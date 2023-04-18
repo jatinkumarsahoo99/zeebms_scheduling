@@ -1,0 +1,38 @@
+name: bms_scheduling
+version: 1.0.0+1
+publish_to: none
+description: A new Flutter project.
+environment: 
+  sdk: '>=2.18.1 <3.0.0'
+
+dependencies: 
+  cupertino_icons: ^1.0.2
+  get: 4.6.5
+  dio: 5.1.1
+  shared_preferences:
+  url_strategy: ^0.2.0
+  intl: ^0.17.0
+  pluto_grid: ^5.3.2
+  dropdown_plus: ^0.0.9
+  dropdown_search: ^5.0.3
+  time_range_picker: 2.0.1
+  encrypt:
+  flutter_file_saver: ^0.6.1+1
+  excel:
+  pluto_grid_export: ^1.0.3
+  url_launcher:
+  data_table_2:
+  url_encoder:
+  azure_application_insights: ^3.1.0
+
+  flutter: 
+    sdk: flutter
+
+dev_dependencies: 
+  flutter_lints: ^2.0.0
+  flutter_test: 
+    sdk: flutter
+
+flutter: 
+  uses-material-design: true
+
