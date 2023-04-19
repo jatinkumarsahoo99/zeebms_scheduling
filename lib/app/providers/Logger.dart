@@ -30,7 +30,7 @@ class Logger {
       telemetryClient.context.applicationVersion = Const.appVersion;
       telemetryClient.context.user.id =
           Get.find<MainController>().user?.employeeId ?? "";
-      telemetryClient.context.properties['Module'] = 'Admin';
+      telemetryClient.context.properties['Module'] = 'Scheduling';
       telemetryClient.context.properties['UserName'] =
           Get.find<MainController>().user?.employeeName ?? "";
       telemetryClient.context.properties['PersonalNo'] =
@@ -79,7 +79,7 @@ class Logger {
       telemetryClient.context.applicationVersion = Const.appVersion;
       telemetryClient.context.user.id =
           Get.find<MainController>().user?.employeeId ?? "";
-      telemetryClient.context.properties['Module'] = 'Admin';
+      telemetryClient.context.properties['Module'] = 'Scheduling';
       telemetryClient.context.properties['UserName'] =
           Get.find<MainController>().user?.employeeName ?? "";
       telemetryClient.context.properties['PersonalNo'] =
@@ -128,7 +128,7 @@ class Logger {
       telemetryClient.context.applicationVersion = Const.appVersion;
       telemetryClient.context.user.id =
           Get.find<MainController>().user?.employeeId ?? "";
-      telemetryClient.context.properties['Module'] = 'Admin';
+      telemetryClient.context.properties['Module'] = 'Scheduling';
       telemetryClient.context.properties['UserName'] =
           Get.find<MainController>().user?.employeeName ?? "";
       telemetryClient.context.properties['PersonalNo'] =
@@ -174,7 +174,7 @@ class Logger {
       telemetryClient.context.applicationVersion = Const.appVersion;
       telemetryClient.context.user.id =
           Get.find<MainController>().user?.employeeId ?? "";
-      telemetryClient.context.properties['Module'] = 'Admin';
+      telemetryClient.context.properties['Module'] = 'Scheduling';
       telemetryClient.context.properties['UserName'] =
           Get.find<MainController>().user?.employeeName ?? "";
       telemetryClient.context.properties['PersonalNo'] =
@@ -218,7 +218,7 @@ class Logger {
       telemetryClient.context.applicationVersion = Const.appVersion;
       telemetryClient.context.user.id =
           Get.find<MainController>().user?.employeeId ?? "";
-      telemetryClient.context.properties['Module'] = 'Admin';
+      telemetryClient.context.properties['Module'] = 'Scheduling';
       telemetryClient.context.properties['UserName'] =
           Get.find<MainController>().user?.employeeName ?? "";
       telemetryClient.context.properties['PersonalNo'] =
@@ -290,7 +290,7 @@ class Logger {
       telemetryClient.context.applicationVersion = Const.appVersion;
       telemetryClient.context.user.id =
           Get.find<MainController>().user?.employeeId ?? "";
-      telemetryClient.context.properties['Module'] = 'Admin';
+      telemetryClient.context.properties['Module'] = 'Scheduling';
       telemetryClient.context.properties['UserName'] =
           Get.find<MainController>().user?.employeeName ?? "";
       telemetryClient.context.properties['PersonalNo'] =
