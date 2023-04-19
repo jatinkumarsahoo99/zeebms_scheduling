@@ -37,7 +37,7 @@ class HomeController extends GetxController {
     var uri = Uri.dataFromString(html.window.location.href); //converts string to a uri
     Map<String, String> params = uri.queryParameters;
     print("Params are>>>>" + params.toString());
-    if (Routes.listRoutes.contains("/" + extractName)) {
+    if (RoutesList.listRoutes.contains("/" + extractName)) {
       if (extractName == "frmDailyFPC") {
         html.window.location.reload();
       } else {
