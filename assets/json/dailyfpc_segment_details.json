@@ -1,0 +1,42 @@
+[
+      {
+          "segmentnumber": 0,
+          "segmentCaption": "Seg 1",
+          "som": "00:00:00:00",
+          "eom": "00:00:00:00",
+          "segmentDuration": 0,
+          "duration": "00:06:00:00"
+      },
+      {
+          "segmentnumber": 1,
+          "segmentCaption": "Seg 2",
+          "som": "00:00:00:00",
+          "eom": "00:00:00:00",
+          "segmentDuration": 0,
+          "duration": "00:06:00:00"
+      },
+      {
+          "segmentnumber": 2,
+          "segmentCaption": "Seg 3",
+          "som": "00:00:00:00",
+          "eom": "00:00:00:00",
+          "segmentDuration": 0,
+          "duration": "00:09:00:00"
+      },
+      {
+        "segmentnumber": 0,
+        "segmentCaption": "Seg 1",
+        "som": "00:00:00:00",
+        "eom": "00:00:00:00",
+        "segmentDuration": 0,
+        "duration": "00:06:00:00"
+    },
+    {
+        "segmentnumber": 0,
+        "segmentCaption": "Seg 1",
+        "som": "00:00:00:00",
+        "eom": "00:00:00:00",
+        "segmentDuration": 0,
+        "duration": "00:06:00:00"
+    }
+]

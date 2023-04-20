@@ -7,7 +7,7 @@ import 'Const.dart';
 class Logger {
   static void write(String log, {bool isError = false}) {
     Future.microtask(() {
-      sendTrace(trace: log);
+      // sendTrace(trace: log);
     });
   }
 

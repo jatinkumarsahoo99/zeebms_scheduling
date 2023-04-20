@@ -1,0 +1,274 @@
+{
+  "parent": [
+    {
+      "name": "Programming & Marketing",
+      "id": 1,
+      "child": [
+        {
+          "name": "Master",
+          "id": "1.1",
+          "subChild": [
+            {
+              "name": "Promo Master",
+              "id": "1.1.2"
+            },
+            {
+              "name": "Secondary Event Master",
+              "id": "1.1.3"
+            },
+            {
+              "name": "Segment Details",
+              "id": "1.1.4"
+            },
+            {
+              "name": "Filler Master",
+              "id": "1.1.5"
+            },
+            {
+              "name": "Still Master",
+              "id": "1.1.6"
+            },
+            {
+              "name": "Program Master",
+              "id": "1.1.7"
+            },
+            {
+              "name": "Email Notification Recipients",
+              "id": "1.1.8"
+            },
+            {
+              "name": "Technical Check Alert Recipients",
+              "id": "1.1.9"
+            },
+            {
+              "name": "Vingnette Master",
+              "id": "1.1.10"
+            },
+            {
+              "name": "Email Action items",
+              "id": "1.1.11"
+            },
+            {
+              "name": "CensorShip Master",
+              "id": "1.1.12"
+            },
+            {
+              "name": "Movie Grading",
+              "id": "1.1.13"
+            },
+            {
+              "name": "Program Category Master",
+              "id": "1.1.14"
+            },
+            {
+              "name": "Program Category Specification",
+              "id": "1.1.15"
+            },
+            {
+              "name": "Program Type Master",
+              "id": "1.1.16"
+            },
+            {
+              "name": "Original Repeat Master",
+              "id": "1.1.17"
+            },
+            {
+              "name": "RMS Program Mapping",
+              "id": "1.1.18"
+            },
+            {
+              "name": "Movie & Live Event List",
+              "id": "1.1.19"
+            },
+            {
+              "name": "Episode Type Master",
+              "id": "1.1.20"
+            },
+            {
+              "name": "Program Slot Master",
+              "id": "1.1.21"
+            },
+            {
+              "name": "Star Cast Master",
+              "id": "1.1.22"
+            },
+            {
+              "name": "Star Cast Type Master",
+              "id": "1.1.25"
+            },
+            {
+              "name": "Program Classification",
+              "id": "1.1.23"
+            },
+            {
+              "name": "Movie Scheduler",
+              "id": "1.1.24"
+            },
+            {
+              "name": "Break Definition",
+              "id": "1.1.26"
+            }
+          ]
+        },
+        {
+          "name": "Transaction",
+          "id": "1.2",
+          "subChild": [
+            {
+              "name": "Technical Check- TC",
+              "id": "1.2.1"
+            },
+            {
+              "name": "Pending Technical Check- TC",
+              "id": "1.2.8"
+            },
+            {
+              "name": "Operational FPC",
+              "id": "1.2.2"
+            },
+            {
+              "name": "Content Inward",
+              "id": "1.2.3"
+            },
+            {
+              "name": "Create Break Pattern",
+              "id": "1.2.4"
+            },
+            {
+              "name": "Program Clip Detail",
+              "id": "1.2.5",
+              "key": "frmProgramClipDetail"
+            },
+            {
+              "name": "Annotation (Smoking & Drinking)",
+              "id": "1.2.6"
+            },
+            {
+              "name": "MAM Work Order",
+              "id": "1.2.7"
+            },
+            {
+              "name": "Movie Map for billing",
+              "id": "1.2.9"
+            },
+            {
+              "name": "Make Segment Copy",
+              "id": "1.2.10"
+            },
+            {
+              "name": "Movie Planner",
+              "id": "1.2.11"
+            },
+            {
+              "name": "Link Program To Song Template",
+              "id": "1.2.12"
+            },
+            {
+              "name": "New Segment Details",
+              "id": "1.2.13"
+            },
+            {
+              "name": "Program Tape Details",
+              "id": "1.2.14"
+            }
+          ]
+        },
+        {
+          "name": "Report",
+          "id": "1.3",
+          "subChild": [
+            {
+              "name": "Final Audit Report",
+              "id": "1.3.1"
+            },
+            {
+              "name": "Final Audit Report (Telecast)",
+              "id": "1.3.2"
+            },
+            {
+              "name": "Conflict Report for Movies",
+              "id": "1.3.4"
+            },
+            {
+              "name": "FPC Search",
+              "id": "1.3.5"
+            },
+            {
+              "name": "Daily FPC Status",
+              "id": "1.3.6"
+            },
+            {
+              "name": "Daily FPC Report",
+              "key": "frmdailyfpcreport",
+              "id": "1.3.7"
+            },
+            {
+              "name": "View FPC",
+              "id": "1.3.8"
+            },
+            {
+              "name": "Incoming Outgoing Programs",
+              "id": "1.3.9"
+            },
+            {
+              "name": "Program Episode Report",
+              "id": "1.3.10"
+            },
+            {
+              "name": "Cross FPC",
+              "id": "1.3.11"
+            },
+            {
+              "name": "FPC Mismatch",
+              "id": "1.4.0"
+            },
+            {
+              "name": "FPC Weekly Chart",
+              "id": "1.4.1"
+            },
+            {
+              "name": "Movie Schedule Report",
+              "id": "1.4.2"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "name": "Scheduling",
+      "id": 2,
+      "child": [
+        {
+          "name": "Master",
+          "id": "2.1",
+          "subChild": [
+          ]
+        },
+        {
+          "name": "Transaction",
+          "id": "2.2",
+          "subChild": [
+            {
+              "name": "Technical Check- TC",
+              "id": "2.2.1"
+            }
+          ]
+        },
+        {
+          "name": "Report",
+          "id": "2.3",
+          "subChild": [
+            {
+              "name": "Final Audit Report",
+              "id": "2.3.1"
+            },
+            {
+              "name": "Final Audit Report (Telecast)",
+              "id": "2.3.2"
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}

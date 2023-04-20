@@ -1,7 +1,7 @@
 import 'dart:convert';
 import 'dart:developer';
 import 'package:bms_scheduling/app/providers/ApiFactory.dart';
-import 'package:data_table_2/data_table_2.dart';
+// import 'package:data_table_2/data_table_2.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:get/get_core/src/get_main.dart';
@@ -343,14 +343,14 @@ class Utils {
   //   }
   // }
 
-  static List<DataColumn2> getColumns(List<String> columns) => columns
-      .map((String column) => DataColumn2(
-            size: ColumnSize.S,
-            label: Center(
-              child: TableTextStyle(title: column),
-            ),
-          ))
-      .toList();
+  // static List<DataColumn2> getColumns(List<String> columns) => columns
+  //     .map((String column) => DataColumn2(
+  //           size: ColumnSize.S,
+  //           label: Center(
+  //             child: TableTextStyle(title: column),
+  //           ),
+  //         ))
+  //     .toList();
 
   static checkPermission() {
     if (Get.find<HomeController>().selectChild != null) {

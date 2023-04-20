@@ -16,12 +16,14 @@ class HomeController extends GetxController {
   SubChild? selectChild;
   var selectChild1 = Rxn<SubChild>();
   List? buttons;
+  List? tranmissionButtons;
 
   bool isMoviePlannerPopupShown = false;
 
   @override
   void onInit() {
     getbuttondata();
+    getTransmissionLog();
     super.onInit();
   }
 
@@ -29,6 +31,12 @@ class HomeController extends GetxController {
     String value = await rootBundle.loadString('assets/json/buttons.json');
     buttons = json.decode(value);
     update(["buttons"]);
+  }
+
+  getTransmissionLog() async {
+    String value = await rootBundle.loadString('assets/json/transmission_buttons.json');
+    tranmissionButtons = json.decode(value);
+    update(["transButtons"]);
   }
 
   clearPage1() {

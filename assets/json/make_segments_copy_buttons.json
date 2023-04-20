@@ -1,0 +1,18 @@
+
+    [
+        {
+            "id": 1,
+            "name": "Copy Segments/Annotation",
+            "isDisabled": false
+        },
+        {
+            "id": 2,
+            "name": "Clear",
+            "isDisabled": false
+        },
+        {
+            "id": 3,
+            "name": "Exit",
+            "isDisabled": false
+        }
+      ]

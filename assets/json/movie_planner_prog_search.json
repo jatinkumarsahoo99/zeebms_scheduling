@@ -1,0 +1,18 @@
+
+    [
+        {
+            "id": 1,
+            "name": "Search",
+            "isDisabled": false
+        },
+        {
+            "id": 2,
+            "name": "Clear",
+            "isDisabled": false
+        },
+        {
+            "id": 3,
+            "name": "Validate",
+            "isDisabled": false
+        }
+      ]

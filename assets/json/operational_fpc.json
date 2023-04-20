@@ -1,0 +1,1479 @@
+{
+    "Location": [
+        {
+            "LocationCode": "ASI",
+            "LocationName": "Asia"
+        },
+        {
+            "LocationCode": "AFR",
+            "LocationName": "Africa"
+        },
+        {
+            "LocationCode": "NAM",
+            "LocationName": "North America"
+        },
+        {
+            "LocationCode": "SAM",
+            "LocationName": "South America"
+        }
+        
+    ],
+
+    "Programs": [
+        {
+            "ProgramCode": 0,
+            "ProgramName": "Bhagya Laxmi"
+        },
+        {
+            "ProgramCode": 1,
+            "ProgramName": "Meet"
+        },
+        {
+            "ProgramCode": 2,
+            "ProgramName": "Pavitra Rishta"
+        },
+        {
+            "ProgramCode": 3,
+            "ProgramName": "Bhagya Laxmi1"
+        }
+    ],
+  
+    "Language": [
+      {
+        "LanguageCode": 0,
+        "LanguageName": "---All---"
+      },
+      {
+        "LanguageCode": 132,
+        "LanguageName": "Abkhaz"
+      },
+      {
+        "LanguageCode": 24,
+        "LanguageName": "Afrikaans"
+      },
+      {
+        "LanguageCode": 110,
+        "LanguageName": "AKAN"
+      },
+      {
+        "LanguageCode": 25,
+        "LanguageName": "Albanian"
+      },
+      {
+        "LanguageCode": 26,
+        "LanguageName": "Amharic"
+      },
+      {
+        "LanguageCode": 22,
+        "LanguageName": "Arabic"
+      },
+      {
+        "LanguageCode": 27,
+        "LanguageName": "Armenian"
+      },
+      {
+        "LanguageCode": 92,
+        "LanguageName": "Assamese"
+      },
+      {
+        "LanguageCode": 133,
+        "LanguageName": "Azerbaijani"
+      },
+      {
+        "LanguageCode": 113,
+        "LanguageName": "Bahasa"
+      },
+      {
+        "LanguageCode": 28,
+        "LanguageName": "Basque"
+      },
+      {
+        "LanguageCode": 1,
+        "LanguageName": "Bengali"
+      },
+      {
+        "LanguageCode": 121,
+        "LanguageName": "Berber"
+      },
+      {
+        "LanguageCode": 2,
+        "LanguageName": "Bhojpuri"
+      },
+      {
+        "LanguageCode": 93,
+        "LanguageName": "Bodo"
+      },
+      {
+        "LanguageCode": 112,
+        "LanguageName": "Bosnian"
+      },
+      {
+        "LanguageCode": 29,
+        "LanguageName": "Bulgarian"
+      },
+      {
+        "LanguageCode": 30,
+        "LanguageName": "Burmese"
+      },
+      {
+        "LanguageCode": 31,
+        "LanguageName": "Byelorussian"
+      },
+      {
+        "LanguageCode": 32,
+        "LanguageName": "Catalan"
+      },
+      {
+        "LanguageCode": 146,
+        "LanguageName": "Chichewa"
+      },
+      {
+        "LanguageCode": 33,
+        "LanguageName": "Chinese"
+      },
+      {
+        "LanguageCode": 118,
+        "LanguageName": "Chinese - Cantonese"
+      },
+      {
+        "LanguageCode": 119,
+        "LanguageName": "Chinese - Mandarin"
+      },
+      {
+        "LanguageCode": 34,
+        "LanguageName": "Croatian"
+      },
+      {
+        "LanguageCode": 35,
+        "LanguageName": "Czech"
+      },
+      {
+        "LanguageCode": 36,
+        "LanguageName": "Danish"
+      },
+      {
+        "LanguageCode": 37,
+        "LanguageName": "Dari"
+      },
+      {
+        "LanguageCode": 134,
+        "LanguageName": "Dhivehi"
+      },
+      {
+        "LanguageCode": 94,
+        "LanguageName": "Dogri"
+      },
+      {
+        "LanguageCode": 38,
+        "LanguageName": "Dutch"
+      },
+      {
+        "LanguageCode": 39,
+        "LanguageName": "Dzongkha"
+      },
+      {
+        "LanguageCode": 3,
+        "LanguageName": "English"
+      },
+      {
+        "LanguageCode": 40,
+        "LanguageName": "Esperanto"
+      },
+      {
+        "LanguageCode": 41,
+        "LanguageName": "Estonian"
+      },
+      {
+        "LanguageCode": 42,
+        "LanguageName": "Faroese"
+      },
+      {
+        "LanguageCode": 43,
+        "LanguageName": "Farsi"
+      },
+      {
+        "LanguageCode": 44,
+        "LanguageName": "Finnish"
+      },
+      {
+        "LanguageCode": 21,
+        "LanguageName": "French"
+      },
+      {
+        "LanguageCode": 141,
+        "LanguageName": "Fula"
+      },
+      {
+        "LanguageCode": 45,
+        "LanguageName": "Gaelic"
+      },
+      {
+        "LanguageCode": 46,
+        "LanguageName": "Galician"
+      },
+      {
+        "LanguageCode": 104,
+        "LanguageName": "Garo"
+      },
+      {
+        "LanguageCode": 114,
+        "LanguageName": "Georgian"
+      },
+      {
+        "LanguageCode": 47,
+        "LanguageName": "German"
+      },
+      {
+        "LanguageCode": 48,
+        "LanguageName": "Greek"
+      },
+      {
+        "LanguageCode": 128,
+        "LanguageName": "GUJARATI"
+      },
+      {
+        "LanguageCode": 4,
+        "LanguageName": "Gujrati"
+      },
+      {
+        "LanguageCode": 17,
+        "LanguageName": "Haryanvi"
+      },
+      {
+        "LanguageCode": 116,
+        "LanguageName": "Hausa"
+      },
+      {
+        "LanguageCode": 49,
+        "LanguageName": "Hebrew"
+      },
+      {
+        "LanguageCode": 5,
+        "LanguageName": "Hindi"
+      },
+      {
+        "LanguageCode": 20,
+        "LanguageName": "Hinglish"
+      },
+      {
+        "LanguageCode": 50,
+        "LanguageName": "Hungarian"
+      },
+      {
+        "LanguageCode": 51,
+        "LanguageName": "Icelandic"
+      },
+      {
+        "LanguageCode": 139,
+        "LanguageName": "Igbo"
+      },
+      {
+        "LanguageCode": 52,
+        "LanguageName": "Indonesian"
+      },
+      {
+        "LanguageCode": 18,
+        "LanguageName": "Instrumental"
+      },
+      {
+        "LanguageCode": 53,
+        "LanguageName": "Inuktitut (Eskimo)"
+      },
+      {
+        "LanguageCode": 54,
+        "LanguageName": "Italian"
+      },
+      {
+        "LanguageCode": 55,
+        "LanguageName": "Japanese"
+      },
+      {
+        "LanguageCode": 7,
+        "LanguageName": "Kannada"
+      },
+      {
+        "LanguageCode": 95,
+        "LanguageName": "Kashmiri"
+      },
+      {
+        "LanguageCode": 109,
+        "LanguageName": "Kazakh"
+      },
+      {
+        "LanguageCode": 103,
+        "LanguageName": "Khasi"
+      },
+      {
+        "LanguageCode": 56,
+        "LanguageName": "Khmer"
+      },
+      {
+        "LanguageCode": 117,
+        "LanguageName": "Kikuyu"
+      },
+      {
+        "LanguageCode": 147,
+        "LanguageName": "Kinyarwanda"
+      },
+      {
+        "LanguageCode": 101,
+        "LanguageName": "Kokborok"
+      },
+      {
+        "LanguageCode": 8,
+        "LanguageName": "Konkani"
+      },
+      {
+        "LanguageCode": 57,
+        "LanguageName": "Korean"
+      },
+      {
+        "LanguageCode": 58,
+        "LanguageName": "Kurdish"
+      },
+      {
+        "LanguageCode": 59,
+        "LanguageName": "Laotian"
+      },
+      {
+        "LanguageCode": 60,
+        "LanguageName": "Lappish"
+      },
+      {
+        "LanguageCode": 106,
+        "LanguageName": "Latin"
+      },
+      {
+        "LanguageCode": 61,
+        "LanguageName": "Latvian"
+      },
+      {
+        "LanguageCode": 62,
+        "LanguageName": "Lithuanian"
+      },
+      {
+        "LanguageCode": 125,
+        "LanguageName": "Luganda"
+      },
+      {
+        "LanguageCode": 142,
+        "LanguageName": "Luo"
+      },
+      {
+        "LanguageCode": 145,
+        "LanguageName": "Maasai"
+      },
+      {
+        "LanguageCode": 63,
+        "LanguageName": "Macedonian"
+      },
+      {
+        "LanguageCode": 140,
+        "LanguageName": "Malagasy"
+      },
+      {
+        "LanguageCode": 64,
+        "LanguageName": "Malay"
+      },
+      {
+        "LanguageCode": 9,
+        "LanguageName": "Malayalam"
+      },
+      {
+        "LanguageCode": 23,
+        "LanguageName": "Malaysian"
+      },
+      {
+        "LanguageCode": 120,
+        "LanguageName": "Maldivian"
+      },
+      {
+        "LanguageCode": 65,
+        "LanguageName": "Maltese"
+      },
+      {
+        "LanguageCode": 96,
+        "LanguageName": "Manipuri"
+      },
+      {
+        "LanguageCode": 10,
+        "LanguageName": "Marathi"
+      },
+      {
+        "LanguageCode": 102,
+        "LanguageName": "Mizo"
+      },
+      {
+        "LanguageCode": 131,
+        "LanguageName": "MONGOLIAN"
+      },
+      {
+        "LanguageCode": 105,
+        "LanguageName": "NA"
+      },
+      {
+        "LanguageCode": 66,
+        "LanguageName": "Nepali"
+      },
+      {
+        "LanguageCode": 67,
+        "LanguageName": "Norwegian"
+      },
+      {
+        "LanguageCode": 144,
+        "LanguageName": "Nubian"
+      },
+      {
+        "LanguageCode": 97,
+        "LanguageName": "Oriya"
+      },
+      {
+        "LanguageCode": 138,
+        "LanguageName": "Oromo"
+      },
+      {
+        "LanguageCode": 135,
+        "LanguageName": "Ossetian"
+      },
+      {
+        "LanguageCode": 68,
+        "LanguageName": "Pashto"
+      },
+      {
+        "LanguageCode": 122,
+        "LanguageName": "Persian"
+      },
+      {
+        "LanguageCode": 148,
+        "LanguageName": "Pidgin"
+      },
+      {
+        "LanguageCode": 69,
+        "LanguageName": "Polish"
+      },
+      {
+        "LanguageCode": 70,
+        "LanguageName": "Portuguese"
+      },
+      {
+        "LanguageCode": 11,
+        "LanguageName": "Punjabi"
+      },
+      {
+        "LanguageCode": 12,
+        "LanguageName": "Rajastani"
+      },
+      {
+        "LanguageCode": 71,
+        "LanguageName": "Romanian"
+      },
+      {
+        "LanguageCode": 19,
+        "LanguageName": "Russian"
+      },
+      {
+        "LanguageCode": 98,
+        "LanguageName": "Sanskrit"
+      },
+      {
+        "LanguageCode": 99,
+        "LanguageName": "Santali"
+      },
+      {
+        "LanguageCode": 72,
+        "LanguageName": "Scots"
+      },
+      {
+        "LanguageCode": 73,
+        "LanguageName": "Serbian"
+      },
+      {
+        "LanguageCode": 137,
+        "LanguageName": "Shona"
+      },
+      {
+        "LanguageCode": 107,
+        "LanguageName": "Silent"
+      },
+      {
+        "LanguageCode": 100,
+        "LanguageName": "Sindhi"
+      },
+      {
+        "LanguageCode": 108,
+        "LanguageName": "Sinhalese"
+      },
+      {
+        "LanguageCode": 74,
+        "LanguageName": "Slovak"
+      },
+      {
+        "LanguageCode": 75,
+        "LanguageName": "Slovenian"
+      },
+      {
+        "LanguageCode": 76,
+        "LanguageName": "Somali"
+      },
+      {
+        "LanguageCode": 123,
+        "LanguageName": "Somali"
+      },
+      {
+        "LanguageCode": 143,
+        "LanguageName": "Songhay"
+      },
+      {
+        "LanguageCode": 77,
+        "LanguageName": "Spanish"
+      },
+      {
+        "LanguageCode": 78,
+        "LanguageName": "Swahili"
+      },
+      {
+        "LanguageCode": 79,
+        "LanguageName": "Swedish"
+      },
+      {
+        "LanguageCode": 126,
+        "LanguageName": "Swedish"
+      },
+      {
+        "LanguageCode": 80,
+        "LanguageName": "Tagalog-Filipino"
+      },
+      {
+        "LanguageCode": 81,
+        "LanguageName": "Tajik"
+      },
+      {
+        "LanguageCode": 13,
+        "LanguageName": "Tamil"
+      },
+      {
+        "LanguageCode": 115,
+        "LanguageName": "Tatar"
+      },
+      {
+        "LanguageCode": 14,
+        "LanguageName": "Telugu"
+      },
+      {
+        "LanguageCode": 136,
+        "LanguageName": "Tetum"
+      },
+      {
+        "LanguageCode": 82,
+        "LanguageName": "Thai"
+      },
+      {
+        "LanguageCode": 83,
+        "LanguageName": "Tibetan"
+      },
+      {
+        "LanguageCode": 84,
+        "LanguageName": "Tigrinya"
+      },
+      {
+        "LanguageCode": 85,
+        "LanguageName": "Tongan"
+      },
+      {
+        "LanguageCode": 129,
+        "LanguageName": "Tulu"
+      },
+      {
+        "LanguageCode": 86,
+        "LanguageName": "Turkish"
+      },
+      {
+        "LanguageCode": 87,
+        "LanguageName": "Turkmen"
+      },
+      {
+        "LanguageCode": 88,
+        "LanguageName": "Ucrainian"
+      },
+      {
+        "LanguageCode": 111,
+        "LanguageName": "Ukrainian"
+      },
+      {
+        "LanguageCode": 15,
+        "LanguageName": "Urdu"
+      },
+      {
+        "LanguageCode": 89,
+        "LanguageName": "Uzbek"
+      },
+      {
+        "LanguageCode": 90,
+        "LanguageName": "Vietnamese"
+      },
+      {
+        "LanguageCode": 91,
+        "LanguageName": "Welsh"
+      },
+      {
+        "LanguageCode": 124,
+        "LanguageName": "Yoruba"
+      },
+      {
+        "LanguageCode": 130,
+        "LanguageName": "Zulu"
+      }
+    ]
+  ,
+  
+    "Channel": [
+      {
+        "ChannelCode": "ZAZANHD001",
+        "ChannelName": "& Picture HD"
+      },
+      {
+        "ChannelCode": "ZAZAN00001",
+        "ChannelName": "& TV"
+      },
+      {
+        "ChannelCode": "10050M03",
+        "ChannelName": "& XPLOR HD"
+      },
+      {
+        "ChannelCode": "20023M01",
+        "ChannelName": "&Flix"
+      },
+      {
+        "ChannelCode": "20024M01",
+        "ChannelName": "&Flix HD"
+      },
+      {
+        "ChannelCode": "ZAZEEPIC01",
+        "ChannelName": "&Pictures"
+      },
+      {
+        "ChannelCode": "10017M05",
+        "ChannelName": "&PRIVE"
+      },
+      {
+        "ChannelCode": "ZATVH00001",
+        "ChannelName": "&TV HD"
+      },
+      {
+        "ChannelCode": "ZTVME00001",
+        "ChannelName": "&TV ME"
+      },
+      {
+        "ChannelCode": "ZTVUK00001",
+        "ChannelName": "&TV UK"
+      },
+      {
+        "ChannelCode": "0000000000",
+        "ChannelName": "---All---"
+      },
+      {
+        "ChannelCode": "ZAA2400001",
+        "ChannelName": "24 FPS"
+      },
+      {
+        "ChannelCode": "ZA24G00001",
+        "ChannelName": "24 Ghanta"
+      },
+      {
+        "ChannelCode": "ZAA2400003",
+        "ChannelName": "24 GHANTE MP-CG"
+      },
+      {
+        "ChannelCode": "ZAA2400002",
+        "ChannelName": "24 TAAS"
+      },
+      {
+        "ChannelCode": "ZA9XX00001",
+        "ChannelName": "9X"
+      },
+      {
+        "ChannelCode": "ZAACT00001",
+        "ChannelName": "ACTION CINEMA"
+      },
+      {
+        "ChannelCode": "ZAAAK00001",
+        "ChannelName": "AKASH BANGLA"
+      },
+      {
+        "ChannelCode": "ZANCI00001",
+        "ChannelName": "Anmol Cinema"
+      },
+      {
+        "ChannelCode": "ZAAAS00001",
+        "ChannelName": "ASIAN SKY SHOP"
+      },
+      {
+        "ChannelCode": "ZAASI00001",
+        "ChannelName": "ASIANET"
+      },
+      {
+        "ChannelCode": "ZAZEE00008",
+        "ChannelName": "BHARATHI"
+      },
+      {
+        "ChannelCode": "10070M01",
+        "ChannelName": "Big Magic"
+      },
+      {
+        "ChannelCode": "ZABOE00001",
+        "ChannelName": "BO&E"
+      },
+      {
+        "ChannelCode": "ZAZEE00118",
+        "ChannelName": "BUSINESS TECHNOLOGY"
+      },
+      {
+        "ChannelCode": "ZAACL00001",
+        "ChannelName": "CLASSIC"
+      },
+      {
+        "ChannelCode": "ZACOR00001",
+        "ChannelName": "Corner Shop (Animation)"
+      },
+      {
+        "ChannelCode": "ZAACO00001",
+        "ChannelName": "CORPORATE"
+      },
+      {
+        "ChannelCode": "ZADAM00001",
+        "ChannelName": "DAM"
+      },
+      {
+        "ChannelCode": "ZADDI00001",
+        "ChannelName": "DD - I"
+      },
+      {
+        "ChannelCode": "ZADD200001",
+        "ChannelName": "DD - METRO"
+      },
+      {
+        "ChannelCode": "ZAZEE00006",
+        "ChannelName": "DD - SPORTS"
+      },
+      {
+        "ChannelCode": "ZADIS00001",
+        "ChannelName": "Dish Buzz"
+      },
+      {
+        "ChannelCode": "ZADIT00001",
+        "ChannelName": "Ditto TV"
+      },
+      {
+        "ChannelCode": "10039M01",
+        "ChannelName": "Ditto TV (blocked)"
+      },
+      {
+        "ChannelCode": "DIVA00001",
+        "ChannelName": "Diva Archive"
+      },
+      {
+        "ChannelCode": "DIVT00001",
+        "ChannelName": "Diva Ten Sports"
+      },
+      {
+        "ChannelCode": "ZAZEE00121",
+        "ChannelName": "DMCL"
+      },
+      {
+        "ChannelCode": "ZAZEE00114",
+        "ChannelName": "DTH"
+      },
+      {
+        "ChannelCode": "ZAESS00119",
+        "ChannelName": "ESSEL CORP"
+      },
+      {
+        "ChannelCode": "ZAZEE00117",
+        "ChannelName": "ESSEL PACKAGING"
+      },
+      {
+        "ChannelCode": "ZAZEE00116",
+        "ChannelName": "ESSEL PROPACK"
+      },
+      {
+        "ChannelCode": "ZAESS00001",
+        "ChannelName": "ESSEL VISION"
+      },
+      {
+        "ChannelCode": "ZAAEW00001",
+        "ChannelName": "ESSEL WORLD"
+      },
+      {
+        "ChannelCode": "ZAETC00001",
+        "ChannelName": "ETC"
+      },
+      {
+        "ChannelCode": "ZAETC00002",
+        "ChannelName": "ETC PUNJABI"
+      },
+      {
+        "ChannelCode": "ZAEXP00001",
+        "ChannelName": "EXPORT INTL.-MUM"
+      },
+      {
+        "ChannelCode": "ZAZEE00007",
+        "ChannelName": "EXPOSURE"
+      },
+      {
+        "ChannelCode": "ZAENG00001",
+        "ChannelName": "FX (ENGLISH)"
+      },
+      {
+        "ChannelCode": "10016M02",
+        "ChannelName": "Ganga Bioskope"
+      },
+      {
+        "ChannelCode": "GERM00001",
+        "ChannelName": "GERMANY CAT-2"
+      },
+      {
+        "ChannelCode": "10071M05",
+        "ChannelName": "HiPi"
+      },
+      {
+        "ChannelCode": "ZAZEE00112",
+        "ChannelName": "INHOUSE FACILITY"
+      },
+      {
+        "ChannelCode": "ZAAIE00001",
+        "ChannelName": "INTER - APAC"
+      },
+      {
+        "ChannelCode": "ZAAIA00001",
+        "ChannelName": "INTER AFLAM"
+      },
+      {
+        "ChannelCode": "ZAAIM00001",
+        "ChannelName": "INTER ME"
+      },
+      {
+        "ChannelCode": "ZAARS00001",
+        "ChannelName": "INTER RUSSIA"
+      },
+      {
+        "ChannelCode": "ZAAIS00001",
+        "ChannelName": "INTER SA"
+      },
+      {
+        "ChannelCode": "ZAAIU00001",
+        "ChannelName": "INTER UAE"
+      },
+      {
+        "ChannelCode": "ZAAUK00001",
+        "ChannelName": "INTER UK"
+      },
+      {
+        "ChannelCode": "ZAAUK00002",
+        "ChannelName": "INTER UK/SA"
+      },
+      {
+        "ChannelCode": "ZAAUE00002",
+        "ChannelName": "INTER UK/UAE"
+      },
+      {
+        "ChannelCode": "ZAAUK00003",
+        "ChannelName": "INTER UK/US"
+      },
+      {
+        "ChannelCode": "ZAAUK00004",
+        "ChannelName": "INTER UK/US/SA"
+      },
+      {
+        "ChannelCode": "ZAAUK00005",
+        "ChannelName": "INTER UK/US/SA/UAE"
+      },
+      {
+        "ChannelCode": "ZAAUS00006",
+        "ChannelName": "INTER US"
+      },
+      {
+        "ChannelCode": "ZAAUS00007",
+        "ChannelName": "INTER US/SA"
+      },
+      {
+        "ChannelCode": "ZAAIT00001",
+        "ChannelName": "Inter.Buss-Ad Sales"
+      },
+      {
+        "ChannelCode": "ZINZM00001",
+        "ChannelName": "INTERNATIONAL SA ZEE MAGIC"
+      },
+      {
+        "ChannelCode": "ZAAJA00007",
+        "ChannelName": "JAGRAN"
+      },
+      {
+        "ChannelCode": "ZJIV000001",
+        "ChannelName": "JIVI (RUSSIA VERIA)"
+      },
+      {
+        "ChannelCode": "ZAKAV00001",
+        "ChannelName": "KAVERI"
+      },
+      {
+        "ChannelCode": "LATAM00001",
+        "ChannelName": "LATAM"
+      },
+      {
+        "ChannelCode": "LIVXX00001",
+        "ChannelName": "LIVING FOODZ"
+      },
+      {
+        "ChannelCode": "ZAINT00001",
+        "ChannelName": "M.E ZEE TV"
+      },
+      {
+        "ChannelCode": "ZAZEE00048",
+        "ChannelName": "Maurya TV"
+      },
+      {
+        "ChannelCode": "ZADIS00002",
+        "ChannelName": "MOD (Movie on Demand)"
+      },
+      {
+        "ChannelCode": "ZAAMO00007",
+        "ChannelName": "MOVIES"
+      },
+      {
+        "ChannelCode": "10059M01",
+        "ChannelName": "Network Content Eng"
+      },
+      {
+        "ChannelCode": "10012M02",
+        "ChannelName": "OptimiZee"
+      },
+      {
+        "ChannelCode": "ZAOZE0001",
+        "ChannelName": "OZee"
+      },
+      {
+        "ChannelCode": "ZAPLA00001",
+        "ChannelName": "PLAY TV"
+      },
+      {
+        "ChannelCode": "ZAPOR00001",
+        "ChannelName": "PORTAL"
+      },
+      {
+        "ChannelCode": "ZAPRE00001",
+        "ChannelName": "PREMIERE CINEMA"
+      },
+      {
+        "ChannelCode": "12001O01",
+        "ChannelName": "Sarthak TV"
+      },
+      {
+        "ChannelCode": "ZASIT00001",
+        "ChannelName": "SITI CHANNEL"
+      },
+      {
+        "ChannelCode": "ZAZEE00123",
+        "ChannelName": "Syndication APAC"
+      },
+      {
+        "ChannelCode": "ZAZEE00124",
+        "ChannelName": "Syndication China"
+      },
+      {
+        "ChannelCode": "ZASYD00002",
+        "ChannelName": "SYNDICATION DOMESTIC"
+      },
+      {
+        "ChannelCode": "ZAZEE00126",
+        "ChannelName": "Syndication Middle East"
+      },
+      {
+        "ChannelCode": "ZAZEE00125",
+        "ChannelName": "Syndication South Africa"
+      },
+      {
+        "ChannelCode": "ZASUK00123",
+        "ChannelName": "Syndication UK"
+      },
+      {
+        "ChannelCode": "ZAZEE00122",
+        "ChannelName": "Syndication USA"
+      },
+      {
+        "ChannelCode": "ZATP000001",
+        "ChannelName": "TelePlay"
+      },
+      {
+        "ChannelCode": "ZATEN00006",
+        "ChannelName": "TEN ACTION"
+      },
+      {
+        "ChannelCode": "ZATCA00001",
+        "ChannelName": "TEN CARIBBEAN"
+      },
+      {
+        "ChannelCode": "ZATEN00002",
+        "ChannelName": "TEN CRICKET"
+      },
+      {
+        "ChannelCode": "ZATEN00008",
+        "ChannelName": "TEN CRICKET CARIBBEAN"
+      },
+      {
+        "ChannelCode": "ZATEN00005",
+        "ChannelName": "TEN GOLF"
+      },
+      {
+        "ChannelCode": "ZATEN00004",
+        "ChannelName": "TEN HD"
+      },
+      {
+        "ChannelCode": "ZATEN00001",
+        "ChannelName": "TEN SPORTS INDIA"
+      },
+      {
+        "ChannelCode": "ZATEN00007",
+        "ChannelName": "TEN SPORTS PAKISTAN"
+      },
+      {
+        "ChannelCode": "ZAUTN00001",
+        "ChannelName": "UTN"
+      },
+      {
+        "ChannelCode": "ZAVER00001",
+        "ChannelName": "VERIA"
+      },
+      {
+        "ChannelCode": "10014M12",
+        "ChannelName": "VODDLER"
+      },
+      {
+        "ChannelCode": "ZAWIO00001",
+        "ChannelName": "WION ZN"
+      },
+      {
+        "ChannelCode": "10093M01",
+        "ChannelName": "Youtube Production"
+      },
+      {
+        "ChannelCode": "ZAZLI00001",
+        "ChannelName": "Z LIVING"
+      },
+      {
+        "ChannelCode": "10071M01",
+        "ChannelName": "Z5X"
+      },
+      {
+        "ChannelCode": "10071M01O",
+        "ChannelName": "Z5X_OAP CBD"
+      },
+      {
+        "ChannelCode": "ZAZEE00128",
+        "ChannelName": "ZED"
+      },
+      {
+        "ChannelCode": "ZAZEE00013",
+        "ChannelName": "ZEE (M I B)"
+      },
+      {
+        "ChannelCode": "ZAZEE00027",
+        "ChannelName": "ZEE 24 GANTALU"
+      },
+      {
+        "ChannelCode": "ZAAFL00001",
+        "ChannelName": "ZEE AFLAM"
+      },
+      {
+        "ChannelCode": "ZAALM00001",
+        "ChannelName": "ZEE ALEM"
+      },
+      {
+        "ChannelCode": "ZAZEE00038",
+        "ChannelName": "ZEE ALWAN"
+      },
+      {
+        "ChannelCode": "10013M01",
+        "ChannelName": "ZEE ANMOL"
+      },
+      {
+        "ChannelCode": "ZAZEE00115",
+        "ChannelName": "ZEE ARABIA"
+      },
+      {
+        "ChannelCode": "ZASAP00001",
+        "ChannelName": "ZEE ASIA-PACIFIC"
+      },
+      {
+        "ChannelCode": "ZAZEE00119",
+        "ChannelName": "ZEE ASTRO"
+      },
+      {
+        "ChannelCode": "ZEBND00001",
+        "ChannelName": "Zee Bandhan"
+      },
+      {
+        "ChannelCode": "ZAALP00002",
+        "ChannelName": "ZEE BANGLA"
+      },
+      {
+        "ChannelCode": "ZAZEE00023",
+        "ChannelName": "ZEE BANGLA CINEMA"
+      },
+      {
+        "ChannelCode": "40013N01",
+        "ChannelName": "Zee Bihar Jharkhand"
+      },
+      {
+        "ChannelCode": "ZBIO000001",
+        "ChannelName": "ZEE BIOSKOP"
+      },
+      {
+        "ChannelCode": "ZAGAN00001",
+        "ChannelName": "ZEE BISKOPE"
+      },
+      {
+        "ChannelCode": "ZABOL00002",
+        "ChannelName": "ZEE BOLLYMOVIES"
+      },
+      {
+        "ChannelCode": "ZAGOL00001",
+        "ChannelName": "ZEE Bollywood"
+      },
+      {
+        "ChannelCode": "ZAZEE00113",
+        "ChannelName": "ZEE BUSINESS"
+      },
+      {
+        "ChannelCode": "ZAZEE00005",
+        "ChannelName": "ZEE CAFE"
+      },
+      {
+        "ChannelCode": "10019M04",
+        "ChannelName": "Zee Chanderi"
+      },
+      {
+        "ChannelCode": "ZAZCG00001",
+        "ChannelName": "ZEE Chattisgarh"
+      },
+      {
+        "ChannelCode": "ZAZEE00120",
+        "ChannelName": "ZEE CHINA"
+      },
+      {
+        "ChannelCode": "10019M03",
+        "ChannelName": "Zee Chitramandir"
+      },
+      {
+        "ChannelCode": "ZAZEE00003",
+        "ChannelName": "ZEE CINEMA"
+      },
+      {
+        "ChannelCode": "ZAZEE00035",
+        "ChannelName": "ZEE CINEMA HD"
+      },
+      {
+        "ChannelCode": "ZCINL00001",
+        "ChannelName": "ZEE CINEMALU"
+      },
+      {
+        "ChannelCode": "CINHD00001",
+        "ChannelName": "ZEE CINEMALU HD"
+      },
+      {
+        "ChannelCode": "10005M04",
+        "ChannelName": "Zee Classic - New"
+      },
+      {
+        "ChannelCode": "10070M02",
+        "ChannelName": "Zee Ganga"
+      },
+      {
+        "ChannelCode": "ZAALP00004",
+        "ChannelName": "ZEE GUJARATHI"
+      },
+      {
+        "ChannelCode": "ZHIBR00001",
+        "ChannelName": "ZEE HIBURAN"
+      },
+      {
+        "ChannelCode": "INDXX00001",
+        "ChannelName": "Zee Hindustan"
+      },
+      {
+        "ChannelCode": "ZAZEE00011",
+        "ChannelName": "ZEE INTERNATIONAL"
+      },
+      {
+        "ChannelCode": "40022N01",
+        "ChannelName": "Zee Kalak"
+      },
+      {
+        "ChannelCode": "ZAZEE00047",
+        "ChannelName": "Zee Kalinga (Orissa)"
+      },
+      {
+        "ChannelCode": "ZAZEE00016",
+        "ChannelName": "ZEE KANNADA"
+      },
+      {
+        "ChannelCode": "ZAKKZ00001",
+        "ChannelName": "ZEE KHANA KHAZANA"
+      },
+      {
+        "ChannelCode": "10075T01",
+        "ChannelName": "Zee Malayalam"
+      },
+      {
+        "ChannelCode": "ZAALP00001",
+        "ChannelName": "ZEE MARATHI"
+      },
+      {
+        "ChannelCode": "ZAMAR00001",
+        "ChannelName": "ZEE MARATHI HD"
+      },
+      {
+        "ChannelCode": "ZAZEE00010",
+        "ChannelName": "ZEE MGM"
+      },
+      {
+        "ChannelCode": "ZAZEE00127",
+        "ChannelName": "ZEE MOTION PICTURES"
+      },
+      {
+        "ChannelCode": "ZAZEE00004",
+        "ChannelName": "ZEE MOVIES"
+      },
+      {
+        "ChannelCode": "50151U01",
+        "ChannelName": "Zee Mundo Latam"
+      },
+      {
+        "ChannelCode": "50139U01",
+        "ChannelName": "Zee Mundo USA"
+      },
+      {
+        "ChannelCode": "ZAMUS00004",
+        "ChannelName": "ZEE MUSIC"
+      },
+      {
+        "ChannelCode": "10047M01",
+        "ChannelName": "Zee Music Company"
+      },
+      {
+        "ChannelCode": "ZAZEE00009",
+        "ChannelName": "ZEE NETWORK"
+      },
+      {
+        "ChannelCode": "ZAZEE00002",
+        "ChannelName": "ZEE NEWS"
+      },
+      {
+        "ChannelCode": "ZNUN000001",
+        "ChannelName": "ZEE NUNG"
+      },
+      {
+        "ChannelCode": "ZAODI00001",
+        "ChannelName": "ZEE ODISHA"
+      },
+      {
+        "ChannelCode": "10023B05",
+        "ChannelName": "ZEE PICCHAR"
+      },
+      {
+        "ChannelCode": "10016M05",
+        "ChannelName": "Zee Plex"
+      },
+      {
+        "ChannelCode": "10062M01",
+        "ChannelName": "Zee Plus"
+      },
+      {
+        "ChannelCode": "ZAALP00003",
+        "ChannelName": "ZEE PUNJAB HARYANA HIMACHAL"
+      },
+      {
+        "ChannelCode": "ZAPUN00001",
+        "ChannelName": "Zee Punjabi"
+      },
+      {
+        "ChannelCode": "ZAZEQ0001",
+        "ChannelName": "ZEE Q"
+      },
+      {
+        "ChannelCode": "40012N01",
+        "ChannelName": "Zee Rajasthan Plus"
+      },
+      {
+        "ChannelCode": "ZARAS00119",
+        "ChannelName": "ZEE RUSSIA"
+      },
+      {
+        "ChannelCode": "ZASAL00001",
+        "ChannelName": "ZEE SALAAM"
+      },
+      {
+        "ChannelCode": "INDXX00002",
+        "ChannelName": "Zee Sangam"
+      },
+      {
+        "ChannelCode": "10077O01",
+        "ChannelName": "ZEE SARTHAK"
+      },
+      {
+        "ChannelCode": "ZEESIN0001",
+        "ChannelName": "ZEE Sine"
+      },
+      {
+        "ChannelCode": "ZACOM00001",
+        "ChannelName": "zee smile"
+      },
+      {
+        "ChannelCode": "ZAASP00008",
+        "ChannelName": "ZEE SPORTS"
+      },
+      {
+        "ChannelCode": "ZAZEE00110",
+        "ChannelName": "ZEE STUDIO"
+      },
+      {
+        "ChannelCode": "ZAZEE00033",
+        "ChannelName": "ZEE STUDIO HD"
+      },
+      {
+        "ChannelCode": "ZAZEE00012",
+        "ChannelName": "ZEE SYNDICATION"
+      },
+      {
+        "ChannelCode": "ZATAL00001",
+        "ChannelName": "ZEE TALKIES"
+      },
+      {
+        "ChannelCode": "ZATAL00002",
+        "ChannelName": "ZEE TALKIES HD"
+      },
+      {
+        "ChannelCode": "ZAZEE00022",
+        "ChannelName": "ZEE TAMIZH"
+      },
+      {
+        "ChannelCode": "ZAALP00005",
+        "ChannelName": "ZEE TELUGU"
+      },
+      {
+        "ChannelCode": "TELHD00001",
+        "ChannelName": "ZEE TELUGU HD"
+      },
+      {
+        "ChannelCode": "ZETHE00001",
+        "ChannelName": "ZEE Theator"
+      },
+      {
+        "ChannelCode": "ZATHI00001",
+        "ChannelName": "ZEE THIRAI"
+      },
+      {
+        "ChannelCode": "ZATRE00001",
+        "ChannelName": "ZEE TRENDZ"
+      },
+      {
+        "ChannelCode": "ZAZEE00001",
+        "ChannelName": "ZEE TV"
+      },
+      {
+        "ChannelCode": "ZAZEE00034",
+        "ChannelName": "ZEE TV HD"
+      },
+      {
+        "ChannelCode": "40021N01",
+        "ChannelName": "Zee UP/UK"
+      },
+      {
+        "ChannelCode": "ZAUPU00001",
+        "ChannelName": "ZEE UP/Uttrakhand"
+      },
+      {
+        "ChannelCode": "10070M06",
+        "ChannelName": "Zee Vajwa"
+      },
+      {
+        "ChannelCode": "ZWSAF00001",
+        "ChannelName": "ZEE WORLD SAF"
+      },
+      {
+        "ChannelCode": "ZEEYU00001",
+        "ChannelName": "Zee Yuva"
+      },
+      {
+        "ChannelCode": "10031M03",
+        "ChannelName": "Zee Zest"
+      },
+      {
+        "ChannelCode": "10098M01",
+        "ChannelName": "ZEE5 GLOBAL"
+      },
+      {
+        "ChannelCode": "ZAZEE00020",
+        "ChannelName": "ZEENEXT"
+      },
+      {
+        "ChannelCode": "ZAUKG00001",
+        "ChannelName": "ZEEUK GUJARATHI"
+      },
+      {
+        "ChannelCode": "ZAUSG00001",
+        "ChannelName": "ZEEUSA GUJARATHI"
+      },
+      {
+        "ChannelCode": "ZAGEC00001",
+        "ChannelName": "Zindagi"
+      },
+      {
+        "ChannelCode": "10049M02",
+        "ChannelName": "Zindagi-Zee5"
+      },
+      {
+        "ChannelCode": "ZAZNG00001",
+        "ChannelName": "ZING"
+      },
+      {
+        "ChannelCode": "ZAAZM00008",
+        "ChannelName": "ZMZ"
+      }
+    ]
+  ,
+  
+    "TelecastType": [
+      {
+        "TelecastTypeId": 1,
+        "TelecastType": "Original"
+      },
+      {
+        "TelecastTypeId": 2,
+        "TelecastType": "Repeat"
+      },
+      {
+        "TelecastTypeId": 3,
+        "TelecastType": "Revised"
+      }
+    ],
+
+    "Genre": [
+        {
+            "TypeId": 1,
+            "TypeName": "Adventure"
+        },
+        {
+            "TypeId": 2,
+            "TypeName": "Romance"
+        },
+        {
+            "TypeId": 3,
+            "TypeName": "Thriller"
+        },
+        {
+            "TypeId": 4,
+            "TypeName": "Tragedy"
+        }
+    ]
+  
+  }
