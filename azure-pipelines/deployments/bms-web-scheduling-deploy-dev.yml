@@ -1,0 +1,62 @@
+trigger: none
+pr: none
+
+parameters:
+- name: image_version
+  displayName: image_tag
+  type: object
+  default: xxxx
+  
+- name: branchtodeploy
+  displayName: branch
+  type: string
+  default: develop
+  values:
+    - develop
+    - main
+
+- name: DownloadArtifactSource
+  displayName: Download Artifact Source
+  type: string
+  default: latest
+  values:
+  - buildid
+  - latest
+
+stages:
+- stage: 'DeploytoAks'
+  jobs:
+  - job: DeploytoAKS
+    displayName: 'DeploytoAks'
+    pool:
+      name: Default
+    steps:
+    - checkout: none
+    - task: DownloadPipelineArtifact@2
+      displayName: Download Deployment Files
+      inputs:
+        buildType: specific
+        project: 'BMS-WEB'
+        definition: '241'
+        buildVersionToDownload: 'latestFromBranch'
+        branchName: 'refs/heads/${{ parameters.branchToDeploy }}'
+        targetPath: '$(System.ArtifactsDirectory)/Podfiles'
+        
+    - task: Bash@3
+      displayName: Bash Script
+      inputs:
+        targetType: inline
+        script: >2-
+
+          mv $(System.ArtifactsDirectory)/Podfiles/k8s-file/* /root/aks-dev-cluster/az-pods/bms-web-scheduling-dev-deploy.yml
+
+          sed -i 's/image_version/${{ parameters.image_version }}/g' /root/aks-dev-cluster/az-pods/bms-web-scheduling-dev-deploy.yml
+
+    - task: Bash@3
+      displayName: Bash Script
+      inputs:
+        targetType: inline
+        script: >2-
+
+          sh /root/aks-dev-cluster/bms-web-scripts/dev-scheduling-deployment.sh
+        
