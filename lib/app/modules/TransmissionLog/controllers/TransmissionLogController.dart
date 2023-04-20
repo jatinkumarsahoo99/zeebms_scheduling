@@ -17,9 +17,16 @@ class TransmissionLogController extends GetxController {
   PlutoGridStateManager? gridStateManager;
   // PlutoGridMode selectedPlutoGridMode = PlutoGridMode.normal;
   var isStandby = RxBool(false);
+  var isMy = RxBool(true);
+  var isInsertAfter = RxBool(false);
   TextEditingController selectedDate = TextEditingController();
   TextEditingController startTime_ = TextEditingController();
   TextEditingController offsetTime_ = TextEditingController();
+  TextEditingController txId_ = TextEditingController();
+  TextEditingController txCaption_ = TextEditingController();
+  TextEditingController insertDuration_ = TextEditingController();
+  TextEditingController segmentFpcTime_ = TextEditingController();
+
   List<TransmissionLogModel>? transmissionLogList=[
     new TransmissionLogModel(rowNo: 1,status: "data"),
     new TransmissionLogModel(rowNo: 1,status: "data"),

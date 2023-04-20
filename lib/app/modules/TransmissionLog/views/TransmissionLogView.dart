@@ -6,6 +6,8 @@ import 'package:pluto_grid/pluto_grid.dart';
 import '../../../../widgets/DateTime/DateWithThreeTextField.dart';
 import '../../../../widgets/FormButton.dart';
 import '../../../../widgets/LoadingDialog.dart';
+import '../../../../widgets/WarningBox.dart';
+import '../../../../widgets/button.dart';
 import '../../../../widgets/dropdown.dart';
 import '../../../../widgets/gridFromMap.dart';
 import '../../../../widgets/gridFromMap1.dart';
@@ -318,52 +320,63 @@ class TransmissionLogView extends GetView<TransmissionLogController> {
                     return element.appFormName == "frmSegmentsDetails";
                   });*/
                   if (controller.tranmissionButtons != null) {
-                    return ButtonBar(
-                      alignment: MainAxisAlignment.start,
-                      mainAxisSize: MainAxisSize.min,
-                      children: [
-                        for (var btn in controller.tranmissionButtons!)
+                    return SizedBox(
+                      height: 40,
+                      child: ButtonBar(
+                        // buttonHeight: 20,
+                        alignment: MainAxisAlignment.start,
+                        mainAxisSize: MainAxisSize.min,
+                        // pa
+                        children: [
+                          for (var btn in controller.tranmissionButtons!)
+                            FormButtonWrapper(
+                              btnText: btn["name"],
+                              showIcon: false,
+                              // isEnabled: btn['isDisabled'],
+                              callback: /*btn["name"] != "Delete" &&
+                                      Utils.btnAccessHandler2(btn['name'],
+                                              controller, formPermissions) ==
+                                          null
+                                  ? null
+                                  :*/
+                                  () => formHandler(btn['name']),
+                            ),
+                          IconButton(
+                            onPressed: () {},
+                            icon: Icon(Icons.arrow_upward),
+                            padding: EdgeInsets.symmetric(horizontal: 8.0),
+                          ),
+                          IconButton(
+                            onPressed: () {},
+                            icon: Icon(Icons.arrow_downward),
+                            padding: EdgeInsets.symmetric(horizontal: 8.0),
+                          ),
                           FormButtonWrapper(
-                            btnText: btn["name"],
+                            btnText: "Aa",
                             showIcon: false,
                             // isEnabled: btn['isDisabled'],
                             callback: /*btn["name"] != "Delete" &&
-                                    Utils.btnAccessHandler2(btn['name'],
-                                            controller, formPermissions) ==
-                                        null
-                                ? null
-                                :*/
-                                () => formHandler(btn['name']),
+                                      Utils.btnAccessHandler2(btn['name'],
+                                              controller, formPermissions) ==
+                                          null
+                                  ? null
+                                  :*/
+                                () => formHandler("Aa"),
                           ),
-                        IconButton(
-                            onPressed: () {}, icon: Icon(Icons.arrow_upward)),
-                        IconButton(
-                            onPressed: () {}, icon: Icon(Icons.arrow_downward)),
-                        FormButtonWrapper(
-                          btnText: "Aa",
-                          showIcon: false,
-                          // isEnabled: btn['isDisabled'],
-                          callback: /*btn["name"] != "Delete" &&
-                                    Utils.btnAccessHandler2(btn['name'],
-                                            controller, formPermissions) ==
-                                        null
-                                ? null
-                                :*/
-                              () => formHandler("Aa"),
-                        ),
-                        FormButtonWrapper(
-                          btnText: "CL",
-                          showIcon: false,
-                          isEnabled: false,
-                          callback: /*btn["name"] != "Delete" &&
-                                    Utils.btnAccessHandler2(btn['name'],
-                                            controller, formPermissions) ==
-                                        null
-                                ? null
-                                :*/
-                              () => formHandler("CL"),
-                        ),
-                      ],
+                          FormButtonWrapper(
+                            btnText: "CL",
+                            showIcon: false,
+                            isEnabled: false,
+                            callback: /*btn["name"] != "Delete" &&
+                                      Utils.btnAccessHandler2(btn['name'],
+                                              controller, formPermissions) ==
+                                          null
+                                  ? null
+                                  :*/
+                                () => formHandler("CL"),
+                          ),
+                        ],
+                      ),
                     );
                   } else {
                     return Container();
@@ -376,5 +389,655 @@ class TransmissionLogView extends GetView<TransmissionLogController> {
     );
   }
 
-  formHandler(btn) {}
+  formHandler(btn) {
+    switch (btn) {
+      case "Commercials":
+        showCommercialDialog(Get.context);
+        break;
+      case "Insert":
+        showInsertDialog(Get.context);
+        break;
+      case "Segments":
+        showSegmentDialog(Get.context);
+        break;
+      case "Change":
+        showChangeDialog(Get.context);
+        break;
+      case "TS":
+        showTransmissionSummaryDialog(Get.context);
+        break;
+    }
+  }
+
+  showTransmissionSummaryDialog(context) {
+    return Get.defaultDialog(
+      barrierDismissible: false,
+      title: "Transmission Summary",
+      titleStyle: const TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+      titlePadding: const EdgeInsets.only(top: 10),
+      contentPadding: const EdgeInsets.symmetric(horizontal: 10, vertical: 5),
+      content: SingleChildScrollView(
+        child: SizedBox(
+          height: Get.height * 0.5,
+          child: SingleChildScrollView(
+            child: SizedBox(
+              width: Get.width * 0.8,
+              // height: Get.he,
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: <Widget>[
+                  Row(
+                    children: [
+                      Obx(
+                        () => DropDownField.formDropDown1WidthMap(
+                          controllerX.locations.value,
+                          (value) {
+                            controllerX.selectLocation = value;
+                            // controllerX.selectedLocationId.text = value.key!;
+                            // controllerX.selectedLocationName.text = value.value!;
+                            // controller.getChannelsBasedOnLocation(value.key!);
+                          },
+                          "Time",
+                          0.12,
+                          isEnable: controllerX.isEnable.value,
+                          selected: controllerX.selectLocation,
+                          autoFocus: true,
+                          dialogWidth: 330,
+                          dialogHeight: Get.height * .7,
+                        ),
+                      ),
+                      Padding(
+                        padding: const EdgeInsets.only(top: 15.0, left: 10),
+                        child: FormButtonWrapper(
+                          btnText: "Filter",
+                          showIcon: false,
+                          callback: () {},
+                        ),
+                      ),
+                    ],
+                  ),
+                  SizedBox(
+                    height: 15,
+                  ),
+                  GetBuilder<TransmissionLogController>(
+                      id: "commercialsList",
+                      init: controllerX,
+                      builder: (controller) {
+                        return SizedBox(
+                          // width: 500,
+                          width: Get.width * 0.8,
+                          height: 300,
+                          child: (controllerX.transmissionLogList != null &&
+                                  (controllerX
+                                      .transmissionLogList?.isNotEmpty)!)
+                              ? DataGridFromMap(
+                                  hideCode: false,
+                                  formatDate: false,
+                                  colorCallback: (renderC) => Colors.red[200]!,
+                                  mapData: controllerX.transmissionLogList!
+                                      .map((e) => e.toJson())
+                                      .toList())
+                              // _dataTable3()
+                              : const WarningBox(
+                                  text:
+                                      'Enter Location, Channel & Date to get the Break Definitions'),
+                        );
+                      })
+                ],
+              ),
+            ),
+          ),
+        ),
+      ),
+      radius: 10,
+      confirm: Padding(
+        padding: const EdgeInsets.only(top: 15.0, left: 10),
+        child: FormButtonWrapper(
+          btnText: "Close",
+          showIcon: false,
+          callback: () {
+            Navigator.pop(context);
+          },
+        ),
+      ),
+    );
+  }
+
+  showCommercialDialog(context) {
+    return Get.defaultDialog(
+      barrierDismissible: false,
+      title: "Commercials",
+      titleStyle: const TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+      titlePadding: const EdgeInsets.only(top: 10),
+      contentPadding: const EdgeInsets.symmetric(horizontal: 10, vertical: 5),
+      content: SingleChildScrollView(
+        child: SizedBox(
+          height: Get.height * 0.5,
+          child: SingleChildScrollView(
+            child: SizedBox(
+              width: Get.width * 0.8,
+              // height: Get.he,
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: <Widget>[
+                  Row(
+                    children: [
+                      Obx(
+                        () => DropDownField.formDropDown1WidthMap(
+                          controllerX.locations.value,
+                          (value) {
+                            controllerX.selectLocation = value;
+                            // controllerX.selectedLocationId.text = value.key!;
+                            // controllerX.selectedLocationName.text = value.value!;
+                            // controller.getChannelsBasedOnLocation(value.key!);
+                          },
+                          "Time",
+                          0.12,
+                          isEnable: controllerX.isEnable.value,
+                          selected: controllerX.selectLocation,
+                          autoFocus: true,
+                          dialogWidth: 330,
+                          dialogHeight: Get.height * .7,
+                        ),
+                      ),
+                      Padding(
+                        padding: const EdgeInsets.only(top: 15.0, left: 10),
+                        child: FormButtonWrapper(
+                          btnText: "Filter",
+                          showIcon: false,
+                          callback: () {},
+                        ),
+                      ),
+                    ],
+                  ),
+                  SizedBox(
+                    height: 15,
+                  ),
+                  GetBuilder<TransmissionLogController>(
+                      id: "commercialsList",
+                      init: controllerX,
+                      builder: (controller) {
+                        return SizedBox(
+                          // width: 500,
+                          width: Get.width * 0.8,
+                          height: 300,
+                          child: (controllerX.transmissionLogList != null &&
+                                  (controllerX
+                                      .transmissionLogList?.isNotEmpty)!)
+                              ? DataGridFromMap(
+                                  hideCode: false,
+                                  formatDate: false,
+                                  colorCallback: (renderC) => Colors.red[200]!,
+                                  mapData: controllerX.transmissionLogList!
+                                      .map((e) => e.toJson())
+                                      .toList())
+                              // _dataTable3()
+                              : const WarningBox(
+                                  text:
+                                      'Enter Location, Channel & Date to get the Break Definitions'),
+                        );
+                      })
+                ],
+              ),
+            ),
+          ),
+        ),
+      ),
+      radius: 10,
+      confirm: Padding(
+        padding: const EdgeInsets.only(top: 15.0, left: 10),
+        child: FormButtonWrapper(
+          btnText: "Close",
+          showIcon: false,
+          callback: () {
+            Navigator.pop(context);
+          },
+        ),
+      ),
+    );
+  }
+
+  showInsertDialog(context) {
+    return Get.defaultDialog(
+      barrierDismissible: false,
+      title: "Insert",
+      titleStyle: const TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+      titlePadding: const EdgeInsets.only(top: 10),
+      contentPadding: const EdgeInsets.symmetric(horizontal: 10, vertical: 5),
+      content: SingleChildScrollView(
+        child: SizedBox(
+          height: Get.height * 0.7,
+          child: SingleChildScrollView(
+            child: SizedBox(
+              width: Get.width * 0.8,
+              // height: Get.he,
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: <Widget>[
+                  Row(
+                    children: [
+                      Obx(
+                        () => DropDownField.formDropDown1WidthMap(
+                          controllerX.locations.value,
+                          (value) {
+                            controllerX.selectLocation = value;
+                            // controllerX.selectedLocationId.text = value.key!;
+                            // controllerX.selectedLocationName.text = value.value!;
+                            // controller.getChannelsBasedOnLocation(value.key!);
+                          },
+                          "Event",
+                          0.13,
+                          isEnable: controllerX.isEnable.value,
+                          selected: controllerX.selectLocation,
+                          autoFocus: true,
+                          dialogWidth: 330,
+                          dialogHeight: Get.height * .7,
+                        ),
+                      ),
+                      InputFields.formField1(
+                          width: 0.13,
+                          onchanged: (value) {},
+                          hintTxt: "TX Caption",
+                          margin: true,
+                          controller: controllerX.txCaption_),
+                      InputFields.formField1(
+                          width: 0.13,
+                          onchanged: (value) {},
+                          hintTxt: "TX Id",
+                          margin: true,
+                          controller: controllerX.txId_),
+                      SizedBox(
+                        width: Get.width * 0.05,
+                        child: Row(
+                          children: [
+                            SizedBox(width: 5),
+                            Obx(() => Padding(
+                                  padding: const EdgeInsets.only(top: 15.0),
+                                  child: Checkbox(
+                                    value: controllerX.isMy.value,
+                                    onChanged: (val) {
+                                      controllerX.isMy.value = val!;
+                                    },
+                                    materialTapTargetSize:
+                                        MaterialTapTargetSize.shrinkWrap,
+                                  ),
+                                )),
+                            Padding(
+                              padding:
+                                  const EdgeInsets.only(top: 15.0, left: 5),
+                              child: Text(
+                                "My",
+                                style:
+                                    TextStyle(fontSize: SizeDefine.labelSize1),
+                              ),
+                            ),
+                          ],
+                        ),
+                      ),
+                      Padding(
+                        padding: const EdgeInsets.only(top: 15.0, left: 10),
+                        child: FormButtonWrapper(
+                          btnText: "Search",
+                          showIcon: false,
+                          callback: () {},
+                        ),
+                      ),
+                      Padding(
+                        padding: const EdgeInsets.only(top: 15.0, left: 10),
+                        child: FormButtonWrapper(
+                          btnText: "Add",
+                          showIcon: false,
+                          callback: () {},
+                        ),
+                      ),
+                      SizedBox(
+                        width: Get.width * 0.07,
+                        child: Row(
+                          children: [
+                            SizedBox(width: 5),
+                            Obx(() => Padding(
+                                  padding: const EdgeInsets.only(top: 15.0),
+                                  child: Checkbox(
+                                    value: controllerX.isInsertAfter.value,
+                                    onChanged: (val) {
+                                      controllerX.isInsertAfter.value = val!;
+                                    },
+                                    materialTapTargetSize:
+                                        MaterialTapTargetSize.shrinkWrap,
+                                  ),
+                                )),
+                            Padding(
+                              padding:
+                                  const EdgeInsets.only(top: 15.0, left: 5),
+                              child: Text(
+                                "Insert After",
+                                style:
+                                    TextStyle(fontSize: SizeDefine.labelSize1),
+                              ),
+                            ),
+                          ],
+                        ),
+                      ),
+                      Spacer(),
+                      InputFields.formFieldNumberMask(
+                          hintTxt: "",
+                          controller: controllerX.insertDuration_
+                            ..text = "00:00:00",
+                          widthRatio: 0.13,
+                          isTime: true,
+                          isEnable: false,
+                          paddingLeft: 0),
+                    ],
+                  ),
+                  SizedBox(
+                    height: 15,
+                  ),
+                  GetBuilder<TransmissionLogController>(
+                      id: "commercialsList",
+                      init: controllerX,
+                      builder: (controller) {
+                        return SizedBox(
+                          // width: 500,
+                          width: Get.width * 0.8,
+                          height: Get.height * 0.6,
+                          child: (controllerX.transmissionLogList != null &&
+                                  (controllerX
+                                      .transmissionLogList?.isNotEmpty)!)
+                              ? DataGridFromMap(
+                                  hideCode: false,
+                                  formatDate: false,
+                                  colorCallback: (renderC) => Colors.red[200]!,
+                                  mapData: controllerX.transmissionLogList!
+                                      .map((e) => e.toJson())
+                                      .toList())
+                              // _dataTable3()
+                              : const WarningBox(
+                                  text:
+                                      'Enter Location, Channel & Date to get the Break Definitions'),
+                        );
+                      })
+                ],
+              ),
+            ),
+          ),
+        ),
+      ),
+      confirm: FormButtonWrapper(
+        btnText: "Close",
+        showIcon: false,
+        callback: () {
+          Navigator.pop(context);
+        },
+      ),
+      radius: 10,
+    );
+  }
+
+  showSegmentDialog(context) {
+    return Get.defaultDialog(
+      barrierDismissible: false,
+      title: "Segments",
+      titleStyle: const TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+      titlePadding: const EdgeInsets.only(top: 10),
+      contentPadding: const EdgeInsets.symmetric(horizontal: 10, vertical: 5),
+      content: SingleChildScrollView(
+        child: SizedBox(
+          height: Get.height * 0.7,
+          child: SingleChildScrollView(
+            child: SizedBox(
+              width: Get.width * 0.8,
+              // height: Get.he,
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: <Widget>[
+                  Row(
+                    children: [
+                      GetBuilder<TransmissionLogController>(
+                        id: "selectedProgram",
+                        init: controllerX,
+                        builder: (controller) =>
+                            DropDownField.formDropDownSearchAPI2(
+                          GlobalKey(),
+                          context,
+                          title: "Program",
+                          onchanged: (DropDownValue? value) async {
+                            // selectedProgramId.text = value?.key ?? "";
+                            // selectedProgram.text = value?.value ?? "";
+                            // selectProgram = value;
+                            // await controllerX.getDataAfterProgLoad(controllerX.selectedLocationId.text, controllerX.selectedChannelId.text, value!.key);
+                          },
+                          url: ApiFactory.OPERATIONAL_FPC_PROGRAM_SEARCH,
+                          width: MediaQuery.of(context).size.width * .2,
+                          // selectedValue: selectProgram,
+                          widthofDialog: 350,
+                          dialogHeight: Get.height * .65,
+                        ),
+                      ),
+                      InputFields.numbers(
+                        hintTxt: "Episode No",
+                        onchanged: (val) {
+                          // episodeNo.value = int.parse(val);
+                          // controllerX.getTapeID(selectProgram!.key!, int.parse(val));
+                        },
+                        controller: TextEditingController(
+                            // text: episodeNo.value.toString(),
+                            ),
+                        isNegativeReq: false,
+                        width: 0.12,
+                      ),
+                      SizedBox(
+                        width: 10,
+                      ),
+                      Padding(
+                        padding: EdgeInsets.only(top: 3),
+                        child: InputFields.formFieldNumberMask(
+                            hintTxt: "FPC Time",
+                            controller: controllerX.segmentFpcTime_
+                              ..text = "00:00:00",
+                            widthRatio: 0.12,
+                            isTime: true,
+                            paddingLeft: 0),
+                      ),
+                      SizedBox(
+                        width: 10,
+                      ),
+                      Obx(
+                        () => DropDownField.formDropDown1WidthMap(
+                          controllerX.locations.value,
+                          (value) {
+                            controllerX.selectLocation = value;
+                            // controllerX.selectedLocationId.text = value.key!;
+                            // controllerX.selectedLocationName.text = value.value!;
+                            // controller.getChannelsBasedOnLocation(value.key!);
+                          },
+                          "Tape",
+                          0.12,
+                          isEnable: controllerX.isEnable.value,
+                          selected: controllerX.selectLocation,
+                          autoFocus: true,
+                          dialogWidth: 330,
+                          dialogHeight: Get.height * .7,
+                        ),
+                      ),
+                      SizedBox(
+                        width: 10,
+                      ),
+                      Padding(
+                        padding: const EdgeInsets.only(top: 15.0, left: 10),
+                        child: FormButtonWrapper(
+                          btnText: "Search",
+                          showIcon: false,
+                          callback: () {},
+                        ),
+                      ),
+                      Padding(
+                        padding: const EdgeInsets.only(top: 15.0, left: 10),
+                        child: FormButtonWrapper(
+                          btnText: "Add",
+                          showIcon: false,
+                          callback: () {},
+                        ),
+                      ),
+                    ],
+                  ),
+                  SizedBox(
+                    height: 15,
+                  ),
+                  GetBuilder<TransmissionLogController>(
+                      id: "commercialsList",
+                      init: controllerX,
+                      builder: (controller) {
+                        return SizedBox(
+                          // width: 500,
+                          width: Get.width * 0.8,
+                          height: Get.height * 0.6,
+                          child: (controllerX.transmissionLogList != null &&
+                                  (controllerX
+                                      .transmissionLogList?.isNotEmpty)!)
+                              ? DataGridFromMap(
+                                  hideCode: false,
+                                  formatDate: false,
+                                  colorCallback: (renderC) => Colors.red[200]!,
+                                  mapData: controllerX.transmissionLogList!
+                                      .map((e) => e.toJson())
+                                      .toList())
+                              // _dataTable3()
+                              : const WarningBox(
+                                  text:
+                                      'Enter Location, Channel & Date to get the Break Definitions'),
+                        );
+                      })
+                ],
+              ),
+            ),
+          ),
+        ),
+      ),
+      confirm: FormButtonWrapper(
+        btnText: "Close",
+        showIcon: false,
+        callback: () {
+          Navigator.pop(context);
+        },
+      ),
+      radius: 10,
+    );
+  }
+
+  showChangeDialog(context) {
+    return Get.defaultDialog(
+      barrierDismissible: false,
+      title: "Change",
+      titleStyle: const TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+      titlePadding: const EdgeInsets.only(top: 10),
+      contentPadding: const EdgeInsets.symmetric(horizontal: 10, vertical: 5),
+      content: SingleChildScrollView(
+        child: SizedBox(
+          height: Get.height * 0.3,
+          child: SingleChildScrollView(
+            child: SizedBox(
+              width: Get.width * 0.2,
+              // height: Get.he,
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.center,
+                children: <Widget>[
+                  InputFields.formField1(
+                      width: 0.12,
+                      onchanged: (value) {},
+                      hintTxt: "TX Id",
+                      margin: true,
+                      padLeft: 0,
+                      controller: controllerX.txId_),
+                  Padding(
+                    padding: EdgeInsets.only(top: 3),
+                    child: InputFields.formFieldNumberMask(
+                        hintTxt: "Duration",
+                        controller: controllerX.segmentFpcTime_
+                          ..text = "00:00:00",
+                        widthRatio: 0.12,
+                        isTime: true,
+                        paddingLeft: 0),
+                  ),
+                  Padding(
+                    padding: EdgeInsets.only(top: 3),
+                    child: InputFields.formFieldNumberMask(
+                        hintTxt: "OffSet",
+                        controller: controllerX.segmentFpcTime_
+                          ..text = "00:00:00",
+                        widthRatio: 0.12,
+                        isTime: true,
+                        isEnable: false,
+                        paddingLeft: 0),
+                  ),
+                  Padding(
+                    padding: EdgeInsets.only(top: 3),
+                    child: InputFields.formFieldNumberMask(
+                        hintTxt: "FPC Time",
+                        controller: controllerX.segmentFpcTime_
+                          ..text = "00:00:00",
+                        widthRatio: 0.12,
+                        isTime: true,
+                        isEnable: false,
+                        paddingLeft: 0),
+                  ),
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      SizedBox(
+                        width: Get.width * 0.05,
+                        child: Row(
+                          children: [
+                            SizedBox(width: 5),
+                            Obx(() => Padding(
+                                  padding: const EdgeInsets.only(top: 15.0),
+                                  child: Checkbox(
+                                    value: controllerX.isMy.value,
+                                    onChanged: (val) {
+                                      controllerX.isMy.value = val!;
+                                    },
+                                    materialTapTargetSize:
+                                        MaterialTapTargetSize.shrinkWrap,
+                                  ),
+                                )),
+                            Padding(
+                              padding:
+                                  const EdgeInsets.only(top: 15.0, left: 5),
+                              child: Text(
+                                "All",
+                                style:
+                                    TextStyle(fontSize: SizeDefine.labelSize1),
+                              ),
+                            ),
+                          ],
+                        ),
+                      ),
+                      Padding(
+                        padding: const EdgeInsets.only(top: 15.0, left: 10),
+                        child: FormButtonWrapper(
+                          btnText: "Change",
+                          showIcon: false,
+                          callback: () {},
+                        ),
+                      ),
+                    ],
+                  ),
+                  SizedBox(
+                    height: 15,
+                  ),
+                ],
+              ),
+            ),
+          ),
+        ),
+      ),
+      confirm: FormButtonWrapper(
+        btnText: "Close",
+        showIcon: false,
+        callback: () {
+          Navigator.pop(context);
+        },
+      ),
+      radius: 10,
+    );
+  }
 }
