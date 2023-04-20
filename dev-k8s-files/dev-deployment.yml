@@ -1,0 +1,39 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: bmsweb-scheduling-deployment-new
+  namespace: bms-ns
+  labels:
+    app: bms-scheduling-web
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: bms-scheduling-web
+  template:
+    metadata:
+      labels:
+        app: bms-scheduling-web
+    spec:
+      containers:
+      - name: bms-scheduling-deployment-new
+        image: zeelakscontainer.azurecr.io/bms-web-admin:image_version
+        imagePullPolicy: Always
+
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: bms-scheduling-web-new
+  namespace: bms-ns
+spec:
+  type: ClusterIP
+  ports:
+  - name: http
+    port: 80
+    targetPort: 3000
+  - name: https
+    port: 443
+    targetPort: 3000
+  selector:
+    app: bms-scheduling-web
