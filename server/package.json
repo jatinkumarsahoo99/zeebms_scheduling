@@ -1,0 +1,10 @@
+{
+  "name": "flutter-web-app",
+  "version": "0.0.0",
+  "license": "MIT",
+  "dependencies": {
+    "body-parser": "^1.15.2",
+    "express": "~4.16.1",
+    "express-rate-limit": "~6.6.0"
+  }
+}
