@@ -1,0 +1,598 @@
+{
+    "Language": [
+      {
+        "LanguageCode": 0,
+        "LanguageName": "---All---"
+      },
+      {
+        "LanguageCode": 132,
+        "LanguageName": "Abkhaz"
+      },
+      {
+        "LanguageCode": 24,
+        "LanguageName": "Afrikaans"
+      },
+      {
+        "LanguageCode": 110,
+        "LanguageName": "AKAN"
+      },
+      {
+        "LanguageCode": 25,
+        "LanguageName": "Albanian"
+      },
+      {
+        "LanguageCode": 26,
+        "LanguageName": "Amharic"
+      },
+      {
+        "LanguageCode": 22,
+        "LanguageName": "Arabic"
+      },
+      {
+        "LanguageCode": 27,
+        "LanguageName": "Armenian"
+      },
+      {
+        "LanguageCode": 92,
+        "LanguageName": "Assamese"
+      },
+      {
+        "LanguageCode": 133,
+        "LanguageName": "Azerbaijani"
+      },
+      {
+        "LanguageCode": 113,
+        "LanguageName": "Bahasa"
+      },
+      {
+        "LanguageCode": 28,
+        "LanguageName": "Basque"
+      },
+      {
+        "LanguageCode": 1,
+        "LanguageName": "Bengali"
+      },
+      {
+        "LanguageCode": 121,
+        "LanguageName": "Berber"
+      },
+      {
+        "LanguageCode": 2,
+        "LanguageName": "Bhojpuri"
+      },
+      {
+        "LanguageCode": 93,
+        "LanguageName": "Bodo"
+      },
+      {
+        "LanguageCode": 112,
+        "LanguageName": "Bosnian"
+      },
+      {
+        "LanguageCode": 29,
+        "LanguageName": "Bulgarian"
+      },
+      {
+        "LanguageCode": 30,
+        "LanguageName": "Burmese"
+      },
+      {
+        "LanguageCode": 31,
+        "LanguageName": "Byelorussian"
+      },
+      {
+        "LanguageCode": 32,
+        "LanguageName": "Catalan"
+      },
+      {
+        "LanguageCode": 146,
+        "LanguageName": "Chichewa"
+      },
+      {
+        "LanguageCode": 33,
+        "LanguageName": "Chinese"
+      },
+      {
+        "LanguageCode": 118,
+        "LanguageName": "Chinese - Cantonese"
+      },
+      {
+        "LanguageCode": 119,
+        "LanguageName": "Chinese - Mandarin"
+      },
+      {
+        "LanguageCode": 34,
+        "LanguageName": "Croatian"
+      },
+      {
+        "LanguageCode": 35,
+        "LanguageName": "Czech"
+      },
+      {
+        "LanguageCode": 36,
+        "LanguageName": "Danish"
+      },
+      {
+        "LanguageCode": 37,
+        "LanguageName": "Dari"
+      },
+      {
+        "LanguageCode": 134,
+        "LanguageName": "Dhivehi"
+      },
+      {
+        "LanguageCode": 94,
+        "LanguageName": "Dogri"
+      },
+      {
+        "LanguageCode": 38,
+        "LanguageName": "Dutch"
+      },
+      {
+        "LanguageCode": 39,
+        "LanguageName": "Dzongkha"
+      },
+      {
+        "LanguageCode": 3,
+        "LanguageName": "English"
+      },
+      {
+        "LanguageCode": 40,
+        "LanguageName": "Esperanto"
+      },
+      {
+        "LanguageCode": 41,
+        "LanguageName": "Estonian"
+      },
+      {
+        "LanguageCode": 42,
+        "LanguageName": "Faroese"
+      },
+      {
+        "LanguageCode": 43,
+        "LanguageName": "Farsi"
+      },
+      {
+        "LanguageCode": 44,
+        "LanguageName": "Finnish"
+      },
+      {
+        "LanguageCode": 21,
+        "LanguageName": "French"
+      },
+      {
+        "LanguageCode": 141,
+        "LanguageName": "Fula"
+      },
+      {
+        "LanguageCode": 45,
+        "LanguageName": "Gaelic"
+      },
+      {
+        "LanguageCode": 46,
+        "LanguageName": "Galician"
+      },
+      {
+        "LanguageCode": 104,
+        "LanguageName": "Garo"
+      },
+      {
+        "LanguageCode": 114,
+        "LanguageName": "Georgian"
+      },
+      {
+        "LanguageCode": 47,
+        "LanguageName": "German"
+      },
+      {
+        "LanguageCode": 48,
+        "LanguageName": "Greek"
+      },
+      {
+        "LanguageCode": 128,
+        "LanguageName": "GUJARATI"
+      },
+      {
+        "LanguageCode": 4,
+        "LanguageName": "Gujrati"
+      },
+      {
+        "LanguageCode": 17,
+        "LanguageName": "Haryanvi"
+      },
+      {
+        "LanguageCode": 116,
+        "LanguageName": "Hausa"
+      },
+      {
+        "LanguageCode": 49,
+        "LanguageName": "Hebrew"
+      },
+      {
+        "LanguageCode": 5,
+        "LanguageName": "Hindi"
+      },
+      {
+        "LanguageCode": 20,
+        "LanguageName": "Hinglish"
+      },
+      {
+        "LanguageCode": 50,
+        "LanguageName": "Hungarian"
+      },
+      {
+        "LanguageCode": 51,
+        "LanguageName": "Icelandic"
+      },
+      {
+        "LanguageCode": 139,
+        "LanguageName": "Igbo"
+      },
+      {
+        "LanguageCode": 52,
+        "LanguageName": "Indonesian"
+      },
+      {
+        "LanguageCode": 18,
+        "LanguageName": "Instrumental"
+      },
+      {
+        "LanguageCode": 53,
+        "LanguageName": "Inuktitut (Eskimo)"
+      },
+      {
+        "LanguageCode": 54,
+        "LanguageName": "Italian"
+      },
+      {
+        "LanguageCode": 55,
+        "LanguageName": "Japanese"
+      },
+      {
+        "LanguageCode": 7,
+        "LanguageName": "Kannada"
+      },
+      {
+        "LanguageCode": 95,
+        "LanguageName": "Kashmiri"
+      },
+      {
+        "LanguageCode": 109,
+        "LanguageName": "Kazakh"
+      },
+      {
+        "LanguageCode": 103,
+        "LanguageName": "Khasi"
+      },
+      {
+        "LanguageCode": 56,
+        "LanguageName": "Khmer"
+      },
+      {
+        "LanguageCode": 117,
+        "LanguageName": "Kikuyu"
+      },
+      {
+        "LanguageCode": 147,
+        "LanguageName": "Kinyarwanda"
+      },
+      {
+        "LanguageCode": 101,
+        "LanguageName": "Kokborok"
+      },
+      {
+        "LanguageCode": 8,
+        "LanguageName": "Konkani"
+      },
+      {
+        "LanguageCode": 57,
+        "LanguageName": "Korean"
+      },
+      {
+        "LanguageCode": 58,
+        "LanguageName": "Kurdish"
+      },
+      {
+        "LanguageCode": 59,
+        "LanguageName": "Laotian"
+      },
+      {
+        "LanguageCode": 60,
+        "LanguageName": "Lappish"
+      },
+      {
+        "LanguageCode": 106,
+        "LanguageName": "Latin"
+      },
+      {
+        "LanguageCode": 61,
+        "LanguageName": "Latvian"
+      },
+      {
+        "LanguageCode": 62,
+        "LanguageName": "Lithuanian"
+      },
+      {
+        "LanguageCode": 125,
+        "LanguageName": "Luganda"
+      },
+      {
+        "LanguageCode": 142,
+        "LanguageName": "Luo"
+      },
+      {
+        "LanguageCode": 145,
+        "LanguageName": "Maasai"
+      },
+      {
+        "LanguageCode": 63,
+        "LanguageName": "Macedonian"
+      },
+      {
+        "LanguageCode": 140,
+        "LanguageName": "Malagasy"
+      },
+      {
+        "LanguageCode": 64,
+        "LanguageName": "Malay"
+      },
+      {
+        "LanguageCode": 9,
+        "LanguageName": "Malayalam"
+      },
+      {
+        "LanguageCode": 23,
+        "LanguageName": "Malaysian"
+      },
+      {
+        "LanguageCode": 120,
+        "LanguageName": "Maldivian"
+      },
+      {
+        "LanguageCode": 65,
+        "LanguageName": "Maltese"
+      },
+      {
+        "LanguageCode": 96,
+        "LanguageName": "Manipuri"
+      },
+      {
+        "LanguageCode": 10,
+        "LanguageName": "Marathi"
+      },
+      {
+        "LanguageCode": 102,
+        "LanguageName": "Mizo"
+      },
+      {
+        "LanguageCode": 131,
+        "LanguageName": "MONGOLIAN"
+      },
+      {
+        "LanguageCode": 105,
+        "LanguageName": "NA"
+      },
+      {
+        "LanguageCode": 66,
+        "LanguageName": "Nepali"
+      },
+      {
+        "LanguageCode": 67,
+        "LanguageName": "Norwegian"
+      },
+      {
+        "LanguageCode": 144,
+        "LanguageName": "Nubian"
+      },
+      {
+        "LanguageCode": 97,
+        "LanguageName": "Oriya"
+      },
+      {
+        "LanguageCode": 138,
+        "LanguageName": "Oromo"
+      },
+      {
+        "LanguageCode": 135,
+        "LanguageName": "Ossetian"
+      },
+      {
+        "LanguageCode": 68,
+        "LanguageName": "Pashto"
+      },
+      {
+        "LanguageCode": 122,
+        "LanguageName": "Persian"
+      },
+      {
+        "LanguageCode": 148,
+        "LanguageName": "Pidgin"
+      },
+      {
+        "LanguageCode": 69,
+        "LanguageName": "Polish"
+      },
+      {
+        "LanguageCode": 70,
+        "LanguageName": "Portuguese"
+      },
+      {
+        "LanguageCode": 11,
+        "LanguageName": "Punjabi"
+      },
+      {
+        "LanguageCode": 12,
+        "LanguageName": "Rajastani"
+      },
+      {
+        "LanguageCode": 71,
+        "LanguageName": "Romanian"
+      },
+      {
+        "LanguageCode": 19,
+        "LanguageName": "Russian"
+      },
+      {
+        "LanguageCode": 98,
+        "LanguageName": "Sanskrit"
+      },
+      {
+        "LanguageCode": 99,
+        "LanguageName": "Santali"
+      },
+      {
+        "LanguageCode": 72,
+        "LanguageName": "Scots"
+      },
+      {
+        "LanguageCode": 73,
+        "LanguageName": "Serbian"
+      },
+      {
+        "LanguageCode": 137,
+        "LanguageName": "Shona"
+      },
+      {
+        "LanguageCode": 107,
+        "LanguageName": "Silent"
+      },
+      {
+        "LanguageCode": 100,
+        "LanguageName": "Sindhi"
+      },
+      {
+        "LanguageCode": 108,
+        "LanguageName": "Sinhalese"
+      },
+      {
+        "LanguageCode": 74,
+        "LanguageName": "Slovak"
+      },
+      {
+        "LanguageCode": 75,
+        "LanguageName": "Slovenian"
+      },
+      {
+        "LanguageCode": 76,
+        "LanguageName": "Somali"
+      },
+      {
+        "LanguageCode": 123,
+        "LanguageName": "Somali"
+      },
+      {
+        "LanguageCode": 143,
+        "LanguageName": "Songhay"
+      },
+      {
+        "LanguageCode": 77,
+        "LanguageName": "Spanish"
+      },
+      {
+        "LanguageCode": 78,
+        "LanguageName": "Swahili"
+      },
+      {
+        "LanguageCode": 79,
+        "LanguageName": "Swedish"
+      },
+      {
+        "LanguageCode": 126,
+        "LanguageName": "Swedish"
+      },
+      {
+        "LanguageCode": 80,
+        "LanguageName": "Tagalog-Filipino"
+      },
+      {
+        "LanguageCode": 81,
+        "LanguageName": "Tajik"
+      },
+      {
+        "LanguageCode": 13,
+        "LanguageName": "Tamil"
+      },
+      {
+        "LanguageCode": 115,
+        "LanguageName": "Tatar"
+      },
+      {
+        "LanguageCode": 14,
+        "LanguageName": "Telugu"
+      },
+      {
+        "LanguageCode": 136,
+        "LanguageName": "Tetum"
+      },
+      {
+        "LanguageCode": 82,
+        "LanguageName": "Thai"
+      },
+      {
+        "LanguageCode": 83,
+        "LanguageName": "Tibetan"
+      },
+      {
+        "LanguageCode": 84,
+        "LanguageName": "Tigrinya"
+      },
+      {
+        "LanguageCode": 85,
+        "LanguageName": "Tongan"
+      },
+      {
+        "LanguageCode": 129,
+        "LanguageName": "Tulu"
+      },
+      {
+        "LanguageCode": 86,
+        "LanguageName": "Turkish"
+      },
+      {
+        "LanguageCode": 87,
+        "LanguageName": "Turkmen"
+      },
+      {
+        "LanguageCode": 88,
+        "LanguageName": "Ucrainian"
+      },
+      {
+        "LanguageCode": 111,
+        "LanguageName": "Ukrainian"
+      },
+      {
+        "LanguageCode": 15,
+        "LanguageName": "Urdu"
+      },
+      {
+        "LanguageCode": 89,
+        "LanguageName": "Uzbek"
+      },
+      {
+        "LanguageCode": 90,
+        "LanguageName": "Vietnamese"
+      },
+      {
+        "LanguageCode": 91,
+        "LanguageName": "Welsh"
+      },
+      {
+        "LanguageCode": 124,
+        "LanguageName": "Yoruba"
+      },
+      {
+        "LanguageCode": 130,
+        "LanguageName": "Zulu"
+      }
+    ],
+    "SlotType": [
+      {
+        "SlotTypeId": "1",
+        "SlotType": "Regular"
+      },
+      {
+        "SlotTypeId": "2",
+        "SlotType": "Commercial"
+      }
+    ]
+  }

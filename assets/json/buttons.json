@@ -1,0 +1,37 @@
+[
+  {
+    "id": 1,
+    "name": "Save",
+    "isDisabled": false
+  },
+  {
+    "id": 2,
+    "name": "Delete",
+    "isDisabled": false
+  },
+  {
+    "id": 2,
+    "name": "Refresh",
+    "isDisabled": false
+  },
+  {
+    "id": 3,
+    "name": "Clear",
+    "isDisabled": false
+  },
+  {
+    "id": 3,
+    "name": "Exit",
+    "isDisabled": false
+  },
+  {
+    "id": 4,
+    "name": "Search",
+    "isDisabled": true
+  },
+  {
+    "id": 5,
+    "name": "Docs",
+    "isDisabled": true
+  }
+]

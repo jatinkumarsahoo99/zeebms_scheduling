@@ -1,0 +1,18 @@
+
+    [
+        {
+            "id": 1,
+            "name": "Show Details",
+            "isDisabled": false
+        },
+        {
+            "id": 2,
+            "name": "Default",
+            "isDisabled": false
+        },
+        {
+            "id": 3,
+            "name": "View Day",
+            "isDisabled": false
+        }
+      ]

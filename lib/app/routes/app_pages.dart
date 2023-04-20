@@ -5,7 +5,7 @@ import '../modules/LogAdditions/views/log_additions_view.dart';
 import '../modules/MamWorkOrders/bindings/mam_work_orders_binding.dart';
 import '../modules/MamWorkOrders/views/mam_work_orders_view.dart';
 import '../modules/TransmissionLog/bindings/transmission_log_binding.dart';
-import '../modules/TransmissionLog/views/transmission_log_view.dart';
+import '../modules/TransmissionLog/views/TransmissionLogView.dart';
 import '../modules/home/bindings/home_binding.dart';
 import '../modules/home/views/home_view.dart';
 

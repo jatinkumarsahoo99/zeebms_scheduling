@@ -1,6 +1,6 @@
 import 'package:get/get.dart';
 
-import '../controllers/transmission_log_controller.dart';
+import '../controllers/TransmissionLogController.dart';
 
 class TransmissionLogBinding extends Bindings {
   @override
