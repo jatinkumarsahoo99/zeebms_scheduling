@@ -21,30 +21,41 @@ class HomeController extends GetxController {
 
   @override
   void onInit() {
-    getbuttondata();
+    // getbuttondata();
     super.onInit();
   }
 
-  getbuttondata() async {
-    String value = await rootBundle.loadString('assets/json/buttons.json');
-    buttons = json.decode(value);
-    update(["buttons"]);
-  }
+  // getbuttondata() async {
+  //   String value = await rootBundle.loadString('assets/json/buttons.json');
+  //   buttons = json.decode(value);
+  //   update(["buttons"]);
+  // }
 
   clearPage1() {
-    String extractName = (html.window.location.href.split("?")[0]).split(ApiFactory.SPLIT_CLEAR_PAGE)[1];
+    String extractName = (html.window.location.href.split("?")[0])
+        .split(ApiFactory.SPLIT_CLEAR_PAGE)[1];
     print("Extract name>>>>" + extractName);
-    var uri = Uri.dataFromString(html.window.location.href); //converts string to a uri
+    var uri = Uri.dataFromString(
+        html.window.location.href); //converts string to a uri
     Map<String, String> params = uri.queryParameters;
     print("Params are>>>>" + params.toString());
     if (RoutesList.listRoutes.contains("/" + extractName)) {
       if (extractName == "frmDailyFPC") {
         html.window.location.reload();
       } else {
-        String personalNo = Aes.encrypt(Get.find<MainController>().user?.personnelNo ?? "") ?? "";
-        String loginCode = (Aes.encrypt(Get.find<MainController>().user?.logincode ?? "") ?? "");
-        String formName = (Aes.encrypt(Get.find<MainController>().formName ?? "") ?? "");
-        Get.offAndToNamed("/" + extractName, parameters: {"loginCode": loginCode, "personalNo": personalNo, "formName": formName});
+        String personalNo =
+            Aes.encrypt(Get.find<MainController>().user?.personnelNo ?? "") ??
+                "";
+        String loginCode =
+            (Aes.encrypt(Get.find<MainController>().user?.logincode ?? "") ??
+                "");
+        String formName =
+            (Aes.encrypt(Get.find<MainController>().formName ?? "") ?? "");
+        Get.offAndToNamed("/" + extractName, parameters: {
+          "loginCode": loginCode,
+          "personalNo": personalNo,
+          "formName": formName
+        });
       }
     }
   }
