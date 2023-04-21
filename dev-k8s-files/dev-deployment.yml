@@ -17,7 +17,7 @@ spec:
     spec:
       containers:
       - name: bms-scheduling-deployment-new
-        image: zeelakscontainer.azurecr.io/bms-web-admin:image_version
+        image: zeelakscontainer.azurecr.io/bms-web-scheduling:image_version
         imagePullPolicy: Always
 
 ---
