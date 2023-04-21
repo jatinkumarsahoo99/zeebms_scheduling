@@ -8,6 +8,7 @@ abstract class Routes {
   static const TRANSMISSION_LOG = _Paths.TRANSMISSION_LOG;
   static const LOG_ADDITIONS = _Paths.LOG_ADDITIONS;
   static const MAM_WORK_ORDERS = _Paths.MAM_WORK_ORDERS;
+  static const RO_BOOKING = _Paths.RO_BOOKING;
 }
 
 abstract class RoutesList {
@@ -26,4 +27,5 @@ abstract class _Paths {
   static const TRANSMISSION_LOG = '/transmission-log';
   static const LOG_ADDITIONS = '/log-additions';
   static const MAM_WORK_ORDERS = '/mam-work-orders';
+  static const RO_BOOKING = '/ro-booking';
 }

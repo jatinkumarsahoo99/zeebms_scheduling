@@ -1,10 +1,10 @@
+import 'package:bms_scheduling/widgets/LabelTextStyle.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:get/get.dart';
 import 'package:intl/intl.dart';
 
 import '../../app/providers/SizeDefine.dart';
-
 
 class DateWithThreeTextField extends StatefulWidget {
   final String title, splitType;
@@ -26,7 +26,7 @@ class DateWithThreeTextField extends StatefulWidget {
     this.year = 2022,
     this.monthWithFullName = false,
     this.isEnable = true,
-    this.widthRation = .15,
+    this.widthRation = .09,
     this.onFocusChange,
     this.startDate,
     this.endDate,
@@ -119,28 +119,23 @@ class _DateWithThreeTextFieldState extends State<DateWithThreeTextField> {
   Widget build(BuildContext context) {
     final textColor = (widget.isEnable) ? Colors.black : Colors.grey;
     final borderColor =
-    (widget.isEnable) ? Colors.deepPurpleAccent : Colors.grey;
+        (widget.isEnable) ? Colors.deepPurpleAccent : Colors.grey;
     return Column(
       mainAxisAlignment: MainAxisAlignment.start,
       mainAxisSize: MainAxisSize.min,
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         /// TITLE
-        Text(
-          widget.title,
-          style: TextStyle(
-            fontSize: SizeDefine.labelSize1,
-            color: textColor,
-            fontWeight: FontWeight.w500,
-          ),
+        LabelText.style(
+          hint: widget.title,
+          txtColor: (widget.isEnable) ? Colors.black : Colors.grey,
         ),
-        const SizedBox(height: 3),
 
         /// BOX
         Container(
           height: SizeDefine.heightInputField,
-          padding: const EdgeInsets.symmetric(horizontal: 5),
           width: Get.width * widget.widthRation,
+          padding: const EdgeInsets.symmetric(horizontal: 5),
           decoration: BoxDecoration(border: Border.all(color: borderColor)),
           alignment: Alignment.centerLeft,
           child: Row(
@@ -195,7 +190,7 @@ class _DateWithThreeTextFieldState extends State<DateWithThreeTextField> {
                             onChanged: (value) {
                               int no = int.tryParse(value) ?? 00;
                               int selectedMonth =
-                              getMonthINTFromMonthStr(textCtr[1].text);
+                                  getMonthINTFromMonthStr(textCtr[1].text);
                               print(selectedMonth - 1);
                               print(maxDays[selectedMonth - 1]);
                               if (no > maxDays[selectedMonth - 1] ||
@@ -373,26 +368,26 @@ class _DateWithThreeTextFieldState extends State<DateWithThreeTextField> {
                 focusNode: iconFocusNode,
                 onTap: widget.isEnable
                     ? () {
-                  showDatePicker(
-                    context: context,
-                    initialDate: widget.intailDate ?? DateTime.now(),
-                    firstDate: widget.startDate ?? DateTime(2011),
-                    lastDate: widget.endDate ?? DateTime(2050),
-                  ).then(
-                        (selectedDate) {
-                      if (selectedDate != null) {
-                        // var now = DateTime.now();
-                        textCtr[0].text = selectedDate.day.toString();
-                        addZeroAndSetCursorAtLast(0);
-                        textCtr[1].text =
-                            getMonthsFromIndex(selectedDate.month);
-                        textCtr[2].text = selectedDate.year.toString();
+                        showDatePicker(
+                          context: context,
+                          initialDate: widget.intailDate ?? DateTime.now(),
+                          firstDate: widget.startDate ?? DateTime(2011),
+                          lastDate: widget.endDate ?? DateTime(2050),
+                        ).then(
+                          (selectedDate) {
+                            if (selectedDate != null) {
+                              // var now = DateTime.now();
+                              textCtr[0].text = selectedDate.day.toString();
+                              addZeroAndSetCursorAtLast(0);
+                              textCtr[1].text =
+                                  getMonthsFromIndex(selectedDate.month);
+                              textCtr[2].text = selectedDate.year.toString();
+                            }
+                            FocusScope.of(context).requestFocus(iconFocusNode);
+                            FocusScope.of(context).previousFocus();
+                          },
+                        );
                       }
-                      FocusScope.of(context).requestFocus(iconFocusNode);
-                      FocusScope.of(context).previousFocus();
-                    },
-                  );
-                }
                     : null,
                 child: Icon(Icons.date_range,
                     size: 16,
@@ -485,12 +480,12 @@ class _DateWithThreeTextFieldState extends State<DateWithThreeTextField> {
   assignNewValeToEditTextField() {
     var now = DateTime.now();
     List<String?> tempDate =
-    widget.mainTextController.text.split(widget.splitType);
+        widget.mainTextController.text.split(widget.splitType);
     if (tempDate.length == 3) {
       tempDate = widget.mainTextController.text.split(widget.splitType);
       textCtr[0].text = (tempDate[0] ?? now.day.toString()); //DD
       textCtr[1].text =
-      (getMonthsFromIndex(int.tryParse(tempDate[1] ?? "0") ?? 0)); //MMM
+          (getMonthsFromIndex(int.tryParse(tempDate[1] ?? "0") ?? 0)); //MMM
       textCtr[2].text = tempDate[2] ?? now.year.toString(); //YYYY
     } else {
       textCtr[0].text = now.day.toString();
@@ -532,8 +527,8 @@ class _DateWithThreeTextFieldState extends State<DateWithThreeTextField> {
       if (no >
           (selectedMonth == 2
               ? isLeapYearFun(int.tryParse(textCtr[2].text) ?? 2022)
-              ? 29
-              : 28
+                  ? 29
+                  : 28
               : maxNo)) {
         no = 01;
       } else if (no <= 0) {
