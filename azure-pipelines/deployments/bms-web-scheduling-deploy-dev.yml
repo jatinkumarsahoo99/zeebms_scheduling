@@ -12,7 +12,7 @@ parameters:
   type: string
   default: develop
   values:
-    - develop
+    - Develop
     - main
 
 - name: DownloadArtifactSource
