@@ -30,7 +30,7 @@ class _RadioRowState extends State<RadioRow> {
                 children: [
                   Radio<String>(
                       value: e,
-                      groupValue: "groupValue",
+                      groupValue: widget.groupValue,
                       onChanged: (value) {
                         widget.onchange!(value);
                       }),
