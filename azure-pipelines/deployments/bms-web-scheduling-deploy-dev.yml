@@ -10,7 +10,7 @@ parameters:
 - name: branchtodeploy
   displayName: branch
   type: string
-  default: develop
+  default: Develop
   values:
     - Develop
     - main
