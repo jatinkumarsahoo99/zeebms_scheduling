@@ -6,7 +6,6 @@ import '../../../data/DropDownValue.dart';
 import '../TransmissionLogModel.dart';
 
 class TransmissionLogController extends GetxController {
-
   var locations = RxList<DropDownValue>();
   var channels = RxList<DropDownValue>([]);
   RxBool isEnable = RxBool(true);
@@ -15,6 +14,7 @@ class TransmissionLogController extends GetxController {
   DropDownValue? selectLocation;
   DropDownValue? selectChannel;
   PlutoGridStateManager? gridStateManager;
+
   // PlutoGridMode selectedPlutoGridMode = PlutoGridMode.normal;
   var isStandby = RxBool(false);
   var isMy = RxBool(true);
@@ -27,34 +27,34 @@ class TransmissionLogController extends GetxController {
   TextEditingController insertDuration_ = TextEditingController();
   TextEditingController segmentFpcTime_ = TextEditingController();
 
-  List<TransmissionLogModel>? transmissionLogList=[
-    new TransmissionLogModel(rowNo: 1,status: "data"),
-    new TransmissionLogModel(rowNo: 1,status: "data"),
-    new TransmissionLogModel(rowNo: 1,status: "data"),
-    new TransmissionLogModel(rowNo: 1,status: "data"),
-    new TransmissionLogModel(rowNo: 1,status: "data"),
-    new TransmissionLogModel(rowNo: 1,status: "data"),
-    new TransmissionLogModel(rowNo: 1,status: "data"),
-    new TransmissionLogModel(rowNo: 1,status: "data"),
-    new TransmissionLogModel(rowNo: 1,status: "data"),
-    new TransmissionLogModel(rowNo: 1,status: "data"),
-    new TransmissionLogModel(rowNo: 1,status: "data"),
-    new TransmissionLogModel(rowNo: 1,status: "data"),
-    new TransmissionLogModel(rowNo: 1,status: "data"),
-    new TransmissionLogModel(rowNo: 1,status: "data"),
-    new TransmissionLogModel(rowNo: 1,status: "data"),
-    new TransmissionLogModel(rowNo: 1,status: "data"),
-    new TransmissionLogModel(rowNo: 1,status: "data"),
-    new TransmissionLogModel(rowNo: 1,status: "data"),
-    new TransmissionLogModel(rowNo: 1,status: "data"),
-    new TransmissionLogModel(rowNo: 1,status: "data"),
+  List<TransmissionLogModel>? transmissionLogList = [
+    new TransmissionLogModel(rowNo: 1, status: "data"),
+    new TransmissionLogModel(rowNo: 1, status: "data"),
+    new TransmissionLogModel(rowNo: 1, status: "data"),
+    new TransmissionLogModel(rowNo: 1, status: "data"),
+    new TransmissionLogModel(rowNo: 1, status: "data"),
+    new TransmissionLogModel(rowNo: 1, status: "data"),
+    new TransmissionLogModel(rowNo: 1, status: "data"),
+    new TransmissionLogModel(rowNo: 1, status: "data"),
+    new TransmissionLogModel(rowNo: 1, status: "data"),
+    new TransmissionLogModel(rowNo: 1, status: "data"),
+    new TransmissionLogModel(rowNo: 1, status: "data"),
+    new TransmissionLogModel(rowNo: 1, status: "data"),
+    new TransmissionLogModel(rowNo: 1, status: "data"),
+    new TransmissionLogModel(rowNo: 1, status: "data"),
+    new TransmissionLogModel(rowNo: 1, status: "data"),
+    new TransmissionLogModel(rowNo: 1, status: "data"),
+    new TransmissionLogModel(rowNo: 1, status: "data"),
+    new TransmissionLogModel(rowNo: 1, status: "data"),
+    new TransmissionLogModel(rowNo: 1, status: "data"),
+    new TransmissionLogModel(rowNo: 1, status: "data"),
   ];
   PlutoGridMode selectedPlutoGridMode = PlutoGridMode.normal;
   int? selectedIndex;
+  RxnString verifyType = RxnString();
 
   @override
   void onInit() {
     super.onInit();
   }
-
 }

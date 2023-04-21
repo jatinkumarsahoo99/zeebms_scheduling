@@ -1,3 +1,4 @@
+import 'package:bms_scheduling/widgets/radio_row.dart';
 import 'package:flutter/material.dart';
 
 import 'package:get/get.dart';
@@ -405,6 +406,12 @@ class TransmissionLogView extends GetView<TransmissionLogController> {
         break;
       case "TS":
         showTransmissionSummaryDialog(Get.context);
+        break;
+      case "Verify":
+        showVerifyDialog(Get.context);
+        break;
+      case "Aa":
+        showAaDialog(Get.context);
         break;
     }
   }
@@ -1024,6 +1031,197 @@ class TransmissionLogView extends GetView<TransmissionLogController> {
                   SizedBox(
                     height: 15,
                   ),
+                ],
+              ),
+            ),
+          ),
+        ),
+      ),
+      confirm: FormButtonWrapper(
+        btnText: "Close",
+        showIcon: false,
+        callback: () {
+          Navigator.pop(context);
+        },
+      ),
+      radius: 10,
+    );
+  }
+
+  showVerifyDialog(context) {
+    return Get.defaultDialog(
+      barrierDismissible: false,
+      title: "Verify",
+      titleStyle: const TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+      titlePadding: const EdgeInsets.only(top: 10),
+      contentPadding: const EdgeInsets.symmetric(horizontal: 10, vertical: 5),
+      content: SingleChildScrollView(
+        child: SizedBox(
+          height: Get.height * 0.7,
+          child: SingleChildScrollView(
+            child: SizedBox(
+              width: Get.width * 0.8,
+              // height: Get.he,
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: <Widget>[
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.end,
+                    children: [
+                      Padding(
+                        padding: const EdgeInsets.only(top: 15.0, left: 10),
+                        child: FormButtonWrapper(
+                          btnText: "Details",
+                          showIcon: false,
+                          callback: () {},
+                        ),
+                      ),
+                    ],
+                  ),
+                  SizedBox(
+                    height: 15,
+                  ),
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      GetBuilder<TransmissionLogController>(
+                          id: "commercialsList",
+                          init: controllerX,
+                          builder: (controller) {
+                            return SizedBox(
+                              // width: 500,
+                              width: Get.width * 0.49,
+                              height: Get.height * 0.53,
+                              child: (controllerX.transmissionLogList != null &&
+                                      (controllerX
+                                          .transmissionLogList?.isNotEmpty)!)
+                                  ? DataGridFromMap(
+                                      hideCode: false,
+                                      formatDate: false,
+                                      colorCallback: (renderC) =>
+                                          Colors.red[200]!,
+                                      mapData: controllerX.transmissionLogList!
+                                          .map((e) => e.toJson())
+                                          .toList())
+                                  // _dataTable3()
+                                  : const WarningBox(
+                                      text:
+                                          'Enter Location, Channel & Date to get the Break Definitions'),
+                            );
+                          }),
+                      GetBuilder<TransmissionLogController>(
+                          id: "commercialsList",
+                          init: controllerX,
+                          builder: (controller) {
+                            return SizedBox(
+                              // width: 500,
+                              width: Get.width * 0.3,
+                              height: Get.height * 0.53,
+                              child: (controllerX.transmissionLogList != null &&
+                                      (controllerX
+                                          .transmissionLogList?.isNotEmpty)!)
+                                  ? DataGridFromMap(
+                                      hideCode: false,
+                                      formatDate: false,
+                                      colorCallback: (renderC) =>
+                                          Colors.red[200]!,
+                                      mapData: controllerX.transmissionLogList!
+                                          .map((e) => e.toJson())
+                                          .toList())
+                                  // _dataTable3()
+                                  : const WarningBox(
+                                      text:
+                                          'Enter Location, Channel & Date to get the Break Definitions'),
+                            );
+                          }),
+                    ],
+                  ),
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.end,
+                    children: [
+                      Padding(
+                        padding: EdgeInsets.only(top: 3),
+                        child: InputFields.formFieldNumberMask(
+                            hintTxt: "Min Time Difference",
+                            controller: controllerX.segmentFpcTime_
+                              ..text = "00:00:00",
+                            widthRatio: 0.12,
+                            isTime: true,
+                            paddingLeft: 0),
+                      ),
+                    ],
+                  ),
+                ],
+              ),
+            ),
+          ),
+        ),
+      ),
+      confirm: FormButtonWrapper(
+        btnText: "Close",
+        showIcon: false,
+        callback: () {
+          Navigator.pop(context);
+        },
+      ),
+      radius: 10,
+    );
+  }
+
+  showAaDialog(context) {
+    return Get.defaultDialog(
+      barrierDismissible: false,
+      title: "Verification",
+      titleStyle: const TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+      titlePadding: const EdgeInsets.only(top: 10),
+      contentPadding: const EdgeInsets.symmetric(horizontal: 10, vertical: 5),
+      content: SingleChildScrollView(
+        child: SizedBox(
+          height: Get.height * 0.6,
+          child: SingleChildScrollView(
+            child: SizedBox(
+              width: Get.width * 0.8,
+              // height: Get.he,
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: <Widget>[
+                  Obx(
+                    () => RadioRow(
+                      items: const ["Tape", "Product", "Brand"],
+                      groupValue: controllerX.verifyType.value ?? "",
+                      onchange: (val) {
+                        print("Response>>>"+val);
+                        controllerX.verifyType.value = val;
+                      },
+                    ),
+                  ),
+                  SizedBox(
+                    height: 15,
+                  ),
+                  GetBuilder<TransmissionLogController>(
+                      id: "commercialsList",
+                      init: controllerX,
+                      builder: (controller) {
+                        return SizedBox(
+                          // width: 500,
+                          width: Get.width * 0.8,
+                          height: Get.height * 0.6,
+                          child: (controllerX.transmissionLogList != null &&
+                                  (controllerX
+                                      .transmissionLogList?.isNotEmpty)!)
+                              ? DataGridFromMap(
+                                  hideCode: false,
+                                  formatDate: false,
+                                  colorCallback: (renderC) => Colors.red[200]!,
+                                  mapData: controllerX.transmissionLogList!
+                                      .map((e) => e.toJson())
+                                      .toList())
+                              // _dataTable3()
+                              : const WarningBox(
+                                  text:
+                                      'Enter Location, Channel & Date to get the Break Definitions'),
+                        );
+                      }),
                 ],
               ),
             ),
