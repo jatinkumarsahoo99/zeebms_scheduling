@@ -1,8 +1,10 @@
 import 'package:bms_scheduling/app/controller/MainController.dart';
+import 'package:bms_scheduling/app/modules/LogAdditions/controllers/LogAdditionsController.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import '../../widgets/LoadingScreen.dart';
 import '../../widgets/NoDataFoundPage.dart';
+import '../modules/LogAdditions/views/LogAdditionsView.dart';
 import '../modules/TransmissionLog/views/TransmissionLogView.dart';
 import '../modules/home/views/home_view.dart';
 import '../routes/app_pages.dart';
@@ -34,6 +36,9 @@ class AuthGuard1 extends StatelessWidget {
               break;
             case Routes.TRANSMISSION_LOG:
               currentWidget = TransmissionLogView();
+              break;
+            case Routes.LOG_ADDITIONS:
+              currentWidget = LogAdditionsView();
               break;
             default:
               currentWidget = const NoDataFoundPage();
