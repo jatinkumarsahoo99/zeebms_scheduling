@@ -18,6 +18,7 @@ abstract class RoutesList {
     _Paths.TRANSMISSION_LOG,
     _Paths.LOG_ADDITIONS,
     _Paths.MAM_WORK_ORDERS,
+    _Paths.RO_BOOKING,
   ];
 }
 
