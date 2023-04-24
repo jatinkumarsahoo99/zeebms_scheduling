@@ -10,13 +10,14 @@ import '../modules/TransmissionLog/bindings/transmission_log_binding.dart';
 import '../modules/TransmissionLog/views/TransmissionLogView.dart';
 import '../modules/home/bindings/home_binding.dart';
 import '../modules/home/views/home_view.dart';
+import '../providers/AuthGuard1.dart';
 
 part 'app_routes.dart';
 
 class AppPages {
   AppPages._();
 
-  static const INITIAL = Routes.RO_BOOKING;
+  static const INITIAL = Routes.TRANSMISSION_LOG;
 
   static final routes = [
     GetPage(
@@ -26,8 +27,9 @@ class AppPages {
     ),
     GetPage(
       name: _Paths.TRANSMISSION_LOG,
-      page: () => TransmissionLogView(),
-      binding: TransmissionLogBinding(),
+      // page: () => TransmissionLogView(),
+      page: () => AuthGuard1(childName: _Paths.TRANSMISSION_LOG),
+      // binding: TransmissionLogBinding(),
     ),
     GetPage(
       name: _Paths.LOG_ADDITIONS,

@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import '../../widgets/LoadingScreen.dart';
 import '../../widgets/NoDataFoundPage.dart';
+import '../modules/TransmissionLog/views/TransmissionLogView.dart';
 import '../modules/home/views/home_view.dart';
 import '../routes/app_pages.dart';
 
@@ -30,6 +31,9 @@ class AuthGuard1 extends StatelessWidget {
           switch (childName) {
             case Routes.HOME:
               currentWidget = HomeView();
+              break;
+            case Routes.TRANSMISSION_LOG:
+              currentWidget = TransmissionLogView();
               break;
             default:
               currentWidget = const NoDataFoundPage();
