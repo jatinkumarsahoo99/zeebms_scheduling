@@ -73,6 +73,8 @@ class FormButton extends StatelessWidget {
     } else if (btnText.toLowerCase() == "delete" ||
         btnText.toLowerCase() == "delete variance") {
       iconData = Icons.delete;
+    } else if (btnText.toLowerCase() == "verify") {
+      iconData = Icons.verified_rounded;
     } else if (btnText.toLowerCase() == "refresh") {
       iconData = Icons.refresh;
     } else if (btnText.toLowerCase() == "clear") {
