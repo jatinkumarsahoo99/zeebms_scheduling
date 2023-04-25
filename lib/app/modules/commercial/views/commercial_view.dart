@@ -618,7 +618,7 @@ class CommercialView extends GetView<CommercialController> {
                             padding: const EdgeInsets.fromLTRB(15, 15, 7, 0),
                             child: SizedBox(
                               width: w * .30,
-                              height: (h * .7) - (kToolbarHeight / 2),
+                              height: (h * .77) - (kToolbarHeight / 2),
                               child: programTable(context),
                             ),
                           ),
@@ -631,13 +631,13 @@ class CommercialView extends GetView<CommercialController> {
                                 if (controller.conflictReport.isEmpty ||
                                     controller.beams.isEmpty) {
                                   return Column(
+                                    mainAxisAlignment: MainAxisAlignment.start,
                                     children: [
-                                      // const Padding(
-                                      //   padding: EdgeInsets.only(top: 7, bottom: 4),
-                                      // ),
+                                      const Padding(
+                                        padding: EdgeInsets.only(top: 8, bottom: 4),
+                                      ),
                                       Container(
-                                        height: (h * .8) - kToolbarHeight / 2,
-                                        width: w * 0.6,
+                                        width: w * 0.65,
                                         decoration: BoxDecoration(
                                           border: Border.all(
                                             color: Colors.grey.shade300,
@@ -647,11 +647,7 @@ class CommercialView extends GetView<CommercialController> {
                                         ),
                                         child: Padding(
                                           padding: const EdgeInsets.all(8.0),
-                                          child: SizedBox(
-                                              height:
-                                                  (h * .6) - kToolbarHeight / 2,
-                                              width: w * 0.6,
-                                              child: tabView(context)),
+                                          child: tabView(context),
                                         ),
                                       ),
                                       //const SizedBox(height: 10),
@@ -663,6 +659,7 @@ class CommercialView extends GetView<CommercialController> {
                               })
                         ],
                       ),
+                      const Spacer(),
                       GetBuilder<HomeController>(
                           id: "buttons",
                           init: Get.find<HomeController>(),
@@ -799,8 +796,8 @@ class CommercialView extends GetView<CommercialController> {
   Widget schedulingView(BuildContext context) {
     return Column(
       children: [
-        Container(
-          height: (Get.height * .60) - kToolbarHeight / 2,
+        SizedBox(
+          height: (Get.height * .65) - kToolbarHeight / 2,
           width: MediaQuery.of(context).size.width * 0.6,
           child: GetBuilder<CommercialController>(
               id: "schedulingView",
@@ -856,113 +853,176 @@ class CommercialView extends GetView<CommercialController> {
                 }
               }),
         ),
-        Row(
-          crossAxisAlignment: CrossAxisAlignment.center,
-          children: [
-            Text('Commercial Spots : 0'),
-            SizedBox(
-              width: 20,
-            ),
-            Text('Commercial Duration : 00:00:00:00'),
-          ],
+        SizedBox(
+          height: (Get.height * .1),
+          child: Row(
+            crossAxisAlignment: CrossAxisAlignment.center,
+            children: [
+              Text('Commercial Spots : 0'),
+              SizedBox(
+                width: 20,
+              ),
+              Text('Commercial Duration : 00:00:00:00'),
+            ],
+          ),
         ),
       ],
     );
   }
 
   Widget fpcMismatchView(BuildContext context) {
-    return Container(
-      height: (Get.height * .60) - kToolbarHeight / 2,
-      width: MediaQuery.of(context).size.width * 0.6,
-      child: GetBuilder<CommercialController>(
-          id: "fpcMismatchView",
-          // init: CreateBreakPatternController(),
-          builder: (controller) {
-            if (controllerX.programList != null &&
-                (controllerX.programList?.isNotEmpty)!) {
-              // final key = GlobalKey();
-              return Expanded(
-                // height: 400,
-                child: DataGridFromMap(
-                  mapData: (controllerX.programList
-                      ?.map((e) => e.toJson1())
-                      .toList())!,
-                  widthRatio: (Get.width * 0.2) / 2 + 7,
-                  mode: PlutoGridMode.select,
-                  onSelected: (plutoGrid) {
-                    // controllerX.selectedProgram =
-                    // controllerX.programList![plutoGrid.rowIdx!] ;
-                    print(">>>>>>Program Data>>>>>>" +
-                        jsonEncode(controllerX.selectedProgram?.toJson()));
-                  },
-                ),
-              );
-            } else {
-              return Expanded(
-                child: Card(
-                  clipBehavior: Clip.hardEdge,
-                  shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(0), // if you need this
-                    side: BorderSide(
-                      color: Colors.grey.shade300,
-                      width: 1,
+    return Column(
+      children: [
+        SizedBox(
+          height: (Get.height * .65) - kToolbarHeight / 2,
+          width: MediaQuery.of(context).size.width * 0.6,
+          child: GetBuilder<CommercialController>(
+              id: "fpcMismatchView",
+              // init: CreateBreakPatternController(),
+              builder: (controller) {
+                if (controllerX.programList != null &&
+                    (controllerX.programList?.isNotEmpty)!) {
+                  // final key = GlobalKey();
+                  return Expanded(
+                    // height: 400,
+                    child: DataGridFromMap(
+                      mapData: (controllerX.programList
+                          ?.map((e) => e.toJson1())
+                          .toList())!,
+                      widthRatio: (Get.width * 0.2) / 2 + 7,
+                      mode: PlutoGridMode.select,
+                      onSelected: (plutoGrid) {
+                        // controllerX.selectedProgram =
+                        // controllerX.programList![plutoGrid.rowIdx!] ;
+                        print(">>>>>>Program Data>>>>>>" +
+                            jsonEncode(controllerX.selectedProgram?.toJson()));
+                      },
                     ),
-                  ),
-                  child: Container(
-                    height: Get.height - (4 * kToolbarHeight),
-                  ),
+                  );
+                } else {
+                  return Expanded(
+                    child: Card(
+                      clipBehavior: Clip.hardEdge,
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(0), // if you need this
+                        side: BorderSide(
+                          color: Colors.grey.shade300,
+                          width: 1,
+                        ),
+                      ),
+                      child: Container(
+                        height: Get.height - (4 * kToolbarHeight),
+                      ),
+                    ),
+                  );
+                }
+              }),
+        ),
+        SizedBox(
+          height: (Get.height * .1),
+          child: Row(
+            crossAxisAlignment: CrossAxisAlignment.center,
+            mainAxisAlignment: MainAxisAlignment.end,
+            children: [
+              Padding(
+                padding: const EdgeInsets.only(top: 17.0),
+                child: FormButton(
+                  btnText: "Change FPC",
+                  callback: () {},
                 ),
-              );
-            }
-          }),
+              ),
+              SizedBox(
+                width: 20,
+              ),
+              Padding(
+                padding: const EdgeInsets.only(top: 17.0),
+                child: FormButton(
+                  btnText: "Mis-Match",
+                  callback: () {},
+                ),
+              ),
+              SizedBox(
+                width: 20,
+              ),
+              Padding(
+                padding: const EdgeInsets.only(top: 17.0),
+                child: FormButton(
+                  btnText: "Mark-as-Error",
+                  callback: () {},
+                ),
+              ),
+            ],
+          ),
+        ),
+      ],
     );
   }
 
   Widget markedAsErrorView(BuildContext context) {
-    return Container(
-      height: (Get.height * .60) - kToolbarHeight / 2,
-      width: MediaQuery.of(context).size.width * 0.6,
-      child: GetBuilder<CommercialController>(
-          id: "markedAsErrorView",
-          // init: CreateBreakPatternController(),
-          builder: (controller) {
-            if (controllerX.programList != null &&
-                (controllerX.programList?.isNotEmpty)!) {
-              // final key = GlobalKey();
-              return Expanded(
-                // height: 400,
-                child: DataGridFromMap(
-                  mapData: (controllerX.programList
-                      ?.map((e) => e.toJson1())
-                      .toList())!,
-                  widthRatio: (Get.width * 0.2) / 2 + 7,
-                  mode: PlutoGridMode.select,
-                  onSelected: (plutoGrid) {
-                    // controllerX.selectedProgram =
-                    // controllerX.programList![plutoGrid.rowIdx!] ;
-                    print(">>>>>>Program Data>>>>>>" +
-                        jsonEncode(controllerX.selectedProgram?.toJson()));
-                  },
-                ),
-              );
-            } else {
-              return Expanded(
-                child: Card(
-                  clipBehavior: Clip.hardEdge,
-                  shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(0), // if you need this
-                    side: BorderSide(
-                      color: Colors.grey.shade300,
-                      width: 1,
+    return Column(
+      children: [
+        SizedBox(
+          height: (Get.height * .65) - kToolbarHeight / 2,
+          width: MediaQuery.of(context).size.width * 0.6,
+          child: GetBuilder<CommercialController>(
+              id: "markedAsErrorView",
+              // init: CreateBreakPatternController(),
+              builder: (controller) {
+                if (controllerX.programList != null &&
+                    (controllerX.programList?.isNotEmpty)!) {
+                  // final key = GlobalKey();
+                  return Expanded(
+                    // height: 400,
+                    child: DataGridFromMap(
+                      mapData: (controllerX.programList
+                          ?.map((e) => e.toJson1())
+                          .toList())!,
+                      widthRatio: (Get.width * 0.2) / 2 + 7,
+                      mode: PlutoGridMode.select,
+                      onSelected: (plutoGrid) {
+                        // controllerX.selectedProgram =
+                        // controllerX.programList![plutoGrid.rowIdx!] ;
+                        print(">>>>>>Program Data>>>>>>" +
+                            jsonEncode(controllerX.selectedProgram?.toJson()));
+                      },
                     ),
-                  ),
-                  child: Container(
-                    height: Get.height - (4 * kToolbarHeight),
-                  ),
+                  );
+                } else {
+                  return Expanded(
+                    child: Card(
+                      clipBehavior: Clip.hardEdge,
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(0), // if you need this
+                        side: BorderSide(
+                          color: Colors.grey.shade300,
+                          width: 1,
+                        ),
+                      ),
+                      child: Container(
+                        height: Get.height - (4 * kToolbarHeight),
+                      ),
+                    ),
+                  );
+                }
+              }),
+        ),
+        SizedBox(
+          height: (Get.height * .1),
+          child: Row(
+            crossAxisAlignment: CrossAxisAlignment.center,
+            children: [
+              Padding(
+                padding: const EdgeInsets.only(top: 17.0),
+                child: FormButton(
+                  btnText: "Mark-as-Error",
+                  callback: () {},
                 ),
-              );
-            }
-          }),
+              ),
+            ],
+          ),
+        ),
+      ],
     );
   }
+
 }

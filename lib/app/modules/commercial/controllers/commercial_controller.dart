@@ -390,6 +390,22 @@ class CommercialController extends GetxController {
     }
   }
 
+  fetchInitial() {
+    // Get.find<ConnectorControl>().GETMETHODCALL(
+    //   api: ApiFactory.FPC_WEEKLY_INITIAL,
+    //   fun: (Map<String, dynamic> map) {
+    //     locationList?.clear();
+    //     channelList?.clear();
+    //     map["lstLocations"].forEach((element) {
+    //       locationList?.add(SystemEnviroment(key: element["locationCode"], value: element["locationName"]));
+    //     });
+    //     map["lstChannels"].forEach((element) {
+    //       channelList?.add(SystemEnviroment(key: element["channelcode"], value: element["channelName"]));
+    //     });
+    //     update(["initialData"]);
+    //   },
+    // );
+  }
   // fetchInitial() {
   //   Get.find<ConnectorControl>().GETMETHODCALL(
   //     api: ApiFactory.FPC_WEEKLY_INITIAL,
@@ -569,4 +585,5 @@ class CommercialController extends GetxController {
     Get.find<HomeController>().selectChild1.value = null;
     Get.delete<CommercialController>();
   }
+
 }
