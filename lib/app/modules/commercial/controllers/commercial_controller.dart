@@ -24,8 +24,7 @@ class FPCWeeklyTable extends DataTableSource {
   bool get isRowCountApproximate => false;
 
   @override
-  int get rowCount =>
-      Get.find<CommercialController>().listData?.length ?? 0;
+  int get rowCount => Get.find<CommercialController>().listData?.length ?? 0;
 
   @override
   int get selectedRowCount => 0;
@@ -198,14 +197,14 @@ class ProgramClipModel {
 
   ProgramClipModel(
       {this.mediaClipId,
-        this.locationCode,
-        this.channelCode,
-        this.clipType,
-        this.programCode,
-        this.lookupName,
-        this.clipId,
-        this.locationName,
-        this.channelName});
+      this.locationCode,
+      this.channelCode,
+      this.clipType,
+      this.programCode,
+      this.lookupName,
+      this.clipId,
+      this.locationName,
+      this.channelName});
 
   ProgramClipModel.fromJson(Map<String, dynamic> json) {
     mediaClipId = json['mediaClipId'];
@@ -232,6 +231,7 @@ class ProgramClipModel {
     data['channelName'] = this.channelName;
     return data;
   }
+
   Map<String, dynamic> toJson1() {
     final Map<String, dynamic> data = new Map<String, dynamic>();
     // data['mediaClipId'] = this.mediaClipId;
@@ -270,7 +270,6 @@ class ChannelModel {
 }
 
 class CommercialController extends GetxController {
-
   var locations = RxList<DropDownValue>();
   var channels = RxList<DropDownValue>([]);
   RxBool isEnable = RxBool(true);
@@ -288,32 +287,32 @@ class CommercialController extends GetxController {
   List conflictReport = [];
 
   List<FPCMisMatchProgramModel>? programList = [
-    new FPCMisMatchProgramModel(startTime: '01:00:00',programName: 'Test1'),
-    new FPCMisMatchProgramModel(startTime: '01:00:00',programName: 'Test'),
-    new FPCMisMatchProgramModel(startTime: '01:00:00',programName: 'Test'),
-    new FPCMisMatchProgramModel(startTime: '01:00:00',programName: 'Test'),
-    new FPCMisMatchProgramModel(startTime: '01:00:00',programName: 'Test5'),
-    new FPCMisMatchProgramModel(startTime: '01:00:00',programName: 'Test'),
-    new FPCMisMatchProgramModel(startTime: '01:00:00',programName: 'Test'),
-    new FPCMisMatchProgramModel(startTime: '01:00:00',programName: 'Test'),
-    new FPCMisMatchProgramModel(startTime: '01:00:00',programName: 'Test'),
-    new FPCMisMatchProgramModel(startTime: '01:00:00',programName: 'Test10'),
-    new FPCMisMatchProgramModel(startTime: '01:00:00',programName: 'Test'),
-    new FPCMisMatchProgramModel(startTime: '01:00:00',programName: 'Test'),
-    new FPCMisMatchProgramModel(startTime: '01:00:00',programName: 'Test'),
-    new FPCMisMatchProgramModel(startTime: '01:00:00',programName: 'Test'),
-    new FPCMisMatchProgramModel(startTime: '01:00:00',programName: 'Test15'),
-    new FPCMisMatchProgramModel(startTime: '01:00:00',programName: 'Test'),
-    new FPCMisMatchProgramModel(startTime: '01:00:00',programName: 'Test'),
-    new FPCMisMatchProgramModel(startTime: '01:00:00',programName: 'Test'),
-    new FPCMisMatchProgramModel(startTime: '01:00:00',programName: 'Test'),
-    new FPCMisMatchProgramModel(startTime: '01:00:00',programName: 'Test20'),
-    new FPCMisMatchProgramModel(startTime: '01:00:00',programName: 'Test'),
-    new FPCMisMatchProgramModel(startTime: '01:00:00',programName: 'Test'),
-    new FPCMisMatchProgramModel(startTime: '01:00:00',programName: 'Test'),
-    new FPCMisMatchProgramModel(startTime: '01:00:00',programName: 'Test'),
-    new FPCMisMatchProgramModel(startTime: '01:00:00',programName: 'Test'),
-    new FPCMisMatchProgramModel(startTime: '01:00:00',programName: 'Test26'),
+    new FPCMisMatchProgramModel(startTime: '01:00:00', programName: 'Test1'),
+    new FPCMisMatchProgramModel(startTime: '01:00:00', programName: 'Test'),
+    new FPCMisMatchProgramModel(startTime: '01:00:00', programName: 'Test'),
+    new FPCMisMatchProgramModel(startTime: '01:00:00', programName: 'Test'),
+    new FPCMisMatchProgramModel(startTime: '01:00:00', programName: 'Test5'),
+    new FPCMisMatchProgramModel(startTime: '01:00:00', programName: 'Test'),
+    new FPCMisMatchProgramModel(startTime: '01:00:00', programName: 'Test'),
+    new FPCMisMatchProgramModel(startTime: '01:00:00', programName: 'Test'),
+    new FPCMisMatchProgramModel(startTime: '01:00:00', programName: 'Test'),
+    new FPCMisMatchProgramModel(startTime: '01:00:00', programName: 'Test10'),
+    new FPCMisMatchProgramModel(startTime: '01:00:00', programName: 'Test'),
+    new FPCMisMatchProgramModel(startTime: '01:00:00', programName: 'Test'),
+    new FPCMisMatchProgramModel(startTime: '01:00:00', programName: 'Test'),
+    new FPCMisMatchProgramModel(startTime: '01:00:00', programName: 'Test'),
+    new FPCMisMatchProgramModel(startTime: '01:00:00', programName: 'Test15'),
+    new FPCMisMatchProgramModel(startTime: '01:00:00', programName: 'Test'),
+    new FPCMisMatchProgramModel(startTime: '01:00:00', programName: 'Test'),
+    new FPCMisMatchProgramModel(startTime: '01:00:00', programName: 'Test'),
+    new FPCMisMatchProgramModel(startTime: '01:00:00', programName: 'Test'),
+    new FPCMisMatchProgramModel(startTime: '01:00:00', programName: 'Test20'),
+    new FPCMisMatchProgramModel(startTime: '01:00:00', programName: 'Test'),
+    new FPCMisMatchProgramModel(startTime: '01:00:00', programName: 'Test'),
+    new FPCMisMatchProgramModel(startTime: '01:00:00', programName: 'Test'),
+    new FPCMisMatchProgramModel(startTime: '01:00:00', programName: 'Test'),
+    new FPCMisMatchProgramModel(startTime: '01:00:00', programName: 'Test'),
+    new FPCMisMatchProgramModel(startTime: '01:00:00', programName: 'Test26'),
   ];
   List beams = [];
   int? conflictDays = 4;
@@ -328,8 +327,8 @@ class CommercialController extends GetxController {
   PlutoGridStateManager? bmsReportStateManager;
   PlutoGridStateManager? locChanStateManager;
   Map? initData;
-  TextEditingController refDateContrl = TextEditingController(text: DateFormat("dd-MM-yyyy").format(DateTime.now()));
-
+  TextEditingController refDateContrl = TextEditingController(
+      text: DateFormat("dd-MM-yyyy").format(DateTime.now()));
 
   DataTableSource dataTable = FPCWeeklyTable();
   List<SystemEnviroment>? channelList = [];
@@ -391,22 +390,22 @@ class CommercialController extends GetxController {
     }
   }
 
-  fetchInitial() {
-    Get.find<ConnectorControl>().GETMETHODCALL(
-      api: ApiFactory.FPC_WEEKLY_INITIAL,
-      fun: (Map<String, dynamic> map) {
-        locationList?.clear();
-        channelList?.clear();
-        map["lstLocations"].forEach((element) {
-          locationList?.add(SystemEnviroment(key: element["locationCode"], value: element["locationName"]));
-        });
-        map["lstChannels"].forEach((element) {
-          channelList?.add(SystemEnviroment(key: element["channelcode"], value: element["channelName"]));
-        });
-        update(["initialData"]);
-      },
-    );
-  }
+  // fetchInitial() {
+  //   Get.find<ConnectorControl>().GETMETHODCALL(
+  //     api: ApiFactory.FPC_WEEKLY_INITIAL,
+  //     fun: (Map<String, dynamic> map) {
+  //       locationList?.clear();
+  //       channelList?.clear();
+  //       map["lstLocations"].forEach((element) {
+  //         locationList?.add(SystemEnviroment(key: element["locationCode"], value: element["locationName"]));
+  //       });
+  //       map["lstChannels"].forEach((element) {
+  //         channelList?.add(SystemEnviroment(key: element["channelcode"], value: element["channelName"]));
+  //       });
+  //       update(["initialData"]);
+  //     },
+  //   );
+  // }
 
   generateData() async {
     if (conflictDays == null) {
@@ -422,8 +421,10 @@ class CommercialController extends GetxController {
         element["selected"] = true;
       }
       reportBody["IgnoreSingleTelecast"] = ignoreSingleTelecast.value;
-      reportBody["locationCodeChannels"] = locationsForReport1.map((e) => e.toJson()).toList();
-      reportBody["ReferenceDate"] = DateFormat("yyyy-MM-dd").format(DateFormat("dd-MM-yyyy").parse(refDateContrl.text));
+      reportBody["locationCodeChannels"] =
+          locationsForReport1.map((e) => e.toJson()).toList();
+      reportBody["ReferenceDate"] = DateFormat("yyyy-MM-dd")
+          .format(DateFormat("dd-MM-yyyy").parse(refDateContrl.text));
 
       LoadingDialog.call();
       beams = [];
@@ -433,13 +434,15 @@ class CommercialController extends GetxController {
       // String value =
       //     await rootBundle.loadString('assets/json/ci_dashbaord_report.json');
       await Get.find<ConnectorControl>().POSTMETHOD_FORMDATA(
-        // NEED TO PASS USER NAME
+          // NEED TO PASS USER NAME
           timeout: 360000,
-          api: "https://api-programming-bms-uat.zeeconnect.in//api/MovieConflictReport/GetMovieConflictReport",
+          api:
+              "https://api-programming-bms-uat.zeeconnect.in//api/MovieConflictReport/GetMovieConflictReport",
           json: reportBody,
           fun: (map) async {
             beams = map["lstReportBaseData"];
-            for (var element in beams.where((element) => (element["days"] <= conflictDays && element["days"] >= 0))) {
+            for (var element in beams.where((element) =>
+                (element["days"] <= conflictDays && element["days"] >= 0))) {
               conflictPrograms.add(element["program"]);
             }
             conflictPrograms.toSet().toList();
@@ -462,11 +465,16 @@ class CommercialController extends GetxController {
           value: element.key == "selected" || element.value == null
               ? ""
               : element.key.toString().toLowerCase().contains("date")
-              ? (element.value.toString().contains('T') && element.value.toString().split('T')[1] == '00:00:00')
-              ? DateFormat("dd/MM/yyyy").format(DateFormat('yyyy-MM-ddTHH:mm:ss').parse(element.value.toString()))
-              : DateFormat("dd/MM/yyyy HH:mm:ss").format(DateFormat('yyyy-MM-ddTHH:mm:ss').parse(element.value.toString()))
-          // DateFormat("dd-MM-yyyy hh:mm").format(DateTime.parse(element.value.toString().replaceAll("T", " ")))
-              : element.value.toString(),
+                  ? (element.value.toString().contains('T') &&
+                          element.value.toString().split('T')[1] == '00:00:00')
+                      ? DateFormat("dd/MM/yyyy").format(
+                          DateFormat('yyyy-MM-ddTHH:mm:ss')
+                              .parse(element.value.toString()))
+                      : DateFormat("dd/MM/yyyy HH:mm:ss").format(
+                          DateFormat('yyyy-MM-ddTHH:mm:ss')
+                              .parse(element.value.toString()))
+                  // DateFormat("dd-MM-yyyy hh:mm").format(DateTime.parse(element.value.toString().replaceAll("T", " ")))
+                  : element.value.toString(),
         );
       }
 
@@ -495,7 +503,9 @@ class CommercialController extends GetxController {
     // log("Rows");
     // log(conflictReportStateManager.currentRow!.cells["Program"]!.value);
     List<PlutoRow> rows = [];
-    for (Map row in beams.where((element) => element["program"] == conflictReportStateManager.currentRow!.cells["Program"]!.value)) {
+    for (Map row in beams.where((element) =>
+        element["program"] ==
+        conflictReportStateManager.currentRow!.cells["Program"]!.value)) {
       Map<String, PlutoCell> cells = {};
 
       for (var element in row.entries) {
@@ -503,11 +513,16 @@ class CommercialController extends GetxController {
           value: element.key == "selected" || element.value == null
               ? ""
               : element.key.toString().toLowerCase().contains("date")
-              ? (element.value.toString().contains('T') && element.value.toString().split('T')[1] == '00:00:00')
-              ? DateFormat("dd/MM/yyyy").format(DateFormat('yyyy-MM-ddTHH:mm:ss').parse(element.value.toString()))
-              : DateFormat("dd/MM/yyyy HH:mm:ss").format(DateFormat('yyyy-MM-ddTHH:mm:ss').parse(element.value.toString()))
-          // ? DateFormat("dd/MM/yyyy hh:mm").format(DateTime.parse(element.value.toString().replaceAll("T", " ")))
-              : element.value.toString(),
+                  ? (element.value.toString().contains('T') &&
+                          element.value.toString().split('T')[1] == '00:00:00')
+                      ? DateFormat("dd/MM/yyyy").format(
+                          DateFormat('yyyy-MM-ddTHH:mm:ss')
+                              .parse(element.value.toString()))
+                      : DateFormat("dd/MM/yyyy HH:mm:ss").format(
+                          DateFormat('yyyy-MM-ddTHH:mm:ss')
+                              .parse(element.value.toString()))
+                  // ? DateFormat("dd/MM/yyyy hh:mm").format(DateTime.parse(element.value.toString().replaceAll("T", " ")))
+                  : element.value.toString(),
         );
       }
 
@@ -529,7 +544,6 @@ class CommercialController extends GetxController {
     update(["beams"]);
   }
 
-
   fetchGenerate() {
     if (selectedLocation == null) {
       Snack.callError("Please select Location");
@@ -541,7 +555,6 @@ class CommercialController extends GetxController {
       selectDate = df1.parse(date_.text);
       listData?.clear();
       LoadingDialog.call();
-
     }
   }
 
@@ -556,6 +569,4 @@ class CommercialController extends GetxController {
     Get.find<HomeController>().selectChild1.value = null;
     Get.delete<CommercialController>();
   }
-
-
 }

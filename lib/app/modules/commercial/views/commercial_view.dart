@@ -38,7 +38,6 @@ class CommercialView extends GetView<CommercialController> {
     final w = MediaQuery.of(context).size.width;
     final h = MediaQuery.of(context).size.height;
 
-
     return GetBuilder<CommercialController>(
         init: CommercialController(),
         id: "initData",
@@ -500,39 +499,7 @@ class CommercialView extends GetView<CommercialController> {
           //   );
           // }
 
-
           return Scaffold(
-            floatingActionButtonLocation: FloatingActionButtonLocation.centerDocked,
-            extendBody: false,
-            floatingActionButton: GetBuilder<HomeController>(
-                id: "buttons",
-                init: Get.find<HomeController>(),
-                builder: (btcontroller) {
-                  if (btcontroller.buttons != null) {
-                    return Container(
-                      padding: EdgeInsets.zero,
-                      margin: EdgeInsets.zero,
-                      width: double.infinity,
-                      decoration: const BoxDecoration(color: Colors.white, border: Border(top: BorderSide(width: 1.0, color: Colors.grey))),
-                      child: ButtonBar(
-                        alignment: MainAxisAlignment.start,
-                        mainAxisSize: MainAxisSize.min,
-                        children: [
-                          for (var btn in btcontroller.buttons!)
-                            //if (Utils.btnAccessHandler(btn['name'], controller.formPermissions!) != null)
-                              FormButtonWrapper(
-                                btnText: btn["name"],
-                                callback: () => controller.formHandler(
-                                  btn['name'],
-                                ),
-                              )
-                        ],
-                      ),
-                    );
-                  }
-                  return Container();
-                }),
-
             body: FocusTraversalGroup(
               policy: OrderedTraversalPolicy(),
               child: Padding(
@@ -551,9 +518,9 @@ class CommercialView extends GetView<CommercialController> {
                             child: Row(
                               children: [
                                 Obx(
-                                      () => DropDownField.formDropDown1WidthMap(
+                                  () => DropDownField.formDropDown1WidthMap(
                                     controllerX.locations.value,
-                                        (value) {
+                                    (value) {
                                       controllerX.selectLocation = value;
                                       // controllerX.selectedLocationId.text = value.key!;
                                       // controllerX.selectedLocationName.text = value.value!;
@@ -569,12 +536,11 @@ class CommercialView extends GetView<CommercialController> {
                                   ),
                                 ),
                                 const SizedBox(width: 15),
-
                                 Obx(() {
                                   return DropDownField.formDropDown1Width(
                                     Get.context!,
                                     controllerX.channelList ?? [],
-                                        (value) {
+                                    (value) {
                                       controllerX.selectedChannel = value;
                                     },
                                     "Channel",
@@ -587,13 +553,11 @@ class CommercialView extends GetView<CommercialController> {
                                   );
                                 }),
                                 const SizedBox(width: 15),
-
                                 DateWithThreeTextField(
                                   title: "From Date",
                                   mainTextController: controllerX.date_,
                                   widthRation: controllerX.widthSize,
                                 ),
-
                                 const SizedBox(
                                   width: 20,
                                 ),
@@ -601,12 +565,9 @@ class CommercialView extends GetView<CommercialController> {
                                   padding: const EdgeInsets.only(top: 17.0),
                                   child: FormButton(
                                     btnText: "show details",
-                                    callback: () {
-
-                                    },
+                                    callback: () {},
                                   ),
                                 ),
-
                                 const SizedBox(
                                   width: 20,
                                 ),
@@ -614,34 +575,27 @@ class CommercialView extends GetView<CommercialController> {
                                   padding: const EdgeInsets.only(top: 17.0),
                                   child: FormButton(
                                     btnText: "verify",
-                                    callback: () {
-
-                                    },
+                                    callback: () {},
                                   ),
                                 ),
-
                                 Padding(
-                                  padding: const EdgeInsets.only(top: 16.0, left: 15),
+                                  padding: const EdgeInsets.only(
+                                      top: 16.0, left: 15),
                                   child: Row(
                                     children: [
-
                                       Radio(
                                         value: 0,
                                         groupValue: controllerX.selectedGroup,
-                                        onChanged: (int? value) {
-                                        },
+                                        onChanged: (int? value) {},
                                       ),
                                       const Text('Insert After'),
-
                                       const SizedBox(
                                         width: 10,
                                       ),
-
                                       Radio(
                                         value: 1,
                                         groupValue: controllerX.selectedGroup,
-                                        onChanged: (int? value) {
-                                        },
+                                        onChanged: (int? value) {},
                                       ),
                                       const Text('Auto Shuffle'),
                                     ],
@@ -655,7 +609,6 @@ class CommercialView extends GetView<CommercialController> {
                           );
                         },
                       ),
-
                       Row(
                         //mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                         crossAxisAlignment: CrossAxisAlignment.start,
@@ -665,8 +618,9 @@ class CommercialView extends GetView<CommercialController> {
                             padding: const EdgeInsets.fromLTRB(15, 15, 7, 0),
                             child: SizedBox(
                               width: w * .30,
-                              height: (h * .9) - (kToolbarHeight / 2),
-                              child: programTable(context),),
+                              height: (h * .7) - (kToolbarHeight / 2),
+                              child: programTable(context),
+                            ),
                           ),
 
                           /// output forms
@@ -682,33 +636,60 @@ class CommercialView extends GetView<CommercialController> {
                                       //   padding: EdgeInsets.only(top: 7, bottom: 4),
                                       // ),
                                       Container(
-                                        height: (h * .9) - kToolbarHeight/2,
+                                        height: (h * .8) - kToolbarHeight / 2,
                                         width: w * 0.6,
                                         decoration: BoxDecoration(
-                                            border: Border.all(
-                                              color: Colors.grey.shade300,
-                                              width: 1,
-                                            ),
-                                            //color: Colors.deepPurpleAccent
+                                          border: Border.all(
+                                            color: Colors.grey.shade300,
+                                            width: 1,
+                                          ),
+                                          //color: Colors.deepPurpleAccent
                                         ),
                                         child: Padding(
                                           padding: const EdgeInsets.all(8.0),
                                           child: SizedBox(
-                                              height: (h * .8) - kToolbarHeight/2,
+                                              height:
+                                                  (h * .6) - kToolbarHeight / 2,
                                               width: w * 0.6,
                                               child: tabView(context)),
                                         ),
                                       ),
                                       //const SizedBox(height: 10),
-
                                     ],
                                   );
-                                }else{
+                                } else {
                                   return Container();
                                 }
                               })
                         ],
-                      )
+                      ),
+                      GetBuilder<HomeController>(
+                          id: "buttons",
+                          init: Get.find<HomeController>(),
+                          builder: (btcontroller) {
+                            if (btcontroller.buttons != null) {
+                              return Container(
+                                decoration: const BoxDecoration(
+                                  color: Colors.white,
+                                ),
+                                child: ButtonBar(
+                                  alignment: MainAxisAlignment.start,
+                                  mainAxisSize: MainAxisSize.min,
+                                  children: [
+                                    for (var btn in btcontroller.buttons!)
+                                      //if (Utils.btnAccessHandler(btn['name'], controller.formPermissions!) != null)
+                                      FormButtonWrapper(
+                                        btnText: btn["name"],
+                                        callback: () => controller.formHandler(
+                                          btn['name'],
+                                        ),
+                                      )
+                                  ],
+                                ),
+                              );
+                            }
+                            return Container();
+                          }),
                     ],
                   ),
                 ),
@@ -720,58 +701,56 @@ class CommercialView extends GetView<CommercialController> {
 
   Widget tabView(BuildContext context) {
     return Obx(() => Column(
-      children: [
-        Row(
-          mainAxisAlignment: MainAxisAlignment.start,
           children: [
-            CupertinoSlidingSegmentedControl(
+            Row(
+              mainAxisAlignment: MainAxisAlignment.start,
+              children: [
+                CupertinoSlidingSegmentedControl(
+                  groupValue: controllerX.selectedIndex.value,
 
-              groupValue: controllerX.selectedIndex.value,
-
-              //backgroundColor: Colors.blue.shade200,
-              children: <int, Widget>{
-                0: Text(
-                  'Schedulling',
-                  textAlign: TextAlign.center,
-                  style: TextStyle(
-                    fontSize: SizeDefine.fontSizeTab,
-                  ),
+                  //backgroundColor: Colors.blue.shade200,
+                  children: <int, Widget>{
+                    0: Text(
+                      'Schedulling',
+                      textAlign: TextAlign.center,
+                      style: TextStyle(
+                        fontSize: SizeDefine.fontSizeTab,
+                      ),
+                    ),
+                    1: Text(
+                      'FPC Mismatch',
+                      textAlign: TextAlign.center,
+                      style: TextStyle(
+                        fontSize: SizeDefine.fontSizeTab,
+                      ),
+                    ),
+                    2: Text(
+                      'Marked as Error ',
+                      textAlign: TextAlign.center,
+                      style: TextStyle(
+                        fontSize: SizeDefine.fontSizeTab,
+                      ),
+                    ),
+                  },
+                  onValueChanged: (int? value) {
+                    print("Index1 is>>" + value.toString());
+                    controllerX.selectedIndex.value = value!;
+                  },
                 ),
-                1: Text(
-                  'FPC Mismatch',
-                  textAlign: TextAlign.center,
-                  style: TextStyle(
-                    fontSize: SizeDefine.fontSizeTab,
-                  ),
-                ),
-                2: Text(
-                  'Marked as Error ',
-                  textAlign: TextAlign.center,
-                  style: TextStyle(
-                    fontSize: SizeDefine.fontSizeTab,
-                  ),
-                ),
-              },
-              onValueChanged: (int? value) {
-                print("Index1 is>>" + value.toString());
-                controllerX.selectedIndex.value = value!;
-              },
+              ],
             ),
+            Column(
+              children: [
+                if (controllerX.selectedIndex.value == 0)
+                  schedulingView(context)
+                else if (controllerX.selectedIndex.value == 1)
+                  fpcMismatchView(context)
+                else if (controllerX.selectedIndex.value == 2)
+                  markedAsErrorView(context)
+              ],
+            )
           ],
-        ),
-        Column(
-          children: [
-            if (controllerX.selectedIndex.value == 0)
-              schedulingView(context)
-            else if (controllerX.selectedIndex.value == 1)
-              fpcMismatchView(context)
-            else if (controllerX.selectedIndex.value == 2)
-                markedAsErrorView(context)
-
-          ],
-        )
-      ],
-    ));
+        ));
   }
 
   Widget programTable(context) {
@@ -789,10 +768,10 @@ class CommercialView extends GetView<CommercialController> {
                     ?.map((e) => e.toJson1())
                     .toList())!,
                 widthRatio: (Get.width * 0.2) / 2 + 7,
-                mode: PlutoGridMode.select,
+                // mode: PlutoGridMode.select,
                 onSelected: (plutoGrid) {
                   controllerX.selectedProgram =
-                  controllerX.programList![plutoGrid.rowIdx!] ;
+                      controllerX.programList![plutoGrid.rowIdx!];
                   print(jsonEncode(controllerX.selectedProgram?.toJson()));
                 },
               ),
@@ -817,78 +796,86 @@ class CommercialView extends GetView<CommercialController> {
         });
   }
 
-  Widget schedulingView(BuildContext context){
-      return Column(
-        children: [
-
-          Container(
-            height: (MediaQuery.of(context).size.height * .75) - kToolbarHeight/2,
-            width: MediaQuery.of(context).size.width * 0.6,
-            child: GetBuilder<CommercialController>(
-                id: "schedulingView",
-                // init: CreateBreakPatternController(),
-                builder: (controller) {
-                  if (controllerX.programList != null &&
-                      (controllerX.programList?.isNotEmpty)!) {
-                    // final key = GlobalKey();
-                    return Expanded(
-                      // height: 400,
-                      child: DataGridFromMap(
-                        mapData: (controllerX.programList
-                            ?.map((e) => e.toJson1())
-                            .toList())!,
-                        widthRatio: (Get.width * 0.2) / 2 + 7,
-                        mode: PlutoGridMode.select,
-                        onSelected: (plutoGrid) {
-                          // controllerX.selectedProgram =
-                          // controllerX.programList![plutoGrid.rowIdx!] ;
-                          print(">>>>>>Program Data>>>>>>" +
-                              jsonEncode(controllerX.selectedProgram?.toJson()));
-                        },
-                      ),
-                    );
-                  } else {
-                    return Expanded(
-                      child: Card(
-                        clipBehavior: Clip.hardEdge,
-                        shape: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(0), // if you need this
-                          side: BorderSide(
-                            color: Colors.grey.shade300,
-                            width: 1,
-                          ),
+  Widget schedulingView(BuildContext context) {
+    return Column(
+      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+      mainAxisSize: MainAxisSize.max,
+      children: [
+        Container(
+          height: (Get.height * .70) - kToolbarHeight / 2,
+          width: MediaQuery.of(context).size.width * 0.6,
+          child: GetBuilder<CommercialController>(
+              id: "schedulingView",
+              // init: CreateBreakPatternController(),
+              builder: (controller) {
+                if (controllerX.programList != null &&
+                    (controllerX.programList?.isNotEmpty)!) {
+                  // final key = GlobalKey();
+                  return Expanded(
+                    // height: 400,
+                    child: DataGridFromMap(
+                      mapData: (controllerX.programList
+                          ?.map((e) => e.toJson1())
+                          .toList())!,
+                      widthRatio: (Get.width * 0.2) / 2 + 7,
+                      onload: (loadevnt) {
+                        loadevnt.stateManager.gridFocusNode.addListener(() {
+                          if (loadevnt.stateManager.gridFocusNode.hasFocus) {
+                            loadevnt.stateManager
+                                .setGridMode(PlutoGridMode.select);
+                          } else {
+                            loadevnt.stateManager
+                                .setGridMode(PlutoGridMode.normal);
+                          }
+                        });
+                      },
+                      // mode: PlutoGridMode.select,
+                      onSelected: (plutoGrid) {
+                        // controllerX.selectedProgram =
+                        // controllerX.programList![plutoGrid.rowIdx!] ;
+                        print(">>>>>>Program Data>>>>>>" +
+                            jsonEncode(controllerX.selectedProgram?.toJson()));
+                      },
+                    ),
+                  );
+                } else {
+                  return Expanded(
+                    child: Card(
+                      clipBehavior: Clip.hardEdge,
+                      shape: RoundedRectangleBorder(
+                        borderRadius:
+                            BorderRadius.circular(0), // if you need this
+                        side: BorderSide(
+                          color: Colors.grey.shade300,
+                          width: 1,
                         ),
-                        child: Container(
-                          height: Get.height - (4 * kToolbarHeight),
-                        ),
                       ),
-                    );
-                  }
-                }),
-          ),
-
-          Column(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: [
-              Row(
-                crossAxisAlignment: CrossAxisAlignment.center,
-                children: [
-
-                  Text('Commercial Spots : 0'),
-                  SizedBox(width: 20,),
-                  Text('Commercial Duration : 00:00:00:00'),
-                ],
-              ),
-            ],
-          ),
-
-        ],
-      );
+                      child: Container(
+                        height: Get.height - (4 * kToolbarHeight),
+                      ),
+                    ),
+                  );
+                }
+              }),
+        ),
+        Spacer(),
+        Row(
+          crossAxisAlignment: CrossAxisAlignment.center,
+          children: [
+            Text('Commercial Spots : 0'),
+            SizedBox(
+              width: 20,
+            ),
+            Text('Commercial Duration : 00:00:00:00'),
+          ],
+        ),
+      ],
+    );
   }
 
-  Widget fpcMismatchView(BuildContext context){
+  Widget fpcMismatchView(BuildContext context) {
     return Container(
-      height: (MediaQuery.of(context).size.height * .75) - kToolbarHeight/2,
+      height: (Get.height * .60) - kToolbarHeight / 2,
       width: MediaQuery.of(context).size.width * 0.6,
       child: GetBuilder<CommercialController>(
           id: "fpcMismatchView",
@@ -934,9 +921,9 @@ class CommercialView extends GetView<CommercialController> {
     );
   }
 
-  Widget markedAsErrorView(BuildContext context){
+  Widget markedAsErrorView(BuildContext context) {
     return Container(
-      height: (MediaQuery.of(context).size.height * .75) - kToolbarHeight/2,
+      height: (Get.height * .60) - kToolbarHeight / 2,
       width: MediaQuery.of(context).size.width * 0.6,
       child: GetBuilder<CommercialController>(
           id: "markedAsErrorView",
@@ -981,6 +968,4 @@ class CommercialView extends GetView<CommercialController> {
           }),
     );
   }
-
-
 }
