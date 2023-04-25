@@ -798,11 +798,9 @@ class CommercialView extends GetView<CommercialController> {
 
   Widget schedulingView(BuildContext context) {
     return Column(
-      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-      mainAxisSize: MainAxisSize.max,
       children: [
         Container(
-          height: (Get.height * .70) - kToolbarHeight / 2,
+          height: (Get.height * .60) - kToolbarHeight / 2,
           width: MediaQuery.of(context).size.width * 0.6,
           child: GetBuilder<CommercialController>(
               id: "schedulingView",
@@ -858,7 +856,6 @@ class CommercialView extends GetView<CommercialController> {
                 }
               }),
         ),
-        Spacer(),
         Row(
           crossAxisAlignment: CrossAxisAlignment.center,
           children: [
