@@ -8,6 +8,7 @@ abstract class Routes {
   static const TRANSMISSION_LOG = _Paths.TRANSMISSION_LOG;
   static const LOG_ADDITIONS = _Paths.LOG_ADDITIONS;
   static const MAM_WORK_ORDERS = _Paths.MAM_WORK_ORDERS;
+  static const COMMERCIAL = _Paths.COMMERCIAL;
   static const RO_BOOKING = _Paths.RO_BOOKING;
   static const FPC_MISMATCH = _Paths.FPC_MISMATCH;
 }
@@ -21,6 +22,7 @@ abstract class RoutesList {
     _Paths.MAM_WORK_ORDERS,
     _Paths.RO_BOOKING,
     _Paths.FPC_MISMATCH,
+    _Paths.COMMERCIAL
   ];
 }
 
@@ -32,4 +34,5 @@ abstract class _Paths {
   static const MAM_WORK_ORDERS = '/frmMAMWorkOrders';
   static const RO_BOOKING = '/frmROBooking';
   static const FPC_MISMATCH = '/frmFPCMismatch';
+  static const COMMERCIAL = '/commercial';
 }
