@@ -1,5 +1,7 @@
 import 'package:get/get.dart';
 
+import '../modules/ImportDigitextRunOrder/bindings/import_digitext_run_order_binding.dart';
+import '../modules/ImportDigitextRunOrder/views/import_digitext_run_order_view.dart';
 import '../modules/LogAdditions/bindings/log_additions_binding.dart';
 import '../modules/LogAdditions/views/log_additions_view.dart';
 import '../modules/MamWorkOrders/bindings/mam_work_orders_binding.dart';
@@ -17,7 +19,7 @@ part 'app_routes.dart';
 class AppPages {
   AppPages._();
 
-  static const INITIAL = Routes.TRANSMISSION_LOG;
+  static const INITIAL = Routes.IMPORT_DIGITEXT_RUN_ORDER;
 
   static final routes = [
     GetPage(
@@ -45,6 +47,11 @@ class AppPages {
       name: _Paths.RO_BOOKING,
       page: () => const RoBookingView(),
       binding: RoBookingBinding(),
+    ),
+    GetPage(
+      name: _Paths.IMPORT_DIGITEXT_RUN_ORDER,
+      page: () => const ImportDigitextRunOrderView(),
+      binding: ImportDigitextRunOrderBinding(),
     ),
   ];
 }

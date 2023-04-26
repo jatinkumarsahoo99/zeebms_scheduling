@@ -9,6 +9,7 @@ abstract class Routes {
   static const LOG_ADDITIONS = _Paths.LOG_ADDITIONS;
   static const MAM_WORK_ORDERS = _Paths.MAM_WORK_ORDERS;
   static const RO_BOOKING = _Paths.RO_BOOKING;
+  static const IMPORT_DIGITEXT_RUN_ORDER = _Paths.IMPORT_DIGITEXT_RUN_ORDER;
 }
 
 abstract class RoutesList {
@@ -29,4 +30,5 @@ abstract class _Paths {
   static const LOG_ADDITIONS = '/log-additions';
   static const MAM_WORK_ORDERS = '/mam-work-orders';
   static const RO_BOOKING = '/ro-booking';
+  static const IMPORT_DIGITEXT_RUN_ORDER = '/import-digitext-run-order';
 }
