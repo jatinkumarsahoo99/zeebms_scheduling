@@ -1,4 +1,4 @@
-class FPCMisMatchProgramModel {
+class CommercialProgramModel {
   String? startTime;
   String? programName;
   String? episodeNumber;
@@ -8,7 +8,8 @@ class FPCMisMatchProgramModel {
   int? episodeDuration;
   bool? isSelected=false;
 
-  FPCMisMatchProgramModel(
+
+  CommercialProgramModel(
       {this.startTime,
         this.programName,
         this.episodeNumber,
@@ -17,7 +18,7 @@ class FPCMisMatchProgramModel {
         this.promoCap,
         this.episodeDuration});
 
-  FPCMisMatchProgramModel.fromJson(Map<String, dynamic> json) {
+  CommercialProgramModel.fromJson(Map<String, dynamic> json) {
     startTime = json['startTime'];
     programName = json['programName'];
     episodeNumber = (json['episodeNumber']??"").toString();
@@ -50,4 +51,5 @@ class FPCMisMatchProgramModel {
     // data['episodeDuration'] = this.episodeDuration;
     return data;
   }
+
 }

@@ -1,5 +1,4 @@
 import 'dart:convert';
-import 'dart:developer';
 import 'package:flutter/cupertino.dart';
 import 'package:bms_scheduling/app/data/DropDownValue.dart';
 import 'package:bms_scheduling/app/providers/extensions/string_extensions.dart';
@@ -618,45 +617,47 @@ class CommercialView extends GetView<CommercialController> {
                             padding: const EdgeInsets.fromLTRB(15, 15, 7, 0),
                             child: SizedBox(
                               width: w * .30,
-                              height: (h * .77) - (kToolbarHeight / 2),
+                              height: (h * .8) - (kToolbarHeight / 2),
                               child: programTable(context),
                             ),
                           ),
 
                           /// output forms
-                          GetBuilder<CommercialController>(
-                              init: CommercialController(),
-                              id: "reports",
-                              builder: (controller) {
-                                if (controller.conflictReport.isEmpty ||
-                                    controller.beams.isEmpty) {
-                                  return Column(
-                                    mainAxisAlignment: MainAxisAlignment.start,
-                                    children: [
-                                      const Padding(
-                                        padding: EdgeInsets.only(top: 8, bottom: 4),
-                                      ),
-                                      Container(
-                                        width: w * 0.65,
-                                        decoration: BoxDecoration(
-                                          border: Border.all(
-                                            color: Colors.grey.shade300,
-                                            width: 1,
+                          Padding(
+                            padding: const EdgeInsets.fromLTRB(15, 15, 7, 0),
+                            child: GetBuilder<CommercialController>(
+                                init: CommercialController(),
+                                id: "reports",
+                                builder: (controller) {
+                                  if (controller.conflictReport.isEmpty ||
+                                      controller.beams.isEmpty) {
+                                    return Column(
+                                      mainAxisAlignment: MainAxisAlignment.start,
+                                      children: [
+                                        Container(
+                                          width: w * 0.65,
+                                          decoration: BoxDecoration(
+                                            border: Border.all(
+                                              color: Colors.grey.shade300,
+                                              width: 0.5,
+                                            ),
+                                              borderRadius: const BorderRadius.all(Radius.circular(10))
+                                            //color: Colors.deepPurpleAccent
                                           ),
-                                          //color: Colors.deepPurpleAccent
+                                          child: Padding(
+                                            padding: const EdgeInsets.all(2.0),
+                                            child: tabView(context),
+                                          ),
                                         ),
-                                        child: Padding(
-                                          padding: const EdgeInsets.all(8.0),
-                                          child: tabView(context),
-                                        ),
-                                      ),
-                                      //const SizedBox(height: 10),
-                                    ],
-                                  );
-                                } else {
-                                  return Container();
-                                }
-                              })
+                                        //const SizedBox(height: 10),
+                                      ],
+                                    );
+                                  } else {
+                                    return Container();
+                                  }
+                                }),
+                          ),
+
                         ],
                       ),
                       const Spacer(),
@@ -798,38 +799,39 @@ class CommercialView extends GetView<CommercialController> {
       children: [
         SizedBox(
           height: (Get.height * .65) - kToolbarHeight / 2,
-          width: MediaQuery.of(context).size.width * 0.6,
+          width: MediaQuery.of(context).size.width * 0.65,
           child: GetBuilder<CommercialController>(
               id: "schedulingView",
               // init: CreateBreakPatternController(),
               builder: (controller) {
-                if (controllerX.programList != null &&
-                    (controllerX.programList?.isNotEmpty)!) {
+                if (controllerX.commercialList != null &&
+                    (controllerX.commercialList?.isNotEmpty)!) {
                   // final key = GlobalKey();
                   return Expanded(
                     // height: 400,
                     child: DataGridFromMap(
-                      mapData: (controllerX.programList
+                      mapData: (controllerX.commercialList
                           ?.map((e) => e.toJson1())
                           .toList())!,
                       widthRatio: (Get.width * 0.2) / 2 + 7,
-                      onload: (loadevnt) {
-                        loadevnt.stateManager.gridFocusNode.addListener(() {
-                          if (loadevnt.stateManager.gridFocusNode.hasFocus) {
-                            loadevnt.stateManager
+                      onload: (loadevent) {
+                        loadevent.stateManager.gridFocusNode.addListener(() {
+                          if (loadevent.stateManager.gridFocusNode.hasFocus) {
+                            loadevent.stateManager
                                 .setGridMode(PlutoGridMode.select);
                           } else {
-                            loadevnt.stateManager
+                            loadevent.stateManager
                                 .setGridMode(PlutoGridMode.normal);
                           }
                         });
                       },
                       // mode: PlutoGridMode.select,
                       onSelected: (plutoGrid) {
-                        // controllerX.selectedProgram =
-                        // controllerX.programList![plutoGrid.rowIdx!] ;
-                        print(">>>>>>Program Data>>>>>>" +
-                            jsonEncode(controllerX.selectedProgram?.toJson()));
+                        controllerX.selectedCommercial =
+                            controllerX.commercialList![plutoGrid.rowIdx!];
+                        print(">>>>>>Commercial Data>>>>>>" +
+                            jsonEncode(
+                                controllerX.selectedCommercial?.toJson()));
                       },
                     ),
                   );
@@ -875,27 +877,28 @@ class CommercialView extends GetView<CommercialController> {
       children: [
         SizedBox(
           height: (Get.height * .65) - kToolbarHeight / 2,
-          width: MediaQuery.of(context).size.width * 0.6,
+          width: MediaQuery.of(context).size.width * 0.65,
           child: GetBuilder<CommercialController>(
               id: "fpcMismatchView",
               // init: CreateBreakPatternController(),
               builder: (controller) {
-                if (controllerX.programList != null &&
-                    (controllerX.programList?.isNotEmpty)!) {
+                if (controllerX.commercialList != null &&
+                    (controllerX.commercialList?.isNotEmpty)!) {
                   // final key = GlobalKey();
                   return Expanded(
                     // height: 400,
                     child: DataGridFromMap(
-                      mapData: (controllerX.programList
+                      mapData: (controllerX.commercialList
                           ?.map((e) => e.toJson1())
                           .toList())!,
                       widthRatio: (Get.width * 0.2) / 2 + 7,
-                      mode: PlutoGridMode.select,
+                      //mode: PlutoGridMode.select,
                       onSelected: (plutoGrid) {
-                        // controllerX.selectedProgram =
-                        // controllerX.programList![plutoGrid.rowIdx!] ;
-                        print(">>>>>>Program Data>>>>>>" +
-                            jsonEncode(controllerX.selectedProgram?.toJson()));
+                        controllerX.selectedCommercial =
+                            controllerX.commercialList![plutoGrid.rowIdx!];
+                        print(">>>>>>Commercial Data>>>>>>" +
+                            jsonEncode(
+                                controllerX.selectedCommercial?.toJson()));
                       },
                     ),
                   );
@@ -904,7 +907,8 @@ class CommercialView extends GetView<CommercialController> {
                     child: Card(
                       clipBehavior: Clip.hardEdge,
                       shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(0), // if you need this
+                        borderRadius:
+                            BorderRadius.circular(0), // if you need this
                         side: BorderSide(
                           color: Colors.grey.shade300,
                           width: 1,
@@ -931,7 +935,7 @@ class CommercialView extends GetView<CommercialController> {
                   callback: () {},
                 ),
               ),
-              SizedBox(
+              const SizedBox(
                 width: 20,
               ),
               Padding(
@@ -941,7 +945,7 @@ class CommercialView extends GetView<CommercialController> {
                   callback: () {},
                 ),
               ),
-              SizedBox(
+              const SizedBox(
                 width: 20,
               ),
               Padding(
@@ -963,27 +967,28 @@ class CommercialView extends GetView<CommercialController> {
       children: [
         SizedBox(
           height: (Get.height * .65) - kToolbarHeight / 2,
-          width: MediaQuery.of(context).size.width * 0.6,
+          width: MediaQuery.of(context).size.width * 0.65,
           child: GetBuilder<CommercialController>(
               id: "markedAsErrorView",
               // init: CreateBreakPatternController(),
               builder: (controller) {
-                if (controllerX.programList != null &&
-                    (controllerX.programList?.isNotEmpty)!) {
+                if (controllerX.commercialList != null &&
+                    (controllerX.commercialList?.isNotEmpty)!) {
                   // final key = GlobalKey();
                   return Expanded(
                     // height: 400,
                     child: DataGridFromMap(
-                      mapData: (controllerX.programList
+                      mapData: (controllerX.commercialList
                           ?.map((e) => e.toJson1())
                           .toList())!,
                       widthRatio: (Get.width * 0.2) / 2 + 7,
-                      mode: PlutoGridMode.select,
+                      //mode: PlutoGridMode.select,
                       onSelected: (plutoGrid) {
-                        // controllerX.selectedProgram =
-                        // controllerX.programList![plutoGrid.rowIdx!] ;
-                        print(">>>>>>Program Data>>>>>>" +
-                            jsonEncode(controllerX.selectedProgram?.toJson()));
+                        controllerX.selectedCommercial =
+                            controllerX.commercialList![plutoGrid.rowIdx!];
+                        print(">>>>>>Commercial Data>>>>>>" +
+                            jsonEncode(
+                                controllerX.selectedCommercial?.toJson()));
                       },
                     ),
                   );
@@ -992,7 +997,8 @@ class CommercialView extends GetView<CommercialController> {
                     child: Card(
                       clipBehavior: Clip.hardEdge,
                       shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(0), // if you need this
+                        borderRadius:
+                            BorderRadius.circular(0), // if you need this
                         side: BorderSide(
                           color: Colors.grey.shade300,
                           width: 1,
@@ -1009,6 +1015,7 @@ class CommercialView extends GetView<CommercialController> {
         SizedBox(
           height: (Get.height * .1),
           child: Row(
+            mainAxisAlignment: MainAxisAlignment.end,
             crossAxisAlignment: CrossAxisAlignment.center,
             children: [
               Padding(
@@ -1024,5 +1031,4 @@ class CommercialView extends GetView<CommercialController> {
       ],
     );
   }
-
 }

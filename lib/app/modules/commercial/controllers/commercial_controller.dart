@@ -17,6 +17,7 @@ import '../../../providers/DataGridMenu.dart';
 import '../../../providers/SizeDefine.dart';
 import '../../../providers/Utils.dart';
 import '../../../routes/app_pages.dart';
+import '../CommercialModel.dart';
 import '../CommercialProgramModel.dart';
 
 class FPCWeeklyTable extends DataTableSource {
@@ -286,34 +287,134 @@ class CommercialController extends GetxController {
   List<ChannelModel> locationsForReport1 = [];
   List conflictReport = [];
 
-  List<FPCMisMatchProgramModel>? programList = [
-    new FPCMisMatchProgramModel(startTime: '01:00:00', programName: 'Test1'),
-    new FPCMisMatchProgramModel(startTime: '01:00:00', programName: 'Test'),
-    new FPCMisMatchProgramModel(startTime: '01:00:00', programName: 'Test'),
-    new FPCMisMatchProgramModel(startTime: '01:00:00', programName: 'Test'),
-    new FPCMisMatchProgramModel(startTime: '01:00:00', programName: 'Test5'),
-    new FPCMisMatchProgramModel(startTime: '01:00:00', programName: 'Test'),
-    new FPCMisMatchProgramModel(startTime: '01:00:00', programName: 'Test'),
-    new FPCMisMatchProgramModel(startTime: '01:00:00', programName: 'Test'),
-    new FPCMisMatchProgramModel(startTime: '01:00:00', programName: 'Test'),
-    new FPCMisMatchProgramModel(startTime: '01:00:00', programName: 'Test10'),
-    new FPCMisMatchProgramModel(startTime: '01:00:00', programName: 'Test'),
-    new FPCMisMatchProgramModel(startTime: '01:00:00', programName: 'Test'),
-    new FPCMisMatchProgramModel(startTime: '01:00:00', programName: 'Test'),
-    new FPCMisMatchProgramModel(startTime: '01:00:00', programName: 'Test'),
-    new FPCMisMatchProgramModel(startTime: '01:00:00', programName: 'Test15'),
-    new FPCMisMatchProgramModel(startTime: '01:00:00', programName: 'Test'),
-    new FPCMisMatchProgramModel(startTime: '01:00:00', programName: 'Test'),
-    new FPCMisMatchProgramModel(startTime: '01:00:00', programName: 'Test'),
-    new FPCMisMatchProgramModel(startTime: '01:00:00', programName: 'Test'),
-    new FPCMisMatchProgramModel(startTime: '01:00:00', programName: 'Test20'),
-    new FPCMisMatchProgramModel(startTime: '01:00:00', programName: 'Test'),
-    new FPCMisMatchProgramModel(startTime: '01:00:00', programName: 'Test'),
-    new FPCMisMatchProgramModel(startTime: '01:00:00', programName: 'Test'),
-    new FPCMisMatchProgramModel(startTime: '01:00:00', programName: 'Test'),
-    new FPCMisMatchProgramModel(startTime: '01:00:00', programName: 'Test'),
-    new FPCMisMatchProgramModel(startTime: '01:00:00', programName: 'Test26'),
+  List<CommercialProgramModel>? programList  = [
+    CommercialProgramModel(startTime: '01:00:00', programName: 'Test1'),
+    CommercialProgramModel(startTime: '01:00:00', programName: 'Test'),
+    CommercialProgramModel(startTime: '01:00:00', programName: 'Test'),
+    CommercialProgramModel(startTime: '01:00:00', programName: 'Test'),
+    CommercialProgramModel(startTime: '01:00:00', programName: 'Test5'),
+    CommercialProgramModel(startTime: '01:00:00', programName: 'Test'),
+    CommercialProgramModel(startTime: '01:00:00', programName: 'Test'),
+    CommercialProgramModel(startTime: '01:00:00', programName: 'Test'),
+    CommercialProgramModel(startTime: '01:00:00', programName: 'Test'),
+    CommercialProgramModel(startTime: '01:00:00', programName: 'Test10'),
+    CommercialProgramModel(startTime: '01:00:00', programName: 'Test'),
+    CommercialProgramModel(startTime: '01:00:00', programName: 'Test'),
+    CommercialProgramModel(startTime: '01:00:00', programName: 'Test'),
+    CommercialProgramModel(startTime: '01:00:00', programName: 'Test'),
+    CommercialProgramModel(startTime: '01:00:00', programName: 'Test15'),
+    CommercialProgramModel(startTime: '01:00:00', programName: 'Test'),
+    CommercialProgramModel(startTime: '01:00:00', programName: 'Test'),
+    CommercialProgramModel(startTime: '01:00:00', programName: 'Test'),
+    CommercialProgramModel(startTime: '01:00:00', programName: 'Test'),
+    CommercialProgramModel(startTime: '01:00:00', programName: 'Test20'),
+    CommercialProgramModel(startTime: '01:00:00', programName: 'Test'),
+    CommercialProgramModel(startTime: '01:00:00', programName: 'Test'),
+    CommercialProgramModel(startTime: '01:00:00', programName: 'Test'),
+    CommercialProgramModel(startTime: '01:00:00', programName: 'Test'),
+    CommercialProgramModel(startTime: '01:00:00', programName: 'Test'),
+    CommercialProgramModel(startTime: '01:00:00', programName: 'Test26',),
+
   ];
+  List<CommercialModel>? commercialList = [
+    CommercialModel(
+        fpcTime:'01:00:00', breakNumber:'1', eventType:'S',
+        exportTapeCode:'TBA', segmentCaption:'Caption', client:' ', brand:' ', duration: 0,
+        product:' ', bookingNumber:' ', bookingDetailcode:' ',rostimeBand:' ', randid:' ',
+        programName:'Program Name', rownumber:'O', bStatus:'B', pDailyFPC:' ', pProgramMaster:' '),
+    CommercialModel(
+        fpcTime:'01:00:00', breakNumber:'1', eventType:'S',
+        exportTapeCode:'TBA', segmentCaption:'Caption', client:' ', brand:' ', duration: 0,
+        product:' ', bookingNumber:' ', bookingDetailcode:' ',rostimeBand:' ', randid:' ',
+        programName:'Program Name', rownumber:'O', bStatus:'B', pDailyFPC:' ', pProgramMaster:' '),
+    CommercialModel(
+        fpcTime:'01:00:00', breakNumber:'1', eventType:'S',
+        exportTapeCode:'TBA', segmentCaption:'Caption', client:' ', brand:' ', duration: 0,
+        product:' ', bookingNumber:' ', bookingDetailcode:' ',rostimeBand:' ', randid:' ',
+        programName:'Program Name', rownumber:'O', bStatus:'B', pDailyFPC:' ', pProgramMaster:' '),
+    CommercialModel(
+        fpcTime:'01:00:00', breakNumber:'1', eventType:'S',
+        exportTapeCode:'TBA', segmentCaption:'Caption', client:' ', brand:' ', duration: 0,
+        product:' ', bookingNumber:' ', bookingDetailcode:' ',rostimeBand:' ', randid:' ',
+        programName:'Program Name', rownumber:'O', bStatus:'B', pDailyFPC:' ', pProgramMaster:' '),
+    CommercialModel(
+        fpcTime:'01:00:00', breakNumber:'1', eventType:'S',
+        exportTapeCode:'TBA', segmentCaption:'Caption', client:' ', brand:' ', duration: 0,
+        product:' ', bookingNumber:' ', bookingDetailcode:' ',rostimeBand:' ', randid:' ',
+        programName:'Program Name', rownumber:'O', bStatus:'B', pDailyFPC:' ', pProgramMaster:' '),
+    CommercialModel(
+        fpcTime:'01:00:00', breakNumber:'1', eventType:'S',
+        exportTapeCode:'TBA', segmentCaption:'Caption', client:' ', brand:' ', duration: 0,
+        product:' ', bookingNumber:' ', bookingDetailcode:' ',rostimeBand:' ', randid:' ',
+        programName:'Program Name', rownumber:'O', bStatus:'B', pDailyFPC:' ', pProgramMaster:' '),
+    CommercialModel(
+        fpcTime:'01:00:00', breakNumber:'1', eventType:'S',
+        exportTapeCode:'TBA', segmentCaption:'Caption', client:' ', brand:' ', duration: 0,
+        product:' ', bookingNumber:' ', bookingDetailcode:' ',rostimeBand:' ', randid:' ',
+        programName:'Program Name', rownumber:'O', bStatus:'B', pDailyFPC:' ', pProgramMaster:' '),
+    CommercialModel(
+        fpcTime:'01:00:00', breakNumber:'1', eventType:'S',
+        exportTapeCode:'TBA', segmentCaption:'Caption', client:' ', brand:' ', duration: 0,
+        product:' ', bookingNumber:' ', bookingDetailcode:' ',rostimeBand:' ', randid:' ',
+        programName:'Program Name', rownumber:'O', bStatus:'B', pDailyFPC:' ', pProgramMaster:' '),
+    CommercialModel(
+        fpcTime:'01:00:00', breakNumber:'1', eventType:'S',
+        exportTapeCode:'TBA', segmentCaption:'Caption', client:' ', brand:' ', duration: 0,
+        product:' ', bookingNumber:' ', bookingDetailcode:' ',rostimeBand:' ', randid:' ',
+        programName:'Program Name', rownumber:'O', bStatus:'B', pDailyFPC:' ', pProgramMaster:' '),
+    CommercialModel(
+        fpcTime:'01:00:00', breakNumber:'1', eventType:'S',
+        exportTapeCode:'TBA', segmentCaption:'Caption', client:' ', brand:' ', duration: 0,
+        product:' ', bookingNumber:' ', bookingDetailcode:' ',rostimeBand:' ', randid:' ',
+        programName:'Program Name', rownumber:'O', bStatus:'B', pDailyFPC:' ', pProgramMaster:' '),
+    CommercialModel(
+        fpcTime:'01:00:00', breakNumber:'1', eventType:'S',
+        exportTapeCode:'TBA', segmentCaption:'Caption', client:' ', brand:' ', duration: 0,
+        product:' ', bookingNumber:' ', bookingDetailcode:' ',rostimeBand:' ', randid:' ',
+        programName:'Program Name', rownumber:'O', bStatus:'B', pDailyFPC:' ', pProgramMaster:' '),
+    CommercialModel(
+        fpcTime:'01:00:00', breakNumber:'1', eventType:'S',
+        exportTapeCode:'TBA', segmentCaption:'Caption', client:' ', brand:' ', duration: 0,
+        product:' ', bookingNumber:' ', bookingDetailcode:' ',rostimeBand:' ', randid:' ',
+        programName:'Program Name', rownumber:'O', bStatus:'B', pDailyFPC:' ', pProgramMaster:' '),
+    CommercialModel(
+        fpcTime:'01:00:00', breakNumber:'1', eventType:'S',
+        exportTapeCode:'TBA', segmentCaption:'Caption', client:' ', brand:' ', duration: 0,
+        product:' ', bookingNumber:' ', bookingDetailcode:' ',rostimeBand:' ', randid:' ',
+        programName:'Program Name', rownumber:'O', bStatus:'B', pDailyFPC:' ', pProgramMaster:' '),
+    CommercialModel(
+        fpcTime:'01:00:00', breakNumber:'1', eventType:'S',
+        exportTapeCode:'TBA', segmentCaption:'Caption', client:' ', brand:' ', duration: 0,
+        product:' ', bookingNumber:' ', bookingDetailcode:' ',rostimeBand:' ', randid:' ',
+        programName:'Program Name', rownumber:'O', bStatus:'B', pDailyFPC:' ', pProgramMaster:' '),
+    CommercialModel(
+        fpcTime:'01:00:00', breakNumber:'1', eventType:'S',
+        exportTapeCode:'TBA', segmentCaption:'Caption', client:' ', brand:' ', duration: 0,
+        product:' ', bookingNumber:' ', bookingDetailcode:' ',rostimeBand:' ', randid:' ',
+        programName:'Program Name', rownumber:'O', bStatus:'B', pDailyFPC:' ', pProgramMaster:' '),
+    CommercialModel(
+        fpcTime:'01:00:00', breakNumber:'1', eventType:'S',
+        exportTapeCode:'TBA', segmentCaption:'Caption', client:' ', brand:' ', duration: 0,
+        product:' ', bookingNumber:' ', bookingDetailcode:' ',rostimeBand:' ', randid:' ',
+        programName:'Program Name', rownumber:'O', bStatus:'B', pDailyFPC:' ', pProgramMaster:' '),
+    CommercialModel(
+        fpcTime:'01:00:00', breakNumber:'1', eventType:'S',
+        exportTapeCode:'TBA', segmentCaption:'Caption', client:' ', brand:' ', duration: 0,
+        product:' ', bookingNumber:' ', bookingDetailcode:' ',rostimeBand:' ', randid:' ',
+        programName:'Program Name', rownumber:'O', bStatus:'B', pDailyFPC:' ', pProgramMaster:' '),
+    CommercialModel(
+        fpcTime:'01:00:00', breakNumber:'1', eventType:'S',
+        exportTapeCode:'TBA', segmentCaption:'Caption', client:' ', brand:' ', duration: 0,
+        product:' ', bookingNumber:' ', bookingDetailcode:' ',rostimeBand:' ', randid:' ',
+        programName:'Program Name', rownumber:'O', bStatus:'B', pDailyFPC:' ', pProgramMaster:' '),
+    CommercialModel(
+        fpcTime:'01:00:00', breakNumber:'1', eventType:'S',
+        exportTapeCode:'TBA', segmentCaption:'Caption', client:' ', brand:' ', duration: 0,
+        product:' ', bookingNumber:' ', bookingDetailcode:' ',rostimeBand:' ', randid:' ',
+        programName:'Program Name', rownumber:'O', bStatus:'B', pDailyFPC:' ', pProgramMaster:' '),
+
+  ];
+
   List beams = [];
   int? conflictDays = 4;
   List conflictPrograms = [];
@@ -346,7 +447,8 @@ class CommercialController extends GetxController {
   SystemEnviroment? selectedChannel;
   SystemEnviroment? selectedLocation;
   SystemEnviroment? selectedClipType;
-  FPCMisMatchProgramModel? selectedProgram;
+  CommercialProgramModel? selectedProgram;
+  CommercialModel? selectedCommercial;
   int selectedGroup = 0;
   int selectIndex = 0;
   ProgramClipModel? selectedRow;
