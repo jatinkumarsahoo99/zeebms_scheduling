@@ -1,4 +1,3 @@
-import 'package:bms_scheduling/app/modules/TransmissionLog/bindings/transmission_log_binding.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:get/get.dart';
 import 'package:pluto_grid/pluto_grid.dart';

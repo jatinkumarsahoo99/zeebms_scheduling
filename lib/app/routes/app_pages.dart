@@ -1,7 +1,9 @@
 import 'package:get/get.dart';
 
+import '../modules/FpcMismatch/bindings/fpc_mismatch_binding.dart';
+import '../modules/FpcMismatch/views/FpcMismatchView.dart';
 import '../modules/LogAdditions/bindings/log_additions_binding.dart';
-import '../modules/LogAdditions/views/log_additions_view.dart';
+import '../modules/LogAdditions/views/LogAdditionsView.dart';
 import '../modules/MamWorkOrders/bindings/mam_work_orders_binding.dart';
 import '../modules/MamWorkOrders/views/mam_work_orders_view.dart';
 import '../modules/RoBooking/bindings/ro_booking_binding.dart';
@@ -27,14 +29,15 @@ class AppPages {
     ),
     GetPage(
       name: _Paths.TRANSMISSION_LOG,
-      // page: () => TransmissionLogView(),
       page: () => AuthGuard1(childName: _Paths.TRANSMISSION_LOG),
-      // binding: TransmissionLogBinding(),
     ),
     GetPage(
       name: _Paths.LOG_ADDITIONS,
-      page: () => LogAdditionsView(),
-      binding: LogAdditionsBinding(),
+      page: () => AuthGuard1(childName: _Paths.LOG_ADDITIONS),
+    ),
+    GetPage(
+      name: _Paths.LOG_ADDITIONS,
+      page: () => AuthGuard1(childName: _Paths.LOG_ADDITIONS),
     ),
     GetPage(
       name: _Paths.MAM_WORK_ORDERS,
@@ -45,6 +48,10 @@ class AppPages {
       name: _Paths.RO_BOOKING,
       page: () => const RoBookingView(),
       binding: RoBookingBinding(),
+    ),
+    GetPage(
+      name: _Paths.FPC_MISMATCH,
+      page: () => AuthGuard1(childName: _Paths.FPC_MISMATCH),
     ),
   ];
 }

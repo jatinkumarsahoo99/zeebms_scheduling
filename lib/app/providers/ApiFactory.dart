@@ -88,4 +88,40 @@ class ApiFactory {
     return BASE_URL +
         '/api/MoviePlanner/GetLocationSelect?Locationcode=$location&logincode=$userId';
   }
+
+
+  //////////////////// FPC MISMATCH - UI: Sanjaya Jena API: PATTA NIGAM ////////////////
+  static String FPC_MISMATCH_LOCATION =
+      BASE_URL + "/api/FpcMismatch/GetLocations";
+
+  static String FPC_MISMATCH_CHANNEL(String userId, String locCode) =>
+      BASE_URL + "/api/FpcMismatch/GetChannelMaster/$locCode";
+
+  static String FPC_MISMATCH(String location, String channelCode, String dt) =>
+      BASE_URL +
+          "/api/FpcMismatch/BindFPCMismatchGrid/$location,$channelCode,$dt";
+
+  static String FPC_MISMATCH_ERROR(
+      String location, String channelCode, String dt) =>
+      BASE_URL +
+          "/api/FpcMismatch/BindFPCMismatchGridError/$location,$channelCode,$dt";
+
+  static String FPC_MISMATCH_ALL(
+      String location, String channelCode, String dt) =>
+      BASE_URL +
+          "/api/FpcMismatch/BindFPCMismatchGridAll/$location,$channelCode,$dt";
+
+  static String FPC_MISMATCH_PROGRAM(
+      String location, String channelCode, String dt) =>
+      BASE_URL + "/api/FpcMismatch/BindWebFPCGrid/$location,$channelCode,$dt";
+
+  static String FPC_MISMATCH_MARK_ERROR =
+      BASE_URL + "/api/FpcMismatch/UpdateRecordError";
+
+  static String FPC_MISMATCH_MARK_UNDO_ERROR =
+      BASE_URL + "/api/FpcMismatch/UpdateUndoError";
+
+  static String FPC_MISMATCH_SAVE = BASE_URL + "/api/FpcMismatch/UpdateRecord";
+
+/////////////////////////////////////////////////////////////////////////////////////////
 }
