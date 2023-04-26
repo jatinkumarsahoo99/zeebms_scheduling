@@ -20,6 +20,7 @@ abstract class RoutesList {
     _Paths.LOG_ADDITIONS,
     _Paths.MAM_WORK_ORDERS,
     _Paths.RO_BOOKING,
+    _Paths.FPC_MISMATCH,
   ];
 }
 
@@ -28,7 +29,7 @@ abstract class _Paths {
   static const HOME = '/home';
   static const TRANSMISSION_LOG = '/frmTransmissionlog';
   static const LOG_ADDITIONS = '/frmAdditions';
-  static const MAM_WORK_ORDERS = '/mam-work-orders';
-  static const RO_BOOKING = '/ro-booking';
-  static const FPC_MISMATCH = '/fpc-mismatch';
+  static const MAM_WORK_ORDERS = '/frmMAMWorkOrders';
+  static const RO_BOOKING = '/frmROBooking';
+  static const FPC_MISMATCH = '/frmFPCMismatch';
 }

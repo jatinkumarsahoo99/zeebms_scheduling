@@ -1,4 +1,5 @@
 import 'package:bms_scheduling/app/controller/MainController.dart';
+import 'package:bms_scheduling/app/modules/FpcMismatch/views/FpcMismatchView.dart';
 import 'package:bms_scheduling/app/modules/LogAdditions/controllers/LogAdditionsController.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
@@ -39,6 +40,9 @@ class AuthGuard1 extends StatelessWidget {
               break;
             case Routes.LOG_ADDITIONS:
               currentWidget = LogAdditionsView();
+              break;
+            case Routes.FPC_MISMATCH:
+              currentWidget = FpcMismatchView();
               break;
             default:
               currentWidget = const NoDataFoundPage();

@@ -37,8 +37,7 @@ class AppPages {
     ),
     GetPage(
       name: _Paths.LOG_ADDITIONS,
-      page: () => LogAdditionsView(),
-      binding: LogAdditionsBinding(),
+      page: () => AuthGuard1(childName: _Paths.LOG_ADDITIONS),
     ),
     GetPage(
       name: _Paths.MAM_WORK_ORDERS,
@@ -52,8 +51,7 @@ class AppPages {
     ),
     GetPage(
       name: _Paths.FPC_MISMATCH,
-      page: () => FpcMismatchView(),
-      binding: FpcMismatchBinding(),
+      page: () => AuthGuard1(childName: _Paths.FPC_MISMATCH),
     ),
   ];
 }
