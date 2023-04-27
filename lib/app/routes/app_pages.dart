@@ -1,5 +1,7 @@
 import 'package:get/get.dart';
 
+import '../modules/ImportDigitextRunOrder/bindings/import_digitext_run_order_binding.dart';
+import '../modules/ImportDigitextRunOrder/views/import_digitext_run_order_view.dart';
 import '../modules/FpcMismatch/bindings/fpc_mismatch_binding.dart';
 import '../modules/FpcMismatch/views/FpcMismatchView.dart';
 import '../modules/LogAdditions/bindings/log_additions_binding.dart';
@@ -21,7 +23,7 @@ part 'app_routes.dart';
 class AppPages {
   AppPages._();
 
-  static const INITIAL = Routes.TRANSMISSION_LOG;
+  static const INITIAL = Routes.IMPORT_DIGITEXT_RUN_ORDER;
 
   static final routes = [
     GetPage(
@@ -57,8 +59,14 @@ class AppPages {
       binding: RoBookingBinding(),
     ),
     GetPage(
+<<<<<<< HEAD
+      name: _Paths.IMPORT_DIGITEXT_RUN_ORDER,
+      page: () => const ImportDigitextRunOrderView(),
+      binding: ImportDigitextRunOrderBinding(),
+=======
       name: _Paths.FPC_MISMATCH,
       page: () => AuthGuard1(childName: _Paths.FPC_MISMATCH),
+>>>>>>> cbd401d391ded09dedff75e57f6a68e805f470cd
     ),
   ];
 }
