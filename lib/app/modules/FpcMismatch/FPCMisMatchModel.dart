@@ -64,7 +64,7 @@ class FPCMisMatchModel {
     fpcTime = json['fpcTime'];
     starttime = json['starttime'];
     endTime = json['endTime'];
-    tapeId = json['tapeId'];
+    tapeId = json['tapeid'];
     caption = json['caption'];
     bookedProgram = json['bookedProgram'];
     bookedTime = json['bookedTime'];

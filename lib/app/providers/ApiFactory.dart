@@ -26,15 +26,15 @@ class ApiFactory {
 
   // static String SERVER_URL = "https://bmswebfrontend-uat.azurewebsites.net";
   static String WEB_URL = Enviroment.toLowerCase() == "uat"
-      ? "https://app-admin-bms-uat.zeeconnect.in"
-      : "https://app-admin-bms-dev.zeeconnect.in";
+      ? "https://app-scheduling-bms-uat.zeeconnect.in"
+      : "https://app-scheduling-bms-dev.zeeconnect.in";
   static String WEB_URL_COMMON = Enviroment.toLowerCase() == "uat"
       ? "https://app-common-bms-uat.zeeconnect.in"
       : "https://app-common-bms-dev.zeeconnect.in";
 
   static String BASE_URL = Enviroment.toLowerCase() == "uat"
-      ? "https://api-programming-bms-uat.zeeconnect.in"
-      : "https://api-programming-bms-dev.zeeconnect.in";
+      ? "https://api-scheduling-bms-uat.zeeconnect.in"
+      : "https://api-scheduling-bms-dev.zeeconnect.in";
   static String BASE_URL_COMMON = Enviroment.toLowerCase() == "uat"
       ? "https://api-common-bms-uat.zeeconnect.in"
       : "https://api-common-bms-dev.zeeconnect.in";
@@ -89,31 +89,34 @@ class ApiFactory {
         '/api/MoviePlanner/GetLocationSelect?Locationcode=$location&logincode=$userId';
   }
 
-
   //////////////////// FPC MISMATCH - UI: Sanjaya Jena API: PATTA NIGAM ////////////////
   static String FPC_MISMATCH_LOCATION =
       BASE_URL + "/api/FpcMismatch/GetLocations";
 
   static String FPC_MISMATCH_CHANNEL(String userId, String locCode) =>
-      BASE_URL + "/api/FpcMismatch/GetChannelMaster/$locCode";
+      BASE_URL + "/api/FpcMismatch/GetChannelMaster?locationCode=$locCode";
 
   static String FPC_MISMATCH(String location, String channelCode, String dt) =>
+      // BASE_URL + "/api/FpcMismatch/BindFPCMismatchGrid/$location,$channelCode,$dt";
       BASE_URL +
-          "/api/FpcMismatch/BindFPCMismatchGrid/$location,$channelCode,$dt";
+      "/api/FpcMismatch/BindFPCMismatchGrid?LocationCode=$location&ChannelCode=$channelCode&EffectiveDate=$dt";
 
   static String FPC_MISMATCH_ERROR(
-      String location, String channelCode, String dt) =>
+          String location, String channelCode, String dt) =>
       BASE_URL +
-          "/api/FpcMismatch/BindFPCMismatchGridError/$location,$channelCode,$dt";
+      // "/api/FpcMismatch/BindFPCMismatchGridError/$location,$channelCode,$dt";
+      "/api/FpcMismatch/BindFPCMismatchGridError?LocationCode=$location&ChannelCode=$channelCode&EffectiveDate=$dt";
 
   static String FPC_MISMATCH_ALL(
-      String location, String channelCode, String dt) =>
+          String location, String channelCode, String dt) =>
       BASE_URL +
-          "/api/FpcMismatch/BindFPCMismatchGridAll/$location,$channelCode,$dt";
+      // "/api/FpcMismatch/BindFPCMismatchGridAll/$location,$channelCode,$dt";
+      "/api/FpcMismatch/BindFPCMismatchGridAll?LocationCode=$location&ChannelCode=$channelCode&EffectiveDate=$dt";
 
   static String FPC_MISMATCH_PROGRAM(
-      String location, String channelCode, String dt) =>
-      BASE_URL + "/api/FpcMismatch/BindWebFPCGrid/$location,$channelCode,$dt";
+          String location, String channelCode, String dt) =>
+      // BASE_URL + "/api/FpcMismatch/BindWebFPCGrid/$location,$channelCode,$dt";
+      BASE_URL + "/api/FpcMismatch/BindWebFPCGrid?LocationCode=$location&ChannelCode=$channelCode&TelecastDate=$dt";
 
   static String FPC_MISMATCH_MARK_ERROR =
       BASE_URL + "/api/FpcMismatch/UpdateRecordError";

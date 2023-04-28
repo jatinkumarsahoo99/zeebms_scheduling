@@ -8,10 +8,12 @@ import '../modules/MamWorkOrders/bindings/mam_work_orders_binding.dart';
 import '../modules/MamWorkOrders/views/mam_work_orders_view.dart';
 import '../modules/RoBooking/bindings/ro_booking_binding.dart';
 import '../modules/RoBooking/views/ro_booking_view.dart';
+import '../modules/SpotPriority/bindings/spot_priority_binding.dart';
+import '../modules/SpotPriority/views/SpotPriorityView.dart';
 import '../modules/TransmissionLog/bindings/transmission_log_binding.dart';
+import '../modules/TransmissionLog/views/TransmissionLogView.dart';
 import '../modules/commercial/bindings/commercial_binding.dart';
 import '../modules/commercial/views/commercial_view.dart';
-import '../modules/TransmissionLog/views/TransmissionLogView.dart';
 import '../modules/home/bindings/home_binding.dart';
 import '../modules/home/views/home_view.dart';
 import '../providers/AuthGuard1.dart';
@@ -59,6 +61,11 @@ class AppPages {
     GetPage(
       name: _Paths.FPC_MISMATCH,
       page: () => AuthGuard1(childName: _Paths.FPC_MISMATCH),
+    ),
+    GetPage(
+      name: _Paths.SPOT_PRIORITY,
+      page: () => SpotPriorityView(),
+      binding: SpotPriorityBinding(),
     ),
   ];
 }
