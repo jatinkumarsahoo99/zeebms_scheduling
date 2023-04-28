@@ -10,6 +10,7 @@ abstract class Routes {
   static const MAM_WORK_ORDERS = _Paths.MAM_WORK_ORDERS;
   static const COMMERCIAL = _Paths.COMMERCIAL;
   static const RO_BOOKING = _Paths.RO_BOOKING;
+  static const FILLER = _Paths.FILLER;
 }
 
 abstract class RoutesList {
@@ -30,4 +31,5 @@ abstract class _Paths {
   static const MAM_WORK_ORDERS = '/mam-work-orders';
   static const COMMERCIAL = '/commercial';
   static const RO_BOOKING = '/ro-booking';
+  static const FILLER = '/filler';
 }
