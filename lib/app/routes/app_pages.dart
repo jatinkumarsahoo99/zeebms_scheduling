@@ -23,7 +23,7 @@ part 'app_routes.dart';
 class AppPages {
   AppPages._();
 
-  static const INITIAL = Routes.MAM_WORK_ORDERS;
+  static const INITIAL = Routes.IMPORT_DIGITEXT_RUN_ORDER;
 
   static final routes = [
     GetPage(
@@ -34,10 +34,6 @@ class AppPages {
     GetPage(
       name: _Paths.TRANSMISSION_LOG,
       page: () => AuthGuard1(childName: _Paths.TRANSMISSION_LOG),
-    ),
-    GetPage(
-      name: _Paths.LOG_ADDITIONS,
-      page: () => AuthGuard1(childName: _Paths.LOG_ADDITIONS),
     ),
     GetPage(
       name: _Paths.LOG_ADDITIONS,
@@ -59,10 +55,9 @@ class AppPages {
       binding: RoBookingBinding(),
     ),
     GetPage(
-      name: _Paths.IMPORT_DIGITEXT_RUN_ORDER,
-      page: () => const ImportDigitextRunOrderView(),
-      binding: ImportDigitextRunOrderBinding(),
-    ),
+        name: _Paths.IMPORT_DIGITEXT_RUN_ORDER,
+        page: () => AuthGuard1(childName: _Paths.IMPORT_DIGITEXT_RUN_ORDER),
+        binding: ImportDigitextRunOrderBinding()),
     GetPage(
       name: _Paths.FPC_MISMATCH,
       page: () => AuthGuard1(childName: _Paths.FPC_MISMATCH),

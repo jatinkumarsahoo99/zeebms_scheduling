@@ -15,10 +15,9 @@ class WoAsPerDailyFpcView extends GetView {
   @override
   Widget build(BuildContext context) {
     return Column(
-      crossAxisAlignment: CrossAxisAlignment.end,
+      crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         Row(
-          crossAxisAlignment: CrossAxisAlignment.end,
           children: [
             DropDownField.formDropDown1WidthMap(
                 [], (value) => {}, "Work Order Type", 0.24),
@@ -28,9 +27,7 @@ class WoAsPerDailyFpcView extends GetView {
           height: 10,
         ),
         Wrap(
-          alignment: WrapAlignment.start,
-          runAlignment: WrapAlignment.start,
-          crossAxisAlignment: WrapCrossAlignment.start,
+          crossAxisAlignment: WrapCrossAlignment.end,
           spacing: Get.width * 0.005,
           runSpacing: 5,
           children: [
@@ -42,6 +39,7 @@ class WoAsPerDailyFpcView extends GetView {
                 title: "Ref Date",
                 widthRation: 0.12,
                 mainTextController: TextEditingController()),
+            Text("Double Click Quality Column to swap between HD to SD")
           ],
         ),
         Divider(

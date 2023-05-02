@@ -1,5 +1,6 @@
 import 'package:bms_scheduling/app/controller/MainController.dart';
 import 'package:bms_scheduling/app/modules/FpcMismatch/views/FpcMismatchView.dart';
+import 'package:bms_scheduling/app/modules/ImportDigitextRunOrder/views/import_digitext_run_order_view.dart';
 import 'package:bms_scheduling/app/modules/LogAdditions/controllers/LogAdditionsController.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
@@ -43,6 +44,9 @@ class AuthGuard1 extends StatelessWidget {
               break;
             case Routes.FPC_MISMATCH:
               currentWidget = FpcMismatchView();
+              break;
+            case Routes.IMPORT_DIGITEXT_RUN_ORDER:
+              currentWidget = ImportDigitextRunOrderView();
               break;
             default:
               currentWidget = const NoDataFoundPage();

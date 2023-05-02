@@ -1,3 +1,9 @@
+import 'package:bms_scheduling/app/modules/RoBooking/views/dummydata.dart';
+import 'package:bms_scheduling/widgets/DateTime/DateWithThreeTextField.dart';
+import 'package:bms_scheduling/widgets/FormButton.dart';
+import 'package:bms_scheduling/widgets/dropdown.dart';
+import 'package:bms_scheduling/widgets/gridFromMap.dart';
+import 'package:bms_scheduling/widgets/input_fields.dart';
 import 'package:flutter/material.dart';
 
 import 'package:get/get.dart';
@@ -6,17 +12,93 @@ class CancelWoView extends GetView {
   const CancelWoView({Key? key}) : super(key: key);
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        title: const Text('CancelWoView'),
-        centerTitle: true,
-      ),
-      body: const Center(
-        child: Text(
-          'CancelWoView is working',
-          style: TextStyle(fontSize: 20),
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Row(
+          children: [
+            DropDownField.formDropDown1WidthMap(
+                [], (value) => {}, "Work Order Type", 0.24),
+          ],
         ),
-      ),
+        Divider(
+          height: 10,
+        ),
+        Wrap(
+          crossAxisAlignment: WrapCrossAlignment.end,
+          spacing: Get.width * 0.005,
+          alignment: WrapAlignment.start,
+          runSpacing: 5,
+          children: [
+            DropDownField.formDropDown1WidthMap(
+                [], (value) => {}, "Location", 0.09),
+            DropDownField.formDropDown1WidthMap(
+                [], (value) => {}, "Channel", 0.12),
+            DropDownField.formDropDown1WidthMap(
+                [], (value) => {}, "Program", 0.24),
+            InputFields.formField1(
+                hintTxt: "From Epi#",
+                controller: TextEditingController(),
+                width: 0.0375),
+            InputFields.formField1(
+                hintTxt: "To Epi#",
+                controller: TextEditingController(),
+                width: 0.0375),
+            DropDownField.formDropDown1WidthMap(
+                [], (value) => {}, "Telecast Type", 0.12),
+            Row(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                Icon(Icons.check_box_outline_blank_outlined),
+                Text("Tel Dt")
+              ],
+            ),
+            DateWithThreeTextField(
+                title: "Tel Dt From",
+                widthRation: 0.09,
+                mainTextController: TextEditingController()),
+            DateWithThreeTextField(
+                title: "Tel Dt To",
+                widthRation: 0.09,
+                mainTextController: TextEditingController()),
+            FormButtonWrapper(
+              btnText: "Show",
+              callback: () {},
+            )
+          ],
+        ),
+        Divider(
+          height: 10,
+        ),
+        Expanded(
+            child: Container(
+          color: Colors.amber,
+          child: DataGridFromMap(
+            mapData: dummyProgram,
+            formatDate: false,
+          ),
+        )),
+        SizedBox(
+          height: 5,
+        ),
+        Row(
+          mainAxisSize: MainAxisSize.max,
+          mainAxisAlignment: MainAxisAlignment.end,
+          children: [
+            Text(
+              "Dbl Click WOld col to select unselect all work orders",
+              style: TextStyle(color: Colors.blue),
+            ),
+            SizedBox(
+              width: 5,
+            ),
+            FormButtonWrapper(
+              btnText: "Cancel WO",
+              callback: () {},
+            )
+          ],
+        )
+      ],
     );
   }
 }

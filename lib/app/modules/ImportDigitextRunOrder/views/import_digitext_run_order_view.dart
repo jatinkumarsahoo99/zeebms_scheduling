@@ -35,17 +35,28 @@ class ImportDigitextRunOrderView
                       crossAxisAlignment: CrossAxisAlignment.end,
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: [
-                        DropDownField.formDropDown1WidthMap(
-                            [], (value) => {}, "Location", 0.24),
-                        DropDownField.formDropDown1WidthMap(
-                            [], (value) => {}, "Channel", 0.24),
+                        Obx(
+                          () => DropDownField.formDropDown1WidthMap(
+                              controller.locations.value, (value) {
+                            controller.selectedLocation = value;
+                            controller.getChannel(value.key);
+                          }, "Location", 0.24),
+                        ),
+                        Obx(
+                          () => DropDownField.formDropDown1WidthMap(
+                              controller.channels.value, (value) {
+                            controller.selectedChannel = value;
+                          }, "Channel", 0.24),
+                        ),
                         DateWithThreeTextField(
                             title: "Schedule Date.",
                             widthRation: 0.12,
                             mainTextController: TextEditingController()),
                         FormButtonWrapper(
                           btnText: "Load",
-                          callback: () {},
+                          callback: () {
+                            controller.pickFile();
+                          },
                         )
                       ],
                     ),
@@ -57,7 +68,7 @@ class ImportDigitextRunOrderView
                       hintTxt: "File",
                       isEnable: false,
                       width: 0.72,
-                      controller: TextEditingController()),
+                      controller: controller.fileController),
                 ),
               ],
             ),

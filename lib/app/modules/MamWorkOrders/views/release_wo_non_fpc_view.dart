@@ -15,7 +15,6 @@ class ReleaseWoNonFpcView extends GetView {
   @override
   Widget build(BuildContext context) {
     return Column(
-      crossAxisAlignment: CrossAxisAlignment.end,
       children: [
         Row(
           crossAxisAlignment: CrossAxisAlignment.end,
