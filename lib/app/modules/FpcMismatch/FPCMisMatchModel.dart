@@ -64,13 +64,13 @@ class FPCMisMatchModel {
     fpcTime = json['fpcTime'];
     starttime = json['starttime'];
     endTime = json['endTime'];
-    tapeId = json['tapeid'];
+    tapeId = json['tapeId']??json['tapeid'];
     caption = json['caption'];
     bookedProgram = json['bookedProgram'];
     bookedTime = json['bookedTime'];
-    clientName = json['clientName'];
+    clientName = json['clientname'];
     agencyname = json['agencyname'];
-    personnelName = json['personnelName'];
+    personnelName = json['personnelname'];
     bookingNumber = json['bookingNumber'];
     bookingDetailcode = json['bookingDetailcode'].toString();
     bookingReferenceNumber = json['bookingReferenceNumber'];
