@@ -33,7 +33,7 @@ class FpcMismatchController extends GetxController {
   TextEditingController date_ = TextEditingController();
   int? selectIndex = 0;
 
-  double widthSize=0.12;
+  double widthSize = 0.12;
 
   @override
   void onInit() {
@@ -73,7 +73,7 @@ class FpcMismatchController extends GetxController {
   }
 
   fetchMismatch() {
-    print(">>Key is>>>>>"+(selectedChannel?.key??""));
+    print(">>Key is>>>>>" + (selectedChannel?.key ?? ""));
     if (selectedLocation == null) {
       Snack.callError("Please select location");
     } else if (selectedChannel == null) {
@@ -198,35 +198,47 @@ class FpcMismatchController extends GetxController {
     } else if (selectedProgram == null) {
       Snack.callError("Please select program");
     } else {
-      List<FPCMisMatchModel> postMapList = (dataList
-          ?.where((element) => (element.selectItem == true))
-          .toList())!;
-      var postMap1 = postMapList
-          .map((e) => e.toSaveJson(
-          selectedLocation?.key ?? "",
-          selectedChannel?.key ?? "",
-          selectedProgram?.programCode ?? "",
-          selectedProgram?.startTime ?? ""))
-          .toList();
+      FPCMisMatchModel? modelData =
+          dataList?.firstWhere((element) => (element.selectItem)!);
 
-      var postData = {"data": postMap1};
-      print("????" + jsonEncode(postData));
-
-      LoadingDialog.call();
-      Get.find<ConnectorControl>().POSTMETHOD(
-        api: ApiFactory.FPC_MISMATCH_SAVE,
-        json: postMap1,
-        fun: (dynamic data) {
-          Get.back();
-          if (data.toString().toLowerCase() == "success") {
-            // LoadingDialog.callDataSavedMessage("Record Saved successfully");
-            LoadingDialog.callDataSaved();
-          } else {
-            Snack.callError("Something went wrong");
-          }
-        },
-      );
+      if (modelData?.fpcTime != selectedProgram?.startTime) {
+        LoadingDialog.recordExists("Booked FPC Time doesn't matches with Scheduled FPC Time. Want to continue?",(){
+          updateRecord();
+        },deleteCancel: "No",deleteTitle: "Yes");
+      } else {
+        updateRecord();
+      }
     }
+  }
+
+  updateRecord() {
+    List<FPCMisMatchModel> postMapList =
+        (dataList?.where((element) => (element.selectItem == true)).toList())!;
+    var postMap1 = postMapList
+        .map((e) => e.toSaveJson(
+            selectedLocation?.key ?? "",
+            selectedChannel?.key ?? "",
+            selectedProgram?.programCode ?? "",
+            selectedProgram?.startTime ?? ""))
+        .toList();
+
+    var postData = {"data": postMap1};
+    print("????" + jsonEncode(postData));
+
+    LoadingDialog.call();
+    Get.find<ConnectorControl>().POSTMETHOD(
+      api: ApiFactory.FPC_MISMATCH_SAVE,
+      json: postMap1,
+      fun: (dynamic data) {
+        Get.back();
+        if (data.toString().toLowerCase() == "success") {
+          // LoadingDialog.callDataSavedMessage("Record Saved successfully");
+          LoadingDialog.callDataSaved();
+        } else {
+          Snack.callError("Something went wrong");
+        }
+      },
+    );
   }
 
   saveMarkError() {
@@ -254,7 +266,7 @@ class FpcMismatchController extends GetxController {
           .toList())!;
       var postMap1 = postMapList
           .map((e) => e.toMarkErrorJson(
-          selectedLocation?.key ?? "", selectedChannel?.key ?? ""))
+              selectedLocation?.key ?? "", selectedChannel?.key ?? ""))
           .toList();
       // var data={
       //   "moDta":postMapList.map((e) => e.toMarkErrorJson(selectedLocation?.key??"", selectedChannel?.key??"")).toList()
@@ -301,7 +313,7 @@ class FpcMismatchController extends GetxController {
           .toList())!;
       var postMap1 = postMapList
           .map((e) => e.toMarkErrorJson(
-          selectedLocation?.key ?? "", selectedChannel?.key ?? ""))
+              selectedLocation?.key ?? "", selectedChannel?.key ?? ""))
           .toList();
 
       LoadingDialog.call();
