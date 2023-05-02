@@ -12,6 +12,7 @@ abstract class Routes {
   static const RO_BOOKING = _Paths.RO_BOOKING;
   static const IMPORT_DIGITEXT_RUN_ORDER = _Paths.IMPORT_DIGITEXT_RUN_ORDER;
   static const FPC_MISMATCH = _Paths.FPC_MISMATCH;
+  static const SPOT_PRIORITY = _Paths.SPOT_PRIORITY;
 }
 
 abstract class RoutesList {
@@ -37,4 +38,5 @@ abstract class _Paths {
   static const IMPORT_DIGITEXT_RUN_ORDER = '/import-digitext-run-order';
   static const FPC_MISMATCH = '/frmFPCMismatch';
   static const COMMERCIAL = '/commercial';
+  static const SPOT_PRIORITY = '/spot-priority';
 }
