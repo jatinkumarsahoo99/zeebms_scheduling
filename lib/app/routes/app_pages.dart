@@ -57,27 +57,12 @@ class AppPages {
       binding: RoBookingBinding(),
     ),
     GetPage(
-<<<<<<< HEAD
-      name: _Paths.IMPORT_DIGITEXT_RUN_ORDER,
-      page: () => const ImportDigitextRunOrderView(),
-      binding: ImportDigitextRunOrderBinding(),
-    ),
-    GetPage(
-      name: _Paths.FPC_MISMATCH,
-      page: () => AuthGuard1(childName: _Paths.FPC_MISMATCH),
-    ),
-    GetPage(
-      name: _Paths.SPOT_PRIORITY,
-      page: () => SpotPriorityView(),
-      binding: SpotPriorityBinding(),
-=======
         name: _Paths.IMPORT_DIGITEXT_RUN_ORDER,
         page: () => AuthGuard1(childName: _Paths.IMPORT_DIGITEXT_RUN_ORDER),
         binding: ImportDigitextRunOrderBinding()),
     GetPage(
       name: _Paths.FPC_MISMATCH,
       page: () => AuthGuard1(childName: _Paths.FPC_MISMATCH),
->>>>>>> c1225489a3f7fe5772a2a5e180b706e297251289
     ),
   ];
 }
