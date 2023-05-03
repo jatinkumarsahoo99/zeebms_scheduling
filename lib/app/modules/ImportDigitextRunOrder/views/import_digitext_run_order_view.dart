@@ -257,11 +257,15 @@ class ImportDigitextRunOrderView
                                   ),
                                   if (index == 0)
                                     ElevatedButton(
-                                        onPressed: () {},
+                                        onPressed: () {
+                                          controller.mapClients();
+                                        },
                                         child: Text("Map Client")),
                                   if (index == 3)
                                     ElevatedButton(
-                                        onPressed: () {},
+                                        onPressed: () {
+                                          controller.mapAgencies();
+                                        },
                                         child: Text("Map Agencies"))
                                 ],
                               );

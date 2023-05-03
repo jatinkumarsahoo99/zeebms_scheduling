@@ -191,4 +191,34 @@ class ImportDigitextRunOrderController extends GetxController {
     digitexRunOrderData!.missingAgencies![tapEvent.rowIdx].agenciesCode = "";
     digitexRunOrderData!.missingAgencies![tapEvent.rowIdx].agenciesName = "";
   }
+
+  mapClients() {
+    Get.find<ConnectorControl>().POSTMETHOD_FORMDATA(
+        api: ApiFactory.IMPORT_DIGITEX_RUN_ORDER_MAP_CLIENT,
+        json: digitexRunOrderData!.missingClients!
+            .map((e) => e.toJson())
+            .toList(),
+        fun: (value) {
+          try {
+            print(value.toString());
+          } catch (e) {
+            LoadingDialog.callErrorMessage1(msg: "Failed To Map Clients");
+          }
+        });
+  }
+
+  mapAgencies() {
+    Get.find<ConnectorControl>().POSTMETHOD_FORMDATA(
+        api: ApiFactory.IMPORT_DIGITEX_RUN_ORDER_MAP_AGENCY,
+        json: digitexRunOrderData!.missingAgencies!
+            .map((e) => e.toJson())
+            .toList(),
+        fun: (value) {
+          try {
+            print(value.toString());
+          } catch (e) {
+            LoadingDialog.callErrorMessage1(msg: "Failed To Map Agencies");
+          }
+        });
+  }
 }
