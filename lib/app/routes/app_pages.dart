@@ -58,7 +58,7 @@ class AppPages {
     ),
     GetPage(
       name: _Paths.IMPORT_DIGITEXT_RUN_ORDER,
-      page: () => const ImportDigitextRunOrderView(),
+      page: () => AuthGuard1(childName: _Paths.IMPORT_DIGITEXT_RUN_ORDER),
       binding: ImportDigitextRunOrderBinding(),
     ),
     GetPage(

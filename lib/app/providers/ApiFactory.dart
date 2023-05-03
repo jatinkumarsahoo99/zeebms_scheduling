@@ -146,4 +146,7 @@ class ApiFactory {
 
   static String IMPORT_DIGITEX_RUN_ORDER_IMPORT(locationCode, channelCode) =>
       "$BASE_URL/api/ImportDigitexRunOrder/LoadDigitexRunOrder?LocationCode=$locationCode&ChannelCode=$channelCode";
+  static String IMPORT_DIGITEX_RUN_ORDER_SAVE(
+          locationCode, channelCode, date) =>
+      "$BASE_URL/api/ImportDigitexRunOrder/SaveRunOrder?LocationCode=$locationCode&ChannelCode=$channelCode&BookingDate=$date";
 }

@@ -13,6 +13,7 @@ import 'package:flutter/material.dart';
 
 import 'package:get/get.dart';
 
+import '../../../controller/HomeController.dart';
 import '../controllers/import_digitext_run_order_controller.dart';
 
 class ImportDigitextRunOrderView
@@ -277,13 +278,55 @@ class ImportDigitextRunOrderView
           ),
 
           // Bottom Section with 50 height container
-          Container(
-            height: 50.0,
-            child: Center(
-              child:
-                  Text('This is the bottom button section based on permission'),
-            ),
-          ),
+          GetBuilder<HomeController>(
+              id: "buttons",
+              init: Get.find<HomeController>(),
+              builder: (btncontroller) {
+                /* PermissionModel formPermissions = Get.find<MainController>()
+                      .permissionList!
+                      .lastWhere((element) {
+                    return element.appFormName == "frmSegmentsDetails";
+                  });*/
+
+                return Container(
+                  height: 40,
+                  child: ButtonBar(
+                    // buttonHeight: 20,
+                    alignment: MainAxisAlignment.start,
+                    mainAxisSize: MainAxisSize.min,
+                    // pa
+                    children: [
+                      for (var btn in btncontroller.buttons!)
+                        btn["name"] == "Save"
+                            ? Obx(() => FormButtonWrapper(
+                                  btnText: btn["name"],
+
+                                  // isEnabled: btn['isDisabled'],
+                                  callback: controller.allowSave.value == true
+                                      ? () {
+                                          controller.saveRunOrder();
+                                        }
+                                      : null,
+                                ))
+                            : btn["name"] == "Clear"
+                                ? FormButtonWrapper(
+                                    btnText: btn["name"],
+
+                                    // isEnabled: btn['isDisabled'],
+                                    callback: () {
+                                      btncontroller.clearPage1();
+                                    },
+                                  )
+                                : FormButtonWrapper(
+                                    btnText: btn["name"],
+
+                                    // isEnabled: btn['isDisabled'],
+                                    callback: null,
+                                  ),
+                    ],
+                  ),
+                );
+              }),
         ],
       ),
     );
