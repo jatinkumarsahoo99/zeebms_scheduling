@@ -1,4 +1,5 @@
 import 'package:bms_scheduling/app/modules/RoBooking/views/dummydata.dart';
+import 'package:bms_scheduling/widgets/DataGridShowOnly.dart';
 import 'package:bms_scheduling/widgets/DateTime/DateWithThreeTextField.dart';
 import 'package:bms_scheduling/widgets/FormButton.dart';
 import 'package:bms_scheduling/widgets/dropdown.dart';
@@ -15,6 +16,38 @@ import '../controllers/import_digitext_run_order_controller.dart';
 class ImportDigitextRunOrderView
     extends GetView<ImportDigitextRunOrderController> {
   const ImportDigitextRunOrderView({Key? key}) : super(key: key);
+
+  getPageData(int index) {
+    switch (index) {
+      case 0:
+        return (controller.digitexRunOrderData?.missingClients
+                ?.map((e) => e.toJson())
+                .toList() ??
+            []);
+      case 1:
+        return (controller.digitexRunOrderData?.newBrands ?? []);
+      case 2:
+        return (controller.digitexRunOrderData?.newClocks ?? []);
+      case 3:
+        return (controller.digitexRunOrderData?.missingAgencies
+                ?.map((e) => e.toJson())
+                .toList() ??
+            []);
+      case 4:
+        return (controller.digitexRunOrderData?.missingLinks
+                ?.map((e) => e.toJson())
+                .toList() ??
+            []);
+      case 5:
+        return (controller.digitexRunOrderData?.myData
+                ?.map((e) => e.toJson())
+                .toList() ??
+            []);
+      default:
+        return [];
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -83,29 +116,64 @@ class ImportDigitextRunOrderView
           //       items: controller.radiofilters,
           //       groupValue: controller.selectedradiofilter),
           // ),
-          Padding(
-            padding: const EdgeInsets.all(4.0),
-            child: CupertinoSlidingSegmentedControl(
-                groupValue: controller.radiofilters.first,
-                children: Map.fromEntries(
-                    controller.radiofilters.map((e) => MapEntry(e, Text(e)))),
-                onValueChanged: (value) {}),
-          ),
+          Obx(() => Padding(
+                padding: const EdgeInsets.all(4.0),
+                child: CupertinoSlidingSegmentedControl(
+                    groupValue: controller.selectedradiofilter.value,
+                    children: Map.fromEntries(controller.radiofilters
+                        .map((e) => MapEntry(e, Text(e)))),
+                    onValueChanged: (value) {
+                      controller.selectedradiofilter.value = value ?? "";
+                      controller.pageController
+                          .jumpToPage(controller.radiofilters.indexOf(value!));
+                    }),
+              )),
           // Middle Section taking up entire remaining space
           Expanded(
             child: Container(
-              padding: EdgeInsets.all(4),
-              child: DataGridFromMap(
-                mapData: dummyProgram,
-                formatDate: false,
-              ),
-            ),
+                padding: EdgeInsets.all(4),
+                child: GetBuilder<ImportDigitextRunOrderController>(
+                    init: controller,
+                    id: "data",
+                    builder: (digtexController) {
+                      print("updating  grid");
+                      if (digtexController.digitexRunOrderData != null) {
+                        return PageView.builder(
+                            controller: controller.pageController,
+                            itemCount: controller.radiofilters.length,
+                            physics: NeverScrollableScrollPhysics(),
+                            itemBuilder: (context, index) {
+                              return Stack(
+                                alignment: Alignment.bottomRight,
+                                children: [
+                                  DataGridShowOnlyKeys(
+                                    mapData: getPageData(index),
+                                    formatDate: false,
+                                    hideCode: false,
+                                    onRowDoubleTap: (tapEvent) {
+                                      print(tapEvent.rowIdx.toString());
+                                    },
+                                  ),
+                                  if (index == 0)
+                                    ElevatedButton(
+                                        onPressed: () {},
+                                        child: Text("Map Client")),
+                                  if (index == 3)
+                                    ElevatedButton(
+                                        onPressed: () {},
+                                        child: Text("Map Agencies"))
+                                ],
+                              );
+                            });
+                      } else {
+                        return Container();
+                      }
+                    })),
           ),
 
           // Bottom Section with 50 height container
           Container(
             height: 50.0,
-            color: Colors.red,
             child: Center(
               child:
                   Text('This is the bottom button section based on permission'),

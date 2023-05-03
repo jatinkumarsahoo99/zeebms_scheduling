@@ -1,4 +1,5 @@
 import 'dart:io';
+import 'package:bms_scheduling/app/modules/ImportDigitextRunOrder/bindings/digitex_run_order_data.dart';
 import 'package:dio/dio.dart' as dio;
 import 'package:http_parser/http_parser.dart';
 
@@ -14,20 +15,23 @@ import '../../../data/DropDownValue.dart';
 class ImportDigitextRunOrderController extends GetxController {
   //TODO: Implement ImportDigitextRunOrderController
   List<String> radiofilters = [
-    "Missing Chart",
+    "Missing Clients",
     "New Brands",
     "NewClocks",
+    "Missing Agencies",
     "Missing Links",
     "My Data"
   ];
-  String selectedradiofilter = "Missing Chart";
+
+  var selectedradiofilter = "Missing Clients".obs;
   RxList<DropDownValue> locations = <DropDownValue>[].obs;
   RxList<DropDownValue> channels = <DropDownValue>[].obs;
   DropDownValue? selectedLocation;
   DropDownValue? selectedChannel;
+  DigitexRunOrderData? digitexRunOrderData;
   var importedFile = Rxn<PlatformFile>();
   TextEditingController fileController = TextEditingController();
-
+  PageController pageController = PageController();
   final count = 0.obs;
   @override
   void onInit() {
@@ -58,7 +62,19 @@ class ImportDigitextRunOrderController extends GetxController {
             selectedLocation!.key, selectedChannel!.key),
         json: formData,
         fun: (value) {
-          print(value);
+          try {
+            if (value is Map<String, dynamic>) {
+              digitexRunOrderData = DigitexRunOrderData.fromJson(value);
+              update(["data"]);
+            }
+            if (digitexRunOrderData!.message != null &&
+                digitexRunOrderData!.message!.isNotEmpty) {
+              LoadingDialog.callErrorMessage1(
+                  msg: digitexRunOrderData!.message!);
+            }
+          } catch (e) {
+            LoadingDialog.callErrorMessage1(msg: "Failed To Import File");
+          }
         });
   }
 
@@ -70,7 +86,7 @@ class ImportDigitextRunOrderController extends GetxController {
       fileController.text = result.files.single.name;
       importfile();
     } else {
-      // User canceled the picker
+      // User canceled the pic5ker
     }
   }
 
