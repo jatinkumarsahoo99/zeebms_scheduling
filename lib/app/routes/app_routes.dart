@@ -24,7 +24,8 @@ abstract class RoutesList {
     _Paths.MAM_WORK_ORDERS,
     _Paths.RO_BOOKING,
     _Paths.FPC_MISMATCH,
-    _Paths.COMMERCIAL
+    _Paths.COMMERCIAL,
+    _Paths.SPOT_PRIORITY,
   ];
 }
 
