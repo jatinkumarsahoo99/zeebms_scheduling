@@ -99,17 +99,26 @@ class ApiFactory {
   static String FPC_MISMATCH(String location, String channelCode, String dt) =>
       // BASE_URL + "/api/FpcMismatch/BindFPCMismatchGrid/$location,$channelCode,$dt";
       BASE_URL +
+<<<<<<< HEAD
       "/api/FpcMismatch/BindFPCMismatchGrid?LocationCode=$location&ChannelCode=$channelCode&EffectiveDate=$dt";
+=======
+      "/api/FpcMismatch/BindFPCMismatchGrid/$location,$channelCode,$dt";
+>>>>>>> c1225489a3f7fe5772a2a5e180b706e297251289
 
   static String FPC_MISMATCH_ERROR(
           String location, String channelCode, String dt) =>
       BASE_URL +
+<<<<<<< HEAD
       // "/api/FpcMismatch/BindFPCMismatchGridError/$location,$channelCode,$dt";
       "/api/FpcMismatch/BindFPCMismatchGridError?LocationCode=$location&ChannelCode=$channelCode&EffectiveDate=$dt";
+=======
+      "/api/FpcMismatch/BindFPCMismatchGridError/$location,$channelCode,$dt";
+>>>>>>> c1225489a3f7fe5772a2a5e180b706e297251289
 
   static String FPC_MISMATCH_ALL(
           String location, String channelCode, String dt) =>
       BASE_URL +
+<<<<<<< HEAD
       // "/api/FpcMismatch/BindFPCMismatchGridAll/$location,$channelCode,$dt";
       "/api/FpcMismatch/BindFPCMismatchGridAll?LocationCode=$location&ChannelCode=$channelCode&EffectiveDate=$dt";
 
@@ -117,6 +126,13 @@ class ApiFactory {
           String location, String channelCode, String dt) =>
       // BASE_URL + "/api/FpcMismatch/BindWebFPCGrid/$location,$channelCode,$dt";
       BASE_URL + "/api/FpcMismatch/BindWebFPCGrid?LocationCode=$location&ChannelCode=$channelCode&TelecastDate=$dt";
+=======
+      "/api/FpcMismatch/BindFPCMismatchGridAll/$location,$channelCode,$dt";
+
+  static String FPC_MISMATCH_PROGRAM(
+          String location, String channelCode, String dt) =>
+      BASE_URL + "/api/FpcMismatch/BindWebFPCGrid/$location,$channelCode,$dt";
+>>>>>>> c1225489a3f7fe5772a2a5e180b706e297251289
 
   static String FPC_MISMATCH_MARK_ERROR =
       BASE_URL + "/api/FpcMismatch/UpdateRecordError";
@@ -127,4 +143,13 @@ class ApiFactory {
   static String FPC_MISMATCH_SAVE = BASE_URL + "/api/FpcMismatch/UpdateRecord";
 
 /////////////////////////////////////////////////////////////////////////////////////////
+
+//////////////// Import Digitex Run Order: UI:SHOEB SHAIKH, API: INDRESH ///////////////
+
+  static String IMPORT_DIGITEX_RUN_ORDER_LOCATION =
+      "$BASE_URL/api/ImportDigitexRunOrder/GetLocations";
+  static String IMPORT_DIGITEX_RUN_ORDER_CHANNEL(locationCode) =>
+      "$BASE_URL/api/ImportDigitexRunOrder/GetChannels/$locationCode";
+  static String IMPORT_DIGITEX_RUN_ORDER_IMPORT(locationCode, channelCode) =>
+      "$BASE_URL/api/ImportDigitexRunOrder/LoadDigitexRunOrder?LocationCode=$locationCode&ChannelCode=$channelCode";
 }

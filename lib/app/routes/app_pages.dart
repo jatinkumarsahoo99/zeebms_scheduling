@@ -42,10 +42,6 @@ class AppPages {
       page: () => AuthGuard1(childName: _Paths.LOG_ADDITIONS),
     ),
     GetPage(
-      name: _Paths.LOG_ADDITIONS,
-      page: () => AuthGuard1(childName: _Paths.LOG_ADDITIONS),
-    ),
-    GetPage(
       name: _Paths.MAM_WORK_ORDERS,
       page: () => MamWorkOrdersView(),
       binding: MamWorkOrdersBinding(),
@@ -61,6 +57,7 @@ class AppPages {
       binding: RoBookingBinding(),
     ),
     GetPage(
+<<<<<<< HEAD
       name: _Paths.IMPORT_DIGITEXT_RUN_ORDER,
       page: () => const ImportDigitextRunOrderView(),
       binding: ImportDigitextRunOrderBinding(),
@@ -73,6 +70,14 @@ class AppPages {
       name: _Paths.SPOT_PRIORITY,
       page: () => SpotPriorityView(),
       binding: SpotPriorityBinding(),
+=======
+        name: _Paths.IMPORT_DIGITEXT_RUN_ORDER,
+        page: () => AuthGuard1(childName: _Paths.IMPORT_DIGITEXT_RUN_ORDER),
+        binding: ImportDigitextRunOrderBinding()),
+    GetPage(
+      name: _Paths.FPC_MISMATCH,
+      page: () => AuthGuard1(childName: _Paths.FPC_MISMATCH),
+>>>>>>> c1225489a3f7fe5772a2a5e180b706e297251289
     ),
   ];
 }
