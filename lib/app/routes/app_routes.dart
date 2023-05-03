@@ -31,12 +31,12 @@ abstract class RoutesList {
 abstract class _Paths {
   _Paths._();
   static const HOME = '/home';
-  static const TRANSMISSION_LOG = '/transmission-log';
-  static const LOG_ADDITIONS = '/log-additions';
-  static const MAM_WORK_ORDERS = '/mam-work-orders';
-  static const RO_BOOKING = '/ro-booking';
-  static const IMPORT_DIGITEXT_RUN_ORDER = '/import-digitext-run-order';
+  static const TRANSMISSION_LOG = '/frmTransmissionlog';
+  static const LOG_ADDITIONS = '/frmAdditions';
+  static const MAM_WORK_ORDERS = '/frmMAMWorkOrders';
+  static const RO_BOOKING = '/frmROBooking';
+  static const IMPORT_DIGITEXT_RUN_ORDER = '/frmBARBRunOrder';
   static const FPC_MISMATCH = '/frmFPCMismatch';
-  static const COMMERCIAL = '/commercial';
-  static const SPOT_PRIORITY = '/spot-priority';
+  static const COMMERCIAL = '/frmCommercialScheduling';
+  static const SPOT_PRIORITY = '/frmSpotPriority';
 }
