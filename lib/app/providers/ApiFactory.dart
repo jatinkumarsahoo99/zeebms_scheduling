@@ -130,6 +130,10 @@ class ApiFactory {
       "$BASE_URL/api/ImportDigitexRunOrder/GetLocations";
   static String IMPORT_DIGITEX_RUN_ORDER_CHANNEL(locationCode) =>
       "$BASE_URL/api/ImportDigitexRunOrder/GetChannels/$locationCode";
+  static String IMPORT_DIGITEX_RUN_ORDER_AGENCY =
+      "$BASE_URL/api/ImportDigitexRunOrder/GetAgencyMasters/Sky/";
+  static String IMPORT_DIGITEX_RUN_ORDER_CLIENT =
+      "$BASE_URL/api/ImportDigitexRunOrder/GetClientMasters/";
   static String IMPORT_DIGITEX_RUN_ORDER_IMPORT(locationCode, channelCode) =>
       "$BASE_URL/api/ImportDigitexRunOrder/LoadDigitexRunOrder?LocationCode=$locationCode&ChannelCode=$channelCode";
 }
