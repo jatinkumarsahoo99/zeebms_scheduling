@@ -19,32 +19,32 @@ class MamWorkOrdersView extends GetView<MamWorkOrdersController> {
         children: [
           Padding(
             padding: const EdgeInsets.all(4.0),
-            child: CupertinoSlidingSegmentedControl(
-                groupValue: null,
-                children: Map.fromEntries(
-                    controller.mainTabs.map((e) => MapEntry(e, Text(e)))),
-                onValueChanged: (value) {
-                  controller.pageController.jumpToPage(controller.mainTabs
-                      .indexWhere((element) => element == value));
-                }),
+            child: Obx(() {
+              return CupertinoSlidingSegmentedControl(
+                  thumbColor: CupertinoColors.white,
+                  groupValue: controller.selectedTab.value,
+                  children: Map.fromEntries(controller.mainTabs.map((e) => MapEntry(e, Text(e)))),
+                  onValueChanged: (value) {
+                    controller.pageController.jumpToPage(controller.mainTabs.indexWhere((element) {
+                      if (element == value) {
+                        controller.selectedTab.value = element;
+                        return true;
+                      } else {
+                        return false;
+                      }
+                    }));
+                  });
+            }),
           ),
           Expanded(
               child: Card(
             margin: EdgeInsets.symmetric(vertical: 0, horizontal: 5),
-            shape: RoundedRectangleBorder(
-                borderRadius: BorderRadius.vertical(
-                    top: Radius.zero, bottom: Radius.circular(8))),
+            shape: RoundedRectangleBorder(borderRadius: BorderRadius.vertical(top: Radius.zero, bottom: Radius.circular(8))),
             child: Padding(
               padding: const EdgeInsets.all(8.0),
               child: PageView(
                 controller: controller.pageController,
-                children: [
-                  ReleaseWoNonFpcView(),
-                  WoAsPerDailyFpcView(),
-                  WoRepushView(),
-                  CancelWoView(),
-                  WoHistoryView()
-                ],
+                children: [ReleaseWoNonFpcView(), WoAsPerDailyFpcView(), WoRepushView(), CancelWoView(), WoHistoryView()],
               ),
             ),
           )),

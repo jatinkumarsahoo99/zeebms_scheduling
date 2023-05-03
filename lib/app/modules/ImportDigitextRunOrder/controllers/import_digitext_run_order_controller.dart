@@ -1,11 +1,8 @@
-import 'dart:io';
-import 'package:bms_scheduling/app/modules/ImportDigitextRunOrder/bindings/digitex_run_order_data.dart';
-import 'package:dio/dio.dart' as dio;
-import 'package:http_parser/http_parser.dart';
-
 import 'package:bms_scheduling/app/controller/ConnectorControl.dart';
+import 'package:bms_scheduling/app/modules/ImportDigitextRunOrder/bindings/digitex_run_order_data.dart';
 import 'package:bms_scheduling/app/providers/ApiFactory.dart';
 import 'package:bms_scheduling/widgets/LoadingDialog.dart';
+import 'package:dio/dio.dart' as dio;
 import 'package:file_picker/file_picker.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:get/get.dart';
@@ -14,14 +11,7 @@ import '../../../data/DropDownValue.dart';
 
 class ImportDigitextRunOrderController extends GetxController {
   //TODO: Implement ImportDigitextRunOrderController
-  List<String> radiofilters = [
-    "Missing Clients",
-    "New Brands",
-    "NewClocks",
-    "Missing Agencies",
-    "Missing Links",
-    "My Data"
-  ];
+  List<String> radiofilters = ["Missing Clients", "New Brands", "NewClocks", "Missing Agencies", "Missing Links", "My Data"];
 
   var selectedradiofilter = "Missing Clients".obs;
   RxList<DropDownValue> locations = <DropDownValue>[].obs;
@@ -58,8 +48,7 @@ class ImportDigitextRunOrderController extends GetxController {
     });
 
     Get.find<ConnectorControl>().POSTMETHOD_FORMDATA(
-        api: ApiFactory.IMPORT_DIGITEX_RUN_ORDER_IMPORT(
-            selectedLocation!.key, selectedChannel!.key),
+        api: ApiFactory.IMPORT_DIGITEX_RUN_ORDER_IMPORT(selectedLocation!.key, selectedChannel!.key),
         json: formData,
         fun: (value) {
           try {
@@ -67,10 +56,8 @@ class ImportDigitextRunOrderController extends GetxController {
               digitexRunOrderData = DigitexRunOrderData.fromJson(value);
               update(["data"]);
             }
-            if (digitexRunOrderData!.message != null &&
-                digitexRunOrderData!.message!.isNotEmpty) {
-              LoadingDialog.callErrorMessage1(
-                  msg: digitexRunOrderData!.message!);
+            if (digitexRunOrderData!.message != null && digitexRunOrderData!.message!.isNotEmpty) {
+              LoadingDialog.callErrorMessage1(msg: digitexRunOrderData!.message!);
             }
           } catch (e) {
             LoadingDialog.callErrorMessage1(msg: "Failed To Import File");
@@ -96,13 +83,9 @@ class ImportDigitextRunOrderController extends GetxController {
           api: ApiFactory.IMPORT_DIGITEX_RUN_ORDER_LOCATION,
           fun: (data) {
             if (data is List) {
-              locations.value = data
-                  .map((e) => DropDownValue(
-                      key: e["locationCode"], value: e["locationName"]))
-                  .toList();
+              locations.value = data.map((e) => DropDownValue(key: e["locationCode"], value: e["locationName"])).toList();
             } else {
-              LoadingDialog.callErrorMessage1(
-                  msg: "Failed To Load Initial Data");
+              LoadingDialog.callErrorMessage1(msg: "Failed To Load Initial Data");
             }
           });
     } catch (e) {
@@ -116,13 +99,9 @@ class ImportDigitextRunOrderController extends GetxController {
           api: ApiFactory.IMPORT_DIGITEX_RUN_ORDER_CHANNEL(locationCode),
           fun: (data) {
             if (data is List) {
-              channels.value = data
-                  .map((e) => DropDownValue(
-                      key: e["channelCode"], value: e["channelName"]))
-                  .toList();
+              channels.value = data.map((e) => DropDownValue(key: e["channelCode"], value: e["channelName"])).toList();
             } else {
-              LoadingDialog.callErrorMessage1(
-                  msg: "Failed To Load Initial Data");
+              LoadingDialog.callErrorMessage1(msg: "Failed To Load Initial Data");
             }
           });
     } catch (e) {

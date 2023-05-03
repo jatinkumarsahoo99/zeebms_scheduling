@@ -3,13 +3,8 @@ import 'package:get/get.dart';
 
 class MamWorkOrdersController extends GetxController {
   //TODO: Implement MamWorkOrdersController
-  List<String> mainTabs = [
-    "Release WO Non FPC",
-    "WO As Per Daily FPC",
-    "WO Re-push",
-    "Cancel WO",
-    "WO History"
-  ];
+  List<String> mainTabs = ["Release WO Non FPC", "WO As Per Daily FPC", "WO Re-push", "Cancel WO", "WO History"];
+  var selectedTab = "Release WO Non FPC".obs;
   PageController pageController = PageController();
   final count = 0.obs;
   @override
