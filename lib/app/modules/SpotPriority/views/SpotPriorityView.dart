@@ -11,11 +11,11 @@ import '../../../../widgets/input_fields.dart';
 import '../../../../widgets/radio_row.dart';
 import '../../../controller/HomeController.dart';
 import '../../../providers/SizeDefine.dart';
-import '../controllers/LogAdditionsController.dart';
+import '../controllers/SpotPriorityController.dart';
 
-class LogAdditionsView extends GetView<LogAdditionsController> {
-  LogAdditionsController controllerX = Get.put<LogAdditionsController>(LogAdditionsController());
+class SpotPriorityView extends GetView<SpotPriorityController> {
 
+  SpotPriorityController controllerX = Get.put<SpotPriorityController>(SpotPriorityController());
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -25,13 +25,13 @@ class LogAdditionsView extends GetView<LogAdditionsController> {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            GetBuilder<LogAdditionsController>(
+            GetBuilder<SpotPriorityController>(
               init: controllerX,
               id: "updateView",
               builder: (control) {
                 return Padding(
                   padding:
-                      const EdgeInsets.symmetric(vertical: 8, horizontal: 15),
+                  const EdgeInsets.symmetric(vertical: 8, horizontal: 15),
                   child: SizedBox(
                     width: double.maxFinite,
                     child: Wrap(
@@ -40,9 +40,9 @@ class LogAdditionsView extends GetView<LogAdditionsController> {
                       spacing: 5,
                       children: [
                         Obx(
-                          () => DropDownField.formDropDown1WidthMap(
+                              () => DropDownField.formDropDown1WidthMap(
                             controllerX.locations.value,
-                            (value) {
+                                (value) {
                               controllerX.selectLocation = value;
                               controllerX.getChannels(
                                   controllerX.selectLocation?.key ?? "");
@@ -59,9 +59,9 @@ class LogAdditionsView extends GetView<LogAdditionsController> {
 
                         /// channel
                         Obx(
-                          () => DropDownField.formDropDown1WidthMap(
+                              () => DropDownField.formDropDown1WidthMap(
                             controllerX.channels.value,
-                            (value) {
+                                (value) {
                               controllerX.selectChannel = value;
                             },
                             "Channel",
@@ -75,7 +75,7 @@ class LogAdditionsView extends GetView<LogAdditionsController> {
                         ),
 
                         Obx(
-                          () => DateWithThreeTextField(
+                              () => DateWithThreeTextField(
                             title: "Schedule Date",
                             splitType: "-",
                             widthRation: 0.12,
@@ -98,7 +98,7 @@ class LogAdditionsView extends GetView<LogAdditionsController> {
                           ),
                         ),
                         Obx(
-                          () => RadioRow(
+                              () => RadioRow(
                             items: const ["Primary", "Secondary"],
                             groupValue: controllerX.verifyType.value ?? "",
                             onchange: (val) {
@@ -113,19 +113,19 @@ class LogAdditionsView extends GetView<LogAdditionsController> {
                             children: [
                               SizedBox(width: 5),
                               Obx(() => Padding(
-                                    padding: const EdgeInsets.only(top: 15.0),
-                                    child: Checkbox(
-                                      value: controllerX.isStandby.value,
-                                      onChanged: (val) {
-                                        controllerX.isStandby.value = val!;
-                                      },
-                                      materialTapTargetSize:
-                                          MaterialTapTargetSize.shrinkWrap,
-                                    ),
-                                  )),
+                                padding: const EdgeInsets.only(top: 15.0),
+                                child: Checkbox(
+                                  value: controllerX.isStandby.value,
+                                  onChanged: (val) {
+                                    controllerX.isStandby.value = val!;
+                                  },
+                                  materialTapTargetSize:
+                                  MaterialTapTargetSize.shrinkWrap,
+                                ),
+                              )),
                               Padding(
                                 padding:
-                                    const EdgeInsets.only(top: 15.0, left: 5),
+                                const EdgeInsets.only(top: 15.0, left: 5),
                                 child: Text(
                                   "Standby Log",
                                   style: TextStyle(
@@ -141,19 +141,19 @@ class LogAdditionsView extends GetView<LogAdditionsController> {
                             children: [
                               SizedBox(width: 5),
                               Obx(() => Padding(
-                                    padding: const EdgeInsets.only(top: 15.0),
-                                    child: Checkbox(
-                                      value: controllerX.isIgnoreSpot.value,
-                                      onChanged: (val) {
-                                        controllerX.isIgnoreSpot.value = val!;
-                                      },
-                                      materialTapTargetSize:
-                                          MaterialTapTargetSize.shrinkWrap,
-                                    ),
-                                  )),
+                                padding: const EdgeInsets.only(top: 15.0),
+                                child: Checkbox(
+                                  value: controllerX.isIgnoreSpot.value,
+                                  onChanged: (val) {
+                                    controllerX.isIgnoreSpot.value = val!;
+                                  },
+                                  materialTapTargetSize:
+                                  MaterialTapTargetSize.shrinkWrap,
+                                ),
+                              )),
                               Padding(
                                 padding:
-                                    const EdgeInsets.only(top: 15.0, left: 5),
+                                const EdgeInsets.only(top: 15.0, left: 5),
                                 child: Text(
                                   "Ignore Sports in Log",
                                   style: TextStyle(
@@ -206,7 +206,7 @@ class LogAdditionsView extends GetView<LogAdditionsController> {
             ),
             // Divider(),
 
-            GetBuilder<LogAdditionsController>(
+            GetBuilder<SpotPriorityController>(
               id: "transmissionList",
               init: controllerX,
               builder: (controller) {
@@ -214,18 +214,18 @@ class LogAdditionsView extends GetView<LogAdditionsController> {
                   // width: Get.width,
                   // height: Get.height * .33,
                   child: (controllerX.logAdditionModel != null &&
-                          (controllerX.logAdditionModel?.isNotEmpty)!)
+                      (controllerX.logAdditionModel?.isNotEmpty)!)
                       ? DataGridFromMap1(
-                          onFocusChange: (value) {
-                            controllerX.gridStateManager!
-                                .setGridMode(PlutoGridMode.selectWithOneTap);
-                            controllerX.selectedPlutoGridMode =
-                                PlutoGridMode.selectWithOneTap;
-                          },
-                          onload: (loadevent) {
-                            controllerX.gridStateManager =
-                                loadevent.stateManager;
-                           /* if (controller.selectedIndex != null) {
+                      onFocusChange: (value) {
+                        controllerX.gridStateManager!
+                            .setGridMode(PlutoGridMode.selectWithOneTap);
+                        controllerX.selectedPlutoGridMode =
+                            PlutoGridMode.selectWithOneTap;
+                      },
+                      onload: (loadevent) {
+                        controllerX.gridStateManager =
+                            loadevent.stateManager;
+                        /* if (controller.selectedIndex != null) {
                               loadevent.stateManager.moveScrollByRow(
                                   PlutoMoveDirection.down,
                                   controller.selectedIndex);
@@ -239,21 +239,21 @@ class LogAdditionsView extends GetView<LogAdditionsController> {
                                       .value,
                                   controller.selectedIndex);
                             }*/
-                          },
-                          hideKeys: ["color", "modifed", ""],
-                          showSrNo: true,
-                          colorCallback: (PlutoRowColorContext plutoContext) {
-                            /* return (controllerX
+                      },
+                      hideKeys: ["color", "modifed", ""],
+                      showSrNo: true,
+                      colorCallback: (PlutoRowColorContext plutoContext) {
+                        /* return (controllerX
                                               .dailyFpcListData![plutoContext.rowIdx].selectItem)!
                                               ? Colors.red
                                               : Colors.white;*/
-                            return Color(controllerX
-                                    .logAdditionModel![plutoContext.rowIdx]
-                                    .colorNo ??
-                                Colors.white.value);
-                          },
-                          onSelected: (event) {
-                            /*  controllerX.segmentList?.value = [];
+                        return Color(controllerX
+                            .logAdditionModel![plutoContext.rowIdx]
+                            .colorNo ??
+                            Colors.white.value);
+                      },
+                      onSelected: (event) {
+                        /*  controllerX.segmentList?.value = [];
                           controller.update(["segmentList"]);
 
                           DailyFPCModel data = controllerX.dailyFpcListData![event.rowIdx!];
@@ -300,22 +300,22 @@ class LogAdditionsView extends GetView<LogAdditionsController> {
                           } catch (e) {
                             print("DataGridFromMap1 OPERATION FPC PAGE ${e.toString()}");
                           }*/
-                          },
-                          mode: controllerX.selectedPlutoGridMode,
-                          widthRatio: (Get.width / 11.4),
-                          mapData: controllerX.logAdditionModel!
-                              .map((e) => e.toJson1())
-                              .toList())
+                      },
+                      mode: controllerX.selectedPlutoGridMode,
+                      widthRatio: (Get.width / 11.4),
+                      mapData: controllerX.logAdditionModel!
+                          .map((e) => e.toJson1())
+                          .toList())
                       : Container(
-                          // height: Get.height * .33,
-                          // width: Get.width,
-                          decoration: BoxDecoration(
-                            border: Border.all(
-                              color: Colors.grey.shade400,
-                              width: 1,
-                            ),
-                          ),
-                        ),
+                    // height: Get.height * .33,
+                    // width: Get.width,
+                    decoration: BoxDecoration(
+                      border: Border.all(
+                        color: Colors.grey.shade400,
+                        width: 1,
+                      ),
+                    ),
+                  ),
                 );
               },
             ),
