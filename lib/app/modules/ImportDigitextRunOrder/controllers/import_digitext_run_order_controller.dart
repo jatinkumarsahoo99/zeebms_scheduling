@@ -6,6 +6,7 @@ import 'package:dio/dio.dart' as dio;
 import 'package:file_picker/file_picker.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:get/get.dart';
+import 'package:pluto_grid/pluto_grid.dart';
 
 import '../../../data/DropDownValue.dart';
 
@@ -22,7 +23,10 @@ class ImportDigitextRunOrderController extends GetxController {
   var importedFile = Rxn<PlatformFile>();
   TextEditingController fileController = TextEditingController();
   PageController pageController = PageController();
+  PlutoGridStateManager? clientGridStateManager;
+  PlutoGridStateManager? agencyGridStateManager;
   final count = 0.obs;
+  RxBool allowSave = RxBool(false);
   @override
   void onInit() {
     getLocation();
@@ -37,6 +41,38 @@ class ImportDigitextRunOrderController extends GetxController {
   @override
   void onClose() {
     super.onClose();
+  }
+
+  getLocation() {
+    try {
+      Get.find<ConnectorControl>().GETMETHODCALL(
+          api: ApiFactory.IMPORT_DIGITEX_RUN_ORDER_LOCATION,
+          fun: (data) {
+            if (data is List) {
+              locations.value = data.map((e) => DropDownValue(key: e["locationCode"], value: e["locationName"])).toList();
+            } else {
+              LoadingDialog.callErrorMessage1(msg: "Failed To Load Initial Data");
+            }
+          });
+    } catch (e) {
+      LoadingDialog.callErrorMessage1(msg: "Failed To Load Initial Data");
+    }
+  }
+
+  getChannel(locationCode) {
+    try {
+      Get.find<ConnectorControl>().GETMETHODCALL(
+          api: ApiFactory.IMPORT_DIGITEX_RUN_ORDER_CHANNEL(locationCode),
+          fun: (data) {
+            if (data is List) {
+              channels.value = data.map((e) => DropDownValue(key: e["channelCode"], value: e["channelName"])).toList();
+            } else {
+              LoadingDialog.callErrorMessage1(msg: "Failed To Load Initial Data");
+            }
+          });
+    } catch (e) {
+      LoadingDialog.callErrorMessage1(msg: "Failed To Load Initial Data");
+    }
   }
 
   importfile() async {
@@ -77,35 +113,39 @@ class ImportDigitextRunOrderController extends GetxController {
     }
   }
 
-  getLocation() {
-    try {
-      Get.find<ConnectorControl>().GETMETHODCALL(
-          api: ApiFactory.IMPORT_DIGITEX_RUN_ORDER_LOCATION,
-          fun: (data) {
-            if (data is List) {
-              locations.value = data.map((e) => DropDownValue(key: e["locationCode"], value: e["locationName"])).toList();
-            } else {
-              LoadingDialog.callErrorMessage1(msg: "Failed To Load Initial Data");
-            }
-          });
-    } catch (e) {
-      LoadingDialog.callErrorMessage1(msg: "Failed To Load Initial Data");
-    }
+  updateClientData(PlutoGridOnRowDoubleTapEvent tapEvent, DropDownValue client) {
+    clientGridStateManager!.changeCellValue(clientGridStateManager!.rows[tapEvent.rowIdx].cells["clientName"]!, client.value.toString(),
+        force: true, callOnChangedEvent: false);
+    clientGridStateManager!.changeCellValue(clientGridStateManager!.rows[tapEvent.rowIdx].cells["clientCode"]!, client.key.toString(),
+        force: true, callOnChangedEvent: false);
+    digitexRunOrderData!.missingClients![tapEvent.rowIdx].clientCode = client.key.toString();
+    digitexRunOrderData!.missingClients![tapEvent.rowIdx].clientName = client.value.toString();
   }
 
-  getChannel(locationCode) {
-    try {
-      Get.find<ConnectorControl>().GETMETHODCALL(
-          api: ApiFactory.IMPORT_DIGITEX_RUN_ORDER_CHANNEL(locationCode),
-          fun: (data) {
-            if (data is List) {
-              channels.value = data.map((e) => DropDownValue(key: e["channelCode"], value: e["channelName"])).toList();
-            } else {
-              LoadingDialog.callErrorMessage1(msg: "Failed To Load Initial Data");
-            }
-          });
-    } catch (e) {
-      LoadingDialog.callErrorMessage1(msg: "Failed To Load Initial Data");
-    }
+  clearClientData(PlutoGridOnRowDoubleTapEvent tapEvent, DropDownValue client) {
+    clientGridStateManager!
+        .changeCellValue(clientGridStateManager!.rows[tapEvent.rowIdx].cells["clientName"]!, "", force: true, callOnChangedEvent: false);
+    clientGridStateManager!
+        .changeCellValue(clientGridStateManager!.rows[tapEvent.rowIdx].cells["clientCode"]!, "", force: true, callOnChangedEvent: false);
+    digitexRunOrderData!.missingClients![tapEvent.rowIdx].clientCode = "";
+    digitexRunOrderData!.missingClients![tapEvent.rowIdx].clientName = "";
+  }
+
+  updateAgencyData(PlutoGridOnRowDoubleTapEvent tapEvent, DropDownValue agency) {
+    clientGridStateManager!.changeCellValue(clientGridStateManager!.rows[tapEvent.rowIdx].cells["agencyName"]!, agency.value.toString(),
+        force: true, callOnChangedEvent: false);
+    clientGridStateManager!.changeCellValue(clientGridStateManager!.rows[tapEvent.rowIdx].cells["agencyCode"]!, agency.key.toString(),
+        force: true, callOnChangedEvent: false);
+    digitexRunOrderData!.missingClients![tapEvent.rowIdx].clientCode = agency.key.toString();
+    digitexRunOrderData!.missingClients![tapEvent.rowIdx].clientName = agency.value.toString();
+  }
+
+  clearAgencyData(PlutoGridOnRowDoubleTapEvent tapEvent, DropDownValue agency) {
+    agencyGridStateManager!
+        .changeCellValue(agencyGridStateManager!.rows[tapEvent.rowIdx].cells["agencyName"]!, "", force: true, callOnChangedEvent: false);
+    agencyGridStateManager!
+        .changeCellValue(agencyGridStateManager!.rows[tapEvent.rowIdx].cells["agencyCode"]!, "", force: true, callOnChangedEvent: false);
+    digitexRunOrderData!.missingAgencies![tapEvent.rowIdx].agenciesCode = "";
+    digitexRunOrderData!.missingAgencies![tapEvent.rowIdx].agenciesName = "";
   }
 }
