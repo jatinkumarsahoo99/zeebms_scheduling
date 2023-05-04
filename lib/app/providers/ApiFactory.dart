@@ -1,5 +1,6 @@
 // ignore_for_file: non_constant_identifier_names
 
+import 'package:bms_scheduling/app/data/DropDownValue.dart';
 import 'package:flutter/foundation.dart';
 import 'package:intl/intl.dart';
 
@@ -116,7 +117,8 @@ class ApiFactory {
   static String FPC_MISMATCH_PROGRAM(
           String location, String channelCode, String dt) =>
       // BASE_URL + "/api/FpcMismatch/BindWebFPCGrid/$location,$channelCode,$dt";
-      BASE_URL + "/api/FpcMismatch/BindWebFPCGrid?LocationCode=$location&ChannelCode=$channelCode&TelecastDate=$dt";
+      BASE_URL +
+      "/api/FpcMismatch/BindWebFPCGrid?LocationCode=$location&ChannelCode=$channelCode&TelecastDate=$dt";
 
   static String FPC_MISMATCH_MARK_ERROR =
       BASE_URL + "/api/FpcMismatch/UpdateRecordError";
@@ -127,4 +129,34 @@ class ApiFactory {
   static String FPC_MISMATCH_SAVE = BASE_URL + "/api/FpcMismatch/UpdateRecord";
 
 /////////////////////////////////////////////////////////////////////////////////////////
+
+//////////////////////////////////////////Log Additions API: Deven UI: Sanjaya///////////////////////////////////////////////
+  static String LOG_ADDITION_LOCATION =
+      BASE_URL + "/api/Additions/GetLoadLocation";
+  static String LOG_ADDITION_CHANNEL =
+      BASE_URL + "/api/Additions/GetLocationSelect?Locationcode=";
+
+  static String LOG_ADDITION_PREVIOUS_ADDITION(
+    String locName,
+    String chnlName,
+    String date,
+    String aditionNo,
+  ) =>
+      BASE_URL +
+      "/api/Additions/GetDisplayPreviousAdditon?locationName=$locName&channelName=$chnlName&Date=$date&additionnumber=$aditionNo";
+
+  static String LOG_ADDITION_SHOW_DETAILS(
+          DropDownValue locDetail,
+          DropDownValue chnlDetails,
+          String date,
+          bool isPrimary,
+          bool checkStandBy,
+          bool checkIgnore) =>
+      BASE_URL +
+      "/api/Additions/GetShowDetails?Locationcode=${locDetail.key}&locationName=${locDetail.value}&channelcode=${chnlDetails.key}&channelName=${chnlDetails.value}&logdate=$date&optPrimary=$isPrimary&chkStandby=$checkStandBy&chkIgnore=$checkIgnore";
+
+  static String LOG_ADDITION_GET_ADDITIONS(
+          DropDownValue locDetail, DropDownValue chnlDetails, String date) =>
+      BASE_URL +
+      "/api/Additions/GetPopulateAdditions?Locationcode=${locDetail.key}&channelcode=${chnlDetails.key}&Date=$date";
 }

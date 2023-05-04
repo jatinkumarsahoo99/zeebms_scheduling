@@ -33,6 +33,7 @@ class DataGridFromMap extends StatelessWidget {
     this.columnAutoResize = true,
     this.actionOnPress,
     this.onSelected,
+    this.onRowCheck,
     this.checkRowKey = "selected",
     this.onRowDoubleTap,
     this.formatDate = true,
@@ -61,6 +62,7 @@ class DataGridFromMap extends StatelessWidget {
   final Function(bool)? onFocusChange;
   final List? hideKeys;
   final Function(PlutoGridOnSelectedEvent)? onSelected;
+  final Function(PlutoGridOnRowCheckedEvent)? onRowCheck;
   final double? widthRatio;
   final IconData? actionIcon;
   final String? actionIconKey;
@@ -287,6 +289,7 @@ class DataGridFromMap extends StatelessWidget {
             columns: segColumn,
             onRowDoubleTap: onRowDoubleTap,
             onSelected: onSelected,
+            onRowChecked: onRowCheck,
             rows: segRows),
       ),
     );
@@ -559,6 +562,7 @@ class DataGridFromMap3 extends StatelessWidget {
             columns: segColumn,
             onRowDoubleTap: onRowDoubleTap,
             onSelected: onSelected,
+            // onRowChecked: onRowCheck,
             rows: segRows),
       ),
     );
