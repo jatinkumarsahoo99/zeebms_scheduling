@@ -1,19 +1,21 @@
 import 'package:get/get.dart';
 
-import '../modules/ImportDigitextRunOrder/bindings/import_digitext_run_order_binding.dart';
-import '../modules/ImportDigitextRunOrder/views/import_digitext_run_order_view.dart';
 import '../modules/FpcMismatch/bindings/fpc_mismatch_binding.dart';
 import '../modules/FpcMismatch/views/FpcMismatchView.dart';
+import '../modules/ImportDigitextRunOrder/bindings/import_digitext_run_order_binding.dart';
+import '../modules/ImportDigitextRunOrder/views/import_digitext_run_order_view.dart';
 import '../modules/LogAdditions/bindings/log_additions_binding.dart';
 import '../modules/LogAdditions/views/LogAdditionsView.dart';
 import '../modules/MamWorkOrders/bindings/mam_work_orders_binding.dart';
 import '../modules/MamWorkOrders/views/mam_work_orders_view.dart';
 import '../modules/RoBooking/bindings/ro_booking_binding.dart';
 import '../modules/RoBooking/views/ro_booking_view.dart';
+import '../modules/RoCancellation/bindings/ro_cancellation_binding.dart';
+import '../modules/RoCancellation/views/ro_cancellation_view.dart';
 import '../modules/TransmissionLog/bindings/transmission_log_binding.dart';
+import '../modules/TransmissionLog/views/TransmissionLogView.dart';
 import '../modules/commercial/bindings/commercial_binding.dart';
 import '../modules/commercial/views/commercial_view.dart';
-import '../modules/TransmissionLog/views/TransmissionLogView.dart';
 import '../modules/home/bindings/home_binding.dart';
 import '../modules/home/views/home_view.dart';
 import '../providers/AuthGuard1.dart';
@@ -23,7 +25,7 @@ part 'app_routes.dart';
 class AppPages {
   AppPages._();
 
-  static const INITIAL = Routes.IMPORT_DIGITEXT_RUN_ORDER;
+  static const INITIAL = Routes.RO_CANCELLATION;
 
   static final routes = [
     GetPage(
@@ -61,6 +63,11 @@ class AppPages {
     GetPage(
       name: _Paths.FPC_MISMATCH,
       page: () => AuthGuard1(childName: _Paths.FPC_MISMATCH),
+    ),
+    GetPage(
+      name: _Paths.RO_CANCELLATION,
+      page: () => AuthGuard1(childName: _Paths.RO_CANCELLATION),
+      binding: RoCancellationBinding(),
     ),
   ];
 }
