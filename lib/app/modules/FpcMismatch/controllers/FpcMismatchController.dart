@@ -1,5 +1,6 @@
 import 'dart:convert';
 
+import 'package:bms_scheduling/app/data/DropDownValue.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:get/get.dart';
 import 'package:intl/intl.dart';
@@ -16,8 +17,8 @@ import '../FPCMisMatchProgramModel.dart';
 class FpcMismatchController extends GetxController {
   // DataTableSource dataTable = FPCMismatchTable();
   // DataTableSource programTable = FPCMismatchProgramTable();
-  List<SystemEnviroment>? channelList = [];
-  List<SystemEnviroment>? locationList = [];
+  RxList<DropDownValue>? channelList = RxList([]);
+  RxList<DropDownValue>? locationList = RxList([]);
   List<FPCMisMatchModel>? dataList = [];
   List<FPCMisMatchProgramModel>? programList = [];
 
@@ -25,20 +26,20 @@ class FpcMismatchController extends GetxController {
   DateTime? selectedDate = DateTime.now();
   DateFormat df = DateFormat("dd/MM/yyyy");
   DateFormat df1 = DateFormat("dd-MM-yyyy");
-  DateFormat df2 = DateFormat("MM-dd-yyyy");
-  SystemEnviroment? selectedChannel;
-  SystemEnviroment? selectedLocation;
+  DateFormat df2 = DateFormat("dd-MMM-yyyy");
+  DropDownValue? selectedChannel;
+  DropDownValue? selectedLocation;
   FPCMisMatchProgramModel? selectedProgram;
   TextEditingController date_ = TextEditingController();
   int? selectIndex = 0;
 
-  double widthSize=0.12;
+  double widthSize = 0.12;
 
   @override
   void onInit() {
     // fetchChannel();
     fetchLocation();
-    date_.text = df.format(now);
+    date_.text = df1.format(now);
     super.onInit();
   }
 
@@ -48,7 +49,7 @@ class FpcMismatchController extends GetxController {
       api: ApiFactory.FPC_MISMATCH_LOCATION,
       fun: (List list) {
         list.forEach((element) {
-          locationList?.add(new SystemEnviroment(
+          locationList?.add(new DropDownValue(
               key: element["locationCode"], value: element["locationName"]));
         });
         update(["initialData"]);
@@ -63,8 +64,8 @@ class FpcMismatchController extends GetxController {
           selectedLocation?.key ?? ""),
       fun: (List list) {
         list.forEach((element) {
-          channelList?.add(new SystemEnviroment(
-              key: element["channelcode"], value: element["channelName"]));
+          channelList?.add(new DropDownValue(
+              key: element["channelCode"], value: element["channelName"]));
         });
         update(["initialData"]);
       },
@@ -72,6 +73,7 @@ class FpcMismatchController extends GetxController {
   }
 
   fetchMismatch() {
+    print(">>Key is>>>>>" + (selectedChannel?.key ?? ""));
     if (selectedLocation == null) {
       Snack.callError("Please select location");
     } else if (selectedChannel == null) {
@@ -80,6 +82,7 @@ class FpcMismatchController extends GetxController {
       Snack.callError("Please select date");
     } else {
       // LoadingDialog.call();
+      selectedDate = df1.parse(date_.text);
       Get.find<ConnectorControl>().GETMETHODCALL(
           api: ApiFactory.FPC_MISMATCH(selectedLocation?.key ?? "",
               selectedChannel?.key ?? "", df2.format(selectedDate!)),
@@ -108,6 +111,7 @@ class FpcMismatchController extends GetxController {
       Snack.callError("Please select date");
     } else {
       // LoadingDialog.call();
+      selectedDate = df1.parse(date_.text);
       Get.find<ConnectorControl>().GETMETHODCALL(
           api: ApiFactory.FPC_MISMATCH_ERROR(selectedLocation?.key ?? "",
               selectedChannel?.key ?? "", df2.format(selectedDate!)),
@@ -135,6 +139,7 @@ class FpcMismatchController extends GetxController {
       Snack.callError("Please select date");
     } else {
       // LoadingDialog.call();
+      selectedDate = df1.parse(date_.text);
       Get.find<ConnectorControl>().GETMETHODCALL(
         api: ApiFactory.FPC_MISMATCH_ALL(selectedLocation?.key ?? "",
             selectedChannel?.key ?? "", df2.format(selectedDate!)),
@@ -160,6 +165,7 @@ class FpcMismatchController extends GetxController {
       Snack.callError("Please select date");
     } else {
       LoadingDialog.call();
+      selectedDate = df1.parse(date_.text);
       Get.find<ConnectorControl>().GETMETHODCALL(
         api: ApiFactory.FPC_MISMATCH_PROGRAM(selectedLocation?.key ?? "",
             selectedChannel?.key ?? "", df2.format(selectedDate!)),
@@ -192,35 +198,47 @@ class FpcMismatchController extends GetxController {
     } else if (selectedProgram == null) {
       Snack.callError("Please select program");
     } else {
-      List<FPCMisMatchModel> postMapList = (dataList
-          ?.where((element) => (element.selectItem == true))
-          .toList())!;
-      var postMap1 = postMapList
-          .map((e) => e.toSaveJson(
-          selectedLocation?.key ?? "",
-          selectedChannel?.key ?? "",
-          selectedProgram?.programCode ?? "",
-          selectedProgram?.startTime ?? ""))
-          .toList();
+      FPCMisMatchModel? modelData =
+          dataList?.firstWhere((element) => (element.selectItem)!);
 
-      var postData = {"data": postMap1};
-      print("????" + jsonEncode(postData));
-
-      LoadingDialog.call();
-      Get.find<ConnectorControl>().POSTMETHOD(
-        api: ApiFactory.FPC_MISMATCH_SAVE,
-        json: postMap1,
-        fun: (dynamic data) {
-          Get.back();
-          if (data.toString().toLowerCase() == "success") {
-            // LoadingDialog.callDataSavedMessage("Record Saved successfully");
-            LoadingDialog.callDataSaved();
-          } else {
-            Snack.callError("Something went wrong");
-          }
-        },
-      );
+      if (modelData?.fpcTime != selectedProgram?.startTime) {
+        LoadingDialog.recordExists("Booked FPC Time doesn't matches with Scheduled FPC Time. Want to continue?",(){
+          updateRecord();
+        },deleteCancel: "No",deleteTitle: "Yes");
+      } else {
+        updateRecord();
+      }
     }
+  }
+
+  updateRecord() {
+    List<FPCMisMatchModel> postMapList =
+        (dataList?.where((element) => (element.selectItem == true)).toList())!;
+    var postMap1 = postMapList
+        .map((e) => e.toSaveJson(
+            selectedLocation?.key ?? "",
+            selectedChannel?.key ?? "",
+            selectedProgram?.programCode ?? "",
+            selectedProgram?.startTime ?? ""))
+        .toList();
+
+    var postData = {"data": postMap1};
+    print("????" + jsonEncode(postData));
+
+    LoadingDialog.call();
+    Get.find<ConnectorControl>().POSTMETHOD(
+      api: ApiFactory.FPC_MISMATCH_SAVE,
+      json: postMap1,
+      fun: (dynamic data) {
+        Get.back();
+        if (data.toString().toLowerCase() == "success") {
+          // LoadingDialog.callDataSavedMessage("Record Saved successfully");
+          LoadingDialog.callDataSaved();
+        } else {
+          Snack.callError("Something went wrong");
+        }
+      },
+    );
   }
 
   saveMarkError() {
@@ -248,7 +266,7 @@ class FpcMismatchController extends GetxController {
           .toList())!;
       var postMap1 = postMapList
           .map((e) => e.toMarkErrorJson(
-          selectedLocation?.key ?? "", selectedChannel?.key ?? ""))
+              selectedLocation?.key ?? "", selectedChannel?.key ?? ""))
           .toList();
       // var data={
       //   "moDta":postMapList.map((e) => e.toMarkErrorJson(selectedLocation?.key??"", selectedChannel?.key??"")).toList()
@@ -295,7 +313,7 @@ class FpcMismatchController extends GetxController {
           .toList())!;
       var postMap1 = postMapList
           .map((e) => e.toMarkErrorJson(
-          selectedLocation?.key ?? "", selectedChannel?.key ?? ""))
+              selectedLocation?.key ?? "", selectedChannel?.key ?? ""))
           .toList();
 
       LoadingDialog.call();

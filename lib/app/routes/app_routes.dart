@@ -13,6 +13,7 @@ abstract class Routes {
   static const IMPORT_DIGITEXT_RUN_ORDER = _Paths.IMPORT_DIGITEXT_RUN_ORDER;
   static const FPC_MISMATCH = _Paths.FPC_MISMATCH;
   static const RO_CANCELLATION = _Paths.RO_CANCELLATION;
+  static const SPOT_PRIORITY = _Paths.SPOT_PRIORITY;
 }
 
 abstract class RoutesList {
@@ -31,12 +32,13 @@ abstract class RoutesList {
 abstract class _Paths {
   _Paths._();
   static const HOME = '/home';
-  static const TRANSMISSION_LOG = '/transmission-log';
-  static const LOG_ADDITIONS = '/log-additions';
-  static const MAM_WORK_ORDERS = '/mam-work-orders';
-  static const RO_BOOKING = '/ro-booking';
-  static const IMPORT_DIGITEXT_RUN_ORDER = '/import-digitext-run-order';
+  static const TRANSMISSION_LOG = '/frmTransmissionlog';
+  static const LOG_ADDITIONS = '/frmAdditions';
+  static const MAM_WORK_ORDERS = '/frmMAMWorkOrders';
+  static const RO_BOOKING = '/frmROBooking';
+  static const IMPORT_DIGITEXT_RUN_ORDER = '/frmBARBRunOrder';
   static const FPC_MISMATCH = '/frmFPCMismatch';
   static const COMMERCIAL = '/commercial';
   static const RO_CANCELLATION = '/ro-cancellation';
+  static const SPOT_PRIORITY = '/frmSpotPriority';
 }

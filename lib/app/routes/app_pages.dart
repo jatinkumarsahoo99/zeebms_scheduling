@@ -12,6 +12,8 @@ import '../modules/RoBooking/bindings/ro_booking_binding.dart';
 import '../modules/RoBooking/views/ro_booking_view.dart';
 import '../modules/RoCancellation/bindings/ro_cancellation_binding.dart';
 import '../modules/RoCancellation/views/ro_cancellation_view.dart';
+import '../modules/SpotPriority/bindings/spot_priority_binding.dart';
+import '../modules/SpotPriority/views/SpotPriorityView.dart';
 import '../modules/TransmissionLog/bindings/transmission_log_binding.dart';
 import '../modules/TransmissionLog/views/TransmissionLogView.dart';
 import '../modules/commercial/bindings/commercial_binding.dart';
@@ -57,12 +59,18 @@ class AppPages {
       binding: RoBookingBinding(),
     ),
     GetPage(
-        name: _Paths.IMPORT_DIGITEXT_RUN_ORDER,
-        page: () => AuthGuard1(childName: _Paths.IMPORT_DIGITEXT_RUN_ORDER),
-        binding: ImportDigitextRunOrderBinding()),
+      name: _Paths.IMPORT_DIGITEXT_RUN_ORDER,
+      page: () => AuthGuard1(childName: _Paths.IMPORT_DIGITEXT_RUN_ORDER),
+      binding: ImportDigitextRunOrderBinding(),
+    ),
     GetPage(
       name: _Paths.FPC_MISMATCH,
       page: () => AuthGuard1(childName: _Paths.FPC_MISMATCH),
+    ),
+    GetPage(
+      name: _Paths.SPOT_PRIORITY,
+      page: () => SpotPriorityView(),
+      binding: SpotPriorityBinding(),
     ),
     GetPage(
       name: _Paths.RO_CANCELLATION,

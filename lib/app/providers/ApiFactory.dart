@@ -26,8 +26,8 @@ class ApiFactory {
 
   // static String SERVER_URL = "https://bmswebfrontend-uat.azurewebsites.net";
   static String WEB_URL = Enviroment.toLowerCase() == "uat"
-      ? "https://app-admin-bms-uat.zeeconnect.in"
-      : "https://app-admin-bms-dev.zeeconnect.in";
+      ? "https://app-scheduling-bms-uat.zeeconnect.in"
+      : "https://app-scheduling-bms-dev.zeeconnect.in";
   static String WEB_URL_COMMON = Enviroment.toLowerCase() == "uat"
       ? "https://app-common-bms-uat.zeeconnect.in"
       : "https://app-common-bms-dev.zeeconnect.in";
@@ -94,25 +94,30 @@ class ApiFactory {
       BASE_URL + "/api/FpcMismatch/GetLocations";
 
   static String FPC_MISMATCH_CHANNEL(String userId, String locCode) =>
-      BASE_URL + "/api/FpcMismatch/GetChannelMaster/$locCode";
+      BASE_URL + "/api/FpcMismatch/GetChannelMaster?locationCode=$locCode";
 
   static String FPC_MISMATCH(String location, String channelCode, String dt) =>
+      // BASE_URL + "/api/FpcMismatch/BindFPCMismatchGrid/$location,$channelCode,$dt";
       BASE_URL +
-      "/api/FpcMismatch/BindFPCMismatchGrid/$location,$channelCode,$dt";
+      "/api/FpcMismatch/BindFPCMismatchGrid?LocationCode=$location&ChannelCode=$channelCode&EffectiveDate=$dt";
 
   static String FPC_MISMATCH_ERROR(
           String location, String channelCode, String dt) =>
       BASE_URL +
-      "/api/FpcMismatch/BindFPCMismatchGridError/$location,$channelCode,$dt";
+      // "/api/FpcMismatch/BindFPCMismatchGridError/$location,$channelCode,$dt";
+      "/api/FpcMismatch/BindFPCMismatchGridError?LocationCode=$location&ChannelCode=$channelCode&EffectiveDate=$dt";
 
   static String FPC_MISMATCH_ALL(
           String location, String channelCode, String dt) =>
       BASE_URL +
-      "/api/FpcMismatch/BindFPCMismatchGridAll/$location,$channelCode,$dt";
+      // "/api/FpcMismatch/BindFPCMismatchGridAll/$location,$channelCode,$dt";
+      "/api/FpcMismatch/BindFPCMismatchGridAll?LocationCode=$location&ChannelCode=$channelCode&EffectiveDate=$dt";
 
   static String FPC_MISMATCH_PROGRAM(
           String location, String channelCode, String dt) =>
-      BASE_URL + "/api/FpcMismatch/BindWebFPCGrid/$location,$channelCode,$dt";
+      // BASE_URL + "/api/FpcMismatch/BindWebFPCGrid/$location,$channelCode,$dt";
+      BASE_URL +
+      "/api/FpcMismatch/BindWebFPCGrid?LocationCode=$location&ChannelCode=$channelCode&TelecastDate=$dt";
 
   static String FPC_MISMATCH_MARK_ERROR =
       BASE_URL + "/api/FpcMismatch/UpdateRecordError";
@@ -130,6 +135,18 @@ class ApiFactory {
       "$BASE_URL/api/ImportDigitexRunOrder/GetLocations";
   static String IMPORT_DIGITEX_RUN_ORDER_CHANNEL(locationCode) =>
       "$BASE_URL/api/ImportDigitexRunOrder/GetChannels/$locationCode";
+  static String IMPORT_DIGITEX_RUN_ORDER_AGENCY =
+      "$BASE_URL/api/ImportDigitexRunOrder/GetAgencyMasters/Sky/";
+  static String IMPORT_DIGITEX_RUN_ORDER_CLIENT =
+      "$BASE_URL/api/ImportDigitexRunOrder/GetClientMasters/";
+  static String IMPORT_DIGITEX_RUN_ORDER_MAP_CLIENT =
+      "$BASE_URL/api/ImportDigitexRunOrder/SaveMissingClientMaster";
+  static String IMPORT_DIGITEX_RUN_ORDER_MAP_AGENCY =
+      "$BASE_URL/api/ImportDigitexRunOrder/SaveMissingAgencyMaster";
+
   static String IMPORT_DIGITEX_RUN_ORDER_IMPORT(locationCode, channelCode) =>
       "$BASE_URL/api/ImportDigitexRunOrder/LoadDigitexRunOrder?LocationCode=$locationCode&ChannelCode=$channelCode";
+  static String IMPORT_DIGITEX_RUN_ORDER_SAVE(
+          locationCode, channelCode, date) =>
+      "$BASE_URL/api/ImportDigitexRunOrder/SaveRunOrder?LocationCode=$locationCode&ChannelCode=$channelCode&BookingDate=$date";
 }

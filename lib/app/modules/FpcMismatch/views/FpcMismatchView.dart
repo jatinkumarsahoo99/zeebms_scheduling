@@ -7,6 +7,7 @@ import 'package:get/get.dart';
 import 'package:intl/intl.dart';
 import 'package:pluto_grid/pluto_grid.dart';
 
+import '../../../../widgets/DateTime/DateWithThreeTextField.dart';
 import '../../../../widgets/DateWidget.dart';
 import '../../../../widgets/FormButton.dart';
 import '../../../../widgets/dropdown.dart';
@@ -32,7 +33,7 @@ class FpcMismatchView extends GetView<FpcMismatchController> {
         Get.delete<FpcMismatchController>();
         break;
       case "Refresh":
-      // controllerX.fetchMismatchAll();
+        // controllerX.fetchMismatchAll();
         break;
     }
   }
@@ -61,36 +62,68 @@ class FpcMismatchView extends GetView<FpcMismatchController> {
             GetBuilder<FpcMismatchController>(
               id: "initialData",
               builder: (control) {
+                print("List data>>>" + controllerX.locationList.toString());
                 return Padding(
                   padding: const EdgeInsets.only(left: 18.0, top: 10),
                   child: Row(
                     children: [
-                      DropDownField.formDropDownSelected(
-                          controllerX.locationList ?? [], (value) {
-                        controllerX.selectedLocation = value;
-                        controllerX.fetchChannel();
-                      }, "Location", null, widthRatio: controllerX.widthSize),
-                      DropDownField.formDropDownSelected(
-                          controllerX.channelList ?? [], (value) {
-                        controllerX.selectedChannel = value;
-                      }, "Channel", null,
-                          searchReq: true,
-                          widthRatio: controllerX.widthSize,
-                          paddingLeft: 5),
-                      DateWidget.dateStartDtEndDt3(context, "As On Date",
-                              (data) {
-                            log(">>>>" + data.toString());
-                            // controllerX.inwardToDt = data;
-                            controllerX.selectedDate = data;
-                            controllerX.date_.text =
-                                DateFormat("dd/MM/yyyy").format(data);
+                      Obx(
+                        () => DropDownField.formDropDown1WidthMap(
+                          controllerX.locationList?.value ?? [],
+                          (value) {
+                            controllerX.selectedLocation = value;
+                            controllerX.fetchChannel();
                           },
-                          startDt: DateTime.now(),
+                          "Location",
+                          controllerX.widthSize,
+                          // isEnable: controllerX.isEnable.value,
+                          selected: controllerX.selectedLocation,
+                          autoFocus: true,
+                          dialogWidth: 300,
+                          dialogHeight: Get.height * .7,
+                        ),
+                      ),
+                      SizedBox(width: 5,),
+                      Obx(
+                        () => DropDownField.formDropDown1WidthMap(
+                          controllerX.channelList?.value ?? [],
+                          (value) {
+                            controllerX.selectedChannel = value;
+                            print("Value is>>>"+value.toString());
+                          },
+                          "Channel",
+                          controllerX.widthSize,
+                          // isEnable: controllerX.isEnable.value,
+                          selected: controllerX.selectedChannel,
+                          autoFocus: true,
+                          dialogWidth: 300,
+                          dialogHeight: Get.height * .7,
+                        ),
+                      ),
+                    /*  DateWidget.dateStartDtEndDt3(context, "As On Date",
+                          (data) {
+                        log(">>>>" + data.toString());
+                        // controllerX.inwardToDt = data;
+                        controllerX.selectedDate = data;
+                        controllerX.date_.text =
+                            DateFormat("dd/MM/yyyy").format(data);
+                      },
+                          // startDt: DateTime.now(),
                           //Note: Data Availble on 1 OCT 2012
-                          // startDt: DateTime.now().subtract(Duration(days: 5000)),
+                          startDt: DateTime.now().subtract(Duration(days: 5000)),
                           endDt: DateTime.now().add(Duration(days: 1825)),
                           initialValue: controllerX.date_.text,
-                          widthRatio: controllerX.widthSize),
+                          widthRatio: controllerX.widthSize),*/
+                      SizedBox(width: 5,),
+                      DateWithThreeTextField(
+                        title: "As On Date",
+                        // startDt: DateTime.now(),
+                        //Note: Data Availble on 1 OCT 2012
+                        startDate: DateTime.now().subtract(Duration(days: 5000)),
+                        endDate: DateTime.now().add(Duration(days: 1825)),
+                        mainTextController: controllerX.date_,
+                        widthRation: controllerX.widthSize,
+                      ),
                       const SizedBox(
                         width: 5,
                       ),
@@ -190,12 +223,12 @@ class FpcMismatchView extends GetView<FpcMismatchController> {
                           FormButtonWrapper(
                             btnText: btn["name"],
                             callback: Utils.btnAccessHandler2(btn['name'],
-                                controller, formPermissions) ==
-                                null
+                                        controller, formPermissions) ==
+                                    null
                                 ? null
                                 : () => formHandler(
-                              btn['name'],
-                            ),
+                                      btn['name'],
+                                    ),
                           )
                       ],
                     );
@@ -213,33 +246,32 @@ class FpcMismatchView extends GetView<FpcMismatchController> {
         id: "fpcMaster",
         // init: CreateBreakPatternController(),
         builder: (controller) {
+          print("Data grid values>>>"+controllerX.dataList.toString());
           if (controllerX.dataList != null &&
               (controllerX.dataList?.isNotEmpty)!) {
             // final key = GlobalKey();
-            return SizedBox(
-              width: Get.width * 0.78,
-              child: Expanded(
-                // height: 400,
-                // flex: 5,
-                child: DataGridFromMap(
-                  mapData:
-                  (controllerX.dataList?.map((e) => e.toJson1()).toList())!,
-                  widthRatio: 90,
-                  colorCallback: (PlutoRowColorContext plutoContext) {
-                    return (controllerX
-                        .dataList![plutoContext.rowIdx].selectItem)!
-                        ? Colors.red
-                        : Colors.white;
-                  },
-                  mode: PlutoGridMode.select,
-                  onSelected: (PlutoGridOnSelectedEvent plutoEvnt) {
-                    controllerX.dataList![plutoEvnt.rowIdx!].selectItem =
-                    ((controllerX.dataList![plutoEvnt.rowIdx!].selectItem)!)
-                        ? false
-                        : true;
-                    controller.update(["fpcMaster"]);
-                  },
-                ),
+            return Expanded(
+              // height: 400,
+              flex: 5,
+              child: DataGridFromMap(
+                showSrNo: false,
+                mapData:(controllerX.dataList?.map((e) => e.toJson1()).toList())!,
+                widthRatio: 90,
+                colorCallback: (PlutoRowColorContext plutoContext) {
+                  return (controllerX
+                          .dataList![plutoContext.rowIdx].selectItem)!
+                      ? Colors.red
+                      : Colors.white;
+                },
+                mode: PlutoGridMode.selectWithOneTap,
+                formatDate: false,
+                onSelected: (PlutoGridOnSelectedEvent plutoEvnt) {
+                  controllerX.dataList![plutoEvnt.rowIdx!].selectItem =
+                      ((controllerX.dataList![plutoEvnt.rowIdx!].selectItem)!)
+                          ? false
+                          : true;
+                  controller.update(["fpcMaster"]);
+                },
               ),
             );
           } else {
@@ -273,6 +305,7 @@ class FpcMismatchView extends GetView<FpcMismatchController> {
             // final key = GlobalKey();
             return Expanded(
               // height: 400,
+              flex:2,
               child: DataGridFromMap(
                 mapData: (controllerX.programList
                     ?.map((e) => e.toJson1())
@@ -281,7 +314,7 @@ class FpcMismatchView extends GetView<FpcMismatchController> {
                 mode: PlutoGridMode.select,
                 onSelected: (plutoGrid) {
                   controllerX.selectedProgram =
-                  controllerX.programList![plutoGrid.rowIdx!];
+                      controllerX.programList![plutoGrid.rowIdx!];
                   print(">>>>>>Program Data>>>>>>" +
                       jsonEncode(controllerX.selectedProgram?.toJson()));
                 },
@@ -306,6 +339,4 @@ class FpcMismatchView extends GetView<FpcMismatchController> {
           }
         });
   }
-
-
 }

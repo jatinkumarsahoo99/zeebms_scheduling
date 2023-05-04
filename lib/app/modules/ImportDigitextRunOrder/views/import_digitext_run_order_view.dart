@@ -1,4 +1,6 @@
+import 'package:bms_scheduling/app/data/DropDownValue.dart';
 import 'package:bms_scheduling/app/modules/RoBooking/views/dummydata.dart';
+import 'package:bms_scheduling/app/providers/ApiFactory.dart';
 import 'package:bms_scheduling/widgets/DataGridShowOnly.dart';
 import 'package:bms_scheduling/widgets/DateTime/DateWithThreeTextField.dart';
 import 'package:bms_scheduling/widgets/FormButton.dart';
@@ -11,6 +13,7 @@ import 'package:flutter/material.dart';
 
 import 'package:get/get.dart';
 
+import '../../../controller/HomeController.dart';
 import '../controllers/import_digitext_run_order_controller.dart';
 
 class ImportDigitextRunOrderView
@@ -149,18 +152,121 @@ class ImportDigitextRunOrderView
                                   DataGridShowOnlyKeys(
                                     mapData: getPageData(index),
                                     formatDate: false,
+                                    onload: (load) {
+                                      if (index == 0) {
+                                        controller.clientGridStateManager =
+                                            load.stateManager;
+                                      }
+                                    },
                                     hideCode: false,
                                     onRowDoubleTap: (tapEvent) {
-                                      print(tapEvent.rowIdx.toString());
+                                      DropDownValue? _client;
+                                      if (index == 0) {
+                                        Get.defaultDialog(
+                                            title: "Map Clients",
+                                            content: Column(
+                                              children: [
+                                                InputFields.formField1(
+                                                    hintTxt: "Digitex",
+                                                    width: 0.24,
+                                                    isEnable: false,
+                                                    controller:
+                                                        TextEditingController(
+                                                            text: tapEvent
+                                                                    .row
+                                                                    .cells[
+                                                                        "clientstoCreate"]
+                                                                    ?.value ??
+                                                                "")),
+                                                DropDownField
+                                                    .formDropDownSearchAPI2(
+                                                        GlobalKey(), context,
+                                                        parseKeyForKey:
+                                                            "clientCode",
+                                                        parseKeyForValue:
+                                                            "clientName",
+                                                        title: "Client",
+                                                        url: ApiFactory
+                                                            .IMPORT_DIGITEX_RUN_ORDER_CLIENT,
+                                                        onchanged: (data) {
+                                                  _client = data;
+                                                }),
+                                              ],
+                                            ),
+                                            cancel: FormButtonWrapper(
+                                                btnText: "Map",
+                                                callback: () {
+                                                  if (_client != null) {
+                                                    controller.updateClientData(
+                                                        tapEvent, _client!);
+                                                  }
+                                                }),
+                                            confirm: FormButtonWrapper(
+                                                btnText: "Clear",
+                                                callback: () {
+                                                  controller.clearClientData(
+                                                      tapEvent, _client!);
+                                                }));
+                                      } else if (index == 3) {
+                                        Get.defaultDialog(
+                                            title: "Map Agency",
+                                            content: Column(
+                                              children: [
+                                                InputFields.formField1(
+                                                    hintTxt: "Digitex",
+                                                    width: 0.24,
+                                                    isEnable: false,
+                                                    controller:
+                                                        TextEditingController(
+                                                            text: tapEvent
+                                                                    .row
+                                                                    .cells[
+                                                                        "agenciestoCreate"]
+                                                                    ?.value ??
+                                                                "")),
+                                                DropDownField
+                                                    .formDropDownSearchAPI2(
+                                                        GlobalKey(), context,
+                                                        parseKeyForKey:
+                                                            "agencyCode",
+                                                        parseKeyForValue:
+                                                            "agencyName",
+                                                        title: "Agency",
+                                                        url: ApiFactory
+                                                            .IMPORT_DIGITEX_RUN_ORDER_AGENCY,
+                                                        onchanged: (data) {
+                                                  _client = data;
+                                                }),
+                                              ],
+                                            ),
+                                            cancel: FormButtonWrapper(
+                                                btnText: "Map",
+                                                callback: () {
+                                                  if (_client != null) {
+                                                    controller.updateAgencyData(
+                                                        tapEvent, _client!);
+                                                  }
+                                                }),
+                                            confirm: FormButtonWrapper(
+                                                btnText: "Clear",
+                                                callback: () {
+                                                  controller.clearAgencyData(
+                                                      tapEvent, _client!);
+                                                }));
+                                      }
                                     },
                                   ),
                                   if (index == 0)
                                     ElevatedButton(
-                                        onPressed: () {},
+                                        onPressed: () {
+                                          controller.mapClients();
+                                        },
                                         child: Text("Map Client")),
                                   if (index == 3)
                                     ElevatedButton(
-                                        onPressed: () {},
+                                        onPressed: () {
+                                          controller.mapAgencies();
+                                        },
                                         child: Text("Map Agencies"))
                                 ],
                               );
@@ -172,13 +278,55 @@ class ImportDigitextRunOrderView
           ),
 
           // Bottom Section with 50 height container
-          Container(
-            height: 50.0,
-            child: Center(
-              child:
-                  Text('This is the bottom button section based on permission'),
-            ),
-          ),
+          GetBuilder<HomeController>(
+              id: "buttons",
+              init: Get.find<HomeController>(),
+              builder: (btncontroller) {
+                /* PermissionModel formPermissions = Get.find<MainController>()
+                      .permissionList!
+                      .lastWhere((element) {
+                    return element.appFormName == "frmSegmentsDetails";
+                  });*/
+
+                return Container(
+                  height: 40,
+                  child: ButtonBar(
+                    // buttonHeight: 20,
+                    alignment: MainAxisAlignment.start,
+                    mainAxisSize: MainAxisSize.min,
+                    // pa
+                    children: [
+                      for (var btn in btncontroller.buttons!)
+                        btn["name"] == "Save"
+                            ? Obx(() => FormButtonWrapper(
+                                  btnText: btn["name"],
+
+                                  // isEnabled: btn['isDisabled'],
+                                  callback: controller.allowSave.value == true
+                                      ? () {
+                                          controller.saveRunOrder();
+                                        }
+                                      : null,
+                                ))
+                            : btn["name"] == "Clear"
+                                ? FormButtonWrapper(
+                                    btnText: btn["name"],
+
+                                    // isEnabled: btn['isDisabled'],
+                                    callback: () {
+                                      btncontroller.clearPage1();
+                                    },
+                                  )
+                                : FormButtonWrapper(
+                                    btnText: btn["name"],
+
+                                    // isEnabled: btn['isDisabled'],
+                                    callback: null,
+                                  ),
+                    ],
+                  ),
+                );
+              }),
         ],
       ),
     );

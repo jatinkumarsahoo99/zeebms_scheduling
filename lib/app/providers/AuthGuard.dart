@@ -20,8 +20,8 @@ class AuthGuard extends StatelessWidget {
       // init: Get.find<MainController>(),
       init: MainController(),
       initState: (c) {
-        Get.find<MainController>().checkSession2();
-        Get.find<MainController>().checkSession();
+        // Get.find<MainController>().checkSession2();
+        // Get.find<MainController>().checkSession();
       },
       builder: (controller) {
         print("Login value>>" + controller.loginVal.value.toString());
