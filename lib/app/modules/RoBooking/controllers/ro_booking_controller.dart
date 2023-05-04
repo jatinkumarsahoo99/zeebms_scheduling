@@ -1,5 +1,6 @@
 import 'package:bms_scheduling/app/modules/RoBooking/views/deal_view.dart';
 import 'package:bms_scheduling/app/modules/RoBooking/views/program_view.dart';
+import 'package:bms_scheduling/app/modules/RoBooking/views/spots_view.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
@@ -13,7 +14,7 @@ class RoBookingController extends GetxController {
   Map tabs = {
     "Deal": DealView(),
     "Programs": ProgramView(),
-    "Spots": Container(),
+    "Spots": SpotsView(),
     "Make Good Spots": Container(),
     "Booking Summary": Container(),
     "Spots Not Verified": Container(),

@@ -31,11 +31,12 @@ class DealView extends GetView<RoBookingController> {
         SizedBox(
           height: 4,
         ),
-        Container(
-          height: Get.height / 2.5,
-          child: DataGridFromMap(
-            mapData: dummydata,
-            formatDate: false,
+        Expanded(
+          child: Container(
+            child: DataGridFromMap(
+              mapData: dummydata,
+              formatDate: false,
+            ),
           ),
         )
       ],
