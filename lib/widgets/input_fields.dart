@@ -225,7 +225,7 @@ class InputFields {
           // padding: const EdgeInsets.only(
           //     top: 6.0,
           //     bottom: 6.0),
-          margin: EdgeInsets.only(left: margin ? (padLeft ?? 10) : 0),
+
           height: height ?? SizeDefine.heightInputField,
           width: Get.width * width!,
 
