@@ -37,7 +37,7 @@ class MainController extends GetxController {
   @override
   void onInit() {
     sharedPref = SharedPref();
-    Utils.callJSToExit(param: "HandShaking");
+    // Utils.callJSToExit(param: "HandShaking");
     super.onInit();
     html.window.onMessage.listen((event) {
       // print("Point>>>"+event.toString());
