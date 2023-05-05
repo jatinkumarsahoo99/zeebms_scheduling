@@ -16,9 +16,9 @@ class DropDownValue {
   }
 
   DropDownValue.fromJsonDynamic(
-      Map<String, dynamic> json, String key, String name) {
-    value = json[name];
-    key = json[key];
+      Map<String, dynamic> json, String keyData, String name) {
+    value = json[name].toString();
+    key = json[keyData].toString();
   }
 
   Map<String, dynamic> toJson() {

@@ -25,7 +25,9 @@ abstract class RoutesList {
     _Paths.MAM_WORK_ORDERS,
     _Paths.RO_BOOKING,
     _Paths.FPC_MISMATCH,
-    _Paths.COMMERCIAL
+    _Paths.COMMERCIAL,
+    _Paths.SPOT_PRIORITY,
+    _Paths.RO_CANCELLATION,
   ];
 }
 
@@ -38,7 +40,7 @@ abstract class _Paths {
   static const RO_BOOKING = '/frmROBooking';
   static const IMPORT_DIGITEXT_RUN_ORDER = '/frmBARBRunOrder';
   static const FPC_MISMATCH = '/frmFPCMismatch';
-  static const COMMERCIAL = '/commercial';
-  static const RO_CANCELLATION = '/ro-cancellation';
+  static const COMMERCIAL = '/frmCommercialScheduling';
+  static const RO_CANCELLATION = '/frmROCancellation';
   static const SPOT_PRIORITY = '/frmSpotPriority';
 }

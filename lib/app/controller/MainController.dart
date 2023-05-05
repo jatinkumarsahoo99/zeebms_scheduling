@@ -14,6 +14,7 @@ import '../data/user.dart';
 import '../providers/Aes.dart';
 import '../providers/ApiFactory.dart';
 import '../providers/SharedPref.dart';
+import '../providers/Utils.dart';
 import 'ConnectorControl.dart';
 
 class MainController extends GetxController {
@@ -31,13 +32,27 @@ class MainController extends GetxController {
   SharedPref? sharedPref;
   List<PermissionModel>? permissionList = [];
   String formName = "";
+  RxBool handShakingDone = RxBool(false);
 
   @override
   void onInit() {
     sharedPref = SharedPref();
-    // checkSession();
-    // checkSessionFromParams();
+    Utils.callJSToExit(param: "HandShaking");
     super.onInit();
+    html.window.onMessage.listen((event) {
+      // print("Point>>>"+event.toString());
+      print(event.data.toString());
+      if (event.origin == ApiFactory.NOTIFY_URL) {
+        if (event.data.toString().contains("HandShakeDone")) {
+          handShakingDone.value = true;
+          print("Handshake Done");
+        } else {
+          print("Not in error code 2");
+        }
+      } else {
+        print("Not in error code 1");
+      }
+    });
   }
 
 
