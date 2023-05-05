@@ -6,6 +6,7 @@ import 'package:dio/dio.dart' as dio;
 import 'package:file_picker/file_picker.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:get/get.dart';
+import 'package:intl/intl.dart';
 import 'package:pluto_grid/pluto_grid.dart';
 
 import '../../../data/DropDownValue.dart';
@@ -13,10 +14,12 @@ import '../../../data/DropDownValue.dart';
 class ImportDigitextRunOrderController extends GetxController {
   //TODO: Implement ImportDigitextRunOrderController
   List<String> radiofilters = ["Missing Clients", "New Brands", "NewClocks", "Missing Agencies", "Missing Links", "My Data"];
-
+  DateFormat df1 = DateFormat("dd-MMM-yyyy");
+  DateFormat df2 = DateFormat("yyyy-MM-dd");
   var selectedradiofilter = "Missing Clients".obs;
   RxList<DropDownValue> locations = <DropDownValue>[].obs;
   RxList<DropDownValue> channels = <DropDownValue>[].obs;
+  TextEditingController scheduleDate = TextEditingController();
   DropDownValue? selectedLocation;
   DropDownValue? selectedChannel;
   DigitexRunOrderData? digitexRunOrderData;
@@ -26,10 +29,11 @@ class ImportDigitextRunOrderController extends GetxController {
   PlutoGridStateManager? clientGridStateManager;
   PlutoGridStateManager? agencyGridStateManager;
   final count = 0.obs;
-  RxBool allowSave = RxBool(false);
+  var allowSave = RxBool(false);
   @override
   void onInit() {
     getLocation();
+    scheduleDate.text = df1.format(DateTime.now());
     super.onInit();
   }
 
@@ -76,6 +80,7 @@ class ImportDigitextRunOrderController extends GetxController {
   }
 
   importfile() async {
+    LoadingDialog.call();
     dio.FormData formData = dio.FormData.fromMap({
       'ImportFile': dio.MultipartFile.fromBytes(
         importedFile.value!.bytes!.toList(),
@@ -87,6 +92,7 @@ class ImportDigitextRunOrderController extends GetxController {
         api: ApiFactory.IMPORT_DIGITEX_RUN_ORDER_IMPORT(selectedLocation!.key, selectedChannel!.key),
         json: formData,
         fun: (value) {
+          Get.back();
           try {
             if (value is Map<String, dynamic>) {
               digitexRunOrderData = DigitexRunOrderData.fromJson(value);
@@ -120,6 +126,7 @@ class ImportDigitextRunOrderController extends GetxController {
         force: true, callOnChangedEvent: false);
     digitexRunOrderData!.missingClients![tapEvent.rowIdx].clientCode = client.key.toString();
     digitexRunOrderData!.missingClients![tapEvent.rowIdx].clientName = client.value.toString();
+    checkSave();
   }
 
   clearClientData(PlutoGridOnRowDoubleTapEvent tapEvent, DropDownValue client) {
@@ -129,6 +136,7 @@ class ImportDigitextRunOrderController extends GetxController {
         .changeCellValue(clientGridStateManager!.rows[tapEvent.rowIdx].cells["clientCode"]!, "", force: true, callOnChangedEvent: false);
     digitexRunOrderData!.missingClients![tapEvent.rowIdx].clientCode = "";
     digitexRunOrderData!.missingClients![tapEvent.rowIdx].clientName = "";
+    checkSave();
   }
 
   updateAgencyData(PlutoGridOnRowDoubleTapEvent tapEvent, DropDownValue agency) {
@@ -138,6 +146,7 @@ class ImportDigitextRunOrderController extends GetxController {
         force: true, callOnChangedEvent: false);
     digitexRunOrderData!.missingClients![tapEvent.rowIdx].clientCode = agency.key.toString();
     digitexRunOrderData!.missingClients![tapEvent.rowIdx].clientName = agency.value.toString();
+    checkSave();
   }
 
   clearAgencyData(PlutoGridOnRowDoubleTapEvent tapEvent, DropDownValue agency) {
@@ -147,5 +156,69 @@ class ImportDigitextRunOrderController extends GetxController {
         .changeCellValue(agencyGridStateManager!.rows[tapEvent.rowIdx].cells["agencyCode"]!, "", force: true, callOnChangedEvent: false);
     digitexRunOrderData!.missingAgencies![tapEvent.rowIdx].agenciesCode = "";
     digitexRunOrderData!.missingAgencies![tapEvent.rowIdx].agenciesName = "";
+    checkSave();
+  }
+
+  mapClients() {
+    LoadingDialog.call();
+    Get.find<ConnectorControl>().POSTMETHOD_FORMDATA(
+        api: ApiFactory.IMPORT_DIGITEX_RUN_ORDER_MAP_CLIENT,
+        json: digitexRunOrderData!.missingClients!.map((e) => e.toJson()).toList(),
+        fun: (value) {
+          Get.back();
+          try {
+            print(value.toString());
+          } catch (e) {
+            LoadingDialog.callErrorMessage1(msg: "Failed To Map Clients");
+          }
+        });
+  }
+
+  mapAgencies() {
+    LoadingDialog.call();
+    Get.find<ConnectorControl>().POSTMETHOD_FORMDATA(
+        api: ApiFactory.IMPORT_DIGITEX_RUN_ORDER_MAP_AGENCY,
+        json: digitexRunOrderData!.missingAgencies!.map((e) => e.toJson()).toList(),
+        fun: (value) {
+          Get.back();
+          try {
+            print(value.toString());
+          } catch (e) {
+            LoadingDialog.callErrorMessage1(msg: "Failed To Map Agencies");
+          }
+        });
+  }
+
+  checkSave() {
+    bool _allowSave = true;
+    if (digitexRunOrderData!.missingAgencies!.any((element) => element.agenciesCode!.isEmpty || element.agenciesCode!.isEmpty)) {
+      _allowSave = false;
+    }
+    if (digitexRunOrderData!.missingClients!.any((element) => element.clientCode!.isEmpty || element.clientName!.isEmpty)) {
+      _allowSave = false;
+    }
+    allowSave.value = _allowSave;
+  }
+
+  saveRunOrder() {
+    LoadingDialog.call();
+    dio.FormData formData = dio.FormData.fromMap({
+      'ImportFile': dio.MultipartFile.fromBytes(
+        importedFile.value!.bytes!.toList(),
+        filename: importedFile.value!.name,
+      )
+    });
+
+    Get.find<ConnectorControl>().POSTMETHOD_FORMDATA(
+        api: ApiFactory.IMPORT_DIGITEX_RUN_ORDER_SAVE(selectedLocation!.key, selectedChannel!.key, df2.format(df1.parse(scheduleDate.text))),
+        json: formData,
+        fun: (value) {
+          Get.back();
+          try {
+            LoadingDialog.callErrorMessage1(msg: value);
+          } catch (e) {
+            LoadingDialog.callErrorMessage1(msg: "Failed To Import File");
+          }
+        });
   }
 }

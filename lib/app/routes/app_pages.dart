@@ -5,6 +5,9 @@ import '../modules/MamWorkOrders/bindings/mam_work_orders_binding.dart';
 import '../modules/MamWorkOrders/views/mam_work_orders_view.dart';
 import '../modules/RoBooking/bindings/ro_booking_binding.dart';
 import '../modules/RoBooking/views/ro_booking_view.dart';
+import '../modules/RoCancellation/bindings/ro_cancellation_binding.dart';
+import '../modules/SpotPriority/bindings/spot_priority_binding.dart';
+import '../modules/SpotPriority/views/SpotPriorityView.dart';
 import '../modules/commercial/bindings/commercial_binding.dart';
 import '../modules/commercial/views/commercial_view.dart';
 import '../modules/home/bindings/home_binding.dart';
@@ -16,7 +19,7 @@ part 'app_routes.dart';
 class AppPages {
   AppPages._();
 
-  static const INITIAL = Routes.IMPORT_DIGITEXT_RUN_ORDER;
+  static const INITIAL = Routes.RO_CANCELLATION;
 
   static final routes = [
     GetPage(
@@ -48,12 +51,23 @@ class AppPages {
       binding: RoBookingBinding(),
     ),
     GetPage(
-        name: _Paths.IMPORT_DIGITEXT_RUN_ORDER,
-        page: () => AuthGuard1(childName: _Paths.IMPORT_DIGITEXT_RUN_ORDER),
-        binding: ImportDigitextRunOrderBinding()),
+      name: _Paths.IMPORT_DIGITEXT_RUN_ORDER,
+      page: () => AuthGuard1(childName: _Paths.IMPORT_DIGITEXT_RUN_ORDER),
+      binding: ImportDigitextRunOrderBinding(),
+    ),
     GetPage(
       name: _Paths.FPC_MISMATCH,
       page: () => AuthGuard1(childName: _Paths.FPC_MISMATCH),
+    ),
+    GetPage(
+      name: _Paths.SPOT_PRIORITY,
+      page: () => SpotPriorityView(),
+      binding: SpotPriorityBinding(),
+    ),
+    GetPage(
+      name: _Paths.RO_CANCELLATION,
+      page: () => AuthGuard1(childName: _Paths.RO_CANCELLATION),
+      binding: RoCancellationBinding(),
     ),
   ];
 }
