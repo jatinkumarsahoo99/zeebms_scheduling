@@ -1,16 +1,2 @@
 # bms_scheduling
-
-A new Flutter project.
-
-## Getting Started
-
-This project is a starting point for a Flutter application.
-
-A few resources to get you started if this is your first Flutter project:
-
-- [Lab: Write your first Flutter app](https://docs.flutter.dev/get-started/codelab)
-- [Cookbook: Useful Flutter samples](https://docs.flutter.dev/cookbook)
-
-For help getting started with Flutter development, view the
-[online documentation](https://docs.flutter.dev/), which offers tutorials,
-samples, guidance on mobile development, and a full API reference.
+https://app-programming-bms-dev.zeeconnect.in//commercial?personalNo=2Jri%2FF8CQnRN4E%2Fc777Cgw%3D%3D&loginCode=rfxpGtJwEqsQPU9ytSC1Kw%3D%3D&formName=a4Lfy%2FGb5Roxo9vLiBCqSQ%3D%3D

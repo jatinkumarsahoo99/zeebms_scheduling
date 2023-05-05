@@ -1,5 +1,4 @@
 import 'dart:developer';
-
 import 'package:bms_scheduling/app/providers/extensions/string_extensions.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
@@ -42,6 +41,7 @@ class ChannelModel {
 }
 
 class CommercialController extends GetxController {
+
   var locations = RxList<DropDownValue>();
   var channels = RxList<DropDownValue>([]);
   RxBool isEnable = RxBool(true);

@@ -1,14 +1,12 @@
 import 'dart:convert';
-
 import 'package:flutter/material.dart';
-
 import 'package:get/get.dart';
 import 'package:pluto_grid/pluto_grid.dart';
-
 import '../../../../widgets/DateTime/DateWithThreeTextField.dart';
 import '../../../../widgets/FormButton.dart';
 import '../../../../widgets/dropdown.dart';
 import '../../../../widgets/gridFromMap.dart';
+import '../../../../widgets/input_fields.dart';
 import '../../../controller/HomeController.dart';
 import '../controllers/filler_controller.dart';
 
@@ -23,7 +21,6 @@ class FillerView extends GetView<FillerController> {
 
   @override
   Widget build(BuildContext context) {
-
     final w = MediaQuery.of(context).size.width;
     final h = MediaQuery.of(context).size.height;
 
@@ -52,9 +49,9 @@ class FillerView extends GetView<FillerController> {
                             child: Row(
                               children: [
                                 Obx(
-                                      () => DropDownField.formDropDown1WidthMap(
+                                  () => DropDownField.formDropDown1WidthMap(
                                     controllerX.locations.value,
-                                        (value) {
+                                    (value) {
                                       controllerX.selectLocation = value;
                                       // controllerX.selectedLocationId.text = value.key!;
                                       // controllerX.selectedLocationName.text = value.value!;
@@ -74,7 +71,7 @@ class FillerView extends GetView<FillerController> {
                                   return DropDownField.formDropDown1Width(
                                     Get.context!,
                                     controllerX.channelList ?? [],
-                                        (value) {
+                                    (value) {
                                       controllerX.selectedChannel = value;
                                     },
                                     "Channel",
@@ -123,7 +120,7 @@ class FillerView extends GetView<FillerController> {
                           padding: const EdgeInsets.fromLTRB(15, 15, 7, 0),
                           child: GetBuilder<FillerController>(
                               init: FillerController(),
-                              id: "reports",
+                              id: "location",
                               builder: (controller) {
                                 if (controller.conflictReport.isEmpty ||
                                     controller.beams.isEmpty) {
@@ -134,9 +131,10 @@ class FillerView extends GetView<FillerController> {
                                           color: Colors.grey.shade300,
                                           width: 0.5,
                                         ),
-                                        borderRadius: const BorderRadius.all(Radius.circular(10))
-                                      //color: Colors.deepPurpleAccent
-                                    ),
+                                        borderRadius: const BorderRadius.all(
+                                            Radius.circular(10))
+                                        //color: Colors.deepPurpleAccent
+                                        ),
                                     child: Padding(
                                       padding: const EdgeInsets.all(2.0),
                                       child: fillerTable(context),
@@ -154,30 +152,141 @@ class FillerView extends GetView<FillerController> {
                           padding: const EdgeInsets.fromLTRB(15, 15, 7, 0),
                           child: GetBuilder<FillerController>(
                               init: FillerController(),
-                              id: "reports",
+                              id: "fillerSchedule",
                               builder: (controller) {
                                 if (controller.conflictReport.isEmpty ||
                                     controller.beams.isEmpty) {
-                                  return Flexible(
-                                    child: Container(
-                                      width: w * 0.65,
-                                      decoration: BoxDecoration(
-                                          border: Border.all(
-                                            color: Colors.grey.shade300,
-                                            width: 0.5,
+                                  return SizedBox(
+                                    width: w * 0.65,
+                                    child: Column(
+                                      mainAxisSize: MainAxisSize.max,
+                                      mainAxisAlignment:
+                                          MainAxisAlignment.start,
+                                      crossAxisAlignment:
+                                          CrossAxisAlignment.start,
+                                      children: [
+                                        Padding(
+                                          padding: const EdgeInsets.all(5.0),
+                                          child: DropDownField.formDropDownSearchAPI2(
+                                            GlobalKey(), context,
+                                            title: "Filler Caption",
+                                            autoFocus: true,
+                                            url: '',
+                                            //url: ApiFactory.PROGRAM_MASTER_PROGRAM_SEARCH,
+                                            onchanged: (data) {
+                                              controllerX
+                                                      .candoFocusOnProgramGrid =
+                                                  false;
+                                              // print("Hey Test>>>" + data.toString());
+                                              // // controllerX.selectProgram = DropDownValue(key: data["programCode"].toString(),value: data["programName"]);
+                                              controllerX.selectLocation = data;
+                                              controllerX.isSearchFromProgram =
+                                                  true;
+                                              // // controllerX.selectProgram1 = data;
+                                              // // stuck ==>1
+                                              //controllerX.fetchProgramData(data.key ?? "", value: data.value);
+                                            },
+                                            selectedValue:
+                                                controllerX.selectLocation,
+                                            width: w * 0.45,
+                                            // padding: const EdgeInsets.only()
                                           ),
-                                          borderRadius: const BorderRadius.all(Radius.circular(10))
-                                        //color: Colors.deepPurpleAccent
-                                      ),
-                                      child: Column(
-                                        children: [
-                                          Text('Filler Schedule'),
-                                          Padding(
-                                            padding: const EdgeInsets.all(2.0),
-                                            child: fillerTable(context),
-                                          ),
-                                        ],
-                                      ),
+                                        ),
+                                        Row(
+                                          children: [
+                                            Padding(
+                                              padding: const EdgeInsets.only(
+                                                  top: 5.0),
+                                              child:
+                                                  InputFields.formField1Width(
+                                                      widthRatio: 0.12,
+                                                      paddingLeft: 5,
+                                                      hintTxt: "Tape ID",
+                                                      controller:
+                                                          controllerX.tapeId_,
+                                                      maxLen: 10),
+                                            ),
+                                            Padding(
+                                              padding: const EdgeInsets.only(
+                                                  top: 5.0),
+                                              child:
+                                                  InputFields.formField1Width(
+                                                      widthRatio: 0.12,
+                                                      paddingLeft: 5,
+                                                      hintTxt: "Seg No",
+                                                      controller:
+                                                          controllerX.segNo_,
+                                                      maxLen: 10),
+                                            ),
+                                            Padding(
+                                              padding: const EdgeInsets.only(
+                                                  top: 5.0),
+                                              child:
+                                                  InputFields.formField1Width(
+                                                      widthRatio: 0.12,
+                                                      paddingLeft: 5,
+                                                      hintTxt: "Seg Dur",
+                                                      controller:
+                                                          controllerX.segDur_,
+                                                      maxLen: 10),
+                                            ),
+                                          ],
+                                        ),
+                                        Row(
+                                          children: [
+                                            Padding(
+                                              padding: const EdgeInsets.only(
+                                                  top: 5.0, bottom: 5.0),
+                                              child:
+                                                  InputFields.formField1Width(
+                                                      widthRatio: 0.12,
+                                                      paddingLeft: 5,
+                                                      hintTxt: "Total Filler",
+                                                      controller: controllerX
+                                                          .totalFiller,
+                                                      maxLen: 10),
+                                            ),
+                                            Padding(
+                                              padding: const EdgeInsets.only(
+                                                  top: 5.0, bottom: 5.0),
+                                              child:
+                                                  InputFields.formField1Width(
+                                                      widthRatio: 0.12,
+                                                      paddingLeft: 5,
+                                                      hintTxt:
+                                                          "Total Filler Dur",
+                                                      controller: controllerX
+                                                          .totalFillerDur,
+                                                      maxLen: 10),
+                                            ),
+                                            Padding(
+                                              padding:
+                                                  EdgeInsets.only(top: 15.0),
+                                              child: Row(children: [
+                                                Radio(
+                                                  value: 0,
+                                                  groupValue:
+                                                      controllerX.selectedAfter,
+                                                  onChanged: (int? value) {},
+                                                ),
+                                                Text('Insert After')
+                                              ]),
+                                            ),
+                                            const SizedBox(
+                                              width: 10,
+                                            ),
+                                            Padding(
+                                              padding: const EdgeInsets.only(
+                                                  top: 15.0),
+                                              child: FormButton(
+                                                btnText: "Add",
+                                                callback: () {},
+                                              ),
+                                            ),
+                                          ],
+                                        ),
+                                        fillerScheduleTable(context),
+                                      ],
                                     ),
                                   );
                                 } else {
@@ -186,7 +295,6 @@ class FillerView extends GetView<FillerController> {
                               }),
                         ),
                       ),
-
                       GetBuilder<HomeController>(
                           id: "buttons",
                           init: Get.find<HomeController>(),
@@ -201,7 +309,7 @@ class FillerView extends GetView<FillerController> {
                                   mainAxisSize: MainAxisSize.min,
                                   children: [
                                     for (var btn in btcontroller.buttons!)
-                                    //if (Utils.btnAccessHandler(btn['name'], controller.formPermissions!) != null)
+                                      //if (Utils.btnAccessHandler(btn['name'], controller.formPermissions!) != null)
                                       FormButtonWrapper(
                                         btnText: btn["name"],
                                         callback: () => controller.formHandler(
@@ -232,14 +340,13 @@ class FillerView extends GetView<FillerController> {
               (controllerX.fillerList?.isNotEmpty)!) {
             // final key = GlobalKey();
             return DataGridFromMap(
-              mapData: (controllerX.fillerList
-                  ?.map((e) => e.toJson1())
-                  .toList())!,
+              mapData:
+                  (controllerX.fillerList?.map((e) => e.toJson1()).toList())!,
               widthRatio: (Get.width * 0.2) / 2 + 7,
               // mode: PlutoGridMode.select,
               onSelected: (plutoGrid) {
                 controllerX.selectedFiller =
-                controllerX.fillerList![plutoGrid.rowIdx!];
+                    controllerX.fillerList![plutoGrid.rowIdx!];
                 print(jsonEncode(controllerX.selectedFiller?.toJson()));
               },
             );
@@ -281,8 +388,9 @@ class FillerView extends GetView<FillerController> {
                 // mode: PlutoGridMode.select,
                 onSelected: (plutoGrid) {
                   controllerX.selectedFillerSchedule =
-                  controllerX.fillerScheduleList![plutoGrid.rowIdx!];
-                  print(jsonEncode(controllerX.selectedFillerSchedule?.toJson()));
+                      controllerX.fillerScheduleList![plutoGrid.rowIdx!];
+                  print(
+                      jsonEncode(controllerX.selectedFillerSchedule?.toJson()));
                 },
               ),
             );

@@ -11,6 +11,7 @@ abstract class Routes {
   static const COMMERCIAL = _Paths.COMMERCIAL;
   static const RO_BOOKING = _Paths.RO_BOOKING;
   static const FILLER = _Paths.FILLER;
+  static const PROMOS = _Paths.PROMOS;
 }
 
 abstract class RoutesList {
@@ -32,4 +33,5 @@ abstract class _Paths {
   static const COMMERCIAL = '/commercial';
   static const RO_BOOKING = '/ro-booking';
   static const FILLER = '/filler';
+  static const PROMOS = '/promos';
 }

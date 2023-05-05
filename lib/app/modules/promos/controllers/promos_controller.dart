@@ -1,10 +1,7 @@
-import 'package:bms_scheduling/app/modules/filler/FillerModel.dart';
-import 'package:bms_scheduling/app/modules/filler/FillerModel.dart';
-import 'package:flutter/material.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:get/get.dart';
 import 'package:intl/intl.dart';
 import 'package:pluto_grid/pluto_grid.dart';
-
 import '../../../../widgets/LoadingDialog.dart';
 import '../../../../widgets/Snack.dart';
 import '../../../controller/ConnectorControl.dart';
@@ -12,30 +9,18 @@ import '../../../controller/HomeController.dart';
 import '../../../data/DropDownValue.dart';
 import '../../../data/PermissionModel.dart';
 import '../../../data/system_envirtoment.dart';
-import '../FillerModel.dart';
-import '../FillerScheduleModel.dart';
+import '../PromoModel.dart';
+import '../PromoProgramModel.dart';
 
-class FillerController extends GetxController {
+class PromosController extends GetxController  {
+
   var locations = RxList<DropDownValue>();
   var channels = RxList<DropDownValue>([]);
-  var captions = RxList<DropDownValue>([]);
   RxBool isEnable = RxBool(true);
-  bool isSearchFromProgram = false;
-  bool candoFocusOnProgramGrid = false;
-
-  TextEditingController tapeId_ = TextEditingController()..text = "";
-  TextEditingController segNo_ = TextEditingController()..text = "";
-  TextEditingController segDur_ = TextEditingController()..text = "";
-  TextEditingController totalFiller = TextEditingController()..text = "";
-  TextEditingController totalFillerDur = TextEditingController()..text = "";
-
-  /// Radio Button
-  int selectedAfter = 0;
 
   //input controllers
   DropDownValue? selectLocation;
   DropDownValue? selectChannel;
-  DropDownValue? selectCaption;
   PlutoGridStateManager? gridStateManager;
 
   List<PermissionModel>? formPermissions;
@@ -44,271 +29,172 @@ class FillerController extends GetxController {
 
   List conflictReport = [];
 
-  List<FillerModel>? fillerList = [
-    FillerModel
-
-      (
-        fpcTime:'01:00:00', breakNumber:'1', eventType:'S',
-        exportTapeCode:'TBA', segmentCaption:'Caption', client:' ', brand:' ', duration: 0,
-        product:' ', bookingNumber:' ', bookingDetailcode:' ',rostimeBand:' ', randid:' ',
-        programName:'Program Name', rownumber:'O', bStatus:'B', pDailyFPC:' ', pProgramMaster:' '),
-    FillerModel
-
-      (
-        fpcTime:'01:00:00', breakNumber:'1', eventType:'S',
-        exportTapeCode:'TBA', segmentCaption:'Caption', client:' ', brand:' ', duration: 0,
-        product:' ', bookingNumber:' ', bookingDetailcode:' ',rostimeBand:' ', randid:' ',
-        programName:'Program Name', rownumber:'O', bStatus:'B', pDailyFPC:' ', pProgramMaster:' '),
-    FillerModel
-
-      (
-        fpcTime:'01:00:00', breakNumber:'1', eventType:'S',
-        exportTapeCode:'TBA', segmentCaption:'Caption', client:' ', brand:' ', duration: 0,
-        product:' ', bookingNumber:' ', bookingDetailcode:' ',rostimeBand:' ', randid:' ',
-        programName:'Program Name', rownumber:'O', bStatus:'B', pDailyFPC:' ', pProgramMaster:' '),
-    FillerModel
-
-      (
-        fpcTime:'01:00:00', breakNumber:'1', eventType:'S',
-        exportTapeCode:'TBA', segmentCaption:'Caption', client:' ', brand:' ', duration: 0,
-        product:' ', bookingNumber:' ', bookingDetailcode:' ',rostimeBand:' ', randid:' ',
-        programName:'Program Name', rownumber:'O', bStatus:'B', pDailyFPC:' ', pProgramMaster:' '),
-    FillerModel
-
-      (
-        fpcTime:'01:00:00', breakNumber:'1', eventType:'S',
-        exportTapeCode:'TBA', segmentCaption:'Caption', client:' ', brand:' ', duration: 0,
-        product:' ', bookingNumber:' ', bookingDetailcode:' ',rostimeBand:' ', randid:' ',
-        programName:'Program Name', rownumber:'O', bStatus:'B', pDailyFPC:' ', pProgramMaster:' '),
-    FillerModel
-
-      (
-        fpcTime:'01:00:00', breakNumber:'1', eventType:'S',
-        exportTapeCode:'TBA', segmentCaption:'Caption', client:' ', brand:' ', duration: 0,
-        product:' ', bookingNumber:' ', bookingDetailcode:' ',rostimeBand:' ', randid:' ',
-        programName:'Program Name', rownumber:'O', bStatus:'B', pDailyFPC:' ', pProgramMaster:' '),
-    FillerModel
-
-      (
-        fpcTime:'01:00:00', breakNumber:'1', eventType:'S',
-        exportTapeCode:'TBA', segmentCaption:'Caption', client:' ', brand:' ', duration: 0,
-        product:' ', bookingNumber:' ', bookingDetailcode:' ',rostimeBand:' ', randid:' ',
-        programName:'Program Name', rownumber:'O', bStatus:'B', pDailyFPC:' ', pProgramMaster:' '),
-    FillerModel
-
-      (
-        fpcTime:'01:00:00', breakNumber:'1', eventType:'S',
-        exportTapeCode:'TBA', segmentCaption:'Caption', client:' ', brand:' ', duration: 0,
-        product:' ', bookingNumber:' ', bookingDetailcode:' ',rostimeBand:' ', randid:' ',
-        programName:'Program Name', rownumber:'O', bStatus:'B', pDailyFPC:' ', pProgramMaster:' '),
-    FillerModel
-
-      (
-        fpcTime:'01:00:00', breakNumber:'1', eventType:'S',
-        exportTapeCode:'TBA', segmentCaption:'Caption', client:' ', brand:' ', duration: 0,
-        product:' ', bookingNumber:' ', bookingDetailcode:' ',rostimeBand:' ', randid:' ',
-        programName:'Program Name', rownumber:'O', bStatus:'B', pDailyFPC:' ', pProgramMaster:' '),
-    FillerModel
-
-      (
-        fpcTime:'01:00:00', breakNumber:'1', eventType:'S',
-        exportTapeCode:'TBA', segmentCaption:'Caption', client:' ', brand:' ', duration: 0,
-        product:' ', bookingNumber:' ', bookingDetailcode:' ',rostimeBand:' ', randid:' ',
-        programName:'Program Name', rownumber:'O', bStatus:'B', pDailyFPC:' ', pProgramMaster:' '),
-    FillerModel
-
-      (
-        fpcTime:'01:00:00', breakNumber:'1', eventType:'S',
-        exportTapeCode:'TBA', segmentCaption:'Caption', client:' ', brand:' ', duration: 0,
-        product:' ', bookingNumber:' ', bookingDetailcode:' ',rostimeBand:' ', randid:' ',
-        programName:'Program Name', rownumber:'O', bStatus:'B', pDailyFPC:' ', pProgramMaster:' '),
-    FillerModel
-
-      (
-        fpcTime:'01:00:00', breakNumber:'1', eventType:'S',
-        exportTapeCode:'TBA', segmentCaption:'Caption', client:' ', brand:' ', duration: 0,
-        product:' ', bookingNumber:' ', bookingDetailcode:' ',rostimeBand:' ', randid:' ',
-        programName:'Program Name', rownumber:'O', bStatus:'B', pDailyFPC:' ', pProgramMaster:' '),
-    FillerModel
-
-      (
-        fpcTime:'01:00:00', breakNumber:'1', eventType:'S',
-        exportTapeCode:'TBA', segmentCaption:'Caption', client:' ', brand:' ', duration: 0,
-        product:' ', bookingNumber:' ', bookingDetailcode:' ',rostimeBand:' ', randid:' ',
-        programName:'Program Name', rownumber:'O', bStatus:'B', pDailyFPC:' ', pProgramMaster:' '),
-    FillerModel
-
-      (
-        fpcTime:'01:00:00', breakNumber:'1', eventType:'S',
-        exportTapeCode:'TBA', segmentCaption:'Caption', client:' ', brand:' ', duration: 0,
-        product:' ', bookingNumber:' ', bookingDetailcode:' ',rostimeBand:' ', randid:' ',
-        programName:'Program Name', rownumber:'O', bStatus:'B', pDailyFPC:' ', pProgramMaster:' '),
-    FillerModel
-
-      (
-        fpcTime:'01:00:00', breakNumber:'1', eventType:'S',
-        exportTapeCode:'TBA', segmentCaption:'Caption', client:' ', brand:' ', duration: 0,
-        product:' ', bookingNumber:' ', bookingDetailcode:' ',rostimeBand:' ', randid:' ',
-        programName:'Program Name', rownumber:'O', bStatus:'B', pDailyFPC:' ', pProgramMaster:' '),
-    FillerModel
-
-      (
-        fpcTime:'01:00:00', breakNumber:'1', eventType:'S',
-        exportTapeCode:'TBA', segmentCaption:'Caption', client:' ', brand:' ', duration: 0,
-        product:' ', bookingNumber:' ', bookingDetailcode:' ',rostimeBand:' ', randid:' ',
-        programName:'Program Name', rownumber:'O', bStatus:'B', pDailyFPC:' ', pProgramMaster:' '),
-    FillerModel
-
-      (
-        fpcTime:'01:00:00', breakNumber:'1', eventType:'S',
-        exportTapeCode:'TBA', segmentCaption:'Caption', client:' ', brand:' ', duration: 0,
-        product:' ', bookingNumber:' ', bookingDetailcode:' ',rostimeBand:' ', randid:' ',
-        programName:'Program Name', rownumber:'O', bStatus:'B', pDailyFPC:' ', pProgramMaster:' '),
-    FillerModel
-
-      (
-        fpcTime:'01:00:00', breakNumber:'1', eventType:'S',
-        exportTapeCode:'TBA', segmentCaption:'Caption', client:' ', brand:' ', duration: 0,
-        product:' ', bookingNumber:' ', bookingDetailcode:' ',rostimeBand:' ', randid:' ',
-        programName:'Program Name', rownumber:'O', bStatus:'B', pDailyFPC:' ', pProgramMaster:' '),
-    FillerModel
-
-      (
-        fpcTime:'01:00:00', breakNumber:'1', eventType:'S',
-        exportTapeCode:'TBA', segmentCaption:'Caption', client:' ', brand:' ', duration: 0,
-        product:' ', bookingNumber:' ', bookingDetailcode:' ',rostimeBand:' ', randid:' ',
-        programName:'Program Name', rownumber:'O', bStatus:'B', pDailyFPC:' ', pProgramMaster:' '),
+  List<PromoProgramModel>? programList  = [
+    PromoProgramModel
+      (startTime: '01:00:00', programName: 'Test1'),
+    PromoProgramModel
+      (startTime: '01:00:00', programName: 'Test'),
+    PromoProgramModel
+      (startTime: '01:00:00', programName: 'Test'),
+    PromoProgramModel
+      (startTime: '01:00:00', programName: 'Test'),
+    PromoProgramModel
+      (startTime: '01:00:00', programName: 'Test5'),
+    PromoProgramModel
+      (startTime: '01:00:00', programName: 'Test'),
+    PromoProgramModel
+      (startTime: '01:00:00', programName: 'Test'),
+    PromoProgramModel
+      (startTime: '01:00:00', programName: 'Test'),
+    PromoProgramModel
+      (startTime: '01:00:00', programName: 'Test'),
+    PromoProgramModel
+      (startTime: '01:00:00', programName: 'Test10'),
+    PromoProgramModel
+      (startTime: '01:00:00', programName: 'Test'),
+    PromoProgramModel
+      (startTime: '01:00:00', programName: 'Test'),
+    PromoProgramModel
+      (startTime: '01:00:00', programName: 'Test'),
+    PromoProgramModel
+      (startTime: '01:00:00', programName: 'Test'),
+    PromoProgramModel
+      (startTime: '01:00:00', programName: 'Test15'),
+    PromoProgramModel
+      (startTime: '01:00:00', programName: 'Test'),
+    PromoProgramModel
+      (startTime: '01:00:00', programName: 'Test'),
+    PromoProgramModel
+      (startTime: '01:00:00', programName: 'Test'),
+    PromoProgramModel
+      (startTime: '01:00:00', programName: 'Test'),
+    PromoProgramModel
+      (startTime: '01:00:00', programName: 'Test20'),
+    PromoProgramModel
+      (startTime: '01:00:00', programName: 'Test'),
+    PromoProgramModel
+      (startTime: '01:00:00', programName: 'Test'),
+    PromoProgramModel
+      (startTime: '01:00:00', programName: 'Test'),
+    PromoProgramModel
+      (startTime: '01:00:00', programName: 'Test'),
+    PromoProgramModel
+      (startTime: '01:00:00', programName: 'Test'),
+    PromoProgramModel
+      (startTime: '01:00:00', programName: 'Test26',),
 
   ];
-  List<FillerScheduleModel>? fillerScheduleList = [
-    FillerScheduleModel
 
+  List<PromoModel>? commercialList = [
+    PromoModel
       (
         fpcTime:'01:00:00', breakNumber:'1', eventType:'S',
         exportTapeCode:'TBA', segmentCaption:'Caption', client:' ', brand:' ', duration: 0,
         product:' ', bookingNumber:' ', bookingDetailcode:' ',rostimeBand:' ', randid:' ',
         programName:'Program Name', rownumber:'O', bStatus:'B', pDailyFPC:' ', pProgramMaster:' '),
-    FillerScheduleModel
-
+    PromoModel
       (
         fpcTime:'01:00:00', breakNumber:'1', eventType:'S',
         exportTapeCode:'TBA', segmentCaption:'Caption', client:' ', brand:' ', duration: 0,
         product:' ', bookingNumber:' ', bookingDetailcode:' ',rostimeBand:' ', randid:' ',
         programName:'Program Name', rownumber:'O', bStatus:'B', pDailyFPC:' ', pProgramMaster:' '),
-    FillerScheduleModel
-
+    PromoModel
       (
         fpcTime:'01:00:00', breakNumber:'1', eventType:'S',
         exportTapeCode:'TBA', segmentCaption:'Caption', client:' ', brand:' ', duration: 0,
         product:' ', bookingNumber:' ', bookingDetailcode:' ',rostimeBand:' ', randid:' ',
         programName:'Program Name', rownumber:'O', bStatus:'B', pDailyFPC:' ', pProgramMaster:' '),
-    FillerScheduleModel
-
+    PromoModel
       (
         fpcTime:'01:00:00', breakNumber:'1', eventType:'S',
         exportTapeCode:'TBA', segmentCaption:'Caption', client:' ', brand:' ', duration: 0,
         product:' ', bookingNumber:' ', bookingDetailcode:' ',rostimeBand:' ', randid:' ',
         programName:'Program Name', rownumber:'O', bStatus:'B', pDailyFPC:' ', pProgramMaster:' '),
-    FillerScheduleModel
-
+    PromoModel
       (
         fpcTime:'01:00:00', breakNumber:'1', eventType:'S',
         exportTapeCode:'TBA', segmentCaption:'Caption', client:' ', brand:' ', duration: 0,
         product:' ', bookingNumber:' ', bookingDetailcode:' ',rostimeBand:' ', randid:' ',
         programName:'Program Name', rownumber:'O', bStatus:'B', pDailyFPC:' ', pProgramMaster:' '),
-    FillerScheduleModel
-
+    PromoModel
       (
         fpcTime:'01:00:00', breakNumber:'1', eventType:'S',
         exportTapeCode:'TBA', segmentCaption:'Caption', client:' ', brand:' ', duration: 0,
         product:' ', bookingNumber:' ', bookingDetailcode:' ',rostimeBand:' ', randid:' ',
         programName:'Program Name', rownumber:'O', bStatus:'B', pDailyFPC:' ', pProgramMaster:' '),
-    FillerScheduleModel
-
+    PromoModel
       (
         fpcTime:'01:00:00', breakNumber:'1', eventType:'S',
         exportTapeCode:'TBA', segmentCaption:'Caption', client:' ', brand:' ', duration: 0,
         product:' ', bookingNumber:' ', bookingDetailcode:' ',rostimeBand:' ', randid:' ',
         programName:'Program Name', rownumber:'O', bStatus:'B', pDailyFPC:' ', pProgramMaster:' '),
-    FillerScheduleModel
-
+    PromoModel
       (
         fpcTime:'01:00:00', breakNumber:'1', eventType:'S',
         exportTapeCode:'TBA', segmentCaption:'Caption', client:' ', brand:' ', duration: 0,
         product:' ', bookingNumber:' ', bookingDetailcode:' ',rostimeBand:' ', randid:' ',
         programName:'Program Name', rownumber:'O', bStatus:'B', pDailyFPC:' ', pProgramMaster:' '),
-    FillerScheduleModel
-
+    PromoModel
       (
         fpcTime:'01:00:00', breakNumber:'1', eventType:'S',
         exportTapeCode:'TBA', segmentCaption:'Caption', client:' ', brand:' ', duration: 0,
         product:' ', bookingNumber:' ', bookingDetailcode:' ',rostimeBand:' ', randid:' ',
         programName:'Program Name', rownumber:'O', bStatus:'B', pDailyFPC:' ', pProgramMaster:' '),
-    FillerScheduleModel
-
+    PromoModel
       (
         fpcTime:'01:00:00', breakNumber:'1', eventType:'S',
         exportTapeCode:'TBA', segmentCaption:'Caption', client:' ', brand:' ', duration: 0,
         product:' ', bookingNumber:' ', bookingDetailcode:' ',rostimeBand:' ', randid:' ',
         programName:'Program Name', rownumber:'O', bStatus:'B', pDailyFPC:' ', pProgramMaster:' '),
-    FillerScheduleModel
-
+    PromoModel
       (
         fpcTime:'01:00:00', breakNumber:'1', eventType:'S',
         exportTapeCode:'TBA', segmentCaption:'Caption', client:' ', brand:' ', duration: 0,
         product:' ', bookingNumber:' ', bookingDetailcode:' ',rostimeBand:' ', randid:' ',
         programName:'Program Name', rownumber:'O', bStatus:'B', pDailyFPC:' ', pProgramMaster:' '),
-    FillerScheduleModel
-
+    PromoModel
       (
         fpcTime:'01:00:00', breakNumber:'1', eventType:'S',
         exportTapeCode:'TBA', segmentCaption:'Caption', client:' ', brand:' ', duration: 0,
         product:' ', bookingNumber:' ', bookingDetailcode:' ',rostimeBand:' ', randid:' ',
         programName:'Program Name', rownumber:'O', bStatus:'B', pDailyFPC:' ', pProgramMaster:' '),
-    FillerScheduleModel
-
+    PromoModel
       (
         fpcTime:'01:00:00', breakNumber:'1', eventType:'S',
         exportTapeCode:'TBA', segmentCaption:'Caption', client:' ', brand:' ', duration: 0,
         product:' ', bookingNumber:' ', bookingDetailcode:' ',rostimeBand:' ', randid:' ',
         programName:'Program Name', rownumber:'O', bStatus:'B', pDailyFPC:' ', pProgramMaster:' '),
-    FillerScheduleModel
-
+    PromoModel
       (
         fpcTime:'01:00:00', breakNumber:'1', eventType:'S',
         exportTapeCode:'TBA', segmentCaption:'Caption', client:' ', brand:' ', duration: 0,
         product:' ', bookingNumber:' ', bookingDetailcode:' ',rostimeBand:' ', randid:' ',
         programName:'Program Name', rownumber:'O', bStatus:'B', pDailyFPC:' ', pProgramMaster:' '),
-    FillerScheduleModel
-
+    PromoModel
       (
         fpcTime:'01:00:00', breakNumber:'1', eventType:'S',
         exportTapeCode:'TBA', segmentCaption:'Caption', client:' ', brand:' ', duration: 0,
         product:' ', bookingNumber:' ', bookingDetailcode:' ',rostimeBand:' ', randid:' ',
         programName:'Program Name', rownumber:'O', bStatus:'B', pDailyFPC:' ', pProgramMaster:' '),
-    FillerScheduleModel
-
+    PromoModel
       (
         fpcTime:'01:00:00', breakNumber:'1', eventType:'S',
         exportTapeCode:'TBA', segmentCaption:'Caption', client:' ', brand:' ', duration: 0,
         product:' ', bookingNumber:' ', bookingDetailcode:' ',rostimeBand:' ', randid:' ',
         programName:'Program Name', rownumber:'O', bStatus:'B', pDailyFPC:' ', pProgramMaster:' '),
-    FillerScheduleModel
-
+    PromoModel
       (
         fpcTime:'01:00:00', breakNumber:'1', eventType:'S',
         exportTapeCode:'TBA', segmentCaption:'Caption', client:' ', brand:' ', duration: 0,
         product:' ', bookingNumber:' ', bookingDetailcode:' ',rostimeBand:' ', randid:' ',
         programName:'Program Name', rownumber:'O', bStatus:'B', pDailyFPC:' ', pProgramMaster:' '),
-    FillerScheduleModel
-
+    PromoModel
       (
         fpcTime:'01:00:00', breakNumber:'1', eventType:'S',
         exportTapeCode:'TBA', segmentCaption:'Caption', client:' ', brand:' ', duration: 0,
         product:' ', bookingNumber:' ', bookingDetailcode:' ',rostimeBand:' ', randid:' ',
         programName:'Program Name', rownumber:'O', bStatus:'B', pDailyFPC:' ', pProgramMaster:' '),
-    FillerScheduleModel
-
+    PromoModel
       (
         fpcTime:'01:00:00', breakNumber:'1', eventType:'S',
         exportTapeCode:'TBA', segmentCaption:'Caption', client:' ', brand:' ', duration: 0,
@@ -322,6 +208,7 @@ class FillerController extends GetxController {
   List conflictPrograms = [];
   List<PlutoRow> beamRows = [];
   var selectedChannels = RxList([]);
+
   Map<String, dynamic> reportBody = {};
 
   var selectedIndex = RxInt(0);
@@ -329,7 +216,6 @@ class FillerController extends GetxController {
   PlutoGridStateManager? bmsReportStateManager;
   PlutoGridStateManager? locChanStateManager;
   Map? initData;
-
   TextEditingController refDateContrl = TextEditingController(
       text: DateFormat("dd-MM-yyyy").format(DateTime.now()));
 
@@ -338,10 +224,8 @@ class FillerController extends GetxController {
 
   TextEditingController programName_ = TextEditingController();
   TextEditingController date_ = TextEditingController();
-  TextEditingController fillerCaptionName_ = TextEditingController();
 
   DateTime now = DateTime.now();
-  DateTime selectDate = DateTime.now();
   DateTime? selectedDate = DateTime.now();
   DateFormat df = DateFormat("dd/MM/yyyy");
   DateFormat df1 = DateFormat("dd-MM-yyyy");
@@ -349,20 +233,26 @@ class FillerController extends GetxController {
 
   SystemEnviroment? selectedChannel;
   SystemEnviroment? selectedLocation;
-  SystemEnviroment? selectedCaption;
 
   /// List for Columns
-  FillerModel? selectedFiller;
-  FillerScheduleModel? selectedFillerSchedule;
+  PromoProgramModel
+  ? selectedProgram;
+  PromoModel? selectedPromo;
+
+  /// Radio Button
+  int selectedGroup = 0;
+  int selectIndex = 0;
 
   List<Map<String, dynamic>>? listData = [];
+
+  DateTime selectDate = DateTime.now();
 
   /////////////Pluto Grid////////////
   List redBreaks = [];
   BuildContext? gridContext;
   PlutoGridStateManager? stateManager;
 
-  double widthSize = 0.10; /// Changed to set PROMO From Date width UI to 0.17
+  double widthSize = 0.17;
   var locationEnable = RxBool(true);
   var channelEnable = RxBool(true);
 
@@ -407,6 +297,23 @@ class FillerController extends GetxController {
     //   },
     // );
   }
+
+  // fetchInitial() {
+  //   Get.find<ConnectorControl>().GETMETHODCALL(
+  //     api: ApiFactory.FPC_WEEKLY_INITIAL,
+  //     fun: (Map<String, dynamic> map) {
+  //       locationList?.clear();
+  //       channelList?.clear();
+  //       map["lstLocations"].forEach((element) {
+  //         locationList?.add(SystemEnviroment(key: element["locationCode"], value: element["locationName"]));
+  //       });
+  //       map["lstChannels"].forEach((element) {
+  //         channelList?.add(SystemEnviroment(key: element["channelcode"], value: element["channelName"]));
+  //       });
+  //       update(["initialData"]);
+  //     },
+  //   );
+  // }
 
   generateData() async {
     if (conflictDays == null) {
@@ -560,16 +467,7 @@ class FillerController extends GetxController {
 
   void exit() {
     Get.find<HomeController>().selectChild1.value = null;
-    Get.delete<FillerController>();
+    Get.delete<PromosController>();
   }
 
-  @override
-  void onReady() {
-    super.onReady();
-  }
-
-  @override
-  void onClose() {
-    super.onClose();
-  }
 }

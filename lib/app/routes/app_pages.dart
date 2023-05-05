@@ -14,6 +14,8 @@ import '../modules/filler/bindings/filler_binding.dart';
 import '../modules/filler/views/filler_view.dart';
 import '../modules/home/bindings/home_binding.dart';
 import '../modules/home/views/home_view.dart';
+import '../modules/promos/bindings/promos_binding.dart';
+import '../modules/promos/views/promos_view.dart';
 
 part 'app_routes.dart';
 
@@ -22,7 +24,7 @@ class AppPages {
 
   //static const INITIAL = Routes.RO_BOOKING;
   //static const INITIAL = Routes.TRANSMISSION_LOG;
-  static const INITIAL = Routes.FILLER;
+  static const INITIAL = Routes.COMMERCIAL;
 
   static final routes = [
     GetPage(
@@ -59,6 +61,11 @@ class AppPages {
       name: _Paths.FILLER,
       page: () => FillerView(),
       binding: FillerBinding(),
+    ),
+    GetPage(
+      name: _Paths.PROMOS,
+      page: () => PromosView(),
+      binding: PromosBinding(),
     ),
   ];
 }
