@@ -2,19 +2,18 @@ import 'package:flutter/material.dart';
 
 import 'package:get/get.dart';
 
-import '../controllers/log_additions_controller.dart';
-
-class LogAdditionsView extends GetView<LogAdditionsController> {
+class MakeGoodSpotsView extends GetView {
+  const MakeGoodSpotsView({Key? key}) : super(key: key);
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text('LogAdditionsView'),
+        title: const Text('MakeGoodSpotsView'),
         centerTitle: true,
       ),
-      body: Center(
+      body: const Center(
         child: Text(
-          'LogAdditionsView is working',
+          'MakeGoodSpotsView is working',
           style: TextStyle(fontSize: 20),
         ),
       ),

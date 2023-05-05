@@ -1,7 +1,7 @@
 import 'package:get/get.dart';
 
-class LogAdditionsController extends GetxController {
-  //TODO: Implement LogAdditionsController
+class RoCancellationController extends GetxController {
+  //TODO: Implement RoCancellationController
 
   final count = 0.obs;
   @override
@@ -15,6 +15,9 @@ class LogAdditionsController extends GetxController {
   }
 
   @override
-  void onClose() {}
+  void onClose() {
+    super.onClose();
+  }
+
   void increment() => count.value++;
 }

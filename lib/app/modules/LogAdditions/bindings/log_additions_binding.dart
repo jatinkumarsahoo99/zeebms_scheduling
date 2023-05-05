@@ -1,6 +1,6 @@
 import 'package:get/get.dart';
 
-import '../controllers/log_additions_controller.dart';
+import '../controllers/LogAdditionsController.dart';
 
 class LogAdditionsBinding extends Bindings {
   @override

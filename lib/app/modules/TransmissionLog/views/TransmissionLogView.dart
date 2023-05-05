@@ -1,25 +1,18 @@
 import 'package:bms_scheduling/widgets/radio_row.dart';
 import 'package:flutter/material.dart';
-
 import 'package:get/get.dart';
 import 'package:pluto_grid/pluto_grid.dart';
-
 import '../../../../widgets/DateTime/DateWithThreeTextField.dart';
 import '../../../../widgets/FormButton.dart';
-import '../../../../widgets/LoadingDialog.dart';
 import '../../../../widgets/WarningBox.dart';
-import '../../../../widgets/button.dart';
 import '../../../../widgets/dropdown.dart';
 import '../../../../widgets/gridFromMap.dart';
 import '../../../../widgets/gridFromMap1.dart';
 import '../../../../widgets/input_fields.dart';
 import '../../../controller/HomeController.dart';
-import '../../../controller/MainController.dart';
 import '../../../data/DropDownValue.dart';
-import '../../../data/PermissionModel.dart';
 import '../../../providers/ApiFactory.dart';
 import '../../../providers/SizeDefine.dart';
-import '../../../providers/Utils.dart';
 import '../controllers/TransmissionLogController.dart';
 
 class TransmissionLogView extends GetView<TransmissionLogController> {
@@ -54,9 +47,8 @@ class TransmissionLogView extends GetView<TransmissionLogController> {
                             controllerX.locations.value,
                             (value) {
                               controllerX.selectLocation = value;
-                              // controllerX.selectedLocationId.text = value.key!;
-                              // controllerX.selectedLocationName.text = value.value!;
-                              // controller.getChannelsBasedOnLocation(value.key!);
+                              controllerX.getChannels(
+                                  controllerX.selectLocation?.key ?? "");
                             },
                             "Location",
                             0.12,
@@ -74,9 +66,6 @@ class TransmissionLogView extends GetView<TransmissionLogController> {
                             controllerX.channels.value,
                             (value) {
                               controllerX.selectChannel = value;
-                              // controllerX.selectedLocationId.text = value.key!;
-                              // controllerX.selectedLocationName.text = value.value!;
-                              // controller.getChannelsBasedOnLocation(value.key!);
                             },
                             "Channel",
                             0.12,
@@ -1190,7 +1179,7 @@ class TransmissionLogView extends GetView<TransmissionLogController> {
                       items: const ["Tape", "Product", "Brand"],
                       groupValue: controllerX.verifyType.value ?? "",
                       onchange: (val) {
-                        print("Response>>>"+val);
+                        print("Response>>>" + val);
                         controllerX.verifyType.value = val;
                       },
                     ),

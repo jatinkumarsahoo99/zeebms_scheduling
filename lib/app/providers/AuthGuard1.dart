@@ -1,8 +1,14 @@
 import 'package:bms_scheduling/app/controller/MainController.dart';
+import 'package:bms_scheduling/app/modules/FpcMismatch/views/FpcMismatchView.dart';
+import 'package:bms_scheduling/app/modules/ImportDigitextRunOrder/views/import_digitext_run_order_view.dart';
+import 'package:bms_scheduling/app/modules/LogAdditions/controllers/LogAdditionsController.dart';
+import 'package:bms_scheduling/app/modules/RoCancellation/views/ro_cancellation_view.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import '../../widgets/LoadingScreen.dart';
 import '../../widgets/NoDataFoundPage.dart';
+import '../modules/LogAdditions/views/LogAdditionsView.dart';
+import '../modules/TransmissionLog/views/TransmissionLogView.dart';
 import '../modules/home/views/home_view.dart';
 import '../routes/app_pages.dart';
 
@@ -30,6 +36,21 @@ class AuthGuard1 extends StatelessWidget {
           switch (childName) {
             case Routes.HOME:
               currentWidget = HomeView();
+              break;
+            case Routes.TRANSMISSION_LOG:
+              currentWidget = TransmissionLogView();
+              break;
+            case Routes.RO_CANCELLATION:
+              currentWidget = RoCancellationView();
+              break;
+            case Routes.LOG_ADDITIONS:
+              currentWidget = LogAdditionsView();
+              break;
+            case Routes.FPC_MISMATCH:
+              currentWidget = FpcMismatchView();
+              break;
+            case Routes.IMPORT_DIGITEXT_RUN_ORDER:
+              currentWidget = ImportDigitextRunOrderView();
               break;
             default:
               currentWidget = const NoDataFoundPage();
