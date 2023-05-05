@@ -36,6 +36,7 @@ class ApiFactory {
   static String BASE_URL = Enviroment.toLowerCase() == "uat"
       ? "https://api-scheduling-bms-uat.zeeconnect.in"
       : "https://api-scheduling-bms-dev.zeeconnect.in";
+
   static String BASE_URL_COMMON = Enviroment.toLowerCase() == "uat"
       ? "https://api-common-bms-uat.zeeconnect.in"
       : "https://api-common-bms-dev.zeeconnect.in";
@@ -158,6 +159,9 @@ class ApiFactory {
           DropDownValue locDetail, DropDownValue chnlDetails, String date) =>
       BASE_URL +
       "/api/Additions/GetPopulateAdditions?Locationcode=${locDetail.key}&channelcode=${chnlDetails.key}&Date=$date";
+  static String LOG_ADDITION_SAVE_ADDITION() =>
+      BASE_URL +
+      "/api/Additions/PostAddition";
 
 //////////////// Import Digitex Run Order: UI:SHOEB SHAIKH, API: INDRESH ///////////////
 

@@ -217,24 +217,32 @@ class LogAdditionsView extends GetView<LogAdditionsController> {
                             showIcon: false,
                           ),
                         ),
-                        SizedBox(width: 25,),
+                        SizedBox(
+                          width: 25,
+                        ),
                         Padding(
-                          padding: const EdgeInsets.only(top:15.0),
+                          padding: const EdgeInsets.only(top: 15.0),
                           child: const Text("Additional Count: "),
                         ),
-                        SizedBox(width: 5,),
+                        SizedBox(
+                          width: 5,
+                        ),
                         Padding(
-                          padding: const EdgeInsets.only(top:15.0),
+                          padding: const EdgeInsets.only(top: 15.0),
                           child: const Text("--"),
                         ),
-                        SizedBox(width: 10,),
+                        SizedBox(
+                          width: 10,
+                        ),
                         Padding(
-                          padding: const EdgeInsets.only(top:15.0),
+                          padding: const EdgeInsets.only(top: 15.0),
                           child: const Text("Cancellation Count: "),
                         ),
-                        SizedBox(width: 5,),
+                        SizedBox(
+                          width: 5,
+                        ),
                         Padding(
-                          padding: const EdgeInsets.only(top:15.0),
+                          padding: const EdgeInsets.only(top: 15.0),
                           child: const Text("--"),
                         ),
 
@@ -267,84 +275,11 @@ class LogAdditionsView extends GetView<LogAdditionsController> {
                           onload: (loadevent) {
                             controllerX.gridStateManager =
                                 loadevent.stateManager;
-                            /* if (controller.selectedIndex != null) {
-                              loadevent.stateManager.moveScrollByRow(
-                                  PlutoMoveDirection.down,
-                                  controller.selectedIndex);
-                              loadevent.stateManager.setCurrentCell(
-                                  loadevent
-                                      .stateManager
-                                      .rows[controller.selectedIndex!]
-                                      .cells
-                                      .entries
-                                      .first
-                                      .value,
-                                  controller.selectedIndex);
-                            }*/
                           },
-                          // hideKeys: ["color", "modifed", ""],
                           showSrNo: true,
-                          // colorCallback: (PlutoRowColorContext plutoContext) {
-                          //   /* return (controllerX
-                          //                     .dailyFpcListData![plutoContext.rowIdx].selectItem)!
-                          //                     ? Colors.red
-                          //                     : Colors.white;*/
-                          //   return Color(controllerX
-                          //           .logAdditionModel?.displayPreviousAdditon?.previousAdditons![plutoContext.rowIdx]
-                          //           .colorNo ??
-                          //       Colors.white.value);
-                          // },
-                          onSelected: (event) {
-                            /*  controllerX.segmentList?.value = [];
-                          controller.update(["segmentList"]);
-
-                          DailyFPCModel data = controllerX.dailyFpcListData![event.rowIdx!];
-                          selectedLanguage.text = data.languageCode ?? "";
-                          selectedProgramType.text = data.programTypeCode ?? "";
-                          controller.selectedProgram = data;
-                          selectProgram = DropDownValue(
-                            key: controller.selectedProgram?.programCode ?? "",
-                            value: controller.selectedProgram?.programName ?? "",
-                          );
-                          controllerX.selectedIndex = event.rowIdx;
-                          controllerX.selectedColumn = event.cell!.column.field;
-                          selectedTapeId.text = data.tapeid!;
-                          selectedProgram.text = data.programName.toString();
-                          selectedProgramId.text = data.programCode.toString();
-                          controllerX.tapeId.text = data.tapeid.toString();
-                          episodeNo.value = data.epsNo!;
-                          print("Here is the episode duration>>>>" + data.episodeDuration.toString());
-                          */ /* controller
-                                                  .getSegmentDetailsList(
-                                                      controllerX.selectedLocationId.text,
-                                                      controllerX.selectedChannelId.text,
-                                                      data.episodeDuration,
-                                                      data.programName);*/ /*
-
-                          controller.getSegmentDetailsList1(
-                            data,
-                            controllerX.selectedLocationId.text,
-                            controllerX.selectedChannelId.text,
-                          );
-
-                          try {
-                            controller.showSegments.value = false;
-                            controller.showNewSegments.value = false;
-                            controller.selectedFpc.value = data;
-                            controller.showSegments.value = true;
-
-                            selectedOriRep.text = data.oriRep!;
-                            selectedOriRepId.text = data.originalRepeatCode ?? "";
-
-                            timeinController.text = controller.selectedProgram!.fpcTime.toString();
-
-                            controller.update(["segmentList", "selectedProgram"]);
-                          } catch (e) {
-                            print("DataGridFromMap1 OPERATION FPC PAGE ${e.toString()}");
-                          }*/
-                          },
+                          hideCode: false,
                           mode: controllerX.selectedPlutoGridMode,
-                          widthRatio: (Get.width / 11.4),
+                          // widthRatio: (Get.width / 12.4),
                           mapData: (controllerX.logAdditionModel
                               ?.displayPreviousAdditon?.previousAdditons
                               ?.map((e) => e.toJson())

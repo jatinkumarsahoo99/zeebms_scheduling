@@ -138,6 +138,25 @@ class LogAdditionsController extends GetxController {
           });
     }
   }
+  saveAddition() {
+    if (selectLocation == null) {
+      Snack.callError("Please select location");
+    } else if (selectChannel == null) {
+      Snack.callError("Please select channel");
+    } else if (selectedDate.text == "") {
+      Snack.callError("Please select date");
+    } else {
+      print("Channel is>>>" + jsonEncode(selectChannel?.toJson()));
+      Get.find<ConnectorControl>().POSTMETHOD(
+          api: ApiFactory.LOG_ADDITION_SAVE_ADDITION(),
+          fun: (Map<String, dynamic> map) {
+            map["displayPreviousAdditon"].forEach((v) {
+              additions.value
+                  .add(DropDownValue.fromJsonDynamic(v, "value", "name"));
+            });
+          });
+    }
+  }
 
   showDetails() {
     if (selectLocation == null) {

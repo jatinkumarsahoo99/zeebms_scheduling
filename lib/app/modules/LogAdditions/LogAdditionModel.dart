@@ -62,7 +62,7 @@ class PreviousAdditons {
   String? clientName;
   String? productName;
   int? bookingdetailcode1;
-  Null? approxTXtime;
+  String? approxTXtime;
 
   PreviousAdditons(
       {this.action,
@@ -110,8 +110,8 @@ class PreviousAdditons {
     data['exportTapeCaption'] = this.exportTapeCaption;
     data['duration'] = this.duration;
     data['spotPositionShortName'] = this.spotPositionShortName;
-    data['exportTapeCode'] = this.exportTapeCode;
-    data['scheduletime'] = this.scheduletime;
+    data['ExportTapeCode'] = this.exportTapeCode;
+    data['Scheduletime'] = this.scheduletime;
     data['programName'] = this.programName;
     data['breakNumber'] = this.breakNumber;
     data['col10'] = this.col10;
@@ -120,7 +120,7 @@ class PreviousAdditons {
     data['rOsTime'] = this.rOsTime;
     data['clientName'] = this.clientName;
     data['productName'] = this.productName;
-    data['bookingdetailcode1'] = this.bookingdetailcode1;
+    data['Bookingdetailcode1'] = this.bookingdetailcode1;
     data['approxTXtime'] = this.approxTXtime;
     return data;
   }
