@@ -40,6 +40,22 @@
   <script src="flutter.js" defer></script>
 </head>
 <body oncontextmenu="return false;">
+
+<script type="text/javascript">
+        function fromFlutter(data,server) {
+        // Do something
+        console.log("This is working now!!! v1");
+        window.parent.postMessage(data, server);
+    }
+   function getwindowtophostname(){
+        return window.top.location.hostname
+        }
+    function myFunction1(val) {
+        console.log(val);
+        console.log("Locations is????>>>>"+String(window.top.location));
+        return 'working';
+    }
+    </script>
   <script>
     window.addEventListener('load', function(ev) {
       // Download main.dart.js
