@@ -1,4 +1,6 @@
+import 'package:bms_scheduling/app/controller/HomeController.dart';
 import 'package:bms_scheduling/widgets/DateTime/DateWithThreeTextField.dart';
+import 'package:bms_scheduling/widgets/FormButton.dart';
 import 'package:bms_scheduling/widgets/dropdown.dart';
 import 'package:bms_scheduling/widgets/input_fields.dart';
 import 'package:flutter/cupertino.dart';
@@ -197,10 +199,51 @@ class RoBookingView extends GetView<RoBookingController> {
                 ),
               ),
             ),
-            Container(
-              color: Colors.red,
-              height: 50,
-            )
+            GetBuilder<HomeController>(
+                id: "buttons",
+                init: Get.find<HomeController>(),
+                builder: (btncontroller) {
+                  /* PermissionModel formPermissions = Get.find<MainController>()
+                      .permissionList!
+                      .lastWhere((element) {
+                    return element.appFormName == "frmSegmentsDetails";
+                  });*/
+
+                  return Container(
+                    height: 40,
+                    child: ButtonBar(
+                      // buttonHeight: 20,
+                      alignment: MainAxisAlignment.start,
+                      mainAxisSize: MainAxisSize.min,
+                      // pa
+                      children: [
+                        for (var btn in btncontroller.buttons!)
+                          btn["name"] == "Save"
+                              ? Obx(() => FormButtonWrapper(
+                                    btnText: btn["name"],
+
+                                    // isEnabled: btn['isDisabled'],
+                                    callback: () {},
+                                  ))
+                              : btn["name"] == "Clear"
+                                  ? FormButtonWrapper(
+                                      btnText: btn["name"],
+
+                                      // isEnabled: btn['isDisabled'],
+                                      callback: () {
+                                        btncontroller.clearPage1();
+                                      },
+                                    )
+                                  : FormButtonWrapper(
+                                      btnText: btn["name"],
+
+                                      // isEnabled: btn['isDisabled'],
+                                      callback: null,
+                                    ),
+                      ],
+                    ),
+                  );
+                }),
           ],
         ));
   }

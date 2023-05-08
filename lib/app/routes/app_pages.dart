@@ -12,6 +12,10 @@ import '../modules/RoBooking/bindings/ro_booking_binding.dart';
 import '../modules/RoBooking/views/ro_booking_view.dart';
 import '../modules/RoCancellation/bindings/ro_cancellation_binding.dart';
 import '../modules/RoCancellation/views/ro_cancellation_view.dart';
+import '../modules/RoReschedule/bindings/ro_reschedule_binding.dart';
+import '../modules/RoReschedule/views/ro_reschedule_view.dart';
+import '../modules/RosDistribution/bindings/ros_distribution_binding.dart';
+import '../modules/RosDistribution/views/ros_distribution_view.dart';
 import '../modules/SpotPriority/bindings/spot_priority_binding.dart';
 import '../modules/SpotPriority/views/SpotPriorityView.dart';
 import '../modules/TransmissionLog/bindings/transmission_log_binding.dart';
@@ -27,7 +31,8 @@ part 'app_routes.dart';
 class AppPages {
   AppPages._();
 
-  static const INITIAL = Routes.RO_CANCELLATION;
+  static const INITIAL = Routes.ROS_DISTRIBUTION +
+      "?personalNo=AqoF3cvt1PCPIKM8FfPwag%3D%3D&loginCode=gsS2oEkuYKzI9aXanDqobQ%3D%3D&formName=a4Lfy%2FGb5Roxo9vLiBCqSQ%3D%3D";
 
   static final routes = [
     GetPage(
@@ -76,6 +81,16 @@ class AppPages {
       name: _Paths.RO_CANCELLATION,
       page: () => AuthGuard1(childName: _Paths.RO_CANCELLATION),
       binding: RoCancellationBinding(),
+    ),
+    GetPage(
+      name: _Paths.RO_RESCHEDULE,
+      page: () => AuthGuard1(childName: _Paths.RO_RESCHEDULE),
+      binding: RoRescheduleBinding(),
+    ),
+    GetPage(
+      name: _Paths.ROS_DISTRIBUTION,
+      page: () => AuthGuard1(childName: _Paths.ROS_DISTRIBUTION),
+      binding: RosDistributionBinding(),
     ),
   ];
 }

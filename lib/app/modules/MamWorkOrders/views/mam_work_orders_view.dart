@@ -1,3 +1,5 @@
+import 'package:bms_scheduling/app/controller/HomeController.dart';
+import 'package:bms_scheduling/widgets/FormButton.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
@@ -48,10 +50,54 @@ class MamWorkOrdersView extends GetView<MamWorkOrdersController> {
               ),
             ),
           )),
-          Container(
-            height: 50,
-            color: Colors.red,
-          )
+          GetBuilder<HomeController>(
+              id: "buttons",
+              init: Get.find<HomeController>(),
+              builder: (btncontroller) {
+                /* PermissionModel formPermissions = Get.find<MainController>()
+                      .permissionList!
+                      .lastWhere((element) {
+                    return element.appFormName == "frmSegmentsDetails";
+                  });*/
+
+                if (btncontroller.buttons != null) {
+                  return Container(
+                    height: 40,
+                    child: ButtonBar(
+                      // buttonHeight: 20,
+                      alignment: MainAxisAlignment.start,
+                      mainAxisSize: MainAxisSize.min,
+                      // pa
+                      children: [
+                        for (var btn in btncontroller.buttons!)
+                          btn["name"] == "Save"
+                              ? Obx(() => FormButtonWrapper(
+                                    btnText: btn["name"],
+
+                                    // isEnabled: btn['isDisabled'],
+                                    callback: () {},
+                                  ))
+                              : btn["name"] == "Clear"
+                                  ? FormButtonWrapper(
+                                      btnText: btn["name"],
+
+                                      // isEnabled: btn['isDisabled'],
+                                      callback: () {
+                                        btncontroller.clearPage1();
+                                      },
+                                    )
+                                  : FormButtonWrapper(
+                                      btnText: btn["name"],
+
+                                      // isEnabled: btn['isDisabled'],
+                                      callback: null,
+                                    ),
+                      ],
+                    ),
+                  );
+                }
+                return Container();
+              }),
         ],
       ),
     );
