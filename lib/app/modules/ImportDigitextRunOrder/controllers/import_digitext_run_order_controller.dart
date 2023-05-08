@@ -97,7 +97,7 @@ class ImportDigitextRunOrderController extends GetxController {
     }
   }
 
-  importfile() async {
+  importfile() {
     LoadingDialog.call();
     dio.FormData formData = dio.FormData.fromMap({
       'ImportFile': dio.MultipartFile.fromBytes(

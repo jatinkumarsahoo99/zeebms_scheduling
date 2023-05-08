@@ -14,6 +14,7 @@ void main() async {
     FlutterError.presentError(details);
     // Logger.sendError(error: details,stackTrace: details.stack,severity: Severity.critical);
   };
+
   PlatformDispatcher.instance.onError = (error, stack) {
     // Logger.sendError(error: error,severity: Severity.warning,stackTrace: stack);
     return true;

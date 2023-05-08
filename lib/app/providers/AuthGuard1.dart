@@ -3,6 +3,8 @@ import 'package:bms_scheduling/app/modules/FpcMismatch/views/FpcMismatchView.dar
 import 'package:bms_scheduling/app/modules/ImportDigitextRunOrder/views/import_digitext_run_order_view.dart';
 import 'package:bms_scheduling/app/modules/LogAdditions/controllers/LogAdditionsController.dart';
 import 'package:bms_scheduling/app/modules/RoCancellation/views/ro_cancellation_view.dart';
+import 'package:bms_scheduling/app/modules/RoReschedule/views/ro_reschedule_view.dart';
+import 'package:bms_scheduling/app/modules/RosDistribution/views/ros_distribution_view.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import '../../widgets/LoadingScreen.dart';
@@ -48,6 +50,12 @@ class AuthGuard1 extends StatelessWidget {
               break;
             case Routes.FPC_MISMATCH:
               currentWidget = FpcMismatchView();
+              break;
+            case Routes.RO_RESCHEDULE:
+              currentWidget = RoRescheduleView();
+              break;
+            case Routes.ROS_DISTRIBUTION:
+              currentWidget = RosDistributionView();
               break;
             case Routes.IMPORT_DIGITEXT_RUN_ORDER:
               currentWidget = ImportDigitextRunOrderView();
