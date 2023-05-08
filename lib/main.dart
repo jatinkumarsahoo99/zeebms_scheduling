@@ -1,5 +1,6 @@
 import 'dart:ui';
 import 'package:azure_application_insights/azure_application_insights.dart';
+import 'package:bms_scheduling/app/providers/Aes.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:url_strategy/url_strategy.dart';
@@ -19,7 +20,7 @@ void main() async {
     return true;
   };
   setPathUrlStrategy();
-
+  print("Aes dec>>>"+(Aes.decrypt("kW5Bkf17/S5YF7ML28FmVg==")??""));
   runApp(
     GetMaterialApp(
       title: "Zee BMS",

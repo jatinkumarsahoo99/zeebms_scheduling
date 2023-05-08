@@ -41,6 +41,8 @@ class FpcMismatchView extends GetView<FpcMismatchController> {
   FpcMismatchController controllerX = Get.put(FpcMismatchController());
   final GlobalKey rebuildKey = GlobalKey();
 
+
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -83,13 +85,15 @@ class FpcMismatchView extends GetView<FpcMismatchController> {
                           dialogHeight: Get.height * .7,
                         ),
                       ),
-                      SizedBox(width: 5,),
+                      SizedBox(
+                        width: 5,
+                      ),
                       Obx(
                         () => DropDownField.formDropDown1WidthMap(
                           controllerX.channelList?.value ?? [],
                           (value) {
                             controllerX.selectedChannel = value;
-                            print("Value is>>>"+value.toString());
+                            print("Value is>>>" + value.toString());
                           },
                           "Channel",
                           controllerX.widthSize,
@@ -100,7 +104,7 @@ class FpcMismatchView extends GetView<FpcMismatchController> {
                           dialogHeight: Get.height * .7,
                         ),
                       ),
-                    /*  DateWidget.dateStartDtEndDt3(context, "As On Date",
+                      /*  DateWidget.dateStartDtEndDt3(context, "As On Date",
                           (data) {
                         log(">>>>" + data.toString());
                         // controllerX.inwardToDt = data;
@@ -114,12 +118,15 @@ class FpcMismatchView extends GetView<FpcMismatchController> {
                           endDt: DateTime.now().add(Duration(days: 1825)),
                           initialValue: controllerX.date_.text,
                           widthRatio: controllerX.widthSize),*/
-                      SizedBox(width: 5,),
+                      SizedBox(
+                        width: 5,
+                      ),
                       DateWithThreeTextField(
                         title: "As On Date",
                         // startDt: DateTime.now(),
                         //Note: Data Availble on 1 OCT 2012
-                        startDate: DateTime.now().subtract(Duration(days: 5000)),
+                        startDate:
+                            DateTime.now().subtract(Duration(days: 5000)),
                         endDate: DateTime.now().add(Duration(days: 1825)),
                         mainTextController: controllerX.date_,
                         widthRation: controllerX.widthSize,
@@ -246,7 +253,7 @@ class FpcMismatchView extends GetView<FpcMismatchController> {
         id: "fpcMaster",
         // init: CreateBreakPatternController(),
         builder: (controller) {
-          print("Data grid values>>>"+controllerX.dataList.toString());
+          print("Data grid values>>>" + controllerX.dataList.toString());
           if (controllerX.dataList != null &&
               (controllerX.dataList?.isNotEmpty)!) {
             // final key = GlobalKey();
@@ -255,23 +262,40 @@ class FpcMismatchView extends GetView<FpcMismatchController> {
               flex: 5,
               child: DataGridFromMap(
                 showSrNo: false,
-                mapData:(controllerX.dataList?.map((e) => e.toJson1()).toList())!,
+                mapData:
+                    (controllerX.dataList?.map((e) => e.toJson1()).toList())!,
                 widthRatio: 90,
-                colorCallback: (PlutoRowColorContext plutoContext) {
+                checkRow: true,
+                checkRowKey: "select",
+                onload: (load) {
+                  controllerX.stateManager = load.stateManager;
+                  // load.stateManager.
+                },
+                onRowCheck: (PlutoGridOnRowCheckedEvent onRowCheckedEvent) {
+                  if (onRowCheckedEvent.isRow) {
+                    controllerX.dataList![onRowCheckedEvent.rowIdx!]
+                        .selectItem = onRowCheckedEvent.isChecked;
+                  } else {
+                    controllerX.dataList?.forEach((element) {
+                      element.selectItem = onRowCheckedEvent.isChecked;
+                    });
+                  }
+                },
+                /* colorCallback: (PlutoRowColorContext plutoContext) {
                   return (controllerX
                           .dataList![plutoContext.rowIdx].selectItem)!
-                      ? Colors.red
+                      ? Colors.grey
                       : Colors.white;
-                },
+                },*/
                 mode: PlutoGridMode.selectWithOneTap,
                 formatDate: false,
-                onSelected: (PlutoGridOnSelectedEvent plutoEvnt) {
+                /*onSelected: (PlutoGridOnSelectedEvent plutoEvnt) {
                   controllerX.dataList![plutoEvnt.rowIdx!].selectItem =
                       ((controllerX.dataList![plutoEvnt.rowIdx!].selectItem)!)
                           ? false
                           : true;
                   controller.update(["fpcMaster"]);
-                },
+                },*/
               ),
             );
           } else {
@@ -305,13 +329,13 @@ class FpcMismatchView extends GetView<FpcMismatchController> {
             // final key = GlobalKey();
             return Expanded(
               // height: 400,
-              flex:2,
+              flex: 2,
               child: DataGridFromMap(
                 mapData: (controllerX.programList
                     ?.map((e) => e.toJson1())
                     .toList())!,
                 widthRatio: (Get.width * 0.2) / 2 + 7,
-                mode: PlutoGridMode.select,
+                mode: PlutoGridMode.selectWithOneTap,
                 onSelected: (plutoGrid) {
                   controllerX.selectedProgram =
                       controllerX.programList![plutoGrid.rowIdx!];
