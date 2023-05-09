@@ -20,11 +20,13 @@ class FormButtonWrapper extends StatelessWidget {
   final IconData? iconDataM;
   final FocusNode? focusNode;
   final bool showIcon;
+  final double? width;
 
   FormButtonWrapper({
     required this.btnText,
     this.callback,
     this.focusNode,
+    this.width,
     this.height = 25,
     this.isEnabled,
     this.iconDataM,
@@ -35,6 +37,7 @@ class FormButtonWrapper extends StatelessWidget {
   Widget build(BuildContext context) {
     return SizedBox(
       height: height,
+      width: width,
       child: FormButton(
         focusNode: focusNode,
         btnText: btnText,
