@@ -118,7 +118,8 @@ class ApiFactory {
   static String FPC_MISMATCH_PROGRAM(
           String location, String channelCode, String dt) =>
       // BASE_URL + "/api/FpcMismatch/BindWebFPCGrid/$location,$channelCode,$dt";
-      BASE_URL + "/api/FpcMismatch/BindWebFPCGrid?LocationCode=$location&ChannelCode=$channelCode&TelecastDate=$dt";
+      BASE_URL +
+      "/api/FpcMismatch/BindWebFPCGrid?LocationCode=$location&ChannelCode=$channelCode&TelecastDate=$dt";
 
   static String FPC_MISMATCH_MARK_ERROR =
       BASE_URL + "/api/FpcMismatch/UpdateRecordError";
@@ -160,8 +161,7 @@ class ApiFactory {
       BASE_URL +
       "/api/Additions/GetPopulateAdditions?Locationcode=${locDetail.key}&channelcode=${chnlDetails.key}&Date=$date";
   static String LOG_ADDITION_SAVE_ADDITION() =>
-      BASE_URL +
-      "/api/Additions/PostAddition";
+      BASE_URL + "/api/Additions/PostAddition";
 
 //////////////// Import Digitex Run Order: UI:SHOEB SHAIKH, API: INDRESH ///////////////
 
@@ -170,7 +170,7 @@ class ApiFactory {
   static String IMPORT_DIGITEX_RUN_ORDER_CHANNEL(locationCode) =>
       "$BASE_URL/api/ImportDigitexRunOrder/GetChannels/$locationCode";
   static String IMPORT_DIGITEX_RUN_ORDER_AGENCY =
-      "$BASE_URL/api/ImportDigitexRunOrder/GetAgencyMasters/Sky/";
+      "$BASE_URL/api/ImportDigitexRunOrder/GetAgencyMasters/";
   static String IMPORT_DIGITEX_RUN_ORDER_CLIENT =
       "$BASE_URL/api/ImportDigitexRunOrder/GetClientMasters/";
   static String IMPORT_DIGITEX_RUN_ORDER_MAP_CLIENT =
@@ -183,4 +183,10 @@ class ApiFactory {
   static String IMPORT_DIGITEX_RUN_ORDER_SAVE(
           locationCode, channelCode, date) =>
       "$BASE_URL/api/ImportDigitexRunOrder/SaveRunOrder?LocationCode=$locationCode&ChannelCode=$channelCode&BookingDate=$date";
+
+//////// RO CANCELLATION ///////
+  static String RO_CANCELLATION_LOCATION =
+      "$BASE_URL/api/ReleaseOrderCancellation/GetCboLocation";
+  static String RO_CANCELLATION_CHANNNEL(locationCode) =>
+      "$BASE_URL/api/ReleaseOrderCancellation/OnLeaveLocation?LocationCode=$locationCode";
 }

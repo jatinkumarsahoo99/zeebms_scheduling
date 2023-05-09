@@ -1370,7 +1370,7 @@ class InputFields {
           child: RawKeyboardListener(
             focusNode: fN,
             onKey: (RawKeyEvent keyEvent) {
-              if (showbtn!) {
+              if (showbtn) {
                 if (keyEvent.isKeyPressed(LogicalKeyboardKey.arrowDown)) {
                   /* controller.text =
                       "${(int.tryParse(controller.text) ?? 1) - 1}";*/
@@ -1527,7 +1527,7 @@ class InputFields {
           child: RawKeyboardListener(
             focusNode: fN,
             onKey: (RawKeyEvent keyEvent) {
-              if (showbtn!) {
+              if (showbtn) {
                 if (keyEvent.isKeyPressed(LogicalKeyboardKey.arrowDown)) {
                   /* controller.text =
                       "${(int.tryParse(controller.text) ?? 1) - 1}";*/

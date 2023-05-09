@@ -32,10 +32,19 @@ class RoCancellationView extends GetView<RoCancellationController> {
                 runSpacing: 5,
                 crossAxisAlignment: WrapCrossAlignment.end,
                 children: [
-                  DropDownField.formDropDown1WidthMap(
-                      [], (data) {}, "Location", 0.12),
-                  DropDownField.formDropDown1WidthMap(
-                      [], (data) {}, "Channel", 0.24),
+                  Obx(
+                    () => DropDownField.formDropDown1WidthMap(
+                        controller.locations.value, (value) {
+                      controller.selectedLocation = value;
+                      controller.getChannel(value.key);
+                    }, "Location", 0.12),
+                  ),
+                  Obx(
+                    () => DropDownField.formDropDown1WidthMap(
+                        controller.channels.value, (value) {
+                      controller.selectedChannel = value;
+                    }, "Channel", 0.24),
+                  ),
                   DateWithThreeTextField(
                       widthRation: 0.12,
                       title: "Cancel Date",

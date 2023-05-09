@@ -24,22 +24,28 @@ typedef String DropdownSearchItemAsString<T>(T? item);
 typedef bool DropdownSearchFilterFn<T>(T? item, String? filter);
 typedef bool DropdownSearchCompareFn<T>(T? item, T? selectedItem);
 typedef Widget DropdownSearchBuilder<T>(BuildContext context, T? selectedItem);
-typedef Widget DropdownSearchBuilderMultiSelection<T>(BuildContext context, List<T> selectedItems);
+typedef Widget DropdownSearchBuilderMultiSelection<T>(
+    BuildContext context, List<T> selectedItems);
 typedef Widget DropdownSearchPopupItemBuilder<T>(
   BuildContext context,
   T item,
   bool isSelected,
 );
 typedef bool DropdownSearchPopupItemEnabled<T>(T item);
-typedef Widget ErrorBuilder<T>(BuildContext context, String? searchEntry, dynamic exception);
+typedef Widget ErrorBuilder<T>(
+    BuildContext context, String? searchEntry, dynamic exception);
 typedef Widget EmptyBuilder<T>(BuildContext context, String? searchEntry);
 typedef Widget LoadingBuilder<T>(BuildContext context, String? searchEntry);
 typedef Future<bool?> BeforeChange<T>(T? prevItem, T? nextItem);
-typedef Future<bool?> BeforeChangeMultiSelection<T>(List<T> prevItems, List<T> nextItems);
-typedef Widget FavoriteItemsBuilder<T>(BuildContext context, T item, bool isSelected);
-typedef Widget ValidationMultiSelectionBuilder<T>(BuildContext context, List<T> item);
+typedef Future<bool?> BeforeChangeMultiSelection<T>(
+    List<T> prevItems, List<T> nextItems);
+typedef Widget FavoriteItemsBuilder<T>(
+    BuildContext context, T item, bool isSelected);
+typedef Widget ValidationMultiSelectionBuilder<T>(
+    BuildContext context, List<T> item);
 
-typedef RelativeRect PositionCallback(RenderBox popupButtonObject, RenderBox overlay);
+typedef RelativeRect PositionCallback(
+    RenderBox popupButtonObject, RenderBox overlay);
 
 typedef void OnItemAdded<T>(List<T> selectedItems, T addedItem);
 typedef void OnItemRemoved<T>(List<T> selectedItems, T removedItem);
@@ -391,14 +397,20 @@ class DropdownSearchState<T> extends State<DropdownSearch<T>> {
   @override
   void initState() {
     super.initState();
-    _selectedItemsNotifier.value = isMultiSelectionMode ? List.from(widget.selectedItems) : _itemToList(widget.selectedItem);
+    _selectedItemsNotifier.value = isMultiSelectionMode
+        ? List.from(widget.selectedItems)
+        : _itemToList(widget.selectedItem);
   }
 
   @override
   void didUpdateWidget(DropdownSearch<T> oldWidget) {
-    List<T> oldSelectedItems = isMultiSelectionMode ? oldWidget.selectedItems : _itemToList(oldWidget.selectedItem);
+    List<T> oldSelectedItems = isMultiSelectionMode
+        ? oldWidget.selectedItems
+        : _itemToList(oldWidget.selectedItem);
 
-    List<T> newSelectedItems = isMultiSelectionMode ? widget.selectedItems : _itemToList(widget.selectedItem);
+    List<T> newSelectedItems = isMultiSelectionMode
+        ? widget.selectedItems
+        : _itemToList(widget.selectedItem);
 
     if (!listEquals(oldSelectedItems, newSelectedItems)) {
       _selectedItemsNotifier.value = List.from(newSelectedItems);
@@ -476,17 +488,22 @@ class DropdownSearchState<T> extends State<DropdownSearch<T>> {
         );
       else if (isMultiSelectionMode) {
         return Wrap(
-          children: getSelectedItems.map((e) => defaultItemMultiSelectionMode(e)).toList(),
+          children: getSelectedItems
+              .map((e) => defaultItemMultiSelectionMode(e))
+              .toList(),
         );
       }
-      return Text(_selectedItemAsString(getSelectedItem), style: Theme.of(context).textTheme.subtitle1);
+      return Text(_selectedItemAsString(getSelectedItem),
+          style: Theme.of(context).textTheme.subtitle1);
     }
 
     return selectedItemWidget();
   }
 
   Widget _formField() {
-    return isMultiSelectionMode ? _formFieldMultiSelection() : _formFieldSingleSelection();
+    return isMultiSelectionMode
+        ? _formFieldMultiSelection()
+        : _formFieldSingleSelection();
   }
 
   Widget _formFieldSingleSelection() {
@@ -509,7 +526,9 @@ class DropdownSearchState<T> extends State<DropdownSearch<T>> {
                 baseStyle: widget.dropdownSearchBaseStyle,
                 textAlign: widget.dropdownSearchTextAlign,
                 textAlignVertical: widget.dropdownSearchTextAlignVertical,
-                isEmpty: getSelectedItem == null && (widget.dropdownBuilder == null || widget.dropdownBuilderSupportsNullItem),
+                isEmpty: getSelectedItem == null &&
+                    (widget.dropdownBuilder == null ||
+                        widget.dropdownBuilderSupportsNullItem),
                 isFocused: isFocused,
                 decoration: _manageDropdownDecoration(state),
                 child: _defaultSelectedItemWidget(),
@@ -539,7 +558,9 @@ class DropdownSearchState<T> extends State<DropdownSearch<T>> {
                 baseStyle: widget.dropdownSearchBaseStyle,
                 textAlign: widget.dropdownSearchTextAlign,
                 textAlignVertical: widget.dropdownSearchTextAlignVertical,
-                isEmpty: getSelectedItems.isEmpty && (widget.dropdownBuilderMultiSelection == null || widget.dropdownBuilderSupportsNullItem),
+                isEmpty: getSelectedItems.isEmpty &&
+                    (widget.dropdownBuilderMultiSelection == null ||
+                        widget.dropdownBuilderSupportsNullItem),
                 isFocused: isFocused,
                 decoration: _manageDropdownDecoration(state),
                 child: _defaultSelectedItemWidget(),
@@ -586,7 +607,8 @@ class DropdownSearchState<T> extends State<DropdownSearch<T>> {
       children: <Widget>[
         if (widget.showClearButton == true && getSelectedItems.isNotEmpty)
           IconButton(
-            icon: widget.clearButtonProps?.icon ?? const Icon(Icons.clear, size: 24),
+            icon: widget.clearButtonProps?.icon ??
+                const Icon(Icons.clear, size: 24),
             onPressed: clearButtonPressed,
             constraints: widget.clearButtonProps?.constraints,
             hoverColor: widget.clearButtonProps?.hoverColor,
@@ -595,14 +617,16 @@ class DropdownSearchState<T> extends State<DropdownSearch<T>> {
             color: widget.clearButtonProps?.color,
             focusColor: widget.clearButtonProps?.focusColor,
             iconSize: widget.clearButtonProps?.iconSize ?? 24.0,
-            padding: widget.clearButtonProps?.padding ?? const EdgeInsets.all(8.0),
+            padding:
+                widget.clearButtonProps?.padding ?? const EdgeInsets.all(8.0),
             splashRadius: widget.clearButtonProps?.splashRadius,
             alignment: widget.clearButtonProps?.alignment ?? Alignment.center,
             autofocus: widget.clearButtonProps?.autofocus ?? false,
             disabledColor: widget.clearButtonProps?.disabledColor,
             enableFeedback: widget.clearButtonProps?.enableFeedback ?? false,
             focusNode: widget.clearButtonProps?.focusNode,
-            mouseCursor: widget.clearButtonProps?.mouseCursor ?? SystemMouseCursors.click,
+            mouseCursor: widget.clearButtonProps?.mouseCursor ??
+                SystemMouseCursors.click,
             tooltip: widget.clearButtonProps?.tooltip,
             visualDensity: widget.clearButtonProps?.visualDensity,
           ),
@@ -672,8 +696,10 @@ class DropdownSearchState<T> extends State<DropdownSearch<T>> {
         builder: (ctx) {
           final MediaQueryData mediaQueryData = MediaQuery.of(ctx);
           EdgeInsets padding = mediaQueryData.padding;
-          if (mediaQueryData.padding.bottom == 0.0 && mediaQueryData.viewInsets.bottom != 0.0)
-            padding = padding.copyWith(bottom: mediaQueryData.viewPadding.bottom);
+          if (mediaQueryData.padding.bottom == 0.0 &&
+              mediaQueryData.viewInsets.bottom != 0.0)
+            padding =
+                padding.copyWith(bottom: mediaQueryData.viewPadding.bottom);
 
           return AnimatedPadding(
             duration: Duration(milliseconds: 300),
@@ -688,7 +714,8 @@ class DropdownSearchState<T> extends State<DropdownSearch<T>> {
                     top: widget.popupSafeArea.top ? padding.top : 0,
                   ),
                   child: Material(
-                    color: widget.popupBackgroundColor ?? Theme.of(ctx).canvasColor,
+                    color: widget.popupBackgroundColor ??
+                        Theme.of(ctx).canvasColor,
                     shape: widget.popupShape,
                     clipBehavior: Clip.antiAlias,
                     elevation: widget.popupElevation,
@@ -721,8 +748,12 @@ class DropdownSearchState<T> extends State<DropdownSearch<T>> {
     // Calculate the show-up area for the dropdown using button's size & position based on the `overlay` used as the coordinate space.
     return RelativeRect.fromSize(
       Rect.fromPoints(
-        popupButtonObject.localToGlobal(popupButtonObject.size.bottomLeft(Offset.zero), ancestor: overlay),
-        popupButtonObject.localToGlobal(popupButtonObject.size.bottomRight(Offset.zero), ancestor: overlay),
+        popupButtonObject.localToGlobal(
+            popupButtonObject.size.bottomLeft(Offset.zero),
+            ancestor: overlay),
+        popupButtonObject.localToGlobal(
+            popupButtonObject.size.bottomRight(Offset.zero),
+            ancestor: overlay),
       ),
       Size(overlay.size.width, overlay.size.height),
     );
@@ -733,7 +764,7 @@ class DropdownSearchState<T> extends State<DropdownSearch<T>> {
     // Here we get the render object of our physical button, later to get its size & position
     final popupButtonObject = context.findRenderObject() as RenderBox;
     // Get the render object of the overlay used in `Navigator` / `MaterialApp`, i.e. screen size reference
-    final overlay = Overlay.of(context)!.context.findRenderObject() as RenderBox;
+    final overlay = Overlay.of(context).context.findRenderObject() as RenderBox;
 
     return customShowMenu<T>(
         popupSafeArea: widget.popupSafeArea,
@@ -741,7 +772,8 @@ class DropdownSearchState<T> extends State<DropdownSearch<T>> {
         shape: widget.popupShape,
         color: widget.popupBackgroundColor,
         context: context,
-        position: (widget.positionCallback ?? _position)(popupButtonObject, overlay),
+        position:
+            (widget.positionCallback ?? _position)(popupButtonObject, overlay),
         elevation: widget.popupElevation,
         barrierDismissible: widget.popupBarrierDismissible,
         items: [
@@ -786,7 +818,8 @@ class DropdownSearchState<T> extends State<DropdownSearch<T>> {
       popupOnItemAdded: widget.popupOnItemAdded,
       popupOnItemRemoved: widget.popupOnItemRemoved,
       popupSelectionWidget: widget.popupSelectionWidget,
-      popupValidationMultiSelectionWidget: widget.popupValidationMultiSelectionWidget,
+      popupValidationMultiSelectionWidget:
+          widget.popupValidationMultiSelectionWidget,
       popupCustomMultiSelectionWidget: widget.popupCustomMultiSelectionWidget,
       isMultiSelectionMode: isMultiSelectionMode,
       selectionListViewProps: widget.selectionListViewProps,
@@ -810,17 +843,21 @@ class DropdownSearchState<T> extends State<DropdownSearch<T>> {
       _selectedItemsNotifier.value = List.from(selectedItems);
       if (widget.onChanged != null)
         widget.onChanged!(getSelectedItem);
-      else if (widget.onChangedMultiSelection != null) widget.onChangedMultiSelection!(selectedItems);
+      else if (widget.onChangedMultiSelection != null)
+        widget.onChangedMultiSelection!(selectedItems);
     };
 
     if (widget.onBeforeChange != null) {
-      widget.onBeforeChange!(getSelectedItem, selectedItems.isEmpty ? null : selectedItems.first).then((value) {
+      widget.onBeforeChange!(getSelectedItem,
+              selectedItems.isEmpty ? null : selectedItems.first)
+          .then((value) {
         if (value == true) {
           changeItem();
         }
       });
     } else if (widget.onBeforeChangeMultiSelection != null) {
-      widget.onBeforeChangeMultiSelection!(getSelectedItems, selectedItems).then((value) {
+      widget.onBeforeChangeMultiSelection!(getSelectedItems, selectedItems)
+          .then((value) {
         if (value == true) {
           changeItem();
         }
@@ -860,23 +897,27 @@ class DropdownSearchState<T> extends State<DropdownSearch<T>> {
   ///Change selected Value; this function is public USED to change the selected
   ///value PROGRAMMATICALLY, Otherwise you can use [_handleOnChangeSelectedItems]
   ///for multiSelection mode you can use [changeSelectedItems]
-  void changeSelectedItem(T? selectedItem) => _handleOnChangeSelectedItems(_itemToList(selectedItem));
+  void changeSelectedItem(T? selectedItem) =>
+      _handleOnChangeSelectedItems(_itemToList(selectedItem));
 
   ///Change selected Value; this function is public USED to change the selected
   ///value PROGRAMMATICALLY, Otherwise you can use [_handleOnChangeSelectedItems]
   ///for SingleSelection mode you can use [changeSelectedItem]
-  void changeSelectedItems(List<T> selectedItems) => _handleOnChangeSelectedItems(selectedItems);
+  void changeSelectedItems(List<T> selectedItems) =>
+      _handleOnChangeSelectedItems(selectedItems);
 
   ///function to remove an item from the list
   ///Useful i multiSelection mode to delete an item
-  void removeItem(T itemToRemove) => _handleOnChangeSelectedItems(getSelectedItems..removeWhere((i) => _isEqual(itemToRemove, i)));
+  void removeItem(T itemToRemove) => _handleOnChangeSelectedItems(
+      getSelectedItems..removeWhere((i) => _isEqual(itemToRemove, i)));
 
   ///Change selected Value; this function is public USED to clear selected
   ///value PROGRAMMATICALLY, Otherwise you can use [_handleOnChangeSelectedItems]
   void clear() => _handleOnChangeSelectedItems([]);
 
   ///get selected value programmatically USED for SINGLE_SELECTION mode
-  T? get getSelectedItem => getSelectedItems.isEmpty ? null : getSelectedItems.first;
+  T? get getSelectedItem =>
+      getSelectedItems.isEmpty ? null : getSelectedItems.first;
 
   ///get selected values programmatically
   List<T> get getSelectedItems => _selectedItemsNotifier.value;
