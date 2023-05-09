@@ -1,11 +1,22 @@
 class LogAdditionModel {
   DisplayPreviousAdditon? displayPreviousAdditon;
+  String? additionCount;
+  String? cancellationCount;
 
   LogAdditionModel({this.displayPreviousAdditon});
 
   LogAdditionModel.fromJson(Map<String, dynamic> json) {
     displayPreviousAdditon = json['displayPreviousAdditon'] != null
         ? new DisplayPreviousAdditon.fromJson(json['displayPreviousAdditon'])
+        : null;
+    displayPreviousAdditon = json['lstnewAdditions'] != null
+        ? new DisplayPreviousAdditon.fromJson(json['lstnewAdditions'])
+        : null;
+
+    additionCount =
+        json['additionCount'] != null ? json['additionCount'].toString() : null;
+    cancellationCount = json['cancellationCount'] != null
+        ? json['cancellationCount'].toString()
         : null;
   }
 
@@ -28,6 +39,12 @@ class DisplayPreviousAdditon {
     if (json['previousAdditons'] != null) {
       previousAdditons = <PreviousAdditons>[];
       json['previousAdditons'].forEach((v) {
+        previousAdditons!.add(new PreviousAdditons.fromJson(v));
+      });
+    }
+    if (json['lstnewadditions'] != null) {
+      previousAdditons = <PreviousAdditons>[];
+      json['lstnewadditions'].forEach((v) {
         previousAdditons!.add(new PreviousAdditons.fromJson(v));
       });
     }
@@ -66,28 +83,28 @@ class PreviousAdditons {
 
   PreviousAdditons(
       {this.action,
-        this.tonumber,
-        this.exportTapeCaption,
-        this.duration,
-        this.spotPositionShortName,
-        this.exportTapeCode,
-        this.scheduletime,
-        this.programName,
-        this.breakNumber,
-        this.col10,
-        this.bookingdetailcode,
-        this.segmentNumber,
-        this.rOsTime,
-        this.clientName,
-        this.productName,
-        this.bookingdetailcode1,
-        this.approxTXtime});
+      this.tonumber,
+      this.exportTapeCaption,
+      this.duration,
+      this.spotPositionShortName,
+      this.exportTapeCode,
+      this.scheduletime,
+      this.programName,
+      this.breakNumber,
+      this.col10,
+      this.bookingdetailcode,
+      this.segmentNumber,
+      this.rOsTime,
+      this.clientName,
+      this.productName,
+      this.bookingdetailcode1,
+      this.approxTXtime});
 
   PreviousAdditons.fromJson(Map<String, dynamic> json) {
     action = json['action'];
     tonumber = json['tonumber'];
     exportTapeCaption = json['exportTapeCaption'];
-    duration = json['duration'];
+    duration = json['duration'].toString();
     spotPositionShortName = json['spotPositionShortName'];
     exportTapeCode = json['exportTapeCode'];
     scheduletime = json['scheduletime'];
@@ -95,7 +112,7 @@ class PreviousAdditons {
     breakNumber = json['breakNumber'];
     col10 = json['col10'];
     bookingdetailcode = json['bookingdetailcode'];
-    segmentNumber = json['segmentNumber'];
+    segmentNumber = json['segmentNumber'].toString();
     rOsTime = json['rOsTime'];
     clientName = json['clientName'];
     productName = json['productName'];
@@ -108,7 +125,7 @@ class PreviousAdditons {
     data['action'] = this.action;
     data['tonumber'] = this.tonumber;
     data['exportTapeCaption'] = this.exportTapeCaption;
-    data['duration'] = this.duration;
+    data['duration'] = num.tryParse(this.duration ?? "0");
     data['spotPositionShortName'] = this.spotPositionShortName;
     data['ExportTapeCode'] = this.exportTapeCode;
     data['Scheduletime'] = this.scheduletime;
@@ -116,11 +133,33 @@ class PreviousAdditons {
     data['breakNumber'] = this.breakNumber;
     data['col10'] = this.col10;
     data['bookingdetailcode'] = this.bookingdetailcode;
-    data['segmentNumber'] = this.segmentNumber;
+    data['segmentNumber'] = num.tryParse(this.segmentNumber ?? "");
     data['rOsTime'] = this.rOsTime;
     data['clientName'] = this.clientName;
     data['productName'] = this.productName;
     data['Bookingdetailcode1'] = this.bookingdetailcode1;
+    data['approxTXtime'] = this.approxTXtime;
+    return data;
+  }
+
+  Map<String, dynamic> toJson1() {
+    final Map<String, dynamic> data = new Map<String, dynamic>();
+    data['action'] = this.action;
+    data['tonumber'] = this.tonumber;
+    data['exportTapeCaption'] = this.exportTapeCaption;
+    data['duration'] = num.tryParse(this.duration ?? "0");
+    data['spotPositionShortName'] = this.spotPositionShortName;
+    data['exportTapeCode'] = this.exportTapeCode;
+    data['scheduletime'] = this.scheduletime;
+    data['programName'] = this.programName;
+    data['breakNumber'] = this.breakNumber;
+    data['col10'] = this.col10;
+    data['bookingdetailcode'] = this.bookingdetailcode;
+    data['segmentNumber'] = num.tryParse(this.segmentNumber ?? "");
+    data['rOsTime'] = this.rOsTime;
+    data['clientName'] = this.clientName;
+    data['productName'] = this.productName;
+    data['bookingdetailcode1'] = this.bookingdetailcode1;
     data['approxTXtime'] = this.approxTXtime;
     return data;
   }

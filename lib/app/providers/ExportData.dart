@@ -1,3 +1,5 @@
+import 'dart:convert';
+
 import 'package:excel/excel.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_file_saver/flutter_file_saver.dart';
@@ -14,6 +16,7 @@ class ExportData {
     // performs work in an isolate
   }
   exportExcelFromJsonList(jsonList, screenName) {
+    print("Call json List>>>"+jsonEncode(jsonList));
     if (jsonList!.isNotEmpty) {
       var excel = Excel.createExcel();
       Sheet sheetObject = excel[screenName];
@@ -24,7 +27,8 @@ class ExportData {
       }
       var value = excel.encode()!;
       String time = DateTime.now().toString();
-      var fileBytes = excel.save(fileName: "$screenName-$time.xlsx");
+      // var fileBytes = excel.save(fileName: "$screenName-$time.xlsx");
+      var fileBytes = excel.save(fileName: screenName);
       // FlutterFileSaver()
       //     .writeFileAsBytes(
       //       fileName: 'fpc_search.xlsx',

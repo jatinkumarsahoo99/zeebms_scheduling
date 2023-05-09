@@ -229,7 +229,7 @@ class LogAdditionsView extends GetView<LogAdditionsController> {
                         ),
                         Padding(
                           padding: const EdgeInsets.only(top: 15.0),
-                          child: const Text("--"),
+                          child: Text(controllerX.additionCount.value??""),
                         ),
                         SizedBox(
                           width: 10,
@@ -243,7 +243,7 @@ class LogAdditionsView extends GetView<LogAdditionsController> {
                         ),
                         Padding(
                           padding: const EdgeInsets.only(top: 15.0),
-                          child: const Text("--"),
+                          child:  Text(controllerX.additionCount.value??""),
                         ),
 
                         /// duration
@@ -343,5 +343,16 @@ class LogAdditionsView extends GetView<LogAdditionsController> {
     );
   }
 
-  formHandler(btn) {}
+  formHandler(String btn) {
+    switch (btn.toLowerCase()) {
+      case "save":
+        controllerX.saveAddition();
+        break;
+      case "clear":
+        // controllerX.saveAddition();
+        break;
+      // case "clear":
+      //   break;
+    }
+  }
 }
