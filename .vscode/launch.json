@@ -12,7 +12,8 @@
                 "-d",
                 "chrome",
                 "--web-port",
-                "9992"
+                "9992",
+                "--web-browser-flag=--disable-web-security",
             ],
         },
         {
