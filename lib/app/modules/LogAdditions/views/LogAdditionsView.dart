@@ -229,7 +229,7 @@ class LogAdditionsView extends GetView<LogAdditionsController> {
                         ),
                         Padding(
                           padding: const EdgeInsets.only(top: 15.0),
-                          child: Text(controllerX.additionCount.value??""),
+                          child: Text(controllerX.additionCount.value ?? ""),
                         ),
                         SizedBox(
                           width: 10,
@@ -243,7 +243,7 @@ class LogAdditionsView extends GetView<LogAdditionsController> {
                         ),
                         Padding(
                           padding: const EdgeInsets.only(top: 15.0),
-                          child:  Text(controllerX.additionCount.value??""),
+                          child: Text(controllerX.additionCount.value ?? ""),
                         ),
 
                         /// duration
@@ -263,6 +263,9 @@ class LogAdditionsView extends GetView<LogAdditionsController> {
                   // width: Get.width,
                   // height: Get.height * .33,
                   child: (controllerX.logAdditionModel != null &&
+                          controllerX.logAdditionModel?.displayPreviousAdditon
+                                  ?.previousAdditons !=
+                              null &&
                           (controllerX.logAdditionModel?.displayPreviousAdditon
                               ?.previousAdditons?.isNotEmpty)!)
                       ? DataGridFromMap1(
