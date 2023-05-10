@@ -1,3 +1,5 @@
+import 'package:bms_scheduling/app/controller/HomeController.dart';
+import 'package:bms_scheduling/widgets/FormButton.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
@@ -63,36 +65,54 @@ class MamWorkOrdersView extends GetView<MamWorkOrdersController> {
               ),
             ),
           )),
+          GetBuilder<HomeController>(
+              id: "buttons",
+              init: Get.find<HomeController>(),
+              builder: (btncontroller) {
+                /* PermissionModel formPermissions = Get.find<MainController>()
+                      .permissionList!
+                      .lastWhere((element) {
+                    return element.appFormName == "frmSegmentsDetails";
+                  });*/
 
-          /// Bottom Buttons
-          Align(
-            alignment: Alignment.topLeft,
-            child: GetBuilder<HomeController>(
-                id: "buttons",
-                init: Get.find<HomeController>(),
-                builder: (controllerX) {
-                  PermissionModel formPermissions =
-                      Get.find<MainController>().permissionList!.lastWhere((element) => element.appFormName == "frmMAMWorkOrders");
-                  if (controllerX.buttons != null) {
-                    return ButtonBar(
+                if (btncontroller.buttons != null) {
+                  return Container(
+                    height: 40,
+                    child: ButtonBar(
+                      // buttonHeight: 20,
                       alignment: MainAxisAlignment.start,
                       mainAxisSize: MainAxisSize.min,
+                      // pa
                       children: [
-                        for (var btn in controllerX.buttons!)
-                          FormButtonWrapper(
-                            btnText: btn["name"],
-                            callback: Utils.btnAccessHandler2(btn['name'], controllerX, formPermissions) == null
-                                ? null
-                                : () => controller.formHandler(
-                                      btn['name'],
+                        for (var btn in btncontroller.buttons!)
+                          btn["name"] == "Save"
+                              ? Obx(() => FormButtonWrapper(
+                                    btnText: btn["name"],
+
+                                    // isEnabled: btn['isDisabled'],
+                                    callback: () {},
+                                  ))
+                              : btn["name"] == "Clear"
+                                  ? FormButtonWrapper(
+                                      btnText: btn["name"],
+
+                                      // isEnabled: btn['isDisabled'],
+                                      callback: () {
+                                        btncontroller.clearPage1();
+                                      },
+                                    )
+                                  : FormButtonWrapper(
+                                      btnText: btn["name"],
+
+                                      // isEnabled: btn['isDisabled'],
+                                      callback: null,
                                     ),
-                          )
                       ],
-                    );
-                  }
-                  return Container();
-                }),
-          )
+                    ),
+                  );
+                }
+                return Container();
+              }),
         ],
       ),
     );

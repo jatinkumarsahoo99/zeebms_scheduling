@@ -14,6 +14,8 @@ abstract class Routes {
   static const FPC_MISMATCH = _Paths.FPC_MISMATCH;
   static const RO_CANCELLATION = _Paths.RO_CANCELLATION;
   static const SPOT_PRIORITY = _Paths.SPOT_PRIORITY;
+  static const RO_RESCHEDULE = _Paths.RO_RESCHEDULE;
+  static const ROS_DISTRIBUTION = _Paths.ROS_DISTRIBUTION;
 }
 
 abstract class RoutesList {
@@ -43,4 +45,6 @@ abstract class _Paths {
   static const COMMERCIAL = '/frmCommercialScheduling';
   static const RO_CANCELLATION = '/frmROCancellation';
   static const SPOT_PRIORITY = '/frmSpotPriority';
+  static const RO_RESCHEDULE = '/frmRoReschedule';
+  static const ROS_DISTRIBUTION = '/FrmRosDistribution';
 }

@@ -15,12 +15,13 @@ void main() async {
     FlutterError.presentError(details);
     // Logger.sendError(error: details,stackTrace: details.stack,severity: Severity.critical);
   };
+
   PlatformDispatcher.instance.onError = (error, stack) {
     // Logger.sendError(error: error,severity: Severity.warning,stackTrace: stack);
     return true;
   };
   setPathUrlStrategy();
-  print("Aes dec>>>"+(Aes.decrypt("kW5Bkf17/S5YF7ML28FmVg==")??""));
+  print("Aes dec>>>"+(Aes.decrypt("1BWIoBKeDl7qDSAAhxvXsQ==")??""));
   runApp(
     GetMaterialApp(
       title: "Zee BMS",

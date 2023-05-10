@@ -4,12 +4,14 @@ import 'package:bms_scheduling/widgets/LoadingDialog.dart';
 import 'package:bms_scheduling/widgets/Snack.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:get/get.dart';
+import 'package:intl/intl.dart';
 import 'package:pluto_grid/pluto_grid.dart';
 
 import '../../../controller/ConnectorControl.dart';
 import '../../../controller/MainController.dart';
 import '../../../data/DropDownValue.dart';
 import '../../../providers/ApiFactory.dart';
+import '../../../providers/ExportData.dart';
 import '../LogAdditionModel.dart';
 
 class LogAdditionsController extends GetxController {
@@ -31,6 +33,8 @@ class LogAdditionsController extends GetxController {
   var isStandby = RxBool(false);
   var isIgnoreSpot = RxBool(false);
   RxnString verifyType = RxnString("Primary");
+  RxnString additionCount = RxnString("--");
+  RxnString cancelCount = RxnString("--");
 
   LogAdditionModel? logAdditionModel;
   PlutoGridMode selectedPlutoGridMode = PlutoGridMode.normal;
@@ -83,6 +87,8 @@ class LogAdditionsController extends GetxController {
             Navigator.pop(Get.context!);
             logAdditionModel = LogAdditionModel.fromJson(map);
             if (logAdditionModel != null) {
+              additionCount.value = logAdditionModel?.additionCount ?? "--";
+              cancelCount.value = logAdditionModel?.cancellationCount ?? "--";
               update(["transmissionList"]);
             }
           });
@@ -138,6 +144,7 @@ class LogAdditionsController extends GetxController {
           });
     }
   }
+
   saveAddition() {
     if (selectLocation == null) {
       Snack.callError("Please select location");
@@ -145,17 +152,60 @@ class LogAdditionsController extends GetxController {
       Snack.callError("Please select channel");
     } else if (selectedDate.text == "") {
       Snack.callError("Please select date");
+    } else if (selectAdditions == null) {
+      Snack.callError("Please select addition");
     } else {
-      print("Channel is>>>" + jsonEncode(selectChannel?.toJson()));
-      Get.find<ConnectorControl>().POSTMETHOD(
-          api: ApiFactory.LOG_ADDITION_SAVE_ADDITION(),
-          fun: (Map<String, dynamic> map) {
-            map["displayPreviousAdditon"].forEach((v) {
-              additions.value
-                  .add(DropDownValue.fromJsonDynamic(v, "value", "name"));
-            });
-          });
+      if (selectAdditions?.value != "All") {
+        LoadingDialog.recordExists("Do you want to update the remarks?", () {
+          postData();
+        }, deleteCancel: "No", deleteTitle: "Yes");
+      } else {
+        postData();
+      }
     }
+  }
+
+  postData() {
+    LoadingDialog.call();
+    var mapData = {
+      "additionNameselectedVal": selectAdditions?.key ?? "",
+      "additionNameselected": selectAdditions?.value ?? "",
+      "optPrimary": verifyType.value == "Primary" ? true : false,
+      "remarks": remarks.text,
+      "locationcode": selectLocation?.key ?? "",
+      "locationName": selectLocation?.value ?? "",
+      "channelcode": selectChannel?.key ?? "",
+      "channelName": selectChannel?.value ?? "",
+      "telecastDate": selectedDate.text,
+      "chkIgnore": isIgnoreSpot.value,
+      "chkStandby": isStandby
+          .value /*,
+        "additions": (logAdditionModel?.displayPreviousAdditon?.previousAdditons
+            ?.map((e) => e.toJson1())
+            .toList())*/
+    };
+    Get.find<ConnectorControl>().POSTMETHOD(
+        api: ApiFactory.LOG_ADDITION_SAVE_ADDITION(),
+        json: mapData,
+        fun: (map) {
+          Navigator.pop(Get.context!);
+
+          if (map is Map &&
+              map.containsKey("postAdditionsoutput") &&
+              map["postAdditionsoutput"] != null &&
+              map["postAdditionsoutput"].containsKey("success") &&
+              map["postAdditionsoutput"]["success"] == "success") {
+            LoadingDialog.callDataSaved(callback: () {
+              ExportData().exportExcelFromJsonList(
+                  (logAdditionModel?.displayPreviousAdditon?.previousAdditons
+                      ?.map((e) => e.toJson1())
+                      .toList())!,
+                  "${selectLocation?.value ?? ""} ${selectChannel?.value ?? ""} ${DateFormat('yyyy-MM-dd').format(DateFormat("dd-MM-yyyy").parse(selectedDate.text))} ${selectAdditions?.value ?? ""}.xlsx");
+            });
+          } else {
+            Snack.callError(map.toString());
+          }
+        });
   }
 
   showDetails() {
