@@ -8,6 +8,7 @@ import 'package:intl/intl.dart';
 import 'package:pluto_grid/pluto_grid.dart';
 
 import '../../../controller/ConnectorControl.dart';
+import '../../../controller/HomeController.dart';
 import '../../../controller/MainController.dart';
 import '../../../data/DropDownValue.dart';
 import '../../../providers/ApiFactory.dart';
@@ -89,7 +90,8 @@ class LogAdditionsController extends GetxController {
             if (logAdditionModel != null &&
                 logAdditionModel?.displayPreviousAdditon != null &&
                 logAdditionModel?.displayPreviousAdditon?.previousAdditons !=
-                    null) {
+                    null &&
+                (logAdditionModel?.displayPreviousAdditon?.previousAdditons?.isNotEmpty)!) {
               additionCount.value = logAdditionModel?.displayPreviousAdditon?.additionCount ?? "--";
               cancelCount.value = logAdditionModel?.displayPreviousAdditon?.cancellationCount ?? "--";
               isEnable.value = false;
@@ -125,7 +127,7 @@ class LogAdditionsController extends GetxController {
             if (logAdditionModel != null &&
                 logAdditionModel?.displayPreviousAdditon != null &&
                 logAdditionModel?.displayPreviousAdditon?.previousAdditons !=
-                    null) {
+                    null && (logAdditionModel?.displayPreviousAdditon?.previousAdditons?.isNotEmpty)!) {
               remarks.text =
                   logAdditionModel?.displayPreviousAdditon?.remarks ?? "";
               isEnable.value = false;
@@ -213,6 +215,7 @@ class LogAdditionsController extends GetxController {
               map["postAdditionsoutput"].containsKey("success") &&
               map["postAdditionsoutput"]["success"] == "success") {
             LoadingDialog.callDataSaved(callback: () {
+              Get.find<HomeController>().clearPage1();
               ExportData().exportExcelFromJsonList(
                   (logAdditionModel?.displayPreviousAdditon?.previousAdditons
                       ?.map((e) => e.toJson1())
