@@ -86,10 +86,15 @@ class LogAdditionsController extends GetxController {
           fun: (Map<String, dynamic> map) {
             Navigator.pop(Get.context!);
             logAdditionModel = LogAdditionModel.fromJson(map);
-            if (logAdditionModel != null) {
+            if (logAdditionModel != null &&
+                logAdditionModel?.displayPreviousAdditon != null &&
+                logAdditionModel?.displayPreviousAdditon?.previousAdditons !=
+                    null) {
               additionCount.value = logAdditionModel?.additionCount ?? "--";
               cancelCount.value = logAdditionModel?.cancellationCount ?? "--";
               update(["transmissionList"]);
+            }else {
+              Snack.callError("No Data Found");
             }
           });
     }
@@ -114,8 +119,13 @@ class LogAdditionsController extends GetxController {
             logAdditionModel = LogAdditionModel.fromJson(map);
             remarks.text =
                 logAdditionModel?.displayPreviousAdditon?.remarks ?? "";
-            if (logAdditionModel != null) {
+            if (logAdditionModel != null &&
+                logAdditionModel?.displayPreviousAdditon != null &&
+                logAdditionModel?.displayPreviousAdditon?.previousAdditons !=
+                    null) {
               update(["transmissionList"]);
+            } else {
+              Snack.callError("No Data Found");
             }
           });
     }
