@@ -6,6 +6,7 @@ import 'package:pluto_grid/pluto_grid.dart';
 import '../../../../widgets/DateTime/DateWithThreeTextField.dart';
 import '../../../../widgets/FormButton.dart';
 import '../../../../widgets/dropdown.dart';
+import '../../../../widgets/gridFromMap.dart';
 import '../../../../widgets/gridFromMap1.dart';
 import '../../../../widgets/input_fields.dart';
 import '../../../controller/HomeController.dart';
@@ -272,7 +273,7 @@ class LogAdditionsView extends GetView<LogAdditionsController> {
                               null &&
                           (controllerX.logAdditionModel?.displayPreviousAdditon
                               ?.previousAdditons?.isNotEmpty)!)
-                      ? DataGridFromMap1(
+                      ? DataGridFromMap(
                           onFocusChange: (value) {
                             controllerX.gridStateManager!
                                 .setGridMode(PlutoGridMode.selectWithOneTap);
@@ -356,10 +357,9 @@ class LogAdditionsView extends GetView<LogAdditionsController> {
         controllerX.saveAddition();
         break;
       case "clear":
-        // controllerX.saveAddition();
+        Get.delete<LogAdditionsController>();
+        Get.find<HomeController>().clearPage1();
         break;
-      // case "clear":
-      //   break;
     }
   }
 }

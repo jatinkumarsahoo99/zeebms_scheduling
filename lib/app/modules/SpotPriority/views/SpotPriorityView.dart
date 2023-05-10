@@ -1,16 +1,11 @@
 import 'package:flutter/material.dart';
-
 import 'package:get/get.dart';
 import 'package:pluto_grid/pluto_grid.dart';
-
 import '../../../../widgets/DateTime/DateWithThreeTextField.dart';
 import '../../../../widgets/FormButton.dart';
 import '../../../../widgets/dropdown.dart';
-import '../../../../widgets/gridFromMap1.dart';
-import '../../../../widgets/input_fields.dart';
-import '../../../../widgets/radio_row.dart';
+import '../../../../widgets/gridFromMap.dart';
 import '../../../controller/HomeController.dart';
-import '../../../providers/SizeDefine.dart';
 import '../controllers/SpotPriorityController.dart';
 
 class SpotPriorityView extends GetView<SpotPriorityController> {
@@ -36,7 +31,8 @@ class SpotPriorityView extends GetView<SpotPriorityController> {
                     width: double.maxFinite,
                     child: Wrap(
                       crossAxisAlignment: WrapCrossAlignment.center,
-                      runSpacing: 5,
+                      runSpacing: 0.0,
+                      direction: Axis.horizontal,
                       spacing: 5,
                       children: [
                         Obx(
@@ -76,101 +72,42 @@ class SpotPriorityView extends GetView<SpotPriorityController> {
 
                         Obx(
                               () => DateWithThreeTextField(
-                            title: "Schedule Date",
+                            title: "From",
                             splitType: "-",
                             widthRation: 0.12,
                             isEnable: controllerX.isEnable.value,
                             onFocusChange: (data) {
-                              // controllerX.selectedDate.text =
-                              //     DateFormat('dd/MM/yyyy').format(
-                              //         DateFormat("dd-MM-yyyy").parse(data));
-                              // DateFormat("dd-MM-yyyy").parse(data);
-                              print("Called when focus changed");
-                              /*controller.getDailyFPCDetailsList(
-                                controllerX.selectedLocationId.text,
-                                controllerX.selectedChannelId.text,
-                                controllerX.convertToAPIDateType(),
-                              );*/
 
-                              // controller.isTableDisplayed.value = true;
                             },
                             mainTextController: controllerX.selectedDate,
                           ),
                         ),
                         Obx(
-                              () => RadioRow(
-                            items: const ["Primary", "Secondary"],
-                            groupValue: controllerX.verifyType.value ?? "",
-                            onchange: (val) {
-                              print("Response>>>" + val);
-                              controllerX.verifyType.value = val;
-                            },
-                          ),
-                        ),
-                        SizedBox(
-                          width: Get.width * 0.077,
-                          child: Row(
-                            children: [
-                              SizedBox(width: 5),
-                              Obx(() => Padding(
-                                padding: const EdgeInsets.only(top: 15.0),
-                                child: Checkbox(
-                                  value: controllerX.isStandby.value,
-                                  onChanged: (val) {
-                                    controllerX.isStandby.value = val!;
-                                  },
-                                  materialTapTargetSize:
-                                  MaterialTapTargetSize.shrinkWrap,
-                                ),
-                              )),
-                              Padding(
-                                padding:
-                                const EdgeInsets.only(top: 15.0, left: 5),
-                                child: Text(
-                                  "Standby Log",
-                                  style: TextStyle(
-                                      fontSize: SizeDefine.labelSize1),
-                                ),
-                              ),
-                            ],
-                          ),
-                        ),
-                        SizedBox(
-                          width: Get.width * 0.077,
-                          child: Row(
-                            children: [
-                              SizedBox(width: 5),
-                              Obx(() => Padding(
-                                padding: const EdgeInsets.only(top: 15.0),
-                                child: Checkbox(
-                                  value: controllerX.isIgnoreSpot.value,
-                                  onChanged: (val) {
-                                    controllerX.isIgnoreSpot.value = val!;
-                                  },
-                                  materialTapTargetSize:
-                                  MaterialTapTargetSize.shrinkWrap,
-                                ),
-                              )),
-                              Padding(
-                                padding:
-                                const EdgeInsets.only(top: 15.0, left: 5),
-                                child: Text(
-                                  "Ignore Sports in Log",
-                                  style: TextStyle(
-                                      fontSize: SizeDefine.labelSize1),
-                                ),
-                              ),
-                            ],
-                          ),
-                        ),
-                        Row(),
+                              () => DateWithThreeTextField(
+                            title: "To",
+                            splitType: "-",
+                            widthRation: 0.12,
+                            isEnable: controllerX.isEnable.value,
+                            onFocusChange: (data) {
 
-                        InputFields.formFieldNumberMask(
-                            hintTxt: "Remarks",
-                            controller: controllerX.remarks,
-                            widthRatio: 0.12,
-                            isTime: true,
-                            paddingLeft: 0),
+                            },
+                            mainTextController: controllerX.selectedDate,
+                          ),
+                        ),
+                        Padding(
+                          padding: const EdgeInsets.only(
+                              top: 14.0, left: 5, right: 10),
+                          child: FormButtonWrapper(
+                            btnText: "Show Details",
+                            callback: () {
+                              // controllerX.showDetails();
+                            },
+                            showIcon: false,
+                          ),
+                        ),
+                        SizedBox(
+                          width: 25,
+                        ),
                         /// channel
                         Obx(
                               () => DropDownField.formDropDown1WidthMap(
@@ -178,26 +115,17 @@ class SpotPriorityView extends GetView<SpotPriorityController> {
                                 (value) {
                               controllerX.selectAdditions = value;
                             },
-                            "Additions",
+                            "Select Priority",
                             0.12,
-                            isEnable: controllerX.isEnable.value,
+                            // isEnable: controllerX.isEnable.value,
                             selected: controllerX.selectAdditions,
                             autoFocus: true,
-                            dialogWidth: 330,
-                            dialogHeight: Get.height * .7,
+                            dialogWidth: 200,
+                            dialogHeight: Get.height * .3,
                           ),
                         ),
-                        Padding(
-                          padding: const EdgeInsets.only(
-                              top: 14.0, left: 10, right: 10),
-                          child: FormButtonWrapper(
-                            btnText: "Show Details",
-                            callback: () {},
-                            showIcon: false,
-                          ),
-                        ),
-                        /// duration
 
+                        /// duration
                       ],
                     ),
                   ),
@@ -215,7 +143,7 @@ class SpotPriorityView extends GetView<SpotPriorityController> {
                   // height: Get.height * .33,
                   child: (controllerX.logAdditionModel != null &&
                       (controllerX.logAdditionModel?.isNotEmpty)!)
-                      ? DataGridFromMap1(
+                      ? DataGridFromMap(
                       onFocusChange: (value) {
                         controllerX.gridStateManager!
                             .setGridMode(PlutoGridMode.selectWithOneTap);
@@ -225,20 +153,6 @@ class SpotPriorityView extends GetView<SpotPriorityController> {
                       onload: (loadevent) {
                         controllerX.gridStateManager =
                             loadevent.stateManager;
-                        /* if (controller.selectedIndex != null) {
-                              loadevent.stateManager.moveScrollByRow(
-                                  PlutoMoveDirection.down,
-                                  controller.selectedIndex);
-                              loadevent.stateManager.setCurrentCell(
-                                  loadevent
-                                      .stateManager
-                                      .rows[controller.selectedIndex!]
-                                      .cells
-                                      .entries
-                                      .first
-                                      .value,
-                                  controller.selectedIndex);
-                            }*/
                       },
                       hideKeys: ["color", "modifed", ""],
                       showSrNo: true,
