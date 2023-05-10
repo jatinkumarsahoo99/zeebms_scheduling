@@ -1,7 +1,6 @@
 class LogAdditionModel {
   DisplayPreviousAdditon? displayPreviousAdditon;
-  String? additionCount;
-  String? cancellationCount;
+
 
   LogAdditionModel({this.displayPreviousAdditon});
 
@@ -15,11 +14,7 @@ class LogAdditionModel {
           new DisplayPreviousAdditon.fromJson(json['lstnewAdditions']);
     }
 
-    additionCount =
-        json['additionCount'] != null ? json['additionCount'].toString() : null;
-    cancellationCount = json['cancellationCount'] != null
-        ? json['cancellationCount'].toString()
-        : null;
+
   }
 
   Map<String, dynamic> toJson() {
@@ -34,7 +29,8 @@ class LogAdditionModel {
 class DisplayPreviousAdditon {
   List<PreviousAdditons>? previousAdditons;
   String? remarks;
-
+  String? additionCount;
+  String? cancellationCount;
   DisplayPreviousAdditon({this.previousAdditons, this.remarks});
 
   DisplayPreviousAdditon.fromJson(Map<String, dynamic> json) {
@@ -51,6 +47,8 @@ class DisplayPreviousAdditon {
       });
     }
     remarks = json['remarks'];
+    additionCount = json['additionCount'];
+    cancellationCount = json['cancellationCount'];
   }
 
   Map<String, dynamic> toJson() {
