@@ -43,7 +43,7 @@ class ImportDigitextRunOrderController extends GetxController {
   @override
   void onInit() {
     getLocation();
-    scheduleDate.text = df1.format(DateTime.now());
+    // scheduleDate.text = df1.format(DateTime.now());
     super.onInit();
   }
 

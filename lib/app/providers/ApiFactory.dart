@@ -189,4 +189,7 @@ class ApiFactory {
       "$BASE_URL/api/ReleaseOrderCancellation/GetCboLocation";
   static String RO_CANCELLATION_CHANNNEL(locationCode) =>
       "$BASE_URL/api/ReleaseOrderCancellation/OnLeaveLocation?LocationCode=$locationCode";
+
+  static String RO_CANCELLATION_BOOKINGNO_LEAVE =
+      "$BASE_URL/api/ROCancellation/OnLeaveBookingNumber";
 }
