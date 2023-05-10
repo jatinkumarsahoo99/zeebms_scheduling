@@ -30,6 +30,9 @@ abstract class RoutesList {
     _Paths.COMMERCIAL,
     _Paths.SPOT_PRIORITY,
     _Paths.RO_CANCELLATION,
+    _Paths.RO_RESCHEDULE,
+    _Paths.ROS_DISTRIBUTION,
+    _Paths.IMPORT_DIGITEXT_RUN_ORDER,
   ];
 }
 

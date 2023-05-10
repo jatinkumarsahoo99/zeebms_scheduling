@@ -75,35 +75,43 @@ class ApiFactory {
   }
 
   //////////////////// FPC MISMATCH - UI: Sanjaya Jena API: PATTA NIGAM ////////////////
-  static String FPC_MISMATCH_LOCATION = BASE_URL + "/api/FpcMismatch/GetLocations";
+  static String FPC_MISMATCH_LOCATION =
+      BASE_URL + "/api/FpcMismatch/GetLocations";
 
-  static String FPC_MISMATCH_CHANNEL(String userId, String locCode) => BASE_URL + "/api/FpcMismatch/GetChannelMaster/$locCode";
+  static String FPC_MISMATCH_CHANNEL(String userId, String locCode) =>
+      BASE_URL + "/api/FpcMismatch/GetChannelMaster?locationCode=$locCode";
 
   static String FPC_MISMATCH(String location, String channelCode, String dt) =>
       // BASE_URL + "/api/FpcMismatch/BindFPCMismatchGrid/$location,$channelCode,$dt";
-      BASE_URL + "/api/FpcMismatch/BindFPCMismatchGrid?LocationCode=$location&ChannelCode=$channelCode&EffectiveDate=$dt";
+  BASE_URL +
+      "/api/FpcMismatch/BindFPCMismatchGrid?LocationCode=$location&ChannelCode=$channelCode&EffectiveDate=$dt";
 
-  static String FPC_MISMATCH_ERROR(String location, String channelCode, String dt) =>
+  static String FPC_MISMATCH_ERROR(
+      String location, String channelCode, String dt) =>
       BASE_URL +
-      // "/api/FpcMismatch/BindFPCMismatchGridError/$location,$channelCode,$dt";
-      "/api/FpcMismatch/BindFPCMismatchGridError?LocationCode=$location&ChannelCode=$channelCode&EffectiveDate=$dt";
+          // "/api/FpcMismatch/BindFPCMismatchGridError/$location,$channelCode,$dt";
+          "/api/FpcMismatch/BindFPCMismatchGridError?LocationCode=$location&ChannelCode=$channelCode&EffectiveDate=$dt";
 
-  static String FPC_MISMATCH_ALL(String location, String channelCode, String dt) =>
+  static String FPC_MISMATCH_ALL(
+      String location, String channelCode, String dt) =>
       BASE_URL +
-      // "/api/FpcMismatch/BindFPCMismatchGridAll/$location,$channelCode,$dt";
-      "/api/FpcMismatch/BindFPCMismatchGridAll?LocationCode=$location&ChannelCode=$channelCode&EffectiveDate=$dt";
+          // "/api/FpcMismatch/BindFPCMismatchGridAll/$location,$channelCode,$dt";
+          "/api/FpcMismatch/BindFPCMismatchGridAll?LocationCode=$location&ChannelCode=$channelCode&EffectiveDate=$dt";
 
-  static String FPC_MISMATCH_PROGRAM(String location, String channelCode, String dt) =>
+  static String FPC_MISMATCH_PROGRAM(
+      String location, String channelCode, String dt) =>
       // BASE_URL + "/api/FpcMismatch/BindWebFPCGrid/$location,$channelCode,$dt";
-      BASE_URL + "/api/FpcMismatch/BindWebFPCGrid?LocationCode=$location&ChannelCode=$channelCode&TelecastDate=$dt";
+  BASE_URL + "/api/FpcMismatch/BindWebFPCGrid?LocationCode=$location&ChannelCode=$channelCode&TelecastDate=$dt";
 
-  static String FPC_MISMATCH_MARK_ERROR = BASE_URL + "/api/FpcMismatch/UpdateRecordError";
+  static String FPC_MISMATCH_MARK_ERROR =
+      BASE_URL + "/api/FpcMismatch/UpdateRecordError";
 
-  static String FPC_MISMATCH_MARK_UNDO_ERROR = BASE_URL + "/api/FpcMismatch/UpdateUndoError";
+  static String FPC_MISMATCH_MARK_UNDO_ERROR =
+      BASE_URL + "/api/FpcMismatch/UpdateUndoError";
 
   static String FPC_MISMATCH_SAVE = BASE_URL + "/api/FpcMismatch/UpdateRecord";
 
-/////////////////////////////////////////////////////////////////////////////////////////
+/////////////////////////////////////End FPC Mismatch////////////////////////////////////////////////////
 
 //////////////////////////////////////////Log Additions API: Deven UI: Sanjaya///////////////////////////////////////////////
   static String LOG_ADDITION_LOCATION = BASE_URL + "/api/Additions/GetLoadLocation";
@@ -117,14 +125,15 @@ class ApiFactory {
   ) =>
       BASE_URL + "/api/Additions/GetDisplayPreviousAdditon?locationName=$locName&channelName=$chnlName&Date=$date&additionnumber=$aditionNo";
 
-  static String LOG_ADDITION_SHOW_DETAILS(
-          DropDownValue locDetail, DropDownValue chnlDetails, String date, bool isPrimary, bool checkStandBy, bool checkIgnore) =>
+  static String LOG_ADDITION_SHOW_DETAILS(DropDownValue locDetail, DropDownValue chnlDetails, String date, bool isPrimary, bool checkStandBy, bool checkIgnore) =>
       BASE_URL +
       "/api/Additions/GetShowDetails?Locationcode=${locDetail.key}&locationName=${locDetail.value}&channelcode=${chnlDetails.key}&channelName=${chnlDetails.value}&logdate=$date&optPrimary=$isPrimary&chkStandby=$checkStandBy&chkIgnore=$checkIgnore";
 
   static String LOG_ADDITION_GET_ADDITIONS(DropDownValue locDetail, DropDownValue chnlDetails, String date) =>
       BASE_URL + "/api/Additions/GetPopulateAdditions?Locationcode=${locDetail.key}&channelcode=${chnlDetails.key}&Date=$date";
   static String LOG_ADDITION_SAVE_ADDITION() => BASE_URL + "/api/Additions/PostAddition";
+
+  //////////////////////////////////////////End Log Addition///////////////////////////////////////////////
 
 //////////////// Import Digitex Run Order: UI:SHOEB SHAIKH, API: INDRESH ///////////////
 
