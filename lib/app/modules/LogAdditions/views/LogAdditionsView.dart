@@ -227,9 +227,11 @@ class LogAdditionsView extends GetView<LogAdditionsController> {
                         SizedBox(
                           width: 5,
                         ),
-                        Padding(
-                          padding: const EdgeInsets.only(top: 15.0),
-                          child: Text(controllerX.additionCount.value ?? ""),
+                        Obx(
+                          () => Padding(
+                            padding: const EdgeInsets.only(top: 15.0),
+                            child: Text(controllerX.additionCount.value ?? ""),
+                          ),
                         ),
                         SizedBox(
                           width: 10,
@@ -241,9 +243,11 @@ class LogAdditionsView extends GetView<LogAdditionsController> {
                         SizedBox(
                           width: 5,
                         ),
-                        Padding(
-                          padding: const EdgeInsets.only(top: 15.0),
-                          child: Text(controllerX.additionCount.value ?? ""),
+                        Obx(
+                          () => Padding(
+                            padding: const EdgeInsets.only(top: 15.0),
+                            child: Text(controllerX.additionCount.value ?? ""),
+                          ),
                         ),
 
                         /// duration

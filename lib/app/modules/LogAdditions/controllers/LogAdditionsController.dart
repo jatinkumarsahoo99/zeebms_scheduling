@@ -92,8 +92,9 @@ class LogAdditionsController extends GetxController {
                     null) {
               additionCount.value = logAdditionModel?.additionCount ?? "--";
               cancelCount.value = logAdditionModel?.cancellationCount ?? "--";
+              isEnable.value = false;
               update(["transmissionList"]);
-            }else {
+            } else {
               Snack.callError("No Data Found");
             }
           });
@@ -116,13 +117,18 @@ class LogAdditionsController extends GetxController {
           ),
           fun: (Map<String, dynamic> map) {
             Navigator.pop(Get.context!);
+
+            print(">>>getShowPreviousAddition()>>>" + jsonEncode(map));
             logAdditionModel = LogAdditionModel.fromJson(map);
-            remarks.text =
-                logAdditionModel?.displayPreviousAdditon?.remarks ?? "";
+            print(">>>getShowPreviousAddition() Model>>>" +
+                jsonEncode(logAdditionModel?.toJson()));
             if (logAdditionModel != null &&
                 logAdditionModel?.displayPreviousAdditon != null &&
                 logAdditionModel?.displayPreviousAdditon?.previousAdditons !=
                     null) {
+              remarks.text =
+                  logAdditionModel?.displayPreviousAdditon?.remarks ?? "";
+              isEnable.value = false;
               update(["transmissionList"]);
             } else {
               Snack.callError("No Data Found");
@@ -224,7 +230,6 @@ class LogAdditionsController extends GetxController {
     } else if (selectChannel == null) {
       Snack.callError("Please select channel");
     } else {
-      isEnable.value = false;
       if (selectAdditions?.key != "0") {
         getShowPreviousAddition();
       } else {
