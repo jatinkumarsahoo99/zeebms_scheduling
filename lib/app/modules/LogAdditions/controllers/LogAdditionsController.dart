@@ -91,9 +91,14 @@ class LogAdditionsController extends GetxController {
                 logAdditionModel?.displayPreviousAdditon != null &&
                 logAdditionModel?.displayPreviousAdditon?.previousAdditons !=
                     null &&
-                (logAdditionModel?.displayPreviousAdditon?.previousAdditons?.isNotEmpty)!) {
-              additionCount.value = logAdditionModel?.displayPreviousAdditon?.additionCount ?? "--";
-              cancelCount.value = logAdditionModel?.displayPreviousAdditon?.cancellationCount ?? "--";
+                (logAdditionModel
+                    ?.displayPreviousAdditon?.previousAdditons?.isNotEmpty)!) {
+              additionCount.value =
+                  logAdditionModel?.displayPreviousAdditon?.additionCount ??
+                      "--";
+              cancelCount.value =
+                  logAdditionModel?.displayPreviousAdditon?.cancellationCount ??
+                      "--";
               isEnable.value = false;
               update(["transmissionList"]);
             } else {
@@ -127,7 +132,9 @@ class LogAdditionsController extends GetxController {
             if (logAdditionModel != null &&
                 logAdditionModel?.displayPreviousAdditon != null &&
                 logAdditionModel?.displayPreviousAdditon?.previousAdditons !=
-                    null && (logAdditionModel?.displayPreviousAdditon?.previousAdditons?.isNotEmpty)!) {
+                    null &&
+                (logAdditionModel
+                    ?.displayPreviousAdditon?.previousAdditons?.isNotEmpty)!) {
               remarks.text =
                   logAdditionModel?.displayPreviousAdditon?.remarks ?? "";
               isEnable.value = false;
@@ -215,12 +222,14 @@ class LogAdditionsController extends GetxController {
               map["postAdditionsoutput"].containsKey("success") &&
               map["postAdditionsoutput"]["success"] == "success") {
             LoadingDialog.callDataSaved(callback: () {
-              Get.find<HomeController>().clearPage1();
               ExportData().exportExcelFromJsonList(
                   (logAdditionModel?.displayPreviousAdditon?.previousAdditons
                       ?.map((e) => e.toJson1())
                       .toList())!,
-                  "${selectLocation?.value ?? ""} ${selectChannel?.value ?? ""} ${DateFormat('yyyy-MM-dd').format(DateFormat("dd-MM-yyyy").parse(selectedDate.text))} ${selectAdditions?.value ?? ""}.xlsx");
+                  "${selectLocation?.value ?? ""} ${selectChannel?.value ?? ""} ${DateFormat('yyyy-MM-dd').format(DateFormat("dd-MM-yyyy").parse(selectedDate.text))} ${selectAdditions?.value ?? ""}.xlsx",
+                  callBack: () {
+
+                  });
             });
           } else {
             Snack.callError(map.toString());

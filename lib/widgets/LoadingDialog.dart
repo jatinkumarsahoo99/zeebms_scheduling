@@ -62,7 +62,8 @@ class LoadingDialog {
           ),
           Text(
             msg ?? Const.SAVED_MSG,
-            style: TextStyle(color: Colors.green, fontSize: SizeDefine.popupTxtSize),
+            style: TextStyle(
+                color: Colors.green, fontSize: SizeDefine.popupTxtSize),
           )
         ],
       ),
@@ -71,7 +72,9 @@ class LoadingDialog {
         autoFocus: true,
         callback: () {
           Get.back();
-          callback!();
+          if (callback != null) {
+            callback();
+          }
         },
         btnText: "Ok",
         iconDataM: Icons.done,
@@ -87,7 +90,10 @@ class LoadingDialog {
           style: TextStyle(color: Colors.black),
         ),
       ),*/
-      contentPadding: EdgeInsets.only(left: SizeDefine.popupMarginHorizontal, right: SizeDefine.popupMarginHorizontal, bottom: 16),
+      contentPadding: EdgeInsets.only(
+          left: SizeDefine.popupMarginHorizontal,
+          right: SizeDefine.popupMarginHorizontal,
+          bottom: 16),
     );
     /* Get.defaultDialog(
       title: "",
@@ -140,7 +146,8 @@ class LoadingDialog {
           const SizedBox(height: 10),
           Text(
             msg,
-            style: TextStyle(color: Colors.black, fontSize: SizeDefine.popupTxtSize),
+            style: TextStyle(
+                color: Colors.black, fontSize: SizeDefine.popupTxtSize),
           )
         ],
       ),
@@ -190,7 +197,8 @@ class LoadingDialog {
           ),
           Text(
             value,
-            style: TextStyle(color: Colors.green, fontSize: SizeDefine.popupTxtSize),
+            style: TextStyle(
+                color: Colors.green, fontSize: SizeDefine.popupTxtSize),
           )
         ],
       ),
@@ -214,7 +222,10 @@ class LoadingDialog {
             "OK",
             style: TextStyle(color: Colors.black),
           )),*/
-      contentPadding: EdgeInsets.only(left: SizeDefine.popupMarginHorizontal, right: SizeDefine.popupMarginHorizontal, bottom: 16),
+      contentPadding: EdgeInsets.only(
+          left: SizeDefine.popupMarginHorizontal,
+          right: SizeDefine.popupMarginHorizontal,
+          bottom: 16),
     );
   }
 
@@ -234,7 +245,8 @@ class LoadingDialog {
           const SizedBox(height: 20),
           Text(
             value,
-            style: TextStyle(color: Colors.black, fontSize: SizeDefine.popupTxtSize),
+            style: TextStyle(
+                color: Colors.black, fontSize: SizeDefine.popupTxtSize),
           )
         ],
       ),
@@ -253,7 +265,10 @@ class LoadingDialog {
             Get.back();
           },
           child: Text("OK")),*/
-      contentPadding: EdgeInsets.only(left: SizeDefine.popupMarginHorizontal, right: SizeDefine.popupMarginHorizontal, bottom: 16),
+      contentPadding: EdgeInsets.only(
+          left: SizeDefine.popupMarginHorizontal,
+          right: SizeDefine.popupMarginHorizontal,
+          bottom: 16),
     );
   }
 
@@ -275,7 +290,8 @@ class LoadingDialog {
               const SizedBox(height: 20),
               Text(
                 value,
-                style: TextStyle(color: Colors.red, fontSize: SizeDefine.popupTxtSize),
+                style: TextStyle(
+                    color: Colors.red, fontSize: SizeDefine.popupTxtSize),
               )
             ],
           ),
@@ -353,11 +369,15 @@ class LoadingDialog {
             Get.back();
           },
           child: Text("Ok")),*/
-      contentPadding: EdgeInsets.only(left: SizeDefine.popupMarginHorizontal, right: SizeDefine.popupMarginHorizontal, bottom: 16),
+      contentPadding: EdgeInsets.only(
+          left: SizeDefine.popupMarginHorizontal,
+          right: SizeDefine.popupMarginHorizontal,
+          bottom: 16),
     );
   }
 
-  static delete(String title, Function? confirm, {String? deleteTitle, String? deleteCancel, Function? cancel}) {
+  static delete(String title, Function? confirm,
+      {String? deleteTitle, String? deleteCancel, Function? cancel}) {
     Get.defaultDialog(
       title: "",
       titleStyle: TextStyle(fontSize: 1),
@@ -374,7 +394,8 @@ class LoadingDialog {
           ),
           Text(
             title,
-            style: TextStyle(color: Colors.red, fontSize: SizeDefine.popupTxtSize),
+            style:
+                TextStyle(color: Colors.red, fontSize: SizeDefine.popupTxtSize),
             textAlign: TextAlign.center,
           )
         ],
@@ -410,11 +431,15 @@ class LoadingDialog {
         },
         btnText: deleteTitle ?? "Yes",
       ),
-      contentPadding: EdgeInsets.only(left: SizeDefine.popupMarginHorizontal, right: SizeDefine.popupMarginHorizontal, bottom: 16),
+      contentPadding: EdgeInsets.only(
+          left: SizeDefine.popupMarginHorizontal,
+          right: SizeDefine.popupMarginHorizontal,
+          bottom: 16),
     );
   }
 
-  static recordExists(String title, Function? confirm, {String? deleteTitle, String? deleteCancel}) {
+  static recordExists(String title, Function? confirm,
+      {String? deleteTitle, String? deleteCancel}) {
     Get.defaultDialog(
       title: "",
       titleStyle: TextStyle(fontSize: 1),
@@ -431,7 +456,8 @@ class LoadingDialog {
           ),
           Text(
             title,
-            style: TextStyle(color: Colors.blueAccent, fontSize: SizeDefine.popupTxtSize),
+            style: TextStyle(
+                color: Colors.blueAccent, fontSize: SizeDefine.popupTxtSize),
             textAlign: TextAlign.center,
           )
         ],
@@ -462,11 +488,15 @@ class LoadingDialog {
           },
           autofocus: true,
           child: Text(deleteCancel ?? "No")),*/
-      contentPadding: EdgeInsets.only(left: SizeDefine.popupMarginHorizontal, right: SizeDefine.popupMarginHorizontal, bottom: 16),
+      contentPadding: EdgeInsets.only(
+          left: SizeDefine.popupMarginHorizontal,
+          right: SizeDefine.popupMarginHorizontal,
+          bottom: 16),
     );
   }
 
-  static modify(String title, Function? confirm, Function? cancel, {String? deleteTitle, String? cancelTitle}) {
+  static modify(String title, Function? confirm, Function? cancel,
+      {String? deleteTitle, String? cancelTitle}) {
     Get.defaultDialog(
       title: "",
       titleStyle: TextStyle(fontSize: 1),
@@ -483,7 +513,8 @@ class LoadingDialog {
           ),
           Text(
             title,
-            style: TextStyle(color: Colors.green, fontSize: SizeDefine.popupTxtSize),
+            style: TextStyle(
+                color: Colors.green, fontSize: SizeDefine.popupTxtSize),
             textAlign: TextAlign.center,
           )
         ],
@@ -515,7 +546,10 @@ class LoadingDialog {
             confirm!();
           },
           btnText: deleteTitle ?? "Delete"),
-      contentPadding: EdgeInsets.only(left: SizeDefine.popupMarginHorizontal, right: SizeDefine.popupMarginHorizontal, bottom: 16),
+      contentPadding: EdgeInsets.only(
+          left: SizeDefine.popupMarginHorizontal,
+          right: SizeDefine.popupMarginHorizontal,
+          bottom: 16),
     );
   }
 
@@ -536,7 +570,8 @@ class LoadingDialog {
           ),
           Text(
             msg ?? "Data Deleted Successfully",
-            style: TextStyle(color: Colors.green, fontSize: SizeDefine.popupTxtSize),
+            style: TextStyle(
+                color: Colors.green, fontSize: SizeDefine.popupTxtSize),
           )
         ],
       ),
@@ -553,7 +588,10 @@ class LoadingDialog {
             // cancel!();
           },
           btnText: "OK"),
-      contentPadding: EdgeInsets.only(left: SizeDefine.popupMarginHorizontal, right: SizeDefine.popupMarginHorizontal, bottom: 16),
+      contentPadding: EdgeInsets.only(
+          left: SizeDefine.popupMarginHorizontal,
+          right: SizeDefine.popupMarginHorizontal,
+          bottom: 16),
     );
   }
 
@@ -574,7 +612,8 @@ class LoadingDialog {
           ),
           Text(
             "Are you sure you want to exit this form?",
-            style: TextStyle(color: Colors.green, fontSize: SizeDefine.popupTxtSize),
+            style: TextStyle(
+                color: Colors.green, fontSize: SizeDefine.popupTxtSize),
           ),
           SizedBox(
             height: 10,
@@ -593,7 +632,10 @@ class LoadingDialog {
             fun();
           },
           btnText: "Yes"),
-      contentPadding: EdgeInsets.only(left: SizeDefine.popupMarginHorizontal, right: SizeDefine.popupMarginHorizontal, bottom: 16),
+      contentPadding: EdgeInsets.only(
+          left: SizeDefine.popupMarginHorizontal,
+          right: SizeDefine.popupMarginHorizontal,
+          bottom: 16),
     );
   }
 }
