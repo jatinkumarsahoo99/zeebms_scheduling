@@ -32,36 +32,46 @@ class RoCancellationView extends GetView<RoCancellationController> {
                 runSpacing: 5,
                 crossAxisAlignment: WrapCrossAlignment.end,
                 children: [
-                  DropDownField.formDropDown1WidthMap(
-                      [], (data) {}, "Location", 0.12),
-                  DropDownField.formDropDown1WidthMap(
-                      [], (data) {}, "Channel", 0.24),
+                  Obx(
+                    () => DropDownField.formDropDown1WidthMap(
+                        controller.locations.value, (value) {
+                      controller.selectedLocation = value;
+                      controller.getChannel(value.key);
+                    }, "Location", 0.12),
+                  ),
+                  Obx(
+                    () => DropDownField.formDropDown1WidthMap(
+                        controller.channels.value, (value) {
+                      controller.selectedChannel = value;
+                    }, "Channel", 0.24),
+                  ),
                   DateWithThreeTextField(
                       widthRation: 0.12,
                       title: "Cancel Date",
-                      mainTextController: TextEditingController()),
+                      mainTextController: controller.cancelDatectrl),
                   DateWithThreeTextField(
                       widthRation: 0.12,
                       title: "Eff. Date",
-                      mainTextController: TextEditingController()),
+                      mainTextController: controller.effDatectrl),
                   InputFields.formField1(
                       hintTxt: "Reference",
-                      controller: TextEditingController()),
+                      controller: controller.refNumberctrl),
                   InputFields.formField1(
                       hintTxt: "Booking No",
-                      controller: TextEditingController()),
+                      focusNode: controller.bookingNumberFocus,
+                      controller: controller.bookingNumberctrl),
                   InputFields.formField1(
                       width: 0.24,
                       hintTxt: "Client",
-                      controller: TextEditingController()),
+                      controller: controller.clientctrl),
                   InputFields.formField1(
                       width: 0.24,
                       hintTxt: "Agency",
-                      controller: TextEditingController()),
+                      controller: controller.agencyctrl),
                   InputFields.formField1(
                       width: 0.24,
                       hintTxt: "Brand",
-                      controller: TextEditingController()),
+                      controller: controller.brandctrl),
                   Row(
                     crossAxisAlignment: CrossAxisAlignment.center,
                     mainAxisSize: MainAxisSize.min,

@@ -21,7 +21,7 @@ class RosDistributionView extends GetView<RosDistributionController> {
           children: [
             Card(
               child: Container(
-                padding: EdgeInsets.all(8),
+                padding: const EdgeInsets.all(8),
                 width: Get.width,
                 child: Wrap(
                   crossAxisAlignment: WrapCrossAlignment.end,
@@ -47,7 +47,7 @@ class RosDistributionView extends GetView<RosDistributionController> {
             ),
             Expanded(
                 child: Container(
-              padding: EdgeInsets.all(4),
+              padding: const EdgeInsets.all(4),
               child: DataGridShowOnlyKeys(
                 mapData: dummydata,
                 formatDate: false,
@@ -64,7 +64,12 @@ class RosDistributionView extends GetView<RosDistributionController> {
                   });*/
 
                   return Card(
-                    margin: EdgeInsets.all(Get.width * 0.005),
+                    margin: const EdgeInsets.fromLTRB(4, 4, 4, 0),
+                    shape: const RoundedRectangleBorder(
+                      borderRadius: BorderRadius.only(
+                          topLeft: Radius.circular(10),
+                          topRight: Radius.circular(10)),
+                    ),
                     clipBehavior: Clip.hardEdge,
                     child: Container(
                       width: Get.width,

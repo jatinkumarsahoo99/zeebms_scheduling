@@ -189,6 +189,7 @@ class InputFields {
     required TextEditingController controller,
     Function(String)? onchanged,
     double? padLeft,
+    FocusNode? focusNode,
     Function()? onEditComplete,
     List<TextInputFormatter> inputformatters = const [],
     num? width = 0.12,
@@ -231,6 +232,7 @@ class InputFields {
 
           child: TextFormField(
             maxLines: maxLines,
+            focusNode: focusNode,
             minLines: maxLines,
             autofocus: autoFocus,
             onEditingComplete: onEditComplete,
@@ -1370,7 +1372,7 @@ class InputFields {
           child: RawKeyboardListener(
             focusNode: fN,
             onKey: (RawKeyEvent keyEvent) {
-              if (showbtn!) {
+              if (showbtn) {
                 if (keyEvent.isKeyPressed(LogicalKeyboardKey.arrowDown)) {
                   /* controller.text =
                       "${(int.tryParse(controller.text) ?? 1) - 1}";*/
@@ -1527,7 +1529,7 @@ class InputFields {
           child: RawKeyboardListener(
             focusNode: fN,
             onKey: (RawKeyEvent keyEvent) {
-              if (showbtn!) {
+              if (showbtn) {
                 if (keyEvent.isKeyPressed(LogicalKeyboardKey.arrowDown)) {
                   /* controller.text =
                       "${(int.tryParse(controller.text) ?? 1) - 1}";*/

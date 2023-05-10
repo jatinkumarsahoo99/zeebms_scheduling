@@ -1,34 +1,58 @@
 // import 'package:bms_scheduling/widgets/cutom_dropdown.dart';
+import 'package:bms_scheduling/app/modules/RoBooking/controllers/ro_booking_controller.dart';
+import 'package:bms_scheduling/app/modules/RoBooking/views/dummydata.dart';
+import 'package:bms_scheduling/widgets/DataGridShowOnly.dart';
+import 'package:bms_scheduling/widgets/FormButton.dart';
 import 'package:bms_scheduling/widgets/cutom_dropdown.dart';
+import 'package:bms_scheduling/widgets/dropdown.dart';
+import 'package:bms_scheduling/widgets/input_fields.dart';
 import 'package:flutter/material.dart';
 
 import 'package:get/get.dart';
 
-class SpotsView extends GetView {
+class SpotsView extends GetView<RoBookingController> {
   const SpotsView({Key? key}) : super(key: key);
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        title: const Text('SpotsView'),
-        centerTitle: true,
-      ),
-      body: Center(
-        child: CustomDropDown(
-          options: [
-            DropDownValue(label: 'Option 1', value: 1),
-            DropDownValue(label: 'Option 2', value: 2),
-            DropDownValue(label: 'Option 3', value: 3),
-            DropDownValue(label: 'Option 4', value: 4),
-            DropDownValue(label: 'Option 5', value: 5),
+    return Column(
+      children: [
+        Expanded(
+            child: Container(
+          child: DataGridShowOnlyKeys(
+            mapData: dummydata,
+          ),
+        )),
+        Row(
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          crossAxisAlignment: CrossAxisAlignment.end,
+          children: [
+            Wrap(
+              spacing: 5,
+              children: [
+                DropDownField.formDropDown1WidthMap(
+                    [], (value) => {}, "Location", 0.12),
+                InputFields.formField1(
+                    hintTxt: "Amt", controller: TextEditingController()),
+                InputFields.formField1(
+                    hintTxt: "Bank",
+                    width: 0.24,
+                    controller: controller.refNoCtrl),
+                InputFields.formField1(
+                    hintTxt: "Bal Amt", controller: TextEditingController()),
+              ],
+            ),
+            Wrap(
+              crossAxisAlignment: WrapCrossAlignment.end,
+              spacing: 5,
+              children: [
+                FormButtonWrapper(btnText: "Refresh PDC"),
+                FormButtonWrapper(btnText: "Del Spot Row"),
+                FormButtonWrapper(btnText: "PDC Cheques"),
+              ],
+            )
           ],
-          onSelected: (option) => print('Selected: ${option?.label}'),
-          hint: 'Select an option',
-          widthRatio: 0.5,
-          showSearchBar: true,
-          showProgressBar: true,
-        ),
-      ),
+        )
+      ],
     );
   }
 }
