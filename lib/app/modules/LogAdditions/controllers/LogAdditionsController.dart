@@ -90,8 +90,8 @@ class LogAdditionsController extends GetxController {
                 logAdditionModel?.displayPreviousAdditon != null &&
                 logAdditionModel?.displayPreviousAdditon?.previousAdditons !=
                     null) {
-              additionCount.value = logAdditionModel?.additionCount ?? "--";
-              cancelCount.value = logAdditionModel?.cancellationCount ?? "--";
+              additionCount.value = logAdditionModel?.displayPreviousAdditon?.additionCount ?? "--";
+              cancelCount.value = logAdditionModel?.displayPreviousAdditon?.cancellationCount ?? "--";
               isEnable.value = false;
               update(["transmissionList"]);
             } else {
@@ -153,6 +153,7 @@ class LogAdditionsController extends GetxController {
             selectedDate.text,
           ),
           fun: (Map<String, dynamic> map) {
+            additions.value.clear();
             map["displayPreviousAdditon"].forEach((v) {
               additions.value
                   .add(DropDownValue.fromJsonDynamic(v, "value", "name"));
