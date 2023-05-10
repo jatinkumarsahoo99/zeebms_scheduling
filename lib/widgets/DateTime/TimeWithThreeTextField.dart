@@ -3,7 +3,7 @@ import 'package:flutter/services.dart';
 import 'package:get/get.dart';
 
 import '../../app/providers/SizeDefine.dart';
-
+import '../LabelTextStyle.dart';
 
 class TimeWithThreeTextField extends StatefulWidget {
   final String title, splitType;
@@ -29,8 +29,7 @@ class TimeWithThreeTextField extends StatefulWidget {
   }) : super(key: key);
 
   @override
-  State<TimeWithThreeTextField> createState() =>
-      _DateTimeWithThreeTextFieldState();
+  State<TimeWithThreeTextField> createState() => _DateTimeWithThreeTextFieldState();
 }
 
 class _DateTimeWithThreeTextFieldState extends State<TimeWithThreeTextField> {
@@ -42,11 +41,9 @@ class _DateTimeWithThreeTextFieldState extends State<TimeWithThreeTextField> {
   void initState() {
     focus = List.generate(widget.isTime ? 3 : 4, (index) => FocusNode());
     if (widget.mainTextController.text.isEmpty) {
-      textCtr = List.generate(
-          widget.isTime ? 3 : 4, (index) => TextEditingController(text: "00"));
+      textCtr = List.generate(widget.isTime ? 3 : 4, (index) => TextEditingController(text: "00"));
     } else {
-      textCtr = List.generate(
-          widget.isTime ? 3 : 4, (index) => TextEditingController(text: "00"));
+      textCtr = List.generate(widget.isTime ? 3 : 4, (index) => TextEditingController(text: "00"));
       assignNewValeToEditTextField();
       widget.mainTextController.addListener(() {
         assignNewValeToEditTextField();
@@ -67,23 +64,26 @@ class _DateTimeWithThreeTextFieldState extends State<TimeWithThreeTextField> {
   @override
   Widget build(BuildContext context) {
     final textColor = (widget.isEnable) ? Colors.black : Colors.grey;
-    final borderColor =
-        (widget.isEnable) ? Colors.deepPurpleAccent : Colors.grey;
+    final borderColor = (widget.isEnable) ? Colors.deepPurpleAccent : Colors.grey;
     return Column(
       mainAxisAlignment: MainAxisAlignment.start,
       mainAxisSize: MainAxisSize.min,
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         /// TITLE
-        Text(
-          widget.title,
-          style: TextStyle(
-            fontSize: SizeDefine.labelSize1,
-            color: textColor,
-            fontWeight: FontWeight.w500,
-          ),
+        // Text(
+        //   widget.title,
+        //   style: TextStyle(
+        //     fontSize: SizeDefine.labelSize1,
+        //     color: textColor,
+        //     fontWeight: FontWeight.w500,
+        //   ),
+        // ),
+        // const SizedBox(height: 3),
+        LabelText.style(
+          hint: widget.title,
+          txtColor: (widget.isEnable) ? Colors.black : Colors.grey,
         ),
-        const SizedBox(height: 3),
 
         /// BOX
         Container(
@@ -104,11 +104,9 @@ class _DateTimeWithThreeTextFieldState extends State<TimeWithThreeTextField> {
                       child: RawKeyboardListener(
                         focusNode: focus[0],
                         onKey: (event) {
-                          if (event.isShiftPressed &&
-                              event.isKeyPressed(LogicalKeyboardKey.tab)) {
+                          if (event.isShiftPressed && event.isKeyPressed(LogicalKeyboardKey.tab)) {
                             // FocusScope.of(context).previousFocus(); //hours
-                          } else if (event
-                              .isKeyPressed(LogicalKeyboardKey.tab)) {
+                          } else if (event.isKeyPressed(LogicalKeyboardKey.tab)) {
                             FocusScope.of(context).nextFocus(); //minutes
                             FocusScope.of(context).nextFocus(); // seconds
                             if (!widget.isTime) {
@@ -119,31 +117,23 @@ class _DateTimeWithThreeTextFieldState extends State<TimeWithThreeTextField> {
                             }
                             if (widget.onFocusChange != null) {
                               assignValueToMainTextEditingController();
-                              widget.onFocusChange!(
-                                  widget.mainTextController.text);
+                              widget.onFocusChange!(widget.mainTextController.text);
                             }
-                          } else if (event
-                              .isKeyPressed(LogicalKeyboardKey.arrowRight)) {
+                          } else if (event.isKeyPressed(LogicalKeyboardKey.arrowRight)) {
                             FocusScope.of(context).nextFocus(); //minutes
-                          } else if (event
-                              .isKeyPressed(LogicalKeyboardKey.arrowLeft)) {
+                          } else if (event.isKeyPressed(LogicalKeyboardKey.arrowLeft)) {
                             cursorAtLast(0);
-                          } else if (event
-                              .isKeyPressed(LogicalKeyboardKey.arrowUp)) {
+                          } else if (event.isKeyPressed(LogicalKeyboardKey.arrowUp)) {
                             incrementDecrementOnKeyBoardEvent(0, widget.hour);
-                          } else if (event
-                              .isKeyPressed(LogicalKeyboardKey.arrowDown)) {
-                            incrementDecrementOnKeyBoardEvent(0, widget.hour,
-                                up: false);
+                          } else if (event.isKeyPressed(LogicalKeyboardKey.arrowDown)) {
+                            incrementDecrementOnKeyBoardEvent(0, widget.hour, up: false);
                           }
                         },
                         child: Padding(
                           padding: const EdgeInsets.only(top: 2),
                           child: TextFormField(
                             controller: textCtr[0],
-                            inputFormatters: [
-                              FilteringTextInputFormatter.digitsOnly
-                            ],
+                            inputFormatters: [FilteringTextInputFormatter.digitsOnly],
                             decoration: style,
                             onChanged: (value) {
                               int no = int.tryParse(value) ?? 00;
@@ -182,11 +172,9 @@ class _DateTimeWithThreeTextFieldState extends State<TimeWithThreeTextField> {
                       child: RawKeyboardListener(
                         focusNode: focus[1],
                         onKey: (event) {
-                          if (event.isShiftPressed &&
-                              event.isKeyPressed(LogicalKeyboardKey.tab)) {
+                          if (event.isShiftPressed && event.isKeyPressed(LogicalKeyboardKey.tab)) {
                             FocusScope.of(context).previousFocus(); //hours
-                          } else if (event
-                              .isKeyPressed(LogicalKeyboardKey.tab)) {
+                          } else if (event.isKeyPressed(LogicalKeyboardKey.tab)) {
                             FocusScope.of(context).nextFocus(); // seconds
                             if (!widget.isTime) {
                               FocusScope.of(context).nextFocus(); // frame
@@ -195,31 +183,23 @@ class _DateTimeWithThreeTextFieldState extends State<TimeWithThreeTextField> {
                             }
                             if (widget.onFocusChange != null) {
                               assignValueToMainTextEditingController();
-                              widget.onFocusChange!(
-                                  widget.mainTextController.text);
+                              widget.onFocusChange!(widget.mainTextController.text);
                             }
-                          } else if (event
-                              .isKeyPressed(LogicalKeyboardKey.arrowLeft)) {
+                          } else if (event.isKeyPressed(LogicalKeyboardKey.arrowLeft)) {
                             FocusScope.of(context).previousFocus(); //hours
-                          } else if (event
-                              .isKeyPressed(LogicalKeyboardKey.arrowRight)) {
+                          } else if (event.isKeyPressed(LogicalKeyboardKey.arrowRight)) {
                             FocusScope.of(context).nextFocus(); //seconds
-                          } else if (event
-                              .isKeyPressed(LogicalKeyboardKey.arrowUp)) {
+                          } else if (event.isKeyPressed(LogicalKeyboardKey.arrowUp)) {
                             incrementDecrementOnKeyBoardEvent(1, widget.second);
-                          } else if (event
-                              .isKeyPressed(LogicalKeyboardKey.arrowDown)) {
-                            incrementDecrementOnKeyBoardEvent(1, widget.second,
-                                up: false);
+                          } else if (event.isKeyPressed(LogicalKeyboardKey.arrowDown)) {
+                            incrementDecrementOnKeyBoardEvent(1, widget.second, up: false);
                           }
                         },
                         child: Padding(
                           padding: const EdgeInsets.only(top: 2),
                           child: TextFormField(
                             controller: textCtr[1],
-                            inputFormatters: [
-                              FilteringTextInputFormatter.digitsOnly
-                            ],
+                            inputFormatters: [FilteringTextInputFormatter.digitsOnly],
                             decoration: style,
                             onChanged: (value) {
                               int no = int.tryParse(value) ?? 00;
@@ -258,51 +238,39 @@ class _DateTimeWithThreeTextFieldState extends State<TimeWithThreeTextField> {
                       child: RawKeyboardListener(
                         focusNode: focus[2],
                         onKey: (event) {
-                          if (event.isShiftPressed &&
-                              event.isKeyPressed(LogicalKeyboardKey.tab)) {
+                          if (event.isShiftPressed && event.isKeyPressed(LogicalKeyboardKey.tab)) {
                             FocusScope.of(context).previousFocus(); //minutes
                             FocusScope.of(context).previousFocus(); //Hours
-                          } else if (event
-                              .isKeyPressed(LogicalKeyboardKey.tab)) {
+                          } else if (event.isKeyPressed(LogicalKeyboardKey.tab)) {
                             if (!widget.isTime) {
-                              FocusScope.of(context)
-                                  .nextFocus(); // next widget get focus
+                              FocusScope.of(context).nextFocus(); // next widget get focus
                             } else {
                               FocusScope.of(context).nextFocus(); // icon
                             }
                             if (widget.onFocusChange != null) {
                               assignValueToMainTextEditingController();
-                              widget.onFocusChange!(
-                                  widget.mainTextController.text);
+                              widget.onFocusChange!(widget.mainTextController.text);
                             }
-                          } else if (event
-                              .isKeyPressed(LogicalKeyboardKey.arrowUp)) {
+                          } else if (event.isKeyPressed(LogicalKeyboardKey.arrowUp)) {
                             incrementDecrementOnKeyBoardEvent(2, widget.second);
-                          } else if (event
-                              .isKeyPressed(LogicalKeyboardKey.arrowLeft)) {
+                          } else if (event.isKeyPressed(LogicalKeyboardKey.arrowLeft)) {
                             FocusScope.of(context).previousFocus(); //minutes
                             // cursorAtLast(1);
-                          } else if (event
-                              .isKeyPressed(LogicalKeyboardKey.arrowRight)) {
+                          } else if (event.isKeyPressed(LogicalKeyboardKey.arrowRight)) {
                             if (!widget.isTime) {
-                              FocusScope.of(context)
-                                  .nextFocus(); // frame per second
+                              FocusScope.of(context).nextFocus(); // frame per second
                             } else {
                               cursorAtLast(2);
                             }
-                          } else if (event
-                              .isKeyPressed(LogicalKeyboardKey.arrowDown)) {
-                            incrementDecrementOnKeyBoardEvent(2, widget.second,
-                                up: false);
+                          } else if (event.isKeyPressed(LogicalKeyboardKey.arrowDown)) {
+                            incrementDecrementOnKeyBoardEvent(2, widget.second, up: false);
                           }
                         },
                         child: Padding(
                           padding: const EdgeInsets.only(top: 2),
                           child: TextFormField(
                             controller: textCtr[2],
-                            inputFormatters: [
-                              FilteringTextInputFormatter.digitsOnly
-                            ],
+                            inputFormatters: [FilteringTextInputFormatter.digitsOnly],
                             decoration: style,
                             onChanged: (value) {
                               int no = int.tryParse(value) ?? 00;
@@ -341,44 +309,33 @@ class _DateTimeWithThreeTextFieldState extends State<TimeWithThreeTextField> {
                         child: RawKeyboardListener(
                           focusNode: focus[3],
                           onKey: (event) {
-                            if (event.isShiftPressed &&
-                                event.isKeyPressed(LogicalKeyboardKey.tab)) {
+                            if (event.isShiftPressed && event.isKeyPressed(LogicalKeyboardKey.tab)) {
                               FocusScope.of(context).previousFocus(); //second
                               FocusScope.of(context).previousFocus(); //minutes
                               FocusScope.of(context).previousFocus(); //Hours
-                            } else if (event
-                                .isKeyPressed(LogicalKeyboardKey.tab)) {
+                            } else if (event.isKeyPressed(LogicalKeyboardKey.tab)) {
                               if (widget.isTime) {
                                 FocusScope.of(context).nextFocus(); // icon
                               }
                               if (widget.onFocusChange != null) {
                                 assignValueToMainTextEditingController();
-                                widget.onFocusChange!(
-                                    widget.mainTextController.text);
+                                widget.onFocusChange!(widget.mainTextController.text);
                               }
-                            } else if (event
-                                .isKeyPressed(LogicalKeyboardKey.arrowLeft)) {
+                            } else if (event.isKeyPressed(LogicalKeyboardKey.arrowLeft)) {
                               FocusScope.of(context).previousFocus(); //secound
-                            } else if (event
-                                .isKeyPressed(LogicalKeyboardKey.arrowRight)) {
+                            } else if (event.isKeyPressed(LogicalKeyboardKey.arrowRight)) {
                               cursorAtLast(3);
-                            } else if (event
-                                .isKeyPressed(LogicalKeyboardKey.arrowUp)) {
-                              incrementDecrementOnKeyBoardEvent(
-                                  3, widget.frame);
-                            } else if (event
-                                .isKeyPressed(LogicalKeyboardKey.arrowDown)) {
-                              incrementDecrementOnKeyBoardEvent(3, widget.frame,
-                                  up: false);
+                            } else if (event.isKeyPressed(LogicalKeyboardKey.arrowUp)) {
+                              incrementDecrementOnKeyBoardEvent(3, widget.frame);
+                            } else if (event.isKeyPressed(LogicalKeyboardKey.arrowDown)) {
+                              incrementDecrementOnKeyBoardEvent(3, widget.frame, up: false);
                             }
                           },
                           child: Padding(
                             padding: const EdgeInsets.only(top: 2),
                             child: TextFormField(
                               controller: textCtr[3],
-                              inputFormatters: [
-                                FilteringTextInputFormatter.digitsOnly
-                              ],
+                              inputFormatters: [FilteringTextInputFormatter.digitsOnly],
                               decoration: style,
                               onChanged: (value) {
                                 int no = int.tryParse(value) ?? 00;
@@ -422,26 +379,17 @@ class _DateTimeWithThreeTextFieldState extends State<TimeWithThreeTextField> {
                             useRootNavigator: true,
                           ).then((pickedTime) {
                             if (pickedTime != null) {
-                              textCtr[1].text =
-                                  pickedTime.minute.toString(); //minutes
-                              addZeroAndSetCursorAtLast(1,
-                                  setCUrsor: false); // minutes
-                              textCtr[0].text =
-                                  pickedTime.hour.toString(); // hour
-                              addZeroAndSetCursorAtLast(0,
-                                  setCUrsor: false); // hours
-                              FocusScope.of(context)
-                                  .requestFocus(iconFocusNode);
+                              textCtr[1].text = pickedTime.minute.toString(); //minutes
+                              addZeroAndSetCursorAtLast(1, setCUrsor: false); // minutes
+                              textCtr[0].text = pickedTime.hour.toString(); // hour
+                              addZeroAndSetCursorAtLast(0, setCUrsor: false); // hours
+                              FocusScope.of(context).requestFocus(iconFocusNode);
                               FocusScope.of(context).previousFocus();
                             }
                           });
                         }
                       : null,
-                  child: Icon(Icons.date_range,
-                      size: 16,
-                      color: widget.isEnable
-                          ? Colors.deepPurpleAccent
-                          : Colors.grey),
+                  child: Icon(Icons.date_range, size: 16, color: widget.isEnable ? Colors.deepPurpleAccent : Colors.grey),
                 ),
               ),
             ],
@@ -531,11 +479,7 @@ class _DateTimeWithThreeTextFieldState extends State<TimeWithThreeTextField> {
   }
 
   assignValueToMainTextEditingController() {
-    String time = textCtr[0].text +
-        widget.splitType +
-        textCtr[1].text +
-        widget.splitType +
-        textCtr[2].text;
+    String time = textCtr[0].text + widget.splitType + textCtr[1].text + widget.splitType + textCtr[2].text;
     if (!widget.isTime) {
       time = time + widget.splitType + textCtr[3].text;
     }

@@ -287,52 +287,10 @@ var dummydata = [
 ];
 
 var dummyProgram = [
-  {
-    "Telecastdate": "",
-    "BookedSpots": "21-04-2023",
-    "StartTime": 0,
-    "EndTime": "10:00:00",
-    "ProgramName": "17:59:59",
-    "AvailableDuration": ""
-  },
-  {
-    "Telecastdate": "",
-    "BookedSpots": "24-04-2023",
-    "StartTime": 0,
-    "EndTime": "10:00:00",
-    "ProgramName": "17:59:59",
-    "AvailableDuration": ""
-  },
-  {
-    "Telecastdate": "",
-    "BookedSpots": "25-04-2023",
-    "StartTime": 0,
-    "EndTime": "10:00:00",
-    "ProgramName": "17:59:59",
-    "AvailableDuration": ""
-  },
-  {
-    "Telecastdate": "",
-    "BookedSpots": "26-04-2023",
-    "StartTime": 0,
-    "EndTime": "10:00:00",
-    "ProgramName": "17:59:59",
-    "AvailableDuration": ""
-  },
-  {
-    "Telecastdate": "",
-    "BookedSpots": "27-04-2023",
-    "StartTime": 0,
-    "EndTime": "10:00:00",
-    "ProgramName": "17:59:59",
-    "AvailableDuration": ""
-  },
-  {
-    "Telecastdate": "",
-    "BookedSpots": "28-04-2023",
-    "StartTime": 0,
-    "EndTime": "10:00:00",
-    "ProgramName": "17:59:59",
-    "AvailableDuration": ""
-  }
+  {"Telecastdate": "", "BookedSpots": "21-04-2023", "StartTime": 0, "EndTime": "10:00:00", "ProgramName": "17:59:59", "AvailableDuration": ""},
+  {"Telecastdate": "", "BookedSpots": "24-04-2023", "StartTime": 0, "EndTime": "10:00:00", "ProgramName": "17:59:59", "AvailableDuration": ""},
+  {"Telecastdate": "", "BookedSpots": "25-04-2023", "StartTime": 0, "EndTime": "10:00:00", "ProgramName": "17:59:59", "AvailableDuration": ""},
+  {"Telecastdate": "", "BookedSpots": "26-04-2023", "StartTime": 0, "EndTime": "10:00:00", "ProgramName": "17:59:59", "AvailableDuration": ""},
+  {"Telecastdate": "", "BookedSpots": "27-04-2023", "StartTime": 0, "EndTime": "10:00:00", "ProgramName": "17:59:59", "AvailableDuration": ""},
+  {"Telecastdate": "", "BookedSpots": "28-04-2023", "StartTime": 0, "EndTime": "10:00:00", "ProgramName": "17:59:59", "AvailableDuration": ""}
 ];

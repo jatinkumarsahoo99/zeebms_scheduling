@@ -139,4 +139,19 @@ class ApiFactory {
       "$BASE_URL/api/ImportDigitexRunOrder/LoadDigitexRunOrder?LocationCode=$locationCode&ChannelCode=$channelCode";
   static String IMPORT_DIGITEX_RUN_ORDER_SAVE(locationCode, channelCode, date) =>
       "$BASE_URL/api/ImportDigitexRunOrder/SaveRunOrder?LocationCode=$locationCode&ChannelCode=$channelCode&BookingDate=$date";
+
+  ////////////////////////////// MAM WORK ORDERS API START////////////////////////////////////////////////
+  static String get MAM_WORK_ORDER_INITIALIZE => "$BASE_URL/api/MAMWorkOrder/OnLoadWorkOrder";
+
+  static String MAM_WORK_ORDER_NON_FPC_LOCATION_LEAVE(String? locationCode) {
+    return "$BASE_URL/api/MAMWorkOrder/OnLeaveLocation${(locationCode == null || locationCode.isEmpty) ? '' : '?LocationCode=$locationCode'}";
+  }
+
+  static String get MAM_WORK_ORDER_NON_FPC_BMS_SEARCH => "$BASE_URL/api/MAMWorkOrder/OnLoadBMSProgram?Search=";
+
+  static String get MAM_WORK_ORDER_NON_FPC_RMS_SEARCH => "$BASE_URL/api/MAMWorkOrder/OnLoadcboProgram?Search=";
+
+  static String get MAM_WORK_ORDER_NON_FPC_GET_DATA => "$BASE_URL/api/MAMWorkOrder/OnLeaveProgram";
+
+  ////////////////////////////// MAM WORK ORDERS API END////////////////////////////////////////////////
 }

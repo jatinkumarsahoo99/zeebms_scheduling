@@ -1,16 +1,10 @@
-# bms_scheduling
+Scheduling Forms For debugging
+    http://localhost:9992/frmMAMWorkOrders?personalNo=Y4ojs8NLwzlACrNh%2BbsFdg%3D%3D&loginCode=AEv7qCjgYR3XO5FY7euCDg%3D%3D
 
-A new Flutter project.
 
-## Getting Started
+    http://localhost:9992/frmLoginMaster?personalNo=wD2kPUIgf%2BVMGbIEz0SOig%3D%3D&loginCode=hNZL%2F%2BgRKmrc24HmiFbyDQ%3D%3D
+    
+    http://localhost:9992/Channelmaster?personalNo=wD2kPUIgf%2BVMGbIEz0SOig%3D%3D&loginCode=hNZL%2F%2BgRKmrc24HmiFbyDQ%3D%3D
 
-This project is a starting point for a Flutter application.
 
-A few resources to get you started if this is your first Flutter project:
-
-- [Lab: Write your first Flutter app](https://docs.flutter.dev/get-started/codelab)
-- [Cookbook: Useful Flutter samples](https://docs.flutter.dev/cookbook)
-
-For help getting started with Flutter development, view the
-[online documentation](https://docs.flutter.dev/), which offers tutorials,
-samples, guidance on mobile development, and a full API reference.
+    http://localhost:9992/frmCHANNELSPECS?personalNo=wD2kPUIgf%2BVMGbIEz0SOig%3D%3D&loginCode=hNZL%2F%2BgRKmrc24HmiFbyDQ%3D%3D

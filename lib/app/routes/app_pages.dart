@@ -37,7 +37,7 @@ class AppPages {
     ),
     GetPage(
       name: _Paths.MAM_WORK_ORDERS,
-      page: () => MamWorkOrdersView(),
+      page: () => AuthGuard1(childName: _Paths.MAM_WORK_ORDERS),
       binding: MamWorkOrdersBinding(),
     ),
     GetPage(

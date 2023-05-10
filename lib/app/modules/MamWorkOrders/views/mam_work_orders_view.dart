@@ -3,6 +3,11 @@ import 'package:flutter/material.dart';
 
 import 'package:get/get.dart';
 
+import '../../../../widgets/FormButton.dart';
+import '../../../controller/HomeController.dart';
+import '../../../controller/MainController.dart';
+import '../../../data/PermissionModel.dart';
+import '../../../providers/Utils.dart';
 import '../controllers/mam_work_orders_controller.dart';
 import 'cancel_wo_view.dart';
 import 'release_wo_non_fpc_view.dart';
@@ -11,12 +16,14 @@ import 'wo_history_view.dart';
 import 'wo_repush_view.dart';
 
 class MamWorkOrdersView extends GetView<MamWorkOrdersController> {
+  const MamWorkOrdersView({super.key});
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: Colors.grey[50],
       body: Column(
         children: [
+          /// Tabs
           Padding(
             padding: const EdgeInsets.all(4.0),
             child: Obx(() {
@@ -36,6 +43,8 @@ class MamWorkOrdersView extends GetView<MamWorkOrdersController> {
                   });
             }),
           ),
+
+          /// tab views
           Expanded(
               child: Card(
             margin: EdgeInsets.symmetric(vertical: 0, horizontal: 5),
@@ -44,13 +53,45 @@ class MamWorkOrdersView extends GetView<MamWorkOrdersController> {
               padding: const EdgeInsets.all(8.0),
               child: PageView(
                 controller: controller.pageController,
-                children: [ReleaseWoNonFpcView(), WoAsPerDailyFpcView(), WoRepushView(), CancelWoView(), WoHistoryView()],
+                children: [
+                  ReleaseWoNonFpcView(controller),
+                  WoAsPerDailyFpcView(controller),
+                  WoRepushView(controller),
+                  CancelWoView(controller),
+                  WoHistoryView(controller),
+                ],
               ),
             ),
           )),
-          Container(
-            height: 50,
-            color: Colors.red,
+
+          /// Bottom Buttons
+          Align(
+            alignment: Alignment.topLeft,
+            child: GetBuilder<HomeController>(
+                id: "buttons",
+                init: Get.find<HomeController>(),
+                builder: (controllerX) {
+                  PermissionModel formPermissions =
+                      Get.find<MainController>().permissionList!.lastWhere((element) => element.appFormName == "frmMAMWorkOrders");
+                  if (controllerX.buttons != null) {
+                    return ButtonBar(
+                      alignment: MainAxisAlignment.start,
+                      mainAxisSize: MainAxisSize.min,
+                      children: [
+                        for (var btn in controllerX.buttons!)
+                          FormButtonWrapper(
+                            btnText: btn["name"],
+                            callback: Utils.btnAccessHandler2(btn['name'], controllerX, formPermissions) == null
+                                ? null
+                                : () => controller.formHandler(
+                                      btn['name'],
+                                    ),
+                          )
+                      ],
+                    );
+                  }
+                  return Container();
+                }),
           )
         ],
       ),
