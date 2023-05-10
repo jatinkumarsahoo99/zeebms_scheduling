@@ -163,6 +163,7 @@ class ImportDigitextRunOrderView
                                       DropDownValue? _client;
                                       if (index == 0) {
                                         Get.defaultDialog(
+                                            radius: 2,
                                             title: "Map Clients",
                                             content: Column(
                                               children: [
@@ -209,6 +210,7 @@ class ImportDigitextRunOrderView
                                                 }));
                                       } else if (index == 3) {
                                         Get.defaultDialog(
+                                            radius: 2,
                                             title: "Map Agency",
                                             content: Column(
                                               children: [
