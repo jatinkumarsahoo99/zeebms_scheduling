@@ -1,3 +1,5 @@
+import 'dart:convert';
+
 import 'package:bms_scheduling/widgets/radio_row.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
@@ -220,66 +222,23 @@ class TransmissionLogView extends GetView<TransmissionLogController> {
                                   controller.selectedIndex);
                             }
                           },
-                          hideKeys: ["color", "modifed", ""],
+                          // hideKeys: ["color", "modifed", ""],
                           showSrNo: true,
                           colorCallback: (PlutoRowColorContext plutoContext) {
-                            /* return (controllerX
-                                              .dailyFpcListData![plutoContext.rowIdx].selectItem)!
-                                              ? Colors.red
-                                              : Colors.white;*/
                             return Color(controllerX
                                     .transmissionLogList![plutoContext.rowIdx]
                                     .colorNo ??
                                 Colors.white.value);
                           },
-                          onSelected: (event) {
-                            /*  controllerX.segmentList?.value = [];
-                          controller.update(["segmentList"]);
-
-                          DailyFPCModel data = controllerX.dailyFpcListData![event.rowIdx!];
-                          selectedLanguage.text = data.languageCode ?? "";
-                          selectedProgramType.text = data.programTypeCode ?? "";
-                          controller.selectedProgram = data;
-                          selectProgram = DropDownValue(
-                            key: controller.selectedProgram?.programCode ?? "",
-                            value: controller.selectedProgram?.programName ?? "",
-                          );
-                          controllerX.selectedIndex = event.rowIdx;
-                          controllerX.selectedColumn = event.cell!.column.field;
-                          selectedTapeId.text = data.tapeid!;
-                          selectedProgram.text = data.programName.toString();
-                          selectedProgramId.text = data.programCode.toString();
-                          controllerX.tapeId.text = data.tapeid.toString();
-                          episodeNo.value = data.epsNo!;
-                          print("Here is the episode duration>>>>" + data.episodeDuration.toString());
-                          */ /* controller
-                                                  .getSegmentDetailsList(
-                                                      controllerX.selectedLocationId.text,
-                                                      controllerX.selectedChannelId.text,
-                                                      data.episodeDuration,
-                                                      data.programName);*/ /*
-
-                          controller.getSegmentDetailsList1(
-                            data,
-                            controllerX.selectedLocationId.text,
-                            controllerX.selectedChannelId.text,
-                          );
-
-                          try {
-                            controller.showSegments.value = false;
-                            controller.showNewSegments.value = false;
-                            controller.selectedFpc.value = data;
-                            controller.showSegments.value = true;
-
-                            selectedOriRep.text = data.oriRep!;
-                            selectedOriRepId.text = data.originalRepeatCode ?? "";
-
-                            timeinController.text = controller.selectedProgram!.fpcTime.toString();
-
-                            controller.update(["segmentList", "selectedProgram"]);
-                          } catch (e) {
-                            print("DataGridFromMap1 OPERATION FPC PAGE ${e.toString()}");
-                          }*/
+                          onSelected: (event) {},
+                          onRowsMoved: (PlutoGridOnRowsMovedEvent onRowMoved) {
+                            print("Index is>>" + onRowMoved.idx.toString());
+                           /* for (int i = (onRowMoved.idx - 1) ?? 0;
+                                i >= 0;
+                                i--) {
+                              print("On Print moved" +
+                                  jsonEncode(onRowMoved.rows[i].cells));
+                            }*/
                           },
                           mode: controllerX.selectedPlutoGridMode,
                           widthRatio: (Get.width / 11.4),

@@ -30,12 +30,12 @@ class TransmissionLogController extends GetxController {
   TextEditingController segmentFpcTime_ = TextEditingController();
 
   List<TransmissionLogModel>? transmissionLogList = [
-    new TransmissionLogModel(rowNo: 1, status: "data"),
-    new TransmissionLogModel(rowNo: 1, status: "data"),
-    new TransmissionLogModel(rowNo: 1, status: "data"),
-    new TransmissionLogModel(rowNo: 1, status: "data"),
-    new TransmissionLogModel(rowNo: 1, status: "data"),
-    new TransmissionLogModel(rowNo: 1, status: "data"),
+    new TransmissionLogModel(rowNo: 1, status: "data1"),
+    new TransmissionLogModel(rowNo: 1, status: "data2"),
+    new TransmissionLogModel(rowNo: 1, status: "data3"),
+    new TransmissionLogModel(rowNo: 1, status: "data4"),
+    new TransmissionLogModel(rowNo: 1, status: "data5"),
+    new TransmissionLogModel(rowNo: 1, status: "data6"),
     new TransmissionLogModel(rowNo: 1, status: "data"),
     new TransmissionLogModel(rowNo: 1, status: "data"),
     new TransmissionLogModel(rowNo: 1, status: "data"),
