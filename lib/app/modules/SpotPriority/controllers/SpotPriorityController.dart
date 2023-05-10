@@ -13,8 +13,13 @@ class SpotPriorityController extends GetxController {
   var locations = RxList<DropDownValue>();
   var channels = RxList<DropDownValue>([]);
   var additions = RxList<DropDownValue>([
-    new DropDownValue(key: "All",value: "All"),
-    new DropDownValue(key: "New",value: "New"),
+    new DropDownValue(key: "Additions",value: "All"),
+    new DropDownValue(key: "Break Bumper",value: "New"),
+    new DropDownValue(key: "Lagging Commercial",value: "New"),
+    new DropDownValue(key: "Last Spot",value: "New"),
+    new DropDownValue(key: "Leading Comercial",value: "New"),
+    new DropDownValue(key: "One",value: "New"),
+    new DropDownValue(key: "One/Two",value: "New"),
   ]);
   RxBool isEnable = RxBool(true);
 

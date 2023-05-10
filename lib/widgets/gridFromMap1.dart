@@ -30,6 +30,7 @@ class DataGridFromMap1 extends StatelessWidget {
       this.actionIconKey,
       this.actionOnPress,
       this.onSelected,
+      this.onRowsMoved,
       this.onRowDoubleTap,
       this.formatDate = true,
       this.dateFromat = "dd-MM-yyyy",
@@ -45,6 +46,7 @@ class DataGridFromMap1 extends StatelessWidget {
   final String? dateFromat;
   final List<String>? showonly;
   final Function(PlutoGridOnRowDoubleTapEvent)? onRowDoubleTap;
+  final Function(PlutoGridOnRowsMovedEvent)? onRowsMoved;
 
   final List? hideKeys;
   final Function(PlutoGridOnSelectedEvent)? onSelected;
@@ -126,7 +128,7 @@ class DataGridFromMap1 extends StatelessWidget {
                 }
               }),
               enableSorting: enableSort,
-              enableRowDrag: false,
+              enableRowDrag: true,
               enableEditingMode: false,
               enableDropToResize: true,
               enableContextMenu: false,
@@ -200,7 +202,7 @@ class DataGridFromMap1 extends StatelessWidget {
               }
             }),
             enableSorting: enableSort,
-            enableRowDrag: false,
+            enableRowDrag: true,
             enableEditingMode: false,
             enableDropToResize: true,
             enableContextMenu: false,
@@ -251,6 +253,7 @@ class DataGridFromMap1 extends StatelessWidget {
             onLoaded: onload,
             columns: segColumn,
             onRowDoubleTap: onRowDoubleTap,
+            onRowsMoved: onRowsMoved,
             onSelected: onSelected,
             rows: segRows),
       ),

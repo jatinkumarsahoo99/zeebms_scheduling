@@ -8,6 +8,7 @@ import 'package:intl/intl.dart';
 import 'package:pluto_grid/pluto_grid.dart';
 
 import '../../../controller/ConnectorControl.dart';
+import '../../../controller/HomeController.dart';
 import '../../../controller/MainController.dart';
 import '../../../data/DropDownValue.dart';
 import '../../../providers/ApiFactory.dart';
@@ -86,10 +87,22 @@ class LogAdditionsController extends GetxController {
           fun: (Map<String, dynamic> map) {
             Navigator.pop(Get.context!);
             logAdditionModel = LogAdditionModel.fromJson(map);
-            if (logAdditionModel != null) {
-              additionCount.value = logAdditionModel?.additionCount ?? "--";
-              cancelCount.value = logAdditionModel?.cancellationCount ?? "--";
+            if (logAdditionModel != null &&
+                logAdditionModel?.displayPreviousAdditon != null &&
+                logAdditionModel?.displayPreviousAdditon?.previousAdditons !=
+                    null &&
+                (logAdditionModel
+                    ?.displayPreviousAdditon?.previousAdditons?.isNotEmpty)!) {
+              additionCount.value =
+                  logAdditionModel?.displayPreviousAdditon?.additionCount ??
+                      "--";
+              cancelCount.value =
+                  logAdditionModel?.displayPreviousAdditon?.cancellationCount ??
+                      "--";
+              isEnable.value = false;
               update(["transmissionList"]);
+            } else {
+              Snack.callError("No Data Found");
             }
           });
     }
@@ -111,11 +124,23 @@ class LogAdditionsController extends GetxController {
           ),
           fun: (Map<String, dynamic> map) {
             Navigator.pop(Get.context!);
+
+            print(">>>getShowPreviousAddition()>>>" + jsonEncode(map));
             logAdditionModel = LogAdditionModel.fromJson(map);
-            remarks.text =
-                logAdditionModel?.displayPreviousAdditon?.remarks ?? "";
-            if (logAdditionModel != null) {
+            print(">>>getShowPreviousAddition() Model>>>" +
+                jsonEncode(logAdditionModel?.toJson()));
+            if (logAdditionModel != null &&
+                logAdditionModel?.displayPreviousAdditon != null &&
+                logAdditionModel?.displayPreviousAdditon?.previousAdditons !=
+                    null &&
+                (logAdditionModel
+                    ?.displayPreviousAdditon?.previousAdditons?.isNotEmpty)!) {
+              remarks.text =
+                  logAdditionModel?.displayPreviousAdditon?.remarks ?? "";
+              isEnable.value = false;
               update(["transmissionList"]);
+            } else {
+              Snack.callError("No Data Found");
             }
           });
     }
@@ -137,6 +162,7 @@ class LogAdditionsController extends GetxController {
             selectedDate.text,
           ),
           fun: (Map<String, dynamic> map) {
+            additions.value.clear();
             map["displayPreviousAdditon"].forEach((v) {
               additions.value
                   .add(DropDownValue.fromJsonDynamic(v, "value", "name"));
@@ -200,7 +226,10 @@ class LogAdditionsController extends GetxController {
                   (logAdditionModel?.displayPreviousAdditon?.previousAdditons
                       ?.map((e) => e.toJson1())
                       .toList())!,
-                  "${selectLocation?.value ?? ""} ${selectChannel?.value ?? ""} ${DateFormat('yyyy-MM-dd').format(DateFormat("dd-MM-yyyy").parse(selectedDate.text))} ${selectAdditions?.value ?? ""}.xlsx");
+                  "${selectLocation?.value ?? ""} ${selectChannel?.value ?? ""} ${DateFormat('yyyy-MM-dd').format(DateFormat("dd-MM-yyyy").parse(selectedDate.text))} ${selectAdditions?.value ?? ""}.xlsx",
+                  callBack: () {
+
+                  });
             });
           } else {
             Snack.callError(map.toString());
@@ -214,7 +243,6 @@ class LogAdditionsController extends GetxController {
     } else if (selectChannel == null) {
       Snack.callError("Please select channel");
     } else {
-      isEnable.value = false;
       if (selectAdditions?.key != "0") {
         getShowPreviousAddition();
       } else {

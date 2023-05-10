@@ -5,8 +5,12 @@ import 'package:flutter/material.dart';
 
 import 'package:get/get.dart';
 
+import '../controllers/mam_work_orders_controller.dart';
+
 class WoRepushView extends GetView {
-  const WoRepushView({Key? key}) : super(key: key);
+  const WoRepushView(this.controller, {Key? key}) : super(key: key);
+  @override
+  final MamWorkOrdersController controller;
   @override
   Widget build(BuildContext context) {
     return Column(

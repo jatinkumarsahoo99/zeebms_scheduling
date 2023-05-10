@@ -15,7 +15,7 @@ class ExportData {
   static void topLevelFunction(Map<String, dynamic> args) {
     // performs work in an isolate
   }
-  exportExcelFromJsonList(jsonList, screenName) {
+  exportExcelFromJsonList(jsonList, screenName,{Function? callBack}) {
     print("Call json List>>>"+jsonEncode(jsonList));
     if (jsonList!.isNotEmpty) {
       var excel = Excel.createExcel();
@@ -29,6 +29,9 @@ class ExportData {
       String time = DateTime.now().toString();
       // var fileBytes = excel.save(fileName: "$screenName-$time.xlsx");
       var fileBytes = excel.save(fileName: screenName);
+      if(callBack!=null){
+        callBack();
+      }
       // FlutterFileSaver()
       //     .writeFileAsBytes(
       //       fileName: 'fpc_search.xlsx',

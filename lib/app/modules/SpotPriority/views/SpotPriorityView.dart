@@ -1,21 +1,18 @@
 import 'package:flutter/material.dart';
-
 import 'package:get/get.dart';
 import 'package:pluto_grid/pluto_grid.dart';
-
 import '../../../../widgets/DateTime/DateWithThreeTextField.dart';
 import '../../../../widgets/FormButton.dart';
 import '../../../../widgets/dropdown.dart';
+import '../../../../widgets/gridFromMap.dart';
 import '../../../../widgets/gridFromMap1.dart';
-import '../../../../widgets/input_fields.dart';
-import '../../../../widgets/radio_row.dart';
 import '../../../controller/HomeController.dart';
-import '../../../providers/SizeDefine.dart';
 import '../controllers/SpotPriorityController.dart';
 
 class SpotPriorityView extends GetView<SpotPriorityController> {
+  SpotPriorityController controllerX =
+      Get.put<SpotPriorityController>(SpotPriorityController());
 
-  SpotPriorityController controllerX = Get.put<SpotPriorityController>(SpotPriorityController());
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -31,18 +28,19 @@ class SpotPriorityView extends GetView<SpotPriorityController> {
               builder: (control) {
                 return Padding(
                   padding:
-                  const EdgeInsets.symmetric(vertical: 8, horizontal: 15),
+                      const EdgeInsets.symmetric(vertical: 8, horizontal: 15),
                   child: SizedBox(
                     width: double.maxFinite,
                     child: Wrap(
                       crossAxisAlignment: WrapCrossAlignment.center,
-                      runSpacing: 5,
+                      runSpacing: 0.0,
+                      direction: Axis.horizontal,
                       spacing: 5,
                       children: [
                         Obx(
-                              () => DropDownField.formDropDown1WidthMap(
+                          () => DropDownField.formDropDown1WidthMap(
                             controllerX.locations.value,
-                                (value) {
+                            (value) {
                               controllerX.selectLocation = value;
                               controllerX.getChannels(
                                   controllerX.selectLocation?.key ?? "");
@@ -59,9 +57,9 @@ class SpotPriorityView extends GetView<SpotPriorityController> {
 
                         /// channel
                         Obx(
-                              () => DropDownField.formDropDown1WidthMap(
+                          () => DropDownField.formDropDown1WidthMap(
                             controllerX.channels.value,
-                                (value) {
+                            (value) {
                               controllerX.selectChannel = value;
                             },
                             "Channel",
@@ -75,129 +73,58 @@ class SpotPriorityView extends GetView<SpotPriorityController> {
                         ),
 
                         Obx(
-                              () => DateWithThreeTextField(
-                            title: "Schedule Date",
+                          () => DateWithThreeTextField(
+                            title: "From",
                             splitType: "-",
                             widthRation: 0.12,
                             isEnable: controllerX.isEnable.value,
-                            onFocusChange: (data) {
-                              // controllerX.selectedDate.text =
-                              //     DateFormat('dd/MM/yyyy').format(
-                              //         DateFormat("dd-MM-yyyy").parse(data));
-                              // DateFormat("dd-MM-yyyy").parse(data);
-                              print("Called when focus changed");
-                              /*controller.getDailyFPCDetailsList(
-                                controllerX.selectedLocationId.text,
-                                controllerX.selectedChannelId.text,
-                                controllerX.convertToAPIDateType(),
-                              );*/
-
-                              // controller.isTableDisplayed.value = true;
-                            },
+                            onFocusChange: (data) {},
                             mainTextController: controllerX.selectedDate,
                           ),
                         ),
                         Obx(
-                              () => RadioRow(
-                            items: const ["Primary", "Secondary"],
-                            groupValue: controllerX.verifyType.value ?? "",
-                            onchange: (val) {
-                              print("Response>>>" + val);
-                              controllerX.verifyType.value = val;
-                            },
-                          ),
-                        ),
-                        SizedBox(
-                          width: Get.width * 0.077,
-                          child: Row(
-                            children: [
-                              SizedBox(width: 5),
-                              Obx(() => Padding(
-                                padding: const EdgeInsets.only(top: 15.0),
-                                child: Checkbox(
-                                  value: controllerX.isStandby.value,
-                                  onChanged: (val) {
-                                    controllerX.isStandby.value = val!;
-                                  },
-                                  materialTapTargetSize:
-                                  MaterialTapTargetSize.shrinkWrap,
-                                ),
-                              )),
-                              Padding(
-                                padding:
-                                const EdgeInsets.only(top: 15.0, left: 5),
-                                child: Text(
-                                  "Standby Log",
-                                  style: TextStyle(
-                                      fontSize: SizeDefine.labelSize1),
-                                ),
-                              ),
-                            ],
-                          ),
-                        ),
-                        SizedBox(
-                          width: Get.width * 0.077,
-                          child: Row(
-                            children: [
-                              SizedBox(width: 5),
-                              Obx(() => Padding(
-                                padding: const EdgeInsets.only(top: 15.0),
-                                child: Checkbox(
-                                  value: controllerX.isIgnoreSpot.value,
-                                  onChanged: (val) {
-                                    controllerX.isIgnoreSpot.value = val!;
-                                  },
-                                  materialTapTargetSize:
-                                  MaterialTapTargetSize.shrinkWrap,
-                                ),
-                              )),
-                              Padding(
-                                padding:
-                                const EdgeInsets.only(top: 15.0, left: 5),
-                                child: Text(
-                                  "Ignore Sports in Log",
-                                  style: TextStyle(
-                                      fontSize: SizeDefine.labelSize1),
-                                ),
-                              ),
-                            ],
-                          ),
-                        ),
-                        Row(),
-
-                        InputFields.formFieldNumberMask(
-                            hintTxt: "Remarks",
-                            controller: controllerX.remarks,
-                            widthRatio: 0.12,
-                            isTime: true,
-                            paddingLeft: 0),
-                        /// channel
-                        Obx(
-                              () => DropDownField.formDropDown1WidthMap(
-                            controllerX.additions.value,
-                                (value) {
-                              controllerX.selectAdditions = value;
-                            },
-                            "Additions",
-                            0.12,
+                          () => DateWithThreeTextField(
+                            title: "To",
+                            splitType: "-",
+                            widthRation: 0.12,
                             isEnable: controllerX.isEnable.value,
-                            selected: controllerX.selectAdditions,
-                            autoFocus: true,
-                            dialogWidth: 330,
-                            dialogHeight: Get.height * .7,
+                            onFocusChange: (data) {},
+                            mainTextController: controllerX.selectedDate,
                           ),
                         ),
                         Padding(
                           padding: const EdgeInsets.only(
-                              top: 14.0, left: 10, right: 10),
+                              top: 14.0, left: 5, right: 10),
                           child: FormButtonWrapper(
                             btnText: "Show Details",
-                            callback: () {},
+                            callback: () {
+                              // controllerX.showDetails();
+                            },
                             showIcon: false,
                           ),
                         ),
-                        /// duration
+                        SizedBox(
+                          width: 25,
+                        ),
 
+                        /// channel
+                        Obx(
+                          () => DropDownField.formDropDown1WidthMap(
+                            controllerX.additions.value,
+                            (value) {
+                              controllerX.selectAdditions = value;
+                            },
+                            "Select Priority",
+                            0.12,
+                            // isEnable: controllerX.isEnable.value,
+                            selected: controllerX.selectAdditions,
+                            autoFocus: true,
+                            dialogWidth: 200,
+                            dialogHeight: Get.height * .3,
+                          ),
+                        ),
+
+                        /// duration
                       ],
                     ),
                   ),
@@ -214,108 +141,43 @@ class SpotPriorityView extends GetView<SpotPriorityController> {
                   // width: Get.width,
                   // height: Get.height * .33,
                   child: (controllerX.logAdditionModel != null &&
-                      (controllerX.logAdditionModel?.isNotEmpty)!)
-                      ? DataGridFromMap1(
-                      onFocusChange: (value) {
-                        controllerX.gridStateManager!
-                            .setGridMode(PlutoGridMode.selectWithOneTap);
-                        controllerX.selectedPlutoGridMode =
-                            PlutoGridMode.selectWithOneTap;
-                      },
-                      onload: (loadevent) {
-                        controllerX.gridStateManager =
-                            loadevent.stateManager;
-                        /* if (controller.selectedIndex != null) {
-                              loadevent.stateManager.moveScrollByRow(
-                                  PlutoMoveDirection.down,
-                                  controller.selectedIndex);
-                              loadevent.stateManager.setCurrentCell(
-                                  loadevent
-                                      .stateManager
-                                      .rows[controller.selectedIndex!]
-                                      .cells
-                                      .entries
-                                      .first
-                                      .value,
-                                  controller.selectedIndex);
-                            }*/
-                      },
-                      hideKeys: ["color", "modifed", ""],
-                      showSrNo: true,
-                      colorCallback: (PlutoRowColorContext plutoContext) {
-                        /* return (controllerX
-                                              .dailyFpcListData![plutoContext.rowIdx].selectItem)!
-                                              ? Colors.red
-                                              : Colors.white;*/
-                        return Color(controllerX
-                            .logAdditionModel![plutoContext.rowIdx]
-                            .colorNo ??
-                            Colors.white.value);
-                      },
-                      onSelected: (event) {
-                        /*  controllerX.segmentList?.value = [];
-                          controller.update(["segmentList"]);
+                          (controllerX.logAdditionModel?.isNotEmpty)!)
+                      ? DataGridFromMap(
+                          onFocusChange: (value) {
+                            controllerX.gridStateManager!
+                                .setGridMode(PlutoGridMode.selectWithOneTap);
+                            controllerX.selectedPlutoGridMode =
+                                PlutoGridMode.selectWithOneTap;
+                          },
+                          onload: (loadevent) {
+                            controllerX.gridStateManager =
+                                loadevent.stateManager;
+                          },
+                          hideKeys: ["color", "modifed", ""],
+                          showSrNo: true,
+                          colorCallback: (PlutoRowColorContext plutoContext) {
 
-                          DailyFPCModel data = controllerX.dailyFpcListData![event.rowIdx!];
-                          selectedLanguage.text = data.languageCode ?? "";
-                          selectedProgramType.text = data.programTypeCode ?? "";
-                          controller.selectedProgram = data;
-                          selectProgram = DropDownValue(
-                            key: controller.selectedProgram?.programCode ?? "",
-                            value: controller.selectedProgram?.programName ?? "",
-                          );
-                          controllerX.selectedIndex = event.rowIdx;
-                          controllerX.selectedColumn = event.cell!.column.field;
-                          selectedTapeId.text = data.tapeid!;
-                          selectedProgram.text = data.programName.toString();
-                          selectedProgramId.text = data.programCode.toString();
-                          controllerX.tapeId.text = data.tapeid.toString();
-                          episodeNo.value = data.epsNo!;
-                          print("Here is the episode duration>>>>" + data.episodeDuration.toString());
-                          */ /* controller
-                                                  .getSegmentDetailsList(
-                                                      controllerX.selectedLocationId.text,
-                                                      controllerX.selectedChannelId.text,
-                                                      data.episodeDuration,
-                                                      data.programName);*/ /*
-
-                          controller.getSegmentDetailsList1(
-                            data,
-                            controllerX.selectedLocationId.text,
-                            controllerX.selectedChannelId.text,
-                          );
-
-                          try {
-                            controller.showSegments.value = false;
-                            controller.showNewSegments.value = false;
-                            controller.selectedFpc.value = data;
-                            controller.showSegments.value = true;
-
-                            selectedOriRep.text = data.oriRep!;
-                            selectedOriRepId.text = data.originalRepeatCode ?? "";
-
-                            timeinController.text = controller.selectedProgram!.fpcTime.toString();
-
-                            controller.update(["segmentList", "selectedProgram"]);
-                          } catch (e) {
-                            print("DataGridFromMap1 OPERATION FPC PAGE ${e.toString()}");
-                          }*/
-                      },
-                      mode: controllerX.selectedPlutoGridMode,
-                      widthRatio: (Get.width / 11.4),
-                      mapData: controllerX.logAdditionModel!
-                          .map((e) => e.toJson1())
-                          .toList())
+                            return Color(controllerX
+                                    .logAdditionModel![plutoContext.rowIdx]
+                                    .colorNo ??
+                                Colors.white.value);
+                          },
+                          onSelected: (event) {},
+                          mode: controllerX.selectedPlutoGridMode,
+                          widthRatio: (Get.width / 11.4),
+                          mapData: controllerX.logAdditionModel!
+                              .map((e) => e.toJson1())
+                              .toList())
                       : Container(
-                    // height: Get.height * .33,
-                    // width: Get.width,
-                    decoration: BoxDecoration(
-                      border: Border.all(
-                        color: Colors.grey.shade400,
-                        width: 1,
-                      ),
-                    ),
-                  ),
+                          // height: Get.height * .33,
+                          // width: Get.width,
+                          decoration: BoxDecoration(
+                            border: Border.all(
+                              color: Colors.grey.shade400,
+                              width: 1,
+                            ),
+                          ),
+                        ),
                 );
               },
             ),
