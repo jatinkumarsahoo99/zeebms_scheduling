@@ -405,7 +405,8 @@ class Utils {
   }
 
   static double getColumnSize(
-      {required String key, dynamic value = "", double? widthRatio = 120}) {
+      {required String key, dynamic value, double? widthRatio = 120}) {
+    value ??= "";
     try {
       if (key == "no" || key == "Sr No") {
         return 45;
@@ -414,13 +415,13 @@ class Utils {
       } else if (key.toLowerCase().contains("name") ||
           key.toLowerCase().contains("program")) {
         return 180;
-      } else if (num.tryParse(value) != null) {
+      } else if (value is num || num.tryParse(value) != null) {
         return 45;
       } else if (key.toLowerCase().contains("date")) {
         return 100;
       }
     } catch (e) {
-      print("problem in setting width");
+      print("problem in setting width $e");
     }
 
     return 120;

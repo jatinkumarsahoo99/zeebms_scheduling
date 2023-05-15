@@ -188,12 +188,17 @@ class ApiFactory {
 
 //////// RO CANCELLATION ///////
   static String RO_CANCELLATION_LOCATION =
-      "$BASE_URL/api/ReleaseOrderCancellation/GetCboLocation";
+      "$BASE_URL/api/ROCancellation/GetCboLocation";
   static String RO_CANCELLATION_CHANNNEL(locationCode) =>
-      "$BASE_URL/api/ReleaseOrderCancellation/OnLeaveLocation?LocationCode=$locationCode";
+      "$BASE_URL/api/ROCancellation/OnLeaveLocation?LocationCode=$locationCode";
 
   static String RO_CANCELLATION_BOOKINGNO_LEAVE =
-      "$BASE_URL/api/ROCancellation/OnLeaveBookingNumber";
+      "$BASE_URL/api/ROCancellation/OnLeaveBookingNumbers";
+  static String RO_CANCELLATION_CANCEL_LEAVE =
+      "$BASE_URL/api/ROCancellation/OnLeaveCancelNumber";
+  static String RO_CANCELLATION_SAVE =
+      "$BASE_URL/api/ROCancellation/SaveRoCancellation";
+
   ////////////////////////////// MAM WORK ORDERS API START////////////////////////////////////////////////
   static String get MAM_WORK_ORDER_INITIALIZE =>
       "$BASE_URL/api/MAMWorkOrder/OnLoadWorkOrder";
