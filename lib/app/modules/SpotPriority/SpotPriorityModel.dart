@@ -1,151 +1,105 @@
-import '../../providers/ColorData.dart';
-
 class SpotPriorityModel {
-  int? rowNo;
-  String? programCode;
-  String? languageCode;
-  String? originalRepeatCode;
-  String? programTypeCode;
-  int? color;
-  int? episodeDuration;
-  String? fpcTime;
-  String? endTime;
-  String? programName;
-  int? epsNo;
-  int? colorNo;
-  String? tapeid;
-  String? status;
-  String? oriRep;
-  String? wbs;
-  String? caption;
-  String? modifed;
-  String? oriRepCode;
-  String? telecastdate1;
-  String? telecastdate2;
-  String? telecastdate3;
-
+  List<Lstbookingdetail>? lstbookingdetail;
+  int? totalCount;
+  bool? areRecordExistsInSpotPriority;
 
   SpotPriorityModel(
-      {this.rowNo,
-      this.programCode,
-      this.languageCode,
-      this.originalRepeatCode,
-      this.programTypeCode,
-      this.color,
-      this.episodeDuration,
-      this.fpcTime,
-      this.endTime,
-      this.programName,
-      this.epsNo,
-      this.tapeid,
-      this.status,
-      this.oriRep,
-      this.wbs,
-      this.caption,
-      this.modifed,
-      this.oriRepCode,
-      this.telecastdate1,
-      this.telecastdate2,
-      this.telecastdate3,
-      });
+      {this.lstbookingdetail,
+      this.totalCount,
+      this.areRecordExistsInSpotPriority});
 
   SpotPriorityModel.fromJson(Map<String, dynamic> json) {
-    rowNo = json['rowNo'];
-    programCode = json['programCode'];
-    languageCode = json['languageCode'];
-    originalRepeatCode = json['originalRepeatCode'];
-    programTypeCode = json['programTypeCode'];
-    color = json['color'];
-    colorNo = ColorData.getColorData(json['color']).value;
-    episodeDuration = json['episodeDuration'];
-    fpcTime = json['fpcTime'];
-    endTime = json['endTime'];
-    programName = json['programName'];
-    epsNo = json['epsNo'];
-    tapeid = json['tapeid'];
-    status = json['status'];
-    oriRep = json['oriRep'];
-    wbs = json['wbs'];
-    caption = json['caption'];
-    modifed = json['modifed'];
-    oriRepCode = json['oriRepCode'];
-    telecastdate1 = json['telecastdate1'];
-    telecastdate2 = json['telecastdate2'];
-    telecastdate3 = json['telecastdate3'];
+    if (json['lstbookingdetail'] != null) {
+      lstbookingdetail = <Lstbookingdetail>[];
+      json['lstbookingdetail'].forEach((v) {
+        lstbookingdetail!.add(new Lstbookingdetail.fromJson(v));
+      });
+    }
+    totalCount = json['totalCount'];
+    areRecordExistsInSpotPriority = json['areRecordExistsInSpotPriority'];
   }
 
   Map<String, dynamic> toJson() {
     final Map<String, dynamic> data = new Map<String, dynamic>();
-    data['rowNo'] = this.rowNo;
-    data['programCode'] = this.programCode;
-    data['languageCode'] = this.languageCode;
-    data['originalRepeatCode'] = this.originalRepeatCode;
-    data['programTypeCode'] = this.programTypeCode;
-    data['color'] = this.color;
-    data['episodeDuration'] = this.episodeDuration;
-    data['fpcTime'] = this.fpcTime;
-    data['endTime'] = this.endTime;
-    data['programName'] = this.programName;
-    data['epsNo'] = this.epsNo;
-    data['tapeid'] = this.tapeid;
-    data['status'] = this.status;
-    data['oriRep'] = this.oriRep;
-    data['wbs'] = this.wbs;
-    data['caption'] = this.caption;
-    data['modifed'] = this.modifed;
-    data['oriRepCode'] = this.oriRepCode;
-    data['telecastdate1'] = this.telecastdate1;
-    data['telecastdate2'] = this.telecastdate2;
-    data['telecastdate3'] = this.telecastdate3;
+    if (this.lstbookingdetail != null) {
+      data['lstbookingdetail'] =
+          this.lstbookingdetail!.map((v) => v.toJson()).toList();
+    }
+    data['totalCount'] = this.totalCount;
+    data['areRecordExistsInSpotPriority'] = this.areRecordExistsInSpotPriority;
     return data;
   }
+}
 
-  Map<String, dynamic> toJson1() {
-    final Map<String, dynamic> data = new Map<String, dynamic>();
-    // data['rowNo'] = this.rowNo;
-    data['programCode'] = this.programCode;
-    data['languageCode'] = this.languageCode;
-    data['originalRepeatCode'] = this.originalRepeatCode;
-    data['programTypeCode'] = this.programTypeCode;
-    data['color'] = ColorData.getColorData(this.color).value;
-    data['Episode Dur'] = this.episodeDuration;
-    data['fpcTime'] = this.fpcTime;
-    data['endTime'] = this.endTime;
-    data['programName'] = this.programName;
-    data['epsNo'] = this.epsNo;
-    data['tapeid'] = this.tapeid;
-    data['status'] = this.status;
-    data['oriRep'] = this.oriRep;
-    data['wbs'] = this.wbs;
-    data['caption'] = this.caption;
-    data['modifed'] = this.modifed;
-    data['oriRepCode'] = this.oriRepCode;
-    return data;
+class Lstbookingdetail {
+  String? bookingnumber;
+  int? bookingdetailcode;
+  String? priorityname;
+  String? scheduleDate;
+  String? accountname;
+  String? clientname;
+  String? agencyname;
+  String? brandname;
+  String? scheduletime;
+  String? programname;
+  String? exporttapecode;
+  String? exporttapecaption;
+  int? commercialduration;
+  int? spotamount;
+  int? priorityCode;
+
+  Lstbookingdetail(
+      {this.bookingnumber,
+      this.bookingdetailcode,
+      this.priorityname,
+      this.scheduleDate,
+      this.accountname,
+      this.clientname,
+      this.agencyname,
+      this.brandname,
+      this.scheduletime,
+      this.programname,
+      this.exporttapecode,
+      this.exporttapecaption,
+      this.commercialduration,
+      this.spotamount,
+      this.priorityCode});
+
+  Lstbookingdetail.fromJson(Map<String, dynamic> json) {
+    bookingnumber = json['bookingnumber'];
+    bookingdetailcode = json['bookingdetailcode'];
+    priorityname = json['priorityname'];
+    scheduleDate = json['scheduleDate'];
+    accountname = json['accountname'];
+    clientname = json['clientname'];
+    agencyname = json['agencyname'];
+    brandname = json['brandname'];
+    scheduletime = json['scheduletime'];
+    programname = json['programname'];
+    exporttapecode = json['exporttapecode'];
+    exporttapecaption = json['exporttapecaption'];
+    commercialduration = json['commercialduration'];
+    spotamount = json['spotamount'];
+    priorityCode = json['priorityCode'];
   }
 
-  Map<String, dynamic> toJson2() {
+  Map<String, dynamic> toJson() {
     final Map<String, dynamic> data = new Map<String, dynamic>();
-    data['rowNo'] = this.rowNo;
-    data['programCode'] = this.programCode;
-    data['languageCode'] = this.languageCode;
-    data['originalRepeatCode'] = this.originalRepeatCode;
-    data['programTypeCode'] = this.programTypeCode;
-    data['color'] = this.color;
-    data['episodeDuration'] = this.episodeDuration;
-    data['fpcTime'] = this.fpcTime;
-    data['endTime'] = this.endTime;
-    data['programName'] = this.programName;
-    data['epsNo'] = this.epsNo;
-    data['tapeid'] = this.tapeid;
-    data['status'] = this.status;
-    data['oriRep'] = this.oriRep;
-    data['wbs'] = this.wbs;
-    data['caption'] = this.caption;
-    data['modifed'] = this.modifed;
-    data['oriRepCode'] = this.oriRepCode;
-    data['telecastdate1'] = this.telecastdate1;
-    data['telecastdate2'] = this.telecastdate2;
-    data['telecastdate3'] = this.telecastdate3;
+    data['bookingnumber'] = this.bookingnumber;
+    data['bookingdetailcode'] = this.bookingdetailcode;
+    data['priorityname'] = this.priorityname;
+    data['scheduleDate'] = this.scheduleDate;
+    data['accountname'] = this.accountname;
+    data['clientname'] = this.clientname;
+    data['agencyname'] = this.agencyname;
+    data['brandname'] = this.brandname;
+    data['scheduletime'] = this.scheduletime;
+    data['programname'] = this.programname;
+    data['exporttapecode'] = this.exporttapecode;
+    data['exporttapecaption'] = this.exporttapecaption;
+    data['commercialduration'] = this.commercialduration;
+    data['spotamount'] = this.spotamount;
+    data['priorityCode'] = this.priorityCode;
     return data;
   }
 }

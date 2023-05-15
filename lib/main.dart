@@ -21,7 +21,7 @@ void main() async {
     return true;
   };
   setPathUrlStrategy();
-  print("Aes dec>>>"+(Aes.decrypt("1BWIoBKeDl7qDSAAhxvXsQ==")??""));
+  // print("Aes dec>>>"+(Aes.decrypt("1BWIoBKeDl7qDSAAhxvXsQ==")??""));
   runApp(
     GetMaterialApp(
       title: "Zee BMS",

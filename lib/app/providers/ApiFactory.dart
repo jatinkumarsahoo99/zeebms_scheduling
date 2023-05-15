@@ -44,9 +44,94 @@ class ApiFactory {
       ? "https://api-login-bms-uat.zeeconnect.in"
       : "https://api-login-bms-dev.zeeconnect.in";
 
-  // api-login-bms-dev.zeeconnect.in
-  // api-common-bms-dev.zeeconnect.in
-  // api-programming-bms-dev.zeeconnect.in
+  ////////////////////// SEARCH ////////////////////////////
+
+  static String SEARCH_SEND_NAME(
+    String mail,
+    String pageName,
+  ) {
+    var currentDate =
+        DateFormat("yyyy-MM-dd HH:mm:ss.SSS").format(DateTime.now());
+    return BASE_URL_COMMON +
+        "/api/MDI/SaveApplicationPagesFootprintData?UserName=$mail&PageName=$pageName&AccessDate=$currentDate";
+  }
+
+  static String SEARCH_VARIANCE(
+      {required String viewName,
+      required String screenName,
+      required String loginCode}) {
+    // return BASE_URL + "/api/$screenName/SearchVariance/$viewName";
+    return BASE_URL_COMMON + "/api/CommonSearch/SearchVariance/$viewName";
+  }
+
+  static String SEARCH_BINDGRID(
+      {required String viewName,
+      required String screenName,
+      required String code}) {
+    // return BASE_URL + "/api/$screenName/BindGrid/$viewName,$code";
+    return BASE_URL_COMMON + "/api/CommonSearch/BindGrid/$viewName,$code";
+  }
+
+  static String SEARCH_MASTER_SEARCH({
+    required String name,
+    required String valuecolumnname,
+    required String TableName,
+    required bool chkLikeNotLike,
+    required String searchvalue,
+    required String screenName,
+  }) {
+    // return BASE_URL + "/api/$screenName/TextSearch?name=$name&valuecolumnname=$valuecolumnname&TableName=$TableName&chkLikeNotLike=$chkLikeNotLike&searchvalue=$searchvalue";
+    return BASE_URL_COMMON +
+        "/api/CommonSearch/TextSearch?name=$name&valuecolumnname=$valuecolumnname&TableName=$TableName&chkLikeNotLike=$chkLikeNotLike&searchvalue=$searchvalue";
+  }
+
+  static String SEARCH_EXECUTE_SEARCH({
+    required String strViewName,
+    required String loginCode,
+    required String screenName,
+  }) {
+    // return BASE_URL + "/api/$screenName/SearchExecute?strViewName=$strViewName";
+    return BASE_URL_COMMON +
+        "/api/CommonSearch/SearchExecute?strViewName=$strViewName";
+  }
+
+  // static String SEARCH_PIVOT({required String screenName,}) => BASE_URL + "/api/$screenName/SearchPivot";
+  static String SEARCH_PIVOT({
+    required String screenName,
+  }) =>
+      BASE_URL_COMMON + "/api/CommonSearch/SearchPivot";
+
+  // static String SEARCH_EXCUTE_PIVOT({required String screenName, required String strViewname,}) => BASE_URL + "/api/$screenName/SearchExecutePivot?strViewName=$strViewname";
+  static String SEARCH_EXCUTE_PIVOT({
+    required String screenName,
+    required String strViewname,
+  }) =>
+      BASE_URL_COMMON +
+      "/api/CommonSearch/SearchExecutePivot?strViewName=$strViewname";
+
+  static String ADD_SEARCH_VARIANCE({
+    required String strViewName,
+    required String loginCode,
+    required String screenName,
+    required String sVariant,
+    // required String pivotTemplate,
+  }) {
+    // return BASE_URL + "/api/$screenName/InsertSearchVariance?strViewName=$strViewName&sVariant=$sVariant";
+    return BASE_URL_COMMON +
+        "/api/CommonSearch/InsertSearchVariance?strViewName=$strViewName&sVariant=$sVariant";
+  }
+
+  static String DELETE_SEARCH_VARIANCE({
+    required String varianceId,
+    required String loginCode,
+    required String screenName,
+  }) {
+    // return BASE_URL + "/api/$screenName/DeleteSearchVariance?VarianceId=$varianceId";
+    return BASE_URL_COMMON +
+        "/api/CommonSearch/DeleteSearchVariance?VarianceId=$varianceId";
+  }
+
+  /////////////////////////////////////////////////////////
 
   static String AZURE_REDIRECT_UI =
       "${kReleaseMode ? WEB_URL : LOCAL_URL}/dashboard";
@@ -160,6 +245,7 @@ class ApiFactory {
           DropDownValue locDetail, DropDownValue chnlDetails, String date) =>
       BASE_URL +
       "/api/Additions/GetPopulateAdditions?Locationcode=${locDetail.key}&channelcode=${chnlDetails.key}&Date=$date";
+
   static String LOG_ADDITION_SAVE_ADDITION() =>
       BASE_URL + "/api/Additions/PostAddition";
 
@@ -169,6 +255,7 @@ class ApiFactory {
 
   static String IMPORT_DIGITEX_RUN_ORDER_LOCATION =
       "$BASE_URL/api/ImportDigitexRunOrder/GetLocations";
+
   static String IMPORT_DIGITEX_RUN_ORDER_CHANNEL(locationCode) =>
       "$BASE_URL/api/ImportDigitexRunOrder/GetChannels/$locationCode";
   static String IMPORT_DIGITEX_RUN_ORDER_AGENCY =
@@ -217,4 +304,15 @@ class ApiFactory {
       "$BASE_URL/api/MAMWorkOrder/OnLeaveProgram";
 
   ////////////////////////////// MAM WORK ORDERS API END////////////////////////////////////////////////
+
+//////////////////////////////// Spot Priority ////////////////////////
+
+  static String SPOT_PRIORITY_LOCATION() =>
+      "$BASE_URL/api/SetSpotPriority/GetInitial";
+
+  static String SPOT_PRIORITY_CHANNEL() =>
+      "$BASE_URL/api/SetSpotPriority/GetChannelList?LocationCode=";
+
+  static String SPOT_PRIORITY_SHOW_DETAILS(String loc,String chnlCode,String frmDt,String toDt) =>
+      "$BASE_URL/api/SetSpotPriority/GetShowDetails?LocationCode=$loc&Channelcode=$chnlCode&FromDate=$frmDt&ToDate=$toDt";
 }

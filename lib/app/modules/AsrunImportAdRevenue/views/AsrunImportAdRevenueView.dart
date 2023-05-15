@@ -1,24 +1,26 @@
 import 'dart:convert';
 
-import 'package:bms_scheduling/widgets/radio_row.dart';
 import 'package:flutter/material.dart';
+
 import 'package:get/get.dart';
 import 'package:pluto_grid/pluto_grid.dart';
+
 import '../../../../widgets/DateTime/DateWithThreeTextField.dart';
 import '../../../../widgets/FormButton.dart';
 import '../../../../widgets/WarningBox.dart';
+import '../../../../widgets/cutom_dropdown.dart';
 import '../../../../widgets/dropdown.dart';
 import '../../../../widgets/gridFromMap.dart';
 import '../../../../widgets/gridFromMap1.dart';
 import '../../../../widgets/input_fields.dart';
+import '../../../../widgets/radio_row.dart';
 import '../../../controller/HomeController.dart';
-import '../../../data/DropDownValue.dart';
 import '../../../providers/ApiFactory.dart';
 import '../../../providers/SizeDefine.dart';
-import '../controllers/TransmissionLogController.dart';
+import '../controllers/AsrunImportController.dart';
 
-class TransmissionLogView extends GetView<TransmissionLogController> {
-  TransmissionLogController controllerX = Get.put(TransmissionLogController());
+class AsrunImportAdRevenueView extends GetView<AsrunImportController> {
+  AsrunImportController controllerX = Get.put(AsrunImportController());
   final GlobalKey rebuildKey = GlobalKey();
 
   @override
@@ -30,7 +32,7 @@ class TransmissionLogView extends GetView<TransmissionLogController> {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            GetBuilder<TransmissionLogController>(
+            GetBuilder<AsrunImportController>(
               init: controllerX,
               id: "updateView",
               builder: (control) {
@@ -78,37 +80,9 @@ class TransmissionLogView extends GetView<TransmissionLogController> {
                             dialogHeight: Get.height * .7,
                           ),
                         ),
-                        SizedBox(
-                          width: Get.width * 0.077,
-                          child: Row(
-                            children: [
-                              SizedBox(width: 5),
-                              Obx(() => Padding(
-                                    padding: const EdgeInsets.only(top: 15.0),
-                                    child: Checkbox(
-                                      value: controllerX.isStandby.value,
-                                      onChanged: (val) {
-                                        controllerX.isStandby.value = val!;
-                                      },
-                                      materialTapTargetSize:
-                                          MaterialTapTargetSize.shrinkWrap,
-                                    ),
-                                  )),
-                              Padding(
-                                padding:
-                                    const EdgeInsets.only(top: 15.0, left: 5),
-                                child: Text(
-                                  "Standby Log",
-                                  style: TextStyle(
-                                      fontSize: SizeDefine.labelSize1),
-                                ),
-                              ),
-                            ],
-                          ),
-                        ),
                         Obx(
                           () => DateWithThreeTextField(
-                            title: "Schedule Date",
+                            title: "Log Date",
                             splitType: "-",
                             widthRation: 0.12,
                             isEnable: controllerX.isEnable.value,
@@ -131,32 +105,16 @@ class TransmissionLogView extends GetView<TransmissionLogController> {
                         ),
                         Padding(
                           padding: const EdgeInsets.only(
-                              top: 14.0, left: 10, right: 10),
+                              top: 14.0, left: 5, right: 5),
                           child: FormButtonWrapper(
-                            btnText: "Retrieve",
+                            btnText: "ProgMismatch",
                             callback: () {},
                             showIcon: false,
                           ),
                         ),
-                        InputFields.formFieldNumberMask(
-                            hintTxt: "Start Time",
-                            controller: controllerX.startTime_,
-                            widthRatio: 0.12,
-                            isTime: true,
-                            paddingLeft: 0),
-
-                        /// duration
-                        InputFields.formFieldNumberMask(
-                            hintTxt: "Offset Time",
-                            controller: controllerX.startTime_,
-                            widthRatio: 0.12,
-                            isTime: true,
-                            paddingLeft: 0),
-                        SizedBox(
-                          width: Get.width * 0.1,
+                        FittedBox(
                           child: Row(
                             children: [
-                              SizedBox(width: 5),
                               Obx(() => Padding(
                                     padding: const EdgeInsets.only(top: 15.0),
                                     child: Checkbox(
@@ -170,9 +128,9 @@ class TransmissionLogView extends GetView<TransmissionLogController> {
                                   )),
                               Padding(
                                 padding:
-                                    const EdgeInsets.only(top: 15.0, left: 5),
+                                    const EdgeInsets.only(top: 15.0, left: 3),
                                 child: Text(
-                                  "Tx Comm.",
+                                  "FPC",
                                   style: TextStyle(
                                       fontSize: SizeDefine.labelSize1),
                                 ),
@@ -180,6 +138,143 @@ class TransmissionLogView extends GetView<TransmissionLogController> {
                             ],
                           ),
                         ),
+                        FittedBox(
+                          child: Row(
+                            children: [
+                              Obx(() => Padding(
+                                    padding: const EdgeInsets.only(top: 15.0),
+                                    child: Checkbox(
+                                      value: controllerX.isStandby.value,
+                                      onChanged: (val) {
+                                        controllerX.isStandby.value = val!;
+                                      },
+                                      materialTapTargetSize:
+                                          MaterialTapTargetSize.shrinkWrap,
+                                    ),
+                                  )),
+                              Padding(
+                                padding:
+                                    const EdgeInsets.only(top: 15.0, left: 3),
+                                child: Text(
+                                  "Mark Slot",
+                                  style: TextStyle(
+                                      fontSize: SizeDefine.labelSize1),
+                                ),
+                              ),
+                            ],
+                          ),
+                        ),
+
+                        FittedBox(
+                          child: Row(
+                            children: [
+                              Obx(() => Padding(
+                                    padding: const EdgeInsets.only(top: 15.0),
+                                    child: Checkbox(
+                                      value: controllerX.isStandby.value,
+                                      onChanged: (val) {
+                                        controllerX.isStandby.value = val!;
+                                      },
+                                      materialTapTargetSize:
+                                          MaterialTapTargetSize.shrinkWrap,
+                                    ),
+                                  )),
+                              Padding(
+                                padding:
+                                    const EdgeInsets.only(top: 15.0, left: 3),
+                                child: Text(
+                                  "Dont update exposure program",
+                                  style: TextStyle(
+                                      fontSize: SizeDefine.labelSize1),
+                                ),
+                              ),
+                            ],
+                          ),
+                        ),
+                        FittedBox(
+                          child: Row(
+                            children: [
+                              Obx(() => Padding(
+                                    padding: const EdgeInsets.only(top: 15.0),
+                                    child: Checkbox(
+                                      value: controllerX.isStandby.value,
+                                      onChanged: (val) {
+                                        controllerX.isStandby.value = val!;
+                                      },
+                                      materialTapTargetSize:
+                                          MaterialTapTargetSize.shrinkWrap,
+                                    ),
+                                  )),
+                              Padding(
+                                padding:
+                                    const EdgeInsets.only(top: 15.0, left: 3),
+                                child: Text(
+                                  "GFK",
+                                  style: TextStyle(
+                                      fontSize: SizeDefine.labelSize1),
+                                ),
+                              ),
+                            ],
+                          ),
+                        ),
+                        FittedBox(
+                          child: Row(
+                            children: [
+                              Obx(() => Padding(
+                                    padding: const EdgeInsets.only(top: 15.0),
+                                    child: Checkbox(
+                                      value: controllerX.isStandby.value,
+                                      onChanged: (val) {
+                                        controllerX.isStandby.value = val!;
+                                      },
+                                      materialTapTargetSize:
+                                          MaterialTapTargetSize.shrinkWrap,
+                                    ),
+                                  )),
+                              Padding(
+                                padding:
+                                    const EdgeInsets.only(top: 15.0, left: 3),
+                                child: Text(
+                                  "DailyFPC",
+                                  style: TextStyle(
+                                      fontSize: SizeDefine.labelSize1),
+                                ),
+                              ),
+                            ],
+                          ),
+                        ),
+                        FittedBox(
+                          child: Row(
+                            children: [
+                              Obx(() => Padding(
+                                    padding: const EdgeInsets.only(top: 15.0),
+                                    child: Checkbox(
+                                      value: controllerX.isStandby.value,
+                                      onChanged: (val) {
+                                        controllerX.isStandby.value = val!;
+                                      },
+                                      materialTapTargetSize:
+                                          MaterialTapTargetSize.shrinkWrap,
+                                    ),
+                                  )),
+                              Padding(
+                                padding:
+                                    const EdgeInsets.only(top: 15.0, left: 3),
+                                child: Text(
+                                  "Amagi",
+                                  style: TextStyle(
+                                      fontSize: SizeDefine.labelSize1),
+                                ),
+                              ),
+                            ],
+                          ),
+                        ),
+                        InputFields.formFieldNumberMask(
+                            hintTxt: "Start Time",
+                            controller: controllerX.startTime_,
+                            widthRatio: 0.12,
+                            isTime: true,
+                            paddingLeft: 0),
                       ],
                     ),
                   ),
@@ -188,7 +283,7 @@ class TransmissionLogView extends GetView<TransmissionLogController> {
             ),
             // Divider(),
 
-            GetBuilder<TransmissionLogController>(
+            GetBuilder<AsrunImportController>(
               id: "transmissionList",
               init: controllerX,
               builder: (controller) {
@@ -243,7 +338,9 @@ class TransmissionLogView extends GetView<TransmissionLogController> {
                             print("On Print moved" +
                                 jsonEncode(
                                     onRowMoved.rows[0].cells.toString()));
-                            int? val=int.tryParse((onRowMoved.rows[0].cells["Episode Dur"]?.value.toString())!)!;
+                            int? val = int.tryParse((onRowMoved
+                                .rows[0].cells["Episode Dur"]?.value
+                                .toString())!)!;
                             // print("After On select>>" + data.toString());
                             for (int i = (onRowMoved.idx) ?? 0; i >= 0; i--) {
                               print("On Print moved" + i.toString());
@@ -257,7 +354,7 @@ class TransmissionLogView extends GetView<TransmissionLogController> {
 
                               controllerX.gridStateManager?.rows[i]
                                       .cells["Episode Dur"] =
-                                  PlutoCell(value: val-(i-onRowMoved.idx));
+                                  PlutoCell(value: val - (i - onRowMoved.idx));
                             }
                             controllerX.gridStateManager?.notifyListeners();
                           },
@@ -289,7 +386,7 @@ class TransmissionLogView extends GetView<TransmissionLogController> {
                       .lastWhere((element) {
                     return element.appFormName == "frmSegmentsDetails";
                   });*/
-                  if (controller.tranmissionButtons != null) {
+                  if (controller.asurunImportButtoons != null) {
                     return SizedBox(
                       height: 40,
                       child: ButtonBar(
@@ -298,7 +395,7 @@ class TransmissionLogView extends GetView<TransmissionLogController> {
                         mainAxisSize: MainAxisSize.min,
                         // pa
                         children: [
-                          for (var btn in controller.tranmissionButtons!)
+                          for (var btn in controller.asurunImportButtoons!)
                             FormButtonWrapper(
                               btnText: btn["name"],
                               showIcon: false,
@@ -321,30 +418,7 @@ class TransmissionLogView extends GetView<TransmissionLogController> {
                             icon: Icon(Icons.arrow_downward),
                             padding: EdgeInsets.symmetric(horizontal: 8.0),
                           ),
-                          FormButtonWrapper(
-                            btnText: "Aa",
-                            showIcon: false,
-                            // isEnabled: btn['isDisabled'],
-                            callback: /*btn["name"] != "Delete" &&
-                                      Utils.btnAccessHandler2(btn['name'],
-                                              controller, formPermissions) ==
-                                          null
-                                  ? null
-                                  :*/
-                                () => formHandler("Aa"),
-                          ),
-                          FormButtonWrapper(
-                            btnText: "CL",
-                            showIcon: false,
-                            isEnabled: false,
-                            callback: /*btn["name"] != "Delete" &&
-                                      Utils.btnAccessHandler2(btn['name'],
-                                              controller, formPermissions) ==
-                                          null
-                                  ? null
-                                  :*/
-                                () => formHandler("CL"),
-                          ),
+
                         ],
                       ),
                     );
@@ -368,7 +442,7 @@ class TransmissionLogView extends GetView<TransmissionLogController> {
         showInsertDialog(Get.context);
         break;
       case "Segments":
-        showSegmentDialog(Get.context);
+        // showSegmentDialog(Get.context);
         break;
       case "Change":
         showChangeDialog(Get.context);
@@ -435,7 +509,7 @@ class TransmissionLogView extends GetView<TransmissionLogController> {
                   SizedBox(
                     height: 15,
                   ),
-                  GetBuilder<TransmissionLogController>(
+                  GetBuilder<AsrunImportController>(
                       id: "commercialsList",
                       init: controllerX,
                       builder: (controller) {
@@ -529,7 +603,7 @@ class TransmissionLogView extends GetView<TransmissionLogController> {
                   SizedBox(
                     height: 15,
                   ),
-                  GetBuilder<TransmissionLogController>(
+                  GetBuilder<AsrunImportController>(
                       id: "commercialsList",
                       init: controllerX,
                       builder: (controller) {
@@ -708,158 +782,7 @@ class TransmissionLogView extends GetView<TransmissionLogController> {
                   SizedBox(
                     height: 15,
                   ),
-                  GetBuilder<TransmissionLogController>(
-                      id: "commercialsList",
-                      init: controllerX,
-                      builder: (controller) {
-                        return SizedBox(
-                          // width: 500,
-                          width: Get.width * 0.8,
-                          height: Get.height * 0.6,
-                          child: (controllerX.transmissionLogList != null &&
-                                  (controllerX
-                                      .transmissionLogList?.isNotEmpty)!)
-                              ? DataGridFromMap(
-                                  hideCode: false,
-                                  formatDate: false,
-                                  colorCallback: (renderC) => Colors.red[200]!,
-                                  mapData: controllerX.transmissionLogList!
-                                      .map((e) => e.toJson())
-                                      .toList())
-                              // _dataTable3()
-                              : const WarningBox(
-                                  text:
-                                      'Enter Location, Channel & Date to get the Break Definitions'),
-                        );
-                      })
-                ],
-              ),
-            ),
-          ),
-        ),
-      ),
-      confirm: FormButtonWrapper(
-        btnText: "Close",
-        showIcon: false,
-        callback: () {
-          Navigator.pop(context);
-        },
-      ),
-      radius: 10,
-    );
-  }
-
-  showSegmentDialog(context) {
-    return Get.defaultDialog(
-      barrierDismissible: false,
-      title: "Segments",
-      titleStyle: const TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
-      titlePadding: const EdgeInsets.only(top: 10),
-      contentPadding: const EdgeInsets.symmetric(horizontal: 10, vertical: 5),
-      content: SingleChildScrollView(
-        child: SizedBox(
-          height: Get.height * 0.7,
-          child: SingleChildScrollView(
-            child: SizedBox(
-              width: Get.width * 0.8,
-              // height: Get.he,
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: <Widget>[
-                  Row(
-                    children: [
-                      GetBuilder<TransmissionLogController>(
-                        id: "selectedProgram",
-                        init: controllerX,
-                        builder: (controller) =>
-                            DropDownField.formDropDownSearchAPI2(
-                          GlobalKey(),
-                          context,
-                          title: "Program",
-                          onchanged: (DropDownValue? value) async {
-                            // selectedProgramId.text = value?.key ?? "";
-                            // selectedProgram.text = value?.value ?? "";
-                            // selectProgram = value;
-                            // await controllerX.getDataAfterProgLoad(controllerX.selectedLocationId.text, controllerX.selectedChannelId.text, value!.key);
-                          },
-                          url: ApiFactory.OPERATIONAL_FPC_PROGRAM_SEARCH,
-                          width: MediaQuery.of(context).size.width * .2,
-                          // selectedValue: selectProgram,
-                          widthofDialog: 350,
-                          dialogHeight: Get.height * .65,
-                        ),
-                      ),
-                      InputFields.numbers(
-                        hintTxt: "Episode No",
-                        onchanged: (val) {
-                          // episodeNo.value = int.parse(val);
-                          // controllerX.getTapeID(selectProgram!.key!, int.parse(val));
-                        },
-                        controller: TextEditingController(
-                            // text: episodeNo.value.toString(),
-                            ),
-                        isNegativeReq: false,
-                        width: 0.12,
-                      ),
-                      SizedBox(
-                        width: 10,
-                      ),
-                      Padding(
-                        padding: EdgeInsets.only(top: 3),
-                        child: InputFields.formFieldNumberMask(
-                            hintTxt: "FPC Time",
-                            controller: controllerX.segmentFpcTime_
-                              ..text = "00:00:00",
-                            widthRatio: 0.12,
-                            isTime: true,
-                            paddingLeft: 0),
-                      ),
-                      SizedBox(
-                        width: 10,
-                      ),
-                      Obx(
-                        () => DropDownField.formDropDown1WidthMap(
-                          controllerX.locations.value,
-                          (value) {
-                            controllerX.selectLocation = value;
-                            // controllerX.selectedLocationId.text = value.key!;
-                            // controllerX.selectedLocationName.text = value.value!;
-                            // controller.getChannelsBasedOnLocation(value.key!);
-                          },
-                          "Tape",
-                          0.12,
-                          isEnable: controllerX.isEnable.value,
-                          selected: controllerX.selectLocation,
-                          autoFocus: true,
-                          dialogWidth: 330,
-                          dialogHeight: Get.height * .7,
-                        ),
-                      ),
-                      SizedBox(
-                        width: 10,
-                      ),
-                      Padding(
-                        padding: const EdgeInsets.only(top: 15.0, left: 10),
-                        child: FormButtonWrapper(
-                          btnText: "Search",
-                          showIcon: false,
-                          callback: () {},
-                        ),
-                      ),
-                      Padding(
-                        padding: const EdgeInsets.only(top: 15.0, left: 10),
-                        child: FormButtonWrapper(
-                          btnText: "Add",
-                          showIcon: false,
-                          callback: () {},
-                        ),
-                      ),
-                    ],
-                  ),
-                  SizedBox(
-                    height: 15,
-                  ),
-                  GetBuilder<TransmissionLogController>(
+                  GetBuilder<AsrunImportController>(
                       id: "commercialsList",
                       init: controllerX,
                       builder: (controller) {
@@ -1053,7 +976,7 @@ class TransmissionLogView extends GetView<TransmissionLogController> {
                   Row(
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
-                      GetBuilder<TransmissionLogController>(
+                      GetBuilder<AsrunImportController>(
                           id: "commercialsList",
                           init: controllerX,
                           builder: (controller) {
@@ -1078,7 +1001,7 @@ class TransmissionLogView extends GetView<TransmissionLogController> {
                                           'Enter Location, Channel & Date to get the Break Definitions'),
                             );
                           }),
-                      GetBuilder<TransmissionLogController>(
+                      GetBuilder<AsrunImportController>(
                           id: "commercialsList",
                           init: controllerX,
                           builder: (controller) {
@@ -1167,7 +1090,7 @@ class TransmissionLogView extends GetView<TransmissionLogController> {
                   SizedBox(
                     height: 15,
                   ),
-                  GetBuilder<TransmissionLogController>(
+                  GetBuilder<AsrunImportController>(
                       id: "commercialsList",
                       init: controllerX,
                       builder: (controller) {

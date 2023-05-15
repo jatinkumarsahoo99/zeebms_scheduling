@@ -1,13 +1,13 @@
-import 'package:flutter/cupertino.dart';
+import 'package:flutter/material.dart';
+import 'package:get/get.dart';
 import 'package:get/get.dart';
 import 'package:pluto_grid/pluto_grid.dart';
 import '../../../controller/ConnectorControl.dart';
 import '../../../controller/MainController.dart';
 import '../../../data/DropDownValue.dart';
 import '../../../providers/ApiFactory.dart';
-import '../TransmissionLogModel.dart';
-
-class TransmissionLogController extends GetxController {
+import '../AsrunImportModel.dart';
+class AsrunImportController extends GetxController {
   var locations = RxList<DropDownValue>();
   var channels = RxList<DropDownValue>([]);
   RxBool isEnable = RxBool(true);
@@ -29,7 +29,7 @@ class TransmissionLogController extends GetxController {
   TextEditingController insertDuration_ = TextEditingController();
   TextEditingController segmentFpcTime_ = TextEditingController();
 
-  List<TransmissionLogModel>? transmissionLogList = List.generate(100, (index) => new TransmissionLogModel(episodeDuration: (index+1), status: "data1"));
+  List<AsrunImportModel>? transmissionLogList = List.generate(100, (index) => new AsrunImportModel(episodeDuration: (index+1), status: "data1"));
   PlutoGridMode selectedPlutoGridMode = PlutoGridMode.selectWithOneTap;
   int? selectedIndex;
   RxnString verifyType = RxnString();

@@ -1,7 +1,9 @@
+import 'package:bms_scheduling/widgets/LoadingDialog.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:get/get.dart';
 import 'package:pluto_grid/pluto_grid.dart';
 
+import '../../../../widgets/Snack.dart';
 import '../../../controller/ConnectorControl.dart';
 import '../../../controller/MainController.dart';
 import '../../../data/DropDownValue.dart';
@@ -9,69 +11,35 @@ import '../../../providers/ApiFactory.dart';
 import '../SpotPriorityModel.dart';
 
 class SpotPriorityController extends GetxController {
-
   var locations = RxList<DropDownValue>();
   var channels = RxList<DropDownValue>([]);
-  var additions = RxList<DropDownValue>([
-    new DropDownValue(key: "Additions",value: "All"),
-    new DropDownValue(key: "Break Bumper",value: "New"),
-    new DropDownValue(key: "Lagging Commercial",value: "New"),
-    new DropDownValue(key: "Last Spot",value: "New"),
-    new DropDownValue(key: "Leading Comercial",value: "New"),
-    new DropDownValue(key: "One",value: "New"),
-    new DropDownValue(key: "One/Two",value: "New"),
-  ]);
+  var priorityList = RxList<DropDownValue>([]);
   RxBool isEnable = RxBool(true);
 
   //input controllers
   DropDownValue? selectLocation;
   DropDownValue? selectChannel;
-  DropDownValue? selectAdditions;
+  DropDownValue? selectPriority;
   PlutoGridStateManager? gridStateManager;
 
-  TextEditingController selectedDate = TextEditingController();
-  TextEditingController remarks = TextEditingController();
-  var isStandby = RxBool(false);
-  var isIgnoreSpot = RxBool(false);
-  RxnString verifyType = RxnString();
+  TextEditingController frmDate = TextEditingController();
+  TextEditingController toDate = TextEditingController();
 
-  List<SpotPriorityModel>? logAdditionModel = [
-    new SpotPriorityModel(rowNo: 1, status: "data"),
-    new SpotPriorityModel(rowNo: 1, status: "data"),
-    new SpotPriorityModel(rowNo: 1, status: "data"),
-    new SpotPriorityModel(rowNo: 1, status: "data"),
-    new SpotPriorityModel(rowNo: 1, status: "data"),
-    new SpotPriorityModel(rowNo: 1, status: "data"),
-    new SpotPriorityModel(rowNo: 1, status: "data"),
-    new SpotPriorityModel(rowNo: 1, status: "data"),
-    new SpotPriorityModel(rowNo: 1, status: "data"),
-    new SpotPriorityModel(rowNo: 1, status: "data"),
-    new SpotPriorityModel(rowNo: 1, status: "data"),
-    new SpotPriorityModel(rowNo: 1, status: "data"),
-    new SpotPriorityModel(rowNo: 1, status: "data"),
-    new SpotPriorityModel(rowNo: 1, status: "data"),
-    new SpotPriorityModel(rowNo: 1, status: "data"),
-    new SpotPriorityModel(rowNo: 1, status: "data"),
-    new SpotPriorityModel(rowNo: 1, status: "data"),
-    new SpotPriorityModel(rowNo: 1, status: "data"),
-    new SpotPriorityModel(rowNo: 1, status: "data"),
-    new SpotPriorityModel(rowNo: 1, status: "data"),
-  ];
+  SpotPriorityModel? spotPriorityModel;
   PlutoGridMode selectedPlutoGridMode = PlutoGridMode.normal;
-
-
 
   @override
   void onInit() {
+    getLocations();
     super.onInit();
   }
 
   getLocations() {
     Get.find<ConnectorControl>().GETMETHODCALL(
-        api: ApiFactory.MOVIE_PLANNER_GET_LOCATIONS,
+        api: ApiFactory.SPOT_PRIORITY_LOCATION(),
         fun: (Map map) {
           locations.clear();
-          map["location"].forEach((e) {
+          map["setSpotPriority"]["location"].forEach((e) {
             locations.add(DropDownValue.fromJson1(e));
           });
         });
@@ -79,16 +47,34 @@ class SpotPriorityController extends GetxController {
 
   getChannels(String key) {
     Get.find<ConnectorControl>().GETMETHODCALL(
-        api: ApiFactory.MOVIE_PLANNER_GET_DATA_ON_LOCATION_SELECT(
-          userId: Get.find<MainController>().user?.logincode ?? "",
-          location: key,
-        ),
+        api: ApiFactory.SPOT_PRIORITY_CHANNEL() + key,
         fun: (Map map) {
           channels.clear();
-          map["locationSelect"].forEach((e) {
+          map["lstchannels"].forEach((e) {
             channels.add(
                 DropDownValue.fromJsonDynamic(e, "channelCode", "channelName"));
           });
         });
+  }
+
+  getShowDetails() {
+    if (selectLocation == null) {
+      Snack.callError("Please select location");
+    } else if (selectChannel == null) {
+      Snack.callError("Please select channel");
+    } else {
+      LoadingDialog.call();
+      Get.find<ConnectorControl>().GETMETHODCALL(
+          api: ApiFactory.SPOT_PRIORITY_SHOW_DETAILS(selectLocation?.key ?? "",
+              selectChannel?.key ?? "", frmDate.text, toDate.text),
+          fun: (Map<String, dynamic> map) {
+            Get.back();
+            if (map.containsKey("ShowDetails")) {
+              spotPriorityModel =
+                  SpotPriorityModel.fromJson(map["ShowDetails"]);
+              update(["spotPriorityList"]);
+            }
+          });
+    }
   }
 }

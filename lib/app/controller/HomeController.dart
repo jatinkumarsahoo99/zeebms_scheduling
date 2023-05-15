@@ -17,6 +17,7 @@ class HomeController extends GetxController {
   var selectChild1 = Rxn<SubChild>();
   List? buttons;
   List? tranmissionButtons;
+  List? asurunImportButtoons;
 
   bool isMoviePlannerPopupShown = false;
 
@@ -36,7 +37,8 @@ class HomeController extends GetxController {
   getTransmissionLog() async {
     String value =
         await rootBundle.loadString('assets/json/transmission_buttons.json');
-    tranmissionButtons = json.decode(value);
+    tranmissionButtons = json.decode(value)["transmissionLog"];
+    asurunImportButtoons = json.decode(value)["assrunImport"];
     update(["transButtons"]);
   }
 

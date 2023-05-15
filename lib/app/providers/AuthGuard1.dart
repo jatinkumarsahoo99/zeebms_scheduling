@@ -11,6 +11,7 @@ import 'package:get/get.dart';
 import '../../widgets/LoadingScreen.dart';
 import '../../widgets/NoDataFoundPage.dart';
 import '../modules/LogAdditions/views/LogAdditionsView.dart';
+import '../modules/SpotPriority/views/SpotPriorityView.dart';
 import '../modules/TransmissionLog/views/TransmissionLogView.dart';
 import '../modules/home/views/home_view.dart';
 import '../routes/app_pages.dart';
@@ -63,6 +64,9 @@ class AuthGuard1 extends StatelessWidget {
               break;
             case Routes.MAM_WORK_ORDERS:
               currentWidget = MamWorkOrdersView();
+              break;
+            case Routes.SPOT_PRIORITY:
+              currentWidget = SpotPriorityView();
               break;
             default:
               currentWidget = const NoDataFoundPage();
