@@ -16,6 +16,11 @@ abstract class Routes {
   static const SPOT_PRIORITY = _Paths.SPOT_PRIORITY;
   static const RO_RESCHEDULE = _Paths.RO_RESCHEDULE;
   static const ROS_DISTRIBUTION = _Paths.ROS_DISTRIBUTION;
+  static const FINAL_AUDIT_REPORT_BEFORE_LOG =
+      _Paths.FINAL_AUDIT_REPORT_BEFORE_LOG;
+  static const FINAL_AUDIT_REPORT_AFTER_TELECAST =
+      _Paths.FINAL_AUDIT_REPORT_AFTER_TELECAST;
+  static const AUDIT_STATUS = _Paths.AUDIT_STATUS;
 }
 
 abstract class RoutesList {
@@ -50,4 +55,8 @@ abstract class _Paths {
   static const SPOT_PRIORITY = '/frmSpotPriority';
   static const RO_RESCHEDULE = '/frmRoReschedule';
   static const ROS_DISTRIBUTION = '/FrmRosDistribution';
+  static const FINAL_AUDIT_REPORT_BEFORE_LOG = '/final-audit-report-before-log';
+  static const FINAL_AUDIT_REPORT_AFTER_TELECAST =
+      '/final-audit-report-after-telecast';
+  static const AUDIT_STATUS = '/audit-status';
 }
