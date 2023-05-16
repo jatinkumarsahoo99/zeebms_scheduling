@@ -1,11 +1,12 @@
+import 'dart:collection';
+
 import 'package:bms_scheduling/widgets/LoadingDialog.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:get/get.dart';
 import 'package:pluto_grid/pluto_grid.dart';
-
 import '../../../../widgets/Snack.dart';
 import '../../../controller/ConnectorControl.dart';
-import '../../../controller/MainController.dart';
+import '../../../controller/HomeController.dart';
 import '../../../data/DropDownValue.dart';
 import '../../../providers/ApiFactory.dart';
 import '../SpotPriorityModel.dart';
@@ -14,6 +15,10 @@ class SpotPriorityController extends GetxController {
   var locations = RxList<DropDownValue>();
   var channels = RxList<DropDownValue>([]);
   var priorityList = RxList<DropDownValue>([]);
+
+  Set<String> uniqueList = {};
+
+  // Map list = HashMap();
   RxBool isEnable = RxBool(true);
 
   //input controllers
@@ -69,10 +74,59 @@ class SpotPriorityController extends GetxController {
               selectChannel?.key ?? "", frmDate.text, toDate.text),
           fun: (Map<String, dynamic> map) {
             Get.back();
-            if (map.containsKey("ShowDetails")) {
+            if (map.containsKey("showDetails")) {
+              priorityList.clear();
+              uniqueList.clear();
               spotPriorityModel =
-                  SpotPriorityModel.fromJson(map["ShowDetails"]);
+                  SpotPriorityModel.fromJson(map["showDetails"]);
+              uniqueList.toList().forEach((element) {
+                if (element != null) {
+                  priorityList.value
+                      .add(DropDownValue(key: element, value: element));
+                }
+              });
               update(["spotPriorityList"]);
+            } else {
+              Snack.callError("No Data Found");
+            }
+          });
+    }
+  }
+
+  saveSpotPriority() {
+    if (selectLocation == null) {
+      Snack.callError("Please select location");
+    } else if (selectChannel == null) {
+      Snack.callError("Please select channel");
+    } else if (spotPriorityModel == null) {
+      Snack.callError("There is no data to save");
+    } else {
+      var filterList=spotPriorityModel?.lstbookingdetail?.where((e) {
+        return  (e.priorityCode! > 0);
+      });
+      var mapData = {
+        "locationcode": selectLocation?.key ?? "",
+        "channelcode": selectChannel?.key ?? "",
+        "fromDate": frmDate.text,
+        "toDate": toDate.text,
+        "spotprioritys": filterList?.map((e) {
+            return e.toJson1();
+        }).toList()
+      };
+      LoadingDialog.call();
+      Get.find<ConnectorControl>().POSTMETHOD(
+          api: ApiFactory.SPOT_PRIORITY_SAVE(),
+          json: mapData,
+          fun: (Map<String, dynamic> map) {
+            Get.back();
+            if (map.containsKey("postSave") &&
+                map["postSave"] == "Records are updated successfully.") {
+              LoadingDialog.callDataSaved(callback: () {
+                Get.delete<SpotPriorityController>();
+                Get.find<HomeController>().clearPage1();
+              });
+            } else {
+              Snack.callError(map.toString());
             }
           });
     }

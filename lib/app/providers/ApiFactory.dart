@@ -313,6 +313,9 @@ class ApiFactory {
   static String SPOT_PRIORITY_CHANNEL() =>
       "$BASE_URL/api/SetSpotPriority/GetChannelList?LocationCode=";
 
+  static String SPOT_PRIORITY_SAVE() =>
+      "$BASE_URL/api/SetSpotPriority/PostSave";
+
   static String SPOT_PRIORITY_SHOW_DETAILS(String loc,String chnlCode,String frmDt,String toDt) =>
       "$BASE_URL/api/SetSpotPriority/GetShowDetails?LocationCode=$loc&Channelcode=$chnlCode&FromDate=$frmDt&ToDate=$toDt";
 }

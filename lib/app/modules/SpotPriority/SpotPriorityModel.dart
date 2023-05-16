@@ -1,6 +1,9 @@
+import 'package:bms_scheduling/app/modules/SpotPriority/controllers/SpotPriorityController.dart';
+import 'package:get/get.dart';
+
 class SpotPriorityModel {
   List<Lstbookingdetail>? lstbookingdetail;
-  int? totalCount;
+  num? totalCount;
   bool? areRecordExistsInSpotPriority;
 
   SpotPriorityModel(
@@ -12,6 +15,9 @@ class SpotPriorityModel {
     if (json['lstbookingdetail'] != null) {
       lstbookingdetail = <Lstbookingdetail>[];
       json['lstbookingdetail'].forEach((v) {
+        if (v["priorityname"] != null) {
+          Get.find<SpotPriorityController>().uniqueList.add(v["priorityname"]);
+        }
         lstbookingdetail!.add(new Lstbookingdetail.fromJson(v));
       });
     }
@@ -33,7 +39,7 @@ class SpotPriorityModel {
 
 class Lstbookingdetail {
   String? bookingnumber;
-  int? bookingdetailcode;
+  num? bookingdetailcode;
   String? priorityname;
   String? scheduleDate;
   String? accountname;
@@ -44,9 +50,9 @@ class Lstbookingdetail {
   String? programname;
   String? exporttapecode;
   String? exporttapecaption;
-  int? commercialduration;
-  int? spotamount;
-  int? priorityCode;
+  num? commercialduration;
+  num? spotamount;
+  num? priorityCode;
 
   Lstbookingdetail(
       {this.bookingnumber,
@@ -100,6 +106,16 @@ class Lstbookingdetail {
     data['commercialduration'] = this.commercialduration;
     data['spotamount'] = this.spotamount;
     data['priorityCode'] = this.priorityCode;
+    return data;
+  }
+
+  Map<String, dynamic> toJson1() {
+    final Map<String, dynamic> data = new Map<String, dynamic>();
+    data['bookingNumber'] = this.bookingnumber;
+    data['bookingDetailCode'] = this.bookingdetailcode;
+    // data['priorityname'] = this.priorityname;
+    data['scheduleDate'] = this.scheduleDate;
+    data['priorityCode'] = this.priorityCode.toString();
     return data;
   }
 }

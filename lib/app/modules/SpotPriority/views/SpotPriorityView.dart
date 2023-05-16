@@ -9,7 +9,8 @@ import '../../../controller/HomeController.dart';
 import '../controllers/SpotPriorityController.dart';
 
 class SpotPriorityView extends GetView<SpotPriorityController> {
-  SpotPriorityController controllerX = Get.put<SpotPriorityController>(SpotPriorityController());
+  SpotPriorityController controllerX =
+      Get.put<SpotPriorityController>(SpotPriorityController());
 
   @override
   Widget build(BuildContext context) {
@@ -133,13 +134,15 @@ class SpotPriorityView extends GetView<SpotPriorityController> {
 
             GetBuilder<SpotPriorityController>(
               id: "spotPriorityList",
-              init: controllerX,
+              // init: controllerX,
               builder: (controller) {
+                print("Print called test");
                 return Expanded(
                   // width: Get.width,
                   // height: Get.height * .33,
                   child: (controllerX.spotPriorityModel != null &&
-                          (controllerX.spotPriorityModel?.lstbookingdetail?.isNotEmpty)!)
+                          (controllerX.spotPriorityModel?.lstbookingdetail
+                              ?.isNotEmpty)!)
                       ? DataGridFromMap(
                           onFocusChange: (value) {
                             controllerX.gridStateManager!
@@ -151,7 +154,8 @@ class SpotPriorityView extends GetView<SpotPriorityController> {
                             controllerX.gridStateManager =
                                 loadevent.stateManager;
                           },
-                          hideKeys: ["color", "modifed", ""],
+                          formatDate: false,
+                          // hideKeys: ["color", "modifed", ""],
                           showSrNo: true,
                           onSelected: (event) {},
                           mode: controllerX.selectedPlutoGridMode,
@@ -219,5 +223,16 @@ class SpotPriorityView extends GetView<SpotPriorityController> {
     );
   }
 
-  formHandler(btn) {}
+  formHandler(btn) {
+    switch(btn){
+      case "Save":
+        controllerX.saveSpotPriority();
+        break;
+      case "Clear":
+        Get.delete<SpotPriorityController>();
+        Get.find<HomeController>().clearPage1();
+        // controllerX.clear();
+        break;
+    }
+  }
 }
