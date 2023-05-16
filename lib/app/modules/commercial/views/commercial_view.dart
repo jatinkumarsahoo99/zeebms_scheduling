@@ -508,12 +508,14 @@ class CommercialView extends GetView<CommercialController> {
                   width: double.maxFinite,
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
+                    mainAxisSize: MainAxisSize.max,
                     children: [
                       GetBuilder<CommercialController>(
                         id: "initialData",
                         builder: (control) {
                           return Padding(
-                            padding: const EdgeInsets.only(left: 18.0, top: 10),
+                            padding:
+                                const EdgeInsets.only(left: 18.0, top: 10),
                             child: Row(
                               children: [
                                 Obx(
@@ -608,69 +610,54 @@ class CommercialView extends GetView<CommercialController> {
                           );
                         },
                       ),
-                      Row(
-                        //mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          /// input forms
-                          Padding(
-                            padding: const EdgeInsets.fromLTRB(15, 15, 7, 0),
-                            child: SizedBox(
-                              width: w * .30,
-                              height: (h * .8) - (kToolbarHeight / 2),
-                              child: programTable(context),
+                      Expanded(
+                        child: Row(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            /// input forms
+                            Expanded(
+                              child: Padding(
+                                padding:
+                                    const EdgeInsets.fromLTRB(15, 15, 7, 0),
+                                child: programTable(context),
+                              ),
                             ),
-                          ),
 
-                          /// output forms
-                          Padding(
-                            padding: const EdgeInsets.fromLTRB(15, 15, 7, 0),
-                            child: GetBuilder<CommercialController>(
-                                init: CommercialController(),
-                                id: "reports",
-                                builder: (controller) {
-                                  if (controller.conflictReport.isEmpty ||
-                                      controller.beams.isEmpty) {
-                                    return Column(
-                                      mainAxisAlignment: MainAxisAlignment.start,
-                                      children: [
-                                        Container(
-                                          width: w * 0.65,
-                                          decoration: BoxDecoration(
-                                            border: Border.all(
-                                              color: Colors.grey.shade300,
-                                              width: 0.5,
-                                            ),
-                                              borderRadius: const BorderRadius.all(Radius.circular(10))
-                                            //color: Colors.deepPurpleAccent
-                                          ),
-                                          child: Padding(
-                                            padding: const EdgeInsets.all(2.0),
-                                            child: tabView(context),
-                                          ),
-                                        ),
-                                        //const SizedBox(height: 10),
-                                      ],
-                                    );
-                                  } else {
-                                    return Container();
-                                  }
-                                }),
-                          ),
-
-                        ],
+                            /// output forms
+                            Expanded(
+                              flex:2,
+                              child: Padding(
+                                padding:
+                                    const EdgeInsets.fromLTRB(15, 15, 7, 0),
+                                child: GetBuilder<CommercialController>(
+                                    init: CommercialController(),
+                                    id: "reports",
+                                    builder: (controller) {
+                                      if (controller
+                                              .conflictReport.isEmpty ||
+                                          controller.beams.isEmpty) {
+                                        return Padding(
+                                          padding:
+                                              const EdgeInsets.all(2.0),
+                                          child: tabView(context),
+                                        );
+                                      } else {
+                                        return Container();
+                                      }
+                                    }),
+                              ),
+                            ),
+                          ],
+                        ),
                       ),
-                      const Spacer(),
-                      GetBuilder<HomeController>(
-                          id: "buttons",
-                          init: Get.find<HomeController>(),
-                          builder: (btcontroller) {
-                            if (btcontroller.buttons != null) {
-                              return Container(
-                                decoration: const BoxDecoration(
-                                  color: Colors.white,
-                                ),
-                                child: ButtonBar(
+                      Padding(
+                        padding: EdgeInsets.fromLTRB(5, 10, 5, 10),
+                        child: GetBuilder<HomeController>(
+                            id: "buttons",
+                            init: Get.find<HomeController>(),
+                            builder: (btcontroller) {
+                              if (btcontroller.buttons != null) {
+                                return ButtonBar(
                                   alignment: MainAxisAlignment.start,
                                   mainAxisSize: MainAxisSize.min,
                                   children: [
@@ -678,16 +665,17 @@ class CommercialView extends GetView<CommercialController> {
                                       //if (Utils.btnAccessHandler(btn['name'], controller.formPermissions!) != null)
                                       FormButtonWrapper(
                                         btnText: btn["name"],
-                                        callback: () => controller.formHandler(
+                                        callback: () =>
+                                            controller.formHandler(
                                           btn['name'],
                                         ),
                                       )
                                   ],
-                                ),
-                              );
-                            }
-                            return Container();
-                          }),
+                                );
+                              }
+                              return Container();
+                            }),
+                      ),
                     ],
                   ),
                 ),
@@ -700,53 +688,107 @@ class CommercialView extends GetView<CommercialController> {
   Widget tabView(BuildContext context) {
     return Obx(() => Column(
           children: [
-            Row(
-              mainAxisAlignment: MainAxisAlignment.start,
-              children: [
-                CupertinoSlidingSegmentedControl(
-                  groupValue: controllerX.selectedIndex.value,
-
-                  //backgroundColor: Colors.blue.shade200,
-                  children: <int, Widget>{
-                    0: Text(
-                      'Schedulling',
-                      textAlign: TextAlign.center,
-                      style: TextStyle(
-                        fontSize: SizeDefine.fontSizeTab,
+            Padding(
+              padding: const EdgeInsets.fromLTRB(0,0,10,10),
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.start,
+                crossAxisAlignment: CrossAxisAlignment.center,
+                children: [
+                  CupertinoSlidingSegmentedControl(
+                    groupValue: controllerX.selectedIndex.value,
+                    //backgroundColor: Colors.blue.shade200,
+                    children: <int, Widget>{
+                      0: Text(
+                        'Schedulling',
+                        textAlign: TextAlign.center,
+                        style: TextStyle(
+                          fontSize: SizeDefine.fontSizeTab,
+                        ),
                       ),
-                    ),
-                    1: Text(
-                      'FPC Mismatch',
-                      textAlign: TextAlign.center,
-                      style: TextStyle(
-                        fontSize: SizeDefine.fontSizeTab,
+                      1: Text(
+                        'FPC Mismatch',
+                        textAlign: TextAlign.center,
+                        style: TextStyle(
+                          fontSize: SizeDefine.fontSizeTab,
+                        ),
                       ),
-                    ),
-                    2: Text(
-                      'Marked as Error ',
-                      textAlign: TextAlign.center,
-                      style: TextStyle(
-                        fontSize: SizeDefine.fontSizeTab,
+                      2: Text(
+                        'Marked as Error ',
+                        textAlign: TextAlign.center,
+                        style: TextStyle(
+                          fontSize: SizeDefine.fontSizeTab,
+                        ),
                       ),
+                    },
+                    onValueChanged: (int? value) {
+                      print("Index1 is>>" + value.toString());
+                      controllerX.selectedIndex.value = value!;
+                    },
+                  ),
+                  const Spacer(),
+                  if (controllerX.selectedIndex.value == 0)
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.end,
+                      crossAxisAlignment: CrossAxisAlignment.center,
+                      children: [
+                        Text('Commercial Spots : 0'),
+                        SizedBox(
+                          width: 20,
+                        ),
+                        Text('Commercial Duration : 00:00:00:00'),
+                      ],
+                    )
+                  else if (controllerX.selectedIndex.value == 1)
+                    Row(
+                      crossAxisAlignment: CrossAxisAlignment.center,
+                      //mainAxisAlignment: MainAxisAlignment.end,
+                      children: [
+                        FormButton(
+                          btnText: "Change FPC",
+                          callback: () {},
+                        ),
+                        const SizedBox(
+                          width: 20,
+                        ),
+                        FormButton(
+                          btnText: "Mis-Match",
+                          callback: () {},
+                        ),
+                        const SizedBox(
+                          width: 20,
+                        ),
+                        FormButton(
+                          btnText: "Mark-as-Error",
+                          callback: () {},
+                        ),
+                      ],
+                    )
+                  else if (controllerX.selectedIndex.value == 2)
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.end,
+                      crossAxisAlignment: CrossAxisAlignment.center,
+                      children: [
+                        FormButton(
+                          btnText: "Mark-as-Error",
+                          callback: () {},
+                        ),
+                      ],
                     ),
-                  },
-                  onValueChanged: (int? value) {
-                    print("Index1 is>>" + value.toString());
-                    controllerX.selectedIndex.value = value!;
-                  },
-                ),
-              ],
+                ],
+              ),
             ),
-            Column(
-              children: [
-                if (controllerX.selectedIndex.value == 0)
-                  schedulingView(context)
-                else if (controllerX.selectedIndex.value == 1)
-                  fpcMismatchView(context)
-                else if (controllerX.selectedIndex.value == 2)
-                  markedAsErrorView(context)
-              ],
-            )
+            Expanded(
+              child: Column(
+                children: [
+                  if (controllerX.selectedIndex.value == 0)
+                    Expanded(child: schedulingView(context))
+                  else if (controllerX.selectedIndex.value == 1)
+                    Expanded(child: fpcMismatchView(context))
+                  else if (controllerX.selectedIndex.value == 2)
+                    Expanded(child: markedAsErrorView(context))
+                ],
+              ),
+            ),
           ],
         ));
   }
@@ -759,20 +801,17 @@ class CommercialView extends GetView<CommercialController> {
           if (controllerX.programList != null &&
               (controllerX.programList?.isNotEmpty)!) {
             // final key = GlobalKey();
-            return Expanded(
-              // height: 400,
-              child: DataGridFromMap(
-                mapData: (controllerX.programList
-                    ?.map((e) => e.toJson1())
-                    .toList())!,
-                widthRatio: (Get.width * 0.2) / 2 + 7,
-                // mode: PlutoGridMode.select,
-                onSelected: (plutoGrid) {
-                  controllerX.selectedProgram =
-                      controllerX.programList![plutoGrid.rowIdx!];
-                  print(jsonEncode(controllerX.selectedProgram?.toJson()));
-                },
-              ),
+            return DataGridFromMap(
+              mapData: (controllerX.programList
+                  ?.map((e) => e.toJson1())
+                  .toList())!,
+              //widthRatio: (Get.width * 0.1),
+              // mode: PlutoGridMode.select,
+              onSelected: (plutoGrid) {
+                controllerX.selectedProgram =
+                    controllerX.programList![plutoGrid.rowIdx!];
+                print(jsonEncode(controllerX.selectedProgram?.toJson()));
+              },
             );
           } else {
             return Expanded(
@@ -786,8 +825,8 @@ class CommercialView extends GetView<CommercialController> {
                   ),
                 ),
                 child: Container(
-                  height: Get.height - (4 * kToolbarHeight),
-                ),
+                    //height: Get.height - (4 * kToolbarHeight),
+                    ),
               ),
             );
           }
@@ -797,77 +836,117 @@ class CommercialView extends GetView<CommercialController> {
   Widget schedulingView(BuildContext context) {
     return Column(
       children: [
-        SizedBox(
-          height: (Get.height * .65) - kToolbarHeight / 2,
-          width: MediaQuery.of(context).size.width * 0.65,
-          child: GetBuilder<CommercialController>(
-              id: "schedulingView",
-              // init: CreateBreakPatternController(),
-              builder: (controller) {
-                if (controllerX.commercialList != null &&
-                    (controllerX.commercialList?.isNotEmpty)!) {
-                  // final key = GlobalKey();
-                  return Expanded(
-                    // height: 400,
-                    child: DataGridFromMap(
-                      mapData: (controllerX.commercialList
-                          ?.map((e) => e.toJson1())
-                          .toList())!,
-                      widthRatio: (Get.width * 0.2) / 2 + 7,
-                      onload: (loadevent) {
-                        loadevent.stateManager.gridFocusNode.addListener(() {
-                          if (loadevent.stateManager.gridFocusNode.hasFocus) {
-                            loadevent.stateManager
-                                .setGridMode(PlutoGridMode.select);
-                          } else {
-                            loadevent.stateManager
-                                .setGridMode(PlutoGridMode.normal);
-                          }
-                        });
-                      },
-                      // mode: PlutoGridMode.select,
-                      onSelected: (plutoGrid) {
-                        controllerX.selectedCommercial =
-                            controllerX.commercialList![plutoGrid.rowIdx!];
-                        print(">>>>>>Commercial Data>>>>>>" +
-                            jsonEncode(
-                                controllerX.selectedCommercial?.toJson()));
-                      },
-                    ),
-                  );
-                } else {
-                  return Expanded(
-                    child: Card(
-                      clipBehavior: Clip.hardEdge,
-                      shape: RoundedRectangleBorder(
-                        borderRadius:
-                            BorderRadius.circular(0), // if you need this
-                        side: BorderSide(
-                          color: Colors.grey.shade300,
-                          width: 1,
-                        ),
-                      ),
-                      child: Container(
-                        height: Get.height - (4 * kToolbarHeight),
+        GetBuilder<CommercialController>(
+            id: "schedulingView",
+            // init: CreateBreakPatternController(),
+            builder: (controller) {
+              if (controllerX.commercialList != null &&
+                  (controllerX.commercialList?.isNotEmpty)!) {
+                // final key = GlobalKey();
+                return Expanded(
+                  // height: 400,
+                  child: DataGridFromMap(
+                    mapData: (controllerX.commercialList
+                        ?.map((e) => e.toJson1())
+                        .toList())!,
+                    //widthRatio: (Get.width * 0.2) / 2 + 7,
+                    onload: (loadevent) {
+                      loadevent.stateManager.gridFocusNode.addListener(() {
+                        if (loadevent.stateManager.gridFocusNode.hasFocus) {
+                          loadevent.stateManager
+                              .setGridMode(PlutoGridMode.select);
+                        } else {
+                          loadevent.stateManager
+                              .setGridMode(PlutoGridMode.normal);
+                        }
+                      });
+                    },
+                    // mode: PlutoGridMode.select,
+                    onSelected: (plutoGrid) {
+                      controllerX.selectedCommercial =
+                          controllerX.commercialList![plutoGrid.rowIdx!];
+                      print(">>>>>>Commercial Data>>>>>>" +
+                          jsonEncode(controllerX.selectedCommercial?.toJson()));
+                    },
+                  ),
+                );
+              } else {
+                return Expanded(
+                  child: Card(
+                    clipBehavior: Clip.hardEdge,
+                    shape: RoundedRectangleBorder(
+                      borderRadius:
+                          BorderRadius.circular(0), // if you need this
+                      side: BorderSide(
+                        color: Colors.grey.shade300,
+                        width: 1,
                       ),
                     ),
-                  );
-                }
-              }),
-        ),
-        SizedBox(
-          height: (Get.height * .1),
-          child: Row(
-            crossAxisAlignment: CrossAxisAlignment.center,
-            children: [
-              Text('Commercial Spots : 0'),
-              SizedBox(
-                width: 20,
-              ),
-              Text('Commercial Duration : 00:00:00:00'),
-            ],
-          ),
-        ),
+                    child: Container(
+                      height: Get.height - (4 * kToolbarHeight),
+                    ),
+                  ),
+                );
+              }
+            }),
+        // SizedBox(
+        //   //height: (Get.height * .65) - kToolbarHeight / 2,
+        //   //width: MediaQuery.of(context).size.width * 0.65,
+        //   child: GetBuilder<CommercialController>(
+        //       id: "schedulingView",
+        //       // init: CreateBreakPatternController(),
+        //       builder: (controller) {
+        //         if (controllerX.commercialList != null &&
+        //             (controllerX.commercialList?.isNotEmpty)!) {
+        //           // final key = GlobalKey();
+        //           return Expanded(
+        //             // height: 400,
+        //             child: DataGridFromMap(
+        //               mapData: (controllerX.commercialList
+        //                   ?.map((e) => e.toJson1())
+        //                   .toList())!,
+        //               widthRatio: (Get.width * 0.2) / 2 + 7,
+        //               onload: (loadevent) {
+        //                 loadevent.stateManager.gridFocusNode.addListener(() {
+        //                   if (loadevent.stateManager.gridFocusNode.hasFocus) {
+        //                     loadevent.stateManager
+        //                         .setGridMode(PlutoGridMode.select);
+        //                   } else {
+        //                     loadevent.stateManager
+        //                         .setGridMode(PlutoGridMode.normal);
+        //                   }
+        //                 });
+        //               },
+        //               // mode: PlutoGridMode.select,
+        //               onSelected: (plutoGrid) {
+        //                 controllerX.selectedCommercial =
+        //                     controllerX.commercialList![plutoGrid.rowIdx!];
+        //                 print(">>>>>>Commercial Data>>>>>>" +
+        //                     jsonEncode(
+        //                         controllerX.selectedCommercial?.toJson()));
+        //               },
+        //             ),
+        //           );
+        //         } else {
+        //           return Expanded(
+        //             child: Card(
+        //               clipBehavior: Clip.hardEdge,
+        //               shape: RoundedRectangleBorder(
+        //                 borderRadius:
+        //                     BorderRadius.circular(0), // if you need this
+        //                 side: BorderSide(
+        //                   color: Colors.grey.shade300,
+        //                   width: 1,
+        //                 ),
+        //               ),
+        //               child: Container(
+        //                 height: Get.height - (4 * kToolbarHeight),
+        //               ),
+        //             ),
+        //           );
+        //         }
+        //       }),
+        // ),
       ],
     );
   }
@@ -875,89 +954,53 @@ class CommercialView extends GetView<CommercialController> {
   Widget fpcMismatchView(BuildContext context) {
     return Column(
       children: [
-        SizedBox(
-          height: (Get.height * .65) - kToolbarHeight / 2,
-          width: MediaQuery.of(context).size.width * 0.65,
-          child: GetBuilder<CommercialController>(
-              id: "fpcMismatchView",
-              // init: CreateBreakPatternController(),
-              builder: (controller) {
-                if (controllerX.commercialList != null &&
-                    (controllerX.commercialList?.isNotEmpty)!) {
-                  // final key = GlobalKey();
-                  return Expanded(
-                    // height: 400,
-                    child: DataGridFromMap(
-                      mapData: (controllerX.commercialList
-                          ?.map((e) => e.toJson1())
-                          .toList())!,
-                      widthRatio: (Get.width * 0.2) / 2 + 7,
-                      //mode: PlutoGridMode.select,
-                      onSelected: (plutoGrid) {
-                        controllerX.selectedCommercial =
-                            controllerX.commercialList![plutoGrid.rowIdx!];
-                        print(">>>>>>Commercial Data>>>>>>" +
-                            jsonEncode(
-                                controllerX.selectedCommercial?.toJson()));
-                      },
-                    ),
-                  );
-                } else {
-                  return Expanded(
-                    child: Card(
-                      clipBehavior: Clip.hardEdge,
-                      shape: RoundedRectangleBorder(
-                        borderRadius:
-                            BorderRadius.circular(0), // if you need this
-                        side: BorderSide(
-                          color: Colors.grey.shade300,
-                          width: 1,
-                        ),
-                      ),
-                      child: Container(
-                        height: Get.height - (4 * kToolbarHeight),
+        GetBuilder<CommercialController>(
+            id: "fpcMismatchView",
+            // init: CreateBreakPatternController(),
+            builder: (controller) {
+              if (controllerX.commercialList != null &&
+                  (controllerX.commercialList?.isNotEmpty)!) {
+                // final key = GlobalKey();
+                return Expanded(
+                  // height: 400,
+                  child: DataGridFromMap(
+                    mapData: (controllerX.commercialList
+                        ?.map((e) => e.toJson1())
+                        .toList())!,
+                    //widthRatio: (Get.width * 0.2) / 2 + 7,
+                    //mode: PlutoGridMode.select,
+                    onSelected: (plutoGrid) {
+                      controllerX.selectedCommercial =
+                          controllerX.commercialList![plutoGrid.rowIdx!];
+                      print(">>>>>>Commercial Data>>>>>>" +
+                          jsonEncode(controllerX.selectedCommercial?.toJson()));
+                    },
+                  ),
+                );
+              } else {
+                return Expanded(
+                  child: Card(
+                    clipBehavior: Clip.hardEdge,
+                    shape: RoundedRectangleBorder(
+                      borderRadius:
+                          BorderRadius.circular(0), // if you need this
+                      side: BorderSide(
+                        color: Colors.grey.shade300,
+                        width: 1,
                       ),
                     ),
-                  );
-                }
-              }),
-        ),
-        SizedBox(
-          height: (Get.height * .1),
-          child: Row(
-            crossAxisAlignment: CrossAxisAlignment.center,
-            mainAxisAlignment: MainAxisAlignment.end,
-            children: [
-              Padding(
-                padding: const EdgeInsets.only(top: 17.0),
-                child: FormButton(
-                  btnText: "Change FPC",
-                  callback: () {},
-                ),
-              ),
-              const SizedBox(
-                width: 20,
-              ),
-              Padding(
-                padding: const EdgeInsets.only(top: 17.0),
-                child: FormButton(
-                  btnText: "Mis-Match",
-                  callback: () {},
-                ),
-              ),
-              const SizedBox(
-                width: 20,
-              ),
-              Padding(
-                padding: const EdgeInsets.only(top: 17.0),
-                child: FormButton(
-                  btnText: "Mark-as-Error",
-                  callback: () {},
-                ),
-              ),
-            ],
-          ),
-        ),
+                    child: Container(
+                      height: Get.height - (4 * kToolbarHeight),
+                    ),
+                  ),
+                );
+              }
+            }),
+        // SizedBox(
+        //   height: (Get.height * .65) - kToolbarHeight / 2,
+        //   width: MediaQuery.of(context).size.width * 0.65,
+        //   child:
+        // ),
       ],
     );
   }
@@ -965,70 +1008,55 @@ class CommercialView extends GetView<CommercialController> {
   Widget markedAsErrorView(BuildContext context) {
     return Column(
       children: [
-        SizedBox(
-          height: (Get.height * .65) - kToolbarHeight / 2,
-          width: MediaQuery.of(context).size.width * 0.65,
-          child: GetBuilder<CommercialController>(
-              id: "markedAsErrorView",
-              // init: CreateBreakPatternController(),
-              builder: (controller) {
-                if (controllerX.commercialList != null &&
-                    (controllerX.commercialList?.isNotEmpty)!) {
-                  // final key = GlobalKey();
-                  return Expanded(
-                    // height: 400,
-                    child: DataGridFromMap(
-                      mapData: (controllerX.commercialList
-                          ?.map((e) => e.toJson1())
-                          .toList())!,
-                      widthRatio: (Get.width * 0.2) / 2 + 7,
-                      //mode: PlutoGridMode.select,
-                      onSelected: (plutoGrid) {
-                        controllerX.selectedCommercial =
-                            controllerX.commercialList![plutoGrid.rowIdx!];
-                        print(">>>>>>Commercial Data>>>>>>" +
-                            jsonEncode(
-                                controllerX.selectedCommercial?.toJson()));
-                      },
-                    ),
-                  );
-                } else {
-                  return Expanded(
-                    child: Card(
-                      clipBehavior: Clip.hardEdge,
-                      shape: RoundedRectangleBorder(
-                        borderRadius:
-                            BorderRadius.circular(0), // if you need this
-                        side: BorderSide(
-                          color: Colors.grey.shade300,
-                          width: 1,
-                        ),
-                      ),
-                      child: Container(
-                        height: Get.height - (4 * kToolbarHeight),
+        GetBuilder<CommercialController>(
+            id: "markedAsErrorView",
+            // init: CreateBreakPatternController(),
+            builder: (controller) {
+              if (controllerX.commercialList != null &&
+                  (controllerX.commercialList?.isNotEmpty)!) {
+                // final key = GlobalKey();
+                return Expanded(
+                  // height: 400,
+                  child: DataGridFromMap(
+                    mapData: (controllerX.commercialList
+                        ?.map((e) => e.toJson1())
+                        .toList())!,
+                    //widthRatio: (Get.width * 0.2) / 2 + 7,
+                    //mode: PlutoGridMode.select,
+                    onSelected: (plutoGrid) {
+                      controllerX.selectedCommercial =
+                          controllerX.commercialList![plutoGrid.rowIdx!];
+                      print(">>>>>>Commercial Data>>>>>>" +
+                          jsonEncode(controllerX.selectedCommercial?.toJson()));
+                    },
+                  ),
+                );
+              } else {
+                return Expanded(
+                  child: Card(
+                    clipBehavior: Clip.hardEdge,
+                    shape: RoundedRectangleBorder(
+                      borderRadius:
+                          BorderRadius.circular(0), // if you need this
+                      side: BorderSide(
+                        color: Colors.grey.shade300,
+                        width: 1,
                       ),
                     ),
-                  );
-                }
-              }),
-        ),
-        SizedBox(
-          height: (Get.height * .1),
-          child: Row(
-            mainAxisAlignment: MainAxisAlignment.end,
-            crossAxisAlignment: CrossAxisAlignment.center,
-            children: [
-              Padding(
-                padding: const EdgeInsets.only(top: 17.0),
-                child: FormButton(
-                  btnText: "Mark-as-Error",
-                  callback: () {},
-                ),
-              ),
-            ],
-          ),
-        ),
+                    child: Container(
+                      height: Get.height - (4 * kToolbarHeight),
+                    ),
+                  ),
+                );
+              }
+            }),
+        // SizedBox(
+        //   height: (Get.height * .65) - kToolbarHeight / 2,
+        //   width: MediaQuery.of(context).size.width * 0.65,
+        //   child:
+        // ),
       ],
     );
   }
+
 }

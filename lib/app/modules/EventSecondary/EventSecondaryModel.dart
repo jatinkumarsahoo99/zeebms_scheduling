@@ -1,4 +1,4 @@
-class FillerScheduleModel {
+class EventSecondaryModel {
 
   bool? selectItem=false;
   String? fpcTime;
@@ -20,13 +20,13 @@ class FillerScheduleModel {
   String? pDailyFPC;
   String? pProgramMaster;
 
-  FillerScheduleModel({ this.fpcTime, this.breakNumber,
-    this.eventType, this.exportTapeCode, this.segmentCaption, this.client,
-    this.brand, this.duration, this.product, this.bookingNumber,
-    this.bookingDetailcode, this.rostimeBand, this.randid, this.programName,
-    this.rownumber, this.bStatus, this.pDailyFPC, this.pProgramMaster});
+  EventSecondaryModel({ this.fpcTime, this.breakNumber,
+      this.eventType, this.exportTapeCode, this.segmentCaption, this.client,
+      this.brand, this.duration, this.product, this.bookingNumber,
+      this.bookingDetailcode, this.rostimeBand, this.randid, this.programName,
+      this.rownumber, this.bStatus, this.pDailyFPC, this.pProgramMaster});
 
-  FillerScheduleModel.fromJson(Map<String, dynamic> json) {
+  EventSecondaryModel.fromJson(Map<String, dynamic> json) {
     // startTime = json['startTime'];
     // programName = json['programName'];
     // episodeNumber = (json['episodeNumber']??"").toString();

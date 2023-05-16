@@ -149,4 +149,38 @@ class ApiFactory {
   static String IMPORT_DIGITEX_RUN_ORDER_SAVE(
           locationCode, channelCode, date) =>
       "$BASE_URL/api/ImportDigitexRunOrder/SaveRunOrder?LocationCode=$locationCode&ChannelCode=$channelCode&BookingDate=$date";
+
+//////////////// Filler: UI:VISHAL GORE, API: INDRESH ///////////////
+
+  static String FILLER_LOCATION =
+      "$BASE_URL/api/FillerScheduling/GetLocations";
+
+  static String FILLER_CHANNEL(locationCode) =>
+      "$BASE_URL/api/FillerScheduling/GetChannels/$locationCode";
+
+  static String FILLER_CAPTION =
+      "$BASE_URL/api/FillerScheduling/GetFillerCaption/";
+
+  /// to Search Caption in dropdown
+  static String FILLER_VALUE_BY_CAPTION(fillerCaption) =>
+      "$BASE_URL/api/FillerScheduling/GetFillerCaption/$fillerCaption";
+
+  static String FILLER_VALUES_BY_FILLER_CODE(fillerCode) =>
+      "$BASE_URL/api/FillerScheduling/GetFillerValuesByFillerCode/$fillerCode";
+
+  static String FILLER_VALUES_BY_TAPE_CODE(tapeCode) =>
+      "$BASE_URL/api/FillerScheduling/GetFillerValuesByTapeCode/$tapeCode";
+
+  static String FPC_DETAILS(
+      locationCode, channelCode, date) =>
+      //"$BASE_URL/api/FillerScheduling/GetFpcDetails/$locationCode/$channelCode/$date";
+      //"$BASE_URL/api/FillerScheduling/GetFpcDetails/ZAZEE00001/ZAMUS00004/01-01-2023";
+      //"$BASE_URL/api/FillerScheduling/GetFpcDetails?LocationCode=ZAZEE00001&ChannelCode=ZAMUS00004&TelecastDate=4-3-2023";
+      "$BASE_URL/api/FillerScheduling/GetFpcDetails?LocationCode=$locationCode&ChannelCode=$channelCode&TelecastDate=$date";
+
+  static String SEGMENT_DETAILS(
+      programCode, exportTapeCode, episodeNumber, originalRepeatCode, locationCode, channelCode, startTime, date) =>
+      "$BASE_URL/api/FillerScheduling/GetSegmentDetails?ProgramCode=$programCode&ExportTapeCode=$exportTapeCode&EpisodeNumber=$episodeNumber&OriginalRepeatCode=$originalRepeatCode&LocationCode=$locationCode&ChannelCode=$channelCode&StartTime=$startTime&StartDate=$date";
+      //"$BASE_URL/api/FillerScheduling/GetSegmentDetails?ProgramCode=ZAZIN02069&ExportTapeCode=ZNG3160&EpisodeNumber=145&OriginalRepeatCode=ZAORI00001&LocationCode=ZAZEE00001&ChannelCode=ZAMUS00004&StartTime=01%3A00%3A00%3A00&StartDate=4%2F3%2F2023";
+
 }

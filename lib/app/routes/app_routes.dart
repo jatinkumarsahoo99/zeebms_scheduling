@@ -16,6 +16,7 @@ abstract class Routes {
   static const FPC_MISMATCH = _Paths.FPC_MISMATCH;
   static const RO_CANCELLATION = _Paths.RO_CANCELLATION;
   static const SPOT_PRIORITY = _Paths.SPOT_PRIORITY;
+  static const EVENT_SECONDARY = _Paths.EVENT_SECONDARY;
 }
 
 abstract class RoutesList {
@@ -41,9 +42,10 @@ abstract class _Paths {
   static const IMPORT_DIGITEXT_RUN_ORDER = '/frmBARBRunOrder';
   static const FPC_MISMATCH = '/frmFPCMismatch';
   static const COMMERCIAL = '/commercial';
-  static const RO_BOOKING = '/ro-booking';
+  //static const RO_BOOKING = '/ro-booking';
   static const FILLER = '/filler';
   static const PROMOS = '/promos';
   static const RO_CANCELLATION = '/ro-cancellation';
   static const SPOT_PRIORITY = '/frmSpotPriority';
+  static const EVENT_SECONDARY = '/event-secondary';
 }

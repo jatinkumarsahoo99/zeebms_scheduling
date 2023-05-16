@@ -1,5 +1,7 @@
 import 'package:get/get.dart';
 
+import '../modules/EventSecondary/bindings/event_secondary_binding.dart';
+import '../modules/EventSecondary/views/event_secondary_view.dart';
 import '../modules/FpcMismatch/bindings/fpc_mismatch_binding.dart';
 import '../modules/FpcMismatch/views/FpcMismatchView.dart';
 import '../modules/ImportDigitextRunOrder/bindings/import_digitext_run_order_binding.dart';
@@ -22,16 +24,16 @@ import '../modules/filler/bindings/filler_binding.dart';
 import '../modules/filler/views/filler_view.dart';
 import '../modules/home/bindings/home_binding.dart';
 import '../modules/home/views/home_view.dart';
-import '../providers/AuthGuard1.dart';
 import '../modules/promos/bindings/promos_binding.dart';
 import '../modules/promos/views/promos_view.dart';
+import '../providers/AuthGuard1.dart';
 
 part 'app_routes.dart';
 
 class AppPages {
   AppPages._();
 
-  static const INITIAL = Routes.RO_CANCELLATION;
+  static const INITIAL = Routes.COMMERCIAL;
 
   static final routes = [
     GetPage(
@@ -64,7 +66,7 @@ class AppPages {
     ),
     GetPage(
       name: _Paths.FILLER,
-      page: () => FillerView(),
+      page: () => AuthGuard1(childName: _Paths.FILLER),
       binding: FillerBinding(),
     ),
     GetPage(
@@ -91,5 +93,11 @@ class AppPages {
       page: () => AuthGuard1(childName: _Paths.RO_CANCELLATION),
       binding: RoCancellationBinding(),
     ),
+    GetPage(
+      name: _Paths.EVENT_SECONDARY,
+      page: () => EventSecondaryView(),
+      binding: EventSecondaryBinding(),
+    ),
   ];
+
 }

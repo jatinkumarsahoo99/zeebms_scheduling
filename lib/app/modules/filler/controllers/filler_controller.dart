@@ -1,5 +1,8 @@
-import 'package:bms_scheduling/app/modules/filler/FillerModel.dart';
-import 'package:bms_scheduling/app/modules/filler/FillerModel.dart';
+import 'dart:convert';
+
+import 'package:bms_scheduling/app/modules/filler/FillerDailyFPCModel.dart';
+import 'package:bms_scheduling/app/modules/filler/FillerDailyFPCModel.dart';
+import 'package:file_picker/file_picker.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:intl/intl.dart';
@@ -12,30 +15,41 @@ import '../../../controller/HomeController.dart';
 import '../../../data/DropDownValue.dart';
 import '../../../data/PermissionModel.dart';
 import '../../../data/system_envirtoment.dart';
-import '../FillerModel.dart';
-import '../FillerScheduleModel.dart';
+import '../../../providers/ApiFactory.dart';
+import '../FillerDailyFPCModel.dart';
+import '../FillerSegmentModel.dart';
+import 'package:dio/dio.dart' as dio;
 
 class FillerController extends GetxController {
   var locations = RxList<DropDownValue>();
+  var importLocations = RxList<DropDownValue>();
   var channels = RxList<DropDownValue>([]);
+  var importChannels = RxList<DropDownValue>([]);
   var captions = RxList<DropDownValue>([]);
+
+  List<FillerDailyFPCModel>? fillerDailyFpcList = [];
+  List<FillerSegmentModel>? fillerSegmentList = [];
+
   RxBool isEnable = RxBool(true);
-  bool isSearchFromProgram = false;
-  bool candoFocusOnProgramGrid = false;
+  bool isSearchFromCaption = false;
+  bool candoFocusOnCaptionGrid = false;
 
   TextEditingController tapeId_ = TextEditingController()..text = "";
   TextEditingController segNo_ = TextEditingController()..text = "";
-  TextEditingController segDur_ = TextEditingController()..text = "";
+  TextEditingController segDur_ = TextEditingController()..text = "00:00:00:00";
   TextEditingController totalFiller = TextEditingController()..text = "";
   TextEditingController totalFillerDur = TextEditingController()..text = "";
+  TextEditingController fromTime_ = TextEditingController()..text = "00:00:00:00";
+  TextEditingController toTime_ = TextEditingController()..text = "00:00:00:00";
 
+  late String fillerCode;
   /// Radio Button
   int selectedAfter = 0;
 
   //input controllers
   DropDownValue? selectLocation;
   DropDownValue? selectChannel;
-  DropDownValue? selectCaption;
+  var selectCaption = Rxn<DropDownValue>();
   PlutoGridStateManager? gridStateManager;
 
   List<PermissionModel>? formPermissions;
@@ -43,280 +57,6 @@ class FillerController extends GetxController {
   List<PlutoColumn> initColumn = [];
 
   List conflictReport = [];
-
-  List<FillerModel>? fillerList = [
-    FillerModel
-
-      (
-        fpcTime:'01:00:00', breakNumber:'1', eventType:'S',
-        exportTapeCode:'TBA', segmentCaption:'Caption', client:' ', brand:' ', duration: 0,
-        product:' ', bookingNumber:' ', bookingDetailcode:' ',rostimeBand:' ', randid:' ',
-        programName:'Program Name', rownumber:'O', bStatus:'B', pDailyFPC:' ', pProgramMaster:' '),
-    FillerModel
-
-      (
-        fpcTime:'01:00:00', breakNumber:'1', eventType:'S',
-        exportTapeCode:'TBA', segmentCaption:'Caption', client:' ', brand:' ', duration: 0,
-        product:' ', bookingNumber:' ', bookingDetailcode:' ',rostimeBand:' ', randid:' ',
-        programName:'Program Name', rownumber:'O', bStatus:'B', pDailyFPC:' ', pProgramMaster:' '),
-    FillerModel
-
-      (
-        fpcTime:'01:00:00', breakNumber:'1', eventType:'S',
-        exportTapeCode:'TBA', segmentCaption:'Caption', client:' ', brand:' ', duration: 0,
-        product:' ', bookingNumber:' ', bookingDetailcode:' ',rostimeBand:' ', randid:' ',
-        programName:'Program Name', rownumber:'O', bStatus:'B', pDailyFPC:' ', pProgramMaster:' '),
-    FillerModel
-
-      (
-        fpcTime:'01:00:00', breakNumber:'1', eventType:'S',
-        exportTapeCode:'TBA', segmentCaption:'Caption', client:' ', brand:' ', duration: 0,
-        product:' ', bookingNumber:' ', bookingDetailcode:' ',rostimeBand:' ', randid:' ',
-        programName:'Program Name', rownumber:'O', bStatus:'B', pDailyFPC:' ', pProgramMaster:' '),
-    FillerModel
-
-      (
-        fpcTime:'01:00:00', breakNumber:'1', eventType:'S',
-        exportTapeCode:'TBA', segmentCaption:'Caption', client:' ', brand:' ', duration: 0,
-        product:' ', bookingNumber:' ', bookingDetailcode:' ',rostimeBand:' ', randid:' ',
-        programName:'Program Name', rownumber:'O', bStatus:'B', pDailyFPC:' ', pProgramMaster:' '),
-    FillerModel
-
-      (
-        fpcTime:'01:00:00', breakNumber:'1', eventType:'S',
-        exportTapeCode:'TBA', segmentCaption:'Caption', client:' ', brand:' ', duration: 0,
-        product:' ', bookingNumber:' ', bookingDetailcode:' ',rostimeBand:' ', randid:' ',
-        programName:'Program Name', rownumber:'O', bStatus:'B', pDailyFPC:' ', pProgramMaster:' '),
-    FillerModel
-
-      (
-        fpcTime:'01:00:00', breakNumber:'1', eventType:'S',
-        exportTapeCode:'TBA', segmentCaption:'Caption', client:' ', brand:' ', duration: 0,
-        product:' ', bookingNumber:' ', bookingDetailcode:' ',rostimeBand:' ', randid:' ',
-        programName:'Program Name', rownumber:'O', bStatus:'B', pDailyFPC:' ', pProgramMaster:' '),
-    FillerModel
-
-      (
-        fpcTime:'01:00:00', breakNumber:'1', eventType:'S',
-        exportTapeCode:'TBA', segmentCaption:'Caption', client:' ', brand:' ', duration: 0,
-        product:' ', bookingNumber:' ', bookingDetailcode:' ',rostimeBand:' ', randid:' ',
-        programName:'Program Name', rownumber:'O', bStatus:'B', pDailyFPC:' ', pProgramMaster:' '),
-    FillerModel
-
-      (
-        fpcTime:'01:00:00', breakNumber:'1', eventType:'S',
-        exportTapeCode:'TBA', segmentCaption:'Caption', client:' ', brand:' ', duration: 0,
-        product:' ', bookingNumber:' ', bookingDetailcode:' ',rostimeBand:' ', randid:' ',
-        programName:'Program Name', rownumber:'O', bStatus:'B', pDailyFPC:' ', pProgramMaster:' '),
-    FillerModel
-
-      (
-        fpcTime:'01:00:00', breakNumber:'1', eventType:'S',
-        exportTapeCode:'TBA', segmentCaption:'Caption', client:' ', brand:' ', duration: 0,
-        product:' ', bookingNumber:' ', bookingDetailcode:' ',rostimeBand:' ', randid:' ',
-        programName:'Program Name', rownumber:'O', bStatus:'B', pDailyFPC:' ', pProgramMaster:' '),
-    FillerModel
-
-      (
-        fpcTime:'01:00:00', breakNumber:'1', eventType:'S',
-        exportTapeCode:'TBA', segmentCaption:'Caption', client:' ', brand:' ', duration: 0,
-        product:' ', bookingNumber:' ', bookingDetailcode:' ',rostimeBand:' ', randid:' ',
-        programName:'Program Name', rownumber:'O', bStatus:'B', pDailyFPC:' ', pProgramMaster:' '),
-    FillerModel
-
-      (
-        fpcTime:'01:00:00', breakNumber:'1', eventType:'S',
-        exportTapeCode:'TBA', segmentCaption:'Caption', client:' ', brand:' ', duration: 0,
-        product:' ', bookingNumber:' ', bookingDetailcode:' ',rostimeBand:' ', randid:' ',
-        programName:'Program Name', rownumber:'O', bStatus:'B', pDailyFPC:' ', pProgramMaster:' '),
-    FillerModel
-
-      (
-        fpcTime:'01:00:00', breakNumber:'1', eventType:'S',
-        exportTapeCode:'TBA', segmentCaption:'Caption', client:' ', brand:' ', duration: 0,
-        product:' ', bookingNumber:' ', bookingDetailcode:' ',rostimeBand:' ', randid:' ',
-        programName:'Program Name', rownumber:'O', bStatus:'B', pDailyFPC:' ', pProgramMaster:' '),
-    FillerModel
-
-      (
-        fpcTime:'01:00:00', breakNumber:'1', eventType:'S',
-        exportTapeCode:'TBA', segmentCaption:'Caption', client:' ', brand:' ', duration: 0,
-        product:' ', bookingNumber:' ', bookingDetailcode:' ',rostimeBand:' ', randid:' ',
-        programName:'Program Name', rownumber:'O', bStatus:'B', pDailyFPC:' ', pProgramMaster:' '),
-    FillerModel
-
-      (
-        fpcTime:'01:00:00', breakNumber:'1', eventType:'S',
-        exportTapeCode:'TBA', segmentCaption:'Caption', client:' ', brand:' ', duration: 0,
-        product:' ', bookingNumber:' ', bookingDetailcode:' ',rostimeBand:' ', randid:' ',
-        programName:'Program Name', rownumber:'O', bStatus:'B', pDailyFPC:' ', pProgramMaster:' '),
-    FillerModel
-
-      (
-        fpcTime:'01:00:00', breakNumber:'1', eventType:'S',
-        exportTapeCode:'TBA', segmentCaption:'Caption', client:' ', brand:' ', duration: 0,
-        product:' ', bookingNumber:' ', bookingDetailcode:' ',rostimeBand:' ', randid:' ',
-        programName:'Program Name', rownumber:'O', bStatus:'B', pDailyFPC:' ', pProgramMaster:' '),
-    FillerModel
-
-      (
-        fpcTime:'01:00:00', breakNumber:'1', eventType:'S',
-        exportTapeCode:'TBA', segmentCaption:'Caption', client:' ', brand:' ', duration: 0,
-        product:' ', bookingNumber:' ', bookingDetailcode:' ',rostimeBand:' ', randid:' ',
-        programName:'Program Name', rownumber:'O', bStatus:'B', pDailyFPC:' ', pProgramMaster:' '),
-    FillerModel
-
-      (
-        fpcTime:'01:00:00', breakNumber:'1', eventType:'S',
-        exportTapeCode:'TBA', segmentCaption:'Caption', client:' ', brand:' ', duration: 0,
-        product:' ', bookingNumber:' ', bookingDetailcode:' ',rostimeBand:' ', randid:' ',
-        programName:'Program Name', rownumber:'O', bStatus:'B', pDailyFPC:' ', pProgramMaster:' '),
-    FillerModel
-
-      (
-        fpcTime:'01:00:00', breakNumber:'1', eventType:'S',
-        exportTapeCode:'TBA', segmentCaption:'Caption', client:' ', brand:' ', duration: 0,
-        product:' ', bookingNumber:' ', bookingDetailcode:' ',rostimeBand:' ', randid:' ',
-        programName:'Program Name', rownumber:'O', bStatus:'B', pDailyFPC:' ', pProgramMaster:' '),
-
-  ];
-  List<FillerScheduleModel>? fillerScheduleList = [
-    FillerScheduleModel
-
-      (
-        fpcTime:'01:00:00', breakNumber:'1', eventType:'S',
-        exportTapeCode:'TBA', segmentCaption:'Caption', client:' ', brand:' ', duration: 0,
-        product:' ', bookingNumber:' ', bookingDetailcode:' ',rostimeBand:' ', randid:' ',
-        programName:'Program Name', rownumber:'O', bStatus:'B', pDailyFPC:' ', pProgramMaster:' '),
-    FillerScheduleModel
-
-      (
-        fpcTime:'01:00:00', breakNumber:'1', eventType:'S',
-        exportTapeCode:'TBA', segmentCaption:'Caption', client:' ', brand:' ', duration: 0,
-        product:' ', bookingNumber:' ', bookingDetailcode:' ',rostimeBand:' ', randid:' ',
-        programName:'Program Name', rownumber:'O', bStatus:'B', pDailyFPC:' ', pProgramMaster:' '),
-    FillerScheduleModel
-
-      (
-        fpcTime:'01:00:00', breakNumber:'1', eventType:'S',
-        exportTapeCode:'TBA', segmentCaption:'Caption', client:' ', brand:' ', duration: 0,
-        product:' ', bookingNumber:' ', bookingDetailcode:' ',rostimeBand:' ', randid:' ',
-        programName:'Program Name', rownumber:'O', bStatus:'B', pDailyFPC:' ', pProgramMaster:' '),
-    FillerScheduleModel
-
-      (
-        fpcTime:'01:00:00', breakNumber:'1', eventType:'S',
-        exportTapeCode:'TBA', segmentCaption:'Caption', client:' ', brand:' ', duration: 0,
-        product:' ', bookingNumber:' ', bookingDetailcode:' ',rostimeBand:' ', randid:' ',
-        programName:'Program Name', rownumber:'O', bStatus:'B', pDailyFPC:' ', pProgramMaster:' '),
-    FillerScheduleModel
-
-      (
-        fpcTime:'01:00:00', breakNumber:'1', eventType:'S',
-        exportTapeCode:'TBA', segmentCaption:'Caption', client:' ', brand:' ', duration: 0,
-        product:' ', bookingNumber:' ', bookingDetailcode:' ',rostimeBand:' ', randid:' ',
-        programName:'Program Name', rownumber:'O', bStatus:'B', pDailyFPC:' ', pProgramMaster:' '),
-    FillerScheduleModel
-
-      (
-        fpcTime:'01:00:00', breakNumber:'1', eventType:'S',
-        exportTapeCode:'TBA', segmentCaption:'Caption', client:' ', brand:' ', duration: 0,
-        product:' ', bookingNumber:' ', bookingDetailcode:' ',rostimeBand:' ', randid:' ',
-        programName:'Program Name', rownumber:'O', bStatus:'B', pDailyFPC:' ', pProgramMaster:' '),
-    FillerScheduleModel
-
-      (
-        fpcTime:'01:00:00', breakNumber:'1', eventType:'S',
-        exportTapeCode:'TBA', segmentCaption:'Caption', client:' ', brand:' ', duration: 0,
-        product:' ', bookingNumber:' ', bookingDetailcode:' ',rostimeBand:' ', randid:' ',
-        programName:'Program Name', rownumber:'O', bStatus:'B', pDailyFPC:' ', pProgramMaster:' '),
-    FillerScheduleModel
-
-      (
-        fpcTime:'01:00:00', breakNumber:'1', eventType:'S',
-        exportTapeCode:'TBA', segmentCaption:'Caption', client:' ', brand:' ', duration: 0,
-        product:' ', bookingNumber:' ', bookingDetailcode:' ',rostimeBand:' ', randid:' ',
-        programName:'Program Name', rownumber:'O', bStatus:'B', pDailyFPC:' ', pProgramMaster:' '),
-    FillerScheduleModel
-
-      (
-        fpcTime:'01:00:00', breakNumber:'1', eventType:'S',
-        exportTapeCode:'TBA', segmentCaption:'Caption', client:' ', brand:' ', duration: 0,
-        product:' ', bookingNumber:' ', bookingDetailcode:' ',rostimeBand:' ', randid:' ',
-        programName:'Program Name', rownumber:'O', bStatus:'B', pDailyFPC:' ', pProgramMaster:' '),
-    FillerScheduleModel
-
-      (
-        fpcTime:'01:00:00', breakNumber:'1', eventType:'S',
-        exportTapeCode:'TBA', segmentCaption:'Caption', client:' ', brand:' ', duration: 0,
-        product:' ', bookingNumber:' ', bookingDetailcode:' ',rostimeBand:' ', randid:' ',
-        programName:'Program Name', rownumber:'O', bStatus:'B', pDailyFPC:' ', pProgramMaster:' '),
-    FillerScheduleModel
-
-      (
-        fpcTime:'01:00:00', breakNumber:'1', eventType:'S',
-        exportTapeCode:'TBA', segmentCaption:'Caption', client:' ', brand:' ', duration: 0,
-        product:' ', bookingNumber:' ', bookingDetailcode:' ',rostimeBand:' ', randid:' ',
-        programName:'Program Name', rownumber:'O', bStatus:'B', pDailyFPC:' ', pProgramMaster:' '),
-    FillerScheduleModel
-
-      (
-        fpcTime:'01:00:00', breakNumber:'1', eventType:'S',
-        exportTapeCode:'TBA', segmentCaption:'Caption', client:' ', brand:' ', duration: 0,
-        product:' ', bookingNumber:' ', bookingDetailcode:' ',rostimeBand:' ', randid:' ',
-        programName:'Program Name', rownumber:'O', bStatus:'B', pDailyFPC:' ', pProgramMaster:' '),
-    FillerScheduleModel
-
-      (
-        fpcTime:'01:00:00', breakNumber:'1', eventType:'S',
-        exportTapeCode:'TBA', segmentCaption:'Caption', client:' ', brand:' ', duration: 0,
-        product:' ', bookingNumber:' ', bookingDetailcode:' ',rostimeBand:' ', randid:' ',
-        programName:'Program Name', rownumber:'O', bStatus:'B', pDailyFPC:' ', pProgramMaster:' '),
-    FillerScheduleModel
-
-      (
-        fpcTime:'01:00:00', breakNumber:'1', eventType:'S',
-        exportTapeCode:'TBA', segmentCaption:'Caption', client:' ', brand:' ', duration: 0,
-        product:' ', bookingNumber:' ', bookingDetailcode:' ',rostimeBand:' ', randid:' ',
-        programName:'Program Name', rownumber:'O', bStatus:'B', pDailyFPC:' ', pProgramMaster:' '),
-    FillerScheduleModel
-
-      (
-        fpcTime:'01:00:00', breakNumber:'1', eventType:'S',
-        exportTapeCode:'TBA', segmentCaption:'Caption', client:' ', brand:' ', duration: 0,
-        product:' ', bookingNumber:' ', bookingDetailcode:' ',rostimeBand:' ', randid:' ',
-        programName:'Program Name', rownumber:'O', bStatus:'B', pDailyFPC:' ', pProgramMaster:' '),
-    FillerScheduleModel
-
-      (
-        fpcTime:'01:00:00', breakNumber:'1', eventType:'S',
-        exportTapeCode:'TBA', segmentCaption:'Caption', client:' ', brand:' ', duration: 0,
-        product:' ', bookingNumber:' ', bookingDetailcode:' ',rostimeBand:' ', randid:' ',
-        programName:'Program Name', rownumber:'O', bStatus:'B', pDailyFPC:' ', pProgramMaster:' '),
-    FillerScheduleModel
-
-      (
-        fpcTime:'01:00:00', breakNumber:'1', eventType:'S',
-        exportTapeCode:'TBA', segmentCaption:'Caption', client:' ', brand:' ', duration: 0,
-        product:' ', bookingNumber:' ', bookingDetailcode:' ',rostimeBand:' ', randid:' ',
-        programName:'Program Name', rownumber:'O', bStatus:'B', pDailyFPC:' ', pProgramMaster:' '),
-    FillerScheduleModel
-
-      (
-        fpcTime:'01:00:00', breakNumber:'1', eventType:'S',
-        exportTapeCode:'TBA', segmentCaption:'Caption', client:' ', brand:' ', duration: 0,
-        product:' ', bookingNumber:' ', bookingDetailcode:' ',rostimeBand:' ', randid:' ',
-        programName:'Program Name', rownumber:'O', bStatus:'B', pDailyFPC:' ', pProgramMaster:' '),
-    FillerScheduleModel
-
-      (
-        fpcTime:'01:00:00', breakNumber:'1', eventType:'S',
-        exportTapeCode:'TBA', segmentCaption:'Caption', client:' ', brand:' ', duration: 0,
-        product:' ', bookingNumber:' ', bookingDetailcode:' ',rostimeBand:' ', randid:' ',
-        programName:'Program Name', rownumber:'O', bStatus:'B', pDailyFPC:' ', pProgramMaster:' '),
-
-  ];
-
   List beams = [];
   int? conflictDays = 4;
   List conflictPrograms = [];
@@ -330,14 +70,15 @@ class FillerController extends GetxController {
   PlutoGridStateManager? locChanStateManager;
   Map? initData;
 
-  TextEditingController refDateContrl = TextEditingController(
-      text: DateFormat("dd-MM-yyyy").format(DateTime.now()));
-
   List<SystemEnviroment>? channelList = [];
   List<SystemEnviroment>? locationList = [];
 
+  TextEditingController refDateContrl = TextEditingController(
+      text: DateFormat("dd-MM-yyyy").format(DateTime.now()));
   TextEditingController programName_ = TextEditingController();
   TextEditingController date_ = TextEditingController();
+  TextEditingController fillerFromDate_ = TextEditingController();
+  TextEditingController fillerToDate_ = TextEditingController();
   TextEditingController fillerCaptionName_ = TextEditingController();
 
   DateTime now = DateTime.now();
@@ -346,14 +87,21 @@ class FillerController extends GetxController {
   DateFormat df = DateFormat("dd/MM/yyyy");
   DateFormat df1 = DateFormat("dd-MM-yyyy");
   DateFormat df2 = DateFormat("MM-dd-yyyy");
+  DateFormat dfFinal = DateFormat("yyyy-MM-ddThh:mm:ss");
 
-  SystemEnviroment? selectedChannel;
-  SystemEnviroment? selectedLocation;
+  DropDownValue? selectedLocation;
+  DropDownValue? selectedChannel;
+
+  DropDownValue? selectedImportLocation;
+  DropDownValue? selectedImportChannel;
+
+  SystemEnviroment? selectedChannelEnv;
+  SystemEnviroment? selectedLocationEnv;
   SystemEnviroment? selectedCaption;
 
   /// List for Columns
-  FillerModel? selectedFiller;
-  FillerScheduleModel? selectedFillerSchedule;
+  FillerDailyFPCModel? selectedDailyFPC;
+  FillerSegmentModel? selectedSegment;
 
   List<Map<String, dynamic>>? listData = [];
 
@@ -362,12 +110,18 @@ class FillerController extends GetxController {
   BuildContext? gridContext;
   PlutoGridStateManager? stateManager;
 
-  double widthSize = 0.10; /// Changed to set PROMO From Date width UI to 0.17
+  double widthSize = 0.10;
+
+  /// Changed to set PROMO From Date width UI to 0.17
   var locationEnable = RxBool(true);
   var channelEnable = RxBool(true);
 
+  var importedFile = Rxn<PlatformFile>();
+  TextEditingController fileController = TextEditingController();
+
   @override
   void onInit() {
+    getLocation();
     super.onInit();
   }
 
@@ -391,58 +145,262 @@ class FillerController extends GetxController {
     }
   }
 
-  fetchInitial() {
-    // Get.find<ConnectorControl>().GETMETHODCALL(
-    //   api: ApiFactory.FPC_WEEKLY_INITIAL,
-    //   fun: (Map<String, dynamic> map) {
-    //     locationList?.clear();
-    //     channelList?.clear();
-    //     map["lstLocations"].forEach((element) {
-    //       locationList?.add(SystemEnviroment(key: element["locationCode"], value: element["locationName"]));
-    //     });
-    //     map["lstChannels"].forEach((element) {
-    //       channelList?.add(SystemEnviroment(key: element["channelcode"], value: element["channelName"]));
-    //     });
-    //     update(["initialData"]);
-    //   },
-    // );
+  // fetchInitial() {
+  //   Get.find<ConnectorControl>().GETMETHODCALL(
+  //     api: ApiFactory.FILLER_LOCATION,
+  //     fun: (Map<String, dynamic> map) {
+  //       locationList?.clear();
+  //       channelList?.clear();
+  //       map["lstLocations"].forEach((element) {
+  //         locationList?.add(SystemEnviroment(key: element["locationCode"], value: element["locationName"]));
+  //       });
+  //       map["lstChannels"].forEach((element) {
+  //         channelList?.add(SystemEnviroment(key: element["channelcode"], value: element["channelName"]));
+  //       });
+  //       update(["initialData"]);
+  //     },
+  //   );
+  // }
+
+  getLocation() {
+    try {
+      Get.find<ConnectorControl>().GETMETHODCALL(
+          api: ApiFactory.FILLER_LOCATION,
+          fun: (data) {
+            if (data is List) {
+              locations.value = data
+                  .map((e) => DropDownValue(
+                      key: e["locationCode"], value: e["locationName"]))
+                  .toList();
+            } else {
+              LoadingDialog.callErrorMessage1(
+                  msg: "Failed To Load Initial Data");
+            }
+          });
+    } catch (e) {
+      LoadingDialog.callErrorMessage1(msg: "Failed To Load Initial Data");
+    }
   }
 
-  generateData() async {
-    if (conflictDays == null) {
-      // Snack.callError("Invalid Day Value");
-      LoadingDialog.showErrorDialog("Invalid Day Value");
-    } else if (locChanStateManager!.checkedRows.isEmpty) {
-      LoadingDialog.showErrorDialog("Please select Location Channel");
-    } else {
-      reportBody["ReferenceDate"] = DateFormat("yyyy-MM-dd")
-          .format(DateFormat("dd-MM-yyyy").parse(refDateContrl.text));
-
-      LoadingDialog.call();
-      beams = [];
-      conflictReport = [];
-      conflictPrograms = [];
-      update(["reports"]);
-      // String value =
-      //     await rootBundle.loadString('assets/json/ci_dashbaord_report.json');
-      await Get.find<ConnectorControl>().POSTMETHOD_FORMDATA(
-        // NEED TO PASS USER NAME
-          timeout: 360000,
-          api:
-          "https://api-programming-bms-uat.zeeconnect.in//api/MovieConflictReport/GetMovieConflictReport",
-          json: reportBody,
-          fun: (map) async {
-            beams = map["lstReportBaseData"];
-            for (var element in beams.where((element) =>
-            (element["days"] <= conflictDays && element["days"] >= 0))) {
-              conflictPrograms.add(element["program"]);
+  getChannel(locationCode) {
+    try {
+      Get.find<ConnectorControl>().GETMETHODCALL(
+          api: ApiFactory.FILLER_CHANNEL(locationCode),
+          fun: (data) {
+            if (data is List) {
+              channels.value = data
+                  .map((e) => DropDownValue(
+                      key: e["channelCode"], value: e["channelName"]))
+                  .toList();
+            } else {
+              LoadingDialog.callErrorMessage1(
+                  msg: "Failed To Load Initial Data");
             }
-            conflictPrograms.toSet().toList();
-            // log(conflictPrograms.toString());
-            conflictReport = map["lstConflictReport"];
-            update(["reports"]);
           });
-      Get.back();
+    } catch (e) {
+      LoadingDialog.callErrorMessage1(msg: "Failed To Load Initial Data");
+    }
+  }
+
+  importfile() async {
+    LoadingDialog.call();
+    dio.FormData formData = dio.FormData.fromMap({
+      'ImportFile': dio.MultipartFile.fromBytes(
+        importedFile.value!.bytes!.toList(),
+        filename: importedFile.value!.name,
+      )
+    });
+
+    Get.find<ConnectorControl>().POSTMETHOD_FORMDATA(
+        api: ApiFactory.IMPORT_DIGITEX_RUN_ORDER_IMPORT(
+            selectedLocation!.key, selectedChannel!.key),
+        json: formData,
+        fun: (value) {
+          Get.back();
+          try {
+            /// Need to create new Model to import filler file
+            // if (value is Map<String, dynamic>) {
+            //   digitexRunOrderData = DigitexRunOrderData.fromJson(value);
+            //   update(["data"]);
+            // }
+            // if (digitexRunOrderData!.message != null &&
+            //     digitexRunOrderData!.message!.isNotEmpty) {
+            //   LoadingDialog.callErrorMessage1(
+            //       msg: digitexRunOrderData!.message!);
+            // }
+          } catch (e) {
+            LoadingDialog.callErrorMessage1(msg: "Failed To Import File");
+          }
+        });
+  }
+
+  pickFile() async {
+    FilePickerResult? result = await FilePicker.platform.pickFiles();
+
+    if (result != null && result.files.single != null) {
+      importedFile.value = result.files.single;
+      fileController.text = result.files.single.name;
+      importfile();
+    } else {
+      // User canceled the pic5ker
+    }
+  }
+
+  // getFillerValueByCaption(fillerCaption) {
+  //   try {
+  //     Get.find<ConnectorControl>().GETMETHODCALL(
+  //         api: ApiFactory.FILLER_VALUE_BY_CAPTION(fillerCaption),
+  //         fun: (dynamic data) {
+  //           print('>>> Filler Caption Code data $data');
+  //           print('>>> Filler Code data ${data['fillerCode']}');
+  //           getFillerValuesByFillerCode(data['fillerCode']);
+  //         });
+  //   } catch (e) {
+  //     LoadingDialog.callErrorMessage1(msg: "Failed To Load Initial Data");
+  //   }
+  // }
+
+  getFillerValuesByFillerCode(fillerCode) {
+    try {
+      Get.find<ConnectorControl>().GETMETHODCALL(
+          api: ApiFactory.FILLER_VALUES_BY_FILLER_CODE(fillerCode),
+          fun: (data) {
+            print('>> Fillers Value : ${data}');
+            tapeId_.text = data['exportTapeCode'];
+            segNo_.text = data['segmentNumber'];
+            segDur_.text = data['fillerDuration'];
+            // if (data is List) {
+            //   channels.value = data
+            //       .map((e) => DropDownValue(
+            //       key: e["fillerCode"], value: e["fillerCaption"]))
+            //       .toList();
+            // } else {
+            //   LoadingDialog.callErrorMessage1(
+            //       msg: "Failed To Load Initial Data");
+            // }
+          });
+    } catch (e) {
+      LoadingDialog.callErrorMessage1(msg: "Failed To Load Initial Data");
+    }
+  }
+
+  getFillerValuesByTapeCode(tapeCode) {
+    try {
+      Get.find<ConnectorControl>().GETMETHODCALL(
+          api: ApiFactory.FILLER_VALUES_BY_TAPE_CODE(tapeCode),
+          fun: (dynamic data) {
+            print('>>> Data from Tape Code : $data');
+            /// Need to show date in Filler caption, filler dropdown,tape idseg dur,total dur
+            fillerCode = data['fillerCode'];
+            ///selectCaption.value = data['fillerCaption'];
+            tapeId_.text = data['exportTapeCode'];
+            segNo_.text = data['segmentNumber'];
+            segDur_.text = data['fillerDuration'];
+          });
+    } catch (e) {
+      LoadingDialog.callErrorMessage1(msg: "Failed To Load Initial Data");
+    }
+  }
+
+  getFillerValuesByImportFillersWithTapeCode(tapeCode) {
+    try {
+      var jsonRequest = {
+        "LocationCode": selectedImportLocation?.key.toString(),
+        "ChannelCode": selectedImportChannel?.key.toString(),
+        "ImportDate": fillerFromDate_.text,
+        "ImportToDate":fillerToDate_.text,
+        "TelecastTime": fromTime_.text ?? "",
+        "ImportTime": toTime_.text ?? ""
+      };
+      print("requestedData1>>>" + jsonEncode(json));
+      Get.find<ConnectorControl>().POSTMETHOD(
+          api: ApiFactory.FILLER_VALUES_BY_TAPE_CODE(tapeCode),
+          fun: (dynamic data) {
+
+            /// Date will be saved after importing Fillers with
+            /// selected Location, Channel, Date and time...
+            /// Response is "Data saved successfully"
+
+            // print('>>> Data from Tape Code : $data');
+            // /// Need to show date in Filler caption, filler dropdown,tape idseg dur,total dur
+            // fillerCode = data['fillerCode'];
+            // ///selectCaption.value = data['fillerCaption'];
+            // tapeId_.text = data['exportTapeCode'];
+            // segNo_.text = data['segmentNumber'];
+            // segDur_.text = data['fillerDuration'];
+          },
+          json: jsonRequest
+      );
+    } catch (e) {
+      LoadingDialog.callErrorMessage1(msg: "Failed To Load Initial Data");
+    }
+  }
+
+  fetchFPCDetails() {
+    print(">>Key is>>>>>" + (selectedChannel?.key ?? ""));
+    if (selectedLocation == null) {
+      Snack.callError("Please select location");
+    } else if (selectedChannel == null) {
+      Snack.callError("Please select location");
+    } else if (selectedDate == null) {
+      Snack.callError("Please select date");
+    } else {
+      // LoadingDialog.call();
+      selectedDate = df1.parse(date_.text);
+      Get.find<ConnectorControl>().GETMETHODCALL(
+          api: ApiFactory.FPC_DETAILS(selectedLocation?.key ?? "",
+              selectedChannel?.key ?? "", dfFinal.format(selectedDate!)),
+          fun: (dynamic list) {
+            print("Json response is>>>" + jsonEncode(list));
+            // Get.back();
+            fillerDailyFpcList?.clear();
+            list['dailyFPC'].forEach((element) {
+              fillerDailyFpcList?.add(FillerDailyFPCModel.fromJson(element));
+            });
+            print(">>Update Called");
+            update(["fillerFPCTable"]);
+          },
+          failed: (val) {
+            Snack.callError(val.toString());
+          });
+    }
+  }
+
+  fetchSegmentDetails(FillerDailyFPCModel fillerDailyFpc) {
+    print(">>Key is>>>>>" + (selectedChannel?.key ?? ""));
+    if (selectedLocation == null) {
+      Snack.callError("Please select location");
+    } else if (selectedChannel == null) {
+      Snack.callError("Please select location");
+    } else if (selectedDate == null) {
+      Snack.callError("Please select date");
+    } else {
+      // LoadingDialog.call();
+      selectedDate = df1.parse(date_.text);
+      Get.find<ConnectorControl>().GETMETHODCALL(
+          api: ApiFactory.SEGMENT_DETAILS(
+              //    programCode, exportTapeCode, episodeNumber, originalRepeatCode, locationCode, channelCode, startTime, date),
+              fillerDailyFpc.programCode,
+              fillerDailyFpc.tapeID,
+              fillerDailyFpc.epsNo,
+              fillerDailyFpc.oriRep,
+              selectedLocation?.key ?? "",
+              selectedChannel?.key ?? "",
+              fillerDailyFpc.fpcTime,
+              dfFinal.format(selectedDate!)),
+          //  selectedLocation?.key ?? "", selectedChannel?.key ?? "",
+          //      df2.format(selectedDate!),fillerDailyFpc,"","","",""),
+          fun: (List list) {
+            // Get.back();
+            fillerSegmentList?.clear();
+            list.forEach((element) {
+              fillerSegmentList?.add(FillerSegmentModel.fromJson(element));
+            });
+            update(["fillerSegmentTable"]);
+          },
+          failed: (val) {
+            Snack.callError(val.toString());
+          });
     }
   }
 
@@ -458,16 +416,16 @@ class FillerController extends GetxController {
           value: element.key == "selected" || element.value == null
               ? ""
               : element.key.toString().toLowerCase().contains("date")
-              ? (element.value.toString().contains('T') &&
-              element.value.toString().split('T')[1] == '00:00:00')
-              ? DateFormat("dd/MM/yyyy").format(
-              DateFormat('yyyy-MM-ddTHH:mm:ss')
-                  .parse(element.value.toString()))
-              : DateFormat("dd/MM/yyyy HH:mm:ss").format(
-              DateFormat('yyyy-MM-ddTHH:mm:ss')
-                  .parse(element.value.toString()))
-          // DateFormat("dd-MM-yyyy hh:mm").format(DateTime.parse(element.value.toString().replaceAll("T", " ")))
-              : element.value.toString(),
+                  ? (element.value.toString().contains('T') &&
+                          element.value.toString().split('T')[1] == '00:00:00')
+                      ? DateFormat("dd/MM/yyyy").format(
+                          DateFormat('yyyy-MM-ddTHH:mm:ss')
+                              .parse(element.value.toString()))
+                      : DateFormat("dd/MM/yyyy HH:mm:ss").format(
+                          DateFormat('yyyy-MM-ddTHH:mm:ss')
+                              .parse(element.value.toString()))
+                  // DateFormat("dd-MM-yyyy hh:mm").format(DateTime.parse(element.value.toString().replaceAll("T", " ")))
+                  : element.value.toString(),
         );
       }
 
@@ -498,7 +456,7 @@ class FillerController extends GetxController {
     // log(conflictReportStateManager.currentRow!.cells["Program"]!.value);
     List<PlutoRow> rows = [];
     for (Map row in beams.where((element) =>
-    element["program"] ==
+        element["program"] ==
         conflictReportStateManager.currentRow!.cells["Program"]!.value)) {
       Map<String, PlutoCell> cells = {};
 
@@ -507,16 +465,16 @@ class FillerController extends GetxController {
           value: element.key == "selected" || element.value == null
               ? ""
               : element.key.toString().toLowerCase().contains("date")
-              ? (element.value.toString().contains('T') &&
-              element.value.toString().split('T')[1] == '00:00:00')
-              ? DateFormat("dd/MM/yyyy").format(
-              DateFormat('yyyy-MM-ddTHH:mm:ss')
-                  .parse(element.value.toString()))
-              : DateFormat("dd/MM/yyyy HH:mm:ss").format(
-              DateFormat('yyyy-MM-ddTHH:mm:ss')
-                  .parse(element.value.toString()))
-          // ? DateFormat("dd/MM/yyyy hh:mm").format(DateTime.parse(element.value.toString().replaceAll("T", " ")))
-              : element.value.toString(),
+                  ? (element.value.toString().contains('T') &&
+                          element.value.toString().split('T')[1] == '00:00:00')
+                      ? DateFormat("dd/MM/yyyy").format(
+                          DateFormat('yyyy-MM-ddTHH:mm:ss')
+                              .parse(element.value.toString()))
+                      : DateFormat("dd/MM/yyyy HH:mm:ss").format(
+                          DateFormat('yyyy-MM-ddTHH:mm:ss')
+                              .parse(element.value.toString()))
+                  // ? DateFormat("dd/MM/yyyy hh:mm").format(DateTime.parse(element.value.toString().replaceAll("T", " ")))
+                  : element.value.toString(),
         );
       }
 
@@ -550,6 +508,17 @@ class FillerController extends GetxController {
       listData?.clear();
       LoadingDialog.call();
     }
+  }
+
+  bool isBMSTimeGreater(String? value, String? refrence) {
+    var firstvalue = value!.split(":");
+    var secondValue = refrence!.split(":");
+    for (var i = 0; i < 4; i++) {
+      if (int.parse(firstvalue[i]) > int.parse(secondValue[i])) {
+        return true;
+      }
+    }
+    return false;
   }
 
   void clear() {
