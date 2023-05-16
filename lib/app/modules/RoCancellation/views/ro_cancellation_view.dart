@@ -1,4 +1,3 @@
-import 'package:bms_scheduling/app/modules/RoBooking/views/dummydata.dart';
 import 'package:bms_scheduling/widgets/DataGridShowOnly.dart';
 import 'package:bms_scheduling/widgets/DateTime/DateWithThreeTextField.dart';
 import 'package:bms_scheduling/widgets/FormButton.dart';
@@ -7,6 +6,7 @@ import 'package:bms_scheduling/widgets/input_fields.dart';
 import 'package:flutter/material.dart';
 
 import 'package:get/get.dart';
+import 'package:pluto_grid/pluto_grid.dart';
 
 import '../../../controller/HomeController.dart';
 import '../controllers/ro_cancellation_controller.dart';
@@ -37,7 +37,7 @@ class RoCancellationView extends GetView<RoCancellationController> {
                         controller.locations.value, (value) {
                       controller.selectedLocation = value;
                       controller.getChannel(value.key);
-                    }, "Location", 0.12),
+                    }, "Location", 0.24),
                   ),
                   Obx(
                     () => DropDownField.formDropDown1WidthMap(
@@ -45,41 +45,104 @@ class RoCancellationView extends GetView<RoCancellationController> {
                       controller.selectedChannel = value;
                     }, "Channel", 0.24),
                   ),
-                  DateWithThreeTextField(
-                      widthRation: 0.12,
-                      title: "Cancel Date",
-                      mainTextController: controller.cancelDatectrl),
-                  DateWithThreeTextField(
-                      widthRation: 0.12,
-                      title: "Eff. Date",
-                      mainTextController: controller.effDatectrl),
+                  SizedBox(
+                      width: Get.width * 0.45,
+                      child: Row(
+                        mainAxisSize: MainAxisSize.max,
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        children: [
+                          Obx(
+                            () => DateWithThreeTextField(
+                                widthRation: 0.20,
+                                isEnable: controller.enableCancelDate.value,
+                                title: "Cancel Date",
+                                mainTextController: controller.cancelDatectrl),
+                          ),
+                          Obx(
+                            () => DateWithThreeTextField(
+                                widthRation: 0.20,
+                                isEnable: controller.enableEffDate.value,
+                                title: "Eff. Date",
+                                onFocusChange: (value) {
+                                  controller.cancelMonthctrl.text =
+                                      value.split("-")[2] + value.split("-")[1];
+                                  controller.enableCancelMonth.value = false;
+                                },
+                                mainTextController: controller.effDatectrl),
+                          )
+                        ],
+                      )),
                   InputFields.formField1(
                       hintTxt: "Reference",
+                      width: 0.24,
                       controller: controller.refNumberctrl),
                   InputFields.formField1(
                       hintTxt: "Booking No",
+                      width: 0.24,
                       focusNode: controller.bookingNumberFocus,
                       controller: controller.bookingNumberctrl),
-                  InputFields.formField1(
-                      width: 0.24,
-                      hintTxt: "Client",
-                      controller: controller.clientctrl),
-                  InputFields.formField1(
-                      width: 0.24,
-                      hintTxt: "Agency",
-                      controller: controller.agencyctrl),
-                  InputFields.formField1(
-                      width: 0.24,
-                      hintTxt: "Brand",
-                      controller: controller.brandctrl),
-                  Row(
-                    crossAxisAlignment: CrossAxisAlignment.center,
-                    mainAxisSize: MainAxisSize.min,
-                    children: [
-                      Icon(Icons.check_box_outline_blank_outlined),
-                      Text("Select All Sports"),
-                    ],
-                  )
+                  SizedBox(
+                      width: Get.width * 0.45,
+                      child: Row(
+                          mainAxisSize: MainAxisSize.max,
+                          mainAxisAlignment: MainAxisAlignment.start,
+                          children: [
+                            Obx(
+                              () => InputFields.formField1(
+                                  isEnable: controller.enableCancelMonth.value,
+                                  width: 0.18,
+                                  hintTxt: "Cancel No",
+                                  controller: controller.cancelMonthctrl),
+                            ),
+                            Obx(
+                              () => InputFields.formField1(
+                                  isEnable: controller.enableCancelNumber.value,
+                                  width: 0.27,
+                                  focusNode: controller.cancelNumberFocus,
+                                  hintTxt: "",
+                                  controller: controller.cancelNumberctrl),
+                            )
+                          ])),
+                  Obx(
+                    () => InputFields.formField1(
+                        width: 0.24,
+                        isEnable: controller.enableBrandClientAgent.value,
+                        hintTxt: "Client",
+                        controller: controller.clientctrl),
+                  ),
+                  Obx(
+                    () => InputFields.formField1(
+                        width: 0.24,
+                        isEnable: controller.enableBrandClientAgent.value,
+                        hintTxt: "Agency",
+                        controller: controller.agencyctrl),
+                  ),
+                  Obx(
+                    () => InputFields.formField1(
+                        width: 0.24,
+                        isEnable: controller.enableBrandClientAgent.value,
+                        hintTxt: "Brand",
+                        controller: controller.brandctrl),
+                  ),
+                  Obx(() => InkWell(
+                        onTap: () {
+                          controller.roCancellationGridManager!
+                              .toggleAllRowChecked(!controller.selectAll.value);
+                          controller.selectAll.value =
+                              !controller.selectAll.value;
+                        },
+                        focusNode: controller.selectAllFocus,
+                        child: Row(
+                          crossAxisAlignment: CrossAxisAlignment.center,
+                          mainAxisSize: MainAxisSize.min,
+                          children: [
+                            Icon(controller.selectAll.value
+                                ? Icons.check_box_outlined
+                                : Icons.check_box_outline_blank_outlined),
+                            Text("Select All Sports"),
+                          ],
+                        ),
+                      ))
                 ],
               ),
             ),
@@ -99,10 +162,14 @@ class RoCancellationView extends GetView<RoCancellationController> {
               child: Row(
                 mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                 children: [
-                  Text("Total Spots: 13"),
-                  Text("Total Duration: 00:09:30:00"),
-                  Text("Total Amount: 1200"),
-                  Text("Total Val. Amount: 1150"),
+                  Obx(() => Text(
+                      "Total Spots: ${controller.intTotalCount.value ?? "--"}")),
+                  Obx(() => Text(
+                      "Total Duration: ${controller.intTotalDuration.value ?? "--"}")),
+                  Obx(() => Text(
+                      "Total Amount: ${controller.intTotalAmount.value ?? "--"}")),
+                  Obx(() => Text(
+                      "Total Val. Amount: ${controller.intTotalValuationAmount.value ?? "--"}")),
                 ],
               ),
             ),
@@ -121,10 +188,64 @@ class RoCancellationView extends GetView<RoCancellationController> {
                   )),
               child: Row(
                 children: [
-                  Container(
-                    width: Get.width * .9,
-                    child: DataGridShowOnlyKeys(mapData: dummyProgram),
-                  ),
+                  GetBuilder<RoCancellationController>(
+                      init: controller,
+                      id: "cancelData",
+                      builder: (cancelDatactrl) {
+                        if (cancelDatactrl.roCancellationData == null ||
+                            cancelDatactrl
+                                    .roCancellationData!.cancellationData ==
+                                null ||
+                            cancelDatactrl.roCancellationData!.cancellationData!
+                                    .lstBookingNoStatusData ==
+                                null ||
+                            cancelDatactrl.roCancellationData!.cancellationData!
+                                .lstBookingNoStatusData!.isEmpty) {
+                          return Container(
+                            width: Get.width * .9,
+                            decoration: BoxDecoration(
+                                border: Border.all(color: Colors.grey[300]!)),
+                          );
+                        } else {
+                          return Container(
+                            width: Get.width * .9,
+                            child: DataGridShowOnlyKeys(
+                                onRowChecked: (rowcheckEvent) {
+                                  controller
+                                      .roCancellationData!
+                                      .cancellationData!
+                                      .lstBookingNoStatusData![
+                                          rowcheckEvent.rowIdx!]
+                                      .requested = rowcheckEvent.isChecked;
+                                  rowcheckEvent.row!.cells["requested"]!.value =
+                                      "${rowcheckEvent.isChecked}";
+                                },
+                                checkRow: true,
+                                onload: (loadEvent) {
+                                  controller.roCancellationGridManager =
+                                      loadEvent.stateManager;
+                                  for (var i = 0;
+                                      i < loadEvent.stateManager.rows.length;
+                                      i++) {
+                                    PlutoRow row =
+                                        loadEvent.stateManager.rows[i];
+                                    if (row.cells["requested"]!.value == true ||
+                                        row.cells["requested"]!.value ==
+                                            "true") {
+                                      loadEvent.stateManager
+                                          .setRowChecked(row, true);
+                                    }
+                                  }
+                                },
+                                hideCheckKeysValue: true,
+                                checkRowKey: "requested",
+                                mapData: cancelDatactrl.roCancellationData!
+                                    .cancellationData!.lstBookingNoStatusData!
+                                    .map((e) => e.toJson())
+                                    .toList()),
+                          );
+                        }
+                      }),
                   SizedBox(
                     width: 3,
                   ),
@@ -136,7 +257,10 @@ class RoCancellationView extends GetView<RoCancellationController> {
                         FormButtonWrapper(
                           width: Get.width * 0.07,
                           btnText: "Import",
-                          callback: () {},
+                          callback: () {
+                            print(controller.cancelDatectrl.text.toString());
+                            print(controller.effDatectrl.text.toString());
+                          },
                         ),
                         SizedBox(
                           height: 30,
@@ -144,7 +268,9 @@ class RoCancellationView extends GetView<RoCancellationController> {
                         FormButtonWrapper(
                           width: Get.width * 0.07,
                           btnText: "OK",
-                          callback: () {},
+                          callback: () {
+                            controller.calculate();
+                          },
                         ),
                       ],
                     ),
@@ -177,7 +303,9 @@ class RoCancellationView extends GetView<RoCancellationController> {
                                 btnText: btn["name"],
 
                                 // isEnabled: btn['isDisabled'],
-                                callback: () {},
+                                callback: () {
+                                  controller.save();
+                                },
                               )
                             : btn["name"] == "Clear"
                                 ? FormButtonWrapper(

@@ -18,6 +18,7 @@ class DataGridShowOnlyKeys extends StatelessWidget {
     this.showonly,
     this.enableSort = false,
     this.onload,
+    this.hideCheckKeysValue = false,
     this.hideKeys,
     this.mode,
     this.editKeys,
@@ -28,6 +29,7 @@ class DataGridShowOnlyKeys extends StatelessWidget {
     this.columnAutoResize = true,
     this.actionOnPress,
     this.onSelected,
+    this.keysWidths,
     this.checkRowKey = "selected",
     this.onRowDoubleTap,
     this.formatDate = true,
@@ -37,6 +39,7 @@ class DataGridShowOnlyKeys extends StatelessWidget {
     this.doPasccal = true,
     this.exportFileName,
     this.focusNode,
+    this.onRowChecked,
     this.previousWidgetFN,
   }) : super(key: key);
   final List mapData;
@@ -55,13 +58,16 @@ class DataGridShowOnlyKeys extends StatelessWidget {
   final Function(PlutoGridOnChangedEvent)? onEdit;
   final Function(bool)? onFocusChange;
   final List? hideKeys;
+  final Function(PlutoGridOnRowCheckedEvent)? onRowChecked;
   final Function(PlutoGridOnSelectedEvent)? onSelected;
   final double? widthRatio;
   final IconData? actionIcon;
+  final Map<String, double>? keysWidths;
   final String? actionIconKey;
   final bool columnAutoResize;
   final List<String>? editKeys;
   final Function? actionOnPress;
+  final bool hideCheckKeysValue;
   final bool doPasccal;
   Color Function(PlutoRowColorContext)? colorCallback;
   Function(PlutoGridOnLoadedEvent)? onload;
@@ -156,10 +162,12 @@ class DataGridShowOnlyKeys extends StatelessWidget {
                 enableEditingMode: editKeys != null && editKeys!.contains(key),
                 enableDropToResize: true,
                 enableContextMenu: false,
-                width: Utils.getColumnSize(
-                  key: key,
-                  value: mapData[0][key].toString(),
-                ),
+                width: (keysWidths != null && keysWidths!.containsKey(key))
+                    ? keysWidths![key]!
+                    : Utils.getColumnSize(
+                        key: key,
+                        value: mapData[0][key].toString(),
+                      ),
                 enableAutoEditing: false,
                 hide: showonly == null
                     ? (hideKeys != null && hideKeys!.contains(key)) ||
@@ -204,7 +212,11 @@ class DataGridShowOnlyKeys extends StatelessWidget {
                             exportFileName: exportFileName);
                       },
                       child: Text(
-                        rendererContext.cell.value.toString(),
+                        (checkRow == true &&
+                                key == checkRowKey &&
+                                hideCheckKeysValue)
+                            ? ""
+                            : rendererContext.cell.value.toString(),
                         style: TextStyle(
                           fontSize: SizeDefine.columnTitleFontSize,
                         ),
@@ -219,7 +231,11 @@ class DataGridShowOnlyKeys extends StatelessWidget {
                           exportFileName: exportFileName);
                     },
                     child: Text(
-                      rendererContext.cell.value.toString(),
+                      (checkRow == true &&
+                              key == checkRowKey &&
+                              hideCheckKeysValue)
+                          ? ""
+                          : rendererContext.cell.value.toString(),
                       style: TextStyle(
                         fontSize: SizeDefine.columnTitleFontSize,
                       ),
@@ -232,7 +248,9 @@ class DataGridShowOnlyKeys extends StatelessWidget {
               enableEditingMode: editKeys != null && editKeys!.contains(key),
               enableDropToResize: true,
               enableContextMenu: false,
-              width: Utils.getColumnSize(key: key, value: mapData[0][key]),
+              width: (keysWidths != null && keysWidths!.containsKey(key))
+                  ? keysWidths![key]!
+                  : Utils.getColumnSize(key: key, value: mapData[0][key]),
               enableAutoEditing: false,
               hide: showonly == null
                   ? (hideKeys != null && hideKeys!.contains(key)) ||
@@ -287,6 +305,7 @@ class DataGridShowOnlyKeys extends StatelessWidget {
                 actionKey: actionIconKey,
                 previousWidgetFN: previousWidgetFN,
               ),
+              onRowChecked: onRowChecked,
               rowColorCallback: colorCallback,
               onLoaded: (load) {
                 load.stateManager.setColumnSizeConfig(PlutoGridColumnSizeConfig(

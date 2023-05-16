@@ -1,77 +1,156 @@
-[
-  {
-    "id": 1,
-    "name": "Auto",
-    "isDisabled": false
-  },
-  {
-    "id": 2,
-    "name": "Save",
-    "isDisabled": false
-  },
-  {
-    "id": 2,
-    "name": "Commercials",
-    "isDisabled": false
-  },
-  {
-    "id": 3,
-    "name": "Insert",
-    "isDisabled": false
-  },
-  {
-    "id": 3,
-    "name": "Updated",
-    "isDisabled": false
-  },
-  {
-    "id": 4,
-    "name": "Segments",
-    "isDisabled": true
-  },
-  {
-    "id": 5,
-    "name": "Change",
-    "isDisabled": true
-  },
-  {
-    "id": 5,
-    "name": "Export",
-    "isDisabled": true
-  },
-  {
-    "id": 5,
-    "name": "Next Time",
-    "isDisabled": true
-  },
-  {
-    "id": 5,
-    "name": "Undo",
-    "isDisabled": true
-  },
-  {
-    "id": 5,
-    "name": "TS",
-    "isDisabled": true
-  },
-  {
-    "id": 5,
-    "name": "Verify",
-    "isDisabled": true
-  },
-  {
-    "id": 5,
-    "name": "Clear",
-    "isDisabled": true
-  },
-  {
-    "id": 5,
-    "name": "Load",
-    "isDisabled": true
-  },
-  {
-    "id": 5,
-    "name": "Search",
-    "isDisabled": true
-  }
-]
+{
+  "transmissionLog": [
+    {
+      "id": 1,
+      "name": "Auto",
+      "isDisabled": false
+    },
+    {
+      "id": 2,
+      "name": "Save",
+      "isDisabled": false
+    },
+    {
+      "id": 2,
+      "name": "Commercials",
+      "isDisabled": false
+    },
+    {
+      "id": 3,
+      "name": "Insert",
+      "isDisabled": false
+    },
+    {
+      "id": 3,
+      "name": "Updated",
+      "isDisabled": false
+    },
+    {
+      "id": 4,
+      "name": "Segments",
+      "isDisabled": true
+    },
+    {
+      "id": 5,
+      "name": "Change",
+      "isDisabled": true
+    },
+    {
+      "id": 5,
+      "name": "Export",
+      "isDisabled": true
+    },
+    {
+      "id": 5,
+      "name": "Next Time",
+      "isDisabled": true
+    },
+    {
+      "id": 5,
+      "name": "Undo",
+      "isDisabled": true
+    },
+    {
+      "id": 5,
+      "name": "TS",
+      "isDisabled": true
+    },
+    {
+      "id": 5,
+      "name": "Verify",
+      "isDisabled": true
+    },
+    {
+      "id": 5,
+      "name": "Clear",
+      "isDisabled": true
+    },
+    {
+      "id": 5,
+      "name": "Load",
+      "isDisabled": true
+    },
+    {
+      "id": 5,
+      "name": "Search",
+      "isDisabled": true
+    }
+  ],
+  "assrunImport": [
+    {
+      "id": 1,
+      "name": "Save",
+      "isDisabled": false
+    },
+    {
+      "id": 2,
+      "name": "Delete",
+      "isDisabled": false
+    },
+    {
+      "id": 2,
+      "name": "Refresh",
+      "isDisabled": false
+    },
+    {
+      "id": 3,
+      "name": "Clear",
+      "isDisabled": false
+    },
+    {
+      "id": 3,
+      "name": "Exit",
+      "isDisabled": false
+    },
+    {
+      "id": 4,
+      "name": "Search",
+      "isDisabled": true
+    },
+    {
+      "id": 5,
+      "name": "Docs",
+      "isDisabled": true
+    },
+    {
+      "id": 5,
+      "name": "Import",
+      "isDisabled": true
+    },
+    {
+      "id": 5,
+      "name": "Commercials",
+      "isDisabled": true
+    },
+    {
+      "id": 5,
+      "name": "Error",
+      "isDisabled": true
+    },
+    {
+      "id": 5,
+      "name": "View FPC",
+      "isDisabled": true
+    },
+    {
+      "id": 5,
+      "name": "SP Verify",
+      "isDisabled": true
+    },
+    {
+      "id": 5,
+      "name": "Swap",
+      "isDisabled": true
+    },
+    {
+      "id": 5,
+      "name": "Paste Up",
+      "isDisabled": true
+    },
+    {
+      "id": 5,
+      "name": "Paste Down",
+      "isDisabled": true
+    }
+  ]
+}

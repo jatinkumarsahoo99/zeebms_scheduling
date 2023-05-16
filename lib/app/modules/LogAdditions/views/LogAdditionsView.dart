@@ -11,6 +11,7 @@ import '../../../../widgets/gridFromMap1.dart';
 import '../../../../widgets/input_fields.dart';
 import '../../../controller/HomeController.dart';
 import '../../../providers/SizeDefine.dart';
+import '../../CommonSearch/views/common_search_view.dart';
 import '../controllers/LogAdditionsController.dart';
 
 class LogAdditionsView extends GetView<LogAdditionsController> {
@@ -83,18 +84,6 @@ class LogAdditionsView extends GetView<LogAdditionsController> {
                             widthRation: 0.12,
                             isEnable: controllerX.isEnable.value,
                             onFocusChange: (data) {
-                              // controllerX.selectedDate.text =
-                              //     DateFormat('dd/MM/yyyy').format(
-                              //         DateFormat("dd-MM-yyyy").parse(data));
-                              // DateFormat("dd-MM-yyyy").parse(data);
-                              print("Called when focus changed");
-                              /*controller.getDailyFPCDetailsList(
-                                controllerX.selectedLocationId.text,
-                                controllerX.selectedChannelId.text,
-                                controllerX.convertToAPIDateType(),
-                              );*/
-
-                              // controller.isTableDisplayed.value = true;
                               controllerX.getAdditionList();
                             },
                             mainTextController: controllerX.selectedDate,
@@ -359,6 +348,14 @@ class LogAdditionsView extends GetView<LogAdditionsController> {
       case "clear":
         Get.delete<LogAdditionsController>();
         Get.find<HomeController>().clearPage1();
+        break;
+      case "search":
+        Get.to(SearchPage(
+            key: Key("Log Additions"),
+            screenName: "Log Additions",
+            appBarName: "Log Additions",
+            strViewName: "BMS_VTransmissionLog",
+            isAppBarReq: true));
         break;
     }
   }
