@@ -337,6 +337,7 @@ class DataGridFromMap3 extends StatelessWidget {
     this.previousWidgetFN,
     this.focusNode,
     this.gridStyle,
+    this.checkBoxColumnNoEditKey,
   }) : super(key: key);
   final FocusNode? previousWidgetFN;
   PlutoGridStyleConfig? gridStyle;
@@ -372,6 +373,7 @@ class DataGridFromMap3 extends StatelessWidget {
   Function(PlutoGridOnLoadedEvent)? onload;
   final GlobalKey rebuildKey = GlobalKey();
   final List<String>? checkBoxColumnKey;
+  final List<String>? checkBoxColumnNoEditKey;
   final String? uncheckCheckBoxStr;
   final String? checkBoxStrComparison;
   final void Function(String columnName)? onColumnHeaderDoubleTap;
@@ -432,40 +434,42 @@ class DataGridFromMap3 extends StatelessWidget {
             if (checkBoxColumnKey != null && checkBoxColumnKey!.isNotEmpty && checkBoxColumnKey!.contains(key)) {
               return InkWell(
                 canRequestFocus: false,
-                onTap: () {
-                  if (showTitleInCheckBox != null && showTitleInCheckBox!.isNotEmpty) {
-                    var temp = mapData[rendererContext.rowIdx][key];
-                    temp['key'] = (temp['key'] == checkBoxStrComparison) ? uncheckCheckBoxStr : checkBoxStrComparison;
-                    rendererContext.stateManager.changeCellValue(
-                      rendererContext.cell,
-                      temp,
-                      force: true,
-                      callOnChangedEvent: true,
-                      notify: true,
-                    );
-                  } else {
-                    rendererContext.stateManager.changeCellValue(
-                      rendererContext.cell,
-                      rendererContext.cell.value == checkBoxStrComparison ? uncheckCheckBoxStr : checkBoxStrComparison,
-                      force: true,
-                      callOnChangedEvent: true,
-                      notify: true,
-                    );
-                  }
-                },
+                onTap: !(checkBoxColumnNoEditKey?.contains(key) ?? false)
+                    ? () {
+                        if (showTitleInCheckBox != null && showTitleInCheckBox!.isNotEmpty) {
+                          var temp = mapData[rendererContext.rowIdx][key];
+                          temp['key'] = (temp['key'] == checkBoxStrComparison) ? uncheckCheckBoxStr : checkBoxStrComparison;
+                          rendererContext.stateManager.changeCellValue(
+                            rendererContext.cell,
+                            temp,
+                            force: true,
+                            callOnChangedEvent: true,
+                            notify: true,
+                          );
+                        } else {
+                          rendererContext.stateManager.changeCellValue(
+                            rendererContext.cell,
+                            rendererContext.cell.value == checkBoxStrComparison ? uncheckCheckBoxStr : checkBoxStrComparison,
+                            force: true,
+                            callOnChangedEvent: true,
+                            notify: true,
+                          );
+                        }
+                      }
+                    : null,
                 child: Row(
                   mainAxisSize: MainAxisSize.max,
                   children: [
                     Icon(
                       ((showTitleInCheckBox != null && showTitleInCheckBox!.isNotEmpty)
                                   ? mapData[rendererContext.rowIdx][key]['key']
-                                  : rendererContext.cell.value) ==
+                                  : rendererContext.cell.value.toString()) ==
                               checkBoxStrComparison
                           ? Icons.check_box
                           : Icons.check_box_outline_blank,
                       color: ((showTitleInCheckBox != null && showTitleInCheckBox!.isNotEmpty)
                                   ? mapData[rendererContext.rowIdx][key]['key']
-                                  : rendererContext.cell.value) ==
+                                  : rendererContext.cell.value.toString()) ==
                               checkBoxStrComparison
                           ? Colors.deepPurpleAccent
                           : Colors.grey,

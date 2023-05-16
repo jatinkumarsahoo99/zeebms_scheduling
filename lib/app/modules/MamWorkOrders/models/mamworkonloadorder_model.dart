@@ -29,7 +29,6 @@ class MAMWORKORDERONLOADMODEL {
       this.btnSave});
 
   MAMWORKORDERONLOADMODEL.fromJson(Map<String, dynamic> json) {
-    print(json);
     if (json['lstcboLocation'] != null) {
       lstcboLocation = <DropDownValue>[];
       json['lstcboLocation'].forEach((v) {

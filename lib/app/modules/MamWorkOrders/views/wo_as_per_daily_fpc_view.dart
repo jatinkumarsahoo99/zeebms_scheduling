@@ -20,28 +20,50 @@ class WoAsPerDailyFpcView extends GetView {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        Row(
-          children: [
-            DropDownField.formDropDown1WidthMap([], (value) => {}, "Work Order Type", 0.24),
-          ],
-        ),
-        Divider(
-          height: 10,
-        ),
-        Wrap(
-          crossAxisAlignment: WrapCrossAlignment.end,
-          spacing: Get.width * 0.005,
-          runSpacing: 5,
-          children: [
-            DropDownField.formDropDown1WidthMap([], (value) => {}, "Location", 0.12),
-            DropDownField.formDropDown1WidthMap([], (value) => {}, "Channel", 0.24),
-            DateWithThreeTextField(title: "Ref Date", widthRation: 0.12, mainTextController: TextEditingController()),
-            Text("Double Click Quality Column to swap between HD to SD")
-          ],
-        ),
-        Divider(
-          height: 10,
-        ),
+        Obx(() {
+          return DropDownField.formDropDown1WidthMap(
+            controller.onloadData.value.lstcboWOTypeFPC ?? [],
+            (value) => controller.woAsPerDailyFPCSelectedWoType = value,
+            "Work Order Type",
+            0.24,
+            selected: controller.woAsPerDailyFPCSelectedWoType,
+          );
+        }),
+        Divider(height: 10),
+        Obx(() {
+          print("All UI Building");
+          return Wrap(
+            crossAxisAlignment: WrapCrossAlignment.end,
+            spacing: Get.width * 0.005,
+            runSpacing: 5,
+            children: [
+              DropDownField.formDropDown1WidthMap(
+                controller.onloadData.value.lstcboLocationFPC ?? [],
+                controller.handleOnAsPerDailyFpcLocationChanged,
+                "Location",
+                0.12,
+                selected: controller.woAsPerDailyFPCSelectedLocation,
+              ),
+              Obx(() {
+                print("channel UI Building");
+                return DropDownField.formDropDown1WidthMap(
+                  controller.woAsPerDailyFPCChannelList.value,
+                  (value) => controller.woAsPerDailyFPCSelectedChannel = value,
+                  "Channel",
+                  0.24,
+                  selected: controller.woAsPerDailyFPCSelectedChannel,
+                );
+              }),
+              DateWithThreeTextField(
+                title: "Ref Date",
+                widthRation: 0.12,
+                mainTextController: TextEditingController(),
+              ),
+              Text("Double Click Quality Column to swap between HD to SD")
+            ],
+          );
+        }),
+        Divider(height: 10),
         Expanded(
             child: Container(
           color: Colors.amber,
