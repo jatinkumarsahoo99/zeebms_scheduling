@@ -257,7 +257,7 @@ class DataGridFromMap extends StatelessWidget {
         }
         segRows.add(PlutoRow(cells: cells, sortIdx: i));
       } catch (e) {
-        print("problem in adding rows");
+        print("problem in adding rows"+e.toString());
       }
     }
 

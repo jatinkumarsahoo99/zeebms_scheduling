@@ -386,4 +386,161 @@ class ConnectorControl extends GetConnect {
       }
     }
   }
+
+
+  POSTMETHOD_FORMDATA_HEADER(
+      {required String api,
+        required dynamic json,
+        int? timeout = 36000,
+        required Function fun}) async {
+    try {
+      service.Response response = await dio.post(api,
+          data: json,
+          options: Options(
+              receiveTimeout: Duration(milliseconds: timeout!),
+              sendTimeout: Duration(milliseconds: timeout),
+              headers: {
+                // "accept-language": (AppData.selectedLanguage=="English")?"en":"ar",
+                'Content-Type': 'application/json',
+                "Authorization": "Bearer " +
+                    ((Get.find<MainController>().user != null)
+                        ? Get.find<MainController>().user?.token ?? ""
+                        : ""),
+
+                "PersonnelNo": ((Get.find<MainController>().user != null)
+                    ? Aes.encrypt(
+                    Get.find<MainController>().user?.personnelNo ?? "")
+                    : ""),
+                "Userid": ((Get.find<MainController>().user != null)
+                    ? Aes.encrypt(
+                    Get.find<MainController>().user?.logincode ?? "")
+                    : ""),
+                "FormName": ((Get.find<MainController>().formName != null)
+                    ? Get.find<MainController>().formName ?? ""
+                    : "")
+              },
+              responseType: ResponseType.json));
+      if (response.statusCode == 200 || response.statusCode == 201) {
+        try {
+          // print("RESPONSE CALL>>>>" + JsonEncoder().convert(response.data).toString());
+          fun(response.data);
+        } catch (e) {
+          print("Message is: " + e.toString());
+        }
+      } else if (response.statusCode == 417) {
+        fun(response.data);
+      } else {
+        print("Message is: >>1");
+        fun(failedMap);
+      }
+    } on DioError catch (e) {
+      /* if (e.response?.statusCode == 401 &&
+          (e.response?.headers.map.containsKey("www-authenticate"))! &&
+          e.response?.headers.map["www-authenticate"]?.length == 2 &&
+          (e.response?.headers.map["www-authenticate"]![0]
+              .contains("invalid_token"))! &&
+          (e.response?.headers.map["www-authenticate"]![1]
+              .contains("The token expired at"))!) {*/
+      if (e.response?.statusCode == 401) {
+        //Snack.callError("Token Expired. We are regenerating new token",
+//            widthRatio: 0.5);
+        updateToken(() {
+          POSTMETHOD_FORMDATA(api: api, json: json, fun: fun, timeout: timeout);
+        });
+      } else {
+        switch (e.type) {
+          case DioErrorType.connectionTimeout:
+          case DioErrorType.cancel:
+          case DioErrorType.sendTimeout:
+          case DioErrorType.receiveTimeout:
+          case DioErrorType.unknown:
+            fun(failedMap);
+            break;
+          case DioErrorType.badResponse:
+            fun(e.response?.data);
+        }
+      }
+    }
+  }
+  GET_METHOD_CALL_HEADER(
+      {required String api,
+        // required String formName,
+        required Function fun,
+        Function? failed,
+        ResponseType? responseType}) async {
+    print("<<>>>>>API CALL>>>>>>\n\n\n\n\n\n\n\n\n" + api);
+    try {
+      service.Response response = await dio.get(api,
+          options: Options(
+            responseType: responseType,
+            headers: {
+              "Access-Control-Allow-Origin": "*",
+              "Authorization": "Bearer " +
+                  ((Get.find<MainController>().user != null)
+                      ? Get.find<MainController>().user?.token ?? ""
+                      : ""),
+              "PersonnelNo": ((Get.find<MainController>().user != null)
+                  ? Aes.encrypt(
+                  Get.find<MainController>().user?.personnelNo ?? "")
+                  : ""),
+              "Userid": ((Get.find<MainController>().user != null)
+                  ? Aes.encrypt(
+                  Get.find<MainController>().user?.logincode ?? "")
+                  : ""),
+              "FormName": ((Get.find<MainController>().formName != null)
+                  ? Get.find<MainController>().formName ?? ""
+                  : "")
+            },
+          ));
+      if (response.statusCode == 200) {
+        try {
+          fun(response.data);
+        } catch (e) {
+          print("Message is: " + e.toString());
+        }
+      } else if (response.statusCode == 500) {
+        print("MI II>>" + response.data);
+        if (failed != null) {
+          failed(response.data);
+        }
+      } else if (response.statusCode == 401) {
+        print("MI II>>" + response.data);
+        if (failed != null) {
+          failed(failedMap);
+        }
+      }
+    } on DioError catch (e) {
+      print("Connector Response Error>>" + jsonEncode(e.response?.headers.map));
+      /*print("(e.response?.headers.map.containsKey(\"www-authenticate\"))!"+((e.response?.headers.map.containsKey("www-authenticate"))!).toString());
+      print("Status Code"+((e.response?.statusCode!).toString()));
+      print("value"+(e.response?.headers.map["www-authenticate"]![0])!);*/
+      /*if (e.response?.statusCode == 401 &&
+          (e.response?.headers.map.containsKey("www-authenticate"))! &&
+          e.response?.headers.map["www-authenticate"]?.length == 2 &&
+          (e.response?.headers.map["www-authenticate"]![0]
+              .contains("invalid_token"))! &&
+          (e.response?.headers.map["www-authenticate"]![1]
+              .contains("The token expired at"))!) {*/
+      if (e.response?.statusCode == 401) {
+        //Snack.callError("Token Expired. We are regenerating new token",
+//            widthRatio: 0.5);
+        updateToken(() {
+          GETMETHODCALL(api: api, fun: fun, failed: failed);
+        });
+      } else {
+        switch (e.type) {
+          case DioErrorType.connectionTimeout:
+          case DioErrorType.cancel:
+          case DioErrorType.sendTimeout:
+          case DioErrorType.receiveTimeout:
+          case DioErrorType.unknown:
+            failed!(failedMap);
+            // Snack.callError("Unauthorised");
+            break;
+          case DioErrorType.badResponse:
+            failed!(e.response?.data ?? "");
+        }
+      }
+    }
+  }
 }
