@@ -5,7 +5,6 @@ import '../../../../widgets/DateTime/DateWithThreeTextField.dart';
 import '../../../../widgets/FormButton.dart';
 import '../../../../widgets/dropdown.dart';
 import '../../../../widgets/gridFromMap.dart';
-import '../../../../widgets/gridFromMap1.dart';
 import '../../../controller/HomeController.dart';
 import '../controllers/SpotPriorityController.dart';
 
@@ -79,7 +78,7 @@ class SpotPriorityView extends GetView<SpotPriorityController> {
                             widthRation: 0.12,
                             isEnable: controllerX.isEnable.value,
                             onFocusChange: (data) {},
-                            mainTextController: controllerX.selectedDate,
+                            mainTextController: controllerX.frmDate,
                           ),
                         ),
                         Obx(
@@ -89,7 +88,7 @@ class SpotPriorityView extends GetView<SpotPriorityController> {
                             widthRation: 0.12,
                             isEnable: controllerX.isEnable.value,
                             onFocusChange: (data) {},
-                            mainTextController: controllerX.selectedDate,
+                            mainTextController: controllerX.toDate,
                           ),
                         ),
                         Padding(
@@ -98,7 +97,7 @@ class SpotPriorityView extends GetView<SpotPriorityController> {
                           child: FormButtonWrapper(
                             btnText: "Show Details",
                             callback: () {
-                              // controllerX.showDetails();
+                              controllerX.getShowDetails();
                             },
                             showIcon: false,
                           ),
@@ -110,14 +109,14 @@ class SpotPriorityView extends GetView<SpotPriorityController> {
                         /// channel
                         Obx(
                           () => DropDownField.formDropDown1WidthMap(
-                            controllerX.additions.value,
+                            controllerX.priorityList.value,
                             (value) {
-                              controllerX.selectAdditions = value;
+                              controllerX.selectPriority = value;
                             },
                             "Select Priority",
                             0.12,
                             // isEnable: controllerX.isEnable.value,
-                            selected: controllerX.selectAdditions,
+                            selected: controllerX.selectPriority,
                             autoFocus: true,
                             dialogWidth: 200,
                             dialogHeight: Get.height * .3,
@@ -134,14 +133,16 @@ class SpotPriorityView extends GetView<SpotPriorityController> {
             // Divider(),
 
             GetBuilder<SpotPriorityController>(
-              id: "transmissionList",
-              init: controllerX,
+              id: "spotPriorityList",
+              // init: controllerX,
               builder: (controller) {
+                print("Print called test");
                 return Expanded(
                   // width: Get.width,
                   // height: Get.height * .33,
-                  child: (controllerX.logAdditionModel != null &&
-                          (controllerX.logAdditionModel?.isNotEmpty)!)
+                  child: (controllerX.spotPriorityModel != null &&
+                          (controllerX.spotPriorityModel?.lstbookingdetail
+                              ?.isNotEmpty)!)
                       ? DataGridFromMap(
                           onFocusChange: (value) {
                             controllerX.gridStateManager!
@@ -153,21 +154,16 @@ class SpotPriorityView extends GetView<SpotPriorityController> {
                             controllerX.gridStateManager =
                                 loadevent.stateManager;
                           },
-                          hideKeys: ["color", "modifed", ""],
+                          formatDate: false,
+                          // hideKeys: ["color", "modifed", ""],
                           showSrNo: true,
-                          colorCallback: (PlutoRowColorContext plutoContext) {
-
-                            return Color(controllerX
-                                    .logAdditionModel![plutoContext.rowIdx]
-                                    .colorNo ??
-                                Colors.white.value);
-                          },
                           onSelected: (event) {},
                           mode: controllerX.selectedPlutoGridMode,
                           widthRatio: (Get.width / 11.4),
-                          mapData: controllerX.logAdditionModel!
-                              .map((e) => e.toJson1())
-                              .toList())
+                          mapData: (controllerX
+                              .spotPriorityModel?.lstbookingdetail!
+                              .map((e) => e.toJson())
+                              .toList())!)
                       : Container(
                           // height: Get.height * .33,
                           // width: Get.width,
@@ -227,5 +223,16 @@ class SpotPriorityView extends GetView<SpotPriorityController> {
     );
   }
 
-  formHandler(btn) {}
+  formHandler(btn) {
+    switch(btn){
+      case "Save":
+        controllerX.saveSpotPriority();
+        break;
+      case "Clear":
+        Get.delete<SpotPriorityController>();
+        Get.find<HomeController>().clearPage1();
+        // controllerX.clear();
+        break;
+    }
+  }
 }

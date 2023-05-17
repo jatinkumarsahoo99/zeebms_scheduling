@@ -184,8 +184,7 @@ class DataGridFromMap1 extends StatelessWidget {
                     left: 6,
                   ),
                   alignment: Alignment.centerLeft,
-                  color:
-                      (key == "epsNo" || key == "tapeid" || key == "status") ? ColorData.cellColor(rendererContext.row.cells[key]?.value, key) : null,
+                  // color: (key == "epsNo" || key == "tapeid" || key == "status") ? ColorData.cellColor(rendererContext.row.cells[key]?.value, key) : null,
                   child: GestureDetector(
                     onSecondaryTapDown: (detail) {
                       DataGridMenu().showGridMenu(rendererContext.stateManager, detail, context);

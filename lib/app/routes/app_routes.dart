@@ -21,6 +21,12 @@ abstract class Routes {
   static const FINAL_AUDIT_REPORT_AFTER_TELECAST =
       _Paths.FINAL_AUDIT_REPORT_AFTER_TELECAST;
   static const AUDIT_STATUS = _Paths.AUDIT_STATUS;
+  static const ASRUN_IMPORT_AD_REVENUE = _Paths.ASRUN_IMPORT_AD_REVENUE;
+  static const SALES_AUDIT_NOT_TELECAST_REPORT =
+      _Paths.SALES_AUDIT_NOT_TELECAST_REPORT;
+  static const SALES_AUDIT_EXTRA_SPOTS_REPORT =
+      _Paths.SALES_AUDIT_EXTRA_SPOTS_REPORT;
+  static const SALES_AUDIT_NEW = _Paths.SALES_AUDIT_NEW;
 }
 
 abstract class RoutesList {
@@ -59,4 +65,9 @@ abstract class _Paths {
   static const FINAL_AUDIT_REPORT_AFTER_TELECAST =
       '/final-audit-report-after-telecast';
   static const AUDIT_STATUS = '/audit-status';
+  static const ASRUN_IMPORT_AD_REVENUE = '/frmAsrunImport';
+  static const SALES_AUDIT_NOT_TELECAST_REPORT = '/frmsalesauditnottelecast';
+  static const SALES_AUDIT_EXTRA_SPOTS_REPORT =
+      '/frmsalesauditextraspotsreport';
+  static const SALES_AUDIT_NEW = '/TransmissionLog';
 }
