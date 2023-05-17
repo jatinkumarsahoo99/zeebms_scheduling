@@ -23,7 +23,7 @@ dependencies:
   pluto_grid_export: ^1.0.3
   url_launcher:
   data_table_2: 2.3.9
-  url_encoder:
+  # url_encoder:
   azure_application_insights: ^3.1.0
 
   flutter: 
@@ -31,8 +31,8 @@ dependencies:
 
 dev_dependencies: 
   flutter_lints: ^2.0.0
-  flutter_test: 
-    sdk: flutter
+  # flutter_test: 
+  #   sdk: flutter
 
 flutter: 
   uses-material-design: true
