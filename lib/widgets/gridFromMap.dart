@@ -2,6 +2,7 @@ import 'package:bms_scheduling/app/providers/extensions/string_extensions.dart';
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+
 // import 'package:flutter/src/foundation/key.dart';
 // import 'package:flutter/src/widgets/framework.dart';
 import 'package:intl/intl.dart';
@@ -34,6 +35,7 @@ class DataGridFromMap extends StatelessWidget {
     this.actionOnPress,
     this.onSelected,
     this.onRowCheck,
+    this.onContextMenuClick,
     this.checkRowKey = "selected",
     this.onRowDoubleTap,
     this.formatDate = true,
@@ -60,6 +62,7 @@ class DataGridFromMap extends StatelessWidget {
   final Function(PlutoGridOnRowDoubleTapEvent)? onRowDoubleTap;
   final Function(PlutoGridOnChangedEvent)? onEdit;
   final Function(bool)? onFocusChange;
+  final Function(DataGridMenuItem,int)? onContextMenuClick;
   final List? hideKeys;
   final Function(PlutoGridOnSelectedEvent)? onSelected;
   final Function(PlutoGridOnRowCheckedEvent)? onRowCheck;
@@ -93,7 +96,9 @@ class DataGridFromMap extends StatelessWidget {
           enableContextMenu: false,
           width: 25,
           enableAutoEditing: false,
-          hide: hideCode! && key.toString().toLowerCase() != "hourcode" && key.toString().toLowerCase().contains("code"),
+          hide: hideCode! &&
+              key.toString().toLowerCase() != "hourcode" &&
+              key.toString().toLowerCase().contains("code"),
           enableColumnDrag: false,
           field: "no",
           type: PlutoColumnType.text()));
@@ -111,7 +116,8 @@ class DataGridFromMap extends StatelessWidget {
                               : key.toString().pascalCaseToNormal()
                       : key.toString().pascalCaseToNormal()
                   : key.toString(),
-              enableRowChecked: (checkRow == true && key == checkRowKey) ? true : false,
+              enableRowChecked:
+                  (checkRow == true && key == checkRowKey) ? true : false,
               renderer: ((rendererContext) {
                 if (actionIconKey != null && key == actionIconKey) {
                   return GestureDetector(
@@ -141,7 +147,16 @@ class DataGridFromMap extends StatelessWidget {
                 } else {
                   return GestureDetector(
                     onSecondaryTapDown: (detail) {
-                      DataGridMenu().showGridMenu(rendererContext.stateManager, detail, context, exportFileName: exportFileName);
+                      if (onContextMenuClick == null) {
+                        DataGridMenu().showGridMenu(
+                            rendererContext.stateManager, detail, context,
+                            exportFileName: exportFileName);
+                      } else {
+                        DataGridMenu().showGridCustomMenu(
+                            rendererContext.stateManager, detail, context,
+                            exportFileName: exportFileName,
+                            onPressedClick: onContextMenuClick,plutoContext: rendererContext);
+                      }
                     },
                     child: Text(
                       (rendererContext.cell.value ?? "").toString(),
@@ -164,7 +179,9 @@ class DataGridFromMap extends StatelessWidget {
               enableAutoEditing: false,
               hide: showonly == null
                   ? (hideKeys != null && hideKeys!.contains(key)) ||
-                      hideCode! && key.toString().toLowerCase() != "hourcode" && key.toString().toLowerCase().contains("code")
+                      hideCode! &&
+                          key.toString().toLowerCase() != "hourcode" &&
+                          key.toString().toLowerCase().contains("code")
                   : !showonly!.contains(key),
               enableColumnDrag: false,
               field: key,
@@ -180,7 +197,8 @@ class DataGridFromMap extends StatelessWidget {
                     ? "FPC Caption"
                     : key.toString().pascalCaseToNormal()
                 : key,
-            enableRowChecked: (checkRow == true && key == checkRowKey) ? true : false,
+            enableRowChecked:
+                (checkRow == true && key == checkRowKey) ? true : false,
             renderer: ((rendererContext) {
               if (actionIconKey != null) {
                 if (key == actionIconKey) {
@@ -197,7 +215,16 @@ class DataGridFromMap extends StatelessWidget {
                 } else {
                   return GestureDetector(
                     onSecondaryTapDown: (detail) {
-                      DataGridMenu().showGridMenu(rendererContext.stateManager, detail, context, exportFileName: exportFileName);
+                      if (onContextMenuClick == null) {
+                        DataGridMenu().showGridMenu(
+                            rendererContext.stateManager, detail, context,
+                            exportFileName: exportFileName);
+                      } else {
+                        DataGridMenu().showGridCustomMenu(
+                            rendererContext.stateManager, detail, context,
+                            exportFileName: exportFileName,
+                            onPressedClick: onContextMenuClick,plutoContext: rendererContext);
+                      }
                     },
                     child: Text(
                       rendererContext.cell.value.toString(),
@@ -210,7 +237,13 @@ class DataGridFromMap extends StatelessWidget {
               } else {
                 return GestureDetector(
                   onSecondaryTapDown: (detail) {
-                    DataGridMenu().showGridMenu(rendererContext.stateManager, detail, context, exportFileName: exportFileName);
+                    if(onContextMenuClick==null) {
+                      DataGridMenu().showGridMenu(rendererContext.stateManager, detail, context, exportFileName: exportFileName);
+                    }else {
+                      DataGridMenu().showGridCustomMenu(
+                          rendererContext.stateManager, detail, context,
+                          exportFileName: exportFileName,onPressedClick: onContextMenuClick,plutoContext: rendererContext);
+                    }
                   },
                   child: Text(
                     rendererContext.cell.value.toString(),
@@ -230,7 +263,9 @@ class DataGridFromMap extends StatelessWidget {
             enableAutoEditing: false,
             hide: showonly == null
                 ? (hideKeys != null && hideKeys!.contains(key)) ||
-                    hideCode! && key.toString().toLowerCase() != "hourcode" && key.toString().toLowerCase().contains("code")
+                    hideCode! &&
+                        key.toString().toLowerCase() != "hourcode" &&
+                        key.toString().toLowerCase().contains("code")
                 : !showonly!.contains(key),
             enableColumnDrag: false,
             field: key,
@@ -250,14 +285,16 @@ class DataGridFromMap extends StatelessWidget {
           cells[element.key] = PlutoCell(
             value: element.key == "selected" || element.value == null
                 ? ""
-                : element.key.toString().toLowerCase().contains("date") && formatDate!
-                    ? DateFormat(dateFromat).format(DateTime.parse(element.value.toString().replaceAll("T", " ")))
+                : element.key.toString().toLowerCase().contains("date") &&
+                        formatDate!
+                    ? DateFormat(dateFromat).format(DateTime.parse(
+                        element.value.toString().replaceAll("T", " ")))
                     : element.value.toString(),
           );
         }
         segRows.add(PlutoRow(cells: cells, sortIdx: i));
       } catch (e) {
-        print("problem in adding rows"+e.toString());
+        print("problem in adding rows" + e.toString());
       }
     }
 
@@ -279,8 +316,9 @@ class DataGridFromMap extends StatelessWidget {
             ),
             rowColorCallback: colorCallback,
             onLoaded: (load) {
-              load.stateManager
-                  .setColumnSizeConfig(PlutoGridColumnSizeConfig(autoSizeMode: PlutoAutoSizeMode.none, resizeMode: PlutoResizeMode.normal));
+              load.stateManager.setColumnSizeConfig(PlutoGridColumnSizeConfig(
+                  autoSizeMode: PlutoAutoSizeMode.none,
+                  resizeMode: PlutoResizeMode.normal));
               load.stateManager.setKeepFocus(false);
               if (onload != null) {
                 onload!(load);
@@ -366,7 +404,8 @@ class DataGridFromMap3 extends StatelessWidget {
   final List<String?>? actionIconKey;
   final bool columnAutoResize;
   final List<String>? editKeys;
-  final Function(PlutoGridCellPosition position, bool isSpaceCalled)? actionOnPress;
+  final Function(PlutoGridCellPosition position, bool isSpaceCalled)?
+      actionOnPress;
   final bool doPasccal;
   Color Function(PlutoRowColorContext)? colorCallback;
   Function(PlutoGridOnLoadedEvent)? onload;
@@ -377,6 +416,7 @@ class DataGridFromMap3 extends StatelessWidget {
   final void Function(String columnName)? onColumnHeaderDoubleTap;
   PlutoColumnSort sort;
   FocusNode? focusNode;
+
   @override
   Widget build(BuildContext context) {
     List<PlutoColumn> segColumn = [];
@@ -396,7 +436,9 @@ class DataGridFromMap3 extends StatelessWidget {
           enableContextMenu: false,
           width: 25,
           enableAutoEditing: false,
-          hide: hideCode! && key.toString().toLowerCase() != "hourcode" && key.toString().toLowerCase().contains("code"),
+          hide: hideCode! &&
+              key.toString().toLowerCase() != "hourcode" &&
+              key.toString().toLowerCase().contains("code"),
           enableColumnDrag: false,
           field: "no",
           type: PlutoColumnType.text()));
@@ -407,7 +449,9 @@ class DataGridFromMap3 extends StatelessWidget {
       segColumn.add(PlutoColumn(
           titlePadding: const EdgeInsets.only(),
           sort: sort,
-          titleSpan: enableColumnDoubleTap != null && enableColumnDoubleTap!.isNotEmpty && enableColumnDoubleTap!.contains(key)
+          titleSpan: enableColumnDoubleTap != null &&
+                  enableColumnDoubleTap!.isNotEmpty &&
+                  enableColumnDoubleTap!.contains(key)
               ? TextSpan(
                   text: doPasccal
                       ? key == "fpcCaption"
@@ -429,13 +473,18 @@ class DataGridFromMap3 extends StatelessWidget {
               : key,
           enableRowChecked: false,
           renderer: ((rendererContext) {
-            if (checkBoxColumnKey != null && checkBoxColumnKey!.isNotEmpty && checkBoxColumnKey!.contains(key)) {
+            if (checkBoxColumnKey != null &&
+                checkBoxColumnKey!.isNotEmpty &&
+                checkBoxColumnKey!.contains(key)) {
               return InkWell(
                 canRequestFocus: false,
                 onTap: () {
-                  if (showTitleInCheckBox != null && showTitleInCheckBox!.isNotEmpty) {
+                  if (showTitleInCheckBox != null &&
+                      showTitleInCheckBox!.isNotEmpty) {
                     var temp = mapData[rendererContext.rowIdx][key];
-                    temp['key'] = (temp['key'] == checkBoxStrComparison) ? uncheckCheckBoxStr : checkBoxStrComparison;
+                    temp['key'] = (temp['key'] == checkBoxStrComparison)
+                        ? uncheckCheckBoxStr
+                        : checkBoxStrComparison;
                     rendererContext.stateManager.changeCellValue(
                       rendererContext.cell,
                       temp,
@@ -446,7 +495,9 @@ class DataGridFromMap3 extends StatelessWidget {
                   } else {
                     rendererContext.stateManager.changeCellValue(
                       rendererContext.cell,
-                      rendererContext.cell.value == checkBoxStrComparison ? uncheckCheckBoxStr : checkBoxStrComparison,
+                      rendererContext.cell.value == checkBoxStrComparison
+                          ? uncheckCheckBoxStr
+                          : checkBoxStrComparison,
                       force: true,
                       callOnChangedEvent: true,
                       notify: true,
@@ -457,23 +508,28 @@ class DataGridFromMap3 extends StatelessWidget {
                   mainAxisSize: MainAxisSize.max,
                   children: [
                     Icon(
-                      ((showTitleInCheckBox != null && showTitleInCheckBox!.isNotEmpty)
+                      ((showTitleInCheckBox != null &&
+                                      showTitleInCheckBox!.isNotEmpty)
                                   ? mapData[rendererContext.rowIdx][key]['key']
                                   : rendererContext.cell.value) ==
                               checkBoxStrComparison
                           ? Icons.check_box
                           : Icons.check_box_outline_blank,
-                      color: ((showTitleInCheckBox != null && showTitleInCheckBox!.isNotEmpty)
+                      color: ((showTitleInCheckBox != null &&
+                                      showTitleInCheckBox!.isNotEmpty)
                                   ? mapData[rendererContext.rowIdx][key]['key']
                                   : rendererContext.cell.value) ==
                               checkBoxStrComparison
                           ? Colors.deepPurpleAccent
                           : Colors.grey,
                     ),
-                    if (showTitleInCheckBox != null && showTitleInCheckBox!.isNotEmpty && showTitleInCheckBox!.contains(key)) ...{
+                    if (showTitleInCheckBox != null &&
+                        showTitleInCheckBox!.isNotEmpty &&
+                        showTitleInCheckBox!.contains(key)) ...{
                       const SizedBox(width: 5),
                       Text(
-                        (showTitleInCheckBox != null && showTitleInCheckBox!.isNotEmpty)
+                        (showTitleInCheckBox != null &&
+                                showTitleInCheckBox!.isNotEmpty)
                             ? mapData[rendererContext.rowIdx][key]['value']
                             : mapData[rendererContext.rowIdx][key],
                         style: TextStyle(
@@ -488,6 +544,9 @@ class DataGridFromMap3 extends StatelessWidget {
               return GestureDetector(
                 onSecondaryTapDown: (detail) {
                   DataGridMenu().showGridMenu(rendererContext.stateManager, detail, context, exportFileName: exportFileName);
+                  /*DataGridMenu().showGridCustomMenu(
+                      rendererContext.stateManager, detail, context,
+                      exportFileName: exportFileName);*/
                 },
                 child: Text(
                   rendererContext.cell.value.toString(),
@@ -507,7 +566,9 @@ class DataGridFromMap3 extends StatelessWidget {
           enableAutoEditing: false,
           hide: showonly == null
               ? (hideKeys != null && hideKeys!.contains(key)) ||
-                  hideCode! && key.toString().toLowerCase() != "hourcode" && key.toString().toLowerCase().contains("code")
+                  hideCode! &&
+                      key.toString().toLowerCase() != "hourcode" &&
+                      key.toString().toLowerCase().contains("code")
               : !showonly!.contains(key),
           enableColumnDrag: false,
           field: key,
@@ -552,8 +613,9 @@ class DataGridFromMap3 extends StatelessWidget {
             ).copyWith(style: gridStyle),
             rowColorCallback: colorCallback,
             onLoaded: (load) {
-              load.stateManager
-                  .setColumnSizeConfig(PlutoGridColumnSizeConfig(autoSizeMode: PlutoAutoSizeMode.none, resizeMode: PlutoResizeMode.normal));
+              load.stateManager.setColumnSizeConfig(PlutoGridColumnSizeConfig(
+                  autoSizeMode: PlutoAutoSizeMode.none,
+                  resizeMode: PlutoResizeMode.normal));
               load.stateManager.setKeepFocus(false);
               if (onload != null) {
                 onload!(load);

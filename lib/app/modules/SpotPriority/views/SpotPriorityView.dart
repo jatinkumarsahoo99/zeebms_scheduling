@@ -3,9 +3,11 @@ import 'package:get/get.dart';
 import 'package:pluto_grid/pluto_grid.dart';
 import '../../../../widgets/DateTime/DateWithThreeTextField.dart';
 import '../../../../widgets/FormButton.dart';
+import '../../../../widgets/Snack.dart';
 import '../../../../widgets/dropdown.dart';
 import '../../../../widgets/gridFromMap.dart';
 import '../../../controller/HomeController.dart';
+import '../../../providers/DataGridMenu.dart';
 import '../controllers/SpotPriorityController.dart';
 
 class SpotPriorityView extends GetView<SpotPriorityController> {
@@ -154,6 +156,54 @@ class SpotPriorityView extends GetView<SpotPriorityController> {
                             controllerX.gridStateManager =
                                 loadevent.stateManager;
                           },
+                          hideCode: false,
+                          onContextMenuClick:
+                              (DataGridMenuItem? valData, int rowIdx) {
+                            switch (valData) {
+                              case DataGridMenuItem.setPriority:
+                                if (controllerX.selectPriority == null) {
+                                  Snack.callError("Please select priority");
+                                } else {
+                                  controllerX.gridStateManager?.rows[rowIdx]
+                                          .cells["priorityname"]?.value =
+                                      controllerX.selectPriority?.value ?? "";
+                                  controllerX.gridStateManager?.rows[rowIdx]
+                                          .cells["priorityCode"]?.value =
+                                      int.tryParse(
+                                          controllerX.selectPriority?.key ??
+                                              "0");
+                                  controllerX
+                                          .spotPriorityModel
+                                          ?.lstbookingdetail![rowIdx]
+                                          .priorityname =
+                                      controllerX.selectPriority?.value ?? "";
+                                  controllerX
+                                      .spotPriorityModel
+                                      ?.lstbookingdetail![rowIdx]
+                                      .priorityCode = int.tryParse(controllerX
+                                          .selectPriority?.key ??
+                                      "0");
+                                  controllerX.gridStateManager
+                                      ?.notifyListeners();
+                                }
+                                break;
+                              case DataGridMenuItem.clearPriority:
+                                controllerX.gridStateManager?.rows[rowIdx]
+                                    .cells["priorityname"]?.value = "";
+                                controllerX.gridStateManager?.rows[rowIdx]
+                                    .cells["priorityCode"]?.value = 0;
+                                controllerX
+                                    .spotPriorityModel
+                                    ?.lstbookingdetail![rowIdx]
+                                    .priorityname = null;
+                                controllerX
+                                    .spotPriorityModel
+                                    ?.lstbookingdetail![rowIdx]
+                                    .priorityCode = 0;
+                                controllerX.gridStateManager?.notifyListeners();
+                                break;
+                            }
+                          },
                           formatDate: false,
                           // hideKeys: ["color", "modifed", ""],
                           showSrNo: true,
@@ -224,7 +274,7 @@ class SpotPriorityView extends GetView<SpotPriorityController> {
   }
 
   formHandler(btn) {
-    switch(btn){
+    switch (btn) {
       case "Save":
         controllerX.saveSpotPriority();
         break;
