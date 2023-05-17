@@ -15,9 +15,9 @@ class SpotPriorityModel {
     if (json['lstbookingdetail'] != null) {
       lstbookingdetail = <Lstbookingdetail>[];
       json['lstbookingdetail'].forEach((v) {
-        if (v["priorityname"] != null) {
+      /*  if (v["priorityname"] != null) {
           Get.find<SpotPriorityController>().uniqueList.add(v["priorityname"]);
-        }
+        }*/
         lstbookingdetail!.add(new Lstbookingdetail.fromJson(v));
       });
     }
