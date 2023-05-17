@@ -9,7 +9,13 @@ class NumericStepButton extends StatefulWidget {
 
   final ValueChanged<int> onChanged;
 
-  NumericStepButton({Key? key, this.minValue = 1, this.maxValue = 100, required this.onChanged, this.hint}) : super(key: key);
+  NumericStepButton(
+      {Key? key,
+      this.minValue = 1,
+      this.maxValue = 100,
+      required this.onChanged,
+      this.hint})
+      : super(key: key);
 
   @override
   State<NumericStepButton> createState() {
@@ -34,7 +40,8 @@ class _NumericStepButtonState extends State<NumericStepButton> {
           height: SizeDefine.marginGap,
         ),
         Container(
-          decoration: BoxDecoration(border: Border.all(color: Colors.deepPurpleAccent)),
+          decoration:
+              BoxDecoration(border: Border.all(color: Colors.deepPurpleAccent)),
           height: 25,
           child: Row(
             mainAxisAlignment: MainAxisAlignment.spaceAround,
@@ -42,7 +49,7 @@ class _NumericStepButtonState extends State<NumericStepButton> {
               IconButton(
                 icon: Icon(
                   Icons.remove,
-                  color: Theme.of(context).colorScheme.secondary,
+                  color: Theme.of(context).primaryColorLight,
                 ),
                 padding: EdgeInsets.symmetric(vertical: 0.0, horizontal: 10.0),
                 iconSize: 18.0,
@@ -69,7 +76,7 @@ class _NumericStepButtonState extends State<NumericStepButton> {
               IconButton(
                 icon: Icon(
                   Icons.add,
-                  color: Theme.of(context).colorScheme.secondary,
+                  color: Theme.of(context).primaryColorLight,
                 ),
                 padding: EdgeInsets.symmetric(vertical: 0.0, horizontal: 10.0),
                 iconSize: 18.0,
