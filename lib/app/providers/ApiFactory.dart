@@ -285,6 +285,8 @@ class ApiFactory {
       "$BASE_URL/api/ROCancellation/OnLeaveCancelNumber";
   static String RO_CANCELLATION_SAVE =
       "$BASE_URL/api/ROCancellation/SaveRoCancellation";
+  static String RO_CANCELLATION_IMPORT =
+      "$BASE_URL/api/ROCancellation/ImportExcel";
 
   ////////////////////////////// MAM WORK ORDERS API START////////////////////////////////////////////////
   static String get MAM_WORK_ORDER_INITIALIZE =>
@@ -300,8 +302,14 @@ class ApiFactory {
   static String get MAM_WORK_ORDER_NON_FPC_RMS_SEARCH =>
       "$BASE_URL/api/MAMWorkOrder/OnLoadcboProgram?Search=";
 
+  static String MAM_WORK_ORDER_NON_FPC_ON_BMS_LEAVE(String? val) =>
+      "$BASE_URL/api/MAMWorkOrder/OnLeaveBMSPrograms?BMSProgramCode=$val";
+
   static String get MAM_WORK_ORDER_NON_FPC_GET_DATA =>
       "$BASE_URL/api/MAMWorkOrder/OnLeaveProgram";
+
+  static String get MAM_WORK_ORDER_NON_FPC_SAVE_DATA =>
+      "$BASE_URL/api/MAMWorkOrder/SaveWorkOrder";
 
   ////////////////////////////// MAM WORK ORDERS API END////////////////////////////////////////////////
 
@@ -316,6 +324,7 @@ class ApiFactory {
   static String SPOT_PRIORITY_SAVE() =>
       "$BASE_URL/api/SetSpotPriority/PostSave";
 
-  static String SPOT_PRIORITY_SHOW_DETAILS(String loc,String chnlCode,String frmDt,String toDt) =>
+  static String SPOT_PRIORITY_SHOW_DETAILS(
+          String loc, String chnlCode, String frmDt, String toDt) =>
       "$BASE_URL/api/SetSpotPriority/GetShowDetails?LocationCode=$loc&Channelcode=$chnlCode&FromDate=$frmDt&ToDate=$toDt";
 }

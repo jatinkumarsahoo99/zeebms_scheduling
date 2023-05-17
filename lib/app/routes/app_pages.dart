@@ -1,5 +1,11 @@
 import 'package:get/get.dart';
 
+import '../modules/AuditStatus/bindings/audit_status_binding.dart';
+import '../modules/AuditStatus/views/audit_status_view.dart';
+import '../modules/FinalAuditReportAfterTelecast/bindings/final_audit_report_after_telecast_binding.dart';
+import '../modules/FinalAuditReportAfterTelecast/views/final_audit_report_after_telecast_view.dart';
+import '../modules/FinalAuditReportBeforeLog/bindings/final_audit_report_before_log_binding.dart';
+import '../modules/FinalAuditReportBeforeLog/views/final_audit_report_before_log_view.dart';
 import '../modules/AsrunImportAdRevenue/views/AsrunImportAdRevenueView.dart';
 import '../modules/ImportDigitextRunOrder/bindings/import_digitext_run_order_binding.dart';
 import '../modules/MamWorkOrders/bindings/mam_work_orders_binding.dart';
@@ -27,7 +33,7 @@ part 'app_routes.dart';
 class AppPages {
   AppPages._();
 
-  static const INITIAL = Routes.SPOT_PRIORITY +
+  static const INITIAL = Routes.AUDIT_STATUS +
       "?personalNo=AqoF3cvt1PCPIKM8FfPwag%3D%3D&loginCode=gsS2oEkuYKzI9aXanDqobQ%3D%3D&formName=a4Lfy%2FGb5Roxo9vLiBCqSQ%3D%3D";
 
   static final routes = [
@@ -87,6 +93,21 @@ class AppPages {
       name: _Paths.ROS_DISTRIBUTION,
       page: () => AuthGuard1(childName: _Paths.ROS_DISTRIBUTION),
       binding: RosDistributionBinding(),
+    ),
+    GetPage(
+      name: _Paths.FINAL_AUDIT_REPORT_BEFORE_LOG,
+      page: () => const FinalAuditReportBeforeLogView(),
+      binding: FinalAuditReportBeforeLogBinding(),
+    ),
+    GetPage(
+      name: _Paths.FINAL_AUDIT_REPORT_AFTER_TELECAST,
+      page: () => const FinalAuditReportAfterTelecastView(),
+      binding: FinalAuditReportAfterTelecastBinding(),
+    ),
+    GetPage(
+      name: _Paths.AUDIT_STATUS,
+      page: () => const AuditStatusView(),
+      binding: AuditStatusBinding(),
     ),
     GetPage(
       name: _Paths.ASRUN_IMPORT_AD_REVENUE,

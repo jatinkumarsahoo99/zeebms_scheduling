@@ -5,6 +5,7 @@ import 'package:bms_scheduling/widgets/DateTime/TimeWithThreeTextField.dart';
 import 'package:bms_scheduling/widgets/FormButton.dart';
 import 'package:bms_scheduling/widgets/dropdown.dart';
 import 'package:bms_scheduling/widgets/gridFromMap.dart';
+import 'package:bms_scheduling/widgets/gridFromMap1.dart';
 import 'package:bms_scheduling/widgets/input_fields.dart';
 import 'package:flutter/material.dart';
 
@@ -48,8 +49,8 @@ class ReleaseWoNonFpcView extends GetView {
                   padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
                   child: Text(
                       controller.nonFPCWOReleaseTXID
-                          ? "Msg: Work order will be released for single episodes and not for range. Please ensure segment entry is done in order to get time code update."
-                          : "Msg: Work order can can be release for range of episodes.",
+                          ? "Work order will be released for single episodes and not for range. Please ensure segment entry is done in order to get time code update."
+                          : "Work order can can be release for range of episodes.",
                       style: TextStyle(color: Colors.blue)),
                 ),
               )
@@ -93,18 +94,20 @@ class ReleaseWoNonFpcView extends GetView {
                 parseKeyForValue: "programname",
                 selectedValue: controller.nonFPCSelectedBMSProgram,
               ),
-              DropDownField.formDropDownSearchAPI2(
-                GlobalKey(),
-                context,
-                title: "RMS Program",
-                url: ApiFactory.MAM_WORK_ORDER_NON_FPC_RMS_SEARCH,
-                onchanged: (val) => controller.nonFPCSelectedRMSProgram = val,
-                width: Get.width * .3,
-                customInData: "cboProgramsList",
-                parseKeyForKey: "programcode",
-                parseKeyForValue: "programname",
-                selectedValue: controller.nonFPCSelectedRMSProgram,
-              ),
+              Obx(() {
+                return DropDownField.formDropDownSearchAPI2(
+                  GlobalKey(),
+                  context,
+                  title: "RMS Program",
+                  url: ApiFactory.MAM_WORK_ORDER_NON_FPC_RMS_SEARCH,
+                  onchanged: (val) => controller.nonFPCSelectedRMSProgram.value = val,
+                  width: Get.width * .3,
+                  customInData: "cboProgramsList",
+                  parseKeyForKey: "programcode",
+                  parseKeyForValue: "programname",
+                  selectedValue: controller.nonFPCSelectedRMSProgram.value,
+                );
+              }),
               InputFields.formField1(hintTxt: "From Epi#", controller: controller.nonFPCFromEpi, width: 0.0575),
               InputFields.formField1(hintTxt: "To Epi#", controller: controller.nonFPCToEpi, width: 0.0575),
               InputFields.formField1(hintTxt: "Epi Segs", controller: controller.nonFPCEpiSegments, width: 0.0575),
@@ -161,17 +164,46 @@ class ReleaseWoNonFpcView extends GetView {
 
         /// data table
         Expanded(
-            child: Container(
-          color: Colors.amber,
-          child: DataGridFromMap(
-            mapData: dummyProgram,
-            formatDate: false,
+          child: Obx(
+            () {
+              return controller.nonFPCDataTableList.value.isEmpty
+                  ? Container(
+                      decoration: BoxDecoration(border: Border.all(color: Colors.grey)),
+                    )
+                  : DataGridFromMap3(
+                      mapData: controller.nonFPCDataTableList.value,
+                      formatDate: false,
+                      checkBoxColumnKey: const [
+                        "segmented",
+                        "timeCodeRequired",
+                        "requireApproval",
+                        "release",
+                      ],
+                      checkBoxStrComparison: true.toString(),
+                      uncheckCheckBoxStr: false.toString(),
+                      hideCode: false,
+                      checkBoxColumnNoEditKey: const [
+                        "segmented",
+                        "timeCodeRequired",
+                        "requireApproval",
+                        "release",
+                      ],
+                      enableColumnDoubleTap: ["release"],
+                      onColumnHeaderDoubleTap: controller.handleColumTapNonFPCWO,
+                    );
+            },
           ),
-        )),
+        ),
         SizedBox(height: 5),
 
         /// save btn
-        FormButtonWrapper(btnText: "Save WO")
+        Align(
+          alignment: Alignment.topRight,
+          child: FormButtonWrapper(
+            btnText: "Save WO",
+            callback: controller.handleOnSaveNonFPCWO,
+          ),
+        )
       ],
     );
   }

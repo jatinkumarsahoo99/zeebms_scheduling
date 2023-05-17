@@ -1,18 +1,20 @@
 import 'package:bms_scheduling/app/modules/RoCancellation/bindings/ro_cancellation_data.dart';
 import 'package:bms_scheduling/app/providers/ApiFactory.dart';
 import 'package:bms_scheduling/widgets/LoadingDialog.dart';
+import 'package:file_picker/file_picker.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:get/get_connect/http/src/utils/utils.dart';
 import 'package:intl/intl.dart';
 import 'package:pluto_grid/pluto_grid.dart';
+import 'package:dio/dio.dart' as dio;
 
 import '../../../controller/ConnectorControl.dart';
 import '../../../data/DropDownValue.dart';
 
 class RoCancellationController extends GetxController {
   //TODO: Implement RoCancellationController
-
+  PlatformFile? importedFile;
   DateFormat df2 = DateFormat("yyyy-MM-dd");
   RxList<DropDownValue> locations = <DropDownValue>[].obs;
   RxList<DropDownValue> channels = <DropDownValue>[].obs;
@@ -289,11 +291,58 @@ class RoCancellationController extends GetxController {
           if (data is String) {
             LoadingDialog.callErrorMessage1(msg: data);
           } else if (data is Map && data.containsKey("saveInfo")) {
-            LoadingDialog.callInfoMessage(data["saveInfo"]["message"]);
+            if (data["saveInfo"]["message"] == "Records saved successfully") {
+              LoadingDialog.callDataSaved(msg: data["saveInfo"]["message"]);
+            } else {
+              LoadingDialog.callInfoMessage(data["saveInfo"]["message"]);
+            }
           }
         });
 
     print("ON BOOKING NUMBER LEAVE END>>>");
+  }
+
+  importfile() {
+    LoadingDialog.call();
+    dio.FormData formData = dio.FormData.fromMap({
+      'File': dio.MultipartFile.fromBytes(
+        importedFile!.bytes!.toList(),
+        filename: importedFile!.name,
+      )
+    });
+
+    Get.find<ConnectorControl>().POSTMETHOD_FORMDATA(
+        api: ApiFactory.RO_CANCELLATION_IMPORT,
+        json: formData,
+        fun: (data) {
+          print(data);
+          Get.back();
+
+          try {
+            List<LstBookingNoStatusData> _lstBookingNoStatusData = [];
+            for (var element in data["importExcelResponse"]) {
+              _lstBookingNoStatusData
+                  .add(LstBookingNoStatusData.fromJson(element));
+            }
+            roCancellationData!.cancellationData!.lstBookingNoStatusData =
+                _lstBookingNoStatusData;
+            update(["cancelData"]);
+          } catch (e) {
+            LoadingDialog.callErrorMessage1(msg: "Failed To Import File");
+          }
+        });
+  }
+
+  pickFile() async {
+    FilePickerResult? result = await FilePicker.platform.pickFiles();
+
+    if (result != null && result.files.single != null) {
+      importedFile = result.files.single;
+
+      importfile();
+    } else {
+      // User canceled the pic5ker
+    }
   }
 
   @override

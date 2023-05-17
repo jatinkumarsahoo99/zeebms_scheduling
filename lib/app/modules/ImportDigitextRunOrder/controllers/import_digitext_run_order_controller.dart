@@ -13,7 +13,14 @@ import '../../../data/DropDownValue.dart';
 
 class ImportDigitextRunOrderController extends GetxController {
   //TODO: Implement ImportDigitextRunOrderController
-  List<String> radiofilters = ["Missing Clients", "New Brands", "NewClocks", "Missing Agencies", "Missing Links", "My Data"];
+  List<String> radiofilters = [
+    "Missing Clients",
+    "New Brands",
+    "NewClocks",
+    "Missing Agencies",
+    "Missing Links",
+    "My Data"
+  ];
   DateFormat df1 = DateFormat("dd-MMM-yyyy");
   DateFormat df2 = DateFormat("yyyy-MM-dd");
   var selectedradiofilter = "Missing Clients".obs;
@@ -53,9 +60,13 @@ class ImportDigitextRunOrderController extends GetxController {
           api: ApiFactory.IMPORT_DIGITEX_RUN_ORDER_LOCATION,
           fun: (data) {
             if (data is List) {
-              locations.value = data.map((e) => DropDownValue(key: e["locationCode"], value: e["locationName"])).toList();
+              locations.value = data
+                  .map((e) => DropDownValue(
+                      key: e["locationCode"], value: e["locationName"]))
+                  .toList();
             } else {
-              LoadingDialog.callErrorMessage1(msg: "Failed To Load Initial Data");
+              LoadingDialog.callErrorMessage1(
+                  msg: "Failed To Load Initial Data");
             }
           });
     } catch (e) {
@@ -69,9 +80,13 @@ class ImportDigitextRunOrderController extends GetxController {
           api: ApiFactory.IMPORT_DIGITEX_RUN_ORDER_CHANNEL(locationCode),
           fun: (data) {
             if (data is List) {
-              channels.value = data.map((e) => DropDownValue(key: e["channelCode"], value: e["channelName"])).toList();
+              channels.value = data
+                  .map((e) => DropDownValue(
+                      key: e["channelCode"], value: e["channelName"]))
+                  .toList();
             } else {
-              LoadingDialog.callErrorMessage1(msg: "Failed To Load Initial Data");
+              LoadingDialog.callErrorMessage1(
+                  msg: "Failed To Load Initial Data");
             }
           });
     } catch (e) {
@@ -89,7 +104,8 @@ class ImportDigitextRunOrderController extends GetxController {
     });
 
     Get.find<ConnectorControl>().POSTMETHOD_FORMDATA(
-        api: ApiFactory.IMPORT_DIGITEX_RUN_ORDER_IMPORT(selectedLocation!.key, selectedChannel!.key),
+        api: ApiFactory.IMPORT_DIGITEX_RUN_ORDER_IMPORT(
+            selectedLocation!.key, selectedChannel!.key),
         json: formData,
         fun: (value) {
           Get.back();
@@ -98,8 +114,10 @@ class ImportDigitextRunOrderController extends GetxController {
               digitexRunOrderData = DigitexRunOrderData.fromJson(value);
               update(["data"]);
             }
-            if (digitexRunOrderData!.message != null && digitexRunOrderData!.message!.isNotEmpty) {
-              LoadingDialog.callErrorMessage1(msg: digitexRunOrderData!.message!);
+            if (digitexRunOrderData!.message != null &&
+                digitexRunOrderData!.message!.isNotEmpty) {
+              LoadingDialog.callErrorMessage1(
+                  msg: digitexRunOrderData!.message!);
             }
           } catch (e) {
             LoadingDialog.callErrorMessage1(msg: "Failed To Import File");
@@ -119,41 +137,63 @@ class ImportDigitextRunOrderController extends GetxController {
     }
   }
 
-  updateClientData(PlutoGridOnRowDoubleTapEvent tapEvent, DropDownValue client) {
-    clientGridStateManager!.changeCellValue(clientGridStateManager!.rows[tapEvent.rowIdx].cells["clientName"]!, client.value.toString(),
-        force: true, callOnChangedEvent: false);
-    clientGridStateManager!.changeCellValue(clientGridStateManager!.rows[tapEvent.rowIdx].cells["clientCode"]!, client.key.toString(),
-        force: true, callOnChangedEvent: false);
-    digitexRunOrderData!.missingClients![tapEvent.rowIdx].clientCode = client.key.toString();
-    digitexRunOrderData!.missingClients![tapEvent.rowIdx].clientName = client.value.toString();
+  updateClientData(
+      PlutoGridOnRowDoubleTapEvent tapEvent, DropDownValue client) {
+    clientGridStateManager!.changeCellValue(
+        clientGridStateManager!.rows[tapEvent.rowIdx].cells["clientName"]!,
+        client.value.toString(),
+        force: true,
+        callOnChangedEvent: false);
+    clientGridStateManager!.changeCellValue(
+        clientGridStateManager!.rows[tapEvent.rowIdx].cells["clientCode"]!,
+        client.key.toString(),
+        force: true,
+        callOnChangedEvent: false);
+    digitexRunOrderData!.missingClients![tapEvent.rowIdx].clientCode =
+        client.key.toString();
+    digitexRunOrderData!.missingClients![tapEvent.rowIdx].clientName =
+        client.value.toString();
     checkSave();
   }
 
   clearClientData(PlutoGridOnRowDoubleTapEvent tapEvent, DropDownValue client) {
-    clientGridStateManager!
-        .changeCellValue(clientGridStateManager!.rows[tapEvent.rowIdx].cells["clientName"]!, "", force: true, callOnChangedEvent: false);
-    clientGridStateManager!
-        .changeCellValue(clientGridStateManager!.rows[tapEvent.rowIdx].cells["clientCode"]!, "", force: true, callOnChangedEvent: false);
+    clientGridStateManager!.changeCellValue(
+        clientGridStateManager!.rows[tapEvent.rowIdx].cells["clientName"]!, "",
+        force: true, callOnChangedEvent: false);
+    clientGridStateManager!.changeCellValue(
+        clientGridStateManager!.rows[tapEvent.rowIdx].cells["clientCode"]!, "",
+        force: true, callOnChangedEvent: false);
     digitexRunOrderData!.missingClients![tapEvent.rowIdx].clientCode = "";
     digitexRunOrderData!.missingClients![tapEvent.rowIdx].clientName = "";
     checkSave();
   }
 
-  updateAgencyData(PlutoGridOnRowDoubleTapEvent tapEvent, DropDownValue agency) {
-    clientGridStateManager!.changeCellValue(clientGridStateManager!.rows[tapEvent.rowIdx].cells["agencyName"]!, agency.value.toString(),
-        force: true, callOnChangedEvent: false);
-    clientGridStateManager!.changeCellValue(clientGridStateManager!.rows[tapEvent.rowIdx].cells["agencyCode"]!, agency.key.toString(),
-        force: true, callOnChangedEvent: false);
-    digitexRunOrderData!.missingClients![tapEvent.rowIdx].clientCode = agency.key.toString();
-    digitexRunOrderData!.missingClients![tapEvent.rowIdx].clientName = agency.value.toString();
+  updateAgencyData(
+      PlutoGridOnRowDoubleTapEvent tapEvent, DropDownValue agency) {
+    clientGridStateManager!.changeCellValue(
+        clientGridStateManager!.rows[tapEvent.rowIdx].cells["agencyName"]!,
+        agency.value.toString(),
+        force: true,
+        callOnChangedEvent: false);
+    clientGridStateManager!.changeCellValue(
+        clientGridStateManager!.rows[tapEvent.rowIdx].cells["agencyCode"]!,
+        agency.key.toString(),
+        force: true,
+        callOnChangedEvent: false);
+    digitexRunOrderData!.missingClients![tapEvent.rowIdx].clientCode =
+        agency.key.toString();
+    digitexRunOrderData!.missingClients![tapEvent.rowIdx].clientName =
+        agency.value.toString();
     checkSave();
   }
 
   clearAgencyData(PlutoGridOnRowDoubleTapEvent tapEvent, DropDownValue agency) {
-    agencyGridStateManager!
-        .changeCellValue(agencyGridStateManager!.rows[tapEvent.rowIdx].cells["agencyName"]!, "", force: true, callOnChangedEvent: false);
-    agencyGridStateManager!
-        .changeCellValue(agencyGridStateManager!.rows[tapEvent.rowIdx].cells["agencyCode"]!, "", force: true, callOnChangedEvent: false);
+    agencyGridStateManager!.changeCellValue(
+        agencyGridStateManager!.rows[tapEvent.rowIdx].cells["agencyName"]!, "",
+        force: true, callOnChangedEvent: false);
+    agencyGridStateManager!.changeCellValue(
+        agencyGridStateManager!.rows[tapEvent.rowIdx].cells["agencyCode"]!, "",
+        force: true, callOnChangedEvent: false);
     digitexRunOrderData!.missingAgencies![tapEvent.rowIdx].agenciesCode = "";
     digitexRunOrderData!.missingAgencies![tapEvent.rowIdx].agenciesName = "";
     checkSave();
@@ -163,7 +203,9 @@ class ImportDigitextRunOrderController extends GetxController {
     LoadingDialog.call();
     Get.find<ConnectorControl>().POSTMETHOD_FORMDATA(
         api: ApiFactory.IMPORT_DIGITEX_RUN_ORDER_MAP_CLIENT,
-        json: digitexRunOrderData!.missingClients!.map((e) => e.toJson()).toList(),
+        json: digitexRunOrderData!.missingClients!
+            .map((e) => e.toJson())
+            .toList(),
         fun: (value) {
           Get.back();
           try {
@@ -178,7 +220,9 @@ class ImportDigitextRunOrderController extends GetxController {
     LoadingDialog.call();
     Get.find<ConnectorControl>().POSTMETHOD_FORMDATA(
         api: ApiFactory.IMPORT_DIGITEX_RUN_ORDER_MAP_AGENCY,
-        json: digitexRunOrderData!.missingAgencies!.map((e) => e.toJson()).toList(),
+        json: digitexRunOrderData!.missingAgencies!
+            .map((e) => e.toJson())
+            .toList(),
         fun: (value) {
           Get.back();
           try {
@@ -191,10 +235,12 @@ class ImportDigitextRunOrderController extends GetxController {
 
   checkSave() {
     bool _allowSave = true;
-    if (digitexRunOrderData!.missingAgencies!.any((element) => element.agenciesCode!.isEmpty || element.agenciesCode!.isEmpty)) {
+    if (digitexRunOrderData!.missingAgencies!.any((element) =>
+        element.agenciesCode!.isEmpty || element.agenciesCode!.isEmpty)) {
       _allowSave = false;
     }
-    if (digitexRunOrderData!.missingClients!.any((element) => element.clientCode!.isEmpty || element.clientName!.isEmpty)) {
+    if (digitexRunOrderData!.missingClients!.any((element) =>
+        element.clientCode!.isEmpty || element.clientName!.isEmpty)) {
       _allowSave = false;
     }
     allowSave.value = _allowSave;
@@ -210,7 +256,8 @@ class ImportDigitextRunOrderController extends GetxController {
     });
 
     Get.find<ConnectorControl>().POSTMETHOD_FORMDATA(
-        api: ApiFactory.IMPORT_DIGITEX_RUN_ORDER_SAVE(selectedLocation!.key, selectedChannel!.key, df2.format(df1.parse(scheduleDate.text))),
+        api: ApiFactory.IMPORT_DIGITEX_RUN_ORDER_SAVE(selectedLocation!.key,
+            selectedChannel!.key, df2.format(df1.parse(scheduleDate.text))),
         json: formData,
         fun: (value) {
           Get.back();

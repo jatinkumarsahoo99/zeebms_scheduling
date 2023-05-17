@@ -65,54 +65,34 @@ class MamWorkOrdersView extends GetView<MamWorkOrdersController> {
               ),
             ),
           )),
-          GetBuilder<HomeController>(
-              id: "buttons",
-              init: Get.find<HomeController>(),
-              builder: (btncontroller) {
-                /* PermissionModel formPermissions = Get.find<MainController>()
-                      .permissionList!
-                      .lastWhere((element) {
-                    return element.appFormName == "frmSegmentsDetails";
-                  });*/
 
-                if (btncontroller.buttons != null) {
-                  return Container(
-                    height: 40,
-                    child: ButtonBar(
-                      // buttonHeight: 20,
-                      alignment: MainAxisAlignment.start,
-                      mainAxisSize: MainAxisSize.min,
-                      // pa
-                      children: [
-                        for (var btn in btncontroller.buttons!)
-                          btn["name"] == "Save"
-                              ? Obx(() => FormButtonWrapper(
-                                    btnText: btn["name"],
-
-                                    // isEnabled: btn['isDisabled'],
-                                    callback: () {},
-                                  ))
-                              : btn["name"] == "Clear"
-                                  ? FormButtonWrapper(
-                                      btnText: btn["name"],
-
-                                      // isEnabled: btn['isDisabled'],
-                                      callback: () {
-                                        btncontroller.clearPage1();
-                                      },
-                                    )
-                                  : FormButtonWrapper(
-                                      btnText: btn["name"],
-
-                                      // isEnabled: btn['isDisabled'],
-                                      callback: null,
-                                    ),
-                      ],
-                    ),
-                  );
-                }
-                return Container();
-              }),
+          /// bottom common buttons
+          Align(
+            alignment: Alignment.topLeft,
+            child: GetBuilder<HomeController>(
+                id: "buttons",
+                init: Get.find<HomeController>(),
+                builder: (btncontroller) {
+                  if (btncontroller.buttons != null) {
+                    return SizedBox(
+                      height: 40,
+                      child: ButtonBar(
+                        alignment: MainAxisAlignment.start,
+                        mainAxisSize: MainAxisSize.min,
+                        children: [
+                          for (var btn in btncontroller.buttons!)
+                            FormButtonWrapper(
+                              btnText: btn["name"],
+                              // isEnabled: btn['isDisabled'],
+                              callback: () => controller.formHandler(btn['name'].toString()),
+                            ),
+                        ],
+                      ),
+                    );
+                  }
+                  return Container();
+                }),
+          ),
         ],
       ),
     );
