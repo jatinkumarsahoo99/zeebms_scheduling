@@ -492,10 +492,10 @@ packages:
     dependency: "direct main"
     description:
       name: pluto_grid_export
-      sha256: "6c68e8efd857081e254811c0ad34971f7d8e687744e742bb67be3055151c1c31"
+      sha256: "1262a32018b4f168e46898de559c845184ef869f94018729f8b6f4c5910d2132"
       url: "https://pub.dev"
     source: hosted
-    version: "1.0.4"
+    version: "1.0.5"
   pointycastle:
     dependency: transitive
     description:

@@ -305,19 +305,29 @@ class RoCancellationController extends GetxController {
   importfile() {
     LoadingDialog.call();
     dio.FormData formData = dio.FormData.fromMap({
-      'ImportFile': dio.MultipartFile.fromBytes(
+      'File': dio.MultipartFile.fromBytes(
         importedFile!.bytes!.toList(),
         filename: importedFile!.name,
       )
     });
 
     Get.find<ConnectorControl>().POSTMETHOD_FORMDATA(
-        api: ApiFactory.IMPORT_DIGITEX_RUN_ORDER_IMPORT(
-            selectedLocation!.key, selectedChannel!.key),
+        api: ApiFactory.RO_CANCELLATION_IMPORT,
         json: formData,
-        fun: (value) {
+        fun: (data) {
+          print(data);
           Get.back();
-          try {} catch (e) {
+
+          try {
+            List<LstBookingNoStatusData> _lstBookingNoStatusData = [];
+            for (var element in data["importExcelResponse"]) {
+              _lstBookingNoStatusData
+                  .add(LstBookingNoStatusData.fromJson(element));
+            }
+            roCancellationData!.cancellationData!.lstBookingNoStatusData =
+                _lstBookingNoStatusData;
+            update(["cancelData"]);
+          } catch (e) {
             LoadingDialog.callErrorMessage1(msg: "Failed To Import File");
           }
         });

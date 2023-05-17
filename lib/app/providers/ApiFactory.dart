@@ -198,6 +198,8 @@ class ApiFactory {
       "$BASE_URL/api/ROCancellation/OnLeaveCancelNumber";
   static String RO_CANCELLATION_SAVE =
       "$BASE_URL/api/ROCancellation/SaveRoCancellation";
+  static String RO_CANCELLATION_IMPORT =
+      "$BASE_URL/api/ROCancellation/ImportExcel";
 
   ////////////////////////////// MAM WORK ORDERS API START////////////////////////////////////////////////
   static String get MAM_WORK_ORDER_INITIALIZE =>
