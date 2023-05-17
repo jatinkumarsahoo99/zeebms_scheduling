@@ -4,29 +4,17 @@ import 'package:bms_scheduling/app/data/DropDownValue.dart';
 import 'package:flutter/foundation.dart';
 import 'package:intl/intl.dart';
 
+import 'Const.dart';
+
 // import '../modules/OperationalFPC/DailyFPCModel.dart';
 
 class ApiFactory {
-  // Developing R & D URLS
-  // https://web-bms-qa.azurewebsites.net/
-  // https://api-bms-qa.azurewebsites.net/
-
-  //RELEASE WORK URLS
-  //https://bmswebfrontend-uat.azurewebsites.net
-  //https://api-bms-dev.azurewebsites.net
-
-  ////AKS
-  // http://bms-api-common.bms-api-ns.svc.cluster.local/weatherforecast
-  // http://bms-api-programming.bms-api-ns.svc.cluster.local/weatherforecast
-  // http://bms-api-login.bms-api-ns.svc.cluster.local/weatherforecast
-
   static String userId = "";
   static String LOCAL_URL = "http://localhost:9999";
   static String Enviroment =
       const String.fromEnvironment('ENV', defaultValue: 'dev');
 
-  // static String SERVER_URL = "https://bmswebfrontend-uat.azurewebsites.net";
-  static String WEB_URL = Enviroment.toLowerCase() == "uat"
+  /* static String WEB_URL = Enviroment.toLowerCase() == "uat"
       ? "https://app-admin-bms-uat.zeeconnect.in"
       : "https://app-admin-bms-dev.zeeconnect.in";
   static String WEB_URL_COMMON = Enviroment.toLowerCase() == "uat"
@@ -42,7 +30,15 @@ class ApiFactory {
       : "https://api-common-bms-dev.zeeconnect.in";
   static String BASE_URL_LOGIN = Enviroment.toLowerCase() == "uat"
       ? "https://api-login-bms-uat.zeeconnect.in"
-      : "https://api-login-bms-dev.zeeconnect.in";
+      : "https://api-login-bms-dev.zeeconnect.in";*/
+
+  static String WEB_URL = Const.getWebAdminUrl();
+  static String WEB_URL_COMMON = Const.getWebCommonUrl();
+
+  static String BASE_URL = Const.getBaseSchedulingAPIUrl();
+
+  static String BASE_URL_COMMON = Const.getBaseCommonAPIUrl();
+  static String BASE_URL_LOGIN = Const.getBaseLoginAPIUrl();
 
   ////////////////////// SEARCH ////////////////////////////
 
@@ -269,6 +265,7 @@ class ApiFactory {
 
   static String IMPORT_DIGITEX_RUN_ORDER_IMPORT(locationCode, channelCode) =>
       "$BASE_URL/api/ImportDigitexRunOrder/LoadDigitexRunOrder?LocationCode=$locationCode&ChannelCode=$channelCode";
+
   static String IMPORT_DIGITEX_RUN_ORDER_SAVE(
           locationCode, channelCode, date) =>
       "$BASE_URL/api/ImportDigitexRunOrder/SaveRunOrder?LocationCode=$locationCode&ChannelCode=$channelCode&BookingDate=$date";
@@ -276,6 +273,7 @@ class ApiFactory {
 //////// RO CANCELLATION ///////
   static String RO_CANCELLATION_LOCATION =
       "$BASE_URL/api/ROCancellation/GetCboLocation";
+
   static String RO_CANCELLATION_CHANNNEL(locationCode) =>
       "$BASE_URL/api/ROCancellation/OnLeaveLocation?LocationCode=$locationCode";
 
