@@ -27,8 +27,16 @@ class WoRepushView extends GetView {
                     )
                   : DataGridFromMap3(
                       mapData: controller.rePushModel.value.programResponse?.lstResendWorkOrders?.map((e) => e.toJson()).toList() ?? [],
-                      onColumnHeaderDoubleTap: controller.aPDFPCOnColumnDoubleTap,
+                      checkBoxColumnKey: ['resend'],
+                      enableColumnDoubleTap: ['resend'],
+                      onEdit: controller.handleOnChangedInDTInWORePush,
+                      checkBoxStrComparison: "true",
+                      uncheckCheckBoxStr: "false",
+                      onColumnHeaderDoubleTap: controller.handleDoubleTabInDTInWORePush,
                       mode: PlutoGridMode.selectWithOneTap,
+                      onSelected: (p0) {
+                        print("Row is selected");
+                      },
                     );
             },
           ),
@@ -66,10 +74,9 @@ class WoRepushView extends GetView {
               children: [
                 FormButtonWrapper(
                   btnText: "Load WOs To Repush",
-                  callback: () {
-                    controller.rePushLoadGetData();
-                  },
+                  callback: controller.rePushLoadGetData,
                 ),
+                SizedBox(width: 15),
                 FormButtonWrapper(
                   btnText: "Re-push WO",
                   callback: () {},

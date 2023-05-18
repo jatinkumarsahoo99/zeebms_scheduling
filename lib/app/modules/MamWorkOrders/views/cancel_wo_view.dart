@@ -1,4 +1,6 @@
 import 'package:bms_scheduling/app/modules/RoBooking/views/dummydata.dart';
+import 'package:bms_scheduling/app/providers/ApiFactory.dart';
+import 'package:bms_scheduling/widgets/CheckBoxWidget.dart';
 import 'package:bms_scheduling/widgets/DateTime/DateWithThreeTextField.dart';
 import 'package:bms_scheduling/widgets/FormButton.dart';
 import 'package:bms_scheduling/widgets/dropdown.dart';
@@ -21,36 +23,95 @@ class CancelWoView extends GetView {
       children: [
         Row(
           children: [
-            DropDownField.formDropDown1WidthMap([], (value) => {}, "Work Order Type", 0.24),
+            Obx(() {
+              return DropDownField.formDropDown1WidthMap(
+                controller.onloadData.value.lstcboWOTypeCancelWO,
+                (value) => controller.cwoSelectedWOT = value,
+                "Work Order Type",
+                0.24,
+                selected: controller.cwoSelectedWOT,
+                autoFocus: true,
+              );
+            }),
           ],
         ),
-        Divider(
-          height: 10,
-        ),
-        Wrap(
-          crossAxisAlignment: WrapCrossAlignment.end,
-          spacing: Get.width * 0.005,
-          alignment: WrapAlignment.start,
-          runSpacing: 5,
-          children: [
-            DropDownField.formDropDown1WidthMap([], (value) => {}, "Location", 0.09),
-            DropDownField.formDropDown1WidthMap([], (value) => {}, "Channel", 0.12),
-            DropDownField.formDropDown1WidthMap([], (value) => {}, "Program", 0.24),
-            InputFields.formField1(hintTxt: "From Epi#", controller: TextEditingController(), width: 0.0375),
-            InputFields.formField1(hintTxt: "To Epi#", controller: TextEditingController(), width: 0.0375),
-            DropDownField.formDropDown1WidthMap([], (value) => {}, "Telecast Type", 0.12),
-            Row(
-              mainAxisSize: MainAxisSize.min,
-              children: [Icon(Icons.check_box_outline_blank_outlined), Text("Tel Dt")],
-            ),
-            DateWithThreeTextField(title: "Tel Dt From", widthRation: 0.09, mainTextController: TextEditingController()),
-            DateWithThreeTextField(title: "Tel Dt To", widthRation: 0.09, mainTextController: TextEditingController()),
-            FormButtonWrapper(
-              btnText: "Show",
-              callback: () {},
-            )
-          ],
-        ),
+        Divider(height: 10),
+        Obx(() {
+          return Wrap(
+            crossAxisAlignment: WrapCrossAlignment.end,
+            spacing: Get.width * 0.005,
+            alignment: WrapAlignment.start,
+            runSpacing: 5,
+            children: [
+              DropDownField.formDropDown1WidthMap(
+                controller.onloadData.value.lstcboLocationWOCanc,
+                controller.handleOnLocChangedInCWO,
+                "Location",
+                0.115,
+                selected: controller.cWOSelectedWOTLocation,
+              ),
+              Obx(() {
+                return DropDownField.formDropDown1WidthMap(
+                  controller.cWOChannelList.value,
+                  (value) => controller.cWOSelectedWOTChannel = value,
+                  "Channel",
+                  0.118,
+                  selected: controller.cWOSelectedWOTChannel,
+                );
+              }),
+              DropDownField.formDropDownSearchAPI2(
+                GlobalKey(),
+                context,
+                title: "Program",
+                url: ApiFactory.MAM_WORK_ORDER_WO_CANCEL_PROGRAM_SEARCH,
+                onchanged: (val) => controller.cWOSelectedWOProgram = val,
+                width: Get.width * .2,
+                selectedValue: controller.cWOSelectedWOProgram,
+                parseKeyForKey: "programcode",
+                parseKeyForValue: "programname",
+                customInData: 'cboProgramsList',
+              ),
+              InputFields.formField1(
+                hintTxt: "From Epi#",
+                controller: controller.cWOfromEpiTC,
+                width: 0.0375,
+              ),
+              InputFields.formField1(
+                hintTxt: "To Epi#",
+                controller: controller.cWOToEpiTC,
+                width: 0.0375,
+              ),
+              DropDownField.formDropDown1WidthMap(
+                controller.onloadData.value.lstcboTelecastTypeWOCanc,
+                (value) => controller.cWOSelectedWOTTelecasteType = value,
+                "Telecast Type",
+                0.12,
+                selected: controller.cWOSelectedWOTTelecasteType,
+              ),
+              Obx(() {
+                return CheckBoxWidget1(
+                  title: "Tel Dt",
+                  value: controller.cWOtelDate.value,
+                  onChanged: (val) => controller.cWOtelDate.value = val ?? false,
+                );
+              }),
+              DateWithThreeTextField(
+                title: "Tel Dt From",
+                widthRation: 0.09,
+                mainTextController: controller.cwoTelDTFrom,
+              ),
+              DateWithThreeTextField(
+                title: "Tel Dt To",
+                widthRation: 0.09,
+                mainTextController: controller.cwoTelDTTo,
+              ),
+              FormButtonWrapper(
+                btnText: "Show",
+                callback: controller.showCancelWOData,
+              )
+            ],
+          );
+        }),
         Divider(
           height: 10,
         ),

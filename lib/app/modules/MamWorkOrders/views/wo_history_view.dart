@@ -1,4 +1,5 @@
 import 'package:bms_scheduling/app/modules/RoBooking/views/dummydata.dart';
+import 'package:bms_scheduling/widgets/CheckBoxWidget.dart';
 import 'package:bms_scheduling/widgets/DateTime/DateWithThreeTextField.dart';
 import 'package:bms_scheduling/widgets/FormButton.dart';
 import 'package:bms_scheduling/widgets/dropdown.dart';
@@ -19,30 +20,75 @@ class WoHistoryView extends GetView {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        Wrap(
-          crossAxisAlignment: WrapCrossAlignment.end,
-          spacing: Get.width * 0.005,
-          alignment: WrapAlignment.start,
-          runSpacing: 5,
-          children: [
-            DropDownField.formDropDown1WidthMap([], (value) => {}, "Location", 0.09),
-            DropDownField.formDropDown1WidthMap([], (value) => {}, "Channel", 0.12),
-            DropDownField.formDropDown1WidthMap([], (value) => {}, "Program", 0.24),
-            InputFields.formField1(hintTxt: "From Epi#", controller: TextEditingController(), width: 0.0375),
-            InputFields.formField1(hintTxt: "To Epi#", controller: TextEditingController(), width: 0.0375),
-            DropDownField.formDropDown1WidthMap([], (value) => {}, "Telecast Type", 0.12),
-            Row(
-              mainAxisSize: MainAxisSize.min,
-              children: [Icon(Icons.check_box_outline_blank_outlined), Text("Tel Dt")],
-            ),
-            DateWithThreeTextField(title: "Tel Dt From", widthRation: 0.09, mainTextController: TextEditingController()),
-            DateWithThreeTextField(title: "Tel Dt To", widthRation: 0.09, mainTextController: TextEditingController()),
-            FormButtonWrapper(
-              btnText: "Show",
-              callback: () {},
-            )
-          ],
-        ),
+        Obx(() {
+          return Wrap(
+            crossAxisAlignment: WrapCrossAlignment.end,
+            spacing: Get.width * 0.005,
+            alignment: WrapAlignment.start,
+            runSpacing: 5,
+            children: [
+              DropDownField.formDropDown1WidthMap(
+                controller.onloadData.value.lstcboLocationWOHistory,
+                controller.handleLocationChangedInWOH,
+                "Location",
+                0.09,
+                selected: controller.woHSelectedLocation,
+              ),
+              DropDownField.formDropDown1WidthMap(
+                [],
+                (value) => controller.woHSelectedChannel = value,
+                "Channel",
+                0.12,
+                selected: controller.woHSelectedChannel,
+              ),
+              DropDownField.formDropDown1WidthMap(
+                [],
+                (value) => controller.woHSelectedProgram = value,
+                "Program",
+                0.24,
+                selected: controller.woHSelectedProgram,
+              ),
+              InputFields.formField1(
+                hintTxt: "From Epi#",
+                controller: controller.woHFromEpi,
+                width: 0.0375,
+              ),
+              InputFields.formField1(
+                hintTxt: "To Epi#",
+                controller: controller.woHToEpi,
+                width: 0.0375,
+              ),
+              DropDownField.formDropDown1WidthMap(
+                controller.onloadData.value.lstcboTelecastTypeWOHistory,
+                (value) => controller.woHSelectedTelecastType = value,
+                "Telecast Type",
+                0.12,
+                selected: controller.woHSelectedTelecastType,
+              ),
+              Obx(() {
+                return CheckBoxWidget1(
+                  title: "Tel Dt",
+                  value: controller.woHtelDate.value,
+                  onChanged: (val) => controller.woHtelDate.value = val ?? false,
+                );
+              }),
+              DateWithThreeTextField(
+                title: "Tel Dt From",
+                widthRation: 0.09,
+                mainTextController: controller.woHTelDTFrom,
+              ),
+              DateWithThreeTextField(
+                title: "Tel Dt To",
+                widthRation: 0.09,
+                mainTextController: controller.woHTelDTTo,
+              ),
+              FormButtonWrapper(
+                btnText: "Show",
+                callback: () {},
+              )
+            ],
+          );
+        }),
         Divider(
           height: 10,
         ),

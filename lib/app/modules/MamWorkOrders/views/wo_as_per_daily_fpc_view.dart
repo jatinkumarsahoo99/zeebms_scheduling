@@ -1,15 +1,11 @@
 import 'package:bms_scheduling/widgets/DateTime/DateWithThreeTextField.dart';
-import 'package:bms_scheduling/widgets/DateTime/TimeWithThreeTextField.dart';
 import 'package:bms_scheduling/widgets/FormButton.dart';
 import 'package:bms_scheduling/widgets/dropdown.dart';
 import 'package:bms_scheduling/widgets/gridFromMap.dart';
-import 'package:bms_scheduling/widgets/input_fields.dart';
 import 'package:flutter/material.dart';
-
 import 'package:get/get.dart';
 import 'package:pluto_grid/pluto_grid.dart';
 
-import '../../RoBooking/views/dummydata.dart';
 import '../controllers/mam_work_orders_controller.dart';
 
 class WoAsPerDailyFpcView extends GetView {
@@ -33,7 +29,6 @@ class WoAsPerDailyFpcView extends GetView {
         }),
         Divider(height: 10),
         Obx(() {
-          print("All UI Building");
           return Wrap(
             crossAxisAlignment: WrapCrossAlignment.end,
             spacing: Get.width * 0.005,
@@ -47,7 +42,6 @@ class WoAsPerDailyFpcView extends GetView {
                 selected: controller.woAsPerDailyFPCSelectedLocation,
               ),
               Obx(() {
-                print("channel UI Building");
                 return DropDownField.formDropDown1WidthMap(
                   controller.woAsPerDailyFPCChannelList.value,
                   (value) => controller.woAsPerDailyFPCSelectedChannel = value,
@@ -70,29 +64,64 @@ class WoAsPerDailyFpcView extends GetView {
 
         /// data table
         Expanded(
-          child: Obx(
-            () {
-              return (controller.woASPDFPCModel.value.programResponse?.dailyFpc?.isEmpty ?? true)
-                  ? Container(
-                      decoration: BoxDecoration(border: Border.all(color: Colors.grey)),
-                    )
-                  : DataGridFromMap3(
-                      mapData: controller.woASPDFPCModel.value.programResponse?.dailyFpc?.map((e) => e.toJson()).toList() ?? [],
-                      enableColumnDoubleTap: ['release'],
-                      checkBoxStrComparison: true.toString(),
-                      uncheckCheckBoxStr: false.toString(),
-                      checkBoxColumnKey: ['release'],
-                      editKeys: ['quality'],
-                      onEdit: controller.aPDFPCOnDataTableEdit,
-                      onColumnHeaderDoubleTap: controller.aPDFPCOnColumnDoubleTap,
-                      // colorCallback: (row){
-                      // },
-                      mode: PlutoGridMode.normal,
-                      onload: (manager) {
-                        manager.stateManager.setCurrentCell(manager.stateManager.firstCell, 0, notify: true);
-                      },
-                    );
-            },
+          child: Row(
+            children: [
+              Expanded(
+                flex: 2,
+                child: Obx(
+                  () {
+                    return (controller.woASPDFPCModel.value.programResponse?.dailyFpc?.isEmpty ?? true)
+                        ? Container(
+                            decoration: BoxDecoration(border: Border.all(color: Colors.grey)),
+                          )
+                        : DataGridFromMap3(
+                            mapData: controller.woASPDFPCModel.value.programResponse?.dailyFpc?.map((e) => e.toJson()).toList() ?? [],
+                            enableColumnDoubleTap: ['release', 'quality'],
+                            checkBoxStrComparison: true.toString(),
+                            uncheckCheckBoxStr: false.toString(),
+                            checkBoxColumnKey: ['release'],
+                            editKeys: ['quality'],
+                            onEdit: controller.aPDFPCOnDataTableEdit,
+                            onColumnHeaderDoubleTap: controller.aPDFPCOnColumnDoubleTap,
+                            // colorCallback: (row){
+                            // },
+                            mode: PlutoGridMode.normal,
+                            onload: (manager) {
+                              manager.stateManager.setCurrentCell(manager.stateManager.firstCell, 0, notify: true);
+                            },
+                          );
+                  },
+                ),
+              ),
+              SizedBox(width: 10),
+              Expanded(
+                child: Obx(
+                  () {
+                    return (controller.woASPDFPCModel.value.programResponse?.dailyFpc?.isEmpty ?? true)
+                        ? Container(
+                            decoration: BoxDecoration(border: Border.all(color: Colors.grey)),
+                          )
+                        : DataGridFromMap3(
+                            mapData: controller.woASPDFPCModel.value.programResponse?.dailyFpc?.map((e) => e.toJson()).toList() ?? [],
+                            enableColumnDoubleTap: ['release', 'quality'],
+                            checkBoxStrComparison: true.toString(),
+                            uncheckCheckBoxStr: false.toString(),
+                            checkBoxColumnKey: ['release'],
+                            editKeys: ['quality'],
+                            onEdit: controller.aPDFPCOnDataTableEdit,
+
+                            onColumnHeaderDoubleTap: controller.aPDFPCOnColumnDoubleTap,
+                            // colorCallback: (row){
+                            // },
+                            mode: PlutoGridMode.normal,
+                            onload: (manager) {
+                              manager.stateManager.setCurrentCell(manager.stateManager.firstCell, 0, notify: true);
+                            },
+                          );
+                  },
+                ),
+              ),
+            ],
           ),
         ),
         SizedBox(
@@ -102,7 +131,7 @@ class WoAsPerDailyFpcView extends GetView {
           alignment: Alignment.topRight,
           child: FormButtonWrapper(
             btnText: "Save WOs",
-            callback: () {},
+            callback: controller.saveWOAsPerDailyFPC,
           ),
         )
       ],
