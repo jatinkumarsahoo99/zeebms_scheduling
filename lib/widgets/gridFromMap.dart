@@ -461,8 +461,11 @@ class DataGridFromMap3 extends StatelessWidget {
           enableRowChecked: false,
           renderer: ((rendererContext) {
             if (checkBoxColumnKey != null && checkBoxColumnKey!.isNotEmpty && checkBoxColumnKey!.contains(key)) {
-              return InkWell(
-                canRequestFocus: false,
+              return GestureDetector(
+                // canRequestFocus: false,
+                onSecondaryTapDown: (detail) {
+                  DataGridMenu().showGridMenu(rendererContext.stateManager, detail, context, exportFileName: exportFileName);
+                },
                 onTap: !(checkBoxColumnNoEditKey?.contains(key) ?? false)
                     ? () {
                         if (showTitleInCheckBox != null && showTitleInCheckBox!.isNotEmpty) {

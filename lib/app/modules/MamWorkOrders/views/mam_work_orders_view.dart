@@ -55,6 +55,7 @@ class MamWorkOrdersView extends GetView<MamWorkOrdersController> {
               padding: const EdgeInsets.all(8.0),
               child: PageView(
                 controller: controller.pageController,
+                physics: const NeverScrollableScrollPhysics(),
                 children: [
                   ReleaseWoNonFpcView(controller),
                   WoAsPerDailyFpcView(controller),
