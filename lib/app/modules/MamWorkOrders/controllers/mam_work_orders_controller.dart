@@ -1,14 +1,17 @@
-import 'dart:convert';
-import 'dart:developer';
-
 import 'package:bms_scheduling/app/controller/ConnectorControl.dart';
 import 'package:bms_scheduling/app/controller/MainController.dart';
 import 'package:bms_scheduling/app/data/DropDownValue.dart';
 import 'package:bms_scheduling/app/modules/MamWorkOrders/models/mamworkonloadorder_model.dart';
+import 'package:bms_scheduling/app/modules/MamWorkOrders/models/re_push_model.dart';
 import 'package:bms_scheduling/app/providers/ApiFactory.dart';
 import 'package:bms_scheduling/widgets/LoadingDialog.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:intl/intl.dart';
+import 'package:pluto_grid/pluto_grid.dart';
+
+import '../models/non_fpc_wo_dt.dart';
+import '../models/wo_aspdfpc_model.dart';
 
 class MamWorkOrdersController extends GetxController {
   /// Common Varaibles START
@@ -35,7 +38,7 @@ class MamWorkOrdersController extends GetxController {
       nonFPCTxID = TextEditingController(),
       nonFPCTelDate = TextEditingController(),
       nonFPCTelTime = TextEditingController(text: "00:00:00");
-  var nonFPCDataTableList = [].obs;
+  var nonFPCDataTableList = <NonFPCWOModel>[].obs;
   // Release WO NON FPC Varaibles END
   ///
   ///
@@ -45,13 +48,20 @@ class MamWorkOrdersController extends GetxController {
   /// WO AS PER DAILY DAILY FPC VARAIBLES START
   DropDownValue? woAsPerDailyFPCSelectedWoType, woAsPerDailyFPCSelectedLocation, woAsPerDailyFPCSelectedChannel;
   var woAsPerDailyFPCChannelList = <DropDownValue>[].obs;
+  var woAPDFPCTelecateDateTC = TextEditingController();
+  var woAsPerDailyFPCWOTFN = FocusNode();
+  var woASPDFPCModel = WOAPDFPCModel().obs;
+  bool woAsPerDFPCEnableAll = false;
   // WO AS PER DAILY DAILY FPC VARAIBLES END
   ///
   ///
   ///
   ///
   ///
-  ///
+  /// WO RE-PUSH varaibles start
+  var rePushJsonTC = TextEditingController();
+  var rePushModel = REPushModel().obs;
+  // WO RE-PUSH varaibles end
 
   @override
   void onReady() {
@@ -64,6 +74,39 @@ class MamWorkOrdersController extends GetxController {
   ///
   ///
   ///
+  ///
+  ///
+  ///
+  ///
+  ///
+  ///
+  ///
+  ///
+  //////////////////////////////////////// WO RE-PUSH FUNCTIONALITY START//////////////////////////////////////////
+  clearWORepushPage() {
+    rePushJsonTC.clear();
+  }
+
+  rePushLoadGetData() {
+    LoadingDialog.call();
+    Get.find<ConnectorControl>().GETMETHODCALL(
+      api: ApiFactory.MAM_WORK_ORDER_WO_RE_PUSH_GET_DATA,
+      fun: (resp) {
+        closeDialogIfOpen();
+        if (resp != null && resp is Map<String, dynamic> && resp['program_Response']['lstResendWorkOrders'] != null) {
+          rePushModel.value = REPushModel.fromJson(resp);
+        } else {
+          LoadingDialog.showErrorDialog(resp.toString());
+        }
+      },
+      failed: (resp) {
+        closeDialogIfOpen();
+        LoadingDialog.showErrorDialog(resp.toString());
+      },
+    );
+  }
+
+  //////////////////////////////////////// WO RE-PUSH NON FPC FUNCTIONALITY END//////////////////////////////////////////
   ///
   ///
   ///
@@ -170,8 +213,9 @@ class MamWorkOrdersController extends GetxController {
             if (resp is Map<String, dynamic> &&
                 resp['program_Response']['lstProgram'] != null &&
                 resp['program_Response']['lstProgram'] is List<dynamic>) {
-              nonFPCDataTableList.value = resp['program_Response']['lstProgram'];
-              if (nonFPCDataTableList.value.isEmpty) {
+              var list = (resp['program_Response']['lstProgram'] as List<dynamic>).map((e) => NonFPCWOModel.fromJson(e)).toList();
+              nonFPCDataTableList.addAll(list);
+              if (nonFPCDataTableList.isEmpty) {
                 LoadingDialog.showErrorDialog("Data not found");
               }
             } else {
@@ -242,18 +286,7 @@ class MamWorkOrdersController extends GetxController {
               "exportTapeCode": nonFPCTxID.text.trim(),
               "loggedUser": Get.find<MainController>().user?.logincode,
               "chkQuality": nonFPCQualityHD,
-              "lstGetProgram": nonFPCDataTableList
-                  .map((e) => {
-                        "release": e['release'] == true ? 1 : 0,
-                        "contentTypeId": e['contentTypeId'].toString(),
-                        "contentFormatId": e['contentFormatId'].toString(),
-                        "vendorCode": e['vendorCode'].toString(),
-                        "languageCode": e['languageCode'].toString(),
-                        "segmented": e['segmented'] == true ? 1.toString() : 0.toString(),
-                        "timeCodeRequired": (e['timeCodeRequired'] ?? false) == true ? 1.toString() : 0.toString(),
-                        "requiredApproval": (e['requiredApproval'] ?? false) == true ? 1.toString() : 0.toString(),
-                      })
-                  .toList()
+              "lstGetProgram": nonFPCDataTableList.map((element) => element.toJson(fromSave: true)).toList(),
             },
           );
         } catch (e) {
@@ -266,11 +299,12 @@ class MamWorkOrdersController extends GetxController {
 
   handleColumTapNonFPCWO(String columnName) {
     nonFPCEnableAll = !nonFPCEnableAll;
-    nonFPCDataTableList.value = nonFPCDataTableList
-        .map(
-          (element) => element['release'] == nonFPCEnableAll,
-        )
-        .toList();
+    nonFPCDataTableList.value = nonFPCDataTableList.map(
+      (element) {
+        element.release = nonFPCEnableAll;
+        return element;
+      },
+    ).toList();
   }
   ////////////////////////////////////////// RELEASE WO NON FPC FUNCTIONALITY END//////////////////////////////////////////
   ///
@@ -293,13 +327,93 @@ class MamWorkOrdersController extends GetxController {
     }
   }
 
-  getAsperDailyFPCChannelList() {}
+  onLeaveTelecasteDateInWODFPC(String date) {
+    try {
+      if (woAsPerDailyFPCSelectedLocation == null || woAsPerDailyFPCSelectedChannel == null || woAsPerDailyFPCSelectedWoType == null) {
+        return;
+      }
+      LoadingDialog.call();
+      Get.find<ConnectorControl>().POSTMETHOD(
+        api: ApiFactory.MAM_WORK_ORDER_WO_ADFPC_GET_DATATABLE_DATA,
+        fun: (resp) {
+          closeDialogIfOpen();
+          if (resp != null && resp is Map<String, dynamic> && resp['program_Response'] != null) {
+            woASPDFPCModel.value = WOAPDFPCModel.fromJson(resp);
+
+            if (woASPDFPCModel.value.programResponse?.dailyFpc?.isEmpty ?? true) {
+              LoadingDialog.showErrorDialog("No data found.");
+            }
+          }
+        },
+        json: {
+          "locationCode": woAsPerDailyFPCSelectedLocation!.key,
+          "channelCode": woAsPerDailyFPCSelectedChannel!.key,
+          "telecastDate": DateFormat("yyyy-MM-ddT00:00:00").format(DateFormat("dd-MM-yyyy").parse(woAPDFPCTelecateDateTC.text)),
+          "workFlowId": num.tryParse(woAsPerDailyFPCSelectedWoType?.key ?? "0"),
+        },
+      );
+    } catch (e) {
+      closeDialogIfOpen();
+      LoadingDialog.showErrorDialog(e.toString());
+    }
+  }
+
+  getAsperDailyFPCChannelList() {
+    LoadingDialog.call();
+    try {
+      Get.find<ConnectorControl>().GETMETHODCALL(
+        api: ApiFactory.MAM_WORK_ORDER_WO_ADFPC_GET_CHANNEL(
+            woAsPerDailyFPCSelectedLocation?.key ?? "", Get.find<MainController>().user?.logincode ?? ""),
+        fun: (resp) {
+          closeDialogIfOpen();
+          if (resp != null && resp is Map<String, dynamic> && resp['dtLocationFPC'] != null) {
+            woAsPerDailyFPCChannelList.addAll((resp['dtLocationFPC'] as List<dynamic>)
+                .map(
+                  (e) => DropDownValue(
+                    key: e['channelCode'],
+                    value: e['channelName'],
+                  ),
+                )
+                .toList());
+          } else {
+            LoadingDialog.showErrorDialog(resp.toString());
+          }
+        },
+        failed: (msg) {
+          closeDialogIfOpen();
+          LoadingDialog.showErrorDialog(msg.toString());
+        },
+      );
+    } catch (e) {
+      closeDialogIfOpen();
+      LoadingDialog.showErrorDialog(e.toString());
+    }
+  }
+
+  aPDFPCOnDataTableEdit(PlutoGridOnChangedEvent event) {
+    woASPDFPCModel.value.programResponse?.dailyFpc?[event.rowIdx].quality = event.value.toString();
+  }
+
+  aPDFPCOnColumnDoubleTap(String columName) {
+    woAsPerDFPCEnableAll = !woAsPerDFPCEnableAll;
+    woASPDFPCModel.value.programResponse?.dailyFpc = woASPDFPCModel.value.programResponse?.dailyFpc?.map((e) {
+          e.release = woAsPerDFPCEnableAll;
+          return e;
+        }).toList() ??
+        [];
+    woASPDFPCModel.refresh();
+  }
 
   clearWOAsperDailyFPCPage() {
     woAsPerDailyFPCSelectedWoType = null;
     woAsPerDailyFPCSelectedLocation = null;
     woAsPerDailyFPCSelectedChannel = null;
+    woASPDFPCModel.value = WOAPDFPCModel();
+    woAsPerDFPCEnableAll = false;
     onloadData.refresh();
+    if (pageController.page == 1) {
+      woAsPerDailyFPCWOTFN.requestFocus();
+    }
   }
 
   ////////////////////////////////////////// WO AS PER DAILY DAILY FPC FUNCTIONALITY END//////////////////////////////////////////
@@ -333,6 +447,7 @@ class MamWorkOrdersController extends GetxController {
               onloadData.value = MAMWORKORDERONLOADMODEL.fromJson(resp['on_Initilasation']);
               nonFPCSelectedWorkOrderType = onloadData.value.lstcboWorkOrderType?.first;
               nonFPCSelectedTelecasteType = onloadData.value.lstcboTelecastType?.first;
+              woAsPerDailyFPCSelectedWoType = onloadData.value.lstcboWOTypeFPC?.first;
               onloadData.refresh();
             } else {
               LoadingDialog.showErrorDialog("Fail to get initial data");

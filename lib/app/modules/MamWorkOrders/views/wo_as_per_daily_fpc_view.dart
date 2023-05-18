@@ -7,6 +7,7 @@ import 'package:bms_scheduling/widgets/input_fields.dart';
 import 'package:flutter/material.dart';
 
 import 'package:get/get.dart';
+import 'package:pluto_grid/pluto_grid.dart';
 
 import '../../RoBooking/views/dummydata.dart';
 import '../controllers/mam_work_orders_controller.dart';
@@ -27,6 +28,7 @@ class WoAsPerDailyFpcView extends GetView {
             "Work Order Type",
             0.24,
             selected: controller.woAsPerDailyFPCSelectedWoType,
+            inkWellFocusNode: controller.woAsPerDailyFPCWOTFN,
           );
         }),
         Divider(height: 10),
@@ -55,27 +57,54 @@ class WoAsPerDailyFpcView extends GetView {
                 );
               }),
               DateWithThreeTextField(
-                title: "Ref Date",
+                title: "Telecaste Date",
                 widthRation: 0.12,
-                mainTextController: TextEditingController(),
+                mainTextController: controller.woAPDFPCTelecateDateTC,
+                onFocusChange: controller.onLeaveTelecasteDateInWODFPC,
               ),
               Text("Double Click Quality Column to swap between HD to SD")
             ],
           );
         }),
         Divider(height: 10),
+
+        /// data table
         Expanded(
-            child: Container(
-          color: Colors.amber,
-          child: DataGridFromMap(
-            mapData: dummyProgram,
-            formatDate: false,
+          child: Obx(
+            () {
+              return (controller.woASPDFPCModel.value.programResponse?.dailyFpc?.isEmpty ?? true)
+                  ? Container(
+                      decoration: BoxDecoration(border: Border.all(color: Colors.grey)),
+                    )
+                  : DataGridFromMap3(
+                      mapData: controller.woASPDFPCModel.value.programResponse?.dailyFpc?.map((e) => e.toJson()).toList() ?? [],
+                      enableColumnDoubleTap: ['release'],
+                      checkBoxStrComparison: true.toString(),
+                      uncheckCheckBoxStr: false.toString(),
+                      checkBoxColumnKey: ['release'],
+                      editKeys: ['quality'],
+                      onEdit: controller.aPDFPCOnDataTableEdit,
+                      onColumnHeaderDoubleTap: controller.aPDFPCOnColumnDoubleTap,
+                      // colorCallback: (row){
+                      // },
+                      mode: PlutoGridMode.normal,
+                      onload: (manager) {
+                        manager.stateManager.setCurrentCell(manager.stateManager.firstCell, 0, notify: true);
+                      },
+                    );
+            },
           ),
-        )),
+        ),
         SizedBox(
           height: 5,
         ),
-        FormButtonWrapper(btnText: "Save WO")
+        Align(
+          alignment: Alignment.topRight,
+          child: FormButtonWrapper(
+            btnText: "Save WOs",
+            callback: () {},
+          ),
+        )
       ],
     );
   }

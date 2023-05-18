@@ -228,6 +228,7 @@ class ApiFactory {
   ////////////////////////////// MAM WORK ORDERS API START////////////////////////////////////////////////
   static String get MAM_WORK_ORDER_INITIALIZE => "$BASE_URL/api/MAMWorkOrder/OnLoadWorkOrder";
 
+  /////////////////////////////////// 1st tab api //////////////////////////////////////////
   static String MAM_WORK_ORDER_NON_FPC_LOCATION_LEAVE(String? locationCode) {
     return "$BASE_URL/api/MAMWorkOrder/OnLeaveLocation${(locationCode == null || locationCode.isEmpty) ? '' : '?LocationCode=$locationCode'}";
   }
@@ -241,6 +242,14 @@ class ApiFactory {
   static String get MAM_WORK_ORDER_NON_FPC_GET_DATA => "$BASE_URL/api/MAMWorkOrder/OnLeaveProgram";
 
   static String get MAM_WORK_ORDER_NON_FPC_SAVE_DATA => "$BASE_URL/api/MAMWorkOrder/SaveWorkOrder";
+
+  /////////////////////////////////// 2nd tab api //////////////////////////////////////////
+  static String MAM_WORK_ORDER_WO_ADFPC_GET_CHANNEL(String locationCode, String loginCode) =>
+      "$BASE_URL/api/MAMWorkOrder/OnLeaveLocationFPC?LocationCode=$locationCode&LoginCode=$loginCode";
+
+  static String get MAM_WORK_ORDER_WO_ADFPC_GET_DATATABLE_DATA => "$BASE_URL/api/MAMWorkOrder/OnLeaveTelecastDate";
+  /////////////////////////////////// 3rd tab api //////////////////////////////////////////
+  static String get MAM_WORK_ORDER_WO_RE_PUSH_GET_DATA => "$BASE_URL/api/MAMWorkOrder/OnLoadRepush";
 
   ////////////////////////////// MAM WORK ORDERS API END////////////////////////////////////////////////
 

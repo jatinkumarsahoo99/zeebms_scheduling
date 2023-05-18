@@ -257,7 +257,7 @@ class DataGridFromMap extends StatelessWidget {
         }
         segRows.add(PlutoRow(cells: cells, sortIdx: i));
       } catch (e) {
-        print("problem in adding rows"+e.toString());
+        print("problem in adding rows" + e.toString());
       }
     }
 
@@ -432,8 +432,11 @@ class DataGridFromMap3 extends StatelessWidget {
           enableRowChecked: false,
           renderer: ((rendererContext) {
             if (checkBoxColumnKey != null && checkBoxColumnKey!.isNotEmpty && checkBoxColumnKey!.contains(key)) {
-              return InkWell(
-                canRequestFocus: false,
+              return GestureDetector(
+                // canRequestFocus: false,
+                onSecondaryTapDown: (detail) {
+                  DataGridMenu().showGridMenu(rendererContext.stateManager, detail, context, exportFileName: exportFileName);
+                },
                 onTap: !(checkBoxColumnNoEditKey?.contains(key) ?? false)
                     ? () {
                         if (showTitleInCheckBox != null && showTitleInCheckBox!.isNotEmpty) {
