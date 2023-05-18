@@ -2,6 +2,7 @@ import 'package:bms_scheduling/app/providers/extensions/string_extensions.dart';
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+
 // import 'package:flutter/src/foundation/key.dart';
 // import 'package:flutter/src/widgets/framework.dart';
 import 'package:intl/intl.dart';
@@ -34,6 +35,7 @@ class DataGridFromMap extends StatelessWidget {
     this.actionOnPress,
     this.onSelected,
     this.onRowCheck,
+    this.onContextMenuClick,
     this.checkRowKey = "selected",
     this.onRowDoubleTap,
     this.formatDate = true,
@@ -60,6 +62,7 @@ class DataGridFromMap extends StatelessWidget {
   final Function(PlutoGridOnRowDoubleTapEvent)? onRowDoubleTap;
   final Function(PlutoGridOnChangedEvent)? onEdit;
   final Function(bool)? onFocusChange;
+  final Function(DataGridMenuItem,int)? onContextMenuClick;
   final List? hideKeys;
   final Function(PlutoGridOnSelectedEvent)? onSelected;
   final Function(PlutoGridOnRowCheckedEvent)? onRowCheck;
@@ -93,7 +96,9 @@ class DataGridFromMap extends StatelessWidget {
           enableContextMenu: false,
           width: 25,
           enableAutoEditing: false,
-          hide: hideCode! && key.toString().toLowerCase() != "hourcode" && key.toString().toLowerCase().contains("code"),
+          hide: hideCode! &&
+              key.toString().toLowerCase() != "hourcode" &&
+              key.toString().toLowerCase().contains("code"),
           enableColumnDrag: false,
           field: "no",
           type: PlutoColumnType.text()));
@@ -141,7 +146,16 @@ class DataGridFromMap extends StatelessWidget {
                 } else {
                   return GestureDetector(
                     onSecondaryTapDown: (detail) {
-                      DataGridMenu().showGridMenu(rendererContext.stateManager, detail, context, exportFileName: exportFileName);
+                      if (onContextMenuClick == null) {
+                        DataGridMenu().showGridMenu(
+                            rendererContext.stateManager, detail, context,
+                            exportFileName: exportFileName);
+                      } else {
+                        DataGridMenu().showGridCustomMenu(
+                            rendererContext.stateManager, detail, context,
+                            exportFileName: exportFileName,
+                            onPressedClick: onContextMenuClick,plutoContext: rendererContext);
+                      }
                     },
                     child: Text(
                       (rendererContext.cell.value ?? "").toString(),
@@ -197,7 +211,16 @@ class DataGridFromMap extends StatelessWidget {
                 } else {
                   return GestureDetector(
                     onSecondaryTapDown: (detail) {
-                      DataGridMenu().showGridMenu(rendererContext.stateManager, detail, context, exportFileName: exportFileName);
+                      if (onContextMenuClick == null) {
+                        DataGridMenu().showGridMenu(
+                            rendererContext.stateManager, detail, context,
+                            exportFileName: exportFileName);
+                      } else {
+                        DataGridMenu().showGridCustomMenu(
+                            rendererContext.stateManager, detail, context,
+                            exportFileName: exportFileName,
+                            onPressedClick: onContextMenuClick,plutoContext: rendererContext);
+                      }
                     },
                     child: Text(
                       rendererContext.cell.value.toString(),
@@ -210,7 +233,13 @@ class DataGridFromMap extends StatelessWidget {
               } else {
                 return GestureDetector(
                   onSecondaryTapDown: (detail) {
-                    DataGridMenu().showGridMenu(rendererContext.stateManager, detail, context, exportFileName: exportFileName);
+                    if(onContextMenuClick==null) {
+                      DataGridMenu().showGridMenu(rendererContext.stateManager, detail, context, exportFileName: exportFileName);
+                    }else {
+                      DataGridMenu().showGridCustomMenu(
+                          rendererContext.stateManager, detail, context,
+                          exportFileName: exportFileName,onPressedClick: onContextMenuClick,plutoContext: rendererContext);
+                    }
                   },
                   child: Text(
                     rendererContext.cell.value.toString(),
