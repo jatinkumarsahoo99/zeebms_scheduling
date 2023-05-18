@@ -17,15 +17,19 @@ class REPushModel {
 }
 
 class ProgramResponse {
-  String? allowColumnsEditing;
-  String? dataGridViewContentAlignment;
+  List<String>? allowColumnsEditing;
+  List<String>? dataGridViewContentAlignment;
   List<LstResendWorkOrders>? lstResendWorkOrders;
 
   ProgramResponse({this.allowColumnsEditing, this.dataGridViewContentAlignment, this.lstResendWorkOrders});
 
   ProgramResponse.fromJson(Map<String, dynamic> json) {
-    allowColumnsEditing = json['allowColumnsEditing'];
-    dataGridViewContentAlignment = json['dataGridViewContentAlignment'];
+    if (json['allowColumnsEditing'] != null) {
+      allowColumnsEditing = (json['allowColumnsEditing'] as List<dynamic>).cast<String>();
+    }
+    if (json['dataGridViewContentAlignment'] != null) {
+      dataGridViewContentAlignment = (json['dataGridViewContentAlignment'] as List<dynamic>).cast<String>();
+    }
     if (json['lstResendWorkOrders'] != null) {
       lstResendWorkOrders = <LstResendWorkOrders>[];
       json['lstResendWorkOrders'].forEach((v) {
@@ -100,24 +104,43 @@ class LstResendWorkOrders {
     jason = json['jason'];
   }
 
-  Map<String, dynamic> toJson() {
+  Map<String, dynamic> toJson({bool fromSave = false}) {
     final Map<String, dynamic> data = <String, dynamic>{};
-    data['resend'] = resend;
-    data['woStatus'] = woStatus;
-    data['location'] = location;
-    data['channel'] = channel;
-    data['woId'] = woId;
-    data['program'] = program;
-    data['episodeNo'] = episodeNo;
-    data['telecastType'] = telecastType;
-    data['tapeId'] = tapeId;
-    data['telecastDate'] = telecastDate;
-    data['telecastTime'] = telecastTime;
-    data['vendor'] = vendor;
-    data['contentType'] = contentType;
-    data['language'] = language;
-    data['segmentCount'] = segmentCount;
-    data['jason'] = jason;
+    if (fromSave) {
+      data['resend'] = resend;
+      data['woStatus'] = woStatus;
+      data['location'] = location;
+      data['channel'] = channel;
+      data['woId'] = woId;
+      data['program'] = program;
+      data['episodeNo'] = episodeNo;
+      data['telecastType'] = telecastType;
+      data['tapeId'] = tapeId;
+      data['telecastDate'] = telecastDate;
+      data['telecastTime'] = telecastTime;
+      data['vendor'] = vendor;
+      data['contentType'] = contentType;
+      data['language'] = language;
+      data['segmentCount'] = segmentCount;
+      data['jason'] = jason;
+    } else {
+      data['resend'] = resend.toString();
+      data['woStatus'] = woStatus;
+      data['location'] = location;
+      data['channel'] = channel;
+      data['woId'] = woId;
+      data['program'] = program;
+      data['episodeNo'] = episodeNo;
+      data['telecastType'] = telecastType;
+      data['tapeId'] = tapeId;
+      data['telecastDate'] = telecastDate;
+      data['telecastTime'] = telecastTime;
+      data['vendor'] = vendor;
+      data['contentType'] = contentType;
+      data['language'] = language;
+      data['segmentCount'] = segmentCount;
+      data['jason'] = jason;
+    }
     return data;
   }
 }

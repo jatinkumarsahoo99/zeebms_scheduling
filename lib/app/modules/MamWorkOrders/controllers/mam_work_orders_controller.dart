@@ -10,6 +10,7 @@ import 'package:get/get.dart';
 import 'package:intl/intl.dart';
 import 'package:pluto_grid/pluto_grid.dart';
 
+import '../models/cancel_wo_model.dart';
 import '../models/non_fpc_wo_dt.dart';
 import '../models/wo_aspdfpc_model.dart';
 
@@ -48,10 +49,11 @@ class MamWorkOrdersController extends GetxController {
   /// WO AS PER DAILY DAILY FPC VARAIBLES START
   DropDownValue? woAsPerDailyFPCSelectedWoType, woAsPerDailyFPCSelectedLocation, woAsPerDailyFPCSelectedChannel;
   var woAsPerDailyFPCChannelList = <DropDownValue>[].obs;
+  var woAsPerDailyFPCSaveList = [].obs;
   var woAPDFPCTelecateDateTC = TextEditingController();
   var woAsPerDailyFPCWOTFN = FocusNode();
   var woASPDFPCModel = WOAPDFPCModel().obs;
-  bool woAsPerDFPCEnableAll = false;
+  bool woAsPerDFPCEnableAll = false, woAsPerDFPCSwapToHDSD = true;
   // WO AS PER DAILY DAILY FPC VARAIBLES END
   ///
   ///
@@ -61,7 +63,38 @@ class MamWorkOrdersController extends GetxController {
   /// WO RE-PUSH varaibles start
   var rePushJsonTC = TextEditingController();
   var rePushModel = REPushModel().obs;
+  bool canEnableRePush = false;
   // WO RE-PUSH varaibles end
+  ///
+  ///
+  ///
+  ///
+  ///
+  /// Cancel WO varaibles end
+  DropDownValue? cwoSelectedWOT, cWOSelectedWOTLocation, cWOSelectedWOTChannel, cWOSelectedWOTTelecasteType, cWOSelectedWOProgram;
+  var cWOChannelList = <DropDownValue>[].obs;
+  var cwoDataTableList = <CancelWOModel>[].obs;
+  var cWOfromEpiTC = TextEditingController(),
+      cWOToEpiTC = TextEditingController(),
+      cwoTelDTFrom = TextEditingController(),
+      cwoTelDTTo = TextEditingController();
+  var cWOtelDate = true.obs;
+  bool cwoisEnableAll = false;
+  // Cancel WO varaibles end
+  ///
+  ///
+  ///
+  ///
+  /// WO HISTORY VARAIBLES START
+  DropDownValue? woHSelectedLocation, woHSelectedChannel, woHSelectedProgram, woHSelectedTelecastType;
+  var woHChannelList = <DropDownValue>[].obs;
+  var woHFromEpi = TextEditingController(),
+      woHToEpi = TextEditingController(),
+      woHTelDTFrom = TextEditingController(),
+      woHTelDTTo = TextEditingController();
+  var woHtelDate = true.obs;
+
+  /// WO HISTORY VARAIBLES END
 
   @override
   void onReady() {
@@ -82,9 +115,197 @@ class MamWorkOrdersController extends GetxController {
   ///
   ///
   ///
+  //////////////////////////////////////// WO HISTORY FUNCTIONALITY START//////////////////////////////////////
+  clearWOHistoryPage() async {
+    woHSelectedLocation = null;
+    woHSelectedChannel = null;
+    woHSelectedProgram = null;
+    woHSelectedTelecastType = null;
+    woHFromEpi.clear();
+    woHToEpi.clear();
+    woHtelDate = false.obs;
+  }
+
+  showDataInWOHistory() {
+    if (woHSelectedLocation == null || woHSelectedChannel == null) {
+      LoadingDialog.showErrorDialog("Selecting location and channel for history is mandatory");
+    } else {
+      LoadingDialog.call();
+      Get.find<ConnectorControl>().POSTMETHOD(
+        api: ApiFactory.MAM_WORK_ORDER_WO_HISTORY_SHOW_DATA,
+        fun: (resp) {
+          closeDialogIfOpen();
+        },
+        json: {
+          "locationCode": woHSelectedLocation?.key,
+          "channelCode": woHSelectedChannel?.key,
+          "programCode": woHSelectedProgram?.key,
+          "fromEpisodeNo": num.tryParse(woHFromEpi.text),
+          "toEpisodeNo": num.tryParse(woHToEpi.text),
+          "originalRepeatCode": woHSelectedTelecastType?.key,
+          "chkTelDtWOHistory": woHtelDate.value,
+          "telecastFromDate": DateFormat("yyyy-MM-ddT00:00:00").format(DateFormat("dd-MM-yyyy").parse(woHTelDTFrom.text)),
+          "telecastToDate": DateFormat("yyyy-MM-ddT00:00:00").format(DateFormat("dd-MM-yyyy").parse(woHTelDTTo.text)),
+        },
+      );
+    }
+  }
+
+  handleLocationChangedInWOH(DropDownValue? val) {
+    woHSelectedLocation = val;
+    if (val != null) {
+      LoadingDialog.call();
+      Get.find<ConnectorControl>().GETMETHODCALL(
+          api: ApiFactory.MAM_WORK_ORDER_WO_HISTORY_GET_CHANNEL(val.key ?? "", Get.find<MainController>().user?.logincode ?? ""),
+          fun: (resp) {
+            closeDialogIfOpen();
+            if (resp != null && resp is Map<String, dynamic> && resp.containsKey("dtLocationWoHistory") && resp['dtLocationWoHistory'] != null) {
+              List<dynamic> resp2 = resp['dtLocationWoHistory'] as List<dynamic>;
+              woHSelectedChannel = null;
+              woHChannelList.clear();
+              woHChannelList.addAll(resp2.map((e) => DropDownValue(key: e['channelCode'], value: e['channelName'])).toList());
+            } else {
+              LoadingDialog.showErrorDialog(resp.toString());
+            }
+          },
+          failed: (resp) {
+            closeDialogIfOpen();
+            LoadingDialog.showErrorDialog(resp.toString());
+          });
+    } else {
+      LoadingDialog.showErrorDialog("Please select location.");
+    }
+  }
+
+  //////////////////////////////////////// WO HISTORY FUNCTIONALITY END////////////////////////////////////////
+  ///
+  ///
+  ///
+  ///
+  ///
+  ///
+  ///
+  //////////////////////////////////////// CANCEL WO FUNCTIONALITY START////////////////////////////////////////
+  clearCancelWOPage() async {
+    cwoDataTableList.clear();
+    cwoSelectedWOT = null;
+    cWOSelectedWOTLocation = null;
+    cWOSelectedWOTChannel = null;
+    cWOSelectedWOTTelecasteType = null;
+    cWOSelectedWOProgram = null;
+    cWOtelDate.value = false;
+    cwoisEnableAll = false;
+    cWOfromEpiTC.clear();
+    cWOToEpiTC.clear();
+  }
+
+  handleOnLocChangedInCWO(DropDownValue? val) {
+    cWOSelectedWOTLocation = val;
+    if (val != null) {
+      LoadingDialog.call();
+      Get.find<ConnectorControl>().GETMETHODCALL(
+          api: ApiFactory.MAM_WORK_ORDER_WO_CANCEL_GET_CHANNEL(val.key ?? "", Get.find<MainController>().user?.logincode ?? ""),
+          fun: (resp) {
+            closeDialogIfOpen();
+            if (resp != null && resp is Map<String, dynamic> && resp.containsKey("dtLocationWoHistory") && resp['dtLocationWoHistory'] != null) {
+              List<dynamic> resp2 = resp['dtLocationWoHistory'] as List<dynamic>;
+              cWOSelectedWOTChannel = null;
+              cWOChannelList.clear();
+              cWOChannelList.addAll(resp2.map((e) => DropDownValue(key: e['channelCode'], value: e['channelName'])).toList());
+            } else {
+              LoadingDialog.showErrorDialog(resp.toString());
+            }
+          },
+          failed: (resp) {
+            closeDialogIfOpen();
+            LoadingDialog.showErrorDialog(resp.toString());
+          });
+    } else {
+      LoadingDialog.showErrorDialog("Please select location.");
+    }
+  }
+
+  showCancelWOData() async {
+    if (cwoSelectedWOT == null || cWOSelectedWOTLocation == null || cWOSelectedWOTChannel == null) {
+      LoadingDialog.showErrorDialog("Selecting work order type,location and channel for cancellation is mandatory.");
+    } else {
+      LoadingDialog.call();
+      Get.find<ConnectorControl>().POSTMETHOD(
+        api: ApiFactory.MAM_WORK_ORDER_WO_CANCEL_SHOW_DATA,
+        fun: (resp) {
+          closeDialogIfOpen();
+          if (resp != null && resp is Map<String, dynamic> && resp['program_Response'] != null && resp['program_Response']['lstWoCancel'] != null) {
+            cwoDataTableList.clear();
+            for (var element in resp['program_Response']['lstWoCancel']) {
+              cwoDataTableList.add(CancelWOModel.fromJson(element));
+            }
+            cwoDataTableList.refresh();
+          } else {
+            LoadingDialog.showErrorDialog(resp.toString());
+          }
+        },
+        json: {
+          "workflowId": cwoSelectedWOT?.key,
+          "locationCode": cWOSelectedWOTLocation?.key,
+          "channelCode": cWOSelectedWOTChannel?.key,
+          "programCode": cWOSelectedWOProgram?.key,
+          "fromEpisodeNo": num.tryParse(cWOfromEpiTC.text),
+          "toEpisodeNo": num.tryParse(cWOToEpiTC.text),
+          "originalRepeatCode": cWOSelectedWOTTelecasteType?.key,
+          "chkIncludeTelDt": cWOtelDate.value,
+          "telecastFromDate": DateFormat('yyyy-MM-ddT00:00:00').format(DateFormat("dd-MM-yyyy").parse(cwoTelDTFrom.text)),
+          "telecastToDate": DateFormat('yyyy-MM-ddT00:00:00').format(DateFormat("dd-MM-yyyy").parse(cwoTelDTTo.text)),
+        },
+      );
+    }
+  }
+
+  cancelWOData() {
+    if (cWOSelectedWOTLocation == null || cWOSelectedWOTChannel == null) {
+      LoadingDialog.showErrorDialog("Location, Channel are mandatory to select.");
+    } else {
+      LoadingDialog.call();
+      Get.find<ConnectorControl>().POSTMETHOD(
+        api: ApiFactory.MAM_WORK_ORDER_WO_CANCEL_CANCEL_DATA,
+        fun: (resp) {
+          closeDialogIfOpen();
+        },
+        json: {
+          "locationCode": cWOSelectedWOTLocation?.key,
+          "channelCode": cWOSelectedWOTChannel?.key,
+          "lstCancelWo": cwoDataTableList.map((element) => element.toJson(fromSave: true)).toList()
+        },
+      );
+    }
+  }
+
+  cancelWOViewDataTableDoubleTap(String columnName) {
+    cwoisEnableAll = !cwoisEnableAll;
+    cwoDataTableList.value = cwoDataTableList.map((element) {
+      element.cancelWO = cwoisEnableAll;
+      return element;
+    }).toList();
+  }
+
+  cancelWOViewDataTableEdit(PlutoGridOnChangedEvent event) {
+    cwoDataTableList[event.rowIdx].cancelWO = event.value.toString().toLowerCase() == "true";
+  }
+
+  //////////////////////////////////////// CANCEL WO FUNCTIONALITY END//////////////////////////////////////////
+  ///
+  ///
+  ///
+  ///
+  ///
+  ///
+  ///
+  ///
+  ///
   //////////////////////////////////////// WO RE-PUSH FUNCTIONALITY START//////////////////////////////////////////
-  clearWORepushPage() {
+  clearWORepushPage() async {
     rePushJsonTC.clear();
+    rePushModel.value = REPushModel();
+    canEnableRePush = false;
   }
 
   rePushLoadGetData() {
@@ -106,6 +327,54 @@ class MamWorkOrdersController extends GetxController {
     );
   }
 
+  handleOnChangedInDTInWORePush(PlutoGridOnChangedEvent event) {
+    rePushModel.value.programResponse?.lstResendWorkOrders?[event.rowIdx].resend = event.value.toString().toLowerCase() == "true";
+  }
+
+  handleDoubleTabInDTInWORePush(String columnName) {
+    canEnableRePush = !canEnableRePush;
+    rePushModel.value.programResponse?.lstResendWorkOrders = rePushModel.value.programResponse?.lstResendWorkOrders?.map((e) {
+      e.resend = canEnableRePush;
+      return e;
+    }).toList();
+    rePushModel.refresh();
+  }
+
+  getJSONINWORepush(PlutoGridOnSelectedEvent event) {
+    event.rowIdx;
+    if (event.rowIdx != null) {
+      rePushModel.value.programResponse?.lstResendWorkOrders?[event.rowIdx!];
+      LoadingDialog.call();
+      Get.find<ConnectorControl>().POSTMETHOD(
+        api: ApiFactory.MAM_WORK_ORDER_WO_RE_PUSH_GET_JSON,
+        fun: (resp) {
+          closeDialogIfOpen();
+        },
+        json: {
+          "rowIndex": event.rowIdx!,
+          "columnIndex": 15,
+          "lstRepushWorkOrder": rePushModel.value.programResponse?.lstResendWorkOrders?.map((e) => e.toJson(fromSave: true)).toList(),
+        },
+      );
+    }
+  }
+
+  rePushWO() {
+    LoadingDialog.call();
+    Get.find<ConnectorControl>().POSTMETHOD(
+      api: ApiFactory.MAM_WORK_ORDER_WO_RE_PUSH_SAVE_DATA,
+      fun: (resp) {
+        closeDialogIfOpen();
+        if (resp.toString() == 'Work orders repushed.') {
+          LoadingDialog.callDataSaved(msg: resp.toString());
+        } else {
+          LoadingDialog.showErrorDialog(resp.toString());
+        }
+      },
+      json: rePushModel.value.programResponse?.lstResendWorkOrders?.map((e) => e.toJson(fromSave: true)).toList(),
+    );
+  }
+
   //////////////////////////////////////// WO RE-PUSH NON FPC FUNCTIONALITY END//////////////////////////////////////////
   ///
   ///
@@ -116,7 +385,7 @@ class MamWorkOrdersController extends GetxController {
   ///
   ///
   //////////////////////////////////////// RELEASE WO NON FPC FUNCTIONALITY START//////////////////////////////////////////
-  clearReleaseWONonFPCPage() {
+  clearReleaseWONonFPCPage() async {
     nonFPCSelectedWorkOrderType = null;
     nonFPCSelectedLoc = null;
     nonFPCSelectedChannel = null;
@@ -134,9 +403,6 @@ class MamWorkOrdersController extends GetxController {
     nonFPCTxID.clear();
     nonFPCTelTime.text = "00:00:00";
     nonFPCDataTableList.clear();
-    if (pageController.page == 0) {
-      nonFPCWOTypeFN.requestFocus();
-    }
   }
 
   handleNONFPCLocationChanged(DropDownValue? val) {
@@ -265,6 +531,19 @@ class MamWorkOrdersController extends GetxController {
             api: ApiFactory.MAM_WORK_ORDER_NON_FPC_SAVE_DATA,
             fun: (resp) {
               closeDialogIfOpen();
+              if (resp != null && resp is Map<String, dynamic> && resp['program_Response'] != null) {
+                if (resp['program_Response']['strMessage'].toString() == 'MAYAM tasks created successfully.') {
+                  LoadingDialog.callDataSaved(
+                      msg: resp['program_Response']['strMessage'].toString(),
+                      callback: () {
+                        clearPage();
+                      });
+                } else {
+                  LoadingDialog.showErrorDialog(resp['program_Response']['strMessage'].toString());
+                }
+              } else {
+                LoadingDialog.showErrorDialog(resp.toString());
+              }
             },
             json: {
               "chkWithTXId": nonFPCWOReleaseTXID,
@@ -358,6 +637,59 @@ class MamWorkOrdersController extends GetxController {
     }
   }
 
+  saveWOAsPerDailyFPC() async {
+    if (woAsPerDailyFPCSelectedWoType == null || woAsPerDailyFPCSelectedLocation == null || woAsPerDailyFPCSelectedChannel == null) {
+      LoadingDialog.showErrorDialog("Work order type, Location and Channel selection is mandatory");
+    } else {
+      LoadingDialog.call();
+      Get.find<ConnectorControl>().POSTMETHOD(
+        api: ApiFactory.MAM_WORK_ORDER_WO_ADFPC_SAVE_DATA,
+        fun: (resp) {
+          closeDialogIfOpen();
+          if (resp != null && resp is Map<String, dynamic> && resp['dtRepush_WorkOrder'] != null) {
+            if (resp['dtRepush_WorkOrder']['lstdgvWorkOrderTypeFPC'] != null) {
+              woAsPerDailyFPCSaveList.clear();
+              for (var element in resp['dtRepush_WorkOrder']['lstdgvWorkOrderTypeFPC']) {
+                woAsPerDailyFPCSaveList.add(element);
+              }
+              woAsPerDailyFPCSaveList.refresh();
+            }
+            if (resp['dtRepush_WorkOrder']['message'] != null) {
+              var msgList = resp['dtRepush_WorkOrder']['message'] as List<dynamic>;
+              showMsgDialog(msgList);
+            }
+          } else {
+            LoadingDialog.showErrorDialog(resp.toString());
+          }
+        },
+        json: {
+          "workFlowId": woAsPerDailyFPCSelectedWoType?.key,
+          "locationCode": woAsPerDailyFPCSelectedLocation?.key,
+          "LocationName": woAsPerDailyFPCSelectedLocation?.value,
+          "channelCode": woAsPerDailyFPCSelectedChannel?.key,
+          "ChannelName": woAsPerDailyFPCSelectedChannel?.value,
+          "loginCode": Get.find<MainController>().user?.logincode,
+          "lstdtDailyFpc": woASPDFPCModel.value.programResponse?.dailyFpc?.map((e) => e.toJson(fromSave: true)).toList(),
+        },
+      );
+    }
+  }
+
+  showMsgDialog(List<dynamic> msgList) {
+    if (msgList.length == 1) {
+      LoadingDialog.callDataSaved(
+          msg: msgList.first,
+          callback: () {
+            clearPage();
+          });
+    } else {
+      LoadingDialog.showErrorDialog(msgList.first, callback: () {
+        msgList.removeAt(0);
+        showMsgDialog(msgList);
+      });
+    }
+  }
+
   getAsperDailyFPCChannelList() {
     LoadingDialog.call();
     try {
@@ -391,13 +723,25 @@ class MamWorkOrdersController extends GetxController {
   }
 
   aPDFPCOnDataTableEdit(PlutoGridOnChangedEvent event) {
-    woASPDFPCModel.value.programResponse?.dailyFpc?[event.rowIdx].quality = event.value.toString();
+    if (event.columnIdx == 1) {
+      woASPDFPCModel.value.programResponse?.dailyFpc?[event.rowIdx].release = event.value.toString().toLowerCase() == 'true';
+    } else {
+      woASPDFPCModel.value.programResponse?.dailyFpc?[event.rowIdx].quality = event.value.toString();
+    }
   }
 
   aPDFPCOnColumnDoubleTap(String columName) {
-    woAsPerDFPCEnableAll = !woAsPerDFPCEnableAll;
+    if (columName == 'release') {
+      woAsPerDFPCEnableAll = !woAsPerDFPCEnableAll;
+    } else if (columName == 'quality') {
+      woAsPerDFPCSwapToHDSD = !woAsPerDFPCSwapToHDSD;
+    }
     woASPDFPCModel.value.programResponse?.dailyFpc = woASPDFPCModel.value.programResponse?.dailyFpc?.map((e) {
-          e.release = woAsPerDFPCEnableAll;
+          if (columName == 'release') {
+            e.release = woAsPerDFPCEnableAll;
+          } else if (columName == 'quality') {
+            e.quality = woAsPerDFPCSwapToHDSD ? "HD" : "SD";
+          }
           return e;
         }).toList() ??
         [];
@@ -410,23 +754,11 @@ class MamWorkOrdersController extends GetxController {
     woAsPerDailyFPCSelectedChannel = null;
     woASPDFPCModel.value = WOAPDFPCModel();
     woAsPerDFPCEnableAll = false;
-    onloadData.refresh();
-    if (pageController.page == 1) {
-      woAsPerDailyFPCWOTFN.requestFocus();
-    }
+    woAsPerDailyFPCSaveList.clear();
   }
 
   ////////////////////////////////////////// WO AS PER DAILY DAILY FPC FUNCTIONALITY END//////////////////////////////////////////
   ///
-  ///
-  ///
-  ///
-  ///
-  ///
-  ///
-  ///
-  ///
-  ////////////////////////////////////////// RELEASE WO NON FPC FUNCTIONALITY END//////////////////////////////////////////
   ///
   ///
   ///
@@ -448,6 +780,7 @@ class MamWorkOrdersController extends GetxController {
               nonFPCSelectedWorkOrderType = onloadData.value.lstcboWorkOrderType?.first;
               nonFPCSelectedTelecasteType = onloadData.value.lstcboTelecastType?.first;
               woAsPerDailyFPCSelectedWoType = onloadData.value.lstcboWOTypeFPC?.first;
+              cwoSelectedWOT = onloadData.value.lstcboWOTypeCancelWO?.first;
               onloadData.refresh();
             } else {
               LoadingDialog.showErrorDialog("Fail to get initial data");
@@ -474,9 +807,16 @@ class MamWorkOrdersController extends GetxController {
     }
   }
 
-  clearPage() {
-    clearReleaseWONonFPCPage();
-    clearWOAsperDailyFPCPage();
+  clearPage() async {
+    await clearWOHistoryPage();
+    await clearCancelWOPage();
+    await clearWORepushPage();
+    await clearWOAsperDailyFPCPage();
+    await clearReleaseWONonFPCPage();
+    selectedTab.value = "Release WO Non FPC";
+    onloadData.refresh();
+    pageController.animateToPage(0, duration: const Duration(milliseconds: 200), curve: Curves.linear);
+    nonFPCWOTypeFN.requestFocus();
   }
 
   //////////////////////////////// COMMON FUNCTION ON THIS FORM END///////////////////////////////////////////////////

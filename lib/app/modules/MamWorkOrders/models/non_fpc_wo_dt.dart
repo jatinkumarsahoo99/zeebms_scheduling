@@ -44,7 +44,7 @@ class NonFPCWOModel {
   Map<String, dynamic> toJson({bool fromSave = false}) {
     final Map<String, dynamic> data = <String, dynamic>{};
     if (fromSave) {
-      data['release'] = release == true ? 1 : 0;
+      data['release'] = release == true ? 0 : 1;
       data['contentTypeId'] = contentTypeId.toString();
       data['contentFormatId'] = contentFormatId.toString();
       data['vendorCode'] = vendorCode.toString();

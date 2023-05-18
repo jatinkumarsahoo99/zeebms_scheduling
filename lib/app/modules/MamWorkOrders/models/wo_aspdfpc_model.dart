@@ -97,20 +97,35 @@ class DailyFpc {
     quality = json['quality'];
   }
 
-  Map<String, dynamic> toJson() {
+  Map<String, dynamic> toJson({bool fromSave = false}) {
     final Map<String, dynamic> data = <String, dynamic>{};
-    data['release'] = release.toString();
-    data['program'] = program;
-    data['episode'] = episode ?? '';
-    data['originalRepeatName'] = originalRepeatName;
-    data['telecastTime'] = telecastTime;
-    data['tapeId'] = tapeId;
-    data['totalSegments'] = totalSegments;
-    data['programCode'] = programCode;
-    data['bmsProgramCode'] = bmsProgramCode;
-    data['rmsProgramName'] = rmsProgramName;
-    data['originalRepeatCode'] = originalRepeatCode;
-    data['quality'] = quality;
+    if (fromSave) {
+      data['release'] = (release ?? false);
+      data['program'] = program;
+      data['episode'] = episode;
+      data['originalRepeatName'] = originalRepeatName;
+      data['telecastTime'] = telecastTime;
+      data['tapeId'] = tapeId;
+      data['totalSegments'] = totalSegments;
+      data['programCode'] = programCode;
+      data['bmsProgramCode'] = bmsProgramCode;
+      data['rmsProgramName'] = rmsProgramName;
+      data['originalRepeatCode'] = originalRepeatCode;
+      data['quality'] = quality;
+    } else {
+      data['release'] = release.toString();
+      data['program'] = program;
+      data['episode'] = episode ?? '';
+      data['originalRepeatName'] = originalRepeatName;
+      data['telecastTime'] = telecastTime;
+      data['tapeId'] = tapeId;
+      data['totalSegments'] = totalSegments;
+      data['programCode'] = programCode;
+      data['bmsProgramCode'] = bmsProgramCode;
+      data['rmsProgramName'] = rmsProgramName;
+      data['originalRepeatCode'] = originalRepeatCode;
+      data['quality'] = quality;
+    }
     return data;
   }
 }
