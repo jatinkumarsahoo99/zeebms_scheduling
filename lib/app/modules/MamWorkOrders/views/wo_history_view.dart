@@ -1,4 +1,5 @@
 import 'package:bms_scheduling/app/modules/RoBooking/views/dummydata.dart';
+import 'package:bms_scheduling/app/providers/ApiFactory.dart';
 import 'package:bms_scheduling/widgets/CheckBoxWidget.dart';
 import 'package:bms_scheduling/widgets/DateTime/DateWithThreeTextField.dart';
 import 'package:bms_scheduling/widgets/FormButton.dart';
@@ -34,19 +35,26 @@ class WoHistoryView extends GetView {
                 0.09,
                 selected: controller.woHSelectedLocation,
               ),
-              DropDownField.formDropDown1WidthMap(
-                [],
-                (value) => controller.woHSelectedChannel = value,
-                "Channel",
-                0.12,
-                selected: controller.woHSelectedChannel,
-              ),
-              DropDownField.formDropDown1WidthMap(
-                [],
-                (value) => controller.woHSelectedProgram = value,
-                "Program",
-                0.24,
-                selected: controller.woHSelectedProgram,
+              Obx(() {
+                return DropDownField.formDropDown1WidthMap(
+                  controller.woHChannelList.value,
+                  (value) => controller.woHSelectedChannel = value,
+                  "Channel",
+                  0.12,
+                  selected: controller.woHSelectedChannel,
+                );
+              }),
+              DropDownField.formDropDownSearchAPI2(
+                GlobalKey(),
+                context,
+                width: Get.width * 0.2,
+                selectedValue: controller.woHSelectedProgram,
+                onchanged: (value) => controller.woHSelectedProgram = value,
+                title: 'Program',
+                url: ApiFactory.MAM_WORK_ORDER_WO_HISTORY_PROGRAM_SEARCH,
+                customInData: 'cboProgramsList',
+                parseKeyForKey: 'programcode',
+                parseKeyForValue: 'programname',
               ),
               InputFields.formField1(
                 hintTxt: "From Epi#",
@@ -84,7 +92,7 @@ class WoHistoryView extends GetView {
               ),
               FormButtonWrapper(
                 btnText: "Show",
-                callback: () {},
+                callback: controller.showDataInWOHistory,
               )
             ],
           );

@@ -239,29 +239,33 @@ class ApiFactory {
   }
 
   static String get MAM_WORK_ORDER_NON_FPC_BMS_SEARCH => "$BASE_URL/api/MAMWorkOrder/OnLoadBMSProgram?Search=";
-
   static String get MAM_WORK_ORDER_NON_FPC_RMS_SEARCH => "$BASE_URL/api/MAMWorkOrder/OnLoadcboProgram?Search=";
-
   static String MAM_WORK_ORDER_NON_FPC_ON_BMS_LEAVE(String? val) => "$BASE_URL/api/MAMWorkOrder/OnLeaveBMSPrograms?BMSProgramCode=$val";
-
   static String get MAM_WORK_ORDER_NON_FPC_GET_DATA => "$BASE_URL/api/MAMWorkOrder/OnLeaveProgram";
-
   static String get MAM_WORK_ORDER_NON_FPC_SAVE_DATA => "$BASE_URL/api/MAMWorkOrder/SaveWorkOrder";
-
   /////////////////////////////////// 2nd tab api //////////////////////////////////////////
   static String MAM_WORK_ORDER_WO_ADFPC_GET_CHANNEL(String locationCode, String loginCode) =>
       "$BASE_URL/api/MAMWorkOrder/OnLeaveLocationFPC?LocationCode=$locationCode&LoginCode=$loginCode";
-
   static String get MAM_WORK_ORDER_WO_ADFPC_GET_DATATABLE_DATA => "$BASE_URL/api/MAMWorkOrder/OnLeaveTelecastDate";
   static String get MAM_WORK_ORDER_WO_ADFPC_SAVE_DATA => "$BASE_URL/api/MAMWorkOrder/SaveWOsFPC";
+
   /////////////////////////////////// 3rd tab api //////////////////////////////////////////
   static String get MAM_WORK_ORDER_WO_RE_PUSH_GET_DATA => "$BASE_URL/api/MAMWorkOrder/OnLoadRepush";
+  static String get MAM_WORK_ORDER_WO_RE_PUSH_GET_JSON => "$BASE_URL/api/MAMWorkOrder/dgvRepushWorkOrderCell";
+  static String get MAM_WORK_ORDER_WO_RE_PUSH_SAVE_DATA => "$BASE_URL/api/MAMWorkOrder/RepushReloadWorkService";
+
   /////////////////////////////////// 4th tab api //////////////////////////////////////////
   static String MAM_WORK_ORDER_WO_CANCEL_GET_CHANNEL(String locationCode, String loginCode) =>
       "$BASE_URL/api/MAMWorkOrder/OnLeaveLocationWOCanc?LocationCode=$locationCode&LoginCode=$loginCode";
-
   static String get MAM_WORK_ORDER_WO_CANCEL_PROGRAM_SEARCH => "$BASE_URL/api/MAMWorkOrder/OnLoadCancelProgram?Search=";
   static String get MAM_WORK_ORDER_WO_CANCEL_SHOW_DATA => "$BASE_URL/api/MAMWorkOrder/ShowWorkOrder";
+  static String get MAM_WORK_ORDER_WO_CANCEL_CANCEL_DATA => "$BASE_URL/api/MAMWorkOrder/CancelWorkOrder";
+
+  /////////////////////////////////// 5th tab api //////////////////////////////////////////
+  static String MAM_WORK_ORDER_WO_HISTORY_GET_CHANNEL(String locationCode, String loginCode) =>
+      "$BASE_URL/api/MAMWorkOrder/OnLeaveLocationWOHistory?LocationCode=$locationCode&LoginCode=$loginCode";
+  static String get MAM_WORK_ORDER_WO_HISTORY_PROGRAM_SEARCH => "$BASE_URL/api/MAMWorkOrder/OnLoadProgramWOHistory?Search=";
+  static String get MAM_WORK_ORDER_WO_HISTORY_SHOW_DATA => "$BASE_URL/api/MAMWorkOrder/GetShowWorkOrderHistory";
 
   ////////////////////////////// MAM WORK ORDERS API END////////////////////////////////////////////////
 

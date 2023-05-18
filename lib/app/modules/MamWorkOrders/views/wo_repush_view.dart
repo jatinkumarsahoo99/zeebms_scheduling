@@ -34,9 +34,7 @@ class WoRepushView extends GetView {
                       uncheckCheckBoxStr: "false",
                       onColumnHeaderDoubleTap: controller.handleDoubleTabInDTInWORePush,
                       mode: PlutoGridMode.selectWithOneTap,
-                      onSelected: (p0) {
-                        print("Row is selected");
-                      },
+                      onSelected: controller.getJSONINWORepush,
                     );
             },
           ),
@@ -79,7 +77,7 @@ class WoRepushView extends GetView {
                 SizedBox(width: 15),
                 FormButtonWrapper(
                   btnText: "Re-push WO",
-                  callback: () {},
+                  callback: controller.rePushWO,
                 ),
               ],
             )

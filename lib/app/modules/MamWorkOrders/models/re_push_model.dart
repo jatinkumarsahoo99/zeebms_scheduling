@@ -107,6 +107,22 @@ class LstResendWorkOrders {
   Map<String, dynamic> toJson({bool fromSave = false}) {
     final Map<String, dynamic> data = <String, dynamic>{};
     if (fromSave) {
+      data['resend'] = resend;
+      data['woStatus'] = woStatus;
+      data['location'] = location;
+      data['channel'] = channel;
+      data['woId'] = woId;
+      data['program'] = program;
+      data['episodeNo'] = episodeNo;
+      data['telecastType'] = telecastType;
+      data['tapeId'] = tapeId;
+      data['telecastDate'] = telecastDate;
+      data['telecastTime'] = telecastTime;
+      data['vendor'] = vendor;
+      data['contentType'] = contentType;
+      data['language'] = language;
+      data['segmentCount'] = segmentCount;
+      data['jason'] = jason;
     } else {
       data['resend'] = resend.toString();
       data['woStatus'] = woStatus;

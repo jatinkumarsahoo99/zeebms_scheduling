@@ -97,26 +97,12 @@ class WoAsPerDailyFpcView extends GetView {
               Expanded(
                 child: Obx(
                   () {
-                    return (controller.woASPDFPCModel.value.programResponse?.dailyFpc?.isEmpty ?? true)
+                    return (controller.woAsPerDailyFPCSaveList.isEmpty)
                         ? Container(
                             decoration: BoxDecoration(border: Border.all(color: Colors.grey)),
                           )
-                        : DataGridFromMap3(
-                            mapData: controller.woASPDFPCModel.value.programResponse?.dailyFpc?.map((e) => e.toJson()).toList() ?? [],
-                            enableColumnDoubleTap: ['release', 'quality'],
-                            checkBoxStrComparison: true.toString(),
-                            uncheckCheckBoxStr: false.toString(),
-                            checkBoxColumnKey: ['release'],
-                            editKeys: ['quality'],
-                            onEdit: controller.aPDFPCOnDataTableEdit,
-
-                            onColumnHeaderDoubleTap: controller.aPDFPCOnColumnDoubleTap,
-                            // colorCallback: (row){
-                            // },
-                            mode: PlutoGridMode.normal,
-                            onload: (manager) {
-                              manager.stateManager.setCurrentCell(manager.stateManager.firstCell, 0, notify: true);
-                            },
+                        : DataGridFromMap(
+                            mapData: controller.woAsPerDailyFPCSaveList.map((e) => e).toList(),
                           );
                   },
                 ),
@@ -124,9 +110,7 @@ class WoAsPerDailyFpcView extends GetView {
             ],
           ),
         ),
-        SizedBox(
-          height: 5,
-        ),
+        SizedBox(height: 5),
         Align(
           alignment: Alignment.topRight,
           child: FormButtonWrapper(

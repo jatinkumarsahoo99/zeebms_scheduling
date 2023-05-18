@@ -9,6 +9,7 @@ import 'package:bms_scheduling/widgets/input_fields.dart';
 import 'package:flutter/material.dart';
 
 import 'package:get/get.dart';
+import 'package:pluto_grid/pluto_grid.dart';
 
 import '../controllers/mam_work_orders_controller.dart';
 
@@ -112,26 +113,34 @@ class CancelWoView extends GetView {
             ],
           );
         }),
-        Divider(
-          height: 10,
-        ),
+        Divider(height: 10),
         Expanded(
-            child: Container(
-          color: Colors.amber,
-          child: DataGridFromMap(
-            mapData: dummyProgram,
-            formatDate: false,
+          child: Obx(
+            () {
+              return (controller.cwoDataTableList.isEmpty)
+                  ? Container(
+                      decoration: BoxDecoration(border: Border.all(color: Colors.grey)),
+                    )
+                  : DataGridFromMap3(
+                      mapData: controller.cwoDataTableList.map((e) => e.toJson()).toList(),
+                      checkBoxStrComparison: true.toString(),
+                      uncheckCheckBoxStr: false.toString(),
+                      checkBoxColumnKey: ['cancelWO'],
+                      onEdit: controller.cancelWOViewDataTableEdit,
+                      onColumnHeaderDoubleTap: controller.cancelWOViewDataTableDoubleTap,
+                      enableColumnDoubleTap: ['cancelWO'],
+                      mode: PlutoGridMode.selectWithOneTap,
+                    );
+            },
           ),
-        )),
-        SizedBox(
-          height: 5,
         ),
+        SizedBox(height: 5),
         Row(
           mainAxisSize: MainAxisSize.max,
           mainAxisAlignment: MainAxisAlignment.end,
           children: [
             Text(
-              "Dbl Click WOld col to select unselect all work orders",
+              "Dbl Click cancelWO col to select unselect all work orders",
               style: TextStyle(color: Colors.blue),
             ),
             SizedBox(
@@ -139,7 +148,7 @@ class CancelWoView extends GetView {
             ),
             FormButtonWrapper(
               btnText: "Cancel WO",
-              callback: () {},
+              callback: controller.cancelWOData,
             )
           ],
         )
