@@ -26,6 +26,8 @@ import '../modules/home/bindings/home_binding.dart';
 import '../modules/home/views/home_view.dart';
 import '../modules/promos/bindings/promos_binding.dart';
 import '../modules/promos/views/promos_view.dart';
+import '../modules/slide/bindings/slide_binding.dart';
+import '../modules/slide/views/slide_view.dart';
 import '../providers/AuthGuard1.dart';
 
 part 'app_routes.dart';
@@ -33,7 +35,7 @@ part 'app_routes.dart';
 class AppPages {
   AppPages._();
 
-  static const INITIAL = Routes.COMMERCIAL;
+  static const INITIAL = Routes.COMMERCIAL+"?personalNo=AqoF3cvt1PCPIKM8FfPwag%3D%3D&loginCode=gsS2oEkuYKzI9aXanDqobQ%3D%3D&formName=a4Lfy%2FGb5Roxo9vLiBCqSQ%3D%3D";
 
   static final routes = [
     GetPage(
@@ -56,7 +58,7 @@ class AppPages {
     ),
     GetPage(
       name: _Paths.COMMERCIAL,
-      page: () => CommercialView(),
+      page: () => AuthGuard1(childName: _Paths.COMMERCIAL),
       binding: CommercialBinding(),
     ),
     GetPage(
@@ -97,6 +99,11 @@ class AppPages {
       name: _Paths.EVENT_SECONDARY,
       page: () => EventSecondaryView(),
       binding: EventSecondaryBinding(),
+    ),
+    GetPage(
+      name: _Paths.SLIDE,
+      page: () => SlideView(),
+      binding: SlideBinding(),
     ),
   ];
 

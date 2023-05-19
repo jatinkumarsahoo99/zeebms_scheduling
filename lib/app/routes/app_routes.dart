@@ -17,6 +17,7 @@ abstract class Routes {
   static const RO_CANCELLATION = _Paths.RO_CANCELLATION;
   static const SPOT_PRIORITY = _Paths.SPOT_PRIORITY;
   static const EVENT_SECONDARY = _Paths.EVENT_SECONDARY;
+  static const SLIDE = _Paths.SLIDE;
 }
 
 abstract class RoutesList {
@@ -48,4 +49,5 @@ abstract class _Paths {
   static const RO_CANCELLATION = '/ro-cancellation';
   static const SPOT_PRIORITY = '/frmSpotPriority';
   static const EVENT_SECONDARY = '/event-secondary';
+  static const SLIDE = '/slide';
 }

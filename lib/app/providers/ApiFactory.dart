@@ -173,14 +173,28 @@ class ApiFactory {
 
   static String FPC_DETAILS(
       locationCode, channelCode, date) =>
-      //"$BASE_URL/api/FillerScheduling/GetFpcDetails/$locationCode/$channelCode/$date";
-      //"$BASE_URL/api/FillerScheduling/GetFpcDetails/ZAZEE00001/ZAMUS00004/01-01-2023";
-      //"$BASE_URL/api/FillerScheduling/GetFpcDetails?LocationCode=ZAZEE00001&ChannelCode=ZAMUS00004&TelecastDate=4-3-2023";
       "$BASE_URL/api/FillerScheduling/GetFpcDetails?LocationCode=$locationCode&ChannelCode=$channelCode&TelecastDate=$date";
 
   static String SEGMENT_DETAILS(
       programCode, exportTapeCode, episodeNumber, originalRepeatCode, locationCode, channelCode, startTime, date) =>
       "$BASE_URL/api/FillerScheduling/GetSegmentDetails?ProgramCode=$programCode&ExportTapeCode=$exportTapeCode&EpisodeNumber=$episodeNumber&OriginalRepeatCode=$originalRepeatCode&LocationCode=$locationCode&ChannelCode=$channelCode&StartTime=$startTime&StartDate=$date";
-      //"$BASE_URL/api/FillerScheduling/GetSegmentDetails?ProgramCode=ZAZIN02069&ExportTapeCode=ZNG3160&EpisodeNumber=145&OriginalRepeatCode=ZAORI00001&LocationCode=ZAZEE00001&ChannelCode=ZAMUS00004&StartTime=01%3A00%3A00%3A00&StartDate=4%2F3%2F2023";
 
+
+  //////////////// Filler: UI: VISHAL G,API: DEVEN ///////////////
+
+  static String COMMERCIAL_LOCATION =
+      "$BASE_URL/api/CommercialScheduling/csload";
+
+  static String COMMERCIAL_CHANNEL(locationCode) =>
+      "$BASE_URL/api/CommercialScheduling/GetLocationSelect?Locationcode=$locationCode";
+
+  static String COMMERCIAL_SHOW_FPC_SCHEDULLING_DETAILS(
+      locationCode, channelCode, date) =>
+      "$BASE_URL/api/CommercialScheduling/GetShowDetails?Locationcode=$locationCode&ChannelCode=$channelCode&TelecastDate=$date";
+
+  static String COMMERCIAL_SHOW_ON_TAB_DETAILS() =>
+      "$BASE_URL/api/CommercialScheduling/GetTabChange";
+
+  static String SAVE_COMMERCIAL_DETAILS() =>
+      "$BASE_URL/api/CommercialScheduling/PostSave";
 }

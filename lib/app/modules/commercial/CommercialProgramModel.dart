@@ -1,54 +1,26 @@
 class CommercialProgramModel {
-  String? startTime;
-  String? programName;
-  String? episodeNumber;
-  String? tapeId;
-  String? programCode;
-  String? promoCap;
-  int? episodeDuration;
-  bool? isSelected=false;
 
+  String? fpcTime;
+  String? programname;
+  String? programcode;
 
-  CommercialProgramModel(
-      {this.startTime,
-        this.programName,
-        this.episodeNumber,
-        this.tapeId,
-        this.programCode,
-        this.promoCap,
-        this.episodeDuration});
+  CommercialProgramModel({
+      this.fpcTime,
+      this.programname,
+      this.programcode,
+      });
 
   CommercialProgramModel.fromJson(Map<String, dynamic> json) {
-    startTime = json['startTime'];
-    programName = json['programName'];
-    episodeNumber = (json['episodeNumber']??"").toString();
-    tapeId = json['tapeId'];
-    programCode = json['programCode'];
-    promoCap = (json['promoCap']??'').toString();
-    episodeDuration = json['episodeDuration'];
+    fpcTime = json['fpcTime'];
+    programname = json['programname'];
+    programcode = (json['programcode']??"").toString();
   }
 
   Map<String, dynamic> toJson() {
-    final Map<String, dynamic> data = new Map<String, dynamic>();
-    data['startTime'] = this.startTime;
-    data['programName'] = this.programName;
-    data['episodeNumber'] = this.episodeNumber;
-    data['tapeId'] = this.tapeId;
-    data['programCode'] = this.programCode;
-    data['promoCap'] = this.promoCap;
-    data['episodeDuration'] = this.episodeDuration;
-    return data;
-  }
-
-  Map<String, dynamic> toJson1() {
-    final Map<String, dynamic> data = new Map<String, dynamic>();
-    data['startTime'] = this.startTime;
-    data['programName'] = this.programName;
-    // data['episodeNumber'] = this.episodeNumber;
-    // data['tapeId'] = this.tapeId;
-    // data['programCode'] = this.programCode;
-    // data['promoCap'] = this.promoCap;
-    // data['episodeDuration'] = this.episodeDuration;
+    final Map<String, dynamic> data = {};
+    data['fpcTime'] = this.fpcTime;
+    data['programname'] = this.programname;
+    data['programcode'] = this.programcode;
     return data;
   }
 

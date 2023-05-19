@@ -121,8 +121,8 @@ class FillerController extends GetxController {
 
   @override
   void onInit() {
-    getLocation();
     super.onInit();
+    getLocation();
   }
 
   formHandler(btnName) async {
@@ -335,6 +335,8 @@ class FillerController extends GetxController {
       LoadingDialog.callErrorMessage1(msg: "Failed To Load Initial Data");
     }
   }
+
+
 
   fetchFPCDetails() {
     print(">>Key is>>>>>" + (selectedChannel?.key ?? ""));

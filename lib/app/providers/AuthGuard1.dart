@@ -3,6 +3,7 @@ import 'package:bms_scheduling/app/modules/FpcMismatch/views/FpcMismatchView.dar
 import 'package:bms_scheduling/app/modules/ImportDigitextRunOrder/views/import_digitext_run_order_view.dart';
 import 'package:bms_scheduling/app/modules/LogAdditions/controllers/LogAdditionsController.dart';
 import 'package:bms_scheduling/app/modules/RoCancellation/views/ro_cancellation_view.dart';
+import 'package:bms_scheduling/app/modules/commercial/views/commercial_view.dart';
 import 'package:bms_scheduling/app/modules/filler/views/filler_view.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
@@ -54,7 +55,10 @@ class AuthGuard1 extends StatelessWidget {
               currentWidget = ImportDigitextRunOrderView();
               break;
             case Routes.FILLER:
-              currentWidget=FillerView();
+              currentWidget = FillerView();
+              break;
+            case Routes.COMMERCIAL:
+              currentWidget = CommercialView();
               break;
             default:
               currentWidget = const NoDataFoundPage();
