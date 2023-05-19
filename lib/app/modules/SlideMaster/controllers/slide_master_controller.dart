@@ -20,4 +20,6 @@ class SlideMasterController extends GetxController {
   }
 
   void increment() => count.value++;
+
+  formHandler(String string) {}
 }
