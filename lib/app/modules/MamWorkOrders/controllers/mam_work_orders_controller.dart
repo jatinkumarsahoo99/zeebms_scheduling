@@ -13,6 +13,7 @@ import 'package:pluto_grid/pluto_grid.dart';
 import '../models/cancel_wo_model.dart';
 import '../models/non_fpc_wo_dt.dart';
 import '../models/wo_aspdfpc_model.dart';
+import '../models/wo_history_model.dart';
 
 class MamWorkOrdersController extends GetxController {
   /// Common Varaibles START
@@ -87,6 +88,7 @@ class MamWorkOrdersController extends GetxController {
   ///
   /// WO HISTORY VARAIBLES START
   DropDownValue? woHSelectedLocation, woHSelectedChannel, woHSelectedProgram, woHSelectedTelecastType;
+  var wHDTList = <WOHistoryModel>[].obs;
   var woHChannelList = <DropDownValue>[].obs;
   var woHFromEpi = TextEditingController(),
       woHToEpi = TextEditingController(),
@@ -123,7 +125,10 @@ class MamWorkOrdersController extends GetxController {
     woHSelectedTelecastType = null;
     woHFromEpi.clear();
     woHToEpi.clear();
+    wHDTList.clear();
     woHtelDate = false.obs;
+    woHTelDTFrom.text = getCurrentDateTime;
+    woHTelDTTo.text = getCurrentDateTime;
   }
 
   showDataInWOHistory() {
@@ -135,6 +140,17 @@ class MamWorkOrdersController extends GetxController {
         api: ApiFactory.MAM_WORK_ORDER_WO_HISTORY_SHOW_DATA,
         fun: (resp) {
           closeDialogIfOpen();
+          if (resp != null &&
+              resp is Map<String, dynamic> &&
+              resp['dtShowWorkOrderHistory'] != null &&
+              resp['dtShowWorkOrderHistory']['lstShowHistory'] != null) {
+            wHDTList.value = (resp['dtShowWorkOrderHistory']['lstShowHistory'] as List<dynamic>).map((e) => WOHistoryModel.fromJson(e)).toList();
+            if (wHDTList.isEmpty) {
+              LoadingDialog.showErrorDialog("No data found.");
+            }
+          } else {
+            LoadingDialog.showErrorDialog(resp.toString());
+          }
         },
         json: {
           "locationCode": woHSelectedLocation?.key,
@@ -197,6 +213,8 @@ class MamWorkOrdersController extends GetxController {
     cwoisEnableAll = false;
     cWOfromEpiTC.clear();
     cWOToEpiTC.clear();
+    cwoTelDTFrom.text = getCurrentDateTime;
+    cwoTelDTTo.text = getCurrentDateTime;
   }
 
   handleOnLocChangedInCWO(DropDownValue? val) {
@@ -240,6 +258,9 @@ class MamWorkOrdersController extends GetxController {
               cwoDataTableList.add(CancelWOModel.fromJson(element));
             }
             cwoDataTableList.refresh();
+            if (cwoDataTableList.isEmpty) {
+              LoadingDialog.showErrorDialog("No data found");
+            }
           } else {
             LoadingDialog.showErrorDialog(resp.toString());
           }
@@ -269,10 +290,16 @@ class MamWorkOrdersController extends GetxController {
         api: ApiFactory.MAM_WORK_ORDER_WO_CANCEL_CANCEL_DATA,
         fun: (resp) {
           closeDialogIfOpen();
+          if (resp != null && resp is Map<String, dynamic>) {
+            LoadingDialog.callDataSaved(msg: resp.toString());
+          } else {
+            LoadingDialog.showErrorDialog(resp.toString());
+          }
         },
         json: {
           "locationCode": cWOSelectedWOTLocation?.key,
           "channelCode": cWOSelectedWOTChannel?.key,
+          "LoggedUser": Get.find<MainController>().user?.logincode,
           "lstCancelWo": cwoDataTableList.map((element) => element.toJson(fromSave: true)).toList()
         },
       );
@@ -403,6 +430,7 @@ class MamWorkOrdersController extends GetxController {
     nonFPCTxID.clear();
     nonFPCTelTime.text = "00:00:00";
     nonFPCDataTableList.clear();
+    nonFPCTelDate.text = getCurrentDateTime;
   }
 
   handleNONFPCLocationChanged(DropDownValue? val) {
@@ -755,6 +783,7 @@ class MamWorkOrdersController extends GetxController {
     woASPDFPCModel.value = WOAPDFPCModel();
     woAsPerDFPCEnableAll = false;
     woAsPerDailyFPCSaveList.clear();
+    woAPDFPCTelecateDateTC.text = getCurrentDateTime;
   }
 
   ////////////////////////////////////////// WO AS PER DAILY DAILY FPC FUNCTIONALITY END//////////////////////////////////////////
@@ -818,6 +847,8 @@ class MamWorkOrdersController extends GetxController {
     pageController.animateToPage(0, duration: const Duration(milliseconds: 200), curve: Curves.linear);
     nonFPCWOTypeFN.requestFocus();
   }
+
+  String get getCurrentDateTime => "${DateTime.now().day}-${DateTime.now().month}-${DateTime.now().year}";
 
   //////////////////////////////// COMMON FUNCTION ON THIS FORM END///////////////////////////////////////////////////
 }
