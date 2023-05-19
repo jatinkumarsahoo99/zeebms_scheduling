@@ -1,12 +1,12 @@
 import 'package:get/get.dart';
 
+import '../modules/AsrunImportAdRevenue/views/AsrunImportAdRevenueView.dart';
 import '../modules/AuditStatus/bindings/audit_status_binding.dart';
 import '../modules/AuditStatus/views/audit_status_view.dart';
 import '../modules/FinalAuditReportAfterTelecast/bindings/final_audit_report_after_telecast_binding.dart';
 import '../modules/FinalAuditReportAfterTelecast/views/final_audit_report_after_telecast_view.dart';
 import '../modules/FinalAuditReportBeforeLog/bindings/final_audit_report_before_log_binding.dart';
 import '../modules/FinalAuditReportBeforeLog/views/final_audit_report_before_log_view.dart';
-import '../modules/AsrunImportAdRevenue/views/AsrunImportAdRevenueView.dart';
 import '../modules/ImportDigitextRunOrder/bindings/import_digitext_run_order_binding.dart';
 import '../modules/MamWorkOrders/bindings/mam_work_orders_binding.dart';
 import '../modules/RoBooking/bindings/ro_booking_binding.dart';
@@ -20,8 +20,12 @@ import '../modules/SalesAuditNew/bindings/sales_audit_new_binding.dart';
 import '../modules/SalesAuditNew/views/sales_audit_new_view.dart';
 import '../modules/SalesAuditNotTelecastReport/bindings/sales_audit_not_telecast_report_binding.dart';
 import '../modules/SalesAuditNotTelecastReport/views/SalesAuditNotTelecastReportView.dart';
+import '../modules/SlideMaster/bindings/slide_master_binding.dart';
+import '../modules/SlideMaster/views/slide_master_view.dart';
 import '../modules/SpotPriority/bindings/spot_priority_binding.dart';
 import '../modules/SpotPriority/views/SpotPriorityView.dart';
+import '../modules/StillMaster/bindings/still_master_binding.dart';
+import '../modules/StillMaster/views/still_master_view.dart';
 import '../modules/commercial/bindings/commercial_binding.dart';
 import '../modules/commercial/views/commercial_view.dart';
 import '../modules/home/bindings/home_binding.dart';
@@ -128,6 +132,16 @@ class AppPages {
       name: _Paths.SALES_AUDIT_NEW,
       page: () => SalesAuditNewView(),
       binding: SalesAuditNewBinding(),
+    ),
+    GetPage(
+      name: _Paths.SLIDE_MASTER,
+      page: () => const SlideMasterView(),
+      binding: SlideMasterBinding(),
+    ),
+    GetPage(
+      name: _Paths.STILL_MASTER,
+      page: () => const StillMasterView(),
+      binding: StillMasterBinding(),
     ),
   ];
 }

@@ -7,10 +7,10 @@ import 'package:bms_scheduling/widgets/dropdown.dart';
 import 'package:bms_scheduling/widgets/gridFromMap.dart';
 import 'package:bms_scheduling/widgets/input_fields.dart';
 import 'package:flutter/material.dart';
-
 import 'package:get/get.dart';
 
 import '../controllers/mam_work_orders_controller.dart';
+import 'package:pluto_grid/pluto_grid.dart' show PlutoGridMode;
 
 class WoHistoryView extends GetView {
   const WoHistoryView(this.controller, {Key? key}) : super(key: key);
@@ -101,13 +101,20 @@ class WoHistoryView extends GetView {
           height: 10,
         ),
         Expanded(
-            child: Container(
-          color: Colors.amber,
-          child: DataGridFromMap(
-            mapData: dummyProgram,
-            formatDate: false,
+          child: Obx(
+            () {
+              return (controller.wHDTList.isEmpty)
+                  ? Container(
+                      decoration: BoxDecoration(border: Border.all(color: Colors.grey)),
+                    )
+                  : DataGridFromMap(
+                      mapData: controller.wHDTList.map((e) => e.toJson()).toList(),
+                      mode: PlutoGridMode.selectWithOneTap,
+                      formatDate: false,
+                    );
+            },
           ),
-        )),
+        ),
       ],
     );
   }
