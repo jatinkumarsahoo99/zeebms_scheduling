@@ -25,6 +25,7 @@ abstract class Routes {
   static const SALES_AUDIT_NEW = _Paths.SALES_AUDIT_NEW;
   static const SLIDE_MASTER = _Paths.SLIDE_MASTER;
   static const STILL_MASTER = _Paths.STILL_MASTER;
+  static const SECONDARY_EVENT_MASTER = _Paths.SECONDARY_EVENT_MASTER;
 }
 
 abstract class RoutesList {
@@ -66,6 +67,7 @@ abstract class _Paths {
   static const SALES_AUDIT_NOT_TELECAST_REPORT = '/frmsalesauditnottelecast';
   static const SALES_AUDIT_EXTRA_SPOTS_REPORT = '/frmsalesauditextraspotsreport';
   static const SALES_AUDIT_NEW = '/TransmissionLog';
-  static const SLIDE_MASTER = '/slide-master';
-  static const STILL_MASTER = '/still-master';
+  static const SLIDE_MASTER = '/frmSlideMaster';
+  static const STILL_MASTER = '/frmStillMaster';
+  static const SECONDARY_EVENT_MASTER = '/frmSecondaryEventmaster';
 }

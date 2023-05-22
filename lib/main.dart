@@ -1,9 +1,9 @@
 import 'dart:ui';
-import 'package:azure_application_insights/azure_application_insights.dart';
-import 'package:bms_scheduling/app/providers/Aes.dart';
+
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:url_strategy/url_strategy.dart';
+
 import 'app/providers/BinderData.dart';
 import 'app/providers/Logger.dart';
 import 'app/providers/theme.dart';

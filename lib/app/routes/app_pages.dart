@@ -1,4 +1,7 @@
 import 'package:get/get.dart';
+
+import '../modules/SecondaryEventMaster/bindings/secondary_event_master_binding.dart';
+import '../modules/SecondaryEventMaster/views/secondary_event_master_view.dart';
 import '../modules/home/bindings/home_binding.dart';
 import '../modules/home/views/home_view.dart';
 import '../providers/AuthGuard1.dart';
@@ -8,7 +11,7 @@ part 'app_routes.dart';
 class AppPages {
   AppPages._();
 
-  static const INITIAL = Routes.SALES_AUDIT_NEW +
+  static const INITIAL = Routes.SECONDARY_EVENT_MASTER +
       "?personalNo=AqoF3cvt1PCPIKM8FfPwag%3D%3D&loginCode=gsS2oEkuYKzI9aXanDqobQ%3D%3D&formName=a4Lfy%2FGb5Roxo9vLiBCqSQ%3D%3D";
 
   static final routes = [
@@ -65,39 +68,62 @@ class AppPages {
     ),
     GetPage(
       name: _Paths.FINAL_AUDIT_REPORT_BEFORE_LOG,
-      page: () => AuthGuard1(childName: _Paths.FINAL_AUDIT_REPORT_BEFORE_LOG,),
+      page: () => AuthGuard1(
+        childName: _Paths.FINAL_AUDIT_REPORT_BEFORE_LOG,
+      ),
     ),
     GetPage(
       name: _Paths.FINAL_AUDIT_REPORT_AFTER_TELECAST,
-      page: () => AuthGuard1(childName: _Paths.FINAL_AUDIT_REPORT_AFTER_TELECAST,),
+      page: () => AuthGuard1(
+        childName: _Paths.FINAL_AUDIT_REPORT_AFTER_TELECAST,
+      ),
     ),
     GetPage(
       name: _Paths.AUDIT_STATUS,
-      page: () => AuthGuard1(childName: _Paths.AUDIT_STATUS,),
+      page: () => AuthGuard1(
+        childName: _Paths.AUDIT_STATUS,
+      ),
     ),
     GetPage(
       name: _Paths.ASRUN_IMPORT_AD_REVENUE,
-      page: () => AuthGuard1(childName: _Paths.ASRUN_IMPORT_AD_REVENUE,),
+      page: () => AuthGuard1(
+        childName: _Paths.ASRUN_IMPORT_AD_REVENUE,
+      ),
     ),
     GetPage(
       name: _Paths.SALES_AUDIT_NOT_TELECAST_REPORT,
-      page: () => AuthGuard1(childName: _Paths.SALES_AUDIT_NOT_TELECAST_REPORT,),
+      page: () => AuthGuard1(
+        childName: _Paths.SALES_AUDIT_NOT_TELECAST_REPORT,
+      ),
     ),
     GetPage(
       name: _Paths.SALES_AUDIT_EXTRA_SPOTS_REPORT,
-      page: () => AuthGuard1(childName: _Paths.SALES_AUDIT_EXTRA_SPOTS_REPORT,),
+      page: () => AuthGuard1(
+        childName: _Paths.SALES_AUDIT_EXTRA_SPOTS_REPORT,
+      ),
     ),
     GetPage(
       name: _Paths.SALES_AUDIT_NEW,
-      page: () => AuthGuard1(childName: _Paths.SALES_AUDIT_NEW,),
+      page: () => AuthGuard1(
+        childName: _Paths.SALES_AUDIT_NEW,
+      ),
     ),
     GetPage(
       name: _Paths.SLIDE_MASTER,
-      page: () =>  AuthGuard1(childName: _Paths.SLIDE_MASTER,),
+      page: () => AuthGuard1(
+        childName: _Paths.SLIDE_MASTER,
+      ),
     ),
     GetPage(
       name: _Paths.STILL_MASTER,
-      page: () =>  AuthGuard1(childName: _Paths.STILL_MASTER,),
+      page: () => AuthGuard1(
+        childName: _Paths.STILL_MASTER,
+      ),
+    ),
+    GetPage(
+      name: _Paths.SECONDARY_EVENT_MASTER,
+      page: () => const SecondaryEventMasterView(),
+      binding: SecondaryEventMasterBinding(),
     ),
   ];
 }
