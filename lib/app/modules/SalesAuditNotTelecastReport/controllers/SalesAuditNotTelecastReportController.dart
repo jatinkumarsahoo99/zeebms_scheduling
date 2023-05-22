@@ -17,7 +17,7 @@ import '../../../data/DropDownValue.dart';
 import '../SalesAuditNotTelecastModel.dart';
 
 class SalesAuditNotTelecastReportController extends GetxController {
-  // DataTableSource movieLiveEventTable = ProgramTapeTable();
+  var locations = RxList<DropDownValue>();
   List<SystemEnviroment>? progTypeList = [];
   List<SystemEnviroment>? totalProgTypeList = [];
   List<SystemEnviroment>? progNameList = [];
@@ -37,6 +37,11 @@ class SalesAuditNotTelecastReportController extends GetxController {
   List dataList = [];
   FocusNode progType = FocusNode();
   int? selectIndex;
+
+  RxBool isEnable = RxBool(true);
+  //input controllers
+  DropDownValue? selectLocation;
+
 
   @override
   void onInit() {

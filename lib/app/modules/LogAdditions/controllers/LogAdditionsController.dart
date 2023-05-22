@@ -242,6 +242,8 @@ class LogAdditionsController extends GetxController {
       Snack.callError("Please select location");
     } else if (selectChannel == null) {
       Snack.callError("Please select channel");
+    }else if (selectAdditions == null) {
+      Snack.callError("Please select additions");
     } else {
       if (selectAdditions?.key != "0") {
         getShowPreviousAddition();
