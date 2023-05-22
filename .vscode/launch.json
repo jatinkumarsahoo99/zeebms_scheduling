@@ -8,11 +8,11 @@
             "name": "Scheduling",
             "request": "launch",
             "type": "dart",
+            "flutterMode": "debug",
             "args": [
                 "-d",
                 "chrome",
-                "--web-port",
-                "9992",
+                "--web-port=9992",
                 "--web-browser-flag=--disable-web-security",
             ],
         },

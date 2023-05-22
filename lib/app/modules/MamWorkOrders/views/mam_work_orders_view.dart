@@ -55,6 +55,7 @@ class MamWorkOrdersView extends GetView<MamWorkOrdersController> {
               padding: const EdgeInsets.all(8.0),
               child: PageView(
                 controller: controller.pageController,
+                physics: const NeverScrollableScrollPhysics(),
                 children: [
                   ReleaseWoNonFpcView(controller),
                   WoAsPerDailyFpcView(controller),
@@ -83,8 +84,7 @@ class MamWorkOrdersView extends GetView<MamWorkOrdersController> {
                           for (var btn in btncontroller.buttons!)
                             FormButtonWrapper(
                               btnText: btn["name"],
-                              // isEnabled: btn['isDisabled'],
-                              callback: () => controller.formHandler(btn['name'].toString()),
+                              callback: btn["name"] == "Save" ? null : () => controller.formHandler(btn['name'].toString()),
                             ),
                         ],
                       ),

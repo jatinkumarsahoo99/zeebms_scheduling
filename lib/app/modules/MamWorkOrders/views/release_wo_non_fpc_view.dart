@@ -171,7 +171,7 @@ class ReleaseWoNonFpcView extends GetView {
                       decoration: BoxDecoration(border: Border.all(color: Colors.grey)),
                     )
                   : DataGridFromMap3(
-                      mapData: controller.nonFPCDataTableList.value,
+                      mapData: controller.nonFPCDataTableList.value.map((e) => e.toJson()).toList(),
                       formatDate: false,
                       checkBoxColumnKey: const [
                         "segmented",
