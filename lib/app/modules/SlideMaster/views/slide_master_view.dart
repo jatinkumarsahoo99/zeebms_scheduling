@@ -7,6 +7,7 @@ import 'package:get/get.dart';
 
 import '../../../../widgets/FormButton.dart';
 import '../../../../widgets/input_fields.dart';
+import '../../../../widgets/radio_row.dart';
 import '../../../controller/HomeController.dart';
 import '../controllers/slide_master_controller.dart';
 
@@ -129,26 +130,19 @@ class SlideMasterView extends GetView<SlideMasterController> {
                   ),
                 ),
                 Padding(
-                  padding: const EdgeInsets.all(8.0),
+                  padding: const EdgeInsets.symmetric(vertical: 4),
                   child: Row(
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: [
                       SizedBox(
-                        width: context.width * .22,
-                        child: Row(
-                          crossAxisAlignment: CrossAxisAlignment.end,
-                          children: [
-                            Expanded(child: Align(alignment: Alignment.topLeft, child: CheckBoxWidget1(title: "Non-Dated"))),
-                            // SizedBox(width: 10),
-                            Expanded(child: Align(alignment: Alignment.topLeft, child: CheckBoxWidget1(title: "Dated"))),
-                          ],
-                        ),
+                        width: context.width * .23,
+                        child: RadioRow(items: ['Non-Dated', 'Dated'], groupValue: "Non-Dated"),
                       ),
                       SizedBox(width: 20),
                       DateWithThreeTextField(
                         title: "Upto Date",
                         mainTextController: TextEditingController(),
-                        widthRation: .22,
+                        widthRation: .225,
                       )
                     ],
                   ),
