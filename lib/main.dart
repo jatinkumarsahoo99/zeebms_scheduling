@@ -1,5 +1,6 @@
 import 'dart:ui';
 import 'package:azure_application_insights/azure_application_insights.dart';
+import 'package:bms_scheduling/app/providers/Aes.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:url_strategy/url_strategy.dart';
@@ -14,12 +15,13 @@ void main() async {
     FlutterError.presentError(details);
     // Logger.sendError(error: details,stackTrace: details.stack,severity: Severity.critical);
   };
+
   PlatformDispatcher.instance.onError = (error, stack) {
     // Logger.sendError(error: error,severity: Severity.warning,stackTrace: stack);
     return true;
   };
   setPathUrlStrategy();
-
+  // print("Aes dec>>>"+(Aes.decrypt("1BWIoBKeDl7qDSAAhxvXsQ==")??""));
   runApp(
     GetMaterialApp(
       title: "Zee BMS",

@@ -53,18 +53,17 @@ class AppPages {
     ),
     GetPage(
       name: _Paths.MAM_WORK_ORDERS,
-      page: () => MamWorkOrdersView(),
-      binding: MamWorkOrdersBinding(),
+      page: () => AuthGuard1(childName: _Paths.MAM_WORK_ORDERS),
     ),
     GetPage(
       name: _Paths.COMMERCIAL,
+      page: () => AuthGuard1(childName: _Paths.COMMERCIAL),
       page: () => AuthGuard1(childName: _Paths.COMMERCIAL),
       binding: CommercialBinding(),
     ),
     GetPage(
       name: _Paths.RO_BOOKING,
-      page: () => const RoBookingView(),
-      binding: RoBookingBinding(),
+      page: () => AuthGuard1(childName: _Paths.RO_BOOKING),
     ),
     GetPage(
       name: _Paths.FILLER,
@@ -79,7 +78,6 @@ class AppPages {
     GetPage(
       name: _Paths.IMPORT_DIGITEXT_RUN_ORDER,
       page: () => AuthGuard1(childName: _Paths.IMPORT_DIGITEXT_RUN_ORDER),
-      binding: ImportDigitextRunOrderBinding(),
     ),
     GetPage(
       name: _Paths.FPC_MISMATCH,
@@ -87,13 +85,57 @@ class AppPages {
     ),
     GetPage(
       name: _Paths.SPOT_PRIORITY,
-      page: () => SpotPriorityView(),
-      binding: SpotPriorityBinding(),
+      page: () => AuthGuard1(childName: _Paths.SPOT_PRIORITY),
+      // binding: SpotPriorityBinding(),
     ),
     GetPage(
       name: _Paths.RO_CANCELLATION,
       page: () => AuthGuard1(childName: _Paths.RO_CANCELLATION),
-      binding: RoCancellationBinding(),
+      // binding: RoCancellationBinding(),
+    ),
+    GetPage(
+      name: _Paths.RO_RESCHEDULE,
+      page: () => AuthGuard1(childName: _Paths.RO_RESCHEDULE),
+    ),
+    GetPage(
+      name: _Paths.ROS_DISTRIBUTION,
+      page: () => AuthGuard1(childName: _Paths.ROS_DISTRIBUTION),
+    ),
+    GetPage(
+      name: _Paths.FINAL_AUDIT_REPORT_BEFORE_LOG,
+      page: () => AuthGuard1(childName: _Paths.FINAL_AUDIT_REPORT_BEFORE_LOG,),
+    ),
+    GetPage(
+      name: _Paths.FINAL_AUDIT_REPORT_AFTER_TELECAST,
+      page: () => AuthGuard1(childName: _Paths.FINAL_AUDIT_REPORT_AFTER_TELECAST,),
+    ),
+    GetPage(
+      name: _Paths.AUDIT_STATUS,
+      page: () => AuthGuard1(childName: _Paths.AUDIT_STATUS,),
+    ),
+    GetPage(
+      name: _Paths.ASRUN_IMPORT_AD_REVENUE,
+      page: () => AuthGuard1(childName: _Paths.ASRUN_IMPORT_AD_REVENUE,),
+    ),
+    GetPage(
+      name: _Paths.SALES_AUDIT_NOT_TELECAST_REPORT,
+      page: () => AuthGuard1(childName: _Paths.SALES_AUDIT_NOT_TELECAST_REPORT,),
+    ),
+    GetPage(
+      name: _Paths.SALES_AUDIT_EXTRA_SPOTS_REPORT,
+      page: () => AuthGuard1(childName: _Paths.SALES_AUDIT_EXTRA_SPOTS_REPORT,),
+    ),
+    GetPage(
+      name: _Paths.SALES_AUDIT_NEW,
+      page: () => AuthGuard1(childName: _Paths.SALES_AUDIT_NEW,),
+    ),
+    GetPage(
+      name: _Paths.SLIDE_MASTER,
+      page: () =>  AuthGuard1(childName: _Paths.SLIDE_MASTER,),
+    ),
+    GetPage(
+      name: _Paths.STILL_MASTER,
+      page: () =>  AuthGuard1(childName: _Paths.STILL_MASTER,),
     ),
     GetPage(
       name: _Paths.EVENT_SECONDARY,

@@ -6,15 +6,17 @@ import 'package:pluto_grid/pluto_grid.dart';
 import '../../../../widgets/DateTime/DateWithThreeTextField.dart';
 import '../../../../widgets/FormButton.dart';
 import '../../../../widgets/dropdown.dart';
+import '../../../../widgets/gridFromMap.dart';
 import '../../../../widgets/gridFromMap1.dart';
 import '../../../../widgets/input_fields.dart';
-import '../../../../widgets/radio_row.dart';
 import '../../../controller/HomeController.dart';
 import '../../../providers/SizeDefine.dart';
+import '../../CommonSearch/views/common_search_view.dart';
 import '../controllers/LogAdditionsController.dart';
 
 class LogAdditionsView extends GetView<LogAdditionsController> {
-  LogAdditionsController controllerX = Get.put<LogAdditionsController>(LogAdditionsController());
+  LogAdditionsController controllerX =
+      Get.put<LogAdditionsController>(LogAdditionsController());
 
   @override
   Widget build(BuildContext context) {
@@ -36,7 +38,8 @@ class LogAdditionsView extends GetView<LogAdditionsController> {
                     width: double.maxFinite,
                     child: Wrap(
                       crossAxisAlignment: WrapCrossAlignment.center,
-                      runSpacing: 5,
+                      runSpacing: 0.0,
+                      direction: Axis.horizontal,
                       spacing: 5,
                       children: [
                         Obx(
@@ -81,31 +84,38 @@ class LogAdditionsView extends GetView<LogAdditionsController> {
                             widthRation: 0.12,
                             isEnable: controllerX.isEnable.value,
                             onFocusChange: (data) {
-                              // controllerX.selectedDate.text =
-                              //     DateFormat('dd/MM/yyyy').format(
-                              //         DateFormat("dd-MM-yyyy").parse(data));
-                              // DateFormat("dd-MM-yyyy").parse(data);
-                              print("Called when focus changed");
-                              /*controller.getDailyFPCDetailsList(
-                                controllerX.selectedLocationId.text,
-                                controllerX.selectedChannelId.text,
-                                controllerX.convertToAPIDateType(),
-                              );*/
-
-                              // controller.isTableDisplayed.value = true;
+                              controllerX.getAdditionList();
                             },
                             mainTextController: controllerX.selectedDate,
                           ),
                         ),
-                        Obx(
-                          () => RadioRow(
-                            items: const ["Primary", "Secondary"],
-                            groupValue: controllerX.verifyType.value ?? "",
-                            onchange: (val) {
-                              print("Response>>>" + val);
-                              controllerX.verifyType.value = val;
-                            },
-                          ),
+                        Padding(
+                          padding: const EdgeInsets.only(top: 15.0),
+                          child: Radio<String>(
+                              value: "Primary",
+                              groupValue: controllerX.verifyType.value,
+                              onChanged: (value) {
+                                controllerX.verifyType.value = value;
+                                controllerX.update(["updateView"]);
+                              }),
+                        ),
+                        const Padding(
+                          padding: EdgeInsets.only(top: 15.0),
+                          child: Text("Primary"),
+                        ),
+                        Padding(
+                          padding: const EdgeInsets.only(top: 15.0),
+                          child: Radio<String>(
+                              value: "Secondary",
+                              groupValue: controllerX.verifyType.value,
+                              onChanged: (value) {
+                                controllerX.verifyType.value = value;
+                                controllerX.update(["updateView"]);
+                              }),
+                        ),
+                        const Padding(
+                          padding: EdgeInsets.only(top: 15.0),
+                          child: Text("Secondary"),
                         ),
                         SizedBox(
                           width: Get.width * 0.077,
@@ -136,10 +146,9 @@ class LogAdditionsView extends GetView<LogAdditionsController> {
                           ),
                         ),
                         SizedBox(
-                          width: Get.width * 0.077,
+                          width: Get.width * 0.1,
                           child: Row(
                             children: [
-                              SizedBox(width: 5),
                               Obx(() => Padding(
                                     padding: const EdgeInsets.only(top: 15.0),
                                     child: Checkbox(
@@ -165,39 +174,73 @@ class LogAdditionsView extends GetView<LogAdditionsController> {
                         ),
                         Row(),
 
-                        InputFields.formFieldNumberMask(
+                        InputFields.formField1Width(
                             hintTxt: "Remarks",
                             controller: controllerX.remarks,
-                            widthRatio: 0.12,
-                            isTime: true,
+                            widthRatio: 0.245,
                             paddingLeft: 0),
+
                         /// channel
                         Obx(
-                              () => DropDownField.formDropDown1WidthMap(
+                          () => DropDownField.formDropDown1WidthMap(
                             controllerX.additions.value,
-                                (value) {
+                            (value) {
                               controllerX.selectAdditions = value;
                             },
                             "Additions",
                             0.12,
-                            isEnable: controllerX.isEnable.value,
+                            // isEnable: controllerX.isEnable.value,
                             selected: controllerX.selectAdditions,
                             autoFocus: true,
-                            dialogWidth: 330,
-                            dialogHeight: Get.height * .7,
+                            dialogWidth: 200,
+                            dialogHeight: Get.height * .3,
                           ),
                         ),
                         Padding(
                           padding: const EdgeInsets.only(
-                              top: 14.0, left: 10, right: 10),
+                              top: 14.0, left: 5, right: 10),
                           child: FormButtonWrapper(
                             btnText: "Show Details",
-                            callback: () {},
+                            callback: () {
+                              controllerX.showDetails();
+                            },
                             showIcon: false,
                           ),
                         ),
-                        /// duration
+                        SizedBox(
+                          width: 25,
+                        ),
+                        Padding(
+                          padding: const EdgeInsets.only(top: 15.0),
+                          child: const Text("Additional Count: "),
+                        ),
+                        SizedBox(
+                          width: 5,
+                        ),
+                        Obx(
+                          () => Padding(
+                            padding: const EdgeInsets.only(top: 15.0),
+                            child: Text(controllerX.additionCount.value ?? "--"),
+                          ),
+                        ),
+                        SizedBox(
+                          width: 10,
+                        ),
+                        Padding(
+                          padding: const EdgeInsets.only(top: 15.0),
+                          child: const Text("Cancellation Count: "),
+                        ),
+                        SizedBox(
+                          width: 5,
+                        ),
+                        Obx(
+                          () => Padding(
+                            padding: const EdgeInsets.only(top: 15.0),
+                            child: Text(controllerX.cancelCount.value ?? "--"),
+                          ),
+                        ),
 
+                        /// duration
                       ],
                     ),
                   ),
@@ -214,8 +257,12 @@ class LogAdditionsView extends GetView<LogAdditionsController> {
                   // width: Get.width,
                   // height: Get.height * .33,
                   child: (controllerX.logAdditionModel != null &&
-                          (controllerX.logAdditionModel?.isNotEmpty)!)
-                      ? DataGridFromMap1(
+                          controllerX.logAdditionModel?.displayPreviousAdditon
+                                  ?.previousAdditons !=
+                              null &&
+                          (controllerX.logAdditionModel?.displayPreviousAdditon
+                              ?.previousAdditons?.isNotEmpty)!)
+                      ? DataGridFromMap(
                           onFocusChange: (value) {
                             controllerX.gridStateManager!
                                 .setGridMode(PlutoGridMode.selectWithOneTap);
@@ -225,87 +272,15 @@ class LogAdditionsView extends GetView<LogAdditionsController> {
                           onload: (loadevent) {
                             controllerX.gridStateManager =
                                 loadevent.stateManager;
-                           /* if (controller.selectedIndex != null) {
-                              loadevent.stateManager.moveScrollByRow(
-                                  PlutoMoveDirection.down,
-                                  controller.selectedIndex);
-                              loadevent.stateManager.setCurrentCell(
-                                  loadevent
-                                      .stateManager
-                                      .rows[controller.selectedIndex!]
-                                      .cells
-                                      .entries
-                                      .first
-                                      .value,
-                                  controller.selectedIndex);
-                            }*/
                           },
-                          hideKeys: ["color", "modifed", ""],
                           showSrNo: true,
-                          colorCallback: (PlutoRowColorContext plutoContext) {
-                            /* return (controllerX
-                                              .dailyFpcListData![plutoContext.rowIdx].selectItem)!
-                                              ? Colors.red
-                                              : Colors.white;*/
-                            return Color(controllerX
-                                    .logAdditionModel![plutoContext.rowIdx]
-                                    .colorNo ??
-                                Colors.white.value);
-                          },
-                          onSelected: (event) {
-                            /*  controllerX.segmentList?.value = [];
-                          controller.update(["segmentList"]);
-
-                          DailyFPCModel data = controllerX.dailyFpcListData![event.rowIdx!];
-                          selectedLanguage.text = data.languageCode ?? "";
-                          selectedProgramType.text = data.programTypeCode ?? "";
-                          controller.selectedProgram = data;
-                          selectProgram = DropDownValue(
-                            key: controller.selectedProgram?.programCode ?? "",
-                            value: controller.selectedProgram?.programName ?? "",
-                          );
-                          controllerX.selectedIndex = event.rowIdx;
-                          controllerX.selectedColumn = event.cell!.column.field;
-                          selectedTapeId.text = data.tapeid!;
-                          selectedProgram.text = data.programName.toString();
-                          selectedProgramId.text = data.programCode.toString();
-                          controllerX.tapeId.text = data.tapeid.toString();
-                          episodeNo.value = data.epsNo!;
-                          print("Here is the episode duration>>>>" + data.episodeDuration.toString());
-                          */ /* controller
-                                                  .getSegmentDetailsList(
-                                                      controllerX.selectedLocationId.text,
-                                                      controllerX.selectedChannelId.text,
-                                                      data.episodeDuration,
-                                                      data.programName);*/ /*
-
-                          controller.getSegmentDetailsList1(
-                            data,
-                            controllerX.selectedLocationId.text,
-                            controllerX.selectedChannelId.text,
-                          );
-
-                          try {
-                            controller.showSegments.value = false;
-                            controller.showNewSegments.value = false;
-                            controller.selectedFpc.value = data;
-                            controller.showSegments.value = true;
-
-                            selectedOriRep.text = data.oriRep!;
-                            selectedOriRepId.text = data.originalRepeatCode ?? "";
-
-                            timeinController.text = controller.selectedProgram!.fpcTime.toString();
-
-                            controller.update(["segmentList", "selectedProgram"]);
-                          } catch (e) {
-                            print("DataGridFromMap1 OPERATION FPC PAGE ${e.toString()}");
-                          }*/
-                          },
+                          hideCode: false,
                           mode: controllerX.selectedPlutoGridMode,
-                          widthRatio: (Get.width / 11.4),
-                          mapData: controllerX.logAdditionModel!
-                              .map((e) => e.toJson1())
-                              .toList())
+                          // widthRatio: (Get.width / 12.4),
+                          mapData: (controllerX.logAdditionModel
+                              ?.displayPreviousAdditon?.previousAdditons
+                              ?.map((e) => e.toJson())
+                              .toList())!)
                       : Container(
                           // height: Get.height * .33,
                           // width: Get.width,
@@ -365,5 +340,23 @@ class LogAdditionsView extends GetView<LogAdditionsController> {
     );
   }
 
-  formHandler(btn) {}
+  formHandler(String btn) {
+    switch (btn.toLowerCase()) {
+      case "save":
+        controllerX.saveAddition();
+        break;
+      case "clear":
+        Get.delete<LogAdditionsController>();
+        Get.find<HomeController>().clearPage1();
+        break;
+      case "search":
+        Get.to(SearchPage(
+            key: Key("Log Additions"),
+            screenName: "Log Additions",
+            appBarName: "Log Additions",
+            strViewName: "BMS_VTransmissionLog",
+            isAppBarReq: true));
+        break;
+    }
+  }
 }

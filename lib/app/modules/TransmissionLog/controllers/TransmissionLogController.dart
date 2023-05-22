@@ -29,29 +29,8 @@ class TransmissionLogController extends GetxController {
   TextEditingController insertDuration_ = TextEditingController();
   TextEditingController segmentFpcTime_ = TextEditingController();
 
-  List<TransmissionLogModel>? transmissionLogList = [
-    new TransmissionLogModel(rowNo: 1, status: "data"),
-    new TransmissionLogModel(rowNo: 1, status: "data"),
-    new TransmissionLogModel(rowNo: 1, status: "data"),
-    new TransmissionLogModel(rowNo: 1, status: "data"),
-    new TransmissionLogModel(rowNo: 1, status: "data"),
-    new TransmissionLogModel(rowNo: 1, status: "data"),
-    new TransmissionLogModel(rowNo: 1, status: "data"),
-    new TransmissionLogModel(rowNo: 1, status: "data"),
-    new TransmissionLogModel(rowNo: 1, status: "data"),
-    new TransmissionLogModel(rowNo: 1, status: "data"),
-    new TransmissionLogModel(rowNo: 1, status: "data"),
-    new TransmissionLogModel(rowNo: 1, status: "data"),
-    new TransmissionLogModel(rowNo: 1, status: "data"),
-    new TransmissionLogModel(rowNo: 1, status: "data"),
-    new TransmissionLogModel(rowNo: 1, status: "data"),
-    new TransmissionLogModel(rowNo: 1, status: "data"),
-    new TransmissionLogModel(rowNo: 1, status: "data"),
-    new TransmissionLogModel(rowNo: 1, status: "data"),
-    new TransmissionLogModel(rowNo: 1, status: "data"),
-    new TransmissionLogModel(rowNo: 1, status: "data"),
-  ];
-  PlutoGridMode selectedPlutoGridMode = PlutoGridMode.normal;
+  List<TransmissionLogModel>? transmissionLogList = List.generate(100, (index) => new TransmissionLogModel(episodeDuration: (index+1), status: "data1"));
+  PlutoGridMode selectedPlutoGridMode = PlutoGridMode.selectWithOneTap;
   int? selectedIndex;
   RxnString verifyType = RxnString();
   RxList<DropDownValue> listLocation = RxList([]);

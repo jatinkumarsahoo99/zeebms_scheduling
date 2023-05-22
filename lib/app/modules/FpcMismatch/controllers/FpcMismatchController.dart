@@ -4,6 +4,7 @@ import 'package:bms_scheduling/app/data/DropDownValue.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:get/get.dart';
 import 'package:intl/intl.dart';
+import 'package:pluto_grid/pluto_grid.dart';
 
 import '../../../../widgets/LoadingDialog.dart';
 import '../../../../widgets/Snack.dart';
@@ -34,6 +35,9 @@ class FpcMismatchController extends GetxController {
   int? selectIndex = 0;
 
   double widthSize = 0.12;
+  PlutoGridStateManager? stateManager;
+
+  SelectButton? selectButton;
 
   @override
   void onInit() {
@@ -82,6 +86,7 @@ class FpcMismatchController extends GetxController {
       Snack.callError("Please select date");
     } else {
       // LoadingDialog.call();
+      selectButton = SelectButton.DisplayMismatch;
       selectedDate = df1.parse(date_.text);
       Get.find<ConnectorControl>().GETMETHODCALL(
           api: ApiFactory.FPC_MISMATCH(selectedLocation?.key ?? "",
@@ -111,6 +116,7 @@ class FpcMismatchController extends GetxController {
       Snack.callError("Please select date");
     } else {
       // LoadingDialog.call();
+      selectButton = SelectButton.DisplayError;
       selectedDate = df1.parse(date_.text);
       Get.find<ConnectorControl>().GETMETHODCALL(
           api: ApiFactory.FPC_MISMATCH_ERROR(selectedLocation?.key ?? "",
@@ -139,6 +145,7 @@ class FpcMismatchController extends GetxController {
       Snack.callError("Please select date");
     } else {
       // LoadingDialog.call();
+      selectButton = SelectButton.DisplayAll;
       selectedDate = df1.parse(date_.text);
       Get.find<ConnectorControl>().GETMETHODCALL(
         api: ApiFactory.FPC_MISMATCH_ALL(selectedLocation?.key ?? "",
@@ -202,9 +209,11 @@ class FpcMismatchController extends GetxController {
           dataList?.firstWhere((element) => (element.selectItem)!);
 
       if (modelData?.fpcTime != selectedProgram?.startTime) {
-        LoadingDialog.recordExists("Booked FPC Time doesn't matches with Scheduled FPC Time. Want to continue?",(){
+        LoadingDialog.recordExists(
+            "Booked FPC Time doesn't matches with Scheduled FPC Time. Want to continue?",
+            () {
           updateRecord();
-        },deleteCancel: "No",deleteTitle: "Yes");
+        }, deleteCancel: "No", deleteTitle: "Yes");
       } else {
         updateRecord();
       }
@@ -233,7 +242,9 @@ class FpcMismatchController extends GetxController {
         Get.back();
         if (data.toString().toLowerCase() == "success") {
           // LoadingDialog.callDataSavedMessage("Record Saved successfully");
-          LoadingDialog.callDataSaved();
+          LoadingDialog.callDataSaved(callback: () {
+            checkDataAndFetch();
+          });
         } else {
           Snack.callError("Something went wrong");
         }
@@ -280,12 +291,29 @@ class FpcMismatchController extends GetxController {
         fun: (dynamic value) {
           Get.back();
           if (value.toString().toLowerCase() == "success") {
-            LoadingDialog.callDataSavedMessage("Record added successfully");
+            LoadingDialog.callDataSavedMessage("Record added successfully",
+                callback: () {
+              checkDataAndFetch();
+            });
           } else {
             Snack.callError("Something went wrong");
           }
         },
       );
+    }
+  }
+
+  checkDataAndFetch() {
+    switch (selectButton) {
+      case SelectButton.DisplayAll:
+        fetchMismatchAll();
+        break;
+      case SelectButton.DisplayMismatch:
+        fetchMismatch();
+        break;
+      case SelectButton.DisplayError:
+        fetchMismatchError();
+        break;
     }
   }
 
@@ -323,13 +351,20 @@ class FpcMismatchController extends GetxController {
         fun: (dynamic value) {
           Get.back();
           if (value.toString().toLowerCase() == "success") {
-            LoadingDialog.callDataSavedMessage("Record undo successfully");
+            LoadingDialog.callDataSavedMessage("Record undo successfully",
+                callback: () {
+              checkDataAndFetch();
+            });
           } else {
             Snack.callError("Something went wrong");
           }
         },
       );
     }
+  }
+
+  fetchData() {
+    stateManager?.onRowChecked;
   }
 
   void clear() {
@@ -341,4 +376,10 @@ class FpcMismatchController extends GetxController {
     // programTable.notifyListeners();
     update(["programTable"]);
   }
+}
+
+enum SelectButton {
+  DisplayMismatch,
+  DisplayError,
+  DisplayAll,
 }

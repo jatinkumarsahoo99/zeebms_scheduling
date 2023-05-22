@@ -15,14 +15,14 @@ dependencies:
   pluto_grid: ^5.3.2
   dropdown_plus: ^0.0.9
   dropdown_search: ^5.0.3
-  time_range_picker: 2.0.1
+  time_range_picker: ^2.2.0
   encrypt:
   file_picker: ^5.2.11
   flutter_file_saver: ^0.6.1+1
   excel:
   pluto_grid_export: ^1.0.3
   url_launcher:
-#  data_table_2:
+  data_table_2: 2.3.9
   url_encoder:
   azure_application_insights: ^3.1.0
 

@@ -10,6 +10,7 @@ class ColorData {
   static const Color bgFormField = Color(0xFFECEFF1);
   static const Color hintColor = Color(0xFFCBC9D9);
   static const Color brandColor = Color(0xFF402b6c);
+  static Color scaffoldBg = Colors.grey[200]!;
   static const Color deepSkyBlue = Color.fromARGB(255, 0, 191, 255);
 
   /*static cellColor(String value){
@@ -30,13 +31,13 @@ class ColorData {
         } else {
           return null;
         }
-        case "status":
+      case "status":
         if (value.toString() != "Scheduled") {
           return deepSkyBlue;
         } else {
           return null;
         }
-        case "tapeid":
+      case "tapeid":
         if (value.toString().toLowerCase() == "tba" || value.toString().toLowerCase() == "live" || value.toString().toLowerCase() == "news") {
           return deepSkyBlue;
         } else {

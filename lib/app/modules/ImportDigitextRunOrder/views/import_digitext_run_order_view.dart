@@ -65,7 +65,7 @@ class ImportDigitextRunOrderView
               children: [
                 Padding(
                   padding: const EdgeInsets.all(8.0),
-                  child: Container(
+                  child: SizedBox(
                     width: Get.width * 0.72,
                     child: Row(
                       crossAxisAlignment: CrossAxisAlignment.end,
@@ -87,7 +87,7 @@ class ImportDigitextRunOrderView
                         DateWithThreeTextField(
                             title: "Schedule Date.",
                             widthRation: 0.12,
-                            mainTextController: TextEditingController()),
+                            mainTextController: controller.scheduleDate),
                         FormButtonWrapper(
                           btnText: "Load",
                           callback: () {
@@ -163,6 +163,7 @@ class ImportDigitextRunOrderView
                                       DropDownValue? _client;
                                       if (index == 0) {
                                         Get.defaultDialog(
+                                            radius: 2,
                                             title: "Map Clients",
                                             content: Column(
                                               children: [
@@ -209,6 +210,7 @@ class ImportDigitextRunOrderView
                                                 }));
                                       } else if (index == 3) {
                                         Get.defaultDialog(
+                                            radius: 2,
                                             title: "Map Agency",
                                             content: Column(
                                               children: [
@@ -288,7 +290,7 @@ class ImportDigitextRunOrderView
                     return element.appFormName == "frmSegmentsDetails";
                   });*/
 
-                return Container(
+                return SizedBox(
                   height: 40,
                   child: ButtonBar(
                     // buttonHeight: 20,

@@ -1,11 +1,8 @@
-import 'dart:io';
-import 'package:bms_scheduling/app/modules/ImportDigitextRunOrder/bindings/digitex_run_order_data.dart';
-import 'package:dio/dio.dart' as dio;
-import 'package:http_parser/http_parser.dart';
-
 import 'package:bms_scheduling/app/controller/ConnectorControl.dart';
+import 'package:bms_scheduling/app/modules/ImportDigitextRunOrder/bindings/digitex_run_order_data.dart';
 import 'package:bms_scheduling/app/providers/ApiFactory.dart';
 import 'package:bms_scheduling/widgets/LoadingDialog.dart';
+import 'package:dio/dio.dart' as dio;
 import 'package:file_picker/file_picker.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:get/get.dart';
@@ -43,7 +40,7 @@ class ImportDigitextRunOrderController extends GetxController {
   @override
   void onInit() {
     getLocation();
-    scheduleDate.text = df1.format(DateTime.now());
+    // scheduleDate.text = df1.format(DateTime.now());
     super.onInit();
   }
 
@@ -97,7 +94,7 @@ class ImportDigitextRunOrderController extends GetxController {
     }
   }
 
-  importfile() async {
+  importfile() {
     LoadingDialog.call();
     dio.FormData formData = dio.FormData.fromMap({
       'ImportFile': dio.MultipartFile.fromBytes(

@@ -26,6 +26,7 @@ class FPCMisMatchModel {
   String? recordnumber;
   String? networkYN;
   String? bookingstatus;
+  String? select;
 
   FPCMisMatchModel(
       {this.selectItem,
@@ -121,6 +122,7 @@ class FPCMisMatchModel {
   Map<String, dynamic> toJson1() {
     final Map<String, dynamic> data = new Map<String, dynamic>();
     // data['selectItem'] = this.selectItem;
+    data['select'] = "";
     data['date'] = this.date;
     data['fpcType'] = this.fpcType;
     data['fpcProgram'] = this.fpcProgram;

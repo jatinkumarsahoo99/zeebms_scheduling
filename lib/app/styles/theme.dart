@@ -8,7 +8,9 @@ import '../providers/SizeDefine.dart';
 ThemeData primaryThemeData = ThemeData(
   focusColor: Colors.deepPurple[200],
 
-  elevatedButtonTheme: ElevatedButtonThemeData(style: ButtonStyle(overlayColor: MaterialStatePropertyAll(Colors.deepPurple[900]))),
+  elevatedButtonTheme: ElevatedButtonThemeData(
+      style: ButtonStyle(
+          overlayColor: MaterialStatePropertyAll(Colors.deepPurple[900]))),
   buttonTheme: ButtonThemeData(focusColor: Colors.deepPurple[900]),
   // scaffoldBackgroundColor: Colors.grey[300],
   scaffoldBackgroundColor: Colors.white,
@@ -52,16 +54,20 @@ PlutoGridConfiguration plutoGridConfiguration({
             // This is a Map with basic shortcut keys and actions set.
             ...PlutoGridShortcut.defaultActions,
 
-            LogicalKeySet(LogicalKeyboardKey.tab): CustomTabKeyAction(focusNode, previousWidgetFN),
-            LogicalKeySet(LogicalKeyboardKey.shift, LogicalKeyboardKey.tab): CustomTabKeyAction(focusNode, previousWidgetFN),
+            LogicalKeySet(LogicalKeyboardKey.tab):
+                CustomTabKeyAction(focusNode, previousWidgetFN),
+            LogicalKeySet(LogicalKeyboardKey.shift, LogicalKeyboardKey.tab):
+                CustomTabKeyAction(focusNode, previousWidgetFN),
             LogicalKeySet(LogicalKeyboardKey.space): CustomSpaceKeyAction(),
             // You can override the enter key behavior as below.
-            LogicalKeySet(LogicalKeyboardKey.enter): CustomEnterKeyAction(actionOnPress: actionOnPress, actionKey: actionKey),
+            LogicalKeySet(LogicalKeyboardKey.enter): CustomEnterKeyAction(
+                actionOnPress: actionOnPress, actionKey: actionKey),
           },
         ),
         columnSize: PlutoGridColumnSizeConfig(
           resizeMode: PlutoResizeMode.normal,
-          autoSizeMode: autoScale ? PlutoAutoSizeMode.scale : PlutoAutoSizeMode.none,
+          autoSizeMode:
+              autoScale ? PlutoAutoSizeMode.scale : PlutoAutoSizeMode.none,
         ),
         style: PlutoGridStyleConfig(
             rowHeight: 35,
@@ -81,10 +87,13 @@ PlutoGridConfiguration plutoGridConfiguration({
             cellTextStyle: TextStyle(
               fontSize: SizeDefine.columnTitleFontSize,
             ),
-            columnTextStyle: TextStyle(fontSize: SizeDefine.columnTitleFontSize, fontWeight: FontWeight.bold)),
+            columnTextStyle: TextStyle(
+                fontSize: SizeDefine.columnTitleFontSize,
+                fontWeight: FontWeight.bold)),
         enterKeyAction: PlutoGridEnterKeyAction.none,
         tabKeyAction: PlutoGridTabKeyAction.moveToNextOnEdge,
-        scrollbar: const PlutoGridScrollbarConfig(draggableScrollbar: true, isAlwaysShown: true, hoverWidth: 15));
+        scrollbar: const PlutoGridScrollbarConfig(
+            draggableScrollbar: true, isAlwaysShown: true, hoverWidth: 15));
 
 PlutoGridConfiguration plutoGridConfiguration2({
   Function(PlutoGridCellPosition index, bool isSpace)? actionOnPress,
@@ -98,9 +107,11 @@ PlutoGridConfiguration plutoGridConfiguration2({
           actions: {
             // This is a Map with basic shortcut keys and actions set.
             ...PlutoGridShortcut.defaultActions,
+            LogicalKeySet(LogicalKeyboardKey.shift, LogicalKeyboardKey.tab):
+                CustomTabKeyAction(focusNode, previousWidgetFN),
+            LogicalKeySet(LogicalKeyboardKey.tab):
+                CustomTabKeyAction(focusNode, previousWidgetFN),
 
-            LogicalKeySet(LogicalKeyboardKey.tab): CustomTabKeyAction(focusNode, previousWidgetFN),
-            LogicalKeySet(LogicalKeyboardKey.shift, LogicalKeyboardKey.tab): CustomTabKeyAction(focusNode, previousWidgetFN),
             LogicalKeySet(LogicalKeyboardKey.space): CustomKeyAction2(
               actionOnPress: actionOnPress,
               actionKey: actionKey,
@@ -116,7 +127,8 @@ PlutoGridConfiguration plutoGridConfiguration2({
         ),
         columnSize: PlutoGridColumnSizeConfig(
           resizeMode: PlutoResizeMode.normal,
-          autoSizeMode: autoScale ? PlutoAutoSizeMode.scale : PlutoAutoSizeMode.none,
+          autoSizeMode:
+              autoScale ? PlutoAutoSizeMode.scale : PlutoAutoSizeMode.none,
         ),
         style: PlutoGridStyleConfig(
             rowHeight: 35,
@@ -136,10 +148,13 @@ PlutoGridConfiguration plutoGridConfiguration2({
             cellTextStyle: TextStyle(
               fontSize: SizeDefine.columnTitleFontSize,
             ),
-            columnTextStyle: TextStyle(fontSize: SizeDefine.columnTitleFontSize, fontWeight: FontWeight.bold)),
+            columnTextStyle: TextStyle(
+                fontSize: SizeDefine.columnTitleFontSize,
+                fontWeight: FontWeight.bold)),
         enterKeyAction: PlutoGridEnterKeyAction.none,
         tabKeyAction: PlutoGridTabKeyAction.moveToNextOnEdge,
-        scrollbar: const PlutoGridScrollbarConfig(draggableScrollbar: true, isAlwaysShown: true, hoverWidth: 15));
+        scrollbar: const PlutoGridScrollbarConfig(
+            draggableScrollbar: true, isAlwaysShown: true, hoverWidth: 15));
 
 // Create a new class that inherits from PlutoGridShortcutAction
 // If the execute method is implemented,
@@ -156,7 +171,8 @@ class CustomEnterKeyAction extends PlutoGridShortcutAction {
     required PlutoKeyManagerEvent keyEvent,
     required PlutoGridStateManager stateManager,
   }) {
-    if (stateManager.currentCell != null && stateManager.currentCell!.column.field == actionKey) {
+    if (stateManager.currentCell != null &&
+        stateManager.currentCell!.column.field == actionKey) {
       actionOnPress!(stateManager.currentCell!.row.sortIdx);
     }
   }
@@ -192,7 +208,9 @@ class CustomSpaceKeyAction extends PlutoGridShortcutAction {
     required PlutoGridStateManager stateManager,
   }) {
     if (stateManager.currentCell!.column.enableRowChecked == true) {
-      stateManager.setRowChecked(stateManager.currentCell!.row, !stateManager.currentCell!.row.checked!, notify: true);
+      stateManager.setRowChecked(stateManager.currentCell!.row,
+          !stateManager.currentCell!.row.checked!,
+          notify: true);
     }
   }
 }
@@ -212,11 +230,12 @@ class CustomTabKeyAction extends PlutoGridShortcutAction {
       return;
     }
     if (keyEvent.isShiftPressed) {
-      if (stateManager.currentRowIdx == 0 && stateManager.currentCellPosition?.columnIdx == 0) {
+      if (stateManager.currentRowIdx == 0 &&
+          stateManager.currentCellPosition?.columnIdx == 0) {
         try {
           // stateManager.setKeepFocus(false);
           // print("Go previous focus Widget");
-          previousWidgetFN?.requestFocus();
+          stateManager.gridFocusNode.nearestScope!.requestFocus();
           // FocusScope.of(previousWidgetFN!.context!).previousFocus();
         } catch (e) {
           print(e.toString());
@@ -228,7 +247,8 @@ class CustomTabKeyAction extends PlutoGridShortcutAction {
         stateManager.moveCellPrevious();
       }
     } else {
-      if (stateManager.currentCell!.row == stateManager.refRows.last && stateManager.currentCell!.column == stateManager.refColumns.last) {
+      if (stateManager.currentCell!.row == stateManager.refRows.last &&
+          stateManager.currentCell!.column == stateManager.refColumns.last) {
         FocusScope.of(focusNode.context!).previousFocus();
         focusNode.nextFocus();
       } else {

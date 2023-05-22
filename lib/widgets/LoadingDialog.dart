@@ -71,7 +71,9 @@ class LoadingDialog {
         autoFocus: true,
         callback: () {
           Get.back();
-          callback!();
+          if (callback != null) {
+            callback();
+          }
         },
         btnText: "Ok",
         iconDataM: Icons.done,
@@ -149,7 +151,9 @@ class LoadingDialog {
         autoFocus: true,
         callback: () {
           Get.back();
-          callback!();
+          if (callback != null) {
+            callback();
+          }
         },
         btnText: "OK",
       )
