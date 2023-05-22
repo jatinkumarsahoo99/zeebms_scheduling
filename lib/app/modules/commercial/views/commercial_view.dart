@@ -841,8 +841,8 @@ class CommercialView extends GetView<CommercialController> {
             id: "fillerShowOnTabTable",
             // init: CreateBreakPatternController(),
             builder: (controller) {
-              if (controllerX.commercialShowList != null &&
-                  (controllerX.commercialShowList?.isNotEmpty)!) {
+              if (controllerX.commercialShowDetailsList != null &&
+                  (controllerX.commercialShowDetailsList?.isNotEmpty)!) {
                 // final key = GlobalKey();
                 return Expanded(
                   // height: 400,
@@ -856,7 +856,7 @@ class CommercialView extends GetView<CommercialController> {
                               ? Colors.white
                               : Colors.orange.shade700;
                     },
-                    mapData: (controllerX.commercialShowList
+                    mapData: (controllerX.commercialShowDetailsList
                         ?.map((e) => e.toJson())
                         .toList())!,
                     showonly: [
@@ -893,7 +893,7 @@ class CommercialView extends GetView<CommercialController> {
                     mode: PlutoGridMode.select,
                     onSelected: (plutoGrid) {
                       controllerX.selectedShowOnTab =
-                          controllerX.commercialShowList![plutoGrid.rowIdx!];
+                          controllerX.commercialShowDetailsList![plutoGrid.rowIdx!];
                       print(">>>>>>Commercial Data>>>>>>" +
                           jsonEncode(controllerX.selectedShowOnTab?.toJson()));
                     },

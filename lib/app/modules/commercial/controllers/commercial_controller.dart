@@ -77,7 +77,7 @@ class CommercialController extends GetxController {
   List<PlutoColumn> initColumn = [];
   List<PermissionModel>? formPermissions;
   List<CommercialProgramModel>? commercialProgramList  =[];
-  List<CommercialShowOnTabModel>? commercialShowList = [];
+  List<CommercialShowOnTabModel>? commercialShowDetailsList = [];
   List<CommercialShowOnTabModel>? commercialShowFPCList = [];
   List<CommercialShowOnTabModel>? commercialShowMarkedList = [];
 
@@ -164,9 +164,9 @@ class CommercialController extends GetxController {
             commercialDuration.value=
             list['showDetails']['bindGridOutPut']['commercialDuration']??"";
 
-            commercialShowList?.clear();
+            commercialShowDetailsList?.clear();
             list['showDetails']['lstCommercialShuffling'].forEach((element) {
-              commercialShowList?.add(CommercialShowOnTabModel.fromJson(element));
+              commercialShowDetailsList?.add(CommercialShowOnTabModel.fromJson(element));
             });
 
             print(">>Update Called");
@@ -202,7 +202,7 @@ class CommercialController extends GetxController {
           "telecastDate": df1.format(selectedDate!),
           "FpctimeSelected": (fpcTimeSelected??"").toString(),
           "tabindex": selectedIndex.value.toString(),
-          "lstCommercialShuffling" : commercialShowList?.map((e) => e.toJson()).toList(),
+          "lstCommercialShuffling" : commercialShowDetailsList?.map((e) => e.toJson()).toList(),
         };
         print("requestedData1>>>" + jsonEncode(jsonRequest));
         Get.find<ConnectorControl>().POSTMETHOD(
@@ -223,7 +223,7 @@ class CommercialController extends GetxController {
                   commercialShowMarkedList?.add(CommercialShowOnTabModel.fromJson(element));
                 });
               }else{
-                commercialShowList?.clear();
+                commercialShowDetailsList?.clear();
                 commercialSpots.value =
                 data['tabchangeOutput']['bindGridOutPut']['commercialSpots']??"";
 
@@ -231,7 +231,7 @@ class CommercialController extends GetxController {
                 data['tabchangeOutput']['bindGridOutPut']['commercialDuration']??"";
 
                 data['tabchangeOutput']['lstCommercialShuffling'].forEach((element) {
-                  commercialShowList?.add(CommercialShowOnTabModel.fromJson(element));
+                  commercialShowDetailsList?.add(CommercialShowOnTabModel.fromJson(element));
                 });
               }
 
@@ -262,9 +262,9 @@ class CommercialController extends GetxController {
           "locationCode": selectedLocation?.key.toString(),
           "channelCode": selectedChannel?.key.toString(),
           "scheduleDate": df1.format(selectedDate!),
-          "lstCommercialShuffling" : commercialShowList?.map((e) => e.toJson()).toList(),
+          "lstCommercialShuffling" : commercialShowDetailsList?.map((e) => e.toJson()).toList(),
         };
-        print("requestedToSaveData>>>" + jsonEncode(jsonRequest));
+        print("requestedToSaveData >>>" + jsonEncode(jsonRequest));
         Get.find<ConnectorControl>().POSTMETHOD(
             api: ApiFactory.SAVE_COMMERCIAL_DETAILS(),
             fun: (dynamic data) {
@@ -397,7 +397,7 @@ class CommercialController extends GetxController {
     commercialSpots.value = "";
     commercialDuration.value = "";
 
-    commercialShowList?.clear();
+    commercialShowDetailsList?.clear();
     commercialProgramList?.clear();
     commercialShowFPCList?.clear();
     commercialShowMarkedList?.clear();
