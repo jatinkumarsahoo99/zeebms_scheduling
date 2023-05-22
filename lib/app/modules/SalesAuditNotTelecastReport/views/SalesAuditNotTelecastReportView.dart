@@ -10,12 +10,6 @@ import '../../../../widgets/dropdown.dart';
 import '../../../../widgets/gridFromMap.dart';
 import '../../../../widgets/input_fields.dart';
 import '../../../controller/HomeController.dart';
-import '../../../controller/MainController.dart';
-import '../../../data/DropDownValue.dart';
-import '../../../data/PermissionModel.dart';
-import '../../../providers/ApiFactory.dart';
-import '../../../providers/Utils.dart';
-import '../../CommonSearch/views/common_search_view.dart';
 import '../controllers/SalesAuditNotTelecastReportController.dart';
 
 class SalesAuditNotTelecastReportView
@@ -78,96 +72,21 @@ class SalesAuditNotTelecastReportView
                                     crossAxisAlignment: CrossAxisAlignment.start,
                                     mainAxisAlignment: MainAxisAlignment.start,
                                     children: [
-                                      Row(
-                                        children: [
-                                          Checkbox(
-                                            value: ((controllerX.progTypeList?.isNotEmpty)! &&
-                                                controllerX.selectedProgTypeIndexes?.length == controllerX.progTypeList?.length)
-                                                ? true
-                                                : false,
-                                            onChanged: (bool? value) {
-                                              if (value!) {
-                                                controllerX.selectedProgTypeIndexes =
-                                                    List.generate(controllerX.progTypeList?.length ?? 0, (index) => 0 + index);
-                                              } else {
-                                                controllerX.selectedProgTypeIndexes?.clear();
-                                              }
-                                              controllerX.update(["initialData"]);
-                                            },
-                                            materialTapTargetSize: MaterialTapTargetSize.shrinkWrap,
-                                          ),
-                                          Text(
-                                            "Program Type",
-                                            style: TextStyle(fontSize: 12),
-                                          ),
-                                          Spacer(),
-                                          InputFields.formField1Width(
-                                            widthRatio: 0.12,
-                                            paddingLeft: 5,
-                                            focus: controllerX.progType,
-                                            hintTxt: "Search",
-                                            controller: controllerX.searchProgType_,
-                                            autoFocus: true,
-                                          ),
-                                        ],
-                                      ),
-                                      Container(
-                                        height: MediaQuery.of(context).size.height * 0.3,
-                                        // margin: EdgeInsets.symmetric(vertical: 10),
-                                        child: GetBuilder<SalesAuditNotTelecastReportController>(
-                                          id: "updateTable",
-                                          builder: (control) {
-                                            print("Here is my call");
-                                            return Stack(
-                                              children: [
-                                                Container(
-                                                  decoration: BoxDecoration(
-                                                    border: Border.all(color: Colors.deepPurpleAccent),
-                                                    borderRadius: BorderRadius.circular(0),
-                                                  ),
-                                                  margin: EdgeInsets.only(top: 5),
-                                                  child: Focus(
-                                                    descendantsAreFocusable: false,
-                                                    descendantsAreTraversable: false,
-                                                    child: ListView.builder(
-                                                      controller: controllerX.scrollController,
-                                                      itemCount: controllerX.progTypeList?.length ?? 0,
-                                                      itemBuilder: (context, int index) {
-                                                        return Container(
-                                                          height: 30,
-                                                          color: (controllerX.selectIndex != null && controllerX.selectIndex == index)
-                                                              ? Colors.purple[100]
-                                                              : Colors.white,
-                                                          child: Row(
-                                                            children: [
-                                                              Checkbox(
-                                                                value: controllerX.selectedProgTypeIndexes?.contains(index),
-                                                                onChanged: (bool? value) {
-                                                                  if (controllerX.selectedProgTypeIndexes?.contains(index) ?? false) {
-                                                                    controllerX.selectedProgTypeIndexes?.remove(index); // unselect
-                                                                  } else {
-                                                                    controllerX.selectedProgTypeIndexes?.add(index); // select
-                                                                  }
-                                                                  controllerX.update(["initialData"]);
-                                                                  /*controllerX.update(
-                                                                      ["updateTable"]);*/
-                                                                },
-                                                              ),
-                                                              Text(
-                                                                controllerX.progTypeList![index].value ?? "",
-                                                                style: TextStyle(fontSize: 12),
-                                                              )
-                                                            ],
-                                                          ),
-                                                        );
-                                                      },
-                                                    ),
-                                                    onFocusChange: (val) {},
-                                                  ),
-                                                ),
-                                              ],
-                                            );
+                                      Obx(
+                                            () => DropDownField.formDropDown1WidthMap(
+                                          controllerX.locations.value,
+                                              (value) {
+                                            controllerX.selectLocation = value;
+                                            /*controllerX.getChannels(
+                                                controllerX.selectLocation?.key ?? "");*/
                                           },
+                                          "Location",
+                                          0.22,
+                                          isEnable: controllerX.isEnable.value,
+                                          selected: controllerX.selectLocation,
+                                          autoFocus: true,
+                                          dialogWidth: 330,
+                                          dialogHeight: Get.height * .7,
                                         ),
                                       ),
                                       Padding(
@@ -191,8 +110,7 @@ class SalesAuditNotTelecastReportView
                                               },
                                             ),
                                             Text(
-                                              // "Select All",
-                                              "List of program",
+                                              "Channel",
                                               style: TextStyle(fontSize: 12),
                                             ),
                                             Spacer(),

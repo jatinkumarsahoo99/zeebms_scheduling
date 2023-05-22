@@ -68,6 +68,7 @@ class TransmissionLogView extends GetView<TransmissionLogController> {
                             controllerX.channels.value,
                             (value) {
                               controllerX.selectChannel = value;
+                              controllerX.getChannelFocusOut();
                             },
                             "Channel",
                             0.12,
@@ -134,7 +135,9 @@ class TransmissionLogView extends GetView<TransmissionLogController> {
                               top: 14.0, left: 10, right: 10),
                           child: FormButtonWrapper(
                             btnText: "Retrieve",
-                            callback: () {},
+                            callback: () {
+                              controllerX.callRetrieve();
+                            },
                             showIcon: false,
                           ),
                         ),
@@ -195,8 +198,14 @@ class TransmissionLogView extends GetView<TransmissionLogController> {
                 return Expanded(
                   // width: Get.width,
                   // height: Get.height * .33,
-                  child: (controllerX.transmissionLogList != null &&
-                          (controllerX.transmissionLogList?.isNotEmpty)!)
+                  child: (controllerX.transmissionLog != null &&
+                          controllerX.transmissionLog?.loadSavedLogOutput !=
+                              null &&
+                          controllerX.transmissionLog?.loadSavedLogOutput
+                                  ?.listColorGridlogs !=
+                              null &&
+                          (controllerX.transmissionLog?.loadSavedLogOutput
+                              ?.listColorGridlogs?.isNotEmpty)!)
                       ? DataGridFromMap1(
                           onFocusChange: (value) {
                             controllerX.gridStateManager!
@@ -222,15 +231,16 @@ class TransmissionLogView extends GetView<TransmissionLogController> {
                                   controller.selectedIndex);
                             }
                           },
-                          hideKeys: ["color", "modifed"],
+                          formatDate: false,
+                          hideKeys: ["foreColor","backColor", "modifed"],
                           showSrNo: true,
                           // mode: PlutoGridMode.selectWithOneTap,
-                          colorCallback: (PlutoRowColorContext plutoContext) {
+                       /*   colorCallback: (PlutoRowColorContext plutoContext) {
                             return Color(controllerX
-                                    .transmissionLogList![plutoContext.rowIdx]
+                                    .transmissionLog![plutoContext.rowIdx]
                                     .colorNo ??
                                 Colors.white.value);
-                          },
+                          },*/
                           onSelected: (PlutoGridOnSelectedEvent event) {
                             event.selectedRows?.forEach((element) {
                               print("On Print select" +
@@ -238,34 +248,37 @@ class TransmissionLogView extends GetView<TransmissionLogController> {
                             });
                           },
                           onRowsMoved: (PlutoGridOnRowsMovedEvent onRowMoved) {
-                            print("Index is>>" + onRowMoved.idx.toString());
-                            Map map = onRowMoved.rows[0].cells;
-                            print("On Print moved" +
-                                jsonEncode(
-                                    onRowMoved.rows[0].cells.toString()));
-                            int? val=int.tryParse((onRowMoved.rows[0].cells["Episode Dur"]?.value.toString())!)!;
-                            // print("After On select>>" + data.toString());
-                            for (int i = (onRowMoved.idx) ?? 0; i >= 0; i--) {
-                              print("On Print moved" + i.toString());
-                              print("On select>>" +
-                                  map["Episode Dur"].value.toString());
-
-                              print("On Print moved cell>>>" +
-                                  jsonEncode(controllerX.gridStateManager
-                                      ?.rows[i].cells["Episode Dur"]?.value
-                                      .toString()));
-
-                              controllerX.gridStateManager?.rows[i]
-                                      .cells["Episode Dur"] =
-                                  PlutoCell(value: val-(i-onRowMoved.idx));
-                            }
-                            controllerX.gridStateManager?.notifyListeners();
+                            // print("Index is>>" + onRowMoved.idx.toString());
+                            // Map map = onRowMoved.rows[0].cells;
+                            // print("On Print moved" +
+                            //     jsonEncode(
+                            //         onRowMoved.rows[0].cells.toString()));
+                            // int? val = int.tryParse((onRowMoved
+                            //     .rows[0].cells["Episode Dur"]?.value
+                            //     .toString())!)!;
+                            // // print("After On select>>" + data.toString());
+                            // for (int i = (onRowMoved.idx) ?? 0; i >= 0; i--) {
+                            //   print("On Print moved" + i.toString());
+                            //   print("On select>>" +
+                            //       map["Episode Dur"].value.toString());
+                            //
+                            //   print("On Print moved cell>>>" +
+                            //       jsonEncode(controllerX.gridStateManager
+                            //           ?.rows[i].cells["Episode Dur"]?.value
+                            //           .toString()));
+                            //
+                            //   controllerX.gridStateManager?.rows[i]
+                            //           .cells["Episode Dur"] =
+                            //       PlutoCell(value: val - (i - onRowMoved.idx));
+                            // }
+                            // controllerX.gridStateManager?.notifyListeners();
                           },
                           mode: controllerX.selectedPlutoGridMode,
                           widthRatio: (Get.width / 11.4),
-                          mapData: controllerX.transmissionLogList!
-                              .map((e) => e.toJson1())
-                              .toList())
+                          mapData: (controllerX.transmissionLog
+                              ?.loadSavedLogOutput?.listColorGridlogs!
+                              .map((e) => e.toJson())
+                              .toList())!)
                       : Container(
                           // height: Get.height * .33,
                           // width: Get.width,
@@ -443,16 +456,15 @@ class TransmissionLogView extends GetView<TransmissionLogController> {
                           // width: 500,
                           width: Get.width * 0.8,
                           height: 300,
-                          child: (controllerX.transmissionLogList != null &&
-                                  (controllerX
-                                      .transmissionLogList?.isNotEmpty)!)
+                          child: (controllerX.transmissionLog != null)
                               ? DataGridFromMap(
                                   hideCode: false,
                                   formatDate: false,
                                   colorCallback: (renderC) => Colors.red[200]!,
-                                  mapData: controllerX.transmissionLogList!
+                                  mapData: (controllerX.transmissionLog
+                                      ?.loadSavedLogOutput?.listColorGridlogs!
                                       .map((e) => e.toJson())
-                                      .toList())
+                                      .toList())!)
                               // _dataTable3()
                               : const WarningBox(
                                   text:
@@ -537,16 +549,15 @@ class TransmissionLogView extends GetView<TransmissionLogController> {
                           // width: 500,
                           width: Get.width * 0.8,
                           height: 300,
-                          child: (controllerX.transmissionLogList != null &&
-                                  (controllerX
-                                      .transmissionLogList?.isNotEmpty)!)
+                          child: (controllerX.transmissionLog != null)
                               ? DataGridFromMap(
                                   hideCode: false,
                                   formatDate: false,
                                   colorCallback: (renderC) => Colors.red[200]!,
-                                  mapData: controllerX.transmissionLogList!
+                                  mapData: (controllerX.transmissionLog
+                                      ?.loadSavedLogOutput?.listColorGridlogs!
                                       .map((e) => e.toJson())
-                                      .toList())
+                                      .toList())!)
                               // _dataTable3()
                               : const WarningBox(
                                   text:
@@ -716,16 +727,15 @@ class TransmissionLogView extends GetView<TransmissionLogController> {
                           // width: 500,
                           width: Get.width * 0.8,
                           height: Get.height * 0.6,
-                          child: (controllerX.transmissionLogList != null &&
-                                  (controllerX
-                                      .transmissionLogList?.isNotEmpty)!)
+                          child: (controllerX.transmissionLog != null)
                               ? DataGridFromMap(
                                   hideCode: false,
                                   formatDate: false,
                                   colorCallback: (renderC) => Colors.red[200]!,
-                                  mapData: controllerX.transmissionLogList!
+                                  mapData: (controllerX.transmissionLog
+                                      ?.loadSavedLogOutput?.listColorGridlogs!
                                       .map((e) => e.toJson())
-                                      .toList())
+                                      .toList())!)
                               // _dataTable3()
                               : const WarningBox(
                                   text:
@@ -867,16 +877,15 @@ class TransmissionLogView extends GetView<TransmissionLogController> {
                           // width: 500,
                           width: Get.width * 0.8,
                           height: Get.height * 0.6,
-                          child: (controllerX.transmissionLogList != null &&
-                                  (controllerX
-                                      .transmissionLogList?.isNotEmpty)!)
+                          child: (controllerX.transmissionLog != null)
                               ? DataGridFromMap(
                                   hideCode: false,
                                   formatDate: false,
                                   colorCallback: (renderC) => Colors.red[200]!,
-                                  mapData: controllerX.transmissionLogList!
+                                  mapData: (controllerX.transmissionLog
+                                      ?.loadSavedLogOutput?.listColorGridlogs!
                                       .map((e) => e.toJson())
-                                      .toList())
+                                      .toList())!)
                               // _dataTable3()
                               : const WarningBox(
                                   text:
@@ -1061,17 +1070,18 @@ class TransmissionLogView extends GetView<TransmissionLogController> {
                               // width: 500,
                               width: Get.width * 0.49,
                               height: Get.height * 0.53,
-                              child: (controllerX.transmissionLogList != null &&
-                                      (controllerX
-                                          .transmissionLogList?.isNotEmpty)!)
+                              child: (controllerX.transmissionLog != null)
                                   ? DataGridFromMap(
                                       hideCode: false,
                                       formatDate: false,
                                       colorCallback: (renderC) =>
                                           Colors.red[200]!,
-                                      mapData: controllerX.transmissionLogList!
+                                      mapData: (controllerX
+                                          .transmissionLog
+                                          ?.loadSavedLogOutput
+                                          ?.listColorGridlogs!
                                           .map((e) => e.toJson())
-                                          .toList())
+                                          .toList())!)
                                   // _dataTable3()
                                   : const WarningBox(
                                       text:
@@ -1086,17 +1096,18 @@ class TransmissionLogView extends GetView<TransmissionLogController> {
                               // width: 500,
                               width: Get.width * 0.3,
                               height: Get.height * 0.53,
-                              child: (controllerX.transmissionLogList != null &&
-                                      (controllerX
-                                          .transmissionLogList?.isNotEmpty)!)
+                              child: (controllerX.transmissionLog != null)
                                   ? DataGridFromMap(
                                       hideCode: false,
                                       formatDate: false,
                                       colorCallback: (renderC) =>
                                           Colors.red[200]!,
-                                      mapData: controllerX.transmissionLogList!
+                                      mapData: (controllerX
+                                          .transmissionLog
+                                          ?.loadSavedLogOutput
+                                          ?.listColorGridlogs!
                                           .map((e) => e.toJson())
-                                          .toList())
+                                          .toList())!)
                                   // _dataTable3()
                                   : const WarningBox(
                                       text:
@@ -1175,16 +1186,15 @@ class TransmissionLogView extends GetView<TransmissionLogController> {
                           // width: 500,
                           width: Get.width * 0.8,
                           height: Get.height * 0.6,
-                          child: (controllerX.transmissionLogList != null &&
-                                  (controllerX
-                                      .transmissionLogList?.isNotEmpty)!)
+                          child: (controllerX.transmissionLog != null)
                               ? DataGridFromMap(
                                   hideCode: false,
                                   formatDate: false,
                                   colorCallback: (renderC) => Colors.red[200]!,
-                                  mapData: controllerX.transmissionLogList!
+                                  mapData: (controllerX.transmissionLog
+                                      ?.loadSavedLogOutput?.listColorGridlogs!
                                       .map((e) => e.toJson())
-                                      .toList())
+                                      .toList())!)
                               // _dataTable3()
                               : const WarningBox(
                                   text:
