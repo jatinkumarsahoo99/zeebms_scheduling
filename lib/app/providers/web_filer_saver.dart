@@ -1,5 +1,5 @@
 import 'dart:convert';
-import 'dart:js' as js;
+
 import 'dart:html' as html;
 
 class WebFileSaver {
