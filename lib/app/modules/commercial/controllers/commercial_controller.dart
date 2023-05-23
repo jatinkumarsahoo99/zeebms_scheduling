@@ -422,13 +422,15 @@ class CommercialController extends GetxController {
   }
 
   void clear() {
+    date_.text = "";
     selectedChannel = null;
     selectedLocation = null;
     commercialSpots.value = "";
     commercialDuration.value = "";
 
-    commercialShowDetailsList?.clear();
     commercialProgramList?.clear();
+    commercialShufflingList?.clear();
+    commercialShowDetailsList?.clear();
     commercialShowFPCList?.clear();
     commercialShowMarkedList?.clear();
 
