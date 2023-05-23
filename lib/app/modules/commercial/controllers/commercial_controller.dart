@@ -1,5 +1,5 @@
+import 'dart:convert';
 import 'dart:developer';
-
 import 'package:bms_scheduling/app/providers/extensions/string_extensions.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
@@ -9,6 +9,7 @@ import '../../../../widgets/LoadingDialog.dart';
 import '../../../../widgets/Snack.dart';
 import '../../../controller/ConnectorControl.dart';
 import '../../../controller/HomeController.dart';
+import '../../../controller/MainController.dart';
 import '../../../data/DropDownValue.dart';
 import '../../../data/PermissionModel.dart';
 import '../../../data/system_envirtoment.dart';
@@ -18,458 +19,296 @@ import '../../../providers/SizeDefine.dart';
 import '../../../providers/Utils.dart';
 import '../../../routes/app_pages.dart';
 import '../CommercialProgramModel.dart';
-
-class FPCWeeklyTable extends DataTableSource {
-  @override
-  bool get isRowCountApproximate => false;
-
-  @override
-  int get rowCount => Get.find<CommercialController>().listData?.length ?? 0;
-
-  @override
-  int get selectedRowCount => 0;
-
-  @override
-  DataRow? getRow(int index) {
-    throw UnimplementedError();
-  }
-
-  // @override
-  // DataRow getRow(int index) {
-  //   Map<String,dynamic>? data =
-  //   Get.find<CommercialController>().listData![index];
-  //   return DataRow2(
-  //     onSelectChanged: (tap){
-  //       // Get.find<FPCMismatchController>().selectedProgram=data;
-  //       Get.find<CommercialController>().selectIndex=index;
-  //       notifyListeners();
-  //     },
-  //     selected: Get.find<CommercialController>().selectIndex==index,
-  //     cells: data.values.map((e) => DataCell(
-  //       InkWell(
-  //         onTap: () {
-  //           Get.find<CommercialController>().selectIndex=index;
-  //           notifyListeners();
-  //         },
-  //         child: Center(
-  //           child: Text(
-  //             e.toString(),
-  //             style: TextStyle(color: Colors.black, fontSize: 12),
-  //             textAlign: TextAlign.center,
-  //           ),
-  //         ),
-  //       ),
-  //     )).toList()/*[
-  //
-  //       DataCell(
-  //         InkWell(
-  //           onTap: () {},
-  //           child: Center(
-  //             child: Text(
-  //               (index + 1).toString(),
-  //               style: TextStyle(color: Colors.black, fontSize: 12),
-  //               textAlign: TextAlign.center,
-  //             ),
-  //           ),
-  //         ),
-  //       ),
-  //       DataCell(
-  //         InkWell(
-  //           onTap: () {},
-  //           child: Center(
-  //             child: Text(
-  //               data[0].value ?? "",
-  //               style: TextStyle(color: Colors.black, fontSize: 12),
-  //               textAlign: TextAlign.center,
-  //             ),
-  //           ),
-  //         ),
-  //       ),
-  //       DataCell(
-  //         InkWell(
-  //           onTap: () {},
-  //           child: Center(
-  //             child: Text(
-  //               data[1].value ?? "",
-  //               style: TextStyle(color: Colors.black, fontSize: 12),
-  //               textAlign: TextAlign.center,
-  //             ),
-  //           ),
-  //         ),
-  //         showEditIcon: false,
-  //         placeholder: false,
-  //       ),
-  //       DataCell(
-  //         InkWell(
-  //           onTap: () {},
-  //           child: Center(
-  //             child: Text(
-  //               data[2].value ?? "",
-  //               style: TextStyle(color: Colors.black, fontSize: 12),
-  //               textAlign: TextAlign.center,
-  //             ),
-  //           ),
-  //         ),
-  //         showEditIcon: false,
-  //         placeholder: false,
-  //       ),
-  //       DataCell(
-  //         InkWell(
-  //           onTap: () {},
-  //           child: Center(
-  //             child: Text(
-  //               data[3].value ?? "",
-  //               style: TextStyle(color: Colors.black, fontSize: 12),
-  //               textAlign: TextAlign.center,
-  //             ),
-  //           ),
-  //         ),
-  //         showEditIcon: false,
-  //         placeholder: false,
-  //       ), DataCell(
-  //         InkWell(
-  //           onTap: () {},
-  //           child: Center(
-  //             child: Text(
-  //               data[4].value ?? "",
-  //               style: TextStyle(color: Colors.black, fontSize: 12),
-  //               textAlign: TextAlign.center,
-  //             ),
-  //           ),
-  //         ),
-  //         showEditIcon: false,
-  //         placeholder: false,
-  //       ), DataCell(
-  //         InkWell(
-  //           onTap: () {},
-  //           child: Center(
-  //             child: Text(
-  //               data[5].value ?? "",
-  //               style: TextStyle(color: Colors.black, fontSize: 12),
-  //               textAlign: TextAlign.center,
-  //             ),
-  //           ),
-  //         ),
-  //         showEditIcon: false,
-  //         placeholder: false,
-  //       ), DataCell(
-  //         InkWell(
-  //           onTap: () {},
-  //           child: Center(
-  //             child: Text(
-  //               data[6].value ?? "",
-  //               style: TextStyle(color: Colors.black, fontSize: 12),
-  //               textAlign: TextAlign.center,
-  //             ),
-  //           ),
-  //         ),
-  //         showEditIcon: false,
-  //         placeholder: false,
-  //       ), DataCell(
-  //         InkWell(
-  //           onTap: () {},
-  //           child: Center(
-  //             child: Text(
-  //               data[7].value ?? "",
-  //               style: TextStyle(color: Colors.black, fontSize: 12),
-  //               textAlign: TextAlign.center,
-  //             ),
-  //           ),
-  //         ),
-  //         showEditIcon: false,
-  //         placeholder: false,
-  //       ),
-  //     ]*/,
-  //   );
-  // }
-}
-
-class ProgramClipModel {
-  int? mediaClipId;
-  String? locationCode;
-  String? channelCode;
-  String? clipType;
-  int? programCode;
-  String? lookupName;
-  String? clipId;
-  String? locationName;
-  String? channelName;
-
-  ProgramClipModel(
-      {this.mediaClipId,
-      this.locationCode,
-      this.channelCode,
-      this.clipType,
-      this.programCode,
-      this.lookupName,
-      this.clipId,
-      this.locationName,
-      this.channelName});
-
-  ProgramClipModel.fromJson(Map<String, dynamic> json) {
-    mediaClipId = json['mediaClipId'];
-    locationCode = json['locationCode'];
-    channelCode = json['channelCode'];
-    clipType = json['clipType'];
-    programCode = json['programCode'];
-    lookupName = json['lookupName'];
-    clipId = json['clipId'];
-    locationName = json['locationName'];
-    channelName = json['channelName'];
-  }
-
-  Map<String, dynamic> toJson() {
-    final Map<String, dynamic> data = new Map<String, dynamic>();
-    data['mediaClipId'] = this.mediaClipId;
-    data['locationCode'] = this.locationCode;
-    data['channelCode'] = this.channelCode;
-    data['clipType'] = this.clipType;
-    data['programCode'] = this.programCode;
-    data['lookupName'] = this.lookupName;
-    data['clipId'] = this.clipId;
-    data['locationName'] = this.locationName;
-    data['channelName'] = this.channelName;
-    return data;
-  }
-
-  Map<String, dynamic> toJson1() {
-    final Map<String, dynamic> data = new Map<String, dynamic>();
-    // data['mediaClipId'] = this.mediaClipId;
-    // data['locationCode'] = this.locationCode;
-    // data['channelCode'] = this.channelCode;
-    // data['clipType'] = this.clipType;
-    // data['programCode'] = this.programCode;
-    data['Lookup Name'] = this.lookupName;
-    data['Clip Id'] = this.clipId;
-    data['Location Name'] = this.locationName;
-    data['Channel Name'] = this.channelName;
-    return data;
-  }
-}
-
-class ChannelModel {
-  String? locationCode;
-
-  String? channelCode;
-
-  ChannelModel({this.locationCode, this.channelCode});
-
-  ChannelModel.fromJson(Map<String, dynamic> json) {
-    locationCode = json['locationCode'];
-
-    channelCode = json['channelCode'];
-  }
-
-  Map<String, dynamic> toJson() {
-    final Map<String, dynamic> data = <String, dynamic>{};
-    data['locationCode'] = locationCode;
-    data['channelCode'] = channelCode;
-    data['selected'] = true;
-    return data;
-  }
-}
+import '../CommercialShowOnTabModel.dart';
 
 class CommercialController extends GetxController {
-  var locations = RxList<DropDownValue>();
-  var channels = RxList<DropDownValue>([]);
-  RxBool isEnable = RxBool(true);
+  /// Radio Button
+  int? tabIndex = 0;
+  int selectIndex = 0;
+  int? selectedDDIndex;
 
-  //input controllers
-  DropDownValue? selectLocation;
-  DropDownValue? selectChannel;
-  PlutoGridStateManager? gridStateManager;
-
-  List<PermissionModel>? formPermissions;
-  List<PlutoRow> initRows = [];
-  List<PlutoColumn> initColumn = [];
-  List locationsForReport = [];
-  List<ChannelModel> locationsForReport1 = [];
-  List conflictReport = [];
-
-  List<FPCMisMatchProgramModel>? programList = [
-    new FPCMisMatchProgramModel(startTime: '01:00:00', programName: 'Test1'),
-    new FPCMisMatchProgramModel(startTime: '01:00:00', programName: 'Test'),
-    new FPCMisMatchProgramModel(startTime: '01:00:00', programName: 'Test'),
-    new FPCMisMatchProgramModel(startTime: '01:00:00', programName: 'Test'),
-    new FPCMisMatchProgramModel(startTime: '01:00:00', programName: 'Test5'),
-    new FPCMisMatchProgramModel(startTime: '01:00:00', programName: 'Test'),
-    new FPCMisMatchProgramModel(startTime: '01:00:00', programName: 'Test'),
-    new FPCMisMatchProgramModel(startTime: '01:00:00', programName: 'Test'),
-    new FPCMisMatchProgramModel(startTime: '01:00:00', programName: 'Test'),
-    new FPCMisMatchProgramModel(startTime: '01:00:00', programName: 'Test10'),
-    new FPCMisMatchProgramModel(startTime: '01:00:00', programName: 'Test'),
-    new FPCMisMatchProgramModel(startTime: '01:00:00', programName: 'Test'),
-    new FPCMisMatchProgramModel(startTime: '01:00:00', programName: 'Test'),
-    new FPCMisMatchProgramModel(startTime: '01:00:00', programName: 'Test'),
-    new FPCMisMatchProgramModel(startTime: '01:00:00', programName: 'Test15'),
-    new FPCMisMatchProgramModel(startTime: '01:00:00', programName: 'Test'),
-    new FPCMisMatchProgramModel(startTime: '01:00:00', programName: 'Test'),
-    new FPCMisMatchProgramModel(startTime: '01:00:00', programName: 'Test'),
-    new FPCMisMatchProgramModel(startTime: '01:00:00', programName: 'Test'),
-    new FPCMisMatchProgramModel(startTime: '01:00:00', programName: 'Test20'),
-    new FPCMisMatchProgramModel(startTime: '01:00:00', programName: 'Test'),
-    new FPCMisMatchProgramModel(startTime: '01:00:00', programName: 'Test'),
-    new FPCMisMatchProgramModel(startTime: '01:00:00', programName: 'Test'),
-    new FPCMisMatchProgramModel(startTime: '01:00:00', programName: 'Test'),
-    new FPCMisMatchProgramModel(startTime: '01:00:00', programName: 'Test'),
-    new FPCMisMatchProgramModel(startTime: '01:00:00', programName: 'Test26'),
-  ];
-  List beams = [];
-  int? conflictDays = 4;
-  List conflictPrograms = [];
-  List<PlutoRow> beamRows = [];
-  var selectedChannels = RxList([]);
-  var ignoreSingleTelecast = RxBool(false);
-  Map<String, dynamic> reportBody = {};
+  int selectedGroup = 0;
+  double widthSize = 0.17;
+  String? fpcTimeSelected;
+  DropDownValue? selectedChannel;
+  DropDownValue? selectedLocation;
 
   var selectedIndex = RxInt(0);
-  late PlutoGridStateManager conflictReportStateManager;
-  PlutoGridStateManager? bmsReportStateManager;
-  PlutoGridStateManager? locChanStateManager;
-  Map? initData;
-  TextEditingController refDateContrl = TextEditingController(
-      text: DateFormat("dd-MM-yyyy").format(DateTime.now()));
+  RxBool isEnable = RxBool(true);
+  var channelEnable = RxBool(true);
+  var locationEnable = RxBool(true);
+  var selectedChannels = RxList([]);
+  var commercialSpots = RxString("");
+  var commercialDuration = RxString("");
 
-  DataTableSource dataTable = FPCWeeklyTable();
-  List<SystemEnviroment>? channelList = [];
-  List<SystemEnviroment>? clipTypeList = [];
-  List<SystemEnviroment>? locationList = [];
+  var locations = RxList<DropDownValue>();
+  var channels = RxList<DropDownValue>([]);
 
-  TextEditingController programName_ = TextEditingController();
-  TextEditingController clip_ = TextEditingController();
-  TextEditingController date_ = TextEditingController();
   DateTime now = DateTime.now();
   DateTime? selectedDate = DateTime.now();
   DateFormat df = DateFormat("dd/MM/yyyy");
   DateFormat df1 = DateFormat("dd-MM-yyyy");
   DateFormat df2 = DateFormat("MM-dd-yyyy");
-  SystemEnviroment? selectedChannel;
-  SystemEnviroment? selectedLocation;
-  SystemEnviroment? selectedClipType;
-  FPCMisMatchProgramModel? selectedProgram;
-  int selectedGroup = 0;
-  int selectIndex = 0;
-  ProgramClipModel? selectedRow;
-  List<Map<String, dynamic>>? listData = [];
+  DateFormat dfFinal = DateFormat("yyyy-MM-ddThh:mm:ss");
 
-  DateTime selectDate = DateTime.now();
+  List beams = [];
+  List<PlutoRow> beamRows = [];
+  List<PlutoRow> initRows = [];
+  List<PlutoColumn> initColumn = [];
+  List<PermissionModel>? formPermissions;
+  List<CommercialProgramModel>? commercialProgramList = [];
+  List<CommercialShowOnTabModel>? commercialShufflingList = [];
+  List<CommercialShowOnTabModel>? commercialShowDetailsList = [];
+  List<CommercialShowOnTabModel>? commercialShowFPCList = [];
+  List<CommercialShowOnTabModel>? commercialShowMarkedList = [];
 
   /////////////Pluto Grid////////////
   List redBreaks = [];
+
   BuildContext? gridContext;
   PlutoGridStateManager? stateManager;
+  PlutoGridStateManager? gridStateManager;
+  PlutoGridStateManager? locChanStateManager;
+  PlutoGridStateManager? bmsReportStateManager;
+  PlutoGridMode selectedPlutoGridMode = PlutoGridMode.select;
 
-  double widthSize = 0.17;
-  var locationEnable = RxBool(true);
-  var channelEnable = RxBool(true);
+  late PlutoGridStateManager conflictReportStateManager;
+
+  List<SystemEnviroment>? channelList = [];
+  List<SystemEnviroment>? locationList = [];
+
+  CommercialProgramModel? selectedProgram;
+  CommercialShowOnTabModel? selectedShowOnTab;
+
+  TextEditingController date_ = TextEditingController();
+  TextEditingController programName_ = TextEditingController();
+  TextEditingController refDateContrl = TextEditingController(
+      text: DateFormat("dd-MM-yyyy").format(DateTime.now()));
 
   @override
   void onInit() {
     super.onInit();
+    getLocations();
+  }
+
+  getLocations() {
+    Get.find<ConnectorControl>().GETMETHODCALL(
+        api: ApiFactory.COMMERCIAL_LOCATION,
+        fun: (Map map) {
+          locations.clear();
+          map["csload"]["lstLocations"].forEach((e) {
+            locations.add(DropDownValue.fromJson1(e));
+          });
+        });
+  }
+
+  getChannel(locationCode) {
+    try {
+      Get.find<ConnectorControl>().GETMETHODCALL(
+          api: ApiFactory.COMMERCIAL_CHANNEL(locationCode),
+          fun: (data) {
+            if (data["locationSelect"] is List) {
+              channels.value = (data["locationSelect"] as List)
+                  .map((e) => DropDownValue(
+                      key: e["channelCode"], value: e["channelName"]))
+                  .toList();
+            } else {
+              LoadingDialog.callErrorMessage1(
+                  msg: "Failed To Load Initial Data");
+            }
+          });
+    } catch (e) {
+      LoadingDialog.callErrorMessage1(msg: "Failed To Load Initial Data");
+    }
+  }
+
+  fetchProgramSchedulingDetails() {
+    print(">>Key is>>>>>" + (selectedChannel?.key ?? ""));
+    if (selectedLocation == null) {
+      Snack.callError("Please select location");
+    } else if (selectedChannel == null) {
+      Snack.callError("Please select location");
+    } else if (selectedDate == null) {
+      Snack.callError("Please select date");
+    } else {
+      // LoadingDialog.call();
+      selectedDate = df1.parse(date_.text);
+      Get.find<ConnectorControl>().GETMETHODCALL(
+          api: ApiFactory.COMMERCIAL_SHOW_FPC_SCHEDULLING_DETAILS(
+              selectedLocation?.key ?? "",
+              selectedChannel?.key ?? "",
+              df1.format(selectedDate!)),
+          fun: (dynamic list) {
+            print("Json response is>>>" + jsonEncode(list));
+
+            commercialProgramList?.clear();
+            list['showDetails']["lstDailyFPC"].forEach((element) {
+              commercialProgramList
+                  ?.add(CommercialProgramModel.fromJson(element));
+            });
+
+            commercialSpots.value =
+                list['showDetails']['bindGridOutPut']['commercialSpots'] ?? "";
+
+            commercialDuration.value = list['showDetails']['bindGridOutPut']
+                    ['commercialDuration'] ?? "";
+
+            commercialShowDetailsList?.clear();
+            list['showDetails']['lstCommercialShuffling'].forEach((element) {
+              commercialShowDetailsList
+                  ?.add(CommercialShowOnTabModel.fromJson(element));
+            });
+
+            commercialShufflingList?.clear();
+            list['showDetails']['lstscheduling'].forEach((element) {
+              commercialShufflingList
+                  ?.add(CommercialShowOnTabModel.fromJson(element));
+            });
+
+            print(">>Program List Update Called");
+            update(["fillerFPCTable"]);
+            update(["fillerShowOnTabTable"]);
+          },
+          failed: (val) {
+            Snack.callError(val.toString());
+          });
+    }
+  }
+
+  fetchSchedulingShowOnTabDetails() {
+    print(">>Key is>>>>>" + (selectedChannel?.key ?? ""));
+    if (selectedLocation == null) {
+      Snack.callError("Please select location");
+    } else if (selectedChannel == null) {
+      Snack.callError("Please select location");
+    } else if (selectedDate == null) {
+      Snack.callError("Please select date");
+    } else {
+      // LoadingDialog.call();
+      selectedDate = df1.parse(date_.text);
+      //   "locationCode": "ZAZEE00001",
+      // "channelCode": "ZAZEE00001",
+      // "telecastDate": "31-03-2023",
+      // "FpctimeSelected":"02:00:00",
+      // "tabindex": "1",
+      try {
+        var jsonRequest = {
+          "locationCode": selectedLocation?.key.toString(),
+          "channelCode": selectedChannel?.key.toString(),
+          "telecastDate": df1.format(selectedDate!),
+          "FpctimeSelected": (fpcTimeSelected ?? "").toString(),
+          "tabindex": selectedIndex.value.toString(),
+          "lstCommercialShuffling":
+              commercialShowDetailsList?.map((e) => e.toJson()).toList(),
+        };
+        print("requestedData1>>>" + jsonEncode(jsonRequest));
+        Get.find<ConnectorControl>().POSTMETHOD(
+            api: ApiFactory.COMMERCIAL_SHOW_ON_TAB_DETAILS(),
+            fun: (dynamic data) {
+              print("Json response is>>>" + jsonEncode(data));
+
+              if (selectedIndex.value.toString() == "1") {
+                commercialShowFPCList?.clear();
+                data['tabchangeOutput']['lstFPCMismatch'].forEach((element) {
+                  commercialShowFPCList
+                      ?.add(CommercialShowOnTabModel.fromJson(element));
+                });
+              } else if (selectedIndex.value.toString() == "2") {
+                commercialShowMarkedList?.clear();
+                data['tabchangeOutput']['lstMarkedAsError'].forEach((element) {
+                  commercialShowMarkedList
+                      ?.add(CommercialShowOnTabModel.fromJson(element));
+                });
+              } else {
+                commercialSpots.value = data['tabchangeOutput']['bindGridOutPut']
+                        ['commercialSpots'].toString() ??
+                    "";
+
+                commercialDuration.value = data['tabchangeOutput']
+                        ['bindGridOutPut']['commercialDuration'].toString() ??
+                    "";
+
+                // data['tabchangeOutput']['lstscheduling'].forEach((element) {
+                //   commercialShowDetailsList?.add(CommercialShowOnTabModel.fromJson(element));
+                // });
+                //
+                // data['tabchangeOutput']['lstCommercialShuffling'].forEach((element) {
+                //   commercialShowDetailsList?.add(CommercialShowOnTabModel.fromJson(element));
+                // });
+
+                commercialShufflingList?.clear();
+                data['tabchangeOutput']['lstscheduling'].forEach((element) {
+                  commercialShufflingList
+                      ?.add(CommercialShowOnTabModel.fromJson(element));
+                });
+
+                commercialShowDetailsList?.clear();
+                data['tabchangeOutput']['lstCommercialShuffling']
+                    .forEach((element) {
+                  commercialShowDetailsList
+                      ?.add(CommercialShowOnTabModel.fromJson(element));
+                });
+              }
+
+              print(">>On Tap Update Called");
+              update(["fillerShowOnTabTable"]);
+            },
+            json: jsonRequest);
+      } catch (e) {
+        LoadingDialog.callErrorMessage1(msg: "Failed To Load OnTab Data");
+      }
+    }
+  }
+
+  /// Not Completed
+  saveSchedulingData() {
+    if (selectedLocation == null) {
+      Snack.callError("Please select location");
+    } else if (selectedChannel == null) {
+      Snack.callError("Please select location");
+    } else if (selectedDate == null) {
+      Snack.callError("Please select date");
+    } else {
+      selectedDate = df1.parse(date_.text);
+      try {
+        var jsonRequest = {
+          "locationCode": selectedLocation?.key.toString(),
+          "channelCode": selectedChannel?.key.toString(),
+          "scheduleDate": df1.format(selectedDate!),
+          "lstCommercialShuffling":
+              commercialShowDetailsList?.map((e) => e.toJson()).toList(),
+        };
+        print("requestedToSaveData >>>" + jsonEncode(jsonRequest));
+        Get.find<ConnectorControl>().POSTMETHOD(
+            api: ApiFactory.SAVE_COMMERCIAL_DETAILS(),
+            fun: (dynamic data) {
+              print("Json response is>>>" + jsonEncode(data));
+
+              print("saveSchedulingData Called");
+              update(["fillerShowOnTabTable"]);
+            },
+            json: jsonRequest);
+      } catch (e) {
+        LoadingDialog.callErrorMessage1(msg: "Failed To Save Data");
+      }
+    }
   }
 
   formHandler(btnName) async {
     if (btnName == "Clear") {
-      initData = null;
-      initRows = [];
-      initColumn = [];
-      locationsForReport = [];
-      locationsForReport1 = [];
-      conflictReport = [];
+      clear();
+    }
 
-      beams = [];
-      conflictDays = 4;
-      conflictPrograms = [];
-      beamRows = [];
-      selectedChannels.value = [];
-      ignoreSingleTelecast.value = false;
+    if (btnName == "Save") {
+      saveSchedulingData();
+    }
 
-      Map<String, dynamic> reportBody = {};
-      update(["initData"]);
-      //getInitData();
+    if (btnName == "Exit") {
+      exit();
     }
   }
 
-  fetchInitial() {
-    // Get.find<ConnectorControl>().GETMETHODCALL(
-    //   api: ApiFactory.FPC_WEEKLY_INITIAL,
-    //   fun: (Map<String, dynamic> map) {
-    //     locationList?.clear();
-    //     channelList?.clear();
-    //     map["lstLocations"].forEach((element) {
-    //       locationList?.add(SystemEnviroment(key: element["locationCode"], value: element["locationName"]));
-    //     });
-    //     map["lstChannels"].forEach((element) {
-    //       channelList?.add(SystemEnviroment(key: element["channelcode"], value: element["channelName"]));
-    //     });
-    //     update(["initialData"]);
-    //   },
-    // );
-  }
-  // fetchInitial() {
-  //   Get.find<ConnectorControl>().GETMETHODCALL(
-  //     api: ApiFactory.FPC_WEEKLY_INITIAL,
-  //     fun: (Map<String, dynamic> map) {
-  //       locationList?.clear();
-  //       channelList?.clear();
-  //       map["lstLocations"].forEach((element) {
-  //         locationList?.add(SystemEnviroment(key: element["locationCode"], value: element["locationName"]));
-  //       });
-  //       map["lstChannels"].forEach((element) {
-  //         channelList?.add(SystemEnviroment(key: element["channelcode"], value: element["channelName"]));
-  //       });
-  //       update(["initialData"]);
-  //     },
-  //   );
-  // }
-
-  generateData() async {
-    if (conflictDays == null) {
-      // Snack.callError("Invalid Day Value");
-      LoadingDialog.showErrorDialog("Invalid Day Value");
-    } else if (locChanStateManager!.checkedRows.isEmpty) {
-      LoadingDialog.showErrorDialog("Please select Location Channel");
-    } else {
-      // for (var element in locChanStateManager!.checkedRows) {
-      //   locationsForReport.add(channels[element.sortIdx]);
-      // }
-      for (var element in locationsForReport) {
-        element["selected"] = true;
-      }
-      reportBody["IgnoreSingleTelecast"] = ignoreSingleTelecast.value;
-      reportBody["locationCodeChannels"] =
-          locationsForReport1.map((e) => e.toJson()).toList();
-      reportBody["ReferenceDate"] = DateFormat("yyyy-MM-dd")
-          .format(DateFormat("dd-MM-yyyy").parse(refDateContrl.text));
-
-      LoadingDialog.call();
-      beams = [];
-      conflictReport = [];
-      conflictPrograms = [];
-      update(["reports"]);
-      // String value =
-      //     await rootBundle.loadString('assets/json/ci_dashbaord_report.json');
-      await Get.find<ConnectorControl>().POSTMETHOD_FORMDATA(
-          // NEED TO PASS USER NAME
-          timeout: 360000,
-          api:
-              "https://api-programming-bms-uat.zeeconnect.in//api/MovieConflictReport/GetMovieConflictReport",
-          json: reportBody,
-          fun: (map) async {
-            beams = map["lstReportBaseData"];
-            for (var element in beams.where((element) =>
-                (element["days"] <= conflictDays && element["days"] >= 0))) {
-              conflictPrograms.add(element["program"]);
-            }
-            conflictPrograms.toSet().toList();
-            // log(conflictPrograms.toString());
-            conflictReport = map["lstConflictReport"];
-            update(["reports"]);
-          });
-      Get.back();
-    }
-  }
-
+  /// Useful in Columns
   loadColumnBeams(column) {
     List<PlutoRow> rows = [];
     for (Map row in beams.where((element) => element["beam"] == column)) {
@@ -512,6 +351,7 @@ class CommercialController extends GetxController {
     update(["beams"]);
   }
 
+  /// Useful in Columns
   void loadBeams() {
     if (conflictReportStateManager.currentRow == null) {
       return;
@@ -560,28 +400,27 @@ class CommercialController extends GetxController {
     update(["beams"]);
   }
 
-  fetchGenerate() {
-    if (selectedLocation == null) {
-      Snack.callError("Please select Location");
-    } else if (selectedChannel == null) {
-      Snack.callError("Please select Channel");
-    } else if (selectDate == null) {
-      Snack.callError("Please select from date");
-    } else {
-      selectDate = df1.parse(date_.text);
-      listData?.clear();
-      LoadingDialog.call();
-    }
-  }
-
   void clear() {
-    listData?.clear();
+    selectedChannel = null;
+    selectedLocation = null;
+    commercialSpots.value = "";
+    commercialDuration.value = "";
+
+    commercialShowDetailsList?.clear();
+    commercialProgramList?.clear();
+    commercialShowFPCList?.clear();
+    commercialShowMarkedList?.clear();
+
     locationEnable.value = true;
     channelEnable.value = true;
-    dataTable.notifyListeners();
+
+    update(["fillerShowOnTabTable"]);
+    update(["fillerFPCTable"]);
+    update(["initialData"]);
   }
 
   void exit() {
+    clear();
     Get.find<HomeController>().selectChild1.value = null;
     Get.delete<CommercialController>();
   }

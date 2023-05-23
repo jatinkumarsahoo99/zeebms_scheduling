@@ -7,6 +7,8 @@ import 'package:bms_scheduling/app/modules/ImportDigitextRunOrder/views/import_d
 import 'package:bms_scheduling/app/modules/MamWorkOrders/views/mam_work_orders_view.dart';
 import 'package:bms_scheduling/app/modules/RoBooking/views/ro_booking_view.dart';
 import 'package:bms_scheduling/app/modules/RoCancellation/views/ro_cancellation_view.dart';
+import 'package:bms_scheduling/app/modules/commercial/views/commercial_view.dart';
+import 'package:bms_scheduling/app/modules/filler/views/filler_view.dart';
 import 'package:bms_scheduling/app/modules/RoReschedule/views/ro_reschedule_view.dart';
 import 'package:bms_scheduling/app/modules/RosDistribution/views/ros_distribution_view.dart';
 import 'package:bms_scheduling/app/modules/SalesAuditExtraSpotsReport/views/sales_audit_extra_spots_report_view.dart';
@@ -73,6 +75,12 @@ class AuthGuard1 extends StatelessWidget {
               break;
             case Routes.IMPORT_DIGITEXT_RUN_ORDER:
               currentWidget = ImportDigitextRunOrderView();
+              break;
+            case Routes.FILLER:
+              currentWidget = FillerView();
+              break;
+            case Routes.COMMERCIAL:
+              currentWidget = CommercialView();
               break;
             case Routes.MAM_WORK_ORDERS:
               currentWidget = MamWorkOrdersView();

@@ -13,7 +13,7 @@ packages:
     dependency: transitive
     description:
       name: args
-      sha256: c372bb384f273f0c2a8aaaa226dad84dc27c8519a691b888725dec59518ad53a
+      sha256: "4cab82a83ffef80b262ddedf47a0a8e56ee6fbf7fe21e6e768b02792034dd440"
       url: "https://pub.dev"
     source: hosted
     version: "2.4.1"
@@ -181,7 +181,11 @@ packages:
     dependency: transitive
     description:
       name: ffi
+<<<<<<< HEAD
       sha256: ed5337a5660c506388a9f012be0288fb38b49020ce2b45fe1f8b8323fe429f99
+=======
+      sha256: a38574032c5f1dd06c4aee541789906c12ccaab8ba01446e800d9c5b79c4a978
+>>>>>>> bffe2a3b4e2d3bf801fe7791b7b373d0c2325cf4
       url: "https://pub.dev"
     source: hosted
     version: "2.0.2"
@@ -197,7 +201,11 @@ packages:
     dependency: "direct main"
     description:
       name: file_picker
+<<<<<<< HEAD
       sha256: c7a8e25ca60e7f331b153b0cb3d405828f18d3e72a6fa1d9440c86556fffc877
+=======
+      sha256: e6c7ad8e572379df86ea64ef0a5395889fba3954411d47ca021b888d79f8e798
+>>>>>>> bffe2a3b4e2d3bf801fe7791b7b373d0c2325cf4
       url: "https://pub.dev"
     source: hosted
     version: "5.3.0"
@@ -210,7 +218,11 @@ packages:
     dependency: transitive
     description:
       name: flutter_file_manager_android
+<<<<<<< HEAD
       sha256: a00ed550fb6284fb7da392de5c95e4d98e21754df865e81609a7ce2553dbec6d
+=======
+      sha256: b92acbcd2880cb45a046e93add31acd8f768f4084f96b2880cd008123acb6d51
+>>>>>>> bffe2a3b4e2d3bf801fe7791b7b373d0c2325cf4
       url: "https://pub.dev"
     source: hosted
     version: "1.2.1"
@@ -218,7 +230,11 @@ packages:
     dependency: transitive
     description:
       name: flutter_file_manager_ios
+<<<<<<< HEAD
       sha256: "5a03dad9928cc9558b7564b6223a6d5c85add27a38605ccd5f95284f1306d5fd"
+=======
+      sha256: "77f5e13760d6ccfa4d439806036a804d49b0cf1a7ae23328920c67d59b8f1c32"
+>>>>>>> bffe2a3b4e2d3bf801fe7791b7b373d0c2325cf4
       url: "https://pub.dev"
     source: hosted
     version: "1.1.1"
@@ -226,7 +242,11 @@ packages:
     dependency: transitive
     description:
       name: flutter_file_manager_macos
+<<<<<<< HEAD
       sha256: "75043db36be0e02c365fb25dfd73fa467882d5eae0fad76d2f95321600a90b4d"
+=======
+      sha256: "427e2ab091fb3a512bd250083ff78d0e437a348e68773428b5e57871160d94a3"
+>>>>>>> bffe2a3b4e2d3bf801fe7791b7b373d0c2325cf4
       url: "https://pub.dev"
     source: hosted
     version: "1.1.1"
@@ -234,7 +254,11 @@ packages:
     dependency: transitive
     description:
       name: flutter_file_manager_platform_interface
+<<<<<<< HEAD
       sha256: "61246685aef6f3b65139b28a201ca025d67d623b6be3c21236bfd7dba581090a"
+=======
+      sha256: d56d3d75140be8656c30e611917f3ddf631bbc9d54d7eaf115db5ce913f20b38
+>>>>>>> bffe2a3b4e2d3bf801fe7791b7b373d0c2325cf4
       url: "https://pub.dev"
     source: hosted
     version: "1.1.1"
@@ -242,7 +266,11 @@ packages:
     dependency: transitive
     description:
       name: flutter_file_manager_web
+<<<<<<< HEAD
       sha256: f418785eb4d62344c4a020359fc7021cc866a91a2fe2d00763f304fdbd45bab3
+=======
+      sha256: "73c47d67ff82dba4738c9bd93c70acb84ac49a571e27410bf4f96d9caeeff5eb"
+>>>>>>> bffe2a3b4e2d3bf801fe7791b7b373d0c2325cf4
       url: "https://pub.dev"
     source: hosted
     version: "1.1.1"
@@ -250,7 +278,11 @@ packages:
     dependency: "direct main"
     description:
       name: flutter_file_saver
+<<<<<<< HEAD
       sha256: fcc82e5b8c7619a450565b62daeee12bcc25bbae6d78d51a98460c3f3ab9403a
+=======
+      sha256: "86334f1283a1262e63a1ef5fea99a4bd9a31466d759e07c9d0e895a06f00201f"
+>>>>>>> bffe2a3b4e2d3bf801fe7791b7b373d0c2325cf4
       url: "https://pub.dev"
     source: hosted
     version: "0.6.2"
@@ -266,7 +298,11 @@ packages:
     dependency: transitive
     description:
       name: flutter_plugin_android_lifecycle
+<<<<<<< HEAD
       sha256: "950e77c2bbe1692bc0874fc7fb491b96a4dc340457f4ea1641443d0a6c1ea360"
+=======
+      sha256: "8ffe990dac54a4a5492747added38571a5ab474c8e5d196809ea08849c69b1bb"
+>>>>>>> bffe2a3b4e2d3bf801fe7791b7b373d0c2325cf4
       url: "https://pub.dev"
     source: hosted
     version: "2.0.15"
@@ -396,7 +432,11 @@ packages:
     dependency: transitive
     description:
       name: path_provider
+<<<<<<< HEAD
       sha256: "3087813781ab814e4157b172f1a11c46be20179fcc9bea043e0fba36bc0acaa2"
+=======
+      sha256: c7edf82217d4b2952b2129a61d3ad60f1075b9299e629e149a8d2e39c2e6aad4
+>>>>>>> bffe2a3b4e2d3bf801fe7791b7b373d0c2325cf4
       url: "https://pub.dev"
     source: hosted
     version: "2.0.15"
@@ -412,7 +452,11 @@ packages:
     dependency: transitive
     description:
       name: path_provider_foundation
+<<<<<<< HEAD
       sha256: "1995d88ec2948dac43edf8fe58eb434d35d22a2940ecee1a9fefcd62beee6eb3"
+=======
+      sha256: ad4c4d011830462633f03eb34445a45345673dfd4faf1ab0b4735fbd93b19183
+>>>>>>> bffe2a3b4e2d3bf801fe7791b7b373d0c2325cf4
       url: "https://pub.dev"
     source: hosted
     version: "2.2.3"
@@ -532,7 +576,11 @@ packages:
     dependency: "direct main"
     description:
       name: shared_preferences
+<<<<<<< HEAD
       sha256: "16d3fb6b3692ad244a695c0183fca18cf81fd4b821664394a781de42386bf022"
+=======
+      sha256: "858aaa72d8f61637d64e776aca82e1c67e6d9ee07979123c5d17115031c1b13b"
+>>>>>>> bffe2a3b4e2d3bf801fe7791b7b373d0c2325cf4
       url: "https://pub.dev"
     source: hosted
     version: "2.1.1"
@@ -548,7 +596,11 @@ packages:
     dependency: transitive
     description:
       name: shared_preferences_foundation
+<<<<<<< HEAD
       sha256: e014107bb79d6d3297196f4f2d0db54b5d1f85b8ea8ff63b8e8b391a02700feb
+=======
+      sha256: "0c1c16c56c9708aa9c361541a6f0e5cc6fc12a3232d866a687a7b7db30032b07"
+>>>>>>> bffe2a3b4e2d3bf801fe7791b7b373d0c2325cf4
       url: "https://pub.dev"
     source: hosted
     version: "2.2.2"
@@ -641,7 +693,11 @@ packages:
     dependency: "direct main"
     description:
       name: time_range_picker
+<<<<<<< HEAD
       sha256: "63c3e0beba3c261f7d95e9a2ecef3a3e0bc88d4874edbbef4471c1a60c228526"
+=======
+      sha256: a49d8a2579fa30aeee400fc92ca18bc80358c6ff83aa65af4636b45a6c0c4be4
+>>>>>>> bffe2a3b4e2d3bf801fe7791b7b373d0c2325cf4
       url: "https://pub.dev"
     source: hosted
     version: "2.2.0"
@@ -649,7 +705,11 @@ packages:
     dependency: transitive
     description:
       name: typed_data
+<<<<<<< HEAD
       sha256: facc8d6582f16042dd49f2463ff1bd6e2c9ef9f3d5da3d9b087e244a7b564b3c
+=======
+      sha256: "26f87ade979c47a150c9eaab93ccd2bebe70a27dc0b4b29517f2904f04eb11a5"
+>>>>>>> bffe2a3b4e2d3bf801fe7791b7b373d0c2325cf4
       url: "https://pub.dev"
     source: hosted
     version: "1.3.2"
@@ -665,7 +725,11 @@ packages:
     dependency: "direct main"
     description:
       name: url_launcher
+<<<<<<< HEAD
       sha256: eb1e00ab44303d50dd487aab67ebc575456c146c6af44422f9c13889984c00f3
+=======
+      sha256: "75f2846facd11168d007529d6cd8fcb2b750186bea046af9711f10b907e1587e"
+>>>>>>> bffe2a3b4e2d3bf801fe7791b7b373d0c2325cf4
       url: "https://pub.dev"
     source: hosted
     version: "6.1.11"
@@ -673,7 +737,11 @@ packages:
     dependency: transitive
     description:
       name: url_launcher_android
+<<<<<<< HEAD
       sha256: "1a5848f598acc5b7d8f7c18b8cb834ab667e59a13edc3c93e9d09cf38cc6bc87"
+=======
+      sha256: "22f8db4a72be26e9e3a4aa3f194b1f7afbc76d20ec141f84be1d787db2155cbd"
+>>>>>>> bffe2a3b4e2d3bf801fe7791b7b373d0c2325cf4
       url: "https://pub.dev"
     source: hosted
     version: "6.0.34"
@@ -745,7 +813,11 @@ packages:
     dependency: transitive
     description:
       name: win32
+<<<<<<< HEAD
       sha256: "5a751eddf9db89b3e5f9d50c20ab8612296e4e8db69009788d6c8b060a84191c"
+=======
+      sha256: dd8f9344bc305ae2923e3d11a2a911d9a4e2c7dd6fe0ed10626d63211a69676e
+>>>>>>> bffe2a3b4e2d3bf801fe7791b7b373d0c2325cf4
       url: "https://pub.dev"
     source: hosted
     version: "4.1.4"

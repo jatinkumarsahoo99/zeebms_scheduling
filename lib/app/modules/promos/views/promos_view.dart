@@ -1,44 +1,35 @@
 import 'dart:convert';
-import 'package:bms_scheduling/app/modules/commercial/CommercialShowOnTabModel.dart';
 import 'package:flutter/cupertino.dart';
-import 'package:bms_scheduling/app/data/DropDownValue.dart';
-import 'package:bms_scheduling/app/providers/extensions/string_extensions.dart';
-import 'package:bms_scheduling/widgets/LoadingScreen.dart';
 import 'package:flutter/material.dart';
-
 import 'package:get/get.dart';
-import 'package:intl/intl.dart';
 import 'package:pluto_grid/pluto_grid.dart';
-
 import '../../../../widgets/DateTime/DateWithThreeTextField.dart';
 import '../../../../widgets/FormButton.dart';
 import '../../../../widgets/dropdown.dart';
 import '../../../../widgets/gridFromMap.dart';
-import '../../../../widgets/gridFromMap1.dart';
 import '../../../../widgets/input_fields.dart';
-import '../../../controller/ConnectorControl.dart';
 import '../../../controller/HomeController.dart';
-import '../../../providers/ApiFactory.dart';
-import '../../../providers/DataGridMenu.dart';
 import '../../../providers/SizeDefine.dart';
-import '../../../providers/Utils.dart';
-import '../../../styles/theme.dart';
-import '../controllers/commercial_controller.dart';
+import '../../filler/controllers/filler_controller.dart';
+import '../controllers/promos_controller.dart';
 
-class CommercialView extends GetView<CommercialController> {
-  CommercialView({Key? key}) : super(key: key);
+class PromosView extends GetView<PromosController> {
+  PromosView({Key? key}) : super(key: key);
 
   late PlutoGridStateManager stateManager;
-  var formName = 'Schedule Commercials';
+  var formName = 'Scheduling Promo';
 
   void handleOnRowChecked(PlutoGridOnRowCheckedEvent event) {}
-  CommercialController controllerX = Get.put(CommercialController());
+  //PromosController controllerX = Get.put(PromosController());
+  FillerController controllerX = Get.put(FillerController());
 
   @override
   Widget build(BuildContext context) {
+    final w = MediaQuery.of(context).size.width;
+    final h = MediaQuery.of(context).size.height;
 
-    return GetBuilder<CommercialController>(
-        init: CommercialController(),
+    return GetBuilder<PromosController>(
+        init: PromosController(),
         id: "initData",
         builder: (controller) {
           FocusNode _channelsFocus = FocusNode();
@@ -501,172 +492,415 @@ class CommercialView extends GetView<CommercialController> {
           return Scaffold(
             body: FocusTraversalGroup(
               policy: OrderedTraversalPolicy(),
-              child: Padding(
-                padding: const EdgeInsets.symmetric(vertical: 8),
-                child: SizedBox(
-                  height: double.maxFinite,
-                  width: double.maxFinite,
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    mainAxisSize: MainAxisSize.max,
-                    children: [
-                      GetBuilder<CommercialController>(
-                        id: "initialData",
-                        builder: (control) {
-                          return Padding(
-                            padding: const EdgeInsets.only(left: 18.0, top: 10),
-                            child: Row(
-                              children: [
-                                Obx(
-                                  () => DropDownField.formDropDown1WidthMap(
-                                    controllerX.locations.value,
-                                    (value) {
-                                      controller.selectedLocation = value;
-                                      controllerX.getChannel(value.key);
-                                    },
-                                    "Location",
-                                    0.12,
-                                    isEnable: controllerX.isEnable.value,
-                                    selected: controllerX.selectedLocation,
-                                    autoFocus: true,
-                                    dialogWidth: 330,
-                                    dialogHeight: Get.height * .7,
+              child: SizedBox(
+                height: double.maxFinite,
+                width: double.maxFinite,
+                child: Column(
+                  mainAxisAlignment: MainAxisAlignment.start,
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Expanded(
+                      child: Row(
+                        children: [
+                          /// Two Table
+                          Expanded(
+                            flex: 2,
+                            child: Padding(
+                              padding: const EdgeInsets.fromLTRB(15, 10, 15, 0),
+                              child: Column(
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: [
+                                  Padding(
+                                    padding:
+                                        const EdgeInsets.fromLTRB(0, 5, 0, 5),
+                                    child: GetBuilder<FillerController>(
+                                      id: "initialData",
+                                      builder: (control) {
+                                        return Row(
+                                          children: [
+                                            Obx(
+                                              () => DropDownField
+                                                  .formDropDown1WidthMap(
+                                                      controller.locations
+                                                          .value, (value) {
+                                                // controller.selectedLocation = value;
+                                                // controller.getChannel(value.key);
+                                              }, "Location", 0.15),
+                                            ),
+                                            const SizedBox(width: 15),
+                                            Obx(
+                                              () => DropDownField
+                                                  .formDropDown1WidthMap(
+                                                controller.channels.value,
+                                                (value) {
+                                                  //controller.selectedChannel = value;
+                                                },
+                                                "Channel",
+                                                0.15,
+                                                dialogHeight: Get.height * .7,
+                                              ),
+                                            ),
+                                            const SizedBox(width: 15),
+                                            Obx(
+                                                  () => DateWithThreeTextField(
+                                                title: "From Date",
+                                                splitType: "-",
+                                                widthRation: controllerX.widthSize,
+                                                isEnable: controller.isEnable.value,
+                                                onFocusChange: (data) {
+                                                  print('Selected Date $data');
+
+                                                },
+                                                mainTextController: controllerX.date_,
+                                              ),
+                                            ),
+                                            Padding(
+                                              padding: const EdgeInsets.only(
+                                                  left: 10, top: 17.0),
+                                              child: FormButton(
+                                                btnText: "Show Details",
+                                                callback: () {},
+                                              ),
+                                            ),
+                                            const SizedBox(width: 10),
+                                            Padding(
+                                              padding: const EdgeInsets.only(
+                                                  top: 17.0),
+                                              child: FormButton(
+                                                btnText: "Import",
+                                                callback: () {},
+                                              ),
+                                            ),
+                                            Padding(
+                                              padding: const EdgeInsets.only(
+                                                  left: 10, top: 17.0),
+                                              child: FormButton(
+                                                btnText: "Delete",
+                                                callback: () {},
+                                              ),
+                                            ),
+                                          ],
+                                        );
+                                      },
+                                    ),
                                   ),
-                                ),
-                                const SizedBox(width: 15),
-                                Obx(
-                                  () => DropDownField.formDropDown1WidthMap(
-                                    controller.channels.value,
-                                    (value) {
-                                      controller.selectedChannel = value;
-                                    },
-                                    "Channel",
-                                    0.15,
-                                    dialogHeight: Get.height * .7,
+                                  // Padding(
+                                  //   padding:
+                                  //       const EdgeInsets.fromLTRB(0, 5, 0, 5),
+                                  //   child: GetBuilder<PromosController>(
+                                  //     id: "initialData",
+                                  //     builder: (control) {
+                                  //       return Expanded(
+                                  //         child: Row(
+                                  //           children: [
+                                  //             Obx(
+                                  //               () => DropDownField
+                                  //                   .formDropDown1WidthMap(
+                                  //                 controllerX.locations.value,
+                                  //                 (value) {
+                                  //                   controllerX.selectLocation =
+                                  //                       value;
+                                  //                   // controllerX.selectedLocationId.text = value.key!;
+                                  //                   // controllerX.selectedLocationName.text = value.value!;
+                                  //                   // controller.getChannelsBasedOnLocation(value.key!);
+                                  //                 },
+                                  //                 "Location",
+                                  //                 0.14,
+                                  //                 isEnable: controllerX
+                                  //                     .isEnable.value,
+                                  //                 selected: controllerX
+                                  //                     .selectLocation,
+                                  //                 autoFocus: true,
+                                  //                 dialogWidth: 330,
+                                  //                 dialogHeight: Get.height * .7,
+                                  //               ),
+                                  //             ),
+                                  //             const SizedBox(width: 10),
+                                  //             Obx(() {
+                                  //               return DropDownField
+                                  //                   .formDropDown1Width(
+                                  //                 Get.context!,
+                                  //                 controllerX.channelList ?? [],
+                                  //                 (value) {
+                                  //                   controllerX
+                                  //                           .selectedChannel =
+                                  //                       value;
+                                  //                 },
+                                  //                 "Channel",
+                                  //                 controllerX.widthSize + 0.02,
+                                  //                 paddingLeft: 5,
+                                  //                 searchReq: true,
+                                  //                 isEnable: control
+                                  //                     .channelEnable.value,
+                                  //                 selected: controllerX
+                                  //                     .selectedChannelEnv,
+                                  //                 dialogHeight: Get.height * .7,
+                                  //               );
+                                  //             }),
+                                  //             const SizedBox(width: 10),
+                                  //             DateWithThreeTextField(
+                                  //               title: "From Date",
+                                  //               mainTextController:
+                                  //                   controllerX.date_,
+                                  //               widthRation: 0.10,
+                                  //             ),
+                                  //             Padding(
+                                  //               padding: const EdgeInsets.only(
+                                  //                   left: 10, top: 17.0),
+                                  //               child: FormButton(
+                                  //                 btnText: "Show Details",
+                                  //                 callback: () {},
+                                  //               ),
+                                  //             ),
+                                  //             const SizedBox(width: 10),
+                                  //             Padding(
+                                  //               padding: const EdgeInsets.only(
+                                  //                   top: 17.0),
+                                  //               child: FormButton(
+                                  //                 btnText: "Import",
+                                  //                 callback: () {},
+                                  //               ),
+                                  //             ),
+                                  //             Padding(
+                                  //               padding: const EdgeInsets.only(
+                                  //                   left: 10, top: 17.0),
+                                  //               child: FormButton(
+                                  //                 btnText: "Delete",
+                                  //                 callback: () {},
+                                  //               ),
+                                  //             ),
+                                  //           ],
+                                  //         ),
+                                  //       );
+                                  //     },
+                                  //   ),
+                                  // ),
+                                  Expanded(
+                                    //flex: 1,
+                                    child: GetBuilder<FillerController>(
+                                        init: FillerController(),
+                                        id: "eventTable",
+                                        builder: (controller) {
+                                          if (controller
+                                                  .conflictReport.isEmpty ||
+                                              controller.beams.isEmpty) {
+                                            return Column(
+                                              crossAxisAlignment:
+                                                  CrossAxisAlignment.start,
+                                              children: [
+                                                fillerTable(context),
+                                              ],
+                                            );
+                                          } else {
+                                            return Container();
+                                          }
+                                        }),
                                   ),
-                                ),
-                                const SizedBox(width: 15),
-                                DateWithThreeTextField(
-                                  title: "From Date",
-                                  mainTextController: controllerX.date_,
-                                  widthRation: controllerX.widthSize,
-                                ),
-                                const SizedBox(
-                                  width: 20,
-                                ),
-                                Padding(
-                                  padding: const EdgeInsets.only(top: 17.0),
-                                  child: FormButton(
-                                    btnText: "show details",
-                                    callback: () {
-                                      controllerX.selectedIndex.value = 0;
-                                      controllerX
-                                          .fetchProgramSchedulingDetails();
-                                    },
+                                  Expanded(
+                                    //flex: 1,
+                                    child: GetBuilder<FillerController>(
+                                        init: FillerController(),
+                                        id: "eventCaptionTable",
+                                        builder: (controller) {
+                                          if (controller
+                                                  .conflictReport.isEmpty ||
+                                              controller.beams.isEmpty) {
+                                            return Column(
+                                              crossAxisAlignment:
+                                                  CrossAxisAlignment.start,
+                                              children: [
+                                                fillerSegmentTable(context),
+                                              ],
+                                            );
+                                          } else {
+                                            return Container();
+                                          }
+                                        }),
                                   ),
-                                ),
-                                const SizedBox(
-                                  width: 20,
-                                ),
-                                Padding(
-                                  padding: const EdgeInsets.only(top: 17.0),
-                                  child: FormButton(
-                                    btnText: "verify",
-                                    callback: () {},
+                                  const Padding(
+                                      padding: EdgeInsets.fromLTRB(0, 10, 0, 0),
+                                      child: Text("Time Band : 00:00:00")),
+                                  Padding(
+                                    padding:
+                                        const EdgeInsets.fromLTRB(0, 0, 0, 10),
+                                    child: Row(
+                                      crossAxisAlignment:
+                                          CrossAxisAlignment.end,
+                                      children: [
+                                        const Text("Program : PrgName"),
+                                        const Spacer(),
+                                        Padding(
+                                          padding:
+                                              const EdgeInsets.only(top: 5.0),
+                                          child: InputFields.formField1Width(
+                                              widthRatio: 0.09,
+                                              paddingLeft: 5,
+                                              hintTxt: "Available",
+                                              controller: controllerX.segNo_,
+                                              maxLen: 10),
+                                        ),
+                                        Padding(
+                                          padding:
+                                              const EdgeInsets.only(top: 5.0),
+                                          child: InputFields.formField1Width(
+                                              widthRatio: 0.09,
+                                              paddingLeft: 5,
+                                              hintTxt: "Scheduled",
+                                              controller: controllerX.segNo_,
+                                              maxLen: 10),
+                                        ),
+                                        Padding(
+                                          padding:
+                                              const EdgeInsets.only(top: 5.0),
+                                          child: InputFields.formField1Width(
+                                              widthRatio: 0.09,
+                                              paddingLeft: 5,
+                                              hintTxt: "Count",
+                                              controller: controllerX.segNo_,
+                                              maxLen: 10),
+                                        ),
+                                      ],
+                                    ),
                                   ),
-                                ),
-                                Padding(
-                                  padding: const EdgeInsets.only(
-                                      top: 16.0, left: 15),
-                                  child: Row(
+                                ],
+                              ),
+                            ),
+                          ),
+
+                          /// Program Table
+                          Expanded(
+                            child: Padding(
+                              padding: const EdgeInsets.fromLTRB(0, 10, 15, 0),
+                              child: Column(
+                                children: [
+                                  Row(
                                     children: [
-                                      Radio(
-                                        value: 0,
-                                        groupValue: controllerX.selectedGroup,
-                                        onChanged: (int? value) {},
+                                      Expanded(
+                                        flex: 1,
+                                        child: Padding(
+                                          padding:
+                                              const EdgeInsets.only(top: 5.0),
+                                          child: InputFields.formField1Width(
+                                              widthRatio: .15,
+                                              paddingLeft: 5,
+                                              hintTxt: "Promo Caption",
+                                              controller: controllerX.tapeId_,
+                                              maxLen: 10),
+                                        ),
                                       ),
-                                      const Text('Insert After'),
-                                      const SizedBox(
-                                        width: 10,
+                                      Expanded(
+                                        flex: 1,
+                                        child: Padding(
+                                          padding:
+                                              const EdgeInsets.only(top: 5.0),
+                                          child: InputFields.formField1Width(
+                                              widthRatio:
+                                                  (Get.width * 0.2) / 2 + 7,
+                                              paddingLeft: 5,
+                                              isEnable: false,
+                                              hintTxt: "",
+                                              controller: controllerX.segNo_,
+                                              maxLen: 10),
+                                        ),
                                       ),
-                                      Radio(
-                                        value: 1,
-                                        groupValue: controllerX.selectedGroup,
-                                        onChanged: (int? value) {},
-                                      ),
-                                      const Text('Auto Shuffle'),
                                     ],
                                   ),
-                                ),
-                                const SizedBox(
-                                  width: 20,
-                                ),
-                              ],
-                            ),
-                          );
-                        },
-                      ),
-                      Expanded(
-                        child: Row(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            /// input forms
-                            Expanded(
-                              child: Padding(
-                                padding:
-                                    const EdgeInsets.fromLTRB(15, 15, 7, 0),
-                                child: programTable(context),
-                              ),
-                            ),
-
-                            /// output forms
-                            Expanded(
-                              flex: 2,
-                              child: Padding(
-                                padding:
-                                    const EdgeInsets.fromLTRB(15, 15, 7, 0),
-                                child: GetBuilder<CommercialController>(
-                                    init: CommercialController(),
-                                    id: "reports",
-                                    builder: (controller) {
-                                      return Padding(
-                                        padding: const EdgeInsets.all(2.0),
-                                        child: tabView(context),
-                                      );
-                                    }),
-                              ),
-                            ),
-                          ],
-                        ),
-                      ),
-                      Padding(
-                        padding: EdgeInsets.fromLTRB(5, 10, 5, 10),
-                        child: GetBuilder<HomeController>(
-                            id: "buttons",
-                            init: Get.find<HomeController>(),
-                            builder: (btcontroller) {
-                              if (btcontroller.buttons != null) {
-                                return ButtonBar(
-                                  alignment: MainAxisAlignment.start,
-                                  mainAxisSize: MainAxisSize.min,
-                                  children: [
-                                    for (var btn in btcontroller.buttons!)
-                                      //if (Utils.btnAccessHandler(btn['name'], controller.formPermissions!) != null)
-                                      FormButtonWrapper(
-                                        btnText: btn["name"],
-                                        callback: () => controller.formHandler(
-                                          btn['name'],
+                                  Row(
+                                    children: [
+                                      Expanded(
+                                        child: Padding(
+                                          padding:
+                                              const EdgeInsets.only(top: 5.0),
+                                          child: InputFields.formField1Width(
+                                              widthRatio:
+                                                  (Get.width * 0.2) / 2 + 7,
+                                              paddingLeft: 5,
+                                              hintTxt: "Promo Id",
+                                              controller: controllerX.tapeId_,
+                                              maxLen: 10),
                                         ),
-
-                                      )
-                                  ],
-                                );
-                              }
-                              return Container();
-                            }),
+                                      ),
+                                    ],
+                                  ),
+                                  Row(
+                                    mainAxisAlignment:
+                                        MainAxisAlignment.spaceBetween,
+                                    children: [
+                                      Padding(
+                                        padding: const EdgeInsets.only(
+                                            bottom: 8.0, top: 8.0),
+                                        child: Row(children: [
+                                          Radio(
+                                            value: 0,
+                                            groupValue:
+                                                controllerX.selectedAfter,
+                                            onChanged: (int? value) {},
+                                          ),
+                                          const Text('My')
+                                        ]),
+                                      ),
+                                      Padding(
+                                        padding: const EdgeInsets.only(
+                                            left: 10, bottom: 5.0, top: 5.0),
+                                        child: FormButton(
+                                          btnText: "Search",
+                                          callback: () {},
+                                        ),
+                                      ),
+                                      Padding(
+                                        padding: const EdgeInsets.only(
+                                            left: 10, bottom: 5.0, top: 5.0),
+                                        child: FormButton(
+                                          btnText: "Add",
+                                          callback: () {},
+                                        ),
+                                      ),
+                                      Padding(
+                                        padding: const EdgeInsets.only(
+                                            left: 10, bottom: 5.0, top: 5.0),
+                                        child: FormButton(
+                                          btnText: "Auto Add",
+                                          callback: () {},
+                                        ),
+                                      ),
+                                    ],
+                                  ),
+                                  programTable(context)
+                                ],
+                              ),
+                            ),
+                          ),
+                        ],
                       ),
-                    ],
-                  ),
+                    ),
+                    GetBuilder<HomeController>(
+                        id: "buttons",
+                        init: Get.find<HomeController>(),
+                        builder: (btcontroller) {
+                          if (btcontroller.buttons != null) {
+                            return Container(
+                              decoration: const BoxDecoration(
+                                color: Colors.white,
+                              ),
+                              child: ButtonBar(
+                                alignment: MainAxisAlignment.start,
+                                mainAxisSize: MainAxisSize.min,
+                                children: [
+                                  for (var btn in btcontroller.buttons!)
+                                    //if (Utils.btnAccessHandler(btn['name'], controller.formPermissions!) != null)
+                                    FormButtonWrapper(
+                                      btnText: btn["name"],
+                                      callback: () => controller.formHandler(
+                                        btn['name'],
+                                      ),
+                                    )
+                                ],
+                              ),
+                            );
+                          }
+                          return Container();
+                        }),
+                  ],
                 ),
               ),
             ),
@@ -674,144 +908,24 @@ class CommercialView extends GetView<CommercialController> {
         });
   }
 
-  Widget tabView(BuildContext context) {
-    return Obx(() => Column(
-          children: [
-            Padding(
-              padding: const EdgeInsets.fromLTRB(0, 0, 10, 10),
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.start,
-                crossAxisAlignment: CrossAxisAlignment.center,
-                children: [
-                  CupertinoSlidingSegmentedControl(
-                    groupValue: controllerX.selectedIndex.value,
-                    //backgroundColor: Colors.blue.shade200,
-                    children: <int, Widget>{
-                      0: Text(
-                        'Schedulling',
-                        textAlign: TextAlign.center,
-                        style: TextStyle(
-                          fontSize: SizeDefine.fontSizeTab,
-                        ),
-                      ),
-                      1: Text(
-                        'FPC Mismatch',
-                        textAlign: TextAlign.center,
-                        style: TextStyle(
-                          fontSize: SizeDefine.fontSizeTab,
-                        ),
-                      ),
-                      2: Text(
-                        'Marked as Error ',
-                        textAlign: TextAlign.center,
-                        style: TextStyle(
-                          fontSize: SizeDefine.fontSizeTab,
-                        ),
-                      ),
-                    },
-                    onValueChanged: (int? value) {
-                      print("Index1 is>>" + value.toString());
-                      controllerX.selectedIndex.value = value!;
-                      controllerX.fetchSchedulingShowOnTabDetails();
-                    },
-                  ),
-                  const Spacer(),
-                  if (controllerX.selectedIndex.value == 0)
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.end,
-                      crossAxisAlignment: CrossAxisAlignment.center,
-                      children: [
-                        Obx(() => Text(
-                            'Commercial Spots : ${controllerX.commercialSpots.value}')),
-                        const SizedBox(
-                          width: 20,
-                        ),
-                        Obx(() => Text(
-                            'Commercial Duration : ${controllerX.commercialDuration.value}')),
-                      ],
-                    )
-                  else if (controllerX.selectedIndex.value == 1)
-                    Row(
-                      crossAxisAlignment: CrossAxisAlignment.center,
-                      //mainAxisAlignment: MainAxisAlignment.end,
-                      children: [
-                        FormButton(
-                          btnText: "Change FPC",
-                          callback: () {},
-                        ),
-                        const SizedBox(
-                          width: 20,
-                        ),
-                        FormButton(
-                          btnText: "Mis-Match",
-                          callback: () {},
-                        ),
-                        const SizedBox(
-                          width: 20,
-                        ),
-                        FormButton(
-                          btnText: "Mark-as-Error",
-                          callback: () {},
-                        ),
-                      ],
-                    )
-                  else if (controllerX.selectedIndex.value == 2)
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.end,
-                      crossAxisAlignment: CrossAxisAlignment.center,
-                      children: [
-                        FormButton(
-                          btnText: "Mark-as-Error",
-                          callback: () {},
-                        ),
-                      ],
-                    ),
-                ],
-              ),
-            ),
-            Expanded(
-              child: Column(
-                children: [
-                  if (controllerX.selectedIndex.value == 0)
-                    Expanded(child: schedulingView(context))
-                  else if (controllerX.selectedIndex.value == 1)
-                    Expanded(child: fpcMismatchView(context))
-                  else if (controllerX.selectedIndex.value == 2)
-                    Expanded(child: markedAsErrorView(context))
-                ],
-              ),
-            ),
-          ],
-        ));
-  }
-
-  Widget programTable(context) {
-    return GetBuilder<CommercialController>(
-        id: "fillerFPCTable",
+  Widget fillerTable(context) {
+    return GetBuilder<FillerController>(
+        id: "fillerTable",
         // init: CreateBreakPatternController(),
         builder: (controller) {
-          if (controllerX.commercialProgramList != null &&
-              (controllerX.commercialProgramList?.isNotEmpty)!) {
+          if (controllerX.fillerDailyFpcList != null &&
+              (controllerX.fillerDailyFpcList?.isNotEmpty)!) {
             // final key = GlobalKey();
             return DataGridFromMap(
-              mapData: (controllerX.commercialProgramList
+              mapData: (controllerX.fillerDailyFpcList
                   ?.map((e) => e.toJson())
                   .toList())!,
-              showonly: [
-                "fpcTime",
-                "programname",
-              ],
-              //widthRatio: (Get.width * 0.1),
-              mode: PlutoGridMode.select,
+              widthRatio: (Get.width * 0.2) / 2 + 7,
+              // mode: PlutoGridMode.select,
               onSelected: (plutoGrid) {
-                print(jsonEncode(controllerX.selectedProgram?.toJson()));
-                controllerX.selectedProgram =
-                    controllerX.commercialProgramList![plutoGrid.rowIdx!];
-
-                controllerX.fpcTimeSelected = controllerX
-                    .commercialProgramList![plutoGrid.rowIdx!].fpcTime;
-
-                controllerX.fetchSchedulingShowOnTabDetails();
+                controllerX.selectedDailyFPC =
+                    controllerX.fillerDailyFpcList![plutoGrid.rowIdx!];
+                print(jsonEncode(controllerX.selectedDailyFPC?.toJson()));
               },
             );
           } else {
@@ -826,332 +940,97 @@ class CommercialView extends GetView<CommercialController> {
                   ),
                 ),
                 child: Container(
-                    //height: Get.height - (4 * kToolbarHeight),
-                    ),
+                  height: Get.height - (4 * kToolbarHeight),
+                ),
               ),
             );
           }
         });
   }
 
-  /// tab 0 ( A ) selected date is 22 March 2023
-  Widget schedulingView(BuildContext context) {
-    return Column(
-      children: [
-        GetBuilder<CommercialController>(
-            id: "fillerShowOnTabTable",
-            // init: CreateBreakPatternController(),
-            builder: (controller) {
-              if (controllerX.commercialShufflingList != null &&
-                  (controllerX.commercialShufflingList?.isNotEmpty)!) {
-                // final key = GlobalKey();
-                return Expanded(
-                  // child: DataGridFromMap(
-                  //   colorCallback: (row) {
-                  //     return row.row.cells.containsValue(
-                  //             controller.stateManager?.currentCell)
-                  //         ? Colors.blueAccent
-                  //         : controller.redBreaks.contains(row.rowIdx -
-                  //                 1)
-                  //             ? Colors.white
-                  //             : Colors.orange.shade700;
-                  //   },
-                  //   mapData: (controllerX.commercialShowDetailsList
-                  //       ?.map((e) => e.toJson())
-                  //       .toList())!,
-                  //   showonly: [
-                  //     "fpcTime",
-                  //     "breakNumber",
-                  //     "eventType",
-                  //     "exportTapeCode",
-                  //     "segmentCaption",
-                  //     "client",
-                  //     "brand",
-                  //     "duration",
-                  //     "product",
-                  //     "bookingNumber",
-                  //     "bookingDetailcode",
-                  //     "rostimeBand",
-                  //     "randid",
-                  //     "programName",
-                  //     "rownumber",
-                  //     "bStatus",
-                  //     "pDailyFPC",
-                  //     "pProgramMaster"
-                  //   ],
-                  //   onload: (loadEvent) {
-                  //     loadEvent.stateManager.gridFocusNode.addListener(() {
-                  //       if (loadEvent.stateManager.gridFocusNode.hasFocus) {
-                  //         loadEvent.stateManager
-                  //             .setGridMode(PlutoGridMode.select);
-                  //       } else {
-                  //         loadEvent.stateManager
-                  //             .setGridMode(PlutoGridMode.normal);
-                  //       }
-                  //     });
-                  //   },
-                  //   mode: PlutoGridMode.select,
-                  //   onSelected: (plutoGrid) {
-                  //     controllerX.selectedShowOnTab =
-                  //         controllerX.commercialShowDetailsList![plutoGrid.rowIdx!];
-                  //     print(">>>>>>Commercial Data>>>>>>" +
-                  //         jsonEncode(controllerX.selectedShowOnTab?.toJson()));
-                  //   },
-                  // ),
-                  ///
-                  child: DataGridFromMap1(
-                      onFocusChange: (value) {
-                        controllerX.gridStateManager!
-                            .setGridMode(PlutoGridMode.selectWithOneTap);
-                        controllerX.selectedPlutoGridMode =
-                            PlutoGridMode.selectWithOneTap;
-                      },
-                      onload: (loadevent) {
-                        controllerX.gridStateManager =
-                            loadevent.stateManager;
-                        if (controller.selectedDDIndex != null) {
-                          loadevent.stateManager.moveScrollByRow(
-                              PlutoMoveDirection.down,
-                              controller.selectedDDIndex);
-                          loadevent.stateManager.setCurrentCell(
-                              loadevent
-                                  .stateManager
-                                  .rows[controller.selectedDDIndex!]
-                                  .cells
-                                  .entries
-                                  .first
-                                  .value,
-                              controller.selectedDDIndex);
-                        }
-                      },
-                      showSrNo: true,
-                      showonly: [
-                        "fpcTime",
-                        "breakNumber",
-                        "eventType",
-                        "exportTapeCode",
-                        "segmentCaption",
-                        "client",
-                        "brand",
-                        "duration",
-                        "product",
-                        "bookingNumber",
-                        "bookingDetailcode",
-                        "rostimeBand",
-                        "randid",
-                        "programName",
-                        "rownumber",
-                        "bStatus",
-                        "pDailyFPC",
-                        "pProgramMaster"
-                      ],
-                      colorCallback: (PlutoRowColorContext plutoContext) {
-                        return Color(int.parse('0x${controllerX
-                            .commercialShufflingList![plutoContext.rowIdx]
-                            .backColor}'
-                        ));
-                      },
-                        // colorCallback: (row) {
-                        //   return row.row.cells.containsValue(
-                        //           controller.stateManager?.currentCell)
-                        //       ? Colors.blueAccent
-                        //       : controller.redBreaks.contains(row.rowIdx -
-                        //               1)
-                        //           ? Colors.white
-                        //           : Colors.orange.shade700;
-                        // },
-                      onSelected: (PlutoGridOnSelectedEvent event) {
-                        controllerX.selectedShowOnTab =
-                        controllerX.commercialShufflingList![event.rowIdx!];
-                        print(">>>>>>Commercial Data>>>>>>" +
-                            jsonEncode(controllerX.selectedShowOnTab?.toJson()));
-                      },
-                      onRowsMoved: (PlutoGridOnRowsMovedEvent onRowMoved) {
-                        print("Index is>>" + onRowMoved.idx.toString());
-                        Map map = onRowMoved.rows[0].cells;
-                        print("On Print moved" +
-                            jsonEncode(
-                                onRowMoved.rows[0].cells.toString()));
-                        controllerX.gridStateManager?.notifyListeners();
-                      },
-                      mode: controllerX.selectedPlutoGridMode,
-                      mapData: controllerX.commercialShufflingList!
-                          .map((e) => e.toJson())
-                          .toList())
-                );
-              } else {
-                return Expanded(
-                  child: Card(
-                    clipBehavior: Clip.hardEdge,
-                    shape: RoundedRectangleBorder(
-                      borderRadius:
-                          BorderRadius.circular(0), // if you need this
-                      side: BorderSide(
-                        color: Colors.grey.shade300,
-                        width: 1,
-                      ),
-                    ),
-                    child: Container(
-                      height: Get.height - (4 * kToolbarHeight),
-                    ),
+  Widget fillerSegmentTable(context) {
+    return GetBuilder<FillerController>(
+        id: "fillerSegmentTable",
+        // init: CreateBreakPatternController(),
+        builder: (controller) {
+          if (controllerX.fillerSegmentList != null &&
+              (controllerX.fillerSegmentList?.isNotEmpty)!) {
+            // final key = GlobalKey();
+            return Expanded(
+              // height: 400,
+              child: DataGridFromMap(
+                mapData: (controllerX.fillerSegmentList
+                    ?.map((e) => e.toJson())
+                    .toList())!,
+                widthRatio: (Get.width * 0.2) / 2 + 7,
+                // mode: PlutoGridMode.select,
+                onSelected: (plutoGrid) {
+                  controllerX.selectedSegment =
+                      controllerX.fillerSegmentList![plutoGrid.rowIdx!];
+                  print(jsonEncode(controllerX.selectedSegment?.toJson()));
+                },
+              ),
+            );
+          } else {
+            return Expanded(
+              child: Card(
+                clipBehavior: Clip.hardEdge,
+                shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(0), // if you need this
+                  side: BorderSide(
+                    color: Colors.grey.shade300,
+                    width: 1,
                   ),
-                );
-              }
-            }),
-      ],
-    );
+                ),
+                child: Container(
+                  height: Get.height - (4 * kToolbarHeight),
+                ),
+              ),
+            );
+          }
+        });
   }
 
-  /// tab 1 ( B )
-  Widget fpcMismatchView(BuildContext context) {
-    return Column(
-      children: [
-        GetBuilder<CommercialController>(
-            id: "fillerShowOnTabTable",
-            // init: CreateBreakPatternController(),
-            builder: (controller) {
-              if (controllerX.commercialShowFPCList != null &&
-                  (controllerX.commercialShowFPCList?.isNotEmpty)!) {
-                // final key = GlobalKey();
-                return Expanded(
-                  // height: 400,
-                  child: DataGridFromMap(
-                    mapData: (controllerX.commercialShowFPCList
-                        ?.map((e) => e.toJson())
-                        .toList())!,
-                    showonly: [
-                      "fpcTime",
-                      "breakNumber",
-                      "eventType",
-                      "exportTapeCode",
-                      "segmentCaption",
-                      "client",
-                      "brand",
-                      "duration",
-                      "product",
-                      "bookingNumber",
-                      "bookingDetailcode",
-                      "rostimeBand",
-                      "randid",
-                      "programName",
-                      "rownumber",
-                      "bStatus",
-                      "pDailyFPC",
-                      "pProgramMaster"
-                    ],
-                    //widthRatio: (Get.width * 0.2) / 2 + 7,
-                    //mode: PlutoGridMode.select,
-                    onSelected: (plutoGrid) {
-                      controllerX.selectedShowOnTab =
-                          controllerX.commercialShowFPCList![plutoGrid.rowIdx!];
-                      print(">>>>>>FPC Data>>>>>>" +
-                          jsonEncode(controllerX.selectedShowOnTab?.toJson()));
-                    },
+  Widget programTable(context) {
+    return GetBuilder<PromosController>(
+        id: "programTable",
+        // init: CreateBreakPatternController(),
+        builder: (controller) {
+          if (controllerX.fillerDailyFpcList != null &&
+              (controllerX.fillerDailyFpcList?.isNotEmpty)!) {
+            // final key = GlobalKey();
+            return Expanded(
+              // height: 400,
+              child: DataGridFromMap(
+                mapData: (controllerX.fillerDailyFpcList
+                    ?.map((e) => e.toJson())
+                    .toList())!,
+                widthRatio: (Get.width * 0.2) / 2 + 7,
+                // mode: PlutoGridMode.select,
+                onSelected: (plutoGrid) {
+                  controllerX.selectedDailyFPC =
+                      controllerX.fillerDailyFpcList![plutoGrid.rowIdx!];
+                  print(jsonEncode(controllerX.selectedDailyFPC?.toJson()));
+                },
+              ),
+            );
+          } else {
+            return Expanded(
+              child: Card(
+                clipBehavior: Clip.hardEdge,
+                shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(0), // if you need this
+                  side: BorderSide(
+                    color: Colors.grey.shade300,
+                    width: 1,
                   ),
-                );
-              } else {
-                return Expanded(
-                  child: Card(
-                    clipBehavior: Clip.hardEdge,
-                    shape: RoundedRectangleBorder(
-                      borderRadius:
-                          BorderRadius.circular(0), // if you need this
-                      side: BorderSide(
-                        color: Colors.grey.shade300,
-                        width: 1,
-                      ),
-                    ),
-                    child: Container(
-                      height: Get.height - (4 * kToolbarHeight),
-                    ),
-                  ),
-                );
-              }
-            }),
-        // SizedBox(
-        //   height: (Get.height * .65) - kToolbarHeight / 2,
-        //   width: MediaQuery.of(context).size.width * 0.65,
-        //   child:
-        // ),
-      ],
-    );
+                ),
+                child: Container(
+                  height: Get.height - (4 * kToolbarHeight),
+                ),
+              ),
+            );
+          }
+        });
   }
-
-  /// tab 2 ( C )
-  Widget markedAsErrorView(BuildContext context) {
-    return Column(
-      children: [
-        GetBuilder<CommercialController>(
-            id: "fillerShowOnTabTable",
-            // init: CreateBreakPatternController(),
-            builder: (controller) {
-              if (controllerX.commercialShowMarkedList != null &&
-                  (controllerX.commercialShowMarkedList?.isNotEmpty)!) {
-                // final key = GlobalKey();
-                return Expanded(
-                  // height: 400,
-                  child: DataGridFromMap(
-                    mapData: (controllerX.commercialShowMarkedList
-                        ?.map((e) => e.toJson())
-                        .toList())!,
-                    showonly: [
-                      "fpcTime",
-                      "breakNumber",
-                      "eventType",
-                      "exportTapeCode",
-                      "segmentCaption",
-                      "client",
-                      "brand",
-                      "duration",
-                      "product",
-                      "bookingNumber",
-                      "bookingDetailcode",
-                      "rostimeBand",
-                      "randid",
-                      "programName",
-                      "rownumber",
-                      "bStatus",
-                      "pDailyFPC",
-                      "pProgramMaster"
-                    ],
-                    //widthRatio: (Get.width * 0.2) / 2 + 7,
-                    //mode: PlutoGridMode.select,
-                    onSelected: (plutoGrid) {
-                      controllerX.selectedShowOnTab = controllerX
-                          .commercialShowMarkedList![plutoGrid.rowIdx!];
-                      print(">>>>>>Error Data>>>>>>" +
-                          jsonEncode(controllerX.selectedShowOnTab?.toJson()));
-                    },
-                  ),
-                );
-              } else {
-                return Expanded(
-                  child: Card(
-                    clipBehavior: Clip.hardEdge,
-                    shape: RoundedRectangleBorder(
-                      borderRadius:
-                          BorderRadius.circular(0), // if you need this
-                      side: BorderSide(
-                        color: Colors.grey.shade300,
-                        width: 1,
-                      ),
-                    ),
-                    child: Container(
-                      height: Get.height - (4 * kToolbarHeight),
-                    ),
-                  ),
-                );
-              }
-            }),
-        // SizedBox(
-        //   height: (Get.height * .65) - kToolbarHeight / 2,
-        //   width: MediaQuery.of(context).size.width * 0.65,
-        //   child:
-        // ),
-      ],
-    );
-  }
-
-
-
 }
