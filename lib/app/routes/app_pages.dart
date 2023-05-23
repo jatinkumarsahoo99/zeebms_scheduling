@@ -33,7 +33,7 @@ part 'app_routes.dart';
 class AppPages {
   AppPages._();
 
-  static const INITIAL = Routes.AUDIT_STATUS +
+  static const INITIAL = Routes.RO_RESCHEDULE +
       "?personalNo=AqoF3cvt1PCPIKM8FfPwag%3D%3D&loginCode=gsS2oEkuYKzI9aXanDqobQ%3D%3D&formName=a4Lfy%2FGb5Roxo9vLiBCqSQ%3D%3D";
 
   static final routes = [
@@ -82,7 +82,7 @@ class AppPages {
     GetPage(
       name: _Paths.RO_CANCELLATION,
       page: () => AuthGuard1(childName: _Paths.RO_CANCELLATION),
-      // binding: RoCancellationBinding(),
+      binding: RoCancellationBinding(),
     ),
     GetPage(
       name: _Paths.RO_RESCHEDULE,
