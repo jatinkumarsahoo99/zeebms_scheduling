@@ -1,5 +1,7 @@
 import 'package:get/get.dart';
 
+import '../modules/FillerMaster/bindings/filler_master_binding.dart';
+import '../modules/FillerMaster/views/filler_master_view.dart';
 import '../modules/SecondaryEventMaster/bindings/secondary_event_master_binding.dart';
 import '../modules/SecondaryEventMaster/views/secondary_event_master_view.dart';
 import '../modules/home/bindings/home_binding.dart';
@@ -11,7 +13,7 @@ part 'app_routes.dart';
 class AppPages {
   AppPages._();
 
-  static const INITIAL = Routes.SECONDARY_EVENT_MASTER +
+  static const INITIAL = Routes.FILLER_MASTER +
       "?personalNo=AqoF3cvt1PCPIKM8FfPwag%3D%3D&loginCode=gsS2oEkuYKzI9aXanDqobQ%3D%3D&formName=a4Lfy%2FGb5Roxo9vLiBCqSQ%3D%3D";
 
   static final routes = [
@@ -124,6 +126,11 @@ class AppPages {
       name: _Paths.SECONDARY_EVENT_MASTER,
       page: () => const SecondaryEventMasterView(),
       binding: SecondaryEventMasterBinding(),
+    ),
+    GetPage(
+      name: _Paths.FILLER_MASTER,
+      page: () => const FillerMasterView(),
+      binding: FillerMasterBinding(),
     ),
   ];
 }

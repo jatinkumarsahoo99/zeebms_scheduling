@@ -26,6 +26,7 @@ abstract class Routes {
   static const SLIDE_MASTER = _Paths.SLIDE_MASTER;
   static const STILL_MASTER = _Paths.STILL_MASTER;
   static const SECONDARY_EVENT_MASTER = _Paths.SECONDARY_EVENT_MASTER;
+  static const FILLER_MASTER = _Paths.FILLER_MASTER;
 }
 
 abstract class RoutesList {
@@ -70,4 +71,5 @@ abstract class _Paths {
   static const SLIDE_MASTER = '/frmSlideMaster';
   static const STILL_MASTER = '/frmStillMaster';
   static const SECONDARY_EVENT_MASTER = '/frmSecondaryEventmaster';
+  static const FILLER_MASTER = '/frmFillerMaster';
 }
