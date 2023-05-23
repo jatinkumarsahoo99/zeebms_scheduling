@@ -3,7 +3,6 @@ import 'package:flutter/cupertino.dart';
 import 'package:get/get.dart';
 import 'package:pluto_grid/pluto_grid.dart';
 import '../../../controller/ConnectorControl.dart';
-import '../../../controller/MainController.dart';
 import '../../../data/DropDownValue.dart';
 import '../../../providers/ApiFactory.dart';
 import '../TransmissionLogModel.dart';
@@ -75,11 +74,7 @@ class TransmissionLogController extends GetxController {
           selectChannel?.key ?? "",
         ),
         fun: (Map map) {
-          channels.clear();
-          map["locationSelect"].forEach((e) {
-            channels.add(
-                DropDownValue.fromJsonDynamic(e, "channelCode", "channelName"));
-          });
+
         });
   }
 
