@@ -1,4 +1,5 @@
 import 'package:bms_scheduling/app/controller/MainController.dart';
+import 'package:bms_scheduling/app/modules/FillerMaster/views/filler_master_view.dart';
 import 'package:bms_scheduling/app/modules/FinalAuditReportAfterTelecast/views/final_audit_report_after_telecast_view.dart';
 import 'package:bms_scheduling/app/modules/FinalAuditReportBeforeLog/views/final_audit_report_before_log_view.dart';
 import 'package:bms_scheduling/app/modules/FpcMismatch/views/FpcMismatchView.dart';
@@ -17,6 +18,7 @@ import '../../widgets/NoDataFoundPage.dart';
 import '../modules/AsrunImportAdRevenue/views/AsrunImportAdRevenueView.dart';
 import '../modules/AuditStatus/views/audit_status_view.dart';
 import '../modules/LogAdditions/views/LogAdditionsView.dart';
+import '../modules/PromoMaster/views/promo_master_view.dart';
 import '../modules/SalesAuditNew/views/sales_audit_new_view.dart';
 import '../modules/SlideMaster/views/slide_master_view.dart';
 import '../modules/SpotPriority/views/SpotPriorityView.dart';
@@ -113,6 +115,12 @@ class AuthGuard1 extends StatelessWidget {
               break;
             case Routes.STILL_MASTER:
               currentWidget = StillMasterView();
+              break;
+            case Routes.PROMO_MASTER:
+              currentWidget = PromoMasterView();
+              break;
+            case Routes.FILLER_MASTER:
+              currentWidget = FillerMasterView();
               break;
             default:
               currentWidget = const NoDataFoundPage();

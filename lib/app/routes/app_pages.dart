@@ -160,7 +160,16 @@ class AppPages {
     ),
     GetPage(
       name: _Paths.PROMO_MASTER,
-      page: () => const PromoMasterView(),
+      page: () => AuthGuard1(
+        childName: _Paths.PROMO_MASTER,
+      ),
+      binding: PromoMasterBinding(),
+    ),
+    GetPage(
+      name: _Paths.FILLER_MASTER,
+      page: () => AuthGuard1(
+        childName: _Paths.FILLER_MASTER,
+      ),
       binding: PromoMasterBinding(),
     ),
   ];
