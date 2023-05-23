@@ -227,9 +227,7 @@ class LogAdditionsController extends GetxController {
                       ?.map((e) => e.toJson1())
                       .toList())!,
                   "${selectLocation?.value ?? ""} ${selectChannel?.value ?? ""} ${DateFormat('yyyy-MM-dd').format(DateFormat("dd-MM-yyyy").parse(selectedDate.text))} ${selectAdditions?.value ?? ""}.xlsx",
-                  callBack: () {
-
-                  });
+                  callBack: () {});
             });
           } else {
             Snack.callError(map.toString());
@@ -243,10 +241,14 @@ class LogAdditionsController extends GetxController {
     } else if (selectChannel == null) {
       Snack.callError("Please select channel");
     } else {
-      if (selectAdditions?.key != "0") {
-        getShowPreviousAddition();
-      } else {
+      if (selectAdditions == null) {
         getShowDetails();
+      } else {
+        if (selectAdditions?.key != "0") {
+          getShowPreviousAddition();
+        } else {
+          getShowDetails();
+        }
       }
     }
   }
