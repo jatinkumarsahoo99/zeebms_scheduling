@@ -29,6 +29,9 @@ import '../modules/FinalAuditReportBeforeLog/bindings/final_audit_report_before_
 import '../modules/FpcMismatch/bindings/fpc_mismatch_binding.dart';
 import '../modules/ImportDigitextRunOrder/bindings/import_digitext_run_order_binding.dart';
 import '../modules/MamWorkOrders/bindings/mam_work_orders_binding.dart';
+import '../modules/PromoMaster/bindings/promo_master_binding.dart';
+import '../modules/PromoMaster/controllers/promo_master_controller.dart';
+import '../modules/PromoMaster/views/promo_master_view.dart';
 import '../modules/RoBooking/bindings/ro_booking_binding.dart';
 import '../modules/RoCancellation/bindings/ro_cancellation_binding.dart';
 import '../modules/RoReschedule/bindings/ro_reschedule_binding.dart';
@@ -86,7 +89,6 @@ class AppPages {
       name: _Paths.RO_BOOKING,
       page: () => AuthGuard1(childName: _Paths.RO_BOOKING),
       binding: RoBookingBinding(),
-
     ),
     GetPage(
       name: _Paths.FILLER,
@@ -130,59 +132,80 @@ class AppPages {
     ),
     GetPage(
       name: _Paths.FINAL_AUDIT_REPORT_BEFORE_LOG,
-      page: () => AuthGuard1(childName: _Paths.FINAL_AUDIT_REPORT_BEFORE_LOG,),
+      page: () => AuthGuard1(
+        childName: _Paths.FINAL_AUDIT_REPORT_BEFORE_LOG,
+      ),
       binding: FinalAuditReportBeforeLogBinding(),
     ),
     GetPage(
       name: _Paths.FINAL_AUDIT_REPORT_AFTER_TELECAST,
-      page: () => AuthGuard1(childName: _Paths.FINAL_AUDIT_REPORT_AFTER_TELECAST,),
+      page: () => AuthGuard1(
+        childName: _Paths.FINAL_AUDIT_REPORT_AFTER_TELECAST,
+      ),
       binding: FinalAuditReportAfterTelecastBinding(),
     ),
     GetPage(
       name: _Paths.AUDIT_STATUS,
-      page: () => AuthGuard1(childName: _Paths.AUDIT_STATUS,),
+      page: () => AuthGuard1(
+        childName: _Paths.AUDIT_STATUS,
+      ),
       binding: AuditStatusBinding(),
     ),
     GetPage(
       name: _Paths.ASRUN_IMPORT_AD_REVENUE,
-      page: () => AuthGuard1(childName: _Paths.ASRUN_IMPORT_AD_REVENUE,),
+      page: () => AuthGuard1(
+        childName: _Paths.ASRUN_IMPORT_AD_REVENUE,
+      ),
       binding: AsrunImportBinding(),
     ),
     GetPage(
       name: _Paths.SALES_AUDIT_NOT_TELECAST_REPORT,
-      page: () => AuthGuard1(childName: _Paths.SALES_AUDIT_NOT_TELECAST_REPORT,),
+      page: () => AuthGuard1(
+        childName: _Paths.SALES_AUDIT_NOT_TELECAST_REPORT,
+      ),
       binding: SalesAuditNotTelecastReportBinding(),
     ),
     GetPage(
       name: _Paths.SALES_AUDIT_EXTRA_SPOTS_REPORT,
-      page: () => AuthGuard1(childName: _Paths.SALES_AUDIT_EXTRA_SPOTS_REPORT,),
+      page: () => AuthGuard1(
+        childName: _Paths.SALES_AUDIT_EXTRA_SPOTS_REPORT,
+      ),
       binding: SalesAuditExtraSpotsReportBinding(),
     ),
     GetPage(
       name: _Paths.SALES_AUDIT_NEW,
-      page: () => AuthGuard1(childName: _Paths.SALES_AUDIT_NEW,),
+      page: () => AuthGuard1(
+        childName: _Paths.SALES_AUDIT_NEW,
+      ),
       binding: SalesAuditNewBinding(),
     ),
     GetPage(
       name: _Paths.SLIDE_MASTER,
-      page: () =>  AuthGuard1(childName: _Paths.SLIDE_MASTER,),
+      page: () => AuthGuard1(
+        childName: _Paths.SLIDE_MASTER,
+      ),
       binding: SlideMasterBinding(),
     ),
     GetPage(
       name: _Paths.STILL_MASTER,
-      page: () =>  AuthGuard1(childName: _Paths.STILL_MASTER,),
+      page: () => AuthGuard1(
+        childName: _Paths.STILL_MASTER,
+      ),
       binding: StillMasterBinding(),
     ),
     GetPage(
-      name: _Paths.EVENT_SECONDARY,
-      page: () => EventSecondaryView(),
-      binding: EventSecondaryBinding(),
+      name: _Paths.PROMO_MASTER,
+      page: () => AuthGuard1(
+        childName: _Paths.PROMO_MASTER,
+      ),
+      binding: PromoMasterBinding(),
     ),
     GetPage(
-      name: _Paths.SLIDE,
-      page: () => SlideView(),
-      binding: SlideBinding(),
+      name: _Paths.FILLER_MASTER,
+      page: () => AuthGuard1(
+        childName: _Paths.FILLER_MASTER,
+      ),
+      binding: PromoMasterBinding(),
     ),
   ];
-
 }

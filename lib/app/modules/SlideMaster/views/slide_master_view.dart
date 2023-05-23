@@ -1,10 +1,9 @@
-import 'package:bms_scheduling/widgets/CheckBoxWidget.dart';
 import 'package:bms_scheduling/widgets/DateTime/DateWithThreeTextField.dart';
 import 'package:bms_scheduling/widgets/dropdown.dart';
 import 'package:flutter/material.dart';
-
 import 'package:get/get.dart';
 
+import '../../../../widgets/DateTime/TimeWithThreeTextField.dart';
 import '../../../../widgets/FormButton.dart';
 import '../../../../widgets/input_fields.dart';
 import '../../../../widgets/radio_row.dart';
@@ -103,26 +102,29 @@ class SlideMasterView extends GetView<SlideMasterController> {
                             .112,
                           ),
                           SizedBox(width: 13),
-                          InputFields.formField1(
-                            hintTxt: "SOM",
-                            controller: TextEditingController(),
-                            width: 0.11,
+                          TimeWithThreeTextField(
+                            title: "SOM",
+                            mainTextController: TextEditingController(),
+                            widthRation: 0.11,
+                            isTime: false,
                           ),
                         ],
                       ),
                       SizedBox(width: 20),
                       Row(
                         children: [
-                          InputFields.formField1(
-                            hintTxt: "EOM",
-                            controller: TextEditingController(),
-                            width: 0.11,
+                          TimeWithThreeTextField(
+                            title: "EOM",
+                            mainTextController: TextEditingController(),
+                            widthRation: 0.11,
+                            isTime: false,
                           ),
                           SizedBox(width: 10),
-                          InputFields.formField1(
-                            hintTxt: "Duration",
-                            controller: TextEditingController(),
-                            width: 0.11,
+                          TimeWithThreeTextField(
+                            title: "Duration",
+                            mainTextController: TextEditingController(),
+                            widthRation: 0.11,
+                            isTime: false,
                           ),
                         ],
                       ),

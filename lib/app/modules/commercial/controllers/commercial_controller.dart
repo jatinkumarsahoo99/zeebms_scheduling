@@ -18,29 +18,8 @@ import '../../../providers/DataGridMenu.dart';
 import '../../../providers/SizeDefine.dart';
 import '../../../providers/Utils.dart';
 import '../../../routes/app_pages.dart';
-import '../CommercialShowOnTabModel.dart';
 import '../CommercialProgramModel.dart';
-
-class ChannelModel {
-  String? locationCode;
-
-  String? channelCode;
-
-  ChannelModel({this.locationCode, this.channelCode});
-
-  ChannelModel.fromJson(Map<String, dynamic> json) {
-    locationCode = json['locationCode'];
-    channelCode = json['channelCode'];
-  }
-
-  Map<String, dynamic> toJson() {
-    final Map<String, dynamic> data = <String, dynamic>{};
-    data['locationCode'] = locationCode;
-    data['channelCode'] = channelCode;
-    data['selected'] = true;
-    return data;
-  }
-}
+import '../CommercialShowOnTabModel.dart';
 
 class CommercialController extends GetxController {
   /// Radio Button
