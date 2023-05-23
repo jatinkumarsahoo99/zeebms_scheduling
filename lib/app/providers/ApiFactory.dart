@@ -317,7 +317,7 @@ class ApiFactory {
 
   ////////////////////////////// MAM WORK ORDERS API END////////////////////////////////////////////////
 
-//////////////////////////////// Spot Priority ////////////////////////
+  ////////////////////////////// Spot Priority | Sanjaya :UI | Deven Bhole : API ////////////////////////
 
   static String SPOT_PRIORITY_LOCATION() => "$BASE_URL/api/SetSpotPriority/GetInitial";
 
@@ -327,4 +327,14 @@ class ApiFactory {
 
   static String SPOT_PRIORITY_SHOW_DETAILS(String loc, String chnlCode, String frmDt, String toDt) =>
       "$BASE_URL/api/SetSpotPriority/GetShowDetails?LocationCode=$loc&Channelcode=$chnlCode&FromDate=$frmDt&ToDate=$toDt";
+
+////////////////////////////////End Spot Priority ////////////////////////
+
+////////////////////////////// Transmission Log | Sanjaya :UI | Deven Bhole : API ////////////////////////
+
+  static String TRANSMISSION_LOG_LOCATION() => "$BASE_URL/api/Transmissionlog/GetLoadLocation";
+  static String TRANSMISSION_LOG_CHANNEL(String locId) => "$BASE_URL/api/Transmissionlog/GetLocationSelect?Locationcode=$locId";
+  static String TRANSMISSION_LOG_RETRIVE() => "$BASE_URL/api/Transmissionlog/PostLoadSavedLog";
+  static String TRANSMISSION_LOG_CHANNEL_SPEC_SETTING(String locId,String channelId) => "$BASE_URL/api/Transmissionlog/GetChannelSpecsSettings?Locationcode=$locId&ChannelCode=$channelId";
+
 }

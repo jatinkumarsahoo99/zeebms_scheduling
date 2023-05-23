@@ -3,7 +3,6 @@ import 'package:bms_scheduling/app/modules/FinalAuditReportAfterTelecast/views/f
 import 'package:bms_scheduling/app/modules/FinalAuditReportBeforeLog/views/final_audit_report_before_log_view.dart';
 import 'package:bms_scheduling/app/modules/FpcMismatch/views/FpcMismatchView.dart';
 import 'package:bms_scheduling/app/modules/ImportDigitextRunOrder/views/import_digitext_run_order_view.dart';
-import 'package:bms_scheduling/app/modules/LogAdditions/controllers/LogAdditionsController.dart';
 import 'package:bms_scheduling/app/modules/MamWorkOrders/views/mam_work_orders_view.dart';
 import 'package:bms_scheduling/app/modules/RoBooking/views/ro_booking_view.dart';
 import 'package:bms_scheduling/app/modules/RoCancellation/views/ro_cancellation_view.dart';
@@ -96,9 +95,6 @@ class AuthGuard1 extends StatelessWidget {
             case Routes.RO_BOOKING:
               currentWidget = RoBookingView();
               break;
-            case Routes.COMMERCIAL:
-              currentWidget = CommercialView();
-              break;
             case Routes.FINAL_AUDIT_REPORT_BEFORE_LOG:
               currentWidget = FinalAuditReportBeforeLogView();
               break;
@@ -116,9 +112,6 @@ class AuthGuard1 extends StatelessWidget {
               break;
             case Routes.SALES_AUDIT_EXTRA_SPOTS_REPORT:
               currentWidget = SalesAuditExtraSpotsReportView();
-              break;
-            case Routes.SALES_AUDIT_NEW:
-              currentWidget = SalesAuditNewView();
               break;
             case Routes.SALES_AUDIT_NEW:
               currentWidget = SalesAuditNewView();
