@@ -232,10 +232,10 @@ class TransmissionLogView extends GetView<TransmissionLogController> {
                             }
                           },
                           formatDate: false,
-                          hideKeys: ["foreColor","backColor", "modifed"],
+                          hideKeys: ["foreColor", "backColor", "modifed"],
                           showSrNo: true,
                           // mode: PlutoGridMode.selectWithOneTap,
-                       /*   colorCallback: (PlutoRowColorContext plutoContext) {
+                          /*   colorCallback: (PlutoRowColorContext plutoContext) {
                             return Color(controllerX
                                     .transmissionLog![plutoContext.rowIdx]
                                     .colorNo ??
@@ -246,6 +246,10 @@ class TransmissionLogView extends GetView<TransmissionLogController> {
                               print("On Print select" +
                                   jsonEncode(element.toJson()));
                             });
+                          },
+                          colorCallback: (PlutoRowColorContext plutoContext) {
+                            return Color(int.parse(
+                                '0x${controllerX.transmissionLog?.loadSavedLogOutput?.listColorGridlogs![plutoContext.rowIdx].backColor}'));
                           },
                           onRowsMoved: (PlutoGridOnRowsMovedEvent onRowMoved) {
                             // print("Index is>>" + onRowMoved.idx.toString());
