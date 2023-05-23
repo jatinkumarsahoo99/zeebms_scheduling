@@ -180,16 +180,16 @@ class SlideView extends GetView<SlideController> {
                       },
                       hideKeys: ["color", "modifed", ""],
                       showSrNo: true,
-                      colorCallback: (PlutoRowColorContext plutoContext) {
-                        /* return (controllerX
-                                              .dailyFpcListData![plutoContext.rowIdx].selectItem)!
-                                              ? Colors.red
-                                              : Colors.white;*/
-                        return Color(controllerX
-                            .transmissionLogList![plutoContext.rowIdx]
-                            .colorNo ??
-                            Colors.white.value);
-                      },
+                      // colorCallback: (PlutoRowColorContext plutoContext) {
+                      //   /* return (controllerX
+                      //                         .dailyFpcListData![plutoContext.rowIdx].selectItem)!
+                      //                         ? Colors.red
+                      //                         : Colors.white;*/
+                      //   return Color(controllerX
+                      //       .transmissionLogList![plutoContext.rowIdx]
+                      //       .colorNo ??
+                      //       Colors.white.value);
+                      // },
                       onSelected: (event) {
                         /*  controllerX.segmentList?.value = [];
                           controller.update(["segmentList"]);
@@ -242,7 +242,7 @@ class SlideView extends GetView<SlideController> {
                       mode: controllerX.selectedPlutoGridMode,
                       widthRatio: (Get.width / 11.4),
                       mapData: controllerX.transmissionLogList!
-                          .map((e) => e.toJson1())
+                          .map((e) => e.toJson())
                           .toList())
                       : Container(
                     // height: Get.height * .33,
