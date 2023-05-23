@@ -43,13 +43,14 @@ class ChannelModel {
 }
 
 class CommercialController extends GetxController {
-
   /// Radio Button
   int? tabIndex = 0;
   int selectIndex = 0;
+  int? selectedDDIndex;
+
   int selectedGroup = 0;
   double widthSize = 0.17;
-  String? fpcTimeSelected ;
+  String? fpcTimeSelected;
   DropDownValue? selectedChannel;
   DropDownValue? selectedLocation;
 
@@ -76,17 +77,22 @@ class CommercialController extends GetxController {
   List<PlutoRow> initRows = [];
   List<PlutoColumn> initColumn = [];
   List<PermissionModel>? formPermissions;
-  List<CommercialProgramModel>? commercialProgramList  =[];
+  List<CommercialProgramModel>? commercialProgramList = [];
+  List<CommercialShowOnTabModel>? commercialShufflingList = [];
   List<CommercialShowOnTabModel>? commercialShowDetailsList = [];
   List<CommercialShowOnTabModel>? commercialShowFPCList = [];
   List<CommercialShowOnTabModel>? commercialShowMarkedList = [];
 
   /////////////Pluto Grid////////////
   List redBreaks = [];
+
   BuildContext? gridContext;
   PlutoGridStateManager? stateManager;
+  PlutoGridStateManager? gridStateManager;
   PlutoGridStateManager? locChanStateManager;
   PlutoGridStateManager? bmsReportStateManager;
+  PlutoGridMode selectedPlutoGridMode = PlutoGridMode.select;
+
   late PlutoGridStateManager conflictReportStateManager;
 
   List<SystemEnviroment>? channelList = [];
@@ -125,8 +131,8 @@ class CommercialController extends GetxController {
             if (data["locationSelect"] is List) {
               channels.value = (data["locationSelect"] as List)
                   .map((e) => DropDownValue(
-                  key: e["channelCode"], value: e["channelName"])).toList();
-
+                      key: e["channelCode"], value: e["channelName"]))
+                  .toList();
             } else {
               LoadingDialog.callErrorMessage1(
                   msg: "Failed To Load Initial Data");
@@ -149,27 +155,38 @@ class CommercialController extends GetxController {
       // LoadingDialog.call();
       selectedDate = df1.parse(date_.text);
       Get.find<ConnectorControl>().GETMETHODCALL(
-          api: ApiFactory.COMMERCIAL_SHOW_FPC_SCHEDULLING_DETAILS(selectedLocation?.key ?? "",
-              selectedChannel?.key ?? "", df1.format(selectedDate!)),
+          api: ApiFactory.COMMERCIAL_SHOW_FPC_SCHEDULLING_DETAILS(
+              selectedLocation?.key ?? "",
+              selectedChannel?.key ?? "",
+              df1.format(selectedDate!)),
           fun: (dynamic list) {
             print("Json response is>>>" + jsonEncode(list));
 
             commercialProgramList?.clear();
             list['showDetails']["lstDailyFPC"].forEach((element) {
-              commercialProgramList?.add(CommercialProgramModel.fromJson(element));
+              commercialProgramList
+                  ?.add(CommercialProgramModel.fromJson(element));
             });
 
             commercialSpots.value =
-            list['showDetails']['bindGridOutPut']['commercialSpots']??"";
-            commercialDuration.value=
-            list['showDetails']['bindGridOutPut']['commercialDuration']??"";
+                list['showDetails']['bindGridOutPut']['commercialSpots'] ?? "";
+
+            commercialDuration.value = list['showDetails']['bindGridOutPut']
+                    ['commercialDuration'] ?? "";
 
             commercialShowDetailsList?.clear();
             list['showDetails']['lstCommercialShuffling'].forEach((element) {
-              commercialShowDetailsList?.add(CommercialShowOnTabModel.fromJson(element));
+              commercialShowDetailsList
+                  ?.add(CommercialShowOnTabModel.fromJson(element));
             });
 
-            print(">>Update Called");
+            commercialShufflingList?.clear();
+            list['showDetails']['lstscheduling'].forEach((element) {
+              commercialShufflingList
+                  ?.add(CommercialShowOnTabModel.fromJson(element));
+            });
+
+            print(">>Program List Update Called");
             update(["fillerFPCTable"]);
             update(["fillerShowOnTabTable"]);
           },
@@ -190,19 +207,20 @@ class CommercialController extends GetxController {
     } else {
       // LoadingDialog.call();
       selectedDate = df1.parse(date_.text);
-    //   "locationCode": "ZAZEE00001",
-    // "channelCode": "ZAZEE00001",
-    // "telecastDate": "31-03-2023",
-    // "FpctimeSelected":"02:00:00",
-    // "tabindex": "1",
+      //   "locationCode": "ZAZEE00001",
+      // "channelCode": "ZAZEE00001",
+      // "telecastDate": "31-03-2023",
+      // "FpctimeSelected":"02:00:00",
+      // "tabindex": "1",
       try {
         var jsonRequest = {
           "locationCode": selectedLocation?.key.toString(),
           "channelCode": selectedChannel?.key.toString(),
           "telecastDate": df1.format(selectedDate!),
-          "FpctimeSelected": (fpcTimeSelected??"").toString(),
+          "FpctimeSelected": (fpcTimeSelected ?? "").toString(),
           "tabindex": selectedIndex.value.toString(),
-          "lstCommercialShuffling" : commercialShowDetailsList?.map((e) => e.toJson()).toList(),
+          "lstCommercialShuffling":
+              commercialShowDetailsList?.map((e) => e.toJson()).toList(),
         };
         print("requestedData1>>>" + jsonEncode(jsonRequest));
         Get.find<ConnectorControl>().POSTMETHOD(
@@ -210,36 +228,53 @@ class CommercialController extends GetxController {
             fun: (dynamic data) {
               print("Json response is>>>" + jsonEncode(data));
 
-
-
-              if(selectedIndex.value.toString() == "1"){
+              if (selectedIndex.value.toString() == "1") {
                 commercialShowFPCList?.clear();
                 data['tabchangeOutput']['lstFPCMismatch'].forEach((element) {
-                  commercialShowFPCList?.add(CommercialShowOnTabModel.fromJson(element));
+                  commercialShowFPCList
+                      ?.add(CommercialShowOnTabModel.fromJson(element));
                 });
-              }else if(selectedIndex.value.toString() == "2"){
+              } else if (selectedIndex.value.toString() == "2") {
                 commercialShowMarkedList?.clear();
                 data['tabchangeOutput']['lstMarkedAsError'].forEach((element) {
-                  commercialShowMarkedList?.add(CommercialShowOnTabModel.fromJson(element));
+                  commercialShowMarkedList
+                      ?.add(CommercialShowOnTabModel.fromJson(element));
                 });
-              }else{
+              } else {
+                commercialSpots.value = data['tabchangeOutput']['bindGridOutPut']
+                        ['commercialSpots'].toString() ??
+                    "";
+
+                commercialDuration.value = data['tabchangeOutput']
+                        ['bindGridOutPut']['commercialDuration'].toString() ??
+                    "";
+
+                // data['tabchangeOutput']['lstscheduling'].forEach((element) {
+                //   commercialShowDetailsList?.add(CommercialShowOnTabModel.fromJson(element));
+                // });
+                //
+                // data['tabchangeOutput']['lstCommercialShuffling'].forEach((element) {
+                //   commercialShowDetailsList?.add(CommercialShowOnTabModel.fromJson(element));
+                // });
+
+                commercialShufflingList?.clear();
+                data['tabchangeOutput']['lstscheduling'].forEach((element) {
+                  commercialShufflingList
+                      ?.add(CommercialShowOnTabModel.fromJson(element));
+                });
+
                 commercialShowDetailsList?.clear();
-                commercialSpots.value =
-                data['tabchangeOutput']['bindGridOutPut']['commercialSpots']??"";
-
-                commercialDuration.value =
-                data['tabchangeOutput']['bindGridOutPut']['commercialDuration']??"";
-
-                data['tabchangeOutput']['lstCommercialShuffling'].forEach((element) {
-                  commercialShowDetailsList?.add(CommercialShowOnTabModel.fromJson(element));
+                data['tabchangeOutput']['lstCommercialShuffling']
+                    .forEach((element) {
+                  commercialShowDetailsList
+                      ?.add(CommercialShowOnTabModel.fromJson(element));
                 });
               }
 
-              print(">>Update Called");
+              print(">>On Tap Update Called");
               update(["fillerShowOnTabTable"]);
             },
-            json: jsonRequest
-        );
+            json: jsonRequest);
       } catch (e) {
         LoadingDialog.callErrorMessage1(msg: "Failed To Load OnTab Data");
       }
@@ -248,7 +283,6 @@ class CommercialController extends GetxController {
 
   /// Not Completed
   saveSchedulingData() {
-
     if (selectedLocation == null) {
       Snack.callError("Please select location");
     } else if (selectedChannel == null) {
@@ -262,7 +296,8 @@ class CommercialController extends GetxController {
           "locationCode": selectedLocation?.key.toString(),
           "channelCode": selectedChannel?.key.toString(),
           "scheduleDate": df1.format(selectedDate!),
-          "lstCommercialShuffling" : commercialShowDetailsList?.map((e) => e.toJson()).toList(),
+          "lstCommercialShuffling":
+              commercialShowDetailsList?.map((e) => e.toJson()).toList(),
         };
         print("requestedToSaveData >>>" + jsonEncode(jsonRequest));
         Get.find<ConnectorControl>().POSTMETHOD(
@@ -273,8 +308,7 @@ class CommercialController extends GetxController {
               print("saveSchedulingData Called");
               update(["fillerShowOnTabTable"]);
             },
-            json: jsonRequest
-        );
+            json: jsonRequest);
       } catch (e) {
         LoadingDialog.callErrorMessage1(msg: "Failed To Save Data");
       }
@@ -282,7 +316,6 @@ class CommercialController extends GetxController {
   }
 
   formHandler(btnName) async {
-
     if (btnName == "Clear") {
       clear();
     }
@@ -294,7 +327,6 @@ class CommercialController extends GetxController {
     if (btnName == "Exit") {
       exit();
     }
-
   }
 
   /// Useful in Columns
@@ -389,9 +421,7 @@ class CommercialController extends GetxController {
     update(["beams"]);
   }
 
-
   void clear() {
-
     selectedChannel = null;
     selectedLocation = null;
     commercialSpots.value = "";

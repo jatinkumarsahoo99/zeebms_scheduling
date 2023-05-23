@@ -14,6 +14,7 @@ import '../../../../widgets/DateTime/DateWithThreeTextField.dart';
 import '../../../../widgets/FormButton.dart';
 import '../../../../widgets/dropdown.dart';
 import '../../../../widgets/gridFromMap.dart';
+import '../../../../widgets/gridFromMap1.dart';
 import '../../../../widgets/input_fields.dart';
 import '../../../controller/ConnectorControl.dart';
 import '../../../controller/HomeController.dart';
@@ -833,7 +834,7 @@ class CommercialView extends GetView<CommercialController> {
         });
   }
 
-  /// tab 0 ( A )
+  /// tab 0 ( A ) selected date is 22 March 2023
   Widget schedulingView(BuildContext context) {
     return Column(
       children: [
@@ -841,63 +842,158 @@ class CommercialView extends GetView<CommercialController> {
             id: "fillerShowOnTabTable",
             // init: CreateBreakPatternController(),
             builder: (controller) {
-              if (controllerX.commercialShowDetailsList != null &&
-                  (controllerX.commercialShowDetailsList?.isNotEmpty)!) {
+              if (controllerX.commercialShufflingList != null &&
+                  (controllerX.commercialShufflingList?.isNotEmpty)!) {
                 // final key = GlobalKey();
                 return Expanded(
-                  // height: 400,
-                  child: DataGridFromMap(
-                    colorCallback: (row) {
-                      return row.row.cells.containsValue(
-                              controller.stateManager?.currentCell)
-                          ? Colors.blueAccent
-                          : controller.redBreaks.contains(row.rowIdx -
-                                  1)
-                              ? Colors.white
-                              : Colors.orange.shade700;
-                    },
-                    mapData: (controllerX.commercialShowDetailsList
-                        ?.map((e) => e.toJson())
-                        .toList())!,
-                    showonly: [
-                      "fpcTime",
-                      "breakNumber",
-                      "eventType",
-                      "exportTapeCode",
-                      "segmentCaption",
-                      "client",
-                      "brand",
-                      "duration",
-                      "product",
-                      "bookingNumber",
-                      "bookingDetailcode",
-                      "rostimeBand",
-                      "randid",
-                      "programName",
-                      "rownumber",
-                      "bStatus",
-                      "pDailyFPC",
-                      "pProgramMaster"
-                    ],
-                    onload: (loadevent) {
-                      loadevent.stateManager.gridFocusNode.addListener(() {
-                        if (loadevent.stateManager.gridFocusNode.hasFocus) {
-                          loadevent.stateManager
-                              .setGridMode(PlutoGridMode.select);
-                        } else {
-                          loadevent.stateManager
-                              .setGridMode(PlutoGridMode.normal);
+                  // child: DataGridFromMap(
+                  //   colorCallback: (row) {
+                  //     return row.row.cells.containsValue(
+                  //             controller.stateManager?.currentCell)
+                  //         ? Colors.blueAccent
+                  //         : controller.redBreaks.contains(row.rowIdx -
+                  //                 1)
+                  //             ? Colors.white
+                  //             : Colors.orange.shade700;
+                  //   },
+                  //   mapData: (controllerX.commercialShowDetailsList
+                  //       ?.map((e) => e.toJson())
+                  //       .toList())!,
+                  //   showonly: [
+                  //     "fpcTime",
+                  //     "breakNumber",
+                  //     "eventType",
+                  //     "exportTapeCode",
+                  //     "segmentCaption",
+                  //     "client",
+                  //     "brand",
+                  //     "duration",
+                  //     "product",
+                  //     "bookingNumber",
+                  //     "bookingDetailcode",
+                  //     "rostimeBand",
+                  //     "randid",
+                  //     "programName",
+                  //     "rownumber",
+                  //     "bStatus",
+                  //     "pDailyFPC",
+                  //     "pProgramMaster"
+                  //   ],
+                  //   onload: (loadEvent) {
+                  //     loadEvent.stateManager.gridFocusNode.addListener(() {
+                  //       if (loadEvent.stateManager.gridFocusNode.hasFocus) {
+                  //         loadEvent.stateManager
+                  //             .setGridMode(PlutoGridMode.select);
+                  //       } else {
+                  //         loadEvent.stateManager
+                  //             .setGridMode(PlutoGridMode.normal);
+                  //       }
+                  //     });
+                  //   },
+                  //   mode: PlutoGridMode.select,
+                  //   onSelected: (plutoGrid) {
+                  //     controllerX.selectedShowOnTab =
+                  //         controllerX.commercialShowDetailsList![plutoGrid.rowIdx!];
+                  //     print(">>>>>>Commercial Data>>>>>>" +
+                  //         jsonEncode(controllerX.selectedShowOnTab?.toJson()));
+                  //   },
+                  // ),
+                  ///
+                  child: DataGridFromMap1(
+                      onFocusChange: (value) {
+                        controllerX.gridStateManager!
+                            .setGridMode(PlutoGridMode.selectWithOneTap);
+                        controllerX.selectedPlutoGridMode =
+                            PlutoGridMode.selectWithOneTap;
+                      },
+                      onload: (loadevent) {
+                        controllerX.gridStateManager =
+                            loadevent.stateManager;
+                        if (controller.selectedDDIndex != null) {
+                          loadevent.stateManager.moveScrollByRow(
+                              PlutoMoveDirection.down,
+                              controller.selectedDDIndex);
+                          loadevent.stateManager.setCurrentCell(
+                              loadevent
+                                  .stateManager
+                                  .rows[controller.selectedDDIndex!]
+                                  .cells
+                                  .entries
+                                  .first
+                                  .value,
+                              controller.selectedDDIndex);
                         }
-                      });
-                    },
-                    mode: PlutoGridMode.select,
-                    onSelected: (plutoGrid) {
-                      controllerX.selectedShowOnTab =
-                          controllerX.commercialShowDetailsList![plutoGrid.rowIdx!];
-                      print(">>>>>>Commercial Data>>>>>>" +
-                          jsonEncode(controllerX.selectedShowOnTab?.toJson()));
-                    },
-                  ),
+                      },
+                      showSrNo: true,
+                      showonly: [
+                        "fpcTime",
+                        "breakNumber",
+                        "eventType",
+                        "exportTapeCode",
+                        "segmentCaption",
+                        "client",
+                        "brand",
+                        "duration",
+                        "product",
+                        "bookingNumber",
+                        "bookingDetailcode",
+                        "rostimeBand",
+                        "randid",
+                        "programName",
+                        "rownumber",
+                        "bStatus",
+                        "pDailyFPC",
+                        "pProgramMaster"
+                      ],
+                      colorCallback: (PlutoRowColorContext plutoContext) {
+                        return Color(int.parse('0x${controllerX
+                            .commercialShufflingList![plutoContext.rowIdx]
+                            .backColor}'
+                        ));
+                      },
+                        // colorCallback: (row) {
+                        //   return row.row.cells.containsValue(
+                        //           controller.stateManager?.currentCell)
+                        //       ? Colors.blueAccent
+                        //       : controller.redBreaks.contains(row.rowIdx -
+                        //               1)
+                        //           ? Colors.white
+                        //           : Colors.orange.shade700;
+                        // },
+                      onSelected: (PlutoGridOnSelectedEvent event) {
+                        controllerX.selectedShowOnTab =
+                        controllerX.commercialShufflingList![event.rowIdx!];
+                        print(">>>>>>Commercial Data>>>>>>" +
+                            jsonEncode(controllerX.selectedShowOnTab?.toJson()));
+                      },
+                      onRowsMoved: (PlutoGridOnRowsMovedEvent onRowMoved) {
+                        print("Index is>>" + onRowMoved.idx.toString());
+                        Map map = onRowMoved.rows[0].cells;
+                        print("On Print moved" +
+                            jsonEncode(
+                                onRowMoved.rows[0].cells.toString()));
+                        int? val=int.tryParse((onRowMoved.rows[0].cells["Episode Dur"]?.value.toString())!)!;
+                        // print("After On select>>" + data.toString());
+                        for (int i = (onRowMoved.idx) ?? 0; i >= 0; i--) {
+                          print("On Print moved" + i.toString());
+                          print("On select>>" +
+                              map["Episode Dur"].value.toString());
+
+                          print("On Print moved cell>>>" +
+                              jsonEncode(controllerX.gridStateManager
+                                  ?.rows[i].cells["Episode Dur"]?.value
+                                  .toString()));
+
+                          controllerX.gridStateManager?.rows[i]
+                              .cells["Episode Dur"] =
+                              PlutoCell(value: val-(i-onRowMoved.idx));
+                        }
+                        controllerX.gridStateManager?.notifyListeners();
+                      },
+                      mode: controllerX.selectedPlutoGridMode,
+                      mapData: controllerX.commercialShufflingList!
+                          .map((e) => e.toJson())
+                          .toList())
                 );
               } else {
                 return Expanded(
@@ -1071,5 +1167,7 @@ class CommercialView extends GetView<CommercialController> {
       ],
     );
   }
+
+
 
 }

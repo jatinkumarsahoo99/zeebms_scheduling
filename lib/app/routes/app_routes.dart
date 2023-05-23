@@ -60,11 +60,9 @@ abstract class _Paths {
   static const FPC_MISMATCH = '/frmFPCMismatch';
   static const COMMERCIAL = '/frmCommercialScheduling';
   static const RO_CANCELLATION = '/frmROCancellation';
-  static const COMMERCIAL = '/commercial';
   //static const RO_BOOKING = '/ro-booking';
   static const FILLER = '/filler';
   static const PROMOS = '/promos';
-  static const RO_CANCELLATION = '/ro-cancellation';
   static const SPOT_PRIORITY = '/frmSpotPriority';
   static const RO_RESCHEDULE = '/frmRoReschedule';
   static const ROS_DISTRIBUTION = '/FrmRosDistribution';
