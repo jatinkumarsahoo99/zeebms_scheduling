@@ -219,51 +219,37 @@ class ApiFactory {
       "$BASE_URL/api/ImportDigitexRunOrder/SaveRunOrder?LocationCode=$locationCode&ChannelCode=$channelCode&BookingDate=$date";
 //////////////// Filler: UI:VISHAL GORE, API: INDRESH ///////////////
 
-  static String FILLER_LOCATION =
-      "$BASE_URL/api/FillerScheduling/GetLocations";
+  static String FILLER_LOCATION = "$BASE_URL/api/FillerScheduling/GetLocations";
 
-  static String FILLER_CHANNEL(locationCode) =>
-      "$BASE_URL/api/FillerScheduling/GetChannels/$locationCode";
+  static String FILLER_CHANNEL(locationCode) => "$BASE_URL/api/FillerScheduling/GetChannels/$locationCode";
 
-  static String FILLER_CAPTION =
-      "$BASE_URL/api/FillerScheduling/GetFillerCaption/";
+  static String FILLER_CAPTION = "$BASE_URL/api/FillerScheduling/GetFillerCaption/";
 
   /// to Search Caption in dropdown
-  static String FILLER_VALUE_BY_CAPTION(fillerCaption) =>
-      "$BASE_URL/api/FillerScheduling/GetFillerCaption/$fillerCaption";
+  static String FILLER_VALUE_BY_CAPTION(fillerCaption) => "$BASE_URL/api/FillerScheduling/GetFillerCaption/$fillerCaption";
 
-  static String FILLER_VALUES_BY_FILLER_CODE(fillerCode) =>
-      "$BASE_URL/api/FillerScheduling/GetFillerValuesByFillerCode/$fillerCode";
+  static String FILLER_VALUES_BY_FILLER_CODE(fillerCode) => "$BASE_URL/api/FillerScheduling/GetFillerValuesByFillerCode/$fillerCode";
 
-  static String FILLER_VALUES_BY_TAPE_CODE(tapeCode) =>
-      "$BASE_URL/api/FillerScheduling/GetFillerValuesByTapeCode/$tapeCode";
+  static String FILLER_VALUES_BY_TAPE_CODE(tapeCode) => "$BASE_URL/api/FillerScheduling/GetFillerValuesByTapeCode/$tapeCode";
 
-  static String FPC_DETAILS(
-      locationCode, channelCode, date) =>
+  static String FPC_DETAILS(locationCode, channelCode, date) =>
       "$BASE_URL/api/FillerScheduling/GetFpcDetails?LocationCode=$locationCode&ChannelCode=$channelCode&TelecastDate=$date";
 
-  static String SEGMENT_DETAILS(
-      programCode, exportTapeCode, episodeNumber, originalRepeatCode, locationCode, channelCode, startTime, date) =>
+  static String SEGMENT_DETAILS(programCode, exportTapeCode, episodeNumber, originalRepeatCode, locationCode, channelCode, startTime, date) =>
       "$BASE_URL/api/FillerScheduling/GetSegmentDetails?ProgramCode=$programCode&ExportTapeCode=$exportTapeCode&EpisodeNumber=$episodeNumber&OriginalRepeatCode=$originalRepeatCode&LocationCode=$locationCode&ChannelCode=$channelCode&StartTime=$startTime&StartDate=$date";
-
 
   //////////////// Filler: UI: VISHAL G,API: DEVEN ///////////////
 
-  static String COMMERCIAL_LOCATION =
-      "$BASE_URL/api/CommercialScheduling/csload";
+  static String COMMERCIAL_LOCATION = "$BASE_URL/api/CommercialScheduling/csload";
 
-  static String COMMERCIAL_CHANNEL(locationCode) =>
-      "$BASE_URL/api/CommercialScheduling/GetLocationSelect?Locationcode=$locationCode";
+  static String COMMERCIAL_CHANNEL(locationCode) => "$BASE_URL/api/CommercialScheduling/GetLocationSelect?Locationcode=$locationCode";
 
-  static String COMMERCIAL_SHOW_FPC_SCHEDULLING_DETAILS(
-      locationCode, channelCode, date) =>
+  static String COMMERCIAL_SHOW_FPC_SCHEDULLING_DETAILS(locationCode, channelCode, date) =>
       "$BASE_URL/api/CommercialScheduling/GetShowDetails?Locationcode=$locationCode&ChannelCode=$channelCode&TelecastDate=$date";
 
-  static String COMMERCIAL_SHOW_ON_TAB_DETAILS() =>
-      "$BASE_URL/api/CommercialScheduling/GetTabChange";
+  static String COMMERCIAL_SHOW_ON_TAB_DETAILS() => "$BASE_URL/api/CommercialScheduling/GetTabChange";
 
-  static String SAVE_COMMERCIAL_DETAILS() =>
-      "$BASE_URL/api/CommercialScheduling/PostSave";
+  static String SAVE_COMMERCIAL_DETAILS() => "$BASE_URL/api/CommercialScheduling/PostSave";
 
 //////// RO CANCELLATION ///////
   static String RO_CANCELLATION_LOCATION = "$BASE_URL/api/ROCancellation/GetCboLocation";
@@ -331,6 +317,9 @@ class ApiFactory {
 
   static String RO_RESCHEDULE_DGVGRID_DOUBLECLICK = "$BASE_URL/api/RoReschedule/OnDoubleClick_dgvViewRO";
   static String RO_RESCHEDULE_SCHEDULENO_LEAVE = "$BASE_URL/api/RoReschedule/OnLeave_ReschedulingNo";
+  static String RO_RESCHEDULE_MODIFY = "$BASE_URL/api/RoReschedule/OnClick_Modify";
+  static String RO_RESCHEDULE_ADDSPOT = "$BASE_URL/api/RoReschedule/OnClick_AddSpots";
+  static String RO_RESCHEDULE_SAVE = "$BASE_URL/api/RoReschedule/OnSave_Rescheduling";
 
   static String RO_RESCHEDULE_SELECTED_INDEX_CHNAGE_TAPEID(tapeID) => "$BASE_URL/api/RoReschedule/SelectedIndexChanged_TapeID?TapeID=$tapeID'";
 ////////////////////////////////End Spot Priority ////////////////////////

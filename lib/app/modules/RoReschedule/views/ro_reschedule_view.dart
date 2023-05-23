@@ -23,18 +23,7 @@ class RoRescheduleView extends GetView<RoRescheduleController> {
             id: "initData",
             builder: (controller) {
               if (controller.reschedulngInitData == null) {
-                return Center(
-                    child: Column(
-                  mainAxisSize: MainAxisSize.min,
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
-                    Text("Please Wait"),
-                    SizedBox(
-                      width: 20,
-                    ),
-                    CircularProgressIndicator()
-                  ],
-                ));
+                return Center(child: CircularProgressIndicator());
               } else {
                 return Column(
                   crossAxisAlignment: CrossAxisAlignment.start,

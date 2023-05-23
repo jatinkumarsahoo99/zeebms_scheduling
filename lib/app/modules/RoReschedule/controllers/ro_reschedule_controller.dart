@@ -1,8 +1,10 @@
 import 'package:bms_scheduling/app/controller/ConnectorControl.dart';
+import 'package:bms_scheduling/app/modules/RoBooking/views/dummydata.dart';
 import 'package:bms_scheduling/app/modules/RoReschedule/bindings/ro_booking_leave_data.dart';
 import 'package:bms_scheduling/app/modules/RoReschedule/bindings/ro_init_data.dart';
 import 'package:bms_scheduling/app/modules/RoReschedule/bindings/ro_re_schedule_leave_dart.dart';
 import 'package:bms_scheduling/app/providers/ApiFactory.dart';
+import 'package:bms_scheduling/widgets/DataGridShowOnly.dart';
 import 'package:bms_scheduling/widgets/DateTime/DateWithThreeTextField.dart';
 import 'package:bms_scheduling/widgets/FormButton.dart';
 import 'package:bms_scheduling/widgets/LoadingDialog.dart';
@@ -49,12 +51,12 @@ class RoRescheduleController extends GetxController {
       print("init done");
       print(value);
       toNumberFocus.addListener(() {
-        if (!toNumberFocus.hasFocus) {
+        if (!toNumberFocus.hasFocus && tonumberCtrl.text.isNotEmpty) {
           fetchToData();
         }
       });
       reScheduleFocus.addListener(() {
-        if (!reScheduleFocus.hasFocus) {
+        if (!reScheduleFocus.hasFocus && reSchedNoCtrl.text.isNotEmpty) {
           onScheduleLeaveData();
         }
       });
@@ -272,7 +274,14 @@ class RoRescheduleController extends GetxController {
                           FormButtonWrapper(btnText: "Back "),
                         ],
                       ),
-                    )
+                    ),
+                    Expanded(
+                        child: Container(
+                      child: DataGridShowOnlyKeys(
+                        mapData: dummyProgram,
+                        formatDate: false,
+                      ),
+                    ))
                   ],
                 ),
               ));
@@ -285,40 +294,7 @@ class RoRescheduleController extends GetxController {
     }
 
     print("ON ROW DPUBLE TAP END>>>");
-
-    var body = {
-      "dealNo": "string",
-      "locationCode": "ZAZEE00001",
-      "channelCode": "ZATVX00001",
-      "effectivedate": "2023-05-22T07:30:55.180Z",
-      "dealNumber": "string",
-      "recordNumber": 0,
-      "zoneCode": "string",
-      "chkTapeID": true,
-      "lstDgvRow": [
-        {
-          "RowNo": 1,
-          "ProgramCode": "ZABXX00022",
-          "MidPre": "ZAMID00002",
-          "PositionCode": "ZAOTH00002",
-          "ProgramName": "Bzinga",
-          "ScheduleDate": "2023-03-26T00:00:00",
-          "ScheduleTime": "17:00:00",
-          "ExportTapeCode": "2HEB22924",
-          "CommercialCaption": "LP CCG SHADES APART 15SECS",
-          "TapeDuration": "15",
-          "SpotAmount": "0",
-          "BookingDetailCode": "3",
-          "Recordnumber": "46",
-          "SegmentNumber": "1",
-          "Breaknumber": "1",
-          "SpotPositionTypeName": "MID PROGRAM",
-          "PositionName": "OTHERS",
-          "Edit": 1,
-          "rescheduleno": "23030052W",
-          "Audited": true
-        }
-      ]
-    };
   }
+
+  addSpot() {}
 }
