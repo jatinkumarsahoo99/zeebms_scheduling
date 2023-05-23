@@ -4,38 +4,39 @@ import 'package:bms_scheduling/app/data/DropDownValue.dart';
 import 'package:flutter/foundation.dart';
 import 'package:intl/intl.dart';
 
+import 'Const.dart';
+
 // import '../modules/OperationalFPC/DailyFPCModel.dart';
 
 class ApiFactory {
-  // Developing R & D URLS
-  // https://web-bms-qa.azurewebsites.net/
-  // https://api-bms-qa.azurewebsites.net/
-
-  //RELEASE WORK URLS
-  //https://bmswebfrontend-uat.azurewebsites.net
-  //https://api-bms-dev.azurewebsites.net
-
-  ////AKS
-  // http://bms-api-common.bms-api-ns.svc.cluster.local/weatherforecast
-  // http://bms-api-programming.bms-api-ns.svc.cluster.local/weatherforecast
-  // http://bms-api-login.bms-api-ns.svc.cluster.local/weatherforecast
-
   static String userId = "";
   static String LOCAL_URL = "http://localhost:9999";
   static String Enviroment = const String.fromEnvironment('ENV', defaultValue: 'dev');
 
-  // static String SERVER_URL = "https://bmswebfrontend-uat.azurewebsites.net";
-  static String WEB_URL = Enviroment.toLowerCase() == "uat" ? "https://app-admin-bms-uat.zeeconnect.in" : "https://app-admin-bms-dev.zeeconnect.in";
-  static String WEB_URL_COMMON =
-      Enviroment.toLowerCase() == "uat" ? "https://app-common-bms-uat.zeeconnect.in" : "https://app-common-bms-dev.zeeconnect.in";
+  /* static String WEB_URL = Enviroment.toLowerCase() == "uat"
+      ? "https://app-admin-bms-uat.zeeconnect.in"
+      : "https://app-admin-bms-dev.zeeconnect.in";
+  static String WEB_URL_COMMON = Enviroment.toLowerCase() == "uat"
+      ? "https://app-common-bms-uat.zeeconnect.in"
+      : "https://app-common-bms-dev.zeeconnect.in";
 
   static String BASE_URL =
       Enviroment.toLowerCase() == "uat" ? "https://api-scheduling-bms-uat.zeeconnect.in" : "https://api-scheduling-bms-dev.zeeconnect.in";
 
-  static String BASE_URL_COMMON =
-      Enviroment.toLowerCase() == "uat" ? "https://api-common-bms-uat.zeeconnect.in" : "https://api-common-bms-dev.zeeconnect.in";
-  static String BASE_URL_LOGIN =
-      Enviroment.toLowerCase() == "uat" ? "https://api-login-bms-uat.zeeconnect.in" : "https://api-login-bms-dev.zeeconnect.in";
+  static String BASE_URL_COMMON = Enviroment.toLowerCase() == "uat"
+      ? "https://api-common-bms-uat.zeeconnect.in"
+      : "https://api-common-bms-dev.zeeconnect.in";
+  static String BASE_URL_LOGIN = Enviroment.toLowerCase() == "uat"
+      ? "https://api-login-bms-uat.zeeconnect.in"
+      : "https://api-login-bms-dev.zeeconnect.in";*/
+
+  static String WEB_URL = Const.getWebAdminUrl();
+  static String WEB_URL_COMMON = Const.getWebCommonUrl();
+
+  static String BASE_URL = Const.getBaseSchedulingAPIUrl();
+
+  static String BASE_URL_COMMON = Const.getBaseCommonAPIUrl();
+  static String BASE_URL_LOGIN = Const.getBaseLoginAPIUrl();
 
   ////////////////////// SEARCH ////////////////////////////
 
@@ -229,23 +230,43 @@ class ApiFactory {
   ////////////////////////////// MAM WORK ORDERS API START////////////////////////////////////////////////
   static String get MAM_WORK_ORDER_INITIALIZE => "$BASE_URL/api/MAMWorkOrder/OnLoadWorkOrder";
 
+  /////////////////////////////////// 1st tab api //////////////////////////////////////////
   static String MAM_WORK_ORDER_NON_FPC_LOCATION_LEAVE(String? locationCode) {
     return "$BASE_URL/api/MAMWorkOrder/OnLeaveLocation${(locationCode == null || locationCode.isEmpty) ? '' : '?LocationCode=$locationCode'}";
   }
 
   static String get MAM_WORK_ORDER_NON_FPC_BMS_SEARCH => "$BASE_URL/api/MAMWorkOrder/OnLoadBMSProgram?Search=";
-
   static String get MAM_WORK_ORDER_NON_FPC_RMS_SEARCH => "$BASE_URL/api/MAMWorkOrder/OnLoadcboProgram?Search=";
-
   static String MAM_WORK_ORDER_NON_FPC_ON_BMS_LEAVE(String? val) => "$BASE_URL/api/MAMWorkOrder/OnLeaveBMSPrograms?BMSProgramCode=$val";
-
   static String get MAM_WORK_ORDER_NON_FPC_GET_DATA => "$BASE_URL/api/MAMWorkOrder/OnLeaveProgram";
-
   static String get MAM_WORK_ORDER_NON_FPC_SAVE_DATA => "$BASE_URL/api/MAMWorkOrder/SaveWorkOrder";
+  /////////////////////////////////// 2nd tab api //////////////////////////////////////////
+  static String MAM_WORK_ORDER_WO_ADFPC_GET_CHANNEL(String locationCode, String loginCode) =>
+      "$BASE_URL/api/MAMWorkOrder/OnLeaveLocationFPC?LocationCode=$locationCode&LoginCode=$loginCode";
+  static String get MAM_WORK_ORDER_WO_ADFPC_GET_DATATABLE_DATA => "$BASE_URL/api/MAMWorkOrder/OnLeaveTelecastDate";
+  static String get MAM_WORK_ORDER_WO_ADFPC_SAVE_DATA => "$BASE_URL/api/MAMWorkOrder/SaveWOsFPC";
+
+  /////////////////////////////////// 3rd tab api //////////////////////////////////////////
+  static String get MAM_WORK_ORDER_WO_RE_PUSH_GET_DATA => "$BASE_URL/api/MAMWorkOrder/OnLoadRepush";
+  static String get MAM_WORK_ORDER_WO_RE_PUSH_GET_JSON => "$BASE_URL/api/MAMWorkOrder/dgvRepushWorkOrderCell";
+  static String get MAM_WORK_ORDER_WO_RE_PUSH_SAVE_DATA => "$BASE_URL/api/MAMWorkOrder/RepushReloadWorkService";
+
+  /////////////////////////////////// 4th tab api //////////////////////////////////////////
+  static String MAM_WORK_ORDER_WO_CANCEL_GET_CHANNEL(String locationCode, String loginCode) =>
+      "$BASE_URL/api/MAMWorkOrder/OnLeaveLocationWOCanc?LocationCode=$locationCode&LoginCode=$loginCode";
+  static String get MAM_WORK_ORDER_WO_CANCEL_PROGRAM_SEARCH => "$BASE_URL/api/MAMWorkOrder/OnLoadCancelProgram?Search=";
+  static String get MAM_WORK_ORDER_WO_CANCEL_SHOW_DATA => "$BASE_URL/api/MAMWorkOrder/ShowWorkOrder";
+  static String get MAM_WORK_ORDER_WO_CANCEL_CANCEL_DATA => "$BASE_URL/api/MAMWorkOrder/CancelWorkOrder";
+
+  /////////////////////////////////// 5th tab api //////////////////////////////////////////
+  static String MAM_WORK_ORDER_WO_HISTORY_GET_CHANNEL(String locationCode, String loginCode) =>
+      "$BASE_URL/api/MAMWorkOrder/OnLeaveLocationWOHistory?LocationCode=$locationCode&LoginCode=$loginCode";
+  static String get MAM_WORK_ORDER_WO_HISTORY_PROGRAM_SEARCH => "$BASE_URL/api/MAMWorkOrder/OnLoadProgramWOHistory?Search=";
+  static String get MAM_WORK_ORDER_WO_HISTORY_SHOW_DATA => "$BASE_URL/api/MAMWorkOrder/GetShowWorkOrderHistory";
 
   ////////////////////////////// MAM WORK ORDERS API END////////////////////////////////////////////////
 
-//////////////////////////////// Spot Priority ////////////////////////
+  ////////////////////////////// Spot Priority | Sanjaya :UI | Deven Bhole : API ////////////////////////
 
   static String SPOT_PRIORITY_LOCATION() => "$BASE_URL/api/SetSpotPriority/GetInitial";
 
@@ -260,9 +281,18 @@ class ApiFactory {
   static String RO_RESCHEDULE_INIT = "$BASE_URL/api/RoReschedule/OnLoad_Reschedule";
   static String RO_RESCHEDULE_CHANNNEL(locationCode) => "$BASE_URL/api/RoReschedule/OnLeave_Location?LocationCode=$locationCode";
   static String RO_RESCHEDULE_BOOKINGNO_LEAVE = "$BASE_URL/api/RoReschedule/OnLeave_BookingNumber";
-  
+
   static String RO_RESCHEDULE_DGVGRID_DOUBLECLICK = "$BASE_URL/api/RoReschedule/OnDoubleClick_dgvViewRO";
   static String RO_RESCHEDULE_SCHEDULENO_LEAVE = "$BASE_URL/api/RoReschedule/OnLeave_ReschedulingNo";
-  
+
   static String RO_RESCHEDULE_SELECTED_INDEX_CHNAGE_TAPEID(tapeID) => "$BASE_URL/api/RoReschedule/SelectedIndexChanged_TapeID?TapeID=$tapeID'";
+////////////////////////////////End Spot Priority ////////////////////////
+
+////////////////////////////// Transmission Log | Sanjaya :UI | Deven Bhole : API ////////////////////////
+
+  static String TRANSMISSION_LOG_LOCATION() => "$BASE_URL/api/Transmissionlog/GetLoadLocation";
+  static String TRANSMISSION_LOG_CHANNEL(String locId) => "$BASE_URL/api/Transmissionlog/GetLocationSelect?Locationcode=$locId";
+  static String TRANSMISSION_LOG_RETRIVE() => "$BASE_URL/api/Transmissionlog/PostLoadSavedLog";
+  static String TRANSMISSION_LOG_CHANNEL_SPEC_SETTING(String locId, String channelId) =>
+      "$BASE_URL/api/Transmissionlog/GetChannelSpecsSettings?Locationcode=$locId&ChannelCode=$channelId";
 }

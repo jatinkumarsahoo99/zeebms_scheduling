@@ -44,8 +44,13 @@ class SpotPriorityController extends GetxController {
         api: ApiFactory.SPOT_PRIORITY_LOCATION(),
         fun: (Map map) {
           locations.clear();
+          priorityList.clear();
           map["setSpotPriority"]["location"].forEach((e) {
             locations.add(DropDownValue.fromJson1(e));
+          });
+          map["setSpotPriority"]["priority"].forEach((e) {
+            priorityList.add(DropDownValue.fromJsonDynamic(
+                e, "priorityCode", "priorityName"));
           });
         });
   }
@@ -75,16 +80,7 @@ class SpotPriorityController extends GetxController {
           fun: (Map<String, dynamic> map) {
             Get.back();
             if (map.containsKey("showDetails")) {
-              priorityList.clear();
-              uniqueList.clear();
-              spotPriorityModel =
-                  SpotPriorityModel.fromJson(map["showDetails"]);
-              uniqueList.toList().forEach((element) {
-                if (element != null) {
-                  priorityList.value
-                      .add(DropDownValue(key: element, value: element));
-                }
-              });
+              spotPriorityModel = SpotPriorityModel.fromJson(map["showDetails"]);
               update(["spotPriorityList"]);
             } else {
               Snack.callError("No Data Found");
@@ -101,8 +97,8 @@ class SpotPriorityController extends GetxController {
     } else if (spotPriorityModel == null) {
       Snack.callError("There is no data to save");
     } else {
-      var filterList=spotPriorityModel?.lstbookingdetail?.where((e) {
-        return  (e.priorityCode! > 0);
+      var filterList = spotPriorityModel?.lstbookingdetail?.where((e) {
+        return (e.priorityCode! > 0);
       });
       var mapData = {
         "locationcode": selectLocation?.key ?? "",
@@ -110,7 +106,7 @@ class SpotPriorityController extends GetxController {
         "fromDate": frmDate.text,
         "toDate": toDate.text,
         "spotprioritys": filterList?.map((e) {
-            return e.toJson1();
+          return e.toJson1();
         }).toList()
       };
       LoadingDialog.call();
