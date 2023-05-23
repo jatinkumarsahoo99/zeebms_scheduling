@@ -972,22 +972,6 @@ class CommercialView extends GetView<CommercialController> {
                         print("On Print moved" +
                             jsonEncode(
                                 onRowMoved.rows[0].cells.toString()));
-                        int? val=int.tryParse((onRowMoved.rows[0].cells["Episode Dur"]?.value.toString())!)!;
-                        // print("After On select>>" + data.toString());
-                        for (int i = (onRowMoved.idx) ?? 0; i >= 0; i--) {
-                          print("On Print moved" + i.toString());
-                          print("On select>>" +
-                              map["Episode Dur"].value.toString());
-
-                          print("On Print moved cell>>>" +
-                              jsonEncode(controllerX.gridStateManager
-                                  ?.rows[i].cells["Episode Dur"]?.value
-                                  .toString()));
-
-                          controllerX.gridStateManager?.rows[i]
-                              .cells["Episode Dur"] =
-                              PlutoCell(value: val-(i-onRowMoved.idx));
-                        }
                         controllerX.gridStateManager?.notifyListeners();
                       },
                       mode: controllerX.selectedPlutoGridMode,
