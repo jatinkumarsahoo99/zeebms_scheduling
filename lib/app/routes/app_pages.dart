@@ -7,6 +7,9 @@ import '../modules/FinalAuditReportBeforeLog/bindings/final_audit_report_before_
 import '../modules/FpcMismatch/bindings/fpc_mismatch_binding.dart';
 import '../modules/ImportDigitextRunOrder/bindings/import_digitext_run_order_binding.dart';
 import '../modules/MamWorkOrders/bindings/mam_work_orders_binding.dart';
+import '../modules/PromoMaster/bindings/promo_master_binding.dart';
+import '../modules/PromoMaster/controllers/promo_master_controller.dart';
+import '../modules/PromoMaster/views/promo_master_view.dart';
 import '../modules/RoBooking/bindings/ro_booking_binding.dart';
 import '../modules/RoCancellation/bindings/ro_cancellation_binding.dart';
 import '../modules/RoReschedule/bindings/ro_reschedule_binding.dart';
@@ -28,8 +31,8 @@ part 'app_routes.dart';
 class AppPages {
   AppPages._();
 
-  static const INITIAL = Routes.FILLER_MASTER +
-      "?personalNo=AqoF3cvt1PCPIKM8FfPwag%3D%3D&loginCode=gsS2oEkuYKzI9aXanDqobQ%3D%3D&formName=a4Lfy%2FGb5Roxo9vLiBCqSQ%3D%3D";
+  static const INITIAL =
+      Routes.PROMO_MASTER + "?personalNo=AqoF3cvt1PCPIKM8FfPwag%3D%3D&loginCode=gsS2oEkuYKzI9aXanDqobQ%3D%3D&formName=a4Lfy%2FGb5Roxo9vLiBCqSQ%3D%3D";
 
   static final routes = [
     GetPage(
@@ -154,6 +157,11 @@ class AppPages {
         childName: _Paths.STILL_MASTER,
       ),
       binding: StillMasterBinding(),
+    ),
+    GetPage(
+      name: _Paths.PROMO_MASTER,
+      page: () => const PromoMasterView(),
+      binding: PromoMasterBinding(),
     ),
   ];
 }

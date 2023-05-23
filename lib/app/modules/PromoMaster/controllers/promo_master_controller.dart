@@ -20,4 +20,6 @@ class PromoMasterController extends GetxController {
   }
 
   void increment() => count.value++;
+
+  formHandler(String string) {}
 }
