@@ -21,276 +21,325 @@ class FillerMasterView extends GetView<FillerMasterController> {
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             Expanded(
-              child: Row(
-                children: [
-                  Expanded(
-                    flex: 12,
-                    child: Container(
-                      decoration: BoxDecoration(border: Border.all(color: Colors.grey)),
-                      padding: EdgeInsets.all(16),
-                      child: ListView(
-                        children: [
-                          Row(
-                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              child: FocusTraversalGroup(
+                policy: WidgetOrderTraversalPolicy(),
+                child: Row(
+                  children: [
+                    FocusTraversalGroup(
+                      policy: WidgetOrderTraversalPolicy(),
+                      child: Expanded(
+                        flex: 12,
+                        child: Container(
+                          decoration: BoxDecoration(border: Border.all(color: Colors.grey)),
+                          padding: EdgeInsets.all(16),
+                          child: ListView(
                             children: [
-                              DropDownField.formDropDown1WidthMap([], (p0) => null, "Location", .17, autoFocus: true),
-                              // SizedBox(width: 20),
-                              DropDownField.formDropDown1WidthMap([], (p0) => null, "Channel", .17),
-                              // SizedBox(width: 20),
-                              DropDownField.formDropDown1WidthMap([], (p0) => null, "Movie Grade", .17),
-                            ],
-                          ),
-                          SizedBox(height: 14),
-                          Row(
-                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                            children: [
-                              DropDownField.formDropDownSearchAPI2(GlobalKey(), context,
-                                  width: context.width * 0.17, onchanged: (DropDownValue) {}, title: 'Banner', url: ''),
-                              // SizedBox(width: 20),
-                              InputFields.formField1(hintTxt: "Filler Name", controller: TextEditingController(), width: 0.17),
-                              // SizedBox(width: 20),
-                              InputFields.formField1(hintTxt: "TX Caption", controller: TextEditingController(), width: 0.17),
-                            ],
-                          ),
-                          SizedBox(height: 14),
-                          Row(
-                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                            children: [
-                              InputFields.formField1(hintTxt: "Tape ID", controller: TextEditingController(), width: 0.17),
-                              // SizedBox(width: 20),
-                              InputFields.formField1(hintTxt: "Seg No", controller: TextEditingController(), width: 0.17),
-                              // SizedBox(width: 20),
-                              InputFields.formField1(hintTxt: "TX No", controller: TextEditingController(), width: 0.17),
-                            ],
-                          ),
-                          SizedBox(height: 14),
+                              Row(
+                                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                children: [
+                                  DropDownField.formDropDown1WidthMap([], (p0) => null, "Location", .17, autoFocus: true),
+                                  // SizedBox(width: 20),
+                                  DropDownField.formDropDown1WidthMap([], (p0) => null, "Channel", .17),
+                                  // SizedBox(width: 20),
+                                  DropDownField.formDropDown1WidthMap([], (p0) => null, "Movie Grade", .17),
+                                ],
+                              ),
+                              SizedBox(height: 14),
+                              Row(
+                                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                children: [
+                                  DropDownField.formDropDownSearchAPI2(GlobalKey(), context,
+                                      width: context.width * 0.17, onchanged: (val) {}, title: 'Banner', url: ''),
+                                  // SizedBox(width: 20),
+                                  InputFields.formField1(hintTxt: "Filler Name", controller: TextEditingController(), width: 0.17),
+                                  // SizedBox(width: 20),
+                                  InputFields.formField1(hintTxt: "TX Caption", controller: TextEditingController(), width: 0.17),
+                                ],
+                              ),
+                              SizedBox(height: 14),
+                              Row(
+                                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                children: [
+                                  InputFields.formField1(hintTxt: "Tape ID", controller: TextEditingController(), width: 0.17),
+                                  // SizedBox(width: 20),
+                                  InputFields.formField1(hintTxt: "Seg No", controller: TextEditingController(), width: 0.17),
+                                  // SizedBox(width: 20),
+                                  InputFields.formField1(hintTxt: "TX No", controller: TextEditingController(), width: 0.17),
+                                ],
+                              ),
+                              SizedBox(height: 14),
 
-                          Row(
-                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                            children: [
-                              TimeWithThreeTextField(title: "SOM", mainTextController: TextEditingController(), widthRation: 0.17, isTime: false),
-                              // SizedBox(width: 20),
-                              TimeWithThreeTextField(title: "EOM", mainTextController: TextEditingController(), widthRation: 0.17, isTime: false),
-                              // SizedBox(width: 20),
-                              TimeWithThreeTextField(
-                                  title: "Duration", mainTextController: TextEditingController(), widthRation: 0.17, isTime: false),
-                            ],
-                          ),
-                          SizedBox(height: 14),
-                          Row(
-                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                            children: [
-                              DropDownField.formDropDown1WidthMap([], (p0) => null, "Tape Type", .17, autoFocus: true),
-                              // SizedBox(width: 20),
-                              DropDownField.formDropDown1WidthMap([], (p0) => null, "Type", .17),
-                              // SizedBox(width: 20),
-                              DropDownField.formDropDown1WidthMap([], (p0) => null, "Censhor", .17, autoFocus: true),
-                            ],
-                          ),
-                          SizedBox(height: 14),
-                          Row(
-                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                            children: [
-                              DropDownField.formDropDown1WidthMap([], (p0) => null, "Langauge", .17),
-                              // SizedBox(width: 20),
-                              DropDownField.formDropDown1WidthMap([], (p0) => null, "Production", .17, autoFocus: true),
-                              // SizedBox(width: 20),
-                              InputFields.formField1(hintTxt: "Seg ID", controller: TextEditingController(), width: 0.17),
-                            ],
-                          ),
-                          SizedBox(height: 14),
-                          Row(
-                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                            children: [
-                              DropDownField.formDropDown1WidthMap([], (p0) => null, "Color", 0.17, autoFocus: true),
-                              // SizedBox(width: 20),
-                              DropDownField.formDropDown1WidthMap([], (p0) => null, "Region", .17, autoFocus: true),
-                              // SizedBox(width: 20),
-                              DropDownField.formDropDown1WidthMap([], (p0) => null, "Energy", .17),
-                            ],
-                          ),
-                          SizedBox(height: 14),
-                          Row(
-                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                            children: [
-                              DropDownField.formDropDown1WidthMap([], (p0) => null, "Era", .17, autoFocus: true),
-                              // SizedBox(width: 20),
-                              DropDownField.formDropDown1WidthMap([], (p0) => null, "Song Grade", .17),
-                              // SizedBox(width: 20),
-                              DropDownField.formDropDown1WidthMap([], (p0) => null, "Meed", .17, autoFocus: true),
-                            ],
-                          ),
-                          SizedBox(height: 14),
-                          Row(
-                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                            children: [
-                              DropDownField.formDropDown1WidthMap([], (p0) => null, "Tempo", .17),
-                              // SizedBox(width: 20),
-                              InputFields.formField1(hintTxt: "Movie Name", controller: TextEditingController(), width: 0.17),
-                              // SizedBox(width: 20),
-                              InputFields.formField1(hintTxt: "Release Year", controller: TextEditingController(), width: 0.17),
-                            ],
-                          ),
-                          SizedBox(height: 14),
-                          Row(
-                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                            children: [
-                              InputFields.formField1(hintTxt: "Singer", controller: TextEditingController(), width: 0.17),
-                              // SizedBox(width: 20),
-                              InputFields.formField1(hintTxt: "Music Director", controller: TextEditingController(), width: 0.17),
-                              // SizedBox(width: 20),
-                              InputFields.formField1(hintTxt: "Music Company", controller: TextEditingController(), width: 0.17),
-                            ],
-                          ),
-                          // SizedBox(height: 4),
-                        ],
-                      ),
-                    ),
-                  ),
-                  SizedBox(width: 14),
-                  Expanded(
-                    flex: 8,
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      mainAxisSize: MainAxisSize.max,
-                      children: [
-                        Expanded(
-                          child: Container(
-                            width: double.infinity,
-                            decoration: BoxDecoration(border: Border.all(color: Colors.grey)),
-                            padding: const EdgeInsets.all(16.0),
-                            child: Column(
-                              children: [
-                                Row(
-                                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                                  children: [
-                                    DropDownField.formDropDown1WidthMap([], (p0) => null, "Source", .17, autoFocus: true),
-                                    // SizedBox(width: 20),
-                                    DropDownField.formDropDown1WidthMap([], (p0) => null, "ID No", .17),
-                                  ],
-                                ),
-                                SizedBox(height: 14),
-                                Row(
-                                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                                  children: [
-                                    DropDownField.formDropDown1WidthMap([], (p0) => null, "Start Date", .17, autoFocus: true),
-                                    // SizedBox(width: 20),
-                                    DropDownField.formDropDown1WidthMap([], (p0) => null, "End Date", .17),
-                                  ],
-                                ),
-                                SizedBox(height: 14),
-                                Expanded(
-                                  child: Column(
-                                    crossAxisAlignment: CrossAxisAlignment.start,
-                                    children: [
-                                      Text(
-                                        "Synopsis",
-                                        style: TextStyle(
-                                          fontSize: SizeDefine.labelSize1,
-                                          color: Colors.black,
-                                          fontWeight: FontWeight.w500,
-                                        ),
-                                      ),
-                                      const SizedBox(height: 5),
-                                      TextFormField(
-                                        maxLines: 110 ~/ 20,
-                                        decoration: InputDecoration(
-                                          filled: true,
-                                          fillColor: Colors.white,
-                                          border: OutlineInputBorder(
-                                            borderRadius: BorderRadius.circular(0),
-                                            borderSide: BorderSide(
-                                              color: Colors.deepPurpleAccent,
-                                            ),
-                                          ),
-                                          enabledBorder: OutlineInputBorder(
-                                            borderRadius: BorderRadius.circular(0),
-                                            borderSide: BorderSide(
-                                              color: Colors.deepPurpleAccent,
-                                            ),
-                                          ),
-                                          focusedBorder: OutlineInputBorder(
-                                            borderRadius: BorderRadius.circular(0),
-                                            borderSide: BorderSide(
-                                              color: Colors.deepPurpleAccent,
-                                            ),
-                                          ),
-                                          errorBorder: OutlineInputBorder(
-                                            borderRadius: BorderRadius.circular(0),
-                                            borderSide: BorderSide(
-                                              color: Colors.deepPurpleAccent,
-                                            ),
-                                          ),
-                                        ),
-                                      ),
-                                    ],
+                              Row(
+                                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                children: [
+                                  TimeWithThreeTextField(title: "SOM", mainTextController: TextEditingController(), widthRation: 0.17, isTime: false),
+                                  // SizedBox(width: 20),
+                                  TimeWithThreeTextField(title: "EOM", mainTextController: TextEditingController(), widthRation: 0.17, isTime: false),
+                                  // SizedBox(width: 20),
+                                  TimeWithThreeTextField(
+                                      title: "Duration", mainTextController: TextEditingController(), widthRation: 0.17, isTime: false),
+                                ],
+                              ),
+                              SizedBox(height: 14),
+                              Row(
+                                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                children: [
+                                  DropDownField.formDropDown1WidthMap(
+                                    [],
+                                    (p0) => null,
+                                    "Tape Type",
+                                    .17,
                                   ),
-                                ),
-                                SizedBox(height: 14),
-                              ],
-                            ),
+                                  // SizedBox(width: 20),
+                                  DropDownField.formDropDown1WidthMap([], (p0) => null, "Type", .17),
+                                  // SizedBox(width: 20),
+                                  DropDownField.formDropDown1WidthMap(
+                                    [],
+                                    (p0) => null,
+                                    "Censhor",
+                                    .17,
+                                  ),
+                                ],
+                              ),
+                              SizedBox(height: 14),
+                              Row(
+                                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                children: [
+                                  DropDownField.formDropDown1WidthMap([], (p0) => null, "Langauge", .17),
+                                  // SizedBox(width: 20),
+                                  DropDownField.formDropDown1WidthMap(
+                                    [],
+                                    (p0) => null,
+                                    "Production",
+                                    .17,
+                                  ),
+                                  // SizedBox(width: 20),
+                                  InputFields.formField1(hintTxt: "Seg ID", controller: TextEditingController(), width: 0.17),
+                                ],
+                              ),
+                              SizedBox(height: 14),
+                              Row(
+                                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                children: [
+                                  DropDownField.formDropDown1WidthMap(
+                                    [],
+                                    (p0) => null,
+                                    "Color",
+                                    0.17,
+                                  ),
+                                  // SizedBox(width: 20),
+                                  DropDownField.formDropDown1WidthMap(
+                                    [],
+                                    (p0) => null,
+                                    "Region",
+                                    .17,
+                                  ),
+                                  // SizedBox(width: 20),
+                                  DropDownField.formDropDown1WidthMap([], (p0) => null, "Energy", .17),
+                                ],
+                              ),
+                              SizedBox(height: 14),
+                              Row(
+                                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                children: [
+                                  DropDownField.formDropDown1WidthMap(
+                                    [],
+                                    (p0) => null,
+                                    "Era",
+                                    .17,
+                                  ),
+                                  // SizedBox(width: 20),
+                                  DropDownField.formDropDown1WidthMap([], (p0) => null, "Song Grade", .17),
+                                  // SizedBox(width: 20),
+                                  DropDownField.formDropDown1WidthMap(
+                                    [],
+                                    (p0) => null,
+                                    "Meed",
+                                    .17,
+                                  ),
+                                ],
+                              ),
+                              SizedBox(height: 14),
+                              Row(
+                                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                children: [
+                                  DropDownField.formDropDown1WidthMap([], (p0) => null, "Tempo", .17),
+                                  // SizedBox(width: 20),
+                                  InputFields.formField1(hintTxt: "Movie Name", controller: TextEditingController(), width: 0.17),
+                                  // SizedBox(width: 20),
+                                  InputFields.formField1(hintTxt: "Release Year", controller: TextEditingController(), width: 0.17),
+                                ],
+                              ),
+                              SizedBox(height: 14),
+                              Row(
+                                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                children: [
+                                  InputFields.formField1(hintTxt: "Singer", controller: TextEditingController(), width: 0.17),
+                                  // SizedBox(width: 20),
+                                  InputFields.formField1(hintTxt: "Music Director", controller: TextEditingController(), width: 0.17),
+                                  // SizedBox(width: 20),
+                                  InputFields.formField1(hintTxt: "Music Company", controller: TextEditingController(), width: 0.17),
+                                ],
+                              ),
+                              // SizedBox(height: 4),
+                            ],
                           ),
                         ),
-                        SizedBox(height: 14),
-                        Text("Annotation"),
-                        SizedBox(height: 5),
-                        Expanded(
-                          child: Container(
-                            width: double.infinity,
-                            decoration: BoxDecoration(border: Border.all(color: Colors.grey)),
-                            padding: const EdgeInsets.all(16.0),
-                            child: Column(
-                              children: [
-                                DropDownField.formDropDownSearchAPI2(
-                                  GlobalKey(),
-                                  context,
-                                  width: context.width * 0.37,
-                                  onchanged: (DropDownValue) {},
-                                  title: 'Banner',
-                                  url: '',
-                                ),
-                                SizedBox(height: 14),
-                                Row(
-                                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                                  crossAxisAlignment: CrossAxisAlignment.end,
-                                  children: [
-                                    TimeWithThreeTextField(
-                                        title: "SOM", mainTextController: TextEditingController(), widthRation: 0.11, isTime: false),
-                                    // SizedBox(width: 20),
-                                    TimeWithThreeTextField(
-                                        title: "EOM", mainTextController: TextEditingController(), widthRation: 0.11, isTime: false),
-                                    // SizedBox(width: 20),
-                                    FormButton(btnText: "btnText"),
-                                  ],
-                                ),
-                                SizedBox(height: 14),
-                                Expanded(
-                                  child: Container(
-                                    decoration: BoxDecoration(
-                                        border: Border.all(
-                                      color: Colors.grey,
-                                    )),
-                                  ),
-                                ),
-                                SizedBox(height: 14),
-                                Row(
-                                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                                  children: [
-                                    TimeWithThreeTextField(
-                                        title: "SOM", mainTextController: TextEditingController(), widthRation: 0.17, isTime: false),
-                                    // SizedBox(width: 20),
-                                    TimeWithThreeTextField(
-                                        title: "EOM", mainTextController: TextEditingController(), widthRation: 0.17, isTime: false),
-                                  ],
-                                ),
-                              ],
-                            ),
-                          ),
-                        )
-                      ],
+                      ),
                     ),
-                  ),
-                ],
+                    SizedBox(width: 14),
+                    FocusTraversalGroup(
+                      policy: WidgetOrderTraversalPolicy(),
+                      child: Expanded(
+                        flex: 8,
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          mainAxisSize: MainAxisSize.max,
+                          children: [
+                            Expanded(
+                              child: Container(
+                                width: double.infinity,
+                                decoration: BoxDecoration(border: Border.all(color: Colors.grey)),
+                                padding: const EdgeInsets.all(16.0),
+                                child: Column(
+                                  children: [
+                                    Row(
+                                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                      children: [
+                                        DropDownField.formDropDown1WidthMap([], (p0) => null, "Source", .17),
+                                        // SizedBox(width: 20),
+                                        DropDownField.formDropDown1WidthMap([], (p0) => null, "ID No", .17),
+                                      ],
+                                    ),
+                                    SizedBox(height: 14),
+                                    Row(
+                                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                      children: [
+                                        DropDownField.formDropDown1WidthMap(
+                                          [],
+                                          (p0) => null,
+                                          "Start Date",
+                                          .17,
+                                        ),
+                                        // SizedBox(width: 20),
+                                        DropDownField.formDropDown1WidthMap([], (p0) => null, "End Date", .17),
+                                      ],
+                                    ),
+                                    SizedBox(height: 14),
+                                    Expanded(
+                                      child: Column(
+                                        crossAxisAlignment: CrossAxisAlignment.start,
+                                        children: [
+                                          Text(
+                                            "Synopsis",
+                                            style: TextStyle(
+                                              fontSize: SizeDefine.labelSize1,
+                                              color: Colors.black,
+                                              fontWeight: FontWeight.w500,
+                                            ),
+                                          ),
+                                          const SizedBox(height: 5),
+                                          TextFormField(
+                                            maxLines: 110 ~/ 20,
+                                            decoration: InputDecoration(
+                                              filled: true,
+                                              fillColor: Colors.white,
+                                              border: OutlineInputBorder(
+                                                borderRadius: BorderRadius.circular(0),
+                                                borderSide: BorderSide(
+                                                  color: Colors.deepPurpleAccent,
+                                                ),
+                                              ),
+                                              enabledBorder: OutlineInputBorder(
+                                                borderRadius: BorderRadius.circular(0),
+                                                borderSide: BorderSide(
+                                                  color: Colors.deepPurpleAccent,
+                                                ),
+                                              ),
+                                              focusedBorder: OutlineInputBorder(
+                                                borderRadius: BorderRadius.circular(0),
+                                                borderSide: BorderSide(
+                                                  color: Colors.deepPurpleAccent,
+                                                ),
+                                              ),
+                                              errorBorder: OutlineInputBorder(
+                                                borderRadius: BorderRadius.circular(0),
+                                                borderSide: BorderSide(
+                                                  color: Colors.deepPurpleAccent,
+                                                ),
+                                              ),
+                                            ),
+                                          ),
+                                        ],
+                                      ),
+                                    ),
+                                    SizedBox(height: 14),
+                                  ],
+                                ),
+                              ),
+                            ),
+                            SizedBox(height: 14),
+                            Text("Annotation"),
+                            SizedBox(height: 5),
+                            Expanded(
+                              child: Container(
+                                width: double.infinity,
+                                decoration: BoxDecoration(border: Border.all(color: Colors.grey)),
+                                padding: const EdgeInsets.all(16.0),
+                                child: Column(
+                                  children: [
+                                    DropDownField.formDropDownSearchAPI2(
+                                      GlobalKey(),
+                                      context,
+                                      width: context.width * 0.37,
+                                      onchanged: (DropDownValue) {},
+                                      title: 'Banner',
+                                      url: '',
+                                    ),
+                                    SizedBox(height: 14),
+                                    Row(
+                                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                      crossAxisAlignment: CrossAxisAlignment.end,
+                                      children: [
+                                        TimeWithThreeTextField(
+                                            title: "TC In", mainTextController: TextEditingController(), widthRation: 0.11, isTime: false),
+                                        // SizedBox(width: 20),
+                                        TimeWithThreeTextField(
+                                            title: "TC Out", mainTextController: TextEditingController(), widthRation: 0.11, isTime: false),
+                                        // SizedBox(width: 20),
+                                        FormButton(btnText: "Add", callback: () {}),
+                                      ],
+                                    ),
+                                    SizedBox(height: 14),
+                                    Expanded(
+                                      child: Container(
+                                        decoration: BoxDecoration(
+                                            border: Border.all(
+                                          color: Colors.grey,
+                                        )),
+                                      ),
+                                    ),
+                                    SizedBox(height: 14),
+                                    Row(
+                                      crossAxisAlignment: CrossAxisAlignment.end,
+                                      children: [
+                                        InputFields.formField1(hintTxt: "Copy", controller: TextEditingController(), width: 0.11),
+                                        Spacer(),
+                                        InputFields.formField1(hintTxt: "Seg No", controller: TextEditingController(), width: 0.11),
+                                        SizedBox(width: 20),
+                                        FormButton(btnText: "Copy", callback: () {}),
+                                      ],
+                                    ),
+                                  ],
+                                ),
+                              ),
+                            )
+                          ],
+                        ),
+                      ),
+                    ),
+                  ],
+                ),
               ),
             ),
             SizedBox(height: 8),

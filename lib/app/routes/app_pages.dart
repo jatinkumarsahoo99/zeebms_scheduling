@@ -2,6 +2,8 @@ import 'package:get/get.dart';
 
 import '../modules/FillerMaster/bindings/filler_master_binding.dart';
 import '../modules/FillerMaster/views/filler_master_view.dart';
+import '../modules/PromoMaster/bindings/promo_master_binding.dart';
+import '../modules/PromoMaster/views/promo_master_view.dart';
 import '../modules/SecondaryEventMaster/bindings/secondary_event_master_binding.dart';
 import '../modules/SecondaryEventMaster/views/secondary_event_master_view.dart';
 import '../modules/home/bindings/home_binding.dart';
@@ -131,6 +133,11 @@ class AppPages {
       name: _Paths.FILLER_MASTER,
       page: () => const FillerMasterView(),
       binding: FillerMasterBinding(),
+    ),
+    GetPage(
+      name: _Paths.PROMO_MASTER,
+      page: () => const PromoMasterView(),
+      binding: PromoMasterBinding(),
     ),
   ];
 }
