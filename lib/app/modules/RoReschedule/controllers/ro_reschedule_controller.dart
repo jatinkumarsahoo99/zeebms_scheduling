@@ -137,8 +137,8 @@ class RoRescheduleController extends GetxController {
             "backDated": 1
           },
           fun: (data) {
-            if (data is Map<String, dynamic> &&
-                data.containsKey("info_LeaveBookingNumber")) {
+            if (data is Map && data.containsKey("info_LeaveBookingNumber")) {
+              print("Parsing Data");
               roRescheduleOnLeaveData = RORescheduleOnLeaveData.fromJson(
                   data["info_LeaveBookingNumber"]);
 

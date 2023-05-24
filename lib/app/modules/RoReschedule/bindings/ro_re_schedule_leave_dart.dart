@@ -47,42 +47,50 @@ class RORescheduleOnLeaveData {
     zoneCode = json['zoneCode'];
     bookingNumber = json['bookingNumber'];
     bookingMonth = json['bookingMonth'];
+    print("parsing lstcmbTapeID");
     if (json['lstcmbTapeID'] != null) {
       lstcmbTapeID = <LstcmbTapeID>[];
       json['lstcmbTapeID'].forEach((v) {
         lstcmbTapeID!.add(LstcmbTapeID.fromJson(v));
       });
     }
+    print("parsing lstcmbBulkTape");
+
     if (json['lstcmbBulkTape'] != null) {
       lstcmbBulkTape = <LstcmbBulkTape>[];
       json['lstcmbBulkTape'].forEach((v) {
         lstcmbBulkTape!.add(LstcmbBulkTape.fromJson(v));
       });
     }
+    print("parsing lstdgvUpdated");
     if (json['lstdgvUpdated'] != null) {
       lstdgvUpdated = <LstdgvUpdated>[];
       json['lstdgvUpdated'].forEach((v) {
         lstdgvUpdated!.add(LstdgvUpdated.fromJson(v));
       });
     }
+    print("parsing print");
     if (json['lstDgvRO'] != null) {
       lstDgvRO = <LstDgvRO>[];
       json['lstDgvRO'].forEach((v) {
         lstDgvRO!.add(LstDgvRO.fromJson(v));
       });
     }
+    print("parsing lstTable");
     if (json['lstTable'] != null) {
       lstTable = <LstTable>[];
       json['lstTable'].forEach((v) {
         lstTable!.add(LstTable.fromJson(v));
       });
     }
+    print("parsing lstTapeDetails");
     if (json['lstTapeDetails'] != null) {
       lstTapeDetails = <LstTapeDetails>[];
       json['lstTapeDetails'].forEach((v) {
         lstTapeDetails!.add(LstTapeDetails.fromJson(v));
       });
     }
+    print("parsing lstUpdateTable");
     if (json['lstUpdateTable'] != null) {
       lstUpdateTable = <LstUpdateTable>[];
       json['lstUpdateTable'].forEach((v) {
@@ -304,7 +312,11 @@ class LstUpdateTable {
     positionName = json['positionName'];
     edit = json['edit'];
     rescheduleno = json['rescheduleno'];
-    audited = json['audited'];
+    audited = json['audited'] is int
+        ? json['audited'] == 1
+            ? true
+            : false
+        : json['audited'];
   }
 
   Map<String, dynamic> toJson() {
