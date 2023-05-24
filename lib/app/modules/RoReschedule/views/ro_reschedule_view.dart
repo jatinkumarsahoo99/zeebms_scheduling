@@ -157,11 +157,17 @@ class RoRescheduleView extends GetView<RoRescheduleController> {
                                         ),
                                       )
                                     : DataGridShowOnlyKeys(
+                                        onSelected: (p0) {
+                                          controller.changeTapeId.value = false;
+                                        },
+                                        onload: (load) {
+                                          controller.plutoGridStateManager = load.stateManager;
+                                        },
                                         onRowDoubleTap: (tapEvent) {
                                           controller.dgvGridnRowDoubleTap(tapEvent.rowIdx);
                                         },
                                         mapData: gridController.rescheduleBookingNumberLeaveData!.infoLeaveBookingNumber!.lstDgvRO!,
-                                        formatDate: false,
+                                        formatDate: true,
                                       );
                               }),
                         ),
@@ -203,7 +209,10 @@ class RoRescheduleView extends GetView<RoRescheduleController> {
                             children: [
                               InkWell(
                                 onTap: () {
-                                  controller.changeTapeId.value = !controller.changeTapeId.value;
+                                  if (controller.plutoGridStateManager!.currentCell != null) {
+                                    controller.changeTapeId.value = !controller.changeTapeId.value;
+                                    controller.onChangeTapeIDClick();
+                                  }
                                 },
                                 child: Row(mainAxisSize: MainAxisSize.max, mainAxisAlignment: MainAxisAlignment.start, children: [
                                   Obx(() => Icon(controller.changeTapeId.value ? Icons.check_box_outlined : Icons.check_box_outline_blank_outlined)),
@@ -225,14 +234,12 @@ class RoRescheduleView extends GetView<RoRescheduleController> {
                                           // controller.selectedLocation = data;
                                           // controller.getChannel(data.key);
                                         }, "Tape ID", 0.12),
-                                        InputFields.formField1(
-                                            hintTxt: "Seg", isEnable: controller.enableFields.value, controller: controller.zoneCtrl, width: 0.06),
-                                        InputFields.formField1(
-                                            hintTxt: "Dur", isEnable: controller.enableFields.value, controller: controller.zoneCtrl, width: 0.06),
+                                        InputFields.formField1(hintTxt: "Seg", isEnable: false, controller: controller.changeTapeIdSeg, width: 0.06),
+                                        InputFields.formField1(hintTxt: "Dur", isEnable: false, controller: controller.changeTapeIdDur, width: 0.06),
                                         InputFields.formField1(
                                             hintTxt: "Caption",
                                             isEnable: controller.enableFields.value,
-                                            controller: controller.zoneCtrl,
+                                            controller: controller.chnageTapeIdCap,
                                             width: 0.18),
                                         FormButtonWrapper(btnText: "Modify"),
                                         FormButtonWrapper(btnText: "Close ")
