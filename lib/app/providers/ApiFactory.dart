@@ -321,7 +321,7 @@ class ApiFactory {
   static String RO_RESCHEDULE_ADDSPOT = "$BASE_URL/api/RoReschedule/OnClick_AddSpots";
   static String RO_RESCHEDULE_SAVE = "$BASE_URL/api/RoReschedule/OnSave_Rescheduling";
 
-  static String RO_RESCHEDULE_SELECTED_INDEX_CHNAGE_TAPEID(tapeID) => "$BASE_URL/api/RoReschedule/SelectedIndexChanged_TapeID?TapeID=$tapeID'";
+  static String RO_RESCHEDULE_SELECTED_INDEX_CHNAGE_TAPEID(tapeID) => "$BASE_URL/api/RoReschedule/SelectedIndexChanged_TapeID?TapeID=$tapeID";
 ////////////////////////////////End Spot Priority ////////////////////////
 
 ////////////////////////////// Transmission Log | Sanjaya :UI | Deven Bhole : API ////////////////////////
