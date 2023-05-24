@@ -9,6 +9,7 @@ import 'package:bms_scheduling/widgets/input_fields.dart';
 import 'package:flutter/material.dart';
 
 import 'package:get/get.dart';
+import 'package:pluto_grid/pluto_grid.dart';
 
 import '../controllers/ro_reschedule_controller.dart';
 
@@ -190,8 +191,9 @@ class RoRescheduleView extends GetView<RoRescheduleController> {
                                         ),
                                       )
                                     : DataGridShowOnlyKeys(
+                                        mode: PlutoGridMode.selectWithOneTap,
                                         onSelected: (p0) {
-                                          controller.changeTapeId.value = false;
+                                          controller.closeModify();
                                         },
                                         onload: (load) {
                                           controller.plutoGridStateManager =
@@ -310,8 +312,16 @@ class RoRescheduleView extends GetView<RoRescheduleController> {
                                             controller:
                                                 controller.chnageTapeIdCap,
                                             width: 0.18),
-                                        FormButtonWrapper(btnText: "Modify"),
-                                        FormButtonWrapper(btnText: "Close ")
+                                        FormButtonWrapper(
+                                          btnText: "Modify",
+                                          callback: () {
+                                            controller.modify();
+                                          },
+                                        ),
+                                        FormButtonWrapper(
+                                          btnText: "Close",
+                                          callback: () {},
+                                        )
                                       ],
                                     )
                                   : Container())

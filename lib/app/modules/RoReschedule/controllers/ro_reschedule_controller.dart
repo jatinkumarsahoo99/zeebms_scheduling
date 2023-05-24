@@ -441,7 +441,13 @@ class RoRescheduleController extends GetxController {
         api: ApiFactory.RO_RESCHEDULE_MODIFY,
         json: {
           "exportTapeCode": modifySelectedTapeCode!.key!,
-          "segmentNumber": "1",
+          "segmentNumber": roRescheduleOnLeaveData!
+              .lstDgvRO![plutoGridStateManager!.currentCell!.row.sortIdx]
+              .segmentNumber
+              .toString(),
+          "lstTable": roRescheduleOnLeaveData!.lstTable!
+              .map((e) => e.toJson())
+              .toList(),
           "lstDgvRO": [
             roRescheduleOnLeaveData!
                 .lstDgvRO![plutoGridStateManager!.currentCell!.row.sortIdx]
@@ -449,6 +455,13 @@ class RoRescheduleController extends GetxController {
           ]
         },
         fun: (data) {});
+  }
+
+  closeModify() {
+    changeTapeId.value = false;
+    changeTapeIdSeg.text = "";
+    changeTapeIdDur.text = "";
+    modifySelectedTapeCode = null;
   }
 
   addSpot(data) {
