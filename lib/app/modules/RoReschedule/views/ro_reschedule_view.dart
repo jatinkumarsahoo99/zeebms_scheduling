@@ -255,8 +255,6 @@ class RoRescheduleView extends GetView<RoRescheduleController> {
                                   if (controller
                                           .plutoGridStateManager!.currentCell !=
                                       null) {
-                                    controller.changeTapeId.value =
-                                        !controller.changeTapeId.value;
                                     controller.onChangeTapeIDClick();
                                   }
                                 },
@@ -287,11 +285,13 @@ class RoRescheduleView extends GetView<RoRescheduleController> {
                                                     [])
                                                 .map((e) => DropDownValue(
                                                     key: e.exporttapecode,
-                                                    value: e.commercialCaption))
+                                                    value: e.exporttapecode))
                                                 .toList(), (data) {
                                           // controller.selectedLocation = data;
                                           // controller.getChannel(data.key);
-                                        }, "Tape ID", 0.12),
+                                        }, "Tape ID", 0.12,
+                                            selected: controller
+                                                .modifySelectedTapeCode),
                                         InputFields.formField1(
                                             hintTxt: "Seg",
                                             isEnable: false,
@@ -306,8 +306,7 @@ class RoRescheduleView extends GetView<RoRescheduleController> {
                                             width: 0.06),
                                         InputFields.formField1(
                                             hintTxt: "Caption",
-                                            isEnable:
-                                                controller.enableFields.value,
+                                            isEnable: false,
                                             controller:
                                                 controller.chnageTapeIdCap,
                                             width: 0.18),

@@ -227,7 +227,10 @@ class RoRescheduleController extends GetxController {
                 roRescheduleOnLeaveData!.lstDgvRO![index].recordnumber,
             "zoneCode": roRescheduleOnLeaveData!.zoneCode,
             "chkTapeID": changeTapeId.value,
-            "lstDgvRow": [roRescheduleOnLeaveData!.lstDgvRO![index].toJson()]
+            "lstDgvRow": [roRescheduleOnLeaveData!.lstDgvRO![index].toJson()],
+            "lstTapeDetails": roRescheduleOnLeaveData!.lstTapeDetails!
+                .map((e) => e.toJson())
+                .toList()
           },
           fun: (data) {
             if (data is Map<String, dynamic> &&
@@ -400,10 +403,36 @@ class RoRescheduleController extends GetxController {
         .exportTapeCode;
 
     print(tapeId);
-    Get.find<ConnectorControl>().GETMETHODCALL(
-        api: ApiFactory.RO_RESCHEDULE_SELECTED_INDEX_CHNAGE_TAPEID(tapeId),
+    Get.find<ConnectorControl>().POSTMETHOD_FORMDATA(
+        api: ApiFactory.RO_RESCHEDULE_SELECTED_INDEX_CHNAGE_TAPEID,
+        json: {
+          "TapeID": tapeId,
+          "lstTapeDetails": roRescheduleOnLeaveData!.lstTapeDetails!
+              .map((e) => e.toJson())
+              .toList()
+        },
         fun: (data) {
-          print(data);
+          if (data is Map &&
+              data.containsKey("info_SelectedIndexChanged_TapeID")) {
+            var tapeData = data["info_SelectedIndexChanged_TapeID"];
+            chnageTapeIdCap.text = tapeData["commercialCaption"];
+            if (roRescheduleOnLeaveData?.lstcmbTapeID != null &&
+                roRescheduleOnLeaveData!.lstcmbTapeID!.isNotEmpty) {
+              modifySelectedTapeCode = DropDownValue(
+                  key: roRescheduleOnLeaveData?.lstcmbTapeID![0].exporttapecode,
+                  value:
+                      roRescheduleOnLeaveData?.lstcmbTapeID![0].exporttapecode);
+            }
+            changeTapeIdSeg.text = roRescheduleOnLeaveData!
+                .lstDgvRO![plutoGridStateManager!.currentCell!.row.sortIdx]
+                .segmentNumber
+                .toString();
+            changeTapeIdDur.text = roRescheduleOnLeaveData!
+                .lstDgvRO![plutoGridStateManager!.currentCell!.row.sortIdx]
+                .tapeDuration
+                .toString();
+            changeTapeId.value = !changeTapeId.value;
+          }
         });
   }
 
@@ -425,5 +454,36 @@ class RoRescheduleController extends GetxController {
   addSpot(data) {
     Get.find<ConnectorControl>().POSTMETHOD(
         api: ApiFactory.RO_RESCHEDULE_ADDSPOT, json: data, fun: (data) {});
+  }
+
+  save() {
+    Get.find<ConnectorControl>().POSTMETHOD(
+        api: ApiFactory.RO_RESCHEDULE_SAVE,
+        json: {
+          "locationCode": selectedLocation!.key!,
+          "channelCode": selectedChannel!.key!,
+          "rescheduleMonth": bookingMonthCtrl.text,
+          "rescheduleNumber": tonumberCtrl.text,
+          "rescheduleDate": DateFormat("yyyy-MM-dd")
+              .format(DateFormat("dd-MM-yyyy").parse(refDateCtrl.text)),
+          "bookingEffectiveDate": DateFormat("yyyy-MM-dd")
+              .format(DateFormat("dd-MM-yyyy").parse(effDateCtrl.text)),
+          "rescheduleReferenceNumber": referenceCtrl.text,
+          "clientCode": roRescheduleOnLeaveData!.clientname!,
+          "agencyCode": agencyCtrl.text,
+          "brandCode": branCtrl.text,
+          "rescheduleDuration": 0,
+          "rescheduleAmount": 0,
+          "executiveCode": 0,
+          "modifiedBy": "string",
+          "dealno": roRescheduleOnLeaveData!.dealno,
+          "bookingnumber": roRescheduleOnLeaveData!.bookingNumber!,
+          "edit": 0,
+          "lstDetails":
+              roRescheduleOnLeaveData!.lstTapeDetails!.map((e) => e.toJson())
+        },
+        fun: (data) {
+          print(data);
+        });
   }
 }
