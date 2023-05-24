@@ -1,18 +1,22 @@
 import 'package:bms_scheduling/widgets/radio_row.dart';
 import 'package:flutter/material.dart';
-
 import 'package:get/get.dart';
 
-import '../../../../widgets/CheckBoxWidget.dart';
 import '../../../../widgets/DateTime/DateWithThreeTextField.dart';
+import '../../../../widgets/DateTime/TimeWithThreeTextField.dart';
 import '../../../../widgets/FormButton.dart';
 import '../../../../widgets/dropdown.dart';
 import '../../../../widgets/input_fields.dart';
 import '../../../controller/HomeController.dart';
 import '../controllers/still_master_controller.dart';
 
+typedef SaySomething = void Function(String name);
+
+typedef Hey = void Function();
+
 class StillMasterView extends GetView<StillMasterController> {
   const StillMasterView({Key? key}) : super(key: key);
+
   @override
   Widget build(BuildContext context) {
     var size = MediaQuery.of(context).size;
@@ -133,26 +137,29 @@ class StillMasterView extends GetView<StillMasterController> {
                             .112,
                           ),
                           SizedBox(width: 13),
-                          InputFields.formField1(
-                            hintTxt: "SOM",
-                            controller: TextEditingController(),
-                            width: 0.11,
+                          TimeWithThreeTextField(
+                            title: "SOM",
+                            mainTextController: TextEditingController(),
+                            widthRation: 0.11,
+                            isTime: false,
                           ),
                         ],
                       ),
                       SizedBox(width: 20),
                       Row(
                         children: [
-                          InputFields.formField1(
-                            hintTxt: "EOM",
-                            controller: TextEditingController(),
-                            width: 0.11,
+                          TimeWithThreeTextField(
+                            title: "EOM",
+                            mainTextController: TextEditingController(),
+                            widthRation: 0.11,
+                            isTime: false,
                           ),
                           SizedBox(width: 10),
-                          InputFields.formField1(
-                            hintTxt: "Dur",
-                            controller: TextEditingController(),
-                            width: 0.11,
+                          TimeWithThreeTextField(
+                            title: "Duration",
+                            mainTextController: TextEditingController(),
+                            widthRation: 0.11,
+                            isTime: false,
                           ),
                         ],
                       ),

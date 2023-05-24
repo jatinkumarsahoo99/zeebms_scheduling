@@ -16,6 +16,14 @@ import '../modules/AsrunImportAdRevenue/bindings/asrun_import_binding.dart';
 import '../modules/AuditStatus/bindings/audit_status_binding.dart';
 import '../modules/FinalAuditReportAfterTelecast/bindings/final_audit_report_after_telecast_binding.dart';
 import '../modules/FinalAuditReportBeforeLog/bindings/final_audit_report_before_log_binding.dart';
+import '../modules/FpcMismatch/bindings/fpc_mismatch_binding.dart';
+import '../modules/ImportDigitextRunOrder/bindings/import_digitext_run_order_binding.dart';
+import '../modules/MamWorkOrders/bindings/mam_work_orders_binding.dart';
+import '../modules/PromoMaster/bindings/promo_master_binding.dart';
+import '../modules/PromoMaster/controllers/promo_master_controller.dart';
+import '../modules/PromoMaster/views/promo_master_view.dart';
+import '../modules/RoBooking/bindings/ro_booking_binding.dart';
+import '../modules/RoCancellation/bindings/ro_cancellation_binding.dart';
 import '../modules/RoReschedule/bindings/ro_reschedule_binding.dart';
 import '../modules/RosDistribution/bindings/ros_distribution_binding.dart';
 import '../modules/SalesAuditExtraSpotsReport/bindings/sales_audit_extra_spots_report_binding.dart';
@@ -68,7 +76,6 @@ class AppPages {
       name: _Paths.RO_BOOKING,
       page: () => AuthGuard1(childName: _Paths.RO_BOOKING),
       binding: RoBookingBinding(),
-
     ),
     GetPage(
       name: _Paths.FILLER,
@@ -156,15 +163,18 @@ class AppPages {
       binding: StillMasterBinding(),
     ),
     GetPage(
-      name: _Paths.EVENT_SECONDARY,
-      page: () => EventSecondaryView(),
-      binding: EventSecondaryBinding(),
+      name: _Paths.PROMO_MASTER,
+      page: () => AuthGuard1(
+        childName: _Paths.PROMO_MASTER,
+      ),
+      binding: PromoMasterBinding(),
     ),
     GetPage(
-      name: _Paths.SLIDE,
-      page: () => SlideView(),
-      binding: SlideBinding(),
+      name: _Paths.FILLER_MASTER,
+      page: () => AuthGuard1(
+        childName: _Paths.FILLER_MASTER,
+      ),
+      binding: PromoMasterBinding(),
     ),
   ];
-
 }
