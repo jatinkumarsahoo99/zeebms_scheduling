@@ -93,9 +93,7 @@ class DataGridShowOnlyKeys extends StatelessWidget {
             enableContextMenu: false,
             width: 25,
             enableAutoEditing: false,
-            hide: hideCode! &&
-                key.toString().toLowerCase() != "hourcode" &&
-                key.toString().toLowerCase().contains("code"),
+            hide: hideCode! && key.toString().toLowerCase() != "hourcode" && key.toString().toLowerCase().contains("code"),
             enableColumnDrag: false,
             field: "no",
             type: PlutoColumnType.text()));
@@ -113,8 +111,7 @@ class DataGridShowOnlyKeys extends StatelessWidget {
                                 : key.toString().pascalCaseToNormal()
                         : key.toString().pascalCaseToNormal()
                     : key.toString(),
-                enableRowChecked:
-                    (checkRow == true && key == checkRowKey) ? true : false,
+                enableRowChecked: (checkRow == true && key == checkRowKey) ? true : false,
                 renderer: ((rendererContext) {
                   if (actionIconKey != null && key == actionIconKey) {
                     return GestureDetector(
@@ -144,9 +141,7 @@ class DataGridShowOnlyKeys extends StatelessWidget {
                   } else {
                     return GestureDetector(
                       onSecondaryTapDown: (detail) {
-                        DataGridMenu().showGridMenu(
-                            rendererContext.stateManager, detail, context,
-                            exportFileName: exportFileName);
+                        DataGridMenu().showGridMenu(rendererContext.stateManager, detail, context, exportFileName: exportFileName);
                       },
                       child: Text(
                         (rendererContext.cell.value ?? "").toString(),
@@ -171,9 +166,7 @@ class DataGridShowOnlyKeys extends StatelessWidget {
                 enableAutoEditing: false,
                 hide: showonly == null
                     ? (hideKeys != null && hideKeys!.contains(key)) ||
-                        hideCode! &&
-                            key.toString().toLowerCase() != "hourcode" &&
-                            key.toString().toLowerCase().contains("code")
+                        hideCode! && key.toString().toLowerCase() != "hourcode" && key.toString().toLowerCase().contains("code")
                     : !showonly!.contains(key),
                 enableColumnDrag: false,
                 field: key,
@@ -189,8 +182,7 @@ class DataGridShowOnlyKeys extends StatelessWidget {
                       ? "FPC Caption"
                       : key.toString().pascalCaseToNormal()
                   : key,
-              enableRowChecked:
-                  (checkRow == true && key == checkRowKey) ? true : false,
+              enableRowChecked: (checkRow == true && key == checkRowKey) ? true : false,
               renderer: ((rendererContext) {
                 if (actionIconKey != null) {
                   if (key == actionIconKey) {
@@ -207,16 +199,10 @@ class DataGridShowOnlyKeys extends StatelessWidget {
                   } else {
                     return GestureDetector(
                       onSecondaryTapDown: (detail) {
-                        DataGridMenu().showGridMenu(
-                            rendererContext.stateManager, detail, context,
-                            exportFileName: exportFileName);
+                        DataGridMenu().showGridMenu(rendererContext.stateManager, detail, context, exportFileName: exportFileName);
                       },
                       child: Text(
-                        (checkRow == true &&
-                                key == checkRowKey &&
-                                hideCheckKeysValue)
-                            ? ""
-                            : rendererContext.cell.value.toString(),
+                        (checkRow == true && key == checkRowKey && hideCheckKeysValue) ? "" : rendererContext.cell.value.toString(),
                         style: TextStyle(
                           fontSize: SizeDefine.columnTitleFontSize,
                         ),
@@ -226,16 +212,10 @@ class DataGridShowOnlyKeys extends StatelessWidget {
                 } else {
                   return GestureDetector(
                     onSecondaryTapDown: (detail) {
-                      DataGridMenu().showGridMenu(
-                          rendererContext.stateManager, detail, context,
-                          exportFileName: exportFileName);
+                      DataGridMenu().showGridMenu(rendererContext.stateManager, detail, context, exportFileName: exportFileName);
                     },
                     child: Text(
-                      (checkRow == true &&
-                              key == checkRowKey &&
-                              hideCheckKeysValue)
-                          ? ""
-                          : rendererContext.cell.value.toString(),
+                      (checkRow == true && key == checkRowKey && hideCheckKeysValue) ? "" : rendererContext.cell.value.toString(),
                       style: TextStyle(
                         fontSize: SizeDefine.columnTitleFontSize,
                       ),
@@ -248,15 +228,11 @@ class DataGridShowOnlyKeys extends StatelessWidget {
               enableEditingMode: editKeys != null && editKeys!.contains(key),
               enableDropToResize: true,
               enableContextMenu: false,
-              width: (keysWidths != null && keysWidths!.containsKey(key))
-                  ? keysWidths![key]!
-                  : Utils.getColumnSize(key: key, value: mapData[0][key]),
+              width: (keysWidths != null && keysWidths!.containsKey(key)) ? keysWidths![key]! : Utils.getColumnSize(key: key, value: mapData[0][key]),
               enableAutoEditing: false,
               hide: showonly == null
                   ? (hideKeys != null && hideKeys!.contains(key)) ||
-                      hideCode! &&
-                          key.toString().toLowerCase() != "hourcode" &&
-                          key.toString().toLowerCase().contains("code")
+                      hideCode! && key.toString().toLowerCase() != "hourcode" && key.toString().toLowerCase().contains("code")
                   : !showonly!.contains(key),
               enableColumnDrag: false,
               field: key,
@@ -276,10 +252,8 @@ class DataGridShowOnlyKeys extends StatelessWidget {
             cells[element.key] = PlutoCell(
               value: element.key == "selected" || element.value == null
                   ? ""
-                  : element.key.toString().toLowerCase().contains("date") &&
-                          formatDate!
-                      ? DateFormat(dateFromat).format(DateTime.parse(
-                          element.value.toString().replaceAll("T", " ")))
+                  : element.key.toString().toLowerCase().contains("date") && formatDate!
+                      ? DateFormat(dateFromat).format(DateTime.parse(element.value.toString().replaceAll("T", " ")))
                       : element.value.toString(),
             );
           }
@@ -308,9 +282,8 @@ class DataGridShowOnlyKeys extends StatelessWidget {
               onRowChecked: onRowChecked,
               rowColorCallback: colorCallback,
               onLoaded: (load) {
-                load.stateManager.setColumnSizeConfig(PlutoGridColumnSizeConfig(
-                    autoSizeMode: PlutoAutoSizeMode.none,
-                    resizeMode: PlutoResizeMode.normal));
+                load.stateManager
+                    .setColumnSizeConfig(PlutoGridColumnSizeConfig(autoSizeMode: PlutoAutoSizeMode.none, resizeMode: PlutoResizeMode.normal));
                 load.stateManager.setKeepFocus(false);
                 if (onload != null) {
                   onload!(load);
