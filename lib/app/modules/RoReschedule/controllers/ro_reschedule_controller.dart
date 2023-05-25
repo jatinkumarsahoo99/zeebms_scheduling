@@ -78,18 +78,15 @@ class RoRescheduleController extends GetxController {
       Get.find<ConnectorControl>().GETMETHODCALL(
           api: ApiFactory.RO_RESCHEDULE_INIT,
           fun: (data) {
-            if ((data as Map).containsKey("onLoad_Reschedulng") &&
-                data["onLoad_Reschedulng"]["lstlocationMaters"] is List) {
-              reschedulngInitData =
-                  ReschedulngInitData.fromJson(data["onLoad_Reschedulng"]);
+            if ((data as Map).containsKey("onLoad_Reschedulng") && data["onLoad_Reschedulng"]["lstlocationMaters"] is List) {
+              reschedulngInitData = ReschedulngInitData.fromJson(data["onLoad_Reschedulng"]);
               update(["initData"]);
               // for (var e in data["onLoad_Reschedulng"]["lstlocationMaters"]) {
               //   locations.add(DropDownValue(key: e["locationCod   e"], value: e["locationName"]));
               // }
               // locations.refresh();
             } else {
-              LoadingDialog.callErrorMessage1(
-                  msg: "Failed To Load Initial Data");
+              LoadingDialog.callErrorMessage1(msg: "Failed To Load Initial Data");
             }
           });
     } catch (e) {
@@ -104,11 +101,9 @@ class RoRescheduleController extends GetxController {
       Get.find<ConnectorControl>().GETMETHODCALL(
           api: ApiFactory.RO_RESCHEDULE_CHANNNEL(locationCode),
           fun: (data) {
-            if ((data as Map).containsKey("info_LeaveLocation") &&
-                data["info_LeaveLocation"] is List) {
+            if ((data as Map).containsKey("info_LeaveLocation") && data["info_LeaveLocation"] is List) {
               for (var e in data["info_LeaveLocation"]) {
-                channels.add(DropDownValue(
-                    key: e["channelcode"], value: e["channelName"]));
+                channels.add(DropDownValue(key: e["channelcode"], value: e["channelName"]));
               }
               channels.refresh();
               // channels.value = data["lstChannel"]
@@ -116,8 +111,7 @@ class RoRescheduleController extends GetxController {
               //         key: e["channelcode"], value: e["channelName"]))
               //     .toList();
             } else {
-              LoadingDialog.callErrorMessage1(
-                  msg: "Failed To Load Initial Data");
+              LoadingDialog.callErrorMessage1(msg: "Failed To Load Initial Data");
             }
           });
     } catch (e) {
@@ -130,17 +124,11 @@ class RoRescheduleController extends GetxController {
     try {
       Get.find<ConnectorControl>().POSTMETHOD(
           api: ApiFactory.RO_RESCHEDULE_BOOKINGNO_LEAVE,
-          json: {
-            "locationCode": selectedLocation!.key,
-            "channelCode": selectedChannel!.key,
-            "bookingNumber": tonumberCtrl.text,
-            "backDated": 1
-          },
+          json: {"locationCode": selectedLocation!.key, "channelCode": selectedChannel!.key, "bookingNumber": tonumberCtrl.text, "backDated": 1},
           fun: (data) {
             if (data is Map && data.containsKey("info_LeaveBookingNumber")) {
               print("Parsing Data");
-              roRescheduleOnLeaveData = RORescheduleOnLeaveData.fromJson(
-                  data["info_LeaveBookingNumber"]);
+              roRescheduleOnLeaveData = RORescheduleOnLeaveData.fromJson(data["info_LeaveBookingNumber"]);
 
               agencyCtrl.text = roRescheduleOnLeaveData!.agencyname!;
               clientCtrl.text = roRescheduleOnLeaveData!.clientname!;
@@ -149,8 +137,7 @@ class RoRescheduleController extends GetxController {
               payrouteCtrl.text = roRescheduleOnLeaveData!.payRouteName!;
               zoneCtrl.text = roRescheduleOnLeaveData!.zoneName!;
               bookingMonthCtrl.text = roRescheduleOnLeaveData!.bookingMonth!;
-              effDateCtrl.text = DateFormat("dd-MM-yyyy").format(DateTime.parse(
-                  roRescheduleOnLeaveData!.bookingEffectiveDate!));
+              effDateCtrl.text = DateFormat("dd-MM-yyyy").format(DateTime.parse(roRescheduleOnLeaveData!.bookingEffectiveDate!));
               // enableFields.value = false;
               update(["dgvGrid"]);
               // branCtrl.text = rescheduleBookingNumberLeaveData!.infoLeaveBookingNumber!.brandname!;
@@ -176,31 +163,22 @@ class RoRescheduleController extends GetxController {
             "rescheduleNumber": reSchedNoCtrl.text
           },
           fun: (data) {
-            try {
-              if (data is Map<String, dynamic> &&
-                  data.containsKey("info_OnLeaveSchedulingNo")) {
-                roRescheduleOnLeaveData = RORescheduleOnLeaveData.fromJson(
-                    data["info_OnLeaveSchedulingNo"]);
-                agencyCtrl.text = roRescheduleOnLeaveData!.agencyname!;
-                clientCtrl.text = roRescheduleOnLeaveData!.clientname!;
-                delnoCtrl.text = roRescheduleOnLeaveData!.dealno!;
-                branCtrl.text = roRescheduleOnLeaveData!.brandname!;
-                tonumberCtrl.text = roRescheduleOnLeaveData!.bookingNumber!;
-                payrouteCtrl.text = roRescheduleOnLeaveData!.payRouteName!;
-                zoneCtrl.text = roRescheduleOnLeaveData!.zoneName!;
+            if (data is Map<String, dynamic> && data.containsKey("info_OnLeaveSchedulingNo")) {
+              roRescheduleOnLeaveData = RORescheduleOnLeaveData.fromJson(data["info_OnLeaveSchedulingNo"]);
+              agencyCtrl.text = roRescheduleOnLeaveData!.agencyname!;
+              clientCtrl.text = roRescheduleOnLeaveData!.clientname!;
+              delnoCtrl.text = roRescheduleOnLeaveData!.dealno!;
+              branCtrl.text = roRescheduleOnLeaveData!.brandname!;
+              tonumberCtrl.text = roRescheduleOnLeaveData!.bookingNumber!;
+              payrouteCtrl.text = roRescheduleOnLeaveData!.payRouteName!;
+              zoneCtrl.text = roRescheduleOnLeaveData!.zoneName!;
 
-                bookingMonthCtrl.text = roRescheduleOnLeaveData!.bookingMonth!;
-                effDateCtrl.text = DateFormat("dd-MM-yyyy").format(
-                    DateTime.parse(
-                        roRescheduleOnLeaveData!.bookingEffectiveDate!));
-                // enableFields.value = false;
-                update(["dgvGrid", "updatedgvGrid"]);
-                // branCtrl.text = rescheduleBookingNumberLeaveData!.infoLeaveBookingNumber!.brandname!;
-                // branCtrl.text = rescheduleBookingNumberLeaveData!.infoLeaveBookingNumber!.brandname!;
-              }
-            } catch (e) {
-              LoadingDialog.callErrorMessage1(
-                  msg: "Failed To Load Cancellation Data");
+              bookingMonthCtrl.text = roRescheduleOnLeaveData!.bookingMonth!;
+              effDateCtrl.text = DateFormat("dd-MM-yyyy").format(DateTime.parse(roRescheduleOnLeaveData!.bookingEffectiveDate!));
+              // enableFields.value = false;
+              update(["dgvGrid", "updatedgvGrid"]);
+              // branCtrl.text = rescheduleBookingNumberLeaveData!.infoLeaveBookingNumber!.brandname!;
+              // branCtrl.text = rescheduleBookingNumberLeaveData!.infoLeaveBookingNumber!.brandname!;
             }
           });
     } catch (e) {
@@ -220,23 +198,18 @@ class RoRescheduleController extends GetxController {
             "channelCode": selectedChannel!.key!,
             "BookingNumber": tonumberCtrl.text,
             "BackDated": true,
-            "effectivedate": DateFormat("yyyy-MM-dd")
-                .format(DateFormat("dd-MM-yyyy").parse(effDateCtrl.text)),
+            "effectivedate": DateFormat("yyyy-MM-dd").format(DateFormat("dd-MM-yyyy").parse(effDateCtrl.text)),
             "dealNumber": roRescheduleOnLeaveData!.dealno,
-            "recordNumber":
-                roRescheduleOnLeaveData!.lstDgvRO![index].recordnumber,
+            "recordNumber": roRescheduleOnLeaveData!.lstDgvRO![index].recordnumber,
             "zoneCode": roRescheduleOnLeaveData!.zoneCode,
             "chkTapeID": changeTapeId.value,
             "lstDgvRow": [roRescheduleOnLeaveData!.lstDgvRO![index].toJson()],
-            "lstTapeDetails": roRescheduleOnLeaveData!.lstTapeDetails!
-                .map((e) => e.toJson())
-                .toList()
+            "lstTapeDetails": roRescheduleOnLeaveData!.lstTapeDetails!.map((e) => e.toJson()).toList()
           },
           fun: (data) {
-            if (data is Map<String, dynamic> &&
-                data.containsKey("info_OnClickdgvViewRo")) {
-              RORescheduleDGviewDoubleClickData viewDoubleClickData =
-                  RORescheduleDGviewDoubleClickData.fromJson(data);
+            if (data is Map<String, dynamic> && data.containsKey("info_OnClickdgvViewRo")) {
+              RORescheduleDGviewDoubleClickData viewDoubleClickData = RORescheduleDGviewDoubleClickData.fromJson(data["info_OnClickdgvViewRo"]);
+              PlutoGridStateManager? addSpotGridManager;
               try {
                 Get.defaultDialog(
                     content: Container(
@@ -245,7 +218,7 @@ class RoRescheduleController extends GetxController {
                   child: Row(
                     children: [
                       Container(
-                        width: Get.width * 0.30,
+                        width: Get.width * 0.26,
                         child: Wrap(
                           spacing: Get.width * .01,
                           runSpacing: 3,
@@ -253,140 +226,116 @@ class RoRescheduleController extends GetxController {
                             DropDownField.formDropDown1WidthMap(
                                 [],
                                 (data) {},
-                                selected: DropDownValue(
-                                    key: viewDoubleClickData.tapeID,
-                                    value: viewDoubleClickData.tapeID),
+                                selected: DropDownValue(key: viewDoubleClickData.tapeID, value: viewDoubleClickData.tapeID),
                                 "Tape ID",
+                                isEnable: false,
                                 0.12),
                             InputFields.formField1(
-                                focusNode: toNumberFocus,
-                                isEnable: enableFields.value,
-                                hintTxt: "Seg",
-                                controller: TextEditingController(
-                                    text: viewDoubleClickData.segment),
-                                width: 0.05),
+                                isEnable: false, hintTxt: "Seg", controller: TextEditingController(text: viewDoubleClickData.segment), width: 0.05),
+                            InputFields.formField1(
+                                isEnable: false, hintTxt: "Dur", controller: TextEditingController(text: viewDoubleClickData.duration), width: 0.05),
                             InputFields.formField1(
                                 focusNode: toNumberFocus,
-                                isEnable: enableFields.value,
-                                hintTxt: "Dur",
-                                controller: TextEditingController(
-                                    text: viewDoubleClickData.duration),
-                                width: 0.05),
-                            InputFields.formField1(
-                                focusNode: toNumberFocus,
-                                isEnable: enableFields.value,
+                                isEnable: false,
                                 hintTxt: "Caption",
-                                controller: TextEditingController(
-                                    text: viewDoubleClickData.caption),
+                                controller: TextEditingController(text: viewDoubleClickData.caption),
                                 width: 0.24),
                             InputFields.formField1(
-                                focusNode: toNumberFocus,
-                                isEnable: enableFields.value,
+                                isEnable: false,
                                 hintTxt: "Rev Type",
-                                controller: TextEditingController(
-                                    text: viewDoubleClickData.ravType),
+                                controller: TextEditingController(text: viewDoubleClickData.ravType),
                                 width: 0.115),
                             InputFields.formField1(
-                                focusNode: toNumberFocus,
-                                isEnable: enableFields.value,
+                                isEnable: false,
                                 hintTxt: "Language",
-                                controller: TextEditingController(
-                                    text: viewDoubleClickData.language),
+                                controller: TextEditingController(text: viewDoubleClickData.language),
                                 width: 0.115),
                             InputFields.formField1(
-                                focusNode: toNumberFocus,
-                                isEnable: enableFields.value,
+                                isEnable: false,
                                 hintTxt: "Pre/Mid",
-                                controller: TextEditingController(
-                                    text: viewDoubleClickData.preMid),
+                                controller: TextEditingController(text: viewDoubleClickData.preMid),
                                 width: 0.24),
                             InputFields.formField1(
-                                focusNode: toNumberFocus,
-                                isEnable: enableFields.value,
+                                isEnable: false,
                                 hintTxt: "Position",
-                                controller: TextEditingController(
-                                    text: viewDoubleClickData.position),
+                                controller: TextEditingController(text: viewDoubleClickData.position),
                                 width: 0.14),
+                            DropDownField.formDropDown1WidthMap(
+                                List.generate(10, (index) => DropDownValue(value: (index + 1).toString(), key: (index + 1).toString())),
+                                (data) {},
+                                selected: DropDownValue(key: "1", value: "1"),
+                                "Break",
+                                0.09),
                             InputFields.formField1(
-                                focusNode: toNumberFocus,
-                                isEnable: enableFields.value,
-                                hintTxt: "Break",
-                                controller: TextEditingController(text: "1"),
-                                width: 0.09),
-                            InputFields.formField1(
-                                focusNode: toNumberFocus,
-                                isEnable: enableFields.value,
+                                isEnable: false,
                                 hintTxt: "Program",
-                                controller: TextEditingController(
-                                    text: viewDoubleClickData.oriProg),
+                                controller: TextEditingController(text: viewDoubleClickData.oriProg),
                                 width: 0.24),
                             DateWithThreeTextField(
                                 title: "Sch Date",
-                                isEnable: enableFields.value,
+                                isEnable: false,
                                 onFocusChange: (date) {},
                                 widthRation: 0.12,
                                 mainTextController: TextEditingController(
-                                    text: DateFormat("dd-MM-yyyy").format(
-                                        DateFormat("MM/dd/yyyy HH:mm:ss").parse(
-                                            viewDoubleClickData.schDate!)))),
+                                    text: DateFormat("dd-MM-yyyy").format(DateFormat("MM/dd/yyyy HH:mm:ss").parse(viewDoubleClickData.schDate!)))),
                             InputFields.formField1(
-                                focusNode: toNumberFocus,
-                                isEnable: enableFields.value,
-                                hintTxt: "Time",
-                                controller: TextEditingController(
-                                    text: viewDoubleClickData.schTime),
-                                width: 0.11),
+                                isEnable: false, hintTxt: "Time", controller: TextEditingController(text: viewDoubleClickData.schTime), width: 0.11),
                             InputFields.formField1(
-                                focusNode: toNumberFocus,
-                                isEnable: enableFields.value,
-                                hintTxt: "TapeID",
-                                controller: TextEditingController(
-                                    text: viewDoubleClickData.tapeID),
-                                width: 0.12),
+                                isEnable: false, hintTxt: "TapeID", controller: TextEditingController(text: viewDoubleClickData.tapeID), width: 0.12),
                             DateWithThreeTextField(
                                 title: "Kill Dt",
-                                isEnable: enableFields.value,
+                                isEnable: false,
                                 onFocusChange: (date) {},
                                 widthRation: 0.11,
                                 mainTextController: TextEditingController(
-                                    text: DateFormat("dd-MM-yyyy").format(
-                                        DateFormat("MM/dd/yyyy HH:mm:ss").parse(
-                                            viewDoubleClickData.killDate!)))),
+                                    text: DateFormat("dd-MM-yyyy").format(DateFormat("MM/dd/yyyy HH:mm:ss").parse(viewDoubleClickData.killDate!)))),
                             InputFields.formField1(
-                                focusNode: toNumberFocus,
-                                isEnable: enableFields.value,
+                                isEnable: false,
                                 hintTxt: "Cmp Prod",
-                                controller: tonumberCtrl,
+                                controller: TextEditingController(
+                                    text:
+                                        DateFormat("dd-MM-yyyy").format(DateFormat("MM/dd/yyyy HH:mm:ss").parse(viewDoubleClickData.campStartDate!))),
                                 width: 0.115),
                             InputFields.formField1(
-                                focusNode: toNumberFocus,
-                                isEnable: enableFields.value,
+                                isEnable: false,
                                 hintTxt: "",
-                                controller: tonumberCtrl,
+                                controller: TextEditingController(
+                                    text: DateFormat("dd-MM-yyyy").format(DateFormat("MM/dd/yyyy HH:mm:ss").parse(viewDoubleClickData.campEndDate!))),
                                 width: 0.115),
                             FormButtonWrapper(
                               btnText: "Add Spots",
                               callback: () {
-                                addSpot(viewDoubleClickData.toJson());
+                                addSpot(viewDoubleClickData);
                               },
                             ),
-                            FormButtonWrapper(btnText: "Back "),
+                            FormButtonWrapper(
+                              btnText: "Back",
+                              callback: () {
+                                Get.back();
+                              },
+                            ),
                           ],
                         ),
                       ),
                       Expanded(
                           child: Container(
                         child: DataGridShowOnlyKeys(
-                          mapData: dummyProgram,
-                          formatDate: false,
+                          onload: (load) {
+                            addSpotGridManager = load.stateManager;
+                          },
+                          onRowDoubleTap: (rowdblclick) {
+                            viewDoubleClickData.lstDetTable![rowdblclick.rowIdx].bookedSpots = 1;
+                            addSpotGridManager!.changeCellValue(rowdblclick.row.cells["bookSpot"]!, "1");
+                          },
+                          mapData: viewDoubleClickData.lstDetTable!.map((e) => e.toJson()).toList(),
+                          formatDate: true,
                         ),
                       ))
                     ],
                   ),
                 ));
               } catch (e) {
-                LoadingDialog.callErrorMessage1(
-                    msg: "Failed To Load Cancellation Data");
+                LoadingDialog.callErrorMessage1(msg: "Failed To Load Cancellation Data");
               }
             }
           });
@@ -398,39 +347,22 @@ class RoRescheduleController extends GetxController {
   }
 
   onChangeTapeIDClick() {
-    var tapeId = roRescheduleOnLeaveData!
-        .lstDgvRO![plutoGridStateManager!.currentCell!.row.sortIdx]
-        .exportTapeCode;
+    var tapeId = roRescheduleOnLeaveData!.lstDgvRO![plutoGridStateManager!.currentCell!.row.sortIdx].exportTapeCode;
 
     print(tapeId);
     Get.find<ConnectorControl>().POSTMETHOD_FORMDATA(
         api: ApiFactory.RO_RESCHEDULE_SELECTED_INDEX_CHNAGE_TAPEID,
-        json: {
-          "TapeID": tapeId,
-          "lstTapeDetails": roRescheduleOnLeaveData!.lstTapeDetails!
-              .map((e) => e.toJson())
-              .toList()
-        },
+        json: {"TapeID": tapeId, "lstTapeDetails": roRescheduleOnLeaveData!.lstTapeDetails!.map((e) => e.toJson()).toList()},
         fun: (data) {
-          if (data is Map &&
-              data.containsKey("info_SelectedIndexChanged_TapeID")) {
+          if (data is Map && data.containsKey("info_SelectedIndexChanged_TapeID")) {
             var tapeData = data["info_SelectedIndexChanged_TapeID"];
             chnageTapeIdCap.text = tapeData["commercialCaption"];
-            if (roRescheduleOnLeaveData?.lstcmbTapeID != null &&
-                roRescheduleOnLeaveData!.lstcmbTapeID!.isNotEmpty) {
+            if (roRescheduleOnLeaveData?.lstcmbTapeID != null && roRescheduleOnLeaveData!.lstcmbTapeID!.isNotEmpty) {
               modifySelectedTapeCode = DropDownValue(
-                  key: roRescheduleOnLeaveData?.lstcmbTapeID![0].exporttapecode,
-                  value:
-                      roRescheduleOnLeaveData?.lstcmbTapeID![0].exporttapecode);
+                  key: roRescheduleOnLeaveData?.lstcmbTapeID![0].exporttapecode, value: roRescheduleOnLeaveData?.lstcmbTapeID![0].exporttapecode);
             }
-            changeTapeIdSeg.text = roRescheduleOnLeaveData!
-                .lstDgvRO![plutoGridStateManager!.currentCell!.row.sortIdx]
-                .segmentNumber
-                .toString();
-            changeTapeIdDur.text = roRescheduleOnLeaveData!
-                .lstDgvRO![plutoGridStateManager!.currentCell!.row.sortIdx]
-                .tapeDuration
-                .toString();
+            changeTapeIdSeg.text = roRescheduleOnLeaveData!.lstDgvRO![plutoGridStateManager!.currentCell!.row.sortIdx].segmentNumber.toString();
+            changeTapeIdDur.text = roRescheduleOnLeaveData!.lstDgvRO![plutoGridStateManager!.currentCell!.row.sortIdx].tapeDuration.toString();
             changeTapeId.value = !changeTapeId.value;
           }
         });
@@ -441,18 +373,9 @@ class RoRescheduleController extends GetxController {
         api: ApiFactory.RO_RESCHEDULE_MODIFY,
         json: {
           "exportTapeCode": modifySelectedTapeCode!.key!,
-          "segmentNumber": roRescheduleOnLeaveData!
-              .lstDgvRO![plutoGridStateManager!.currentCell!.row.sortIdx]
-              .segmentNumber
-              .toString(),
-          "lstTable": roRescheduleOnLeaveData!.lstTable!
-              .map((e) => e.toJson())
-              .toList(),
-          "lstDgvRO": [
-            roRescheduleOnLeaveData!
-                .lstDgvRO![plutoGridStateManager!.currentCell!.row.sortIdx]
-                .toJson()
-          ]
+          "segmentNumber": roRescheduleOnLeaveData!.lstDgvRO![plutoGridStateManager!.currentCell!.row.sortIdx].segmentNumber.toString(),
+          "lstTable": roRescheduleOnLeaveData!.lstTable!.map((e) => e.toJson()).toList(),
+          "lstDgvRO": [roRescheduleOnLeaveData!.lstDgvRO![plutoGridStateManager!.currentCell!.row.sortIdx].toJson()]
         },
         fun: (data) {});
   }
@@ -464,9 +387,26 @@ class RoRescheduleController extends GetxController {
     modifySelectedTapeCode = null;
   }
 
-  addSpot(data) {
-    Get.find<ConnectorControl>().POSTMETHOD(
-        api: ApiFactory.RO_RESCHEDULE_ADDSPOT, json: data, fun: (data) {});
+  addSpot(RORescheduleDGviewDoubleClickData data) {
+    var json = {
+      "breakNo": "string",
+      "midPre": data.preMid,
+      "positionCode": data.position,
+      "chkTapeID": changeTapeId.value,
+      "exportTapeCode_OriTapeID": data.oriTapeID,
+      "exportTapeCode_TapeID": data.tapeID,
+      "tapeDuration": data.duration,
+      "bookingDetailCode": "",
+      "recordnumber": "",
+      "segmentNumber": data.segment,
+      "breaknumber": "string",
+      "spotPositionTypeName": "",
+      "positionName": data.position,
+      "lstTable": [],
+      "lstUpdateTable": [],
+      "lstTapeDetails": []
+    };
+    Get.find<ConnectorControl>().POSTMETHOD(api: ApiFactory.RO_RESCHEDULE_ADDSPOT, json: data, fun: (data) {});
   }
 
   save() {
@@ -477,10 +417,8 @@ class RoRescheduleController extends GetxController {
           "channelCode": selectedChannel!.key!,
           "rescheduleMonth": bookingMonthCtrl.text,
           "rescheduleNumber": tonumberCtrl.text,
-          "rescheduleDate": DateFormat("yyyy-MM-dd")
-              .format(DateFormat("dd-MM-yyyy").parse(refDateCtrl.text)),
-          "bookingEffectiveDate": DateFormat("yyyy-MM-dd")
-              .format(DateFormat("dd-MM-yyyy").parse(effDateCtrl.text)),
+          "rescheduleDate": DateFormat("yyyy-MM-dd").format(DateFormat("dd-MM-yyyy").parse(refDateCtrl.text)),
+          "bookingEffectiveDate": DateFormat("yyyy-MM-dd").format(DateFormat("dd-MM-yyyy").parse(effDateCtrl.text)),
           "rescheduleReferenceNumber": referenceCtrl.text,
           "clientCode": roRescheduleOnLeaveData!.clientname!,
           "agencyCode": agencyCtrl.text,
@@ -492,8 +430,7 @@ class RoRescheduleController extends GetxController {
           "dealno": roRescheduleOnLeaveData!.dealno,
           "bookingnumber": roRescheduleOnLeaveData!.bookingNumber!,
           "edit": 0,
-          "lstDetails":
-              roRescheduleOnLeaveData!.lstTapeDetails!.map((e) => e.toJson())
+          "lstDetails": roRescheduleOnLeaveData!.lstTapeDetails!.map((e) => e.toJson())
         },
         fun: (data) {
           print(data);

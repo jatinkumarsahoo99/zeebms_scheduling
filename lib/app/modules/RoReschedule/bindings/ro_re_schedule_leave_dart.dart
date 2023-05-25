@@ -165,9 +165,9 @@ class LstdgvUpdated {
   String? scheduleTime;
   String? exportTapeCode;
   String? commercialCaption;
-  int? tapeDuration;
-  int? spotAmount;
-  int? bookingDetailCode;
+  String? tapeDuration;
+  String? spotAmount;
+  String? bookingDetailCode;
   int? recordnumber;
   int? segmentNumber;
   int? breaknumber;
@@ -223,27 +223,27 @@ class LstdgvUpdated {
   }
 
   Map<String, dynamic> toJson() {
-    final Map<String, dynamic> data = <String, dynamic>{};
-    data['rowNo'] = rowNo;
-    data['programCode'] = programCode;
-    data['midPre'] = midPre;
-    data['positionCode'] = positionCode;
-    data['programName'] = programName;
-    data['scheduleDate'] = scheduleDate;
-    data['scheduleTime'] = scheduleTime;
-    data['exportTapeCode'] = exportTapeCode;
-    data['commercialCaption'] = commercialCaption;
-    data['tapeDuration'] = tapeDuration;
-    data['spotAmount'] = spotAmount;
-    data['bookingDetailCode'] = bookingDetailCode;
-    data['recordnumber'] = recordnumber;
-    data['segmentNumber'] = segmentNumber;
-    data['breaknumber'] = breaknumber;
-    data['spotPositionTypeName'] = spotPositionTypeName;
-    data['positionName'] = positionName;
-    data['edit'] = edit;
-    data['rescheduleno'] = rescheduleno;
-    data['audited'] = audited;
+    final Map<String, dynamic> data = new Map<String, dynamic>();
+    data['rowNo'] = this.rowNo;
+    data['programCode'] = this.programCode;
+    data['midPre'] = this.midPre;
+    data['positionCode'] = this.positionCode;
+    data['programName'] = this.programName;
+    data['scheduleDate'] = this.scheduleDate;
+    data['scheduleTime'] = this.scheduleTime;
+    data['exportTapeCode'] = this.exportTapeCode;
+    data['commercialCaption'] = this.commercialCaption;
+    data['tapeDuration'] = this.tapeDuration;
+    data['spotAmount'] = this.spotAmount;
+    data['bookingDetailCode'] = this.bookingDetailCode;
+    data['recordnumber'] = this.recordnumber;
+    data['segmentNumber'] = this.segmentNumber;
+    data['breaknumber'] = this.breaknumber;
+    data['spotPositionTypeName'] = this.spotPositionTypeName;
+    data['positionName'] = this.positionName;
+    data['edit'] = this.edit;
+    data['rescheduleno'] = this.rescheduleno;
+    data['audited'] = this.audited;
     return data;
   }
 }
@@ -251,6 +251,8 @@ class LstdgvUpdated {
 class LstUpdateTable {
   int? rowNo;
   String? programCode;
+  String? revType;
+  String? tapeLanguage;
   String? midPre;
   String? positionCode;
   String? programName;
@@ -258,21 +260,28 @@ class LstUpdateTable {
   String? scheduleTime;
   String? exportTapeCode;
   String? commercialCaption;
-  int? tapeDuration;
-  int? spotAmount;
-  int? bookingDetailCode;
+  String? tapeDuration;
+  String? spotAmount;
+  String? bookingDetailCode;
   int? recordnumber;
   int? segmentNumber;
   int? breaknumber;
   String? spotPositionTypeName;
   String? positionName;
   int? edit;
-  String? rescheduleno;
   bool? audited;
+  String? rescheduleno;
+  String? bookingstatus;
+  String? killDate;
+  String? campaignStartDate;
+  String? campaignEndDate;
+  String? colorName;
 
   LstUpdateTable(
       {this.rowNo,
       this.programCode,
+      this.revType,
+      this.tapeLanguage,
       this.midPre,
       this.positionCode,
       this.programName,
@@ -289,12 +298,19 @@ class LstUpdateTable {
       this.spotPositionTypeName,
       this.positionName,
       this.edit,
+      this.audited,
       this.rescheduleno,
-      this.audited});
+      this.bookingstatus,
+      this.killDate,
+      this.campaignStartDate,
+      this.campaignEndDate,
+      this.colorName});
 
   LstUpdateTable.fromJson(Map<String, dynamic> json) {
     rowNo = json['rowNo'];
     programCode = json['programCode'];
+    revType = json['revType'];
+    tapeLanguage = json['tapeLanguage'];
     midPre = json['midPre'];
     positionCode = json['positionCode'];
     programName = json['programName'];
@@ -311,36 +327,44 @@ class LstUpdateTable {
     spotPositionTypeName = json['spotPositionTypeName'];
     positionName = json['positionName'];
     edit = json['edit'];
+    audited = json['audited'];
     rescheduleno = json['rescheduleno'];
-    audited = json['audited'] is int
-        ? json['audited'] == 1
-            ? true
-            : false
-        : json['audited'];
+    bookingstatus = json['bookingstatus'];
+    killDate = json['killDate'];
+    campaignStartDate = json['campaignStartDate'];
+    campaignEndDate = json['campaignEndDate'];
+    colorName = json['colorName'];
   }
 
   Map<String, dynamic> toJson() {
-    final Map<String, dynamic> data = <String, dynamic>{};
-    data['rowNo'] = rowNo;
-    data['programCode'] = programCode;
-    data['midPre'] = midPre;
-    data['positionCode'] = positionCode;
-    data['programName'] = programName;
-    data['scheduleDate'] = scheduleDate;
-    data['scheduleTime'] = scheduleTime;
-    data['exportTapeCode'] = exportTapeCode;
-    data['commercialCaption'] = commercialCaption;
-    data['tapeDuration'] = tapeDuration;
-    data['spotAmount'] = spotAmount;
-    data['bookingDetailCode'] = bookingDetailCode;
-    data['recordnumber'] = recordnumber;
-    data['segmentNumber'] = segmentNumber;
-    data['breaknumber'] = breaknumber;
-    data['spotPositionTypeName'] = spotPositionTypeName;
-    data['positionName'] = positionName;
-    data['edit'] = edit;
-    data['rescheduleno'] = rescheduleno;
-    data['audited'] = audited;
+    final Map<String, dynamic> data = new Map<String, dynamic>();
+    data['rowNo'] = this.rowNo;
+    data['programCode'] = this.programCode;
+    data['revType'] = this.revType;
+    data['tapeLanguage'] = this.tapeLanguage;
+    data['midPre'] = this.midPre;
+    data['positionCode'] = this.positionCode;
+    data['programName'] = this.programName;
+    data['scheduleDate'] = this.scheduleDate;
+    data['scheduleTime'] = this.scheduleTime;
+    data['exportTapeCode'] = this.exportTapeCode;
+    data['commercialCaption'] = this.commercialCaption;
+    data['tapeDuration'] = this.tapeDuration;
+    data['spotAmount'] = this.spotAmount;
+    data['bookingDetailCode'] = this.bookingDetailCode;
+    data['recordnumber'] = this.recordnumber;
+    data['segmentNumber'] = this.segmentNumber;
+    data['breaknumber'] = this.breaknumber;
+    data['spotPositionTypeName'] = this.spotPositionTypeName;
+    data['positionName'] = this.positionName;
+    data['edit'] = this.edit;
+    data['audited'] = this.audited;
+    data['rescheduleno'] = this.rescheduleno;
+    data['bookingstatus'] = this.bookingstatus;
+    data['killDate'] = this.killDate;
+    data['campaignStartDate'] = this.campaignStartDate;
+    data['campaignEndDate'] = this.campaignEndDate;
+    data['colorName'] = this.colorName;
     return data;
   }
 }
@@ -357,7 +381,7 @@ class LstDgvRO {
   String? exportTapeCode;
   String? commercialCaption;
   int? tapeDuration;
-  int? spotAmount;
+  num? spotAmount;
   int? bookingDetailCode;
   int? recordnumber;
   int? segmentNumber;
@@ -497,7 +521,7 @@ class LstTable {
   String? killDate;
   String? campaignStartDate;
   String? campaignEndDate;
-  String? backColor;
+  String? colorName;
 
   LstTable(
       {this.programCode,
@@ -523,7 +547,7 @@ class LstTable {
       this.killDate,
       this.campaignStartDate,
       this.campaignEndDate,
-      this.backColor});
+      this.colorName});
 
   LstTable.fromJson(Map<String, dynamic> json) {
     programCode = json['programCode'];
@@ -549,35 +573,35 @@ class LstTable {
     killDate = json['killDate'];
     campaignStartDate = json['campaignStartDate'];
     campaignEndDate = json['campaignEndDate'];
-    backColor = json['backColor'];
+    colorName = json['colorName'];
   }
 
   Map<String, dynamic> toJson() {
-    final Map<String, dynamic> data = <String, dynamic>{};
-    data['programCode'] = programCode;
-    data['revType'] = revType;
-    data['tapeLanguage'] = tapeLanguage;
-    data['midPre'] = midPre;
-    data['positionCode'] = positionCode;
-    data['programName'] = programName;
-    data['scheduleDate'] = scheduleDate;
-    data['scheduleTime'] = scheduleTime;
-    data['exportTapeCode'] = exportTapeCode;
-    data['commercialCaption'] = commercialCaption;
-    data['tapeDuration'] = tapeDuration;
-    data['spotAmount'] = spotAmount;
-    data['bookingDetailCode'] = bookingDetailCode;
-    data['recordnumber'] = recordnumber;
-    data['segmentNumber'] = segmentNumber;
-    data['breaknumber'] = breaknumber;
-    data['spotPositionTypeName'] = spotPositionTypeName;
-    data['positionName'] = positionName;
-    data['edit'] = edit;
-    data['bookingstatus'] = bookingstatus;
-    data['killDate'] = killDate;
-    data['campaignStartDate'] = campaignStartDate;
-    data['campaignEndDate'] = campaignEndDate;
-    data['backColor'] = backColor;
+    final Map<String, dynamic> data = new Map<String, dynamic>();
+    data['programCode'] = this.programCode;
+    data['revType'] = this.revType;
+    data['tapeLanguage'] = this.tapeLanguage;
+    data['midPre'] = this.midPre;
+    data['positionCode'] = this.positionCode;
+    data['programName'] = this.programName;
+    data['scheduleDate'] = this.scheduleDate;
+    data['scheduleTime'] = this.scheduleTime;
+    data['exportTapeCode'] = this.exportTapeCode;
+    data['commercialCaption'] = this.commercialCaption;
+    data['tapeDuration'] = this.tapeDuration;
+    data['spotAmount'] = this.spotAmount;
+    data['bookingDetailCode'] = this.bookingDetailCode;
+    data['recordnumber'] = this.recordnumber;
+    data['segmentNumber'] = this.segmentNumber;
+    data['breaknumber'] = this.breaknumber;
+    data['spotPositionTypeName'] = this.spotPositionTypeName;
+    data['positionName'] = this.positionName;
+    data['edit'] = this.edit;
+    data['bookingstatus'] = this.bookingstatus;
+    data['killDate'] = this.killDate;
+    data['campaignStartDate'] = this.campaignStartDate;
+    data['campaignEndDate'] = this.campaignEndDate;
+    data['colorName'] = this.colorName;
     return data;
   }
 }
@@ -589,12 +613,7 @@ class LstTapeDetails {
   String? tapeLanguage;
   int? duration;
 
-  LstTapeDetails(
-      {this.exporttapecode,
-      this.commercialCaption,
-      this.revType,
-      this.tapeLanguage,
-      this.duration});
+  LstTapeDetails({this.exporttapecode, this.commercialCaption, this.revType, this.tapeLanguage, this.duration});
 
   LstTapeDetails.fromJson(Map<String, dynamic> json) {
     exporttapecode = json['exporttapecode'];
