@@ -36,7 +36,6 @@ class CommercialView extends GetView<CommercialController> {
 
   @override
   Widget build(BuildContext context) {
-
     return GetBuilder<CommercialController>(
         init: CommercialController(),
         id: "initData",
@@ -560,8 +559,7 @@ class CommercialView extends GetView<CommercialController> {
                                     btnText: "show details",
                                     callback: () {
                                       controllerX.selectedIndex.value = 0;
-                                      controllerX
-                                          .fetchProgramSchedulingDetails();
+                                      controllerX.fetchProgramSchedulingDetails();
                                     },
                                   ),
                                 ),
@@ -576,8 +574,7 @@ class CommercialView extends GetView<CommercialController> {
                                   ),
                                 ),
                                 Padding(
-                                  padding: const EdgeInsets.only(
-                                      top: 16.0, left: 15),
+                                  padding: const EdgeInsets.only(top: 16.0, left: 15),
                                   child: Row(
                                     children: [
                                       Radio(
@@ -613,8 +610,7 @@ class CommercialView extends GetView<CommercialController> {
                             /// input forms
                             Expanded(
                               child: Padding(
-                                padding:
-                                    const EdgeInsets.fromLTRB(15, 15, 7, 0),
+                                padding: const EdgeInsets.fromLTRB(15, 15, 7, 0),
                                 child: programTable(context),
                               ),
                             ),
@@ -623,8 +619,7 @@ class CommercialView extends GetView<CommercialController> {
                             Expanded(
                               flex: 2,
                               child: Padding(
-                                padding:
-                                    const EdgeInsets.fromLTRB(15, 15, 7, 0),
+                                padding: const EdgeInsets.fromLTRB(15, 15, 7, 0),
                                 child: GetBuilder<CommercialController>(
                                     init: CommercialController(),
                                     id: "reports",
@@ -657,7 +652,6 @@ class CommercialView extends GetView<CommercialController> {
                                         callback: () => controller.formHandler(
                                           btn['name'],
                                         ),
-
                                       )
                                   ],
                                 );
@@ -721,13 +715,11 @@ class CommercialView extends GetView<CommercialController> {
                       mainAxisAlignment: MainAxisAlignment.end,
                       crossAxisAlignment: CrossAxisAlignment.center,
                       children: [
-                        Obx(() => Text(
-                            'Commercial Spots : ${controllerX.commercialSpots.value}')),
+                        Obx(() => Text('Commercial Spots : ${controllerX.commercialSpots.value}')),
                         const SizedBox(
                           width: 20,
                         ),
-                        Obx(() => Text(
-                            'Commercial Duration : ${controllerX.commercialDuration.value}')),
+                        Obx(() => Text('Commercial Duration : ${controllerX.commercialDuration.value}')),
                       ],
                     )
                   else if (controllerX.selectedIndex.value == 1)
@@ -790,13 +782,10 @@ class CommercialView extends GetView<CommercialController> {
         id: "fillerFPCTable",
         // init: CreateBreakPatternController(),
         builder: (controller) {
-          if (controllerX.commercialProgramList != null &&
-              (controllerX.commercialProgramList?.isNotEmpty)!) {
+          if (controllerX.commercialProgramList != null && (controllerX.commercialProgramList?.isNotEmpty)!) {
             // final key = GlobalKey();
             return DataGridFromMap(
-              mapData: (controllerX.commercialProgramList
-                  ?.map((e) => e.toJson())
-                  .toList())!,
+              mapData: (controllerX.commercialProgramList?.map((e) => e.toJson()).toList())!,
               showonly: [
                 "fpcTime",
                 "programname",
@@ -805,11 +794,9 @@ class CommercialView extends GetView<CommercialController> {
               mode: PlutoGridMode.select,
               onSelected: (plutoGrid) {
                 print(jsonEncode(controllerX.selectedProgram?.toJson()));
-                controllerX.selectedProgram =
-                    controllerX.commercialProgramList![plutoGrid.rowIdx!];
+                controllerX.selectedProgram = controllerX.commercialProgramList![plutoGrid.rowIdx!];
 
-                controllerX.fpcTimeSelected = controllerX
-                    .commercialProgramList![plutoGrid.rowIdx!].fpcTime;
+                controllerX.fpcTimeSelected = controllerX.commercialProgramList![plutoGrid.rowIdx!].fpcTime;
 
                 controllerX.fetchSchedulingShowOnTabDetails();
               },
@@ -842,115 +829,99 @@ class CommercialView extends GetView<CommercialController> {
             id: "fillerShowOnTabTable",
             // init: CreateBreakPatternController(),
             builder: (controller) {
-              if (controllerX.commercialShufflingList != null &&
-                  (controllerX.commercialShufflingList?.isNotEmpty)!) {
+              if (controllerX.commercialShufflingList != null && (controllerX.commercialShufflingList?.isNotEmpty)!) {
                 // final key = GlobalKey();
                 return Expanded(
-                  // child: DataGridFromMap(
-                  //   colorCallback: (row) {
-                  //     return row.row.cells.containsValue(
-                  //             controller.stateManager?.currentCell)
-                  //         ? Colors.blueAccent
-                  //         : controller.redBreaks.contains(row.rowIdx -
-                  //                 1)
-                  //             ? Colors.white
-                  //             : Colors.orange.shade700;
-                  //   },
-                  //   mapData: (controllerX.commercialShowDetailsList
-                  //       ?.map((e) => e.toJson())
-                  //       .toList())!,
-                  //   showonly: [
-                  //     "fpcTime",
-                  //     "breakNumber",
-                  //     "eventType",
-                  //     "exportTapeCode",
-                  //     "segmentCaption",
-                  //     "client",
-                  //     "brand",
-                  //     "duration",
-                  //     "product",
-                  //     "bookingNumber",
-                  //     "bookingDetailcode",
-                  //     "rostimeBand",
-                  //     "randid",
-                  //     "programName",
-                  //     "rownumber",
-                  //     "bStatus",
-                  //     "pDailyFPC",
-                  //     "pProgramMaster"
-                  //   ],
-                  //   onload: (loadEvent) {
-                  //     loadEvent.stateManager.gridFocusNode.addListener(() {
-                  //       if (loadEvent.stateManager.gridFocusNode.hasFocus) {
-                  //         loadEvent.stateManager
-                  //             .setGridMode(PlutoGridMode.select);
-                  //       } else {
-                  //         loadEvent.stateManager
-                  //             .setGridMode(PlutoGridMode.normal);
-                  //       }
-                  //     });
-                  //   },
-                  //   mode: PlutoGridMode.select,
-                  //   onSelected: (plutoGrid) {
-                  //     controllerX.selectedShowOnTab =
-                  //         controllerX.commercialShowDetailsList![plutoGrid.rowIdx!];
-                  //     print(">>>>>>Commercial Data>>>>>>" +
-                  //         jsonEncode(controllerX.selectedShowOnTab?.toJson()));
-                  //   },
-                  // ),
-                  ///
-                  child: DataGridFromMap1(
-                      onFocusChange: (value) {
-                        controllerX.gridStateManager!
-                            .setGridMode(PlutoGridMode.selectWithOneTap);
-                        controllerX.selectedPlutoGridMode =
-                            PlutoGridMode.selectWithOneTap;
-                      },
-                      onload: (loadevent) {
-                        controllerX.gridStateManager =
-                            loadevent.stateManager;
-                        if (controller.selectedDDIndex != null) {
-                          loadevent.stateManager.moveScrollByRow(
-                              PlutoMoveDirection.down,
-                              controller.selectedDDIndex);
-                          loadevent.stateManager.setCurrentCell(
-                              loadevent
-                                  .stateManager
-                                  .rows[controller.selectedDDIndex!]
-                                  .cells
-                                  .entries
-                                  .first
-                                  .value,
-                              controller.selectedDDIndex);
-                        }
-                      },
-                      showSrNo: true,
-                      showonly: [
-                        "fpcTime",
-                        "breakNumber",
-                        "eventType",
-                        "exportTapeCode",
-                        "segmentCaption",
-                        "client",
-                        "brand",
-                        "duration",
-                        "product",
-                        "bookingNumber",
-                        "bookingDetailcode",
-                        "rostimeBand",
-                        "randid",
-                        "programName",
-                        "rownumber",
-                        "bStatus",
-                        "pDailyFPC",
-                        "pProgramMaster"
-                      ],
-                      colorCallback: (PlutoRowColorContext plutoContext) {
-                        return Color(int.parse('0x${controllerX
-                            .commercialShufflingList![plutoContext.rowIdx]
-                            .backColor}'
-                        ));
-                      },
+                    // child: DataGridFromMap(
+                    //   colorCallback: (row) {
+                    //     return row.row.cells.containsValue(
+                    //             controller.stateManager?.currentCell)
+                    //         ? Colors.blueAccent
+                    //         : controller.redBreaks.contains(row.rowIdx -
+                    //                 1)
+                    //             ? Colors.white
+                    //             : Colors.orange.shade700;
+                    //   },
+                    //   mapData: (controllerX.commercialShowDetailsList
+                    //       ?.map((e) => e.toJson())
+                    //       .toList())!,
+                    //   showonly: [
+                    //     "fpcTime",
+                    //     "breakNumber",
+                    //     "eventType",
+                    //     "exportTapeCode",
+                    //     "segmentCaption",
+                    //     "client",
+                    //     "brand",
+                    //     "duration",
+                    //     "product",
+                    //     "bookingNumber",
+                    //     "bookingDetailcode",
+                    //     "rostimeBand",
+                    //     "randid",
+                    //     "programName",
+                    //     "rownumber",
+                    //     "bStatus",
+                    //     "pDailyFPC",
+                    //     "pProgramMaster"
+                    //   ],
+                    //   onload: (loadEvent) {
+                    //     loadEvent.stateManager.gridFocusNode.addListener(() {
+                    //       if (loadEvent.stateManager.gridFocusNode.hasFocus) {
+                    //         loadEvent.stateManager
+                    //             .setGridMode(PlutoGridMode.select);
+                    //       } else {
+                    //         loadEvent.stateManager
+                    //             .setGridMode(PlutoGridMode.normal);
+                    //       }
+                    //     });
+                    //   },
+                    //   mode: PlutoGridMode.select,
+                    //   onSelected: (plutoGrid) {
+                    //     controllerX.selectedShowOnTab =
+                    //         controllerX.commercialShowDetailsList![plutoGrid.rowIdx!];
+                    //     print(">>>>>>Commercial Data>>>>>>" +
+                    //         jsonEncode(controllerX.selectedShowOnTab?.toJson()));
+                    //   },
+                    // ),
+                    ///
+                    child: DataGridFromMap1(
+                        onFocusChange: (value) {
+                          controllerX.gridStateManager!.setGridMode(PlutoGridMode.selectWithOneTap);
+                          controllerX.selectedPlutoGridMode = PlutoGridMode.selectWithOneTap;
+                        },
+                        onload: (loadevent) {
+                          controllerX.gridStateManager = loadevent.stateManager;
+                          if (controller.selectedDDIndex != null) {
+                            loadevent.stateManager.moveScrollByRow(PlutoMoveDirection.down, controller.selectedDDIndex);
+                            loadevent.stateManager.setCurrentCell(
+                                loadevent.stateManager.rows[controller.selectedDDIndex!].cells.entries.first.value, controller.selectedDDIndex);
+                          }
+                        },
+                        showSrNo: true,
+                        showonly: [
+                          "fpcTime",
+                          "breakNumber",
+                          "eventType",
+                          "exportTapeCode",
+                          "segmentCaption",
+                          "client",
+                          "brand",
+                          "duration",
+                          "product",
+                          "bookingNumber",
+                          "bookingDetailcode",
+                          "rostimeBand",
+                          "randid",
+                          "programName",
+                          "rownumber",
+                          "bStatus",
+                          "pDailyFPC",
+                          "pProgramMaster"
+                        ],
+                        colorCallback: (PlutoRowColorContext plutoContext) {
+                          return Color(int.parse('0x${controllerX.commercialShufflingList![plutoContext.rowIdx].backColor}'));
+                        },
                         // colorCallback: (row) {
                         //   return row.row.cells.containsValue(
                         //           controller.stateManager?.currentCell)
@@ -960,32 +931,24 @@ class CommercialView extends GetView<CommercialController> {
                         //           ? Colors.white
                         //           : Colors.orange.shade700;
                         // },
-                      onSelected: (PlutoGridOnSelectedEvent event) {
-                        controllerX.selectedShowOnTab =
-                        controllerX.commercialShufflingList![event.rowIdx!];
-                        print(">>>>>>Commercial Data>>>>>>" +
-                            jsonEncode(controllerX.selectedShowOnTab?.toJson()));
-                      },
-                      onRowsMoved: (PlutoGridOnRowsMovedEvent onRowMoved) {
-                        print("Index is>>" + onRowMoved.idx.toString());
-                        Map map = onRowMoved.rows[0].cells;
-                        print("On Print moved" +
-                            jsonEncode(
-                                onRowMoved.rows[0].cells.toString()));
-                        controllerX.gridStateManager?.notifyListeners();
-                      },
-                      mode: controllerX.selectedPlutoGridMode,
-                      mapData: controllerX.commercialShufflingList!
-                          .map((e) => e.toJson())
-                          .toList())
-                );
+                        onSelected: (PlutoGridOnSelectedEvent event) {
+                          controllerX.selectedShowOnTab = controllerX.commercialShufflingList![event.rowIdx!];
+                          print(">>>>>>Commercial Data>>>>>>" + jsonEncode(controllerX.selectedShowOnTab?.toJson()));
+                        },
+                        onRowsMoved: (PlutoGridOnRowsMovedEvent onRowMoved) {
+                          print("Index is>>" + onRowMoved.idx.toString());
+                          Map map = onRowMoved.rows[0].cells;
+                          print("On Print moved" + jsonEncode(onRowMoved.rows[0].cells.toString()));
+                          controllerX.gridStateManager?.notifyListeners();
+                        },
+                        mode: controllerX.selectedPlutoGridMode,
+                        mapData: controllerX.commercialShufflingList!.map((e) => e.toJson()).toList()));
               } else {
                 return Expanded(
                   child: Card(
                     clipBehavior: Clip.hardEdge,
                     shape: RoundedRectangleBorder(
-                      borderRadius:
-                          BorderRadius.circular(0), // if you need this
+                      borderRadius: BorderRadius.circular(0), // if you need this
                       side: BorderSide(
                         color: Colors.grey.shade300,
                         width: 1,
@@ -1010,15 +973,12 @@ class CommercialView extends GetView<CommercialController> {
             id: "fillerShowOnTabTable",
             // init: CreateBreakPatternController(),
             builder: (controller) {
-              if (controllerX.commercialShowFPCList != null &&
-                  (controllerX.commercialShowFPCList?.isNotEmpty)!) {
+              if (controllerX.commercialShowFPCList != null && (controllerX.commercialShowFPCList?.isNotEmpty)!) {
                 // final key = GlobalKey();
                 return Expanded(
                   // height: 400,
                   child: DataGridFromMap(
-                    mapData: (controllerX.commercialShowFPCList
-                        ?.map((e) => e.toJson())
-                        .toList())!,
+                    mapData: (controllerX.commercialShowFPCList?.map((e) => e.toJson()).toList())!,
                     showonly: [
                       "fpcTime",
                       "breakNumber",
@@ -1042,10 +1002,8 @@ class CommercialView extends GetView<CommercialController> {
                     //widthRatio: (Get.width * 0.2) / 2 + 7,
                     //mode: PlutoGridMode.select,
                     onSelected: (plutoGrid) {
-                      controllerX.selectedShowOnTab =
-                          controllerX.commercialShowFPCList![plutoGrid.rowIdx!];
-                      print(">>>>>>FPC Data>>>>>>" +
-                          jsonEncode(controllerX.selectedShowOnTab?.toJson()));
+                      controllerX.selectedShowOnTab = controllerX.commercialShowFPCList![plutoGrid.rowIdx!];
+                      print(">>>>>>FPC Data>>>>>>" + jsonEncode(controllerX.selectedShowOnTab?.toJson()));
                     },
                   ),
                 );
@@ -1054,8 +1012,7 @@ class CommercialView extends GetView<CommercialController> {
                   child: Card(
                     clipBehavior: Clip.hardEdge,
                     shape: RoundedRectangleBorder(
-                      borderRadius:
-                          BorderRadius.circular(0), // if you need this
+                      borderRadius: BorderRadius.circular(0), // if you need this
                       side: BorderSide(
                         color: Colors.grey.shade300,
                         width: 1,
@@ -1085,15 +1042,12 @@ class CommercialView extends GetView<CommercialController> {
             id: "fillerShowOnTabTable",
             // init: CreateBreakPatternController(),
             builder: (controller) {
-              if (controllerX.commercialShowMarkedList != null &&
-                  (controllerX.commercialShowMarkedList?.isNotEmpty)!) {
+              if (controllerX.commercialShowMarkedList != null && (controllerX.commercialShowMarkedList?.isNotEmpty)!) {
                 // final key = GlobalKey();
                 return Expanded(
                   // height: 400,
                   child: DataGridFromMap(
-                    mapData: (controllerX.commercialShowMarkedList
-                        ?.map((e) => e.toJson())
-                        .toList())!,
+                    mapData: (controllerX.commercialShowMarkedList?.map((e) => e.toJson()).toList())!,
                     showonly: [
                       "fpcTime",
                       "breakNumber",
@@ -1117,10 +1071,8 @@ class CommercialView extends GetView<CommercialController> {
                     //widthRatio: (Get.width * 0.2) / 2 + 7,
                     //mode: PlutoGridMode.select,
                     onSelected: (plutoGrid) {
-                      controllerX.selectedShowOnTab = controllerX
-                          .commercialShowMarkedList![plutoGrid.rowIdx!];
-                      print(">>>>>>Error Data>>>>>>" +
-                          jsonEncode(controllerX.selectedShowOnTab?.toJson()));
+                      controllerX.selectedShowOnTab = controllerX.commercialShowMarkedList![plutoGrid.rowIdx!];
+                      print(">>>>>>Error Data>>>>>>" + jsonEncode(controllerX.selectedShowOnTab?.toJson()));
                     },
                   ),
                 );
@@ -1129,8 +1081,7 @@ class CommercialView extends GetView<CommercialController> {
                   child: Card(
                     clipBehavior: Clip.hardEdge,
                     shape: RoundedRectangleBorder(
-                      borderRadius:
-                          BorderRadius.circular(0), // if you need this
+                      borderRadius: BorderRadius.circular(0), // if you need this
                       side: BorderSide(
                         color: Colors.grey.shade300,
                         width: 1,
@@ -1151,7 +1102,4 @@ class CommercialView extends GetView<CommercialController> {
       ],
     );
   }
-
-
-
 }
