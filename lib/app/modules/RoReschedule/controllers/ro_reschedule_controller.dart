@@ -324,8 +324,18 @@ class RoRescheduleController extends GetxController {
                             addSpotGridManager = load.stateManager;
                           },
                           onRowDoubleTap: (rowdblclick) {
+                            addSpotGridManager!.setCurrentCell(rowdblclick.cell, rowdblclick.rowIdx);
+
+                            for (var i = 0; i < viewDoubleClickData.lstDetTable!.length; i++) {
+                              viewDoubleClickData.lstDetTable![i].bookedSpots = 0;
+                            }
                             viewDoubleClickData.lstDetTable![rowdblclick.rowIdx].bookedSpots = 1;
-                            addSpotGridManager!.changeCellValue(rowdblclick.row.cells["bookSpot"]!, "1");
+
+                            for (var element in addSpotGridManager!.rows) {
+                              addSpotGridManager!
+                                  .changeCellValue(element.cells["bookedSpots"]!, "0", force: true, notify: false, callOnChangedEvent: false);
+                            }
+                            addSpotGridManager!.changeCellValue(rowdblclick.row.cells["bookedSpots"]!, "1", force: true);
                           },
                           mapData: viewDoubleClickData.lstDetTable!.map((e) => e.toJson()).toList(),
                           formatDate: true,
