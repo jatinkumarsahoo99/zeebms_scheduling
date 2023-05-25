@@ -267,7 +267,7 @@ class InputFields {
                 errorBorder: InputBorder.none,
                 counterText: "",
                 // hintText: "dd/MM/yyyy",
-                contentPadding: EdgeInsets.only(left: prefixText == null ? 0 : 10),
+                contentPadding: EdgeInsets.only(left: prefixText == null ? 10 : 0),
                 // labelText: hintTxt,
                 labelStyle: TextStyle(fontSize: SizeDefine.labelSize, color: (isEnable ?? true) ? Colors.black : Colors.grey),
                 border: InputBorder.none,

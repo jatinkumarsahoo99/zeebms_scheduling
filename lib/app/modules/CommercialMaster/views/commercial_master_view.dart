@@ -33,7 +33,7 @@ class CommercialMasterView extends GetView<CommercialMasterController> {
                         flex: 12,
                         child: Container(
                           decoration: BoxDecoration(border: Border.all(color: Colors.grey)),
-                          padding: EdgeInsets.all(16),
+                          padding: const EdgeInsets.all(16),
                           child: ListView(
                             children: [
                               Row(
@@ -45,14 +45,12 @@ class CommercialMasterView extends GetView<CommercialMasterController> {
                                     width: 0.17,
                                     autoFocus: true,
                                   ),
-                                  // SizedBox(width: 20),
                                   InputFields.formField1(
                                     hintTxt: "Tx Caption",
                                     controller: TextEditingController(),
                                     width: 0.17,
                                     prefixText: "C/",
                                   ),
-                                  // SizedBox(width: 20),
                                   DropDownField.formDropDown1WidthMap(
                                     [],
                                     (p0) => null,
@@ -65,25 +63,28 @@ class CommercialMasterView extends GetView<CommercialMasterController> {
                               Row(
                                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                                 children: [
-                                  // DropDownField.formDropDownSearchAPI2(GlobalKey(), context,
-                                  //     width: context.width * 0.17, onchanged: (val) {}, title: 'Banner', url: ''),
                                   DropDownField.formDropDown1WidthMap(
                                     [],
                                     (p0) => null,
                                     "Revenue Type",
                                     .17,
                                   ),
-                                  // SizedBox(width: 20),
-                                  InputFields.formField1(hintTxt: "Sec Type", controller: TextEditingController(), width: 0.17),
-                                  // SizedBox(width: 20),
-                                  InputFields.formField1(hintTxt: "Tape ID", controller: TextEditingController(), width: 0.17),
+                                  InputFields.formField1(
+                                    hintTxt: "Sec Type",
+                                    controller: TextEditingController(),
+                                    width: 0.17,
+                                  ),
+                                  InputFields.formField1(
+                                    hintTxt: "Tape ID",
+                                    controller: TextEditingController(),
+                                    width: 0.17,
+                                  ),
                                 ],
                               ),
                               SizedBox(height: 14),
                               Row(
                                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                                 children: [
-                                  // InputFields.formField1(hintTxt: "Tape ID", controller: TextEditingController(), width: 0.17),
                                   SizedBox(
                                     width: context.width * .17,
                                     child: NumericStepButton(
@@ -91,11 +92,16 @@ class CommercialMasterView extends GetView<CommercialMasterController> {
                                       hint: "Seg #",
                                     ),
                                   ),
-                                  // SizedBox(width: 20),
-                                  // InputFields.formField1(hintTxt: "Seg No", controller: TextEditingController(), width: 0.17),
-                                  // SizedBox(width: 20),
-                                  InputFields.formField1(hintTxt: "TX No", controller: TextEditingController(), width: 0.17),
-                                  InputFields.formField1(hintTxt: "Agency Id", controller: TextEditingController(), width: 0.17),
+                                  InputFields.formField1(
+                                    hintTxt: "TX No",
+                                    controller: TextEditingController(),
+                                    width: 0.17,
+                                  ),
+                                  InputFields.formField1(
+                                    hintTxt: "Agency Id",
+                                    controller: TextEditingController(),
+                                    width: 0.17,
+                                  ),
                                 ],
                               ),
                               SizedBox(height: 14),
@@ -126,50 +132,100 @@ class CommercialMasterView extends GetView<CommercialMasterController> {
                               Row(
                                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                                 children: [
-                                  TimeWithThreeTextField(title: "SOM", mainTextController: TextEditingController(), widthRation: 0.17, isTime: false),
-                                  SizedBox(width: 20),
-                                  TimeWithThreeTextField(title: "EOM", mainTextController: TextEditingController(), widthRation: 0.17, isTime: false),
-                                  SizedBox(width: 20),
                                   TimeWithThreeTextField(
-                                      title: "Duration", mainTextController: TextEditingController(), widthRation: 0.17, isTime: false),
+                                    title: "SOM",
+                                    mainTextController: TextEditingController(),
+                                    widthRation: 0.17,
+                                    isTime: false,
+                                  ),
+                                  TimeWithThreeTextField(
+                                    title: "EOM",
+                                    mainTextController: TextEditingController(),
+                                    widthRation: 0.17,
+                                    isTime: false,
+                                  ),
+                                  TimeWithThreeTextField(
+                                    title: "Duration",
+                                    mainTextController: TextEditingController(),
+                                    widthRation: 0.17,
+                                    isTime: false,
+                                  ),
                                 ],
                               ),
                               SizedBox(height: 14),
                               Row(
                                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                                 children: [
-                                  DropDownField.formDropDownSearchAPI2(GlobalKey(), context,
-                                      width: context.width * .17, onchanged: (val) {}, title: 'Client', url: ''),
+                                  DropDownField.formDropDownSearchAPI2(
+                                    GlobalKey(),
+                                    context,
+                                    width: context.width * .17,
+                                    onchanged: (val) {},
+                                    title: 'Client',
+                                    url: '',
+                                  ),
                                   DropDownField.formDropDown1WidthMap(
                                     [],
                                     (p0) => null,
                                     "Brand",
                                     .17,
                                   ),
-                                  InputFields.formField1(hintTxt: "Product Name", controller: TextEditingController(), width: 0.17),
+                                  InputFields.formField1(
+                                    hintTxt: "Product Name",
+                                    controller: TextEditingController(),
+                                    width: 0.17,
+                                  ),
                                 ],
                               ),
                               SizedBox(height: 14),
                               Row(
                                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                                 children: [
-                                  // SizedBox(width: 20),
-                                  InputFields.formField1(hintTxt: "Level 1", controller: TextEditingController(), width: 0.17),
-                                  // SizedBox(width: 20),
-                                  InputFields.formField1(hintTxt: "Level 2", controller: TextEditingController(), width: 0.17),
-                                  InputFields.formField1(hintTxt: "Level 3", controller: TextEditingController(), width: 0.17),
+                                  InputFields.formField1(
+                                    hintTxt: "Level 1",
+                                    controller: TextEditingController(),
+                                    width: 0.17,
+                                  ),
+                                  InputFields.formField1(
+                                    hintTxt: "Level 2",
+                                    controller: TextEditingController(),
+                                    width: 0.17,
+                                  ),
+                                  InputFields.formField1(
+                                    hintTxt: "Level 3",
+                                    controller: TextEditingController(),
+                                    width: 0.17,
+                                  ),
                                 ],
                               ),
                               SizedBox(height: 14),
-                              DropDownField.formDropDownSearchAPI2(GlobalKey(), context,
-                                  width: context.width * 0.6, onchanged: (val) {}, title: 'Agency', url: ''),
+                              DropDownField.formDropDownSearchAPI2(
+                                GlobalKey(),
+                                context,
+                                width: context.width * 0.6,
+                                onchanged: (val) {},
+                                title: 'Agency',
+                                url: '',
+                              ),
                               SizedBox(height: 14),
                               Row(
                                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                                 children: [
-                                  DateWithThreeTextField(title: "End Date", mainTextController: TextEditingController(), widthRation: .17),
-                                  DateWithThreeTextField(title: "Dispatch", mainTextController: TextEditingController(), widthRation: .17),
-                                  InputFields.formField1(hintTxt: "Clock ID", controller: TextEditingController(), width: 0.17),
+                                  DateWithThreeTextField(
+                                    title: "End Date",
+                                    mainTextController: TextEditingController(),
+                                    widthRation: .17,
+                                  ),
+                                  DateWithThreeTextField(
+                                    title: "Dispatch",
+                                    mainTextController: TextEditingController(),
+                                    widthRation: .17,
+                                  ),
+                                  InputFields.formField1(
+                                    hintTxt: "Clock ID",
+                                    controller: TextEditingController(),
+                                    width: 0.17,
+                                  ),
                                 ],
                               ),
                             ],
@@ -186,89 +242,6 @@ class CommercialMasterView extends GetView<CommercialMasterController> {
                           crossAxisAlignment: CrossAxisAlignment.start,
                           mainAxisSize: MainAxisSize.max,
                           children: [
-                            // Expanded(
-                            //   child: Container(
-                            //     width: double.infinity,
-                            //     decoration: BoxDecoration(border: Border.all(color: Colors.grey)),
-                            //     padding: const EdgeInsets.all(16.0),
-                            //     child: Column(
-                            //       children: [
-                            //         Row(
-                            //           mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                            //           children: [
-                            //             DropDownField.formDropDown1WidthMap([], (p0) => null, "Source", .17),
-                            //             // SizedBox(width: 20),
-                            //             DropDownField.formDropDown1WidthMap([], (p0) => null, "ID No", .17),
-                            //           ],
-                            //         ),
-                            //         SizedBox(height: 14),
-                            //         Row(
-                            //           mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                            //           children: [
-                            //             DropDownField.formDropDown1WidthMap(
-                            //               [],
-                            //               (p0) => null,
-                            //               "Start Date",
-                            //               .17,
-                            //             ),
-                            //             // SizedBox(width: 20),
-                            //             DropDownField.formDropDown1WidthMap([], (p0) => null, "End Date", .17),
-                            //           ],
-                            //         ),
-                            //         SizedBox(height: 14),
-                            //         Expanded(
-                            //           child: Column(
-                            //             crossAxisAlignment: CrossAxisAlignment.start,
-                            //             children: [
-                            //               Text(
-                            //                 "Synopsis",
-                            //                 style: TextStyle(
-                            //                   fontSize: SizeDefine.labelSize1,
-                            //                   color: Colors.black,
-                            //                   fontWeight: FontWeight.w500,
-                            //                 ),
-                            //               ),
-                            //               const SizedBox(height: 5),
-                            //               TextFormField(
-                            //                 maxLines: 110 ~/ 20,
-                            //                 decoration: InputDecoration(
-                            //                   filled: true,
-                            //                   fillColor: Colors.white,
-                            //                   border: OutlineInputBorder(
-                            //                     borderRadius: BorderRadius.circular(0),
-                            //                     borderSide: BorderSide(
-                            //                       color: Colors.deepPurpleAccent,
-                            //                     ),
-                            //                   ),
-                            //                   enabledBorder: OutlineInputBorder(
-                            //                     borderRadius: BorderRadius.circular(0),
-                            //                     borderSide: BorderSide(
-                            //                       color: Colors.deepPurpleAccent,
-                            //                     ),
-                            //                   ),
-                            //                   focusedBorder: OutlineInputBorder(
-                            //                     borderRadius: BorderRadius.circular(0),
-                            //                     borderSide: BorderSide(
-                            //                       color: Colors.deepPurpleAccent,
-                            //                     ),
-                            //                   ),
-                            //                   errorBorder: OutlineInputBorder(
-                            //                     borderRadius: BorderRadius.circular(0),
-                            //                     borderSide: BorderSide(
-                            //                       color: Colors.deepPurpleAccent,
-                            //                     ),
-                            //                   ),
-                            //                 ),
-                            //               ),
-                            //             ],
-                            //           ),
-                            //         ),
-                            //         SizedBox(height: 14),
-                            //       ],
-                            //     ),
-                            //   ),
-                            // ),
-                            // SizedBox(height: 14),
                             Text("Annotation Details"),
                             SizedBox(height: 5),
                             Expanded(
@@ -292,11 +265,17 @@ class CommercialMasterView extends GetView<CommercialMasterController> {
                                       crossAxisAlignment: CrossAxisAlignment.end,
                                       children: [
                                         TimeWithThreeTextField(
-                                            title: "TC In", mainTextController: TextEditingController(), widthRation: 0.11, isTime: false),
-                                        // SizedBox(width: 20),
+                                          title: "TC In",
+                                          mainTextController: TextEditingController(),
+                                          widthRation: 0.11,
+                                          isTime: false,
+                                        ),
                                         TimeWithThreeTextField(
-                                            title: "TC Out", mainTextController: TextEditingController(), widthRation: 0.11, isTime: false),
-                                        // SizedBox(width: 20),
+                                          title: "TC Out",
+                                          mainTextController: TextEditingController(),
+                                          widthRation: 0.11,
+                                          isTime: false,
+                                        ),
                                       ],
                                     ),
                                     SizedBox(height: 14),
@@ -317,9 +296,10 @@ class CommercialMasterView extends GetView<CommercialMasterController> {
                                     Expanded(
                                       child: Container(
                                         decoration: BoxDecoration(
-                                            border: Border.all(
-                                          color: Colors.grey,
-                                        )),
+                                          border: Border.all(
+                                            color: Colors.grey,
+                                          ),
+                                        ),
                                       ),
                                     ),
                                     SizedBox(height: 14),
@@ -346,30 +326,33 @@ class CommercialMasterView extends GetView<CommercialMasterController> {
 
             /// bottom common buttons
             GetBuilder<HomeController>(
-                id: "buttons",
-                init: Get.find<HomeController>(),
-                builder: (btncontroller) {
-                  if (btncontroller.buttons != null) {
-                    return SizedBox(
-                      height: 40,
-                      child: Wrap(
-                        spacing: 5,
-                        runSpacing: 15,
-                        alignment: WrapAlignment.start,
-                        // alignment: MainAxisAlignment.start,
-                        // mainAxisSize: MainAxisSize.min,
-                        children: [
-                          for (var btn in btncontroller.buttons!)
-                            FormButtonWrapper(
-                              btnText: btn["name"],
-                              callback: btn["name"] == "Save" ? null : () => controller.formHandler(btn['name'].toString()),
-                            ),
-                        ],
-                      ),
-                    );
-                  }
-                  return Container();
-                }),
+              id: "buttons",
+              init: Get.find<HomeController>(),
+              builder: (btncontroller) {
+                if (btncontroller.buttons != null) {
+                  return SizedBox(
+                    height: 40,
+                    child: Wrap(
+                      spacing: 5,
+                      runSpacing: 15,
+                      alignment: WrapAlignment.start,
+                      children: [
+                        for (var btn in btncontroller.buttons!)
+                          FormButtonWrapper(
+                            btnText: btn["name"],
+                            callback: btn["name"] == "Save"
+                                ? null
+                                : () => controller.formHandler(
+                                      btn['name'].toString(),
+                                    ),
+                          ),
+                      ],
+                    ),
+                  );
+                }
+                return Container();
+              },
+            ),
           ],
         ),
       ),
