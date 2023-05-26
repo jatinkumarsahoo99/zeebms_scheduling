@@ -1,6 +1,7 @@
 import 'dart:convert';
 import 'dart:developer';
 import 'package:bms_scheduling/app/providers/ApiFactory.dart';
+
 // import 'package:data_table_2/data_table_2.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
@@ -415,6 +416,29 @@ class Utils {
       } else if (key.toLowerCase().contains("name") ||
           key.toLowerCase().contains("program")) {
         return 180;
+      } else if (value is num || num.tryParse(value) != null) {
+        return 45;
+      } else if (key.toLowerCase().contains("date")) {
+        return 100;
+      }
+    } catch (e) {
+      print("problem in setting width $e");
+    }
+
+    return 120;
+  }
+
+  static double getColumnSize1(
+      {required String key, dynamic value, double? widthRatio = 120}) {
+    value ??= "";
+    try {
+      if (key == "no" || key == "Sr No") {
+        return 30;
+      } else if (key.toLowerCase().contains("locationname")) {
+        return 80;
+      } else if (key.toLowerCase().contains("Time") ||
+          key.toLowerCase().contains("program")) {
+        return 100;
       } else if (value is num || num.tryParse(value) != null) {
         return 45;
       } else if (key.toLowerCase().contains("date")) {

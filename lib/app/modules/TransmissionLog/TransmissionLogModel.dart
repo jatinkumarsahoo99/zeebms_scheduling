@@ -1,5 +1,3 @@
-import '../../providers/ColorData.dart';
-
 class TransmissionLogModel {
   LoadSavedLogOutput? loadSavedLogOutput;
 
@@ -23,18 +21,18 @@ class TransmissionLogModel {
 class LoadSavedLogOutput {
   String? transmissiontime;
   String? logSavedBy;
-  List<ListColorGridlogs>? listColorGridlogs;
+  List<LstTransmissionLog>? lstTransmissionLog;
 
   LoadSavedLogOutput(
-      {this.transmissiontime, this.logSavedBy, this.listColorGridlogs});
+      {this.transmissiontime, this.logSavedBy, this.lstTransmissionLog});
 
   LoadSavedLogOutput.fromJson(Map<String, dynamic> json) {
     transmissiontime = json['transmissiontime'];
     logSavedBy = json['logSavedBy'];
-    if (json['listColorGridlogs'] != null) {
-      listColorGridlogs = <ListColorGridlogs>[];
-      json['listColorGridlogs'].forEach((v) {
-        listColorGridlogs!.add(new ListColorGridlogs.fromJson(v));
+    if (json['lstTransmissionLog'] != null) {
+      lstTransmissionLog = <LstTransmissionLog>[];
+      json['lstTransmissionLog'].forEach((v) {
+        lstTransmissionLog!.add(new LstTransmissionLog.fromJson(v));
       });
     }
   }
@@ -43,15 +41,15 @@ class LoadSavedLogOutput {
     final Map<String, dynamic> data = new Map<String, dynamic>();
     data['transmissiontime'] = this.transmissiontime;
     data['logSavedBy'] = this.logSavedBy;
-    if (this.listColorGridlogs != null) {
-      data['listColorGridlogs'] =
-          this.listColorGridlogs!.map((v) => v.toJson()).toList();
+    if (this.lstTransmissionLog != null) {
+      data['lstTransmissionLog'] =
+          this.lstTransmissionLog!.map((v) => v.toJson()).toList();
     }
     return data;
   }
 }
 
-class ListColorGridlogs {
+class LstTransmissionLog {
   String? fpCtime;
   String? transmissionTime;
   String? exportTapeCaption;
@@ -73,13 +71,11 @@ class ListColorGridlogs {
   String? datechange;
   String? productGroup;
   String? longCaption;
-  String? foreColor;
-  String? backColor;
   String? productnameFont;
   String? exporttapecodeFont;
   String? rosTimeBandFont;
 
-  ListColorGridlogs(
+  LstTransmissionLog(
       {this.fpCtime,
         this.transmissionTime,
         this.exportTapeCaption,
@@ -101,13 +97,11 @@ class ListColorGridlogs {
         this.datechange,
         this.productGroup,
         this.longCaption,
-        this.foreColor,
-        this.backColor,
         this.productnameFont,
         this.exporttapecodeFont,
         this.rosTimeBandFont});
 
-  ListColorGridlogs.fromJson(Map<String, dynamic> json) {
+  LstTransmissionLog.fromJson(Map<String, dynamic> json) {
     fpCtime = json['fpCtime'];
     transmissionTime = json['transmissionTime'];
     exportTapeCaption = json['exportTapeCaption'];
@@ -129,8 +123,6 @@ class ListColorGridlogs {
     datechange = json['datechange'];
     productGroup = json['productGroup'];
     longCaption = json['longCaption'];
-    foreColor = json['foreColor'];
-    backColor = json['backColor'];
     productnameFont = json['productname_Font'];
     exporttapecodeFont = json['exporttapecode_Font'];
     rosTimeBandFont = json['rosTimeBand_Font'];
@@ -159,12 +151,9 @@ class ListColorGridlogs {
     data['datechange'] = this.datechange;
     data['productGroup'] = this.productGroup;
     data['longCaption'] = this.longCaption;
-    data['foreColor'] = this.foreColor;
-    data['backColor'] = this.backColor;
     data['productname_Font'] = this.productnameFont;
     data['exporttapecode_Font'] = this.exporttapecodeFont;
     data['rosTimeBand_Font'] = this.rosTimeBandFont;
     return data;
   }
 }
-
