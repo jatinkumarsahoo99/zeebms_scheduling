@@ -10,11 +10,13 @@ import '../../../../widgets/WarningBox.dart';
 import '../../../../widgets/dropdown.dart';
 import '../../../../widgets/gridFromMap.dart';
 import '../../../../widgets/gridFromMap1.dart';
+import '../../../../widgets/gridFromMapTransmissionLog.dart';
 import '../../../../widgets/input_fields.dart';
 import '../../../controller/HomeController.dart';
 import '../../../data/DropDownValue.dart';
 import '../../../providers/ApiFactory.dart';
 import '../../../providers/SizeDefine.dart';
+import '../ColorDataModel.dart';
 import '../controllers/TransmissionLogController.dart';
 
 class TransmissionLogView extends GetView<TransmissionLogController> {
@@ -136,7 +138,8 @@ class TransmissionLogView extends GetView<TransmissionLogController> {
                           child: FormButtonWrapper(
                             btnText: "Retrieve",
                             callback: () {
-                              controllerX.callRetrieve();
+                              // controllerX.callRetrieve();
+                              controllerX.getColorList();
                             },
                             showIcon: false,
                           ),
@@ -202,16 +205,54 @@ class TransmissionLogView extends GetView<TransmissionLogController> {
                           controllerX.transmissionLog?.loadSavedLogOutput !=
                               null &&
                           controllerX.transmissionLog?.loadSavedLogOutput
-                                  ?.listColorGridlogs !=
+                                  ?.lstTransmissionLog !=
                               null &&
                           (controllerX.transmissionLog?.loadSavedLogOutput
-                              ?.listColorGridlogs?.isNotEmpty)!)
-                      ? DataGridFromMap1(
+                              ?.lstTransmissionLog?.isNotEmpty)!)
+                      ? DataGridFromMapTransmissionLog(
                           onFocusChange: (value) {
                             controllerX.gridStateManager!
                                 .setGridMode(PlutoGridMode.selectWithOneTap);
                             controllerX.selectedPlutoGridMode =
                                 PlutoGridMode.selectWithOneTap;
+                          },
+                          hideCode: false,
+                          colorCallback: (PlutoRowColorContext colorData) {
+                            PlutoRow currentRow =
+                                colorData.stateManager.rows[colorData.rowIdx];
+                            ColorDataModel? data =
+                                Get.find<TransmissionLogController>()
+                                    .getMatchWithKey(
+                                        currentRow.cells["eventType"]?.value ??
+                                            "");
+                            Color color = Colors.white;
+                            if (data != null) {
+                              print(
+                                  "Index is>> ${colorData.rowIdx.toString()} >>>> ${data.backColor}");
+
+                              color = Color(int.parse('0x${data.backColor}'));
+                            }
+                            if (currentRow.cells["productName"]?.value != null &&
+                                currentRow.cells["productName"]?.value != "") {
+                              String strPriority = ((currentRow
+                                          .cells["bookingNumber"]?.value
+                                          .toString()
+                                          .trim() ??
+                                      "") +
+                                  (currentRow.cells["bookingdetailcode"]?.value
+                                          .toString()
+                                          .trim() ??
+                                      ""));
+                              if (strPriority != null && strPriority != "") {
+                                ColorDataModel? data1 =
+                                    Get.find<TransmissionLogController>()
+                                        .getMatchWithKey(strPriority);
+                                if (data1 != null) {
+                                  color = Color(int.parse('0x${data1.backColor}'));
+                                }
+                              }
+                            }
+                            return color;
                           },
                           onload: (loadevent) {
                             controllerX.gridStateManager =
@@ -247,10 +288,10 @@ class TransmissionLogView extends GetView<TransmissionLogController> {
                                   jsonEncode(element.toJson()));
                             });
                           },
-                          colorCallback: (PlutoRowColorContext plutoContext) {
+                          /*colorCallback: (PlutoRowColorContext plutoContext) {
                             return Color(int.parse(
-                                '0x${controllerX.transmissionLog?.loadSavedLogOutput?.listColorGridlogs![plutoContext.rowIdx].backColor}'));
-                          },
+                                '0x${controllerX.transmissionLog?.loadSavedLogOutput?.lstTransmissionLog![plutoContext.rowIdx].backColor}'));
+                          },*/
                           onRowsMoved: (PlutoGridOnRowsMovedEvent onRowMoved) {
                             // print("Index is>>" + onRowMoved.idx.toString());
                             // Map map = onRowMoved.rows[0].cells;
@@ -280,7 +321,7 @@ class TransmissionLogView extends GetView<TransmissionLogController> {
                           mode: controllerX.selectedPlutoGridMode,
                           widthRatio: (Get.width / 11.4),
                           mapData: (controllerX.transmissionLog
-                              ?.loadSavedLogOutput?.listColorGridlogs!
+                              ?.loadSavedLogOutput?.lstTransmissionLog!
                               .map((e) => e.toJson())
                               .toList())!)
                       : Container(
@@ -466,7 +507,7 @@ class TransmissionLogView extends GetView<TransmissionLogController> {
                                   formatDate: false,
                                   colorCallback: (renderC) => Colors.red[200]!,
                                   mapData: (controllerX.transmissionLog
-                                      ?.loadSavedLogOutput?.listColorGridlogs!
+                                      ?.loadSavedLogOutput?.lstTransmissionLog!
                                       .map((e) => e.toJson())
                                       .toList())!)
                               // _dataTable3()
@@ -559,7 +600,7 @@ class TransmissionLogView extends GetView<TransmissionLogController> {
                                   formatDate: false,
                                   colorCallback: (renderC) => Colors.red[200]!,
                                   mapData: (controllerX.transmissionLog
-                                      ?.loadSavedLogOutput?.listColorGridlogs!
+                                      ?.loadSavedLogOutput?.lstTransmissionLog!
                                       .map((e) => e.toJson())
                                       .toList())!)
                               // _dataTable3()
@@ -737,7 +778,7 @@ class TransmissionLogView extends GetView<TransmissionLogController> {
                                   formatDate: false,
                                   colorCallback: (renderC) => Colors.red[200]!,
                                   mapData: (controllerX.transmissionLog
-                                      ?.loadSavedLogOutput?.listColorGridlogs!
+                                      ?.loadSavedLogOutput?.lstTransmissionLog!
                                       .map((e) => e.toJson())
                                       .toList())!)
                               // _dataTable3()
@@ -887,7 +928,7 @@ class TransmissionLogView extends GetView<TransmissionLogController> {
                                   formatDate: false,
                                   colorCallback: (renderC) => Colors.red[200]!,
                                   mapData: (controllerX.transmissionLog
-                                      ?.loadSavedLogOutput?.listColorGridlogs!
+                                      ?.loadSavedLogOutput?.lstTransmissionLog!
                                       .map((e) => e.toJson())
                                       .toList())!)
                               // _dataTable3()
@@ -1083,7 +1124,7 @@ class TransmissionLogView extends GetView<TransmissionLogController> {
                                       mapData: (controllerX
                                           .transmissionLog
                                           ?.loadSavedLogOutput
-                                          ?.listColorGridlogs!
+                                          ?.lstTransmissionLog!
                                           .map((e) => e.toJson())
                                           .toList())!)
                                   // _dataTable3()
@@ -1109,7 +1150,7 @@ class TransmissionLogView extends GetView<TransmissionLogController> {
                                       mapData: (controllerX
                                           .transmissionLog
                                           ?.loadSavedLogOutput
-                                          ?.listColorGridlogs!
+                                          ?.lstTransmissionLog!
                                           .map((e) => e.toJson())
                                           .toList())!)
                                   // _dataTable3()
@@ -1196,7 +1237,7 @@ class TransmissionLogView extends GetView<TransmissionLogController> {
                                   formatDate: false,
                                   colorCallback: (renderC) => Colors.red[200]!,
                                   mapData: (controllerX.transmissionLog
-                                      ?.loadSavedLogOutput?.listColorGridlogs!
+                                      ?.loadSavedLogOutput?.lstTransmissionLog!
                                       .map((e) => e.toJson())
                                       .toList())!)
                               // _dataTable3()
