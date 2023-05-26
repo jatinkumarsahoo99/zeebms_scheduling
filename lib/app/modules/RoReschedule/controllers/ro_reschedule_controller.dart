@@ -1,4 +1,5 @@
 import 'package:bms_scheduling/app/controller/ConnectorControl.dart';
+import 'package:bms_scheduling/app/controller/MainController.dart';
 import 'package:bms_scheduling/app/modules/RoBooking/views/dummydata.dart';
 import 'package:bms_scheduling/app/modules/RoReschedule/bindings/ro_booking_leave_data.dart';
 import 'package:bms_scheduling/app/modules/RoReschedule/bindings/ro_init_data.dart';
@@ -490,6 +491,7 @@ class RoRescheduleController extends GetxController {
         },
         fun: (data) {
           if (data is Map && data.containsKey("info_Modify")) {
+            print("Parsing lstDgvRO");
             if (data["info_Modify"] is Map &&
                 data["info_Modify"].containsKey("lstDgvRO") &&
                 (data["info_Modify"]["lstDgvRO"] is List)) {
@@ -498,31 +500,34 @@ class RoRescheduleController extends GetxController {
                       .map((e) => LstDgvRO.fromJson(e))
                       .toList();
             }
+            print("Parsing lstTable");
             if (data["info_Modify"] is Map &&
-                data["info_Modify"].containsKey("lstDgvRO") &&
+                data["info_Modify"].containsKey("lstTable") &&
                 (data["info_Modify"]["lstTable"] is List)) {
               roRescheduleOnLeaveData!.lstTable =
                   (data["info_Modify"]["lstTable"] as List)
                       .map((e) => LstTable.fromJson(e))
                       .toList();
             }
+            print("Parsing lstUpdateTable");
             if (data["info_Modify"] is Map &&
-                data["info_Modify"].containsKey("lstDgvRO") &&
+                data["info_Modify"].containsKey("lstUpdateTable") &&
                 (data["info_Modify"]["lstUpdateTable"] is List)) {
               roRescheduleOnLeaveData!.lstUpdateTable =
                   (data["info_Modify"]["lstUpdateTable"] as List)
                       .map((e) => LstUpdateTable.fromJson(e))
                       .toList();
             }
+            print("Parsing lstdgvUpdated");
+
             if (data["info_Modify"] is Map &&
-                data["info_Modify"].containsKey("lstDgvRO") &&
+                data["info_Modify"].containsKey("lstdgvUpdated") &&
                 (data["info_Modify"]["lstdgvUpdated"] is List)) {
               roRescheduleOnLeaveData!.lstdgvUpdated =
                   (data["info_Modify"]["lstdgvUpdated"] as List)
                       .map((e) => LstdgvUpdated.fromJson(e))
                       .toList();
             }
-
             update(["dgvGrid", "updatedgvGrid"]);
           }
         });
@@ -537,30 +542,50 @@ class RoRescheduleController extends GetxController {
 
   addSpot(RORescheduleDGviewDoubleClickData data) {
     var json = {
-      "breakNo": "string",
+      "breakNo": roRescheduleOnLeaveData!
+          .lstDgvRO![plutoGridStateManager!.currentCell!.row.sortIdx]
+          .breaknumber
+          .toString(),
       "midPre": data.preMid,
-      "positionCode": data.position,
+      "positionCode": roRescheduleOnLeaveData!
+          .lstDgvRO![plutoGridStateManager!.currentCell!.row.sortIdx]
+          .positionCode,
       "chkTapeID": changeTapeId.value,
       "exportTapeCode_OriTapeID": data.oriTapeID,
       "exportTapeCode_TapeID": data.tapeID,
       "tapeDuration": data.duration,
-      "bookingDetailCode": "",
-      "recordnumber": "",
+      "bookingDetailCode": roRescheduleOnLeaveData!
+          .lstDgvRO![plutoGridStateManager!.currentCell!.row.sortIdx]
+          .bookingDetailCode
+          .toString(),
+      "recordnumber": roRescheduleOnLeaveData!
+          .lstDgvRO![plutoGridStateManager!.currentCell!.row.sortIdx]
+          .recordnumber
+          .toString(),
       "segmentNumber": data.segment,
-      "breaknumber": "string",
-      "spotPositionTypeName": "",
-      "positionName": data.position,
+      "breaknumber": roRescheduleOnLeaveData!
+          .lstDgvRO![plutoGridStateManager!.currentCell!.row.sortIdx]
+          .breaknumber
+          .toString(),
+      "spotPositionTypeName": roRescheduleOnLeaveData!
+          .lstDgvRO![plutoGridStateManager!.currentCell!.row.sortIdx]
+          .spotPositionTypeName,
+      "positionName": roRescheduleOnLeaveData!
+          .lstDgvRO![plutoGridStateManager!.currentCell!.row.sortIdx]
+          .positionName,
       "lstTable":
           roRescheduleOnLeaveData?.lstTable?.map((e) => e.toJson()).toList(),
       "lstUpdateTable": roRescheduleOnLeaveData?.lstUpdateTable
           ?.map((e) => e.toJson())
           .toList(),
-      "lstTapeDetails": roRescheduleOnLeaveData?.lstTapeDetails
-          ?.map((e) => e.toJson())
-          .toList(),
+      "lstDetTable": data.lstDetTable!.map((e) => e.toJson()).toList(),
     };
     Get.find<ConnectorControl>().POSTMETHOD(
-        api: ApiFactory.RO_RESCHEDULE_ADDSPOT, json: data, fun: (data) {});
+        api: ApiFactory.RO_RESCHEDULE_ADDSPOT,
+        json: json,
+        fun: (data) {
+          print(data);
+        });
   }
 
   save() {
@@ -581,8 +606,8 @@ class RoRescheduleController extends GetxController {
           "brandCode": branCtrl.text,
           "rescheduleDuration": 0,
           "rescheduleAmount": 0,
-          "executiveCode": 0,
-          "modifiedBy": "string",
+          "executiveCode": "",
+          "modifiedBy": Get.find<MainController>().user?.logincode ?? "",
           "dealno": roRescheduleOnLeaveData!.dealno,
           "bookingnumber": roRescheduleOnLeaveData!.bookingNumber!,
           "edit": 0,
@@ -590,7 +615,50 @@ class RoRescheduleController extends GetxController {
               roRescheduleOnLeaveData!.lstTapeDetails!.map((e) => e.toJson())
         },
         fun: (data) {
-          print(data);
+          if (data is Map &&
+              data.containsKey("info_AddSpots") &&
+              data["info_AddSpots"] is Map) {
+            Map addspotData = data["info_AddSpots"];
+            if (addspotData.containsKey("message") &&
+                addspotData["message"] != null &&
+                addspotData["message"].toString() != "") {
+              LoadingDialog.callErrorMessage1(msg: addspotData["message"]);
+            }
+
+            if (addspotData.containsKey("lstDgvRO") &&
+                (addspotData["lstDgvRO"] is List)) {
+              roRescheduleOnLeaveData!.lstDgvRO =
+                  (addspotData["lstDgvRO"] as List)
+                      .map((e) => LstDgvRO.fromJson(e))
+                      .toList();
+            }
+            print("Parsing lstTable");
+            if (addspotData.containsKey("lstTable") &&
+                (addspotData["lstTable"] is List)) {
+              roRescheduleOnLeaveData!.lstTable =
+                  (addspotData["lstTable"] as List)
+                      .map((e) => LstTable.fromJson(e))
+                      .toList();
+            }
+            print("Parsing lstUpdateTable");
+            if (addspotData.containsKey("lstUpdateTable") &&
+                (addspotData["lstUpdateTable"] is List)) {
+              roRescheduleOnLeaveData!.lstUpdateTable =
+                  (data["info_Modify"]["lstUpdateTable"] as List)
+                      .map((e) => LstUpdateTable.fromJson(e))
+                      .toList();
+            }
+            print("Parsing lstdgvUpdated");
+
+            if (addspotData.containsKey("lstdgvUpdated") &&
+                (addspotData["lstdgvUpdated"] is List)) {
+              roRescheduleOnLeaveData!.lstdgvUpdated =
+                  (addspotData["lstdgvUpdated"] as List)
+                      .map((e) => LstdgvUpdated.fromJson(e))
+                      .toList();
+            }
+            update(["dgvGrid", "updatedgvGrid"]);
+          }
         });
   }
 }

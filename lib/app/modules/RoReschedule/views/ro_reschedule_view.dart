@@ -192,6 +192,24 @@ class RoRescheduleView extends GetView<RoRescheduleController> {
                                       )
                                     : DataGridShowOnlyKeys(
                                         mode: PlutoGridMode.selectWithOneTap,
+                                        hideKeys: [],
+                                        colorCallback: (p0) {
+                                          if (controller
+                                              .roRescheduleOnLeaveData!
+                                              .lstDgvRO![p0.rowIdx]
+                                              .colorName!
+                                              .isNotEmpty) {
+                                            return controller
+                                                        .roRescheduleOnLeaveData!
+                                                        .lstDgvRO![p0.rowIdx]
+                                                        .colorName!
+                                                        .toLowerCase() ==
+                                                    "rosybrown"
+                                                ? Colors.brown
+                                                : Colors.white;
+                                          }
+                                          return Colors.white;
+                                        },
                                         onSelected: (p0) {
                                           controller.closeModify();
                                         },
