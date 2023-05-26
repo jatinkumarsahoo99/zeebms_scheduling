@@ -36,467 +36,11 @@ class CommercialView extends GetView<CommercialController> {
 
   @override
   Widget build(BuildContext context) {
-
     return GetBuilder<CommercialController>(
         init: CommercialController(),
         id: "initData",
         builder: (controller) {
           FocusNode _channelsFocus = FocusNode();
-
-          // if (controller.initData == null) {
-          //   return PleaseWaitCard();
-          // } else {
-          //   FocusNode _channelsFocus = FocusNode();
-          //   log(controller.initData!["channels"]![0].keys.toString());
-          //   return Scaffold(
-          //     floatingActionButtonLocation: FloatingActionButtonLocation.centerDocked,
-          //     extendBody: false,
-          //     floatingActionButton: GetBuilder<HomeController>(
-          //         id: "buttons",
-          //         init: Get.find<HomeController>(),
-          //         builder: (btcontroller) {
-          //           if (btcontroller.buttons != null) {
-          //             return Container(
-          //               padding: EdgeInsets.zero,
-          //               margin: EdgeInsets.zero,
-          //               width: double.infinity,
-          //               decoration: BoxDecoration(color: Colors.white, border: Border(top: BorderSide(width: 1.0, color: Colors.grey))),
-          //               child: ButtonBar(
-          //                 alignment: MainAxisAlignment.start,
-          //                 mainAxisSize: MainAxisSize.min,
-          //                 children: [
-          //                   for (var btn in btcontroller.buttons!)
-          //                     if (Utils.btnAccessHandler(btn['name'], controller.formPermissions!) != null)
-          //                       FormButtonWrapper(
-          //                         btnText: btn["name"],
-          //                         callback: () => controller.formHandler(
-          //                           btn['name'],
-          //                         ),
-          //                       )
-          //                 ],
-          //               ),
-          //             );
-          //           }
-          //           return Container();
-          //         }),
-          //     body: FocusTraversalGroup(
-          //       policy: OrderedTraversalPolicy(),
-          //       child: Padding(
-          //         padding: const EdgeInsets.symmetric(vertical: 8),
-          //         child: Row(
-          //           mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-          //           crossAxisAlignment: CrossAxisAlignment.start,
-          //           children: [
-          //             /// input forms
-          //             SizedBox(
-          //               width: w * 0.35,
-          //               child: Column(
-          //                 crossAxisAlignment: CrossAxisAlignment.start,
-          //                 children: [
-          //                   /// program type
-          //                   DropDownField.formDropDown1WidthMap(
-          //                     (controller.initData!["lmsProgramTypes"] as List)
-          //                         .map((e) => DropDownValue(key: e["programTypeCode"].toString(), value: e["programTypeName"]))
-          //                         .toList(),
-          //                         (value) => () {},
-          //                     "Program Type",
-          //                     0.35,
-          //                     searchReq: true,
-          //                     autoFocus: true,
-          //                     dialogHeight: h * .75,
-          //                   ),
-          //
-          //                   /// channel
-          //                   const Padding(
-          //                     padding: EdgeInsets.only(top: 7, bottom: 4),
-          //                     child: Text(
-          //                       "Channels",
-          //                       style: TextStyle(fontSize: 12),
-          //                     ),
-          //                   ),
-          //
-          //                   /// channel box
-          //                   SizedBox(
-          //                       width: w * .35,
-          //                       height: (h * .6) - (kToolbarHeight / 2),
-          //                       child: Focus(
-          //                         autofocus: false,
-          //                         focusNode: _channelsFocus,
-          //                         child: PlutoGrid(
-          //                           mode: PlutoGridMode.normal,
-          //                           configuration: plutoGridConfiguration(focusNode: _channelsFocus),
-          //                           columns: controller.initColumn,
-          //                           onLoaded: (event) {
-          //                             controller.locChanStateManager = event.stateManager;
-          //                             // event.stateManager.setColumnSizeConfig(
-          //                             //     PlutoGridColumnSizeConfig(
-          //                             //   autoSizeMode: PlutoAutoSizeMode.equal,
-          //                             //   resizeMode: PlutoResizeMode.none,
-          //                             // ));
-          //                           },
-          //                           rows: controller.initRows,
-          //                           onRowChecked: (event) {
-          //                             /* if (controller.locationsForReport
-          //                                 .contains({
-          //                               "locationCode": controller
-          //                                       .channels[event.row!.sortIdx]
-          //                                   ["locationCode"],
-          //                               "channelCode": controller
-          //                                       .channels[event.row!.sortIdx]
-          //                                   ["channelCode"]
-          //                             })) {
-          //                               controller.locationsForReport.remove({
-          //                                 "locationCode": controller
-          //                                         .channels[event.row!.sortIdx]
-          //                                     ["locationCode"],
-          //                                 "channelCode": controller
-          //                                         .channels[event.row!.sortIdx]
-          //                                     ["channelCode"]
-          //                               });
-          //                             } else {
-          //                               controller.locationsForReport.add({
-          //                                 "locationCode": controller
-          //                                         .channels[event.row!.sortIdx]
-          //                                     ["locationCode"],
-          //                                 "channelCode": controller
-          //                                         .channels[event.row!.sortIdx]
-          //                                     ["channelCode"]
-          //                               });
-          //                             }*/
-          //                             ChannelModel data = ChannelModel(
-          //                                 locationCode: controller.channels[event.row!.sortIdx]["locationCode"],
-          //                                 channelCode: controller.channels[event.row!.sortIdx]["channelCode"]);
-          //                             bool isDataAvail = controller.locationsForReport1.any((element) => element.channelCode == data.channelCode);
-          //                             if (isDataAvail) {
-          //                               controller.locationsForReport1.removeWhere((element) => element.channelCode == data.channelCode);
-          //                             } else {
-          //                               controller.locationsForReport1.add(data);
-          //                             }
-          //                           },
-          //                         ),
-          //                       )),
-          //
-          //                   /// date and Ignore Single Telecast
-          //                   FocusTraversalGroup(
-          //                     policy: OrderedTraversalPolicy(),
-          //                     child: SizedBox(
-          //                       height: h * .23,
-          //                       child: ListView(
-          //                         children: [
-          //                           Padding(
-          //                             padding: const EdgeInsets.only(top: 5, bottom: 5),
-          //                             child: Row(
-          //                               mainAxisAlignment: MainAxisAlignment.spaceBetween,
-          //                               crossAxisAlignment: CrossAxisAlignment.start,
-          //                               children: [
-          //                                 // Date
-          //                                 DateWithThreeTextField(
-          //                                     widthRation: 0.15,
-          //                                     splitType: "-",
-          //                                     onFocusChange: ((date) {
-          //                                       controller.reportBody["ReferenceDate"] =
-          //                                           DateFormat('yyyy-MM-dd').format(DateFormat("dd-MM-yyyy").parse(date)).toString();
-          //                                     }),
-          //                                     title: "Date",
-          //                                     mainTextController: controller.refDateContrl),
-          //                                 // Ignore Single Telecast
-          //                                 Container(
-          //                                   width: w * .15,
-          //                                   padding: const EdgeInsets.only(top: 16.0),
-          //                                   alignment: Alignment.topLeft,
-          //                                   child: Obx(() => InkWell(
-          //                                     onTap: () {
-          //                                       controller.ignoreSingleTelecast.value = !controller.ignoreSingleTelecast.value;
-          //                                     },
-          //                                     child: Row(
-          //                                       crossAxisAlignment: CrossAxisAlignment.center,
-          //                                       children: [
-          //                                         Icon(
-          //                                           controller.ignoreSingleTelecast.value
-          //                                               ? Icons.check_box_outlined
-          //                                               : Icons.check_box_outline_blank,
-          //                                           color: Colors.deepPurple,
-          //                                         ),
-          //                                         const Text(
-          //                                           "Ignore Single Telecast",
-          //                                           style: TextStyle(fontSize: 12),
-          //                                         ),
-          //                                       ],
-          //                                     ),
-          //                                   )),
-          //                                 )
-          //                               ],
-          //                             ),
-          //                           ),
-          //
-          //                           /// conflicts and display
-          //                           Row(
-          //                             mainAxisAlignment: MainAxisAlignment.spaceBetween,
-          //                             children: [
-          //                               /// conflict
-          //                               InputFields.numbers(
-          //                                 padLeft: 0,
-          //                                 hintTxt: "Conflict",
-          //                                 isNegativeReq: false,
-          //                                 controller: TextEditingController(text: controller.conflictDays.toString()),
-          //                                 onchanged: (value) {
-          //                                   controller.conflictDays = int.tryParse(value);
-          //                                 },
-          //                                 width: 0.15,
-          //                               ),
-          //
-          //                               /// Display
-          //                               DropDownField.formDropDown1WidthMap(
-          //                                 ["Min Date", "Max Date", "Telecast Count"].map((e) => DropDownValue(key: e, value: e)).toList(),
-          //                                     (value) {
-          //                                   // log(value!.value!);
-          //                                   controller.reportBody["Display"] = value.value;
-          //                                 },
-          //                                 "Display",
-          //                                 0.15,
-          //                                 // context,
-          //                                 // leftpad: 0,
-          //                               ),
-          //                             ],
-          //                           ),
-          //                           const SizedBox(height: 10),
-          //
-          //                           /// genearte and clear buttons
-          //                           Row(
-          //                             mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-          //                             children: [
-          //                               Expanded(
-          //                                 child: FormButtonWrapper(
-          //                                     btnText: "Generate",
-          //                                     callback: () {
-          //                                       controller.generateData();
-          //                                     }),
-          //                               ),
-          //                               SizedBox(width: w * .05),
-          //                               Expanded(
-          //                                 child: FormButtonWrapper(
-          //                                     btnText: "Clear",
-          //                                     callback: () {
-          //                                       controller.formHandler("Clear");
-          //                                     }),
-          //                               ),
-          //                             ],
-          //                           )
-          //                         ],
-          //                       ),
-          //                     ),
-          //                   )
-          //                 ],
-          //               ),
-          //             ),
-          //
-          //             /// output forms
-          //             GetBuilder<CommercialController>(
-          //                 init: CommercialController(),
-          //                 id: "reports",
-          //                 builder: (controller) {
-          //                   if (controller.conflictReport.isEmpty || controller.beams.isEmpty) {
-          //                     return Column(
-          //                       children: [
-          //                         Container(
-          //                           height: (h * .75) - kToolbarHeight,
-          //                           width: w * 0.6,
-          //                           decoration: BoxDecoration(
-          //                               border: Border.all(
-          //                                 color: Colors.grey,
-          //                               )),
-          //                         ),
-          //                         const SizedBox(height: 10),
-          //                         Container(
-          //                           height: (h * .30) - kToolbarHeight,
-          //                           width: w * 0.6,
-          //                           decoration: BoxDecoration(
-          //                               border: Border.all(
-          //                                 color: Colors.grey,
-          //                               )),
-          //                         ),
-          //                       ],
-          //                     );
-          //                   } else {
-          //                     FocusNode _focusNode = FocusNode();
-          //                     List<PlutoRow> rows = [];
-          //                     List<PlutoColumn> columns = [];
-          //
-          //                     bool canFormateDate = false;
-          //                     for (Map row in controller.conflictReport) {
-          //                       Map<String, PlutoCell> cells = {};
-          //                       try {
-          //                         for (var element in row.entries) {
-          //                           cells[element.key] = PlutoCell(
-          //                             value: element.key == "selected" || element.value == null || element.value == ""
-          //                                 ? ""
-          //                                 : !(element.key.toString().toLowerCase().contains("program"))
-          //                                 ? element.value.toString().contains('00:00:00')
-          //                                 ? DateFormat("dd/MM/yyyy").format(DateFormat('MM/dd/yyyy HH:mm:ss').parse(element.value.toString()))
-          //                                 : DateFormat("dd/MM/yyyy HH:mm:ss")
-          //                                 .format(DateFormat('MM/dd/yyyy HH:mm:ss').parse(element.value.toString()))
-          //                                 : element.value.toString(),
-          //                           );
-          //                         }
-          //                         rows.add(PlutoRow(
-          //                           cells: cells,
-          //                         ));
-          //                       } catch (e) {
-          //                         log("problem in adding rows$e");
-          //                       }
-          //                     }
-          //
-          //                     return Builder(builder: (context) {
-          //                       return Column(
-          //                         mainAxisAlignment: MainAxisAlignment.start,
-          //                         mainAxisSize: MainAxisSize.max,
-          //                         children: [
-          //                           // 1st grid
-          //                           SizedBox(
-          //                             height: (h * .75) - kToolbarHeight,
-          //                             width: w * 0.6,
-          //                             child: Focus(
-          //                               autofocus: false,
-          //                               focusNode: _focusNode,
-          //                               child: PlutoGrid(
-          //                                 onSorted: (event) {
-          //                                   controller.conflictReportStateManager.columns;
-          //                                   event.column.sort = event.oldSort;
-          //                                   log("sorting event");
-          //                                   controller.loadColumnBeams(event.column.field.toString());
-          //                                 },
-          //                                 rowColorCallback: (rowColorContext) {
-          //                                   if (controller.conflictPrograms.contains(rowColorContext.row.cells["Program"]!.value)) {
-          //                                     return Colors.pink[400]!;
-          //                                   }
-          //
-          //                                   return Colors.white;
-          //                                 },
-          //                                 configuration: plutoGridConfiguration(focusNode: _focusNode),
-          //                                 columns: [
-          //                                   for (var key in controller.conflictReport[0].keys)
-          //                                     PlutoColumn(
-          //                                         title: key.toString(),
-          //                                         readOnly: true,
-          //                                         enableSorting: true,
-          //                                         enableRowDrag: false,
-          //                                         renderer: ((rendererContext) => GestureDetector(
-          //                                           onSecondaryTapDown: (detail) {
-          //                                             DataGridMenu().showGridMenu(rendererContext.stateManager, detail, context);
-          //                                           },
-          //                                           child: Text(
-          //                                             rendererContext.cell.value.toString(),
-          //                                             style: TextStyle(
-          //                                               fontSize: SizeDefine.columnTitleFontSize,
-          //                                             ),
-          //                                           ),
-          //                                         )),
-          //                                         enableEditingMode: false,
-          //                                         enableDropToResize: true,
-          //                                         enableContextMenu: false,
-          //                                         width: Utils.getColumnSize(key: key, value: controller.conflictReport[0][key]),
-          //                                         sort: PlutoColumnSort.none,
-          //                                         enableAutoEditing: false,
-          //                                         hide: key == "territoryCode" ? false : key.toString().toLowerCase().contains("code"),
-          //                                         enableColumnDrag: false,
-          //                                         field: key,
-          //                                         type: PlutoColumnType.text())
-          //                                 ],
-          //                                 rows: rows,
-          //                                 onChanged: (PlutoGridOnChangedEvent event) {
-          //                                   print(event);
-          //                                 },
-          //                                 onRowChecked: (event) {
-          //                                   print('Grid B : $event');
-          //                                 },
-          //                                 onLoaded: (PlutoGridOnLoadedEvent event) {
-          //                                   event.stateManager.setKeepFocus(false);
-          //                                   controller.conflictReportStateManager = event.stateManager;
-          //
-          //                                   event.stateManager.addListener(controller.loadBeams);
-          //                                 },
-          //
-          //                                 // configuration: PlutoConfiguration.dark(),
-          //                               ),
-          //                             ),
-          //                           ),
-          //                           SizedBox(height: 10),
-          //                           // 2 grid
-          //                           GetBuilder<CommercialController>(
-          //                             init: CommercialController(),
-          //                             id: "beams",
-          //                             builder: (controller) {
-          //                               FocusNode _focusNode = FocusNode();
-          //                               return controller.beamRows.isEmpty
-          //                                   ? SizedBox()
-          //                                   : SizedBox(
-          //                                 height: (h * .30) - kToolbarHeight,
-          //                                 width: w * 0.6,
-          //                                 child: Focus(
-          //                                   autofocus: false,
-          //                                   focusNode: _focusNode,
-          //                                   child: PlutoGrid(
-          //                                     onSorted: (event) {
-          //                                       log(event.column.key.toString());
-          //                                     },
-          //                                     configuration: plutoGridConfiguration(focusNode: _focusNode),
-          //                                     columns: [
-          //                                       for (var key in controller.beams[0].keys)
-          //                                         PlutoColumn(
-          //                                             title: key.toString().pascalCaseToNormal(),
-          //                                             readOnly: true,
-          //                                             renderer: ((rendererContext) => GestureDetector(
-          //                                               onSecondaryTapDown: (detail) {
-          //                                                 DataGridMenu().showGridMenu(rendererContext.stateManager, detail, context);
-          //                                               },
-          //                                               child: Text(
-          //                                                 rendererContext.cell.value.toString(),
-          //                                                 style: TextStyle(
-          //                                                   fontSize: SizeDefine.columnTitleFontSize,
-          //                                                 ),
-          //                                               ),
-          //                                             )),
-          //                                             enableSorting: true,
-          //                                             enableRowDrag: false,
-          //                                             enableEditingMode: false,
-          //                                             enableDropToResize: true,
-          //                                             enableContextMenu: false,
-          //                                             width: Utils.getColumnSize(key: key, value: controller.beams[0][key]),
-          //                                             enableAutoEditing: false,
-          //                                             hide: key.toString().toLowerCase().contains("code"),
-          //                                             enableColumnDrag: false,
-          //                                             field: key,
-          //                                             type: PlutoColumnType.text())
-          //                                     ],
-          //                                     rows: controller.beamRows,
-          //                                     onChanged: (PlutoGridOnChangedEvent event) {
-          //                                       print(event);
-          //                                     },
-          //
-          //                                     onRowChecked: (PlutoGridOnRowCheckedEvent event) {
-          //                                       print('Grid B : $event');
-          //                                     },
-          //                                     onLoaded: (PlutoGridOnLoadedEvent event) {
-          //                                       controller.bmsReportStateManager = event.stateManager;
-          //                                     },
-          //
-          //                                     // configuration: PlutoConfiguration.dark(),
-          //                                   ),
-          //                                 ),
-          //                               );
-          //                             },
-          //                           )
-          //                         ],
-          //                       );
-          //                     });
-          //                   }
-          //                 })
-          //           ],
-          //         ),
-          //       ),
-          //     ),
-          //   );
-          // }
 
           return Scaffold(
             body: FocusTraversalGroup(
@@ -714,7 +258,30 @@ class CommercialView extends GetView<CommercialController> {
                     onValueChanged: (int? value) {
                       print("Index1 is>>" + value.toString());
                       controllerX.selectedIndex.value = value!;
-                      controllerX.fetchSchedulingShowOnTabDetails();
+
+                      //controllerX.fetchSchedulingShowOnTabDetails();
+                      if (controllerX.selectedIndex.value == 1) {
+                        ///Filter bStatus F, calculate spot duration then calling ColorGrid filter
+                        controllerX.showCommercialDetailsList?.value =
+                            controllerX.mainCommercialShowDetailsList!
+                                .where((o) => o.bStatus.toString() == 'F')
+                                .toList();
+                        controllerX.showCommercialDetailsList?.refresh();
+                      } else if (controllerX.selectedIndex.value == 2) {
+                        ///Filter bStatus E, calculate spot duration then calling ColorGrid filter
+                        controllerX.showCommercialDetailsList?.value =
+                            controllerX.mainCommercialShowDetailsList!
+                                .where((o) => o.bStatus.toString() == 'E')
+                                .toList();
+                        controllerX.showCommercialDetailsList?.refresh();
+                      } else {
+                        ///Filter bStatus B, calculate spot duration then calling ColorGrid filter
+                        controllerX.showCommercialDetailsList?.value =
+                            controllerX.mainCommercialShowDetailsList!
+                                .where((o) => o.bStatus.toString() == 'B')
+                                .toList();
+                        controllerX.showCommercialDetailsList?.refresh();
+                      }
                     },
                   ),
                   const Spacer(),
@@ -739,7 +306,9 @@ class CommercialView extends GetView<CommercialController> {
                       children: [
                         FormButton(
                           btnText: "Change FPC",
-                          callback: () {},
+                          callback: () {
+                            /// FPCTime,
+                          },
                         ),
                         const SizedBox(
                           width: 20,
@@ -776,10 +345,16 @@ class CommercialView extends GetView<CommercialController> {
                 children: [
                   if (controllerX.selectedIndex.value == 0)
                     Expanded(child: schedulingView(context))
+
+                  /// Filter B, calculate spot duration
                   else if (controllerX.selectedIndex.value == 1)
                     Expanded(child: fpcMismatchView(context))
+
+                  /// Filter F, calculate spot duration
                   else if (controllerX.selectedIndex.value == 2)
                     Expanded(child: markedAsErrorView(context))
+
+                  /// Filter E, calculate spot duration
                 ],
               ),
             ),
@@ -789,12 +364,11 @@ class CommercialView extends GetView<CommercialController> {
 
   Widget programTable(context) {
     return GetBuilder<CommercialController>(
-        id: "fillerFPCTable",
+        id: "fillerFPCProgramTable",
         // init: CreateBreakPatternController(),
         builder: (controller) {
           if (controllerX.commercialProgramList != null &&
               (controllerX.commercialProgramList?.isNotEmpty)!) {
-            // final key = GlobalKey();
             return DataGridFromMap(
               mapData: (controllerX.commercialProgramList
                   ?.map((e) => e.toJson())
@@ -805,14 +379,43 @@ class CommercialView extends GetView<CommercialController> {
               ],
               mode: PlutoGridMode.select,
               onSelected: (plutoGrid) {
-                print(jsonEncode(controllerX.selectedProgram?.toJson()));
+
                 controllerX.selectedProgram =
                     controllerX.commercialProgramList![plutoGrid.rowIdx!];
-
                 controllerX.fpcTimeSelected = controllerX
                     .commercialProgramList![plutoGrid.rowIdx!].fpcTime;
+                print(jsonEncode(controllerX.selectedProgram?.toJson()));
 
-                controllerX.fetchSchedulingShowOnTabDetails();
+                if (controllerX.selectedIndex.value == 1) {
+                  ///Filter F, calculate spot duration then calling ColorGrid filter
+                  controllerX.showCommercialDetailsList?.value =
+                      controllerX.mainCommercialShowDetailsList!
+                          .where((o) => o.fpcTime.toString() ==
+                          controllerX.fpcTimeSelected &&
+                          o.bStatus.toString() == 'F')
+                          .toList();
+                  controllerX.showCommercialDetailsList?.refresh();
+                } else if (controllerX.selectedIndex.value == 2) {
+                  ///Filter E, calculate spot duration then calling ColorGrid filter
+                  controllerX.showCommercialDetailsList?.value =
+                      controllerX.mainCommercialShowDetailsList!
+                          .where((o) => o.fpcTime.toString() ==
+                          controllerX.fpcTimeSelected &&
+                          o.bStatus.toString() == 'E')
+                          .toList();
+                  controllerX.showCommercialDetailsList?.refresh();
+                } else {
+                  ///Filter B, calculate spot duration then calling ColorGrid filter
+                  controllerX.showCommercialDetailsList?.value =
+                      controllerX.mainCommercialShowDetailsList!
+                      .where((o) => o.fpcTime.toString() ==
+                          controllerX.fpcTimeSelected &&
+                          o.bStatus.toString() == 'B')
+                      .toList();
+                  controllerX.showCommercialDetailsList?.refresh();
+                }
+
+                //controllerX.fetchSchedulingShowOnTabDetails();
               },
             );
           } else {
@@ -831,7 +434,7 @@ class CommercialView extends GetView<CommercialController> {
         });
   }
 
-  /// tab 0 ( A ) selected date is 22 March 2023
+  /// tab 0 ( A ) recommended date 22 March 2023
   Widget schedulingView(BuildContext context) {
     return Column(
       children: [
@@ -839,63 +442,10 @@ class CommercialView extends GetView<CommercialController> {
             id: "fillerShowOnTabTable",
             // init: CreateBreakPatternController(),
             builder: (controller) {
-              if (controllerX.commercialShufflingList != null &&
-                  (controllerX.commercialShufflingList?.isNotEmpty)!) {
+              if (controllerX.showCommercialDetailsList != null &&
+                  (controllerX.showCommercialDetailsList?.isNotEmpty)!) {
                 // final key = GlobalKey();
                 return Expanded(
-                    // child: DataGridFromMap(
-                    //   colorCallback: (row) {
-                    //     return row.row.cells.containsValue(
-                    //             controller.stateManager?.currentCell)
-                    //         ? Colors.blueAccent
-                    //         : controller.redBreaks.contains(row.rowIdx -
-                    //                 1)
-                    //             ? Colors.white
-                    //             : Colors.orange.shade700;
-                    //   },
-                    //   mapData: (controllerX.commercialShowDetailsList
-                    //       ?.map((e) => e.toJson())
-                    //       .toList())!,
-                    //   showonly: [
-                    //     "fpcTime",
-                    //     "breakNumber",
-                    //     "eventType",
-                    //     "exportTapeCode",
-                    //     "segmentCaption",
-                    //     "client",
-                    //     "brand",
-                    //     "duration",
-                    //     "product",
-                    //     "bookingNumber",
-                    //     "bookingDetailcode",
-                    //     "rostimeBand",
-                    //     "randid",
-                    //     "programName",
-                    //     "rownumber",
-                    //     "bStatus",
-                    //     "pDailyFPC",
-                    //     "pProgramMaster"
-                    //   ],
-                    //   onload: (loadEvent) {
-                    //     loadEvent.stateManager.gridFocusNode.addListener(() {
-                    //       if (loadEvent.stateManager.gridFocusNode.hasFocus) {
-                    //         loadEvent.stateManager
-                    //             .setGridMode(PlutoGridMode.select);
-                    //       } else {
-                    //         loadEvent.stateManager
-                    //             .setGridMode(PlutoGridMode.normal);
-                    //       }
-                    //     });
-                    //   },
-                    //   mode: PlutoGridMode.select,
-                    //   onSelected: (plutoGrid) {
-                    //     controllerX.selectedShowOnTab =
-                    //         controllerX.commercialShowDetailsList![plutoGrid.rowIdx!];
-                    //     print(">>>>>>Commercial Data>>>>>>" +
-                    //         jsonEncode(controllerX.selectedShowOnTab?.toJson()));
-                    //   },
-                    // ),
-                    ///
                     child: DataGridFromMap1(
                         onFocusChange: (value) {
                           controllerX.gridStateManager!
@@ -943,8 +493,10 @@ class CommercialView extends GetView<CommercialController> {
                         ],
                         colorCallback: (PlutoRowColorContext plutoContext) {
                           return Color(int.parse(
-                              '0x${controllerX.commercialShufflingList![plutoContext.rowIdx].backColor}'));
+                              '0x${controllerX.showCommercialDetailsList![plutoContext.rowIdx].backColor}'));
                         },
+
+                        /// From lstLoadColours List check If EventType 'S' or etc show colors accordingly
                         // colorCallback: (row) {
                         //   return row.row.cells.containsValue(
                         //           controller.stateManager?.currentCell)
@@ -956,7 +508,7 @@ class CommercialView extends GetView<CommercialController> {
                         // },
                         onSelected: (PlutoGridOnSelectedEvent event) {
                           controllerX.selectedShowOnTab = controllerX
-                              .commercialShufflingList![event.rowIdx!];
+                              .showCommercialDetailsList![event.rowIdx!];
                           print(">>>>>>Commercial Data>>>>>>" +
                               jsonEncode(
                                   controllerX.selectedShowOnTab?.toJson()));
@@ -969,7 +521,7 @@ class CommercialView extends GetView<CommercialController> {
                           controllerX.gridStateManager?.notifyListeners();
                         },
                         mode: controllerX.selectedPlutoGridMode,
-                        mapData: controllerX.commercialShufflingList!
+                        mapData: controllerX.showCommercialDetailsList!.value
                             .map((e) => e.toJson())
                             .toList()));
               } else {
@@ -1003,88 +555,13 @@ class CommercialView extends GetView<CommercialController> {
             id: "fillerShowOnTabTable",
             // init: CreateBreakPatternController(),
             builder: (controller) {
-              if (controllerX.commercialShowFPCList != null &&
-                  (controllerX.commercialShowFPCList?.isNotEmpty)!) {
+              if (controllerX.showCommercialDetailsList != null &&
+                  (controllerX.showCommercialDetailsList?.isNotEmpty)!) {
                 // final key = GlobalKey();
                 return Expanded(
                   // height: 400,
                   child: DataGridFromMap(
-                    mapData: (controllerX.commercialShowFPCList
-                        ?.map((e) => e.toJson())
-                        .toList())!,
-                    showonly: [
-                      "fpcTime",
-                      "breakNumber",
-                      "eventType",
-                      "exportTapeCode",
-                      "segmentCaption",
-                      "client",
-                      "brand",
-                      "duration",
-                      "product",
-                      "bookingNumber",
-                      "bookingDetailcode",
-                      "rostimeBand",
-                      "randid",
-                      "programName",
-                      "rownumber",
-                      "bStatus",
-                      "pDailyFPC",
-                      "pProgramMaster"
-                    ],
-                    //widthRatio: (Get.width * 0.2) / 2 + 7,
-                    //mode: PlutoGridMode.select,
-                    onSelected: (plutoGrid) {
-                      controllerX.selectedShowOnTab =
-                          controllerX.commercialShowFPCList![plutoGrid.rowIdx!];
-                      print(">>>>>>FPC Data>>>>>>" +
-                          jsonEncode(controllerX.selectedShowOnTab?.toJson()));
-                    },
-                  ),
-                );
-              } else {
-                return Expanded(
-                  child: Card(
-                    clipBehavior: Clip.hardEdge,
-                    shape: RoundedRectangleBorder(
-                      borderRadius:
-                          BorderRadius.circular(0), // if you need this
-                      side: BorderSide(
-                        color: Colors.grey.shade300,
-                        width: 1,
-                      ),
-                    ),
-                    child: Container(
-                      height: Get.height - (4 * kToolbarHeight),
-                    ),
-                  ),
-                );
-              }
-            }),
-        // SizedBox(
-        //   height: (Get.height * .65) - kToolbarHeight / 2,
-        //   width: MediaQuery.of(context).size.width * 0.65,
-        //   child:
-        // ),
-      ],
-    );
-  }
-
-  /// tab 2 ( C )
-  Widget markedAsErrorView(BuildContext context) {
-    return Column(
-      children: [
-        GetBuilder<CommercialController>(
-            id: "fillerShowOnTabTable",
-            // init: CreateBreakPatternController(),
-            builder: (controller) {
-              if (controllerX.commercialShowMarkedList != null &&
-                  (controllerX.commercialShowMarkedList?.isNotEmpty)!) {
-                // final key = GlobalKey();
-                return Expanded(
-                  // height: 400,
-                  child: DataGridFromMap(
-                    mapData: (controllerX.commercialShowMarkedList
+                    mapData: (controllerX.showCommercialDetailsList
                         ?.map((e) => e.toJson())
                         .toList())!,
                     showonly: [
@@ -1111,7 +588,76 @@ class CommercialView extends GetView<CommercialController> {
                     //mode: PlutoGridMode.select,
                     onSelected: (plutoGrid) {
                       controllerX.selectedShowOnTab = controllerX
-                          .commercialShowMarkedList![plutoGrid.rowIdx!];
+                          .showCommercialDetailsList![plutoGrid.rowIdx!];
+                      print(">>>>>>FPC Data>>>>>>" +
+                          jsonEncode(controllerX.selectedShowOnTab?.toJson()));
+                    },
+                  ),
+                );
+              } else {
+                return Expanded(
+                  child: Card(
+                    clipBehavior: Clip.hardEdge,
+                    shape: RoundedRectangleBorder(
+                      borderRadius:
+                          BorderRadius.circular(0), // if you need this
+                      side: BorderSide(
+                        color: Colors.grey.shade300,
+                        width: 1,
+                      ),
+                    ),
+                    child: Container(
+                      height: Get.height - (4 * kToolbarHeight),
+                    ),
+                  ),
+                );
+              }
+            }),
+      ],
+    );
+  }
+
+  /// tab 2 ( C )
+  Widget markedAsErrorView(BuildContext context) {
+    return Column(
+      children: [
+        GetBuilder<CommercialController>(
+            id: "fillerShowOnTabTable",
+            // init: CreateBreakPatternController(),
+            builder: (controller) {
+              if (controllerX.showCommercialDetailsList != null &&
+                  (controllerX.showCommercialDetailsList?.isNotEmpty)!) {
+                // final key = GlobalKey();
+                return Expanded(
+                  // height: 400,
+                  child: DataGridFromMap(
+                    mapData: (controllerX.showCommercialDetailsList
+                        ?.map((e) => e.toJson())
+                        .toList())!,
+                    showonly: [
+                      "fpcTime",
+                      "breakNumber",
+                      "eventType",
+                      "exportTapeCode",
+                      "segmentCaption",
+                      "client",
+                      "brand",
+                      "duration",
+                      "product",
+                      "bookingNumber",
+                      "bookingDetailcode",
+                      "rostimeBand",
+                      "randid",
+                      "programName",
+                      "rownumber",
+                      "bStatus",
+                      "pDailyFPC",
+                      "pProgramMaster"
+                    ],
+                    //mode: PlutoGridMode.select,
+                    onSelected: (plutoGrid) {
+                      controllerX.selectedShowOnTab = controllerX
+                          .showCommercialDetailsList![plutoGrid.rowIdx!];
                       print(">>>>>>Error Data>>>>>>" +
                           jsonEncode(controllerX.selectedShowOnTab?.toJson()));
                     },
@@ -1136,13 +682,7 @@ class CommercialView extends GetView<CommercialController> {
                 );
               }
             }),
-        // SizedBox(
-        //   height: (Get.height * .65) - kToolbarHeight / 2,
-        //   width: MediaQuery.of(context).size.width * 0.65,
-        //   child:
-        // ),
       ],
     );
   }
-
 }
