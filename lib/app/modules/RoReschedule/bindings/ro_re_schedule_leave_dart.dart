@@ -200,7 +200,7 @@ class LstdgvUpdated {
       this.audited});
 
   LstdgvUpdated.fromJson(Map<String, dynamic> json) {
-    rowNo = json['rowNo'];
+    rowNo = json['rowNo'] is String ? int.tryParse(json['rowNo']) : json['rowNo'];
     programCode = json['programCode'];
     midPre = json['midPre'];
     positionCode = json['positionCode'];
@@ -212,14 +212,15 @@ class LstdgvUpdated {
     tapeDuration = json['tapeDuration'];
     spotAmount = json['spotAmount'];
     bookingDetailCode = json['bookingDetailCode'];
-    recordnumber = json['recordnumber'];
-    segmentNumber = json['segmentNumber'];
-    breaknumber = json['breaknumber'];
+    recordnumber = json['recordnumber'] is String ? int.tryParse(json['recordnumber']) : json['recordnumber'];
+    segmentNumber = json['segmentNumber'] is String ? int.tryParse(json['segmentNumber']) : json['segmentNumber'];
     spotPositionTypeName = json['spotPositionTypeName'];
     positionName = json['positionName'];
-    edit = json['edit'];
+    edit = json['edit'] is String ? int.tryParse(json['edit']) : json['edit'];
     rescheduleno = json['rescheduleno'];
-    audited = json['audited'];
+    audited = json['audited'] is String
+        ? (json['audited'].toString().toLowerCase() == "true" ? true : (json['audited'].toString().toLowerCase() == "false" ? false : null))
+        : json['audited'];
   }
 
   Map<String, dynamic> toJson() {
