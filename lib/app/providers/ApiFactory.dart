@@ -434,4 +434,6 @@ class ApiFactory {
   static String TRANSMISSION_LOG_CHANNEL_SPEC_SETTING(
           String locId, String channelId) =>
       "$BASE_URL/api/Transmissionlog/GetChannelSpecsSettings?Locationcode=$locId&ChannelCode=$channelId";
+  static String TRANSMISSION_LOG_COLOR_LIST(String locId, String channelId, String telcastDt) =>
+      "$BASE_URL/api/Transmissionlog/GetLoadColours?locationcode=$locId&channelcode=$channelId&telecastdate=$telcastDt";
 }
