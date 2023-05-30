@@ -29,7 +29,11 @@ class CommercialController extends GetxController {
 
   int selectedGroup = 0;
   double widthSize = 0.17;
-  String? fpcTimeSelected;
+  String? programFpcTimeSelected;
+  int? mainSelectedIndex;
+  String? programCodeSelected;
+  String? exportTapeCodeSelected;
+  String? pDailyFPCSelected;
   DropDownValue? selectedChannel;
   DropDownValue? selectedLocation;
 
@@ -66,7 +70,8 @@ class CommercialController extends GetxController {
   PlutoGridStateManager? gridStateManager;
   PlutoGridStateManager? locChanStateManager;
   PlutoGridStateManager? bmsReportStateManager;
-  PlutoGridMode selectedPlutoGridMode = PlutoGridMode.select;
+  PlutoGridMode selectedTabPlutoGridMode = PlutoGridMode.select;
+  PlutoGridMode selectedProgramPlutoGridMode = PlutoGridMode.selectWithOneTap;
   late PlutoGridStateManager conflictReportStateManager;
 
   List<SystemEnviroment>? channelList = [];
@@ -146,8 +151,10 @@ class CommercialController extends GetxController {
             list['showDetails']['lstCommercialShuffling'].forEach((element) {
               mainCommercialShowDetailsList
                   ?.add(CommercialShowOnTabModel.fromJson(element));
-              showCommercialDetailsList
-                  ?.add(CommercialShowOnTabModel.fromJson(element));
+
+              showCommercialDetailsList?.value = mainCommercialShowDetailsList!
+                  .where((o) => o.bStatus.toString() == 'B')
+                  .toList();
             });
 
             // commercialSpots.value =
@@ -157,12 +164,26 @@ class CommercialController extends GetxController {
             // ['commercialDuration'] ?? "";
 
             print(">>Program List Update Called");
-            update(["fillerFPCProgramTable"]);
-            update(["fillerShowOnTabTable"]);
+            update(["programTable"]);
+            update(["schedulingTable"]);
+            update(["fpcMismatchTable"]);
+            update(["misMatchTable"]);
           },
           failed: (val) {
             Snack.callError(val.toString());
           });
+    }
+  }
+
+  updateTab(String num) {
+    if (num == "1") {
+      update(["fpcMismatchTable"]);
+    } else if (num == "2") {
+      update(["misMatchTable"]);
+    } else if (num == "-1") {
+      update(["programTable"]);
+    } else {
+      update(["schedulingTable"]);
     }
   }
 
@@ -250,6 +271,164 @@ class CommercialController extends GetxController {
   //   }
   // }
 
+  formHandler(btnName) async {
+    if (btnName == "Clear") {
+      clear();
+    }
+
+    if (btnName == "Save") {
+      saveSchedulingData();
+    }
+
+    if (btnName == "Exit") {
+      exit();
+    }
+  }
+
+  Future<dynamic> showTabList() async {
+    if (selectedIndex.value == 1) {
+      ///Filter bStatus F, calculate spot duration then calling ColorGrid filter
+      showCommercialDetailsList?.value = mainCommercialShowDetailsList!
+          .where((o) => o.bStatus.toString() == 'F')
+          .toList();
+      showCommercialDetailsList?.refresh();
+    } else if (selectedIndex.value == 2) {
+      ///Filter bStatus E, calculate spot duration then calling ColorGrid filter
+      showCommercialDetailsList?.value = mainCommercialShowDetailsList!
+          .where((o) => o.bStatus.toString() == 'E')
+          .toList();
+      showCommercialDetailsList?.refresh();
+    } else {
+      ///Filter bStatus B, calculate spot duration then calling ColorGrid filter
+      showCommercialDetailsList?.value = mainCommercialShowDetailsList!
+          .where((o) => o.bStatus.toString() == 'B')
+          .toList();
+      showCommercialDetailsList?.refresh();
+    }
+    updateTab(selectedIndex.value.toString());
+    return showCommercialDetailsList?.value;
+  }
+
+  Future<dynamic> showSelectedProgramList(BuildContext context) async {
+    if (selectedIndex.value == 1) {
+      ///Filter F, calculate spot duration then calling ColorGrid filter
+      print(programFpcTimeSelected.toString());
+      showCommercialDetailsList?.value = mainCommercialShowDetailsList!
+          .where((o) =>
+              o.fpcTime.toString() == programFpcTimeSelected &&
+              o.bStatus.toString() == 'F')
+          .toList();
+      showCommercialDetailsList?.refresh();
+    } else if (selectedIndex.value == 2) {
+      ///Filter E, calculate spot duration then calling ColorGrid filter
+      print(programFpcTimeSelected.toString());
+      showCommercialDetailsList?.value = mainCommercialShowDetailsList!
+          .where((o) =>
+              o.fpcTime.toString() == programFpcTimeSelected &&
+              o.bStatus.toString() == 'E')
+          .toList();
+      showCommercialDetailsList?.refresh();
+    } else {
+      /// Filter B, calculate spot duration then calling ColorGrid filter.
+      showCommercialDetailsList?.value = mainCommercialShowDetailsList!
+          .where((o) =>
+              o.fpcTime.toString() == programFpcTimeSelected &&
+              o.bStatus.toString() == 'B')
+          .toList();
+      showCommercialDetailsList?.refresh();
+    }
+    updateTab(selectedIndex.value.toString());
+    return showCommercialDetailsList?.value;
+  }
+
+  RxList<CommercialShowOnTabModel>? changeFPCOnClick() {
+    /// BStatus == "B" &&
+    /// FPCTime == programFpcTimeSelected &&
+    /// PProgramMaster = programProgramCodeSelected &&
+    /// PDailyFPC == programProgramCodeSelected
+    print(exportTapeCodeSelected.toString());
+    var list = mainCommercialShowDetailsList!
+        .where((o) =>
+        o.bStatus.toString() == 'F')
+        .toList();
+    var target = list[mainSelectedIndex!];
+    print(mainSelectedIndex!.toString());
+    print("changeFPCOnClick : $target");
+    if (target != null) {
+      target.bStatus = 'B';
+      target.fpcTime = programFpcTimeSelected;
+      target.pProgramMaster = programCodeSelected;
+      target.pDailyFPC = programCodeSelected;
+    }
+    mainCommercialShowDetailsList?.refresh();
+    updateTab("1");
+    showTabList();
+
+    return mainCommercialShowDetailsList;
+  }
+
+  RxList<CommercialShowOnTabModel>? misMatchOnClick() {
+    /// BStatus == "B" && PProgramMaster = PDailyFPC
+    print(exportTapeCodeSelected.toString());
+    // var target = mainCommercialShowDetailsList!
+    //     .firstWhere((item) => item.exportTapeCode == exportTapeCodeSelected);
+
+    var list = mainCommercialShowDetailsList!
+        .where((o) =>
+    o.bStatus.toString() == 'F')
+        .toList();
+    var target = list[mainSelectedIndex!];
+    print("misMatchOnClick : $target");
+    if (target != null) {
+      target.bStatus = 'B';
+      target.pProgramMaster = pDailyFPCSelected;
+    }
+    mainCommercialShowDetailsList?.refresh();
+    updateTab("1");
+    showTabList();
+    return mainCommercialShowDetailsList;
+  }
+
+  RxList<CommercialShowOnTabModel>? markAsErrorOnClick() {
+    /// BStatus == "E"
+    print(exportTapeCodeSelected.toString());
+    // var target = mainCommercialShowDetailsList!
+    //     .firstWhere((item) => item.exportTapeCode == exportTapeCodeSelected);
+    var list = mainCommercialShowDetailsList!
+        .where((o) =>
+    o.bStatus.toString() == 'F')
+        .toList();
+    var target = list[mainSelectedIndex!];
+    print("markAsErrorOnClick : $target");
+    if (target != null) {
+      target.bStatus = 'E';
+    }
+    mainCommercialShowDetailsList?.refresh();
+    updateTab("1");
+    showTabList();
+    return mainCommercialShowDetailsList;
+  }
+
+  RxList<CommercialShowOnTabModel>? unMarkAsErrorOnClick() {
+    /// BStatus == "B"
+    print(exportTapeCodeSelected.toString());
+    // var target = mainCommercialShowDetailsList!
+    //     .firstWhere((item) => item.exportTapeCode == exportTapeCodeSelected);
+    var list = mainCommercialShowDetailsList!
+        .where((o) =>
+    o.bStatus.toString() == 'E')
+        .toList();
+    var target = list[mainSelectedIndex!];
+    print("unMarkAsErrorOnClick : $target");
+    if (target != null) {
+      target.bStatus = 'B';
+    }
+    mainCommercialShowDetailsList?.refresh();
+    updateTab("2");
+    showTabList();
+    return mainCommercialShowDetailsList;
+  }
+
   /// Not Completed
   saveSchedulingData() {
     if (selectedLocation == null) {
@@ -266,7 +445,7 @@ class CommercialController extends GetxController {
           "channelCode": selectedChannel?.key.toString(),
           "scheduleDate": df1.format(selectedDate!),
           "lstCommercialShuffling":
-              showCommercialDetailsList?.map((e) => e.toJson()).toList(),
+              mainCommercialShowDetailsList?.map((e) => e.toJson()).toList(),
         };
         print("requestedToSaveData >>>" + jsonEncode(jsonRequest));
         Get.find<ConnectorControl>().POSTMETHOD(
@@ -284,112 +463,6 @@ class CommercialController extends GetxController {
     }
   }
 
-  formHandler(btnName) async {
-    if (btnName == "Clear") {
-      clear();
-    }
-
-    if (btnName == "Save") {
-      saveSchedulingData();
-    }
-
-    if (btnName == "Exit") {
-      exit();
-    }
-  }
-
-  /// Useful in Columns
-  loadColumnBeams(column) {
-    List<PlutoRow> rows = [];
-    for (Map row in beams.where((element) => element["beam"] == column)) {
-      Map<String, PlutoCell> cells = {};
-
-      for (var element in row.entries) {
-        print(element.value);
-        cells[element.key] = PlutoCell(
-          value: element.key == "selected" || element.value == null
-              ? ""
-              : element.key.toString().toLowerCase().contains("date")
-                  ? (element.value.toString().contains('T') &&
-                          element.value.toString().split('T')[1] == '00:00:00')
-                      ? DateFormat("dd/MM/yyyy").format(
-                          DateFormat('yyyy-MM-ddTHH:mm:ss')
-                              .parse(element.value.toString()))
-                      : DateFormat("dd/MM/yyyy HH:mm:ss").format(
-                          DateFormat('yyyy-MM-ddTHH:mm:ss')
-                              .parse(element.value.toString()))
-                  // DateFormat("dd-MM-yyyy hh:mm").format(DateTime.parse(element.value.toString().replaceAll("T", " ")))
-                  : element.value.toString(),
-        );
-      }
-
-      rows.add(PlutoRow(
-        cells: cells,
-      ));
-    }
-    if (bmsReportStateManager != null) {
-      print("state working");
-
-      bmsReportStateManager!.removeRows(bmsReportStateManager!.rows);
-      bmsReportStateManager!.resetCurrentState();
-      bmsReportStateManager!.appendRows(rows);
-    }
-    beamRows = [];
-    update(["beams"]);
-    beamRows = rows;
-    rows = [];
-    update(["beams"]);
-  }
-
-  /// Useful in Columns
-  void loadBeams() {
-    if (conflictReportStateManager.currentRow == null) {
-      return;
-    }
-    // log("Rows");
-    // log(conflictReportStateManager.currentRow!.cells["Program"]!.value);
-    List<PlutoRow> rows = [];
-    for (Map row in beams.where((element) =>
-        element["program"] ==
-        conflictReportStateManager.currentRow!.cells["Program"]!.value)) {
-      Map<String, PlutoCell> cells = {};
-
-      for (var element in row.entries) {
-        cells[element.key] = PlutoCell(
-          value: element.key == "selected" || element.value == null
-              ? ""
-              : element.key.toString().toLowerCase().contains("date")
-                  ? (element.value.toString().contains('T') &&
-                          element.value.toString().split('T')[1] == '00:00:00')
-                      ? DateFormat("dd/MM/yyyy").format(
-                          DateFormat('yyyy-MM-ddTHH:mm:ss')
-                              .parse(element.value.toString()))
-                      : DateFormat("dd/MM/yyyy HH:mm:ss").format(
-                          DateFormat('yyyy-MM-ddTHH:mm:ss')
-                              .parse(element.value.toString()))
-                  // ? DateFormat("dd/MM/yyyy hh:mm").format(DateTime.parse(element.value.toString().replaceAll("T", " ")))
-                  : element.value.toString(),
-        );
-      }
-
-      rows.add(PlutoRow(
-        cells: cells,
-      ));
-    }
-    if (bmsReportStateManager != null) {
-      print("state working");
-
-      bmsReportStateManager!.removeRows(bmsReportStateManager!.rows);
-      bmsReportStateManager!.resetCurrentState();
-      bmsReportStateManager!.appendRows(rows);
-    }
-    beamRows = [];
-    update(["beams"]);
-    beamRows = rows;
-    rows = [];
-    update(["beams"]);
-  }
-
   void clear() {
     date_.text = "";
     selectedChannel = null;
@@ -403,10 +476,11 @@ class CommercialController extends GetxController {
 
     locationEnable.value = true;
     channelEnable.value = true;
-
-    update(["fillerShowOnTabTable"]);
-    update(["fillerFPCProgramTable"]);
-    update(["initialData"]);
+    update(["initData"]);
+    update(["programTable"]);
+    update(["schedulingTable"]);
+    update(["fpcMismatchTable"]);
+    update(["misMatchTable"]);
   }
 
   void exit() {
