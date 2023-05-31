@@ -121,8 +121,8 @@ class CommercialController extends GetxController {
     }
   }
 
-  fetchProgramSchedulingDetails() {
-    print(">>Key is>>>>>" + (selectedChannel?.key ?? ""));
+  fetchSchedulingDetails() {
+    print("Selected Channel is : ${selectedChannel?.key ?? ""}");
     if (selectedLocation == null) {
       Snack.callError("Please select location");
     } else if (selectedChannel == null) {
@@ -130,7 +130,7 @@ class CommercialController extends GetxController {
     } else if (selectedDate == null) {
       Snack.callError("Please select date");
     } else {
-      // LoadingDialog.call();
+      LoadingDialog.call();
       selectedDate = df1.parse(date_.text);
       Get.find<ConnectorControl>().GETMETHODCALL(
           api: ApiFactory.COMMERCIAL_SHOW_FPC_SCHEDULLING_DETAILS(
@@ -159,15 +159,16 @@ class CommercialController extends GetxController {
 
             // commercialSpots.value =
             //     list['showDetails']['bindGridOutPut']['commercialSpots'] ?? "";
-            //
             // commercialDuration.value = list['showDetails']['bindGridOutPut']
             // ['commercialDuration'] ?? "";
 
-            print(">>Program List Update Called");
-            update(["programTable"]);
-            update(["schedulingTable"]);
-            update(["fpcMismatchTable"]);
-            update(["misMatchTable"]);
+            print("fetchProgramSchedulingDetails() Called");
+            updateTab("all");
+            // update(["programTable"]);
+            // update(["schedulingTable"]);
+            // update(["fpcMismatchTable"]);
+            // update(["misMatchTable"]);
+            Get.back();
           },
           failed: (val) {
             Snack.callError(val.toString());
@@ -176,100 +177,20 @@ class CommercialController extends GetxController {
   }
 
   updateTab(String num) {
-    if (num == "1") {
-      update(["fpcMismatchTable"]);
-    } else if (num == "2") {
-      update(["misMatchTable"]);
-    } else if (num == "-1") {
-      update(["programTable"]);
-    } else {
-      update(["schedulingTable"]);
-    }
+    update(["programTable"]);
+    update(["schedulingTable"]);
+    update(["fpcMismatchTable"]);
+    update(["misMatchTable"]);
+    // if (num == "1") {
+    //   update(["fpcMismatchTable"]);
+    // } else if (num == "2") {
+    //   update(["misMatchTable"]);
+    // } else if (num == "-1") {
+    //   update(["programTable"]);
+    // }else {
+    //   update(["schedulingTable"]);
+    // }
   }
-
-  // fetchSchedulingShowOnTabDetails() {
-  //   print(">>Key is>>>>>" + (selectedChannel?.key ?? ""));
-  //   if (selectedLocation == null) {
-  //     Snack.callError("Please select location");
-  //   } else if (selectedChannel == null) {
-  //     Snack.callError("Please select location");
-  //   } else if (selectedDate == null) {
-  //     Snack.callError("Please select date");
-  //   } else {
-  //     // LoadingDialog.call();
-  //     selectedDate = df1.parse(date_.text);
-  //     //   "locationCode": "ZAZEE00001",
-  //     // "channelCode": "ZAZEE00001",
-  //     // "telecastDate": "31-03-2023",
-  //     // "FpctimeSelected":"02:00:00",
-  //     // "tabindex": "1",
-  //     try {
-  //       var jsonRequest = {
-  //         "locationCode": selectedLocation?.key.toString(),
-  //         "channelCode": selectedChannel?.key.toString(),
-  //         "telecastDate": df1.format(selectedDate!),
-  //         "FpctimeSelected": (fpcTimeSelected ?? "").toString(),
-  //         "tabindex": selectedIndex.value.toString(),
-  //         "lstCommercialShuffling":
-  //             commercialShowDetailsList?.map((e) => e.toJson()).toList(),
-  //       };
-  //       print("requestedData1>>>" + jsonEncode(jsonRequest));
-  //       Get.find<ConnectorControl>().POSTMETHOD(
-  //           api: ApiFactory.COMMERCIAL_SHOW_ON_TAB_DETAILS(),
-  //           fun: (dynamic data) {
-  //             print("Json response is>>>" + jsonEncode(data));
-  //
-  //             if (selectedIndex.value.toString() == "1") {
-  //               commercialShowFPCList?.clear();
-  //               data['tabchangeOutput']['lstFPCMismatch'].forEach((element) {
-  //                 commercialShowFPCList
-  //                     ?.add(CommercialShowOnTabModel.fromJson(element));
-  //               });
-  //             } else if (selectedIndex.value.toString() == "2") {
-  //               commercialShowMarkedList?.clear();
-  //               data['tabchangeOutput']['lstMarkedAsError'].forEach((element) {
-  //                 commercialShowMarkedList
-  //                     ?.add(CommercialShowOnTabModel.fromJson(element));
-  //               });
-  //             } else {
-  //               commercialSpots.value = data['tabchangeOutput']['bindGridOutPut']
-  //                       ['commercialSpots'].toString() ??
-  //                   "";
-  //
-  //               commercialDuration.value = data['tabchangeOutput']
-  //                       ['bindGridOutPut']['commercialDuration'].toString() ??
-  //                   "";
-  //
-  //               // data['tabchangeOutput']['lstscheduling'].forEach((element) {
-  //               //   commercialShowDetailsList?.add(CommercialShowOnTabModel.fromJson(element));
-  //               // });
-  //               //
-  //               // data['tabchangeOutput']['lstCommercialShuffling'].forEach((element) {
-  //               //   commercialShowDetailsList?.add(CommercialShowOnTabModel.fromJson(element));
-  //               // });
-  //               // commercialShufflingList?.clear();
-  //               // data['tabchangeOutput']['lstscheduling'].forEach((element) {
-  //               //   commercialShufflingList
-  //               //       ?.add(CommercialShowOnTabModel.fromJson(element));
-  //               // });
-  //
-  //               commercialShowDetailsList?.clear();
-  //               data['tabchangeOutput']['lstCommercialShuffling']
-  //                   .forEach((element) {
-  //                 commercialShowDetailsList
-  //                     ?.add(CommercialShowOnTabModel.fromJson(element));
-  //               });
-  //             }
-  //
-  //             print(">>On Tap Update Called");
-  //             update(["fillerShowOnTabTable"]);
-  //           },
-  //           json: jsonRequest);
-  //     } catch (e) {
-  //       LoadingDialog.callErrorMessage1(msg: "Failed To Load OnTab Data");
-  //     }
-  //   }
-  // }
 
   formHandler(btnName) async {
     if (btnName == "Clear") {
@@ -348,18 +269,15 @@ class CommercialController extends GetxController {
     /// PDailyFPC == programProgramCodeSelected
     print(exportTapeCodeSelected.toString());
     var list = mainCommercialShowDetailsList!
-        .where((o) =>
-        o.bStatus.toString() == 'F')
+        .where((o) => o.bStatus.toString() == 'F')
         .toList();
     var target = list[mainSelectedIndex!];
     print(mainSelectedIndex!.toString());
     print("changeFPCOnClick : $target");
-    if (target != null) {
-      target.bStatus = 'B';
-      target.fpcTime = programFpcTimeSelected;
-      target.pProgramMaster = programCodeSelected;
-      target.pDailyFPC = programCodeSelected;
-    }
+    target.bStatus = 'B';
+    target.fpcTime = programFpcTimeSelected;
+    target.pProgramMaster = programCodeSelected;
+    target.pDailyFPC = programCodeSelected;
     mainCommercialShowDetailsList?.refresh();
     updateTab("1");
     showTabList();
@@ -374,15 +292,12 @@ class CommercialController extends GetxController {
     //     .firstWhere((item) => item.exportTapeCode == exportTapeCodeSelected);
 
     var list = mainCommercialShowDetailsList!
-        .where((o) =>
-    o.bStatus.toString() == 'F')
+        .where((o) => o.bStatus.toString() == 'F')
         .toList();
     var target = list[mainSelectedIndex!];
     print("misMatchOnClick : $target");
-    if (target != null) {
-      target.bStatus = 'B';
-      target.pProgramMaster = pDailyFPCSelected;
-    }
+    target.bStatus = 'B';
+    target.pProgramMaster = pDailyFPCSelected;
     mainCommercialShowDetailsList?.refresh();
     updateTab("1");
     showTabList();
@@ -392,17 +307,12 @@ class CommercialController extends GetxController {
   RxList<CommercialShowOnTabModel>? markAsErrorOnClick() {
     /// BStatus == "E"
     print(exportTapeCodeSelected.toString());
-    // var target = mainCommercialShowDetailsList!
-    //     .firstWhere((item) => item.exportTapeCode == exportTapeCodeSelected);
     var list = mainCommercialShowDetailsList!
-        .where((o) =>
-    o.bStatus.toString() == 'F')
+        .where((o) => o.bStatus.toString() == 'F')
         .toList();
     var target = list[mainSelectedIndex!];
     print("markAsErrorOnClick : $target");
-    if (target != null) {
-      target.bStatus = 'E';
-    }
+    target.bStatus = 'E';
     mainCommercialShowDetailsList?.refresh();
     updateTab("1");
     showTabList();
@@ -415,14 +325,11 @@ class CommercialController extends GetxController {
     // var target = mainCommercialShowDetailsList!
     //     .firstWhere((item) => item.exportTapeCode == exportTapeCodeSelected);
     var list = mainCommercialShowDetailsList!
-        .where((o) =>
-    o.bStatus.toString() == 'E')
+        .where((o) => o.bStatus.toString() == 'E')
         .toList();
     var target = list[mainSelectedIndex!];
     print("unMarkAsErrorOnClick : $target");
-    if (target != null) {
-      target.bStatus = 'B';
-    }
+    target.bStatus = 'B';
     mainCommercialShowDetailsList?.refresh();
     updateTab("2");
     showTabList();
