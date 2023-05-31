@@ -189,11 +189,11 @@ class TransmissionLogController extends GetxController {
   }
 
   calculateTransmissionTime() {
-    if (transmissionLog != null &&
-        transmissionLog?.loadSavedLogOutput != null &&
-        transmissionLog?.loadSavedLogOutput?.lstTransmissionLog != null &&
+    if (transmissionLog == null ||
+        transmissionLog?.loadSavedLogOutput == null ||
+        transmissionLog?.loadSavedLogOutput?.lstTransmissionLog == null ||
         ((transmissionLog?.loadSavedLogOutput?.lstTransmissionLog?.length ??
-                0) !=
+                0) ==
             0)) {
       return;
     }
@@ -260,10 +260,10 @@ class TransmissionLogController extends GetxController {
         // for all secondary events the transmissiontime is the offset and will not be automatically entered from this function
         if ((i + 1) < (gridStateManager?.rows.length ?? 0)) {
           if (gridStateManager?.rows[i + 1].cells["eventType"]?.value
-                      .toString()
-                      .trim()
-                      .toLowerCase() !=
-                  "gl") {
+                  .toString()
+                  .trim()
+                  .toLowerCase() !=
+              "gl") {
             gridStateManager?.rows[i + 1].cells["transmissionTime"]?.value =
                 Utils.convertToTimeFromDouble(value: transmissionTime);
           }
@@ -331,23 +331,23 @@ class TransmissionLogController extends GetxController {
             .toLowerCase();
         if (strEventType != "gl") {
           secondaryEventCtr = 0;
-          if (num.tryParse(dr.cells["transmissionTime"]?.value.substring(0, 2)!)! <
-              num.tryParse(gridStateManager
-                      ?.rows[strLastEventRowNumber].cells["transmissionTime"]?.value
+          if (num.tryParse(
+                  dr.cells["transmissionTime"]?.value.substring(0, 2)!)! <
+              num.tryParse(gridStateManager?.rows[strLastEventRowNumber]
+                      .cells["transmissionTime"]?.value
                       .toString()
                       .substring(0, 2) ??
                   "0")!) {
             datechange = datechange + 1;
           }
           hr = (datechange * 24) +
-              num.parse(
-                  dr.cells["transmissionTime"]?.value.toString().substring(0, 2) ??
-                      "0");
+              num.parse(dr.cells["transmissionTime"]?.value
+                      .toString()
+                      .substring(0, 2) ??
+                  "0");
         } else {
           secondaryEventCtr = secondaryEventCtr + 1;
-          if (dr.cells["transmissionTime"]?.value
-                  .toString() ==
-              "") {
+          if (dr.cells["transmissionTime"]?.value.toString() == "") {
             dr.cells["transmissionTime"]?.value =
                 Utils.convertToTimeFromDouble(value: (secondaryEventCtr * 60));
           }
@@ -371,7 +371,7 @@ class TransmissionLogController extends GetxController {
           gridStateManager?.rows[i + 2].cells["breakEvent"]?.value = "CLEARALL";
       }
 
-      dr.cells["rownumber"]?.value = i;
+      dr.cells["rownumber"]?.value = i.toString();
       dr.cells["datechange"]?.value = hr;
       i = i + 1;
       if (strEventType != "gl") {
@@ -428,194 +428,10 @@ class TransmissionLogController extends GetxController {
       String strPriority;
       String FPcTime = "";
 
-      // gridStateManager
-      /*for (PlutoRow currentRow in (gridStateManager?.rows)!) {
-        CurrentRowIndex = currentRow.sortIdx;
-        CurrentProduct = (currentRow.cells["productname"]?.value ?? "" + "");
-        if ((((currentRow.cells["Eventtype"]?.value ?? "" + "")).Trim() ==
-            "C")) {
-          CurrentTape = (currentRow.cells["exporttapecode"]?.value + "");
-        }
-        else {
-          CurrentTape = "";
-        }
 
-        CurrentProductGroup = (currentRow.cells["productgroup"]?.value + "");
-        String eventtype = currentRow.cells["EventType"]?.value.ToString.Trim();
-        //                 If eventtype = "P" Then
-        //  eventtype = "S"
-        // End If
-        if (GridColour.GridColorOptions.ContainsKey(eventtype)) {
-          ColorCombo currentColor = GridColour.GridColorOptions(eventtype);
-          currentRow.Defaultcellstyle.ForeColor = currentColor.GetForeColor;
-          currentRow.Defaultcellstyle.BackColor = currentColor.GetBackColor;
-          // gridStateManager.
-          if ((FPcTime == currentRow.cells["FPCtime"]?.value)) {
-            currentRow.cells["FPCTime"].Style.ForeColor =
-                currentColor.GetBackColor;
-          }
-          else {
-            FPcTime = currentRow.cells["FPCTime"]?.value;
-          }
-        }
-        else {
-          currentRow.Defaultcellstyle.ForeColor = Color.Black;
-          currentRow.Defaultcellstyle.BackColor = Color.White;
-          if ((FPcTime == currentRow.cells["FPCtime"]?.value)) {
-            currentRow.cells["FPCTime"].Style.ForeColor = Color.White;
-          }
-          else {
-            FPcTime = currentRow.cells["FPCTime"]?.value;
-          }
-        }
-
-        if ((eventtype.trim() == "P")) {
-          var strFPCTime = (((currentRow.cells["FPCTime"]?.value) ?? "00:00:00")
-              .toString());
-          var intFPCTime = Utils.oldBMSConvertToSecondsValue(value: strFPCTime);
-          var strTransmissionTime = (((currentRow.cells["TransmissionTime"]
-              ?.value) ?? "00:00:00").toString());
-          var intTransmissionTime = Utils.oldBMSConvertToSecondsValue(
-              value: strTransmissionTime);
-          if ((((intTransmissionTime - intFPCTime)).abs() >
-              maxProgramStarttimeDiff)) {
-            currentRow.cells["Transmissiontime"].Style.Font =
-            new Font(Control.DefaultFont, FontStyle.Bold);
-          }
-        }
-
-        if ((CurrentProduct != "")) {
-          // if current row is a commercial then check for out of timeband and back to back products
-          strPriority =
-          (currentRow.cells["BookingNumber"]?.value.ToString.Trim() +
-              currentRow.cells["BookingDetailCode"]?.value.ToString.Trim());
-          // spot priority only for commericals
-          if ((strPriority != "")) {
-            if (GridColour.GridColorOptions.ContainsKey(strPriority)) {
-              ColorCombo currentColor = GridColour.GridColorOptions(
-                  strPriority);
-              currentRow.Defaultcellstyle.ForeColor = currentColor.GetForeColor;
-              currentRow.Defaultcellstyle.BackColor = currentColor.GetBackColor;
-              if ((currentRow.Index != 0)) {
-                if ((currentRow.cells["FPCTime"]?.value ==
-                    tblLog.Rows[(currentRow.Index - 1)].cells["fpctime"]
-                        ?.value)) {
-                  currentRow.cells["FPCTime"].Style.ForeColor =
-                      currentColor.GetBackColor;
-                }
-              }
-            }
-          }
-
-          // Checking Same product back to back
-          if ((CurrentProduct != "")) {
-            if ((CurrentRowIndex
-                < ((gridStateManager?.rows.length)! - 2))) {
-              if ((((CurrentProduct ==
-                  (gridStateManager?.rows[(CurrentRowIndex + 1)]
-                      .cells["productname"]
-                      ?.value)
-                      + ""))
-                  || ((CurrentProduct ==
-                      (gridStateManager?.rows[(CurrentRowIndex + 2)]
-                          .cells["productname"]
-                          ?.value)
-                          + "")))) {
-                // currentRow.cells["productname"].Style.Font =
-                // new Font(Control.DefaultFont, FontStyle.Bold);
-                currentRow.cells["productname"] =
-                new Font(Control.DefaultFont, FontStyle.Bold);
-              }
-            }
-          }
-
-          // Checking Same Tape back to back
-          if ((CurrentTape != "")) {
-            if ((CurrentRowIndex
-                < ((gridStateManager?.rows.length)! - 2))) {
-              if ((((CurrentTape ==
-                  (gridStateManager?.rows[(CurrentRowIndex + 1)]
-                      .cells["exporttapecode"]
-                      ?.value)
-                      + ""))
-                  || ((CurrentTape ==
-                      (gridStateManager?.rows[(CurrentRowIndex + 2)]
-                          .cells["exporttapecode"]
-                          ?.value)
-                          + "")))) {
-                currentRow.cells["Exporttapecode"].Style.Font =
-                new Font(Control.DefaultFont, FontStyle.Bold);
-              }
-            }
-          }
-
-          // Checking PRoduct Group back to back
-          if ((CurrentProductGroup != "")) {
-            if ((CurrentRowIndex
-                < ((gridStateManager?.rows.length)! - 2))) {
-              if ((((CurrentProductGroup ==
-                  (gridStateManager?.rows[(CurrentRowIndex + 1)]
-                      .cells["productgroup"]
-                      ?.value)
-                      + ""))
-                  || ((CurrentProductGroup ==
-                      (gridStateManager?.rows[(CurrentRowIndex + 2)]
-                          .cells["productgroup"]
-                          ?.value)
-                          + "")))) {
-                currentRow.cells["ProductGroup"].Style.Font =
-                new Font(Control.DefaultFont, FontStyle.Bold);
-              }
-            }
-          }
-
-          // 'Dim rosStart As String, RosEnd As String, MidRosEnd As String, MidRosStart As String, TxTime As String
-          List<String> ros = [];
-          if ((currentRow.cells["ROStimeBand"]?.value != "")) {
-            ros = currentRow.cells["ROStimeBand"]?.value.Split("-");
-            rosStart = (ros[0] + ":00");
-            RosEnd = (ros[1] + ":00");
-            // if ((rosStart > RosEnd)) {
-            if ((rosStart.compareTo(RosEnd) == 1)) {
-              MidRosEnd = "23:59:59";
-              MidRosStart = "00:00:00";
-            }
-            else {
-              MidRosEnd = RosEnd;
-              MidRosStart = RosEnd;
-            }
-
-            TxTime =
-                currentRow.cells["Transmissiontime"]?.value.ToString.SubString(
-                    0, 8);
-            if ((((TxTime.compareTo(rosStart) == 1 )
-                && (TxTime < MidRosEnd))
-                || ((TxTime > MidRosStart)
-                    && (TxTime < MidRosEnd)))) {
-              if ((((TxTime.compareTo(rosStart) == 1)
-                  && (MidRosEnd.compareTo(TxTime) == 1))
-                  || ((TxTime.compareTo(MidRosStart) == 1)
-                      && (MidRosEnd.compareTo(TxTime) == 1)))) {
-
-              }
-              else {
-                currentRow.cells["RosTimeBand"].Style.Font =
-                new Font(Control.DefaultFont, FontStyle.Bold);
-              }
-            }
-          }
-        }
-      }*/
 
       dtSTD[3] = DateTime.now().millisecondsSinceEpoch;
-      // If tblLog.Columns.Contains("longcaption") Then
-      // tblLog.Columns["longcaption"].Width = 375;
-      // DRR : Sports This being the last column, its not allowing to extend the column width.
-      // End If
-      // tblLog.FirstDisplayedScrollingRowIndex = r
-      // Cursor = Cursors.Default
     } catch (ex) {
-      // MsgBox(ex.Message);
     } finally {
       /* tblLog.PerformLayout();
       if ((DontSavefile == false)) {
@@ -732,10 +548,13 @@ class TransmissionLogController extends GetxController {
         0;
     intCurrentRowIndex[3] = movedRowIndex!;
 
-    List<PlutoRow>? bsPeople = gridStateManager?.rows;
+    // List<PlutoRow>? bsPeople = gridStateManager?.rows;
     PlutoRow rowToMove = plutoRow;
     String strEventType = "", strRosTimeBand = "", strFPCTime = "";
-
+    Map<String, PlutoCell>? cellsData = {};
+    rowToMove.cells.forEach((key, value) {
+      cellsData[key] = value;
+    });
     strFPCTime = rowToMove.cells["fpCtime"]?.value;
     strRosTimeBand = rowToMove.cells["rosTimeBand"]?.value;
     strEventType = rowToMove.cells["eventType"]?.value;
@@ -753,7 +572,7 @@ class TransmissionLogController extends GetxController {
               return AlertDialog(
                 title: Text("Alert"),
                 content: Text(
-                    "You cannot move selected commercial from $strFPCTime FPCTime to ${gridStateManager?.rows[intCurrentRowIndex[0]].cells["fpCtime"]} FPCTime."),
+                    "You cannot move selected commercial from $strFPCTime FPCTime to ${gridStateManager?.rows[intCurrentRowIndex[0]].cells["fpCtime"]?.value} FPCTime."),
                 actions: [
                   TextButton(
                     child: Text("OK"),
@@ -776,7 +595,8 @@ class TransmissionLogController extends GetxController {
       up = 1;
     }
 
-    PlutoRow row = rowToMove;
+    PlutoRow row = PlutoRow(cells: {});
+    row.cells=cellsData;
     // row.itemArray = celldata;
     if (intCurrentRowIndex[0] > 0) {
       // row.cells["fpCtime"] = gridStateManager?.rows[gridStateManager?.rows[intCurrentRowIndex[0] - 1].cells["rownumber"]?.value].cells["fpCtime"]?.value;
@@ -796,18 +616,24 @@ class TransmissionLogController extends GetxController {
 
     if (gridStateManager?.rows.length == movedRowIndex + 1) {
       // gridStateManager.rows.removeAt(tblLog.rows[rowToMove.index].cells["rownumber"].value + 1);
-      PlutoRow? row = gridStateManager?.rows[movedRowIndex];
+      PlutoRow? row = gridStateManager?.rows[int.tryParse(gridStateManager?.rows[movedRowIndex].cells["rownumber"]?.value)! + 1];
       gridStateManager?.removeRows([row!]);
     } else {
       // bsPeople.rows.removeAt(tblLog.rows[rowToMove.index + up].cells["rownumber"].value);
-      gridStateManager?.removeRows([plutoRow]);
+      PlutoRow? row = gridStateManager?.rows[int.tryParse(gridStateManager?.rows[movedRowIndex+up].cells["rownumber"]?.value)!];
+      gridStateManager?.removeRows([row!]);
     }
 
     if (up == 0) {
       intCurrentRowIndex[0] = intCurrentRowIndex[0] - 1;
     }
+    calculateTransmissionTime();
+    // dtSTD[1] = DateTime.now().millisecondsSinceEpoch;
+
+    updateRowNumber();
+    // dtSTD[2] = DateTime.now().millisecondsSinceEpoch;
     // }
-    colorGrid(false);
+    // colorGrid(false);
     // function();
   }
 
@@ -831,6 +657,10 @@ class TransmissionLogController extends GetxController {
       gridStateManager?.insertRows(0, (logDeletedEvent1.last.values.first));
       gridStateManager?.notifyListeners();
       logDeletedEvent1.removeLast();
+      // calculateTransmissionTime();
+      // dtSTD[1] = DateTime.now().millisecondsSinceEpoch;
+
+      updateRowNumber();
     }
   }
 
