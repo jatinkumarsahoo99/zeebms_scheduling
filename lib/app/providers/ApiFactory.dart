@@ -331,6 +331,26 @@ class ApiFactory {
   static String TRANSMISSION_LOG_RETRIVE() => "$BASE_URL/api/Transmissionlog/PostLoadSavedLog";
   static String TRANSMISSION_LOG_CHANNEL_SPEC_SETTING(String locId, String channelId) =>
       "$BASE_URL/api/Transmissionlog/GetChannelSpecsSettings?Locationcode=$locId&ChannelCode=$channelId";
+////
+  ///
+  ///
+  ///
+  ///
+  ///
+  ///
+////////////////////////////// SLIDE-MASTER-API-START//////////////////////////////////////////////
+  static String SLIDE_MASTER_ON_LOAD(String loginCode) => "$BASE_URL/api/SlideMaster/SlideMasteronLoad?LoginCode=$loginCode";
+  static String SLIDE_MASTER_GET_CHANNEL(String locationCode) => "$BASE_URL/api/SlideMaster/onLeaveLocation?LocationCode=$locationCode";
+  static String get SLIDE_MASTER_RETRIVE_DATA => "$BASE_URL/api/SlideMaster/TapeID_Leave";
+////////////////////////////// SLIDE-MASTER-API-END  //////////////////////////////////////////////
+  ///
+  ///
+  ///
+  ///
+  ///
+  ///
+  ///
+  ///
   static String TRANSMISSION_LOG_COLOR_LIST(String locId, String channelId, String telcastDt) =>
       "$BASE_URL/api/Transmissionlog/GetLoadColours?locationcode=$locId&channelcode=$channelId&telecastdate=$telcastDt";
 }
