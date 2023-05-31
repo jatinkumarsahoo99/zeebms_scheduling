@@ -577,7 +577,6 @@ class CommercialView extends GetView<CommercialController> {
 
                       print(">>>>>>fpcMismatchTable Data>>>>>>" +
                           jsonEncode(controller.selectedShowOnTab?.toJson()));
-
                     },
                   ),
                 );
