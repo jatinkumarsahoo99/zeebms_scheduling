@@ -40,12 +40,13 @@ class CommercialShowOnTabModel {
       this.pDailyFPC,
       this.pProgramMaster});
 
-  CommercialShowOnTabModel.fromJson(Map<String, dynamic> json) {
+  CommercialShowOnTabModel.fromJson(Map<String, dynamic> json, int index) {
     fpcTime = json['fpCtime'];
     breakNumber = json['breakNumber'];
     bookingDetailcode = json['bookingDetailcode'];
     randid = json['randid'];
-    rownumber = json['rownumber'];
+    //rownumber = json['rownumber'];
+    rownumber = index;
     eventType = (json['eventType'] ?? "").toString();
     exportTapeCode = json['exportTapeCode'];
     segmentCaption = json['segmentCaption'];

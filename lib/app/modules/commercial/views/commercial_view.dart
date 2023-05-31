@@ -5,6 +5,7 @@ import 'package:get/get.dart';
 import 'package:pluto_grid/pluto_grid.dart';
 import '../../../../widgets/DateTime/DateWithThreeTextField.dart';
 import '../../../../widgets/FormButton.dart';
+import '../../../../widgets/LoadingDialog.dart';
 import '../../../../widgets/dropdown.dart';
 import '../../../../widgets/gridFromMap.dart';
 import '../../../../widgets/gridFromMap1.dart';
@@ -334,11 +335,11 @@ class CommercialView extends GetView<CommercialController> {
   Widget programTable(context) {
     return GetBuilder<CommercialController>(
         id: "programTable",
-        // init: CreateBreakPatternController(),
         builder: (controller) {
           if (controller.commercialProgramList != null &&
               (controller.commercialProgramList?.isNotEmpty)!) {
             return DataGridFromMap(
+
               colorCallback: (colorRow) {
                 if (controller
                         .commercialProgramList![colorRow.rowIdx].fpcTime ==
@@ -348,14 +349,14 @@ class CommercialView extends GetView<CommercialController> {
                   return Colors.white;
                 }
               },
-              mapData: (controller.commercialProgramList
-                  ?.map((e) => e.toJson())
-                  .toList())!,
+              mode: controller.selectedProgramPlutoGridMode,
               showonly: const [
                 "fpcTime",
                 "programname",
               ],
-              mode: controller.selectedProgramPlutoGridMode,
+              mapData: (controller.commercialProgramList
+                  ?.map((e) => e.toJson())
+                  .toList())!,
               onSelected: (plutoGrid) {
                 controller.selectedProgram =
                     controller.commercialProgramList![plutoGrid.rowIdx!];
@@ -371,7 +372,7 @@ class CommercialView extends GetView<CommercialController> {
                 controller.programFpcTimeSelected =
                     controller.commercialProgramList![plutoGrid.rowIdx].fpcTime;
                 await controller.showSelectedProgramList(context);
-                controller.updateTab('-1');
+                controller.updateTab();
                 print(
                     'on Double tap ${jsonEncode(controller.selectedProgram?.toJson())}');
               },
@@ -471,16 +472,21 @@ class CommercialView extends GetView<CommercialController> {
                             ">>>>>> Commercial Data >>>>>>${jsonEncode(controller.selectedShowOnTab?.toJson())}");
                       },
                       onRowsMoved: (PlutoGridOnRowsMovedEvent onRowMoved) {
-                        print(" onRowMoved Index is>>${onRowMoved.idx}");
-                        Map map = onRowMoved.rows[0].cells;
-                        print(
-                            " On Print moved${jsonEncode(onRowMoved.rows[0].cells.toString())}");
-                        controller.gridStateManager?.notifyListeners();
+
+                        if(controller.showCommercialDetailsList!
+                        [onRowMoved.idx].eventType != "S "){
+                          print(" onRowMoved Index is>>${onRowMoved.idx}");
+                          Map map = onRowMoved.rows[0].cells;
+                          print(
+                              " On Print moved${jsonEncode(onRowMoved.rows[0].cells.toString())}");
+                          controller.gridStateManager?.notifyListeners();
+                        }else{
+                          LoadingDialog.showErrorDialog("You cannot move selected segment");
+                        }
                       },
                       mode: controller.selectedTabPlutoGridMode,
-                      mapData: controller.showCommercialDetailsList!.value
-                          .map((e) => e.toJson())
-                          .toList()));
+                      mapData: controller.showCommercialDetailsList!
+                          .value.map((e) => e.toJson()).toList()));
             } else {
               return Expanded(
                 child: Card(
@@ -540,7 +546,6 @@ class CommercialView extends GetView<CommercialController> {
                       "pDailyFPC",
                       "pProgramMaster"
                     ],
-                    //widthRatio: (Get.width * 0.2) / 2 + 7,
                     mode: PlutoGridMode.selectWithOneTap,
                     onSelected: (plutoGrid) {
                       print(plutoGrid.rowIdx!.toString());

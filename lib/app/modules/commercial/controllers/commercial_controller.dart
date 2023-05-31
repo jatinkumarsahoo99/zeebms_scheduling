@@ -148,14 +148,15 @@ class CommercialController extends GetxController {
 
             mainCommercialShowDetailsList?.clear();
             showCommercialDetailsList?.clear();
-            list['showDetails']['lstCommercialShuffling'].forEach((element) {
+            list['showDetails']['lstCommercialShuffling']
+                .asMap()
+                .forEach((index, element) {
               mainCommercialShowDetailsList
-                  ?.add(CommercialShowOnTabModel.fromJson(element));
-
-              showCommercialDetailsList?.value = mainCommercialShowDetailsList!
-                  .where((o) => o.bStatus.toString() == 'B')
-                  .toList();
+                  ?.add(CommercialShowOnTabModel.fromJson( element, index ));
             });
+            showCommercialDetailsList?.value = mainCommercialShowDetailsList!
+                .where((o) => o.bStatus.toString() == 'B')
+                .toList();
 
             // commercialSpots.value =
             //     list['showDetails']['bindGridOutPut']['commercialSpots'] ?? "";
@@ -163,7 +164,7 @@ class CommercialController extends GetxController {
             // ['commercialDuration'] ?? "";
 
             print("fetchProgramSchedulingDetails() Called");
-            updateTab("all");
+            updateTab();
             // update(["programTable"]);
             // update(["schedulingTable"]);
             // update(["fpcMismatchTable"]);
@@ -176,20 +177,11 @@ class CommercialController extends GetxController {
     }
   }
 
-  updateTab(String num) {
+  updateTab() {
     update(["programTable"]);
     update(["schedulingTable"]);
     update(["fpcMismatchTable"]);
     update(["misMatchTable"]);
-    // if (num == "1") {
-    //   update(["fpcMismatchTable"]);
-    // } else if (num == "2") {
-    //   update(["misMatchTable"]);
-    // } else if (num == "-1") {
-    //   update(["programTable"]);
-    // }else {
-    //   update(["schedulingTable"]);
-    // }
   }
 
   formHandler(btnName) async {
@@ -207,6 +199,7 @@ class CommercialController extends GetxController {
   }
 
   Future<dynamic> showTabList() async {
+    showCommercialDetailsList?.clear();
     if (selectedIndex.value == 1) {
       ///Filter bStatus F, calculate spot duration then calling ColorGrid filter
       showCommercialDetailsList?.value = mainCommercialShowDetailsList!
@@ -216,7 +209,7 @@ class CommercialController extends GetxController {
     } else if (selectedIndex.value == 2) {
       ///Filter bStatus E, calculate spot duration then calling ColorGrid filter
       showCommercialDetailsList?.value = mainCommercialShowDetailsList!
-          .where((o) => o.bStatus.toString() == 'E')
+      .where((o) => o.bStatus.toString() == 'E')
           .toList();
       showCommercialDetailsList?.refresh();
     } else {
@@ -226,7 +219,7 @@ class CommercialController extends GetxController {
           .toList();
       showCommercialDetailsList?.refresh();
     }
-    updateTab(selectedIndex.value.toString());
+    updateTab();
     return showCommercialDetailsList?.value;
   }
 
@@ -245,20 +238,20 @@ class CommercialController extends GetxController {
       print(programFpcTimeSelected.toString());
       showCommercialDetailsList?.value = mainCommercialShowDetailsList!
           .where((o) =>
-              o.fpcTime.toString() == programFpcTimeSelected &&
-              o.bStatus.toString() == 'E')
+      o.fpcTime.toString() == programFpcTimeSelected &&
+          o.bStatus.toString() == 'E')
           .toList();
       showCommercialDetailsList?.refresh();
     } else {
       /// Filter B, calculate spot duration then calling ColorGrid filter.
       showCommercialDetailsList?.value = mainCommercialShowDetailsList!
           .where((o) =>
-              o.fpcTime.toString() == programFpcTimeSelected &&
-              o.bStatus.toString() == 'B')
+      o.fpcTime.toString() == programFpcTimeSelected &&
+          o.bStatus.toString() == 'B')
           .toList();
       showCommercialDetailsList?.refresh();
     }
-    updateTab(selectedIndex.value.toString());
+    updateTab();
     return showCommercialDetailsList?.value;
   }
 
@@ -279,7 +272,7 @@ class CommercialController extends GetxController {
     target.pProgramMaster = programCodeSelected;
     target.pDailyFPC = programCodeSelected;
     mainCommercialShowDetailsList?.refresh();
-    updateTab("1");
+    updateTab();
     showTabList();
 
     return mainCommercialShowDetailsList;
@@ -299,7 +292,7 @@ class CommercialController extends GetxController {
     target.bStatus = 'B';
     target.pProgramMaster = pDailyFPCSelected;
     mainCommercialShowDetailsList?.refresh();
-    updateTab("1");
+    updateTab();
     showTabList();
     return mainCommercialShowDetailsList;
   }
@@ -314,7 +307,7 @@ class CommercialController extends GetxController {
     print("markAsErrorOnClick : $target");
     target.bStatus = 'E';
     mainCommercialShowDetailsList?.refresh();
-    updateTab("1");
+    updateTab();
     showTabList();
     return mainCommercialShowDetailsList;
   }
@@ -331,7 +324,7 @@ class CommercialController extends GetxController {
     print("unMarkAsErrorOnClick : $target");
     target.bStatus = 'B';
     mainCommercialShowDetailsList?.refresh();
-    updateTab("2");
+    updateTab();
     showTabList();
     return mainCommercialShowDetailsList;
   }
