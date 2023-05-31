@@ -6,7 +6,7 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:get/get_connect/http/src/utils/utils.dart';
 import 'package:intl/intl.dart';
-import 'package:pluto_grid/pluto_grid.dart';
+import 'package:bms_scheduling/widgets/PlutoGrid/pluto_grid.dart';
 import 'package:dio/dio.dart' as dio;
 
 import '../../../controller/ConnectorControl.dart';

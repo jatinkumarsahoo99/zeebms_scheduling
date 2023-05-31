@@ -3,7 +3,7 @@ import 'dart:collection';
 import 'package:bms_scheduling/widgets/LoadingDialog.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:get/get.dart';
-import 'package:pluto_grid/pluto_grid.dart';
+import 'package:bms_scheduling/widgets/PlutoGrid/pluto_grid.dart';
 import '../../../../widgets/Snack.dart';
 import '../../../controller/ConnectorControl.dart';
 import '../../../controller/HomeController.dart';
