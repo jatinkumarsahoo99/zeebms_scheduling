@@ -46,18 +46,13 @@ class WoRepushView extends GetView {
         Expanded(
           flex: 2,
           child: Container(
+            width: double.infinity,
+            height: double.infinity,
+            padding: EdgeInsets.all(20),
             decoration: BoxDecoration(border: Border.all(color: Colors.grey)),
-            child: TextFormField(
-              controller: controller.rePushJsonTC,
-              decoration: const InputDecoration(
-                border: InputBorder.none,
-                focusedBorder: InputBorder.none,
-                errorBorder: InputBorder.none,
-                enabledBorder: InputBorder.none,
-                disabledBorder: InputBorder.none,
-                focusedErrorBorder: InputBorder.none,
-              ),
-            ),
+            child: Obx(() {
+              return SelectableText(controller.rePushJsonTC.value);
+            }),
           ),
         ),
         const SizedBox(height: 5),

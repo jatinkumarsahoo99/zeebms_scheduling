@@ -12,7 +12,7 @@ dependencies:
   shared_preferences:
   url_strategy: ^0.2.0
   intl: ^0.17.0
-#  pluto_grid: 5.4.9
+  pluto_grid: ^5.3.2
   dropdown_plus: ^0.0.9
   dropdown_search: ^5.0.3
   time_range_picker: ^2.2.0

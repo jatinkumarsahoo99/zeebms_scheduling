@@ -472,6 +472,14 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "2.1.4"
+  pluto_grid:
+    dependency: "direct main"
+    description:
+      name: pluto_grid
+      sha256: eab54b350911e7995fa0722103328a243d7585e5686e1d67bf845f9a7a193023
+      url: "https://pub.dev"
+    source: hosted
+    version: "5.4.9"
   pointycastle:
     dependency: transitive
     description:
