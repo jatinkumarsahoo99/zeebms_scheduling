@@ -27,6 +27,8 @@ class SalesAuditNotTelecastReportController extends GetxController {
 
   TextEditingController episodeFrom_ = TextEditingController();
   TextEditingController episodeTo_ = TextEditingController();
+  TextEditingController frmDate = TextEditingController();
+  TextEditingController toDate = TextEditingController();
   TextEditingController search_ = TextEditingController();
   TextEditingController searchProgType_ = TextEditingController();
 
@@ -41,6 +43,7 @@ class SalesAuditNotTelecastReportController extends GetxController {
   RxBool isEnable = RxBool(true);
   //input controllers
   DropDownValue? selectLocation;
+  RxString selectValue=RxString("");
 
 
   @override

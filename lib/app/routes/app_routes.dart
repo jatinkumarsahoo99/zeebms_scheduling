@@ -27,6 +27,9 @@ abstract class Routes {
   static const SALES_AUDIT_NEW = _Paths.SALES_AUDIT_NEW;
   static const SLIDE_MASTER = _Paths.SLIDE_MASTER;
   static const STILL_MASTER = _Paths.STILL_MASTER;
+  static const SECONDARY_EVENT_MASTER = _Paths.SECONDARY_EVENT_MASTER;
+  static const FILLER_MASTER = _Paths.FILLER_MASTER;
+  static const PROMO_MASTER = _Paths.PROMO_MASTER;
   static const EVENT_SECONDARY = _Paths.EVENT_SECONDARY;
   static const SLIDE = _Paths.SLIDE;
 }
@@ -60,7 +63,6 @@ abstract class _Paths {
   static const FPC_MISMATCH = '/frmFPCMismatch';
   static const COMMERCIAL = '/frmCommercialScheduling';
   static const RO_CANCELLATION = '/frmROCancellation';
-  //static const RO_BOOKING = '/ro-booking';
   static const FILLER = '/filler';
   static const PROMOS = '/promos';
   static const SPOT_PRIORITY = '/frmSpotPriority';
@@ -73,8 +75,11 @@ abstract class _Paths {
   static const SALES_AUDIT_NOT_TELECAST_REPORT = '/frmsalesauditnottelecast';
   static const SALES_AUDIT_EXTRA_SPOTS_REPORT = '/frmsalesauditextraspotsreport';
   static const SALES_AUDIT_NEW = '/TransmissionLog';
-  static const SLIDE_MASTER = '/slide-master';
-  static const STILL_MASTER = '/still-master';
+  static const SLIDE_MASTER = '/frmSlideMaster';
+  static const STILL_MASTER = '/frmStillMaster';
+  static const SECONDARY_EVENT_MASTER = '/frmSecondaryEventmaster';
+  static const FILLER_MASTER = '/frmFillerMaster';
+  static const PROMO_MASTER = '/frmPromoMaster';
   static const EVENT_SECONDARY = '/event-secondary';
   static const SLIDE = '/slide';
 }

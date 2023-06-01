@@ -9,6 +9,7 @@ import 'package:bms_scheduling/widgets/input_fields.dart';
 import 'package:flutter/material.dart';
 
 import 'package:get/get.dart';
+import 'package:pluto_grid/pluto_grid.dart';
 
 import '../controllers/ro_reschedule_controller.dart';
 
@@ -38,13 +39,20 @@ class RoRescheduleView extends GetView<RoRescheduleController> {
                           spacing: Get.width * 0.005,
                           runSpacing: 5,
                           children: [
-                            DropDownField.formDropDown1WidthMap(
+                            Obx(
+                              () => DropDownField.formDropDown1WidthMap(
                                 controller.reschedulngInitData!.lstlocationMaters!
                                     .map((e) => DropDownValue(key: e.locationCode, value: e.locationName))
-                                    .toList(), (data) {
-                              controller.selectedLocation = data;
-                              controller.getChannel(data.key);
-                            }, "Location", 0.24),
+                                    .toList(),
+                                (data) {
+                                  controller.selectedLocation = data;
+                                  controller.getChannel(data.key);
+                                },
+                                "Location",
+                                0.24,
+                                isEnable: controller.enableFields.value,
+                              ),
+                            ),
                             Obx(
                               // ignore: invalid_use_of_protected_member
                               () => DropDownField.formDropDown1WidthMap(
@@ -148,20 +156,34 @@ class RoRescheduleView extends GetView<RoRescheduleController> {
                               init: controller,
                               id: "dgvGrid",
                               builder: (gridController) {
-                                return (gridController.rescheduleBookingNumberLeaveData == null ||
-                                        gridController.rescheduleBookingNumberLeaveData!.infoLeaveBookingNumber == null ||
-                                        gridController.rescheduleBookingNumberLeaveData!.infoLeaveBookingNumber!.lstDgvRO!.isEmpty)
+                                return (gridController.roRescheduleOnLeaveData == null || gridController.roRescheduleOnLeaveData!.lstDgvRO!.isEmpty)
                                     ? Container(
                                         child: Container(
                                           decoration: BoxDecoration(border: Border.all()),
                                         ),
                                       )
                                     : DataGridShowOnlyKeys(
+                                        mode: PlutoGridMode.selectWithOneTap,
+                                        hideKeys: [],
+                                        colorCallback: (p0) {
+                                          if (controller.roRescheduleOnLeaveData!.lstDgvRO![p0.rowIdx].colorName!.isNotEmpty) {
+                                            return controller.roRescheduleOnLeaveData!.lstDgvRO![p0.rowIdx].colorName!.toLowerCase() == "rosybrown"
+                                                ? Colors.brown
+                                                : Colors.white;
+                                          }
+                                          return Colors.white;
+                                        },
+                                        onSelected: (p0) {
+                                          controller.closeModify();
+                                        },
+                                        onload: (load) {
+                                          controller.plutoGridStateManager = load.stateManager;
+                                        },
                                         onRowDoubleTap: (tapEvent) {
                                           controller.dgvGridnRowDoubleTap(tapEvent.rowIdx);
                                         },
-                                        mapData: gridController.rescheduleBookingNumberLeaveData!.infoLeaveBookingNumber!.lstDgvRO!,
-                                        formatDate: false,
+                                        mapData: gridController.roRescheduleOnLeaveData!.lstDgvRO!.map((e) => e.toJson()).toList(),
+                                        formatDate: true,
                                       );
                               }),
                         ),
@@ -174,18 +196,15 @@ class RoRescheduleView extends GetView<RoRescheduleController> {
                               init: controller,
                               id: "updatedgvGrid",
                               builder: (gridController) {
-                                return (gridController.rescheduleBookingNumberLeaveData == null ||
-                                        gridController.rescheduleBookingNumberLeaveData!.infoLeaveBookingNumber == null ||
-                                        gridController.rescheduleBookingNumberLeaveData!.infoLeaveBookingNumber!.lstdgvUpdated!.isEmpty)
+                                return (gridController.roRescheduleOnLeaveData == null ||
+                                        gridController.roRescheduleOnLeaveData!.lstdgvUpdated!.isEmpty)
                                     ? Container(
                                         child: Container(
                                           decoration: BoxDecoration(border: Border.all()),
                                         ),
                                       )
                                     : DataGridShowOnlyKeys(
-                                        mapData: gridController.rescheduleBookingNumberLeaveData!.infoLeaveBookingNumber!.lstdgvUpdated!
-                                            .map((e) => e.toJson())
-                                            .toList(),
+                                        mapData: gridController.roRescheduleOnLeaveData!.lstdgvUpdated!.map((e) => e.toJson()).toList(),
                                         formatDate: false,
                                       );
                               }),
@@ -203,7 +222,9 @@ class RoRescheduleView extends GetView<RoRescheduleController> {
                             children: [
                               InkWell(
                                 onTap: () {
-                                  controller.changeTapeId.value = !controller.changeTapeId.value;
+                                  if (controller.plutoGridStateManager!.currentCell != null) {
+                                    controller.onChangeTapeIDClick();
+                                  }
                                 },
                                 child: Row(mainAxisSize: MainAxisSize.max, mainAxisAlignment: MainAxisAlignment.start, children: [
                                   Obx(() => Icon(controller.changeTapeId.value ? Icons.check_box_outlined : Icons.check_box_outline_blank_outlined)),
@@ -219,23 +240,26 @@ class RoRescheduleView extends GetView<RoRescheduleController> {
                                       crossAxisAlignment: WrapCrossAlignment.end,
                                       children: [
                                         DropDownField.formDropDown1WidthMap(
-                                            (controller.rescheduleBookingNumberLeaveData?.infoLeaveBookingNumber?.lstcmbTapeID ?? [])
-                                                .map((e) => DropDownValue(key: e.exporttapecode, value: e.commercialCaption))
+                                            (controller.roRescheduleOnLeaveData?.lstcmbTapeID ?? [])
+                                                .map((e) => DropDownValue(key: e.exporttapecode, value: e.exporttapecode))
                                                 .toList(), (data) {
                                           // controller.selectedLocation = data;
                                           // controller.getChannel(data.key);
-                                        }, "Tape ID", 0.12),
+                                        }, "Tape ID", 0.12, selected: controller.modifySelectedTapeCode),
+                                        InputFields.formField1(hintTxt: "Seg", isEnable: false, controller: controller.changeTapeIdSeg, width: 0.06),
+                                        InputFields.formField1(hintTxt: "Dur", isEnable: false, controller: controller.changeTapeIdDur, width: 0.06),
                                         InputFields.formField1(
-                                            hintTxt: "Seg", isEnable: controller.enableFields.value, controller: controller.zoneCtrl, width: 0.06),
-                                        InputFields.formField1(
-                                            hintTxt: "Dur", isEnable: controller.enableFields.value, controller: controller.zoneCtrl, width: 0.06),
-                                        InputFields.formField1(
-                                            hintTxt: "Caption",
-                                            isEnable: controller.enableFields.value,
-                                            controller: controller.zoneCtrl,
-                                            width: 0.18),
-                                        FormButtonWrapper(btnText: "Modify"),
-                                        FormButtonWrapper(btnText: "Close ")
+                                            hintTxt: "Caption", isEnable: false, controller: controller.chnageTapeIdCap, width: 0.18),
+                                        FormButtonWrapper(
+                                          btnText: "Modify",
+                                          callback: () {
+                                            controller.modify();
+                                          },
+                                        ),
+                                        FormButtonWrapper(
+                                          btnText: "Close",
+                                          callback: () {},
+                                        )
                                       ],
                                     )
                                   : Container())
@@ -275,7 +299,9 @@ class RoRescheduleView extends GetView<RoRescheduleController> {
                                             btnText: btn["name"],
 
                                             // isEnabled: btn['isDisabled'],
-                                            callback: () {},
+                                            callback: () {
+                                              controller.save();
+                                            },
                                           )
                                         : btn["name"] == "Clear"
                                             ? FormButtonWrapper(

@@ -321,7 +321,7 @@ class ApiFactory {
   static String RO_RESCHEDULE_ADDSPOT = "$BASE_URL/api/RoReschedule/OnClick_AddSpots";
   static String RO_RESCHEDULE_SAVE = "$BASE_URL/api/RoReschedule/OnSave_Rescheduling";
 
-  static String RO_RESCHEDULE_SELECTED_INDEX_CHNAGE_TAPEID(tapeID) => "$BASE_URL/api/RoReschedule/SelectedIndexChanged_TapeID?TapeID=$tapeID'";
+  static String RO_RESCHEDULE_SELECTED_INDEX_CHNAGE_TAPEID = "$BASE_URL/api/RoReschedule/SelectedIndexChanged_TapeID";
 ////////////////////////////////End Spot Priority ////////////////////////
 
 ////////////////////////////// Transmission Log | Sanjaya :UI | Deven Bhole : API ////////////////////////
@@ -347,4 +347,6 @@ class ApiFactory {
   static String RO_DISTRIBUTION_SHOW_DATA(String locId, String channelID, String date) =>
       "$BASE_URL/api/RosDistribution/GetShowBucket?LocationCode=$locId&ChannelCode=$channelID&Date=$date";
   /////////////////////////// RO DISTRIBUTION END/////////////////////
+  static String TRANSMISSION_LOG_COLOR_LIST(String locId, String channelId, String telcastDt) =>
+      "$BASE_URL/api/Transmissionlog/GetLoadColours?locationcode=$locId&channelcode=$channelId&telecastdate=$telcastDt";
 }
