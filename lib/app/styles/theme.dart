@@ -1,7 +1,7 @@
 import 'package:bms_scheduling/app/providers/extensions/datagrid.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:pluto_grid/pluto_grid.dart';
+import 'package:bms_scheduling/widgets/PlutoGrid/pluto_grid.dart';
 
 import '../providers/SizeDefine.dart';
 
@@ -48,7 +48,7 @@ PlutoGridConfiguration plutoGridConfiguration({
   required FocusNode focusNode,
   FocusNode? previousWidgetFN,
 }) =>
-    PlutoGridConfiguration(
+    PlutoGridConfiguration.dark(
         shortcut: PlutoGridShortcut(
           actions: {
             // This is a Map with basic shortcut keys and actions set.

@@ -347,6 +347,26 @@ class ApiFactory {
   static String RO_DISTRIBUTION_SHOW_DATA(String locId, String channelID, String date) =>
       "$BASE_URL/api/RosDistribution/GetShowBucket?LocationCode=$locId&ChannelCode=$channelID&Date=$date";
   /////////////////////////// RO DISTRIBUTION END/////////////////////
+////
+  ///
+  ///
+  ///
+  ///
+  ///
+  ///
+////////////////////////////// SLIDE-MASTER-API-START//////////////////////////////////////////////
+  static String SLIDE_MASTER_ON_LOAD(String loginCode) => "$BASE_URL/api/SlideMaster/SlideMasteronLoad?LoginCode=$loginCode";
+  static String SLIDE_MASTER_GET_CHANNEL(String locationCode) => "$BASE_URL/api/SlideMaster/onLeaveLocation?LocationCode=$locationCode";
+  static String get SLIDE_MASTER_RETRIVE_DATA => "$BASE_URL/api/SlideMaster/TapeID_Leave";
+////////////////////////////// SLIDE-MASTER-API-END  //////////////////////////////////////////////
+  ///
+  ///
+  ///
+  ///
+  ///
+  ///
+  ///
+  ///
   static String TRANSMISSION_LOG_COLOR_LIST(String locId, String channelId, String telcastDt) =>
       "$BASE_URL/api/Transmissionlog/GetLoadColours?locationcode=$locId&channelcode=$channelId&telecastdate=$telcastDt";
 }
