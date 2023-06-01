@@ -15,13 +15,13 @@ import 'package:intl/intl.dart';
 
 import '../../../../widgets/CheckBoxWidget.dart';
 import '../../../../widgets/DateTime/DateWithThreeTextField.dart';
+import '../../../../widgets/PlutoGrid/src/manager/pluto_grid_state_manager.dart';
+import '../../../../widgets/PlutoGrid/src/pluto_grid.dart';
 import '../../../../widgets/dropdown.dart';
 import '../../../../widgets/gridFromMap.dart';
 import '../../../../widgets/input_fields.dart';
 import '../../../../widgets/radio_row.dart';
 import '../model/ros_show_model.dart';
-import 'package:pluto_grid/pluto_grid.dart';
-import 'package:pluto_grid/pluto_grid.dart' show PlutoGridMode;
 
 class RosDistributionController extends GetxController {
   DropDownValue? selectedLocation, selectedChannel;
@@ -447,7 +447,7 @@ class RosDistributionController extends GetxController {
                                                 "LstAllocatedSpots ": [
                                                   tempLeftList[row.rowIdx ?? 0].toJson(),
                                                 ],
-                                                "LstUnallocatedSpots": []
+                                                "LstUnallocatedSpots": [],
                                               },
                                             );
                                           }
@@ -460,7 +460,7 @@ class RosDistributionController extends GetxController {
                                             tempBookedDur.value = (tempLeftList[0].bookedDuration ?? 0).toString();
                                           }
                                         },
-                                        // mode: PlutoGridMode.selectWithOneTap,
+                                        mode: PlutoGridMode.selectWithOneTap,
                                       ),
                               );
                             }),
