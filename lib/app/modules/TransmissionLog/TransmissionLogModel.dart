@@ -122,11 +122,11 @@ class LstTransmissionLog {
     eventType = json['eventType'];
     bookingNumber = json['bookingNumber'];
     bookingdetailcode = json['bookingdetailcode'];
-    scheduleTime = json['scheduleTime'];
-    productName = json['productName'];
+    scheduleTime = json['scheduleTime']??json["scheduletime"];
+    productName = json['productName']??json["productname"];
     rosTimeBand = json['rosTimeBand'];
     client = json['client'];
-    promoTypecode = json['promoTypecode'];
+    promoTypecode = json['promoTypecode']??json["promotypecode"];
     datechange = json['datechange'];
     productGroup = json['productGroup'];
     longCaption = json['longCaption'];

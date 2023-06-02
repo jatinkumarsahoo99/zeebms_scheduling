@@ -239,7 +239,7 @@ class TransmissionLogView extends GetView<TransmissionLogController> {
                             Color color = Colors.white;
                             if (data != null) {
                               // print("Index is>> ${colorData.rowIdx.toString()} >>>> ${data.backColor}");
-
+                              print(">>>>>Color code is>>>>Index is>${colorData.rowIdx.toString()}"+">>>>>>"+data.backColor.toString());
                               color = Color(int.parse('0x${data.backColor}'));
                             }
                             if (currentRow.cells["productName"]?.value !=
@@ -259,6 +259,7 @@ class TransmissionLogView extends GetView<TransmissionLogController> {
                                     Get.find<TransmissionLogController>()
                                         .getMatchWithKey(strPriority);
                                 if (data1 != null) {
+                                  print(">>>>>Color code is>>>>Index is>${colorData.rowIdx.toString()}"+">>>>>>"+data1.backColor.toString());
                                   color =
                                       Color(int.parse('0x${data1.backColor}'));
                                 }
