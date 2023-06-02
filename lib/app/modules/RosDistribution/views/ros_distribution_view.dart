@@ -3,9 +3,11 @@ import 'package:bms_scheduling/widgets/DataGridShowOnly.dart';
 import 'package:bms_scheduling/widgets/DateTime/DateWithThreeTextField.dart';
 import 'package:bms_scheduling/widgets/FormButton.dart';
 import 'package:bms_scheduling/widgets/dropdown.dart';
+import 'package:bms_scheduling/widgets/radio_row.dart';
 import 'package:flutter/material.dart';
 
 import 'package:get/get.dart';
+import 'package:pluto_grid/pluto_grid.dart';
 
 import '../../../controller/HomeController.dart';
 import '../controllers/ros_distribution_controller.dart';
@@ -20,39 +22,93 @@ class RosDistributionView extends GetView<RosDistributionController> {
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             Card(
-              child: Container(
-                padding: const EdgeInsets.all(8),
+              child: SizedBox(
                 width: Get.width,
-                child: Wrap(
-                  crossAxisAlignment: WrapCrossAlignment.end,
-                  alignment: WrapAlignment.spaceBetween,
-                  spacing: 10,
-                  children: [
-                    DropDownField.formDropDown1WidthMap(
-                        [], (data) {}, "Location", 0.12),
-                    DropDownField.formDropDown1WidthMap(
-                        [], (data) {}, "Channel", 0.18),
-                    DateWithThreeTextField(
-                        widthRation: 0.12,
-                        title: "Cancel Date",
-                        mainTextController: TextEditingController()),
-                    for (var btn in controller.topButtons)
-                      FormButtonWrapper(
-                        btnText: btn["name"],
-                        callback: btn["callback"],
-                      )
-                  ],
+                child: Padding(
+                  padding: const EdgeInsets.all(8.0),
+                  child: GetBuilder(
+                      init: controller,
+                      id: "headRowBtn",
+                      builder: (_) {
+                        return Wrap(
+                          crossAxisAlignment: WrapCrossAlignment.end,
+                          alignment: WrapAlignment.spaceBetween,
+                          spacing: 10,
+                          children: [
+                            Obx(() {
+                              return DropDownField.formDropDown1WidthMap(
+                                controller.location.value,
+                                controller.handleOnLocationChanged,
+                                "Location",
+                                0.12,
+                                selected: controller.selectedLocation,
+                                autoFocus: true,
+                                inkWellFocusNode: controller.locationFN,
+                                isEnable: controller.enableControllos.value,
+                              );
+                            }),
+                            Obx(() {
+                              return DropDownField.formDropDown1WidthMap(
+                                controller.channel.value,
+                                (val) => controller.selectedChannel = val,
+                                "Channel",
+                                0.12,
+                                selected: controller.selectedChannel,
+                                isEnable: controller.enableControllos.value,
+                              );
+                            }),
+                            Obx(() {
+                              return DateWithThreeTextField(
+                                widthRation: 0.12,
+                                title: "Cancel Date",
+                                mainTextController: controller.date,
+                                isEnable: controller.enableControllos.value,
+                              );
+                            }),
+                            for (int index = 0; index < controller.topButtons.length; index++) ...{
+                              FormButtonWrapper(
+                                btnText: controller.topButtons.value[index]['name'],
+                                callback: controller.topButtons.value[index]['callback'],
+                                isEnabled: controller.topButtons.value[index]['isEnabled'],
+                              )
+                            },
+                          ],
+                        );
+                      }),
                 ),
               ),
             ),
             Expanded(
-                child: Container(
-              padding: const EdgeInsets.all(4),
-              child: DataGridShowOnlyKeys(
-                mapData: dummydata,
-                formatDate: false,
-              ),
-            )),
+              child: Obx(() {
+                return Container(
+                  margin: const EdgeInsets.all(8),
+                  decoration: (controller.showDataModel.value.infoShowBucketList?.lstROSSpots?.isEmpty ?? true)
+                      ? BoxDecoration(
+                          border: Border.all(
+                          color: Colors.grey,
+                        ))
+                      : null,
+                  child: (controller.showDataModel.value.infoShowBucketList?.lstROSSpots?.isEmpty ?? true)
+                      ? null
+                      : DataGridShowOnlyKeys(
+                          mapData: (controller.showDataModel.value.infoShowBucketList?.lstROSSpots ?? []).map((e) => e.toJson()).toList(),
+                          formatDate: false,
+                          onload: (event) {
+                            // controller.mainGSM = event.stateManager;
+                            // event.stateManager.setSelectingMode(PlutoGridSelectingMode.row);
+                            // event.stateManager.setSelecting(true);
+                            // event.stateManager.setCurrentCell(event.stateManager.firstCell, 0);
+                          },
+                          colorCallback: (row) =>
+                              (row.row.cells.containsValue(controller.mainGSM?.currentCell)) ? Colors.deepPurple.shade200 : Colors.white,
+                          hideKeys: ['rid'],
+                          widthRatio: 220,
+                          hideCode: false,
+                          // mode: PlutoGridMode.normal,
+                        ),
+                );
+              }),
+            ),
             GetBuilder<HomeController>(
                 id: "buttons",
                 init: Get.find<HomeController>(),
@@ -66,9 +122,7 @@ class RosDistributionView extends GetView<RosDistributionController> {
                   return Card(
                     margin: const EdgeInsets.fromLTRB(4, 4, 4, 0),
                     shape: const RoundedRectangleBorder(
-                      borderRadius: BorderRadius.only(
-                          topLeft: Radius.circular(10),
-                          topRight: Radius.circular(10)),
+                      borderRadius: BorderRadius.only(topLeft: Radius.circular(10), topRight: Radius.circular(10)),
                     ),
                     clipBehavior: Clip.hardEdge,
                     child: Container(
@@ -95,7 +149,8 @@ class RosDistributionView extends GetView<RosDistributionController> {
 
                                           // isEnabled: btn['isDisabled'],
                                           callback: () {
-                                            btncontroller.clearPage1();
+                                            controller.clearAllPage();
+                                            // btncontroller.clearPage1();
                                           },
                                         )
                                       : FormButtonWrapper(
@@ -106,21 +161,21 @@ class RosDistributionView extends GetView<RosDistributionController> {
                             for (var checkBox in controller.checkBoxes)
                               InkWell(
                                 onTap: () {
-                                  controller.checkBoxes[controller.checkBoxes
-                                          .indexOf(checkBox)]["value"] =
-                                      !(controller.checkBoxes[controller
-                                              .checkBoxes
-                                              .indexOf(checkBox)]["value"]!
-                                          as bool);
-
+                                  controller.checkBoxes[controller.checkBoxes.indexOf(checkBox)]["value"] =
+                                      !(controller.checkBoxes[controller.checkBoxes.indexOf(checkBox)]["value"]! as bool);
+                                  if (controller.checkBoxes.indexOf(checkBox) == 0) {
+                                    controller.handleOnChangedInOpenDeals();
+                                  } else if (controller.checkBoxes.indexOf(checkBox) == 1) {
+                                    controller.handleOnChangedInROSSpots();
+                                  } else if (controller.checkBoxes.indexOf(checkBox) == 2) {
+                                    controller.handleOnChangedInSpotBuys();
+                                  }
                                   controller.checkBoxes.refresh();
                                 },
                                 child: Row(
                                   mainAxisSize: MainAxisSize.min,
                                   children: [
-                                    Icon(checkBox["value"] as bool
-                                        ? Icons.check_box_rounded
-                                        : Icons.check_box_outline_blank),
+                                    Icon(checkBox["value"] as bool ? Icons.check_box_rounded : Icons.check_box_outline_blank),
                                     Text(checkBox["name"].toString())
                                   ],
                                 ),

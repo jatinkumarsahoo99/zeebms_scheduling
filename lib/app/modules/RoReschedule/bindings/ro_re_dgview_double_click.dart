@@ -14,12 +14,13 @@ class RORescheduleDGviewDoubleClickData {
   String? killDate;
   String? preMid;
   String? position;
-  List<String>? dgvProgramColumnVisiableTrue;
+  List? dgvProgramColumnVisiableTrue;
   List<String>? dgvProgramColumnVisiableFalse;
   List<String>? formControlVisiableFalse;
-  List<String>? formControlVisiableTrue;
+  List? formControlVisiableTrue;
   List? message;
   List? dgvUpdateds;
+  List<LstDetTable>? lstDetTable;
 
   RORescheduleDGviewDoubleClickData(
       {this.caption,
@@ -42,7 +43,8 @@ class RORescheduleDGviewDoubleClickData {
       this.formControlVisiableFalse,
       this.formControlVisiableTrue,
       this.message,
-      this.dgvUpdateds});
+      this.dgvUpdateds,
+      this.lstDetTable});
 
   RORescheduleDGviewDoubleClickData.fromJson(Map<String, dynamic> json) {
     caption = json['caption'];
@@ -81,9 +83,15 @@ class RORescheduleDGviewDoubleClickData {
       });
     }
     if (json['dgvUpdateds'] != null) {
-      dgvUpdateds = <Null>[];
+      dgvUpdateds = [];
       json['dgvUpdateds'].forEach((v) {
         dgvUpdateds!.add(v);
+      });
+    }
+    if (json['lstDetTable'] != null) {
+      lstDetTable = <LstDetTable>[];
+      json['lstDetTable'].forEach((v) {
+        lstDetTable!.add(new LstDetTable.fromJson(v));
       });
     }
   }
@@ -106,19 +114,56 @@ class RORescheduleDGviewDoubleClickData {
     data['preMid'] = this.preMid;
     data['position'] = this.position;
     if (this.dgvProgramColumnVisiableTrue != null) {
-      data['dgvProgramColumnVisiable_True'] = this.dgvProgramColumnVisiableTrue!.map((v) => v).toList();
+      data['dgvProgramColumnVisiable_True'] = this.dgvProgramColumnVisiableTrue!.map((v) => v.toJson()).toList();
     }
     data['dgvProgramColumnVisiable_False'] = this.dgvProgramColumnVisiableFalse;
     data['formControlVisiable_False'] = this.formControlVisiableFalse;
     if (this.formControlVisiableTrue != null) {
-      data['formControlVisiable_True'] = this.formControlVisiableTrue!.map((v) => v).toList();
+      data['formControlVisiable_True'] = this.formControlVisiableTrue!.map((v) => v.toJson()).toList();
     }
     if (this.message != null) {
-      data['message'] = this.message!.map((v) => v).toList();
+      data['message'] = this.message!.map((v) => v.toJson()).toList();
     }
     if (this.dgvUpdateds != null) {
-      data['dgvUpdateds'] = this.dgvUpdateds!.map((v) => v).toList();
+      data['dgvUpdateds'] = this.dgvUpdateds!.map((v) => v.toJson()).toList();
     }
+    if (this.lstDetTable != null) {
+      data['lstDetTable'] = this.lstDetTable!.map((v) => v.toJson()).toList();
+    }
+    return data;
+  }
+}
+
+class LstDetTable {
+  String? telecastdate;
+  int? bookedSpots;
+  String? startTime;
+  String? endTime;
+  String? programName;
+  int? availableDuration;
+  String? programcode;
+
+  LstDetTable({this.telecastdate, this.bookedSpots, this.startTime, this.endTime, this.programName, this.availableDuration, this.programcode});
+
+  LstDetTable.fromJson(Map<String, dynamic> json) {
+    telecastdate = json['telecastdate'];
+    bookedSpots = json['bookedSpots'];
+    startTime = json['startTime'];
+    endTime = json['endTime'];
+    programName = json['programName'];
+    availableDuration = json['availableDuration'];
+    programcode = json['programcode'];
+  }
+
+  Map<String, dynamic> toJson() {
+    final Map<String, dynamic> data = new Map<String, dynamic>();
+    data['telecastdate'] = this.telecastdate;
+    data['bookedSpots'] = this.bookedSpots;
+    data['startTime'] = this.startTime;
+    data['endTime'] = this.endTime;
+    data['programName'] = this.programName;
+    data['availableDuration'] = this.availableDuration;
+    data['programcode'] = this.programcode;
     return data;
   }
 }
