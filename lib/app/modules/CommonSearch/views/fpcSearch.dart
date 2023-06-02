@@ -4,7 +4,7 @@ import 'package:flutter/src/widgets/framework.dart';
 import 'package:get/get.dart';
 import 'package:get/get_navigation/get_navigation.dart';
 import 'package:get/utils.dart';
-import 'package:pluto_grid/pluto_grid.dart';
+import 'package:bms_scheduling/widgets/PlutoGrid/pluto_grid.dart';
 
 import '../../../../widgets/FormButton.dart';
 import '../../../../widgets/LoadingScreen.dart';

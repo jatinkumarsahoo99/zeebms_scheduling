@@ -331,6 +331,22 @@ class ApiFactory {
   static String TRANSMISSION_LOG_RETRIVE() => "$BASE_URL/api/Transmissionlog/PostLoadSavedLog";
   static String TRANSMISSION_LOG_CHANNEL_SPEC_SETTING(String locId, String channelId) =>
       "$BASE_URL/api/Transmissionlog/GetChannelSpecsSettings?Locationcode=$locId&ChannelCode=$channelId";
+
+  /////////////////////////// RO DISTRIBUTION START/////////////////////
+  static String get RO_DISTRIBUTION_GET_LOCATION => "$BASE_URL/api/RosDistribution/GetRosDistribution";
+  static String get RO_DISTRIBUTION_GET_RETRIVE_DATA => "$BASE_URL/api/RosDistribution/GetView";
+  static String get RO_DISTRIBUTION_GET_EMPTY_DATA => "$BASE_URL/api/RosDistribution/GetEmptyList";
+  static String get RO_DISTRIBUTION_GET_UN_DATA => "$BASE_URL/api/RosDistribution/GetUnalloacted";
+  static String get RO_DISTRIBUTION_GET_SERVICE_DATA => "$BASE_URL/api/RosDistribution/GetServices";
+  static String get RO_DISTRIBUTION_GET_ALLOCATION_DATA => "$BASE_URL/api/RosDistribution/GetAllocateClick";
+  static String get RO_DISTRIBUTION_GET_DEALLOCATE_DATA => "$BASE_URL/api/RosDistribution/GetRollback";
+  static String get RO_DISTRIBUTION_GET_FPC_DOUBLE_CLICK_DATA => "$BASE_URL/api/RosDistribution/GetFpcCellDoubleClick";
+  static String get RO_DISTRIBUTION_GET_OPENDEAL_FILTER_DATA => "$BASE_URL/api/RosDistribution/GetOpenDealFilter";
+
+  static String RO_DISTRIBUTION_GET_CHANNEL(String locId) => "$BASE_URL/api/RosDistribution/cboLocationCode_Leave?LocationCode=$locId";
+  static String RO_DISTRIBUTION_SHOW_DATA(String locId, String channelID, String date) =>
+      "$BASE_URL/api/RosDistribution/GetShowBucket?LocationCode=$locId&ChannelCode=$channelID&Date=$date";
+  /////////////////////////// RO DISTRIBUTION END/////////////////////
 ////
   ///
   ///

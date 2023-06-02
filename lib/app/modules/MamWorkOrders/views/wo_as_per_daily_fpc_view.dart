@@ -4,7 +4,7 @@ import 'package:bms_scheduling/widgets/dropdown.dart';
 import 'package:bms_scheduling/widgets/gridFromMap.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:pluto_grid/pluto_grid.dart';
+import 'package:bms_scheduling/widgets/PlutoGrid/pluto_grid.dart';
 
 import '../controllers/mam_work_orders_controller.dart';
 

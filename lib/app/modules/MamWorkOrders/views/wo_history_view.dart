@@ -10,7 +10,7 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
 import '../controllers/mam_work_orders_controller.dart';
-import 'package:pluto_grid/pluto_grid.dart' show PlutoGridMode;
+import 'package:bms_scheduling/widgets/PlutoGrid/pluto_grid.dart' show PlutoGridMode;
 
 class WoHistoryView extends GetView {
   const WoHistoryView(this.controller, {Key? key}) : super(key: key);

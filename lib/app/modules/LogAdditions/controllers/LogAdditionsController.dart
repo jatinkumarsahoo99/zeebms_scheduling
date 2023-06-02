@@ -5,7 +5,7 @@ import 'package:bms_scheduling/widgets/Snack.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:get/get.dart';
 import 'package:intl/intl.dart';
-import 'package:pluto_grid/pluto_grid.dart';
+import 'package:bms_scheduling/widgets/PlutoGrid/pluto_grid.dart';
 
 import '../../../controller/ConnectorControl.dart';
 import '../../../controller/HomeController.dart';

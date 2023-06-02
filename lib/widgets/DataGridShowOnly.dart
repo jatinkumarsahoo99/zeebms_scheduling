@@ -5,7 +5,7 @@ import 'package:bms_scheduling/app/providers/extensions/string_extensions.dart';
 import 'package:bms_scheduling/app/styles/theme.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
-import 'package:pluto_grid/pluto_grid.dart';
+import 'package:bms_scheduling/widgets/PlutoGrid/pluto_grid.dart';
 
 class DataGridShowOnlyKeys extends StatelessWidget {
   DataGridShowOnlyKeys({
@@ -162,6 +162,7 @@ class DataGridShowOnlyKeys extends StatelessWidget {
                     : Utils.getColumnSize(
                         key: key,
                         value: mapData[0][key].toString(),
+                        widthRatio: widthRatio,
                       ),
                 enableAutoEditing: false,
                 hide: showonly == null

@@ -3,7 +3,7 @@ import 'dart:convert';
 import 'package:bms_scheduling/widgets/radio_row.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:pluto_grid/pluto_grid.dart';
+import 'package:bms_scheduling/widgets/PlutoGrid/pluto_grid.dart';
 import '../../../../widgets/DateTime/DateWithThreeTextField.dart';
 import '../../../../widgets/FormButton.dart';
 import '../../../../widgets/WarningBox.dart';
@@ -15,6 +15,7 @@ import '../../../../widgets/input_fields.dart';
 import '../../../controller/HomeController.dart';
 import '../../../data/DropDownValue.dart';
 import '../../../providers/ApiFactory.dart';
+import '../../../providers/DataGridMenu.dart';
 import '../../../providers/SizeDefine.dart';
 import '../ColorDataModel.dart';
 import '../controllers/TransmissionLogController.dart';
@@ -90,21 +91,28 @@ class TransmissionLogView extends GetView<TransmissionLogController> {
                                     padding: const EdgeInsets.only(top: 15.0),
                                     child: Checkbox(
                                       value: controllerX.isStandby.value,
-                                      onChanged: (val) {
-                                        controllerX.isStandby.value = val!;
-                                      },
+                                      onChanged: controllerX.isEnable.value
+                                          ? (val) {
+                                              controllerX.isStandby.value =
+                                                  val!;
+                                            }
+                                          : null,
                                       materialTapTargetSize:
                                           MaterialTapTargetSize.shrinkWrap,
                                     ),
                                   )),
-                              Padding(
-                                padding:
-                                    const EdgeInsets.only(top: 15.0, left: 5),
-                                child: Text(
-                                  "Standby Log",
-                                  style: TextStyle(
-                                      fontSize: SizeDefine.labelSize1),
-                                ),
+                              Obx(
+                                () => Padding(
+                                    padding: const EdgeInsets.only(
+                                        top: 15.0, left: 5),
+                                    child: Text(
+                                      "Standby Log",
+                                      style: TextStyle(
+                                          fontSize: SizeDefine.labelSize1,
+                                          color: controllerX.isEnable.value
+                                              ? Colors.black
+                                              : Colors.grey),
+                                    )),
                               ),
                             ],
                           ),
@@ -152,12 +160,13 @@ class TransmissionLogView extends GetView<TransmissionLogController> {
                             paddingLeft: 0),
 
                         /// duration
-                        InputFields.formFieldNumberMask(
+                        Obx(() => InputFields.formFieldNumberMask(
                             hintTxt: "Offset Time",
-                            controller: controllerX.startTime_,
+                            controller: controllerX.offsetTime_,
                             widthRatio: 0.12,
                             isTime: true,
-                            paddingLeft: 0),
+                            isEnable: controllerX.isEnable.value,
+                            paddingLeft: 0)),
                         SizedBox(
                           width: Get.width * 0.1,
                           child: Row(
@@ -166,9 +175,10 @@ class TransmissionLogView extends GetView<TransmissionLogController> {
                               Obx(() => Padding(
                                     padding: const EdgeInsets.only(top: 15.0),
                                     child: Checkbox(
-                                      value: controllerX.isStandby.value,
+                                      value: controllerX.chkTxCommercial.value,
                                       onChanged: (val) {
-                                        controllerX.isStandby.value = val!;
+                                        controllerX.chkTxCommercial.value =
+                                            val!;
                                       },
                                       materialTapTargetSize:
                                           MaterialTapTargetSize.shrinkWrap,
@@ -227,12 +237,12 @@ class TransmissionLogView extends GetView<TransmissionLogController> {
                                             "");
                             Color color = Colors.white;
                             if (data != null) {
-                              print(
-                                  "Index is>> ${colorData.rowIdx.toString()} >>>> ${data.backColor}");
+                              // print("Index is>> ${colorData.rowIdx.toString()} >>>> ${data.backColor}");
 
                               color = Color(int.parse('0x${data.backColor}'));
                             }
-                            if (currentRow.cells["productName"]?.value != null &&
+                            if (currentRow.cells["productName"]?.value !=
+                                    null &&
                                 currentRow.cells["productName"]?.value != "") {
                               String strPriority = ((currentRow
                                           .cells["bookingNumber"]?.value
@@ -248,7 +258,8 @@ class TransmissionLogView extends GetView<TransmissionLogController> {
                                     Get.find<TransmissionLogController>()
                                         .getMatchWithKey(strPriority);
                                 if (data1 != null) {
-                                  color = Color(int.parse('0x${data1.backColor}'));
+                                  color =
+                                      Color(int.parse('0x${data1.backColor}'));
                                 }
                               }
                             }
@@ -288,11 +299,89 @@ class TransmissionLogView extends GetView<TransmissionLogController> {
                                   jsonEncode(element.toJson()));
                             });
                           },
+                          onChanged: (PlutoGridOnChangedEvent event) {
+                            print("On changed called>>>>" + event.toString());
+                          },
                           /*colorCallback: (PlutoRowColorContext plutoContext) {
                             return Color(int.parse(
                                 '0x${controllerX.transmissionLog?.loadSavedLogOutput?.lstTransmissionLog![plutoContext.rowIdx].backColor}'));
                           },*/
+                          onContextMenuClick: (DataGridMenuItem itemType,
+                              int index, renderContext) {
+                            switch (itemType) {
+                              case DataGridMenuItem.delete:
+                                controllerX.gridStateManager
+                                    ?.removeCurrentRow();
+                                break;
+                              case DataGridMenuItem.clearpaste:
+                                controllerX.copyRow = null;
+                                break;
+
+                              case DataGridMenuItem.cut:
+                                controllerX.lastSelectOption = "cut";
+                                controllerX.copyRow = renderContext.row;
+                                print("On Print cut index is>>>" +
+                                    index.toString());
+                                renderContext.row.cells.forEach((key, value) {
+                                  print("On Print cut" +
+                                      value.key.toString() +
+                                      ">>>>" +
+                                      value.value.toString());
+                                });
+                                break;
+                              case DataGridMenuItem.copy:
+                                controllerX.lastSelectOption = "copy";
+                                controllerX.copyRow = renderContext.row;
+                                // print("On Print moved" + jsonEncode(renderContext.row.));
+                                print("On Print copy index is>>>" +
+                                    index.toString());
+                                renderContext.row.cells.forEach((key, value) {
+                                  print("On Print copy" +
+                                      value.key.toString() +
+                                      ">>>>" +
+                                      value.value.toString());
+                                });
+                                break;
+                              case DataGridMenuItem.paste:
+                                print("On Print paste index is>>>" +
+                                    index.toString());
+                                renderContext.row.cells.forEach((key, value) {
+                                  print("On Print paste" +
+                                      value.key.toString() +
+                                      ">>>>" +
+                                      value.value.toString());
+                                });
+                                if (controllerX.lastSelectOption != null &&
+                                    controllerX.copyRow != null) {
+                                  switch (controllerX.lastSelectOption) {
+                                    case "cut":
+                                      controllerX.gridStateManager
+                                          ?.removeRows([controllerX.copyRow!]);
+                                      controllerX.gridStateManager?.insertRows(
+                                          index, [controllerX.copyRow!]);
+                                      controllerX.copyRow = null;
+                                      controllerX.gridStateManager
+                                          ?.notifyListeners();
+                                      break;
+                                    case "copy":
+                                      // controllerX.gridStateManager?.rows.insert(index, controllerX.copyRow!);
+                                      controllerX.gridStateManager?.insertRows(
+                                          index, [controllerX.copyRow!]);
+                                      controllerX.gridStateManager
+                                          ?.notifyListeners();
+                                      break;
+                                  }
+                                }
+                                break;
+                            }
+                          },
                           onRowsMoved: (PlutoGridOnRowsMovedEvent onRowMoved) {
+                            controllerX.isRowFilter.value = true;
+                            print("Index is>>" + onRowMoved.idx.toString());
+                            print("On Print moved" +
+                                jsonEncode(
+                                    onRowMoved.rows[0].cells.toString()));
+
                             // print("Index is>>" + onRowMoved.idx.toString());
                             // Map map = onRowMoved.rows[0].cells;
                             // print("On Print moved" +
@@ -439,6 +528,9 @@ class TransmissionLogView extends GetView<TransmissionLogController> {
         break;
       case "Aa":
         showAaDialog(Get.context);
+        break;
+      case "Undo":
+        controllerX.undoClick();
         break;
     }
   }

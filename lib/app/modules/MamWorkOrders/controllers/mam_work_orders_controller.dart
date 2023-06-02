@@ -8,7 +8,7 @@ import 'package:bms_scheduling/widgets/LoadingDialog.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:intl/intl.dart';
-import 'package:pluto_grid/pluto_grid.dart';
+import 'package:bms_scheduling/widgets/PlutoGrid/pluto_grid.dart';
 
 import '../models/cancel_wo_model.dart';
 import '../models/non_fpc_wo_dt.dart';
@@ -62,7 +62,7 @@ class MamWorkOrdersController extends GetxController {
   ///
   ///
   /// WO RE-PUSH varaibles start
-  var rePushJsonTC = TextEditingController();
+  var rePushJsonTC = "".obs;
   var rePushModel = REPushModel().obs;
   bool canEnableRePush = false;
   // WO RE-PUSH varaibles end
@@ -330,7 +330,7 @@ class MamWorkOrdersController extends GetxController {
   ///
   //////////////////////////////////////// WO RE-PUSH FUNCTIONALITY START//////////////////////////////////////////
   clearWORepushPage() async {
-    rePushJsonTC.clear();
+    rePushJsonTC.value = "";
     rePushModel.value = REPushModel();
     canEnableRePush = false;
   }
@@ -376,6 +376,11 @@ class MamWorkOrdersController extends GetxController {
         api: ApiFactory.MAM_WORK_ORDER_WO_RE_PUSH_GET_JSON,
         fun: (resp) {
           closeDialogIfOpen();
+          if (resp != null && resp is Map<String, dynamic> && resp['dtRepush_WorkOrder']['strMessage'] != null) {
+            rePushJsonTC.value = resp['dtRepush_WorkOrder']['strMessage'];
+          } else {
+            LoadingDialog.showErrorDialog(resp.toString());
+          }
         },
         json: {
           "rowIndex": event.rowIdx!,
@@ -392,8 +397,12 @@ class MamWorkOrdersController extends GetxController {
       api: ApiFactory.MAM_WORK_ORDER_WO_RE_PUSH_SAVE_DATA,
       fun: (resp) {
         closeDialogIfOpen();
-        if (resp.toString() == 'Work orders repushed.') {
-          LoadingDialog.callDataSaved(msg: resp.toString());
+        if (resp != null && resp is Map<String, dynamic> && resp['dtRepush_WorkOrder']['message'] != null) {
+          LoadingDialog.callDataSaved(
+              msg: resp['dtRepush_WorkOrder']['message'].toString(),
+              callback: () {
+                clearPage();
+              });
         } else {
           LoadingDialog.showErrorDialog(resp.toString());
         }

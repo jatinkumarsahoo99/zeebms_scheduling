@@ -1,4 +1,5 @@
 import 'dart:developer';
+import 'dart:math';
 import 'package:bms_scheduling/app/modules/TransmissionLog/ColorDataModel.dart';
 import 'package:bms_scheduling/app/modules/TransmissionLog/controllers/TransmissionLogController.dart';
 import 'package:bms_scheduling/app/providers/extensions/string_extensions.dart';
@@ -7,7 +8,7 @@ import 'package:flutter/src/foundation/key.dart';
 import 'package:flutter/src/widgets/framework.dart';
 import 'package:get/get.dart';
 import 'package:intl/intl.dart';
-import 'package:pluto_grid/pluto_grid.dart';
+import 'package:bms_scheduling/widgets/PlutoGrid/pluto_grid.dart';
 import '../app/providers/DataGridMenu.dart';
 import '../app/providers/SizeDefine.dart';
 import '../app/providers/Utils.dart';
@@ -27,10 +28,13 @@ class DataGridFromMapTransmissionLog extends StatelessWidget {
       this.hideKeys,
       this.mode,
       this.actionIcon,
+      this.exportFileName,
       this.actionIconKey,
       this.actionOnPress,
       this.onSelected,
       this.onRowsMoved,
+      this.onChanged,
+      this.onContextMenuClick,
       this.onRowDoubleTap,
       this.formatDate = true,
       this.dateFromat = "dd-MM-yyyy",
@@ -47,8 +51,10 @@ class DataGridFromMapTransmissionLog extends StatelessWidget {
   final List<String>? showonly;
   final Function(PlutoGridOnRowDoubleTapEvent)? onRowDoubleTap;
   final Function(PlutoGridOnRowsMovedEvent)? onRowsMoved;
-
+  final Function(PlutoGridOnChangedEvent)? onChanged;
+  final Function(DataGridMenuItem, int, PlutoColumnRendererContext)?onContextMenuClick;
   final List? hideKeys;
+  final String? exportFileName;
   final Function(PlutoGridOnSelectedEvent)? onSelected;
   final double? widthRatio;
   final IconData? actionIcon;
@@ -70,12 +76,37 @@ class DataGridFromMapTransmissionLog extends StatelessWidget {
           readOnly: true,
           enableSorting: enableSort,
           enableEditingMode: false,
-          enableDropToResize: true,
+          enableDropToResize: false,
           enableContextMenu: false,
-          width: Utils.getColumnSize1(
-            key: "no",
-          ),
+          // width: 250,
+          minWidth: 50,
+          renderer: ((rendererContext) {
+            // print("On rendererContext called");
+
+            return GestureDetector(
+              onSecondaryTapDown: (detail) {
+                if (onContextMenuClick == null) {
+                  DataGridMenu().showGridMenu(
+                      rendererContext.stateManager, detail, context,
+                      exportFileName: exportFileName);
+                } else {
+                  DataGridMenu().showGridCustomTransmissionLog(
+                      rendererContext.stateManager, detail, context,
+                      exportFileName: exportFileName,
+                      onPressedClick: onContextMenuClick,
+                      plutoContext: rendererContext);
+                }
+              },
+              child: Text(
+                (rendererContext.rowIdx + 1).toString(),
+                style: TextStyle(
+                  fontSize: SizeDefine.columnTitleFontSize,
+                ),
+              ),
+            );
+          }),
           enableAutoEditing: false,
+          enableRowDrag: true,
           hide: hideCode! &&
               key.toString().toLowerCase() != "hourcode" &&
               key.toString().toLowerCase().contains("code"),
@@ -93,7 +124,7 @@ class DataGridFromMapTransmissionLog extends StatelessWidget {
               enableRowChecked: false,
               readOnly: true,
               renderer: ((rendererContext) {
-                print("On rendererContext called");
+                // print("On rendererContext called");
                 if (actionIconKey != null) {
                   if (key == actionIconKey) {
                     return InkWell(
@@ -108,8 +139,17 @@ class DataGridFromMapTransmissionLog extends StatelessWidget {
                   } else {
                     return GestureDetector(
                       onSecondaryTapDown: (detail) {
-                        DataGridMenu().showGridMenu(
-                            rendererContext.stateManager, detail, context);
+                        if (onContextMenuClick == null) {
+                          DataGridMenu().showGridMenu(
+                              rendererContext.stateManager, detail, context,
+                              exportFileName: exportFileName);
+                        } else {
+                          DataGridMenu().showGridCustomTransmissionLog(
+                              rendererContext.stateManager, detail, context,
+                              exportFileName: exportFileName,
+                              onPressedClick: onContextMenuClick,
+                              plutoContext: rendererContext);
+                        }
                       },
                       child: Text(
                         rendererContext.cell.value.toString(),
@@ -122,8 +162,17 @@ class DataGridFromMapTransmissionLog extends StatelessWidget {
                 } else {
                   return GestureDetector(
                     onSecondaryTapDown: (detail) {
-                      DataGridMenu().showGridMenu(
-                          rendererContext.stateManager, detail, context);
+                      if (onContextMenuClick == null) {
+                        DataGridMenu().showGridMenu(
+                            rendererContext.stateManager, detail, context,
+                            exportFileName: exportFileName);
+                      } else {
+                        DataGridMenu().showGridCustomTransmissionLog(
+                            rendererContext.stateManager, detail, context,
+                            exportFileName: exportFileName,
+                            onPressedClick: onContextMenuClick,
+                            plutoContext: rendererContext);
+                      }
                     },
                     child: Text(
                       rendererContext.cell.value.toString(),
@@ -135,7 +184,7 @@ class DataGridFromMapTransmissionLog extends StatelessWidget {
                 }
               }),
               enableSorting: enableSort,
-              enableRowDrag: true,
+              enableRowDrag: key=="transmissionTime"?true:false,
               enableEditingMode: false,
               enableDropToResize: true,
               enableContextMenu: false,
@@ -163,7 +212,7 @@ class DataGridFromMapTransmissionLog extends StatelessWidget {
             readOnly: true,
             // backgroundColor: Colors.red,
             renderer: ((rendererContext) {
-              print(">>>>>>Render called");
+              // print(">>>>>>Render called");
 
               bool isBold = false;
               Map<String, PlutoCell> cells = rendererContext.row.cells;
@@ -184,6 +233,10 @@ class DataGridFromMapTransmissionLog extends StatelessWidget {
                     Get.find<TransmissionLogController>()
                         .maxProgramStarttimeDiff)) {
                   isBold = true;
+                  print("eventType Index is>> " +
+                      rendererContext.rowIdx.toString() +
+                      " ////" +
+                      isBold.toString());
                 }
               }
 
@@ -194,21 +247,20 @@ class DataGridFromMapTransmissionLog extends StatelessWidget {
                 String currentProduct = cells["productName"]?.value;
                 if (rendererContext.rowIdx <
                     ((rendererContext.stateManager.rows.length)! - 2)) {
-                  if ((((currentProduct ==
+                  if (((currentProduct ==
                           (rendererContext
-                                  .stateManager
-                                  .rows[(rendererContext.rowIdx + 1)]
-                                  .cells["productname"]
-                                  ?.value) +
-                              "")) ||
+                              .stateManager
+                              .rows[(rendererContext.rowIdx + 1)]
+                              .cells["productName"]
+                              ?.value)) ||
                       ((currentProduct ==
-                          (rendererContext
-                                  .stateManager
-                                  .rows[(rendererContext.rowIdx + 2)]
-                                  .cells["productname"]
-                                  ?.value) +
-                              "")))) {
+                          rendererContext
+                              .stateManager
+                              .rows[(rendererContext.rowIdx + 2)]
+                              .cells["productName"]
+                              ?.value)))) {
                     isBold = true;
+                    // print("productname Index is>> "+rendererContext.rowIdx.toString()+" ////"+isBold.toString());
                   }
                 }
               }
@@ -243,6 +295,10 @@ class DataGridFromMapTransmissionLog extends StatelessWidget {
                                     ?.value) +
                                 "")))) {
                       isBold = true;
+                      print("exportTapeCode Index is>> " +
+                          rendererContext.rowIdx.toString() +
+                          " ////" +
+                          isBold.toString());
                     }
                   }
                 }
@@ -270,6 +326,10 @@ class DataGridFromMapTransmissionLog extends StatelessWidget {
                                   ?.value) +
                               "")))) {
                     isBold = true;
+                    print("productGroup Index is>> " +
+                        rendererContext.rowIdx.toString() +
+                        " ////" +
+                        isBold.toString());
                   }
                 }
               }
@@ -281,7 +341,7 @@ class DataGridFromMapTransmissionLog extends StatelessWidget {
                 List<String>? ros =
                     cells["rosTimeBand"]?.value.toString().split("-");
                 String rosStart = (ros![0] + ":00");
-                String rosEnd = (ros![1] + ":00");
+                String rosEnd = (ros[1] + ":00");
                 String midRosEnd;
                 String midRosStart;
                 if ((rosStart.compareTo(rosEnd) == 1)) {
@@ -295,19 +355,24 @@ class DataGridFromMapTransmissionLog extends StatelessWidget {
                     cells["transmissionTime"]?.value.toString().substring(0, 8);
 
                 if ((((txTime?.compareTo(rosStart) == 1) &&
-                        (midRosEnd?.compareTo(txTime!) == 1)) ||
+                        (midRosEnd.compareTo(txTime!) == 1)) ||
                     ((txTime?.compareTo(midRosStart) == 1) &&
                         (midRosEnd.compareTo(txTime!) == 1)))) {
-                  if ((((txTime?.compareTo(rosStart) == 1) &&
-                          (midRosEnd.compareTo(txTime!) == 1)) ||
-                      ((txTime?.compareTo(midRosStart) == 1) &&
-                          (midRosEnd.compareTo(txTime!) == 1)))) {
+                  if ((((txTime.compareTo(rosStart) == 1) &&
+                          (midRosEnd.compareTo(txTime) == 1)) ||
+                      ((txTime.compareTo(midRosStart) == 1) &&
+                          (midRosEnd.compareTo(txTime) == 1)))) {
                   } else {
                     isBold = true;
+                    print("RosTimeBand Index is>> " +
+                        rendererContext.rowIdx.toString() +
+                        " ////" +
+                        isBold.toString());
                   }
                 }
               }
 
+              //print("Final Index is>> "+rendererContext.rowIdx.toString()+" ////"+isBold.toString());
               return Container(
                 height: 25,
                 padding: EdgeInsets.only(
@@ -317,25 +382,34 @@ class DataGridFromMapTransmissionLog extends StatelessWidget {
                 // color: (key == "epsNo" || key == "tapeid" || key == "status") ? ColorData.cellColor(rendererContext.row.cells[key]?.value, key) : null,
                 child: GestureDetector(
                   onSecondaryTapDown: (detail) {
-                    DataGridMenu().showGridMenu(
-                        rendererContext.stateManager, detail, context);
+                    if (onContextMenuClick == null) {
+                      DataGridMenu().showGridMenu(
+                          rendererContext.stateManager, detail, context,
+                          exportFileName: exportFileName);
+                    } else {
+                      DataGridMenu().showGridCustomTransmissionLog(
+                          rendererContext.stateManager, detail, context,
+                          exportFileName: exportFileName,
+                          onPressedClick: onContextMenuClick,
+                          plutoContext: rendererContext);
+                    }
                   },
                   child: Text(
                     rendererContext.cell.value.toString(),
                     style: TextStyle(
                         fontSize: SizeDefine.columnTitleFontSize,
                         fontWeight:
-                            isBold ? FontWeight.bold : FontWeight.normal),
+                            isBold ? FontWeight.w700 : FontWeight.normal),
                   ),
                 ),
               );
             }),
             enableSorting: enableSort,
-            enableRowDrag: true,
+            enableRowDrag: key=="transmissionTime"?true:false,
             enableEditingMode: false,
             enableDropToResize: true,
             enableContextMenu: false,
-            width: Utils.getColumnSize1(key: key, value: mapData[0][key]),
+            minWidth: Utils.getColumnSize1(key: key, value: mapData[0][key]),
             enableAutoEditing: false,
             hide: showonly == null
                 ? (hideKeys != null && hideKeys!.contains(key)) ||
@@ -370,9 +444,11 @@ class DataGridFromMapTransmissionLog extends StatelessWidget {
         }
         segRows.add(PlutoRow(cells: cells, sortIdx: i));
       } catch (e) {
-        log("problem in adding rows");
+        // log("problem in adding rows");
       }
     }
+
+
     return Scaffold(
       key: _globalKey,
       body: Focus(
@@ -387,9 +463,86 @@ class DataGridFromMapTransmissionLog extends StatelessWidget {
             columns: segColumn,
             onRowDoubleTap: onRowDoubleTap,
             onRowsMoved: onRowsMoved,
+            onChanged: onChanged,
             onSelected: onSelected,
+            /*createFooter: (stateManager) {
+              return PlutoLazyPagination(
+                // Determine the first page.
+                // Default is 1.
+                initialPage: 1,
+
+                // First call the fetch function to determine whether to load the page.
+                // Default is true.
+                initialFetch: true,
+
+                // Decide whether sorting will be handled by the server.
+                // If false, handle sorting on the client side.
+                // Default is true.
+                fetchWithSorting: true,
+
+                // Decide whether filtering is handled by the server.
+                // If false, handle filtering on the client side.
+                // Default is true.
+                fetchWithFiltering: true,
+
+                // Determines the page size to move to the previous and next page buttons.
+                // Default value is null. In this case,
+                // it moves as many as the number of page buttons visible on the screen.
+                pageSizeToMove: null,
+                fetch: (contextData){
+                  return fetch(contextData,stateManager,segRows);
+                },
+                stateManager: stateManager,
+              );
+            },*/
             rows: segRows),
       ),
     );
   }
+
+ /* Future<PlutoLazyPaginationResponse> fetch(
+      PlutoLazyPaginationRequest request,stateManager,segRows
+      ) async {
+    List<PlutoRow> tempList = segRows;
+    if (request.filterRows.isNotEmpty) {
+      final filter = FilterHelper.convertRowsToFilter(
+        request.filterRows,
+        stateManager.refColumns,
+      );
+
+      tempList = segRows.where(filter!).toList();
+    }
+    if (request.sortColumn != null && !request.sortColumn!.sort.isNone) {
+      tempList = [...tempList];
+
+      tempList.sort((a, b) {
+        final sortA = request.sortColumn!.sort.isAscending ? a : b;
+        final sortB = request.sortColumn!.sort.isAscending ? b : a;
+
+        return request.sortColumn!.type.compare(
+          sortA.cells[request.sortColumn!.field]!.valueForSorting,
+          sortB.cells[request.sortColumn!.field]!.valueForSorting,
+        );
+      });
+    }
+
+    final page = request.page;
+    const pageSize = 10;
+    final totalPage = (tempList.length / pageSize).ceil();
+    final start = (page - 1) * pageSize;
+    final end = start + pageSize;
+
+    Iterable<PlutoRow> fetchedRows = tempList.getRange(
+      max(0, start),
+      min(tempList.length, end),
+    );
+
+    await Future.delayed(const Duration(milliseconds: 500));
+
+    return Future.value(PlutoLazyPaginationResponse(
+      totalPage: totalPage,
+      rows: fetchedRows.toList(),
+    ));
+  }*/
+
 }

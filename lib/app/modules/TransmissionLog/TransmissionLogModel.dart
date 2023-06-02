@@ -139,7 +139,8 @@ class LstTransmissionLog {
     data['breakNumber'] = this.breakNumber;
     data['episodeNumber'] = this.episodeNumber;
     data['breakEvent'] = this.breakEvent;
-    data['rownumber'] = this.rownumber;
+    // data['rownumber'] = this.rownumber;
+    data['rownumber'] = (this.rownumber!-1);
     data['eventType'] = this.eventType;
     data['bookingNumber'] = this.bookingNumber;
     data['bookingdetailcode'] = this.bookingdetailcode;

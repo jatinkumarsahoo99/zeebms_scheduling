@@ -20,11 +20,15 @@ dependencies:
   file_picker: ^5.2.11
   flutter_file_saver: ^0.6.1+1
   excel:
-  pluto_grid_export: ^1.0.3
+#  pluto_grid_export: ^1.0.3
   url_launcher:
   data_table_2: 2.3.9
   url_encoder:
   azure_application_insights: ^3.1.0
+  pdf:
+  printing:
+  csv:
+  rxdart:
 
   flutter: 
     sdk: flutter
