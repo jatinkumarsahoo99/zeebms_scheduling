@@ -1,14 +1,12 @@
-import 'package:bms_scheduling/app/modules/RoBooking/views/dummydata.dart';
-import 'package:bms_scheduling/widgets/DataGridShowOnly.dart';
-import 'package:bms_scheduling/widgets/DateTime/DateWithThreeTextField.dart';
-import 'package:bms_scheduling/widgets/FormButton.dart';
-import 'package:bms_scheduling/widgets/dropdown.dart';
-import 'package:bms_scheduling/widgets/radio_row.dart';
+import 'package:bms_scheduling/widgets/gridFromMap.dart';
 import 'package:flutter/material.dart';
-
 import 'package:get/get.dart';
-import 'package:pluto_grid/pluto_grid.dart';
 
+import '../../../../widgets/DateTime/DateWithThreeTextField.dart';
+import '../../../../widgets/FormButton.dart';
+import '../../../../widgets/PlutoGrid/src/manager/pluto_grid_state_manager.dart';
+import '../../../../widgets/PlutoGrid/src/pluto_grid.dart';
+import '../../../../widgets/dropdown.dart';
 import '../../../controller/HomeController.dart';
 import '../controllers/ros_distribution_controller.dart';
 
@@ -90,21 +88,22 @@ class RosDistributionView extends GetView<RosDistributionController> {
                       : null,
                   child: (controller.showDataModel.value.infoShowBucketList?.lstROSSpots?.isEmpty ?? true)
                       ? null
-                      : DataGridShowOnlyKeys(
+                      : DataGridFromMap(
                           mapData: (controller.showDataModel.value.infoShowBucketList?.lstROSSpots ?? []).map((e) => e.toJson()).toList(),
                           formatDate: false,
                           onload: (event) {
-                            // controller.mainGSM = event.stateManager;
-                            // event.stateManager.setSelectingMode(PlutoGridSelectingMode.row);
-                            // event.stateManager.setSelecting(true);
-                            // event.stateManager.setCurrentCell(event.stateManager.firstCell, 0);
+                            controller.mainGSM = event.stateManager;
+                            event.stateManager.setSelectingMode(PlutoGridSelectingMode.row);
+                            event.stateManager.setSelecting(true);
+                            event.stateManager.setCurrentCell(event.stateManager.firstCell, 0);
                           },
+                          enableSort: true,
                           colorCallback: (row) =>
                               (row.row.cells.containsValue(controller.mainGSM?.currentCell)) ? Colors.deepPurple.shade200 : Colors.white,
                           hideKeys: ['rid'],
                           widthRatio: 220,
                           hideCode: false,
-                          // mode: PlutoGridMode.normal,
+                          mode: PlutoGridMode.normal,
                         ),
                 );
               }),

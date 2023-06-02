@@ -1245,6 +1245,7 @@ class DropDownField {
     double? widthofDialog,
     FocusNode? inkwellFocus,
     bool startFromLeft = true,
+    int maxLength = 40,
   }) {
     final textColor = isEnable ? Colors.black : Colors.grey;
     final iconLineColor = isEnable ? Colors.deepPurpleAccent : Colors.grey;
@@ -1332,6 +1333,7 @@ class DropDownField {
                                 children: [
                                   /// search
                                   TextFormField(
+                                    maxLength: maxLength,
                                     decoration: InputDecoration(
                                       contentPadding: const EdgeInsets.fromLTRB(12.0, 17.0, 20.0, 15.0),
                                       isDense: true,
