@@ -550,7 +550,7 @@ class TransmissionLogView extends GetView<TransmissionLogController> {
         showAaDialog(Get.context);
         break;
       case "Export":
-        controllerX.colorGrid(false);
+        // controllerX.colorGrid(false);
         break;
       case "Undo":
         controllerX.undoClick();
