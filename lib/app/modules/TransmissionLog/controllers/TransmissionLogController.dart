@@ -218,9 +218,9 @@ class TransmissionLogController extends GetxController {
                     .fromJson(map as Map<String, dynamic>);
                 transmissionLogModel.loadSavedLogOutput = loadSavedLogOutput;
                 transmissionLog = transmissionLogModel;
+                startTime_.text=map["lstTXLog"][0]["transmissionTime"];
                 isFetch.value = true;
                 update(["transmissionList"]);
-                colorGrid(false);
               }
             });
       }
@@ -481,33 +481,13 @@ class TransmissionLogController extends GetxController {
       if ((gridStateManager?.rows.length == 0)) {
         return;
       }
-
       logSaved = false;
-      dtSTD[0] = DateTime
-          .now()
-          .millisecondsSinceEpoch;
       if (!dontSavefile) {
         calculateTransmissionTime();
-        dtSTD[1] = DateTime
-            .now()
-            .millisecondsSinceEpoch;
-
         updateRowNumber();
-        dtSTD[2] = DateTime
-            .now()
-            .millisecondsSinceEpoch;
       }
 
-      dtSTD[3] = DateTime
-          .now()
-          .millisecondsSinceEpoch;
-      String strPriority;
-      String FPcTime = "";
-
-      dtSTD[3] = DateTime
-          .now()
-          .millisecondsSinceEpoch;
-    } catch (ex) {} finally {
+      } catch (ex) {} finally {
       /* tblLog.PerformLayout();
       if ((DontSavefile == false)) {
         SaveFile();
