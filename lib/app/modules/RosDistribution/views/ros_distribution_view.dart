@@ -1,6 +1,7 @@
 import 'package:bms_scheduling/widgets/gridFromMap.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:url_launcher/url_launcher.dart';
 
 import '../../../../widgets/DateTime/DateWithThreeTextField.dart';
 import '../../../../widgets/FormButton.dart';
@@ -140,7 +141,18 @@ class RosDistributionView extends GetView<RosDistributionController> {
                                       btnText: btn["name"],
 
                                       // isEnabled: btn['isDisabled'],
-                                      callback: () {},
+                                      callback: () async {
+                                        String email = Uri.encodeComponent("mail@fluttercampus.com");
+                                        String subject = Uri.encodeComponent("Hello Flutter");
+                                        String body = Uri.encodeComponent("Hi! I'm Flutter Developer");
+                                        print(subject); //output: Hello%20Flutter
+                                        Uri mail = Uri.parse("mailto:$email?subject=$subject&body=$body");
+                                        if (await launchUrl(mail)) {
+                                          //email app opened
+                                        } else {
+                                          //email app is not opened
+                                        }
+                                      },
                                     )
                                   : btn["name"] == "Clear"
                                       ? FormButtonWrapper(
