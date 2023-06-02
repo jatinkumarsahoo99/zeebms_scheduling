@@ -1,5 +1,6 @@
 import 'dart:convert';
 
+import 'package:bms_scheduling/widgets/LoadingDialog.dart';
 import 'package:bms_scheduling/widgets/radio_row.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
@@ -268,6 +269,10 @@ class TransmissionLogView extends GetView<TransmissionLogController> {
                           onload: (loadevent) {
                             controllerX.gridStateManager =
                                 loadevent.stateManager;
+                            if (controllerX.isFetch.value) {
+                              controllerX.isFetch.value = false;
+                              controllerX.colorGrid(false);
+                            }
                             if (controller.selectedIndex != null) {
                               loadevent.stateManager.moveScrollByRow(
                                   PlutoMoveDirection.down,
@@ -316,6 +321,18 @@ class TransmissionLogView extends GetView<TransmissionLogController> {
                               case DataGridMenuItem.clearpaste:
                                 controllerX.copyRow = null;
                                 break;
+                              case DataGridMenuItem.freezeColumn:
+                                renderContext.stateManager.toggleFrozenColumn(
+                                    renderContext.column,
+                                    PlutoColumnFrozen.start);
+                                // renderContext.column.frozen=PlutoColumnFrozen.start;
+                                break;
+                              case DataGridMenuItem.unFreezeColumn:
+                                renderContext.stateManager.toggleFrozenColumn(
+                                    renderContext.column,
+                                    PlutoColumnFrozen.none);
+                                // renderContext.column.frozen=PlutoColumnFrozen.none;
+                                break;
 
                               case DataGridMenuItem.cut:
                                 controllerX.lastSelectOption = "cut";
@@ -341,6 +358,9 @@ class TransmissionLogView extends GetView<TransmissionLogController> {
                                       ">>>>" +
                                       value.value.toString());
                                 });
+                                break;
+                              case DataGridMenuItem.fixedEvent:
+                                controllerX.fixedEvent(index);
                                 break;
                               case DataGridMenuItem.paste:
                                 print("On Print paste index is>>>" +
@@ -529,8 +549,26 @@ class TransmissionLogView extends GetView<TransmissionLogController> {
       case "Aa":
         showAaDialog(Get.context);
         break;
+      case "Export":
+        controllerX.colorGrid(false);
+        break;
       case "Undo":
         controllerX.undoClick();
+        break;
+      case "Auto":
+        LoadingDialog.recordExists(
+            "Do you want to add promos?",
+            () {
+              controllerX.isAutoClick.value=true;
+              controllerX.callAuto(true);
+            },
+            deleteTitle: "Yes",
+            deleteCancel: "No",
+            cancel: () {
+              controllerX.isAutoClick.value=true;
+              controllerX.callAuto(false);
+            });
+
         break;
     }
   }
