@@ -254,10 +254,17 @@ class RoCancellationView extends GetView<RoCancellationController> {
                                     btncontroller.clearPage1();
                                   },
                                 )
-                              : FormButtonWrapper(
-                                  btnText: btn["name"],
-                                  callback: null,
-                                ),
+                              : btn["name"] == "Docs"
+                                  ? FormButtonWrapper(
+                                      btnText: btn["name"],
+                                      callback: () {
+                                        controller.docs();
+                                      },
+                                    )
+                                  : FormButtonWrapper(
+                                      btnText: btn["name"],
+                                      callback: null,
+                                    ),
                   ],
                 ),
               );
