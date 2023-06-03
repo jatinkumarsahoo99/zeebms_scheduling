@@ -35,6 +35,13 @@ class LoadSavedLogOutput {
         lstTransmissionLog!.add(new LstTransmissionLog.fromJson(v));
       });
     }
+
+    if (json['lstTXLog'] != null) {
+      lstTransmissionLog = <LstTransmissionLog>[];
+      json['lstTXLog'].forEach((v) {
+        lstTransmissionLog!.add(new LstTransmissionLog.fromJson(v));
+      });
+    }
   }
 
   Map<String, dynamic> toJson() {
@@ -115,11 +122,11 @@ class LstTransmissionLog {
     eventType = json['eventType'];
     bookingNumber = json['bookingNumber'];
     bookingdetailcode = json['bookingdetailcode'];
-    scheduleTime = json['scheduleTime'];
-    productName = json['productName'];
+    scheduleTime = json['scheduleTime']??json["scheduletime"];
+    productName = json['productName']??json["productname"];
     rosTimeBand = json['rosTimeBand'];
     client = json['client'];
-    promoTypecode = json['promoTypecode'];
+    promoTypecode = json['promoTypecode']??json["promotypecode"];
     datechange = json['datechange'];
     productGroup = json['productGroup'];
     longCaption = json['longCaption'];
@@ -139,8 +146,8 @@ class LstTransmissionLog {
     data['breakNumber'] = this.breakNumber;
     data['episodeNumber'] = this.episodeNumber;
     data['breakEvent'] = this.breakEvent;
-    // data['rownumber'] = this.rownumber;
-    data['rownumber'] = (this.rownumber!-1);
+    data['rownumber'] = this.rownumber;
+    // data['rownumber'] = (this.rownumber!-1);
     data['eventType'] = this.eventType;
     data['bookingNumber'] = this.bookingNumber;
     data['bookingdetailcode'] = this.bookingdetailcode;

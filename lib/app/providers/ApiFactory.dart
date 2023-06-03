@@ -259,6 +259,9 @@ class ApiFactory {
   static String RO_CANCELLATION_CANCEL_LEAVE = "$BASE_URL/api/ROCancellation/OnLeaveCancelNumber";
   static String RO_CANCELLATION_SAVE = "$BASE_URL/api/ROCancellation/SaveRoCancellation";
   static String RO_CANCELLATION_IMPORT = "$BASE_URL/api/ROCancellation/ImportExcel";
+  static String RO_CANCELLATION_ADD_DOC = "$BASE_URL/api/ROCancellation/AddingDocument";
+  static String RO_CANCELLATION_VIEW_DOC(id) => "$BASE_URL/api/ROCancellation/ViewDocument?DocId=$id";
+  static String RO_CANCELLATION_LIST_DOC = "$BASE_URL/api/ROCancellation/AddingDocument";
 
   ////////////////////////////// MAM WORK ORDERS API START////////////////////////////////////////////////
   static String get MAM_WORK_ORDER_INITIALIZE => "$BASE_URL/api/MAMWorkOrder/OnLoadWorkOrder";
@@ -331,6 +334,10 @@ class ApiFactory {
   static String TRANSMISSION_LOG_RETRIVE() => "$BASE_URL/api/Transmissionlog/PostLoadSavedLog";
   static String TRANSMISSION_LOG_CHANNEL_SPEC_SETTING(String locId, String channelId) =>
       "$BASE_URL/api/Transmissionlog/GetChannelSpecsSettings?Locationcode=$locId&ChannelCode=$channelId";
+  static String TRANSMISSION_LOG_COLOR_LIST(String locId, String channelId, String telcastDt) =>
+      "$BASE_URL/api/Transmissionlog/GetLoadColours?locationcode=$locId&channelcode=$channelId&telecastdate=$telcastDt";
+  static String TRANSMISSION_LOG_AUTO(String locId, String channelId, String telecastDt, bool isPromoReq, bool chkTxComm) =>
+      "$BASE_URL/api/Transmissionlog/GetAutoClick?Locationcode=$locId&channelcode=$channelId&telecastdate=$telecastDt&addpromosAuto=$isPromoReq&chkTxCommercial=$chkTxComm";
 
   /////////////////////////// RO DISTRIBUTION START/////////////////////
   static String get RO_DISTRIBUTION_GET_LOCATION => "$BASE_URL/api/RosDistribution/GetRosDistribution";
@@ -364,14 +371,4 @@ class ApiFactory {
   static String SLIDE_MASTER_GET_CHANNEL(String locationCode) => "$BASE_URL/api/SlideMaster/onLeaveLocation?LocationCode=$locationCode";
   static String get SLIDE_MASTER_RETRIVE_DATA => "$BASE_URL/api/SlideMaster/TapeID_Leave";
 ////////////////////////////// SLIDE-MASTER-API-END  //////////////////////////////////////////////
-  ///
-  ///
-  ///
-  ///
-  ///
-  ///
-  ///
-  ///
-  static String TRANSMISSION_LOG_COLOR_LIST(String locId, String channelId, String telcastDt) =>
-      "$BASE_URL/api/Transmissionlog/GetLoadColours?locationcode=$locId&channelcode=$channelId&telecastdate=$telcastDt";
 }
