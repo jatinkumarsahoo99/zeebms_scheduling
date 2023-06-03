@@ -3,13 +3,17 @@ class ROSCellClickDataModel {
 
   ROSCellClickDataModel({this.infoGetFpcCellDoubleClick});
 
+  ROSCellClickDataModel.copyWith({InfoGetFpcCellDoubleClick? infoGetFpcCellDoubleClick}) {
+    this.infoGetFpcCellDoubleClick = infoGetFpcCellDoubleClick ?? this.infoGetFpcCellDoubleClick;
+  }
+
   ROSCellClickDataModel.fromJson(Map<String, dynamic> json) {
     infoGetFpcCellDoubleClick =
-        json['info_GetFpcCellDoubleClick'] != null ? new InfoGetFpcCellDoubleClick.fromJson(json['info_GetFpcCellDoubleClick']) : null;
+        json['info_GetFpcCellDoubleClick'] != null ? InfoGetFpcCellDoubleClick.fromJson(json['info_GetFpcCellDoubleClick']) : null;
   }
 
   Map<String, dynamic> toJson() {
-    final Map<String, dynamic> data = new Map<String, dynamic>();
+    final Map<String, dynamic> data = Map<String, dynamic>();
     if (infoGetFpcCellDoubleClick != null) {
       data['info_GetFpcCellDoubleClick'] = infoGetFpcCellDoubleClick!.toJson();
     }
@@ -59,19 +63,19 @@ class InfoGetFpcCellDoubleClick {
     if (json['lstFPC'] != null) {
       lstFPC = <LstFPC>[];
       json['lstFPC'].forEach((v) {
-        lstFPC!.add(new LstFPC.fromJson(v));
+        lstFPC!.add(LstFPC.fromJson(v));
       });
     }
     if (json['lstAllocatedSpots'] != null) {
       lstAllocatedSpots = <LstAllocatedSpots>[];
       json['lstAllocatedSpots'].forEach((v) {
-        lstAllocatedSpots!.add(new LstAllocatedSpots.fromJson(v));
+        lstAllocatedSpots!.add(LstAllocatedSpots.fromJson(v));
       });
     }
     if (json['lstUnallocatedSpots'] != null) {
       lstUnallocatedSpots = <LstUnallocatedSpots>[];
       json['lstUnallocatedSpots'].forEach((v) {
-        lstUnallocatedSpots!.add(new LstUnallocatedSpots.fromJson(v));
+        lstUnallocatedSpots!.add(LstUnallocatedSpots.fromJson(v));
       });
     }
     tblAllocatedSpotsVisiableFalse = json['tblAllocatedSpots_Visiable_False'].cast<String>();
@@ -79,7 +83,7 @@ class InfoGetFpcCellDoubleClick {
   }
 
   Map<String, dynamic> toJson() {
-    final Map<String, dynamic> data = new Map<String, dynamic>();
+    final Map<String, dynamic> data = Map<String, dynamic>();
     data['today'] = today;
     data['tomorrow'] = tomorrow;
     data['moveSpotbuys'] = moveSpotbuys;
@@ -180,7 +184,7 @@ class LstFPC {
   }
 
   Map<String, dynamic> toJson() {
-    final Map<String, dynamic> data = new Map<String, dynamic>();
+    final Map<String, dynamic> data = Map<String, dynamic>();
     data['fpcTime'] = fpcTime;
     data['programName'] = programName;
     data['rowNo'] = rowNo;
@@ -303,7 +307,7 @@ class LstAllocatedSpots {
   }
 
   Map<String, dynamic> toJson() {
-    final Map<String, dynamic> data = new Map<String, dynamic>();
+    final Map<String, dynamic> data = Map<String, dynamic>();
     data['rid'] = rid;
     data['rrr'] = rrr;
     data['locationcode'] = locationcode;
@@ -438,7 +442,7 @@ class LstUnallocatedSpots {
   }
 
   Map<String, dynamic> toJson() {
-    final Map<String, dynamic> data = new Map<String, dynamic>();
+    final Map<String, dynamic> data = Map<String, dynamic>();
     data['rid'] = rid;
     data['rrr'] = rrr;
     data['locationcode'] = locationcode;
