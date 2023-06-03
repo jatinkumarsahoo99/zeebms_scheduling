@@ -8,6 +8,7 @@ import 'package:bms_scheduling/widgets/gridFromMap.dart';
 import 'package:bms_scheduling/widgets/gridFromMap1.dart';
 import 'package:bms_scheduling/widgets/input_fields.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 
 import 'package:get/get.dart';
 
@@ -108,9 +109,33 @@ class ReleaseWoNonFpcView extends GetView {
                   selectedValue: controller.nonFPCSelectedRMSProgram.value,
                 );
               }),
-              InputFields.formField1(hintTxt: "From Epi#", controller: controller.nonFPCFromEpi, width: 0.0575),
-              InputFields.formField1(hintTxt: "To Epi#", controller: controller.nonFPCToEpi, width: 0.0575),
-              InputFields.formField1(hintTxt: "Epi Segs", controller: controller.nonFPCEpiSegments, width: 0.0575),
+              InputFields.formField1(
+                hintTxt: "From Epi#",
+                controller: controller.nonFPCFromEpi,
+                inputformatters: [
+                  FilteringTextInputFormatter.digitsOnly,
+                ],
+                maxLen: 4,
+                width: 0.0575,
+              ),
+              InputFields.formField1(
+                hintTxt: "To Epi#",
+                inputformatters: [
+                  FilteringTextInputFormatter.digitsOnly,
+                ],
+                maxLen: 4,
+                controller: controller.nonFPCToEpi,
+                width: 0.0575,
+              ),
+              InputFields.formField1(
+                hintTxt: "Epi Segs",
+                controller: controller.nonFPCEpiSegments,
+                width: 0.0575,
+                inputformatters: [
+                  FilteringTextInputFormatter.digitsOnly,
+                ],
+                maxLen: 4,
+              ),
               DropDownField.formDropDown1WidthMap(
                 controller.onloadData.value.lstcboTelecastType ?? [],
                 (value) => controller.nonFPCSelectedTelecasteType = value,

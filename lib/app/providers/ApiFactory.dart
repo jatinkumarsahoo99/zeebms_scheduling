@@ -349,6 +349,11 @@ class ApiFactory {
   static String get RO_DISTRIBUTION_GET_DEALLOCATE_DATA => "$BASE_URL/api/RosDistribution/GetRollback";
   static String get RO_DISTRIBUTION_GET_FPC_DOUBLE_CLICK_DATA => "$BASE_URL/api/RosDistribution/GetFpcCellDoubleClick";
   static String get RO_DISTRIBUTION_GET_OPENDEAL_FILTER_DATA => "$BASE_URL/api/RosDistribution/GetOpenDealFilter";
+  static String get RO_DISTRIBUTION_GET_ALLOCATE_FPC_DATA => "$BASE_URL/api/RosDistribution/GetAllocateFPC";
+  static String get RO_DISTRIBUTION_GET_DEALLOCATE_FPC_DATA => "$BASE_URL/api/RosDistribution/GetDeallocateFPC";
+  static String get RO_DISTRIBUTION_GET_INCLUDE_ROS_FILTER_FPC_DATA => "$BASE_URL/api/RosDistribution/GetIncludeROSFilter";
+  static String get RO_DISTRIBUTION_GET_OPEN_DEAL_FILTER_FPC_DATA => "$BASE_URL/api/RosDistribution/GetOpenDealFilter";
+  static String get RO_DISTRIBUTION_GET_MOVE_SPOT_FILTER_FPC_DATA => "$BASE_URL/api/RosDistribution/GetOpenDealFilter";
 
   static String RO_DISTRIBUTION_GET_CHANNEL(String locId) => "$BASE_URL/api/RosDistribution/cboLocationCode_Leave?LocationCode=$locId";
   static String RO_DISTRIBUTION_SHOW_DATA(String locId, String channelID, String date) =>
