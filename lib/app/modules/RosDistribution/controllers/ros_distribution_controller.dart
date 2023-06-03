@@ -301,7 +301,7 @@ class RosDistributionController extends GetxController {
         "fromDate": DateFormat("yyyy-MM-dd").format(DateFormat("dd-MM-yyyy").parse(date.text)),
         "loggedUser": Get.find<MainController>().user?.logincode,
         "allowMoveSpotbuys": false,
-        "allocPercentValue": "0"
+        "allocPercentValue": "100"
       },
     );
   }
@@ -449,7 +449,7 @@ class RosDistributionController extends GetxController {
                           },
                         ),
                         FormButton(
-                          btnText: "Deallocat",
+                          btnText: "Deallocate",
                           callback: () {
                             if (selectedLocation == null || selectedChannel == null) return;
                             LoadingDialog.call();
@@ -889,7 +889,7 @@ class RosDistributionController extends GetxController {
             "lstROSSpots": showDataModel.value.infoShowBucketList?.lstROSSpots?.map((e) => e.toJson()).toList(),
             "loggedUser": Get.find<MainController>().user?.logincode,
             "allocPercentVisiable": false,
-            "allocPercentValue": "0",
+            "allocPercentValue": "100",
           });
     }
   }
