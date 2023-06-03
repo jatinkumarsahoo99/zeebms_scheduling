@@ -92,19 +92,20 @@ class RosDistributionView extends GetView<RosDistributionController> {
                       : DataGridFromMap(
                           mapData: (controller.showDataModel.value.infoShowBucketList?.lstROSSpots ?? []).map((e) => e.toJson()).toList(),
                           formatDate: false,
-                          onload: (event) {
-                            controller.mainGSM = event.stateManager;
-                            event.stateManager.setSelectingMode(PlutoGridSelectingMode.row);
-                            event.stateManager.setSelecting(true);
-                            event.stateManager.setCurrentCell(event.stateManager.firstCell, 0);
-                          },
+                          // onload: (event) {
+                          //   controller.mainGSM = event.stateManager;
+                          //   event.stateManager.setSelectingMode(PlutoGridSelectingMode.row);
+                          //   event.stateManager.setSelecting(true);
+                          //   event.stateManager.setCurrentCell(event.stateManager.firstCell, 0);
+                          // },
                           enableSort: true,
-                          colorCallback: (row) =>
-                              (row.row.cells.containsValue(controller.mainGSM?.currentCell)) ? Colors.deepPurple.shade200 : Colors.white,
+                          // colorCallback: (row) =>
+                          //     (row.row.cells.containsValue(controller.mainGSM?.currentCell)) ? Colors.deepPurple.shade200 : Colors.white,
                           hideKeys: ['rid'],
                           widthRatio: 220,
                           hideCode: false,
-                          mode: PlutoGridMode.normal,
+                          onSelected: (row) => controller.mainGridIdx = row.rowIdx ?? 0,
+                          mode: PlutoGridMode.selectWithOneTap,
                         ),
                 );
               }),
