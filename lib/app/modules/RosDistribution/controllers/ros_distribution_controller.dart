@@ -147,9 +147,13 @@ class RosDistributionController extends GetxController {
   }
 
   void handleReportTap() {
+    if (selectedLocation == null || selectedChannel == null) {
+      LoadingDialog.showErrorDialog("Please select Location and Channel.");
+      return;
+    }
     reportList.clear();
     selectedReportTab.value = "Client Wise";
-    Future.delayed(const Duration(seconds: 2)).then((value) {
+    Future.delayed(const Duration(seconds: 1)).then((value) {
       handleOnChangedTapInReport(selectedReportTab.value);
       return null;
     });
@@ -177,7 +181,7 @@ class RosDistributionController extends GetxController {
                         Obx(
                           () {
                             return RadioRow(
-                              items: ['Client Wise', 'Client & Brand Wise', 'Client Pivot', 'Brand Pivot', 'Zone Wise', 'Zone & Time'],
+                              items: const ['Client Wise', 'Client & Brand Wise', 'Client Pivot', 'Brand Pivot', 'Zone Wise', 'Zone & Time'],
                               groupValue: selectedReportTab.value,
                               onchange: handleOnChangedTapInReport,
                             );
@@ -205,6 +209,15 @@ class RosDistributionController extends GetxController {
                             ? null
                             : DataGridShowOnlyKeys(
                                 mapData: reportList.value,
+                                onSelected: (row) {
+                                  if (selectedReportTab.value != "Zone Wise" && selectedReportTab.value != "Zone & Time") {
+                                    mainGSM?.setFilter((element) {
+                                      return element.cells['clientName']?.value.toString() == reportList.value[row.rowIdx ?? 0]['clientName'];
+                                    });
+                                    Get.back();
+                                  }
+                                },
+                                mode: PlutoGridMode.selectWithOneTap,
                               ),
                       );
                     }),
@@ -294,6 +307,8 @@ class RosDistributionController extends GetxController {
       return Colors.white;
     } else if (val == "Red") {
       return Colors.red;
+    } else if (val == "LightGreen") {
+      return Colors.lightGreen;
     } else if (val == "Pink") {
       return Colors.pink;
     } else if (val == "Black") {
@@ -484,25 +499,16 @@ class RosDistributionController extends GetxController {
                                                 if (resp != null && resp is Map<String, dynamic> && resp['info_GetFpcCellDoubleClick'] != null) {
                                                   lastSelectedIdx = row.rowIdx ?? 0;
                                                   tempModel.value = cellModel.ROSCellClickDataModel.fromJson(resp);
-                                                  // tempProgramName.value =
-                                                  //     tempModel.value.infoGetFpcCellDoubleClick?.lstFPC?[row.rowIdx ?? 0].programName ?? "";
-                                                  // tempFpcTime.value =
-                                                  //     tempModel.value.infoGetFpcCellDoubleClick?.lstFPC?[row.rowIdx ?? 0].fpcTime ?? "";
-                                                  // tempCommercialCap.value =
-                                                  //     (tempModel.value.infoGetFpcCellDoubleClick?.lstFPC?[row.rowIdx ?? 0].commercialCap ?? 0)
-                                                  //         .toString();
-                                                  // tempBookedDur.value =
-                                                  //     (tempModel.value.infoGetFpcCellDoubleClick?.lstFPC?[row.rowIdx ?? 0].bookedDuration ?? 0)
-                                                  //         .toString();
-                                                  // tempBal.value = "";
                                                   tempProgramName.value = tempModel.value.infoGetFpcCellDoubleClick?.programname ?? "";
-                                                  // tempAlloc.value = tempModel.value.infoGetFpcCellDoubleClick?.al??"";
                                                   tempFpcTime.value = tempModel.value.infoGetFpcCellDoubleClick?.fpctime ?? "";
                                                   tempCommercialCap.value = tempModel.value.infoGetFpcCellDoubleClick?.commercialCap ?? "";
                                                   tempBookedDur.value = tempModel.value.infoGetFpcCellDoubleClick?.bookedduration ?? "";
                                                   tempBal.value = tempModel.value.infoGetFpcCellDoubleClick?.balanceDuration ?? "";
                                                 } else {
+                                                  tempModel.value.infoGetFpcCellDoubleClick?.lstAllocatedSpots?.clear();
+                                                  tempModel.value.infoGetFpcCellDoubleClick?.lstUnallocatedSpots?.clear();
                                                   LoadingDialog.showErrorDialog(resp.toString());
+                                                  tempModel.refresh();
                                                 }
                                               },
                                               json: {
@@ -543,15 +549,57 @@ class RosDistributionController extends GetxController {
                             child: Column(
                               children: [
                                 Expanded(
-                                  child: Container(
-                                    decoration: BoxDecoration(border: Border.all(color: Colors.grey)),
-                                  ),
+                                  child: Obx(() {
+                                    return Container(
+                                      margin: const EdgeInsets.all(8),
+                                      decoration: (tempModel.value.infoGetFpcCellDoubleClick?.lstAllocatedSpots?.isEmpty ?? true)
+                                          ? BoxDecoration(
+                                              border: Border.all(
+                                              color: Colors.grey,
+                                            ))
+                                          : null,
+                                      child: (tempModel.value.infoGetFpcCellDoubleClick?.lstAllocatedSpots?.isEmpty ?? true)
+                                          ? null
+                                          : DataGridShowOnlyKeys(
+                                              mapData:
+                                                  (tempModel.value.infoGetFpcCellDoubleClick?.lstAllocatedSpots)?.map((e) => e.toJson()).toList() ??
+                                                      [],
+                                              formatDate: false,
+                                              widthRatio: 220,
+                                              hideCode: false,
+                                              colorCallback: (row) => getRowColorForFPC(
+                                                  tempModel.value.infoGetFpcCellDoubleClick?.lstAllocatedSpots?[row.rowIdx].backColor ?? ""),
+                                              mode: PlutoGridMode.selectWithOneTap,
+                                            ),
+                                    );
+                                  }),
                                 ),
                                 const SizedBox(height: 10),
                                 Expanded(
-                                  child: Container(
-                                    decoration: BoxDecoration(border: Border.all(color: Colors.grey)),
-                                  ),
+                                  child: Obx(() {
+                                    return Container(
+                                      margin: const EdgeInsets.all(8),
+                                      decoration: (tempModel.value.infoGetFpcCellDoubleClick?.lstUnallocatedSpots?.isEmpty ?? true)
+                                          ? BoxDecoration(
+                                              border: Border.all(
+                                              color: Colors.grey,
+                                            ))
+                                          : null,
+                                      child: (tempModel.value.infoGetFpcCellDoubleClick?.lstUnallocatedSpots?.isEmpty ?? true)
+                                          ? null
+                                          : DataGridShowOnlyKeys(
+                                              mapData:
+                                                  (tempModel.value.infoGetFpcCellDoubleClick?.lstUnallocatedSpots)?.map((e) => e.toJson()).toList() ??
+                                                      [],
+                                              formatDate: false,
+                                              widthRatio: 220,
+                                              hideCode: false,
+                                              colorCallback: (row) => getRowColorForFPC(
+                                                  tempModel.value.infoGetFpcCellDoubleClick?.lstUnallocatedSpots?[row.rowIdx].backColor ?? ""),
+                                              mode: PlutoGridMode.selectWithOneTap,
+                                            ),
+                                    );
+                                  }),
                                 ),
                               ],
                             ),
@@ -659,6 +707,10 @@ class RosDistributionController extends GetxController {
     } else {
       LoadingDialog.call();
       var selectedRowsInMainGridIDX = await getSelectedRowsInMainGrid();
+      if (selectedRowsInMainGridIDX.isEmpty) {
+        return;
+      }
+
       var jsonList = <dynamic>[];
       for (var i = 0; i < selectedRowsInMainGridIDX.length; i++) {
         jsonList.add(showDataModel.value.infoShowBucketList?.lstROSSpots![i].toJson());
