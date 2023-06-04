@@ -372,4 +372,13 @@ class ApiFactory {
   ///
   static String TRANSMISSION_LOG_COLOR_LIST(String locId, String channelId, String telcastDt) =>
       "$BASE_URL/api/Transmissionlog/GetLoadColours?locationcode=$locId&channelcode=$channelId&telecastdate=$telcastDt";
+
+  ///////////////// RO BOOKING //////////////////////////
+  static String RO_BOOKING_INIT = "$BASE_URL/api/ROBooking/RoBookingOnLoad";
+  static String RO_BOOKING_CHANNNEL(locationCode) => "$BASE_URL/api/ROBooking/Location_Leave?LocationCode=$locationCode";
+
+  static String RO_BOOKING_EFFDT_LEAVE(String locId, String channelId, String effDt) =>
+      "$BASE_URL/api/ROBooking/EffectiveDate_Leave?LocationCode=$locId&ChannelCode=$channelId&EffectiveDate=$effDt";
+  static String RO_BOOKING_CLIENT_LEAVE(String locId, String channelId, String clientCode) =>
+      "$BASE_URL/api/ROBooking/ClientInfo?LocationCode=$locId&ChannelCode=$channelId&ClientCode=$clientCode";
 }
