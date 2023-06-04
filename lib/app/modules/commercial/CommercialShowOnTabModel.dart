@@ -45,7 +45,6 @@ class CommercialShowOnTabModel {
     breakNumber = json['breakNumber'];
     bookingDetailcode = json['bookingDetailcode'];
     randid = json['randid'];
-    //rownumber = json['rownumber'];
     rownumber = index;
     eventType = (json['eventType'] ?? "").toString();
     exportTapeCode = json['exportTapeCode'];
