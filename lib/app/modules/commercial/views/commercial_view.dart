@@ -421,7 +421,9 @@ class CommercialView extends GetView<CommercialController> {
                                   .first
                                   .value,
                               controller.selectedDDIndex);
+                          controller.updateTab();
                         }
+
                       },
                       showSrNo: true,
                       showonly: const [
@@ -446,15 +448,18 @@ class CommercialView extends GetView<CommercialController> {
                       ],
                       colorCallback: (PlutoRowColorContext plutoContext) {
                         try {
-                          return Color(int.parse(
-                              '0x${controller.showCommercialDetailsList![plutoContext.rowIdx].backColor}'));
+
+                          return controller.colorSort(
+                              controller.showCommercialDetailsList![plutoContext.rowIdx].eventType.toString());
+                          // return Color(int.parse(
+                          //     '0x${controller.showCommercialDetailsList![plutoContext.rowIdx].backColor}'));
+
                         } catch (e) {
                           print(
                               " Color Call Back error from schedulingTable ${e.toString()}");
                           return Colors.white;
                         }
                       },
-
                       /// From lstLoadColours List check If EventType 'S' or etc show colors accordingly
                       // colorCallback: (row) {
                       //   return row.row.cells.containsValue(
@@ -483,6 +488,7 @@ class CommercialView extends GetView<CommercialController> {
                         }else{
                           LoadingDialog.showErrorDialog("You cannot move selected segment");
                         }
+                        controller.updateTab();
                       },
                       mode: controller.selectedTabPlutoGridMode,
                       mapData: controller.showCommercialDetailsList!

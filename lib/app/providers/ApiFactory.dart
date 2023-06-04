@@ -334,6 +334,10 @@ class ApiFactory {
   static String TRANSMISSION_LOG_RETRIVE() => "$BASE_URL/api/Transmissionlog/PostLoadSavedLog";
   static String TRANSMISSION_LOG_CHANNEL_SPEC_SETTING(String locId, String channelId) =>
       "$BASE_URL/api/Transmissionlog/GetChannelSpecsSettings?Locationcode=$locId&ChannelCode=$channelId";
+  static String TRANSMISSION_LOG_COLOR_LIST(String locId, String channelId, String telcastDt) =>
+      "$BASE_URL/api/Transmissionlog/GetLoadColours?locationcode=$locId&channelcode=$channelId&telecastdate=$telcastDt";
+  static String TRANSMISSION_LOG_AUTO(String locId, String channelId, String telecastDt, bool isPromoReq, bool chkTxComm) =>
+      "$BASE_URL/api/Transmissionlog/GetAutoClick?Locationcode=$locId&channelcode=$channelId&telecastdate=$telecastDt&addpromosAuto=$isPromoReq&chkTxCommercial=$chkTxComm";
 
   /////////////////////////// RO DISTRIBUTION START/////////////////////
   static String get RO_DISTRIBUTION_GET_LOCATION => "$BASE_URL/api/RosDistribution/GetRosDistribution";
@@ -345,6 +349,11 @@ class ApiFactory {
   static String get RO_DISTRIBUTION_GET_DEALLOCATE_DATA => "$BASE_URL/api/RosDistribution/GetRollback";
   static String get RO_DISTRIBUTION_GET_FPC_DOUBLE_CLICK_DATA => "$BASE_URL/api/RosDistribution/GetFpcCellDoubleClick";
   static String get RO_DISTRIBUTION_GET_OPENDEAL_FILTER_DATA => "$BASE_URL/api/RosDistribution/GetOpenDealFilter";
+  static String get RO_DISTRIBUTION_GET_ALLOCATE_FPC_DATA => "$BASE_URL/api/RosDistribution/GetAllocateFPC";
+  static String get RO_DISTRIBUTION_GET_DEALLOCATE_FPC_DATA => "$BASE_URL/api/RosDistribution/GetDeallocateFPC";
+  static String get RO_DISTRIBUTION_GET_INCLUDE_ROS_FILTER_FPC_DATA => "$BASE_URL/api/RosDistribution/GetIncludeROSFilter";
+  static String get RO_DISTRIBUTION_GET_OPEN_DEAL_FILTER_FPC_DATA => "$BASE_URL/api/RosDistribution/GetOpenDealFilter";
+  static String get RO_DISTRIBUTION_GET_MOVE_SPOT_FILTER_FPC_DATA => "$BASE_URL/api/RosDistribution/GetOpenDealFilter";
 
   static String RO_DISTRIBUTION_GET_CHANNEL(String locId) => "$BASE_URL/api/RosDistribution/cboLocationCode_Leave?LocationCode=$locId";
   static String RO_DISTRIBUTION_SHOW_DATA(String locId, String channelID, String date) =>
@@ -370,8 +379,6 @@ class ApiFactory {
   ///
   ///
   ///
-  static String TRANSMISSION_LOG_COLOR_LIST(String locId, String channelId, String telcastDt) =>
-      "$BASE_URL/api/Transmissionlog/GetLoadColours?locationcode=$locId&channelcode=$channelId&telecastdate=$telcastDt";
 
   ///////////////// RO BOOKING //////////////////////////
   static String RO_BOOKING_INIT = "$BASE_URL/api/ROBooking/RoBookingOnLoad";

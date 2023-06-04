@@ -159,11 +159,7 @@ class DataGridShowOnlyKeys extends StatelessWidget {
                 enableContextMenu: false,
                 width: (keysWidths != null && keysWidths!.containsKey(key))
                     ? keysWidths![key]!
-                    : Utils.getColumnSize(
-                        key: key,
-                        value: mapData[0][key].toString(),
-                        widthRatio: widthRatio,
-                      ),
+                    : Utils.getColumnSize(key: key, value: mapData[0][key].toString(), widthRatio: widthRatio),
                 enableAutoEditing: false,
                 hide: showonly == null
                     ? (hideKeys != null && hideKeys!.contains(key)) ||

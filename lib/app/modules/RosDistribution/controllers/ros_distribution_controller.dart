@@ -22,6 +22,7 @@ import '../../../../widgets/gridFromMap.dart';
 import '../../../../widgets/input_fields.dart';
 import '../../../../widgets/radio_row.dart';
 import '../model/ros_show_model.dart';
+import '../model/ros_cell_click_model.dart' as cellModel;
 
 class RosDistributionController extends GetxController {
   DropDownValue? selectedLocation, selectedChannel;
@@ -38,6 +39,7 @@ class RosDistributionController extends GetxController {
   var reportList = <dynamic>[].obs;
 
   var checkBoxes = [].obs;
+  int mainGridIdx = 0;
 
   @override
   void onInit() {
@@ -146,9 +148,13 @@ class RosDistributionController extends GetxController {
   }
 
   void handleReportTap() {
+    if (selectedLocation == null || selectedChannel == null) {
+      LoadingDialog.showErrorDialog("Please select Location and Channel.");
+      return;
+    }
     reportList.clear();
     selectedReportTab.value = "Client Wise";
-    Future.delayed(const Duration(seconds: 2)).then((value) {
+    Future.delayed(const Duration(seconds: 1)).then((value) {
       handleOnChangedTapInReport(selectedReportTab.value);
       return null;
     });
@@ -176,7 +182,7 @@ class RosDistributionController extends GetxController {
                         Obx(
                           () {
                             return RadioRow(
-                              items: ['Client Wise', 'Client & Brand Wise', 'Client Pivot', 'Brand Pivot', 'Zone Wise', 'Zone & Time'],
+                              items: const ['Client Wise', 'Client & Brand Wise', 'Client Pivot', 'Brand Pivot', 'Zone Wise', 'Zone & Time'],
                               groupValue: selectedReportTab.value,
                               onchange: handleOnChangedTapInReport,
                             );
@@ -204,6 +210,18 @@ class RosDistributionController extends GetxController {
                             ? null
                             : DataGridShowOnlyKeys(
                                 mapData: reportList.value,
+                                onSelected: (row) {
+                                  if (selectedReportTab.value != "Zone Wise" && selectedReportTab.value != "Zone & Time") {
+                                    // mainGSM?.setFilter((element) {
+                                    //   return element.cells['clientName']?.value.toString() == reportList.value[row.rowIdx ?? 0]['clientName'];
+                                    // });
+                                    showDataModel.value.infoShowBucketList?.lstROSSpots
+                                        ?.removeWhere((element) => element.clientName != reportList.value[row.rowIdx ?? 0]['clientName']);
+                                    Get.back();
+                                    showDataModel.refresh();
+                                  }
+                                },
+                                mode: PlutoGridMode.selectWithOneTap,
                               ),
                       );
                     }),
@@ -283,18 +301,39 @@ class RosDistributionController extends GetxController {
         "fromDate": DateFormat("yyyy-MM-dd").format(DateFormat("dd-MM-yyyy").parse(date.text)),
         "loggedUser": Get.find<MainController>().user?.logincode,
         "allowMoveSpotbuys": false,
-        "allocPercentValue": "0"
+        "allocPercentValue": "100"
       },
     );
   }
 
-  void handleFPCTap() {
-    var tempProgramName = "".obs, tempAlloc = "".obs, tempFpcTime = "".obs, tempCommercialCap = "".obs, tempBookedDur = "".obs, tempBal = "".obs;
-    var includeROS = true.obs, includeOpenDeal = true.obs, moveSpotbuys = false.obs;
-    var tempLeftList = <LstFPC>[].obs;
-    if (!(showDataModel.value.infoShowBucketList?.lstFPC?.isEmpty ?? true)) {
-      tempLeftList.value = showDataModel.value.infoShowBucketList?.lstFPC ?? [];
+  Color getRowColorForFPC(String val) {
+    if (val == "White") {
+      return Colors.white;
+    } else if (val == "Red") {
+      return Colors.red;
+    } else if (val == "LightGreen") {
+      return Colors.lightGreen;
+    } else if (val == "Pink") {
+      return Colors.pink;
+    } else if (val == "Black") {
+      return Colors.black12;
+    } else {
+      return Colors.white;
     }
+  }
+
+  void handleFPCTap() {
+    var tempProgramName = "".obs, tempAlloc = "100".obs, tempFpcTime = "".obs, tempCommercialCap = "".obs, tempBookedDur = "".obs, tempBal = "".obs;
+    var includeROS = true.obs, includeOpenDeal = true.obs, moveSpotbuys = false.obs;
+
+    var tempModel = cellModel.ROSCellClickDataModel(infoGetFpcCellDoubleClick: cellModel.InfoGetFpcCellDoubleClick()).obs;
+    tempModel.value.infoGetFpcCellDoubleClick?.lstFPC = [];
+    var temp11 = showDataModel.value.infoShowBucketList?.lstFPC?.map((e) => e.toJson()).toList();
+    var temp22 = temp11?.map((e) => cellModel.LstFPC.fromJson(e)).toList();
+    tempModel.value.infoGetFpcCellDoubleClick?.lstFPC = temp22;
+    int lastSelectedIdx = 0, lastSelectedIdx2nd = 0, lastSelectedIdx3rd = 0;
+    bool canRender = true;
+    PlutoGridStateManager? tempSM1st, tempSM2nd, tempSM3rd;
     showDialog(
         context: Get.context!,
         builder: (_) {
@@ -309,7 +348,6 @@ class RosDistributionController extends GetxController {
                 padding: const EdgeInsets.all(20.0),
                 child: Column(
                   children: [
-                    // SizedBox(height: 20),
                     Wrap(
                       crossAxisAlignment: WrapCrossAlignment.end,
                       spacing: 15,
@@ -332,16 +370,123 @@ class RosDistributionController extends GetxController {
                             widthRatio: .25,
                           );
                         }),
-                        Obx(() {
-                          return InputFields.formFieldDisable(
-                            hintTxt: "Alloc %",
-                            value: tempAlloc.value,
-                            widthRatio: .07,
-                          );
-                        }),
-                        const FormButton(btnText: "Reload"),
-                        const FormButton(btnText: "Allocate"),
-                        const FormButton(btnText: "Deallocat"),
+                        // Obx(() {
+                        //   return InputFields.formFieldDisable(
+                        //     hintTxt: "Alloc %",
+                        //     value: tempAlloc.value,
+                        //     widthRatio: .07,
+                        //   );
+                        // }),
+                        FormButton(
+                          btnText: "Reload",
+                          callback: () {
+                            if (selectedLocation == null || selectedChannel == null) return;
+                            LoadingDialog.call();
+                            Get.find<ConnectorControl>().GETMETHODCALL(
+                                api: ApiFactory.RO_DISTRIBUTION_SHOW_DATA(selectedLocation!.key!, selectedChannel!.key!,
+                                    DateFormat("yyyy-MM-dd").format(DateFormat("dd-MM-yyyy").parse(date.text))),
+                                fun: (resp) {
+                                  closeDialogIfOpen();
+                                  if (resp != null && resp is Map<String, dynamic> && resp['info_ShowBucketList'] != null) {
+                                    enableControllos.value = false;
+                                    showDataModel.value = ROSDistuibutionShowModel.fromJson(resp);
+                                    showDataModel.value.infoShowBucketList?.controlEnableTrue?.forEach((element) {
+                                      topButtons.value = topButtons.value.map((e) {
+                                        if (!e.containsKey(element)) {
+                                          // e['isEnabled'] = false;
+                                        }
+                                        return e;
+                                      }).toList();
+                                    });
+                                    update(['headRowBtn']);
+                                    tempShowDataModel = ROSDistuibutionShowModel.fromJson(showDataModel.value.toJson());
+                                    Get.back();
+                                    handleFPCTap();
+                                  } else {
+                                    LoadingDialog.showErrorDialog(resp.toString());
+                                  }
+                                },
+                                failed: (resp) {
+                                  closeDialogIfOpen();
+                                  LoadingDialog.showErrorDialog(resp.toString());
+                                });
+                          },
+                        ),
+                        FormButton(
+                          btnText: "Allocate",
+                          callback: () {
+                            if (selectedLocation == null || selectedChannel == null) return;
+                            LoadingDialog.call();
+                            Get.find<ConnectorControl>().POSTMETHOD(
+                              api: ApiFactory.RO_DISTRIBUTION_GET_ALLOCATE_FPC_DATA,
+                              fun: (resp) {
+                                closeDialogIfOpen();
+                                if (resp != null && resp is Map<String, dynamic> && resp['info_GetFpcCellDoubleClick'] != null) {
+                                  // tempModel.value = cellModel.ROSCellClickDataModel.fromJson(resp);
+                                  // canRender = true;
+                                } else {
+                                  LoadingDialog.showErrorDialog(resp.toString());
+                                  // tempModel.refresh();
+                                }
+                              },
+                              json: {
+                                "unallocatedSpotsCurrentRowIndex": lastSelectedIdx3rd,
+                                "loggedUser": Get.find<MainController>().user?.logincode,
+                                "allocPercentVisiable": moveSpotbuys.value,
+                                "allocPercentValue": tempAlloc.value,
+                                "fpcCurrentRowIndex": lastSelectedIdx,
+                                "lstFPC": showDataModel.value.infoShowBucketList?.lstFPC?.map((e) => e.toJson()).toList() ?? [],
+                                "lstROSSpots": showDataModel.value.infoShowBucketList?.lstROSSpots?.map((e) => e.toJson()).toList() ?? [],
+                                "lstUnallocatedSpots":
+                                    tempModel.value.infoGetFpcCellDoubleClick?.lstUnallocatedSpots?.map((e) => e.toJson()).toList() ?? [],
+                                "fromDate": DateFormat("yyyy-MM-ddT00:00:00").format(DateFormat("dd-MM-yyyy").parse(date.text)),
+                                "allowMoveSpotbuys": moveSpotbuys.value,
+                                "chkMoveSpotBuys": moveSpotbuys.value,
+                                "chkIncludeROS": includeROS.value,
+                                "chkOpenDeal": includeOpenDeal.value,
+                              },
+                            );
+                          },
+                        ),
+                        FormButton(
+                          btnText: "Deallocate",
+                          callback: () {
+                            if (selectedLocation == null || selectedChannel == null) return;
+                            LoadingDialog.call();
+                            Get.find<ConnectorControl>().POSTMETHOD(
+                              api: ApiFactory.RO_DISTRIBUTION_GET_DEALLOCATE_FPC_DATA,
+                              fun: (resp) {
+                                closeDialogIfOpen();
+                                if (resp != null && resp is Map<String, dynamic> && resp['info_GetDeallocateFPC'] != null) {
+                                  tempModel.value = cellModel.ROSCellClickDataModel(
+                                      infoGetFpcCellDoubleClick: cellModel.InfoGetFpcCellDoubleClick.fromJson(resp['info_GetDeallocateFPC']));
+                                  tempProgramName.value = tempModel.value.infoGetFpcCellDoubleClick?.programname ?? "";
+                                  tempFpcTime.value = tempModel.value.infoGetFpcCellDoubleClick?.fpctime ?? "";
+                                  tempCommercialCap.value = tempModel.value.infoGetFpcCellDoubleClick?.commercialCap ?? "";
+                                  tempBookedDur.value = tempModel.value.infoGetFpcCellDoubleClick?.bookedduration ?? "";
+                                  tempBal.value = tempModel.value.infoGetFpcCellDoubleClick?.balanceDuration ?? "";
+                                } else {
+                                  // tempModel.value.infoGetFpcCellDoubleClick?.lstAllocatedSpots?.clear();
+                                  // tempModel.value.infoGetFpcCellDoubleClick?.lstUnallocatedSpots?.clear();
+                                  LoadingDialog.showErrorDialog(resp.toString());
+                                  tempModel.refresh();
+                                }
+                              },
+                              json: {
+                                "currentRowIndex": lastSelectedIdx,
+                                "lstFPC": showDataModel.value.infoShowBucketList?.lstFPC?.map((e) => e.toJson()).toList(),
+                                "lstROSSpots": showDataModel.value.infoShowBucketList?.lstROSSpots?.map((e) => e.toJson()).toList() ?? [],
+                                "lstAllocatedSpots":
+                                    tempModel.value.infoGetFpcCellDoubleClick?.lstAllocatedSpots?.map((e) => e.toJson()).toList() ?? [],
+                                "fromDate": DateFormat("yyyy-MM-ddT00:00:00").format(DateFormat("dd-MM-yyyy").parse(date.text)),
+                                "allowMoveSpotbuys": moveSpotbuys.value,
+                                "chkMoveSpotBuys": moveSpotbuys.value,
+                                "chkIncludeROS": includeROS.value,
+                                "chkOpenDeal": includeOpenDeal.value,
+                              },
+                            );
+                          },
+                        ),
                         Row(),
                         InputFields.formFieldDisable(
                           hintTxt: "Channel",
@@ -376,25 +521,122 @@ class RosDistributionController extends GetxController {
                             widthRatio: .12,
                           );
                         }),
+                        // Obx(() {
+                        //   return CheckBoxWidget1(
+                        //     title: "Move Spot buys",
+                        //     value: moveSpotbuys.value,
+                        //     onChanged: (val) {
+                        //       moveSpotbuys.value = val ?? false;
+                        //       Get.find<ConnectorControl>().POSTMETHOD(
+                        //         api: ApiFactory.RO_DISTRIBUTION_GET_MOVE_SPOT_FILTER_FPC_DATA,
+                        //         fun: (resp) {
+                        //           closeDialogIfOpen();
+                        //           if (resp != null && resp is Map<String, dynamic> && resp['info_GetFpcCellDoubleClick'] != null) {
+                        //             // tempModel.value = cellModel.ROSCellClickDataModel.fromJson(resp);
+                        //             // canRender = true;
+                        //           } else {
+                        //             LoadingDialog.showErrorDialog(resp.toString());
+                        //             // tempModel.refresh();
+                        //           }
+                        //         },
+                        //         json: {
+                        //           "chkIncludeROS": includeROS.value,
+                        //           "chkOpenDeal": includeOpenDeal.value,
+                        //           "lstUnallocatedSpots":
+                        //               tempModel.value.infoGetFpcCellDoubleClick?.lstUnallocatedSpots?.map((e) => e.toJson()).toList() ?? [],
+                        //           "lstAllocatedSpots":
+                        //               tempModel.value.infoGetFpcCellDoubleClick?.lstAllocatedSpots?.map((e) => e.toJson()).toList() ?? [],
+                        //         },
+                        //       );
+                        //     },
+                        //   );
+                        // }),
                         Obx(() {
                           return CheckBoxWidget1(
-                            title: "Move Spot buys",
-                            value: moveSpotbuys.value,
-                            onChanged: (val) => moveSpotbuys.value = val ?? false,
+                            title: "Include ROS?",
+                            value: includeROS.value,
+                            onChanged: (val) {
+                              includeROS.value = val ?? false;
+                              if (selectedLocation == null || selectedChannel == null) return;
+                              LoadingDialog.call();
+                              Get.find<ConnectorControl>().POSTMETHOD(
+                                api: ApiFactory.RO_DISTRIBUTION_GET_INCLUDE_ROS_FILTER_FPC_DATA,
+                                fun: (resp) {
+                                  closeDialogIfOpen();
+                                  if (resp != null && resp is Map<String, dynamic> && resp['info_GetIncludeROSFilter'] != null) {
+                                    tempModel.value.infoGetFpcCellDoubleClick?.lstAllocatedSpots?.clear();
+                                    tempModel.value.infoGetFpcCellDoubleClick?.lstUnallocatedSpots?.clear();
+                                    if (resp['info_GetIncludeROSFilter']['lstAllocatedSpots'] != null) {
+                                      for (var e in resp['info_GetIncludeROSFilter']['lstAllocatedSpots']) {
+                                        tempModel.value.infoGetFpcCellDoubleClick?.lstAllocatedSpots?.add(cellModel.LstAllocatedSpots.fromJson(e));
+                                      }
+                                    }
+                                    if (resp['info_GetIncludeROSFilter']['lstUnallocatedSpots'] != null) {
+                                      for (var e in resp['info_GetIncludeROSFilter']['lstUnallocatedSpots']) {
+                                        tempModel.value.infoGetFpcCellDoubleClick?.lstUnallocatedSpots
+                                            ?.add(cellModel.LstUnallocatedSpots.fromJson(e));
+                                      }
+                                    }
+                                    tempModel.refresh();
+                                  } else {
+                                    includeROS.value = !(val ?? false);
+                                    LoadingDialog.showErrorDialog(resp.toString());
+                                  }
+                                },
+                                json: {
+                                  "chkIncludeROS": includeROS.value,
+                                  "chkOpenDeal": includeOpenDeal.value,
+                                  "lstUnallocatedSpots":
+                                      tempModel.value.infoGetFpcCellDoubleClick?.lstUnallocatedSpots?.map((e) => e.toJson()).toList() ?? [],
+                                  "lstAllocatedSpots":
+                                      tempModel.value.infoGetFpcCellDoubleClick?.lstAllocatedSpots?.map((e) => e.toJson()).toList() ?? [],
+                                },
+                              );
+                            },
                           );
                         }),
                         Obx(() {
                           return CheckBoxWidget1(
                             title: "Include OPEN Deal?",
-                            value: includeROS.value,
-                            onChanged: (val) => includeROS.value = val ?? false,
-                          );
-                        }),
-                        Obx(() {
-                          return CheckBoxWidget1(
-                            title: "Include OPEN Deal?",
-                            value: includeROS.value,
-                            onChanged: (val) => includeROS.value = val ?? false,
+                            value: includeOpenDeal.value,
+                            onChanged: (val) {
+                              includeOpenDeal.value = val ?? false;
+                              if (selectedLocation == null || selectedChannel == null) return;
+                              LoadingDialog.call();
+                              Get.find<ConnectorControl>().POSTMETHOD(
+                                api: ApiFactory.RO_DISTRIBUTION_GET_OPEN_DEAL_FILTER_FPC_DATA,
+                                fun: (resp) {
+                                  closeDialogIfOpen();
+                                  if (resp != null && resp is Map<String, dynamic> && resp['info_OpenDealFilter'] != null) {
+                                    tempModel.value.infoGetFpcCellDoubleClick?.lstAllocatedSpots?.clear();
+                                    tempModel.value.infoGetFpcCellDoubleClick?.lstUnallocatedSpots?.clear();
+                                    if (resp['info_OpenDealFilter']['lstAllocatedSpots'] != null) {
+                                      for (var e in resp['info_OpenDealFilter']['lstAllocatedSpots']) {
+                                        tempModel.value.infoGetFpcCellDoubleClick?.lstAllocatedSpots?.add(cellModel.LstAllocatedSpots.fromJson(e));
+                                      }
+                                    }
+                                    if (resp['info_OpenDealFilter']['lstUnallocatedSpots'] != null) {
+                                      for (var e in resp['info_OpenDealFilter']['lstUnallocatedSpots']) {
+                                        tempModel.value.infoGetFpcCellDoubleClick?.lstUnallocatedSpots
+                                            ?.add(cellModel.LstUnallocatedSpots.fromJson(e));
+                                      }
+                                    }
+                                    tempModel.refresh();
+                                  } else {
+                                    includeOpenDeal.value = !(val ?? false);
+                                    LoadingDialog.showErrorDialog(resp.toString());
+                                  }
+                                },
+                                json: {
+                                  "chkIncludeROS": includeROS.value,
+                                  "chkOpenDeal": includeOpenDeal.value,
+                                  "lstUnallocatedSpots":
+                                      tempModel.value.infoGetFpcCellDoubleClick?.lstUnallocatedSpots?.map((e) => e.toJson()).toList() ?? [],
+                                  "lstAllocatedSpots":
+                                      tempModel.value.infoGetFpcCellDoubleClick?.lstAllocatedSpots?.map((e) => e.toJson()).toList() ?? [],
+                                },
+                              );
+                            },
                           );
                         })
                       ],
@@ -407,60 +649,74 @@ class RosDistributionController extends GetxController {
                             child: Obx(() {
                               return Container(
                                 margin: const EdgeInsets.all(8),
-                                decoration: (tempLeftList.isEmpty)
+                                decoration: (tempModel.value.infoGetFpcCellDoubleClick?.lstFPC?.isEmpty ?? true)
                                     ? BoxDecoration(
                                         border: Border.all(
                                         color: Colors.grey,
                                       ))
                                     : null,
-                                child: (tempLeftList.isEmpty)
+                                child: (tempModel.value.infoGetFpcCellDoubleClick?.lstFPC?.isEmpty ?? true)
                                     ? null
                                     : DataGridShowOnlyKeys(
-                                        mapData: tempLeftList.map((e) => e.toJson()).toList(),
+                                        mapData: (tempModel.value.infoGetFpcCellDoubleClick?.lstFPC)?.map((e) => e.toJson()).toList() ?? [],
                                         formatDate: false,
                                         widthRatio: 220,
                                         hideCode: false,
-                                        // colorCallback: (row) {
-                                        //   if (tempLeftList[row.rowIdx].color == "") {
-                                        //   } else if (tempLeftList[row.rowIdx].color == "") {
-                                        //   } else {}
-                                        // },
-
-                                        onSelected: (row) {
-                                          if (tempLeftList.isNotEmpty) {
-                                            tempProgramName.value = tempLeftList[row.rowIdx ?? 0].programName ?? "";
-                                            tempFpcTime.value = tempLeftList[row.rowIdx ?? 0].fpcTime ?? "";
-                                            tempCommercialCap.value = (tempLeftList[row.rowIdx ?? 0].commercialCap ?? 0).toString();
-                                            tempBookedDur.value = (tempLeftList[row.rowIdx ?? 0].bookedDuration ?? 0).toString();
+                                        colorCallback: (row) => (row.row.cells.containsValue(tempSM1st?.currentCell))
+                                            ? Colors.deepPurple.shade200
+                                            : getRowColorForFPC(tempModel.value.infoGetFpcCellDoubleClick?.lstFPC?[row.rowIdx].backColor ?? ""),
+                                        onRowDoubleTap: (row) {
+                                          lastSelectedIdx = row.rowIdx;
+                                          tempSM1st?.setCurrentCell(tempSM1st?.getRowByIdx(lastSelectedIdx)?.cells['locationcode'], lastSelectedIdx);
+                                          if ((tempModel.value.infoGetFpcCellDoubleClick?.lstFPC?.isNotEmpty ?? false)) {
                                             LoadingDialog.call();
                                             Get.find<ConnectorControl>().POSTMETHOD(
                                               api: ApiFactory.RO_DISTRIBUTION_GET_FPC_DOUBLE_CLICK_DATA,
                                               fun: (resp) {
                                                 closeDialogIfOpen();
+                                                if (resp != null && resp is Map<String, dynamic> && resp['info_GetFpcCellDoubleClick'] != null) {
+                                                  tempModel.value = cellModel.ROSCellClickDataModel.fromJson(resp);
+                                                  tempProgramName.value = tempModel.value.infoGetFpcCellDoubleClick?.programname ?? "";
+                                                  tempFpcTime.value = tempModel.value.infoGetFpcCellDoubleClick?.fpctime ?? "";
+                                                  tempCommercialCap.value = tempModel.value.infoGetFpcCellDoubleClick?.commercialCap ?? "";
+                                                  tempBookedDur.value = tempModel.value.infoGetFpcCellDoubleClick?.bookedduration ?? "";
+                                                  tempBal.value = tempModel.value.infoGetFpcCellDoubleClick?.balanceDuration ?? "";
+                                                } else {
+                                                  tempModel.value.infoGetFpcCellDoubleClick?.lstAllocatedSpots?.clear();
+                                                  tempModel.value.infoGetFpcCellDoubleClick?.lstUnallocatedSpots?.clear();
+                                                  LoadingDialog.showErrorDialog(resp.toString());
+                                                  tempModel.refresh();
+                                                }
                                               },
                                               json: {
-                                                "fromDate": DateFormat("yyyy-MM-dd").format(DateFormat("dd-MM-yyyy").parse(date.text)),
+                                                "currentRowIndex": row.rowIdx,
+                                                "lstFPC": tempModel.value.infoGetFpcCellDoubleClick?.lstFPC?.map((e) => e.toJson()).toList(),
+                                                "lstROSSpots":
+                                                    showDataModel.value.infoShowBucketList?.lstROSSpots?.map((e) => e.toJson()).toList() ?? [],
+                                                "fromDate": DateFormat("yyyy-MM-ddT00:00:00").format(DateFormat("dd-MM-yyyy").parse(date.text)),
                                                 "allowMoveSpotbuys": moveSpotbuys.value,
                                                 "chkMoveSpotBuys": checkBoxes.value[2]['value'],
                                                 "chkIncludeROS": checkBoxes.value[1]['value'],
                                                 "chkOpenDeal": checkBoxes.value[0]['value'],
-                                                "LstAllocatedSpots ": [
-                                                  tempLeftList[row.rowIdx ?? 0].toJson(),
-                                                ],
-                                                "LstUnallocatedSpots": [],
                                               },
                                             );
                                           }
                                         },
                                         onload: (sm) {
-                                          if (tempLeftList.isNotEmpty) {
-                                            tempProgramName.value = tempLeftList[0].programName ?? "";
-                                            tempFpcTime.value = tempLeftList[0].fpcTime ?? "";
-                                            tempCommercialCap.value = (tempLeftList[0].commercialCap ?? 0).toString();
-                                            tempBookedDur.value = (tempLeftList[0].bookedDuration ?? 0).toString();
+                                          tempSM1st = sm.stateManager;
+                                          if ((tempModel.value.infoGetFpcCellDoubleClick?.lstFPC?.isNotEmpty ?? false) && canRender) {
+                                            canRender = false;
+                                            tempProgramName.value = tempModel.value.infoGetFpcCellDoubleClick?.lstFPC?[0].programName ?? "";
+                                            tempFpcTime.value = tempModel.value.infoGetFpcCellDoubleClick?.lstFPC?[0].fpcTime ?? "";
+                                            tempCommercialCap.value =
+                                                (tempModel.value.infoGetFpcCellDoubleClick?.lstFPC?[0].commercialCap ?? 0).toString();
+                                            tempBookedDur.value =
+                                                (tempModel.value.infoGetFpcCellDoubleClick?.lstFPC?[0].bookedDuration ?? 0).toString();
                                           }
+                                          sm.stateManager
+                                              .setCurrentCell(sm.stateManager.getRowByIdx(lastSelectedIdx)?.cells['rowNo'], lastSelectedIdx);
                                         },
-                                        mode: PlutoGridMode.selectWithOneTap,
+                                        mode: PlutoGridMode.normal,
                                       ),
                               );
                             }),
@@ -471,15 +727,81 @@ class RosDistributionController extends GetxController {
                             child: Column(
                               children: [
                                 Expanded(
-                                  child: Container(
-                                    decoration: BoxDecoration(border: Border.all(color: Colors.grey)),
-                                  ),
+                                  child: Obx(() {
+                                    return Container(
+                                      margin: const EdgeInsets.all(8),
+                                      decoration: (tempModel.value.infoGetFpcCellDoubleClick?.lstAllocatedSpots?.isEmpty ?? true)
+                                          ? BoxDecoration(
+                                              border: Border.all(
+                                              color: Colors.grey,
+                                            ))
+                                          : null,
+                                      child: (tempModel.value.infoGetFpcCellDoubleClick?.lstAllocatedSpots?.isEmpty ?? true)
+                                          ? null
+                                          : DataGridShowOnlyKeys(
+                                              mapData:
+                                                  (tempModel.value.infoGetFpcCellDoubleClick?.lstAllocatedSpots)?.map((e) => e.toJson()).toList() ??
+                                                      [],
+                                              formatDate: false,
+                                              widthRatio: 220,
+                                              hideCode: false,
+                                              colorCallback: (row) => (row.row.cells.containsValue(tempSM2nd?.currentCell))
+                                                  ? Colors.deepPurple.shade200
+                                                  : getRowColorForFPC(
+                                                      tempModel.value.infoGetFpcCellDoubleClick?.lstAllocatedSpots?[row.rowIdx].backColor ?? ""),
+                                              // mode: PlutoGridMode.selectWithOneTap,
+                                              onRowDoubleTap: (p0) {
+                                                lastSelectedIdx2nd = p0.rowIdx;
+                                                tempSM2nd?.setCurrentCell(
+                                                    tempSM2nd?.getRowByIdx(lastSelectedIdx2nd)?.cells['locationcode'], lastSelectedIdx2nd);
+                                              },
+                                              onload: (sm) {
+                                                tempSM2nd = sm.stateManager;
+                                                sm.stateManager.setCurrentCell(
+                                                    sm.stateManager.getRowByIdx(lastSelectedIdx2nd)?.cells['locationcode'], lastSelectedIdx2nd);
+                                              },
+                                            ),
+                                    );
+                                  }),
                                 ),
                                 const SizedBox(height: 10),
                                 Expanded(
-                                  child: Container(
-                                    decoration: BoxDecoration(border: Border.all(color: Colors.grey)),
-                                  ),
+                                  child: Obx(() {
+                                    return Container(
+                                      margin: const EdgeInsets.all(8),
+                                      decoration: (tempModel.value.infoGetFpcCellDoubleClick?.lstUnallocatedSpots?.isEmpty ?? true)
+                                          ? BoxDecoration(
+                                              border: Border.all(
+                                              color: Colors.grey,
+                                            ))
+                                          : null,
+                                      child: (tempModel.value.infoGetFpcCellDoubleClick?.lstUnallocatedSpots?.isEmpty ?? true)
+                                          ? null
+                                          : DataGridShowOnlyKeys(
+                                              mapData:
+                                                  (tempModel.value.infoGetFpcCellDoubleClick?.lstUnallocatedSpots)?.map((e) => e.toJson()).toList() ??
+                                                      [],
+                                              formatDate: false,
+                                              widthRatio: 220,
+                                              hideCode: false,
+                                              onRowDoubleTap: (p0) {
+                                                lastSelectedIdx3rd = p0.rowIdx;
+                                                tempSM3rd?.setCurrentCell(
+                                                    tempSM3rd?.getRowByIdx(lastSelectedIdx3rd)?.cells['locationcode'], lastSelectedIdx3rd);
+                                              },
+                                              colorCallback: (row) => (row.row.cells.containsValue(tempSM3rd?.currentCell))
+                                                  ? Colors.deepPurple.shade200
+                                                  : getRowColorForFPC(
+                                                      tempModel.value.infoGetFpcCellDoubleClick?.lstUnallocatedSpots?[row.rowIdx].backColor ?? ""),
+                                              // mode: PlutoGridMode.selectWithOneTap,
+                                              onload: (sm) {
+                                                tempSM3rd = sm.stateManager;
+                                                sm.stateManager.setCurrentCell(
+                                                    sm.stateManager.getRowByIdx(lastSelectedIdx3rd)?.cells['locationcode'], lastSelectedIdx3rd);
+                                              },
+                                            ),
+                                    );
+                                  }),
                                 ),
                               ],
                             ),
@@ -504,34 +826,6 @@ class RosDistributionController extends GetxController {
         (element) => element.allocatedSpot != null && (element.allocatedSpot?.isNotEmpty ?? false),
       );
       showDataModel.refresh();
-      // LoadingDialog.call();
-      // var selectedRowsInMainGridIDX = await getSelectedRowsInMainGrid();
-      // var jsonList = <dynamic>[];
-      // for (var i = 0; i < selectedRowsInMainGridIDX.length; i++) {
-      //   jsonList.add(showDataModel.value.infoShowBucketList?.lstROSSpots![i].toJson());
-      // }
-      // Get.find<ConnectorControl>().POSTMETHOD(
-      //     api: ApiFactory.RO_DISTRIBUTION_GET_UN_DATA,
-      //     fun: (resp) {
-      //       closeDialogIfOpen();
-      //       if (resp != null &&
-      //           resp is Map<String, dynamic> &&
-      //           resp['info_GetUnalloacted']['lstROSSpots'] != null &&
-      //           resp['info_GetUnalloacted']['lstROSSpots'] is List<dynamic> &&
-      //           (resp['info_GetUnalloacted']['lstROSSpots'] as List<dynamic>).isNotEmpty) {
-      //         var tempList = (resp['info_GetUnalloacted']['lstROSSpots'] as List<dynamic>);
-      //         for (var i = 0; i < tempList.length; i++) {
-      //           showDataModel.value.infoShowBucketList?.lstROSSpots!.removeAt(i);
-      //           showDataModel.value.infoShowBucketList?.lstROSSpots!.insert(i, LstROSSpots.fromJson(tempList[i]));
-      //         }
-      //         showDataModel.refresh();
-      //       } else {
-      //         LoadingDialog.showErrorDialog(resp.toString());
-      //       }
-      //     },
-      //     json: {
-      //       "lstROSSpots": jsonList,
-      //     });
     }
   }
 
@@ -546,11 +840,6 @@ class RosDistributionController extends GetxController {
       }
       update(['headRowBtn']);
       LoadingDialog.call();
-      // var selectedRowsInMainGridIDX = await getSelectedRowsInMainGrid();
-      // var jsonList = <dynamic>[];
-      // for (var i = 0; i < selectedRowsInMainGridIDX.length; i++) {
-      //   jsonList.add(showDataModel.value.infoShowBucketList?.lstROSSpots![i].toJson());
-      // }
       Get.find<ConnectorControl>().POSTMETHOD(
           api: ApiFactory.RO_DISTRIBUTION_GET_SERVICE_DATA,
           fun: (resp) {
@@ -586,32 +875,21 @@ class RosDistributionController extends GetxController {
       return;
     } else {
       LoadingDialog.call();
-      var selectedRowsInMainGridIDX = await getSelectedRowsInMainGrid();
-      var jsonList = <dynamic>[];
-      for (var i = 0; i < selectedRowsInMainGridIDX.length; i++) {
-        jsonList.add(showDataModel.value.infoShowBucketList?.lstROSSpots![i].toJson());
-      }
       Get.find<ConnectorControl>().POSTMETHOD(
-          api: ApiFactory.RO_DISTRIBUTION_GET_DEALLOCATE_DATA,
+          api: ApiFactory.RO_DISTRIBUTION_GET_ALLOCATION_DATA,
           fun: (resp) {
             closeDialogIfOpen();
-            if (resp != null &&
-                resp is Map<String, dynamic> &&
-                resp['info_GetUnalloacted']['lstROSSpots'] != null &&
-                resp['info_GetUnalloacted']['lstROSSpots'] is List<dynamic> &&
-                (resp['info_GetUnalloacted']['lstROSSpots'] as List<dynamic>).isNotEmpty) {
-              var tempList = (resp['info_GetUnalloacted']['lstROSSpots'] as List<dynamic>);
-              for (var i = 0; i < tempList.length; i++) {
-                showDataModel.value.infoShowBucketList?.lstROSSpots!.removeAt(i);
-                showDataModel.value.infoShowBucketList?.lstROSSpots!.insert(i, LstROSSpots.fromJson(tempList[i]));
-              }
-              showDataModel.refresh();
+            if (resp != null && resp is Map<String, dynamic> && resp['info_tblROSSpots'] != null) {
             } else {
               LoadingDialog.showErrorDialog(resp.toString());
             }
           },
           json: {
-            "lstROSSpots": jsonList,
+            "rowIndex": mainGridIdx,
+            "lstROSSpots": showDataModel.value.infoShowBucketList?.lstROSSpots?.map((e) => e.toJson()).toList(),
+            "loggedUser": Get.find<MainController>().user?.logincode,
+            "allocPercentVisiable": false,
+            "allocPercentValue": "100",
           });
     }
   }
@@ -649,6 +927,7 @@ class RosDistributionController extends GetxController {
   ///
   ///
   ////////////////////////////////////// INTIAL API START/////////////
+
   callInitailsAPI() {
     LoadingDialog.call();
     Get.find<ConnectorControl>().GETMETHODCALL(
@@ -709,6 +988,7 @@ class RosDistributionController extends GetxController {
   }
 
   clearAllPage() {
+    mainGridIdx = 0;
     selectedLocation = null;
     selectedChannel = null;
     date.text = "${DateTime.now().day}-${DateTime.now().month}-${DateTime.now().year}";

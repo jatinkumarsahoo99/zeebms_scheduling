@@ -76,6 +76,24 @@ class CommercialController extends GetxController {
 
   List<SystemEnviroment>? channelList = [];
   List<SystemEnviroment>? locationList = [];
+  List<dynamic>? colorList = [
+    {"eventType": "A", "foreColor": "ff000000", "backColor": "ffa9fd77"},
+    {"eventType": "C", "foreColor": "ff090900", "backColor": "ffffff80"},
+    {"eventType": "CL", "foreColor": "ff090900", "backColor": "ffffff80"},
+    {"eventType": "F", "foreColor": "ff000000", "backColor": "ff887cfc"},
+    {"eventType": "GL", "foreColor": "ff000000", "backColor": "fffe46b8"},
+    {"eventType": "I", "foreColor": "ff000000", "backColor": "ff027f45"},
+    {"eventType": "L", "foreColor": "ff000000", "backColor": "ff9bffcd"},
+    {"eventType": "M", "foreColor": "ff000000", "backColor": "ffc6f8c0"},
+    {"eventType": "N", "foreColor": "ff000000", "backColor": "ff00f000"},
+    {"eventType": "O", "foreColor": "ff000000", "backColor": "ffc4e40c"},
+    {"eventType": "P", "foreColor": "ff000000", "backColor": "ffc44331"},
+    {"eventType": "PR", "foreColor": "ff400000", "backColor": "ffffffff"},
+    {"eventType": "re", "foreColor": "ff000000", "backColor": "ff000000"},
+    {"eventType": "S", "foreColor": "ff100901", "backColor": "ffff8000"},
+    {"eventType": "VP", "foreColor": "ff060606", "backColor": "ffc0c0c2"},
+    {"eventType": "W", "foreColor": "ff000000", "backColor": "ffa9fd77"}
+  ];
 
   CommercialProgramModel? selectedProgram;
   CommercialShowOnTabModel? selectedShowOnTab;
@@ -152,23 +170,35 @@ class CommercialController extends GetxController {
                 .asMap()
                 .forEach((index, element) {
               mainCommercialShowDetailsList
-                  ?.add(CommercialShowOnTabModel.fromJson( element, index ));
+                  ?.add(CommercialShowOnTabModel.fromJson(element, index));
             });
             showCommercialDetailsList?.value = mainCommercialShowDetailsList!
                 .where((o) => o.bStatus.toString() == 'B')
                 .toList();
+
+            var cList = mainCommercialShowDetailsList!
+                .where((o) =>
+                    o.eventType.toString() == 'C' &&
+                    o.bStatus.toString() == 'B')
+                .toList();
+            commercialSpots.value = cList.length.toString();
+            print("commercialSpots value is : ${commercialSpots.value}");
+
+            double intTotalDuration = 0;
+            for (int i = 0; i <= cList.length - 1; i++) {
+              intTotalDuration = intTotalDuration +
+                  Utils.oldBMSConvertToSecondsValue(value: cList[i].duration!);
+            }
+            commercialDuration.value =
+                Utils.convertToTimeFromDouble(value: intTotalDuration);
+            print("commercialDuration value is : ${commercialDuration.value}");
 
             // commercialSpots.value =
             //     list['showDetails']['bindGridOutPut']['commercialSpots'] ?? "";
             // commercialDuration.value = list['showDetails']['bindGridOutPut']
             // ['commercialDuration'] ?? "";
 
-            print("fetchProgramSchedulingDetails() Called");
             updateTab();
-            // update(["programTable"]);
-            // update(["schedulingTable"]);
-            // update(["fpcMismatchTable"]);
-            // update(["misMatchTable"]);
             Get.back();
           },
           failed: (val) {
@@ -209,7 +239,7 @@ class CommercialController extends GetxController {
     } else if (selectedIndex.value == 2) {
       ///Filter bStatus E, calculate spot duration then calling ColorGrid filter
       showCommercialDetailsList?.value = mainCommercialShowDetailsList!
-      .where((o) => o.bStatus.toString() == 'E')
+          .where((o) => o.bStatus.toString() == 'E')
           .toList();
       showCommercialDetailsList?.refresh();
     } else {
@@ -238,16 +268,16 @@ class CommercialController extends GetxController {
       print(programFpcTimeSelected.toString());
       showCommercialDetailsList?.value = mainCommercialShowDetailsList!
           .where((o) =>
-      o.fpcTime.toString() == programFpcTimeSelected &&
-          o.bStatus.toString() == 'E')
+              o.fpcTime.toString() == programFpcTimeSelected &&
+              o.bStatus.toString() == 'E')
           .toList();
       showCommercialDetailsList?.refresh();
     } else {
       /// Filter B, calculate spot duration then calling ColorGrid filter.
       showCommercialDetailsList?.value = mainCommercialShowDetailsList!
           .where((o) =>
-      o.fpcTime.toString() == programFpcTimeSelected &&
-          o.bStatus.toString() == 'B')
+              o.fpcTime.toString() == programFpcTimeSelected &&
+              o.bStatus.toString() == 'B')
           .toList();
       showCommercialDetailsList?.refresh();
     }
@@ -361,6 +391,122 @@ class CommercialController extends GetxController {
         LoadingDialog.callErrorMessage1(msg: "Failed To Save Data");
       }
     }
+  }
+
+  Color colorSort(String eventType) {
+    // int? size = colorList?.length;
+    Color color = Colors.white;
+    // for (int i = 0; i <= size! - 1; i++) {
+    //   if (colorList![i]['eventType'] == eventType) {
+    //     color= Color(int.parse('0x${colorList![i]['backColor']}'));
+    //     print(colorList![i]['backColor']);
+    //   }else{
+    //     color = Colors.white;
+    //   }
+    // }
+
+    switch (eventType) {
+      case "A ":
+        color = Color(int.parse('0xffa9fd77'));
+        break;
+      case "A":
+        color = Color(int.parse('0xffa9fd77'));
+        break;
+      case "C ":
+        color = Color(int.parse('0xffffff80'));
+        break;
+      case "C":
+        color = Color(int.parse('0xffffff80'));
+        break;
+      case "CL ":
+        color = Color(int.parse('0xffffff80'));
+        break;
+      case "CL":
+        color = Color(int.parse('0xffffff80'));
+        break;
+      case "F ":
+        color = Color(int.parse('0xff887cfc'));
+        break;
+      case "F":
+        color = Color(int.parse('0xff887cfc'));
+        break;
+      case "GL ":
+        color = Color(int.parse('0xfffe46b8'));
+        break;
+      case "GL":
+        color = Color(int.parse('0xfffe46b8'));
+        break;
+      case "I ":
+        color = Color(int.parse('0xff027f45'));
+        break;
+      case "I":
+        color = Color(int.parse('0xff027f45'));
+        break;
+      case "L ":
+        color = Color(int.parse('0xff9bffcd'));
+        break;
+      case "L":
+        color = Color(int.parse('0xff9bffcd'));
+        break;
+      case "M ":
+        color = Color(int.parse('0xffc6f8c0'));
+        break;
+      case "M":
+        color = Color(int.parse('0xffc6f8c0'));
+        break;
+      case "N ":
+        color = Color(int.parse('0xff00f000'));
+        break;
+      case "N":
+        color = Color(int.parse('0xff00f000'));
+        break;
+      case "O ":
+        color = Color(int.parse('0xffc4e40c'));
+        break;
+      case "O":
+        color = Color(int.parse('0xffc4e40c'));
+        break;
+      case "P ":
+        color = Color(int.parse('0xffc44331'));
+        break;
+      case "P":
+        color = Color(int.parse('0xffc44331'));
+        break;
+      case "PR ":
+        color = Color(int.parse('0xffffffff'));
+        break;
+      case "PR":
+        color = Color(int.parse('0xffffffff'));
+        break;
+      case "re ":
+        color = Color(int.parse('0xff000000'));
+        break;
+      case "re":
+        color = Color(int.parse('0xff000000'));
+        break;
+      case "S ":
+        color = Color(int.parse('0xffff8000'));
+        break;
+      case "S":
+        color = Color(int.parse('0xffff8000'));
+        break;
+      case "VP ":
+        color = Color(int.parse('0xffc0c0c2'));
+        break;
+      case "VP":
+        color = Color(int.parse('0xffc0c0c2'));
+        break;
+      case "W ":
+        color = Color(int.parse('0xffa9fd77'));
+        break;
+      case "W":
+        color = Color(int.parse('0xffa9fd77'));
+        break;
+      default:
+        Colors.white;
+    }
+
+    return color;
   }
 
   void clear() {

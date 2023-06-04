@@ -1,14 +1,12 @@
-import 'package:bms_scheduling/app/modules/RoBooking/views/dummydata.dart';
-import 'package:bms_scheduling/widgets/DataGridShowOnly.dart';
-import 'package:bms_scheduling/widgets/DateTime/DateWithThreeTextField.dart';
-import 'package:bms_scheduling/widgets/FormButton.dart';
-import 'package:bms_scheduling/widgets/dropdown.dart';
-import 'package:bms_scheduling/widgets/radio_row.dart';
+import 'package:bms_scheduling/widgets/gridFromMap.dart';
 import 'package:flutter/material.dart';
-
 import 'package:get/get.dart';
-import 'package:pluto_grid/pluto_grid.dart';
+import 'package:url_launcher/url_launcher.dart';
 
+import '../../../../widgets/DateTime/DateWithThreeTextField.dart';
+import '../../../../widgets/FormButton.dart';
+import '../../../../widgets/PlutoGrid/src/pluto_grid.dart';
+import '../../../../widgets/dropdown.dart';
 import '../../../controller/HomeController.dart';
 import '../controllers/ros_distribution_controller.dart';
 
@@ -90,21 +88,23 @@ class RosDistributionView extends GetView<RosDistributionController> {
                       : null,
                   child: (controller.showDataModel.value.infoShowBucketList?.lstROSSpots?.isEmpty ?? true)
                       ? null
-                      : DataGridShowOnlyKeys(
+                      : DataGridFromMap(
                           mapData: (controller.showDataModel.value.infoShowBucketList?.lstROSSpots ?? []).map((e) => e.toJson()).toList(),
                           formatDate: false,
-                          onload: (event) {
-                            // controller.mainGSM = event.stateManager;
-                            // event.stateManager.setSelectingMode(PlutoGridSelectingMode.row);
-                            // event.stateManager.setSelecting(true);
-                            // event.stateManager.setCurrentCell(event.stateManager.firstCell, 0);
-                          },
-                          colorCallback: (row) =>
-                              (row.row.cells.containsValue(controller.mainGSM?.currentCell)) ? Colors.deepPurple.shade200 : Colors.white,
+                          // onload: (event) {
+                          //   controller.mainGSM = event.stateManager;
+                          //   event.stateManager.setSelectingMode(PlutoGridSelectingMode.row);
+                          //   event.stateManager.setSelecting(true);
+                          //   event.stateManager.setCurrentCell(event.stateManager.firstCell, 0);
+                          // },
+                          enableSort: true,
+                          // colorCallback: (row) =>
+                          //     (row.row.cells.containsValue(controller.mainGSM?.currentCell)) ? Colors.deepPurple.shade200 : Colors.white,
                           hideKeys: ['rid'],
                           widthRatio: 220,
                           hideCode: false,
-                          // mode: PlutoGridMode.normal,
+                          onSelected: (row) => controller.mainGridIdx = row.rowIdx ?? 0,
+                          mode: PlutoGridMode.selectWithOneTap,
                         ),
                 );
               }),
@@ -141,7 +141,18 @@ class RosDistributionView extends GetView<RosDistributionController> {
                                       btnText: btn["name"],
 
                                       // isEnabled: btn['isDisabled'],
-                                      callback: () {},
+                                      callback: () async {
+                                        String email = Uri.encodeComponent("mail@fluttercampus.com");
+                                        String subject = Uri.encodeComponent("Hello Flutter");
+                                        String body = Uri.encodeComponent("Hi! I'm Flutter Developer");
+                                        print(subject); //output: Hello%20Flutter
+                                        Uri mail = Uri.parse("mailto:$email?subject=$subject&body=$body");
+                                        if (await launchUrl(mail)) {
+                                          //email app opened
+                                        } else {
+                                          //email app is not opened
+                                        }
+                                      },
                                     )
                                   : btn["name"] == "Clear"
                                       ? FormButtonWrapper(
