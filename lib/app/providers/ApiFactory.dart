@@ -371,4 +371,14 @@ class ApiFactory {
   static String SLIDE_MASTER_GET_CHANNEL(String locationCode) => "$BASE_URL/api/SlideMaster/onLeaveLocation?LocationCode=$locationCode";
   static String get SLIDE_MASTER_RETRIVE_DATA => "$BASE_URL/api/SlideMaster/TapeID_Leave";
 ////////////////////////////// SLIDE-MASTER-API-END  //////////////////////////////////////////////
+  ///
+  ///
+  ///
+  ///
+  ///
+////////////////////////////// FINAL-AUDIT-MASTER-AT-API-START  ////////////////////////////////////////////
+  static String get FINAL_REPORT_AT_INITAIL => "$BASE_URL/api/FinalAuditReportAT/ZoneWiseInventoryLoad";
+  static String get FINAL_REPORT_AT_GET_DATA => "$BASE_URL/api/FinalAuditReportAT/GenrateClick";
+  static String FINAL_REPORT_AT_GET_CHANNELS(String lc) => "$BASE_URL/api/FinalAuditReportAT/GetChannel?LocationCode=$lc";
+////////////////////////////// FINAL-AUDIT-MASTER-AT-API-END  //////////////////////////////////////////////
 }
