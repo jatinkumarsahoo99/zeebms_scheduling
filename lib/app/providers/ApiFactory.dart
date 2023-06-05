@@ -224,6 +224,8 @@ class ApiFactory {
   static String FILLER_CHANNEL(locationCode) => "$BASE_URL/api/FillerScheduling/GetChannels/$locationCode";
 
   static String FILLER_CAPTION = "$BASE_URL/api/FillerScheduling/GetFillerCaption/";
+  static String get FILLER_IMPORT_EXCEL => "$BASE_URL/api/FillerScheduling/ImportFillerExcel";
+  static String get FILLER_IMPORT_FILLERS => "$BASE_URL/api/FillerScheduling/SaveImportExistingFillers";
 
   /// to Search Caption in dropdown
   static String FILLER_VALUE_BY_CAPTION(fillerCaption) => "$BASE_URL/api/FillerScheduling/GetFillerCaption/$fillerCaption";
@@ -382,6 +384,11 @@ class ApiFactory {
   ///
   ///
   ///
+////////////////////////////// FINAL-AUDIT-MASTER-AT-API-START  ////////////////////////////////////////////
+  static String get FINAL_REPORT_AT_INITAIL => "$BASE_URL/api/FinalAuditReportAT/ZoneWiseInventoryLoad";
+  static String get FINAL_REPORT_AT_GET_DATA => "$BASE_URL/api/FinalAuditReportAT/GenrateClick";
+  static String FINAL_REPORT_AT_GET_CHANNELS(String lc) => "$BASE_URL/api/FinalAuditReportAT/GetChannel?LocationCode=$lc";
+////////////////////////////// FINAL-AUDIT-MASTER-AT-API-END  //////////////////////////////////////////////
   ///
   ///
   ///

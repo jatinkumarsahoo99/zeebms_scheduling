@@ -198,18 +198,20 @@ class FillerController extends GetxController {
 
   importfile() async {
     LoadingDialog.call();
-    dio.FormData formData = dio.FormData.fromMap({
-      "LocationCode": selectedLocation!.key,
-      "ChannelCode": selectedChannel!.key,
-      "TelecastDate": df3.format(df1.parse(date_.text)),
-      'ImportFile': dio.MultipartFile.fromBytes(
-        importedFile.value!.bytes!.toList(),
-        filename: importedFile.value!.name,
-      )
-    });
+    dio.FormData formData = dio.FormData.fromMap(
+      {
+        "ChannelCode": selectedChannel?.key ?? "",
+        "LocationCode": selectedLocation?.key ?? "",
+        'ImportFile': dio.MultipartFile.fromBytes(
+          importedFile.value!.bytes!.toList(),
+          filename: importedFile.value!.name,
+        ),
+        "TelecastDate": DateFormat("dd/MM/yyyy").format(DateFormat("dd-MM-yyyy").parse(date_.text)), //05 / 31 / 2023,
+      },
+    );
 
     Get.find<ConnectorControl>().POSTMETHOD_FORMDATA(
-        api: ApiFactory.FILLER_IMPORT_FILE,
+        api: ApiFactory.FILLER_IMPORT_EXCEL,
         json: formData,
         fun: (value) {
           Get.back();
@@ -223,7 +225,6 @@ class FillerController extends GetxController {
 
   pickFile() async {
     FilePickerResult? result = await FilePicker.platform.pickFiles();
-
     if (result != null && result.files.single != null) {
       importedFile.value = result.files.single;
       fileController.text = result.files.single.name;
@@ -292,35 +293,33 @@ class FillerController extends GetxController {
   }
 
   getFillerValuesByImportFillersWithTapeCode() {
-    try {
-      var jsonRequest = {
-        "LocationCode": selectedImportLocation?.key.toString(),
-        "ChannelCode": selectedImportChannel?.key.toString(),
-        "ImportFromDate": df3.format(df1.parse(fillerFromDate_.text)),
-        "ImportToDate": df3.format(df1.parse(fillerToDate_.text)),
-        "TelecastTime": fromTime_.text ?? "",
-        "ImportTime": toTime_.text ?? ""
-      };
-      print("requestedData1>>>" + jsonEncode(json));
-      Get.find<ConnectorControl>().POSTMETHOD(
-          api: ApiFactory.FILLER_SAVE_IMPORT_FILLERS,
-          fun: (dynamic data) {
-            /// Date will be saved after importing Fillers with
-            /// selected Location, Channel, Date and time...
-            /// Response is "Data saved successfully"
-
-            // print('>>> Data from Tape Code : $data');
-            // /// Need to show date in Filler caption, filler dropdown,tape idseg dur,total dur
-            // fillerCode = data['fillerCode'];
-            // ///selectCaption.value = data['fillerCaption'];
-            // tapeId_.text = data['exportTapeCode'];
-            // segNo_.text = data['segmentNumber'];
-            // segDur_.text = data['fillerDuration'];
-          },
-          json: jsonRequest);
-    } catch (e) {
-      LoadingDialog.callErrorMessage1(msg: "Failed To Load Initial Data");
-    }
+    var jsonRequest = {
+      "LocationCode": selectedImportLocation?.key.toString(),
+      "ChannelCode": selectedImportChannel?.key.toString(),
+      "ImportFromDate": DateFormat("dd/MM/yyyy").format(DateFormat("dd-MM-yyyy").parse(fillerFromDate_.text)),
+      "ImportToDate": DateFormat("dd/MM/yyyy").format(DateFormat("dd-MM-yyyy").parse(fillerToDate_.text)),
+      "TelecastTime": fromTime_.text,
+      "ImportTime": toTime_.text,
+    };
+    LoadingDialog.call();
+    Get.find<ConnectorControl>().POSTMETHOD(
+      api: ApiFactory.FILLER_IMPORT_FILLERS,
+      fun: (dynamic data) {
+        Get.back();
+        if (data.toString() == "Saved Successfully!") {
+          LoadingDialog.callDataSaved(
+              msg: data.toString(),
+              callback: () {
+                Get.back();
+                Get.back();
+                Get.back();
+              });
+        } else {
+          LoadingDialog.showErrorDialog(data.toString());
+        }
+      },
+      json: jsonRequest,
+    );
   }
 
   fetchFPCDetails() {
@@ -389,7 +388,6 @@ class FillerController extends GetxController {
           });
     }
   }
-
 
   fetchGenerate() {
     if (selectedLocation == null) {

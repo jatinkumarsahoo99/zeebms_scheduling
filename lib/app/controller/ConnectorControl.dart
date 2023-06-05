@@ -133,8 +133,6 @@ class ConnectorControl extends GetConnect {
     }
   }
 
-
-
   POST_CALL_MS_TOKEN({required Function fun, required Function failed, required String employeId}) async {
     try {
       /* Map<String, dynamic> map = {
@@ -174,7 +172,6 @@ class ConnectorControl extends GetConnect {
     }
   }
 
-
   GETMETHODCALL_TOKEN({required String api, required String token, required Function fun}) async {
     print("<<>>>>>API CALL>>>>>>\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n" + api);
     try {
@@ -209,8 +206,6 @@ class ConnectorControl extends GetConnect {
       }
     }
   }
-
-
 
   POSTMETHOD({required String api, dynamic? json, required Function fun}) async {
     try {
@@ -265,7 +260,6 @@ class ConnectorControl extends GetConnect {
       }
     }
   }
-
 
   POSTMETHOD_FORMDATA({required String api, required dynamic json, int? timeout = 36000, required Function fun}) async {
     try {
@@ -326,8 +320,6 @@ class ConnectorControl extends GetConnect {
     }
   }
 
-
-
   POSTMETHOD_FORMDATAWITHTYPE({required String api, required dynamic json, int? timeout = 36000, required Function fun}) async {
     try {
       service.Response response = await dio.post(api,
@@ -387,12 +379,7 @@ class ConnectorControl extends GetConnect {
     }
   }
 
-
-  POSTMETHOD_FORMDATA_HEADER(
-      {required String api,
-        required dynamic json,
-        int? timeout = 36000,
-        required Function fun}) async {
+  POSTMETHOD_FORMDATA_HEADER({required String api, required dynamic json, int? timeout = 36000, required Function fun}) async {
     try {
       service.Response response = await dio.post(api,
           data: json,
@@ -402,22 +389,11 @@ class ConnectorControl extends GetConnect {
               headers: {
                 // "accept-language": (AppData.selectedLanguage=="English")?"en":"ar",
                 'Content-Type': 'application/json',
-                "Authorization": "Bearer " +
-                    ((Get.find<MainController>().user != null)
-                        ? Get.find<MainController>().user?.token ?? ""
-                        : ""),
+                "Authorization": "Bearer " + ((Get.find<MainController>().user != null) ? Get.find<MainController>().user?.token ?? "" : ""),
 
-                "PersonnelNo": ((Get.find<MainController>().user != null)
-                    ? Aes.encrypt(
-                    Get.find<MainController>().user?.personnelNo ?? "")
-                    : ""),
-                "Userid": ((Get.find<MainController>().user != null)
-                    ? Aes.encrypt(
-                    Get.find<MainController>().user?.logincode ?? "")
-                    : ""),
-                "FormName": ((Get.find<MainController>().formName != null)
-                    ? Get.find<MainController>().formName ?? ""
-                    : "")
+                "PersonnelNo": ((Get.find<MainController>().user != null) ? Aes.encrypt(Get.find<MainController>().user?.personnelNo ?? "") : ""),
+                "Userid": ((Get.find<MainController>().user != null) ? Aes.encrypt(Get.find<MainController>().user?.logincode ?? "") : ""),
+                "FormName": ((Get.find<MainController>().formName != null) ? Get.find<MainController>().formName ?? "" : "")
               },
               responseType: ResponseType.json));
       if (response.statusCode == 200 || response.statusCode == 201) {
@@ -462,12 +438,13 @@ class ConnectorControl extends GetConnect {
       }
     }
   }
+
   GET_METHOD_CALL_HEADER(
       {required String api,
-        // required String formName,
-        required Function fun,
-        Function? failed,
-        ResponseType? responseType}) async {
+      // required String formName,
+      required Function fun,
+      Function? failed,
+      ResponseType? responseType}) async {
     print("<<>>>>>API CALL>>>>>>\n\n\n\n\n\n\n\n\n" + api);
     try {
       service.Response response = await dio.get(api,
@@ -475,21 +452,10 @@ class ConnectorControl extends GetConnect {
             responseType: responseType,
             headers: {
               "Access-Control-Allow-Origin": "*",
-              "Authorization": "Bearer " +
-                  ((Get.find<MainController>().user != null)
-                      ? Get.find<MainController>().user?.token ?? ""
-                      : ""),
-              "PersonnelNo": ((Get.find<MainController>().user != null)
-                  ? Aes.encrypt(
-                  Get.find<MainController>().user?.personnelNo ?? "")
-                  : ""),
-              "Userid": ((Get.find<MainController>().user != null)
-                  ? Aes.encrypt(
-                  Get.find<MainController>().user?.logincode ?? "")
-                  : ""),
-              "FormName": ((Get.find<MainController>().formName != null)
-                  ? Get.find<MainController>().formName ?? ""
-                  : "")
+              "Authorization": "Bearer " + ((Get.find<MainController>().user != null) ? Get.find<MainController>().user?.token ?? "" : ""),
+              "PersonnelNo": ((Get.find<MainController>().user != null) ? Aes.encrypt(Get.find<MainController>().user?.personnelNo ?? "") : ""),
+              "Userid": ((Get.find<MainController>().user != null) ? Aes.encrypt(Get.find<MainController>().user?.logincode ?? "") : ""),
+              "FormName": ((Get.find<MainController>().formName != null) ? Get.find<MainController>().formName ?? "" : "")
             },
           ));
       if (response.statusCode == 200) {
