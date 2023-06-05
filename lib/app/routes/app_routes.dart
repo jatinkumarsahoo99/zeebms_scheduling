@@ -69,7 +69,7 @@ abstract class _Paths {
   static const COMMERCIAL = '/frmCommercialScheduling';
   static const RO_CANCELLATION = '/frmROCancellation';
   static const FILLER = '/frmFillerScheduling';
-  static const PROMOS = '/promos';
+  static const PROMOS = '/frmPromoScheduling';
   static const SPOT_PRIORITY = '/frmSpotPriority';
   static const RO_RESCHEDULE = '/frmRoReschedule';
   static const ROS_DISTRIBUTION = '/FrmRosDistribution';
