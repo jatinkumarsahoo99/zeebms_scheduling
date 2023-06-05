@@ -340,6 +340,10 @@ class ApiFactory {
       "$BASE_URL/api/Transmissionlog/GetLoadColours?locationcode=$locId&channelcode=$channelId&telecastdate=$telcastDt";
   static String TRANSMISSION_LOG_AUTO(String locId, String channelId, String telecastDt, bool isPromoReq, bool chkTxComm) =>
       "$BASE_URL/api/Transmissionlog/GetAutoClick?Locationcode=$locId&channelcode=$channelId&telecastdate=$telecastDt&addpromosAuto=$isPromoReq&chkTxCommercial=$chkTxComm";
+  static String TRANSMISSION_LOG_COMMERCIAL_CLICK(String locId, String channelId, String telecastDt, bool standBy) =>
+      "$BASE_URL/api/Transmissionlog/GetCommercialsClick?locationcode=$locId&channelcode=$channelId&Date=$telecastDt&standbyLog=$standBy";
+  static String TRANSMISSION_LOG_UPDATED_CLICK(String locId, String channelId, String telecastDt, bool standBy) =>
+      "$BASE_URL/api/Transmissionlog/GetUpdatedLogClick?Locationcode=$locId&channelcode=$channelId&Date=$telecastDt&standbyLog=$standBy";
 
   /////////////////////////// RO DISTRIBUTION START/////////////////////
   static String get RO_DISTRIBUTION_GET_LOCATION => "$BASE_URL/api/RosDistribution/GetRosDistribution";
