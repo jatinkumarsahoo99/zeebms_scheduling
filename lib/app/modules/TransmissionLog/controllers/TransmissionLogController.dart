@@ -23,6 +23,7 @@ class TransmissionLogController extends GetxController {
 
   //input controllers
   DropDownValue? selectLocation;
+  DropDownValue? selectTimeForCommercial;
   DropDownValue? selectChannel;
   PlutoGridStateManager? gridStateManager;
 

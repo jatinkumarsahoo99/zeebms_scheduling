@@ -261,10 +261,10 @@ class TransmissionLogView extends GetView<TransmissionLogController> {
                               Color color = Colors.white;
                               if (data != null) {
                                 // print("Index is>> ${colorData.rowIdx.toString()} >>>> ${data.backColor}");
-                                print(
+                                /*print(
                                     ">>>>>Color code is>>>>Index is>${colorData.rowIdx.toString()}" +
                                         ">>>>>>" +
-                                        data.backColor.toString());
+                                        data.backColor.toString());*/
                                 color = Color(int.parse('0x${data.backColor}'));
                               }
                               if (currentRow.cells["productName"]?.value !=
@@ -286,10 +286,10 @@ class TransmissionLogView extends GetView<TransmissionLogController> {
                                       Get.find<TransmissionLogController>()
                                           .getMatchWithKey(strPriority);
                                   if (data1 != null) {
-                                    print(
+                                    /*print(
                                         ">>>>>Color code is>>>>Index is>${colorData.rowIdx.toString()}" +
                                             ">>>>>>" +
-                                            data1.backColor.toString());
+                                            data1.backColor.toString());*/
                                     color = Color(
                                         int.parse('0x${data1.backColor}'));
                                   }
@@ -723,24 +723,22 @@ class TransmissionLogView extends GetView<TransmissionLogController> {
                 children: <Widget>[
                   Row(
                     children: [
-                      Obx(
-                        () => DropDownField.formDropDown1WidthMap(
+                      DropDownField.formDropDown1WidthMap(
                           model?.timelist?.toList(),
                           (value) {
-                            controller.selectLocation = value;
+                            controller.selectTimeForCommercial = value;
                             // controller.selectedLocationId.text = value.key!;
                             // controller.selectedLocationName.text = value.value!;
                             // controller.getChannelsBasedOnLocation(value.key!);
                           },
                           "Time",
                           0.12,
-                          isEnable: controller.isEnable.value,
-                          selected: controller.selectLocation,
+                          // isEnable: controller.isEnable.value,
+                          selected: controller.selectTimeForCommercial,
                           autoFocus: true,
                           dialogWidth: 330,
                           dialogHeight: Get.height * .7,
                         ),
-                      ),
                       Padding(
                         padding: const EdgeInsets.only(top: 15.0, left: 10),
                         child: FormButtonWrapper(
