@@ -5,8 +5,8 @@ import '../controllers/TransmissionLogController.dart';
 class TransmissionLogBinding extends Bindings {
   @override
   void dependencies() {
-    Get.lazyPut<TransmissionLogController>(
-      () => TransmissionLogController(),
+    Get.put<TransmissionLogController>(
+      TransmissionLogController(),
     );
   }
 }
