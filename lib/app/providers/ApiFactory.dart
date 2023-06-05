@@ -231,6 +231,8 @@ class ApiFactory {
   static String FILLER_VALUES_BY_FILLER_CODE(fillerCode) => "$BASE_URL/api/FillerScheduling/GetFillerValuesByFillerCode/$fillerCode";
 
   static String FILLER_VALUES_BY_TAPE_CODE(tapeCode) => "$BASE_URL/api/FillerScheduling/GetFillerValuesByTapeCode/$tapeCode";
+  static String FILLER_IMPORT_FILE = "$BASE_URL/api/FillerScheduling/ImportFillerExcel";
+  static String FILLER_SAVE_IMPORT_FILLERS = "$BASE_URL/api/FillerScheduling/SaveImportExistingFillers";
 
   static String FPC_DETAILS(locationCode, channelCode, date) =>
       "$BASE_URL/api/FillerScheduling/GetFpcDetails?LocationCode=$locationCode&ChannelCode=$channelCode&TelecastDate=$date";
@@ -375,4 +377,21 @@ class ApiFactory {
   static String SLIDE_MASTER_GET_CHANNEL(String locationCode) => "$BASE_URL/api/SlideMaster/onLeaveLocation?LocationCode=$locationCode";
   static String get SLIDE_MASTER_RETRIVE_DATA => "$BASE_URL/api/SlideMaster/TapeID_Leave";
 ////////////////////////////// SLIDE-MASTER-API-END  //////////////////////////////////////////////
+  ///
+  ///
+  ///
+  ///
+  ///
+  ///
+  ///
+  ///
+
+  ///////////////// RO BOOKING //////////////////////////
+  static String RO_BOOKING_INIT = "$BASE_URL/api/ROBooking/RoBookingOnLoad";
+  static String RO_BOOKING_CHANNNEL(locationCode) => "$BASE_URL/api/ROBooking/Location_Leave?LocationCode=$locationCode";
+
+  static String RO_BOOKING_EFFDT_LEAVE(String locId, String channelId, String effDt) =>
+      "$BASE_URL/api/ROBooking/EffectiveDate_Leave?LocationCode=$locId&ChannelCode=$channelId&EffectiveDate=$effDt";
+  static String RO_BOOKING_CLIENT_LEAVE(String locId, String channelId, String clientCode) =>
+      "$BASE_URL/api/ROBooking/ClientInfo?LocationCode=$locId&ChannelCode=$channelId&ClientCode=$clientCode";
 }
