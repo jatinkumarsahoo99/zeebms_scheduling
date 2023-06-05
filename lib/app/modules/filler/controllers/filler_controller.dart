@@ -200,7 +200,7 @@ class FillerController extends GetxController {
     LoadingDialog.call();
     dio.FormData formData = dio.FormData.fromMap({
       "LocationCode": selectedLocation!.key,
-      "ChannelCode": selectChannel!.key,
+      "ChannelCode": selectedChannel!.key,
       "TelecastDate": df3.format(df1.parse(date_.text)),
       'ImportFile': dio.MultipartFile.fromBytes(
         importedFile.value!.bytes!.toList(),
@@ -390,85 +390,6 @@ class FillerController extends GetxController {
     }
   }
 
-  /// Useful in Columns
-  loadColumnBeams(column) {
-    List<PlutoRow> rows = [];
-    for (Map row in beams.where((element) => element["beam"] == column)) {
-      Map<String, PlutoCell> cells = {};
-
-      for (var element in row.entries) {
-        print(element.value);
-        cells[element.key] = PlutoCell(
-          value: element.key == "selected" || element.value == null
-              ? ""
-              : element.key.toString().toLowerCase().contains("date")
-                  ? (element.value.toString().contains('T') && element.value.toString().split('T')[1] == '00:00:00')
-                      ? DateFormat("dd/MM/yyyy").format(DateFormat('yyyy-MM-ddTHH:mm:ss').parse(element.value.toString()))
-                      : DateFormat("dd/MM/yyyy HH:mm:ss").format(DateFormat('yyyy-MM-ddTHH:mm:ss').parse(element.value.toString()))
-                  // DateFormat("dd-MM-yyyy hh:mm").format(DateTime.parse(element.value.toString().replaceAll("T", " ")))
-                  : element.value.toString(),
-        );
-      }
-
-      rows.add(PlutoRow(
-        cells: cells,
-      ));
-    }
-    if (bmsReportStateManager != null) {
-      print("state working");
-
-      bmsReportStateManager!.removeRows(bmsReportStateManager!.rows);
-      bmsReportStateManager!.resetCurrentState();
-      bmsReportStateManager!.appendRows(rows);
-    }
-    beamRows = [];
-    update(["beams"]);
-    beamRows = rows;
-    rows = [];
-    update(["beams"]);
-  }
-
-  /// Useful in Columns
-  void loadBeams() {
-    if (conflictReportStateManager.currentRow == null) {
-      return;
-    }
-    // log("Rows");
-    // log(conflictReportStateManager.currentRow!.cells["Program"]!.value);
-    List<PlutoRow> rows = [];
-    for (Map row in beams.where((element) => element["program"] == conflictReportStateManager.currentRow!.cells["Program"]!.value)) {
-      Map<String, PlutoCell> cells = {};
-
-      for (var element in row.entries) {
-        cells[element.key] = PlutoCell(
-          value: element.key == "selected" || element.value == null
-              ? ""
-              : element.key.toString().toLowerCase().contains("date")
-                  ? (element.value.toString().contains('T') && element.value.toString().split('T')[1] == '00:00:00')
-                      ? DateFormat("dd/MM/yyyy").format(DateFormat('yyyy-MM-ddTHH:mm:ss').parse(element.value.toString()))
-                      : DateFormat("dd/MM/yyyy HH:mm:ss").format(DateFormat('yyyy-MM-ddTHH:mm:ss').parse(element.value.toString()))
-                  // ? DateFormat("dd/MM/yyyy hh:mm").format(DateTime.parse(element.value.toString().replaceAll("T", " ")))
-                  : element.value.toString(),
-        );
-      }
-
-      rows.add(PlutoRow(
-        cells: cells,
-      ));
-    }
-    if (bmsReportStateManager != null) {
-      print("state working");
-
-      bmsReportStateManager!.removeRows(bmsReportStateManager!.rows);
-      bmsReportStateManager!.resetCurrentState();
-      bmsReportStateManager!.appendRows(rows);
-    }
-    beamRows = [];
-    update(["beams"]);
-    beamRows = rows;
-    rows = [];
-    update(["beams"]);
-  }
 
   fetchGenerate() {
     if (selectedLocation == null) {

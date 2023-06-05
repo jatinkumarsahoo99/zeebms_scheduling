@@ -9,7 +9,6 @@ import '../../../../widgets/dropdown.dart';
 import '../../../../widgets/gridFromMap.dart';
 import '../../../../widgets/input_fields.dart';
 import '../../../controller/HomeController.dart';
-import '../../../providers/SizeDefine.dart';
 import '../../filler/controllers/filler_controller.dart';
 import '../controllers/promos_controller.dart';
 
@@ -20,8 +19,7 @@ class PromosView extends GetView<PromosController> {
   var formName = 'Scheduling Promo';
 
   void handleOnRowChecked(PlutoGridOnRowCheckedEvent event) {}
-  //PromosController controllerX = Get.put(PromosController());
-  FillerController controllerX = Get.put(FillerController());
+  PromosController controllerX = Get.put(PromosController());
 
   @override
   Widget build(BuildContext context) {
@@ -56,7 +54,7 @@ class PromosView extends GetView<PromosController> {
                                   Padding(
                                     padding:
                                         const EdgeInsets.fromLTRB(0, 5, 0, 5),
-                                    child: GetBuilder<FillerController>(
+                                    child: GetBuilder<PromosController>(
                                       id: "initialData",
                                       builder: (control) {
                                         return Row(
@@ -127,138 +125,23 @@ class PromosView extends GetView<PromosController> {
                                       },
                                     ),
                                   ),
-                                  // Padding(
-                                  //   padding:
-                                  //       const EdgeInsets.fromLTRB(0, 5, 0, 5),
-                                  //   child: GetBuilder<PromosController>(
-                                  //     id: "initialData",
-                                  //     builder: (control) {
-                                  //       return Expanded(
-                                  //         child: Row(
-                                  //           children: [
-                                  //             Obx(
-                                  //               () => DropDownField
-                                  //                   .formDropDown1WidthMap(
-                                  //                 controllerX.locations.value,
-                                  //                 (value) {
-                                  //                   controllerX.selectLocation =
-                                  //                       value;
-                                  //                   // controllerX.selectedLocationId.text = value.key!;
-                                  //                   // controllerX.selectedLocationName.text = value.value!;
-                                  //                   // controller.getChannelsBasedOnLocation(value.key!);
-                                  //                 },
-                                  //                 "Location",
-                                  //                 0.14,
-                                  //                 isEnable: controllerX
-                                  //                     .isEnable.value,
-                                  //                 selected: controllerX
-                                  //                     .selectLocation,
-                                  //                 autoFocus: true,
-                                  //                 dialogWidth: 330,
-                                  //                 dialogHeight: Get.height * .7,
-                                  //               ),
-                                  //             ),
-                                  //             const SizedBox(width: 10),
-                                  //             Obx(() {
-                                  //               return DropDownField
-                                  //                   .formDropDown1Width(
-                                  //                 Get.context!,
-                                  //                 controllerX.channelList ?? [],
-                                  //                 (value) {
-                                  //                   controllerX
-                                  //                           .selectedChannel =
-                                  //                       value;
-                                  //                 },
-                                  //                 "Channel",
-                                  //                 controllerX.widthSize + 0.02,
-                                  //                 paddingLeft: 5,
-                                  //                 searchReq: true,
-                                  //                 isEnable: control
-                                  //                     .channelEnable.value,
-                                  //                 selected: controllerX
-                                  //                     .selectedChannelEnv,
-                                  //                 dialogHeight: Get.height * .7,
-                                  //               );
-                                  //             }),
-                                  //             const SizedBox(width: 10),
-                                  //             DateWithThreeTextField(
-                                  //               title: "From Date",
-                                  //               mainTextController:
-                                  //                   controllerX.date_,
-                                  //               widthRation: 0.10,
-                                  //             ),
-                                  //             Padding(
-                                  //               padding: const EdgeInsets.only(
-                                  //                   left: 10, top: 17.0),
-                                  //               child: FormButton(
-                                  //                 btnText: "Show Details",
-                                  //                 callback: () {},
-                                  //               ),
-                                  //             ),
-                                  //             const SizedBox(width: 10),
-                                  //             Padding(
-                                  //               padding: const EdgeInsets.only(
-                                  //                   top: 17.0),
-                                  //               child: FormButton(
-                                  //                 btnText: "Import",
-                                  //                 callback: () {},
-                                  //               ),
-                                  //             ),
-                                  //             Padding(
-                                  //               padding: const EdgeInsets.only(
-                                  //                   left: 10, top: 17.0),
-                                  //               child: FormButton(
-                                  //                 btnText: "Delete",
-                                  //                 callback: () {},
-                                  //               ),
-                                  //             ),
-                                  //           ],
-                                  //         ),
-                                  //       );
-                                  //     },
-                                  //   ),
-                                  // ),
                                   Expanded(
-                                    //flex: 1,
-                                    child: GetBuilder<FillerController>(
-                                        init: FillerController(),
-                                        id: "eventTable",
-                                        builder: (controller) {
-                                          if (controller
-                                                  .conflictReport.isEmpty ||
-                                              controller.beams.isEmpty) {
-                                            return Column(
-                                              crossAxisAlignment:
-                                                  CrossAxisAlignment.start,
-                                              children: [
-                                                fillerTable(context),
-                                              ],
-                                            );
-                                          } else {
-                                            return Container();
-                                          }
-                                        }),
+                                    child: Column(
+                                    crossAxisAlignment:
+                                    CrossAxisAlignment.start,
+                                    children: [
+                                      programTable(context),
+                                    ],
+                                  ),
                                   ),
                                   Expanded(
-                                    //flex: 1,
-                                    child: GetBuilder<FillerController>(
-                                        init: FillerController(),
-                                        id: "eventCaptionTable",
-                                        builder: (controller) {
-                                          if (controller
-                                                  .conflictReport.isEmpty ||
-                                              controller.beams.isEmpty) {
-                                            return Column(
-                                              crossAxisAlignment:
-                                                  CrossAxisAlignment.start,
-                                              children: [
-                                                fillerSegmentTable(context),
-                                              ],
-                                            );
-                                          } else {
-                                            return Container();
-                                          }
-                                        }),
+                                    child: Column(
+                                      crossAxisAlignment:
+                                      CrossAxisAlignment.start,
+                                      children: [
+                                        policyTable(context),
+                                      ],
+                                    ),
                                   ),
                                   const Padding(
                                       padding: EdgeInsets.fromLTRB(0, 10, 0, 0),
@@ -279,7 +162,7 @@ class PromosView extends GetView<PromosController> {
                                               widthRatio: 0.09,
                                               paddingLeft: 5,
                                               hintTxt: "Available",
-                                              controller: controllerX.segNo_,
+                                              controller: controllerX.available_,
                                               maxLen: 10),
                                         ),
                                         Padding(
@@ -289,7 +172,7 @@ class PromosView extends GetView<PromosController> {
                                               widthRatio: 0.09,
                                               paddingLeft: 5,
                                               hintTxt: "Scheduled",
-                                              controller: controllerX.segNo_,
+                                              controller: controllerX.scheduled_,
                                               maxLen: 10),
                                         ),
                                         Padding(
@@ -299,7 +182,7 @@ class PromosView extends GetView<PromosController> {
                                               widthRatio: 0.09,
                                               paddingLeft: 5,
                                               hintTxt: "Count",
-                                              controller: controllerX.segNo_,
+                                              controller: controllerX.count_,
                                               maxLen: 10),
                                         ),
                                       ],
@@ -327,7 +210,7 @@ class PromosView extends GetView<PromosController> {
                                               widthRatio: .15,
                                               paddingLeft: 5,
                                               hintTxt: "Promo Caption",
-                                              controller: controllerX.tapeId_,
+                                              controller: controllerX.promoCaption_,
                                               maxLen: 10),
                                         ),
                                       ),
@@ -342,7 +225,7 @@ class PromosView extends GetView<PromosController> {
                                               paddingLeft: 5,
                                               isEnable: false,
                                               hintTxt: "",
-                                              controller: controllerX.segNo_,
+                                              controller: controllerX.promoCaptionDur_,
                                               maxLen: 10),
                                         ),
                                       ),
@@ -359,7 +242,7 @@ class PromosView extends GetView<PromosController> {
                                                   (Get.width * 0.2) / 2 + 7,
                                               paddingLeft: 5,
                                               hintTxt: "Promo Id",
-                                              controller: controllerX.tapeId_,
+                                              controller: controllerX.promoId_,
                                               maxLen: 10),
                                         ),
                                       ),
@@ -373,12 +256,12 @@ class PromosView extends GetView<PromosController> {
                                         padding: const EdgeInsets.only(
                                             bottom: 8.0, top: 8.0),
                                         child: Row(children: [
-                                          Radio(
-                                            value: 0,
-                                            groupValue:
-                                                controllerX.selectedAfter,
-                                            onChanged: (int? value) {},
-                                          ),
+                                          // Radio(
+                                          //   value: 0,
+                                          //   groupValue:
+                                          //       controllerX.selectedAfter,
+                                          //   onChanged: (int? value) {},
+                                          // ),
                                           const Text('My')
                                         ]),
                                       ),
@@ -408,7 +291,7 @@ class PromosView extends GetView<PromosController> {
                                       ),
                                     ],
                                   ),
-                                  programTable(context)
+                                  captionTable(context)
                                 ],
                               ),
                             ),
@@ -451,127 +334,99 @@ class PromosView extends GetView<PromosController> {
         });
   }
 
-  Widget fillerTable(context) {
-    return GetBuilder<FillerController>(
-        id: "fillerTable",
-        // init: CreateBreakPatternController(),
-        builder: (controller) {
-          if (controllerX.fillerDailyFpcList != null &&
-              (controllerX.fillerDailyFpcList?.isNotEmpty)!) {
-            // final key = GlobalKey();
-            return DataGridFromMap(
-              mapData: (controllerX.fillerDailyFpcList
-                  ?.map((e) => e.toJson())
-                  .toList())!,
-              widthRatio: (Get.width * 0.2) / 2 + 7,
-              // mode: PlutoGridMode.select,
-              onSelected: (plutoGrid) {
-                controllerX.selectedDailyFPC =
-                    controllerX.fillerDailyFpcList![plutoGrid.rowIdx!];
-                print(jsonEncode(controllerX.selectedDailyFPC?.toJson()));
-              },
-            );
-          } else {
-            return Expanded(
-              child: Card(
-                clipBehavior: Clip.hardEdge,
-                shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(0), // if you need this
-                  side: BorderSide(
-                    color: Colors.grey.shade300,
-                    width: 1,
-                  ),
-                ),
-                child: Container(
-                  height: Get.height - (4 * kToolbarHeight),
-                ),
-              ),
-            );
-          }
-        });
-  }
-
-  Widget fillerSegmentTable(context) {
-    return GetBuilder<FillerController>(
-        id: "fillerSegmentTable",
-        // init: CreateBreakPatternController(),
-        builder: (controller) {
-          if (controllerX.fillerSegmentList != null &&
-              (controllerX.fillerSegmentList?.isNotEmpty)!) {
-            // final key = GlobalKey();
-            return Expanded(
-              // height: 400,
-              child: DataGridFromMap(
-                mapData: (controllerX.fillerSegmentList
-                    ?.map((e) => e.toJson())
-                    .toList())!,
-                widthRatio: (Get.width * 0.2) / 2 + 7,
-                // mode: PlutoGridMode.select,
-                onSelected: (plutoGrid) {
-                  controllerX.selectedSegment =
-                      controllerX.fillerSegmentList![plutoGrid.rowIdx!];
-                  print(jsonEncode(controllerX.selectedSegment?.toJson()));
-                },
-              ),
-            );
-          } else {
-            return Expanded(
-              child: Card(
-                clipBehavior: Clip.hardEdge,
-                shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(0), // if you need this
-                  side: BorderSide(
-                    color: Colors.grey.shade300,
-                    width: 1,
-                  ),
-                ),
-                child: Container(
-                  height: Get.height - (4 * kToolbarHeight),
-                ),
-              ),
-            );
-          }
-        });
-  }
-
   Widget programTable(context) {
     return GetBuilder<PromosController>(
         id: "programTable",
-        // init: CreateBreakPatternController(),
         builder: (controller) {
-          if (controllerX.fillerDailyFpcList != null &&
-              (controllerX.fillerDailyFpcList?.isNotEmpty)!) {
+          if ((controllerX.programList.isNotEmpty)!) {
             // final key = GlobalKey();
+            return DataGridFromMap(
+              mapData: (controllerX.programList
+                  .map((e) => e.toJson())
+                  .toList()),
+              widthRatio: (Get.width * 0.2) / 2 + 7,
+              // mode: PlutoGridMode.select,
+              onSelected: (plutoGrid) {
+              },
+            );
+          } else {
+            return Container(
+              decoration: BoxDecoration(
+                border: Border.all(
+                  width: 1,
+                  color: Colors.grey.shade300,
+                ),
+                borderRadius: BorderRadius.circular(0),
+              ),
+              clipBehavior: Clip.hardEdge,
+              //child: const PleaseWaitCard(),
+            );
+          }
+        });
+  }
+
+  Widget policyTable(context) {
+    return GetBuilder<PromosController>(
+        id: "policyTable",
+        builder: (controller) {
+          if ((controllerX.policyList.isNotEmpty)) {
             return Expanded(
               // height: 400,
               child: DataGridFromMap(
-                mapData: (controllerX.fillerDailyFpcList
-                    ?.map((e) => e.toJson())
-                    .toList())!,
+                mapData: (controllerX.policyList
+                    .map((e) => e.toJson())
+                    .toList()),
                 widthRatio: (Get.width * 0.2) / 2 + 7,
                 // mode: PlutoGridMode.select,
                 onSelected: (plutoGrid) {
-                  controllerX.selectedDailyFPC =
-                      controllerX.fillerDailyFpcList![plutoGrid.rowIdx!];
-                  print(jsonEncode(controllerX.selectedDailyFPC?.toJson()));
                 },
               ),
             );
           } else {
-            return Expanded(
-              child: Card(
-                clipBehavior: Clip.hardEdge,
-                shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(0), // if you need this
-                  side: BorderSide(
-                    color: Colors.grey.shade300,
-                    width: 1,
-                  ),
+            return Container(
+              decoration: BoxDecoration(
+                border: Border.all(
+                  width: 1,
+                  color: Colors.grey.shade300,
                 ),
-                child: Container(
-                  height: Get.height - (4 * kToolbarHeight),
-                ),
+                borderRadius: BorderRadius.circular(0),
               ),
+              clipBehavior: Clip.hardEdge,
+              //child: const PleaseWaitCard(),
+            );
+          }
+        });
+  }
+
+  Widget captionTable(context) {
+    return GetBuilder<PromosController>(
+        id: "captionTable",
+        builder: (controller) {
+          if ((controllerX.captionList.isNotEmpty)!) {
+            // final key = GlobalKey();
+            return Expanded(
+              // height: 400,
+              child: DataGridFromMap(
+                mapData: (controllerX.captionList
+                    .map((e) => e.toJson())
+                    .toList())!,
+                widthRatio: (Get.width * 0.2) / 2 + 7,
+                // mode: PlutoGridMode.select,
+                onSelected: (plutoGrid) {
+                },
+              ),
+            );
+          } else {
+            return Container(
+              decoration: BoxDecoration(
+                border: Border.all(
+                  width: 1,
+                  color: Colors.grey.shade300,
+                ),
+                borderRadius: BorderRadius.circular(0),
+              ),
+              clipBehavior: Clip.hardEdge,
+              //child: const PleaseWaitCard(),
             );
           }
         });
