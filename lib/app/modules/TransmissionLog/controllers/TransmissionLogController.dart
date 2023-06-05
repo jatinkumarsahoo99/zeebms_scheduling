@@ -818,4 +818,8 @@ class TransmissionLogController extends GetxController {
       LoadingDialog.callInfoMessage("Nothing is selected");
     }
   }
+
+  dataGridRowFilter(){
+    // gridStateManager.filteredCellValue(column: column)
+  }
 }
