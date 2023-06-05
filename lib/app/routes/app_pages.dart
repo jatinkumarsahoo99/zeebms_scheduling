@@ -100,7 +100,7 @@ class AppPages {
     ),
     GetPage(
       name: _Paths.PROMOS,
-      page: () => PromosView(),
+      page: () => AuthGuard1(childName: _Paths.PROMOS),
       binding: PromosBinding(),
     ),
     GetPage(

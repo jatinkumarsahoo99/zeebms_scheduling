@@ -86,6 +86,7 @@ class FillerController extends GetxController {
   DateTime selectDate = DateTime.now();
   DateTime? selectedDate = DateTime.now();
   DateFormat df = DateFormat("dd/MM/yyyy");
+  DateFormat df3 = DateFormat("MM/dd/yyyy");
   DateFormat df1 = DateFormat("dd-MM-yyyy");
   DateFormat df2 = DateFormat("MM-dd-yyyy");
   DateFormat dfFinal = DateFormat("yyyy-MM-ddThh:mm:ss");
