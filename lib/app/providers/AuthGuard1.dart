@@ -13,6 +13,7 @@ import 'package:bms_scheduling/app/modules/RoReschedule/views/ro_reschedule_view
 import 'package:bms_scheduling/app/modules/RosDistribution/views/ros_distribution_view.dart';
 import 'package:bms_scheduling/app/modules/SalesAuditExtraSpotsReport/views/sales_audit_extra_spots_report_view.dart';
 import 'package:bms_scheduling/app/modules/SalesAuditNotTelecastReport/views/SalesAuditNotTelecastReportView.dart';
+import 'package:bms_scheduling/app/modules/promos/views/promos_view.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import '../../widgets/LoadingScreen.dart';
@@ -78,6 +79,9 @@ class AuthGuard1 extends StatelessWidget {
               break;
             case Routes.FILLER:
               currentWidget = FillerView();
+              break;
+            case Routes.PROMOS:
+              currentWidget = PromosView();
               break;
             case Routes.COMMERCIAL:
               currentWidget = CommercialView();
