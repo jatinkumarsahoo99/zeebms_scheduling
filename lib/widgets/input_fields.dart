@@ -704,6 +704,7 @@ class InputFields {
     Function(String)? onchanged,
     bool isTime = false,
     bool isEnable = true,
+    FocusNode? textFieldFN,
   }) {
     if (controller.text.isEmpty) {
       controller.text = isTime ? "00:00:00" : "00:00:00:00";
@@ -716,6 +717,7 @@ class InputFields {
           widthRatio: widthRatio,
           isTime: isTime,
           isEnable: isEnable,
+          textFieldFN: textFieldFN,
           onFocusChange: (time) {
             if (onEditComplete != null) {
               onEditComplete(time);
@@ -938,6 +940,7 @@ class InputFields {
     double widthRatio = .4,
     void Function(String time)? onFocusChange,
     bool isTime = true,
+    FocusNode? textFieldFN,
   }) {
     bool backSpaceEnter = false;
     setCursor(int index) {
@@ -1088,6 +1091,7 @@ class InputFields {
               height: SizeDefine.heightInputField,
               child: TextFormField(
                 enabled: isEnable,
+                focusNode: textFieldFN,
                 maxLength: (isTime ? 8 : 11),
                 controller: controller,
                 decoration: InputDecoration(

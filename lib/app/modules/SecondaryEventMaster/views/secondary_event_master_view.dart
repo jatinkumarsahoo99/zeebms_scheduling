@@ -36,11 +36,12 @@ class SecondaryEventMasterView extends GetView<SecondaryEventMasterController> {
                     Obx(() {
                       return DropDownField.formDropDown1WidthMap(
                         controller.locationList.value,
-                        (val) => controller.selectedLoc = val,
+                        controller.getChannels,
                         "Location",
                         .23,
                         autoFocus: true,
                         selected: controller.selectedLoc,
+                        inkWellFocusNode: controller.locFN,
                       );
                     }),
                     SizedBox(width: 20),
@@ -66,29 +67,36 @@ class SecondaryEventMasterView extends GetView<SecondaryEventMasterController> {
                           return RadioRow(
                             items: ['Bug', 'Aston'],
                             groupValue: controller.selectedRadio.value,
-                            disabledRadios: controller.controllsEnabled.value ? ['Bug', 'Aston'] : null,
+                            disabledRadios: !(controller.controllsEnabled.value) ? ['Bug', 'Aston'] : null,
+                            onchange: (va) => controller.selectedRadio = va,
                           );
                         }),
                       ),
                       SizedBox(width: 20),
-                      InputFields.formField1(
-                        hintTxt: "Event Name",
-                        controller: TextEditingController(),
-                        width: 0.225,
+                      Obx(
+                        () {
+                          return InputFields.formField1(
+                            hintTxt: "Tx No",
+                            controller: controller.txNoTC,
+                            width: 0.225,
+                            isEnable: controller.controllsEnabled.value,
+                            focusNode: controller.txNOFN,
+                          );
+                        },
                       ),
                     ],
                   ),
                 ),
                 InputFields.formField1(
                   hintTxt: "Event Name",
-                  controller: TextEditingController(),
+                  controller: controller.eventNameTC,
+                  focusNode: controller.eventNameFN,
                   width: 0.475,
                 ),
                 SizedBox(height: 4),
                 InputFields.formField1(
                   hintTxt: "TX Caption",
                   controller: controller.txCaptionTC,
-                  focusNode: controller.txCaptionFN,
                   width: 0.475,
                 ),
 
@@ -97,28 +105,26 @@ class SecondaryEventMasterView extends GetView<SecondaryEventMasterController> {
                   child: Row(
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: [
-                      TimeWithThreeTextField(
-                        title: "SOM",
-                        mainTextController: TextEditingController(),
-                        widthRation: 0.15,
-                        isTime: false,
+                      InputFields.formFieldNumberMask(
+                        hintTxt: "SOM",
+                        controller: controller.somTC,
+                        widthRatio: .15,
                       ),
                       SizedBox(width: 16),
-                      TimeWithThreeTextField(
-                        title: "EOM",
-                        mainTextController: TextEditingController(),
-                        widthRation: 0.15,
-                        isTime: false,
-                        onFocusChange: (time) => controller.calculateDuration(),
+                      InputFields.formFieldNumberMask(
+                        hintTxt: "EOM",
+                        controller: controller.eomTC,
+                        widthRatio: .15,
+                        textFieldFN: controller.eomFN,
                       ),
                       SizedBox(width: 16),
-                      TimeWithThreeTextField(
-                        title: "Duration",
-                        mainTextController: TextEditingController(),
-                        widthRation: 0.15,
-                        isEnable: false,
-                        isTime: false,
-                      ),
+                      Obx(() {
+                        return InputFields.formFieldDisable(
+                          hintTxt: "Duration",
+                          value: controller.duration.value,
+                          widthRatio: .15,
+                        );
+                      }),
                     ],
                   ),
                 ),
@@ -129,13 +135,13 @@ class SecondaryEventMasterView extends GetView<SecondaryEventMasterController> {
                     children: [
                       DateWithThreeTextField(
                         title: "Start Date",
-                        mainTextController: TextEditingController(),
+                        mainTextController: controller.startDateTC,
                         widthRation: .230,
                       ),
                       SizedBox(width: 20),
                       DateWithThreeTextField(
                         title: "End Date",
-                        mainTextController: TextEditingController(),
+                        mainTextController: controller.endDateTC,
                         widthRation: .230,
                       )
                     ],
@@ -163,7 +169,7 @@ class SecondaryEventMasterView extends GetView<SecondaryEventMasterController> {
                                 for (var btn in btncontroller.buttons!)
                                   FormButtonWrapper(
                                     btnText: btn["name"],
-                                    callback: btn["name"] == "Save" ? null : () => controller.formHandler(btn['name'].toString()),
+                                    callback: () => controller.formHandler(btn['name'].toString()),
                                   ),
                               ],
                             ),

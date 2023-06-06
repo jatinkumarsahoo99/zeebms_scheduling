@@ -404,6 +404,16 @@ class ApiFactory {
   ///
   ///
   ///
+  ////////////////////////////// PROMO-API-START  ////////////////////////////////////////////
+  static String get PROMOS_GET_LOCATION => "$BASE_URL/api/PromoScheduling/GetLocations";
+  // static String get SECONDARY_EVENT_MASTER_SAVE_DATA => "$BASE_URL/api/SecondaryEventMaster/Save";
+  static String PROMOS_GET_CHANNELS(String lc) => "$BASE_URL/api/SecondaryEventMaster/GetChannels?LocationCode=$lc";
+  // static String SECONDARY_EVENT_MASTER_DISPLAY_DATA(String txid) => "$BASE_URL/api/SecondaryEventMaster/DisplaySecondaryEvent?TXid=$txid";
+  ////////////////////////////// PROMO-API-END  //////////////////////////////////////////////
+  ///
+  ///
+  ///
+  ///
   ///
   ////////////////////////////// FINAL-AUDIT-MASTER-BT-API-START  ////////////////////////////////////////////
   static String get FINAL_REPORT_BT_INITAIL => "$BASE_URL/api/FinalAuditReportBT/FormLoad";

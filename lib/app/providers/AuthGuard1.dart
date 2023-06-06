@@ -7,6 +7,7 @@ import 'package:bms_scheduling/app/modules/ImportDigitextRunOrder/views/import_d
 import 'package:bms_scheduling/app/modules/MamWorkOrders/views/mam_work_orders_view.dart';
 import 'package:bms_scheduling/app/modules/RoBooking/views/ro_booking_view.dart';
 import 'package:bms_scheduling/app/modules/RoCancellation/views/ro_cancellation_view.dart';
+import 'package:bms_scheduling/app/modules/SecondaryEventMaster/views/secondary_event_master_view.dart';
 import 'package:bms_scheduling/app/modules/commercial/views/commercial_view.dart';
 import 'package:bms_scheduling/app/modules/filler/views/filler_view.dart';
 import 'package:bms_scheduling/app/modules/RoReschedule/views/ro_reschedule_view.dart';
@@ -55,6 +56,9 @@ class AuthGuard1 extends StatelessWidget {
           switch (childName) {
             case Routes.HOME:
               currentWidget = HomeView();
+              break;
+            case Routes.SECONDARY_EVENT_MASTER:
+              currentWidget = SecondaryEventMasterView();
               break;
             case Routes.TRANSMISSION_LOG:
               currentWidget = TransmissionLogView();
