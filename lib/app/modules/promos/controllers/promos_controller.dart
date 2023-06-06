@@ -10,8 +10,7 @@ import '../../../data/DropDownValue.dart';
 import '../../../data/PermissionModel.dart';
 import '../../../data/system_envirtoment.dart';
 
-class PromosController extends GetxController  {
-
+class PromosController extends GetxController {
   var locations = RxList<DropDownValue>();
   var channels = RxList<DropDownValue>([]);
   RxBool isEnable = RxBool(true);
@@ -49,8 +48,7 @@ class PromosController extends GetxController  {
   PlutoGridStateManager? bmsReportStateManager;
   PlutoGridStateManager? locChanStateManager;
   Map? initData;
-  TextEditingController refDateContrl = TextEditingController(
-      text: DateFormat("dd-MM-yyyy").format(DateTime.now()));
+  TextEditingController refDateContrl = TextEditingController(text: DateFormat("dd-MM-yyyy").format(DateTime.now()));
 
   List<SystemEnviroment>? channelList = [];
   List<SystemEnviroment>? locationList = [];
@@ -172,5 +170,4 @@ class PromosController extends GetxController  {
     Get.find<HomeController>().selectChild1.value = null;
     Get.delete<PromosController>();
   }
-
 }

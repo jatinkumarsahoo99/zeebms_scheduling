@@ -384,11 +384,32 @@ class ApiFactory {
   ///
   ///
   ///
-////////////////////////////// FINAL-AUDIT-MASTER-AT-API-START  ////////////////////////////////////////////
+  ////////////////////////////// FINAL-AUDIT-MASTER-AT-API-START  ////////////////////////////////////////////
   static String get FINAL_REPORT_AT_INITAIL => "$BASE_URL/api/FinalAuditReportAT/ZoneWiseInventoryLoad";
   static String get FINAL_REPORT_AT_GET_DATA => "$BASE_URL/api/FinalAuditReportAT/GenrateClick";
   static String FINAL_REPORT_AT_GET_CHANNELS(String lc) => "$BASE_URL/api/FinalAuditReportAT/GetChannel?LocationCode=$lc";
-////////////////////////////// FINAL-AUDIT-MASTER-AT-API-END  //////////////////////////////////////////////
+  ////////////////////////////// FINAL-AUDIT-MASTER-AT-API-END  //////////////////////////////////////////////
+  ///
+  ///
+  ///
+  ///
+  ///
+  ////////////////////////////// SECONDARY-EVENT-MASTER-API-START  ////////////////////////////////////////////
+  static String get SECONDARY_EVENT_MASTER_INITAIL => "$BASE_URL/api/SecondaryEventMaster/FormLoad";
+  static String get SECONDARY_EVENT_MASTER_SAVE_DATA => "$BASE_URL/api/SecondaryEventMaster/Save";
+  static String SECONDARY_EVENT_MASTER_GET_CHANNELS(String lc) => "$BASE_URL/api/SecondaryEventMaster/Getlistchannel?LocationCode=$lc";
+  static String SECONDARY_EVENT_MASTER_DISPLAY_DATA(String txid) => "$BASE_URL/api/SecondaryEventMaster/DisplaySecondaryEvent?TXid=$txid";
+  ////////////////////////////// SECONDARY-EVENT-MASTER-API-END  //////////////////////////////////////////////
+  ///
+  ///
+  ///
+  ///
+  ///
+  ////////////////////////////// FINAL-AUDIT-MASTER-BT-API-START  ////////////////////////////////////////////
+  static String get FINAL_REPORT_BT_INITAIL => "$BASE_URL/api/FinalAuditReportBT/FormLoad";
+  static String get FINAL_REPORT_BT_GET_DATA => "$BASE_URL/api/FinalAuditReportBT/DateLeave";
+  static String FINAL_REPORT_BT_GET_CHANNELS(String lc) => "$BASE_URL/api/FinalAuditReportBT/GetChannel?LocationCode=$lc";
+  //////////////////////////// FINAL-AUDIT-MASTER-BT-API-END  //////////////////////////////////////////////
   ///
   ///
   ///

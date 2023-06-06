@@ -33,9 +33,26 @@ class SecondaryEventMasterView extends GetView<SecondaryEventMasterController> {
                 Row(
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
-                    DropDownField.formDropDown1WidthMap([], (p0) => null, "Location", .23, autoFocus: true),
+                    Obx(() {
+                      return DropDownField.formDropDown1WidthMap(
+                        controller.locationList.value,
+                        (val) => controller.selectedLoc = val,
+                        "Location",
+                        .23,
+                        autoFocus: true,
+                        selected: controller.selectedLoc,
+                      );
+                    }),
                     SizedBox(width: 20),
-                    DropDownField.formDropDown1WidthMap([], (p0) => null, "Channel", .23),
+                    Obx(() {
+                      return DropDownField.formDropDown1WidthMap(
+                        controller.channelList.value,
+                        (val) => controller.selectedChannel = val,
+                        "Channel",
+                        .23,
+                        selected: controller.selectedChannel,
+                      );
+                    }),
                   ],
                 ),
                 Padding(
@@ -45,7 +62,13 @@ class SecondaryEventMasterView extends GetView<SecondaryEventMasterController> {
                     children: [
                       SizedBox(
                         width: context.width * .23,
-                        child: RadioRow(items: ['Bug', 'Aston'], groupValue: "Bug"),
+                        child: Obx(() {
+                          return RadioRow(
+                            items: ['Bug', 'Aston'],
+                            groupValue: controller.selectedRadio.value,
+                            disabledRadios: controller.controllsEnabled.value ? ['Bug', 'Aston'] : null,
+                          );
+                        }),
                       ),
                       SizedBox(width: 20),
                       InputFields.formField1(
@@ -64,60 +87,11 @@ class SecondaryEventMasterView extends GetView<SecondaryEventMasterController> {
                 SizedBox(height: 4),
                 InputFields.formField1(
                   hintTxt: "TX Caption",
-                  controller: TextEditingController(),
+                  controller: controller.txCaptionTC,
+                  focusNode: controller.txCaptionFN,
                   width: 0.475,
                 ),
-                // Padding(
-                //   padding: EdgeInsets.symmetric(vertical: 4),
-                //   child: Row(
-                //     mainAxisAlignment: MainAxisAlignment.center,
-                //     children: [
-                //       Row(
-                //         children: [
-                //           InputFields.formField1(
-                //             hintTxt: "Tape ID",
-                //             controller: TextEditingController(),
-                //             width: 0.112,
-                //           ),
-                //           SizedBox(width: 10),
-                //           InputFields.formField1(
-                //             hintTxt: "Seg No.",
-                //             controller: TextEditingController(),
-                //             width: 0.11,
-                //           ),
-                //         ],
-                //       ),
-                //       SizedBox(width: 20),
-                //       Row(
-                //         children: [
-                //           InputFields.formField1(
-                //             hintTxt: "House ID",
-                //             controller: TextEditingController(),
-                //             width: 0.11,
-                //           ),
-                //           SizedBox(width: 10),
-                //           InputFields.formField1(
-                //             hintTxt: "TX Caption",
-                //             controller: TextEditingController(),
-                //             width: 0.11,
-                //           ),
-                //         ],
-                //       ),
-                //     ],
-                //   ),
-                // ),
-                // Row(
-                //   mainAxisAlignment: MainAxisAlignment.center,
-                //   children: [
-                //     InputFields.formField1(
-                //       hintTxt: "Caption",
-                //       controller: TextEditingController(),
-                //       width: 0.23,
-                //     ),
-                //     SizedBox(width: 20),
-                //     DropDownField.formDropDown1WidthMap([], (p0) => null, "Slide type", .23),
-                //   ],
-                // ),
+
                 Padding(
                   padding: const EdgeInsets.symmetric(vertical: 4),
                   child: Row(
@@ -135,12 +109,15 @@ class SecondaryEventMasterView extends GetView<SecondaryEventMasterController> {
                         mainTextController: TextEditingController(),
                         widthRation: 0.15,
                         isTime: false,
+                        onFocusChange: (time) => controller.calculateDuration(),
                       ),
                       SizedBox(width: 16),
                       TimeWithThreeTextField(
                         title: "Duration",
                         mainTextController: TextEditingController(),
                         widthRation: 0.15,
+                        isEnable: false,
+                        isTime: false,
                       ),
                     ],
                   ),
