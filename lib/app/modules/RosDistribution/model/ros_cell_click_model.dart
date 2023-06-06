@@ -78,8 +78,13 @@ class InfoGetFpcCellDoubleClick {
         lstUnallocatedSpots!.add(LstUnallocatedSpots.fromJson(v));
       });
     }
-    tblAllocatedSpotsVisiableFalse = json['tblAllocatedSpots_Visiable_False'].cast<String>();
-    tblUnallocatedSpotsVisiableFalse = json['tblUnallocatedSpots_Visiable_False'].cast<String>();
+    if (json['info_GetAllocateFPC'] != null) {
+      tblAllocatedSpotsVisiableFalse = json['info_GetAllocateFPC'].cast<String>();
+    }
+
+    if (json['tblUnallocatedSpots_Visiable_False'] != null) {
+      tblUnallocatedSpotsVisiableFalse = json['tblUnallocatedSpots_Visiable_False'].cast<String>();
+    }
   }
 
   Map<String, dynamic> toJson() {

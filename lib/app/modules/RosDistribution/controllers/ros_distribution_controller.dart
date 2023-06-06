@@ -41,6 +41,17 @@ class RosDistributionController extends GetxController {
   var checkBoxes = [].obs;
   int mainGridIdx = 0;
 
+  var data = {
+    "medium": ["English", "Hindi", "Marathi"],
+    "English": {
+      "Subjects": ["English", "Maths", "Science"],
+      "English": {
+        "Standard": [1, 2, 3, 4, 5],
+        1: {"name"}
+      }
+    }
+  };
+
   @override
   void onInit() {
     topButtons.value = [
@@ -421,12 +432,19 @@ class RosDistributionController extends GetxController {
                               api: ApiFactory.RO_DISTRIBUTION_GET_ALLOCATE_FPC_DATA,
                               fun: (resp) {
                                 closeDialogIfOpen();
-                                if (resp != null && resp is Map<String, dynamic> && resp['info_GetFpcCellDoubleClick'] != null) {
-                                  // tempModel.value = cellModel.ROSCellClickDataModel.fromJson(resp);
-                                  // canRender = true;
+                                if (resp != null && resp is Map<String, dynamic> && resp['info_GetAllocateFPC'] != null) {
+                                  tempModel.value = cellModel.ROSCellClickDataModel(
+                                      infoGetFpcCellDoubleClick: cellModel.InfoGetFpcCellDoubleClick.fromJson(resp['info_GetAllocateFPC']));
+                                  tempProgramName.value = tempModel.value.infoGetFpcCellDoubleClick?.programname ?? "";
+                                  tempFpcTime.value = tempModel.value.infoGetFpcCellDoubleClick?.fpctime ?? "";
+                                  tempCommercialCap.value = tempModel.value.infoGetFpcCellDoubleClick?.commercialCap ?? "";
+                                  tempBookedDur.value = tempModel.value.infoGetFpcCellDoubleClick?.bookedduration ?? "";
+                                  tempBal.value = tempModel.value.infoGetFpcCellDoubleClick?.balanceDuration ?? "";
                                 } else {
+                                  // tempModel.value.infoGetFpcCellDoubleClick?.lstAllocatedSpots?.clear();
+                                  // tempModel.value.infoGetFpcCellDoubleClick?.lstUnallocatedSpots?.clear();
                                   LoadingDialog.showErrorDialog(resp.toString());
-                                  // tempModel.refresh();
+                                  tempModel.refresh();
                                 }
                               },
                               json: {
