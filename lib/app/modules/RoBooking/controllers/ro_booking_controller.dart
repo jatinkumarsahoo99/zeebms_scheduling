@@ -19,7 +19,13 @@ class RoBookingController extends GetxController {
       bookDateCtrl = TextEditingController(),
       refNoCtrl = TextEditingController(),
       bookingMonthCtrl = TextEditingController(),
-      bookingNoCtrl = TextEditingController();
+      bookingNoCtrl = TextEditingController(),
+      bookingNoTrailCtrl = TextEditingController(),
+      totSpotCtrl = TextEditingController(),
+      totDurCtrl = TextEditingController(),
+      totAmtCtrl = TextEditingController(),
+      zoneCtrl = TextEditingController(),
+      maxspendCtrl = TextEditingController();
   PageController controller = PageController();
   RxString currentTab = RxString("Deal");
   RoBookingInitData? roBookingInitData;
@@ -59,19 +65,27 @@ class RoBookingController extends GetxController {
         api: ApiFactory.RO_BOOKING_CHANNNEL(locId),
         fun: (data) {
           if (data is Map && data.containsKey("info_LeaveLocationChannelList") && data["info_LeaveLocationChannelList"] is List) {
-            channels.value = data["info_LeaveLocationChannelList"].map((e) => DropDownValue(key: e["channelCode"], value: e["channelName"])).toList();
+            List<DropDownValue> _channels = [];
+            for (var e in data["info_LeaveLocationChannelList"]) {
+              _channels.add(DropDownValue(key: e["channelCode"], value: e["channelName"]));
+            }
+            channels.value = _channels;
           }
         });
   }
 
   effDtLeave() {
     Get.find<ConnectorControl>().GETMETHODCALL(
-        api: ApiFactory.RO_BOOKING_EFFDT_LEAVE(selectedLocation!.key!, selectedLocation!.value!, fpcEffectiveDateCtrl.text.fromdMyToyMd()),
+        api: ApiFactory.RO_BOOKING_EFFDT_LEAVE(selectedLocation!.key!, selectedChannel!.key!, fpcEffectiveDateCtrl.text.fromdMyToyMd()),
         fun: (dataMap) {
           if (dataMap is Map && dataMap.containsKey("info_GetEffectiveDateLeave")) {
             Map data = dataMap["info_GetEffectiveDateLeave"];
             if (data.containsKey("lstClientAgency") && data["lstClientAgency"] is List) {
-              clients.value = data["lstClientAgency"].map((e) => DropDownValue(key: e["clientname"], value: e["clientcode"])).toList();
+              List<DropDownValue> _clients = [];
+              for (var e in data["lstClientAgency"]) {
+                _clients.add(DropDownValue(key: e["clientcode"], value: e["clientname"]));
+              }
+              clients.value = _clients;
             }
             if (data.containsKey("bookingMonth")) {
               bookingMonthCtrl.text = data["bookingMonth"];
@@ -82,10 +96,14 @@ class RoBookingController extends GetxController {
 
   clientLeave(clientCode) {
     Get.find<ConnectorControl>().GETMETHODCALL(
-        api: ApiFactory.RO_BOOKING_CLIENT_LEAVE(selectedLocation!.key!, selectedLocation!.value!, clientCode),
+        api: ApiFactory.RO_BOOKING_CLIENT_LEAVE(selectedLocation!.key!, selectedChannel!.key!, clientCode),
         fun: (data) {
           if (data is Map && data.containsKey("info_ClientList") && data["info_ClientList"] is List) {
-            agencies.value = data["info_ClientList"].map((e) => DropDownValue(key: e["agencycode"], value: e["agencyname"])).toList();
+            List<DropDownValue> _agencies = [];
+            for (var e in data["info_ClientList"]) {
+              _agencies.add(DropDownValue(key: e["agencycode"], value: e["agencyname"]));
+            }
+            agencies.value = _agencies;
           }
         });
   }
@@ -99,6 +117,4 @@ class RoBookingController extends GetxController {
   void onClose() {
     super.onClose();
   }
-
-  void increment() => count.value++;
 }

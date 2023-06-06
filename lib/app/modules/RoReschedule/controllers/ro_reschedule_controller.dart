@@ -216,7 +216,7 @@ class RoRescheduleController extends GetxController {
               try {
                 Get.defaultDialog(
                     content: Container(
-                  height: Get.height / 1.5,
+                  height: Get.height / 1.3,
                   width: Get.width * .70,
                   child: Row(
                     children: [

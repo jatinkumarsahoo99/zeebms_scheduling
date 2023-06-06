@@ -50,6 +50,7 @@ class RoRescheduleView extends GetView<RoRescheduleController> {
                                 },
                                 "Location",
                                 0.24,
+                                selected: controller.selectedLocation,
                                 isEnable: controller.enableFields.value,
                               ),
                             ),
