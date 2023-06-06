@@ -517,12 +517,16 @@ class TransmissionLogView extends GetView<TransmissionLogController> {
                                     () => formHandler(btn['name']),
                               ),
                             IconButton(
-                              onPressed: () {},
+                              onPressed: () {
+                                this.controller.btnUp_Click();
+                              },
                               icon: Icon(Icons.arrow_upward),
                               padding: EdgeInsets.symmetric(horizontal: 8.0),
                             ),
                             IconButton(
-                              onPressed: () {},
+                              onPressed: () {
+                                this.controller.btnDown_Click();
+                              },
                               icon: Icon(Icons.arrow_downward),
                               padding: EdgeInsets.symmetric(horizontal: 8.0),
                             ),

@@ -69,7 +69,7 @@ class TransmissionLogController extends GetxController {
   RxList<DropDownValue> listChannel = RxList([]);
   RxList<ColorDataModel> listColor = RxList([]);
   RxList<DropDownValue> listEventsinInsert = RxList([]);
-  RxNum  maxProgramStarttimeDiff = RxNum(0);
+  RxNum maxProgramStarttimeDiff = RxNum(0);
 
   // bool chkTxCommercial = false;
   var chkTxCommercial = RxBool(false);
@@ -120,10 +120,84 @@ class TransmissionLogController extends GetxController {
           selectChannel?.key ?? "",
         ),
         fun: (Map<String, dynamic> map) {
-          chkTxCommercial.value = map["channelSpecsSettings"]["chkTxCommercial"];
-          maxProgramStarttimeDiff.value = map["channelSpecsSettings"]["maxProgramStarttimeDiff"];
-          print(">>>>Vlaue"+chkTxCommercial.value.toString()+">>>>Max>>>"+maxProgramStarttimeDiff.value.toString());
+          chkTxCommercial.value =
+              map["channelSpecsSettings"]["chkTxCommercial"];
+          maxProgramStarttimeDiff.value =
+              map["channelSpecsSettings"]["maxProgramStarttimeDiff"];
+          print(">>>>Vlaue" +
+              chkTxCommercial.value.toString() +
+              ">>>>Max>>>" +
+              maxProgramStarttimeDiff.value.toString());
         });
+  }
+
+  btnUp_Click() {
+    List<int> intSelectedRows = [];
+    int intSelectedRow = 0;
+    int intMoveUpDown = 0;
+
+    try {
+      /*for (DataGridViewRow dr in tblLog.selectedRows) {
+        intSelectedRows.add(dr.cells["RowNumber"].value);
+        intMoveUpDown = dr.cells["rownumber"].value;
+        intSelectedRow++;
+      }
+      intMoveUpDown--;*/
+
+      cutCopy(isCut: true, row: gridStateManager?.currentRow);
+      paste(gridStateManager?.currentRow?.sortIdx ?? 0 - 1);
+      colorGrid(false);
+
+      /*intSelectedRows.sort();
+      intSelectedRows = intSelectedRows.reversed.toList();
+      for (int i = intSelectedRows.length - 1; i >= 1; i--) {
+        tblLog.rows[intSelectedRows[i]].selected = true;
+      }
+
+      Cursor = Cursors.default;*/
+    } catch (ex) {
+      // Cursor = Cursors.default;
+      // MsgBox(errorLog(ex.message, BMS.globals.loggedUser, this), MsgBoxStyle.critical, strAlertMessageTitle);
+    }
+  }
+
+  void btnDown_Click() {
+    List<int> intSelectedRows = [];
+    int intSelectedRow = 0;
+    int intMoveUpDown = 0;
+
+    try {
+      // Cursor = Cursors.appStarting;
+
+      /*for (DataGridViewRow dr in tblLog.selectedRows) {
+        intSelectedRows.add(dr.cells["RowNumber"].value);
+        if (intMoveUpDown == 0) {
+          intMoveUpDown = dr.cells["rownumber"].value;
+        }
+        intSelectedRow++;
+      }
+      intMoveUpDown += 2;
+*/
+      cutCopy(isCut: true, row: gridStateManager?.currentRow);
+      paste(gridStateManager?.currentRow?.sortIdx ?? 0 + 1);
+      colorGrid(false);
+      /*cutCopy(true);
+      paste(intMoveUpDown);
+      colorGrid(false);
+
+      intSelectedRows.sort();
+      intSelectedRows = intSelectedRows.reversed.toList();
+      for (int i = intSelectedRows.length - 2; i >= 0; i--) {
+        tblLog.rows[intSelectedRows[i]].selected = true;
+      }
+      tblLog.rows[intMoveUpDown - 1].selected = true;
+      tblLog.rows[intMoveUpDown].selected = false;
+
+      Cursor = Cursors.default;*/
+    } catch (ex) {
+      // Cursor = Cursors.default;
+      // MsgBox(errorLog(ex.message, BMS.globals.loggedUser, this), MsgBoxStyle.critical, strAlertMessageTitle);
+    }
   }
 
   getColorList({Function? function}) {
