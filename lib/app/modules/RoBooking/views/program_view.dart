@@ -22,11 +22,13 @@ class ProgramView extends GetView<RoBookingController> {
             children: [
               DropDownField.formDropDownSearchAPI2(GlobalKey(), context,
                   width: Get.width * 0.12, title: "Tape Id", url: "url", onchanged: (value) {}),
-              Container(
-                  width: Get.width * 0.12,
-                  child: Row(
-                    children: [],
-                  )),
+              DropDownField.formDropDown1WidthMap([], (value) => {}, "Seg", 0.03, isEnable: false),
+              InputFields.formField1(
+                  // showTitle: false,
+                  hintTxt: "Duration",
+                  isEnable: false,
+                  controller: controller.refNoCtrl,
+                  width: 0.09 - (5 / Get.width)),
               InputFields.formField1(
                   // showTitle: false,
                   hintTxt: "Caption",
