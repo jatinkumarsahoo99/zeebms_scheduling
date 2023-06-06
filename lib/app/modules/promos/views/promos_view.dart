@@ -55,27 +55,27 @@ class PromosView extends GetView<PromosController> {
                                 children: [
                                   Padding(
                                     padding:
-                                        const EdgeInsets.fromLTRB(0, 5, 0, 5),
+                                    const EdgeInsets.fromLTRB(0, 5, 0, 5),
                                     child: GetBuilder<FillerController>(
                                       id: "initialData",
                                       builder: (control) {
                                         return Row(
                                           children: [
                                             Obx(
-                                              () => DropDownField
+                                                  () => DropDownField
                                                   .formDropDown1WidthMap(
-                                                      controller.locations
-                                                          .value, (value) {
+                                                  controller.locations
+                                                      .value, (value) {
                                                 // controller.selectedLocation = value;
                                                 // controller.getChannel(value.key);
                                               }, "Location", 0.15),
                                             ),
                                             const SizedBox(width: 15),
                                             Obx(
-                                              () => DropDownField
+                                                  () => DropDownField
                                                   .formDropDown1WidthMap(
                                                 controller.channels.value,
-                                                (value) {
+                                                    (value) {
                                                   //controller.selectedChannel = value;
                                                 },
                                                 "Channel",
@@ -127,154 +127,41 @@ class PromosView extends GetView<PromosController> {
                                       },
                                     ),
                                   ),
-                                  // Padding(
-                                  //   padding:
-                                  //       const EdgeInsets.fromLTRB(0, 5, 0, 5),
-                                  //   child: GetBuilder<PromosController>(
-                                  //     id: "initialData",
-                                  //     builder: (control) {
-                                  //       return Expanded(
-                                  //         child: Row(
-                                  //           children: [
-                                  //             Obx(
-                                  //               () => DropDownField
-                                  //                   .formDropDown1WidthMap(
-                                  //                 controllerX.locations.value,
-                                  //                 (value) {
-                                  //                   controllerX.selectLocation =
-                                  //                       value;
-                                  //                   // controllerX.selectedLocationId.text = value.key!;
-                                  //                   // controllerX.selectedLocationName.text = value.value!;
-                                  //                   // controller.getChannelsBasedOnLocation(value.key!);
-                                  //                 },
-                                  //                 "Location",
-                                  //                 0.14,
-                                  //                 isEnable: controllerX
-                                  //                     .isEnable.value,
-                                  //                 selected: controllerX
-                                  //                     .selectLocation,
-                                  //                 autoFocus: true,
-                                  //                 dialogWidth: 330,
-                                  //                 dialogHeight: Get.height * .7,
-                                  //               ),
-                                  //             ),
-                                  //             const SizedBox(width: 10),
-                                  //             Obx(() {
-                                  //               return DropDownField
-                                  //                   .formDropDown1Width(
-                                  //                 Get.context!,
-                                  //                 controllerX.channelList ?? [],
-                                  //                 (value) {
-                                  //                   controllerX
-                                  //                           .selectedChannel =
-                                  //                       value;
-                                  //                 },
-                                  //                 "Channel",
-                                  //                 controllerX.widthSize + 0.02,
-                                  //                 paddingLeft: 5,
-                                  //                 searchReq: true,
-                                  //                 isEnable: control
-                                  //                     .channelEnable.value,
-                                  //                 selected: controllerX
-                                  //                     .selectedChannelEnv,
-                                  //                 dialogHeight: Get.height * .7,
-                                  //               );
-                                  //             }),
-                                  //             const SizedBox(width: 10),
-                                  //             DateWithThreeTextField(
-                                  //               title: "From Date",
-                                  //               mainTextController:
-                                  //                   controllerX.date_,
-                                  //               widthRation: 0.10,
-                                  //             ),
-                                  //             Padding(
-                                  //               padding: const EdgeInsets.only(
-                                  //                   left: 10, top: 17.0),
-                                  //               child: FormButton(
-                                  //                 btnText: "Show Details",
-                                  //                 callback: () {},
-                                  //               ),
-                                  //             ),
-                                  //             const SizedBox(width: 10),
-                                  //             Padding(
-                                  //               padding: const EdgeInsets.only(
-                                  //                   top: 17.0),
-                                  //               child: FormButton(
-                                  //                 btnText: "Import",
-                                  //                 callback: () {},
-                                  //               ),
-                                  //             ),
-                                  //             Padding(
-                                  //               padding: const EdgeInsets.only(
-                                  //                   left: 10, top: 17.0),
-                                  //               child: FormButton(
-                                  //                 btnText: "Delete",
-                                  //                 callback: () {},
-                                  //               ),
-                                  //             ),
-                                  //           ],
-                                  //         ),
-                                  //       );
-                                  //     },
-                                  //   ),
-                                  // ),
                                   Expanded(
                                     //flex: 1,
-                                    child: GetBuilder<FillerController>(
-                                        init: FillerController(),
-                                        id: "eventTable",
-                                        builder: (controller) {
-                                          if (controller
-                                                  .conflictReport.isEmpty ||
-                                              controller.beams.isEmpty) {
-                                            return Column(
-                                              crossAxisAlignment:
-                                                  CrossAxisAlignment.start,
-                                              children: [
-                                                fillerTable(context),
-                                              ],
-                                            );
-                                          } else {
-                                            return Container();
-                                          }
-                                        }),
+                                    child: Column(
+                                      crossAxisAlignment:
+                                      CrossAxisAlignment.start,
+                                      children: [
+                                        programTable(context),
+                                      ],
+                                    ),
                                   ),
                                   Expanded(
                                     //flex: 1,
-                                    child: GetBuilder<FillerController>(
-                                        init: FillerController(),
-                                        id: "eventCaptionTable",
-                                        builder: (controller) {
-                                          if (controller
-                                                  .conflictReport.isEmpty ||
-                                              controller.beams.isEmpty) {
-                                            return Column(
-                                              crossAxisAlignment:
-                                                  CrossAxisAlignment.start,
-                                              children: [
-                                                fillerSegmentTable(context),
-                                              ],
-                                            );
-                                          } else {
-                                            return Container();
-                                          }
-                                        }),
+                                    child: Column(
+                                      crossAxisAlignment:
+                                      CrossAxisAlignment.start,
+                                      children: [
+                                        policyTable(context),
+                                      ],
+                                    ),
                                   ),
                                   const Padding(
                                       padding: EdgeInsets.fromLTRB(0, 10, 0, 0),
                                       child: Text("Time Band : 00:00:00")),
                                   Padding(
                                     padding:
-                                        const EdgeInsets.fromLTRB(0, 0, 0, 10),
+                                    const EdgeInsets.fromLTRB(0, 0, 0, 10),
                                     child: Row(
                                       crossAxisAlignment:
-                                          CrossAxisAlignment.end,
+                                      CrossAxisAlignment.end,
                                       children: [
                                         const Text("Program : PrgName"),
                                         const Spacer(),
                                         Padding(
                                           padding:
-                                              const EdgeInsets.only(top: 5.0),
+                                          const EdgeInsets.only(top: 5.0),
                                           child: InputFields.formField1Width(
                                               widthRatio: 0.09,
                                               paddingLeft: 5,
@@ -284,7 +171,7 @@ class PromosView extends GetView<PromosController> {
                                         ),
                                         Padding(
                                           padding:
-                                              const EdgeInsets.only(top: 5.0),
+                                          const EdgeInsets.only(top: 5.0),
                                           child: InputFields.formField1Width(
                                               widthRatio: 0.09,
                                               paddingLeft: 5,
@@ -294,7 +181,7 @@ class PromosView extends GetView<PromosController> {
                                         ),
                                         Padding(
                                           padding:
-                                              const EdgeInsets.only(top: 5.0),
+                                          const EdgeInsets.only(top: 5.0),
                                           child: InputFields.formField1Width(
                                               widthRatio: 0.09,
                                               paddingLeft: 5,
@@ -310,7 +197,7 @@ class PromosView extends GetView<PromosController> {
                             ),
                           ),
 
-                          /// Program Table
+                          /// Caption Table
                           Expanded(
                             child: Padding(
                               padding: const EdgeInsets.fromLTRB(0, 10, 15, 0),
@@ -322,7 +209,7 @@ class PromosView extends GetView<PromosController> {
                                         flex: 1,
                                         child: Padding(
                                           padding:
-                                              const EdgeInsets.only(top: 5.0),
+                                          const EdgeInsets.only(top: 5.0),
                                           child: InputFields.formField1Width(
                                               widthRatio: .15,
                                               paddingLeft: 5,
@@ -335,10 +222,10 @@ class PromosView extends GetView<PromosController> {
                                         flex: 1,
                                         child: Padding(
                                           padding:
-                                              const EdgeInsets.only(top: 5.0),
+                                          const EdgeInsets.only(top: 5.0),
                                           child: InputFields.formField1Width(
                                               widthRatio:
-                                                  (Get.width * 0.2) / 2 + 7,
+                                              (Get.width * 0.2) / 2 + 7,
                                               paddingLeft: 5,
                                               isEnable: false,
                                               hintTxt: "",
@@ -353,10 +240,10 @@ class PromosView extends GetView<PromosController> {
                                       Expanded(
                                         child: Padding(
                                           padding:
-                                              const EdgeInsets.only(top: 5.0),
+                                          const EdgeInsets.only(top: 5.0),
                                           child: InputFields.formField1Width(
                                               widthRatio:
-                                                  (Get.width * 0.2) / 2 + 7,
+                                              (Get.width * 0.2) / 2 + 7,
                                               paddingLeft: 5,
                                               hintTxt: "Promo Id",
                                               controller: controllerX.tapeId_,
@@ -367,7 +254,7 @@ class PromosView extends GetView<PromosController> {
                                   ),
                                   Row(
                                     mainAxisAlignment:
-                                        MainAxisAlignment.spaceBetween,
+                                    MainAxisAlignment.spaceBetween,
                                     children: [
                                       Padding(
                                         padding: const EdgeInsets.only(
@@ -376,7 +263,7 @@ class PromosView extends GetView<PromosController> {
                                           Radio(
                                             value: 0,
                                             groupValue:
-                                                controllerX.selectedAfter,
+                                            controllerX.selectedAfter,
                                             onChanged: (int? value) {},
                                           ),
                                           const Text('My')
@@ -408,7 +295,7 @@ class PromosView extends GetView<PromosController> {
                                       ),
                                     ],
                                   ),
-                                  programTable(context)
+                                  captionTable(context)
                                 ],
                               ),
                             ),
@@ -430,7 +317,7 @@ class PromosView extends GetView<PromosController> {
                                 mainAxisSize: MainAxisSize.min,
                                 children: [
                                   for (var btn in btcontroller.buttons!)
-                                    //if (Utils.btnAccessHandler(btn['name'], controller.formPermissions!) != null)
+                                  //if (Utils.btnAccessHandler(btn['name'], controller.formPermissions!) != null)
                                     FormButtonWrapper(
                                       btnText: btn["name"],
                                       callback: () => controller.formHandler(
@@ -451,10 +338,9 @@ class PromosView extends GetView<PromosController> {
         });
   }
 
-  Widget fillerTable(context) {
+  Widget programTable(context) {
     return GetBuilder<FillerController>(
-        id: "fillerTable",
-        // init: CreateBreakPatternController(),
+        id: "programTable",
         builder: (controller) {
           if (controllerX.fillerDailyFpcList != null &&
               (controllerX.fillerDailyFpcList?.isNotEmpty)!) {
@@ -467,7 +353,7 @@ class PromosView extends GetView<PromosController> {
               // mode: PlutoGridMode.select,
               onSelected: (plutoGrid) {
                 controllerX.selectedDailyFPC =
-                    controllerX.fillerDailyFpcList![plutoGrid.rowIdx!];
+                controllerX.fillerDailyFpcList![plutoGrid.rowIdx!];
                 print(jsonEncode(controllerX.selectedDailyFPC?.toJson()));
               },
             );
@@ -482,35 +368,26 @@ class PromosView extends GetView<PromosController> {
                     width: 1,
                   ),
                 ),
-                child: Container(
-                  height: Get.height - (4 * kToolbarHeight),
-                ),
+                child: Container(),
               ),
             );
           }
         });
   }
 
-  Widget fillerSegmentTable(context) {
+  Widget policyTable(context) {
     return GetBuilder<FillerController>(
-        id: "fillerSegmentTable",
-        // init: CreateBreakPatternController(),
+        id: "policyTable",
         builder: (controller) {
           if (controllerX.fillerSegmentList != null &&
               (controllerX.fillerSegmentList?.isNotEmpty)!) {
-            // final key = GlobalKey();
             return Expanded(
-              // height: 400,
               child: DataGridFromMap(
                 mapData: (controllerX.fillerSegmentList
                     ?.map((e) => e.toJson())
                     .toList())!,
                 widthRatio: (Get.width * 0.2) / 2 + 7,
-                // mode: PlutoGridMode.select,
                 onSelected: (plutoGrid) {
-                  controllerX.selectedSegment =
-                      controllerX.fillerSegmentList![plutoGrid.rowIdx!];
-                  print(jsonEncode(controllerX.selectedSegment?.toJson()));
                 },
               ),
             );
@@ -526,7 +403,7 @@ class PromosView extends GetView<PromosController> {
                   ),
                 ),
                 child: Container(
-                  height: Get.height - (4 * kToolbarHeight),
+
                 ),
               ),
             );
@@ -534,10 +411,9 @@ class PromosView extends GetView<PromosController> {
         });
   }
 
-  Widget programTable(context) {
+  Widget captionTable(context) {
     return GetBuilder<PromosController>(
-        id: "programTable",
-        // init: CreateBreakPatternController(),
+        id: "captionTable",
         builder: (controller) {
           if (controllerX.fillerDailyFpcList != null &&
               (controllerX.fillerDailyFpcList?.isNotEmpty)!) {
@@ -552,26 +428,14 @@ class PromosView extends GetView<PromosController> {
                 // mode: PlutoGridMode.select,
                 onSelected: (plutoGrid) {
                   controllerX.selectedDailyFPC =
-                      controllerX.fillerDailyFpcList![plutoGrid.rowIdx!];
+                  controllerX.fillerDailyFpcList![plutoGrid.rowIdx!];
                   print(jsonEncode(controllerX.selectedDailyFPC?.toJson()));
                 },
               ),
             );
           } else {
-            return Expanded(
-              child: Card(
-                clipBehavior: Clip.hardEdge,
-                shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(0), // if you need this
-                  side: BorderSide(
-                    color: Colors.grey.shade300,
-                    width: 1,
-                  ),
-                ),
-                child: Container(
-                  height: Get.height - (4 * kToolbarHeight),
-                ),
-              ),
+            return Container(
+              //height: Get.height - (4 * kToolbarHeight),
             );
           }
         });

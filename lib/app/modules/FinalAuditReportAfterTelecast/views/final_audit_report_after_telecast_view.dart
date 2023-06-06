@@ -30,35 +30,70 @@ class FinalAuditReportAfterTelecastView extends GetView<FinalAuditReportAfterTel
                 // buttonHeight: 20,
                 alignment: WrapAlignment.start,
                 children: [
-                  DropDownField.formDropDown1WidthMap([], (data) {}, "Location", 0.24),
-                  DropDownField.formDropDown1WidthMap([], (data) {}, "Channel", 0.24),
-                  DateWithThreeTextField(title: "From Date.", widthRation: 0.12, mainTextController: TextEditingController()),
-                  DateWithThreeTextField(title: "To Date.", widthRation: 0.12, mainTextController: TextEditingController()),
+                  Obx(() {
+                    return DropDownField.formDropDown1WidthMap(
+                      controller.locationList.value,
+                      controller.getChannels,
+                      "Location",
+                      0.24,
+                      selected: controller.selectedLocation,
+                      inkWellFocusNode: controller.locationFN,
+                      autoFocus: true,
+                    );
+                  }),
+                  Obx(() {
+                    return DropDownField.formDropDown1WidthMap(
+                      controller.channelList.value,
+                      (data) => controller.selectedChannel = data,
+                      "Channel",
+                      0.24,
+                      selected: controller.selectedChannel,
+                    );
+                  }),
+                  DateWithThreeTextField(
+                    title: "From Date.",
+                    widthRation: 0.12,
+                    mainTextController: controller.fromTC,
+                  ),
+                  DateWithThreeTextField(
+                    title: "To Date.",
+                    widthRation: 0.12,
+                    mainTextController: controller.toTC,
+                  ),
                   FormButtonWrapper(
                     btnText: "Report",
-                    callback: () {},
+                    callback: controller.handleReportTap,
                   )
                 ],
               ),
             ),
           ),
           Expanded(
-              child: Container(
-            padding: EdgeInsets.symmetric(horizontal: 4, vertical: 2),
-            child: DataGridShowOnlyKeys(
-              mapData: dummydata,
-              formatDate: false,
+            child: Obx(
+              () {
+                return Container(
+                  margin: const EdgeInsets.symmetric(horizontal: 4, vertical: 2),
+                  decoration: controller.dataTBList.isEmpty
+                      ? BoxDecoration(
+                          border: Border.all(
+                            color: Colors.grey,
+                          ),
+                        )
+                      : null,
+                  child: controller.dataTBList.isEmpty
+                      ? null
+                      : DataGridShowOnlyKeys(
+                          mapData: controller.dataTBList.value,
+                          formatDate: false,
+                        ),
+                );
+              },
             ),
-          )),
+          ),
           GetBuilder<HomeController>(
               id: "buttons",
               init: Get.find<HomeController>(),
               builder: (btncontroller) {
-                /* PermissionModel formPermissions = Get.find<MainController>()
-                      .permissionList!
-                      .lastWhere((element) {
-                    return element.appFormName == "frmSegmentsDetails";
-                  });*/
                 if (btncontroller.buttons == null) {
                   return Container();
                 }
@@ -90,9 +125,7 @@ class FinalAuditReportAfterTelecastView extends GetView<FinalAuditReportAfterTel
                                       btnText: btn["name"],
 
                                       // isEnabled: btn['isDisabled'],
-                                      callback: () {
-                                        btncontroller.clearPage1();
-                                      },
+                                      callback: controller.clearPage,
                                     )
                                   : FormButtonWrapper(
                                       btnText: btn["name"],

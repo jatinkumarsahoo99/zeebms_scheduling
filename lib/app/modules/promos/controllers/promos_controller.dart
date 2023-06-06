@@ -9,8 +9,8 @@ import '../../../controller/HomeController.dart';
 import '../../../data/DropDownValue.dart';
 import '../../../data/PermissionModel.dart';
 import '../../../data/system_envirtoment.dart';
-import '../PromoModel.dart';
-import '../PromoProgramModel.dart';
+import '../../filler/FillerDailyFPCModel.dart';
+import '../../filler/FillerSegmentModel.dart';
 
 class PromosController extends GetxController  {
 
@@ -18,190 +18,28 @@ class PromosController extends GetxController  {
   var channels = RxList<DropDownValue>([]);
   RxBool isEnable = RxBool(true);
 
+  TextEditingController available_ = TextEditingController()..text = "";
+  TextEditingController scheduled_ = TextEditingController()..text = "";
+  TextEditingController count_ = TextEditingController()..text = "";
+  TextEditingController promoCaptionDur_ = TextEditingController()..text = "00:00:00:00";
+  TextEditingController promoCaption_ = TextEditingController()..text = "";
+  TextEditingController promoId_ = TextEditingController()..text = "";
   //input controllers
   DropDownValue? selectLocation;
   DropDownValue? selectChannel;
   PlutoGridStateManager? gridStateManager;
 
-  List<PermissionModel>? formPermissions;
   List<PlutoRow> initRows = [];
   List<PlutoColumn> initColumn = [];
-
+  List<PermissionModel>? formPermissions;
   List conflictReport = [];
 
-  List<PromoProgramModel>? programList  = [
-    PromoProgramModel
-      (startTime: '01:00:00', programName: 'Test1'),
-    PromoProgramModel
-      (startTime: '01:00:00', programName: 'Test'),
-    PromoProgramModel
-      (startTime: '01:00:00', programName: 'Test'),
-    PromoProgramModel
-      (startTime: '01:00:00', programName: 'Test'),
-    PromoProgramModel
-      (startTime: '01:00:00', programName: 'Test5'),
-    PromoProgramModel
-      (startTime: '01:00:00', programName: 'Test'),
-    PromoProgramModel
-      (startTime: '01:00:00', programName: 'Test'),
-    PromoProgramModel
-      (startTime: '01:00:00', programName: 'Test'),
-    PromoProgramModel
-      (startTime: '01:00:00', programName: 'Test'),
-    PromoProgramModel
-      (startTime: '01:00:00', programName: 'Test10'),
-    PromoProgramModel
-      (startTime: '01:00:00', programName: 'Test'),
-    PromoProgramModel
-      (startTime: '01:00:00', programName: 'Test'),
-    PromoProgramModel
-      (startTime: '01:00:00', programName: 'Test'),
-    PromoProgramModel
-      (startTime: '01:00:00', programName: 'Test'),
-    PromoProgramModel
-      (startTime: '01:00:00', programName: 'Test15'),
-    PromoProgramModel
-      (startTime: '01:00:00', programName: 'Test'),
-    PromoProgramModel
-      (startTime: '01:00:00', programName: 'Test'),
-    PromoProgramModel
-      (startTime: '01:00:00', programName: 'Test'),
-    PromoProgramModel
-      (startTime: '01:00:00', programName: 'Test'),
-    PromoProgramModel
-      (startTime: '01:00:00', programName: 'Test20'),
-    PromoProgramModel
-      (startTime: '01:00:00', programName: 'Test'),
-    PromoProgramModel
-      (startTime: '01:00:00', programName: 'Test'),
-    PromoProgramModel
-      (startTime: '01:00:00', programName: 'Test'),
-    PromoProgramModel
-      (startTime: '01:00:00', programName: 'Test'),
-    PromoProgramModel
-      (startTime: '01:00:00', programName: 'Test'),
-    PromoProgramModel
-      (startTime: '01:00:00', programName: 'Test26',),
+  List<dynamic> programList = [];
+  List<dynamic> policyList = [];
+  List<dynamic> captionList = [];
 
-  ];
-
-  List<PromoModel>? commercialList = [
-    PromoModel
-      (
-        fpcTime:'01:00:00', breakNumber:'1', eventType:'S',
-        exportTapeCode:'TBA', segmentCaption:'Caption', client:' ', brand:' ', duration: 0,
-        product:' ', bookingNumber:' ', bookingDetailcode:' ',rostimeBand:' ', randid:' ',
-        programName:'Program Name', rownumber:'O', bStatus:'B', pDailyFPC:' ', pProgramMaster:' '),
-    PromoModel
-      (
-        fpcTime:'01:00:00', breakNumber:'1', eventType:'S',
-        exportTapeCode:'TBA', segmentCaption:'Caption', client:' ', brand:' ', duration: 0,
-        product:' ', bookingNumber:' ', bookingDetailcode:' ',rostimeBand:' ', randid:' ',
-        programName:'Program Name', rownumber:'O', bStatus:'B', pDailyFPC:' ', pProgramMaster:' '),
-    PromoModel
-      (
-        fpcTime:'01:00:00', breakNumber:'1', eventType:'S',
-        exportTapeCode:'TBA', segmentCaption:'Caption', client:' ', brand:' ', duration: 0,
-        product:' ', bookingNumber:' ', bookingDetailcode:' ',rostimeBand:' ', randid:' ',
-        programName:'Program Name', rownumber:'O', bStatus:'B', pDailyFPC:' ', pProgramMaster:' '),
-    PromoModel
-      (
-        fpcTime:'01:00:00', breakNumber:'1', eventType:'S',
-        exportTapeCode:'TBA', segmentCaption:'Caption', client:' ', brand:' ', duration: 0,
-        product:' ', bookingNumber:' ', bookingDetailcode:' ',rostimeBand:' ', randid:' ',
-        programName:'Program Name', rownumber:'O', bStatus:'B', pDailyFPC:' ', pProgramMaster:' '),
-    PromoModel
-      (
-        fpcTime:'01:00:00', breakNumber:'1', eventType:'S',
-        exportTapeCode:'TBA', segmentCaption:'Caption', client:' ', brand:' ', duration: 0,
-        product:' ', bookingNumber:' ', bookingDetailcode:' ',rostimeBand:' ', randid:' ',
-        programName:'Program Name', rownumber:'O', bStatus:'B', pDailyFPC:' ', pProgramMaster:' '),
-    PromoModel
-      (
-        fpcTime:'01:00:00', breakNumber:'1', eventType:'S',
-        exportTapeCode:'TBA', segmentCaption:'Caption', client:' ', brand:' ', duration: 0,
-        product:' ', bookingNumber:' ', bookingDetailcode:' ',rostimeBand:' ', randid:' ',
-        programName:'Program Name', rownumber:'O', bStatus:'B', pDailyFPC:' ', pProgramMaster:' '),
-    PromoModel
-      (
-        fpcTime:'01:00:00', breakNumber:'1', eventType:'S',
-        exportTapeCode:'TBA', segmentCaption:'Caption', client:' ', brand:' ', duration: 0,
-        product:' ', bookingNumber:' ', bookingDetailcode:' ',rostimeBand:' ', randid:' ',
-        programName:'Program Name', rownumber:'O', bStatus:'B', pDailyFPC:' ', pProgramMaster:' '),
-    PromoModel
-      (
-        fpcTime:'01:00:00', breakNumber:'1', eventType:'S',
-        exportTapeCode:'TBA', segmentCaption:'Caption', client:' ', brand:' ', duration: 0,
-        product:' ', bookingNumber:' ', bookingDetailcode:' ',rostimeBand:' ', randid:' ',
-        programName:'Program Name', rownumber:'O', bStatus:'B', pDailyFPC:' ', pProgramMaster:' '),
-    PromoModel
-      (
-        fpcTime:'01:00:00', breakNumber:'1', eventType:'S',
-        exportTapeCode:'TBA', segmentCaption:'Caption', client:' ', brand:' ', duration: 0,
-        product:' ', bookingNumber:' ', bookingDetailcode:' ',rostimeBand:' ', randid:' ',
-        programName:'Program Name', rownumber:'O', bStatus:'B', pDailyFPC:' ', pProgramMaster:' '),
-    PromoModel
-      (
-        fpcTime:'01:00:00', breakNumber:'1', eventType:'S',
-        exportTapeCode:'TBA', segmentCaption:'Caption', client:' ', brand:' ', duration: 0,
-        product:' ', bookingNumber:' ', bookingDetailcode:' ',rostimeBand:' ', randid:' ',
-        programName:'Program Name', rownumber:'O', bStatus:'B', pDailyFPC:' ', pProgramMaster:' '),
-    PromoModel
-      (
-        fpcTime:'01:00:00', breakNumber:'1', eventType:'S',
-        exportTapeCode:'TBA', segmentCaption:'Caption', client:' ', brand:' ', duration: 0,
-        product:' ', bookingNumber:' ', bookingDetailcode:' ',rostimeBand:' ', randid:' ',
-        programName:'Program Name', rownumber:'O', bStatus:'B', pDailyFPC:' ', pProgramMaster:' '),
-    PromoModel
-      (
-        fpcTime:'01:00:00', breakNumber:'1', eventType:'S',
-        exportTapeCode:'TBA', segmentCaption:'Caption', client:' ', brand:' ', duration: 0,
-        product:' ', bookingNumber:' ', bookingDetailcode:' ',rostimeBand:' ', randid:' ',
-        programName:'Program Name', rownumber:'O', bStatus:'B', pDailyFPC:' ', pProgramMaster:' '),
-    PromoModel
-      (
-        fpcTime:'01:00:00', breakNumber:'1', eventType:'S',
-        exportTapeCode:'TBA', segmentCaption:'Caption', client:' ', brand:' ', duration: 0,
-        product:' ', bookingNumber:' ', bookingDetailcode:' ',rostimeBand:' ', randid:' ',
-        programName:'Program Name', rownumber:'O', bStatus:'B', pDailyFPC:' ', pProgramMaster:' '),
-    PromoModel
-      (
-        fpcTime:'01:00:00', breakNumber:'1', eventType:'S',
-        exportTapeCode:'TBA', segmentCaption:'Caption', client:' ', brand:' ', duration: 0,
-        product:' ', bookingNumber:' ', bookingDetailcode:' ',rostimeBand:' ', randid:' ',
-        programName:'Program Name', rownumber:'O', bStatus:'B', pDailyFPC:' ', pProgramMaster:' '),
-    PromoModel
-      (
-        fpcTime:'01:00:00', breakNumber:'1', eventType:'S',
-        exportTapeCode:'TBA', segmentCaption:'Caption', client:' ', brand:' ', duration: 0,
-        product:' ', bookingNumber:' ', bookingDetailcode:' ',rostimeBand:' ', randid:' ',
-        programName:'Program Name', rownumber:'O', bStatus:'B', pDailyFPC:' ', pProgramMaster:' '),
-    PromoModel
-      (
-        fpcTime:'01:00:00', breakNumber:'1', eventType:'S',
-        exportTapeCode:'TBA', segmentCaption:'Caption', client:' ', brand:' ', duration: 0,
-        product:' ', bookingNumber:' ', bookingDetailcode:' ',rostimeBand:' ', randid:' ',
-        programName:'Program Name', rownumber:'O', bStatus:'B', pDailyFPC:' ', pProgramMaster:' '),
-    PromoModel
-      (
-        fpcTime:'01:00:00', breakNumber:'1', eventType:'S',
-        exportTapeCode:'TBA', segmentCaption:'Caption', client:' ', brand:' ', duration: 0,
-        product:' ', bookingNumber:' ', bookingDetailcode:' ',rostimeBand:' ', randid:' ',
-        programName:'Program Name', rownumber:'O', bStatus:'B', pDailyFPC:' ', pProgramMaster:' '),
-    PromoModel
-      (
-        fpcTime:'01:00:00', breakNumber:'1', eventType:'S',
-        exportTapeCode:'TBA', segmentCaption:'Caption', client:' ', brand:' ', duration: 0,
-        product:' ', bookingNumber:' ', bookingDetailcode:' ',rostimeBand:' ', randid:' ',
-        programName:'Program Name', rownumber:'O', bStatus:'B', pDailyFPC:' ', pProgramMaster:' '),
-    PromoModel
-      (
-        fpcTime:'01:00:00', breakNumber:'1', eventType:'S',
-        exportTapeCode:'TBA', segmentCaption:'Caption', client:' ', brand:' ', duration: 0,
-        product:' ', bookingNumber:' ', bookingDetailcode:' ',rostimeBand:' ', randid:' ',
-        programName:'Program Name', rownumber:'O', bStatus:'B', pDailyFPC:' ', pProgramMaster:' '),
-
-  ];
+  List<FillerDailyFPCModel>? fillerDailyFpcList = [];
+  List<FillerSegmentModel>? fillerSegmentList = [];
 
   List beams = [];
   int? conflictDays = 4;
@@ -235,9 +73,9 @@ class PromosController extends GetxController  {
   SystemEnviroment? selectedLocation;
 
   /// List for Columns
-  PromoProgramModel
-  ? selectedProgram;
-  PromoModel? selectedPromo;
+  // PromoProgramModel
+  // ? selectedProgram;
+  // PromoModel? selectedPromo;
 
   /// Radio Button
   int selectedGroup = 0;
@@ -252,9 +90,19 @@ class PromosController extends GetxController  {
   BuildContext? gridContext;
   PlutoGridStateManager? stateManager;
 
-  double widthSize = 0.17;
+  double widthSize = 0.14;
   var locationEnable = RxBool(true);
   var channelEnable = RxBool(true);
+
+  TextEditingController availableText_ = TextEditingController()..text = "";
+  TextEditingController scheduleText_ = TextEditingController()..text = "";
+  TextEditingController countText_ = TextEditingController()..text = "";
+  TextEditingController promoCaptionText_ = TextEditingController()..text = "";
+  TextEditingController promoCaptionDurText_ = TextEditingController()..text = "00:00:00:00";
+  TextEditingController promoIDText_ = TextEditingController()..text = "";
+
+  /// Radio Button
+  int selectedAfter = 0;
 
   @override
   void onInit() {
@@ -314,136 +162,6 @@ class PromosController extends GetxController  {
   //     },
   //   );
   // }
-
-  generateData() async {
-    if (conflictDays == null) {
-      // Snack.callError("Invalid Day Value");
-      LoadingDialog.showErrorDialog("Invalid Day Value");
-    } else if (locChanStateManager!.checkedRows.isEmpty) {
-      LoadingDialog.showErrorDialog("Please select Location Channel");
-    } else {
-      reportBody["ReferenceDate"] = DateFormat("yyyy-MM-dd")
-          .format(DateFormat("dd-MM-yyyy").parse(refDateContrl.text));
-
-      LoadingDialog.call();
-      beams = [];
-      conflictReport = [];
-      conflictPrograms = [];
-      update(["reports"]);
-      // String value =
-      //     await rootBundle.loadString('assets/json/ci_dashbaord_report.json');
-      await Get.find<ConnectorControl>().POSTMETHOD_FORMDATA(
-        // NEED TO PASS USER NAME
-          timeout: 360000,
-          api:
-          "https://api-programming-bms-uat.zeeconnect.in//api/MovieConflictReport/GetMovieConflictReport",
-          json: reportBody,
-          fun: (map) async {
-            beams = map["lstReportBaseData"];
-            for (var element in beams.where((element) =>
-            (element["days"] <= conflictDays && element["days"] >= 0))) {
-              conflictPrograms.add(element["program"]);
-            }
-            conflictPrograms.toSet().toList();
-            // log(conflictPrograms.toString());
-            conflictReport = map["lstConflictReport"];
-            update(["reports"]);
-          });
-      Get.back();
-    }
-  }
-
-  /// Useful in Columns
-  loadColumnBeams(column) {
-    List<PlutoRow> rows = [];
-    for (Map row in beams.where((element) => element["beam"] == column)) {
-      Map<String, PlutoCell> cells = {};
-
-      for (var element in row.entries) {
-        print(element.value);
-        cells[element.key] = PlutoCell(
-          value: element.key == "selected" || element.value == null
-              ? ""
-              : element.key.toString().toLowerCase().contains("date")
-              ? (element.value.toString().contains('T') &&
-              element.value.toString().split('T')[1] == '00:00:00')
-              ? DateFormat("dd/MM/yyyy").format(
-              DateFormat('yyyy-MM-ddTHH:mm:ss')
-                  .parse(element.value.toString()))
-              : DateFormat("dd/MM/yyyy HH:mm:ss").format(
-              DateFormat('yyyy-MM-ddTHH:mm:ss')
-                  .parse(element.value.toString()))
-          // DateFormat("dd-MM-yyyy hh:mm").format(DateTime.parse(element.value.toString().replaceAll("T", " ")))
-              : element.value.toString(),
-        );
-      }
-
-      rows.add(PlutoRow(
-        cells: cells,
-      ));
-    }
-    if (bmsReportStateManager != null) {
-      print("state working");
-
-      bmsReportStateManager!.removeRows(bmsReportStateManager!.rows);
-      bmsReportStateManager!.resetCurrentState();
-      bmsReportStateManager!.appendRows(rows);
-    }
-    beamRows = [];
-    update(["beams"]);
-    beamRows = rows;
-    rows = [];
-    update(["beams"]);
-  }
-
-  /// Useful in Columns
-  void loadBeams() {
-    if (conflictReportStateManager.currentRow == null) {
-      return;
-    }
-    // log("Rows");
-    // log(conflictReportStateManager.currentRow!.cells["Program"]!.value);
-    List<PlutoRow> rows = [];
-    for (Map row in beams.where((element) =>
-    element["program"] ==
-        conflictReportStateManager.currentRow!.cells["Program"]!.value)) {
-      Map<String, PlutoCell> cells = {};
-
-      for (var element in row.entries) {
-        cells[element.key] = PlutoCell(
-          value: element.key == "selected" || element.value == null
-              ? ""
-              : element.key.toString().toLowerCase().contains("date")
-              ? (element.value.toString().contains('T') &&
-              element.value.toString().split('T')[1] == '00:00:00')
-              ? DateFormat("dd/MM/yyyy").format(
-              DateFormat('yyyy-MM-ddTHH:mm:ss')
-                  .parse(element.value.toString()))
-              : DateFormat("dd/MM/yyyy HH:mm:ss").format(
-              DateFormat('yyyy-MM-ddTHH:mm:ss')
-                  .parse(element.value.toString()))
-          // ? DateFormat("dd/MM/yyyy hh:mm").format(DateTime.parse(element.value.toString().replaceAll("T", " ")))
-              : element.value.toString(),
-        );
-      }
-
-      rows.add(PlutoRow(
-        cells: cells,
-      ));
-    }
-    if (bmsReportStateManager != null) {
-      print("state working");
-
-      bmsReportStateManager!.removeRows(bmsReportStateManager!.rows);
-      bmsReportStateManager!.resetCurrentState();
-      bmsReportStateManager!.appendRows(rows);
-    }
-    beamRows = [];
-    update(["beams"]);
-    beamRows = rows;
-    rows = [];
-    update(["beams"]);
-  }
 
   fetchGenerate() {
     if (selectedLocation == null) {

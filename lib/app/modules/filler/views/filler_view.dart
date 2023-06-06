@@ -132,15 +132,21 @@ class FillerView extends GetView<FillerController> {
                                                 child: Row(
                                                   children: [
                                                     Obx(
-                                                      () => DropDownField.formDropDown1WidthMap(controller.importLocations.value, (value) {
-                                                        controller.selectedImportLocation = value;
-                                                        controller.getChannel(value.key);
-                                                      }, "Location", 0.15),
+                                                      () => DropDownField.formDropDown1WidthMap(
+                                                        controller.locations.value,
+                                                        (value) {
+                                                          controller.selectedImportLocation = value;
+                                                          controller.getChannel(value.key);
+                                                        },
+                                                        "Location",
+                                                        0.15,
+                                                        autoFocus: true,
+                                                      ),
                                                     ),
                                                     const SizedBox(width: 15),
                                                     Obx(
                                                       () => DropDownField.formDropDown1WidthMap(
-                                                        controller.importChannels.value,
+                                                        controller.channels.value,
                                                         (value) {
                                                           controller.selectedImportChannel = value;
                                                         },
