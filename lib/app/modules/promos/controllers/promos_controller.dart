@@ -9,6 +9,8 @@ import '../../../controller/HomeController.dart';
 import '../../../data/DropDownValue.dart';
 import '../../../data/PermissionModel.dart';
 import '../../../data/system_envirtoment.dart';
+import '../../filler/FillerDailyFPCModel.dart';
+import '../../filler/FillerSegmentModel.dart';
 
 class PromosController extends GetxController {
   var locations = RxList<DropDownValue>();
@@ -34,6 +36,9 @@ class PromosController extends GetxController {
   List<dynamic> programList = [];
   List<dynamic> policyList = [];
   List<dynamic> captionList = [];
+
+  List<FillerDailyFPCModel>? fillerDailyFpcList = [];
+  List<FillerSegmentModel>? fillerSegmentList = [];
 
   List beams = [];
   int? conflictDays = 4;
@@ -83,9 +88,19 @@ class PromosController extends GetxController {
   BuildContext? gridContext;
   PlutoGridStateManager? stateManager;
 
-  double widthSize = 0.17;
+  double widthSize = 0.14;
   var locationEnable = RxBool(true);
   var channelEnable = RxBool(true);
+
+  TextEditingController availableText_ = TextEditingController()..text = "";
+  TextEditingController scheduleText_ = TextEditingController()..text = "";
+  TextEditingController countText_ = TextEditingController()..text = "";
+  TextEditingController promoCaptionText_ = TextEditingController()..text = "";
+  TextEditingController promoCaptionDurText_ = TextEditingController()..text = "00:00:00:00";
+  TextEditingController promoIDText_ = TextEditingController()..text = "";
+
+  /// Radio Button
+  int selectedAfter = 0;
 
   @override
   void onInit() {

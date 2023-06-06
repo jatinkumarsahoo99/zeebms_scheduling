@@ -9,6 +9,7 @@ import '../../../../widgets/dropdown.dart';
 import '../../../../widgets/gridFromMap.dart';
 import '../../../../widgets/input_fields.dart';
 import '../../../controller/HomeController.dart';
+import '../../../providers/SizeDefine.dart';
 import '../../filler/controllers/filler_controller.dart';
 import '../controllers/promos_controller.dart';
 
@@ -19,7 +20,8 @@ class PromosView extends GetView<PromosController> {
   var formName = 'Scheduling Promo';
 
   void handleOnRowChecked(PlutoGridOnRowCheckedEvent event) {}
-  PromosController controllerX = Get.put(PromosController());
+  //PromosController controllerX = Get.put(PromosController());
+  FillerController controllerX = Get.put(FillerController());
 
   @override
   Widget build(BuildContext context) {
@@ -53,27 +55,27 @@ class PromosView extends GetView<PromosController> {
                                 children: [
                                   Padding(
                                     padding:
-                                        const EdgeInsets.fromLTRB(0, 5, 0, 5),
-                                    child: GetBuilder<PromosController>(
+                                    const EdgeInsets.fromLTRB(0, 5, 0, 5),
+                                    child: GetBuilder<FillerController>(
                                       id: "initialData",
                                       builder: (control) {
                                         return Row(
                                           children: [
                                             Obx(
-                                              () => DropDownField
+                                                  () => DropDownField
                                                   .formDropDown1WidthMap(
-                                                      controller.locations
-                                                          .value, (value) {
+                                                  controller.locations
+                                                      .value, (value) {
                                                 // controller.selectedLocation = value;
                                                 // controller.getChannel(value.key);
                                               }, "Location", 0.15),
                                             ),
                                             const SizedBox(width: 15),
                                             Obx(
-                                              () => DropDownField
+                                                  () => DropDownField
                                                   .formDropDown1WidthMap(
                                                 controller.channels.value,
-                                                (value) {
+                                                    (value) {
                                                   //controller.selectedChannel = value;
                                                 },
                                                 "Channel",
@@ -126,15 +128,17 @@ class PromosView extends GetView<PromosController> {
                                     ),
                                   ),
                                   Expanded(
+                                    //flex: 1,
                                     child: Column(
-                                    crossAxisAlignment:
-                                    CrossAxisAlignment.start,
-                                    children: [
-                                      programTable(context),
-                                    ],
-                                  ),
+                                      crossAxisAlignment:
+                                      CrossAxisAlignment.start,
+                                      children: [
+                                        programTable(context),
+                                      ],
+                                    ),
                                   ),
                                   Expanded(
+                                    //flex: 1,
                                     child: Column(
                                       crossAxisAlignment:
                                       CrossAxisAlignment.start,
@@ -148,41 +152,41 @@ class PromosView extends GetView<PromosController> {
                                       child: Text("Time Band : 00:00:00")),
                                   Padding(
                                     padding:
-                                        const EdgeInsets.fromLTRB(0, 0, 0, 10),
+                                    const EdgeInsets.fromLTRB(0, 0, 0, 10),
                                     child: Row(
                                       crossAxisAlignment:
-                                          CrossAxisAlignment.end,
+                                      CrossAxisAlignment.end,
                                       children: [
                                         const Text("Program : PrgName"),
                                         const Spacer(),
                                         Padding(
                                           padding:
-                                              const EdgeInsets.only(top: 5.0),
+                                          const EdgeInsets.only(top: 5.0),
                                           child: InputFields.formField1Width(
                                               widthRatio: 0.09,
                                               paddingLeft: 5,
                                               hintTxt: "Available",
-                                              controller: controllerX.available_,
+                                              controller: controllerX.segNo_,
                                               maxLen: 10),
                                         ),
                                         Padding(
                                           padding:
-                                              const EdgeInsets.only(top: 5.0),
+                                          const EdgeInsets.only(top: 5.0),
                                           child: InputFields.formField1Width(
                                               widthRatio: 0.09,
                                               paddingLeft: 5,
                                               hintTxt: "Scheduled",
-                                              controller: controllerX.scheduled_,
+                                              controller: controllerX.segNo_,
                                               maxLen: 10),
                                         ),
                                         Padding(
                                           padding:
-                                              const EdgeInsets.only(top: 5.0),
+                                          const EdgeInsets.only(top: 5.0),
                                           child: InputFields.formField1Width(
                                               widthRatio: 0.09,
                                               paddingLeft: 5,
                                               hintTxt: "Count",
-                                              controller: controllerX.count_,
+                                              controller: controllerX.segNo_,
                                               maxLen: 10),
                                         ),
                                       ],
@@ -193,7 +197,7 @@ class PromosView extends GetView<PromosController> {
                             ),
                           ),
 
-                          /// Program Table
+                          /// Caption Table
                           Expanded(
                             child: Padding(
                               padding: const EdgeInsets.fromLTRB(0, 10, 15, 0),
@@ -205,12 +209,12 @@ class PromosView extends GetView<PromosController> {
                                         flex: 1,
                                         child: Padding(
                                           padding:
-                                              const EdgeInsets.only(top: 5.0),
+                                          const EdgeInsets.only(top: 5.0),
                                           child: InputFields.formField1Width(
                                               widthRatio: .15,
                                               paddingLeft: 5,
                                               hintTxt: "Promo Caption",
-                                              controller: controllerX.promoCaption_,
+                                              controller: controllerX.tapeId_,
                                               maxLen: 10),
                                         ),
                                       ),
@@ -218,14 +222,14 @@ class PromosView extends GetView<PromosController> {
                                         flex: 1,
                                         child: Padding(
                                           padding:
-                                              const EdgeInsets.only(top: 5.0),
+                                          const EdgeInsets.only(top: 5.0),
                                           child: InputFields.formField1Width(
                                               widthRatio:
-                                                  (Get.width * 0.2) / 2 + 7,
+                                              (Get.width * 0.2) / 2 + 7,
                                               paddingLeft: 5,
                                               isEnable: false,
                                               hintTxt: "",
-                                              controller: controllerX.promoCaptionDur_,
+                                              controller: controllerX.segNo_,
                                               maxLen: 10),
                                         ),
                                       ),
@@ -236,13 +240,13 @@ class PromosView extends GetView<PromosController> {
                                       Expanded(
                                         child: Padding(
                                           padding:
-                                              const EdgeInsets.only(top: 5.0),
+                                          const EdgeInsets.only(top: 5.0),
                                           child: InputFields.formField1Width(
                                               widthRatio:
-                                                  (Get.width * 0.2) / 2 + 7,
+                                              (Get.width * 0.2) / 2 + 7,
                                               paddingLeft: 5,
                                               hintTxt: "Promo Id",
-                                              controller: controllerX.promoId_,
+                                              controller: controllerX.tapeId_,
                                               maxLen: 10),
                                         ),
                                       ),
@@ -250,18 +254,18 @@ class PromosView extends GetView<PromosController> {
                                   ),
                                   Row(
                                     mainAxisAlignment:
-                                        MainAxisAlignment.spaceBetween,
+                                    MainAxisAlignment.spaceBetween,
                                     children: [
                                       Padding(
                                         padding: const EdgeInsets.only(
                                             bottom: 8.0, top: 8.0),
                                         child: Row(children: [
-                                          // Radio(
-                                          //   value: 0,
-                                          //   groupValue:
-                                          //       controllerX.selectedAfter,
-                                          //   onChanged: (int? value) {},
-                                          // ),
+                                          Radio(
+                                            value: 0,
+                                            groupValue:
+                                            controllerX.selectedAfter,
+                                            onChanged: (int? value) {},
+                                          ),
                                           const Text('My')
                                         ]),
                                       ),
@@ -313,7 +317,7 @@ class PromosView extends GetView<PromosController> {
                                 mainAxisSize: MainAxisSize.min,
                                 children: [
                                   for (var btn in btcontroller.buttons!)
-                                    //if (Utils.btnAccessHandler(btn['name'], controller.formPermissions!) != null)
+                                  //if (Utils.btnAccessHandler(btn['name'], controller.formPermissions!) != null)
                                     FormButtonWrapper(
                                       btnText: btn["name"],
                                       callback: () => controller.formHandler(
@@ -335,64 +339,73 @@ class PromosView extends GetView<PromosController> {
   }
 
   Widget programTable(context) {
-    return GetBuilder<PromosController>(
+    return GetBuilder<FillerController>(
         id: "programTable",
         builder: (controller) {
-          if ((controllerX.programList.isNotEmpty)!) {
+          if (controllerX.fillerDailyFpcList != null &&
+              (controllerX.fillerDailyFpcList?.isNotEmpty)!) {
             // final key = GlobalKey();
             return DataGridFromMap(
-              mapData: (controllerX.programList
-                  .map((e) => e.toJson())
-                  .toList()),
+              mapData: (controllerX.fillerDailyFpcList
+                  ?.map((e) => e.toJson())
+                  .toList())!,
               widthRatio: (Get.width * 0.2) / 2 + 7,
               // mode: PlutoGridMode.select,
               onSelected: (plutoGrid) {
+                controllerX.selectedDailyFPC =
+                controllerX.fillerDailyFpcList![plutoGrid.rowIdx!];
+                print(jsonEncode(controllerX.selectedDailyFPC?.toJson()));
               },
             );
           } else {
-            return Container(
-              decoration: BoxDecoration(
-                border: Border.all(
-                  width: 1,
-                  color: Colors.grey.shade300,
+            return Expanded(
+              child: Card(
+                clipBehavior: Clip.hardEdge,
+                shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(0), // if you need this
+                  side: BorderSide(
+                    color: Colors.grey.shade300,
+                    width: 1,
+                  ),
                 ),
-                borderRadius: BorderRadius.circular(0),
+                child: Container(),
               ),
-              clipBehavior: Clip.hardEdge,
-              //child: const PleaseWaitCard(),
             );
           }
         });
   }
 
   Widget policyTable(context) {
-    return GetBuilder<PromosController>(
+    return GetBuilder<FillerController>(
         id: "policyTable",
         builder: (controller) {
-          if ((controllerX.policyList.isNotEmpty)) {
+          if (controllerX.fillerSegmentList != null &&
+              (controllerX.fillerSegmentList?.isNotEmpty)!) {
             return Expanded(
-              // height: 400,
               child: DataGridFromMap(
-                mapData: (controllerX.policyList
-                    .map((e) => e.toJson())
-                    .toList()),
+                mapData: (controllerX.fillerSegmentList
+                    ?.map((e) => e.toJson())
+                    .toList())!,
                 widthRatio: (Get.width * 0.2) / 2 + 7,
-                // mode: PlutoGridMode.select,
                 onSelected: (plutoGrid) {
                 },
               ),
             );
           } else {
-            return Container(
-              decoration: BoxDecoration(
-                border: Border.all(
-                  width: 1,
-                  color: Colors.grey.shade300,
+            return Expanded(
+              child: Card(
+                clipBehavior: Clip.hardEdge,
+                shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(0), // if you need this
+                  side: BorderSide(
+                    color: Colors.grey.shade300,
+                    width: 1,
+                  ),
                 ),
-                borderRadius: BorderRadius.circular(0),
+                child: Container(
+
+                ),
               ),
-              clipBehavior: Clip.hardEdge,
-              //child: const PleaseWaitCard(),
             );
           }
         });
@@ -402,31 +415,27 @@ class PromosView extends GetView<PromosController> {
     return GetBuilder<PromosController>(
         id: "captionTable",
         builder: (controller) {
-          if ((controllerX.captionList.isNotEmpty)!) {
+          if (controllerX.fillerDailyFpcList != null &&
+              (controllerX.fillerDailyFpcList?.isNotEmpty)!) {
             // final key = GlobalKey();
             return Expanded(
               // height: 400,
               child: DataGridFromMap(
-                mapData: (controllerX.captionList
-                    .map((e) => e.toJson())
+                mapData: (controllerX.fillerDailyFpcList
+                    ?.map((e) => e.toJson())
                     .toList())!,
                 widthRatio: (Get.width * 0.2) / 2 + 7,
                 // mode: PlutoGridMode.select,
                 onSelected: (plutoGrid) {
+                  controllerX.selectedDailyFPC =
+                  controllerX.fillerDailyFpcList![plutoGrid.rowIdx!];
+                  print(jsonEncode(controllerX.selectedDailyFPC?.toJson()));
                 },
               ),
             );
           } else {
             return Container(
-              decoration: BoxDecoration(
-                border: Border.all(
-                  width: 1,
-                  color: Colors.grey.shade300,
-                ),
-                borderRadius: BorderRadius.circular(0),
-              ),
-              clipBehavior: Clip.hardEdge,
-              //child: const PleaseWaitCard(),
+              //height: Get.height - (4 * kToolbarHeight),
             );
           }
         });
