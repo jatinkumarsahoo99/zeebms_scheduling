@@ -68,7 +68,7 @@ class SecondaryEventMasterView extends GetView<SecondaryEventMasterController> {
                             items: ['Bug', 'Aston'],
                             groupValue: controller.selectedRadio.value,
                             disabledRadios: !(controller.controllsEnabled.value) ? ['Bug', 'Aston'] : null,
-                            onchange: (va) => controller.selectedRadio = va,
+                            onchange: (va) => controller.selectedRadio.value = va,
                           );
                         }),
                       ),

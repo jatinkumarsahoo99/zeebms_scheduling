@@ -144,12 +144,7 @@ class SecondaryEventMasterController extends GetxController {
   handleONListener() {
     eventNameFN.addListener(() {
       if (!eventNameFN.hasFocus) {
-        var tempText = txCaptionTC.text;
-        if (txCaptionTC.text.startsWith("SEC/")) {
-          txCaptionTC.text = tempText.split("/")[1];
-        } else {
-          txCaptionTC.text = "SEC/$tempText";
-        }
+        txCaptionTC.text = "SEC/${eventNameTC.text}";
       }
     });
     txNOFN.addListener(() {
@@ -220,7 +215,7 @@ class SecondaryEventMasterController extends GetxController {
         fun: (resp) {
           closeDialog();
           if (resp != null && resp is Map<String, dynamic> && resp['save'] != null) {
-            if (resp['']['strmessage'] != null) {
+            if (resp['save']['strmessage'] != null) {
               LoadingDialog.callDataSaved(msg: resp['save']['strmessage'].toString());
             }
           } else {
@@ -228,7 +223,7 @@ class SecondaryEventMasterController extends GetxController {
           }
         },
         json: {
-          "eventCode": eventCode,
+          "eventCode": num.tryParse(eventCode ?? "0"),
           "houseid": txNoTC.text.trim(),
           "eventCaption": eventNameTC.text.trim(),
           "txCaption": txCaptionTC.text.trim(),
