@@ -344,6 +344,14 @@ class ApiFactory {
       "$BASE_URL/api/Transmissionlog/GetCommercialsClick?locationcode=$locId&channelcode=$channelId&Date=$telecastDt&standbyLog=$standBy";
   static String TRANSMISSION_LOG_UPDATED_CLICK(String locId, String channelId, String telecastDt, bool standBy) =>
       "$BASE_URL/api/Transmissionlog/GetUpdatedLogClick?Locationcode=$locId&channelcode=$channelId&Date=$telecastDt&standbyLog=$standBy";
+  static String TRANSMISSION_LOG_VERIFY_CLICK(String locId, String channelId, String telecastDt, bool standBy) =>
+      "$BASE_URL/api/Transmissionlog/GetbtnVerifyClick?locationcode=$locId&channelcode=$channelId&txtDate=$telecastDt&chkStandBy=$standBy";
+  static String TRANSMISSION_LOG_POST_VERIFY() =>
+      "$BASE_URL/api/Transmissionlog/PostVerifyTime";
+  static String TRANSMISSION_LOG_SEARCH_INSERT(String locId, String channelId, String telecastDt, bool isMine, String eventType, String txId, String caption) =>
+      "$BASE_URL/api/Transmissionlog/GetFastInsertsearchClick?locationcode=$locId&channelcode=$channelId&telecastdate=$telecastDt&mine=$isMine&eventType=$eventType&TxID=$txId&Caption=$caption";
+static String TRANSMISSION_LOG_EVENT_LIST() =>
+      "$BASE_URL/api/Transmissionlog/GetLoadFastInsertEventType";
 
   /////////////////////////// RO DISTRIBUTION START/////////////////////
   static String get RO_DISTRIBUTION_GET_LOCATION => "$BASE_URL/api/RosDistribution/GetRosDistribution";

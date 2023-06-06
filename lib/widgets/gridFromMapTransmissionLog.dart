@@ -217,7 +217,7 @@ class DataGridFromMapTransmissionLog extends StatelessWidget {
               bool isBold = false;
               Map<String, PlutoCell> cells = rendererContext.row.cells;
 
-              if (key == "eventType" &&
+              if (key == "transmissionTime" &&
                   (cells["eventType"]?.value.toString().trim().toLowerCase() ==
                       "p")) {
                 var strFPCTime =
@@ -231,7 +231,7 @@ class DataGridFromMapTransmissionLog extends StatelessWidget {
                     value: strTransmissionTime);
                 if ((((intTransmissionTime - intFPCTime)).abs() >
                     Get.find<TransmissionLogController>()
-                        .maxProgramStarttimeDiff)) {
+                        .maxProgramStarttimeDiff.value)) {
                   isBold = true;
                   print("eventType Index is>> " +
                       rendererContext.rowIdx.toString() +
@@ -398,8 +398,9 @@ class DataGridFromMapTransmissionLog extends StatelessWidget {
                     rendererContext.cell.value.toString(),
                     style: TextStyle(
                         fontSize: SizeDefine.columnTitleFontSize,
+                        // color: isBold?Colors.white:Colors.black,
                         fontWeight:
-                            isBold ? FontWeight.w700 : FontWeight.normal),
+                            isBold ? FontWeight.w800 : FontWeight.normal),
                   ),
                 ),
               );
