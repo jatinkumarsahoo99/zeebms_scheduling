@@ -1,25 +1,20 @@
+import 'package:bms_scheduling/app/data/DropDownValue.dart';
 import 'package:get/get.dart';
 
 class StillMasterController extends GetxController {
-  //TODO: Implement StillMasterController
-
-  final count = 0.obs;
-  @override
-  void onInit() {
-    super.onInit();
-  }
-
+  var locationList = <DropDownValue>[].obs, channelList = <DropDownValue>[].obs;
+  DropDownValue? selectedChannel, selectedLocation;
   @override
   void onReady() {
     super.onReady();
   }
 
-  @override
-  void onClose() {
-    super.onClose();
+  clearPage() {
+    selectedChannel = null;
+    selectedLocation = null;
+    locationList.refresh();
+    channelList.refresh();
   }
-
-  void increment() => count.value++;
 
   formHandler(String string) {}
 }

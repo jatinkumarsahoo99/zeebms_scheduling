@@ -219,7 +219,13 @@ class SecondaryEventMasterController extends GetxController {
         api: ApiFactory.SECONDARY_EVENT_MASTER_SAVE_DATA,
         fun: (resp) {
           closeDialog();
-          LoadingDialog.callDataSaved(msg: resp.toString());
+          if (resp != null && resp is Map<String, dynamic> && resp['save'] != null) {
+            if (resp['']['strmessage'] != null) {
+              LoadingDialog.callDataSaved(msg: resp['save']['strmessage'].toString());
+            }
+          } else {
+            LoadingDialog.showErrorDialog(resp.toString());
+          }
         },
         json: {
           "eventCode": eventCode,
