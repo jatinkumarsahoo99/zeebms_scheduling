@@ -21,16 +21,24 @@ class TransmissionLogController extends GetxController {
   RxBool isAutoClick = RxBool(false);
   List<Map<String, List<PlutoRow>>> logDeletedEvent1 = [];
 
+  RxBool visibleChangeOffset = RxBool(true);
+  RxBool visibleChangeDuration = RxBool(true);
+  RxBool visibleChangeFpc = RxBool(true);
+
   //input controllers
   DropDownValue? selectLocation;
-  DropDownValue? selectTimeForCommercial;
   DropDownValue? selectChannel;
+  DropDownValue? selectEvent;
+  DropDownValue? selectTimeForCommercial;
   PlutoGridStateManager? gridStateManager;
+  PlutoGridStateManager? gridStateManagerCommercial;
 
   // PlutoGridMode selectedPlutoGridMode = PlutoGridMode.normal;
   var isStandby = RxBool(false);
   var isMy = RxBool(true);
+  var isAllByChange = RxBool(false);
   var isInsertAfter = RxBool(false);
+  var isAllDay = RxBool(true);
   var isRowFilter = RxBool(false);
   TextEditingController selectedDate = TextEditingController();
   TextEditingController startTime_ = TextEditingController();
@@ -40,7 +48,18 @@ class TransmissionLogController extends GetxController {
   TextEditingController txId_ = TextEditingController();
   TextEditingController txCaption_ = TextEditingController();
   TextEditingController insertDuration_ = TextEditingController();
+  TextEditingController fromInsert_ = TextEditingController();
+  TextEditingController toInsert_ = TextEditingController();
   TextEditingController segmentFpcTime_ = TextEditingController();
+  TextEditingController txId_Change = TextEditingController();
+  TextEditingController duration_change = TextEditingController()
+    ..text = "00:00:00";
+  TextEditingController offset_change = TextEditingController()
+    ..text = "00:00:00";
+  TextEditingController fpctime_change = TextEditingController()
+    ..text = "00:00:00";
+  TextEditingController segment_change =
+      TextEditingController(); //txtChangeSegment
 
   TransmissionLogModel? transmissionLog;
   PlutoGridMode selectedPlutoGridMode = PlutoGridMode.selectWithOneTap;
@@ -49,7 +68,8 @@ class TransmissionLogController extends GetxController {
   RxList<DropDownValue> listLocation = RxList([]);
   RxList<DropDownValue> listChannel = RxList([]);
   RxList<ColorDataModel> listColor = RxList([]);
-  num maxProgramStarttimeDiff = 0;
+  RxList<DropDownValue> listEventsinInsert = RxList([]);
+  RxNum  maxProgramStarttimeDiff = RxNum(0);
 
   // bool chkTxCommercial = false;
   var chkTxCommercial = RxBool(false);
@@ -59,6 +79,9 @@ class TransmissionLogController extends GetxController {
   PlutoRow? copyRow;
   String? lastSelectOption;
   CommercialModel? commercailModel;
+
+  List<int> intCurrentRowIndex = List<int>.filled(4, 0);
+
   @override
   void onInit() {
     super.onInit();
@@ -97,10 +120,9 @@ class TransmissionLogController extends GetxController {
           selectChannel?.key ?? "",
         ),
         fun: (Map<String, dynamic> map) {
-          chkTxCommercial.value =
-              map["channelSpecsSettings"]["chkTxCommercial"];
-          maxProgramStarttimeDiff =
-              map["channelSpecsSettings"]["maxProgramStarttimeDiff"];
+          chkTxCommercial.value = map["channelSpecsSettings"]["chkTxCommercial"];
+          maxProgramStarttimeDiff.value = map["channelSpecsSettings"]["maxProgramStarttimeDiff"];
+          print(">>>>Vlaue"+chkTxCommercial.value.toString()+">>>>Max>>>"+maxProgramStarttimeDiff.value.toString());
         });
   }
 
@@ -141,27 +163,42 @@ class TransmissionLogController extends GetxController {
               isStandby.value),
           fun: (Map map) {
             Get.back();
-            commercailModel=CommercialModel.fromJson(map as Map<String,dynamic>);
+            commercailModel =
+                CommercialModel.fromJson(map as Map<String, dynamic>);
             fun(commercailModel);
           });
     }
   }
 
   getUpdateClick() {
-    LoadingDialog.call();
-    if (selectLocation != null && selectChannel != null) {
-      Get.find<ConnectorControl>().GETMETHODCALL(
-          api: ApiFactory.TRANSMISSION_LOG_UPDATED_CLICK(
-              selectLocation?.key ?? "",
-              selectChannel?.key ?? "",
-              Utils.dateFormatChange(
-                  selectedDate.text, "dd-MM-yyyy", "M/d/yyyy"),
-              isStandby.value),
-          fun: (Map map) {
-            Get.back();
+    LoadingDialog.recordExists("Want to save log?", () {
+      LoadingDialog.call();
+      if (selectLocation != null && selectChannel != null) {
+        Get.find<ConnectorControl>().GETMETHODCALL(
+            api: ApiFactory.TRANSMISSION_LOG_UPDATED_CLICK(
+                selectLocation?.key ?? "",
+                selectChannel?.key ?? "",
+                Utils.dateFormatChange(
+                    selectedDate.text, "dd-MM-yyyy", "M/d/yyyy"),
+                isStandby.value),
+            fun: (Map map) {
+              Get.back();
+            });
+      }
+    }, deleteCancel: "No", deleteTitle: "Yes");
+  }
 
+  getEventListForInsert({required Function function}) {
+    LoadingDialog.call();
+    Get.find<ConnectorControl>().GETMETHODCALL(
+        api: ApiFactory.TRANSMISSION_LOG_EVENT_LIST(),
+        fun: (Map map) {
+          Get.back();
+          map["lstFastInsertEventType"].forEach((e) {
+            listEventsinInsert.add(DropDownValue(key: e, value: e));
           });
-    }
+          function();
+        });
   }
 
   callRetrieve() {
@@ -202,6 +239,150 @@ class TransmissionLogController extends GetxController {
             } else {
               LoadingDialog.callInfoMessage("No Data Found");
             }
+          });
+    }
+  }
+
+  checkVerifyTime() {
+    if (selectLocation == null) {
+      Snack.callError("Please select location");
+    } else if (selectChannel == null) {
+      Snack.callError("Please select channel");
+    } else if (gridStateManager == null) {
+      Snack.callError("Table is not set");
+    } else {
+      LoadingDialog.call();
+      var sendData = {
+        "lstTblLog": gridStateManager?.rows.map((e) => e.toJson()).toList()
+      };
+
+      Get.find<ConnectorControl>().POSTMETHOD(
+          api: ApiFactory.TRANSMISSION_LOG_POST_VERIFY(),
+          json: sendData,
+          fun: (map) {
+            Get.back();
+            if (map is String) {
+              LoadingDialog.callInfoMessage(map.toString());
+            } else {
+              LoadingDialog.callInfoMessage("No Data Found");
+            }
+          });
+    }
+  }
+
+  void btnChangeDone_Click() {
+    intCurrentRowIndex[0] = gridStateManager?.currentRow?.sortIdx ?? 0;
+    intCurrentRowIndex[1] = int.tryParse(gridStateManager
+            ?.rows[intCurrentRowIndex[0]].cells["rownumber"]?.value) ??
+        0;
+    // intCurrentRowIndex[3] = tblLog.FirstDisplayedScrollingRowIndex;
+    intCurrentRowIndex[3] = 0;
+    addEventToUndo();
+    if (isAllByChange.value) {
+      // Update all events with the replaced duration
+      for (var dr in (gridStateManager?.rows)!) {
+        if (dr.cells["exportTapeCode"]?.value.toString().trim() ==
+                txId_Change.text.trim() &&
+            dr.cells["breakNumber"]?.value.toString().trim() ==
+                segment_change.text.trim()) {
+          dr.cells["tapeduration"]?.value = duration_change.text.trim();
+        }
+      }
+    } else {
+      // Update current event with the duration & offset
+      if (gridStateManager?.currentRow?.cells["exportTapeCode"]?.value ==
+              txId_Change.text &&
+          gridStateManager?.currentRow?.cells["breakNumber"]?.value
+                  .toString() ==
+              segment_change.text) {
+        gridStateManager?.currentRow?.cells["tapeduration"]?.value =
+            duration_change.text;
+
+        if (gridStateManager?.currentRow?.cells["eventType"]?.value
+                .toString()
+                .trim()
+                .toLowerCase() ==
+            "gl") {
+          gridStateManager?.currentRow?.cells["transmissionTime"]?.value =
+              offset_change.text;
+        } else {
+          startTime_.text = Utils.convertToTimeFromDouble(
+              value: Utils.oldBMSConvertToSecondsValue(value: startTime_.text) +
+                  (Utils.oldBMSConvertToSecondsValue(
+                          value: offset_change.text) -
+                      Utils.oldBMSConvertToSecondsValue(
+                          value: gridStateManager
+                              ?.currentRow?.cells["transmissionTime"]?.value)));
+        }
+
+        gridStateManager?.currentRow?.cells["fpCtime"]?.value =
+            fpctime_change.text.substring(0, 8);
+      }
+    }
+
+    // grpChange.Visible = false;
+    colorGrid(false);
+  }
+
+  void setChangeTime({required Function function}) {
+    if (gridStateManager == null) return;
+
+    if (gridStateManager?.currentRow?.cells["eventType"]?.value
+            .toString()
+            .trim()
+            .toLowerCase() ==
+        "gl") {
+      visibleChangeOffset.value = true;
+      offset_change.text =
+          gridStateManager?.currentRow?.cells["transmissionTime"]?.value;
+      visibleChangeDuration.value = true;
+      duration_change.text =
+          gridStateManager?.currentRow?.cells["tapeduration"]?.value;
+      fpctime_change.text =
+          gridStateManager?.currentRow?.cells["fpCtime"]?.value + ":00";
+      visibleChangeFpc.value = true;
+    } else {
+      visibleChangeDuration.value = false;
+      if (["p", "s", "f"].contains(gridStateManager
+          ?.currentRow?.cells["eventType"]?.value
+          .toString()
+          .trim()
+          .toLowerCase())) {
+        visibleChangeDuration.value = true;
+      }
+      visibleChangeOffset.value = true;
+      offset_change.text =
+          gridStateManager?.currentRow?.cells["transmissionTime"]?.value;
+      duration_change.text =
+          gridStateManager?.currentRow?.cells["tapeduration"]?.value;
+      fpctime_change.text =
+          gridStateManager?.currentRow?.cells["fpCtime"]?.value + ":00";
+      visibleChangeFpc.value = true;
+    }
+
+    txId_Change.text =
+        gridStateManager?.currentRow?.cells["exportTapeCode"]?.value;
+    segment_change.text =
+        gridStateManager?.currentRow?.cells["breakNumber"]?.value;
+
+    function();
+  }
+
+  verifyClick() {
+    if (selectLocation == null) {
+      Snack.callError("Please select location");
+    } else if (selectChannel == null) {
+      Snack.callError("Please select channel");
+    } else {
+      LoadingDialog.call();
+      Get.find<ConnectorControl>().GETMETHODCALL(
+          api: ApiFactory.TRANSMISSION_LOG_VERIFY_CLICK(
+              selectLocation?.key ?? '',
+              selectChannel?.key ?? '',
+              selectedDate.text,
+              isStandby.value),
+          fun: (map) {
+            Get.back();
           });
     }
   }
@@ -819,7 +1000,16 @@ class TransmissionLogController extends GetxController {
     }
   }
 
-  dataGridRowFilter(){
+  dataGridRowFilter({required String matchValue, required String filterKey}) {
     // gridStateManager.filteredCellValue(column: column)
+    gridStateManager
+        ?.setFilter((element) => element.cells[filterKey]?.value == matchValue);
+  }
+
+  dataGridRowFilterCommercial(
+      {required String matchValue, required String filterKey}) {
+    // gridStateManager.filteredCellValue(column: column)
+    gridStateManagerCommercial
+        ?.setFilter((element) => element.cells[filterKey]?.value == matchValue);
   }
 }
