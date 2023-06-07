@@ -45,8 +45,7 @@ class TransmissionLogView extends GetView<TransmissionLogController> {
               }
               break;
             case "F4":
-              controller
-                  .paste(controller.gridStateManager?.currentRowIdx);
+              controller.paste(controller.gridStateManager?.currentRowIdx);
               break;
           }
         },
@@ -588,7 +587,7 @@ class TransmissionLogView extends GetView<TransmissionLogController> {
         showSegmentDialog(Get.context);
         break;
       case "Change":
-        controller.setChangeTime(function: (){
+        controller.setChangeTime(function: () {
           showChangeDialog(Get.context);
         });
 
@@ -597,7 +596,10 @@ class TransmissionLogView extends GetView<TransmissionLogController> {
         showTransmissionSummaryDialog(Get.context);
         break;
       case "Verify":
-        showVerifyDialog(Get.context);
+        controller.getBtnVerifyClick(fun: () {
+          showVerifyDialog(Get.context);
+        });
+        // showVerifyDialog(Get.context);
         break;
       case "Aa":
         showAaDialog(Get.context);
@@ -1284,38 +1286,38 @@ class TransmissionLogView extends GetView<TransmissionLogController> {
                       hintTxt: "TX Id",
                       margin: true,
                       padLeft: 0,
-                      isEnable:false,
+                      isEnable: false,
                       controller: controller.txId_Change),
-                  Obx(()=>Padding(
-                    padding: EdgeInsets.only(top: 3),
-                    child: InputFields.formFieldNumberMask(
-                        hintTxt: "Duration",
-                        controller: controller.duration_change,
-                        widthRatio: 0.12,
-                        // isTime: true,
-                        isEnable:controller.visibleChangeDuration.value,
-                        paddingLeft: 0),
-                  )),
-                  Obx(()=>Padding(
-                    padding: EdgeInsets.only(top: 3),
-                    child: InputFields.formFieldNumberMask(
-                        hintTxt: "OffSet",
-                        controller: controller.offset_change,
-                        widthRatio: 0.12,
-                        // isTime: true,
-                        isEnable: controller.visibleChangeOffset.value,
-                        paddingLeft: 0),
-                  )),
-                  Obx(()=>Padding(
-                    padding: EdgeInsets.only(top: 3),
-                    child: InputFields.formFieldNumberMask(
-                        hintTxt: "FPC Time",
-                        controller: controller.fpctime_change,
-                        widthRatio: 0.12,
-                        // isTime: true,
-                        isEnable: controller.visibleChangeFpc.value,
-                        paddingLeft: 0),
-                  )),
+                  Obx(() => Padding(
+                        padding: EdgeInsets.only(top: 3),
+                        child: InputFields.formFieldNumberMask(
+                            hintTxt: "Duration",
+                            controller: controller.duration_change,
+                            widthRatio: 0.12,
+                            // isTime: true,
+                            isEnable: controller.visibleChangeDuration.value,
+                            paddingLeft: 0),
+                      )),
+                  Obx(() => Padding(
+                        padding: EdgeInsets.only(top: 3),
+                        child: InputFields.formFieldNumberMask(
+                            hintTxt: "OffSet",
+                            controller: controller.offset_change,
+                            widthRatio: 0.12,
+                            // isTime: true,
+                            isEnable: controller.visibleChangeOffset.value,
+                            paddingLeft: 0),
+                      )),
+                  Obx(() => Padding(
+                        padding: EdgeInsets.only(top: 3),
+                        child: InputFields.formFieldNumberMask(
+                            hintTxt: "FPC Time",
+                            controller: controller.fpctime_change,
+                            widthRatio: 0.12,
+                            // isTime: true,
+                            isEnable: controller.visibleChangeFpc.value,
+                            paddingLeft: 0),
+                      )),
                   Row(
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: [
@@ -1404,7 +1406,9 @@ class TransmissionLogView extends GetView<TransmissionLogController> {
                         child: FormButtonWrapper(
                           btnText: "Details",
                           showIcon: false,
-                          callback: () {},
+                          callback: () {
+                            controller.getBtnVerifyDetailsClick();
+                          },
                         ),
                       ),
                     ],
@@ -1416,7 +1420,7 @@ class TransmissionLogView extends GetView<TransmissionLogController> {
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
                       GetBuilder<TransmissionLogController>(
-                          id: "commercialsList",
+                          id: "verifyList",
                           init: controller,
                           builder: (controller) {
                             return SizedBox(
@@ -1427,12 +1431,21 @@ class TransmissionLogView extends GetView<TransmissionLogController> {
                                   ? DataGridFromMap(
                                       hideCode: false,
                                       formatDate: false,
-                                      colorCallback: (renderC) =>
-                                          Colors.red[200]!,
-                                      mapData: (controller
-                                          .transmissionLog
-                                          ?.loadSavedLogOutput
-                                          ?.lstTransmissionLog!
+                                      onload: (PlutoGridOnLoadedEvent ev) {
+                                        controller.dgvCommercialsStateManager =
+                                            ev.stateManager;
+                                      },
+                                      mode: PlutoGridMode.select,
+                                      onSelected:
+                                          (PlutoGridOnSelectedEvent onSelect) {
+                                        controller
+                                            .dgvCommercialsCellDoubleClick(
+                                                onSelect.rowIdx!);
+                                      },
+                                      /*colorCallback: (renderC) =>
+                                          Colors.red[200]!,*/
+                                      mapData: (controller.verifyListModel
+                                          ?.lstCheckTimeBetweenCommercials!
                                           .map((e) => e.toJson())
                                           .toList())!)
                                   // _dataTable3()
@@ -1442,24 +1455,26 @@ class TransmissionLogView extends GetView<TransmissionLogController> {
                             );
                           }),
                       GetBuilder<TransmissionLogController>(
-                          id: "commercialsList",
+                          id: "filterVerifyList",
                           init: controller,
                           builder: (controller) {
                             return SizedBox(
                               // width: 500,
                               width: Get.width * 0.3,
                               height: Get.height * 0.53,
-                              child: (controller.transmissionLog != null)
+                              child: (controller.listFilterVerify != null &&
+                                      ((controller.listFilterVerify?.length ??
+                                              0) >
+                                          0))
                                   ? DataGridFromMap(
                                       hideCode: false,
+                                      showonly: ["transmissionTime"],
                                       formatDate: false,
-                                      colorCallback: (renderC) =>
-                                          Colors.red[200]!,
-                                      mapData: (controller
-                                          .transmissionLog
-                                          ?.loadSavedLogOutput
-                                          ?.lstTransmissionLog!
-                                          .map((e) => e.toJson())
+                                      showSrNo: false,
+                                      /* colorCallback: (renderC) =>
+                                          Colors.red[200]!,*/
+                                      mapData: (controller.listFilterVerify
+                                          ?.map((e) => e.toJson())
                                           .toList())!)
                                   // _dataTable3()
                                   : const WarningBox(
@@ -1476,10 +1491,9 @@ class TransmissionLogView extends GetView<TransmissionLogController> {
                         padding: EdgeInsets.only(top: 3),
                         child: InputFields.formFieldNumberMask(
                             hintTxt: "Min Time Difference",
-                            controller: controller.segmentFpcTime_
-                              ..text = "00:00:00",
+                            controller: controller.verifyMinTime,
                             widthRatio: 0.12,
-                            isTime: true,
+                            isEnable: false,
                             paddingLeft: 0),
                       ),
                     ],

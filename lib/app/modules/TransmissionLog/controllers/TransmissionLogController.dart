@@ -13,6 +13,8 @@ import '../CommercialModel.dart';
 import '../TransmissionLogModel.dart';
 import 'dart:html' as html;
 
+import '../VerifyListModel.dart';
+
 class TransmissionLogController extends GetxController {
   var locations = RxList<DropDownValue>();
   var channels = RxList<DropDownValue>([]);
@@ -20,7 +22,7 @@ class TransmissionLogController extends GetxController {
   RxBool isFetch = RxBool(false);
   RxBool isAutoClick = RxBool(false);
   List<Map<String, List<PlutoRow>>> logDeletedEvent1 = [];
-
+  List<PlutoRow>? listFilterVerify=[];
   RxBool visibleChangeOffset = RxBool(true);
   RxBool visibleChangeDuration = RxBool(true);
   RxBool visibleChangeFpc = RxBool(true);
@@ -32,6 +34,7 @@ class TransmissionLogController extends GetxController {
   DropDownValue? selectTimeForCommercial;
   PlutoGridStateManager? gridStateManager;
   PlutoGridStateManager? gridStateManagerCommercial;
+  PlutoGridStateManager? dgvCommercialsStateManager;
 
   // PlutoGridMode selectedPlutoGridMode = PlutoGridMode.normal;
   var isStandby = RxBool(false);
@@ -51,6 +54,7 @@ class TransmissionLogController extends GetxController {
   TextEditingController fromInsert_ = TextEditingController();
   TextEditingController toInsert_ = TextEditingController();
   TextEditingController segmentFpcTime_ = TextEditingController();
+  TextEditingController verifyMinTime = TextEditingController();
   TextEditingController txId_Change = TextEditingController();
   TextEditingController duration_change = TextEditingController()
     ..text = "00:00:00";
@@ -70,6 +74,7 @@ class TransmissionLogController extends GetxController {
   RxList<ColorDataModel> listColor = RxList([]);
   RxList<DropDownValue> listEventsinInsert = RxList([]);
   RxNum maxProgramStarttimeDiff = RxNum(0);
+  VerifyListModel? verifyListModel;
 
   // bool chkTxCommercial = false;
   var chkTxCommercial = RxBool(false);
@@ -112,6 +117,89 @@ class TransmissionLogController extends GetxController {
           });
         });
   }
+
+  getBtnVerifyClick({Function? fun}) {
+    Get.find<ConnectorControl>().GETMETHODCALL(
+        api: ApiFactory.TRANSMISSION_LOG_BUTTON_VERIFY(
+            selectLocation?.key ?? "",
+            selectChannel?.key ?? "",
+            selectedDate.text,
+            isStandby.value),
+        fun: (map) {
+          // print("jsonData"+map.toString());
+          if (map is Map &&
+              map.containsKey("lstCheckTimeBetweenCommercials") &&
+              (map["lstCheckTimeBetweenCommercials"].length > 0)) {
+            verifyListModel = VerifyListModel.fromJson(map);
+            if (fun != null) {
+              fun();
+              update(['commercialsList']);
+            }
+          } else {
+            Snack.callError(map.toString());
+          }
+
+          /* channels.clear();
+          map["locationSelect"].forEach((e) {
+            channels.add(
+                DropDownValue.fromJsonDynamic(e, "channelCode", "channelName"));
+          });*/
+        });
+  }
+
+  getBtnVerifyDetailsClick({Function? fun}) {
+    Get.find<ConnectorControl>().GETMETHODCALL(
+        api: ApiFactory.TRANSMISSION_LOG_BUTTON_DETAILS_VERIFY(
+            selectLocation?.key ?? "",
+            selectChannel?.key ?? "",
+            selectedDate.text),
+        fun: (map) {
+          // print("jsonData"+map.toString());
+          if (map is Map &&
+              map.containsKey("lstVerifyInDetails") &&
+              (map["lstVerifyInDetails"].length > 0)) {
+            verifyListModel = VerifyListModel.fromJson(map);
+            update(['verifyList']);
+          } else {
+            Snack.callError(map.toString());
+          }
+        });
+  }
+
+  void dgvCommercialsCellDoubleClick(int rowIndex) {
+    try {
+      String strExportTapeCode = dgvCommercialsStateManager?.rows[rowIndex].cells["exportTapeCode"]?.value;
+
+      // DataTable _dt = tblLog.dataSource;
+
+      /*DataTable __dt = _dt
+          .where((row) => row["ExportTapeCode"] == strExportTapeCode)
+          .toList()
+          .copyToDataTable();*/
+      listFilterVerify=gridStateManager?.rows.where((element) => element.cells["exportTapeCode"]?.value==strExportTapeCode).toList();
+      update(['filterVerifyList']);
+
+      String strTimeDiff = "";
+      num? intSetTimeDiff = 0;
+
+      if (listFilterVerify != null) {
+        for (PlutoRow dr in listFilterVerify!) {
+          if (strTimeDiff != "") {
+            num intTimeDiff = Utils.oldBMSConvertToSecondsValue(value:dr.cells["transmissionTime"]?.value)! - Utils.oldBMSConvertToSecondsValue(value:strTimeDiff)!;
+            if (intSetTimeDiff! > intSetTimeDiff! || intSetTimeDiff == 0) {
+              intSetTimeDiff = intTimeDiff;
+            }
+          }
+          strTimeDiff = dr.cells["transmissionTime"]?.value;
+        }
+        print("Vlaue is>>>"+(intSetTimeDiff?.round().toString()??""));
+        verifyMinTime.text = Utils.convertToTimeFromDouble(value:num.tryParse(intSetTimeDiff?.round().toString()??"0")!);
+      }
+    } catch (ex) {
+      Snack.callError("Error: "+ex.toString());
+    }
+  }
+
 
   getChannelFocusOut() {
     Get.find<ConnectorControl>().GETMETHODCALL(
@@ -1025,7 +1113,8 @@ class TransmissionLogController extends GetxController {
     txtTransmissionTime.text =
         gridStateManager?.rows[index].cells["transmissionTime"]?.value ?? "";
     txtDtChange.text =
-        gridStateManager?.rows[index].cells["datechange"]?.value.toString() ?? '';
+        gridStateManager?.rows[index].cells["datechange"]?.value.toString() ??
+            '';
     // DataTable dt = tblLog.dataSource;
     if (gridStateManager?.rows.length != 0) {
       try {
