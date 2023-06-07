@@ -21,19 +21,14 @@ class ProgramView extends GetView<RoBookingController> {
             runSpacing: 05,
             children: [
               DropDownField.formDropDownSearchAPI2(GlobalKey(), context,
-                  width: Get.width * 0.12,
-                  title: "Tape Id",
-                  url: "url",
-                  onchanged: (value) {}),
-              DropDownField.formDropDown1WidthMap(
-                  [], (value) => {}, "Seg", 0.03,
-                  isEnable: false),
+                  width: Get.width * 0.12, title: "Tape Id", url: "url", onchanged: (value) {}),
+              DropDownField.formDropDown1WidthMap([], (value) => {}, "Seg", 0.03, isEnable: false),
               InputFields.formField1(
                   // showTitle: false,
                   hintTxt: "Duration",
                   isEnable: false,
                   controller: controller.refNoCtrl,
-                  width: 0.09),
+                  width: 0.09 - (5 / Get.width)),
               InputFields.formField1(
                   // showTitle: false,
                   hintTxt: "Caption",
@@ -76,23 +71,13 @@ class ProgramView extends GetView<RoBookingController> {
                   isEnable: false,
                   controller: controller.refNoCtrl,
                   width: 0.12),
-              DateWithThreeTextField(
-                  isEnable: false,
-                  widthRation: 0.12,
-                  title: "Deal Start",
-                  mainTextController: controller.fpcEffectiveDateCtrl),
-              DropDownField.formDropDown1WidthMap(
-                  [], (value) => {}, "Pre-Mid", 0.12,
-                  isEnable: true),
-              DropDownField.formDropDown1WidthMap(
-                  [], (value) => {}, "Position", 0.12,
-                  isEnable: true),
+              DateWithThreeTextField(isEnable: false, widthRation: 0.12, title: "Deal Start", mainTextController: controller.fpcEffectiveDateCtrl),
+              DropDownField.formDropDown1WidthMap([], (value) => {}, "Pre-Mid", 0.12, isEnable: true),
+              DropDownField.formDropDown1WidthMap([], (value) => {}, "Position", 0.12, isEnable: true),
               Row(
                 crossAxisAlignment: CrossAxisAlignment.end,
                 children: [
-                  DropDownField.formDropDown1WidthMap(
-                      [], (value) => {}, "Position", 0.12,
-                      isEnable: true),
+                  DropDownField.formDropDown1WidthMap([], (value) => {}, "Position", 0.12, isEnable: true),
                   SizedBox(
                     width: 5,
                   ),

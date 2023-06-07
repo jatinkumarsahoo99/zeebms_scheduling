@@ -21,22 +21,23 @@ class RoBookingView extends GetView<RoBookingController> {
         id: "init",
         builder: (controller) {
           if (controller.roBookingInitData == null) {
-            return CircularProgressIndicator();
+            return Center(child: CircularProgressIndicator());
           }
           return Scaffold(
               backgroundColor: Colors.grey[50],
               body: Column(
                 children: [
                   Row(
+                    crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
                       Card(
                         child: Padding(
                           padding: const EdgeInsets.all(8.0),
                           child: SizedBox(
-                            width: Get.width * .83,
+                            width: Get.width * .84,
                             child: Wrap(
                               runSpacing: 5.0,
-                              spacing: 5.0,
+                              spacing: Get.width * .01,
                               crossAxisAlignment: WrapCrossAlignment.end,
                               alignment: WrapAlignment.start,
                               children: [
@@ -45,64 +46,71 @@ class RoBookingView extends GetView<RoBookingController> {
                                         .map((e) => DropDownValue(key: e.locationCode, value: e.locationName))
                                         .toList(), (value) {
                                   controller.selectedLocation = value;
-                                }, "Location", 0.12),
+                                  controller.getChannel(value.key);
+                                }, "Location", 0.11),
                                 Obx(
                                   () => DropDownField.formDropDown1WidthMap(controller.channels.value, (value) {
                                     controller.selectedChannel = value;
-                                  }, "Channel", 0.12),
+                                  }, "Channel", 0.23),
                                 ),
                                 DateWithThreeTextField(
                                   title: "FPC Eff. Dt.",
-                                  widthRation: 0.09,
+                                  widthRation: 0.11,
                                   mainTextController: controller.fpcEffectiveDateCtrl,
                                   onFocusChange: (date) {
                                     controller.effDtLeave();
                                   },
                                 ),
-                                DateWithThreeTextField(title: "Booking Date", widthRation: 0.09, mainTextController: controller.bookDateCtrl),
-                                InputFields.formField1(hintTxt: "Ref No", controller: controller.refNoCtrl),
-                                DateWithThreeTextField(title: "Ref Date", mainTextController: controller.fpcEffectiveDateCtrl),
-                                DropDownField.formDropDown1WidthMap([], (value) => {}, "Rev Type", 0.12),
+                                DateWithThreeTextField(title: "Booking Date", widthRation: 0.11, mainTextController: controller.bookDateCtrl),
+                                InputFields.formField1(
+                                  hintTxt: "Ref No",
+                                  controller: controller.refNoCtrl,
+                                  width: 0.11,
+                                ),
+                                DateWithThreeTextField(title: "Ref Date", widthRation: 0.11, mainTextController: controller.fpcEffectiveDateCtrl),
+                                DropDownField.formDropDown1WidthMap([], (value) => {}, "Rev Type", 0.11),
                                 Row(
                                   mainAxisSize: MainAxisSize.min,
                                   mainAxisAlignment: MainAxisAlignment.center,
                                   children: [
-                                    InputFields.formField1(hintTxt: "Booking No", width: 0.06, controller: controller.bookingMonthCtrl),
-                                    InputFields.formField1(hintTxt: "", controller: controller.bookingNoCtrl, width: 0.03),
+                                    InputFields.formField1(hintTxt: "Booking No", width: 0.09, controller: controller.bookingMonthCtrl),
+                                    InputFields.formField1(hintTxt: "", controller: controller.bookingNoCtrl, width: 0.06),
                                     InputFields.formField1(
                                       hintTxt: "",
-                                      controller: controller.refNoCtrl,
-                                      width: 0.06,
+                                      controller: controller.bookingNoTrailCtrl,
+                                      width: 0.08,
                                     ),
                                   ],
                                 ),
                                 Obx(
                                   () => DropDownField.formDropDown1WidthMap(controller.clients.value, (value) {
                                     controller.clientLeave(value.key);
-                                  }, "Client", 0.24),
+                                  }, "Client", 0.23),
                                 ),
-                                DropDownField.formDropDown1WidthMap([], (value) => {}, "Deal", 0.12),
-                                DropDownField.formDropDown1WidthMap([], (value) => {}, "Deal Type", 0.12, isEnable: false),
+                                DropDownField.formDropDown1WidthMap([], (value) => {}, "Deal", 0.11),
+                                DropDownField.formDropDown1WidthMap([], (value) => {}, "Deal Type", 0.11, isEnable: false),
                                 Obx(
-                                  () => DropDownField.formDropDown1WidthMap(controller.agencies.value, (value) => {}, "Agency", 0.24),
+                                  () => DropDownField.formDropDown1WidthMap(controller.agencies.value, (value) => {}, "Agency", 0.23),
                                 ),
-                                DropDownField.formDropDown1WidthMap([], (value) => {}, "Pay route", 0.12),
-                                DropDownField.formDropDown1WidthMap([], (value) => {}, "Pay route", 0.12, isEnable: false),
-                                DropDownField.formDropDown1WidthMap([], (value) => {}, "Brand", 0.24),
-                                ElevatedButton(onPressed: () {}, child: Text("Search Tape")),
-                                DropDownField.formDropDown1WidthMap([], (value) => {}, "Pay Mode", 0.12, isEnable: false),
+                                DropDownField.formDropDown1WidthMap([], (value) => {}, "Pay route", 0.11),
+                                DropDownField.formDropDown1WidthMap([], (value) => {}, "Brand", 0.23),
+                                SizedBox(
+                                  width: Get.width * 0.11,
+                                  child: ElevatedButton(onPressed: () {}, child: Text("Search Tape")),
+                                ),
+                                DropDownField.formDropDown1WidthMap([], (value) => {}, "Pay Mode", 0.11, isEnable: false),
                                 Wrap(
                                   runAlignment: WrapAlignment.spaceBetween,
                                   alignment: WrapAlignment.spaceEvenly,
-                                  runSpacing: 10,
-                                  spacing: 10,
+                                  runSpacing: 5.0,
+                                  spacing: Get.width * .01,
                                   children: [
-                                    DropDownField.formDropDown1WidthMap([], (value) => {}, "Executive", 0.24, isEnable: false),
-                                    InputFields.formField1(hintTxt: "Tot Spots", controller: controller.refNoCtrl, width: 0.06),
-                                    InputFields.formField1(hintTxt: "Tot Dur", controller: controller.refNoCtrl, width: 0.06),
-                                    InputFields.formField1(hintTxt: "Tot Amt", controller: controller.refNoCtrl, width: 0.06),
-                                    InputFields.formField1(hintTxt: "Zone", controller: controller.refNoCtrl, width: 0.06),
-                                    InputFields.formField1(hintTxt: "Max Spend", controller: controller.refNoCtrl, width: 0.06),
+                                    DropDownField.formDropDown1WidthMap([], (value) => {}, "Executive", 0.23, isEnable: false),
+                                    InputFields.formField1(hintTxt: "Tot Spots", controller: controller.totSpotCtrl, width: 0.11),
+                                    InputFields.formField1(hintTxt: "Tot Dur", controller: controller.totDurCtrl, width: 0.11),
+                                    InputFields.formField1(hintTxt: "Tot Amt", controller: controller.totAmtCtrl, width: 0.11),
+                                    InputFields.formField1(hintTxt: "Zone", controller: controller.zoneCtrl, width: 0.11),
+                                    InputFields.formField1(hintTxt: "Max Spend", controller: controller.maxspendCtrl, width: 0.11),
                                   ],
                                 )
                               ],
@@ -110,23 +118,29 @@ class RoBookingView extends GetView<RoBookingController> {
                           ),
                         ),
                       ),
-                      Card(
-                        child: Padding(
-                          padding: const EdgeInsets.all(8.0),
-                          child: Wrap(
-                            spacing: 3,
-                            direction: Axis.vertical,
-                            children: [
-                              InputFields.formField1(hintTxt: "Prev. V Amt", controller: controller.refNoCtrl, width: 0.06),
-                              InputFields.formField1(hintTxt: "Prev. B Amt", controller: controller.refNoCtrl, width: 0.06),
-                              InputFields.formField1(showTitle: false, hintTxt: "", controller: controller.refNoCtrl, width: 0.06),
-                              DropDownField.formDropDown1WidthMap([], (value) => {}, "Sec Event", 0.12, isEnable: false),
-                              DropDownField.formDropDown1WidthMap([], (value) => {}, "Trigger At", 0.12, isEnable: false),
-                            ],
+                      SizedBox(
+                        width: Get.width * 0.14,
+                        child: Card(
+                          child: Padding(
+                            padding: const EdgeInsets.all(8.0),
+                            child: Wrap(
+                              spacing: 3,
+                              runSpacing: 5.0,
+                              children: [
+                                InputFields.formField1(hintTxt: "Prev. V Amt", controller: controller.refNoCtrl, width: 0.06),
+                                InputFields.formField1(hintTxt: "Prev. B Amt", controller: controller.refNoCtrl, width: 0.06),
+                                InputFields.formField1(hintTxt: "", controller: controller.refNoCtrl, width: 0.06),
+                                DropDownField.formDropDown1WidthMap([], (value) => {}, "Sec Event", 0.12, isEnable: false),
+                                DropDownField.formDropDown1WidthMap([], (value) => {}, "Trigger At", 0.12, isEnable: false),
+                              ],
+                            ),
                           ),
                         ),
                       )
                     ],
+                  ),
+                  SizedBox(
+                    height: 10,
                   ),
                   Obx(
                     () => CupertinoSlidingSegmentedControl(
@@ -148,19 +162,20 @@ class RoBookingView extends GetView<RoBookingController> {
                   SizedBox(
                     height: 5,
                   ),
-                  Card(
-                    child: SizedBox(
-                      height: Get.height / 2,
-                      child: Padding(
-                        padding: const EdgeInsets.all(8.0),
-                        child: PageView.builder(
-                            controller: controller.controller,
-                            itemBuilder: (context, int) {
-                              return controller.tabs[controller.tabs.keys.toList()[int]];
-                            }),
-                      ),
+                  Expanded(
+                      child: Container(
+                          child: Card(
+                    child: Padding(
+                      padding: const EdgeInsets.all(8.0),
+                      child: PageView.builder(
+                          itemCount: controller.tabs.length,
+                          physics: NeverScrollableScrollPhysics(),
+                          controller: controller.controller,
+                          itemBuilder: (context, int) {
+                            return controller.tabs[controller.tabs.keys.toList()[int]];
+                          }),
                     ),
-                  ),
+                  ))),
                   GetBuilder<HomeController>(
                       id: "buttons",
                       init: Get.find<HomeController>(),
@@ -192,7 +207,6 @@ class RoBookingView extends GetView<RoBookingController> {
                                         btn["name"] == "Save"
                                             ? FormButtonWrapper(
                                                 btnText: btn["name"],
-
                                                 // isEnabled: btn['isDisabled'],
                                                 callback: () {},
                                               )

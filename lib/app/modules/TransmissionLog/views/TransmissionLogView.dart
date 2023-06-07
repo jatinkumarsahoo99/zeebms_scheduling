@@ -349,6 +349,9 @@ class TransmissionLogView extends GetView<TransmissionLogController> {
                                   controller.gridStateManager
                                       ?.removeCurrentRow();
                                   break;
+                                case DataGridMenuItem.verifyTime:
+                                  controller.checkVerifyTime();
+                                  break;
                                 case DataGridMenuItem.clearpaste:
                                   controller.copyRow = null;
                                   break;
@@ -514,12 +517,16 @@ class TransmissionLogView extends GetView<TransmissionLogController> {
                                     () => formHandler(btn['name']),
                               ),
                             IconButton(
-                              onPressed: () {},
+                              onPressed: () {
+                                this.controller.btnUp_Click();
+                              },
                               icon: Icon(Icons.arrow_upward),
                               padding: EdgeInsets.symmetric(horizontal: 8.0),
                             ),
                             IconButton(
-                              onPressed: () {},
+                              onPressed: () {
+                                this.controller.btnDown_Click();
+                              },
                               icon: Icon(Icons.arrow_downward),
                               padding: EdgeInsets.symmetric(horizontal: 8.0),
                             ),
@@ -566,17 +573,25 @@ class TransmissionLogView extends GetView<TransmissionLogController> {
     switch (btn) {
       case "Commercials":
         controller.getCommercialList(fun: (model) {
-          showCommercialDialog(Get.context,model);
+          showCommercialDialog(Get.context, model);
         });
         break;
+      case "Updated":
+        controller.getUpdateClick();
+        break;
       case "Insert":
-        showInsertDialog(Get.context);
+        controller.getEventListForInsert(function: () {
+          showInsertDialog(Get.context);
+        });
         break;
       case "Segments":
         showSegmentDialog(Get.context);
         break;
       case "Change":
-        showChangeDialog(Get.context);
+        controller.setChangeTime(function: (){
+          showChangeDialog(Get.context);
+        });
+
         break;
       case "TS":
         showTransmissionSummaryDialog(Get.context);
@@ -704,7 +719,7 @@ class TransmissionLogView extends GetView<TransmissionLogController> {
     );
   }
 
-  showCommercialDialog(context,CommercialModel? model) {
+  showCommercialDialog(context, CommercialModel? model) {
     return Get.defaultDialog(
       barrierDismissible: false,
       title: "Commercials",
@@ -724,21 +739,29 @@ class TransmissionLogView extends GetView<TransmissionLogController> {
                   Row(
                     children: [
                       DropDownField.formDropDown1WidthMap(
-                          model?.timelist?.toList(),
-                          (value) {
-                            controller.selectTimeForCommercial = value;
-                            // controller.selectedLocationId.text = value.key!;
-                            // controller.selectedLocationName.text = value.value!;
-                            // controller.getChannelsBasedOnLocation(value.key!);
-                          },
-                          "Time",
-                          0.12,
-                          // isEnable: controller.isEnable.value,
-                          selected: controller.selectTimeForCommercial,
-                          autoFocus: true,
-                          dialogWidth: 330,
-                          dialogHeight: Get.height * .7,
-                        ),
+                        model?.timelist?.toList(),
+                        (value) {
+                          controller.selectTimeForCommercial = value;
+                          controller.dataGridRowFilter(
+                            matchValue: value.value ?? "",
+                            filterKey: 'fpCtime',
+                          );
+                          controller.dataGridRowFilterCommercial(
+                            matchValue: value.value ?? "",
+                            filterKey: 'scheduletime',
+                          );
+                          // controller.selectedLocationId.text = value.key!;
+                          // controller.selectedLocationName.text = value.value!;
+                          // controller.getChannelsBasedOnLocation(value.key!);
+                        },
+                        "Time",
+                        0.12,
+                        // isEnable: controller.isEnable.value,
+                        selected: controller.selectTimeForCommercial,
+                        autoFocus: true,
+                        dialogWidth: 330,
+                        dialogHeight: Get.height * .7,
+                      ),
                       Padding(
                         padding: const EdgeInsets.only(top: 15.0, left: 10),
                         child: FormButtonWrapper(
@@ -761,13 +784,17 @@ class TransmissionLogView extends GetView<TransmissionLogController> {
                           width: Get.width * 0.8,
                           height: 300,
                           child: (model != null &&
-                                  model?.lstListLoggedCommercials != null &&
-                                  model?.lstListLoggedCommercials?.length != 0)
+                                  model.lstListLoggedCommercials != null &&
+                                  model.lstListLoggedCommercials?.length != 0)
                               ? DataGridFromMap(
                                   hideCode: false,
                                   formatDate: false,
+                                  onload: (PlutoGridOnLoadedEvent load) {
+                                    controller.gridStateManagerCommercial =
+                                        load.stateManager;
+                                  },
                                   // colorCallback: (renderC) => Colors.red[200]!,
-                                  mapData: (model?.lstListLoggedCommercials
+                                  mapData: (model.lstListLoggedCommercials
                                       ?.map((e) => e.toJson())
                                       .toList())!)
                               // _dataTable3()
@@ -817,9 +844,9 @@ class TransmissionLogView extends GetView<TransmissionLogController> {
                     children: [
                       Obx(
                         () => DropDownField.formDropDown1WidthMap(
-                          controller.locations.value,
+                          controller.listEventsinInsert.value,
                           (value) {
-                            controller.selectLocation = value;
+                            controller.selectEvent = value;
                             // controller.selectedLocationId.text = value.key!;
                             // controller.selectedLocationName.text = value.value!;
                             // controller.getChannelsBasedOnLocation(value.key!);
@@ -833,12 +860,18 @@ class TransmissionLogView extends GetView<TransmissionLogController> {
                           dialogHeight: Get.height * .7,
                         ),
                       ),
+                      SizedBox(
+                        width: 10,
+                      ),
                       InputFields.formField1(
                           width: 0.13,
                           onchanged: (value) {},
                           hintTxt: "TX Caption",
                           margin: true,
                           controller: controller.txCaption_),
+                      SizedBox(
+                        width: 10,
+                      ),
                       InputFields.formField1(
                           width: 0.13,
                           onchanged: (value) {},
@@ -846,21 +879,26 @@ class TransmissionLogView extends GetView<TransmissionLogController> {
                           margin: true,
                           controller: controller.txId_),
                       SizedBox(
+                        width: 10,
+                      ),
+                      SizedBox(
                         width: Get.width * 0.05,
                         child: Row(
                           children: [
                             SizedBox(width: 5),
-                            Obx(() => Padding(
-                                  padding: const EdgeInsets.only(top: 15.0),
-                                  child: Checkbox(
-                                    value: controller.isMy.value,
-                                    onChanged: (val) {
-                                      controller.isMy.value = val!;
-                                    },
-                                    materialTapTargetSize:
-                                        MaterialTapTargetSize.shrinkWrap,
-                                  ),
-                                )),
+                            Obx(
+                              () => Padding(
+                                padding: const EdgeInsets.only(top: 15.0),
+                                child: Checkbox(
+                                  value: controller.isMy.value,
+                                  onChanged: (val) {
+                                    controller.isMy.value = val!;
+                                  },
+                                  materialTapTargetSize:
+                                      MaterialTapTargetSize.shrinkWrap,
+                                ),
+                              ),
+                            ),
                             Padding(
                               padding:
                                   const EdgeInsets.only(top: 15.0, left: 5),
@@ -889,8 +927,7 @@ class TransmissionLogView extends GetView<TransmissionLogController> {
                           callback: () {},
                         ),
                       ),
-                      SizedBox(
-                        width: Get.width * 0.07,
+                      FittedBox(
                         child: Row(
                           children: [
                             SizedBox(width: 5),
@@ -917,7 +954,9 @@ class TransmissionLogView extends GetView<TransmissionLogController> {
                           ],
                         ),
                       ),
-                      Spacer(),
+                      SizedBox(
+                        width: 10,
+                      ),
                       InputFields.formFieldNumberMask(
                           hintTxt: "",
                           controller: controller.insertDuration_
@@ -938,7 +977,7 @@ class TransmissionLogView extends GetView<TransmissionLogController> {
                         return SizedBox(
                           // width: 500,
                           width: Get.width * 0.8,
-                          height: Get.height * 0.6,
+                          height: Get.height * 0.5,
                           child: (controller.transmissionLog != null)
                               ? DataGridFromMap(
                                   hideCode: false,
@@ -953,7 +992,108 @@ class TransmissionLogView extends GetView<TransmissionLogController> {
                                   text:
                                       'Enter Location, Channel & Date to get the Break Definitions'),
                         );
-                      })
+                      }),
+                  Padding(
+                    padding: const EdgeInsets.only(
+                        left: 5, right: 16, bottom: 4, top: 8),
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: const [
+                        Text(
+                          "Replace",
+                          style: TextStyle(fontSize: 13),
+                        ),
+                        Expanded(
+                          child: Padding(
+                            padding: EdgeInsets.only(left: 16),
+                            child: Divider(
+                              height: 1,
+                            ),
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
+                  Row(
+                    children: [
+                      InputFields.formField1(
+                          width: 0.13,
+                          onchanged: (value) {},
+                          hintTxt: "TX Id",
+                          margin: true,
+                          controller: controller.txId_),
+                      SizedBox(
+                        width: 10,
+                      ),
+                      InputFields.formFieldNumberMask(
+                          hintTxt: "Duration",
+                          controller: controller.insertDuration_
+                            ..text = "00:00:00",
+                          widthRatio: 0.13,
+                          isTime: true,
+                          paddingLeft: 0),
+                      SizedBox(width: 5),
+                      FittedBox(
+                        child: Row(
+                          children: [
+                            SizedBox(width: 5),
+                            Obx(() => Padding(
+                                  padding: const EdgeInsets.only(top: 15.0),
+                                  child: Checkbox(
+                                    value: controller.isAllDay.value,
+                                    onChanged: (val) {
+                                      controller.isAllDay.value = val!;
+                                    },
+                                    materialTapTargetSize:
+                                        MaterialTapTargetSize.shrinkWrap,
+                                  ),
+                                )),
+                            Padding(
+                              padding:
+                                  const EdgeInsets.only(top: 15.0, left: 5),
+                              child: Text(
+                                "All day",
+                                style:
+                                    TextStyle(fontSize: SizeDefine.labelSize1),
+                              ),
+                            ),
+                          ],
+                        ),
+                      ),
+                      SizedBox(width: 5),
+                      InputFields.formFieldNumberMask(
+                          hintTxt: "From",
+                          controller: controller.fromInsert_..text = "00:00:00",
+                          widthRatio: 0.13,
+                          isTime: true,
+                          isEnable: false,
+                          paddingLeft: 0),
+                      SizedBox(width: 10),
+                      InputFields.formFieldNumberMask(
+                          hintTxt: "To",
+                          controller: controller.toInsert_..text = "00:00:00",
+                          widthRatio: 0.13,
+                          isTime: true,
+                          isEnable: false,
+                          paddingLeft: 0),
+                      Padding(
+                        padding: const EdgeInsets.only(left: 10, top: 15),
+                        child: FormButtonWrapper(
+                          btnText: "Get Event",
+                          showIcon: false,
+                          callback: () {},
+                        ),
+                      ),
+                      Padding(
+                        padding: const EdgeInsets.only(left: 10, top: 15),
+                        child: FormButtonWrapper(
+                          btnText: "Replace",
+                          showIcon: false,
+                          callback: () {},
+                        ),
+                      ),
+                    ],
+                  )
                 ],
               ),
             ),
@@ -1144,39 +1284,38 @@ class TransmissionLogView extends GetView<TransmissionLogController> {
                       hintTxt: "TX Id",
                       margin: true,
                       padLeft: 0,
-                      controller: controller.txId_),
-                  Padding(
+                      isEnable:false,
+                      controller: controller.txId_Change),
+                  Obx(()=>Padding(
                     padding: EdgeInsets.only(top: 3),
                     child: InputFields.formFieldNumberMask(
                         hintTxt: "Duration",
-                        controller: controller.segmentFpcTime_
-                          ..text = "00:00:00",
+                        controller: controller.duration_change,
                         widthRatio: 0.12,
-                        isTime: true,
+                        // isTime: true,
+                        isEnable:controller.visibleChangeDuration.value,
                         paddingLeft: 0),
-                  ),
-                  Padding(
+                  )),
+                  Obx(()=>Padding(
                     padding: EdgeInsets.only(top: 3),
                     child: InputFields.formFieldNumberMask(
                         hintTxt: "OffSet",
-                        controller: controller.segmentFpcTime_
-                          ..text = "00:00:00",
+                        controller: controller.offset_change,
                         widthRatio: 0.12,
-                        isTime: true,
-                        isEnable: false,
+                        // isTime: true,
+                        isEnable: controller.visibleChangeOffset.value,
                         paddingLeft: 0),
-                  ),
-                  Padding(
+                  )),
+                  Obx(()=>Padding(
                     padding: EdgeInsets.only(top: 3),
                     child: InputFields.formFieldNumberMask(
                         hintTxt: "FPC Time",
-                        controller: controller.segmentFpcTime_
-                          ..text = "00:00:00",
+                        controller: controller.fpctime_change,
                         widthRatio: 0.12,
-                        isTime: true,
-                        isEnable: false,
+                        // isTime: true,
+                        isEnable: controller.visibleChangeFpc.value,
                         paddingLeft: 0),
-                  ),
+                  )),
                   Row(
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: [
@@ -1188,9 +1327,9 @@ class TransmissionLogView extends GetView<TransmissionLogController> {
                             Obx(() => Padding(
                                   padding: const EdgeInsets.only(top: 15.0),
                                   child: Checkbox(
-                                    value: controller.isMy.value,
+                                    value: controller.isAllByChange.value,
                                     onChanged: (val) {
-                                      controller.isMy.value = val!;
+                                      controller.isAllByChange.value = val!;
                                     },
                                     materialTapTargetSize:
                                         MaterialTapTargetSize.shrinkWrap,
@@ -1213,7 +1352,9 @@ class TransmissionLogView extends GetView<TransmissionLogController> {
                         child: FormButtonWrapper(
                           btnText: "Change",
                           showIcon: false,
-                          callback: () {},
+                          callback: () {
+                            controller.btnChangeDone_Click();
+                          },
                         ),
                       ),
                     ],

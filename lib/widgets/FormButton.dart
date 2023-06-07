@@ -151,7 +151,10 @@ class FormButton extends StatelessWidget {
     return ElevatedButton.icon(
       focusNode: focusNode,
       style: ButtonStyle(
-          overlayColor: MaterialStateProperty.all(Colors.deepPurple[900])),
+          overlayColor: MaterialStateProperty.all(
+            Colors.deepPurple[900],
+          ),
+          alignment: Alignment.center),
       onPressed: (isEnabled ?? true)
           ? (btnText == "Exit")
               ? () {
@@ -166,11 +169,12 @@ class FormButton extends StatelessWidget {
                 }
               : callback
           : null,
-      icon: showIcon ? Icon(iconData, size: 16) : const SizedBox(width: 0),
-      label: Text(
-        btnText,
-        style: TextStyle(fontSize: SizeDefine.fontSizeButton),
-      ),
+      icon: showIcon ? Icon(iconData, size: 16) : Container(),
+      label: Text(btnText.trim(),
+          style: TextStyle(
+            fontSize: SizeDefine.fontSizeButton,
+          ),
+          textAlign: TextAlign.center),
     );
 
     // if (iconData == null) {
