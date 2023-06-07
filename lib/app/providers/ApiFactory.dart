@@ -423,6 +423,16 @@ class ApiFactory {
   ///
   ///
   ///
+  ///
+  ////////////////////////////// STILL-MASTER-API-START  ////////////////////////////////////////////
+  static String get STILL_MASTER_FORM_LOAD => "$BASE_URL/api/StillMaster/GetPageLoad";
+  // static String get FINAL_REPORT_BT_GET_DATA => "$BASE_URL/api/FinalAuditReportBT/DateLeave";
+  static String STILL_MASTER_GET_CHANNELS(String lc) => "$BASE_URL/api/StillMaster/ListMyChannels?LocationCode=$lc";
+  static String get STILL_MASTER_PROGRAM_SEARCH => "$BASE_URL/api/StillMaster/GetSourceProgramSearch?TextSourceProgram=";
+  //////////////////////////// STILL-MASTER-API-END  //////////////////////////////////////////////
+  ///
+  ///
+  ///
 
   ///////////////// RO BOOKING //////////////////////////
   static String RO_BOOKING_INIT = "$BASE_URL/api/ROBooking/RoBookingOnLoad";

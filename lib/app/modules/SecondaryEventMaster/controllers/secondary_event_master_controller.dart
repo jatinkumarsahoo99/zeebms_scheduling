@@ -184,6 +184,7 @@ class SecondaryEventMasterController extends GetxController {
       fun: (resp) {
         closeDialog();
         if (resp != null && resp is Map<String, dynamic> && resp['channels'] != null) {
+          selectedChannel = null;
           channelList.clear();
           channelList.addAll((resp['channels'] as List<dynamic>)
               .map((e) => DropDownValue.fromJson({
