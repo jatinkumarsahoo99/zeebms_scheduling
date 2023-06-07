@@ -8,6 +8,7 @@ import '../../../../widgets/DateTime/TimeWithThreeTextField.dart';
 import '../../../../widgets/FormButton.dart';
 import '../../../../widgets/LoadingDialog.dart';
 import '../../../../widgets/dropdown.dart';
+import '../../../../widgets/gridFromMap.dart';
 import '../../../../widgets/input_fields.dart';
 import '../../../controller/HomeController.dart';
 import '../controllers/still_master_controller.dart';
@@ -85,7 +86,7 @@ class StillMasterView extends GetView<StillMasterController> {
                     FormButton(
                       btnText: "..",
                       iconDataM: Icons.table_view_sharp,
-                      callback: handleProgramShowDT,
+                      callback: () => handleProgramShowDT(context),
                     ),
                     Spacer(),
                   ],
@@ -107,12 +108,14 @@ class StillMasterView extends GetView<StillMasterController> {
                             hintTxt: "Tape ID",
                             controller: controller.tapIDTC,
                             width: 0.112,
+                            focusNode: controller.tapeIDFN,
                           ),
                           SizedBox(width: 10),
                           InputFields.formField1(
                             hintTxt: "Seg No.",
                             controller: controller.segTC,
                             width: 0.11,
+                            focusNode: controller.segFN,
                           ),
                         ],
                       ),
@@ -123,12 +126,14 @@ class StillMasterView extends GetView<StillMasterController> {
                             hintTxt: "House ID",
                             controller: controller.houseIDTC,
                             width: 0.11,
+                            focusNode: controller.houseIDFN,
                           ),
                           SizedBox(width: 10),
                           InputFields.formField1(
                             hintTxt: "Copy",
                             controller: controller.copyTC,
                             width: 0.11,
+                            focusNode: controller.copyFN,
                           ),
                         ],
                       ),
@@ -147,7 +152,7 @@ class StillMasterView extends GetView<StillMasterController> {
                             return RadioRow(
                               items: ["Bumper", "Opening"],
                               groupValue: controller.firststSelectedRadio.value,
-                              onchange: (val) => controller.firststSelectedRadio.value = val,
+                              onchange: controller.handleChangeInRadio,
                             );
                           }),
                           Obx(() {
@@ -161,12 +166,15 @@ class StillMasterView extends GetView<StillMasterController> {
                       ),
                     ),
                     SizedBox(width: 20),
-                    InputFields.formField1(
-                      hintTxt: "TX Caption",
-                      controller: controller.txCaptionTC,
-                      prefixText: "S/",
-                      width: .225,
-                    ),
+                    Obx(() {
+                      return InputFields.formField1(
+                        hintTxt: "TX Caption",
+                        controller: controller.txCaptionTC,
+                        prefixText: controller.prefixText.value,
+                        width: .225,
+                        focusNode: controller.txCaptionFN,
+                      );
+                    }),
                   ],
                 ),
                 Padding(
@@ -185,11 +193,12 @@ class StillMasterView extends GetView<StillMasterController> {
                               selected: controller.selectedTape,
                             );
                           }),
-                          SizedBox(width: 13),
+                          SizedBox(width: 10),
                           InputFields.formFieldNumberMask(
                             hintTxt: "SOM",
                             controller: controller.somTC,
-                            widthRatio: .15,
+                            widthRatio: .11,
+                            paddingLeft: 0,
                           ),
                         ],
                       ),
@@ -199,14 +208,17 @@ class StillMasterView extends GetView<StillMasterController> {
                           InputFields.formFieldNumberMask(
                             hintTxt: "EOM",
                             controller: controller.eomTC,
-                            widthRatio: .15,
+                            widthRatio: .11,
+                            paddingLeft: 0,
+                            textFieldFN: controller.eomFN,
                           ),
                           SizedBox(width: 10),
                           Obx(() {
                             return InputFields.formFieldDisable(
                               hintTxt: "Duration",
                               value: controller.duration.value,
-                              widthRatio: .15,
+                              widthRatio: .11,
+                              leftPad: 0,
                             );
                           }),
                         ],
@@ -230,7 +242,7 @@ class StillMasterView extends GetView<StillMasterController> {
                       SizedBox(width: 20),
                       DateWithThreeTextField(
                         title: "Upto Date",
-                        mainTextController: TextEditingController(),
+                        mainTextController: controller.upToDateTC,
                         widthRation: .225,
                       )
                     ],
@@ -276,13 +288,34 @@ class StillMasterView extends GetView<StillMasterController> {
     );
   }
 
-  handleProgramShowDT() {
+  handleProgramShowDT(BuildContext context) {
     if (controller.selectedLocation == null || controller.selectedChannel == null) {
       LoadingDialog.showErrorDialog("Please select Location,Channel");
     } else {
       Get.defaultDialog(
-        // content: ,
         title: "Program Picker",
+        content: FutureBuilder<bool>(
+          initialData: true,
+          future: controller.getProgramPickerData(),
+          builder: (context, snapShot) {
+            return Container(
+              alignment: Alignment.center,
+              decoration: controller.programPickerList.isEmpty
+                  ? BoxDecoration(
+                      border: Border.all(
+                      color: Colors.grey,
+                    ))
+                  : null,
+              height: context.width * .5,
+              width: context.width * .5,
+              child: (snapShot.data!)
+                  ? const CircularProgressIndicator()
+                  : controller.programPickerList.isEmpty
+                      ? Text("No Data Found")
+                      : DataGridFromMap(mapData: controller.programPickerList),
+            );
+          },
+        ),
       );
     }
   }
