@@ -172,6 +172,7 @@ class CommercialController extends GetxController {
               mainCommercialShowDetailsList
                   ?.add(CommercialShowOnTabModel.fromJson(element, index));
             });
+
             showCommercialDetailsList?.value = mainCommercialShowDetailsList!
                 .where((o) => o.bStatus.toString() == 'B')
                 .toList();
@@ -198,7 +199,7 @@ class CommercialController extends GetxController {
             // commercialDuration.value = list['showDetails']['bindGridOutPut']
             // ['commercialDuration'] ?? "";
 
-            updateTab();
+            updateAllTabs();
             Get.back();
           },
           failed: (val) {
@@ -207,7 +208,7 @@ class CommercialController extends GetxController {
     }
   }
 
-  updateTab() {
+  updateAllTabs() {
     update(["programTable"]);
     update(["schedulingTable"]);
     update(["fpcMismatchTable"]);
@@ -249,7 +250,7 @@ class CommercialController extends GetxController {
           .toList();
       showCommercialDetailsList?.refresh();
     }
-    updateTab();
+    updateAllTabs();
     return showCommercialDetailsList?.value;
   }
 
@@ -281,7 +282,7 @@ class CommercialController extends GetxController {
           .toList();
       showCommercialDetailsList?.refresh();
     }
-    updateTab();
+    updateAllTabs();
     return showCommercialDetailsList?.value;
   }
 
@@ -302,7 +303,7 @@ class CommercialController extends GetxController {
     target.pProgramMaster = programCodeSelected;
     target.pDailyFPC = programCodeSelected;
     mainCommercialShowDetailsList?.refresh();
-    updateTab();
+    updateAllTabs();
     showTabList();
 
     return mainCommercialShowDetailsList;
@@ -322,7 +323,7 @@ class CommercialController extends GetxController {
     target.bStatus = 'B';
     target.pProgramMaster = pDailyFPCSelected;
     mainCommercialShowDetailsList?.refresh();
-    updateTab();
+    updateAllTabs();
     showTabList();
     return mainCommercialShowDetailsList;
   }
@@ -337,7 +338,7 @@ class CommercialController extends GetxController {
     print("markAsErrorOnClick : $target");
     target.bStatus = 'E';
     mainCommercialShowDetailsList?.refresh();
-    updateTab();
+    updateAllTabs();
     showTabList();
     return mainCommercialShowDetailsList;
   }
@@ -354,7 +355,7 @@ class CommercialController extends GetxController {
     print("unMarkAsErrorOnClick : $target");
     target.bStatus = 'B';
     mainCommercialShowDetailsList?.refresh();
-    updateTab();
+    updateAllTabs();
     showTabList();
     return mainCommercialShowDetailsList;
   }
