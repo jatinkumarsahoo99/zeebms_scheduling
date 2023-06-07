@@ -96,6 +96,7 @@ class StillMasterView extends GetView<StillMasterController> {
                   hintTxt: "Caption",
                   controller: controller.captionTC,
                   width: 0.475,
+                  focusNode: controller.captionFN,
                 ),
                 Padding(
                   padding: EdgeInsets.symmetric(vertical: 4),
@@ -312,7 +313,10 @@ class StillMasterView extends GetView<StillMasterController> {
                   ? const CircularProgressIndicator()
                   : controller.programPickerList.isEmpty
                       ? Text("No Data Found")
-                      : DataGridFromMap(mapData: controller.programPickerList),
+                      : DataGridFromMap(
+                          mapData: controller.programPickerList,
+                          onRowDoubleTap: (row) => controller.tblProgramPickerCellDoubleClick(row.rowIdx),
+                        ),
             );
           },
         ),

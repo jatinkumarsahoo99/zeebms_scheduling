@@ -18,6 +18,7 @@ class StillMasterController extends GetxController {
       segFN = FocusNode(),
       houseIDFN = FocusNode(),
       copyFN = FocusNode(),
+      captionFN = FocusNode(),
       eomFN = FocusNode(),
       txCaptionFN = FocusNode();
   var firststSelectedRadio = "Opening".obs, secondSelectedRadio = "Dated".obs;
@@ -79,6 +80,11 @@ class StillMasterController extends GetxController {
     copyFN.addListener(() {
       if (!copyFN.hasFocus) {
         copyLeave();
+      }
+    });
+    captionFN.addListener(() {
+      if (!captionFN.hasFocus) {
+        captionLeave();
       }
     });
 
@@ -286,7 +292,11 @@ class StillMasterController extends GetxController {
   }
 
   copyLeave() async {
-    retrievRecord(tapeid: copyTC.text, segNo: "1", locationCode: selectedLocation?.key ?? "", channelCode: selectedChannel?.key ?? "");
+    retrievRecord(
+        tapeid: copyTC.text.isEmpty ? " " : copyTC.text,
+        segNo: "1",
+        locationCode: selectedLocation?.key ?? "",
+        channelCode: selectedChannel?.key ?? "");
     strCode = "";
     tapIDTC.text = "AUTO";
     controllsEnabled.value = true;
@@ -296,8 +306,15 @@ class StillMasterController extends GetxController {
     }
   }
 
-  tblProgramPickerCellDoubleClick() {
-    createCaption("program");
+  tblProgramPickerCellDoubleClick(int index) {
+    closeDialog();
+    selectedProgram = DropDownValue(key: programPickerList[index]['programCode'], value: programPickerList[index]['programName']);
+    createCaption(selectedProgram!.value!);
+    locationList.refresh();
+  }
+
+  captionLeave() {
+    txCaptionTC.text = captionTC.text;
   }
 
   createCaption(String program) {
