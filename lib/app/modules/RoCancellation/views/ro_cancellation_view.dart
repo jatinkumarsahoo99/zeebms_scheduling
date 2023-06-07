@@ -6,7 +6,7 @@ import 'package:bms_scheduling/widgets/input_fields.dart';
 import 'package:flutter/material.dart';
 
 import 'package:get/get.dart';
-import 'package:pluto_grid/pluto_grid.dart';
+import 'package:bms_scheduling/widgets/PlutoGrid/pluto_grid.dart';
 
 import '../../../controller/HomeController.dart';
 import '../controllers/ro_cancellation_controller.dart';
@@ -230,97 +230,46 @@ class RoCancellationView extends GetView<RoCancellationController> {
             ),
           )),
           GetBuilder<HomeController>(
-              id: "buttons",
-              init: Get.find<HomeController>(),
-              builder: (btncontroller) {
-                /* PermissionModel formPermissions = Get.find<MainController>()
-                      .permissionList!
-                      .lastWhere((element) {
-                    return element.appFormName == "frmSegmentsDetails";
-                  });*/
-
-                return Container(
-                  height: 40,
-                  child: ButtonBar(
-                    // buttonHeight: 20,
-                    alignment: MainAxisAlignment.start,
-                    mainAxisSize: MainAxisSize.min,
-                    // pa
-                    children: [
-                      for (var btn in btncontroller.buttons!)
-                        btn["name"] == "Save"
-                            ? FormButtonWrapper(
-                                btnText: btn["name"],
-
-                                // isEnabled: btn['isDisabled'],
-                                callback: () {
-                                  controller.save();
-                                },
-                              )
-                            : btn["name"] == "Clear"
-                                ? FormButtonWrapper(
-                                    btnText: btn["name"],
-
-                                    // isEnabled: btn['isDisabled'],
-                                    callback: () {
-                                      btncontroller.clearPage1();
-                                    },
-                                  )
-                                : FormButtonWrapper(
-                                    btnText: btn["name"],
-
-                                    // isEnabled: btn['isDisabled'],
-                                    callback: null,
-                                  ),
-                    ],
-                  ),
-                );
-              }),
-          // GetBuilder<HomeController>(
-          //     id: "buttons",
-          //     init: Get.find<HomeController>(),
-          //     builder: (btncontroller) {
-          //       /* PermissionModel formPermissions = Get.find<MainController>()
-          //             .permissionList!
-          //             .lastWhere((element) {
-          //           return element.appFormName == "frmSegmentsDetails";
-          //         });*/
-
-          //       return Container(
-          //         height: 40,
-          //         child: ButtonBar(
-          //           // buttonHeight: 20,
-          //           alignment: MainAxisAlignment.start,
-          //           mainAxisSize: MainAxisSize.min,
-          //           // pa
-          //           children: [
-          //             for (var btn in btncontroller.buttons!)
-          //               btn["name"] == "Save"
-          //                   ? Obx(() => FormButtonWrapper(
-          //                         btnText: btn["name"],
-
-          //                         // isEnabled: btn['isDisabled'],
-          //                         callback: () {},
-          //                       ))
-          //                   : btn["name"] == "Clear"
-          //                       ? FormButtonWrapper(
-          //                           btnText: btn["name"],
-
-          //                           // isEnabled: btn['isDisabled'],
-          //                           callback: () {
-          //                             btncontroller.clearPage1();
-          //                           },
-          //                         )
-          //                       : FormButtonWrapper(
-          //                           btnText: btn["name"],
-
-          //                           // isEnabled: btn['isDisabled'],
-          //                           callback: null,
-          //                         ),
-          //           ],
-          //         ),
-          //       );
-          //     }),
+            id: "buttons",
+            init: Get.find<HomeController>(),
+            builder: (btncontroller) {
+              return Container(
+                height: 40,
+                child: ButtonBar(
+                  alignment: MainAxisAlignment.start,
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
+                    for (var btn in btncontroller.buttons!)
+                      btn["name"] == "Save"
+                          ? FormButtonWrapper(
+                              btnText: btn["name"],
+                              callback: () {
+                                controller.save();
+                              },
+                            )
+                          : btn["name"] == "Clear"
+                              ? FormButtonWrapper(
+                                  btnText: btn["name"],
+                                  callback: () {
+                                    btncontroller.clearPage1();
+                                  },
+                                )
+                              : btn["name"] == "Docs"
+                                  ? FormButtonWrapper(
+                                      btnText: btn["name"],
+                                      callback: () {
+                                        controller.docs();
+                                      },
+                                    )
+                                  : FormButtonWrapper(
+                                      btnText: btn["name"],
+                                      callback: null,
+                                    ),
+                  ],
+                ),
+              );
+            },
+          ),
         ],
       ),
     );

@@ -1,12 +1,18 @@
+import 'dart:convert';
+
 import 'package:bms_scheduling/app/modules/RoCancellation/bindings/ro_cancellation_data.dart';
+import 'package:bms_scheduling/app/modules/RoCancellation/bindings/ro_cancellation_doc.dart';
 import 'package:bms_scheduling/app/providers/ApiFactory.dart';
+import 'package:bms_scheduling/app/providers/ExportData.dart';
+import 'package:bms_scheduling/widgets/DataGridShowOnly.dart';
+import 'package:bms_scheduling/widgets/FormButton.dart';
 import 'package:bms_scheduling/widgets/LoadingDialog.dart';
 import 'package:file_picker/file_picker.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:get/get_connect/http/src/utils/utils.dart';
 import 'package:intl/intl.dart';
-import 'package:pluto_grid/pluto_grid.dart';
+import 'package:bms_scheduling/widgets/PlutoGrid/pluto_grid.dart';
 import 'package:dio/dio.dart' as dio;
 
 import '../../../controller/ConnectorControl.dart';
@@ -35,6 +41,7 @@ class RoCancellationController extends GetxController {
   FocusNode bookingNumberFocus = FocusNode();
   FocusNode cancelNumberFocus = FocusNode();
   FocusNode selectAllFocus = FocusNode();
+  List<RoCancellationDocuments> documents = [];
 
   RoCancellationData? roCancellationData;
   PlutoGridStateManager? roCancellationGridManager;
@@ -76,16 +83,13 @@ class RoCancellationController extends GetxController {
       Get.find<ConnectorControl>().GETMETHODCALL(
           api: ApiFactory.RO_CANCELLATION_LOCATION,
           fun: (data) {
-            if ((data as Map).containsKey("lstLocation") &&
-                data["lstLocation"] is List) {
+            if ((data as Map).containsKey("lstLocation") && data["lstLocation"] is List) {
               for (var e in data["lstLocation"]) {
-                locations.add(DropDownValue(
-                    key: e["locationCode"], value: e["locationName"]));
+                locations.add(DropDownValue(key: e["locationCode"], value: e["locationName"]));
               }
               locations.refresh();
             } else {
-              LoadingDialog.callErrorMessage1(
-                  msg: "Failed To Load Initial Data");
+              LoadingDialog.callErrorMessage1(msg: "Failed To Load Initial Data");
             }
           });
     } catch (e) {
@@ -99,11 +103,9 @@ class RoCancellationController extends GetxController {
       Get.find<ConnectorControl>().GETMETHODCALL(
           api: ApiFactory.RO_CANCELLATION_CHANNNEL(locationCode),
           fun: (data) {
-            if ((data as Map).containsKey("lstChannel") &&
-                data["lstChannel"] is List) {
+            if ((data as Map).containsKey("lstChannel") && data["lstChannel"] is List) {
               for (var e in data["lstChannel"]) {
-                channels.add(DropDownValue(
-                    key: e["channelcode"], value: e["channelName"]));
+                channels.add(DropDownValue(key: e["channelcode"], value: e["channelName"]));
               }
               channels.refresh();
               // channels.value = data["lstChannel"]
@@ -111,8 +113,7 @@ class RoCancellationController extends GetxController {
               //         key: e["channelcode"], value: e["channelName"]))
               //     .toList();
             } else {
-              LoadingDialog.callErrorMessage1(
-                  msg: "Failed To Load Initial Data");
+              LoadingDialog.callErrorMessage1(msg: "Failed To Load Initial Data");
             }
           });
     } catch (e) {
@@ -135,13 +136,11 @@ class RoCancellationController extends GetxController {
           fun: (data) {
             try {
               roCancellationData = RoCancellationData.fromJson(data);
-              if (roCancellationData != null &&
-                  roCancellationData!.cancellationData != null) {
+              if (roCancellationData != null && roCancellationData!.cancellationData != null) {
                 parseCancellationData();
               }
             } catch (e) {
-              LoadingDialog.callErrorMessage1(
-                  msg: "Failed To Load Cancellation Data");
+              LoadingDialog.callErrorMessage1(msg: "Failed To Load Cancellation Data");
             }
           });
     } catch (e) {
@@ -229,6 +228,66 @@ class RoCancellationController extends GetxController {
     } catch (e) {}
   }
 
+  docs() {
+    PlutoGridStateManager? viewDocsStateManger;
+    Get.defaultDialog(
+        title: "Documents",
+        content: Container(
+          width: Get.width / 2.5,
+          height: Get.height / 2.5,
+          child: DataGridShowOnlyKeys(
+            mapData: documents.map((e) => e.toJson()).toList(),
+            onload: (loadGrid) {
+              viewDocsStateManger = loadGrid.stateManager;
+            },
+          ),
+        ),
+        actions: {"Add Doc": () async {}, "View Doc": () {}, "Attach Email": () {}}
+            .entries
+            .map((e) => FormButtonWrapper(
+                  btnText: e.key,
+                  callback: e.key == "Add Doc"
+                      ? () async {
+                          FilePickerResult? result = await FilePicker.platform.pickFiles();
+
+                          if (result != null && result.files.single != null) {
+                            LoadingDialog.call();
+                            await Get.find<ConnectorControl>().POSTMETHOD(
+                                api: ApiFactory.RO_CANCELLATION_ADD_DOC,
+                                fun: (data) {
+                                  if (data is Map && data.containsKey("addingDocument")) {
+                                    for (var doc in data["addingDocument"]) {
+                                      documents.add(RoCancellationDocuments.fromJson(doc));
+                                    }
+                                    Get.back();
+                                    docs();
+                                  }
+                                },
+                                json: {
+                                  "documentKey":
+                                      "ROCancellation ${selectedLocation!.key}${selectedChannel!.key}${cancelMonthctrl.text}${cancelNumberctrl.text}",
+                                  "strFilePath": result.files.first.name,
+                                  "bytes": base64.encode(List<int>.from(result.files.first.bytes ?? []))
+                                });
+                            Get.back();
+                          }
+                        }
+                      : e.key == "View Doc"
+                          ? () {
+                              Get.find<ConnectorControl>().GETMETHODCALL(
+                                  api: ApiFactory.RO_CANCELLATION_VIEW_DOC(documents[viewDocsStateManger!.currentCell!.row.sortIdx].documentId),
+                                  fun: (data) {
+                                    if (data is Map && data.containsKey("addingDocument")) {
+                                      ExportData().exportFilefromByte(
+                                          base64Decode(data["addingDocument"][0]["documentData"]), data["addingDocument"][0]["documentname"]);
+                                    }
+                                  });
+                            }
+                          : () {},
+                ))
+            .toList());
+  }
+
   calculate() {
     intTotalCount.value = 0;
     intTotalDuration.value = 0;
@@ -238,16 +297,10 @@ class RoCancellationController extends GetxController {
     for (var row in roCancellationGridManager!.rows) {
       if (row.checked! && row.cells["cancelNumber"]!.value == "") {
         intTotalCount.value = (intTotalCount.value ?? 0) + 1;
-        intTotalDuration.value = (intTotalDuration.value ?? 0) +
-            (num.parse((row.cells["tapeDuration"]?.value ?? 0).toString()))
-                .toInt();
-        intTotalAmount.value = (intTotalAmount.value ?? 0) +
-            (double.parse((row.cells["spotAmount"]?.value ?? 0).toString()))
-                .toDouble();
-        intTotalValuationAmount.value = (intTotalValuationAmount.value ?? 0) +
-            (double.parse(
-                    (row.cells["valuationAmount"]?.value ?? 0).toString()))
-                .toDouble();
+        intTotalDuration.value = (intTotalDuration.value ?? 0) + (num.parse((row.cells["tapeDuration"]?.value ?? 0).toString())).toInt();
+        intTotalAmount.value = (intTotalAmount.value ?? 0) + (double.parse((row.cells["spotAmount"]?.value ?? 0).toString())).toDouble();
+        intTotalValuationAmount.value =
+            (intTotalValuationAmount.value ?? 0) + (double.parse((row.cells["valuationAmount"]?.value ?? 0).toString())).toDouble();
       }
     }
 
@@ -276,15 +329,11 @@ class RoCancellationController extends GetxController {
           "channelCode": selectedChannel!.key,
           "cancelMonth": int.tryParse(cancelMonthctrl.text) ?? 0,
           "cancelNumber": int.tryParse(cancelNumberctrl.text) ?? 0,
-          "cancelDate": DateFormat("yyyy-MM-dd")
-              .format(DateFormat("dd-MM-yyyy").parse(cancelDatectrl.text)),
+          "cancelDate": DateFormat("yyyy-MM-dd").format(DateFormat("dd-MM-yyyy").parse(cancelDatectrl.text)),
           "referenceNumber": refNumberctrl.text,
           "bookingnumber": bookingNumberctrl.text,
           "modifiedBy": "string",
-          "lstdgvList": roCancellationData!
-              .cancellationData!.lstBookingNoStatusData!
-              .map((e) => e.toJson())
-              .toList()
+          "lstdgvList": roCancellationData!.cancellationData!.lstBookingNoStatusData!.map((e) => e.toJson()).toList()
         },
         fun: (data) {
           Get.back();
@@ -321,11 +370,9 @@ class RoCancellationController extends GetxController {
           try {
             List<LstBookingNoStatusData> _lstBookingNoStatusData = [];
             for (var element in data["importExcelResponse"]) {
-              _lstBookingNoStatusData
-                  .add(LstBookingNoStatusData.fromJson(element));
+              _lstBookingNoStatusData.add(LstBookingNoStatusData.fromJson(element));
             }
-            roCancellationData!.cancellationData!.lstBookingNoStatusData =
-                _lstBookingNoStatusData;
+            roCancellationData!.cancellationData!.lstBookingNoStatusData = _lstBookingNoStatusData;
             update(["cancelData"]);
           } catch (e) {
             LoadingDialog.callErrorMessage1(msg: "Failed To Import File");

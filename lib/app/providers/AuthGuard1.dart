@@ -1,9 +1,9 @@
 import 'package:bms_scheduling/app/controller/MainController.dart';
+import 'package:bms_scheduling/app/modules/FillerMaster/views/filler_master_view.dart';
 import 'package:bms_scheduling/app/modules/FinalAuditReportAfterTelecast/views/final_audit_report_after_telecast_view.dart';
 import 'package:bms_scheduling/app/modules/FinalAuditReportBeforeLog/views/final_audit_report_before_log_view.dart';
 import 'package:bms_scheduling/app/modules/FpcMismatch/views/FpcMismatchView.dart';
 import 'package:bms_scheduling/app/modules/ImportDigitextRunOrder/views/import_digitext_run_order_view.dart';
-import 'package:bms_scheduling/app/modules/LogAdditions/controllers/LogAdditionsController.dart';
 import 'package:bms_scheduling/app/modules/MamWorkOrders/views/mam_work_orders_view.dart';
 import 'package:bms_scheduling/app/modules/RoBooking/views/ro_booking_view.dart';
 import 'package:bms_scheduling/app/modules/RoCancellation/views/ro_cancellation_view.dart';
@@ -13,6 +13,7 @@ import 'package:bms_scheduling/app/modules/RoReschedule/views/ro_reschedule_view
 import 'package:bms_scheduling/app/modules/RosDistribution/views/ros_distribution_view.dart';
 import 'package:bms_scheduling/app/modules/SalesAuditExtraSpotsReport/views/sales_audit_extra_spots_report_view.dart';
 import 'package:bms_scheduling/app/modules/SalesAuditNotTelecastReport/views/SalesAuditNotTelecastReportView.dart';
+import 'package:bms_scheduling/app/modules/promos/views/promos_view.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import '../../widgets/LoadingScreen.dart';
@@ -20,6 +21,7 @@ import '../../widgets/NoDataFoundPage.dart';
 import '../modules/AsrunImportAdRevenue/views/AsrunImportAdRevenueView.dart';
 import '../modules/AuditStatus/views/audit_status_view.dart';
 import '../modules/LogAdditions/views/LogAdditionsView.dart';
+import '../modules/PromoMaster/views/promo_master_view.dart';
 import '../modules/SalesAuditNew/views/sales_audit_new_view.dart';
 import '../modules/SlideMaster/views/slide_master_view.dart';
 import '../modules/SpotPriority/views/SpotPriorityView.dart';
@@ -78,6 +80,9 @@ class AuthGuard1 extends StatelessWidget {
             case Routes.FILLER:
               currentWidget = FillerView();
               break;
+            case Routes.PROMOS:
+              currentWidget = PromosView();
+              break;
             case Routes.COMMERCIAL:
               currentWidget = CommercialView();
               break;
@@ -95,9 +100,6 @@ class AuthGuard1 extends StatelessWidget {
               break;
             case Routes.RO_BOOKING:
               currentWidget = RoBookingView();
-              break;
-            case Routes.COMMERCIAL:
-              currentWidget = CommercialView();
               break;
             case Routes.FINAL_AUDIT_REPORT_BEFORE_LOG:
               currentWidget = FinalAuditReportBeforeLogView();
@@ -120,14 +122,17 @@ class AuthGuard1 extends StatelessWidget {
             case Routes.SALES_AUDIT_NEW:
               currentWidget = SalesAuditNewView();
               break;
-            case Routes.SALES_AUDIT_NEW:
-              currentWidget = SalesAuditNewView();
-              break;
             case Routes.SLIDE_MASTER:
               currentWidget = SlideMasterView();
               break;
             case Routes.STILL_MASTER:
               currentWidget = StillMasterView();
+              break;
+            case Routes.PROMO_MASTER:
+              currentWidget = PromoMasterView();
+              break;
+            case Routes.FILLER_MASTER:
+              currentWidget = FillerMasterView();
               break;
             default:
               currentWidget = const NoDataFoundPage();

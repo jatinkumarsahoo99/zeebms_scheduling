@@ -3,31 +3,27 @@ import 'dart:convert';
 import 'package:flutter/material.dart';
 
 import 'package:get/get.dart';
-import 'package:pluto_grid/pluto_grid.dart';
+import 'package:bms_scheduling/widgets/PlutoGrid/pluto_grid.dart';
 
+import '../../../../widgets/DateTime/DateWithThreeTextField.dart';
 import '../../../../widgets/FormButton.dart';
 import '../../../../widgets/dropdown.dart';
 import '../../../../widgets/gridFromMap.dart';
 import '../../../../widgets/input_fields.dart';
+import '../../../../widgets/radio_row.dart';
 import '../../../controller/HomeController.dart';
-import '../../../controller/MainController.dart';
-import '../../../data/DropDownValue.dart';
-import '../../../data/PermissionModel.dart';
-import '../../../providers/ApiFactory.dart';
-import '../../../providers/Utils.dart';
-import '../../CommonSearch/views/common_search_view.dart';
 import '../controllers/SalesAuditNotTelecastReportController.dart';
 
 class SalesAuditNotTelecastReportView
     extends GetView<SalesAuditNotTelecastReportController> {
-
-  SalesAuditNotTelecastReportController controllerX = Get.put(SalesAuditNotTelecastReportController());
+  SalesAuditNotTelecastReportController controllerX =
+      Get.put(SalesAuditNotTelecastReportController());
   final GlobalKey rebuildKey = GlobalKey();
 
   void formHandler(btnText) {
     switch (btnText) {
       case "Save":
-      // controllerX.save();
+        // controllerX.save();
         break;
       case "Clear":
         Get.delete<SalesAuditNotTelecastReportController>();
@@ -42,7 +38,6 @@ class SalesAuditNotTelecastReportView
         break;
     }
   }
-
 
   @override
   Widget build(BuildContext context) {
@@ -68,131 +63,73 @@ class SalesAuditNotTelecastReportView
                           return Expanded(
                             flex: 3,
                             child: Padding(
-                              padding: const EdgeInsets.only(left: 10.0, top: 0),
+                              padding:
+                                  const EdgeInsets.only(left: 10.0, top: 0),
                               child: FocusTraversalGroup(
                                 policy: WidgetOrderTraversalPolicy(),
                                 child: SingleChildScrollView(
                                   // padding: EdgeInsets.only(top: 1),
                                   controller: ScrollController(),
                                   child: Column(
-                                    crossAxisAlignment: CrossAxisAlignment.start,
+                                    crossAxisAlignment:
+                                        CrossAxisAlignment.start,
                                     mainAxisAlignment: MainAxisAlignment.start,
                                     children: [
-                                      Row(
-                                        children: [
-                                          Checkbox(
-                                            value: ((controllerX.progTypeList?.isNotEmpty)! &&
-                                                controllerX.selectedProgTypeIndexes?.length == controllerX.progTypeList?.length)
-                                                ? true
-                                                : false,
-                                            onChanged: (bool? value) {
-                                              if (value!) {
-                                                controllerX.selectedProgTypeIndexes =
-                                                    List.generate(controllerX.progTypeList?.length ?? 0, (index) => 0 + index);
-                                              } else {
-                                                controllerX.selectedProgTypeIndexes?.clear();
-                                              }
-                                              controllerX.update(["initialData"]);
-                                            },
-                                            materialTapTargetSize: MaterialTapTargetSize.shrinkWrap,
-                                          ),
-                                          Text(
-                                            "Program Type",
-                                            style: TextStyle(fontSize: 12),
-                                          ),
-                                          Spacer(),
-                                          InputFields.formField1Width(
-                                            widthRatio: 0.12,
-                                            paddingLeft: 5,
-                                            focus: controllerX.progType,
-                                            hintTxt: "Search",
-                                            controller: controllerX.searchProgType_,
-                                            autoFocus: true,
-                                          ),
-                                        ],
-                                      ),
-                                      Container(
-                                        height: MediaQuery.of(context).size.height * 0.3,
-                                        // margin: EdgeInsets.symmetric(vertical: 10),
-                                        child: GetBuilder<SalesAuditNotTelecastReportController>(
-                                          id: "updateTable",
-                                          builder: (control) {
-                                            print("Here is my call");
-                                            return Stack(
-                                              children: [
-                                                Container(
-                                                  decoration: BoxDecoration(
-                                                    border: Border.all(color: Colors.deepPurpleAccent),
-                                                    borderRadius: BorderRadius.circular(0),
-                                                  ),
-                                                  margin: EdgeInsets.only(top: 5),
-                                                  child: Focus(
-                                                    descendantsAreFocusable: false,
-                                                    descendantsAreTraversable: false,
-                                                    child: ListView.builder(
-                                                      controller: controllerX.scrollController,
-                                                      itemCount: controllerX.progTypeList?.length ?? 0,
-                                                      itemBuilder: (context, int index) {
-                                                        return Container(
-                                                          height: 30,
-                                                          color: (controllerX.selectIndex != null && controllerX.selectIndex == index)
-                                                              ? Colors.purple[100]
-                                                              : Colors.white,
-                                                          child: Row(
-                                                            children: [
-                                                              Checkbox(
-                                                                value: controllerX.selectedProgTypeIndexes?.contains(index),
-                                                                onChanged: (bool? value) {
-                                                                  if (controllerX.selectedProgTypeIndexes?.contains(index) ?? false) {
-                                                                    controllerX.selectedProgTypeIndexes?.remove(index); // unselect
-                                                                  } else {
-                                                                    controllerX.selectedProgTypeIndexes?.add(index); // select
-                                                                  }
-                                                                  controllerX.update(["initialData"]);
-                                                                  /*controllerX.update(
-                                                                      ["updateTable"]);*/
-                                                                },
-                                                              ),
-                                                              Text(
-                                                                controllerX.progTypeList![index].value ?? "",
-                                                                style: TextStyle(fontSize: 12),
-                                                              )
-                                                            ],
-                                                          ),
-                                                        );
-                                                      },
-                                                    ),
-                                                    onFocusChange: (val) {},
-                                                  ),
-                                                ),
-                                              ],
-                                            );
+                                      Obx(
+                                        () =>
+                                            DropDownField.formDropDown1WidthMap(
+                                          controllerX.locations.value,
+                                          (value) {
+                                            controllerX.selectLocation = value;
+                                            /*controllerX.getChannels(
+                                                controllerX.selectLocation?.key ?? "");*/
                                           },
+                                          "Location",
+                                          0.22,
+                                          isEnable: controllerX.isEnable.value,
+                                          selected: controllerX.selectLocation,
+                                          autoFocus: true,
+                                          dialogWidth: 330,
+                                          dialogHeight: Get.height * .7,
                                         ),
                                       ),
                                       Padding(
-                                        padding: const EdgeInsets.only(top: 8.0),
+                                        padding:
+                                            const EdgeInsets.only(top: 8.0),
                                         child: Row(
                                           children: [
                                             Checkbox(
-                                              value: ((controllerX.progNameList?.isNotEmpty)! &&
-                                                  controllerX.selectedProgramIndexes?.length == controllerX.progNameList?.length)
+                                              value: ((controllerX.progNameList
+                                                          ?.isNotEmpty)! &&
+                                                      controllerX
+                                                              .selectedProgramIndexes
+                                                              ?.length ==
+                                                          controllerX
+                                                              .progNameList
+                                                              ?.length)
                                                   ? true
                                                   : false,
                                               onChanged: (bool? value) {
                                                 if (value!) {
                                                   controllerX.selectedProgramIndexes =
-                                                      List.generate(controllerX.progNameList?.length ?? 0, (index) => 0 + index);
+                                                      List.generate(
+                                                          controllerX
+                                                                  .progNameList
+                                                                  ?.length ??
+                                                              0,
+                                                          (index) => 0 + index);
                                                 } else {
-                                                  controllerX.selectedProgramIndexes?.clear();
+                                                  controllerX
+                                                      .selectedProgramIndexes
+                                                      ?.clear();
                                                 }
 
-                                                controllerX.update(["initialData"]);
+                                                controllerX
+                                                    .update(["initialData"]);
                                               },
                                             ),
                                             Text(
-                                              // "Select All",
-                                              "List of program",
+                                              "Channel",
                                               style: TextStyle(fontSize: 12),
                                             ),
                                             Spacer(),
@@ -202,9 +139,11 @@ class SalesAuditNotTelecastReportView
                                                 hintTxt: "Search",
                                                 controller: controllerX.search_,
                                                 onChange: (val) {
-                                                  controllerX.debouncer.call(() {
+                                                  controllerX.debouncer
+                                                      .call(() {
                                                     // if (val != null && val != "")
-                                                    controllerX.fetchProgram(val);
+                                                    controllerX
+                                                        .fetchProgram(val);
                                                   });
                                                 }),
                                           ],
@@ -212,42 +151,77 @@ class SalesAuditNotTelecastReportView
                                       ),
                                       SizedBox(height: 8),
                                       Container(
-                                        height: MediaQuery.of(context).size.height * .3,
+                                        height:
+                                            MediaQuery.of(context).size.height *
+                                                .3,
                                         // margin: EdgeInsets.symmetric(vertical: 10),
-                                        child: GetBuilder<SalesAuditNotTelecastReportController>(
+                                        child: GetBuilder<
+                                            SalesAuditNotTelecastReportController>(
                                           id: "updateTable1",
                                           builder: (control) {
                                             return Stack(
                                               children: [
                                                 Container(
                                                   decoration: BoxDecoration(
-                                                    border: Border.all(color: Colors.deepPurpleAccent),
-                                                    borderRadius: BorderRadius.circular(0),
+                                                    border: Border.all(
+                                                        color: Colors
+                                                            .deepPurpleAccent),
+                                                    borderRadius:
+                                                        BorderRadius.circular(
+                                                            0),
                                                   ),
-                                                  margin: EdgeInsets.only(top: 8),
+                                                  margin:
+                                                      EdgeInsets.only(top: 8),
                                                   child: ListView.builder(
-                                                    controller: ScrollController(),
-                                                    itemCount: controllerX.progNameList?.length ?? 0,
-                                                    itemBuilder: (context, int index) {
+                                                    controller:
+                                                        ScrollController(),
+                                                    itemCount: controllerX
+                                                            .progNameList
+                                                            ?.length ??
+                                                        0,
+                                                    itemBuilder:
+                                                        (context, int index) {
                                                       return Row(
                                                         children: [
                                                           Checkbox(
-                                                            value: controllerX.selectedProgramIndexes?.contains(index),
-                                                            onChanged: (bool? value) {
-                                                              if (controllerX.selectedProgramIndexes?.contains(index) ?? false) {
-                                                                controllerX.selectedProgramIndexes?.remove(index); // unselect
+                                                            value: controllerX
+                                                                .selectedProgramIndexes
+                                                                ?.contains(
+                                                                    index),
+                                                            onChanged:
+                                                                (bool? value) {
+                                                              if (controllerX
+                                                                      .selectedProgramIndexes
+                                                                      ?.contains(
+                                                                          index) ??
+                                                                  false) {
+                                                                controllerX
+                                                                    .selectedProgramIndexes
+                                                                    ?.remove(
+                                                                        index); // unselect
                                                               } else {
-                                                                controllerX.selectedProgramIndexes?.add(index); // select
+                                                                controllerX
+                                                                    .selectedProgramIndexes
+                                                                    ?.add(
+                                                                        index); // select
                                                               }
-                                                              controllerX.update(["initialData"]);
+                                                              controllerX
+                                                                  .update([
+                                                                "initialData"
+                                                              ]);
                                                               /*controllerX.update(
                                                                   ["updateTable1"]);*/
                                                             },
                                                           ),
                                                           Expanded(
                                                             child: Text(
-                                                              controllerX.progNameList![index].value ?? "",
-                                                              style: TextStyle(fontSize: 12),
+                                                              controllerX
+                                                                      .progNameList![
+                                                                          index]
+                                                                      .value ??
+                                                                  "",
+                                                              style: TextStyle(
+                                                                  fontSize: 12),
                                                             ),
                                                           )
                                                         ],
@@ -263,31 +237,42 @@ class SalesAuditNotTelecastReportView
                                       const SizedBox(
                                         height: 10,
                                       ),
-                                      Row(
-                                        children: [
-                                          Expanded(
-                                            child: InputFields.formFieldNumber(
-                                                hintTxt: "Episode From",
-                                                controller: controllerX.episodeFrom_,
-                                                isNegativeReq: false,
-                                                isUpDownReq: false,
-                                                // widthRatio: 0.16,
-                                                paddingLeft: 0),
-                                          ),
-                                          const SizedBox(
-                                            width: 10,
-                                          ),
-                                          Expanded(
-                                            child: InputFields.formFieldNumber(
-                                                hintTxt: "Episode To",
-                                                isUpDownReq: false,
-                                                controller: controllerX.episodeTo_,
-                                                // widthRatio: 0.16,
-                                                isNegativeReq: false,
-                                                paddingLeft: 0),
-                                          ),
-                                        ],
+                                      Obx(
+                                        () => DateWithThreeTextField(
+                                          title: "From",
+                                          splitType: "-",
+                                          widthRation: 0.22,
+                                          isEnable: controllerX.isEnable.value,
+                                          onFocusChange: (data) {},
+                                          mainTextController:
+                                              controllerX.frmDate,
+                                        ),
                                       ),
+                                      SizedBox(
+                                        height: 5,
+                                      ),
+                                      Obx(
+                                        () => DateWithThreeTextField(
+                                          title: "To",
+                                          splitType: "-",
+                                          widthRation: 0.22,
+                                          isEnable: controllerX.isEnable.value,
+                                          onFocusChange: (data) {},
+                                          mainTextController:
+                                              controllerX.toDate,
+                                        ),
+                                      ),
+                                      Obx(() => RadioRow(
+                                            items: [
+                                              "Not telecasted",
+                                              "Error Sports"
+                                            ],
+                                            groupValue:
+                                                controllerX.selectValue.value ?? "",
+                                            onchange: (v) {
+                                              controllerX.selectValue.value=v;
+                                            },
+                                          )),
                                       const SizedBox(
                                         height: 15,
                                       ),
@@ -358,7 +343,8 @@ class SalesAuditNotTelecastReportView
         id: "listUpdate",
         // init: CreateBreakPatternController(),
         builder: (controller) {
-          if (controllerX.programTapeList != null && (controllerX.programTapeList?.isNotEmpty)!) {
+          if (controllerX.programTapeList != null &&
+              (controllerX.programTapeList?.isNotEmpty)!) {
             // final key = GlobalKey();
             int count = 0;
             return Expanded(
@@ -366,7 +352,9 @@ class SalesAuditNotTelecastReportView
               // height: 400,
               child: DataGridFromMap(
                 showSrNo: false,
-                mapData: (controllerX.programTapeList?.map((e) => e.toJson1()).toList())!,
+                mapData: (controllerX.programTapeList
+                    ?.map((e) => e.toJson1())
+                    .toList())!,
                 // mapData: (controllerX.dataList)!,
                 widthRatio: Get.width / 9 - 1,
               ),
@@ -377,7 +365,8 @@ class SalesAuditNotTelecastReportView
               flex: 10,
               child: Container(
                 // height: Get.height - (2 * kToolbarHeight),
-                decoration: BoxDecoration(border: Border.all(color: Colors.grey)),
+                decoration:
+                    BoxDecoration(border: Border.all(color: Colors.grey)),
               ),
             );
           }

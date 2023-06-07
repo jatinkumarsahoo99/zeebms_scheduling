@@ -1,10 +1,10 @@
-import 'package:bms_scheduling/widgets/CheckBoxWidget.dart';
+import 'package:bms_scheduling/app/data/DropDownValue.dart';
 import 'package:bms_scheduling/widgets/DateTime/DateWithThreeTextField.dart';
 import 'package:bms_scheduling/widgets/dropdown.dart';
 import 'package:flutter/material.dart';
-
 import 'package:get/get.dart';
 
+import '../../../../widgets/DateTime/TimeWithThreeTextField.dart';
 import '../../../../widgets/FormButton.dart';
 import '../../../../widgets/input_fields.dart';
 import '../../../../widgets/radio_row.dart';
@@ -33,9 +33,26 @@ class SlideMasterView extends GetView<SlideMasterController> {
                 Row(
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
-                    DropDownField.formDropDown1WidthMap([], (p0) => null, "Location", .23, autoFocus: true),
+                    Obx(() {
+                      return DropDownField.formDropDown1WidthMap(
+                        controller.locationList.value,
+                        controller.handleOnChangedLocation,
+                        "Location",
+                        .23,
+                        autoFocus: true,
+                        selected: controller.selectedLocation,
+                      );
+                    }),
                     SizedBox(width: 20),
-                    DropDownField.formDropDown1WidthMap([], (p0) => null, "Channel", .23),
+                    Obx(() {
+                      return DropDownField.formDropDown1WidthMap(
+                        controller.channelList.value,
+                        controller.handleOnChangedChannel,
+                        "Channel",
+                        .23,
+                        selected: controller.selectedChannel,
+                      );
+                    }),
                   ],
                 ),
                 Padding(
@@ -47,13 +64,15 @@ class SlideMasterView extends GetView<SlideMasterController> {
                         children: [
                           InputFields.formField1(
                             hintTxt: "Tape ID",
-                            controller: TextEditingController(),
+                            controller: controller.tapeIDCtr,
                             width: 0.112,
+                            focusNode: controller.tapIDFN,
+                            // isEnable: controllsEnable,
                           ),
                           SizedBox(width: 10),
                           InputFields.formField1(
                             hintTxt: "Seg No.",
-                            controller: TextEditingController(),
+                            controller: controller.segNoCtr,
                             width: 0.11,
                           ),
                         ],
@@ -63,14 +82,15 @@ class SlideMasterView extends GetView<SlideMasterController> {
                         children: [
                           InputFields.formField1(
                             hintTxt: "House ID",
-                            controller: TextEditingController(),
+                            controller: controller.houseIDCtr,
                             width: 0.11,
                           ),
                           SizedBox(width: 10),
                           InputFields.formField1(
                             hintTxt: "TX Caption",
-                            controller: TextEditingController(),
+                            controller: controller.txCaptionCtr,
                             width: 0.11,
+                            prefixText: "L/",
                           ),
                         ],
                       ),
@@ -82,11 +102,23 @@ class SlideMasterView extends GetView<SlideMasterController> {
                   children: [
                     InputFields.formField1(
                       hintTxt: "Caption",
-                      controller: TextEditingController(),
+                      controller: controller.captionCtr,
                       width: 0.23,
                     ),
                     SizedBox(width: 20),
-                    DropDownField.formDropDown1WidthMap([], (p0) => null, "Slide type", .23),
+                    Obx(() {
+                      return DropDownField.formDropDown1WidthMap(
+                        controller.slideTypeList.value
+                            .map((e) => DropDownValue(
+                                  key: e['lookupCode'].toString(),
+                                  value: e['lookupType'].toString(),
+                                ))
+                            .toList(),
+                        controller.handleOnChangedSlideType,
+                        "Slide type",
+                        .23,
+                      );
+                    }),
                   ],
                 ),
                 Padding(
@@ -96,33 +128,44 @@ class SlideMasterView extends GetView<SlideMasterController> {
                     children: [
                       Row(
                         children: [
-                          DropDownField.formDropDown1WidthMap(
-                            [],
-                            (p0) => null,
-                            "Tape Type",
-                            .112,
-                          ),
+                          Obx(() {
+                            return DropDownField.formDropDown1WidthMap(
+                              controller.tapeTypeList.value
+                                  .map((e) => DropDownValue(
+                                        key: e['tapetypecode'],
+                                        value: e['tapeTypeName'],
+                                      ))
+                                  .toList(),
+                              controller.handleOnChangedTapeType,
+                              "Tape Type",
+                              .112,
+                              selected: controller.selectedTape,
+                            );
+                          }),
                           SizedBox(width: 13),
-                          InputFields.formField1(
-                            hintTxt: "SOM",
-                            controller: TextEditingController(),
-                            width: 0.11,
+                          TimeWithThreeTextField(
+                            title: "SOM",
+                            mainTextController: controller.somCtr,
+                            widthRation: 0.11,
+                            isTime: false,
                           ),
                         ],
                       ),
                       SizedBox(width: 20),
                       Row(
                         children: [
-                          InputFields.formField1(
-                            hintTxt: "EOM",
-                            controller: TextEditingController(),
-                            width: 0.11,
+                          TimeWithThreeTextField(
+                            title: "EOM",
+                            mainTextController: controller.eomCtr,
+                            widthRation: 0.11,
+                            isTime: false,
                           ),
                           SizedBox(width: 10),
-                          InputFields.formField1(
-                            hintTxt: "Duration",
-                            controller: TextEditingController(),
-                            width: 0.11,
+                          TimeWithThreeTextField(
+                            title: "Duration",
+                            mainTextController: controller.durationCtr,
+                            widthRation: 0.11,
+                            isTime: false,
                           ),
                         ],
                       ),
@@ -133,10 +176,20 @@ class SlideMasterView extends GetView<SlideMasterController> {
                   padding: const EdgeInsets.symmetric(vertical: 4),
                   child: Row(
                     mainAxisAlignment: MainAxisAlignment.center,
+                    crossAxisAlignment: CrossAxisAlignment.end,
                     children: [
                       SizedBox(
                         width: context.width * .23,
-                        child: RadioRow(items: ['Non-Dated', 'Dated'], groupValue: "Non-Dated"),
+                        child: Obx(() {
+                          return RadioRow(
+                            items: ['Non-Dated', 'Dated'],
+                            groupValue: controller.selectedRadio.value,
+                            onchange: (val) {
+                              controller.selectedRadio.value = val;
+                            },
+                            disabledRadios: ['Non-Dated'],
+                          );
+                        }),
                       ),
                       SizedBox(width: 20),
                       DateWithThreeTextField(

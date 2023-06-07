@@ -6,7 +6,7 @@ import 'package:file_picker/file_picker.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:intl/intl.dart';
-import 'package:pluto_grid/pluto_grid.dart';
+import 'package:bms_scheduling/widgets/PlutoGrid/pluto_grid.dart';
 
 import '../../../../widgets/LoadingDialog.dart';
 import '../../../../widgets/Snack.dart';
@@ -16,6 +16,7 @@ import '../../../data/DropDownValue.dart';
 import '../../../data/PermissionModel.dart';
 import '../../../data/system_envirtoment.dart';
 import '../../../providers/ApiFactory.dart';
+import '../../../providers/ExportData.dart';
 import '../FillerDailyFPCModel.dart';
 import '../FillerSegmentModel.dart';
 import 'package:dio/dio.dart' as dio;
@@ -43,6 +44,7 @@ class FillerController extends GetxController {
   TextEditingController toTime_ = TextEditingController()..text = "00:00:00:00";
 
   late String fillerCode;
+
   /// Radio Button
   int selectedAfter = 0;
 
@@ -73,8 +75,7 @@ class FillerController extends GetxController {
   List<SystemEnviroment>? channelList = [];
   List<SystemEnviroment>? locationList = [];
 
-  TextEditingController refDateContrl = TextEditingController(
-      text: DateFormat("dd-MM-yyyy").format(DateTime.now()));
+  TextEditingController refDateContrl = TextEditingController(text: DateFormat("dd-MM-yyyy").format(DateTime.now()));
   TextEditingController programName_ = TextEditingController();
   TextEditingController date_ = TextEditingController();
   TextEditingController fillerFromDate_ = TextEditingController();
@@ -85,6 +86,7 @@ class FillerController extends GetxController {
   DateTime selectDate = DateTime.now();
   DateTime? selectedDate = DateTime.now();
   DateFormat df = DateFormat("dd/MM/yyyy");
+  DateFormat df3 = DateFormat("MM/dd/yyyy");
   DateFormat df1 = DateFormat("dd-MM-yyyy");
   DateFormat df2 = DateFormat("MM-dd-yyyy");
   DateFormat dfFinal = DateFormat("yyyy-MM-ddThh:mm:ss");
@@ -168,13 +170,9 @@ class FillerController extends GetxController {
           api: ApiFactory.FILLER_LOCATION,
           fun: (data) {
             if (data is List) {
-              locations.value = data
-                  .map((e) => DropDownValue(
-                      key: e["locationCode"], value: e["locationName"]))
-                  .toList();
+              locations.value = data.map((e) => DropDownValue(key: e["locationCode"], value: e["locationName"])).toList();
             } else {
-              LoadingDialog.callErrorMessage1(
-                  msg: "Failed To Load Initial Data");
+              LoadingDialog.callErrorMessage1(msg: "Failed To Load Initial Data");
             }
           });
     } catch (e) {
@@ -188,13 +186,9 @@ class FillerController extends GetxController {
           api: ApiFactory.FILLER_CHANNEL(locationCode),
           fun: (data) {
             if (data is List) {
-              channels.value = data
-                  .map((e) => DropDownValue(
-                      key: e["channelCode"], value: e["channelName"]))
-                  .toList();
+              channels.value = data.map((e) => DropDownValue(key: e["channelCode"], value: e["channelName"])).toList();
             } else {
-              LoadingDialog.callErrorMessage1(
-                  msg: "Failed To Load Initial Data");
+              LoadingDialog.callErrorMessage1(msg: "Failed To Load Initial Data");
             }
           });
     } catch (e) {
@@ -204,30 +198,25 @@ class FillerController extends GetxController {
 
   importfile() async {
     LoadingDialog.call();
-    dio.FormData formData = dio.FormData.fromMap({
-      'ImportFile': dio.MultipartFile.fromBytes(
-        importedFile.value!.bytes!.toList(),
-        filename: importedFile.value!.name,
-      )
-    });
+    dio.FormData formData = dio.FormData.fromMap(
+      {
+        "ChannelCode": selectedChannel?.key ?? "",
+        "LocationCode": selectedLocation?.key ?? "",
+        'ImportFile': dio.MultipartFile.fromBytes(
+          importedFile.value!.bytes!.toList(),
+          filename: importedFile.value!.name,
+        ),
+        "TelecastDate": DateFormat("dd/MM/yyyy").format(DateFormat("dd-MM-yyyy").parse(date_.text)), //05 / 31 / 2023,
+      },
+    );
 
     Get.find<ConnectorControl>().POSTMETHOD_FORMDATA(
-        api: ApiFactory.IMPORT_DIGITEX_RUN_ORDER_IMPORT(
-            selectedLocation!.key, selectedChannel!.key),
+        api: ApiFactory.FILLER_IMPORT_EXCEL,
         json: formData,
         fun: (value) {
           Get.back();
           try {
-            /// Need to create new Model to import filler file
-            // if (value is Map<String, dynamic>) {
-            //   digitexRunOrderData = DigitexRunOrderData.fromJson(value);
-            //   update(["data"]);
-            // }
-            // if (digitexRunOrderData!.message != null &&
-            //     digitexRunOrderData!.message!.isNotEmpty) {
-            //   LoadingDialog.callErrorMessage1(
-            //       msg: digitexRunOrderData!.message!);
-            // }
+            ExportData().exportFilefromByte(base64Decode(value), importedFile.value!.name);
           } catch (e) {
             LoadingDialog.callErrorMessage1(msg: "Failed To Import File");
           }
@@ -236,7 +225,6 @@ class FillerController extends GetxController {
 
   pickFile() async {
     FilePickerResult? result = await FilePicker.platform.pickFiles();
-
     if (result != null && result.files.single != null) {
       importedFile.value = result.files.single;
       fileController.text = result.files.single.name;
@@ -290,8 +278,10 @@ class FillerController extends GetxController {
           api: ApiFactory.FILLER_VALUES_BY_TAPE_CODE(tapeCode),
           fun: (dynamic data) {
             print('>>> Data from Tape Code : $data');
+
             /// Need to show date in Filler caption, filler dropdown,tape idseg dur,total dur
             fillerCode = data['fillerCode'];
+
             ///selectCaption.value = data['fillerCaption'];
             tapeId_.text = data['exportTapeCode'];
             segNo_.text = data['segmentNumber'];
@@ -302,41 +292,35 @@ class FillerController extends GetxController {
     }
   }
 
-  getFillerValuesByImportFillersWithTapeCode(tapeCode) {
-    try {
-      var jsonRequest = {
-        "LocationCode": selectedImportLocation?.key.toString(),
-        "ChannelCode": selectedImportChannel?.key.toString(),
-        "ImportDate": fillerFromDate_.text,
-        "ImportToDate":fillerToDate_.text,
-        "TelecastTime": fromTime_.text ?? "",
-        "ImportTime": toTime_.text ?? ""
-      };
-      print("requestedData1>>>" + jsonEncode(json));
-      Get.find<ConnectorControl>().POSTMETHOD(
-          api: ApiFactory.FILLER_VALUES_BY_TAPE_CODE(tapeCode),
-          fun: (dynamic data) {
-
-            /// Date will be saved after importing Fillers with
-            /// selected Location, Channel, Date and time...
-            /// Response is "Data saved successfully"
-
-            // print('>>> Data from Tape Code : $data');
-            // /// Need to show date in Filler caption, filler dropdown,tape idseg dur,total dur
-            // fillerCode = data['fillerCode'];
-            // ///selectCaption.value = data['fillerCaption'];
-            // tapeId_.text = data['exportTapeCode'];
-            // segNo_.text = data['segmentNumber'];
-            // segDur_.text = data['fillerDuration'];
-          },
-          json: jsonRequest
-      );
-    } catch (e) {
-      LoadingDialog.callErrorMessage1(msg: "Failed To Load Initial Data");
-    }
+  getFillerValuesByImportFillersWithTapeCode() {
+    var jsonRequest = {
+      "LocationCode": selectedImportLocation?.key.toString(),
+      "ChannelCode": selectedImportChannel?.key.toString(),
+      "ImportFromDate": DateFormat("dd/MM/yyyy").format(DateFormat("dd-MM-yyyy").parse(fillerFromDate_.text)),
+      "ImportToDate": DateFormat("dd/MM/yyyy").format(DateFormat("dd-MM-yyyy").parse(fillerToDate_.text)),
+      "TelecastTime": fromTime_.text,
+      "ImportTime": toTime_.text,
+    };
+    LoadingDialog.call();
+    Get.find<ConnectorControl>().POSTMETHOD(
+      api: ApiFactory.FILLER_IMPORT_FILLERS,
+      fun: (dynamic data) {
+        Get.back();
+        if (data.toString() == "Saved Successfully!") {
+          LoadingDialog.callDataSaved(
+              msg: data.toString(),
+              callback: () {
+                Get.back();
+                Get.back();
+                Get.back();
+              });
+        } else {
+          LoadingDialog.showErrorDialog(data.toString());
+        }
+      },
+      json: jsonRequest,
+    );
   }
-
-
 
   fetchFPCDetails() {
     print(">>Key is>>>>>" + (selectedChannel?.key ?? ""));
@@ -350,8 +334,7 @@ class FillerController extends GetxController {
       // LoadingDialog.call();
       selectedDate = df1.parse(date_.text);
       Get.find<ConnectorControl>().GETMETHODCALL(
-          api: ApiFactory.FPC_DETAILS(selectedLocation?.key ?? "",
-              selectedChannel?.key ?? "", dfFinal.format(selectedDate!)),
+          api: ApiFactory.FPC_DETAILS(selectedLocation?.key ?? "", selectedChannel?.key ?? "", dfFinal.format(selectedDate!)),
           fun: (dynamic list) {
             print("Json response is>>>" + jsonEncode(list));
             // Get.back();
@@ -404,98 +387,6 @@ class FillerController extends GetxController {
             Snack.callError(val.toString());
           });
     }
-  }
-
-  /// Useful in Columns
-  loadColumnBeams(column) {
-    List<PlutoRow> rows = [];
-    for (Map row in beams.where((element) => element["beam"] == column)) {
-      Map<String, PlutoCell> cells = {};
-
-      for (var element in row.entries) {
-        print(element.value);
-        cells[element.key] = PlutoCell(
-          value: element.key == "selected" || element.value == null
-              ? ""
-              : element.key.toString().toLowerCase().contains("date")
-                  ? (element.value.toString().contains('T') &&
-                          element.value.toString().split('T')[1] == '00:00:00')
-                      ? DateFormat("dd/MM/yyyy").format(
-                          DateFormat('yyyy-MM-ddTHH:mm:ss')
-                              .parse(element.value.toString()))
-                      : DateFormat("dd/MM/yyyy HH:mm:ss").format(
-                          DateFormat('yyyy-MM-ddTHH:mm:ss')
-                              .parse(element.value.toString()))
-                  // DateFormat("dd-MM-yyyy hh:mm").format(DateTime.parse(element.value.toString().replaceAll("T", " ")))
-                  : element.value.toString(),
-        );
-      }
-
-      rows.add(PlutoRow(
-        cells: cells,
-      ));
-    }
-    if (bmsReportStateManager != null) {
-      print("state working");
-
-      bmsReportStateManager!.removeRows(bmsReportStateManager!.rows);
-      bmsReportStateManager!.resetCurrentState();
-      bmsReportStateManager!.appendRows(rows);
-    }
-    beamRows = [];
-    update(["beams"]);
-    beamRows = rows;
-    rows = [];
-    update(["beams"]);
-  }
-
-  /// Useful in Columns
-  void loadBeams() {
-    if (conflictReportStateManager.currentRow == null) {
-      return;
-    }
-    // log("Rows");
-    // log(conflictReportStateManager.currentRow!.cells["Program"]!.value);
-    List<PlutoRow> rows = [];
-    for (Map row in beams.where((element) =>
-        element["program"] ==
-        conflictReportStateManager.currentRow!.cells["Program"]!.value)) {
-      Map<String, PlutoCell> cells = {};
-
-      for (var element in row.entries) {
-        cells[element.key] = PlutoCell(
-          value: element.key == "selected" || element.value == null
-              ? ""
-              : element.key.toString().toLowerCase().contains("date")
-                  ? (element.value.toString().contains('T') &&
-                          element.value.toString().split('T')[1] == '00:00:00')
-                      ? DateFormat("dd/MM/yyyy").format(
-                          DateFormat('yyyy-MM-ddTHH:mm:ss')
-                              .parse(element.value.toString()))
-                      : DateFormat("dd/MM/yyyy HH:mm:ss").format(
-                          DateFormat('yyyy-MM-ddTHH:mm:ss')
-                              .parse(element.value.toString()))
-                  // ? DateFormat("dd/MM/yyyy hh:mm").format(DateTime.parse(element.value.toString().replaceAll("T", " ")))
-                  : element.value.toString(),
-        );
-      }
-
-      rows.add(PlutoRow(
-        cells: cells,
-      ));
-    }
-    if (bmsReportStateManager != null) {
-      print("state working");
-
-      bmsReportStateManager!.removeRows(bmsReportStateManager!.rows);
-      bmsReportStateManager!.resetCurrentState();
-      bmsReportStateManager!.appendRows(rows);
-    }
-    beamRows = [];
-    update(["beams"]);
-    beamRows = rows;
-    rows = [];
-    update(["beams"]);
   }
 
   fetchGenerate() {

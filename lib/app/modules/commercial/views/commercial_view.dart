@@ -1,503 +1,31 @@
 import 'dart:convert';
-import 'package:bms_scheduling/app/modules/commercial/CommercialShowOnTabModel.dart';
 import 'package:flutter/cupertino.dart';
-import 'package:bms_scheduling/app/data/DropDownValue.dart';
-import 'package:bms_scheduling/app/providers/extensions/string_extensions.dart';
-import 'package:bms_scheduling/widgets/LoadingScreen.dart';
 import 'package:flutter/material.dart';
-
 import 'package:get/get.dart';
-import 'package:intl/intl.dart';
-import 'package:pluto_grid/pluto_grid.dart';
-
+import 'package:bms_scheduling/widgets/PlutoGrid/pluto_grid.dart';
 import '../../../../widgets/DateTime/DateWithThreeTextField.dart';
 import '../../../../widgets/FormButton.dart';
+import '../../../../widgets/LoadingDialog.dart';
 import '../../../../widgets/dropdown.dart';
 import '../../../../widgets/gridFromMap.dart';
 import '../../../../widgets/gridFromMap1.dart';
-import '../../../../widgets/input_fields.dart';
-import '../../../controller/ConnectorControl.dart';
 import '../../../controller/HomeController.dart';
-import '../../../providers/ApiFactory.dart';
-import '../../../providers/DataGridMenu.dart';
 import '../../../providers/SizeDefine.dart';
 import '../../../providers/Utils.dart';
-import '../../../styles/theme.dart';
 import '../controllers/commercial_controller.dart';
 
 class CommercialView extends GetView<CommercialController> {
   CommercialView({Key? key}) : super(key: key);
 
-  late PlutoGridStateManager stateManager;
   var formName = 'Schedule Commercials';
-
   void handleOnRowChecked(PlutoGridOnRowCheckedEvent event) {}
-  CommercialController controllerX = Get.put(CommercialController());
 
   @override
   Widget build(BuildContext context) {
-
     return GetBuilder<CommercialController>(
         init: CommercialController(),
         id: "initData",
         builder: (controller) {
-          FocusNode _channelsFocus = FocusNode();
-
-          // if (controller.initData == null) {
-          //   return PleaseWaitCard();
-          // } else {
-          //   FocusNode _channelsFocus = FocusNode();
-          //   log(controller.initData!["channels"]![0].keys.toString());
-          //   return Scaffold(
-          //     floatingActionButtonLocation: FloatingActionButtonLocation.centerDocked,
-          //     extendBody: false,
-          //     floatingActionButton: GetBuilder<HomeController>(
-          //         id: "buttons",
-          //         init: Get.find<HomeController>(),
-          //         builder: (btcontroller) {
-          //           if (btcontroller.buttons != null) {
-          //             return Container(
-          //               padding: EdgeInsets.zero,
-          //               margin: EdgeInsets.zero,
-          //               width: double.infinity,
-          //               decoration: BoxDecoration(color: Colors.white, border: Border(top: BorderSide(width: 1.0, color: Colors.grey))),
-          //               child: ButtonBar(
-          //                 alignment: MainAxisAlignment.start,
-          //                 mainAxisSize: MainAxisSize.min,
-          //                 children: [
-          //                   for (var btn in btcontroller.buttons!)
-          //                     if (Utils.btnAccessHandler(btn['name'], controller.formPermissions!) != null)
-          //                       FormButtonWrapper(
-          //                         btnText: btn["name"],
-          //                         callback: () => controller.formHandler(
-          //                           btn['name'],
-          //                         ),
-          //                       )
-          //                 ],
-          //               ),
-          //             );
-          //           }
-          //           return Container();
-          //         }),
-          //     body: FocusTraversalGroup(
-          //       policy: OrderedTraversalPolicy(),
-          //       child: Padding(
-          //         padding: const EdgeInsets.symmetric(vertical: 8),
-          //         child: Row(
-          //           mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-          //           crossAxisAlignment: CrossAxisAlignment.start,
-          //           children: [
-          //             /// input forms
-          //             SizedBox(
-          //               width: w * 0.35,
-          //               child: Column(
-          //                 crossAxisAlignment: CrossAxisAlignment.start,
-          //                 children: [
-          //                   /// program type
-          //                   DropDownField.formDropDown1WidthMap(
-          //                     (controller.initData!["lmsProgramTypes"] as List)
-          //                         .map((e) => DropDownValue(key: e["programTypeCode"].toString(), value: e["programTypeName"]))
-          //                         .toList(),
-          //                         (value) => () {},
-          //                     "Program Type",
-          //                     0.35,
-          //                     searchReq: true,
-          //                     autoFocus: true,
-          //                     dialogHeight: h * .75,
-          //                   ),
-          //
-          //                   /// channel
-          //                   const Padding(
-          //                     padding: EdgeInsets.only(top: 7, bottom: 4),
-          //                     child: Text(
-          //                       "Channels",
-          //                       style: TextStyle(fontSize: 12),
-          //                     ),
-          //                   ),
-          //
-          //                   /// channel box
-          //                   SizedBox(
-          //                       width: w * .35,
-          //                       height: (h * .6) - (kToolbarHeight / 2),
-          //                       child: Focus(
-          //                         autofocus: false,
-          //                         focusNode: _channelsFocus,
-          //                         child: PlutoGrid(
-          //                           mode: PlutoGridMode.normal,
-          //                           configuration: plutoGridConfiguration(focusNode: _channelsFocus),
-          //                           columns: controller.initColumn,
-          //                           onLoaded: (event) {
-          //                             controller.locChanStateManager = event.stateManager;
-          //                             // event.stateManager.setColumnSizeConfig(
-          //                             //     PlutoGridColumnSizeConfig(
-          //                             //   autoSizeMode: PlutoAutoSizeMode.equal,
-          //                             //   resizeMode: PlutoResizeMode.none,
-          //                             // ));
-          //                           },
-          //                           rows: controller.initRows,
-          //                           onRowChecked: (event) {
-          //                             /* if (controller.locationsForReport
-          //                                 .contains({
-          //                               "locationCode": controller
-          //                                       .channels[event.row!.sortIdx]
-          //                                   ["locationCode"],
-          //                               "channelCode": controller
-          //                                       .channels[event.row!.sortIdx]
-          //                                   ["channelCode"]
-          //                             })) {
-          //                               controller.locationsForReport.remove({
-          //                                 "locationCode": controller
-          //                                         .channels[event.row!.sortIdx]
-          //                                     ["locationCode"],
-          //                                 "channelCode": controller
-          //                                         .channels[event.row!.sortIdx]
-          //                                     ["channelCode"]
-          //                               });
-          //                             } else {
-          //                               controller.locationsForReport.add({
-          //                                 "locationCode": controller
-          //                                         .channels[event.row!.sortIdx]
-          //                                     ["locationCode"],
-          //                                 "channelCode": controller
-          //                                         .channels[event.row!.sortIdx]
-          //                                     ["channelCode"]
-          //                               });
-          //                             }*/
-          //                             ChannelModel data = ChannelModel(
-          //                                 locationCode: controller.channels[event.row!.sortIdx]["locationCode"],
-          //                                 channelCode: controller.channels[event.row!.sortIdx]["channelCode"]);
-          //                             bool isDataAvail = controller.locationsForReport1.any((element) => element.channelCode == data.channelCode);
-          //                             if (isDataAvail) {
-          //                               controller.locationsForReport1.removeWhere((element) => element.channelCode == data.channelCode);
-          //                             } else {
-          //                               controller.locationsForReport1.add(data);
-          //                             }
-          //                           },
-          //                         ),
-          //                       )),
-          //
-          //                   /// date and Ignore Single Telecast
-          //                   FocusTraversalGroup(
-          //                     policy: OrderedTraversalPolicy(),
-          //                     child: SizedBox(
-          //                       height: h * .23,
-          //                       child: ListView(
-          //                         children: [
-          //                           Padding(
-          //                             padding: const EdgeInsets.only(top: 5, bottom: 5),
-          //                             child: Row(
-          //                               mainAxisAlignment: MainAxisAlignment.spaceBetween,
-          //                               crossAxisAlignment: CrossAxisAlignment.start,
-          //                               children: [
-          //                                 // Date
-          //                                 DateWithThreeTextField(
-          //                                     widthRation: 0.15,
-          //                                     splitType: "-",
-          //                                     onFocusChange: ((date) {
-          //                                       controller.reportBody["ReferenceDate"] =
-          //                                           DateFormat('yyyy-MM-dd').format(DateFormat("dd-MM-yyyy").parse(date)).toString();
-          //                                     }),
-          //                                     title: "Date",
-          //                                     mainTextController: controller.refDateContrl),
-          //                                 // Ignore Single Telecast
-          //                                 Container(
-          //                                   width: w * .15,
-          //                                   padding: const EdgeInsets.only(top: 16.0),
-          //                                   alignment: Alignment.topLeft,
-          //                                   child: Obx(() => InkWell(
-          //                                     onTap: () {
-          //                                       controller.ignoreSingleTelecast.value = !controller.ignoreSingleTelecast.value;
-          //                                     },
-          //                                     child: Row(
-          //                                       crossAxisAlignment: CrossAxisAlignment.center,
-          //                                       children: [
-          //                                         Icon(
-          //                                           controller.ignoreSingleTelecast.value
-          //                                               ? Icons.check_box_outlined
-          //                                               : Icons.check_box_outline_blank,
-          //                                           color: Colors.deepPurple,
-          //                                         ),
-          //                                         const Text(
-          //                                           "Ignore Single Telecast",
-          //                                           style: TextStyle(fontSize: 12),
-          //                                         ),
-          //                                       ],
-          //                                     ),
-          //                                   )),
-          //                                 )
-          //                               ],
-          //                             ),
-          //                           ),
-          //
-          //                           /// conflicts and display
-          //                           Row(
-          //                             mainAxisAlignment: MainAxisAlignment.spaceBetween,
-          //                             children: [
-          //                               /// conflict
-          //                               InputFields.numbers(
-          //                                 padLeft: 0,
-          //                                 hintTxt: "Conflict",
-          //                                 isNegativeReq: false,
-          //                                 controller: TextEditingController(text: controller.conflictDays.toString()),
-          //                                 onchanged: (value) {
-          //                                   controller.conflictDays = int.tryParse(value);
-          //                                 },
-          //                                 width: 0.15,
-          //                               ),
-          //
-          //                               /// Display
-          //                               DropDownField.formDropDown1WidthMap(
-          //                                 ["Min Date", "Max Date", "Telecast Count"].map((e) => DropDownValue(key: e, value: e)).toList(),
-          //                                     (value) {
-          //                                   // log(value!.value!);
-          //                                   controller.reportBody["Display"] = value.value;
-          //                                 },
-          //                                 "Display",
-          //                                 0.15,
-          //                                 // context,
-          //                                 // leftpad: 0,
-          //                               ),
-          //                             ],
-          //                           ),
-          //                           const SizedBox(height: 10),
-          //
-          //                           /// genearte and clear buttons
-          //                           Row(
-          //                             mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-          //                             children: [
-          //                               Expanded(
-          //                                 child: FormButtonWrapper(
-          //                                     btnText: "Generate",
-          //                                     callback: () {
-          //                                       controller.generateData();
-          //                                     }),
-          //                               ),
-          //                               SizedBox(width: w * .05),
-          //                               Expanded(
-          //                                 child: FormButtonWrapper(
-          //                                     btnText: "Clear",
-          //                                     callback: () {
-          //                                       controller.formHandler("Clear");
-          //                                     }),
-          //                               ),
-          //                             ],
-          //                           )
-          //                         ],
-          //                       ),
-          //                     ),
-          //                   )
-          //                 ],
-          //               ),
-          //             ),
-          //
-          //             /// output forms
-          //             GetBuilder<CommercialController>(
-          //                 init: CommercialController(),
-          //                 id: "reports",
-          //                 builder: (controller) {
-          //                   if (controller.conflictReport.isEmpty || controller.beams.isEmpty) {
-          //                     return Column(
-          //                       children: [
-          //                         Container(
-          //                           height: (h * .75) - kToolbarHeight,
-          //                           width: w * 0.6,
-          //                           decoration: BoxDecoration(
-          //                               border: Border.all(
-          //                                 color: Colors.grey,
-          //                               )),
-          //                         ),
-          //                         const SizedBox(height: 10),
-          //                         Container(
-          //                           height: (h * .30) - kToolbarHeight,
-          //                           width: w * 0.6,
-          //                           decoration: BoxDecoration(
-          //                               border: Border.all(
-          //                                 color: Colors.grey,
-          //                               )),
-          //                         ),
-          //                       ],
-          //                     );
-          //                   } else {
-          //                     FocusNode _focusNode = FocusNode();
-          //                     List<PlutoRow> rows = [];
-          //                     List<PlutoColumn> columns = [];
-          //
-          //                     bool canFormateDate = false;
-          //                     for (Map row in controller.conflictReport) {
-          //                       Map<String, PlutoCell> cells = {};
-          //                       try {
-          //                         for (var element in row.entries) {
-          //                           cells[element.key] = PlutoCell(
-          //                             value: element.key == "selected" || element.value == null || element.value == ""
-          //                                 ? ""
-          //                                 : !(element.key.toString().toLowerCase().contains("program"))
-          //                                 ? element.value.toString().contains('00:00:00')
-          //                                 ? DateFormat("dd/MM/yyyy").format(DateFormat('MM/dd/yyyy HH:mm:ss').parse(element.value.toString()))
-          //                                 : DateFormat("dd/MM/yyyy HH:mm:ss")
-          //                                 .format(DateFormat('MM/dd/yyyy HH:mm:ss').parse(element.value.toString()))
-          //                                 : element.value.toString(),
-          //                           );
-          //                         }
-          //                         rows.add(PlutoRow(
-          //                           cells: cells,
-          //                         ));
-          //                       } catch (e) {
-          //                         log("problem in adding rows$e");
-          //                       }
-          //                     }
-          //
-          //                     return Builder(builder: (context) {
-          //                       return Column(
-          //                         mainAxisAlignment: MainAxisAlignment.start,
-          //                         mainAxisSize: MainAxisSize.max,
-          //                         children: [
-          //                           // 1st grid
-          //                           SizedBox(
-          //                             height: (h * .75) - kToolbarHeight,
-          //                             width: w * 0.6,
-          //                             child: Focus(
-          //                               autofocus: false,
-          //                               focusNode: _focusNode,
-          //                               child: PlutoGrid(
-          //                                 onSorted: (event) {
-          //                                   controller.conflictReportStateManager.columns;
-          //                                   event.column.sort = event.oldSort;
-          //                                   log("sorting event");
-          //                                   controller.loadColumnBeams(event.column.field.toString());
-          //                                 },
-          //                                 rowColorCallback: (rowColorContext) {
-          //                                   if (controller.conflictPrograms.contains(rowColorContext.row.cells["Program"]!.value)) {
-          //                                     return Colors.pink[400]!;
-          //                                   }
-          //
-          //                                   return Colors.white;
-          //                                 },
-          //                                 configuration: plutoGridConfiguration(focusNode: _focusNode),
-          //                                 columns: [
-          //                                   for (var key in controller.conflictReport[0].keys)
-          //                                     PlutoColumn(
-          //                                         title: key.toString(),
-          //                                         readOnly: true,
-          //                                         enableSorting: true,
-          //                                         enableRowDrag: false,
-          //                                         renderer: ((rendererContext) => GestureDetector(
-          //                                           onSecondaryTapDown: (detail) {
-          //                                             DataGridMenu().showGridMenu(rendererContext.stateManager, detail, context);
-          //                                           },
-          //                                           child: Text(
-          //                                             rendererContext.cell.value.toString(),
-          //                                             style: TextStyle(
-          //                                               fontSize: SizeDefine.columnTitleFontSize,
-          //                                             ),
-          //                                           ),
-          //                                         )),
-          //                                         enableEditingMode: false,
-          //                                         enableDropToResize: true,
-          //                                         enableContextMenu: false,
-          //                                         width: Utils.getColumnSize(key: key, value: controller.conflictReport[0][key]),
-          //                                         sort: PlutoColumnSort.none,
-          //                                         enableAutoEditing: false,
-          //                                         hide: key == "territoryCode" ? false : key.toString().toLowerCase().contains("code"),
-          //                                         enableColumnDrag: false,
-          //                                         field: key,
-          //                                         type: PlutoColumnType.text())
-          //                                 ],
-          //                                 rows: rows,
-          //                                 onChanged: (PlutoGridOnChangedEvent event) {
-          //                                   print(event);
-          //                                 },
-          //                                 onRowChecked: (event) {
-          //                                   print('Grid B : $event');
-          //                                 },
-          //                                 onLoaded: (PlutoGridOnLoadedEvent event) {
-          //                                   event.stateManager.setKeepFocus(false);
-          //                                   controller.conflictReportStateManager = event.stateManager;
-          //
-          //                                   event.stateManager.addListener(controller.loadBeams);
-          //                                 },
-          //
-          //                                 // configuration: PlutoConfiguration.dark(),
-          //                               ),
-          //                             ),
-          //                           ),
-          //                           SizedBox(height: 10),
-          //                           // 2 grid
-          //                           GetBuilder<CommercialController>(
-          //                             init: CommercialController(),
-          //                             id: "beams",
-          //                             builder: (controller) {
-          //                               FocusNode _focusNode = FocusNode();
-          //                               return controller.beamRows.isEmpty
-          //                                   ? SizedBox()
-          //                                   : SizedBox(
-          //                                 height: (h * .30) - kToolbarHeight,
-          //                                 width: w * 0.6,
-          //                                 child: Focus(
-          //                                   autofocus: false,
-          //                                   focusNode: _focusNode,
-          //                                   child: PlutoGrid(
-          //                                     onSorted: (event) {
-          //                                       log(event.column.key.toString());
-          //                                     },
-          //                                     configuration: plutoGridConfiguration(focusNode: _focusNode),
-          //                                     columns: [
-          //                                       for (var key in controller.beams[0].keys)
-          //                                         PlutoColumn(
-          //                                             title: key.toString().pascalCaseToNormal(),
-          //                                             readOnly: true,
-          //                                             renderer: ((rendererContext) => GestureDetector(
-          //                                               onSecondaryTapDown: (detail) {
-          //                                                 DataGridMenu().showGridMenu(rendererContext.stateManager, detail, context);
-          //                                               },
-          //                                               child: Text(
-          //                                                 rendererContext.cell.value.toString(),
-          //                                                 style: TextStyle(
-          //                                                   fontSize: SizeDefine.columnTitleFontSize,
-          //                                                 ),
-          //                                               ),
-          //                                             )),
-          //                                             enableSorting: true,
-          //                                             enableRowDrag: false,
-          //                                             enableEditingMode: false,
-          //                                             enableDropToResize: true,
-          //                                             enableContextMenu: false,
-          //                                             width: Utils.getColumnSize(key: key, value: controller.beams[0][key]),
-          //                                             enableAutoEditing: false,
-          //                                             hide: key.toString().toLowerCase().contains("code"),
-          //                                             enableColumnDrag: false,
-          //                                             field: key,
-          //                                             type: PlutoColumnType.text())
-          //                                     ],
-          //                                     rows: controller.beamRows,
-          //                                     onChanged: (PlutoGridOnChangedEvent event) {
-          //                                       print(event);
-          //                                     },
-          //
-          //                                     onRowChecked: (PlutoGridOnRowCheckedEvent event) {
-          //                                       print('Grid B : $event');
-          //                                     },
-          //                                     onLoaded: (PlutoGridOnLoadedEvent event) {
-          //                                       controller.bmsReportStateManager = event.stateManager;
-          //                                     },
-          //
-          //                                     // configuration: PlutoConfiguration.dark(),
-          //                                   ),
-          //                                 ),
-          //                               );
-          //                             },
-          //                           )
-          //                         ],
-          //                       );
-          //                     });
-          //                   }
-          //                 })
-          //           ],
-          //         ),
-          //       ),
-          //     ),
-          //   );
-          // }
-
           return Scaffold(
             body: FocusTraversalGroup(
               policy: OrderedTraversalPolicy(),
@@ -507,8 +35,8 @@ class CommercialView extends GetView<CommercialController> {
                   height: double.maxFinite,
                   width: double.maxFinite,
                   child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
                     mainAxisSize: MainAxisSize.max,
+                    crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
                       GetBuilder<CommercialController>(
                         id: "initialData",
@@ -519,15 +47,15 @@ class CommercialView extends GetView<CommercialController> {
                               children: [
                                 Obx(
                                   () => DropDownField.formDropDown1WidthMap(
-                                    controllerX.locations.value,
+                                    controller.locations.value,
                                     (value) {
                                       controller.selectedLocation = value;
-                                      controllerX.getChannel(value.key);
+                                      controller.getChannel(value.key);
                                     },
                                     "Location",
                                     0.12,
-                                    isEnable: controllerX.isEnable.value,
-                                    selected: controllerX.selectedLocation,
+                                    isEnable: controller.isEnable.value,
+                                    selected: controller.selectedLocation,
                                     autoFocus: true,
                                     dialogWidth: 330,
                                     dialogHeight: Get.height * .7,
@@ -548,8 +76,8 @@ class CommercialView extends GetView<CommercialController> {
                                 const SizedBox(width: 15),
                                 DateWithThreeTextField(
                                   title: "From Date",
-                                  mainTextController: controllerX.date_,
-                                  widthRation: controllerX.widthSize,
+                                  mainTextController: controller.date_,
+                                  widthRation: controller.widthSize,
                                 ),
                                 const SizedBox(
                                   width: 20,
@@ -559,9 +87,8 @@ class CommercialView extends GetView<CommercialController> {
                                   child: FormButton(
                                     btnText: "show details",
                                     callback: () {
-                                      controllerX.selectedIndex.value = 0;
-                                      controllerX
-                                          .fetchProgramSchedulingDetails();
+                                      controller.selectedIndex.value = 0;
+                                      controller.fetchSchedulingDetails();
                                     },
                                   ),
                                 ),
@@ -582,7 +109,7 @@ class CommercialView extends GetView<CommercialController> {
                                     children: [
                                       Radio(
                                         value: 0,
-                                        groupValue: controllerX.selectedGroup,
+                                        groupValue: controller.selectedGroup,
                                         onChanged: (int? value) {},
                                       ),
                                       const Text('Insert After'),
@@ -591,7 +118,7 @@ class CommercialView extends GetView<CommercialController> {
                                       ),
                                       Radio(
                                         value: 1,
-                                        groupValue: controllerX.selectedGroup,
+                                        groupValue: controller.selectedGroup,
                                         onChanged: (int? value) {},
                                       ),
                                       const Text('Auto Shuffle'),
@@ -607,40 +134,43 @@ class CommercialView extends GetView<CommercialController> {
                         },
                       ),
                       Expanded(
-                        child: Row(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            /// input forms
-                            Expanded(
-                              child: Padding(
-                                padding:
-                                    const EdgeInsets.fromLTRB(15, 15, 7, 0),
-                                child: programTable(context),
+                        child: Container(
+                          child: Row(
+                            mainAxisSize: MainAxisSize.max,
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              /// input forms
+                              Expanded(
+                                child: Container(
+                                  padding:
+                                      const EdgeInsets.fromLTRB(15, 15, 7, 0),
+                                  child: programTable(context),
+                                ),
                               ),
-                            ),
 
-                            /// output forms
-                            Expanded(
-                              flex: 2,
-                              child: Padding(
-                                padding:
-                                    const EdgeInsets.fromLTRB(15, 15, 7, 0),
-                                child: GetBuilder<CommercialController>(
-                                    init: CommercialController(),
-                                    id: "reports",
-                                    builder: (controller) {
-                                      return Padding(
-                                        padding: const EdgeInsets.all(2.0),
-                                        child: tabView(context),
-                                      );
-                                    }),
+                              /// output forms
+                              Expanded(
+                                flex: 2,
+                                child: Container(
+                                  padding:
+                                      const EdgeInsets.fromLTRB(15, 15, 7, 0),
+                                  child: GetBuilder<CommercialController>(
+                                      init: CommercialController(),
+                                      id: "reports",
+                                      builder: (controller) {
+                                        return Padding(
+                                          padding: const EdgeInsets.all(2.0),
+                                          child: tabView(context),
+                                        );
+                                      }),
+                                ),
                               ),
-                            ),
-                          ],
+                            ],
+                          ),
                         ),
                       ),
                       Padding(
-                        padding: EdgeInsets.fromLTRB(5, 10, 5, 10),
+                        padding: const EdgeInsets.fromLTRB(5, 10, 5, 10),
                         child: GetBuilder<HomeController>(
                             id: "buttons",
                             init: Get.find<HomeController>(),
@@ -657,7 +187,6 @@ class CommercialView extends GetView<CommercialController> {
                                         callback: () => controller.formHandler(
                                           btn['name'],
                                         ),
-
                                       )
                                   ],
                                 );
@@ -684,7 +213,7 @@ class CommercialView extends GetView<CommercialController> {
                 crossAxisAlignment: CrossAxisAlignment.center,
                 children: [
                   CupertinoSlidingSegmentedControl(
-                    groupValue: controllerX.selectedIndex.value,
+                    groupValue: controller.selectedIndex.value,
                     //backgroundColor: Colors.blue.shade200,
                     children: <int, Widget>{
                       0: Text(
@@ -709,60 +238,70 @@ class CommercialView extends GetView<CommercialController> {
                         ),
                       ),
                     },
-                    onValueChanged: (int? value) {
-                      print("Index1 is>>" + value.toString());
-                      controllerX.selectedIndex.value = value!;
-                      controllerX.fetchSchedulingShowOnTabDetails();
+                    onValueChanged: (int? value) async {
+                      print("Selected tab index is : $value");
+                      controller.selectedIndex.value = value!;
+                      await controller.showTabList();
+
+                      //controller.fetchSchedulingShowOnTabDetails();
                     },
                   ),
                   const Spacer(),
-                  if (controllerX.selectedIndex.value == 0)
+                  if (controller.selectedIndex.value == 0)
                     Row(
                       mainAxisAlignment: MainAxisAlignment.end,
                       crossAxisAlignment: CrossAxisAlignment.center,
                       children: [
                         Obx(() => Text(
-                            'Commercial Spots : ${controllerX.commercialSpots.value}')),
+                            'Commercial Spots : ${controller.commercialSpots.value}')),
                         const SizedBox(
                           width: 20,
                         ),
                         Obx(() => Text(
-                            'Commercial Duration : ${controllerX.commercialDuration.value}')),
+                            'Commercial Duration : ${controller.commercialDuration.value}')),
                       ],
                     )
-                  else if (controllerX.selectedIndex.value == 1)
+                  else if (controller.selectedIndex.value == 1)
                     Row(
                       crossAxisAlignment: CrossAxisAlignment.center,
                       //mainAxisAlignment: MainAxisAlignment.end,
                       children: [
                         FormButton(
                           btnText: "Change FPC",
-                          callback: () {},
+                          callback: () {
+                            controller.changeFPCOnClick();
+                          },
                         ),
                         const SizedBox(
                           width: 20,
                         ),
                         FormButton(
                           btnText: "Mis-Match",
-                          callback: () {},
+                          callback: () {
+                            controller.misMatchOnClick();
+                          },
                         ),
                         const SizedBox(
                           width: 20,
                         ),
                         FormButton(
                           btnText: "Mark-as-Error",
-                          callback: () {},
+                          callback: () {
+                            controller.markAsErrorOnClick();
+                          },
                         ),
                       ],
                     )
-                  else if (controllerX.selectedIndex.value == 2)
+                  else if (controller.selectedIndex.value == 2)
                     Row(
                       mainAxisAlignment: MainAxisAlignment.end,
                       crossAxisAlignment: CrossAxisAlignment.center,
                       children: [
                         FormButton(
-                          btnText: "Mark-as-Error",
-                          callback: () {},
+                          btnText: "Un-Mark-as-Error",
+                          callback: () {
+                            controller.unMarkAsErrorOnClick();
+                          },
                         ),
                       ],
                     ),
@@ -772,12 +311,18 @@ class CommercialView extends GetView<CommercialController> {
             Expanded(
               child: Column(
                 children: [
-                  if (controllerX.selectedIndex.value == 0)
+                  if (controller.selectedIndex.value == 0)
                     Expanded(child: schedulingView(context))
-                  else if (controllerX.selectedIndex.value == 1)
+
+                  /// Filter B, calculate spot duration
+                  else if (controller.selectedIndex.value == 1)
                     Expanded(child: fpcMismatchView(context))
-                  else if (controllerX.selectedIndex.value == 2)
+
+                  /// Filter F, calculate spot duration
+                  else if (controller.selectedIndex.value == 2)
                     Expanded(child: markedAsErrorView(context))
+
+                  /// Filter E, calculate spot duration
                 ],
               ),
             ),
@@ -785,136 +330,109 @@ class CommercialView extends GetView<CommercialController> {
         ));
   }
 
+  /// Program List ( Left Side )
   Widget programTable(context) {
     return GetBuilder<CommercialController>(
-        id: "fillerFPCTable",
-        // init: CreateBreakPatternController(),
+        id: "programTable",
         builder: (controller) {
-          if (controllerX.commercialProgramList != null &&
-              (controllerX.commercialProgramList?.isNotEmpty)!) {
-            // final key = GlobalKey();
+          if (controller.commercialProgramList != null &&
+              (controller.commercialProgramList?.isNotEmpty)!) {
             return DataGridFromMap(
-              mapData: (controllerX.commercialProgramList
-                  ?.map((e) => e.toJson())
-                  .toList())!,
-              showonly: [
+              colorCallback: (colorRow) {
+                if (controller
+                        .commercialProgramList![colorRow.rowIdx].fpcTime ==
+                    controller.programFpcTimeSelected) {
+                  return Colors.deepPurple[200]!;
+                } else {
+                  return Colors.white;
+                }
+              },
+              mode: controller.selectedProgramPlutoGridMode,
+              showonly: const [
                 "fpcTime",
                 "programname",
               ],
-              //widthRatio: (Get.width * 0.1),
-              mode: PlutoGridMode.select,
+              mapData: (controller.commercialProgramList
+                  ?.map((e) => e.toJson())
+                  .toList())!,
               onSelected: (plutoGrid) {
-                print(jsonEncode(controllerX.selectedProgram?.toJson()));
-                controllerX.selectedProgram =
-                    controllerX.commercialProgramList![plutoGrid.rowIdx!];
-
-                controllerX.fpcTimeSelected = controllerX
+                controller.selectedProgram =
+                    controller.commercialProgramList![plutoGrid.rowIdx!];
+                controller.programFpcTimeSelected = controller
                     .commercialProgramList![plutoGrid.rowIdx!].fpcTime;
-
-                controllerX.fetchSchedulingShowOnTabDetails();
+                controller.programCodeSelected = controller
+                    .commercialProgramList![plutoGrid.rowIdx!].programcode;
+                print(jsonEncode(controller.selectedProgram?.toJson()));
+              },
+              onRowDoubleTap: (plutoGrid) async {
+                controller.selectedProgram =
+                    controller.commercialProgramList![plutoGrid.rowIdx];
+                controller.programFpcTimeSelected =
+                    controller.commercialProgramList![plutoGrid.rowIdx].fpcTime;
+                await controller.showSelectedProgramList(context);
+                controller.updateAllTabs();
+                print(
+                    'on Double tap ${jsonEncode(controller.selectedProgram?.toJson())}');
               },
             );
           } else {
-            return Expanded(
-              child: Card(
-                clipBehavior: Clip.hardEdge,
-                shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(0), // if you need this
-                  side: BorderSide(
-                    color: Colors.grey.shade300,
-                    width: 1,
-                  ),
+            return Container(
+              decoration: BoxDecoration(
+                border: Border.all(
+                  width: 1,
+                  color: Colors.grey.shade300,
                 ),
-                child: Container(
-                    //height: Get.height - (4 * kToolbarHeight),
-                    ),
+                borderRadius: BorderRadius.circular(0),
               ),
+              clipBehavior: Clip.hardEdge,
+              //child: const PleaseWaitCard(),
             );
           }
         });
   }
 
-  /// tab 0 ( A ) selected date is 22 March 2023
+  /// tab 0 ( B ) recommended date 22 March 2023
   Widget schedulingView(BuildContext context) {
     return Column(
       children: [
         GetBuilder<CommercialController>(
-            id: "fillerShowOnTabTable",
-            // init: CreateBreakPatternController(),
-            builder: (controller) {
-              if (controllerX.commercialShufflingList != null &&
-                  (controllerX.commercialShufflingList?.isNotEmpty)!) {
-                // final key = GlobalKey();
-                return Expanded(
-                  // child: DataGridFromMap(
-                  //   colorCallback: (row) {
-                  //     return row.row.cells.containsValue(
-                  //             controller.stateManager?.currentCell)
-                  //         ? Colors.blueAccent
-                  //         : controller.redBreaks.contains(row.rowIdx -
-                  //                 1)
-                  //             ? Colors.white
-                  //             : Colors.orange.shade700;
-                  //   },
-                  //   mapData: (controllerX.commercialShowDetailsList
-                  //       ?.map((e) => e.toJson())
-                  //       .toList())!,
-                  //   showonly: [
-                  //     "fpcTime",
-                  //     "breakNumber",
-                  //     "eventType",
-                  //     "exportTapeCode",
-                  //     "segmentCaption",
-                  //     "client",
-                  //     "brand",
-                  //     "duration",
-                  //     "product",
-                  //     "bookingNumber",
-                  //     "bookingDetailcode",
-                  //     "rostimeBand",
-                  //     "randid",
-                  //     "programName",
-                  //     "rownumber",
-                  //     "bStatus",
-                  //     "pDailyFPC",
-                  //     "pProgramMaster"
-                  //   ],
-                  //   onload: (loadEvent) {
-                  //     loadEvent.stateManager.gridFocusNode.addListener(() {
-                  //       if (loadEvent.stateManager.gridFocusNode.hasFocus) {
-                  //         loadEvent.stateManager
-                  //             .setGridMode(PlutoGridMode.select);
-                  //       } else {
-                  //         loadEvent.stateManager
-                  //             .setGridMode(PlutoGridMode.normal);
-                  //       }
-                  //     });
-                  //   },
-                  //   mode: PlutoGridMode.select,
-                  //   onSelected: (plutoGrid) {
-                  //     controllerX.selectedShowOnTab =
-                  //         controllerX.commercialShowDetailsList![plutoGrid.rowIdx!];
-                  //     print(">>>>>>Commercial Data>>>>>>" +
-                  //         jsonEncode(controllerX.selectedShowOnTab?.toJson()));
-                  //   },
-                  // ),
-                  ///
+          id: "schedulingTable",
+          builder: (controller) {
+            if (controller.showCommercialDetailsList != null &&
+                (controller.showCommercialDetailsList?.isNotEmpty)!) {
+              print(
+                  ' schedulingTable : ${controller.showCommercialDetailsList?.length.toString()}');
+
+              var cList = controller.mainCommercialShowDetailsList!
+                  .where((o) =>
+                      o.eventType.toString() == 'C' &&
+                      o.bStatus.toString() == 'B')
+                  .toList();
+              controller.commercialSpots.value = cList.length.toString();
+              print(
+                  "commercialSpots value is : ${controller.commercialSpots.value}");
+
+              double intTotalDuration = 0;
+              for (int i = 0; i <= cList.length - 1; i++) {
+                intTotalDuration = intTotalDuration +
+                    Utils.oldBMSConvertToSecondsValue(
+                        value: cList[i].duration!);
+              }
+              controller.commercialDuration.value =
+                  Utils.convertToTimeFromDouble(value: intTotalDuration);
+              print(
+                  "commercialDuration value is : ${controller.commercialDuration.value}");
+
+              return Expanded(
                   child: DataGridFromMap1(
-                      onFocusChange: (value) {
-                        controllerX.gridStateManager!
-                            .setGridMode(PlutoGridMode.selectWithOneTap);
-                        controllerX.selectedPlutoGridMode =
-                            PlutoGridMode.selectWithOneTap;
-                      },
-                      onload: (loadevent) {
-                        controllerX.gridStateManager =
-                            loadevent.stateManager;
+                      onload: (event) {
+                        controller.gridStateManager = event.stateManager;
                         if (controller.selectedDDIndex != null) {
-                          loadevent.stateManager.moveScrollByRow(
+                          event.stateManager.moveScrollByRow(
                               PlutoMoveDirection.down,
                               controller.selectedDDIndex);
-                          loadevent.stateManager.setCurrentCell(
-                              loadevent
+                          event.stateManager.setCurrentCell(
+                              event
                                   .stateManager
                                   .rows[controller.selectedDDIndex!]
                                   .cells
@@ -922,10 +440,11 @@ class CommercialView extends GetView<CommercialController> {
                                   .first
                                   .value,
                               controller.selectedDDIndex);
+                          controller.updateAllTabs();
                         }
                       },
                       showSrNo: true,
-                      showonly: [
+                      showonly: const [
                         "fpcTime",
                         "breakNumber",
                         "eventType",
@@ -946,80 +465,96 @@ class CommercialView extends GetView<CommercialController> {
                         "pProgramMaster"
                       ],
                       colorCallback: (PlutoRowColorContext plutoContext) {
-                        return Color(int.parse('0x${controllerX
-                            .commercialShufflingList![plutoContext.rowIdx]
-                            .backColor}'
-                        ));
+                        try {
+                          return controller.colorSort(controller
+                              .showCommercialDetailsList![plutoContext.rowIdx]
+                              .eventType
+                              .toString());
+                          // return Color(int.parse(
+                          //     '0x${controller.showCommercialDetailsList![plutoContext.rowIdx].backColor}'));
+                        } catch (e) {
+                          print(
+                              " Color Call Back error from schedulingTable ${e.toString()}");
+                          return Colors.white;
+                        }
                       },
-                        // colorCallback: (row) {
-                        //   return row.row.cells.containsValue(
-                        //           controller.stateManager?.currentCell)
-                        //       ? Colors.blueAccent
-                        //       : controller.redBreaks.contains(row.rowIdx -
-                        //               1)
-                        //           ? Colors.white
-                        //           : Colors.orange.shade700;
-                        // },
+
+                      /// From lstLoadColours List check If EventType 'S' or etc show colors accordingly
+                      // colorCallback: (row) {
+                      //   return row.row.cells.containsValue(
+                      //           controller.stateManager?.currentCell)
+                      //       ? Colors.blueAccent
+                      //       : controller.redBreaks.contains(row.rowIdx -
+                      //               1)
+                      //           ? Colors.white
+                      //           : Colors.orange.shade700;
+                      // },
                       onSelected: (PlutoGridOnSelectedEvent event) {
-                        controllerX.selectedShowOnTab =
-                        controllerX.commercialShufflingList![event.rowIdx!];
-                        print(">>>>>>Commercial Data>>>>>>" +
-                            jsonEncode(controllerX.selectedShowOnTab?.toJson()));
+                        controller.selectedShowOnTab = controller
+                            .showCommercialDetailsList![event.rowIdx!];
+                        print(
+                            ">>>>>> Commercial Data >>>>>>${jsonEncode(controller.selectedShowOnTab?.toJson())}");
                       },
                       onRowsMoved: (PlutoGridOnRowsMovedEvent onRowMoved) {
-                        print("Index is>>" + onRowMoved.idx.toString());
-                        Map map = onRowMoved.rows[0].cells;
-                        print("On Print moved" +
-                            jsonEncode(
-                                onRowMoved.rows[0].cells.toString()));
-                        controllerX.gridStateManager?.notifyListeners();
+                        if (controller
+                                .showCommercialDetailsList![onRowMoved.idx]
+                                .eventType !=
+                            "S ") {
+                          print(" onRowMoved Index is>>${onRowMoved.idx}");
+                          Map map = onRowMoved.rows[0].cells;
+                          print(
+                              " On Print moved${jsonEncode(onRowMoved.rows[0].cells.toString())}");
+                          controller.gridStateManager?.notifyListeners();
+                        } else {
+                          LoadingDialog.showErrorDialog(
+                              "You cannot move selected segment");
+                        }
+                        controller.updateAllTabs();
                       },
-                      mode: controllerX.selectedPlutoGridMode,
-                      mapData: controllerX.commercialShufflingList!
+                      mode: controller.selectedTabPlutoGridMode,
+                      mapData: controller.showCommercialDetailsList!.value
                           .map((e) => e.toJson())
-                          .toList())
-                );
-              } else {
-                return Expanded(
-                  child: Card(
-                    clipBehavior: Clip.hardEdge,
-                    shape: RoundedRectangleBorder(
-                      borderRadius:
-                          BorderRadius.circular(0), // if you need this
-                      side: BorderSide(
-                        color: Colors.grey.shade300,
-                        width: 1,
-                      ),
-                    ),
-                    child: Container(
-                      height: Get.height - (4 * kToolbarHeight),
+                          .toList()));
+            } else {
+              return Expanded(
+                child: Card(
+                  clipBehavior: Clip.hardEdge,
+                  shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(0), // if you need this
+                    side: BorderSide(
+                      color: Colors.grey.shade300,
+                      width: 1,
                     ),
                   ),
-                );
-              }
-            }),
+                  child: Container(
+                    height: Get.height - (4 * kToolbarHeight),
+                  ),
+                ),
+              );
+            }
+          },
+        ),
       ],
     );
   }
 
-  /// tab 1 ( B )
+  /// tab 1 ( F )
   Widget fpcMismatchView(BuildContext context) {
     return Column(
       children: [
         GetBuilder<CommercialController>(
-            id: "fillerShowOnTabTable",
-            // init: CreateBreakPatternController(),
+            id: "fpcMismatchTable",
             builder: (controller) {
-              if (controllerX.commercialShowFPCList != null &&
-                  (controllerX.commercialShowFPCList?.isNotEmpty)!) {
-                // final key = GlobalKey();
+              if (controller.showCommercialDetailsList != null &&
+                  (controller.showCommercialDetailsList?.isNotEmpty)!) {
+                print(
+                    ' fpcMisMatchTable : ${controller.showCommercialDetailsList?.length.toString()}');
                 return Expanded(
-                  // height: 400,
                   child: DataGridFromMap(
-                    mapData: (controllerX.commercialShowFPCList
+                    mapData: (controller.showCommercialDetailsList
                         ?.map((e) => e.toJson())
                         .toList())!,
-                    showonly: [
+                    showonly: const [
                       "fpcTime",
                       "breakNumber",
                       "eventType",
@@ -1039,13 +574,26 @@ class CommercialView extends GetView<CommercialController> {
                       "pDailyFPC",
                       "pProgramMaster"
                     ],
-                    //widthRatio: (Get.width * 0.2) / 2 + 7,
-                    //mode: PlutoGridMode.select,
+                    mode: PlutoGridMode.selectWithOneTap,
                     onSelected: (plutoGrid) {
-                      controllerX.selectedShowOnTab =
-                          controllerX.commercialShowFPCList![plutoGrid.rowIdx!];
-                      print(">>>>>>FPC Data>>>>>>" +
-                          jsonEncode(controllerX.selectedShowOnTab?.toJson()));
+                      print(plutoGrid.rowIdx!.toString());
+
+                      controller.mainSelectedIndex = plutoGrid.rowIdx!;
+                      controller.selectedShowOnTab = controller
+                          .showCommercialDetailsList![plutoGrid.rowIdx!];
+
+                      controller.exportTapeCodeSelected = controller
+                          .showCommercialDetailsList![plutoGrid.rowIdx!]
+                          .exportTapeCode
+                          .toString();
+
+                      controller.pDailyFPCSelected = controller
+                          .showCommercialDetailsList![plutoGrid.rowIdx!]
+                          .pDailyFPC
+                          .toString();
+
+                      print(
+                          ">>>>>> fpcMismatchTable Data >>>>>>${jsonEncode(controller.selectedShowOnTab?.toJson())}");
                     },
                   ),
                 );
@@ -1068,33 +616,30 @@ class CommercialView extends GetView<CommercialController> {
                 );
               }
             }),
-        // SizedBox(
-        //   height: (Get.height * .65) - kToolbarHeight / 2,
-        //   width: MediaQuery.of(context).size.width * 0.65,
-        //   child:
-        // ),
       ],
     );
   }
 
-  /// tab 2 ( C )
+  /// tab 2 ( E )
   Widget markedAsErrorView(BuildContext context) {
     return Column(
       children: [
         GetBuilder<CommercialController>(
-            id: "fillerShowOnTabTable",
+            id: "misMatchTable",
             // init: CreateBreakPatternController(),
             builder: (controller) {
-              if (controllerX.commercialShowMarkedList != null &&
-                  (controllerX.commercialShowMarkedList?.isNotEmpty)!) {
+              if (controller.showCommercialDetailsList != null &&
+                  (controller.showCommercialDetailsList?.isNotEmpty)!) {
+                print(
+                    ' misMatchTable : ${controller.showCommercialDetailsList?.length.toString()}');
                 // final key = GlobalKey();
                 return Expanded(
                   // height: 400,
                   child: DataGridFromMap(
-                    mapData: (controllerX.commercialShowMarkedList
+                    mapData: (controller.showCommercialDetailsList
                         ?.map((e) => e.toJson())
                         .toList())!,
-                    showonly: [
+                    showonly: const [
                       "fpcTime",
                       "breakNumber",
                       "eventType",
@@ -1114,13 +659,14 @@ class CommercialView extends GetView<CommercialController> {
                       "pDailyFPC",
                       "pProgramMaster"
                     ],
-                    //widthRatio: (Get.width * 0.2) / 2 + 7,
-                    //mode: PlutoGridMode.select,
+                    mode: PlutoGridMode.selectWithOneTap,
                     onSelected: (plutoGrid) {
-                      controllerX.selectedShowOnTab = controllerX
-                          .commercialShowMarkedList![plutoGrid.rowIdx!];
-                      print(">>>>>>Error Data>>>>>>" +
-                          jsonEncode(controllerX.selectedShowOnTab?.toJson()));
+                      print(plutoGrid.rowIdx!.toString());
+                      controller.mainSelectedIndex = plutoGrid.rowIdx!;
+                      controller.selectedShowOnTab = controller
+                          .showCommercialDetailsList![plutoGrid.rowIdx!];
+                      print(
+                          ">>>>>>Error Data>>>>>>${jsonEncode(controller.selectedShowOnTab?.toJson())}");
                     },
                   ),
                 );
@@ -1143,15 +689,7 @@ class CommercialView extends GetView<CommercialController> {
                 );
               }
             }),
-        // SizedBox(
-        //   height: (Get.height * .65) - kToolbarHeight / 2,
-        //   width: MediaQuery.of(context).size.width * 0.65,
-        //   child:
-        // ),
       ],
     );
   }
-
-
-
 }

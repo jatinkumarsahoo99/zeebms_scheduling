@@ -4,8 +4,8 @@ import 'package:excel/excel.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_file_saver/flutter_file_saver.dart';
 import 'package:get/get.dart';
-import 'package:pluto_grid_export/pluto_grid_export.dart' as pluto_grid_export;
-import 'package:pluto_grid_export/pluto_grid_export.dart';
+import 'package:bms_scheduling/widgets/PlutoGridExport/pluto_grid_export.dart' as pluto_grid_export;
+import 'package:bms_scheduling/widgets/PlutoGridExport/pluto_grid_export.dart';
 
 import '../../widgets/LoadingDialog.dart';
 import '../../widgets/Snack.dart';

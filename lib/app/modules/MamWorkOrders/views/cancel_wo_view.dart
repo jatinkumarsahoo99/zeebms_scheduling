@@ -7,9 +7,10 @@ import 'package:bms_scheduling/widgets/dropdown.dart';
 import 'package:bms_scheduling/widgets/gridFromMap.dart';
 import 'package:bms_scheduling/widgets/input_fields.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 
 import 'package:get/get.dart';
-import 'package:pluto_grid/pluto_grid.dart';
+import 'package:bms_scheduling/widgets/PlutoGrid/pluto_grid.dart';
 
 import '../controllers/mam_work_orders_controller.dart';
 
@@ -76,11 +77,19 @@ class CancelWoView extends GetView {
                 hintTxt: "From Epi#",
                 controller: controller.cWOfromEpiTC,
                 width: 0.0375,
+                inputformatters: [
+                  FilteringTextInputFormatter.digitsOnly,
+                ],
+                maxLen: 4,
               ),
               InputFields.formField1(
                 hintTxt: "To Epi#",
                 controller: controller.cWOToEpiTC,
                 width: 0.0375,
+                inputformatters: [
+                  FilteringTextInputFormatter.digitsOnly,
+                ],
+                maxLen: 4,
               ),
               DropDownField.formDropDown1WidthMap(
                 controller.onloadData.value.lstcboTelecastTypeWOCanc,

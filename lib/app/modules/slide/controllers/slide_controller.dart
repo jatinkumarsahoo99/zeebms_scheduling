@@ -1,7 +1,7 @@
 import 'package:file_picker/file_picker.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:pluto_grid/pluto_grid.dart';
+import 'package:bms_scheduling/widgets/PlutoGrid/pluto_grid.dart';
 
 import '../../../controller/ConnectorControl.dart';
 import '../../../controller/MainController.dart';
@@ -33,26 +33,26 @@ class SlideController extends GetxController {
   TextEditingController segmentFpcTime_ = TextEditingController();
 
   List<TransmissionLogModel>? transmissionLogList = [
-    new TransmissionLogModel(rowNo: 1, status: "data"),
-    new TransmissionLogModel(rowNo: 1, status: "data"),
-    new TransmissionLogModel(rowNo: 1, status: "data"),
-    new TransmissionLogModel(rowNo: 1, status: "data"),
-    new TransmissionLogModel(rowNo: 1, status: "data"),
-    new TransmissionLogModel(rowNo: 1, status: "data"),
-    new TransmissionLogModel(rowNo: 1, status: "data"),
-    new TransmissionLogModel(rowNo: 1, status: "data"),
-    new TransmissionLogModel(rowNo: 1, status: "data"),
-    new TransmissionLogModel(rowNo: 1, status: "data"),
-    new TransmissionLogModel(rowNo: 1, status: "data"),
-    new TransmissionLogModel(rowNo: 1, status: "data"),
-    new TransmissionLogModel(rowNo: 1, status: "data"),
-    new TransmissionLogModel(rowNo: 1, status: "data"),
-    new TransmissionLogModel(rowNo: 1, status: "data"),
-    new TransmissionLogModel(rowNo: 1, status: "data"),
-    new TransmissionLogModel(rowNo: 1, status: "data"),
-    new TransmissionLogModel(rowNo: 1, status: "data"),
-    new TransmissionLogModel(rowNo: 1, status: "data"),
-    new TransmissionLogModel(rowNo: 1, status: "data"),
+    // new TransmissionLogModel(rowNo: 1, status: "data"),
+    // new TransmissionLogModel(rowNo: 1, status: "data"),
+    // new TransmissionLogModel(rowNo: 1, status: "data"),
+    // new TransmissionLogModel(rowNo: 1, status: "data"),
+    // new TransmissionLogModel(rowNo: 1, status: "data"),
+    // new TransmissionLogModel(rowNo: 1, status: "data"),
+    // new TransmissionLogModel(rowNo: 1, status: "data"),
+    // new TransmissionLogModel(rowNo: 1, status: "data"),
+    // new TransmissionLogModel(rowNo: 1, status: "data"),
+    // new TransmissionLogModel(rowNo: 1, status: "data"),
+    // new TransmissionLogModel(rowNo: 1, status: "data"),
+    // new TransmissionLogModel(rowNo: 1, status: "data"),
+    // new TransmissionLogModel(rowNo: 1, status: "data"),
+    // new TransmissionLogModel(rowNo: 1, status: "data"),
+    // new TransmissionLogModel(rowNo: 1, status: "data"),
+    // new TransmissionLogModel(rowNo: 1, status: "data"),
+    // new TransmissionLogModel(rowNo: 1, status: "data"),
+    // new TransmissionLogModel(rowNo: 1, status: "data"),
+    // new TransmissionLogModel(rowNo: 1, status: "data"),
+    // new TransmissionLogModel(rowNo: 1, status: "data"),
   ];
   PlutoGridMode selectedPlutoGridMode = PlutoGridMode.normal;
   int? selectedIndex;

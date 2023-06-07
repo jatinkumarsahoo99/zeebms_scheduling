@@ -18,17 +18,25 @@ abstract class Routes {
   static const SPOT_PRIORITY = _Paths.SPOT_PRIORITY;
   static const RO_RESCHEDULE = _Paths.RO_RESCHEDULE;
   static const ROS_DISTRIBUTION = _Paths.ROS_DISTRIBUTION;
-  static const FINAL_AUDIT_REPORT_BEFORE_LOG = _Paths.FINAL_AUDIT_REPORT_BEFORE_LOG;
-  static const FINAL_AUDIT_REPORT_AFTER_TELECAST = _Paths.FINAL_AUDIT_REPORT_AFTER_TELECAST;
+  static const FINAL_AUDIT_REPORT_BEFORE_LOG =
+      _Paths.FINAL_AUDIT_REPORT_BEFORE_LOG;
+  static const FINAL_AUDIT_REPORT_AFTER_TELECAST =
+      _Paths.FINAL_AUDIT_REPORT_AFTER_TELECAST;
   static const AUDIT_STATUS = _Paths.AUDIT_STATUS;
   static const ASRUN_IMPORT_AD_REVENUE = _Paths.ASRUN_IMPORT_AD_REVENUE;
-  static const SALES_AUDIT_NOT_TELECAST_REPORT = _Paths.SALES_AUDIT_NOT_TELECAST_REPORT;
-  static const SALES_AUDIT_EXTRA_SPOTS_REPORT = _Paths.SALES_AUDIT_EXTRA_SPOTS_REPORT;
+  static const SALES_AUDIT_NOT_TELECAST_REPORT =
+      _Paths.SALES_AUDIT_NOT_TELECAST_REPORT;
+  static const SALES_AUDIT_EXTRA_SPOTS_REPORT =
+      _Paths.SALES_AUDIT_EXTRA_SPOTS_REPORT;
   static const SALES_AUDIT_NEW = _Paths.SALES_AUDIT_NEW;
   static const SLIDE_MASTER = _Paths.SLIDE_MASTER;
   static const STILL_MASTER = _Paths.STILL_MASTER;
+  static const SECONDARY_EVENT_MASTER = _Paths.SECONDARY_EVENT_MASTER;
+  static const FILLER_MASTER = _Paths.FILLER_MASTER;
+  static const PROMO_MASTER = _Paths.PROMO_MASTER;
   static const EVENT_SECONDARY = _Paths.EVENT_SECONDARY;
   static const SLIDE = _Paths.SLIDE;
+  static const COMMERCIAL_MASTER = _Paths.COMMERCIAL_MASTER;
 }
 
 abstract class RoutesList {
@@ -60,21 +68,26 @@ abstract class _Paths {
   static const FPC_MISMATCH = '/frmFPCMismatch';
   static const COMMERCIAL = '/frmCommercialScheduling';
   static const RO_CANCELLATION = '/frmROCancellation';
-  //static const RO_BOOKING = '/ro-booking';
-  static const FILLER = '/filler';
-  static const PROMOS = '/promos';
+  static const FILLER = '/frmFillerScheduling';
+  static const PROMOS = '/frmPromoScheduling';
   static const SPOT_PRIORITY = '/frmSpotPriority';
   static const RO_RESCHEDULE = '/frmRoReschedule';
   static const ROS_DISTRIBUTION = '/FrmRosDistribution';
   static const FINAL_AUDIT_REPORT_BEFORE_LOG = '/final-audit-report-before-log';
-  static const FINAL_AUDIT_REPORT_AFTER_TELECAST = '/final-audit-report-after-telecast';
+  static const FINAL_AUDIT_REPORT_AFTER_TELECAST =
+      '/final-audit-report-after-telecast';
   static const AUDIT_STATUS = '/audit-status';
   static const ASRUN_IMPORT_AD_REVENUE = '/frmAsrunImport';
   static const SALES_AUDIT_NOT_TELECAST_REPORT = '/frmsalesauditnottelecast';
-  static const SALES_AUDIT_EXTRA_SPOTS_REPORT = '/frmsalesauditextraspotsreport';
+  static const SALES_AUDIT_EXTRA_SPOTS_REPORT =
+      '/frmsalesauditextraspotsreport';
   static const SALES_AUDIT_NEW = '/TransmissionLog';
-  static const SLIDE_MASTER = '/slide-master';
-  static const STILL_MASTER = '/still-master';
+  static const SLIDE_MASTER = '/frmSlideMaster';
+  static const STILL_MASTER = '/frmStillMaster';
+  static const SECONDARY_EVENT_MASTER = '/frmSecondaryEventmaster';
+  static const FILLER_MASTER = '/frmFillerMaster';
+  static const PROMO_MASTER = '/frmPromoMaster';
   static const EVENT_SECONDARY = '/event-secondary';
   static const SLIDE = '/slide';
+  static const COMMERCIAL_MASTER = '/commercial-master';
 }

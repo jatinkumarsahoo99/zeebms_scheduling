@@ -1,151 +1,167 @@
-import '../../providers/ColorData.dart';
-
 class TransmissionLogModel {
-  int? rowNo;
-  String? programCode;
-  String? languageCode;
-  String? originalRepeatCode;
-  String? programTypeCode;
-  int? color;
-  int? episodeDuration;
-  String? fpcTime;
-  String? endTime;
-  String? programName;
-  int? epsNo;
-  int? colorNo;
-  String? tapeid;
-  String? status;
-  String? oriRep;
-  String? wbs;
-  String? caption;
-  String? modifed;
-  String? oriRepCode;
-  String? telecastdate1;
-  String? telecastdate2;
-  String? telecastdate3;
+  LoadSavedLogOutput? loadSavedLogOutput;
 
-
-  TransmissionLogModel(
-      {this.rowNo,
-      this.programCode,
-      this.languageCode,
-      this.originalRepeatCode,
-      this.programTypeCode,
-      this.color,
-      this.episodeDuration,
-      this.fpcTime,
-      this.endTime,
-      this.programName,
-      this.epsNo,
-      this.tapeid,
-      this.status,
-      this.oriRep,
-      this.wbs,
-      this.caption,
-      this.modifed,
-      this.oriRepCode,
-      this.telecastdate1,
-      this.telecastdate2,
-      this.telecastdate3,
-      });
+  TransmissionLogModel({this.loadSavedLogOutput});
 
   TransmissionLogModel.fromJson(Map<String, dynamic> json) {
-    rowNo = json['rowNo'];
-    programCode = json['programCode'];
-    languageCode = json['languageCode'];
-    originalRepeatCode = json['originalRepeatCode'];
-    programTypeCode = json['programTypeCode'];
-    color = json['color'];
-    colorNo = ColorData.getColorData(json['color']).value;
-    episodeDuration = json['episodeDuration'];
-    fpcTime = json['fpcTime'];
-    endTime = json['endTime'];
-    programName = json['programName'];
-    epsNo = json['epsNo'];
-    tapeid = json['tapeid'];
-    status = json['status'];
-    oriRep = json['oriRep'];
-    wbs = json['wbs'];
-    caption = json['caption'];
-    modifed = json['modifed'];
-    oriRepCode = json['oriRepCode'];
-    telecastdate1 = json['telecastdate1'];
-    telecastdate2 = json['telecastdate2'];
-    telecastdate3 = json['telecastdate3'];
+    loadSavedLogOutput = json['loadSavedLogOutput'] != null
+        ? new LoadSavedLogOutput.fromJson(json['loadSavedLogOutput'])
+        : null;
   }
 
   Map<String, dynamic> toJson() {
     final Map<String, dynamic> data = new Map<String, dynamic>();
-    data['rowNo'] = this.rowNo;
-    data['programCode'] = this.programCode;
-    data['languageCode'] = this.languageCode;
-    data['originalRepeatCode'] = this.originalRepeatCode;
-    data['programTypeCode'] = this.programTypeCode;
-    data['color'] = this.color;
-    data['episodeDuration'] = this.episodeDuration;
-    data['fpcTime'] = this.fpcTime;
-    data['endTime'] = this.endTime;
-    data['programName'] = this.programName;
-    data['epsNo'] = this.epsNo;
-    data['tapeid'] = this.tapeid;
-    data['status'] = this.status;
-    data['oriRep'] = this.oriRep;
-    data['wbs'] = this.wbs;
-    data['caption'] = this.caption;
-    data['modifed'] = this.modifed;
-    data['oriRepCode'] = this.oriRepCode;
-    data['telecastdate1'] = this.telecastdate1;
-    data['telecastdate2'] = this.telecastdate2;
-    data['telecastdate3'] = this.telecastdate3;
+    if (this.loadSavedLogOutput != null) {
+      data['loadSavedLogOutput'] = this.loadSavedLogOutput!.toJson();
+    }
     return data;
   }
+}
 
-  Map<String, dynamic> toJson1() {
-    final Map<String, dynamic> data = new Map<String, dynamic>();
-    // data['rowNo'] = this.rowNo;
-    data['programCode'] = this.programCode;
-    data['languageCode'] = this.languageCode;
-    data['originalRepeatCode'] = this.originalRepeatCode;
-    data['programTypeCode'] = this.programTypeCode;
-    data['color'] = ColorData.getColorData(this.color).value;
-    data['Episode Dur'] = this.episodeDuration;
-    data['fpcTime'] = this.fpcTime;
-    data['endTime'] = this.endTime;
-    data['programName'] = this.programName;
-    data['epsNo'] = this.epsNo;
-    data['tapeid'] = this.tapeid;
-    data['status'] = this.status;
-    data['oriRep'] = this.oriRep;
-    data['wbs'] = this.wbs;
-    data['caption'] = this.caption;
-    data['modifed'] = this.modifed;
-    data['oriRepCode'] = this.oriRepCode;
-    return data;
+class LoadSavedLogOutput {
+  String? transmissiontime;
+  String? logSavedBy;
+  List<LstTransmissionLog>? lstTransmissionLog;
+
+  LoadSavedLogOutput(
+      {this.transmissiontime, this.logSavedBy, this.lstTransmissionLog});
+
+  LoadSavedLogOutput.fromJson(Map<String, dynamic> json) {
+    transmissiontime = json['transmissiontime'];
+    logSavedBy = json['logSavedBy'];
+    if (json['lstTransmissionLog'] != null) {
+      lstTransmissionLog = <LstTransmissionLog>[];
+      json['lstTransmissionLog'].forEach((v) {
+        lstTransmissionLog!.add(new LstTransmissionLog.fromJson(v));
+      });
+    }
+
+    if (json['lstTXLog'] != null) {
+      lstTransmissionLog = <LstTransmissionLog>[];
+      json['lstTXLog'].forEach((v) {
+        lstTransmissionLog!.add(new LstTransmissionLog.fromJson(v));
+      });
+    }
   }
 
-  Map<String, dynamic> toJson2() {
+  Map<String, dynamic> toJson() {
     final Map<String, dynamic> data = new Map<String, dynamic>();
-    data['rowNo'] = this.rowNo;
-    data['programCode'] = this.programCode;
-    data['languageCode'] = this.languageCode;
-    data['originalRepeatCode'] = this.originalRepeatCode;
-    data['programTypeCode'] = this.programTypeCode;
-    data['color'] = this.color;
-    data['episodeDuration'] = this.episodeDuration;
-    data['fpcTime'] = this.fpcTime;
-    data['endTime'] = this.endTime;
-    data['programName'] = this.programName;
-    data['epsNo'] = this.epsNo;
-    data['tapeid'] = this.tapeid;
-    data['status'] = this.status;
-    data['oriRep'] = this.oriRep;
-    data['wbs'] = this.wbs;
-    data['caption'] = this.caption;
-    data['modifed'] = this.modifed;
-    data['oriRepCode'] = this.oriRepCode;
-    data['telecastdate1'] = this.telecastdate1;
-    data['telecastdate2'] = this.telecastdate2;
-    data['telecastdate3'] = this.telecastdate3;
+    data['transmissiontime'] = this.transmissiontime;
+    data['logSavedBy'] = this.logSavedBy;
+    if (this.lstTransmissionLog != null) {
+      data['lstTransmissionLog'] =
+          this.lstTransmissionLog!.map((v) => v.toJson()).toList();
+    }
+    return data;
+  }
+}
+
+class LstTransmissionLog {
+  String? fpCtime;
+  String? transmissionTime;
+  String? exportTapeCaption;
+  String? exportTapeCode;
+  String? tapeduration;
+  String? som;
+  int? breakNumber;
+  int? episodeNumber;
+  String? breakEvent;
+  int? rownumber;
+  String? eventType;
+  String? bookingNumber;
+  int? bookingdetailcode;
+  String? scheduleTime;
+  String? productName;
+  String? rosTimeBand;
+  String? client;
+  String? promoTypecode;
+  String? datechange;
+  String? productGroup;
+  String? longCaption;
+  String? productnameFont;
+  String? exporttapecodeFont;
+  String? rosTimeBandFont;
+
+  LstTransmissionLog(
+      {this.fpCtime,
+        this.transmissionTime,
+        this.exportTapeCaption,
+        this.exportTapeCode,
+        this.tapeduration,
+        this.som,
+        this.breakNumber,
+        this.episodeNumber,
+        this.breakEvent,
+        this.rownumber,
+        this.eventType,
+        this.bookingNumber,
+        this.bookingdetailcode,
+        this.scheduleTime,
+        this.productName,
+        this.rosTimeBand,
+        this.client,
+        this.promoTypecode,
+        this.datechange,
+        this.productGroup,
+        this.longCaption,
+        this.productnameFont,
+        this.exporttapecodeFont,
+        this.rosTimeBandFont});
+
+  LstTransmissionLog.fromJson(Map<String, dynamic> json) {
+    fpCtime = json['fpCtime'];
+    transmissionTime = json['transmissionTime'];
+    exportTapeCaption = json['exportTapeCaption'];
+    exportTapeCode = json['exportTapeCode'];
+    tapeduration = json['tapeduration'];
+    som = json['som'];
+    breakNumber = json['breakNumber'];
+    episodeNumber = json['episodeNumber'];
+    breakEvent = json['breakEvent'];
+    rownumber = json['rownumber'];
+    eventType = json['eventType'];
+    bookingNumber = json['bookingNumber'];
+    bookingdetailcode = json['bookingdetailcode'];
+    scheduleTime = json['scheduleTime']??json["scheduletime"];
+    productName = json['productName']??json["productname"];
+    rosTimeBand = json['rosTimeBand'];
+    client = json['client'];
+    promoTypecode = json['promoTypecode']??json["promotypecode"];
+    datechange = json['datechange'];
+    productGroup = json['productGroup'];
+    longCaption = json['longCaption'];
+    productnameFont = json['productname_Font'];
+    exporttapecodeFont = json['exporttapecode_Font'];
+    rosTimeBandFont = json['rosTimeBand_Font'];
+  }
+
+  Map<String, dynamic> toJson() {
+    final Map<String, dynamic> data = new Map<String, dynamic>();
+    data['fpCtime'] = this.fpCtime;
+    data['transmissionTime'] = this.transmissionTime;
+    data['exportTapeCaption'] = this.exportTapeCaption;
+    data['exportTapeCode'] = this.exportTapeCode;
+    data['tapeduration'] = this.tapeduration;
+    data['som'] = this.som;
+    data['breakNumber'] = this.breakNumber;
+    data['episodeNumber'] = this.episodeNumber;
+    data['breakEvent'] = this.breakEvent;
+    data['rownumber'] = this.rownumber;
+    // data['rownumber'] = (this.rownumber!-1);
+    data['eventType'] = this.eventType;
+    data['bookingNumber'] = this.bookingNumber;
+    data['bookingdetailcode'] = this.bookingdetailcode;
+    data['scheduleTime'] = this.scheduleTime;
+    data['productName'] = this.productName;
+    data['rosTimeBand'] = this.rosTimeBand;
+    data['client'] = this.client;
+    data['promoTypecode'] = this.promoTypecode;
+    data['datechange'] = this.datechange;
+    data['productGroup'] = this.productGroup;
+    data['longCaption'] = this.longCaption;
+    data['productname_Font'] = this.productnameFont;
+    data['exporttapecode_Font'] = this.exporttapecodeFont;
+    data['rosTimeBand_Font'] = this.rosTimeBandFont;
     return data;
   }
 }

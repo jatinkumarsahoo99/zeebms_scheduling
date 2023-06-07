@@ -2,7 +2,7 @@ import 'dart:convert';
 
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:pluto_grid/pluto_grid.dart';
+import 'package:bms_scheduling/widgets/PlutoGrid/pluto_grid.dart';
 
 import '../../../../widgets/CustomSearchDropDown/src/selection_widget.dart';
 import '../../../../widgets/LoadingDialog.dart';
@@ -17,7 +17,7 @@ import '../../../data/DropDownValue.dart';
 import '../SalesAuditNotTelecastModel.dart';
 
 class SalesAuditNotTelecastReportController extends GetxController {
-  // DataTableSource movieLiveEventTable = ProgramTapeTable();
+  var locations = RxList<DropDownValue>();
   List<SystemEnviroment>? progTypeList = [];
   List<SystemEnviroment>? totalProgTypeList = [];
   List<SystemEnviroment>? progNameList = [];
@@ -27,6 +27,8 @@ class SalesAuditNotTelecastReportController extends GetxController {
 
   TextEditingController episodeFrom_ = TextEditingController();
   TextEditingController episodeTo_ = TextEditingController();
+  TextEditingController frmDate = TextEditingController();
+  TextEditingController toDate = TextEditingController();
   TextEditingController search_ = TextEditingController();
   TextEditingController searchProgType_ = TextEditingController();
 
@@ -37,6 +39,12 @@ class SalesAuditNotTelecastReportController extends GetxController {
   List dataList = [];
   FocusNode progType = FocusNode();
   int? selectIndex;
+
+  RxBool isEnable = RxBool(true);
+  //input controllers
+  DropDownValue? selectLocation;
+  RxString selectValue=RxString("");
+
 
   @override
   void onInit() {

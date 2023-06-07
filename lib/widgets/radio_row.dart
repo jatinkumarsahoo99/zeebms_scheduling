@@ -1,24 +1,17 @@
 import 'package:flutter/material.dart';
 
 class RadioRow extends StatefulWidget {
-  const RadioRow(
-      {Key? key, required this.items, required this.groupValue, this.onchange})
-      : super(key: key);
+  const RadioRow({Key? key, required this.items, required this.groupValue, this.onchange, this.disabledRadios}) : super(key: key);
   final List items;
   final String groupValue;
   final Function? onchange;
+  final List<String>? disabledRadios;
 
   @override
   State<RadioRow> createState() => _RadioRowState();
 }
 
 class _RadioRowState extends State<RadioRow> {
-  @override
-  void initState() {
-    // TODO: implement initState
-    super.initState();
-  }
-
   @override
   Widget build(BuildContext context) {
     return Row(
@@ -31,10 +24,17 @@ class _RadioRowState extends State<RadioRow> {
                   Radio<String>(
                       value: e,
                       groupValue: widget.groupValue,
-                      onChanged: (value) {
-                        widget.onchange!(value);
-                      }),
-                  Text(e),
+                      onChanged: widget.disabledRadios?.contains(e) ?? false
+                          ? null
+                          : (value) {
+                              widget.onchange!(value);
+                            }),
+                  Text(
+                    e,
+                    style: TextStyle(
+                      color: widget.disabledRadios?.contains(e) ?? false ? Colors.grey : Colors.black,
+                    ),
+                  ),
                 ],
               ),
             ),

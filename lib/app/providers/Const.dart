@@ -58,23 +58,11 @@ class Const {
     }
   }
 
-  static String getClientId() {
-    switch (ApiFactory.Enviroment.toLowerCase()) {
-      case "prod":
-        return "8303749b-8c0f-457e-a24a-09749a37f738";
-      case "uat":
-        return "2ca12c97-56b5-46ab-a600-da6019f94439";
-      case "dev":
-        return "2ca12c97-56b5-46ab-a600-da6019f94439";
-      default:
-        return "2ca12c97-56b5-46ab-a600-da6019f94439";
-    }
-  }
 
   static String getBaseLoginAPIUrl() {
     switch (ApiFactory.Enviroment.toLowerCase()) {
       case "prod":
-        return "https://api-login.bms.zeeconnect.in";
+        return "https://api-login-bms.zeeconnect.in";
       case "uat":
         return "https://api-login-bms-uat.zeeconnect.in";
       case "dev":
@@ -87,7 +75,7 @@ class Const {
   static String getBaseCommonAPIUrl() {
     switch (ApiFactory.Enviroment.toLowerCase()) {
       case "prod":
-        return "https://api-common.bms.zeeconnect.in";
+        return "https://api-common-bms.zeeconnect.in";
       case "uat":
         return "https://api-common-bms-uat.zeeconnect.in";
       case "dev":
@@ -100,7 +88,7 @@ class Const {
   static String getBaseProgrammingAPIUrl() {
     switch (ApiFactory.Enviroment.toLowerCase()) {
       case "prod":
-        return "https://api-programming.bms.zeeconnect.in";
+        return "https://api-programming-bms.zeeconnect.in";
       case "uat":
         return "https://api-programming-bms-uat.zeeconnect.in";
       case "dev":
@@ -113,7 +101,7 @@ class Const {
   static String getBaseAdminAPIUrl() {
     switch (ApiFactory.Enviroment.toLowerCase()) {
       case "prod":
-        return "https://api-admin.bms.zeeconnect.in";
+        return "https://api-admin-bms.zeeconnect.in";
       case "uat":
         return "https://api-admin-bms-uat.zeeconnect.in";
       case "dev":
@@ -126,7 +114,7 @@ class Const {
   static String getBaseSchedulingAPIUrl() {
     switch (ApiFactory.Enviroment.toLowerCase()) {
       case "prod":
-        return "https://api-scheduling.bms.zeeconnect.in";
+        return "https://api-scheduling-bms.zeeconnect.in";
       case "uat":
         return "https://api-scheduling-bms-uat.zeeconnect.in";
       case "dev":
@@ -152,7 +140,7 @@ class Const {
   static String getWebCommonUrl() {
     switch (ApiFactory.Enviroment.toLowerCase()) {
       case "prod":
-        return "https://home.bms.zeeconnect.in";
+        return "https://home-bms.zeeconnect.in";
       case "uat":
         return "https://app-common-bms-uat.zeeconnect.in";
       case "dev":
@@ -165,7 +153,7 @@ class Const {
   static String getWebProgrammingUrl() {
     switch (ApiFactory.Enviroment.toLowerCase()) {
       case "prod":
-        return "https://programming.zeeconnect.in";
+        return "https://programming-bms.zeeconnect.in";
       case "uat":
         return "https://app-programming-bms-uat.zeeconnect.in";
       case "dev":
@@ -178,7 +166,7 @@ class Const {
   static String getWebAdminUrl() {
     switch (ApiFactory.Enviroment.toLowerCase()) {
       case "prod":
-        return "https://admin.zeeconnect.in";
+        return "https://admin-bms.zeeconnect.in";
       case "uat":
         return "https://app-admin-bms-uat.zeeconnect.in";
       case "dev":
@@ -187,11 +175,10 @@ class Const {
         return "https://app-admin-bms-dev.zeeconnect.in";
     }
   }
-
   static String getWebSchedulingUrl() {
     switch (ApiFactory.Enviroment.toLowerCase()) {
       case "prod":
-        return "https://scheduling.zeeconnect.in";
+        return "https://scheduling-bms.zeeconnect.in";
       case "uat":
         return "https://app-scheduling-bms-uat.zeeconnect.in";
       case "dev":
