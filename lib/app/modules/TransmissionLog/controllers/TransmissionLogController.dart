@@ -132,25 +132,27 @@ class TransmissionLogController extends GetxController {
   }
 
   selectNext_Program_ClockHour(String type) {
-    if(type==null){
-      type="fpCtime";
+    if (type == null) {
+      type = "fpCtime";
     }
     String strValue = "";
-    int intRowIndex = gridStateManager?.currentRow?.sortIdx??0;
+    int intRowIndex = gridStateManager?.currentRowIdx ?? 0;
     bool blnLastRecord = true;
 
     if (type == "fpCtime") {
-      strValue = gridStateManager?.currentRow?.cells["fpCtime"]?.value??"";
+      strValue = gridStateManager?.currentRow?.cells["fpCtime"]?.value ?? "";
     } else {
       // strValue = tblLog.currentRow.cells["FPCTime"].value;
     }
 
-    for (int i = intRowIndex; i < (gridStateManager?.rows.length??0); i++) {
+    for (int i = intRowIndex; i < (gridStateManager?.rows.length ?? 0); i++) {
       if (type == "FPCTime") {
         if (strValue != gridStateManager?.rows[i].cells["FPCTime"]?.value) {
           // gridStateManager?.rows[i].cells["FPCTime"].selected = true;
-          gridStateManager?.setCurrentCell(gridStateManager?.rows[i].cells["FPCTime"], gridStateManager?.rows[i].sortIdx);
-          gridStateManager?.currentRow?.cells["FPCTime"] = gridStateManager?.rows[i].cells["FPCTime"]?.value??"";
+          gridStateManager?.setCurrentCell(
+              gridStateManager?.rows[i].cells["FPCTime"], i);
+          gridStateManager?.currentRow?.cells["FPCTime"] =
+              gridStateManager?.rows[i].cells["FPCTime"]?.value ?? "";
           // gridStateManager?.firstDisplayedScrollingRowIndex = i - 12;
           // gridStateManager?.scroll = i - 12;
           blnLastRecord = false;
@@ -167,7 +169,6 @@ class TransmissionLogController extends GetxController {
     }
   }
 
-
   btnUp_Click() {
     List<int> intSelectedRows = [];
     int intSelectedRow = 0;
@@ -181,9 +182,14 @@ class TransmissionLogController extends GetxController {
       }
       intMoveUpDown--;*/
 
-      cutCopy(isCut: true, row: gridStateManager?.currentRow);
-      paste(gridStateManager?.currentRow?.sortIdx ?? 0 - 1);
-      colorGrid(false);
+      cutCopy(
+          isCut: true,
+          row: gridStateManager?.currentRow,
+          fun: () {
+            paste((gridStateManager?.currentRowIdx ?? 0) - 1, fun: () {
+              colorGrid(false);
+            });
+          });
 
       /*intSelectedRows.sort();
       intSelectedRows = intSelectedRows.reversed.toList();
@@ -198,26 +204,21 @@ class TransmissionLogController extends GetxController {
     }
   }
 
-  void btnDown_Click() {
+  btnDown_Click() {
     List<int> intSelectedRows = [];
     int intSelectedRow = 0;
     int intMoveUpDown = 0;
 
     try {
-      // Cursor = Cursors.appStarting;
+      cutCopy(
+          isCut: true,
+          row: gridStateManager?.currentRow,
+          fun: () {
+            paste((gridStateManager?.currentRowIdx ?? 0) + 1, fun: () {
+              colorGrid(false);
+            });
+          });
 
-      /*for (DataGridViewRow dr in tblLog.selectedRows) {
-        intSelectedRows.add(dr.cells["RowNumber"].value);
-        if (intMoveUpDown == 0) {
-          intMoveUpDown = dr.cells["rownumber"].value;
-        }
-        intSelectedRow++;
-      }
-      intMoveUpDown += 2;
-*/
-      cutCopy(isCut: true, row: gridStateManager?.currentRow);
-      paste(gridStateManager?.currentRow?.sortIdx ?? 0 + 1);
-      colorGrid(false);
       /*cutCopy(true);
       paste(intMoveUpDown);
       colorGrid(false);
@@ -382,7 +383,7 @@ class TransmissionLogController extends GetxController {
   }
 
   void btnChangeDone_Click() {
-    intCurrentRowIndex[0] = gridStateManager?.currentRow?.sortIdx ?? 0;
+    intCurrentRowIndex[0] = gridStateManager?.currentRowIdx ?? 0;
     intCurrentRowIndex[1] = int.tryParse(gridStateManager
             ?.rows[intCurrentRowIndex[0]].cells["rownumber"]?.value) ??
         0;
@@ -788,7 +789,7 @@ class TransmissionLogController extends GetxController {
     for (int i = 0; (i < (gridStateManager?.rows.length ?? 0)); i++) {
       if (gridStateManager?.rows[i].cells["transmissionTime"]?.value ==
               txtTransmissionTime.text &&
-          gridStateManager?.rows[i].cells["datechange"]?.value ==
+          gridStateManager?.rows[i].cells["datechange"]?.value.toString() ==
               txtDtChange.text) {
         return i;
       }
@@ -1024,7 +1025,7 @@ class TransmissionLogController extends GetxController {
     txtTransmissionTime.text =
         gridStateManager?.rows[index].cells["transmissionTime"]?.value ?? "";
     txtDtChange.text =
-        gridStateManager?.rows[index].cells["datechange"]?.value ?? '';
+        gridStateManager?.rows[index].cells["datechange"]?.value.toString() ?? '';
     // DataTable dt = tblLog.dataSource;
     if (gridStateManager?.rows.length != 0) {
       try {
@@ -1041,7 +1042,7 @@ class TransmissionLogController extends GetxController {
     }
   }
 
-  cutCopy({required bool isCut, required PlutoRow? row}) {
+  cutCopy({required bool isCut, required PlutoRow? row, Function? fun}) {
     if (isCut) {
       lastSelectOption = "cut";
       // var strAllowedEvent = "PR,PC,F,I,A,W,VP,GL,C,CL";
@@ -1062,8 +1063,11 @@ class TransmissionLogController extends GetxController {
               "")) {
         print("Cutt");
         copyRow = row;
+        if (fun != null) {
+          fun();
+        }
       } else {
-        LoadingDialog.callErrorMessage("We couldn't copy this row");
+        LoadingDialog.callInfoMessage("We couldn't copy this row");
       }
     } else {
       lastSelectOption = "copy";
@@ -1085,13 +1089,16 @@ class TransmissionLogController extends GetxController {
               "")) {
         print("Copied");
         copyRow = row;
+        if (fun != null) {
+          fun();
+        }
       } else {
-        Snack.callError("We couldn't copy this row");
+        LoadingDialog.callInfoMessage("We couldn't copy this row");
       }
     }
   }
 
-  paste(index) {
+  paste(index, {Function? fun}) {
     if (lastSelectOption != null && copyRow != null) {
       addEventToUndo();
       switch (lastSelectOption) {
@@ -1100,12 +1107,23 @@ class TransmissionLogController extends GetxController {
           gridStateManager?.insertRows(index, [copyRow!]);
           copyRow = null;
           gridStateManager?.notifyListeners();
+          if (fun != null) {
+            fun();
+          }
           break;
         case "copy":
           gridStateManager?.insertRows(index, [copyRow!]);
           gridStateManager?.notifyListeners();
+          if (fun != null) {
+            fun();
+          }
           break;
       }
+      gridStateManager?.setCurrentCell(
+          gridStateManager?.rows[index].cells["no"], index);
+      // gridStateManager?.setcurre(gridStateManager?.currentCell, index);
+      print(" Now focus row is>>>>" +
+          (gridStateManager?.currentRowIdx?.toString() ?? "0"));
     } else {
       LoadingDialog.callInfoMessage("Nothing is selected");
     }

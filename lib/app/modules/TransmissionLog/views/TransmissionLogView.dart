@@ -46,7 +46,7 @@ class TransmissionLogView extends GetView<TransmissionLogController> {
               break;
             case "F4":
               controller
-                  .paste(controller.gridStateManager?.currentRow?.sortIdx);
+                  .paste(controller.gridStateManager?.currentRowIdx);
               break;
           }
         },
