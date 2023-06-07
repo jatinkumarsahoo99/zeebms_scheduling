@@ -131,6 +131,43 @@ class TransmissionLogController extends GetxController {
         });
   }
 
+  selectNext_Program_ClockHour(String type) {
+    if(type==null){
+      type="fpCtime";
+    }
+    String strValue = "";
+    int intRowIndex = gridStateManager?.currentRow?.sortIdx??0;
+    bool blnLastRecord = true;
+
+    if (type == "fpCtime") {
+      strValue = gridStateManager?.currentRow?.cells["fpCtime"]?.value??"";
+    } else {
+      // strValue = tblLog.currentRow.cells["FPCTime"].value;
+    }
+
+    for (int i = intRowIndex; i < (gridStateManager?.rows.length??0); i++) {
+      if (type == "FPCTime") {
+        if (strValue != gridStateManager?.rows[i].cells["FPCTime"]?.value) {
+          // gridStateManager?.rows[i].cells["FPCTime"].selected = true;
+          gridStateManager?.setCurrentCell(gridStateManager?.rows[i].cells["FPCTime"], gridStateManager?.rows[i].sortIdx);
+          gridStateManager?.currentRow?.cells["FPCTime"] = gridStateManager?.rows[i].cells["FPCTime"]?.value??"";
+          // gridStateManager?.firstDisplayedScrollingRowIndex = i - 12;
+          // gridStateManager?.scroll = i - 12;
+          blnLastRecord = false;
+          return;
+        }
+      }
+    }
+
+    if (blnLastRecord) {
+      // if (msgBox("Reached to last record, Want to start again?", MsgBoxStyle.question + MsgBoxStyle.yesNo, strAlertMessageTitle) == MsgBoxResult.yes) {
+      //   gridStateManager?.rows[0].cells["FPCTime"].selected = true;
+      //   gridStateManager?.currentCell[""]?.value = gridStateManager?.rows[0].cells["FPCTime"]?.value??'';
+      // }
+    }
+  }
+
+
   btnUp_Click() {
     List<int> intSelectedRows = [];
     int intSelectedRow = 0;
