@@ -1470,9 +1470,18 @@ class TransmissionLogView extends GetView<TransmissionLogController> {
                                       hideCode: false,
                                       showonly: ["transmissionTime"],
                                       formatDate: false,
+                                      onload: (PlutoGridOnLoadedEvent event) {
+                                        controller.dgvTimeStateManager =
+                                            event.stateManager;
+                                      },
                                       showSrNo: false,
-                                      /* colorCallback: (renderC) =>
-                                          Colors.red[200]!,*/
+                                  mode: PlutoGridMode.select,
+                                  onSelected:
+                                      (PlutoGridOnSelectedEvent onSelect) {
+                                    controller
+                                        .dgvTimeCellDoubleClick(
+                                        onSelect.rowIdx!);
+                                  },
                                       mapData: (controller.listFilterVerify
                                           ?.map((e) => e.toJson())
                                           .toList())!)

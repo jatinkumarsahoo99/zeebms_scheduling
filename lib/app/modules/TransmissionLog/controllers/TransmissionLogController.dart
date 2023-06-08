@@ -35,6 +35,7 @@ class TransmissionLogController extends GetxController {
   PlutoGridStateManager? gridStateManager;
   PlutoGridStateManager? gridStateManagerCommercial;
   PlutoGridStateManager? dgvCommercialsStateManager;
+  PlutoGridStateManager? dgvTimeStateManager;
 
   // PlutoGridMode selectedPlutoGridMode = PlutoGridMode.normal;
   var isStandby = RxBool(false);
@@ -169,13 +170,6 @@ class TransmissionLogController extends GetxController {
   void dgvCommercialsCellDoubleClick(int rowIndex) {
     try {
       String strExportTapeCode = dgvCommercialsStateManager?.rows[rowIndex].cells["exportTapeCode"]?.value;
-
-      // DataTable _dt = tblLog.dataSource;
-
-      /*DataTable __dt = _dt
-          .where((row) => row["ExportTapeCode"] == strExportTapeCode)
-          .toList()
-          .copyToDataTable();*/
       listFilterVerify=gridStateManager?.rows.where((element) => element.cells["exportTapeCode"]?.value==strExportTapeCode).toList();
       update(['filterVerifyList']);
 
@@ -199,6 +193,30 @@ class TransmissionLogController extends GetxController {
       Snack.callError("Error: "+ex.toString());
     }
   }
+
+  dgvTimeCellDoubleClick(int rowIndex) {
+    // gridStateManager?.moveScrollByRow(PlutoMoveDirection.up, 44);
+    colorGrid(true);
+    // unselectAllRows(tblLog);
+    int intRowNumber = int.tryParse(dgvTimeStateManager?.rows[rowIndex].cells["rownumber"]?.value)??0;
+    // int intRowNumber = rowIndex;
+    print("Introw>>>>>>"+intRowNumber.toString());
+    for (PlutoRow dr in (gridStateManager?.rows)!) {
+      if (dr.cells["rownumber"]?.value == intRowNumber) {
+        if (intRowNumber > 12) {
+          // tblLog.firstDisplayedScrollingRowIndex = intRowNumber - 12;
+          print(">>>Response>>>>"+intRowNumber.toString());
+          gridStateManager?.moveScrollByRow(PlutoMoveDirection.up, intRowNumber-12);
+        } else {
+          // tblLog.firstDisplayedScrollingRowIndex = 0;
+          gridStateManager?.moveScrollByRow(PlutoMoveDirection.up, 0);
+        }
+        // tblLog.rows[intRowNumber].selected = true;
+        gridStateManager?.setCurrentCell(gridStateManager?.rows[intRowNumber].cells["no"], intRowNumber);
+      }
+    }
+  }
+
 
 
   getChannelFocusOut() {
