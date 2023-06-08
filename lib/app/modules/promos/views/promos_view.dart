@@ -117,17 +117,62 @@ class PromosView extends GetView<PromosController> {
                                     ),
                                   ),
                                   Expanded(
-                                    child: Container(
-                                      decoration: controller.left1stDT.isEmpty ? BoxDecoration(border: Border.all(color: Colors.grey)) : null,
-                                      child: controller.left1stDT.isEmpty ? null : DataGridFromMap(mapData: []),
-                                    ),
+                                    child: Obx(() {
+                                      return Container(
+                                        decoration: controller.left1stDT.value.isEmpty ? BoxDecoration(border: Border.all(color: Colors.grey)) : null,
+                                        child: controller.left1stDT.value.isEmpty
+                                            ? null
+                                            : DataGridFromMap(
+                                                mapData: controller.left1stDT.value.map((e) => e.toJson()).toList(),
+                                                onRowDoubleTap: (row) => controller.handleDoubleTapInLeft1stTable(row.rowIdx),
+                                                onload: (event) {
+                                                  controller.left1stSM = event.stateManager;
+                                                  event.stateManager.setSelectingMode(PlutoGridSelectingMode.row);
+                                                  event.stateManager.setSelecting(true);
+                                                  event.stateManager.setCurrentCell(
+                                                      event.stateManager.getRowByIdx(controller.left1stGridSelectedIdx)?.cells['startTime'],
+                                                      controller.left1stGridSelectedIdx);
+                                                },
+                                                colorCallback: (row) => controller.left1stDT[row.rowIdx].exceed
+                                                    ? Colors.red
+                                                    : ((row.row.cells.containsValue(controller.left1stSM?.currentCell))
+                                                        ? Colors.deepPurple.shade200
+                                                        : Colors.white),
+                                                mode: PlutoGridMode.selectWithOneTap,
+                                                onSelected: (row) => controller.left1stGridSelectedIdx = row.rowIdx ?? 0,
+                                              ),
+                                      );
+                                    }),
                                   ),
                                   SizedBox(height: 5),
                                   Expanded(
-                                    child: Container(
-                                      decoration: controller.left2ndDT.isEmpty ? BoxDecoration(border: Border.all(color: Colors.grey)) : null,
-                                      child: controller.left2ndDT.isEmpty ? null : DataGridFromMap(mapData: []),
-                                    ),
+                                    child: Obx(() {
+                                      return Container(
+                                        decoration: controller.left2ndDT.value.isEmpty ? BoxDecoration(border: Border.all(color: Colors.grey)) : null,
+                                        child: controller.left2ndDT.value.isEmpty
+                                            ? null
+                                            : DataGridFromMap(
+                                                mapData: controller.left2ndDT.value.map((e) => e.toJson()).toList(),
+                                                mode: PlutoGridMode.selectWithOneTap,
+                                                colorCallback: (row) => (row.row.cells.containsValue(controller.left2ndSM?.currentCell))
+                                                    ? Colors.deepPurple.shade200
+                                                    : Colors.white,
+                                                onload: (event) {
+                                                  controller.left2ndSM = event.stateManager;
+                                                  event.stateManager.setSelectingMode(PlutoGridSelectingMode.row);
+                                                  event.stateManager.setSelecting(true);
+                                                  event.stateManager.setCurrentCell(
+                                                      event.stateManager.getRowByIdx(controller.left2ndGridSelectedIdx)?.cells['promoPolicyName'],
+                                                      controller.left2ndGridSelectedIdx);
+                                                  // event.stateManager.moveCurrentCell(PlutoMoveDirection.down, force: true, notify: true);
+                                                  event.stateManager.moveCurrentCellByRowIdx(
+                                                      controller.left2ndGridSelectedIdx, PlutoMoveDirection.down,
+                                                      notify: true);
+                                                },
+                                                onSelected: (row) => controller.left2ndGridSelectedIdx = row.rowIdx ?? 0,
+                                              ),
+                                      );
+                                    }),
                                   ),
                                   Padding(
                                     padding: EdgeInsets.fromLTRB(0, 10, 0, 0),
@@ -211,11 +256,13 @@ class PromosView extends GetView<PromosController> {
                                         flex: 1,
                                         child: Padding(
                                           padding: const EdgeInsets.only(top: 5.0),
-                                          child: InputFields.formFieldDisable(
-                                            widthRatio: (Get.width * 0.2) / 2 + 7,
-                                            hintTxt: "",
-                                            value: '00:00:00:00',
-                                          ),
+                                          child: Obx(() {
+                                            return InputFields.formFieldDisable(
+                                              widthRatio: (Get.width * 0.2) / 2 + 7,
+                                              hintTxt: "",
+                                              value: controller.rightCount.value,
+                                            );
+                                          }),
                                         ),
                                       ),
                                     ],
@@ -226,11 +273,12 @@ class PromosView extends GetView<PromosController> {
                                         child: Padding(
                                           padding: const EdgeInsets.only(top: 5.0),
                                           child: InputFields.formField1Width(
-                                              widthRatio: (Get.width * 0.2) / 2 + 7,
-                                              paddingLeft: 5,
-                                              hintTxt: "Promo Id",
-                                              controller: controller.promoIDTC,
-                                              maxLen: 10),
+                                            widthRatio: (Get.width * 0.2) / 2 + 7,
+                                            paddingLeft: 5,
+                                            hintTxt: "Promo Id",
+                                            controller: controller.promoIDTC,
+                                            maxLen: 10,
+                                          ),
                                         ),
                                       ),
                                     ],
@@ -274,10 +322,29 @@ class PromosView extends GetView<PromosController> {
                                     ],
                                   ),
                                   Expanded(
-                                    child: Container(
-                                      decoration: controller.right3rdDT.isEmpty ? BoxDecoration(border: Border.all(color: Colors.grey)) : null,
-                                      child: controller.right3rdDT.isEmpty ? null : DataGridFromMap(mapData: []),
-                                    ),
+                                    child: Obx(() {
+                                      return Container(
+                                        decoration:
+                                            controller.right3rdDT.value.isEmpty ? BoxDecoration(border: Border.all(color: Colors.grey)) : null,
+                                        child: controller.right3rdDT.value.isEmpty
+                                            ? null
+                                            : DataGridFromMap(
+                                                mapData: controller.right3rdDT.value,
+                                                onRowDoubleTap: (row) => controller.handleDoubleTapInRightTable(row.rowIdx),
+                                                onload: (event) {
+                                                  controller.rightSM = event.stateManager;
+                                                  event.stateManager.setSelectingMode(PlutoGridSelectingMode.row);
+                                                  event.stateManager.setSelecting(true);
+                                                  // event.stateManager.setCurrentCell(event.stateManager.firstCell, 0);
+                                                },
+                                                colorCallback: (row) => (row.row.cells.containsValue(controller.rightSM?.currentCell))
+                                                    ? Colors.deepPurple.shade200
+                                                    : Colors.white,
+                                                mode: PlutoGridMode.selectWithOneTap,
+                                                onSelected: (row) => controller.handleOnSelectRightTable(row.rowIdx ?? -1),
+                                              ),
+                                      );
+                                    }),
                                   ),
                                 ],
                               ),

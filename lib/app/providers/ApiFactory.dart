@@ -413,8 +413,17 @@ class ApiFactory {
   ///
   ////////////////////////////// PROMO-API-START  ////////////////////////////////////////////
   static String get PROMOS_GET_LOCATION => "$BASE_URL/api/PromoScheduling/GetLocations";
+  static String get PROMOS_SAVE => "$BASE_URL/api/PromoScheduling/SavePromoScheduling";
+  static String get PROMOS_IMPORT_EXCEL_VALIDATE => "$BASE_URL/api/PromoScheduling/ImportExcelValidate";
+  static String get PROMOS_IMPORT_EXCEL => "$BASE_URL/api/PromoScheduling/ImportExcel";
+  static String get PROMOS_LEFT_2ND_GET_DATA => "$BASE_URL/api/PromoScheduling/ProgramSegaments";
+  static String get PROMOS_SEARCH => "$BASE_URL/api/PromoScheduling/FastInsertSearch";
   // static String get SECONDARY_EVENT_MASTER_SAVE_DATA => "$BASE_URL/api/SecondaryEventMaster/Save";
-  static String PROMOS_GET_CHANNELS(String lc) => "$BASE_URL/api/SecondaryEventMaster/GetChannels?LocationCode=$lc";
+  static String PROMOS_GET_CHANNELS(String lc) => "$BASE_URL/api/PromoScheduling/GetChannels?LocationCode=$lc";
+  static String PROMOS_SHOW_DETAILS(String lc, String channelCode, String teleCasteDate) =>
+      "$BASE_URL/api/PromoScheduling/GetPromoSchDetails?LocationCode=$lc&ChannelCode=$channelCode&TelecastDate=$teleCasteDate";
+  static String PROMOS_DELETE(String lc, String channelCode, String teleCasteDate) =>
+      "$BASE_URL/api/PromoScheduling/DeletePromoSchDetails?LocationCode=$lc&ChannelCode=$channelCode&TelecastDate=$teleCasteDate";
   // static String SECONDARY_EVENT_MASTER_DISPLAY_DATA(String txid) => "$BASE_URL/api/SecondaryEventMaster/DisplaySecondaryEvent?TXid=$txid";
   ////////////////////////////// PROMO-API-END  //////////////////////////////////////////////
   ///
