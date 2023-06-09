@@ -1,3 +1,4 @@
+import 'package:bms_scheduling/app/modules/SecondaryEventMaster/bindings/secondary_event_master_binding.dart';
 import 'package:get/get.dart';
 
 import '../modules/AsrunImportAdRevenue/bindings/asrun_import_binding.dart';
@@ -72,6 +73,11 @@ class AppPages {
       name: _Paths.TRANSMISSION_LOG,
       page: () => AuthGuard1(childName: _Paths.TRANSMISSION_LOG),
       binding: TransmissionLogBinding(),
+    ),
+    GetPage(
+      name: _Paths.SECONDARY_EVENT_MASTER,
+      page: () => AuthGuard1(childName: _Paths.SECONDARY_EVENT_MASTER),
+      binding: SecondaryEventMasterBinding(),
     ),
     GetPage(
       name: _Paths.LOG_ADDITIONS,

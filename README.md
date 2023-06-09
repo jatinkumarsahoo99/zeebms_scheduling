@@ -15,15 +15,31 @@ localhost:9992/filler?personalNo=AqoF3cvt1PCPIKM8FfPwag%3D%3D&loginCode=gsS2oEku
 Vishal Gore :
 localhost:9992/commercial?personalNo=2Jri%2FF8CQnRN4E%2Fc777Cgw%3D%3D&loginCode=rfxpGtJwEqsQPU9ytSC1Kw%3D%3D&formName=tGFJWRMgjHorGbokNJgn%2BQ%3D%3D
 
-
-
-///Demo JSON
-
-Nitish
-Achieved :
-    Medium Category UI Design
-    Ros Distribution API Integration
-Planned For Next Week :
-    Scheduling medium category form api integration    
+[
+    "Dropdown No API":{
+        "label":"Location",
+        "list": [],
+        "selectedCode":"",
+        "selectedName":"",
+    },
+    "Dropdown WITH API":{
+        "label":"Program",
+        "list": [],
+        "selectedCode":"",
+        "selectedName":"",
+    },
+    "Dropdown No API":{
+        "label":"Channel",
+        "list": [],
+        "selectedCode":"",
+        "selectedName":"",
+    },
+    "Date":{
+        "label":"Program",
+        "list": [],
+        "selectedCode":"",
+        "selectedName":"",
+    },
+]
 
 

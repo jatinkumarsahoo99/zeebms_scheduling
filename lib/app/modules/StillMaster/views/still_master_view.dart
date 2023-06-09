@@ -1,3 +1,4 @@
+import 'package:bms_scheduling/app/providers/ApiFactory.dart';
 import 'package:bms_scheduling/widgets/radio_row.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
@@ -5,7 +6,9 @@ import 'package:get/get.dart';
 import '../../../../widgets/DateTime/DateWithThreeTextField.dart';
 import '../../../../widgets/DateTime/TimeWithThreeTextField.dart';
 import '../../../../widgets/FormButton.dart';
+import '../../../../widgets/LoadingDialog.dart';
 import '../../../../widgets/dropdown.dart';
+import '../../../../widgets/gridFromMap.dart';
 import '../../../../widgets/input_fields.dart';
 import '../../../controller/HomeController.dart';
 import '../controllers/still_master_controller.dart';
@@ -37,25 +40,63 @@ class StillMasterView extends GetView<StillMasterController> {
                 Row(
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
-                    DropDownField.formDropDown1WidthMap([], (p0) => null, "Location", .23, autoFocus: true),
+                    Obx(() {
+                      return DropDownField.formDropDown1WidthMap(
+                        controller.locationList.value,
+                        controller.getChannels,
+                        "Location",
+                        .23,
+                        autoFocus: true,
+                        selected: controller.selectedLocation,
+                        inkWellFocusNode: controller.locationFN,
+                      );
+                    }),
                     SizedBox(width: 20),
-                    DropDownField.formDropDown1WidthMap([], (p0) => null, "Channel", .23),
+                    Obx(() {
+                      return DropDownField.formDropDown1WidthMap(
+                        controller.channelList.value,
+                        (p0) => controller.selectedChannel = p0,
+                        "Channel",
+                        .23,
+                        selected: controller.selectedChannel,
+                      );
+                    }),
                   ],
                 ),
                 SizedBox(height: 4),
-                DropDownField.formDropDownSearchAPI2(
-                  GlobalKey(),
-                  context,
-                  width: context.width * 0.475,
-                  onchanged: (DropDownValue) {},
-                  title: 'Program',
-                  url: '',
+                Row(
+                  crossAxisAlignment: CrossAxisAlignment.end,
+                  children: [
+                    Spacer(),
+                    Obx(() {
+                      controller.locationList.value;
+                      return DropDownField.formDropDownSearchAPI2(
+                        GlobalKey(),
+                        context,
+                        width: context.width * 0.42,
+                        onchanged: controller.handleOnChangedProgram,
+                        title: 'Program',
+                        url: ApiFactory.STILL_MASTER_PROGRAM_SEARCH,
+                        selectedValue: controller.selectedProgram,
+                        parseKeyForKey: "ProgramCode",
+                        parseKeyForValue: "ProgramName",
+                      );
+                    }),
+                    SizedBox(width: 20),
+                    FormButton(
+                      btnText: "..",
+                      iconDataM: Icons.table_view_sharp,
+                      callback: () => handleProgramShowDT(context),
+                    ),
+                    Spacer(),
+                  ],
                 ),
                 SizedBox(height: 4),
                 InputFields.formField1(
                   hintTxt: "Caption",
-                  controller: TextEditingController(),
+                  controller: controller.captionTC,
                   width: 0.475,
+                  focusNode: controller.captionFN,
                 ),
                 Padding(
                   padding: EdgeInsets.symmetric(vertical: 4),
@@ -66,14 +107,16 @@ class StillMasterView extends GetView<StillMasterController> {
                         children: [
                           InputFields.formField1(
                             hintTxt: "Tape ID",
-                            controller: TextEditingController(),
+                            controller: controller.tapIDTC,
                             width: 0.112,
+                            focusNode: controller.tapeIDFN,
                           ),
                           SizedBox(width: 10),
                           InputFields.formField1(
                             hintTxt: "Seg No.",
-                            controller: TextEditingController(),
+                            controller: controller.segTC,
                             width: 0.11,
+                            focusNode: controller.segFN,
                           ),
                         ],
                       ),
@@ -82,14 +125,16 @@ class StillMasterView extends GetView<StillMasterController> {
                         children: [
                           InputFields.formField1(
                             hintTxt: "House ID",
-                            controller: TextEditingController(),
+                            controller: controller.houseIDTC,
                             width: 0.11,
+                            focusNode: controller.houseIDFN,
                           ),
                           SizedBox(width: 10),
                           InputFields.formField1(
                             hintTxt: "Copy",
-                            controller: TextEditingController(),
+                            controller: controller.copyTC,
                             width: 0.11,
+                            focusNode: controller.copyFN,
                           ),
                         ],
                       ),
@@ -104,23 +149,33 @@ class StillMasterView extends GetView<StillMasterController> {
                       width: context.width * .23,
                       child: Column(
                         children: [
-                          RadioRow(
-                            items: ["Bumper", "Opening"],
-                            groupValue: "Bumper",
-                          ),
-                          RadioRow(
-                            items: ["Closing", "Generic"],
-                            groupValue: "Closing",
-                          ),
+                          Obx(() {
+                            return RadioRow(
+                              items: ["Bumper", "Opening"],
+                              groupValue: controller.firststSelectedRadio.value,
+                              onchange: controller.handleChangeInRadio,
+                            );
+                          }),
+                          Obx(() {
+                            return RadioRow(
+                              items: ["Closing", "Generic"],
+                              groupValue: controller.firststSelectedRadio.value,
+                              onchange: (val) => controller.firststSelectedRadio.value = val,
+                            );
+                          }),
                         ],
                       ),
                     ),
                     SizedBox(width: 20),
-                    InputFields.formField1(
-                      hintTxt: "TX Caption",
-                      controller: TextEditingController(),
-                      width: .225,
-                    ),
+                    Obx(() {
+                      return InputFields.formField1(
+                        hintTxt: "TX Caption",
+                        controller: controller.txCaptionTC,
+                        prefixText: controller.prefixText.value,
+                        width: .225,
+                        focusNode: controller.txCaptionFN,
+                      );
+                    }),
                   ],
                 ),
                 Padding(
@@ -130,37 +185,43 @@ class StillMasterView extends GetView<StillMasterController> {
                     children: [
                       Row(
                         children: [
-                          DropDownField.formDropDown1WidthMap(
-                            [],
-                            (p0) => null,
-                            "Tape",
-                            .112,
-                          ),
-                          SizedBox(width: 13),
-                          TimeWithThreeTextField(
-                            title: "SOM",
-                            mainTextController: TextEditingController(),
-                            widthRation: 0.11,
-                            isTime: false,
+                          Obx(() {
+                            return DropDownField.formDropDown1WidthMap(
+                              controller.tapeList.value,
+                              (p0) => controller.selectedTape = p0,
+                              "Tape",
+                              .112,
+                              selected: controller.selectedTape,
+                            );
+                          }),
+                          SizedBox(width: 10),
+                          InputFields.formFieldNumberMask(
+                            hintTxt: "SOM",
+                            controller: controller.somTC,
+                            widthRatio: .11,
+                            paddingLeft: 0,
                           ),
                         ],
                       ),
                       SizedBox(width: 20),
                       Row(
                         children: [
-                          TimeWithThreeTextField(
-                            title: "EOM",
-                            mainTextController: TextEditingController(),
-                            widthRation: 0.11,
-                            isTime: false,
+                          InputFields.formFieldNumberMask(
+                            hintTxt: "EOM",
+                            controller: controller.eomTC,
+                            widthRatio: .11,
+                            paddingLeft: 0,
+                            textFieldFN: controller.eomFN,
                           ),
                           SizedBox(width: 10),
-                          TimeWithThreeTextField(
-                            title: "Duration",
-                            mainTextController: TextEditingController(),
-                            widthRation: 0.11,
-                            isTime: false,
-                          ),
+                          Obx(() {
+                            return InputFields.formFieldDisable(
+                              hintTxt: "Duration",
+                              value: controller.duration.value,
+                              widthRatio: .11,
+                              leftPad: 0,
+                            );
+                          }),
                         ],
                       ),
                     ],
@@ -173,12 +234,16 @@ class StillMasterView extends GetView<StillMasterController> {
                     children: [
                       SizedBox(
                         width: context.width * .23,
-                        child: RadioRow(items: ['Non-Dated', 'Dated'], groupValue: "Non-Dated"),
+                        child: RadioRow(
+                          items: ['Non-Dated', 'Dated'],
+                          groupValue: controller.secondSelectedRadio.value,
+                          disabledRadios: ['Non-Dated'],
+                        ),
                       ),
                       SizedBox(width: 20),
                       DateWithThreeTextField(
                         title: "Upto Date",
-                        mainTextController: TextEditingController(),
+                        mainTextController: controller.upToDateTC,
                         widthRation: .225,
                       )
                     ],
@@ -206,7 +271,7 @@ class StillMasterView extends GetView<StillMasterController> {
                                 for (var btn in btncontroller.buttons!)
                                   FormButtonWrapper(
                                     btnText: btn["name"],
-                                    callback: btn["name"] == "Save" ? null : () => controller.formHandler(btn['name'].toString()),
+                                    callback: () => controller.formHandler(btn['name'].toString()),
                                   ),
                               ],
                             ),
@@ -222,5 +287,40 @@ class StillMasterView extends GetView<StillMasterController> {
         ),
       ),
     );
+  }
+
+  handleProgramShowDT(BuildContext context) {
+    if (controller.selectedLocation == null || controller.selectedChannel == null) {
+      LoadingDialog.showErrorDialog("Please select Location,Channel");
+    } else {
+      Get.defaultDialog(
+        title: "Program Picker",
+        content: FutureBuilder<bool>(
+          initialData: true,
+          future: controller.getProgramPickerData(),
+          builder: (context, snapShot) {
+            return Container(
+              alignment: Alignment.center,
+              decoration: controller.programPickerList.isEmpty
+                  ? BoxDecoration(
+                      border: Border.all(
+                      color: Colors.grey,
+                    ))
+                  : null,
+              height: context.width * .5,
+              width: context.width * .5,
+              child: (snapShot.data!)
+                  ? const CircularProgressIndicator()
+                  : controller.programPickerList.isEmpty
+                      ? Text("No Data Found")
+                      : DataGridFromMap(
+                          mapData: controller.programPickerList,
+                          onRowDoubleTap: (row) => controller.tblProgramPickerCellDoubleClick(row.rowIdx),
+                        ),
+            );
+          },
+        ),
+      );
+    }
   }
 }
