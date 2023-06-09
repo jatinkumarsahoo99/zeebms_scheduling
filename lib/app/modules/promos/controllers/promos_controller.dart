@@ -151,7 +151,7 @@ class PromosController extends GetxController {
             LoadingDialog.showErrorDialog("Daily FPC not present.");
           } else {
             controllsEnabled.value = false;
-            availableTC.text = "00:20:00:00";
+            availableTC.text = "00:02:00:00";
             scheduledTC.text = "";
           }
         } else {
@@ -169,7 +169,7 @@ class PromosController extends GetxController {
     left1stGridSelectedIdx = index;
     timeBand.value = left1stDT[index].startTime ?? "00:00:00:00";
     programName.value = left1stDT[index].programName ?? "";
-    availableTC.text = "00:20:00:00";
+    availableTC.text = "00:02:00:00";
     scheduledTC.text = "00:00:00:00";
     left1stSM?.setCurrentCell(left1stSM?.getRowByIdx(index)?.cells['startTime'], index);
     left2ndDT.clear();
@@ -206,12 +206,14 @@ class PromosController extends GetxController {
         }
       }
       left2ndDT.insert(left2ndGridSelectedIdx + 1, insertModel);
+      left2ndGridSelectedIdx = left2ndGridSelectedIdx + 1;
       left2ndDT.refresh();
       scheduledTC.text = Utils.convertToTimeFromDouble(value: (Utils.convertToSecond(value: scheduledTC.text)) + (tempRightModel['duration'] ?? 0));
       if ((Utils.convertToSecond(value: scheduledTC.text)) + (tempRightModel['duration'] ?? 0) > Utils.convertToSecond(value: "00:02:00:00")) {
         left1stDT[left1stGridSelectedIdx].exceed = true;
         left1stDT.refresh();
       }
+      countTC.text = left2ndDT.length.toString();
     }
   }
 
@@ -289,7 +291,15 @@ class PromosController extends GetxController {
       api: ApiFactory.PROMOS_SAVE,
       fun: (resp) {
         closeDialog();
-        LoadingDialog.showErrorDialog(resp.toString());
+        if (resp != null && resp.toString().contains("Record saved successfully.")) {
+          LoadingDialog.callDataSaved(
+              msg: resp.toString(),
+              callback: () {
+                clearPage();
+              });
+        } else {
+          LoadingDialog.showErrorDialog(resp.toString());
+        }
       },
       json: {
         "locationCode": selectLocation?.key,
@@ -309,15 +319,18 @@ class PromosController extends GetxController {
       PlatformFile file = result.files.single;
       String? fileName = result.files.single.name;
       LoadingDialog.call();
+      String captionSTR = promoCaptionTC.text.isEmpty ? "null" : promoCaptionTC.text;
       dio.FormData formData = dio.FormData.fromMap(
         {
+          "Caption": captionSTR,
           "LocationCode": selectLocation?.key ?? "",
           "ChannelCode": selectChannel?.key ?? "",
+          "TeleCastDate": DateFormat("yyyy-MM-dd").format(DateFormat("dd-MM-yyyy").parse(fromdateTC.text)),
+          "IsMine": myEnabled.value,
           'ImportFile': dio.MultipartFile.fromBytes(
             file.bytes!.toList(),
             filename: fileName,
           ),
-          "TelecastDate": DateFormat("yyyy-MM-dd").format(DateFormat("dd-MM-yyyy").parse(fromdateTC.text)),
         },
       );
 
@@ -326,20 +339,38 @@ class PromosController extends GetxController {
         json: formData,
         fun: (resp) {
           closeDialog();
-          if (resp != null) {
-            if (1 == 1) {
-              LoadingDialog.call();
-              Get.find<ConnectorControl>().POSTMETHOD_FORMDATA(
-                api: ApiFactory.PROMOS_IMPORT_EXCEL,
-                json: formData,
-                fun: (resp) {
-                  try {
-                    ExportData().exportFilefromByte(base64Decode(resp), fileName);
-                  } catch (e) {
-                    LoadingDialog.callErrorMessage1(msg: "Failed To Import File");
-                  }
-                },
-              );
+
+          if (resp != null && resp is Map<String, dynamic>) {
+            if (resp.containsKey("isError") && resp['isError']) {
+              LoadingDialog.showErrorDialog(resp['errorMessage'].toString());
+            } else if (!(resp['isError'] as bool) && resp['genericMessage'] != null) {
+              LoadingDialog.showErrorDialog(resp['genericMessage'].toString(), callback: () {
+                LoadingDialog.call();
+                dio.FormData formData2 = dio.FormData.fromMap(
+                  {
+                    "Caption": captionSTR,
+                    "LocationCode": selectLocation?.key ?? "",
+                    "ChannelCode": selectChannel?.key ?? "",
+                    "TeleCastDate": DateFormat("yyyy-MM-dd").format(DateFormat("dd-MM-yyyy").parse(fromdateTC.text)),
+                    "IsMine": myEnabled.value,
+                    'ImportFile': dio.MultipartFile.fromBytes(
+                      file.bytes!.toList(),
+                      filename: fileName,
+                    ),
+                  },
+                );
+                Get.find<ConnectorControl>().POSTMETHOD_FORMDATA(
+                  api: ApiFactory.PROMOS_IMPORT_EXCEL,
+                  json: formData2,
+                  fun: (resp2) {
+                    Get.back();
+                    LoadingDialog.showErrorDialog(resp2.toString());
+                    // ExportData().exportFilefromByte(base64Decode(resp2), fileName);
+                  },
+                );
+              });
+            } else {
+              LoadingDialog.showErrorDialog(resp['errorMessage'].toString());
             }
           } else {
             LoadingDialog.showErrorDialog(resp.toString());

@@ -28,14 +28,14 @@ class PromoModel {
 
   Map<String, dynamic> toJson() {
     final Map<String, dynamic> data = Map<String, dynamic>();
-    if (this.dailyFPC != null) {
-      data['dailyFPC'] = this.dailyFPC!.map((v) => v.toJson()).toList();
+    if (dailyFPC != null) {
+      data['dailyFPC'] = dailyFPC!.map((v) => v.toJson()).toList();
     }
-    if (this.promoScheduled != null) {
-      data['promoScheduled'] = this.promoScheduled!.map((v) => v.toJson()).toList();
+    if (promoScheduled != null) {
+      data['promoScheduled'] = promoScheduled!.map((v) => v.toJson()).toList();
     }
-    if (this.activePromoList != null) {
-      data['activePromoList'] = this.activePromoList!.map((v) => v.toJson()).toList();
+    if (activePromoList != null) {
+      data['activePromoList'] = activePromoList!.map((v) => v.toJson()).toList();
     }
     return data;
   }
@@ -73,13 +73,13 @@ class DailyFPC {
 
   Map<String, dynamic> toJson() {
     final Map<String, dynamic> data = Map<String, dynamic>();
-    data['startTime'] = this.startTime;
-    data['programName'] = this.programName;
-    data['episodeNumber'] = this.episodeNumber;
-    data['tapeId'] = this.tapeId;
-    data['programCode'] = this.programCode;
-    data['promoCap'] = this.promoCap;
-    data['episodeDuration'] = this.episodeDuration;
+    data['startTime'] = startTime;
+    data['programName'] = programName;
+    data['episodeNumber'] = episodeNumber;
+    data['tapeId'] = tapeId;
+    data['programCode'] = programCode;
+    data['promoCap'] = promoCap;
+    data['episodeDuration'] = episodeDuration;
     return data;
   }
 }
@@ -127,11 +127,11 @@ class PromoScheduled {
   Map<String, dynamic> toJson({bool fromSave = false}) {
     final Map<String, dynamic> data = Map<String, dynamic>();
     if (fromSave) {
-      data['promoCaption'] = this.promoCaption;
-      data['priority'] = this.priority;
-      data['telecastTime'] = this.telecastTime;
-      data['promoCode'] = this.promoCode;
-      data['programCode'] = this.programCode;
+      data['promoCaption'] = promoCaption ?? "";
+      data['priority'] = priority ?? "";
+      data['telecastTime'] = telecastTime ?? "";
+      data['promoCode'] = promoCode ?? "";
+      data['programCode'] = programCode ?? "";
 
       // data['promoPolicyName'] = this.promoPolicyName;
       // data['promoDuration'] = this.promoDuration;
@@ -140,17 +140,17 @@ class PromoScheduled {
       // data['promoSchedulingCode'] = this.promoSchedulingCode;
       // data['rowNo'] = this.rowNo;
     } else {
-      data['promoPolicyName'] = this.promoPolicyName;
-      data['promoCaption'] = this.promoCaption;
-      data['priority'] = this.priority;
-      data['promoDuration'] = this.promoDuration;
-      data['houseId'] = this.houseId;
-      data['programName'] = this.programName;
-      data['telecastTime'] = this.telecastTime;
-      data['promoCode'] = this.promoCode;
-      data['programCode'] = this.programCode;
-      data['promoSchedulingCode'] = this.promoSchedulingCode;
-      data['rowNo'] = this.rowNo;
+      data['promoPolicyName'] = promoPolicyName;
+      data['promoCaption'] = promoCaption;
+      data['priority'] = priority;
+      data['promoDuration'] = promoDuration;
+      data['houseId'] = houseId;
+      data['programName'] = programName;
+      data['telecastTime'] = telecastTime;
+      data['promoCode'] = promoCode;
+      data['programCode'] = programCode;
+      data['promoSchedulingCode'] = promoSchedulingCode;
+      data['rowNo'] = rowNo;
     }
     return data;
   }
@@ -173,10 +173,10 @@ class ActivePromoList {
 
   Map<String, dynamic> toJson() {
     final Map<String, dynamic> data = Map<String, dynamic>();
-    data['promoCode'] = this.promoCode;
-    data['promoCaption'] = this.promoCaption;
-    data['houseId'] = this.houseId;
-    data['promoDuration'] = this.promoDuration;
+    data['promoCode'] = promoCode;
+    data['promoCaption'] = promoCaption;
+    data['houseId'] = houseId;
+    data['promoDuration'] = promoDuration;
     return data;
   }
 }
