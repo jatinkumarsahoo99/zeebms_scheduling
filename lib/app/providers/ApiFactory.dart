@@ -353,6 +353,13 @@ class ApiFactory {
           String locId, String channelId, String telecastDt, bool isMine, String eventType, String txId, String caption) =>
       "$BASE_URL/api/Transmissionlog/GetFastInsertsearchClick?locationcode=$locId&channelcode=$channelId&telecastdate=$telecastDt&mine=$isMine&eventType=$eventType&TxID=$txId&Caption=$caption";
   static String TRANSMISSION_LOG_EVENT_LIST() => "$BASE_URL/api/Transmissionlog/GetLoadFastInsertEventType";
+  static String TRANSMISSION_LOG_BUTTON_VERIFY(String locId, String channelId, String telecastDt, bool isStandBy) =>
+      "$BASE_URL/api/Transmissionlog/GetbtnVerifyClick?locationcode=$locId&channelcode=$channelId&txtDate=$telecastDt&chkStandBy=$isStandBy";
+  static String TRANSMISSION_LOG_BUTTON_DETAILS_VERIFY(String locId, String channelId, String telecastDt) =>
+      "$BASE_URL/api/Transmissionlog/GetbtnDetailClick?locationcode=$locId&channelcode=$channelId&txtDate=$telecastDt";
+
+// static String TRANSMISSION_LOG_EVENT_LIST() =>
+//       "$BASE_URL/api/Transmissionlog/GetLoadFastInsertEventType";
 
   /////////////////////////// RO DISTRIBUTION START/////////////////////
   static String get RO_DISTRIBUTION_GET_LOCATION => "$BASE_URL/api/RosDistribution/GetRosDistribution";
