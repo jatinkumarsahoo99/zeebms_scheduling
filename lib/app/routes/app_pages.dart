@@ -61,8 +61,8 @@ class AppPages {
   AppPages._();
 
   // static const INITIAL = Routes.ROS_DISTRIBUTION +
-  static const INITIAL =
-      Routes.TRANSMISSION_LOG + "?personalNo=AqoF3cvt1PCPIKM8FfPwag%3D%3D&loginCode=gsS2oEkuYKzI9aXanDqobQ%3D%3D&formName=a4Lfy%2FGb5Roxo9vLiBCqSQ%3D%3D";
+  static const INITIAL = Routes.EVENT_SECONDARY +
+      "?personalNo=AqoF3cvt1PCPIKM8FfPwag%3D%3D&loginCode=gsS2oEkuYKzI9aXanDqobQ%3D%3D&formName=a4Lfy%2FGb5Roxo9vLiBCqSQ%3D%3D";
   static final routes = [
     GetPage(
       name: _Paths.HOME,
@@ -73,6 +73,11 @@ class AppPages {
       name: _Paths.TRANSMISSION_LOG,
       page: () => AuthGuard1(childName: _Paths.TRANSMISSION_LOG),
       binding: TransmissionLogBinding(),
+    ),
+    GetPage(
+      name: _Paths.EVENT_SECONDARY,
+      page: () => AuthGuard1(childName: _Paths.EVENT_SECONDARY),
+      binding: EventSecondaryBinding(),
     ),
     GetPage(
       name: _Paths.SECONDARY_EVENT_MASTER,
