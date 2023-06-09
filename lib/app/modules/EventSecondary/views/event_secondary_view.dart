@@ -124,11 +124,9 @@ class EventSecondaryView extends GetView<EventSecondaryController> {
                                                 event.stateManager.getRowByIdx(controller.left1stGridSelectedIdx)?.cells['startTime'],
                                                 controller.left1stGridSelectedIdx);
                                           },
-                                          colorCallback: (row) => controller.left1stDT[row.rowIdx].exceed
-                                              ? Colors.red
-                                              : ((row.row.cells.containsValue(controller.left1stSM?.currentCell))
-                                                  ? Colors.deepPurple.shade200
-                                                  : Colors.white),
+                                          colorCallback: (row) => ((row.row.cells.containsValue(controller.left1stSM?.currentCell))
+                                              ? Colors.deepPurple.shade200
+                                              : Colors.white),
                                           mode: PlutoGridMode.selectWithOneTap,
                                           onSelected: (row) => controller.left1stGridSelectedIdx = row.rowIdx ?? 0,
                                         ),
@@ -237,8 +235,8 @@ class EventSecondaryView extends GetView<EventSecondaryController> {
                                     child: InputFields.formField1Width(
                                       widthRatio: .15,
                                       paddingLeft: 5,
-                                      hintTxt: "Promo Caption",
-                                      controller: controller.promoCaptionTC,
+                                      hintTxt: "Sec. Caption",
+                                      controller: controller.secCaptionTC,
                                       maxLen: 10,
                                     ),
                                   ),
@@ -266,8 +264,8 @@ class EventSecondaryView extends GetView<EventSecondaryController> {
                                     child: InputFields.formField1Width(
                                       widthRatio: (Get.width * 0.2) / 2 + 7,
                                       paddingLeft: 5,
-                                      hintTxt: "Promo Id",
-                                      controller: controller.promoIDTC,
+                                      hintTxt: "Secondary Id",
+                                      controller: controller.secondaryIDTC,
                                       maxLen: 10,
                                     ),
                                   ),
@@ -299,7 +297,7 @@ class EventSecondaryView extends GetView<EventSecondaryController> {
                                     ),
                                     FormButton(
                                       btnText: "Add FPC",
-                                      callback: controller.handleAutoAddTap,
+                                      callback: controller.handleAddFPCTap,
                                     ),
                                     FormButton(
                                       btnText: "Delete ALL",
@@ -335,35 +333,35 @@ class EventSecondaryView extends GetView<EventSecondaryController> {
                             ),
                             SizedBox(
                               width: double.infinity,
-                              child: Wrap(
-                                spacing: 10,
-                                alignment: WrapAlignment.start,
-                                // runAlignment: WrapAlignment.start,
-                                // crossAxisAlignment: WrapCrossAlignment.start,
-                                children: [
-                                  CheckBoxWidget1(
-                                    title: "All",
-                                    value: controller.myEnabled.value,
-                                    onChanged: (val) {
-                                      controller.myEnabled.value = val ?? false;
-                                    },
-                                  ),
-                                  CheckBoxWidget1(
-                                    title: "Odd",
-                                    value: controller.myEnabled.value,
-                                    onChanged: (val) {
-                                      controller.myEnabled.value = val ?? false;
-                                    },
-                                  ),
-                                  CheckBoxWidget1(
-                                    title: "Even",
-                                    value: controller.myEnabled.value,
-                                    onChanged: (val) {
-                                      controller.myEnabled.value = val ?? false;
-                                    },
-                                  ),
-                                ],
-                              ),
+                              child: Obx(() {
+                                return Wrap(
+                                  spacing: 10,
+                                  alignment: WrapAlignment.start,
+                                  children: [
+                                    CheckBoxWidget1(
+                                      title: "All",
+                                      value: controller.all.value,
+                                      onChanged: (val) {
+                                        controller.all.value = val ?? false;
+                                      },
+                                    ),
+                                    CheckBoxWidget1(
+                                      title: "Odd",
+                                      value: controller.odd.value,
+                                      onChanged: (val) {
+                                        controller.odd.value = val ?? false;
+                                      },
+                                    ),
+                                    CheckBoxWidget1(
+                                      title: "Even",
+                                      value: controller.even.value,
+                                      onChanged: (val) {
+                                        controller.even.value = val ?? false;
+                                      },
+                                    ),
+                                  ],
+                                );
+                              }),
                             )
                           ],
                         ),
