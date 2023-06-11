@@ -356,7 +356,6 @@ class ApiFactory {
       "$BASE_URL/api/Transmissionlog/GetbtnVerifyClick?locationcode=$locId&channelcode=$channelId&txtDate=$telecastDt&chkStandBy=$isStandBy";
  static String TRANSMISSION_LOG_BUTTON_DETAILS_VERIFY(String locId, String channelId, String telecastDt) =>
       "$BASE_URL/api/Transmissionlog/GetbtnDetailClick?locationcode=$locId&channelcode=$channelId&txtDate=$telecastDt";
-
 static String TRANSMISSION_LOG_EVENT_LIST() =>
       "$BASE_URL/api/Transmissionlog/GetLoadFastInsertEventType";
 

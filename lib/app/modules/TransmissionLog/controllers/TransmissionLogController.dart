@@ -1,3 +1,5 @@
+import 'dart:convert';
+
 import 'package:bms_scheduling/widgets/LoadingDialog.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
@@ -10,8 +12,10 @@ import '../../../providers/ApiFactory.dart';
 import '../../../providers/Utils.dart';
 import '../ColorDataModel.dart';
 import '../CommercialModel.dart';
+import '../InsertSearchModel.dart';
 import '../TransmissionLogModel.dart';
 import 'dart:html' as html;
+import 'package:collection/collection.dart';
 
 import '../VerifyListModel.dart';
 
@@ -22,20 +26,25 @@ class TransmissionLogController extends GetxController {
   RxBool isFetch = RxBool(false);
   RxBool isAutoClick = RxBool(false);
   List<Map<String, List<PlutoRow>>> logDeletedEvent1 = [];
-  List<PlutoRow>? listFilterVerify=[];
+  List<PlutoRow>? listFilterVerify = [];
+  List<PlutoRow>? listFilterAa = [];
+  String? selectAa;
   RxBool visibleChangeOffset = RxBool(true);
   RxBool visibleChangeDuration = RxBool(true);
   RxBool visibleChangeFpc = RxBool(true);
 
   //input controllers
   DropDownValue? selectLocation;
+  DropDownValue? selectLocationCopyLog;
   DropDownValue? selectChannel;
+  DropDownValue? selectChannelCopyLog;
   DropDownValue? selectEvent;
   DropDownValue? selectTimeForCommercial;
   PlutoGridStateManager? gridStateManager;
   PlutoGridStateManager? gridStateManagerCommercial;
   PlutoGridStateManager? dgvCommercialsStateManager;
   PlutoGridStateManager? dgvTimeStateManager;
+  InsertSearchModel? inserSearchModel;
 
   // PlutoGridMode selectedPlutoGridMode = PlutoGridMode.normal;
   var isStandby = RxBool(false);
@@ -167,10 +176,71 @@ class TransmissionLogController extends GetxController {
         });
   }
 
+  getBtnInsertSearchClick(
+      {Function? fun,
+      required bool isMine,
+      required String eventType,
+      required String txId,
+      required String txCaption}) {
+    LoadingDialog.call();
+    Get.find<ConnectorControl>().GETMETHODCALL(
+        api: ApiFactory.TRANSMISSION_LOG_SEARCH_INSERT(
+            selectLocation?.key ?? "",
+            selectChannel?.key ?? "",
+            Utils.dateFormatChange(selectedDate.text, "dd-MM-yyyy", "M/d/yyyy"),
+            isMine,
+            eventType,
+            txId,
+            txCaption),
+        fun: (map) {
+          Get.back();
+          inserSearchModel = InsertSearchModel.fromJson(map);
+        });
+  }
+
+  btnCopyLogClick({Function? fun}) {
+    LoadingDialog.call();
+    var sendData = {
+      "locationcode": selectLocationCopyLog?.key ?? "",
+      "channelcode": selectChannelCopyLog?.key ?? "",
+      "standbyLog": isStandby.value,
+      "telecastdate": selectedDate.text,
+      "copylog": true
+    };
+
+    Get.find<ConnectorControl>().POSTMETHOD(
+        api: ApiFactory.TRANSMISSION_LOG_RETRIVE(),
+        json: sendData,
+        fun: (Map<String, dynamic> map) {
+          Get.back();
+          transmissionLog = TransmissionLogModel.fromJson(map);
+          if (transmissionLog != null &&
+              transmissionLog?.loadSavedLogOutput != null &&
+              transmissionLog?.loadSavedLogOutput?.lstTransmissionLog != null &&
+              ((transmissionLog
+                          ?.loadSavedLogOutput?.lstTransmissionLog?.length ??
+                      0) !=
+                  0)) {
+            startTime_.text = transmissionLog?.loadSavedLogOutput
+                    ?.lstTransmissionLog![0].transmissionTime ??
+                "";
+            isEnable.value = false;
+            isFetch.value = true;
+            update(["transmissionList"]);
+          } else {
+            LoadingDialog.callInfoMessage("No Data Found");
+          }
+        });
+  }
+
   void dgvCommercialsCellDoubleClick(int rowIndex) {
     try {
-      String strExportTapeCode = dgvCommercialsStateManager?.rows[rowIndex].cells["exportTapeCode"]?.value;
-      listFilterVerify=gridStateManager?.rows.where((element) => element.cells["exportTapeCode"]?.value==strExportTapeCode).toList();
+      String strExportTapeCode = dgvCommercialsStateManager
+          ?.rows[rowIndex].cells["exportTapeCode"]?.value;
+      listFilterVerify = gridStateManager?.rows
+          .where((element) =>
+              element.cells["exportTapeCode"]?.value == strExportTapeCode)
+          .toList();
       update(['filterVerifyList']);
 
       String strTimeDiff = "";
@@ -179,18 +249,21 @@ class TransmissionLogController extends GetxController {
       if (listFilterVerify != null) {
         for (PlutoRow dr in listFilterVerify!) {
           if (strTimeDiff != "") {
-            num intTimeDiff = Utils.oldBMSConvertToSecondsValue(value:dr.cells["transmissionTime"]?.value)! - Utils.oldBMSConvertToSecondsValue(value:strTimeDiff)!;
+            num intTimeDiff = Utils.oldBMSConvertToSecondsValue(
+                    value: dr.cells["transmissionTime"]?.value)! -
+                Utils.oldBMSConvertToSecondsValue(value: strTimeDiff)!;
             if (intSetTimeDiff! > intSetTimeDiff! || intSetTimeDiff == 0) {
               intSetTimeDiff = intTimeDiff;
             }
           }
           strTimeDiff = dr.cells["transmissionTime"]?.value;
         }
-        print("Vlaue is>>>"+(intSetTimeDiff?.round().toString()??""));
-        verifyMinTime.text = Utils.convertToTimeFromDouble(value:num.tryParse(intSetTimeDiff?.round().toString()??"0")!);
+        print("Vlaue is>>>" + (intSetTimeDiff?.round().toString() ?? ""));
+        verifyMinTime.text = Utils.convertToTimeFromDouble(
+            value: num.tryParse(intSetTimeDiff?.round().toString() ?? "0")!);
       }
     } catch (ex) {
-      Snack.callError("Error: "+ex.toString());
+      Snack.callError("Error: " + ex.toString());
     }
   }
 
@@ -198,26 +271,52 @@ class TransmissionLogController extends GetxController {
     // gridStateManager?.moveScrollByRow(PlutoMoveDirection.up, 44);
     colorGrid(true);
     // unselectAllRows(tblLog);
-    int intRowNumber = int.tryParse(dgvTimeStateManager?.rows[rowIndex].cells["rownumber"]?.value)??0;
+    int intRowNumber = int.tryParse(
+            dgvTimeStateManager?.rows[rowIndex].cells["rownumber"]?.value) ??
+        0;
     // int intRowNumber = rowIndex;
-    print("Introw>>>>>>"+intRowNumber.toString());
+    print("Introw>>>>>>" + intRowNumber.toString());
     for (PlutoRow dr in (gridStateManager?.rows)!) {
-      if (dr.cells["rownumber"]?.value == intRowNumber) {
-        if (intRowNumber > 12) {
+      if (int.tryParse(dr.cells["rownumber"]?.value.toString() ?? "0") ==
+          intRowNumber) {
+        /*if (intRowNumber > 12) {
           // tblLog.firstDisplayedScrollingRowIndex = intRowNumber - 12;
           print(">>>Response>>>>"+intRowNumber.toString());
           gridStateManager?.moveScrollByRow(PlutoMoveDirection.up, intRowNumber-12);
         } else {
           // tblLog.firstDisplayedScrollingRowIndex = 0;
           gridStateManager?.moveScrollByRow(PlutoMoveDirection.up, 0);
-        }
+        }*/
         // tblLog.rows[intRowNumber].selected = true;
-        gridStateManager?.setCurrentCell(gridStateManager?.rows[intRowNumber].cells["no"], intRowNumber);
+        gridStateManager?.moveScrollByRow(
+            PlutoMoveDirection.down, intRowNumber);
+        gridStateManager?.setCurrentCell(
+            gridStateManager?.rows[intRowNumber].cells["no"], intRowNumber);
       }
     }
+    print("Select row index is>>>" +
+        (gridStateManager?.currentRowIdx.toString() ?? ""));
   }
 
+  filterAaList() {
+    List<PlutoRow>? list = gridStateManager?.rows
+        .where((element) =>
+            element.cells["bookingNumber"]?.value != null &&
+            element.cells["bookingNumber"]?.value != "")
+        .toList();
+    // var counts = groupBy<PlutoRow, PlutoRow>(list!, (item) => item.cells["bookingNumber"]?.value));
+    // Map<String,dynamic>? list2={};
+    // Map<String,dynamic>? list1=list?.fold(list2, (map, item) => item.toJson());
+    // print("Resposnnsnnsn>>>>>"+jsonEncode(list1));
+    // var counts1 = groupBy<PlutoRow, PlutoRow>(list!, (item) => item.cells["bookingNumber"]?.value));
 
+    /* counts.forEach((key, value) {
+      print("KeyList:>>"+key.toString()+">>>Value>>"+(value.toString()??""));
+    });*/
+
+    listFilterAa = list;
+    update(["aAList"]);
+  }
 
   getChannelFocusOut() {
     Get.find<ConnectorControl>().GETMETHODCALL(

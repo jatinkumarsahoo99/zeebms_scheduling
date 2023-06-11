@@ -544,7 +544,7 @@ class TransmissionLogView extends GetView<TransmissionLogController> {
                             FormButtonWrapper(
                               btnText: "CL",
                               showIcon: false,
-                              isEnabled: false,
+                              isEnabled: true,
                               callback: /*btn["name"] != "Delete" &&
                                         Utils.btnAccessHandler2(btn['name'],
                                                 controller, formPermissions) ==
@@ -609,6 +609,9 @@ class TransmissionLogView extends GetView<TransmissionLogController> {
         break;
       case "Undo":
         controller.undoClick();
+        break;
+      case "CL":
+        showCopyLogDialog(Get.context);
         break;
       case "Auto":
         LoadingDialog.recordExists(
@@ -918,7 +921,9 @@ class TransmissionLogView extends GetView<TransmissionLogController> {
                         child: FormButtonWrapper(
                           btnText: "Search",
                           showIcon: false,
-                          callback: () {},
+                          callback: () {
+                            controller.getBtnInsertSearchClick(isMine: controller.isMy.value,eventType:controller.selectEvent?.value??"",txId: controller.txId_.text,txCaption: controller.txCaption_.text );
+                          },
                         ),
                       ),
                       Padding(
@@ -1381,6 +1386,97 @@ class TransmissionLogView extends GetView<TransmissionLogController> {
     );
   }
 
+  showCopyLogDialog(context) {
+    return Get.defaultDialog(
+      barrierDismissible: false,
+      title: "Copy Log",
+      titleStyle: const TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+      titlePadding: const EdgeInsets.only(top: 10),
+      contentPadding: const EdgeInsets.symmetric(horizontal: 10, vertical: 5),
+      content: SingleChildScrollView(
+        child: SizedBox(
+          height: Get.height * 0.15,
+          child: SingleChildScrollView(
+            child: SizedBox(
+              width: Get.width * 0.18,
+              // height: Get.he,
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.center,
+                children: <Widget>[
+                  Obx(
+                    () => DropDownField.formDropDown1WidthMap(
+                      controller.locations.value,
+                      (value) {
+                        controller.selectLocationCopyLog = value;
+                        controller.getChannels(
+                            controller.selectLocationCopyLog?.key ?? "");
+                      },
+                      "Location",
+                      0.12,
+                      // isEnable: controller.isEnable.value,
+                      selected: controller.selectLocationCopyLog,
+                      autoFocus: true,
+                      dialogWidth: 330,
+                      dialogHeight: Get.height * .7,
+                    ),
+                  ),
+
+                  /// channel
+                  Obx(
+                    () => DropDownField.formDropDown1WidthMap(
+                      controller.channels.value,
+                      (value) {
+                        controller.selectChannelCopyLog = value;
+                        controller.getChannelFocusOut();
+                      },
+                      "Channel",
+                      0.12,
+                      // isEnable: controller.isEnable.value,
+                      selected: controller.selectChannelCopyLog,
+                      autoFocus: true,
+                      dialogWidth: 330,
+                      dialogHeight: Get.height * .7,
+                    ),
+                  ),
+                  SizedBox(
+                    height: 15,
+                  ),
+                ],
+              ),
+            ),
+          ),
+        ),
+      ),
+      confirm: Row(
+        mainAxisAlignment: MainAxisAlignment.center,
+        children: [
+          FormButtonWrapper(
+            btnText: "Close",
+            showIcon: false,
+            callback: () {
+              Navigator.pop(context);
+            },
+          ),
+          SizedBox(width: 10,),
+          FormButtonWrapper(
+            btnText: "Copy Log",
+            showIcon: false,
+            callback: () {
+              if (controller.selectLocationCopyLog == null) {
+                LoadingDialog.callInfoMessage("Please select location");
+              } else if (controller.selectLocationCopyLog == null) {
+                LoadingDialog.callInfoMessage("Please select channel");
+              } else {
+                controller.btnCopyLogClick();
+              }
+            },
+          ),
+        ],
+      ),
+      radius: 10,
+    );
+  }
+
   showVerifyDialog(context) {
     return Get.defaultDialog(
       barrierDismissible: false,
@@ -1475,13 +1571,12 @@ class TransmissionLogView extends GetView<TransmissionLogController> {
                                             event.stateManager;
                                       },
                                       showSrNo: false,
-                                  mode: PlutoGridMode.select,
-                                  onSelected:
-                                      (PlutoGridOnSelectedEvent onSelect) {
-                                    controller
-                                        .dgvTimeCellDoubleClick(
-                                        onSelect.rowIdx!);
-                                  },
+                                      mode: PlutoGridMode.select,
+                                      onSelected:
+                                          (PlutoGridOnSelectedEvent onSelect) {
+                                        controller.dgvTimeCellDoubleClick(
+                                            onSelect.rowIdx!);
+                                      },
                                       mapData: (controller.listFilterVerify
                                           ?.map((e) => e.toJson())
                                           .toList())!)
@@ -1536,7 +1631,7 @@ class TransmissionLogView extends GetView<TransmissionLogController> {
           height: Get.height * 0.6,
           child: SingleChildScrollView(
             child: SizedBox(
-              width: Get.width * 0.8,
+              width: Get.width * 0.7,
               // height: Get.he,
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
@@ -1548,6 +1643,18 @@ class TransmissionLogView extends GetView<TransmissionLogController> {
                       onchange: (val) {
                         print("Response>>>" + val);
                         controller.verifyType.value = val;
+                        switch (val) {
+                          case "Tape":
+                            controller.selectAa = "exportTapeCode";
+                            break;
+                          case "Product":
+                            controller.selectAa = "productName";
+                            break;
+                          case "Brand":
+                            controller.selectAa = "client";
+                            break;
+                        }
+                        controller.filterAaList();
                       },
                     ),
                   ),
@@ -1555,21 +1662,25 @@ class TransmissionLogView extends GetView<TransmissionLogController> {
                     height: 15,
                   ),
                   GetBuilder<TransmissionLogController>(
-                      id: "commercialsList",
+                      id: "aAList",
                       init: controller,
                       builder: (controller) {
                         return SizedBox(
                           // width: 500,
-                          width: Get.width * 0.8,
-                          height: Get.height * 0.6,
-                          child: (controller.transmissionLog != null)
+                          width: Get.width * 0.7,
+                          height: Get.height * 0.5,
+                          child: (controller.listFilterAa != null &&
+                                  (controller.listFilterAa?.length ?? 0) > 0)
                               ? DataGridFromMap(
                                   hideCode: false,
                                   formatDate: false,
-                                  colorCallback: (renderC) => Colors.red[200]!,
-                                  mapData: (controller.transmissionLog
-                                      ?.loadSavedLogOutput?.lstTransmissionLog!
-                                      .map((e) => e.toJson())
+                                  showonly: [
+                                    controller.selectAa ?? "",
+                                    "bookingNumber"
+                                  ],
+                                  // colorCallback: (renderC) => Colors.red[200]!,
+                                  mapData: (controller.listFilterAa
+                                      ?.map((e) => e.toJson())
                                       .toList())!)
                               // _dataTable3()
                               : const WarningBox(
