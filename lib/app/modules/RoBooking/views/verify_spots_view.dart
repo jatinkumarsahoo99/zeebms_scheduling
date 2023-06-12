@@ -20,6 +20,9 @@ class VerifySpotsView extends GetView<RoBookingController> {
             formatDate: false,
           ),
         )),
+        const SizedBox(
+          height: 5,
+        ),
         FormButtonWrapper(
           btnText: "Set Verify",
           callback: () {},

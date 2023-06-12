@@ -14,37 +14,39 @@ class MakeGoodSpotsView extends GetView<RoBookingController> {
     return Column(
       children: [
         Row(
+          crossAxisAlignment: CrossAxisAlignment.end,
           children: [
             Row(
               mainAxisSize: MainAxisSize.min,
-              children: [
-                Checkbox(value: false, onChanged: (value) {}),
-                Text("Select All")
-              ],
+              children: [Checkbox(value: false, onChanged: (value) {}), Text("Select All")],
             ),
             Spacer(),
-            DateWithThreeTextField(
-                title: "FPC Eff. Dt.",
-                widthRation: 0.09,
-                mainTextController: controller.fpcEffectiveDateCtrl),
-            DateWithThreeTextField(
-                title: "Booking Date",
-                widthRation: 0.09,
-                mainTextController: controller.bookDateCtrl),
+            DateWithThreeTextField(title: "From Date", widthRation: 0.09, mainTextController: controller.mgfromDateCtrl),
+            DateWithThreeTextField(title: "to Date", widthRation: 0.09, mainTextController: controller.mgtoDateCtrl),
             Spacer(),
           ],
         ),
+        SizedBox(
+          height: 5,
+        ),
         Expanded(
             child: Container(
-          child: DataGridShowOnlyKeys(mapData: dummyProgram, formatDate: false),
+          child: controller.bookingNoLeaveData != null
+              ? DataGridShowOnlyKeys(mapData: controller.bookingNoLeaveData!.lstMakeGood!.map((e) => e.toJson()).toList(), formatDate: false)
+              : SizedBox(),
         )),
+        SizedBox(
+          height: 5,
+        ),
         Row(
           mainAxisSize: MainAxisSize.max,
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
             FormButtonWrapper(
               btnText: "Display",
-              callback: () {},
+              callback: () {
+                controller.getDisplay();
+              },
             ),
             SizedBox(width: 5),
             FormButtonWrapper(

@@ -390,4 +390,23 @@ class ApiFactory {
       "$BASE_URL/api/ROBooking/EffectiveDate_Leave?LocationCode=$locId&ChannelCode=$channelId&EffectiveDate=$effDt";
   static String RO_BOOKING_CLIENT_LEAVE(String locId, String channelId, String clientCode) =>
       "$BASE_URL/api/ROBooking/ClientInfo?LocationCode=$locId&ChannelCode=$channelId&ClientCode=$clientCode";
+
+  static String RO_BOOKING_BOOKING_NO_LEAVE = "$BASE_URL/api/ROBooking/OnLeaveBookingNumber";
+  static String RO_BOOKING_BOOKING_SEARCH_TAPE_ID(tapeID) => "$BASE_URL/api/ROBooking/SearchTapeId?ExportTapeCode=$tapeID";
+  static String RO_BOOKING_GET_SpotsNotVerified = "$BASE_URL/api/ROBooking/SpotsNotVerified";
+  static String RO_BOOKING_RefreshPDC = "$BASE_URL/api/ROBooking/RefreshPDC";
+  static String RO_BOOKING_OnLeaveDealNumber = "$BASE_URL/api/ROBooking/OnLeaveDealNumber";
+  static String RO_BOOKING_OnAgencyLeave = "$BASE_URL/api/ROBooking/OnAgencyLeave";
+  static String RO_BOOKING_GET_DISPLAY = "$BASE_URL/api/ROBooking/GetDisplay";
+  static String RO_BOOKING_GetSegment = "$BASE_URL/api/ROBooking/GetSegment";
+  static String RO_BOOKING_GetTapeIdLostFocus = "$BASE_URL/api/ROBooking/GetTapeIdLostFocus";
+  static String RO_BOOKING_DEAL_DOUBLE_CLICK = "$BASE_URL/api/ROBooking/OndgvDealDetailCellDouble";
+  static String RO_BOOKING_GetClientLeave(String locationCode, String channelCode, String clientCode) =>
+      "$BASE_URL/api/ROBooking/GetClientLeave?LocationCode=$locationCode&ChannelCode=$channelCode&ClientCode=$clientCode";
+  static String RO_BOOKING_GetSetVerify = "$BASE_URL/api/ROBooking/GetSetVerify";
+  static String RO_BOOKING_ImportAndMark = "$BASE_URL/api/ROBooking/ImportAndMark";
+  static String RO_BOOKING_cboPDCSelectedIndexChanged = "$BASE_URL/api/ROBooking/cboPDCSelectedIndexChanged";
+  static String RO_BOOKING_cboTapeIdLeave = "$BASE_URL/api/ROBooking/cboTapeIdLeave";
+  static String RO_BOOKING_OnSaveData = "$BASE_URL/api/ROBooking/OnSaveData";
+  static String RO_BOOKING_GetClientPDC = "$BASE_URL/api/ROBooking/GetClientPDC";
 }
