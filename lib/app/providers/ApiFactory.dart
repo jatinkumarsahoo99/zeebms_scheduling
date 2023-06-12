@@ -425,14 +425,41 @@ class ApiFactory {
   static String get PROMOS_IMPORT_EXCEL => "$BASE_URL/api/PromoScheduling/ImportExcel";
   static String get PROMOS_LEFT_2ND_GET_DATA => "$BASE_URL/api/PromoScheduling/ProgramSegaments";
   static String get PROMOS_SEARCH => "$BASE_URL/api/PromoScheduling/FastInsertSearch";
-  // static String get SECONDARY_EVENT_MASTER_SAVE_DATA => "$BASE_URL/api/SecondaryEventMaster/Save";
   static String PROMOS_GET_CHANNELS(String lc) => "$BASE_URL/api/PromoScheduling/GetChannels?LocationCode=$lc";
   static String PROMOS_SHOW_DETAILS(String lc, String channelCode, String teleCasteDate) =>
       "$BASE_URL/api/PromoScheduling/GetPromoSchDetails?LocationCode=$lc&ChannelCode=$channelCode&TelecastDate=$teleCasteDate";
   static String PROMOS_DELETE(String lc, String channelCode, String teleCasteDate) =>
       "$BASE_URL/api/PromoScheduling/DeletePromoSchDetails?LocationCode=$lc&ChannelCode=$channelCode&TelecastDate=$teleCasteDate";
-  // static String SECONDARY_EVENT_MASTER_DISPLAY_DATA(String txid) => "$BASE_URL/api/SecondaryEventMaster/DisplaySecondaryEvent?TXid=$txid";
   ////////////////////////////// PROMO-API-END  //////////////////////////////////////////////
+  ///
+  ///
+  ///
+  ///
+  ////////////////////////////// EVENT-SECONDARY-API-START  ////////////////////////////////////////////
+  static String get EVENT_GET_LOCATION => "$BASE_URL/api/ScheduleSecondayEvents/GetLocations";
+  static String get EVENT_SAVE => "$BASE_URL/api/ScheduleSecondayEvents/EventSave";
+  // static String get EVENT_IMPORT_EXCEL_VALIDATE => "$BASE_URL/api/ScheduleSecondayEvents/ImportExcelValidate";
+  // static String get EVENT_IMPORT_EXCEL => "$BASE_URL/api/ScheduleSecondayEvents/ImportExcel";
+  // static String get EVENT_LEFT_2ND_GET_DATA => "$BASE_URL/api/ScheduleSecondayEvents/ProgramSegaments";
+  static String get EVENT_SEARCH => "$BASE_URL/api/ScheduleSecondayEvents/EventSearch";
+  static String EVENT_GET_CHANNELS(String lc) => "$BASE_URL/api/ScheduleSecondayEvents/GetChannels?LocationCode=$lc";
+  static String get EVENT_SHOW_DETAILS => "$BASE_URL/api/ScheduleSecondayEvents/ShowDetails";
+  static String get EVENT_PREVIOUS_DETAILS => "$BASE_URL/api/ScheduleSecondayEvents/PreviousEvent";
+  static String EVENT_DELETE_ALL(String lc, String channelCode, String teleCasteDate) =>
+      "$BASE_URL/api/ScheduleSecondayEvents/DeletePromoSchDetails?LocationCode=$lc&ChannelCode=$channelCode&TelecastDate=$teleCasteDate";
+  ////////////////////////////// EVENT-SECONDARY-API-END  //////////////////////////////////////////////
+  ///
+  ///
+  ///
+  ///
+  ///
+  ///
+  ////////////////////////////// SLIDE-API-START  ////////////////////////////////////////////
+  static String get SLIDE_GET_LOCATION => "$BASE_URL/api/ScheduleSlides/GetSlideSchedulingLoad";
+  static String get SLIDE_SAVE => "$BASE_URL/api/ScheduleSecondayEvents/EventSave";
+  static String get SLIDE_GET_DATA => "$BASE_URL/api/ScheduleSlides/GetLstDailyFPC";
+  static String SLIDE_GET_CHANNELS(String lc) => "$BASE_URL/api/ScheduleSlides/GetLocationLeave?LocationCode=$lc";
+  ////////////////////////////// SLIDE-API-END  //////////////////////////////////////////////
   ///
   ///
   ///

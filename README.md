@@ -43,3 +43,46 @@ localhost:9992/commercial?personalNo=2Jri%2FF8CQnRN4E%2Fc777Cgw%3D%3D&loginCode=
 ]
 
 
+{
+    Controlls:[
+        {
+            type:DROPDOWNNOAPI,
+            List:[],
+            Label:Location
+        },
+        {
+            type:DROPDOWNAPI,
+            URL:https,
+            Label:Program
+        },
+        {
+            type:DATEFIELD,
+            Label:From Date
+        },
+        {
+            type:TIMEFIELD,
+            Label:Time
+        },
+        {
+            type:NUMERICFIELD,
+            Label:Time
+        },
+        {
+            type:SINGLECHECKBOX,
+            Label:Time
+        },
+        {
+            type:MULTICHECKBOX,
+            Label:Time
+        },
+        {
+            type:MULTIRADIO,
+            Label:Time
+        },
+        {
+            type:SIGNLERADIO,
+            Label:Time
+        },
+    ]
+}
+
