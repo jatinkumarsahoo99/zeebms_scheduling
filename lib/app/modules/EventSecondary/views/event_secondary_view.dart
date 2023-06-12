@@ -341,23 +341,17 @@ class EventSecondaryView extends GetView<EventSecondaryController> {
                                     CheckBoxWidget1(
                                       title: "All",
                                       value: controller.all.value,
-                                      onChanged: (val) {
-                                        controller.all.value = val ?? false;
-                                      },
+                                      onChanged: (val) => controller.all.value = val ?? false,
                                     ),
                                     CheckBoxWidget1(
                                       title: "Odd",
                                       value: controller.odd.value,
-                                      onChanged: (val) {
-                                        controller.odd.value = val ?? false;
-                                      },
+                                      onChanged: (val) => controller.odd.value = val ?? false,
                                     ),
                                     CheckBoxWidget1(
                                       title: "Even",
                                       value: controller.even.value,
-                                      onChanged: (val) {
-                                        controller.even.value = val ?? false;
-                                      },
+                                      onChanged: (val) => controller.even.value = val ?? false,
                                     ),
                                   ],
                                 );

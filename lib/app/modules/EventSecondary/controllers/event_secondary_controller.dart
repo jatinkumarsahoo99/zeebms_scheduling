@@ -4,6 +4,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:get/get.dart';
 import 'package:intl/intl.dart';
 
+import '../../../../widgets/DateTime/DateWithThreeTextField.dart';
 import '../../../../widgets/LoadingDialog.dart';
 import '../../../../widgets/PlutoGrid/src/manager/pluto_grid_state_manager.dart';
 import '../../../controller/ConnectorControl.dart';
@@ -20,7 +21,7 @@ class EventSecondaryController extends GetxController {
   var myEnabled = true.obs;
   DropDownValue? selectLocation, selectChannel;
   var left1stDT = <DetailResponse>[].obs, left2ndDT = <SegementsResponse>[].obs, right3rdDT = [].obs;
-  var fromdateTC = TextEditingController();
+  var fromdateTC = TextEditingController(), todateTC = TextEditingController();
   var timeBand = "00:00:00:00".obs, programName = "PrgName".obs;
   PlutoGridStateManager? left1stSM, left2ndSM, rightSM;
   var left2ndGridSelectedIdx = 0, left1stGridSelectedIdx = 0, rightGridSelectedIdx = 0;
@@ -133,35 +134,46 @@ class EventSecondaryController extends GetxController {
       LoadingDialog.showErrorDialog("Please select Location and Channel.");
       return;
     }
-    LoadingDialog.call();
-    Get.find<ConnectorControl>().POSTMETHOD(
-      api: ApiFactory.EVENT_SHOW_DETAILS,
-      fun: (resp) {
-        closeDialog();
-        if (resp != null && resp is Map<String, dynamic>) {
-          mainModel = ScheduleSecondaryEventModel.fromJson(resp);
-          if (mainModel?.segementsResponse != null) {
-            for (var i = 0; i < (mainModel?.segementsResponse?.length ?? 0); i++) {
-              mainModel?.segementsResponse?[i].rowNo = i;
-            }
-          }
-          left1stDT.clear();
-          left1stDT.addAll(mainModel?.detailResponse ?? []);
-          if (left1stDT.isEmpty) {
-            LoadingDialog.showErrorDialog("Daily FPC not present.");
-          } else {
-            controllsEnabled.value = false;
-            availableTC.text = "00:02:00:00";
-            scheduledTC.text = "";
-          }
-        } else {
-          LoadingDialog.showErrorDialog(resp.toString());
-        }
+    Get.defaultDialog(
+      title: "Select Date",
+      content: Row(
+        children: [
+          DateWithThreeTextField(
+            title: "From Date",
+            widthRation: .10,
+            mainTextController: fromdateTC,
+          ),
+          SizedBox(width: 20),
+          DateWithThreeTextField(
+            title: "To Date",
+            widthRation: .10,
+            mainTextController: todateTC,
+          ),
+        ],
+      ),
+      onCancel: () {
+        Get.back();
       },
-      json: {
-        "locationcode": selectLocation?.key ?? "",
-        "channelCode": selectChannel?.key ?? "",
-        "telecastDate": DateFormat("yyyy-MM-ddT00:00:00").format(DateFormat("dd-MM-yyyy").parse(fromdateTC.text)),
+      onConfirm: () {
+        Get.back();
+        LoadingDialog.call();
+        Get.find<ConnectorControl>().POSTMETHOD(
+          api: ApiFactory.EVENT_PREVIOUS_DETAILS,
+          fun: (resp) {
+            closeDialog();
+            if (resp != null && resp.toString().contains("Secondary event of 18/Nov/2014 saved successfully for  13/Jun/2023")) {
+              LoadingDialog.callDataSaved(msg: resp.toString());
+            } else {
+              LoadingDialog.showErrorDialog(resp.toString());
+            }
+          },
+          json: {
+            "locationcode": selectLocation?.key ?? "",
+            "channelCode": selectChannel?.key ?? "",
+            "fromDate": DateFormat("yyyy-MM-ddT00:00:00").format(DateFormat("dd-MM-yyyy").parse(fromdateTC.text)),
+            "forDate": DateFormat("yyyy-MM-ddT00:00:00").format(DateFormat("dd-MM-yyyy").parse(todateTC.text)),
+          },
+        );
       },
     );
   }
@@ -219,13 +231,15 @@ class EventSecondaryController extends GetxController {
     }
   }
 
-  handleDoubleTapInRightTable(int index) {
+  handleDoubleTapInRightTable(int index, {bool fromAutoAdd = false}) async {
     if (left2ndDT.isEmpty) {
       LoadingDialog.showErrorDialog("ProgramSegaments can't be empty");
     } else {
       rightGridSelectedIdx = index;
-      rightSM?.setCurrentCell(rightSM?.getRowByIdx(index)?.cells['caption'], index);
-      var tempRightModel = right3rdDT[index];
+      if (!fromAutoAdd) {
+        rightSM?.setCurrentCell(rightSM?.getRowByIdx(index)?.cells['caption'], index);
+      }
+      // var tempRightModel = right3rdDT[index];
       var insertModel = SegementsResponse(
         eventCaption: right3rdDT[rightGridSelectedIdx]['caption'],
         breakNo: left2ndDT[left2ndGridSelectedIdx].breakNo,
@@ -244,7 +258,9 @@ class EventSecondaryController extends GetxController {
       }
       left2ndDT.insert(left2ndGridSelectedIdx + 1, insertModel);
       left2ndGridSelectedIdx = left2ndGridSelectedIdx + 1;
-      left2ndDT.refresh();
+      if (!fromAutoAdd) {
+        left2ndDT.refresh();
+      }
       // scheduledTC.text = Utils.convertToTimeFromDouble(value: (Utils.convertToSecond(value: scheduledTC.text)) + (tempRightModel['duration'] ?? 0));
       // if ((Utils.convertToSecond(value: scheduledTC.text)) + (tempRightModel['duration'] ?? 0) > Utils.convertToSecond(value: "00:02:00:00")) {
       //   left1stDT[left1stGridSelectedIdx].exceed = true;
@@ -342,8 +358,8 @@ class EventSecondaryController extends GetxController {
         "locationCode": selectLocation?.key,
         "channelCode": selectChannel?.key,
         "telecastDate": DateFormat("yyyy-MM-dd").format(DateFormat("dd-MM-yyyy").parse(fromdateTC.text)),
-        "modifiedBy": Get.find<MainController>().user?.logincode,
-        "promoSchSaveDetails": mainModel?.segementsResponse?.map((e) => e.toJson()).toList(),
+        // "modifiedBy": Get.find<MainController>().user?.logincode,
+        "scheduleSecondayEvents": mainModel?.segementsResponse?.map((e) => e.toJson(fromSave: true)).toList(),
       },
     );
   }
@@ -354,14 +370,57 @@ class EventSecondaryController extends GetxController {
     }
   }
 
-  void handleDeleteAllTap() {}
-
-  void handleAddFPCTap() {
-    if (all.value) {
-      if (mainModel?.segementsResponse != null) {
-        for (var i = 0; i < (mainModel?.segementsResponse?.length ?? 0); i++) {}
-      }
-    } else if (even.value) {
-    } else if (odd.value) {}
+  void handleDeleteAllTap() {
+    mainModel?.segementsResponse?.removeWhere(
+        (element) => (element.telecastTime == (left1stDT[left1stGridSelectedIdx].startTime ?? "00:00:00:00")) && (element.eventCaption != null));
+    handleDoubleTapInLeft1stTable(left1stGridSelectedIdx);
   }
+
+  void handleAddFPCTap() async {
+    if (right3rdDT.isEmpty) {
+      LoadingDialog.showErrorDialog("Please select row");
+    } else if (left2ndDT.isEmpty) {
+      LoadingDialog.showErrorDialog("Please add row");
+    } else {
+      var temp = left2ndGridSelectedIdx;
+      if (all.value) {
+        if (mainModel?.segementsResponse != null) {
+          int previousBreakNo = 0;
+          for (int i = 0; i < left2ndDT.length; i++) {
+            if (previousBreakNo != (left2ndDT[i].breakNo ?? 1)) {
+              left2ndGridSelectedIdx = i;
+              await handleDoubleTapInRightTable(rightGridSelectedIdx, fromAutoAdd: true);
+            }
+            previousBreakNo = (left2ndDT[i].breakNo ?? 1);
+          }
+        }
+      } else if (even.value) {
+        if (mainModel?.segementsResponse != null) {
+          int previousBreakNo = 0;
+          for (int i = 0; i < left2ndDT.length; i++) {
+            if (previousBreakNo != (left2ndDT[i].breakNo ?? 1) && ((left2ndDT[i].breakNo ?? 1) % 2 == 0)) {
+              left2ndGridSelectedIdx = i;
+              await handleDoubleTapInRightTable(rightGridSelectedIdx, fromAutoAdd: true);
+            }
+            previousBreakNo = (left2ndDT[i].breakNo ?? 1);
+          }
+        }
+      } else if (odd.value) {
+        if (mainModel?.segementsResponse != null) {
+          int previousBreakNo = 0;
+          for (int i = 0; i < left2ndDT.length; i++) {
+            if (previousBreakNo != (left2ndDT[i].breakNo ?? 1) && ((left2ndDT[i].breakNo ?? 0) % 2 != 0)) {
+              left2ndGridSelectedIdx = i;
+              await handleDoubleTapInRightTable(rightGridSelectedIdx, fromAutoAdd: true);
+            }
+            previousBreakNo = (left2ndDT[i].breakNo ?? 1);
+          }
+        }
+      }
+      left2ndGridSelectedIdx = temp;
+      handleDoubleTapInLeft1stTable(left1stGridSelectedIdx);
+    }
+  }
+
+  void addDataINModel() {}
 }

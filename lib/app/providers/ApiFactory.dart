@@ -444,6 +444,7 @@ class ApiFactory {
   static String get EVENT_SEARCH => "$BASE_URL/api/ScheduleSecondayEvents/EventSearch";
   static String EVENT_GET_CHANNELS(String lc) => "$BASE_URL/api/ScheduleSecondayEvents/GetChannels?LocationCode=$lc";
   static String get EVENT_SHOW_DETAILS => "$BASE_URL/api/ScheduleSecondayEvents/ShowDetails";
+  static String get EVENT_PREVIOUS_DETAILS => "$BASE_URL/api/ScheduleSecondayEvents/PreviousEvent";
   static String EVENT_DELETE_ALL(String lc, String channelCode, String teleCasteDate) =>
       "$BASE_URL/api/ScheduleSecondayEvents/DeletePromoSchDetails?LocationCode=$lc&ChannelCode=$channelCode&TelecastDate=$teleCasteDate";
   ////////////////////////////// PROMO-API-END  //////////////////////////////////////////////

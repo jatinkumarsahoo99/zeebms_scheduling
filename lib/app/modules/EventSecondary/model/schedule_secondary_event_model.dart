@@ -89,16 +89,27 @@ class SegementsResponse {
     rowNo = json['rowNo'];
   }
 
-  Map<String, dynamic> toJson() {
+  Map<String, dynamic> toJson({bool fromSave = false}) {
     final Map<String, dynamic> data = new Map<String, dynamic>();
-    data['eventCaption'] = eventCaption;
-    data['breakNo'] = breakNo;
-    data['eventDuration'] = eventDuration;
-    data['houseId'] = houseId;
-    data['telecastTime'] = telecastTime;
-    data['eventCode'] = eventCode;
-    data['eventSchedulingCode'] = eventSchedulingCode;
-    data['rowNo'] = rowNo;
+    if (fromSave) {
+      data['breakNo'] = breakNo;
+      data['eventCaption'] = eventCaption;
+      data['telecastTime'] = telecastTime;
+      data['eventCode'] = eventCode;
+      // data['eventDuration'] = eventDuration;
+      // data['houseId'] = houseId;
+      // data['eventSchedulingCode'] = eventSchedulingCode;
+      data['rowNo'] = rowNo;
+    } else {
+      data['eventCaption'] = eventCaption;
+      data['breakNo'] = breakNo;
+      data['eventDuration'] = eventDuration;
+      data['houseId'] = houseId;
+      data['telecastTime'] = telecastTime;
+      data['eventCode'] = eventCode;
+      data['eventSchedulingCode'] = eventSchedulingCode;
+      data['rowNo'] = rowNo;
+    }
     return data;
   }
 }
