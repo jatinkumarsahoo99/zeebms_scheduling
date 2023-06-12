@@ -97,6 +97,7 @@ class SlideController extends GetxController {
         closeDialog();
         if (resp != null && resp is Map<String, dynamic> && resp['lstFPC'] != null) {
           dataTableList.clear();
+          lastSelectedIdx = 0;
           dataTableList.value.addAll((resp['lstFPC'] as List<dynamic>).map((e) => SlideModel.fromJson(e)).toList());
         } else {
           LoadingDialog.showErrorDialog(resp.toString());
@@ -122,7 +123,15 @@ class SlideController extends GetxController {
       api: ApiFactory.SLIDE_SAVE,
       fun: (resp) {
         closeDialog();
-        LoadingDialog.showErrorDialog(resp.toString());
+        if (resp != null && resp.toString().contains("Record saved successfully")) {
+          LoadingDialog.callDataSaved(
+              msg: resp.toString(),
+              callback: () {
+                clearPage();
+              });
+        } else {
+          LoadingDialog.showErrorDialog(resp.toString());
+        }
       },
       json: {
         "locationCode": selectedLocation?.key,

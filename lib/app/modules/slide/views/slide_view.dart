@@ -6,6 +6,7 @@ import '../../../../widgets/DateTime/DateWithThreeTextField.dart';
 import '../../../../widgets/FormButton.dart';
 import '../../../../widgets/PlutoGrid/src/helper/pluto_move_direction.dart';
 import '../../../../widgets/PlutoGrid/src/manager/pluto_grid_state_manager.dart';
+import '../../../../widgets/PlutoGrid/src/pluto_grid.dart';
 import '../../../../widgets/dropdown.dart';
 import '../../../../widgets/gridFromMap.dart';
 import '../../../controller/HomeController.dart';
@@ -108,25 +109,27 @@ class SlideView extends GetView<SlideController> {
                       colorCallback: (row) =>
                           (row.row.cells.containsValue(controller.stateManager?.currentCell)) ? Colors.deepPurple.shade200 : Colors.white,
                       checkBoxColumnKey: const [
-                          "stationIdCheck",
-                          "presentsCheck",
-                          "presentationCheck",
-                          "commProgCheck",
-                          "commMenuCheck",
-                          "commUpTom",
-                          "networkId",
-                          "marrideId"
-                        ],
+                        "stationIdCheck",
+                        "presentsCheck",
+                        "presentationCheck",
+                        "commProgCheck",
+                        "commMenuCheck",
+                        "commUpTom",
+                        "networkId",
+                        "marrideId"
+                      ],
                       actionIconKey: const [
-                          "stationIdCheck",
-                          "presentsCheck",
-                          "presentationCheck",
-                          "commProgCheck",
-                          "commMenuCheck",
-                          "commUpTom",
-                          "networkId",
-                          "marrideId"
-                        ]),
+                        "stationIdCheck",
+                        "presentsCheck",
+                        "presentationCheck",
+                        "commProgCheck",
+                        "commMenuCheck",
+                        "commUpTom",
+                        "networkId",
+                        "marrideId"
+                      ],
+                      mode: PlutoGridMode.selectWithOneTap,
+                    ),
             ),
           )),
           // Expanded(child: Container(),),
