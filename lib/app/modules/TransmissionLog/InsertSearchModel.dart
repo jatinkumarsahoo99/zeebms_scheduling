@@ -1,18 +1,18 @@
 class InsertSearchModel {
-  LstListMyEventData? lstListMyEventClips;
+  LstListMyEventData? lstListMyEventData;
 
-  InsertSearchModel({this.lstListMyEventClips});
+  InsertSearchModel({this.lstListMyEventData});
 
   InsertSearchModel.fromJson(Map<String, dynamic> json) {
-    lstListMyEventClips = json['lstListMyEventClips'] != null
+    lstListMyEventData = json['lstListMyEventClips'] != null
         ? new LstListMyEventData.fromJson(json['lstListMyEventClips'])
         : null;
   }
 
   Map<String, dynamic> toJson() {
     final Map<String, dynamic> data = new Map<String, dynamic>();
-    if (this.lstListMyEventClips != null) {
-      data['lstListMyEventClips'] = this.lstListMyEventClips!.toJson();
+    if (this.lstListMyEventData != null) {
+      data['lstListMyEventClips'] = this.lstListMyEventData!.toJson();
     }
     return data;
   }

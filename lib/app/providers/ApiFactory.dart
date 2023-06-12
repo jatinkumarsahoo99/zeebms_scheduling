@@ -358,6 +358,8 @@ class ApiFactory {
       "$BASE_URL/api/Transmissionlog/GetbtnDetailClick?locationcode=$locId&channelcode=$channelId&txtDate=$telecastDt";
 static String TRANSMISSION_LOG_EVENT_LIST() =>
       "$BASE_URL/api/Transmissionlog/GetLoadFastInsertEventType";
+static String TRANSMISSION_LOG_POST_PIVOT_LOG() =>
+      "$BASE_URL/api/Transmissionlog/PostPivotLog";
 
 
 

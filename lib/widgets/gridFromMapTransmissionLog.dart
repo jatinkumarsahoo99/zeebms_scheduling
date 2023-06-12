@@ -52,7 +52,7 @@ class DataGridFromMapTransmissionLog extends StatelessWidget {
   final Function(PlutoGridOnRowDoubleTapEvent)? onRowDoubleTap;
   final Function(PlutoGridOnRowsMovedEvent)? onRowsMoved;
   final Function(PlutoGridOnChangedEvent)? onChanged;
-  final Function(DataGridMenuItem, int, PlutoColumnRendererContext)?onContextMenuClick;
+  final Function(DataGridMenuItem, int, PlutoColumnRendererContext)? onContextMenuClick;
   final List? hideKeys;
   final String? exportFileName;
   final Function(PlutoGridOnSelectedEvent)? onSelected;

@@ -322,12 +322,7 @@ class TransmissionLogView extends GetView<TransmissionLogController> {
                             hideKeys: ["foreColor", "backColor", "modifed"],
                             showSrNo: true,
                             // mode: PlutoGridMode.selectWithOneTap,
-                            /*   colorCallback: (PlutoRowColorContext plutoContext) {
-                              return Color(controller
-                                      .transmissionLog![plutoContext.rowIdx]
-                                      .colorNo ??
-                                  Colors.white.value);
-                            },*/
+
                             onSelected: (PlutoGridOnSelectedEvent event) {
                               event.selectedRows?.forEach((element) {
                                 print("On Print select" +
@@ -922,7 +917,11 @@ class TransmissionLogView extends GetView<TransmissionLogController> {
                           btnText: "Search",
                           showIcon: false,
                           callback: () {
-                            controller.getBtnInsertSearchClick(isMine: controller.isMy.value,eventType:controller.selectEvent?.value??"",txId: controller.txId_.text,txCaption: controller.txCaption_.text );
+                            controller.getBtnInsertSearchClick(
+                                isMine: controller.isMy.value,
+                                eventType: controller.selectEvent?.value ?? "",
+                                txId: controller.txId_.text,
+                                txCaption: controller.txCaption_.text);
                           },
                         ),
                       ),
@@ -931,7 +930,9 @@ class TransmissionLogView extends GetView<TransmissionLogController> {
                         child: FormButtonWrapper(
                           btnText: "Add",
                           showIcon: false,
-                          callback: () {},
+                          callback: () {
+
+                          },
                         ),
                       ),
                       FittedBox(
@@ -978,20 +979,41 @@ class TransmissionLogView extends GetView<TransmissionLogController> {
                     height: 15,
                   ),
                   GetBuilder<TransmissionLogController>(
-                      id: "commercialsList",
+                      id: "insertList",
                       init: controller,
                       builder: (controller) {
                         return SizedBox(
                           // width: 500,
                           width: Get.width * 0.8,
                           height: Get.height * 0.5,
-                          child: (controller.transmissionLog != null)
+                          child: (controller.inserSearchModel != null &&
+                                  controller.inserSearchModel
+                                          ?.lstListMyEventData !=
+                                      null &&
+                                  controller
+                                          .inserSearchModel
+                                          ?.lstListMyEventData
+                                          ?.lstListMyEventClips !=
+                                      null &&
+                                  (controller
+                                              .inserSearchModel
+                                              ?.lstListMyEventData
+                                              ?.lstListMyEventClips
+                                              ?.length ??
+                                          0) >
+                                      0)
                               ? DataGridFromMap(
                                   hideCode: false,
                                   formatDate: false,
-                                  colorCallback: (renderC) => Colors.red[200]!,
-                                  mapData: (controller.transmissionLog
-                                      ?.loadSavedLogOutput?.lstTransmissionLog!
+                                  checkRow: true,
+                                  checkRowKey: "no",
+                                  onload: (PlutoGridOnLoadedEvent load) {
+                                    controller.tblFastInsert =
+                                        load.stateManager;
+                                  },
+                                  // colorCallback: (renderC) => Colors.red[200]!,
+                                  mapData: (controller.inserSearchModel
+                                      ?.lstListMyEventData?.lstListMyEventClips!
                                       .map((e) => e.toJson())
                                       .toList())!)
                               // _dataTable3()
@@ -1028,7 +1050,7 @@ class TransmissionLogView extends GetView<TransmissionLogController> {
                           onchanged: (value) {},
                           hintTxt: "TX Id",
                           margin: true,
-                          controller: controller.txId_),
+                          controller: controller.txReplace_),
                       SizedBox(
                         width: 10,
                       ),
@@ -1457,7 +1479,9 @@ class TransmissionLogView extends GetView<TransmissionLogController> {
               Navigator.pop(context);
             },
           ),
-          SizedBox(width: 10,),
+          SizedBox(
+            width: 10,
+          ),
           FormButtonWrapper(
             btnText: "Copy Log",
             showIcon: false,
