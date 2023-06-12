@@ -31,6 +31,7 @@ import '../modules/StillMaster/views/still_master_view.dart';
 import '../modules/TransmissionLog/views/TransmissionLogView.dart';
 import '../modules/commercial/views/commercial_view.dart';
 import '../modules/home/views/home_view.dart';
+import '../modules/slide/views/slide_view.dart';
 import '../routes/app_pages.dart';
 
 class AuthGuard1 extends StatelessWidget {
@@ -57,6 +58,9 @@ class AuthGuard1 extends StatelessWidget {
           switch (childName) {
             case Routes.HOME:
               currentWidget = HomeView();
+              break;
+            case Routes.SLIDE:
+              currentWidget = SlideView();
               break;
             case Routes.EVENT_SECONDARY:
               currentWidget = EventSecondaryView();

@@ -447,7 +447,19 @@ class ApiFactory {
   static String get EVENT_PREVIOUS_DETAILS => "$BASE_URL/api/ScheduleSecondayEvents/PreviousEvent";
   static String EVENT_DELETE_ALL(String lc, String channelCode, String teleCasteDate) =>
       "$BASE_URL/api/ScheduleSecondayEvents/DeletePromoSchDetails?LocationCode=$lc&ChannelCode=$channelCode&TelecastDate=$teleCasteDate";
-  ////////////////////////////// PROMO-API-END  //////////////////////////////////////////////
+  ////////////////////////////// EVENT-SECONDARY-API-END  //////////////////////////////////////////////
+  ///
+  ///
+  ///
+  ///
+  ///
+  ///
+  ////////////////////////////// SLIDE-API-START  ////////////////////////////////////////////
+  static String get SLIDE_GET_LOCATION => "$BASE_URL/api/ScheduleSlides/GetSlideSchedulingLoad";
+  static String get SLIDE_SAVE => "$BASE_URL/api/ScheduleSecondayEvents/EventSave";
+  static String get SLIDE_GET_DATA => "$BASE_URL/api/ScheduleSlides/GetLstDailyFPC";
+  static String SLIDE_GET_CHANNELS(String lc) => "$BASE_URL/api/ScheduleSlides/GetLocationLeave?LocationCode=$lc";
+  ////////////////////////////// SLIDE-API-END  //////////////////////////////////////////////
   ///
   ///
   ///
