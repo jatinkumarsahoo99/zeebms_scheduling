@@ -261,6 +261,60 @@ class ConnectorControl extends GetConnect {
     }
   }
 
+  DELETEMETHOD({required String api, dynamic json, required Function fun}) async {
+    try {
+      print("API NAME:>" + api);
+      service.Response response = await dio.delete(
+        api,
+        options: Options(headers: {
+          "Authorization": "Bearer ${(Get.find<MainController>().user != null) ? Get.find<MainController>().user?.token ?? "" : ""}",
+          "PersonnelNo": ((Get.find<MainController>().user != null) ? Aes.encrypt(Get.find<MainController>().user?.personnelNo ?? "") : ""),
+          "Userid": ((Get.find<MainController>().user != null) ? Aes.encrypt(Get.find<MainController>().user?.logincode ?? "") : "")
+        }, responseType: ResponseType.json),
+        data: (json != null) ? jsonEncode(json) : null,
+      );
+      if (response.statusCode == 200 || response.statusCode == 201) {
+        try {
+          fun(response.data);
+        } catch (e) {
+          print("Message is: " + e.toString());
+        }
+      } else if (response.statusCode == 417) {
+        fun(response.data);
+      } else {
+        print("Message is: >>1");
+        fun(failedMap);
+      }
+    } on DioError catch (e) {
+      /*if (e.response?.statusCode == 401 &&
+          (e.response?.headers.map.containsKey("www-authenticate"))! &&
+          e.response?.headers.map["www-authenticate"]?.length == 2 &&
+          (e.response?.headers.map["www-authenticate"]![0]
+              .contains("invalid_token"))! &&
+          (e.response?.headers.map["www-authenticate"]![1]
+              .contains("The token expired at"))!) {*/
+      if (e.response?.statusCode == 401) {
+        //Snack.callError("Token Expired. We are regenerating new token",
+//            widthRatio: 0.5);
+        updateToken(() {
+          POSTMETHOD(api: api, json: json, fun: fun);
+        });
+      } else {
+        switch (e.type) {
+          case DioErrorType.connectionTimeout:
+          case DioErrorType.cancel:
+          case DioErrorType.sendTimeout:
+          case DioErrorType.receiveTimeout:
+          case DioErrorType.unknown:
+            fun(failedMap);
+            break;
+          case DioErrorType.badResponse:
+            fun(e.response?.data);
+        }
+      }
+    }
+  }
+
   POSTMETHOD_FORMDATA({required String api, required dynamic json, int? timeout = 36000, required Function fun}) async {
     try {
       service.Response response = await dio.post(api,

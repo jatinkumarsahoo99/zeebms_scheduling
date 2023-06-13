@@ -132,7 +132,8 @@ class DataGridFromMap1 extends StatelessWidget {
               enableEditingMode: false,
               enableDropToResize: true,
               enableContextMenu: false,
-              width: Utils.getColumnSize(key: key, value: mapData[0][key]),
+              // width: Utils.getColumnSize(key: key, value: mapData[0][key]),
+              minWidth: Utils.getColumnSize(key: key, value: mapData[0][key]),
               enableAutoEditing: false,
               hide: showonly == null
                   ? (hideKeys != null && hideKeys!.contains(key)) ||
@@ -205,7 +206,8 @@ class DataGridFromMap1 extends StatelessWidget {
             enableEditingMode: false,
             enableDropToResize: true,
             enableContextMenu: false,
-            width: Utils.getColumnSize(key: key, value: mapData[0][key]),
+            // width: Utils.getColumnSize(key: key, value: mapData[0][key])
+            minWidth: Utils.getColumnSize(key: key, value: mapData[0][key]),
             enableAutoEditing: false,
             hide: showonly == null
                 ? (hideKeys != null && hideKeys!.contains(key)) ||

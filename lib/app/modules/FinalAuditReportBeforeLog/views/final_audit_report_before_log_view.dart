@@ -10,6 +10,7 @@ import 'package:flutter/material.dart';
 
 import 'package:get/get.dart';
 
+import '../../../../widgets/CheckBoxWidget.dart';
 import '../controllers/final_audit_report_before_log_controller.dart';
 
 class FinalAuditReportBeforeLogView extends GetView<FinalAuditReportBeforeLogController> {
@@ -30,27 +31,74 @@ class FinalAuditReportBeforeLogView extends GetView<FinalAuditReportBeforeLogCon
                 // buttonHeight: 20,
                 alignment: WrapAlignment.start,
                 children: [
-                  DropDownField.formDropDown1WidthMap([], (data) {}, "Location", 0.24),
-                  DropDownField.formDropDown1WidthMap([], (data) {}, "Channel", 0.24),
-                  Row(
-                    mainAxisSize: MainAxisSize.min,
-                    children: [Icon(Icons.check_box_outlined), Text("Standby Log")],
+                  Obx(() {
+                    return DropDownField.formDropDown1WidthMap(
+                      controller.locationList.value,
+                      controller.getChannels,
+                      "Location",
+                      0.24,
+                      selected: controller.selectedLocation,
+                      inkWellFocusNode: controller.locationFN,
+                      autoFocus: true,
+                    );
+                  }),
+                  Obx(() {
+                    return DropDownField.formDropDown1WidthMap(
+                      controller.channelList.value,
+                      (data) => controller.selectedChannel = data,
+                      "Channel",
+                      0.24,
+                      selected: controller.selectedChannel,
+                    );
+                  }),
+                  Obx(
+                    () => CheckBoxWidget1(
+                      title: 'Standby Log',
+                      value: controller.standByLog.value,
+                      onChanged: (p0) {
+                        controller.standByLog.value = p0 ?? false;
+                      },
+                    ),
                   ),
-                  DateWithThreeTextField(title: "Eff Date.", widthRation: 0.12, mainTextController: TextEditingController()),
+                  DateWithThreeTextField(
+                    title: "Eff Date.",
+                    widthRation: 0.12,
+                    mainTextController: controller.efficitveDateTC,
+                    onFocusChange: (date) => controller.handleReportTap(),
+                  ),
                   InputFields.formFieldNumberMask(
-                      hintTxt: "Start Time", controller: TextEditingController(), widthRatio: 0.12, isTime: true, paddingLeft: 0),
+                    hintTxt: "Start Time",
+                    controller: controller.startTimeTC,
+                    widthRatio: 0.12,
+                    isTime: true,
+                    paddingLeft: 0,
+                  ),
                 ],
               ),
             ),
           ),
           Expanded(
-              child: Container(
-            padding: EdgeInsets.symmetric(horizontal: 4, vertical: 2),
-            child: DataGridShowOnlyKeys(
-              mapData: dummydata,
-              formatDate: false,
+            child: Obx(
+              () {
+                return Container(
+                  margin: const EdgeInsets.symmetric(horizontal: 4, vertical: 2),
+                  decoration: controller.dataTBList.isEmpty
+                      ? BoxDecoration(
+                          border: Border.all(
+                            color: Colors.grey,
+                          ),
+                        )
+                      : null,
+                  child: controller.dataTBList.isEmpty
+                      ? null
+                      : DataGridShowOnlyKeys(
+                          mapData: controller.dataTBList.value,
+                          formatDate: false,
+                        ),
+                );
+              },
             ),
-          )),
+          ),
           GetBuilder<HomeController>(
               id: "buttons",
               init: Get.find<HomeController>(),
@@ -84,7 +132,9 @@ class FinalAuditReportBeforeLogView extends GetView<FinalAuditReportBeforeLogCon
                                   btnText: btn["name"],
 
                                   // isEnabled: btn['isDisabled'],
-                                  callback: () {},
+                                  callback: () {
+                                    controller.convertToExcelAndSave();
+                                  },
                                 )
                               : btn["name"] == "Clear"
                                   ? FormButtonWrapper(
@@ -92,7 +142,7 @@ class FinalAuditReportBeforeLogView extends GetView<FinalAuditReportBeforeLogCon
 
                                       // isEnabled: btn['isDisabled'],
                                       callback: () {
-                                        btncontroller.clearPage1();
+                                        controller.clearPage();
                                       },
                                     )
                                   : FormButtonWrapper(

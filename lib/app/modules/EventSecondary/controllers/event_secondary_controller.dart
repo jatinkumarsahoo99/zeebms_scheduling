@@ -1,503 +1,428 @@
-import 'package:get/get.dart';
+import 'package:bms_scheduling/app/controller/MainController.dart';
+import 'package:bms_scheduling/app/providers/ApiFactory.dart';
 import 'package:flutter/cupertino.dart';
+import 'package:get/get.dart';
 import 'package:intl/intl.dart';
-import 'package:bms_scheduling/widgets/PlutoGrid/pluto_grid.dart';
+
+import '../../../../widgets/DateTime/DateWithThreeTextField.dart';
 import '../../../../widgets/LoadingDialog.dart';
-import '../../../../widgets/Snack.dart';
+import '../../../../widgets/PlutoGrid/src/manager/pluto_grid_state_manager.dart';
 import '../../../controller/ConnectorControl.dart';
-import '../../../controller/HomeController.dart';
 import '../../../data/DropDownValue.dart';
-import '../../../data/PermissionModel.dart';
-import '../../../data/system_envirtoment.dart';
-import '../EventSecondaryModel.dart';
-import '../EventSecondaryProgramModel.dart';
+import '../../../providers/Utils.dart';
+// import '../../promos/promo_model.dart';
+import '../model/schedule_secondary_event_model.dart';
 
 class EventSecondaryController extends GetxController {
+  var locations = <DropDownValue>[].obs;
+  var channels = <DropDownValue>[].obs;
+  RxBool controllsEnabled = true.obs;
+  var locationFN = FocusNode();
+  var myEnabled = true.obs;
+  DropDownValue? selectLocation, selectChannel;
+  var left1stDT = <DetailResponse>[].obs, left2ndDT = <SegementsResponse>[].obs, right3rdDT = [].obs;
+  var fromdateTC = TextEditingController(), todateTC = TextEditingController();
+  var timeBand = "00:00:00:00".obs, programName = "PrgName".obs;
+  PlutoGridStateManager? left1stSM, left2ndSM, rightSM;
+  var left2ndGridSelectedIdx = 0, left1stGridSelectedIdx = 0, rightGridSelectedIdx = 0;
+  var rightCount = "00:00:00:00".obs;
+  var all = true.obs, even = true.obs, odd = true.obs;
+  // var mainData = {};
+  ScheduleSecondaryEventModel? mainModel;
+  var availableTC = TextEditingController(),
+      scheduledTC = TextEditingController(),
+      countTC = TextEditingController(),
+      secondaryIDTC = TextEditingController(),
+      secCaptionTC = TextEditingController();
 
-  var locations = RxList<DropDownValue>();
-  var channels = RxList<DropDownValue>([]);
-  RxBool isEnable = RxBool(true);
-
-  //input controllers
-  DropDownValue? selectLocation;
-  DropDownValue? selectChannel;
-  PlutoGridStateManager? gridStateManager;
-
-  List<PermissionModel>? formPermissions;
-  List<PlutoRow> initRows = [];
-  List<PlutoColumn> initColumn = [];
-
-  List conflictReport = [];
-
-
-
-  TextEditingController tapeId_ = TextEditingController()..text = "";
-  TextEditingController segDur_ = TextEditingController()..text = "00:00:00:00";
-
-  List beams = [];
-  int? conflictDays = 4;
-  List conflictPrograms = [];
-  List<PlutoRow> beamRows = [];
-  var selectedChannels = RxList([]);
-
-  Map<String, dynamic> reportBody = {};
-
-  /// Radio Button
-  int selectedAfter = 0;
-
-  var selectedIndex = RxInt(0);
-  late PlutoGridStateManager conflictReportStateManager;
-  PlutoGridStateManager? bmsReportStateManager;
-  PlutoGridStateManager? locChanStateManager;
-  Map? initData;
-  TextEditingController refDateContrl = TextEditingController(
-      text: DateFormat("dd-MM-yyyy").format(DateTime.now()));
-
-  List<SystemEnviroment>? channelList = [];
-  List<SystemEnviroment>? locationList = [];
-
-  TextEditingController programName_ = TextEditingController();
-  TextEditingController date_ = TextEditingController();
-
-  DateTime now = DateTime.now();
-  DateTime? selectedDate = DateTime.now();
-  DateFormat df = DateFormat("dd/MM/yyyy");
-  DateFormat df1 = DateFormat("dd-MM-yyyy");
-  DateFormat df2 = DateFormat("MM-dd-yyyy");
-
-  SystemEnviroment? selectedChannel;
-  SystemEnviroment? selectedLocation;
-
-  /// List for Columns
-
-  EventSecondaryModel? selectedEvent;
-  EventSecondaryProgramModel? selectedSecondaryEventProgram;
-  List<EventSecondaryModel>? eventList = [
-    EventSecondaryModel
-
-      (
-        fpcTime:'01:00:00', breakNumber:'1', eventType:'S',
-        exportTapeCode:'TBA', segmentCaption:'Caption', client:' ', brand:' ', duration: 0,
-        product:' ', bookingNumber:' ', bookingDetailcode:' ',rostimeBand:' ', randid:' ',
-        programName:'Program Name', rownumber:'O', bStatus:'B', pDailyFPC:' ', pProgramMaster:' '),
-    EventSecondaryModel
-
-      (
-        fpcTime:'01:00:00', breakNumber:'1', eventType:'S',
-        exportTapeCode:'TBA', segmentCaption:'Caption', client:' ', brand:' ', duration: 0,
-        product:' ', bookingNumber:' ', bookingDetailcode:' ',rostimeBand:' ', randid:' ',
-        programName:'Program Name', rownumber:'O', bStatus:'B', pDailyFPC:' ', pProgramMaster:' '),
-    EventSecondaryModel
-
-      (
-        fpcTime:'01:00:00', breakNumber:'1', eventType:'S',
-        exportTapeCode:'TBA', segmentCaption:'Caption', client:' ', brand:' ', duration: 0,
-        product:' ', bookingNumber:' ', bookingDetailcode:' ',rostimeBand:' ', randid:' ',
-        programName:'Program Name', rownumber:'O', bStatus:'B', pDailyFPC:' ', pProgramMaster:' '),
-    EventSecondaryModel
-
-      (
-        fpcTime:'01:00:00', breakNumber:'1', eventType:'S',
-        exportTapeCode:'TBA', segmentCaption:'Caption', client:' ', brand:' ', duration: 0,
-        product:' ', bookingNumber:' ', bookingDetailcode:' ',rostimeBand:' ', randid:' ',
-        programName:'Program Name', rownumber:'O', bStatus:'B', pDailyFPC:' ', pProgramMaster:' '),
-    EventSecondaryModel
-
-      (
-        fpcTime:'01:00:00', breakNumber:'1', eventType:'S',
-        exportTapeCode:'TBA', segmentCaption:'Caption', client:' ', brand:' ', duration: 0,
-        product:' ', bookingNumber:' ', bookingDetailcode:' ',rostimeBand:' ', randid:' ',
-        programName:'Program Name', rownumber:'O', bStatus:'B', pDailyFPC:' ', pProgramMaster:' '),
-    EventSecondaryModel
-
-      (
-        fpcTime:'01:00:00', breakNumber:'1', eventType:'S',
-        exportTapeCode:'TBA', segmentCaption:'Caption', client:' ', brand:' ', duration: 0,
-        product:' ', bookingNumber:' ', bookingDetailcode:' ',rostimeBand:' ', randid:' ',
-        programName:'Program Name', rownumber:'O', bStatus:'B', pDailyFPC:' ', pProgramMaster:' '),
-    EventSecondaryModel
-
-      (
-        fpcTime:'01:00:00', breakNumber:'1', eventType:'S',
-        exportTapeCode:'TBA', segmentCaption:'Caption', client:' ', brand:' ', duration: 0,
-        product:' ', bookingNumber:' ', bookingDetailcode:' ',rostimeBand:' ', randid:' ',
-        programName:'Program Name', rownumber:'O', bStatus:'B', pDailyFPC:' ', pProgramMaster:' '),
-    EventSecondaryModel
-
-      (
-        fpcTime:'01:00:00', breakNumber:'1', eventType:'S',
-        exportTapeCode:'TBA', segmentCaption:'Caption', client:' ', brand:' ', duration: 0,
-        product:' ', bookingNumber:' ', bookingDetailcode:' ',rostimeBand:' ', randid:' ',
-        programName:'Program Name', rownumber:'O', bStatus:'B', pDailyFPC:' ', pProgramMaster:' '),
-    EventSecondaryModel
-
-      (
-        fpcTime:'01:00:00', breakNumber:'1', eventType:'S',
-        exportTapeCode:'TBA', segmentCaption:'Caption', client:' ', brand:' ', duration: 0,
-        product:' ', bookingNumber:' ', bookingDetailcode:' ',rostimeBand:' ', randid:' ',
-        programName:'Program Name', rownumber:'O', bStatus:'B', pDailyFPC:' ', pProgramMaster:' '),
-    EventSecondaryModel
-
-      (
-        fpcTime:'01:00:00', breakNumber:'1', eventType:'S',
-        exportTapeCode:'TBA', segmentCaption:'Caption', client:' ', brand:' ', duration: 0,
-        product:' ', bookingNumber:' ', bookingDetailcode:' ',rostimeBand:' ', randid:' ',
-        programName:'Program Name', rownumber:'O', bStatus:'B', pDailyFPC:' ', pProgramMaster:' '),
-    EventSecondaryModel
-
-      (
-        fpcTime:'01:00:00', breakNumber:'1', eventType:'S',
-        exportTapeCode:'TBA', segmentCaption:'Caption', client:' ', brand:' ', duration: 0,
-        product:' ', bookingNumber:' ', bookingDetailcode:' ',rostimeBand:' ', randid:' ',
-        programName:'Program Name', rownumber:'O', bStatus:'B', pDailyFPC:' ', pProgramMaster:' '),
-    EventSecondaryModel
-
-      (
-        fpcTime:'01:00:00', breakNumber:'1', eventType:'S',
-        exportTapeCode:'TBA', segmentCaption:'Caption', client:' ', brand:' ', duration: 0,
-        product:' ', bookingNumber:' ', bookingDetailcode:' ',rostimeBand:' ', randid:' ',
-        programName:'Program Name', rownumber:'O', bStatus:'B', pDailyFPC:' ', pProgramMaster:' '),
-    EventSecondaryModel
-
-      (
-        fpcTime:'01:00:00', breakNumber:'1', eventType:'S',
-        exportTapeCode:'TBA', segmentCaption:'Caption', client:' ', brand:' ', duration: 0,
-        product:' ', bookingNumber:' ', bookingDetailcode:' ',rostimeBand:' ', randid:' ',
-        programName:'Program Name', rownumber:'O', bStatus:'B', pDailyFPC:' ', pProgramMaster:' '),
-    EventSecondaryModel
-
-      (
-        fpcTime:'01:00:00', breakNumber:'1', eventType:'S',
-        exportTapeCode:'TBA', segmentCaption:'Caption', client:' ', brand:' ', duration: 0,
-        product:' ', bookingNumber:' ', bookingDetailcode:' ',rostimeBand:' ', randid:' ',
-        programName:'Program Name', rownumber:'O', bStatus:'B', pDailyFPC:' ', pProgramMaster:' '),
-    EventSecondaryModel
-
-      (
-        fpcTime:'01:00:00', breakNumber:'1', eventType:'S',
-        exportTapeCode:'TBA', segmentCaption:'Caption', client:' ', brand:' ', duration: 0,
-        product:' ', bookingNumber:' ', bookingDetailcode:' ',rostimeBand:' ', randid:' ',
-        programName:'Program Name', rownumber:'O', bStatus:'B', pDailyFPC:' ', pProgramMaster:' '),
-    EventSecondaryModel
-
-      (
-        fpcTime:'01:00:00', breakNumber:'1', eventType:'S',
-        exportTapeCode:'TBA', segmentCaption:'Caption', client:' ', brand:' ', duration: 0,
-        product:' ', bookingNumber:' ', bookingDetailcode:' ',rostimeBand:' ', randid:' ',
-        programName:'Program Name', rownumber:'O', bStatus:'B', pDailyFPC:' ', pProgramMaster:' '),
-    EventSecondaryModel
-
-      (
-        fpcTime:'01:00:00', breakNumber:'1', eventType:'S',
-        exportTapeCode:'TBA', segmentCaption:'Caption', client:' ', brand:' ', duration: 0,
-        product:' ', bookingNumber:' ', bookingDetailcode:' ',rostimeBand:' ', randid:' ',
-        programName:'Program Name', rownumber:'O', bStatus:'B', pDailyFPC:' ', pProgramMaster:' '),
-    EventSecondaryModel
-
-      (
-        fpcTime:'01:00:00', breakNumber:'1', eventType:'S',
-        exportTapeCode:'TBA', segmentCaption:'Caption', client:' ', brand:' ', duration: 0,
-        product:' ', bookingNumber:' ', bookingDetailcode:' ',rostimeBand:' ', randid:' ',
-        programName:'Program Name', rownumber:'O', bStatus:'B', pDailyFPC:' ', pProgramMaster:' '),
-    EventSecondaryModel
-
-      (
-        fpcTime:'01:00:00', breakNumber:'1', eventType:'S',
-        exportTapeCode:'TBA', segmentCaption:'Caption', client:' ', brand:' ', duration: 0,
-        product:' ', bookingNumber:' ', bookingDetailcode:' ',rostimeBand:' ', randid:' ',
-        programName:'Program Name', rownumber:'O', bStatus:'B', pDailyFPC:' ', pProgramMaster:' '),
-
-  ];
-  List<EventSecondaryProgramModel>? secondaryEventProgramList  = [
-    EventSecondaryProgramModel
-      (startTime: '01:00:00', programName: 'Test1'),
-    EventSecondaryProgramModel
-      (startTime: '01:00:00', programName: 'Test'),
-    EventSecondaryProgramModel
-      (startTime: '01:00:00', programName: 'Test'),
-    EventSecondaryProgramModel
-      (startTime: '01:00:00', programName: 'Test'),
-    EventSecondaryProgramModel
-      (startTime: '01:00:00', programName: 'Test5'),
-    EventSecondaryProgramModel
-      (startTime: '01:00:00', programName: 'Test'),
-    EventSecondaryProgramModel
-      (startTime: '01:00:00', programName: 'Test'),
-    EventSecondaryProgramModel
-      (startTime: '01:00:00', programName: 'Test'),
-    EventSecondaryProgramModel
-      (startTime: '01:00:00', programName: 'Test'),
-    EventSecondaryProgramModel
-      (startTime: '01:00:00', programName: 'Test10'),
-    EventSecondaryProgramModel
-      (startTime: '01:00:00', programName: 'Test'),
-    EventSecondaryProgramModel
-      (startTime: '01:00:00', programName: 'Test'),
-    EventSecondaryProgramModel
-      (startTime: '01:00:00', programName: 'Test'),
-    EventSecondaryProgramModel
-      (startTime: '01:00:00', programName: 'Test'),
-    EventSecondaryProgramModel
-      (startTime: '01:00:00', programName: 'Test15'),
-    EventSecondaryProgramModel
-      (startTime: '01:00:00', programName: 'Test'),
-    EventSecondaryProgramModel
-      (startTime: '01:00:00', programName: 'Test'),
-    EventSecondaryProgramModel
-      (startTime: '01:00:00', programName: 'Test'),
-    EventSecondaryProgramModel
-      (startTime: '01:00:00', programName: 'Test'),
-    EventSecondaryProgramModel
-      (startTime: '01:00:00', programName: 'Test20'),
-    EventSecondaryProgramModel
-      (startTime: '01:00:00', programName: 'Test'),
-    EventSecondaryProgramModel
-      (startTime: '01:00:00', programName: 'Test'),
-    EventSecondaryProgramModel
-      (startTime: '01:00:00', programName: 'Test'),
-    EventSecondaryProgramModel
-      (startTime: '01:00:00', programName: 'Test'),
-    EventSecondaryProgramModel
-      (startTime: '01:00:00', programName: 'Test'),
-    EventSecondaryProgramModel
-      (startTime: '01:00:00', programName: 'Test26',),
-
-  ];
-
-  /// Radio Button
-  int selectedGroup = 0;
-  int selectIndex = 0;
-
-  List<Map<String, dynamic>>? listData = [];
-
-  DateTime selectDate = DateTime.now();
-
-  /////////////Pluto Grid////////////
-  List redBreaks = [];
-  BuildContext? gridContext;
-  PlutoGridStateManager? stateManager;
-
-  double widthSize = 0.17;
-  var locationEnable = RxBool(true);
-  var channelEnable = RxBool(true);
-
-  SystemEnviroment? selectedChannelEnv;
-  SystemEnviroment? selectedLocationEnv;
-  SystemEnviroment? selectedCaption;
+  clearPage() {
+    // mainData = {};
+    all.value = false;
+    myEnabled.value = false;
+    even.value = false;
+    odd.value = false;
+    left1stSM = null;
+    mainModel = null;
+    left2ndSM = null;
+    rightSM = null;
+    left2ndGridSelectedIdx = 0;
+    left1stGridSelectedIdx = 0;
+    rightGridSelectedIdx = 0;
+    selectLocation = null;
+    selectChannel = null;
+    locations.refresh();
+    channels.refresh();
+    controllsEnabled.value = true;
+    myEnabled.value = false;
+    timeBand.value = "";
+    programName.value = "PrgName";
+    rightCount.value = "00:00:00:00";
+    availableTC.clear();
+    scheduledTC.clear();
+    countTC.clear();
+    secondaryIDTC.clear();
+    left1stDT.clear();
+    left2ndDT.clear();
+    secCaptionTC.clear();
+    right3rdDT.clear();
+    Future.delayed(Duration(milliseconds: 200)).then((value) {
+      locationFN.requestFocus();
+    });
+  }
 
   @override
-  void onInit() {
-    super.onInit();
+  void onReady() {
+    super.onReady();
+    getLocation();
   }
 
   formHandler(btnName) async {
     if (btnName == "Clear") {
-      initData = null;
-      initRows = [];
-      initColumn = [];
-
-      conflictReport = [];
-
-      beams = [];
-      conflictDays = 4;
-      conflictPrograms = [];
-      beamRows = [];
-      selectedChannels.value = [];
-
-      Map<String, dynamic> reportBody = {};
-      update(["initData"]);
-      //getInitData();
+      clearPage();
+    } else if (btnName == "Save") {
+      saveData();
     }
   }
 
-  fetchInitial() {
-    // Get.find<ConnectorControl>().GETMETHODCALL(
-    //   api: ApiFactory.FPC_WEEKLY_INITIAL,
-    //   fun: (Map<String, dynamic> map) {
-    //     locationList?.clear();
-    //     channelList?.clear();
-    //     map["lstLocations"].forEach((element) {
-    //       locationList?.add(SystemEnviroment(key: element["locationCode"], value: element["locationName"]));
-    //     });
-    //     map["lstChannels"].forEach((element) {
-    //       channelList?.add(SystemEnviroment(key: element["channelcode"], value: element["channelName"]));
-    //     });
-    //     update(["initialData"]);
-    //   },
-    // );
+  void getChannel(DropDownValue? val) {
+    selectLocation = val;
+    if (val != null) {
+      LoadingDialog.call();
+      Get.find<ConnectorControl>().GETMETHODCALL(
+          api: ApiFactory.EVENT_GET_CHANNELS(val.key ?? ""),
+          fun: (resp) {
+            if (resp != null && resp is List<dynamic>) {
+              closeDialog();
+              selectChannel = null;
+              channels.clear();
+              channels.addAll(resp
+                  .map((e) => DropDownValue(
+                        key: e['channelCode'],
+                        value: e['channelName'],
+                      ))
+                  .toList());
+            } else {
+              LoadingDialog.showErrorDialog(resp.toString());
+            }
+          },
+          failed: (resp) {});
+    }
   }
 
-  // fetchInitial() {
-  //   Get.find<ConnectorControl>().GETMETHODCALL(
-  //     api: ApiFactory.FPC_WEEKLY_INITIAL,
-  //     fun: (Map<String, dynamic> map) {
-  //       locationList?.clear();
-  //       channelList?.clear();
-  //       map["lstLocations"].forEach((element) {
-  //         locationList?.add(SystemEnviroment(key: element["locationCode"], value: element["locationName"]));
-  //       });
-  //       map["lstChannels"].forEach((element) {
-  //         channelList?.add(SystemEnviroment(key: element["channelcode"], value: element["channelName"]));
-  //       });
-  //       update(["initialData"]);
-  //     },
-  //   );
-  // }
+  void getLocation() {
+    LoadingDialog.call();
+    Get.find<ConnectorControl>().GETMETHODCALL(
+        api: ApiFactory.EVENT_GET_LOCATION,
+        fun: (resp) {
+          closeDialog();
+          if (resp != null && resp is List<dynamic>) {
+            locations.clear();
+            locations.addAll(resp
+                .map((e) => DropDownValue(
+                      key: e['locationCode'].toString(),
+                      value: e['locationName'].toString(),
+                    ))
+                .toList());
+          }
+        },
+        failed: (resp) {
+          closeDialog();
+          LoadingDialog.showErrorDialog(resp.toString());
+        });
+  }
 
-  generateData() async {
-    if (conflictDays == null) {
-      // Snack.callError("Invalid Day Value");
-      LoadingDialog.showErrorDialog("Invalid Day Value");
-    } else if (locChanStateManager!.checkedRows.isEmpty) {
-      LoadingDialog.showErrorDialog("Please select Location Channel");
-    } else {
-      reportBody["ReferenceDate"] = DateFormat("yyyy-MM-dd")
-          .format(DateFormat("dd-MM-yyyy").parse(refDateContrl.text));
-
-      LoadingDialog.call();
-      beams = [];
-      conflictReport = [];
-      conflictPrograms = [];
-      update(["reports"]);
-      // String value =
-      //     await rootBundle.loadString('assets/json/ci_dashbaord_report.json');
-      await Get.find<ConnectorControl>().POSTMETHOD_FORMDATA(
-        // NEED TO PASS USER NAME
-          timeout: 360000,
-          api:
-          "https://api-programming-bms-uat.zeeconnect.in//api/MovieConflictReport/GetMovieConflictReport",
-          json: reportBody,
-          fun: (map) async {
-            beams = map["lstReportBaseData"];
-            for (var element in beams.where((element) =>
-            (element["days"] <= conflictDays && element["days"] >= 0))) {
-              conflictPrograms.add(element["program"]);
+  void handleGetPreviousTap() {
+    if (selectLocation == null && selectChannel == null) {
+      LoadingDialog.showErrorDialog("Please select Location and Channel.");
+      return;
+    }
+    Get.defaultDialog(
+      title: "Select Date",
+      content: Row(
+        children: [
+          DateWithThreeTextField(
+            title: "From Date",
+            widthRation: .10,
+            mainTextController: fromdateTC,
+          ),
+          SizedBox(width: 20),
+          DateWithThreeTextField(
+            title: "To Date",
+            widthRation: .10,
+            mainTextController: todateTC,
+          ),
+        ],
+      ),
+      onCancel: () {
+        Get.back();
+      },
+      onConfirm: () {
+        Get.back();
+        LoadingDialog.call();
+        Get.find<ConnectorControl>().POSTMETHOD(
+          api: ApiFactory.EVENT_PREVIOUS_DETAILS,
+          fun: (resp) {
+            closeDialog();
+            if (resp != null && resp.toString().contains("Secondary event of 18/Nov/2014 saved successfully for  13/Jun/2023")) {
+              LoadingDialog.callDataSaved(msg: resp.toString());
+            } else {
+              LoadingDialog.showErrorDialog(resp.toString());
             }
-            conflictPrograms.toSet().toList();
-            // log(conflictPrograms.toString());
-            conflictReport = map["lstConflictReport"];
-            update(["reports"]);
-          });
+          },
+          json: {
+            "locationcode": selectLocation?.key ?? "",
+            "channelCode": selectChannel?.key ?? "",
+            "fromDate": DateFormat("yyyy-MM-ddT00:00:00").format(DateFormat("dd-MM-yyyy").parse(fromdateTC.text)),
+            "forDate": DateFormat("yyyy-MM-ddT00:00:00").format(DateFormat("dd-MM-yyyy").parse(todateTC.text)),
+          },
+        );
+      },
+    );
+  }
+
+  void showDetails() {
+    if (selectLocation == null && selectChannel == null) {
+      LoadingDialog.showErrorDialog("Please select Location and Channel.");
+      return;
+    }
+    LoadingDialog.call();
+    Get.find<ConnectorControl>().POSTMETHOD(
+      api: ApiFactory.EVENT_SHOW_DETAILS,
+      fun: (resp) {
+        closeDialog();
+        if (resp != null && resp is Map<String, dynamic>) {
+          mainModel = ScheduleSecondaryEventModel.fromJson(resp);
+          if (mainModel?.segementsResponse != null) {
+            for (var i = 0; i < (mainModel?.segementsResponse?.length ?? 0); i++) {
+              mainModel?.segementsResponse?[i].rowNo = i;
+            }
+          }
+          left1stDT.clear();
+          left1stDT.addAll(mainModel?.detailResponse ?? []);
+          if (left1stDT.isEmpty) {
+            LoadingDialog.showErrorDialog("Daily FPC not present.");
+          } else {
+            controllsEnabled.value = false;
+            availableTC.text = "00:02:00:00";
+            scheduledTC.text = "";
+          }
+        } else {
+          LoadingDialog.showErrorDialog(resp.toString());
+        }
+      },
+      json: {
+        "locationcode": selectLocation?.key ?? "",
+        "channelCode": selectChannel?.key ?? "",
+        "telecastDate": DateFormat("yyyy-MM-ddT00:00:00").format(DateFormat("dd-MM-yyyy").parse(fromdateTC.text)),
+      },
+    );
+  }
+
+  handleDoubleTapInLeft1stTable(int index) {
+    left1stGridSelectedIdx = index;
+    timeBand.value = left1stDT[index].startTime ?? "00:00:00:00";
+    programName.value = left1stDT[index].programName ?? "";
+    availableTC.text = "00:02:00:00";
+    scheduledTC.text = "00:00:00:00";
+    left1stSM?.setCurrentCell(left1stSM?.getRowByIdx(index)?.cells['startTime'], index);
+    left2ndDT.clear();
+    left2ndGridSelectedIdx = 0;
+    if (mainModel?.segementsResponse != null) {
+      left2ndDT.value = mainModel?.segementsResponse?.where((element) => timeBand.value == element.telecastTime).toList() ?? [];
+      countTC.text = left2ndDT.length.toString();
+    }
+  }
+
+  handleDoubleTapInRightTable(int index, {bool fromAutoAdd = false}) async {
+    if (left2ndDT.isEmpty) {
+      LoadingDialog.showErrorDialog("ProgramSegaments can't be empty");
+    } else {
+      rightGridSelectedIdx = index;
+      if (!fromAutoAdd) {
+        rightSM?.setCurrentCell(rightSM?.getRowByIdx(index)?.cells['caption'], index);
+      }
+      // var tempRightModel = right3rdDT[index];
+      var insertModel = SegementsResponse(
+        eventCaption: right3rdDT[rightGridSelectedIdx]['caption'],
+        breakNo: left2ndDT[left2ndGridSelectedIdx].breakNo,
+        eventDuration: Utils.convertToTimeFromDouble(value: right3rdDT[rightGridSelectedIdx]['duration'] ?? 0),
+        houseId: right3rdDT[rightGridSelectedIdx]['txId'],
+        telecastTime: left2ndDT[left2ndGridSelectedIdx].telecastTime,
+        eventCode: right3rdDT[rightGridSelectedIdx]['eventCode'] ?? 0,
+        eventSchedulingCode: left2ndDT[left2ndGridSelectedIdx].eventSchedulingCode,
+      );
+
+      if (mainModel?.segementsResponse != null && left2ndDT[left2ndGridSelectedIdx].rowNo != null) {
+        mainModel?.segementsResponse?.insert(left2ndDT[left2ndGridSelectedIdx].rowNo! + 1, insertModel);
+        for (var i = 0; i < (mainModel?.segementsResponse?.length ?? 0); i++) {
+          mainModel?.segementsResponse?[i].rowNo = i;
+        }
+      }
+      left2ndDT.insert(left2ndGridSelectedIdx + 1, insertModel);
+      left2ndGridSelectedIdx = left2ndGridSelectedIdx + 1;
+      if (!fromAutoAdd) {
+        left2ndDT.refresh();
+      }
+      // scheduledTC.text = Utils.convertToTimeFromDouble(value: (Utils.convertToSecond(value: scheduledTC.text)) + (tempRightModel['duration'] ?? 0));
+      // if ((Utils.convertToSecond(value: scheduledTC.text)) + (tempRightModel['duration'] ?? 0) > Utils.convertToSecond(value: "00:02:00:00")) {
+      //   left1stDT[left1stGridSelectedIdx].exceed = true;
+      //   left1stDT.refresh();
+      // }
+      // countTC.text = left2ndDT.length.toString();
+    }
+  }
+
+  void handleDelete() {
+    if (selectLocation == null && selectChannel == null) {
+      LoadingDialog.showErrorDialog("Please select Location and Channel.");
+      return;
+    }
+    LoadingDialog.delete("Want to delete promo scheduling for selected date?", () {
+      LoadingDialog.call();
+      Get.find<ConnectorControl>().DELETEMETHOD(
+        api: ApiFactory.PROMOS_DELETE(selectLocation?.key ?? "", selectChannel?.key ?? "",
+            DateFormat("yyyy-MM-ddT00:00:00").format(DateFormat("dd-MM-yyyy").parse(fromdateTC.text))),
+        fun: (resp) {
+          closeDialog();
+          if (resp != null) {
+          } else {
+            LoadingDialog.showErrorDialog(resp.toString());
+          }
+        },
+      );
+    });
+  }
+
+  void handleAddTap() {
+    handleDoubleTapInRightTable(rightGridSelectedIdx);
+  }
+
+  void handleSearchTap() {
+    if (selectLocation == null && selectChannel == null) {
+      LoadingDialog.showErrorDialog("Please select Location and Channel.");
+      return;
+    }
+    LoadingDialog.call();
+    Get.find<ConnectorControl>().POSTMETHOD(
+      api: ApiFactory.EVENT_SEARCH,
+      fun: (resp) {
+        closeDialog();
+        if (resp != null && resp is List<dynamic>) {
+          right3rdDT.clear();
+          right3rdDT.addAll(resp);
+        } else {
+          LoadingDialog.showErrorDialog(resp.toString());
+        }
+      },
+      json: {
+        "locationCode": selectLocation?.key ?? "",
+        "channelCode": selectChannel?.key ?? "",
+        "telecastDate": DateFormat("yyyy-MM-dd").format(DateFormat("dd-MM-yyyy").parse(fromdateTC.text)),
+        "mine": myEnabled.value,
+        "txID": secondaryIDTC.text,
+        "caption": secCaptionTC.text,
+      },
+    );
+  }
+
+  handleOnSelectRightTable(int index) {
+    rightGridSelectedIdx = index;
+    if (right3rdDT[index]['duration'] != null && index != -1) {
+      rightCount.value = Utils.convertToTimeFromDouble(value: right3rdDT[index]['duration']);
+    }
+  }
+
+  void saveData() {
+    if (selectLocation == null && selectChannel == null) {
+      LoadingDialog.showErrorDialog("Please select Location and Channel.");
+      return;
+    }
+    if (mainModel?.segementsResponse == null || (mainModel?.segementsResponse?.isEmpty ?? true)) {
+      LoadingDialog.showErrorDialog("Nothing to save. Please schedule promos");
+      return;
+    }
+    LoadingDialog.call();
+    Get.find<ConnectorControl>().POSTMETHOD(
+      api: ApiFactory.EVENT_SAVE,
+      fun: (resp) {
+        closeDialog();
+        if (resp != null && resp.toString().contains("Record saved")) {
+          LoadingDialog.callDataSaved(
+              msg: resp.toString(),
+              callback: () {
+                clearPage();
+              });
+        } else {
+          LoadingDialog.showErrorDialog(resp.toString());
+        }
+      },
+      json: {
+        "locationCode": selectLocation?.key,
+        "channelCode": selectChannel?.key,
+        "telecastDate": DateFormat("yyyy-MM-dd").format(DateFormat("dd-MM-yyyy").parse(fromdateTC.text)),
+        // "modifiedBy": Get.find<MainController>().user?.logincode,
+        "scheduleSecondayEvents": mainModel?.segementsResponse?.map((e) => e.toJson(fromSave: true)).toList(),
+      },
+    );
+  }
+
+  closeDialog() {
+    if (Get.isDialogOpen ?? false) {
       Get.back();
     }
   }
 
-  /// Useful in Columns
-  loadColumnBeams(column) {
-    List<PlutoRow> rows = [];
-    for (Map row in beams.where((element) => element["beam"] == column)) {
-      Map<String, PlutoCell> cells = {};
-
-      for (var element in row.entries) {
-        print(element.value);
-        cells[element.key] = PlutoCell(
-          value: element.key == "selected" || element.value == null
-              ? ""
-              : element.key.toString().toLowerCase().contains("date")
-              ? (element.value.toString().contains('T') &&
-              element.value.toString().split('T')[1] == '00:00:00')
-              ? DateFormat("dd/MM/yyyy").format(
-              DateFormat('yyyy-MM-ddTHH:mm:ss')
-                  .parse(element.value.toString()))
-              : DateFormat("dd/MM/yyyy HH:mm:ss").format(
-              DateFormat('yyyy-MM-ddTHH:mm:ss')
-                  .parse(element.value.toString()))
-          // DateFormat("dd-MM-yyyy hh:mm").format(DateTime.parse(element.value.toString().replaceAll("T", " ")))
-              : element.value.toString(),
-        );
-      }
-
-      rows.add(PlutoRow(
-        cells: cells,
-      ));
-    }
-    if (bmsReportStateManager != null) {
-      print("state working");
-
-      bmsReportStateManager!.removeRows(bmsReportStateManager!.rows);
-      bmsReportStateManager!.resetCurrentState();
-      bmsReportStateManager!.appendRows(rows);
-    }
-    beamRows = [];
-    update(["beams"]);
-    beamRows = rows;
-    rows = [];
-    update(["beams"]);
+  void handleDeleteAllTap() {
+    mainModel?.segementsResponse?.removeWhere(
+        (element) => (element.telecastTime == (left1stDT[left1stGridSelectedIdx].startTime ?? "00:00:00:00")) && (element.eventCaption != null));
+    handleDoubleTapInLeft1stTable(left1stGridSelectedIdx);
   }
 
-  /// Useful in Columns
-  void loadBeams() {
-    if (conflictReportStateManager.currentRow == null) {
-      return;
-    }
-    // log("Rows");
-    // log(conflictReportStateManager.currentRow!.cells["Program"]!.value);
-    List<PlutoRow> rows = [];
-    for (Map row in beams.where((element) =>
-    element["program"] ==
-        conflictReportStateManager.currentRow!.cells["Program"]!.value)) {
-      Map<String, PlutoCell> cells = {};
-
-      for (var element in row.entries) {
-        cells[element.key] = PlutoCell(
-          value: element.key == "selected" || element.value == null
-              ? ""
-              : element.key.toString().toLowerCase().contains("date")
-              ? (element.value.toString().contains('T') &&
-              element.value.toString().split('T')[1] == '00:00:00')
-              ? DateFormat("dd/MM/yyyy").format(
-              DateFormat('yyyy-MM-ddTHH:mm:ss')
-                  .parse(element.value.toString()))
-              : DateFormat("dd/MM/yyyy HH:mm:ss").format(
-              DateFormat('yyyy-MM-ddTHH:mm:ss')
-                  .parse(element.value.toString()))
-          // ? DateFormat("dd/MM/yyyy hh:mm").format(DateTime.parse(element.value.toString().replaceAll("T", " ")))
-              : element.value.toString(),
-        );
-      }
-
-      rows.add(PlutoRow(
-        cells: cells,
-      ));
-    }
-    if (bmsReportStateManager != null) {
-      print("state working");
-
-      bmsReportStateManager!.removeRows(bmsReportStateManager!.rows);
-      bmsReportStateManager!.resetCurrentState();
-      bmsReportStateManager!.appendRows(rows);
-    }
-    beamRows = [];
-    update(["beams"]);
-    beamRows = rows;
-    rows = [];
-    update(["beams"]);
-  }
-
-  fetchGenerate() {
-    if (selectedLocation == null) {
-      Snack.callError("Please select Location");
-    } else if (selectedChannel == null) {
-      Snack.callError("Please select Channel");
-    } else if (selectDate == null) {
-      Snack.callError("Please select from date");
+  void handleAddFPCTap() async {
+    if (right3rdDT.isEmpty) {
+      LoadingDialog.showErrorDialog("Please select row");
+    } else if (left2ndDT.isEmpty) {
+      LoadingDialog.showErrorDialog("Please add row");
     } else {
-      selectDate = df1.parse(date_.text);
-      listData?.clear();
-      LoadingDialog.call();
+      var temp = left2ndGridSelectedIdx;
+      if (all.value) {
+        if (mainModel?.segementsResponse != null) {
+          int previousBreakNo = 0;
+          for (int i = 0; i < left2ndDT.length; i++) {
+            if (previousBreakNo != (left2ndDT[i].breakNo ?? 1)) {
+              left2ndGridSelectedIdx = i;
+              await handleDoubleTapInRightTable(rightGridSelectedIdx, fromAutoAdd: true);
+            }
+            previousBreakNo = (left2ndDT[i].breakNo ?? 1);
+          }
+        }
+      } else if (even.value) {
+        if (mainModel?.segementsResponse != null) {
+          int previousBreakNo = 0;
+          for (int i = 0; i < left2ndDT.length; i++) {
+            if (previousBreakNo != (left2ndDT[i].breakNo ?? 1) && ((left2ndDT[i].breakNo ?? 1) % 2 == 0)) {
+              left2ndGridSelectedIdx = i;
+              await handleDoubleTapInRightTable(rightGridSelectedIdx, fromAutoAdd: true);
+            }
+            previousBreakNo = (left2ndDT[i].breakNo ?? 1);
+          }
+        }
+      } else if (odd.value) {
+        if (mainModel?.segementsResponse != null) {
+          int previousBreakNo = 0;
+          for (int i = 0; i < left2ndDT.length; i++) {
+            if (previousBreakNo != (left2ndDT[i].breakNo ?? 1) && ((left2ndDT[i].breakNo ?? 0) % 2 != 0)) {
+              left2ndGridSelectedIdx = i;
+              await handleDoubleTapInRightTable(rightGridSelectedIdx, fromAutoAdd: true);
+            }
+            previousBreakNo = (left2ndDT[i].breakNo ?? 1);
+          }
+        }
+      }
+      left2ndGridSelectedIdx = temp;
+      handleDoubleTapInLeft1stTable(left1stGridSelectedIdx);
     }
   }
 
-  void clear() {
-    listData?.clear();
-    locationEnable.value = true;
-    channelEnable.value = true;
-  }
-
-  void exit() {
-    Get.find<HomeController>().selectChild1.value = null;
-    Get.delete<EventSecondaryController>();
-  }
-
+  void addDataINModel() {}
 }
-
