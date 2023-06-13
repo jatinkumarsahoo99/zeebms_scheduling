@@ -468,6 +468,8 @@ class CommercialController extends GetxController {
 
   void clear() {
     leftTableSelectedIdx = 0;
+    programFpcTimeSelected = null;
+    selectedProgram = null;
     date_.text = "";
     selectedChannel = null;
     selectedLocation = null;

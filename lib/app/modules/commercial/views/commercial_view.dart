@@ -340,8 +340,7 @@ class CommercialView extends GetView<CommercialController> {
                     .setCurrentCell(sm.stateManager.getRowByIdx(controller.leftTableSelectedIdx)?.cells['fpcTime'], controller.leftTableSelectedIdx);
               },
               colorCallback: (colorRow) {
-                if (colorRow.rowIdx == controller.leftTableSelectedIdx ||
-                    controller.commercialProgramList![colorRow.rowIdx].fpcTime == controller.programFpcTimeSelected) {
+                if (colorRow.rowIdx == controller.leftTableSelectedIdx) {
                   return Colors.deepPurple[200]!;
                 } else {
                   return Colors.white;
@@ -397,7 +396,7 @@ class CommercialView extends GetView<CommercialController> {
 
               var cList =
                   controller.mainCommercialShowDetailsList!.where((o) => o.eventType.toString() == 'C' && o.bStatus.toString() == 'B').toList();
-              controller.commercialSpots.value = cList.length.toString();
+              controller.commercialSpots.value = cList.where((o) => o.bStatus == "C").toList().length.toString();
               print("commercialSpots value is : ${controller.commercialSpots.value}");
 
               double intTotalDuration = 0;
@@ -405,6 +404,9 @@ class CommercialView extends GetView<CommercialController> {
                 intTotalDuration = intTotalDuration + Utils.oldBMSConvertToSecondsValue(value: cList[i].duration!);
               }
               controller.commercialDuration.value = Utils.convertToTimeFromDouble(value: intTotalDuration);
+              controller.commercialDuration.refresh();
+              controller.commercialSpots.refresh();
+
               print("commercialDuration value is : ${controller.commercialDuration.value}");
 
               return Expanded(
