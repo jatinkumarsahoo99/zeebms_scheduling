@@ -360,6 +360,12 @@ static String TRANSMISSION_LOG_EVENT_LIST() =>
       "$BASE_URL/api/Transmissionlog/GetLoadFastInsertEventType";
 static String TRANSMISSION_LOG_POST_PIVOT_LOG() =>
       "$BASE_URL/api/Transmissionlog/PostPivotLog";
+static String TRANSMISSION_LOG_POST_TS() =>
+      "$BASE_URL/api/Transmissionlog/PostTsCalc";
+static String TRANSMISSION_LOG_LAST_SAVEDLOG(String locId,String chnlId,String txtDt,) =>
+      "$BASE_URL/api/Transmissionlog/GetbtnLastSavedLogClick?locationcode=$locId&channelcode=$chnlId&txtDate=$txtDt";
+static String TRANSMISSION_LOG_TS_GET_HIGHLIGHT(String locId,String chnlId,) =>
+      "$BASE_URL/api/Transmissionlog/GetHighlightTSGrid?Locationcode=$locId&ChannelCode=$chnlId";
 
 
 
