@@ -43,8 +43,8 @@ class CommercialController extends GetxController {
   var channelEnable = RxBool(true);
   var locationEnable = RxBool(true);
   var selectedChannels = RxList([]);
-  var commercialSpots = RxString("");
-  var commercialDuration = RxString("");
+  var commercialSpots = "".obs;
+  var commercialDuration = "".obs;
 
   var locations = RxList<DropDownValue>();
   var channels = RxList<DropDownValue>([]);
@@ -245,6 +245,14 @@ class CommercialController extends GetxController {
       /// Filter B, calculate spot duration then calling ColorGrid filter.
       showCommercialDetailsList?.value =
           mainCommercialShowDetailsList!.where((o) => o.fpcTime.toString() == programFpcTimeSelected && o.bStatus.toString() == 'B').toList();
+      commercialSpots.value = showCommercialDetailsList?.where((o) => o.eventType == "C").toList().length.toString() ?? "0";
+      num intTotalDuration = 0;
+      for (int i = 0; i < (showCommercialDetailsList?.length ?? 0); i++) {
+        if (showCommercialDetailsList?[i].eventType == "C") {
+          intTotalDuration = intTotalDuration + Utils.oldBMSConvertToSecondsValue(value: showCommercialDetailsList?[i].duration ?? "");
+        }
+      }
+      commercialDuration.value = Utils.convertToTimeFromDouble(value: intTotalDuration);
       showCommercialDetailsList?.refresh();
     }
     updateAllTabs();
