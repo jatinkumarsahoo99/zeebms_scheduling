@@ -151,7 +151,7 @@ class PromosController extends GetxController {
             LoadingDialog.showErrorDialog("Daily FPC not present.");
           } else {
             controllsEnabled.value = false;
-            availableTC.text = "00:02:00:00";
+            availableTC.text = "00:16:49:00";
             scheduledTC.text = "";
           }
         } else {
@@ -169,7 +169,7 @@ class PromosController extends GetxController {
     left1stGridSelectedIdx = index;
     timeBand.value = left1stDT[index].startTime ?? "00:00:00:00";
     programName.value = left1stDT[index].programName ?? "";
-    availableTC.text = "00:02:00:00";
+    availableTC.text = "00:16:49:00";
     scheduledTC.text = "00:00:00:00";
     left1stSM?.setCurrentCell(left1stSM?.getRowByIdx(index)?.cells['startTime'], index);
     left2ndDT.clear();
@@ -209,7 +209,7 @@ class PromosController extends GetxController {
       left2ndGridSelectedIdx = left2ndGridSelectedIdx + 1;
       left2ndDT.refresh();
       scheduledTC.text = Utils.convertToTimeFromDouble(value: (Utils.convertToSecond(value: scheduledTC.text)) + (tempRightModel['duration'] ?? 0));
-      if ((Utils.convertToSecond(value: scheduledTC.text)) + (tempRightModel['duration'] ?? 0) > Utils.convertToSecond(value: "00:02:00:00")) {
+      if ((Utils.convertToSecond(value: scheduledTC.text)) + (tempRightModel['duration'] ?? 0) > Utils.convertToSecond(value: "00:16:49:00")) {
         left1stDT[left1stGridSelectedIdx].exceed = true;
         left1stDT.refresh();
       }
