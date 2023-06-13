@@ -2,12 +2,14 @@ import 'package:bms_scheduling/app/providers/extensions/string_extensions.dart';
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:get/get.dart';
 
 // import 'package:flutter/src/foundation/key.dart';
 // import 'package:flutter/src/widgets/framework.dart';
 import 'package:intl/intl.dart';
 import 'package:bms_scheduling/widgets/PlutoGrid/pluto_grid.dart';
 
+import '../app/modules/TransmissionLog/controllers/TransmissionLogController.dart';
 import '../app/providers/DataGridMenu.dart';
 import '../app/providers/SizeDefine.dart';
 import '../app/providers/Utils.dart';
@@ -62,7 +64,7 @@ class DataGridFromMap extends StatelessWidget {
   final Function(PlutoGridOnRowDoubleTapEvent)? onRowDoubleTap;
   final Function(PlutoGridOnChangedEvent)? onEdit;
   final Function(bool)? onFocusChange;
-  final Function(DataGridMenuItem, int)? onContextMenuClick;
+  final Function(DataGridMenuItem,int)? onContextMenuClick;
   final List? hideKeys;
   final Function(PlutoGridOnSelectedEvent)? onSelected;
   final Function(PlutoGridOnRowCheckedEvent)? onRowCheck;
@@ -114,7 +116,8 @@ class DataGridFromMap extends StatelessWidget {
                               : key.toString().pascalCaseToNormal()
                       : key.toString().pascalCaseToNormal()
                   : key.toString(),
-              enableRowChecked: (checkRow == true && key == checkRowKey) ? true : false,
+              enableRowChecked:
+                  (checkRow == true && key == checkRowKey) ? true : false,
               renderer: ((rendererContext) {
                 if (actionIconKey != null && key == actionIconKey) {
                   return GestureDetector(
@@ -126,29 +129,17 @@ class DataGridFromMap extends StatelessWidget {
                       actionOnPress!(rendererContext.rowIdx);
                     },
                   );
-                  // if () {
-                  // } else {
-                  //   return GestureDetector(
-                  //     onSecondaryTapDown: (detail) {
-                  //       DataGridMenu().showGridMenu(
-                  //           rendererContext.stateManager, detail, context);
-                  //     },
-                  //     child: Text(
-                  //       rendererContext.cell.value.toString(),
-                  //       style: TextStyle(
-                  //         fontSize: SizeDefine.columnTitleFontSize,
-                  //       ),
-                  //     ),
-                  //   );
-                  // }
                 } else {
                   return GestureDetector(
                     onSecondaryTapDown: (detail) {
                       if (onContextMenuClick == null) {
                         DataGridMenu().showGridMenu(rendererContext.stateManager, detail, context, exportFileName: exportFileName);
                       } else {
-                        DataGridMenu().showGridCustomMenu(rendererContext.stateManager, detail, context,
-                            exportFileName: exportFileName, onPressedClick: onContextMenuClick, plutoContext: rendererContext);
+                        DataGridMenu().showGridCustomMenu(
+                            rendererContext.stateManager, detail, context,
+                            exportFileName: exportFileName,
+                            onPressedClick: onContextMenuClick,
+                            plutoContext: rendererContext);
                       }
                     },
                     child: Text(
@@ -165,7 +156,7 @@ class DataGridFromMap extends StatelessWidget {
               enableEditingMode: editKeys != null && editKeys!.contains(key),
               enableDropToResize: true,
               enableContextMenu: false,
-              minWidth: Utils.getColumnSize(
+              width: Utils.getColumnSize(
                 key: key,
                 value: mapData[0][key].toString(),
               ),
@@ -188,7 +179,8 @@ class DataGridFromMap extends StatelessWidget {
                     ? "FPC Caption"
                     : key.toString().pascalCaseToNormal()
                 : key,
-            enableRowChecked: (checkRow == true && key == checkRowKey) ? true : false,
+            enableRowChecked:
+                (checkRow == true && key == checkRowKey) ? true : false,
             renderer: ((rendererContext) {
               if (actionIconKey != null) {
                 if (key == actionIconKey) {
@@ -206,7 +198,9 @@ class DataGridFromMap extends StatelessWidget {
                   return GestureDetector(
                     onSecondaryTapDown: (detail) {
                       if (onContextMenuClick == null) {
-                        DataGridMenu().showGridMenu(rendererContext.stateManager, detail, context, exportFileName: exportFileName);
+                        DataGridMenu().showGridMenu(
+                            rendererContext.stateManager, detail, context,
+                            exportFileName: exportFileName);
                       } else {
                         DataGridMenu().showGridCustomMenu(rendererContext.stateManager, detail, context,
                             exportFileName: exportFileName, onPressedClick: onContextMenuClick, plutoContext: rendererContext);
@@ -220,14 +214,88 @@ class DataGridFromMap extends StatelessWidget {
                     ),
                   );
                 }
+              } else if (GetInstance()
+                      .isRegistered<TransmissionLogController>() &&
+                  Get.find<TransmissionLogController>().tsListData != null &&
+                  ((Get.find<TransmissionLogController>().tsListData?.length ??
+                          0) >
+                      0)) {
+                bool isColorRed = false;
+                int intPromoCap =
+                    Get.find<TransmissionLogController>().tsPromoCap.value;
+                int intCommercialCap =
+                    Get.find<TransmissionLogController>().tsCommercialCap.value;
+                if (key == "promoDuration") {
+                  if (num.tryParse(rendererContext
+                              .row.cells["promoDuration"]?.value
+                              .toString() ??
+                          "0")! >
+                      intPromoCap / 60.0) {
+                    isColorRed = true;
+                  }
+                }
+                if (key == "commercialduration") {
+                  if (num.tryParse(rendererContext
+                              .row.cells["commercialduration"]?.value
+                              .toString() ??
+                          "0")! >
+                      intCommercialCap / 60.0) {
+                    isColorRed = true;
+                  }
+                }
+                if (key == "totaladd") {
+                  if (num.tryParse(rendererContext.row.cells["totaladd"]?.value
+                              .toString() ??
+                          "0")! >
+                      (intCommercialCap + intPromoCap) / 60.0) {
+                    isColorRed = true;
+                  }
+                }
+                if (key == "Commercial & Promo") {
+                  if (num.tryParse(rendererContext
+                              .row.cells["Commercial & Promo"]?.value
+                              .toString() ??
+                          "0")! >
+                      (intCommercialCap + intPromoCap) / 60.0) {
+                    isColorRed = true;
+                  }
+                }
+                return Container(
+                  height: 25,
+                  padding: EdgeInsets.only(
+                    left: 6,
+                  ),
+                  alignment: Alignment.centerLeft,
+                  color: isColorRed ? Colors.red : null,
+                  // color: (key == "epsNo" || key == "tapeid" || key == "status") ? ColorData.cellColor(rendererContext.row.cells[key]?.value, key) : null,
+                  child: GestureDetector(
+                    onSecondaryTapDown: (detail) {
+                      DataGridMenu().showGridMenu(
+                          rendererContext.stateManager, detail, context);
+                    },
+                    child: Text(
+                      rendererContext.cell.value.toString(),
+                      style: TextStyle(
+                          fontSize: SizeDefine.columnTitleFontSize,
+                          fontWeight: rendererContext
+                                      .row.cells["modifed"]?.value
+                                      .toString()
+                                      .toLowerCase() ==
+                                  "y"
+                              ? FontWeight.bold
+                              : FontWeight.normal),
+                    ),
+                  ),
+                );
               } else {
                 return GestureDetector(
                   onSecondaryTapDown: (detail) {
-                    if (onContextMenuClick == null) {
+                    if(onContextMenuClick==null) {
                       DataGridMenu().showGridMenu(rendererContext.stateManager, detail, context, exportFileName: exportFileName);
-                    } else {
-                      DataGridMenu().showGridCustomMenu(rendererContext.stateManager, detail, context,
-                          exportFileName: exportFileName, onPressedClick: onContextMenuClick, plutoContext: rendererContext);
+                    }else {
+                      DataGridMenu().showGridCustomMenu(
+                          rendererContext.stateManager, detail, context,
+                          exportFileName: exportFileName,onPressedClick: onContextMenuClick,plutoContext: rendererContext);
                     }
                   },
                   child: Text(
@@ -244,7 +312,7 @@ class DataGridFromMap extends StatelessWidget {
             enableEditingMode: editKeys != null && editKeys!.contains(key),
             enableDropToResize: true,
             enableContextMenu: false,
-            minWidth: Utils.getColumnSize(key: key, value: mapData[0][key]),
+            width: Utils.getColumnSize(key: key, value: mapData[0][key]),
             enableAutoEditing: false,
             hide: showonly == null
                 ? (hideKeys != null && hideKeys!.contains(key)) ||
@@ -397,6 +465,7 @@ class DataGridFromMap3 extends StatelessWidget {
   final void Function(String columnName)? onColumnHeaderDoubleTap;
   PlutoColumnSort sort;
   FocusNode? focusNode;
+
   @override
   Widget build(BuildContext context) {
     List<PlutoColumn> segColumn = [];

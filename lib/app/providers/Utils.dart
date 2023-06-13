@@ -378,7 +378,7 @@ class Utils {
       } else if (value is num || num.tryParse(value) != null) {
         return 45;
       } else if (key.toLowerCase().contains("date")) {
-        return 100;
+        return 45;
       }
     } catch (e) {
       print("problem in setting width $e");
