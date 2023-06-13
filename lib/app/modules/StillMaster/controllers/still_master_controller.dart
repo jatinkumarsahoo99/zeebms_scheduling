@@ -337,75 +337,78 @@ class StillMasterController extends GetxController {
   }
 
   retrievRecord({required String tapeid, required String segNo, required String locationCode, required String channelCode}) async {
-    await Get.find<ConnectorControl>().GETMETHODCALL(
-      api: ApiFactory.STILL_MASTER_GET_RETRIVE_DATA(locationCode, channelCode, segNo, tapeid),
-      fun: (resp) {
-        if (resp != null && resp['getRecord'] != null && (resp['getRecord'] is List<dynamic>) && (resp['getRecord'] as List<dynamic>).isNotEmpty) {
-          var map = resp['getRecord'][0];
-          if (map['stillCode'] != null) {
-            strCode = map['stillCode'];
-          }
-          if (map['stillDuration'] != null) {
-            duration.value = Utils.convertToTimeFromDouble(value: map['stillDuration']);
-          }
-          if (map['stillCaption'] != null) {
-            txCaptionTC.text = map['stillCaption'];
-          }
-          if (map['locationcode'] != null) {
-            var tempLoc = locationList.firstWhereOrNull((element) => element.key == map['locationcode']);
-            if (tempLoc != null) {
-              selectedLocation = tempLoc;
+    await Get.find<ConnectorControl>().POSTMETHOD(
+        api: ApiFactory.STILL_MASTER_GET_RETRIVE_DATA,
+        fun: (resp) {
+          if (resp != null && resp['getRecord'] != null && (resp['getRecord'] is List<dynamic>) && (resp['getRecord'] as List<dynamic>).isNotEmpty) {
+            var map = resp['getRecord'][0];
+            if (map['stillCode'] != null) {
+              strCode = map['stillCode'];
+            }
+            if (map['stillDuration'] != null) {
+              duration.value = Utils.convertToTimeFromDouble(value: map['stillDuration']);
+            }
+            if (map['stillCaption'] != null) {
+              txCaptionTC.text = map['stillCaption'];
+            }
+            if (map['locationcode'] != null) {
+              var tempLoc = locationList.firstWhereOrNull((element) => element.key == map['locationcode']);
+              if (tempLoc != null) {
+                selectedLocation = tempLoc;
+                locationList.refresh();
+              }
+            }
+            if (map['channelcode'] != null) {
+              var tempChannel = channelList.firstWhereOrNull((element) => element.key == map['channelcode']);
+              if (tempChannel != null) {
+                selectedChannel = tempChannel;
+                channelList.refresh();
+              }
+            }
+            if (map['exportTapeCode'] != null) {
+              tapIDTC.text = map['exportTapeCode'];
+            }
+            strTapeID = tapIDTC.text;
+            controllsEnabled.value = false;
+            if (map['exportTapeCaption'] != null) {
+              if (map['exportTapeCaption'].toString().contains("S/")) {
+                handleChangeInRadio("Bumper");
+                txCaptionTC.text = map['exportTapeCaption'].toString().split("/")[1];
+              } else if (map['exportTapeCaption'].toString().contains("OE/")) {
+                handleChangeInRadio("Opening");
+                txCaptionTC.text = map['exportTapeCaption'].toString().split("/")[1];
+              } else if (map['exportTapeCaption'].toString().contains("CE/")) {
+                handleChangeInRadio("Closing");
+                txCaptionTC.text = map['exportTapeCaption'].toString().split("/")[1];
+              }
+            }
+
+            if (map['programCode'] != null && map['programName'] != null) {
+              selectedProgram = DropDownValue(key: map['programCode'].toString(), value: map['programName'].toString());
               locationList.refresh();
             }
-          }
-          if (map['channelcode'] != null) {
-            var tempChannel = channelList.firstWhereOrNull((element) => element.key == map['channelcode']);
-            if (tempChannel != null) {
-              selectedChannel = tempChannel;
-              channelList.refresh();
+            if (map['houseId'] != null) {
+              houseIDTC.text = map['houseId'].toString();
+            }
+            strHouseID = houseIDTC.text;
+            if (map['segmentNumber'] != null) {
+              segTC.text = map['segmentNumber'].toString();
+            }
+            if (map['eom'] != null) {
+              eomTC.text = map[''];
+            }
+            if (map['som'] != null) {
+              somTC.text = map[''];
+            }
+            if (map['killDate'] != null) {
+              upToDateTC.text = DateFormat("dd-MM-yyyy").format(DateFormat("yyyy-MM-ddThh:mm:ss").parse(map['killDate'].toString()));
             }
           }
-          if (map['exportTapeCode'] != null) {
-            tapIDTC.text = map['exportTapeCode'];
-          }
-          strTapeID = tapIDTC.text;
-          controllsEnabled.value = false;
-          if (map['exportTapeCaption'] != null) {
-            if (map['exportTapeCaption'].toString().contains("S/")) {
-              handleChangeInRadio("Bumper");
-              txCaptionTC.text = map['exportTapeCaption'].toString().split("/")[1];
-            } else if (map['exportTapeCaption'].toString().contains("OE/")) {
-              handleChangeInRadio("Opening");
-              txCaptionTC.text = map['exportTapeCaption'].toString().split("/")[1];
-            } else if (map['exportTapeCaption'].toString().contains("CE/")) {
-              handleChangeInRadio("Closing");
-              txCaptionTC.text = map['exportTapeCaption'].toString().split("/")[1];
-            }
-          }
-
-          if (map['programCode'] != null && map['programName'] != null) {
-            selectedProgram = DropDownValue(key: map['programCode'].toString(), value: map['programName'].toString());
-            locationList.refresh();
-          }
-          if (map['houseId'] != null) {
-            houseIDTC.text = map['houseId'].toString();
-          }
-          strHouseID = houseIDTC.text;
-          if (map['segmentNumber'] != null) {
-            segTC.text = map['segmentNumber'].toString();
-          }
-          if (map['eom'] != null) {
-            eomTC.text = map[''];
-          }
-          if (map['som'] != null) {
-            somTC.text = map[''];
-          }
-          if (map['killDate'] != null) {
-            upToDateTC.text = DateFormat("dd-MM-yyyy").format(DateFormat("yyyy-MM-ddThh:mm:ss").parse(map['killDate'].toString()));
-          }
-        }
-      },
-    );
+        },
+        json: {
+          "segmentNumber": num.parse(segNo),
+          "exportTapeCode": tapeid,
+        });
   }
 
   Future<bool> getProgramPickerData() async {

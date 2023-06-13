@@ -91,15 +91,16 @@ class SegementsResponse {
 
   Map<String, dynamic> toJson({bool fromSave = false}) {
     final Map<String, dynamic> data = new Map<String, dynamic>();
+
     if (fromSave) {
       data['breakNo'] = breakNo;
-      data['eventCaption'] = eventCaption;
+      data['eventCaption'] = "";
       data['telecastTime'] = telecastTime;
-      data['eventCode'] = eventCode;
+      data['eventCode'] = eventCode == null ? "" : eventCode.toString();
+      data['rowNo'] = rowNo == null ? "" : rowNo.toString();
       // data['eventDuration'] = eventDuration;
       // data['houseId'] = houseId;
       // data['eventSchedulingCode'] = eventSchedulingCode;
-      data['rowNo'] = rowNo;
     } else {
       data['eventCaption'] = eventCaption;
       data['breakNo'] = breakNo;
