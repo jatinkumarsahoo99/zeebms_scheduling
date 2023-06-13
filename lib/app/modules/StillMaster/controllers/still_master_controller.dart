@@ -271,8 +271,8 @@ class StillMasterController extends GetxController {
       Get.find<ConnectorControl>().POSTMETHOD(
         api: ApiFactory.STILL_MASTER_TAPE_HOUSE_ID_LEAVE,
         fun: (resp) {
-          if (resp != null && resp is Map<String, dynamic> && resp['tapeid'] != null && resp['tapeid']['eventName'] != null) {
-            LoadingDialog.showErrorDialog(resp['tapeid']['eventName'].toString(), callback: () {
+          if (resp != null && resp is Map<String, dynamic> && resp['houseid'] != null && resp['houseid']['eventName'] != null) {
+            LoadingDialog.showErrorDialog(resp['houseid']['eventName'].toString(), callback: () {
               houseIDFN.requestFocus();
             });
             if (strCode.isNotEmpty) {
@@ -281,7 +281,7 @@ class StillMasterController extends GetxController {
           }
         },
         json: {
-          "exportTapeCode": tapIDTC.text,
+          "exportTapeCode": "",
           "segmentNumber": segTC.text,
           "code": strCode,
           "houseID": houseIDTC.text,
