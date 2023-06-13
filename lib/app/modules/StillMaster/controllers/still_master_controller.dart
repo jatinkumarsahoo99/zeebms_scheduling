@@ -269,7 +269,7 @@ class StillMasterController extends GetxController {
   houseIDLeave() {
     if (houseIDTC.text.isNotEmpty) {
       Get.find<ConnectorControl>().POSTMETHOD(
-        api: ApiFactory.STILL_MASTER_TAPE_SEG_NO_LEAVE,
+        api: ApiFactory.STILL_MASTER_TAPE_HOUSE_ID_LEAVE,
         fun: (resp) {
           if (resp != null && resp is Map<String, dynamic> && resp['tapeid'] != null && resp['tapeid']['eventName'] != null) {
             LoadingDialog.showErrorDialog(resp['tapeid']['eventName'].toString(), callback: () {
@@ -363,6 +363,14 @@ class StillMasterController extends GetxController {
               if (tempChannel != null) {
                 selectedChannel = tempChannel;
                 channelList.refresh();
+              } else {
+                getChannels(selectedLocation).then((value) {
+                  var tempChannel = channelList.firstWhereOrNull((element) => element.key == map['channelcode']);
+                  if (tempChannel != null) {
+                    selectedChannel = tempChannel;
+                    channelList.refresh();
+                  }
+                });
               }
             }
             if (map['exportTapeCode'] != null) {
@@ -472,14 +480,14 @@ class StillMasterController extends GetxController {
     initialAPI();
   }
 
-  getChannels(DropDownValue? val) {
+  Future<void> getChannels(DropDownValue? val) async {
     if (val == null) {
       LoadingDialog.showErrorDialog("Please select location.");
       return;
     }
     selectedLocation = val;
     LoadingDialog.call();
-    Get.find<ConnectorControl>().GETMETHODCALL(
+    await Get.find<ConnectorControl>().GETMETHODCALL(
       api: ApiFactory.STILL_MASTER_GET_CHANNELS(selectedLocation!.key!),
       fun: (resp) {
         closeDialog();

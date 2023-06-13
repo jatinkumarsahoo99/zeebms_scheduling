@@ -96,7 +96,7 @@ class SegementsResponse {
       data['breakNo'] = breakNo;
       data['eventCaption'] = "";
       data['telecastTime'] = telecastTime;
-      data['eventCode'] = eventCode == null ? "" : eventCode.toString();
+      data['eventCode'] = (eventCode == null || eventCode == 0) ? "" : eventCode.toString();
       data['rowNo'] = rowNo == null ? "" : rowNo.toString();
       // data['eventDuration'] = eventDuration;
       // data['houseId'] = houseId;

@@ -123,7 +123,7 @@ class SlideController extends GetxController {
       api: ApiFactory.SLIDE_SAVE,
       fun: (resp) {
         closeDialog();
-        if (resp != null && resp.toString().contains("Record saved successfully")) {
+        if (resp != null && resp is Map<String, dynamic> && resp['postsave'] != null && resp['postsave'].toString().contains("Records are updated")) {
           LoadingDialog.callDataSaved(
               msg: resp.toString(),
               callback: () {

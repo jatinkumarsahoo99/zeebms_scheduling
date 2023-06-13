@@ -65,7 +65,9 @@ class EventSecondaryController extends GetxController {
     left2ndDT.clear();
     secCaptionTC.clear();
     right3rdDT.clear();
-    locationFN.requestFocus();
+    Future.delayed(Duration(milliseconds: 200)).then((value) {
+      locationFN.requestFocus();
+    });
   }
 
   @override
@@ -344,7 +346,7 @@ class EventSecondaryController extends GetxController {
       api: ApiFactory.EVENT_SAVE,
       fun: (resp) {
         closeDialog();
-        if (resp != null && resp.toString().contains("Record saved successfully.")) {
+        if (resp != null && resp.toString().contains("Record saved")) {
           LoadingDialog.callDataSaved(
               msg: resp.toString(),
               callback: () {
