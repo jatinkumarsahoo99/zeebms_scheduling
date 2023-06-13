@@ -293,6 +293,27 @@ class PlutoRow {
 
     return json;
   }
+
+  Map<String, dynamic> toJson1({
+    bool includeChildren = true,
+    String childrenField = 'children',
+    List<String>? stringConverterKeys
+  }) {
+    final json = cells.map((key, value) => MapEntry(
+        key, (stringConverterKeys??[]).contains(key) ? value.value.toString() : value.value));
+
+    if (!includeChildren || !type.isGroup) return json;
+
+    final List<Map<String, dynamic>> children = type.group.children
+        .map(
+          (e) => e.toJson(childrenField: childrenField),
+        )
+        .toList();
+
+    json[childrenField] = children;
+
+    return json;
+  }
 }
 
 enum PlutoRowState {
