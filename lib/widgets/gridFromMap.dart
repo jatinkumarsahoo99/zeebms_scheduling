@@ -62,7 +62,7 @@ class DataGridFromMap extends StatelessWidget {
   final Function(PlutoGridOnRowDoubleTapEvent)? onRowDoubleTap;
   final Function(PlutoGridOnChangedEvent)? onEdit;
   final Function(bool)? onFocusChange;
-  final Function(DataGridMenuItem,int)? onContextMenuClick;
+  final Function(DataGridMenuItem, int)? onContextMenuClick;
   final List? hideKeys;
   final Function(PlutoGridOnSelectedEvent)? onSelected;
   final Function(PlutoGridOnRowCheckedEvent)? onRowCheck;
@@ -96,9 +96,7 @@ class DataGridFromMap extends StatelessWidget {
           enableContextMenu: false,
           width: 25,
           enableAutoEditing: false,
-          hide: hideCode! &&
-              key.toString().toLowerCase() != "hourcode" &&
-              key.toString().toLowerCase().contains("code"),
+          hide: hideCode! && key.toString().toLowerCase() != "hourcode" && key.toString().toLowerCase().contains("code"),
           enableColumnDrag: false,
           field: "no",
           type: PlutoColumnType.text()));
@@ -147,14 +145,10 @@ class DataGridFromMap extends StatelessWidget {
                   return GestureDetector(
                     onSecondaryTapDown: (detail) {
                       if (onContextMenuClick == null) {
-                        DataGridMenu().showGridMenu(
-                            rendererContext.stateManager, detail, context,
-                            exportFileName: exportFileName);
+                        DataGridMenu().showGridMenu(rendererContext.stateManager, detail, context, exportFileName: exportFileName);
                       } else {
-                        DataGridMenu().showGridCustomMenu(
-                            rendererContext.stateManager, detail, context,
-                            exportFileName: exportFileName,
-                            onPressedClick: onContextMenuClick,plutoContext: rendererContext);
+                        DataGridMenu().showGridCustomMenu(rendererContext.stateManager, detail, context,
+                            exportFileName: exportFileName, onPressedClick: onContextMenuClick, plutoContext: rendererContext);
                       }
                     },
                     child: Text(
@@ -171,7 +165,7 @@ class DataGridFromMap extends StatelessWidget {
               enableEditingMode: editKeys != null && editKeys!.contains(key),
               enableDropToResize: true,
               enableContextMenu: false,
-              width: Utils.getColumnSize(
+              minWidth: Utils.getColumnSize(
                 key: key,
                 value: mapData[0][key].toString(),
               ),
@@ -212,14 +206,10 @@ class DataGridFromMap extends StatelessWidget {
                   return GestureDetector(
                     onSecondaryTapDown: (detail) {
                       if (onContextMenuClick == null) {
-                        DataGridMenu().showGridMenu(
-                            rendererContext.stateManager, detail, context,
-                            exportFileName: exportFileName);
+                        DataGridMenu().showGridMenu(rendererContext.stateManager, detail, context, exportFileName: exportFileName);
                       } else {
-                        DataGridMenu().showGridCustomMenu(
-                            rendererContext.stateManager, detail, context,
-                            exportFileName: exportFileName,
-                            onPressedClick: onContextMenuClick,plutoContext: rendererContext);
+                        DataGridMenu().showGridCustomMenu(rendererContext.stateManager, detail, context,
+                            exportFileName: exportFileName, onPressedClick: onContextMenuClick, plutoContext: rendererContext);
                       }
                     },
                     child: Text(
@@ -233,12 +223,11 @@ class DataGridFromMap extends StatelessWidget {
               } else {
                 return GestureDetector(
                   onSecondaryTapDown: (detail) {
-                    if(onContextMenuClick==null) {
+                    if (onContextMenuClick == null) {
                       DataGridMenu().showGridMenu(rendererContext.stateManager, detail, context, exportFileName: exportFileName);
-                    }else {
-                      DataGridMenu().showGridCustomMenu(
-                          rendererContext.stateManager, detail, context,
-                          exportFileName: exportFileName,onPressedClick: onContextMenuClick,plutoContext: rendererContext);
+                    } else {
+                      DataGridMenu().showGridCustomMenu(rendererContext.stateManager, detail, context,
+                          exportFileName: exportFileName, onPressedClick: onContextMenuClick, plutoContext: rendererContext);
                     }
                   },
                   child: Text(
@@ -255,7 +244,7 @@ class DataGridFromMap extends StatelessWidget {
             enableEditingMode: editKeys != null && editKeys!.contains(key),
             enableDropToResize: true,
             enableContextMenu: false,
-            width: Utils.getColumnSize(key: key, value: mapData[0][key]),
+            minWidth: Utils.getColumnSize(key: key, value: mapData[0][key]),
             enableAutoEditing: false,
             hide: showonly == null
                 ? (hideKeys != null && hideKeys!.contains(key)) ||

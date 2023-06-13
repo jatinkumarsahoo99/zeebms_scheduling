@@ -456,7 +456,7 @@ class ApiFactory {
   ///
   ////////////////////////////// SLIDE-API-START  ////////////////////////////////////////////
   static String get SLIDE_GET_LOCATION => "$BASE_URL/api/ScheduleSlides/GetSlideSchedulingLoad";
-  static String get SLIDE_SAVE => "$BASE_URL/api/ScheduleSecondayEvents/EventSave";
+  static String get SLIDE_SAVE => "$BASE_URL/api/ScheduleSlides/PostSave";
   static String get SLIDE_GET_DATA => "$BASE_URL/api/ScheduleSlides/GetLstDailyFPC";
   static String SLIDE_GET_CHANNELS(String lc) => "$BASE_URL/api/ScheduleSlides/GetLocationLeave?LocationCode=$lc";
   ////////////////////////////// SLIDE-API-END  //////////////////////////////////////////////
@@ -483,8 +483,7 @@ class ApiFactory {
   // static String get FINAL_REPORT_BT_GET_DATA => "$BASE_URL/api/FinalAuditReportBT/DateLeave";
   static String STILL_MASTER_GET_CHANNELS(String lc) => "$BASE_URL/api/StillMaster/ListMyChannels?LocationCode=$lc";
   static String STILL_MASTER_GET_PROGRAM_DATA(String lc, String cc) => "$BASE_URL/api/StillMaster/GetProgramPicker?locationcode=$lc&channelcode=$cc";
-  static String STILL_MASTER_GET_RETRIVE_DATA(String lc, String cc, String sn, String etc) =>
-      "$BASE_URL/api/StillMaster/GetRetrieveRecord?locationcode=$lc&channelcode=$cc&SegmentNumber=$sn&ExportTapeCode=$etc";
+  static String get STILL_MASTER_GET_RETRIVE_DATA => "$BASE_URL/api/StillMaster/GetRetrieveRecord";
   static String get STILL_MASTER_PROGRAM_SEARCH => "$BASE_URL/api/StillMaster/GetSourceProgramSearch?TextSourceProgram=";
   //////////////////////////// STILL-MASTER-API-END  //////////////////////////////////////////////
   ///

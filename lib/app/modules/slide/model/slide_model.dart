@@ -42,9 +42,9 @@ class SlideModel {
   Map<String, dynamic> toJson({bool fromSave = false}) {
     final Map<String, dynamic> data = <String, dynamic>{};
     if (fromSave) {
-      data['fpcTime'] = fpcTime;
+      data['fpcTime'] = "2023-03-28T$fpcTime";
       data['programCode'] = programCode;
-      data['programName'] = programName;
+      // data['programName'] = programName;
       data['stationIdCheck'] = stationIdCheck;
       data['presentsCheck'] = presentsCheck;
       data['presentationCheck'] = presentationCheck;
