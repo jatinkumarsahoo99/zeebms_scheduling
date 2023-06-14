@@ -221,7 +221,7 @@ class ApiFactory {
 
   static String FILLER_LOCATION = "$BASE_URL/api/FillerScheduling/GetLocations";
 
-  static String FILLER_CHANNEL(locationCode) => "$BASE_URL/api/FillerScheduling/GetChannels/$locationCode";
+  static String FILLER_CHANNEL(locationCode) => "$BASE_URL/api/FillerScheduling/GetChannels?LocationCode=$locationCode";
 
   static String FILLER_CAPTION = "$BASE_URL/api/FillerScheduling/GetFillerCaption/";
   static String get FILLER_IMPORT_EXCEL => "$BASE_URL/api/FillerScheduling/ImportFillerExcel";
@@ -348,26 +348,28 @@ class ApiFactory {
       "$BASE_URL/api/Transmissionlog/GetUpdatedLogClick?Locationcode=$locId&channelcode=$channelId&Date=$telecastDt&standbyLog=$standBy";
   static String TRANSMISSION_LOG_VERIFY_CLICK(String locId, String channelId, String telecastDt, bool standBy) =>
       "$BASE_URL/api/Transmissionlog/GetbtnVerifyClick?locationcode=$locId&channelcode=$channelId&txtDate=$telecastDt&chkStandBy=$standBy";
-  static String TRANSMISSION_LOG_POST_VERIFY() =>
-      "$BASE_URL/api/Transmissionlog/PostVerifyTime";
-  static String TRANSMISSION_LOG_SEARCH_INSERT(String locId, String channelId, String telecastDt, bool isMine, String eventType, String txId, String caption) =>
+  static String TRANSMISSION_LOG_POST_VERIFY() => "$BASE_URL/api/Transmissionlog/PostVerifyTime";
+  static String TRANSMISSION_LOG_SEARCH_INSERT(
+          String locId, String channelId, String telecastDt, bool isMine, String eventType, String txId, String caption) =>
       "$BASE_URL/api/Transmissionlog/GetFastInsertsearchClick?locationcode=$locId&channelcode=$channelId&telecastdate=$telecastDt&mine=$isMine&eventType=$eventType&TxID=$txId&Caption=$caption";
- static String TRANSMISSION_LOG_BUTTON_VERIFY(String locId, String channelId, String telecastDt, bool isStandBy) =>
+  static String TRANSMISSION_LOG_BUTTON_VERIFY(String locId, String channelId, String telecastDt, bool isStandBy) =>
       "$BASE_URL/api/Transmissionlog/GetbtnVerifyClick?locationcode=$locId&channelcode=$channelId&txtDate=$telecastDt&chkStandBy=$isStandBy";
- static String TRANSMISSION_LOG_BUTTON_DETAILS_VERIFY(String locId, String channelId, String telecastDt) =>
+  static String TRANSMISSION_LOG_BUTTON_DETAILS_VERIFY(String locId, String channelId, String telecastDt) =>
       "$BASE_URL/api/Transmissionlog/GetbtnDetailClick?locationcode=$locId&channelcode=$channelId&txtDate=$telecastDt";
-static String TRANSMISSION_LOG_EVENT_LIST() =>
-      "$BASE_URL/api/Transmissionlog/GetLoadFastInsertEventType";
-static String TRANSMISSION_LOG_POST_PIVOT_LOG() =>
-      "$BASE_URL/api/Transmissionlog/PostPivotLog";
-static String TRANSMISSION_LOG_POST_TS() =>
-      "$BASE_URL/api/Transmissionlog/PostTsCalc";
-static String TRANSMISSION_LOG_LAST_SAVEDLOG(String locId,String chnlId,String txtDt,) =>
+  static String TRANSMISSION_LOG_EVENT_LIST() => "$BASE_URL/api/Transmissionlog/GetLoadFastInsertEventType";
+  static String TRANSMISSION_LOG_POST_PIVOT_LOG() => "$BASE_URL/api/Transmissionlog/PostPivotLog";
+  static String TRANSMISSION_LOG_POST_TS() => "$BASE_URL/api/Transmissionlog/PostTsCalc";
+  static String TRANSMISSION_LOG_LAST_SAVEDLOG(
+    String locId,
+    String chnlId,
+    String txtDt,
+  ) =>
       "$BASE_URL/api/Transmissionlog/GetbtnLastSavedLogClick?locationcode=$locId&channelcode=$chnlId&txtDate=$txtDt";
-static String TRANSMISSION_LOG_TS_GET_HIGHLIGHT(String locId,String chnlId,) =>
+  static String TRANSMISSION_LOG_TS_GET_HIGHLIGHT(
+    String locId,
+    String chnlId,
+  ) =>
       "$BASE_URL/api/Transmissionlog/GetHighlightTSGrid?Locationcode=$locId&ChannelCode=$chnlId";
-
-
 
   /////////////////////////// RO DISTRIBUTION START/////////////////////
   static String get RO_DISTRIBUTION_GET_LOCATION => "$BASE_URL/api/RosDistribution/GetRosDistribution";
@@ -428,6 +430,7 @@ static String TRANSMISSION_LOG_TS_GET_HIGHLIGHT(String locId,String chnlId,) =>
   ///
   ////////////////////////////// PROMO-API-START  ////////////////////////////////////////////
   static String get PROMOS_GET_LOCATION => "$BASE_URL/api/PromoScheduling/GetLocations";
+  static String get PROMOS_SAVE_AUTO_PROMO => "$BASE_URL/api/PromoScheduling/SaveAutoPromo";
   static String get PROMOS_SAVE => "$BASE_URL/api/PromoScheduling/SavePromoScheduling";
   static String get PROMOS_IMPORT_EXCEL_VALIDATE => "$BASE_URL/api/PromoScheduling/ImportExcelValidate";
   static String get PROMOS_IMPORT_EXCEL => "$BASE_URL/api/PromoScheduling/ImportExcel";
