@@ -395,6 +395,9 @@ class TransmissionLogView extends GetView<TransmissionLogController> {
                                 case DataGridMenuItem.fixedEvent:
                                   controller.fixedEvent(index);
                                   break;
+                                case DataGridMenuItem.rescheduleSpots:
+                                  showRescheduleDialog(Get.context);
+                                  break;
                                 case DataGridMenuItem.paste:
                                   controller.paste(index);
                                   /*if (controller.lastSelectOption != null &&
@@ -571,6 +574,9 @@ class TransmissionLogView extends GetView<TransmissionLogController> {
           showCommercialDialog(Get.context, model);
         });
         break;
+      case "Next Time":
+        controller.selectNextProgramClockHour();
+        break;
       case "Updated":
         controller.getUpdateClick();
         break;
@@ -580,7 +586,9 @@ class TransmissionLogView extends GetView<TransmissionLogController> {
         });
         break;
       case "Segments":
+        controller.getEventListForInsert(function: () {
         showSegmentDialog(Get.context);
+        });
         break;
       case "Change":
         controller.setChangeTime(function: () {
@@ -1189,11 +1197,13 @@ class TransmissionLogView extends GetView<TransmissionLogController> {
                             // selectProgram = value;
                             // await controller.getDataAfterProgLoad(controller.selectedLocationId.text, controller.selectedChannelId.text, value!.key);
                           },
-                          url: ApiFactory.OPERATIONAL_FPC_PROGRAM_SEARCH,
+                          url: ApiFactory
+                              .TRANSMISSION_LOG_SEGMENT_PROGRAM_SEARCH(),
                           width: MediaQuery.of(context).size.width * .2,
                           // selectedValue: selectProgram,
                           widthofDialog: 350,
                           dialogHeight: Get.height * .65,
+                              parseKeyForKey: "ProgramCode",parseKeyForValue: "ProgramName",
                         ),
                       ),
                       InputFields.numbers(
@@ -1202,9 +1212,7 @@ class TransmissionLogView extends GetView<TransmissionLogController> {
                           // episodeNo.value = int.parse(val);
                           // controller.getTapeID(selectProgram!.key!, int.parse(val));
                         },
-                        controller: TextEditingController(
-                            // text: episodeNo.value.toString(),
-                            ),
+                        controller: controller.txtSegment_epNo..text = "0",
                         isNegativeReq: false,
                         width: 0.12,
                       ),
@@ -1226,17 +1234,17 @@ class TransmissionLogView extends GetView<TransmissionLogController> {
                       ),
                       Obx(
                         () => DropDownField.formDropDown1WidthMap(
-                          controller.locations.value,
+                          controller.listEventsinInsert.value,
                           (value) {
-                            controller.selectLocation = value;
+                            controller.selectTapeSegmentDialog = value;
                             // controller.selectedLocationId.text = value.key!;
                             // controller.selectedLocationName.text = value.value!;
                             // controller.getChannelsBasedOnLocation(value.key!);
                           },
                           "Tape",
                           0.12,
-                          isEnable: controller.isEnable.value,
-                          selected: controller.selectLocation,
+                          // isEnable: controller.isEnable.value,
+                          selected: controller.selectTapeSegmentDialog,
                           autoFocus: true,
                           dialogWidth: 330,
                           dialogHeight: Get.height * .7,
@@ -1419,6 +1427,99 @@ class TransmissionLogView extends GetView<TransmissionLogController> {
         callback: () {
           Navigator.pop(context);
         },
+      ),
+      radius: 10,
+    );
+  }
+
+  showRescheduleDialog(context) {
+    return Get.defaultDialog(
+      barrierDismissible: false,
+      title: "Reschedule Spots",
+      titleStyle: const TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+      titlePadding: const EdgeInsets.only(top: 10),
+      contentPadding: const EdgeInsets.symmetric(horizontal: 10, vertical: 5),
+      content: SingleChildScrollView(
+        child: SizedBox(
+          height: Get.height * 0.28,
+          child: SingleChildScrollView(
+            child: SizedBox(
+              width: Get.width * 0.2,
+              // height: Get.he,
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.center,
+                children: <Widget>[
+                  SizedBox(
+                    height: 10,
+                  ),
+                  InputFields.formFieldDisable(
+                      widthRatio: 0.12,
+                      // onchanged: (value) {},
+                      hintTxt: "Location",
+                      margin: true,
+                      // padLeft: 0,
+                      // isEnable: false,
+                      value: controller.selectLocation?.value ?? ""),
+                  SizedBox(height: 5,),
+                  InputFields.formFieldDisable(
+                      widthRatio: 0.12,
+                      // onchanged: (value) {},
+                      hintTxt: "Channel",
+                      margin: true,
+                      // padLeft: 0,
+                      // isEnable: false,
+                      value: controller.selectChannel?.value ?? ""),
+                  SizedBox(height: 5,),
+                  InputFields.formFieldDisable(
+                      widthRatio: 0.12,
+                      // onchanged: (value) {},
+                      hintTxt: "Telecast Date",
+                      margin: true,
+                      // padLeft: 0,
+                      // isEnable: false,
+                      value: controller.selectedDate.text),
+                  SizedBox(height: 5,),
+                  Padding(
+                    padding: const EdgeInsets.only(left:10.0),
+                    child: DateWithThreeTextField(
+                      title: "Reschedule To",
+                      splitType: "-",
+                      widthRation: 0.12,
+                      // isEnable: controller.isEnable.value,
+                      mainTextController: controller.txtDate_Reschedule,
+                    ),
+                  ),
+                  SizedBox(
+                    height: 5,
+                  ),
+                ],
+              ),
+            ),
+          ),
+        ),
+      ),
+      confirm: Row(
+        mainAxisAlignment: MainAxisAlignment.center,
+        children: [
+          FormButtonWrapper(
+            btnText: "Close",
+            showIcon: false,
+            callback: () {
+              Navigator.pop(context);
+            },
+          ),
+          SizedBox(
+            width: 10,
+          ),
+          FormButtonWrapper(
+            btnText: "Reschedule Spots",
+            showIcon: false,
+            callback: () {
+              controller.btnRescheduleSpots();
+              // Navigator.pop(context);
+            },
+          ),
+        ],
       ),
       radius: 10,
     );

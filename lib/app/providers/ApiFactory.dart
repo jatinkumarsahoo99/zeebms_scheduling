@@ -366,6 +366,10 @@ static String TRANSMISSION_LOG_LAST_SAVEDLOG(String locId,String chnlId,String t
       "$BASE_URL/api/Transmissionlog/GetbtnLastSavedLogClick?locationcode=$locId&channelcode=$chnlId&txtDate=$txtDt";
 static String TRANSMISSION_LOG_TS_GET_HIGHLIGHT(String locId,String chnlId,) =>
       "$BASE_URL/api/Transmissionlog/GetHighlightTSGrid?Locationcode=$locId&ChannelCode=$chnlId";
+static String TRANSMISSION_LOG_SEGMENT_PROGRAM_SEARCH() =>
+      "$BASE_URL/api/Transmissionlog/GetProgramSearch?TextSourceProgram=";
+static String TRANSMISSION_LOG_POST_RESCHEDULE() =>
+      "$BASE_URL/api/Transmissionlog/PostRescheduleSpotsClick";
 
 
 

@@ -37,6 +37,7 @@ class TransmissionLogController extends GetxController {
 
   //input controllers
   DropDownValue? selectLocation;
+  DropDownValue? selectTapeSegmentDialog;
   DropDownValue? selectLocationCopyLog;
   DropDownValue? selectChannel;
   DropDownValue? selectChannelCopyLog;
@@ -48,6 +49,7 @@ class TransmissionLogController extends GetxController {
   PlutoGridStateManager? dgvTimeStateManager;
   PlutoGridStateManager? tblFastInsert;
   InsertSearchModel? inserSearchModel;
+
   // TsModel? tsModel;
   List<dynamic>? tsListData;
 
@@ -76,6 +78,7 @@ class TransmissionLogController extends GetxController {
   TextEditingController segmentFpcTime_ = TextEditingController();
   TextEditingController verifyMinTime = TextEditingController();
   TextEditingController txId_Change = TextEditingController();
+  TextEditingController txtDate_Reschedule = TextEditingController();
   TextEditingController duration_change = TextEditingController()
     ..text = "00:00:00";
   TextEditingController offset_change = TextEditingController()
@@ -84,6 +87,9 @@ class TransmissionLogController extends GetxController {
     ..text = "00:00:00";
   TextEditingController segment_change =
       TextEditingController(); //txtChangeSegment
+  TextEditingController txtSegment_fpctime = TextEditingController();
+  TextEditingController txtSegment_epNo = TextEditingController();
+  DropDownValue? selectTapeSegment;
 
   TransmissionLogModel? transmissionLog;
   PlutoGridMode selectedPlutoGridMode = PlutoGridMode.selectWithOneTap;
@@ -239,12 +245,49 @@ class TransmissionLogController extends GetxController {
               map["restscalc"]["lstOutPutTblTs"] != null &&
               map["restscalc"]["lstOutPutTblTs"].length > 0) {
             // tsModel = TsModel.fromJson(map as Map<String, dynamic>);
-            tsListData=map["restscalc"]["lstOutPutTblTs"];
+            tsListData = map["restscalc"]["lstOutPutTblTs"];
             getInitTsCall();
             // update(['tsList']);
           } else {
             Snack.callError(map.toString());
           }
+        });
+  }
+
+  void btnRescheduleSpots({Function? fun}) {
+    LoadingDialog.call();
+    var postMap = {
+      "locationcode": selectLocation?.key ?? "",
+      "channelcode": selectChannel?.key ?? "",
+      "txtDate": selectedDate.text,
+      "lstBookingDetails": [
+        {
+          "bookingNumber":
+              gridStateManager?.currentRow?.cells["bookingNumber"]?.value,
+          "bookingDetailCode":
+              gridStateManager?.currentRow?.cells["bookingdetailcode"]?.value
+        }
+      ]
+    };
+    Get.find<ConnectorControl>().POSTMETHOD(
+        api: ApiFactory.TRANSMISSION_LOG_POST_RESCHEDULE(),
+        json: postMap,
+        fun: (map) {
+          Get.back();
+          print("Data is>>>>"+map.toString());
+          // print("jsonData"+map.toString());
+         /* if (map is Map &&
+              map.containsKey("restscalc") &&
+              map["restscalc"].containsKey("lstOutPutTblTs") &&
+              map["restscalc"]["lstOutPutTblTs"] != null &&
+              map["restscalc"]["lstOutPutTblTs"].length > 0) {
+            // tsModel = TsModel.fromJson(map as Map<String, dynamic>);
+            tsListData = map["restscalc"]["lstOutPutTblTs"];
+            getInitTsCall();
+            // update(['tsList']);
+          } else {
+            Snack.callError(map.toString());
+          }*/
         });
   }
 
@@ -268,7 +311,7 @@ class TransmissionLogController extends GetxController {
                 Restscalc.fromJson(map as Map<String, dynamic>);
             tsmodel1.restscalc = restscalc;
             tsModel = tsmodel1;*/
-            tsListData=map["lstTraicomplaince"];
+            tsListData = map["lstTraicomplaince"];
             // update(['tsList']);
             getInitTsCall();
           } else {
@@ -289,7 +332,8 @@ class TransmissionLogController extends GetxController {
               map.containsKey("resHighlightTSGrid") &&
               map["resHighlightTSGrid"] != null) {
             tsPromoCap.value = map["resHighlightTSGrid"]["intPromoCap"];
-            tsCommercialCap.value = map["resHighlightTSGrid"]["intCommercialCap"];
+            tsCommercialCap.value =
+                map["resHighlightTSGrid"]["intCommercialCap"];
             update(['tsList']);
           } else {
             Snack.callError(map.toString());
@@ -685,10 +729,8 @@ class TransmissionLogController extends GetxController {
         });
   }
 
-  selectNext_Program_ClockHour(String type) {
-    if (type == null) {
-      type = "fpCtime";
-    }
+  selectNextProgramClockHour() {
+    String type = "fpCtime";
     String strValue = "";
     int intRowIndex = gridStateManager?.currentRowIdx ?? 0;
     bool blnLastRecord = true;
@@ -700,22 +742,28 @@ class TransmissionLogController extends GetxController {
     }
 
     for (int i = intRowIndex; i < (gridStateManager?.rows.length ?? 0); i++) {
-      if (type == "FPCTime") {
-        if (strValue != gridStateManager?.rows[i].cells["FPCTime"]?.value) {
-          // gridStateManager?.rows[i].cells["FPCTime"].selected = true;
-          gridStateManager?.setCurrentCell(
-              gridStateManager?.rows[i].cells["FPCTime"], i);
-          gridStateManager?.currentRow?.cells["FPCTime"] =
-              gridStateManager?.rows[i].cells["FPCTime"]?.value ?? "";
-          // gridStateManager?.firstDisplayedScrollingRowIndex = i - 12;
-          // gridStateManager?.scroll = i - 12;
-          blnLastRecord = false;
-          return;
-        }
+      // if (type == "fpCtime") {
+      if (strValue != gridStateManager?.rows[i].cells["fpCtime"]?.value) {
+        // gridStateManager?.rows[i].cells["FPCTime"].selected = true;
+        gridStateManager?.setCurrentCell(
+            gridStateManager?.rows[i].cells["fpCtime"], i);
+        gridStateManager?.moveScrollByRow(PlutoMoveDirection.down, i);
+        // gridStateManager?.currentRow?.cells["fpCtime"] = gridStateManager?.rows[i].cells["fpCtime"]?.value ?? "";
+        // gridStateManager?.firstDisplayedScrollingRowIndex = i - 12;
+        // gridStateManager?.scroll = i - 12;
+        blnLastRecord = false;
+        return;
       }
+      // }
     }
 
     if (blnLastRecord) {
+      LoadingDialog.recordExists("Reached to last record, Want to start again?",
+          () {
+        gridStateManager?.setCurrentCell(
+            gridStateManager?.rows[0].cells["fpCtime"], 0);
+        gridStateManager?.moveScrollByRow(PlutoMoveDirection.up, 0);
+      });
       // if (msgBox("Reached to last record, Want to start again?", MsgBoxStyle.question + MsgBoxStyle.yesNo, strAlertMessageTitle) == MsgBoxResult.yes) {
       //   gridStateManager?.rows[0].cells["FPCTime"].selected = true;
       //   gridStateManager?.currentCell[""]?.value = gridStateManager?.rows[0].cells["FPCTime"]?.value??'';
@@ -952,8 +1000,10 @@ class TransmissionLogController extends GetxController {
           json: sendData,
           fun: (map) {
             Get.back();
-            if (map is String) {
-              LoadingDialog.callInfoMessage(map.toString());
+            if (map is Map &&
+                map.containsKey("success") &&
+                map["success"] != null) {
+              LoadingDialog.callInfoMessage(map["success"].toString());
             } else {
               LoadingDialog.callInfoMessage("No Data Found");
             }
