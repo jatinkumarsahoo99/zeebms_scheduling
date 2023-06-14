@@ -221,7 +221,7 @@ class ApiFactory {
 
   static String FILLER_LOCATION = "$BASE_URL/api/FillerScheduling/GetLocations";
 
-  static String FILLER_CHANNEL(locationCode) => "$BASE_URL/api/FillerScheduling/GetChannels/$locationCode";
+  static String FILLER_CHANNEL(locationCode) => "$BASE_URL/api/FillerScheduling/GetChannels?LocationCode=$locationCode";
 
   static String FILLER_CAPTION = "$BASE_URL/api/FillerScheduling/GetFillerCaption/";
   static String get FILLER_IMPORT_EXCEL => "$BASE_URL/api/FillerScheduling/ImportFillerExcel";
