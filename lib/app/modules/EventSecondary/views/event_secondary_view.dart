@@ -280,13 +280,15 @@ class EventSecondaryView extends GetView<EventSecondaryController> {
                                   alignment: WrapAlignment.spaceBetween,
                                   spacing: 20,
                                   children: [
-                                    CheckBoxWidget1(
-                                      title: "My",
-                                      value: controller.myEnabled.value,
-                                      onChanged: (val) {
-                                        controller.myEnabled.value = val ?? false;
-                                      },
-                                    ),
+                                    Obx(() {
+                                      return CheckBoxWidget1(
+                                        title: "My",
+                                        value: controller.myEnabled.value,
+                                        onChanged: (val) {
+                                          controller.myEnabled.value = val ?? false;
+                                        },
+                                      );
+                                    }),
                                     FormButton(
                                       btnText: "Search",
                                       callback: controller.handleSearchTap,

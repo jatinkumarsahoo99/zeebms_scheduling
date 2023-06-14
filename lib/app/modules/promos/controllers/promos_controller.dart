@@ -151,7 +151,11 @@ class PromosController extends GetxController {
             LoadingDialog.showErrorDialog("Daily FPC not present.");
           } else {
             controllsEnabled.value = false;
-            availableTC.text = "00:02:00:00";
+            if (mainModel?.dailyFPC?.isNotEmpty ?? false) {
+              availableTC.text = Utils.convertToTimeFromDouble(value: mainModel?.dailyFPC?[0].promoCap ?? 0);
+            } else {
+              availableTC.text = "00:00:00:00";
+            }
             scheduledTC.text = "";
           }
         } else {
@@ -167,9 +171,14 @@ class PromosController extends GetxController {
 
   handleDoubleTapInLeft1stTable(int index) {
     left1stGridSelectedIdx = index;
+    left2ndGridSelectedIdx = 0;
     timeBand.value = left1stDT[index].startTime ?? "00:00:00:00";
     programName.value = left1stDT[index].programName ?? "";
-    availableTC.text = "00:02:00:00";
+    if (mainModel?.dailyFPC?.isNotEmpty ?? false) {
+      availableTC.text = Utils.convertToTimeFromDouble(value: mainModel?.dailyFPC?[0].promoCap ?? 0);
+    } else {
+      availableTC.text = "00:00:00:00";
+    }
     scheduledTC.text = "00:00:00:00";
     left1stSM?.setCurrentCell(left1stSM?.getRowByIdx(index)?.cells['startTime'], index);
     left2ndDT.clear();
@@ -195,7 +204,7 @@ class PromosController extends GetxController {
         programName: left1stDT[left1stGridSelectedIdx].programName,
         telecastTime: left1stDT[left1stGridSelectedIdx].startTime,
         programCode: left1stDT[left1stGridSelectedIdx].programCode,
-        promoCode: left2ndDT[left2ndGridSelectedIdx].promoCode,
+        promoCode: tempRightModel["eventCode"],
         promoSchedulingCode: left2ndDT[left2ndGridSelectedIdx].promoSchedulingCode,
       );
 
@@ -209,7 +218,7 @@ class PromosController extends GetxController {
       left2ndGridSelectedIdx = left2ndGridSelectedIdx + 1;
       left2ndDT.refresh();
       scheduledTC.text = Utils.convertToTimeFromDouble(value: (Utils.convertToSecond(value: scheduledTC.text)) + (tempRightModel['duration'] ?? 0));
-      if ((Utils.convertToSecond(value: scheduledTC.text)) + (tempRightModel['duration'] ?? 0) > Utils.convertToSecond(value: "00:02:00:00")) {
+      if ((Utils.convertToSecond(value: scheduledTC.text)) + (tempRightModel['duration'] ?? 0) > Utils.convertToSecond(value: "00:16:49:00")) {
         left1stDT[left1stGridSelectedIdx].exceed = true;
         left1stDT.refresh();
       }
@@ -304,14 +313,41 @@ class PromosController extends GetxController {
       json: {
         "locationCode": selectLocation?.key,
         "channelCode": selectChannel?.key,
-        "telecastDate": DateFormat("yyyy-MM-dd").format(DateFormat("dd-MM-yyyy").parse(fromdateTC.text)),
+        "telecastDate": DateFormat("dd-MMM-yyyy").format(DateFormat("dd-MM-yyyy").parse(fromdateTC.text)),
         "modifiedBy": Get.find<MainController>().user?.logincode,
         "promoSchSaveDetails": mainModel?.promoScheduled?.map((e) => e.toJson(fromSave: true)).toList(),
       },
     );
   }
 
-  void handleAutoAddTap() {} // not in use
+  void handleAutoAddTap() {
+    if (selectLocation == null && selectChannel == null) {
+      LoadingDialog.showErrorDialog("Please select Location and Channel.");
+    } else {
+      LoadingDialog.call();
+      Get.find<ConnectorControl>().POSTMETHOD(
+        api: ApiFactory.PROMOS_SAVE_AUTO_PROMO,
+        fun: (resp) {
+          closeDialog();
+          if (resp != null && resp is List<dynamic>) {
+            if (resp.isNotEmpty) {
+              mainModel?.promoScheduled = [];
+              mainModel?.promoScheduled?.addAll(resp.map((e) => PromoScheduled.fromJson(e)).toList());
+              handleDoubleTapInLeft1stTable(left1stGridSelectedIdx);
+            }
+          } else {
+            LoadingDialog.showErrorDialog(resp.toString());
+          }
+        },
+        json: {
+          "locationCode": selectLocation?.key,
+          "channelCode": selectChannel?.key,
+          "telecastDate": DateFormat("yyyy-MM-dd").format(DateFormat("dd-MM-yyyy").parse(fromdateTC.text)),
+          "txId": promoIDTC.text,
+        },
+      );
+    }
+  } // not in use
 
   Future<void> handleImportTap() async {
     FilePickerResult? result = await FilePicker.platform.pickFiles();

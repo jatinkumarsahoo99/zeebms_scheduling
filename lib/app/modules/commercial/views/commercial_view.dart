@@ -360,6 +360,21 @@ class CommercialView extends GetView<CommercialController> {
                 print(jsonEncode(controller.selectedProgram?.toJson()));
               },
               onRowDoubleTap: (plutoGrid) async {
+                // try {
+                //   var cList =
+                //       controller.mainCommercialShowDetailsList!.where((o) => o.eventType.toString() == 'C' && o.bStatus.toString() == 'B').toList();
+                //   controller.commercialSpots.value = cList.where((o) => o.eventType == "C").toList().length.toString();
+                //   print(cList.where((o) => o.eventType == "C").toList().length.toString());
+                //   print(controller.commercialSpots.value);
+                //   double intTotalDuration = 0;
+
+                //   for (int i = 0; i <= cList.length - 1; i++) {
+                //     intTotalDuration = intTotalDuration + Utils.oldBMSConvertToSecondsValue(value: cList[i].duration!);
+                //   }
+                //   controller.commercialDuration.value = Utils.convertToTimeFromDouble(value: intTotalDuration);
+                //   // controller.commercialSpots.refresh();
+                //   // controller.commercialDuration.refresh();
+                // } catch (e) {}
                 controller.leftTableSelectedIdx = plutoGrid.rowIdx;
                 controller.selectedProgram = controller.commercialProgramList![plutoGrid.rowIdx];
                 controller.programFpcTimeSelected = controller.commercialProgramList![plutoGrid.rowIdx].fpcTime;
@@ -392,23 +407,6 @@ class CommercialView extends GetView<CommercialController> {
           id: "schedulingTable",
           builder: (controller) {
             if (controller.showCommercialDetailsList != null && (controller.showCommercialDetailsList?.isNotEmpty)!) {
-              print(' schedulingTable : ${controller.showCommercialDetailsList?.length.toString()}');
-
-              var cList =
-                  controller.mainCommercialShowDetailsList!.where((o) => o.eventType.toString() == 'C' && o.bStatus.toString() == 'B').toList();
-              controller.commercialSpots.value = cList.where((o) => o.bStatus == "C").toList().length.toString();
-              print("commercialSpots value is : ${controller.commercialSpots.value}");
-
-              double intTotalDuration = 0;
-              for (int i = 0; i <= cList.length - 1; i++) {
-                intTotalDuration = intTotalDuration + Utils.oldBMSConvertToSecondsValue(value: cList[i].duration!);
-              }
-              controller.commercialDuration.value = Utils.convertToTimeFromDouble(value: intTotalDuration);
-              controller.commercialDuration.refresh();
-              controller.commercialSpots.refresh();
-
-              print("commercialDuration value is : ${controller.commercialDuration.value}");
-
               return Expanded(
                   child: DataGridFromMap1(
                       onload: (event) {

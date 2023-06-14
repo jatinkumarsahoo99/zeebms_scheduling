@@ -220,13 +220,13 @@ class EventSecondaryController extends GetxController {
 
   handleDoubleTapInLeft1stTable(int index) {
     left1stGridSelectedIdx = index;
+    left2ndGridSelectedIdx = 0;
     timeBand.value = left1stDT[index].startTime ?? "00:00:00:00";
     programName.value = left1stDT[index].programName ?? "";
     availableTC.text = "00:02:00:00";
     scheduledTC.text = "00:00:00:00";
     left1stSM?.setCurrentCell(left1stSM?.getRowByIdx(index)?.cells['startTime'], index);
     left2ndDT.clear();
-    left2ndGridSelectedIdx = 0;
     if (mainModel?.segementsResponse != null) {
       left2ndDT.value = mainModel?.segementsResponse?.where((element) => timeBand.value == element.telecastTime).toList() ?? [];
       countTC.text = left2ndDT.length.toString();
