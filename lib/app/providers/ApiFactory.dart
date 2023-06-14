@@ -370,6 +370,10 @@ static String TRANSMISSION_LOG_SEGMENT_PROGRAM_SEARCH() =>
       "$BASE_URL/api/Transmissionlog/GetProgramSearch?TextSourceProgram=";
 static String TRANSMISSION_LOG_POST_RESCHEDULE() =>
       "$BASE_URL/api/Transmissionlog/PostRescheduleSpotsClick";
+static String TRANSMISSION_LOG_PROF_LEAVE(String progCode,String epNo,) =>
+      "$BASE_URL/api/Transmissionlog/GettxtInsProgpisodeNoLeave?programcode=$progCode&EpisodeNo=$epNo";
+static String TRANSMISSION_LOG_SEARCH_SEGMENT(String progCode,String epNo,String tapeCode,bool defaultSeg) =>
+      "$BASE_URL/api/Transmissionlog/GetinsProgSearchClick?programcode=$progCode&episodenumber=$epNo&tapecode=$tapeCode&Defaultsegments=$defaultSeg";
 
 
 

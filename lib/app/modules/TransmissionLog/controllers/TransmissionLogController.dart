@@ -34,6 +34,7 @@ class TransmissionLogController extends GetxController {
   RxBool visibleChangeFpc = RxBool(true);
   RxInt tsPromoCap = RxInt(0);
   RxInt tsCommercialCap = RxInt(0);
+  FocusNode epNoSegment_focus = FocusNode();
 
   //input controllers
   DropDownValue? selectLocation;
@@ -52,6 +53,7 @@ class TransmissionLogController extends GetxController {
 
   // TsModel? tsModel;
   List<dynamic>? tsListData;
+  List<dynamic>? segmentList;
 
   bool blnMultipleGLs = false;
 
@@ -89,7 +91,8 @@ class TransmissionLogController extends GetxController {
       TextEditingController(); //txtChangeSegment
   TextEditingController txtSegment_fpctime = TextEditingController();
   TextEditingController txtSegment_epNo = TextEditingController();
-  DropDownValue? selectTapeSegment;
+  DropDownValue? selectProgramSegment;
+  RxList<DropDownValue>? listTapeDetailsSegment = RxList([]);
 
   TransmissionLogModel? transmissionLog;
   PlutoGridMode selectedPlutoGridMode = PlutoGridMode.selectWithOneTap;
@@ -274,9 +277,9 @@ class TransmissionLogController extends GetxController {
         json: postMap,
         fun: (map) {
           Get.back();
-          print("Data is>>>>"+map.toString());
+          print("Data is>>>>" + map.toString());
           // print("jsonData"+map.toString());
-         /* if (map is Map &&
+          /* if (map is Map &&
               map.containsKey("restscalc") &&
               map["restscalc"].containsKey("lstOutPutTblTs") &&
               map["restscalc"]["lstOutPutTblTs"] != null &&
@@ -314,6 +317,52 @@ class TransmissionLogController extends GetxController {
             tsListData = map["lstTraicomplaince"];
             // update(['tsList']);
             getInitTsCall();
+          } else {
+            Snack.callError(map.toString());
+          }
+        });
+  }
+
+  void getEpisodeLeaveSegment({Function? fun}) {
+    LoadingDialog.call();
+    Get.find<ConnectorControl>().GETMETHODCALL(
+        api: ApiFactory.TRANSMISSION_LOG_PROF_LEAVE(
+          selectProgramSegment?.key ?? "",
+          txtSegment_epNo.text,
+        ),
+        fun: (map) {
+          Get.back();
+          listTapeDetailsSegment?.value.clear();
+          if (map is Map &&
+              map.containsKey("lstexporttapecode") &&
+              map["lstexporttapecode"] != null) {
+            map["lstexporttapecode"].forEach((e) {
+              listTapeDetailsSegment?.add(DropDownValue(
+                  key: e["exporttapecode"], value: e["exporttapecode1"]));
+            });
+          } else {
+            Snack.callError(map.toString());
+          }
+        });
+  }
+
+  void btnSearchSegment({Function? fun}) {
+    LoadingDialog.call();
+    Get.find<ConnectorControl>().GETMETHODCALL(
+        api: ApiFactory.TRANSMISSION_LOG_SEARCH_SEGMENT(
+          selectProgramSegment?.key ?? "",
+          txtSegment_epNo.text,
+            selectTapeSegmentDialog?.key??"",
+          false
+        ),
+        fun: (map) {
+          Get.back();
+          segmentList?.clear();
+          if (map is Map &&
+              map.containsKey("lstProgramSegments") &&
+              map["lstProgramSegments"] != null) {
+            segmentList=map["lstProgramSegments"];
+            update(["segmentList"]);
           } else {
             Snack.callError(map.toString());
           }

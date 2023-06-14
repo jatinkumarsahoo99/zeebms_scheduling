@@ -1192,6 +1192,7 @@ class TransmissionLogView extends GetView<TransmissionLogController> {
                           context,
                           title: "Program",
                           onchanged: (DropDownValue? value) async {
+                            controller.selectProgramSegment=value;
                             // selectedProgramId.text = value?.key ?? "";
                             // selectedProgram.text = value?.value ?? "";
                             // selectProgram = value;
@@ -1206,15 +1207,23 @@ class TransmissionLogView extends GetView<TransmissionLogController> {
                               parseKeyForKey: "ProgramCode",parseKeyForValue: "ProgramName",
                         ),
                       ),
-                      InputFields.numbers(
-                        hintTxt: "Episode No",
-                        onchanged: (val) {
-                          // episodeNo.value = int.parse(val);
-                          // controller.getTapeID(selectProgram!.key!, int.parse(val));
+                      Focus(
+                        onFocusChange: (focus) {
+                          if (!focus) {
+                            controller.getEpisodeLeaveSegment();
+                                                     }
                         },
-                        controller: controller.txtSegment_epNo..text = "0",
-                        isNegativeReq: false,
-                        width: 0.12,
+                        canRequestFocus: false,
+                        skipTraversal: true,
+                        child: InputFields.numbers(
+                          hintTxt: "Episode No",
+                          onchanged: (val) {
+// controller.getEpisodeLeaveSegment();
+                          },
+                          controller: controller.txtSegment_epNo..text = "0",
+                          isNegativeReq: false,
+                          width: 0.12,
+                        ),
                       ),
                       SizedBox(
                         width: 10,
@@ -1234,7 +1243,7 @@ class TransmissionLogView extends GetView<TransmissionLogController> {
                       ),
                       Obx(
                         () => DropDownField.formDropDown1WidthMap(
-                          controller.listEventsinInsert.value,
+                          controller.listTapeDetailsSegment?.value,
                           (value) {
                             controller.selectTapeSegmentDialog = value;
                             // controller.selectedLocationId.text = value.key!;
@@ -1258,7 +1267,9 @@ class TransmissionLogView extends GetView<TransmissionLogController> {
                         child: FormButtonWrapper(
                           btnText: "Search",
                           showIcon: false,
-                          callback: () {},
+                          callback: () {
+                            controller.btnSearchSegment();
+                          },
                         ),
                       ),
                       Padding(
@@ -1275,22 +1286,19 @@ class TransmissionLogView extends GetView<TransmissionLogController> {
                     height: 15,
                   ),
                   GetBuilder<TransmissionLogController>(
-                      id: "commercialsList",
+                      id: "segmentList",
                       init: controller,
                       builder: (controller) {
                         return SizedBox(
                           // width: 500,
                           width: Get.width * 0.8,
                           height: Get.height * 0.6,
-                          child: (controller.transmissionLog != null)
+                          child: (controller.segmentList != null)
                               ? DataGridFromMap(
                                   hideCode: false,
                                   formatDate: false,
-                                  colorCallback: (renderC) => Colors.red[200]!,
-                                  mapData: (controller.transmissionLog
-                                      ?.loadSavedLogOutput?.lstTransmissionLog!
-                                      .map((e) => e.toJson())
-                                      .toList())!)
+                                  // colorCallback: (renderC) => Colors.red[200]!,
+                                  mapData: (controller.segmentList!))
                               // _dataTable3()
                               : const WarningBox(
                                   text:
