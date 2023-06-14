@@ -46,9 +46,23 @@ class DealView extends GetView<RoBookingController> {
                               gridcontroller.dealViewGrid!.columns.indexWhere((element) => element.field == value.cell.column.field), value.rowIdx);
                         },
                       )
-                    : Container(
-                        decoration: BoxDecoration(border: Border.all(width: 1.0, color: Colors.grey)),
-                      )),
+                    : (gridcontroller.dealNoLeaveData != null &&
+                            gridcontroller.bookingNoLeaveData!.lstdgvDealDetails != null &&
+                            gridcontroller.bookingNoLeaveData!.lstdgvDealDetails!.isNotEmpty
+                        ? DataGridShowOnlyKeys(
+                            mapData: gridcontroller.bookingNoLeaveData!.lstdgvDealDetails!.map((e) => e.toJson()).toList(),
+                            onload: (load) {
+                              gridcontroller.dealViewGrid = load.stateManager;
+                            },
+                            onRowDoubleTap: (value) {
+                              gridcontroller.dealdoubleclick(
+                                  gridcontroller.dealViewGrid!.columns.indexWhere((element) => element.field == value.cell.column.field),
+                                  value.rowIdx);
+                            },
+                          )
+                        : Container(
+                            decoration: BoxDecoration(border: Border.all(width: 1.0, color: Colors.grey)),
+                          ))),
           ),
         )
       ],

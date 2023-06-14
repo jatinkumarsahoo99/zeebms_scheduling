@@ -140,14 +140,26 @@ class RoBookingView extends GetView<RoBookingController> {
                                     isEnable: controller.bookingNoLeaveData == null,
                                   ),
                                 ),
-                                DropDownField.formDropDown1WidthMap([], (value) {
-                                  controller.dealNoLeave(value.key);
-                                }, "Deal No", 0.11,
+                                DropDownField.formDropDown1WidthMap(
+                                    controller.agencyLeaveData?.lstDealNumber
+                                            ?.map((e) => DropDownValue(
+                                                  key: e.dealNumber,
+                                                  value: e.dealNumber,
+                                                ))
+                                            .toList() ??
+                                        [],
+                                    (value) {
+                                      controller.selectedDeal = value;
+                                    },
+                                    "Deal No",
+                                    0.11,
+                                    onFocusChange: (value) {
+                                      if (!value) {
+                                        controller.dealNoLeave();
+                                      }
+                                    },
                                     isEnable: controller.bookingNoLeaveData == null,
-                                    selected: controller.bookingNoLeaveData != null
-                                        ? DropDownValue(
-                                            key: controller.bookingNoLeaveData!.dealno ?? "", value: controller.bookingNoLeaveData!.dealno ?? "")
-                                        : null),
+                                    selected: controller.selectedDeal),
                                 DropDownField.formDropDown1WidthMap([], (value) => {}, "Deal Type", 0.11,
                                     isEnable: controller.bookingNoLeaveData == null,
                                     selected: controller.bookingNoLeaveData == null
@@ -157,12 +169,7 @@ class RoBookingView extends GetView<RoBookingController> {
                                 Obx(
                                   () => DropDownField.formDropDown1WidthMap(
                                       controller.agencies.value, (value) => {controller.agencyLeave(value.key)}, "Agency", 0.23,
-                                      isEnable: controller.bookingNoLeaveData == null,
-                                      selected: controller.bookingNoLeaveData != null
-                                          ? DropDownValue(
-                                              key: controller.bookingNoLeaveData!.lstAgency!.first.agencyname ?? "",
-                                              value: controller.bookingNoLeaveData!.lstAgency!.first.agencyname ?? "")
-                                          : null),
+                                      isEnable: controller.bookingNoLeaveData == null, selected: controller.selectedAgnecy),
                                 ),
                                 DropDownField.formDropDown1WidthMap([], (value) => {}, "Pay route", 0.11,
                                     isEnable: controller.bookingNoLeaveData == null,
@@ -175,7 +182,8 @@ class RoBookingView extends GetView<RoBookingController> {
                                     isEnable: controller.bookingNoLeaveData == null,
                                     selected: controller.bookingNoLeaveData != null
                                         ? DropDownValue(
-                                            key: controller.bookingNoLeaveData!.brandcode ?? "", value: controller.bookingNoLeaveData!.dealno ?? "")
+                                            key: controller.bookingNoLeaveData!.lstBrand?.first.brandcode ?? "",
+                                            value: controller.bookingNoLeaveData!.lstBrand?.first.brandname ?? "")
                                         : null),
                                 SizedBox(
                                   width: Get.width * 0.11,
@@ -254,13 +262,7 @@ class RoBookingView extends GetView<RoBookingController> {
                                         "Executive",
                                         0.23,
                                         isEnable: controller.bookingNoLeaveData == null,
-                                        selected: controller.bookingNoLeaveData != null
-                                            ? DropDownValue(
-                                                key: controller.bookingNoLeaveData?.executiveCode ?? "",
-                                                value: controller.roBookingInitData?.lstExecutives
-                                                    ?.firstWhere((element) => element.personnelCode == controller.bookingNoLeaveData!.executiveCode)
-                                                    .personnelName)
-                                            : null),
+                                        selected: controller.selectedExecutive),
                                     InputFields.formField1(
                                       hintTxt: "Tot Spots",
                                       controller: controller.totSpotCtrl,

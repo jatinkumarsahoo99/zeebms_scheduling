@@ -439,7 +439,7 @@ class LstdgvDealDetails {
   String? bandcode;
   int? netcode;
   String? accountCode;
-  String? eventCode;
+  int? eventCode;
   String? revenueTypeCode;
   int? subrevenuetypecode;
   String? locationname;

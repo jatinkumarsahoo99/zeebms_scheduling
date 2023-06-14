@@ -1,4 +1,4 @@
-class AgencyLeaveData {
+class RoBookingAgencyLeaveData {
   String? message;
   String? gstPlantID;
   String? gstRegNo;
@@ -8,7 +8,7 @@ class AgencyLeaveData {
   String? gstPlants;
   List? lstPdcList;
   List<LstDealNumber>? lstDealNumber;
-  String? excutiveDetails;
+  List<ExcutiveDetails>? excutiveDetails;
   List<LstExcutive>? lstExcutive;
   String? zone;
   String? zoneName;
@@ -17,7 +17,7 @@ class AgencyLeaveData {
   String? payRouteCode;
   String? bookingNumber;
 
-  AgencyLeaveData(
+  RoBookingAgencyLeaveData(
       {this.message,
       this.gstPlantID,
       this.gstRegNo,
@@ -36,7 +36,7 @@ class AgencyLeaveData {
       this.payRouteCode,
       this.bookingNumber});
 
-  AgencyLeaveData.fromJson(Map<String, dynamic> json) {
+  RoBookingAgencyLeaveData.fromJson(Map<String, dynamic> json) {
     message = json['message'];
     gstPlantID = json['gstPlantID'];
     gstRegNo = json['gstRegNo'];
@@ -56,7 +56,13 @@ class AgencyLeaveData {
         lstDealNumber!.add(new LstDealNumber.fromJson(v));
       });
     }
-    excutiveDetails = json['excutiveDetails'];
+
+    if (json['excutiveDetails'] != null) {
+      excutiveDetails = <ExcutiveDetails>[];
+      json['excutiveDetails'].forEach((v) {
+        excutiveDetails!.add(new ExcutiveDetails.fromJson(v));
+      });
+    }
     if (json['lstExcutive'] != null) {
       lstExcutive = <LstExcutive>[];
       json['lstExcutive'].forEach((v) {
@@ -100,9 +106,43 @@ class AgencyLeaveData {
   }
 }
 
+class ExcutiveDetails {
+  String? personnelCode;
+  String? personnelname;
+  String? zonename;
+  String? payroutename;
+  String? zoneshortname;
+  String? zonecode;
+  String? payRouteCode;
+
+  ExcutiveDetails({this.personnelCode, this.personnelname, this.zonename, this.payroutename, this.zoneshortname, this.zonecode, this.payRouteCode});
+
+  ExcutiveDetails.fromJson(Map<String, dynamic> json) {
+    personnelCode = json['personnelCode'];
+    personnelname = json['personnelname'];
+    zonename = json['zonename'];
+    payroutename = json['payroutename'];
+    zoneshortname = json['zoneshortname'];
+    zonecode = json['zonecode'];
+    payRouteCode = json['payRouteCode'];
+  }
+
+  Map<String, dynamic> toJson() {
+    final Map<String, dynamic> data = new Map<String, dynamic>();
+    data['personnelCode'] = this.personnelCode;
+    data['personnelname'] = this.personnelname;
+    data['zonename'] = this.zonename;
+    data['payroutename'] = this.payroutename;
+    data['zoneshortname'] = this.zoneshortname;
+    data['zonecode'] = this.zonecode;
+    data['payRouteCode'] = this.payRouteCode;
+    return data;
+  }
+}
+
 class LstDealNumber {
   String? dealNumber;
-  Null? dealNumber2;
+  String? dealNumber2;
 
   LstDealNumber({this.dealNumber, this.dealNumber2});
 
