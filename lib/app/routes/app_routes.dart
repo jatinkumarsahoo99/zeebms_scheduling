@@ -81,7 +81,7 @@ abstract class _Paths {
   static const SECONDARY_EVENT_MASTER = '/frmSecondaryEventmaster';
   static const FILLER_MASTER = '/frmFillerMaster';
   static const PROMO_MASTER = '/frmPromoMaster';
-  static const EVENT_SECONDARY = '/event-secondary';
-  static const SLIDE = '/slide';
+  static const EVENT_SECONDARY = '/frmSecondaryEventSchedulingNew';
+  static const SLIDE = '/frmSlideScheduling';
   static const COMMERCIAL_MASTER = '/frmCommercialMaster';
 }
