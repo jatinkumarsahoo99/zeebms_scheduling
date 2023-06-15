@@ -3,6 +3,7 @@ import 'package:bms_scheduling/app/controller/MainController.dart';
 import 'package:bms_scheduling/app/data/DropDownValue.dart';
 import 'package:bms_scheduling/app/modules/RoBooking/bindings/ro_booking_agency_leave_data.dart';
 import 'package:bms_scheduling/app/modules/RoBooking/bindings/ro_booking_bkg_data.dart';
+import 'package:bms_scheduling/app/modules/RoBooking/bindings/ro_booking_deal_click.dart';
 import 'package:bms_scheduling/app/modules/RoBooking/bindings/ro_dealno_leave.dart';
 import 'package:bms_scheduling/app/modules/RoBooking/views/booking_summary_view.dart';
 import 'package:bms_scheduling/app/modules/RoBooking/views/deal_view.dart';
@@ -13,6 +14,7 @@ import 'package:bms_scheduling/app/modules/RoBooking/views/spots_view.dart';
 import 'package:bms_scheduling/app/modules/RoBooking/views/verify_spots_view.dart';
 import 'package:bms_scheduling/app/providers/ApiFactory.dart';
 import 'package:bms_scheduling/app/providers/extensions/string_extensions.dart';
+import 'package:bms_scheduling/widgets/LoadingDialog.dart';
 import 'package:bms_scheduling/widgets/PlutoGrid/pluto_grid.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
@@ -42,6 +44,7 @@ class RoBookingController extends GetxController {
   RoBookingInitData? roBookingInitData;
   RoBookingBkgNOLeaveData? bookingNoLeaveData;
   RoBookingDealNoLeave? dealNoLeaveData;
+  RoBookingDealDblClick? dealDblClickData;
 
   FocusNode bookingNoFocusNode = FocusNode();
   var spotsNotVerifiedData = RxList();
@@ -61,6 +64,7 @@ class RoBookingController extends GetxController {
   var channels = RxList<DropDownValue>();
   var clients = RxList<DropDownValue>();
   var agencies = RxList<DropDownValue>();
+  List tapeIds = [];
 
   //TODO: Implement RoBookingController
   Map tabs = {
@@ -294,7 +298,7 @@ class RoBookingController extends GetxController {
   //     if (int.parse(dtDealDetails[0][i]["recordnumber"]) == rowIdx &&
   //         dtDealDetails[0][i]["locationname"] == selectedLocation!.value &&
   //         dtDealDetails[0][i]["channelname"] == selectedChannel!.value &&
-  //         dtDealDetails[0][i]["dealnumber"] == selectedDeal!.key) {
+  //         dtD ealDetails[0][i]["dealnumber"] == selectedDeal!.key) {
   //       if (strAccountCode != "I000100010" && strAccountCode != "I000100005" && strAccountCode != "I000100004" && strAccountCode != "I000100013") {
   //         dtDealDetails[0][i]["bookedseconds"] =
   //             int.parse(dtDealDetails[0][i]["bookedseconds"]) + (int.parse(txtDuration.Text) * intTotalBookedSpots);
@@ -413,7 +417,44 @@ class RoBookingController extends GetxController {
           "lstdgvDealDetails": bookingNoLeaveData!.lstdgvDealDetails!.map((e) => e.toJson()).toList(),
           "lstSpots": bookingNoLeaveData!.lstSpots!.map((e) => e.toJson()).toList(),
         },
-        fun: (value) {});
+        fun: (value) {
+          if (value is Map && value.containsKey("info_dgvDealDetailCellDouble") && value["info_dgvDealDetailCellDouble"]["message"] == null) {
+            dealDblClickData = RoBookingDealDblClick.fromJson(value["info_dgvDealDetailCellDouble"]);
+            var _selectedPostion = roBookingInitData?.lstPosition
+                ?.firstWhere((element) => element.column1?.toLowerCase() == dealDblClickData?.positionNo!.toLowerCase());
+            selectedPosition = DropDownValue(key: _selectedPostion?.positioncode ?? "", value: _selectedPostion?.column1 ?? "");
+            var _selectedPredMid = roBookingInitData?.lstspotpositiontype
+                ?.firstWhere((element) => element.spotPositionTypeName?.toLowerCase() == dealDblClickData?.preMid!.toLowerCase());
+            selectedPremid = DropDownValue(key: _selectedPredMid?.spotPositionTypeCode ?? "", value: _selectedPredMid?.spotPositionTypeName ?? "");
+
+            selectedBreak = DropDownValue(key: dealDblClickData?.breakNo.toString() ?? "", value: dealDblClickData?.breakNo.toString() ?? "");
+
+            pagecontroller.jumpToPage(1);
+          }
+          if (value is Map && value.containsKey("info_dgvDealDetailCellDouble") && value["info_dgvDealDetailCellDouble"]["message"] != null) {
+            LoadingDialog.callErrorMessage1(msg: value["info_dgvDealDetailCellDouble"]["message"]);
+          }
+        });
+  }
+
+  getTapeID() {
+    Get.find<ConnectorControl>().POSTMETHOD(
+        api: ApiFactory.RO_BOOKING_cboTapeIdFocusLost,
+        json: {
+          "brandCode": bookingNoLeaveData?.brandcode ?? "",
+          "strAccountCode": bookingNoLeaveData?.accountCode,
+          "locationCode": selectedLocation?.key ?? "",
+          "channelCode": selectedChannel?.key,
+          "intSubRevenueTypeCode": "0"
+        },
+        fun: (value) {
+          if (value is Map &&
+              value.containsKey("info_GetTapeLost") &&
+              value["info_GetTapeLost"].containsKey("lstTape") &&
+              value["info_GetTapeLost"]["lstTape"] is List) {
+            tapeIds = value["info_GetTapeLost"]["lstTape"];
+          }
+        });
   }
 
   @override

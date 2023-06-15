@@ -126,9 +126,10 @@ class RoBookingView extends GetView<RoBookingController> {
                                 Obx(
                                   () => DropDownField.formDropDown1WidthMap(
                                     controller.bookingNoLeaveData != null
-                                        ? controller.bookingNoLeaveData!.lstClientAgency!
-                                            .map((e) => DropDownValue(value: e.clientname, key: e.clientcode))
-                                            .toList()
+                                        ? controller.bookingNoLeaveData?.lstClientAgency
+                                                ?.map((e) => DropDownValue(value: e.clientname, key: e.clientcode))
+                                                .toList() ??
+                                            []
                                         : controller.clients.value,
                                     (value) {
                                       controller.selectedClient = value;
