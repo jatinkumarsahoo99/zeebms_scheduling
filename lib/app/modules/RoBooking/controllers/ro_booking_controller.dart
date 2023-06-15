@@ -229,6 +229,10 @@ class RoBookingController extends GetxController {
         fun: (response) {});
   }
 
+  tapIdLeave(exportCode) {
+    Get.find<ConnectorControl>().GETMETHODCALL(api: ApiFactory.RO_BOOKING_SearchTapeIdLeave(exportCode), fun: (response) {});
+  }
+
   dealNoLeave() {
     Get.find<ConnectorControl>().POSTMETHOD(
         api: ApiFactory.RO_BOOKING_OnLeaveDealNumber,
