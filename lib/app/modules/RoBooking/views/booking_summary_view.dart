@@ -21,6 +21,9 @@ class BookingSummaryView extends GetView {
             )
           ],
         ),
+          SizedBox(
+          height: 5,
+        ),
         Expanded(
             child: Container(
           child: DataGridShowOnlyKeys(

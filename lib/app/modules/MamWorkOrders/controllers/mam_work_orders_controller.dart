@@ -559,7 +559,7 @@ class MamWorkOrdersController extends GetxController {
     } else {
       var from = num.tryParse(nonFPCFromEpi.text) ?? 0;
       var to = num.tryParse(nonFPCToEpi.text) ?? 0;
-      if (from == 0 && to == 0 || from < to) {
+      if (from == 0 && to == 0 || from > to) {
         LoadingDialog.showErrorDialog("From and To Episode No cannot be zero and To Episode No should be greater than From Episode No.");
       } else {
         try {

@@ -180,6 +180,7 @@ class RoCancellationView extends GetView<RoCancellationController> {
                                       rowcheckEvent.isChecked;
                                   rowcheckEvent.row!.cells["requested"]!.value = "${rowcheckEvent.isChecked}";
                                 },
+                                rowCheckColor: Colors.white,
                                 checkRow: true,
                                 onload: (loadEvent) {
                                   controller.roCancellationGridManager = loadEvent.stateManager;
@@ -251,7 +252,8 @@ class RoCancellationView extends GetView<RoCancellationController> {
                               ? FormButtonWrapper(
                                   btnText: btn["name"],
                                   callback: () {
-                                    btncontroller.clearPage1();
+                                    Get.delete<RoCancellationController>();
+                                    Get.find<HomeController>().clearPage1();
                                   },
                                 )
                               : btn["name"] == "Docs"
@@ -261,10 +263,17 @@ class RoCancellationView extends GetView<RoCancellationController> {
                                         controller.docs();
                                       },
                                     )
-                                  : FormButtonWrapper(
-                                      btnText: btn["name"],
-                                      callback: null,
-                                    ),
+                                  : btn["name"] == "Refresh"
+                                      ? FormButtonWrapper(
+                                          btnText: btn["name"],
+                                          callback: () {
+                                            print("Refresh");
+                                          },
+                                        )
+                                      : FormButtonWrapper(
+                                          btnText: btn["name"],
+                                          callback: null,
+                                        ),
                   ],
                 ),
               );
