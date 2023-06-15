@@ -1,3 +1,4 @@
+import 'package:bms_scheduling/app/modules/SecondaryEventMaster/bindings/secondary_event_master_binding.dart';
 import 'package:get/get.dart';
 
 import '../modules/AsrunImportAdRevenue/bindings/asrun_import_binding.dart';
@@ -60,8 +61,8 @@ class AppPages {
   AppPages._();
 
   // static const INITIAL = Routes.ROS_DISTRIBUTION +
-  static const INITIAL =
-      Routes.RO_BOOKING + "?personalNo=AqoF3cvt1PCPIKM8FfPwag%3D%3D&loginCode=gsS2oEkuYKzI9aXanDqobQ%3D%3D&formName=a4Lfy%2FGb5Roxo9vLiBCqSQ%3D%3D";
+  static const INITIAL = Routes.ROS_DISTRIBUTION +
+      "?personalNo=kW5Bkf17%2FS5YF7ML28FmVg%3D%3D&loginCode=1BWIoBKeDl7qDSAAhxvXsQ%3D%3D&formName=OI8ukDpPPVN0I2BEXu2h4nuFu%2BZm1ZRpvP8NL4XCXzQ%3D";
   static final routes = [
     GetPage(
       name: _Paths.HOME,
@@ -69,9 +70,24 @@ class AppPages {
       binding: HomeBinding(),
     ),
     GetPage(
+      name: _Paths.SLIDE,
+      page: () => AuthGuard1(childName: _Paths.SLIDE),
+      binding: SlideBinding(),
+    ),
+    GetPage(
       name: _Paths.TRANSMISSION_LOG,
       page: () => AuthGuard1(childName: _Paths.TRANSMISSION_LOG),
       binding: TransmissionLogBinding(),
+    ),
+    GetPage(
+      name: _Paths.EVENT_SECONDARY,
+      page: () => AuthGuard1(childName: _Paths.EVENT_SECONDARY),
+      binding: EventSecondaryBinding(),
+    ),
+    GetPage(
+      name: _Paths.SECONDARY_EVENT_MASTER,
+      page: () => AuthGuard1(childName: _Paths.SECONDARY_EVENT_MASTER),
+      binding: SecondaryEventMasterBinding(),
     ),
     GetPage(
       name: _Paths.LOG_ADDITIONS,
@@ -100,7 +116,7 @@ class AppPages {
     ),
     GetPage(
       name: _Paths.PROMOS,
-      page: () => PromosView(),
+      page: () => AuthGuard1(childName: _Paths.PROMOS),
       binding: PromosBinding(),
     ),
     GetPage(

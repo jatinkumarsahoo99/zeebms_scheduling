@@ -133,8 +133,6 @@ class ConnectorControl extends GetConnect {
     }
   }
 
-
-
   POST_CALL_MS_TOKEN({required Function fun, required Function failed, required String employeId}) async {
     try {
       /* Map<String, dynamic> map = {
@@ -174,7 +172,6 @@ class ConnectorControl extends GetConnect {
     }
   }
 
-
   GETMETHODCALL_TOKEN({required String api, required String token, required Function fun}) async {
     print("<<>>>>>API CALL>>>>>>\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n" + api);
     try {
@@ -209,8 +206,6 @@ class ConnectorControl extends GetConnect {
       }
     }
   }
-
-
 
   POSTMETHOD({required String api, dynamic? json, required Function fun}) async {
     try {
@@ -266,6 +261,59 @@ class ConnectorControl extends GetConnect {
     }
   }
 
+  DELETEMETHOD({required String api, dynamic json, required Function fun}) async {
+    try {
+      print("API NAME:>" + api);
+      service.Response response = await dio.delete(
+        api,
+        options: Options(headers: {
+          "Authorization": "Bearer ${(Get.find<MainController>().user != null) ? Get.find<MainController>().user?.token ?? "" : ""}",
+          "PersonnelNo": ((Get.find<MainController>().user != null) ? Aes.encrypt(Get.find<MainController>().user?.personnelNo ?? "") : ""),
+          "Userid": ((Get.find<MainController>().user != null) ? Aes.encrypt(Get.find<MainController>().user?.logincode ?? "") : "")
+        }, responseType: ResponseType.json),
+        data: (json != null) ? jsonEncode(json) : null,
+      );
+      if (response.statusCode == 200 || response.statusCode == 201) {
+        try {
+          fun(response.data);
+        } catch (e) {
+          print("Message is: " + e.toString());
+        }
+      } else if (response.statusCode == 417) {
+        fun(response.data);
+      } else {
+        print("Message is: >>1");
+        fun(failedMap);
+      }
+    } on DioError catch (e) {
+      /*if (e.response?.statusCode == 401 &&
+          (e.response?.headers.map.containsKey("www-authenticate"))! &&
+          e.response?.headers.map["www-authenticate"]?.length == 2 &&
+          (e.response?.headers.map["www-authenticate"]![0]
+              .contains("invalid_token"))! &&
+          (e.response?.headers.map["www-authenticate"]![1]
+              .contains("The token expired at"))!) {*/
+      if (e.response?.statusCode == 401) {
+        //Snack.callError("Token Expired. We are regenerating new token",
+//            widthRatio: 0.5);
+        updateToken(() {
+          POSTMETHOD(api: api, json: json, fun: fun);
+        });
+      } else {
+        switch (e.type) {
+          case DioErrorType.connectionTimeout:
+          case DioErrorType.cancel:
+          case DioErrorType.sendTimeout:
+          case DioErrorType.receiveTimeout:
+          case DioErrorType.unknown:
+            fun(failedMap);
+            break;
+          case DioErrorType.badResponse:
+            fun(e.response?.data);
+        }
+      }
+    }
+  }
 
   POSTMETHOD_FORMDATA({required String api, required dynamic json, int? timeout = 36000, required Function fun}) async {
     try {
@@ -326,8 +374,6 @@ class ConnectorControl extends GetConnect {
     }
   }
 
-
-
   POSTMETHOD_FORMDATAWITHTYPE({required String api, required dynamic json, int? timeout = 36000, required Function fun}) async {
     try {
       service.Response response = await dio.post(api,
@@ -387,12 +433,7 @@ class ConnectorControl extends GetConnect {
     }
   }
 
-
-  POSTMETHOD_FORMDATA_HEADER(
-      {required String api,
-        required dynamic json,
-        int? timeout = 36000,
-        required Function fun}) async {
+  POSTMETHOD_FORMDATA_HEADER({required String api, required dynamic json, int? timeout = 36000, required Function fun}) async {
     try {
       service.Response response = await dio.post(api,
           data: json,
@@ -402,22 +443,11 @@ class ConnectorControl extends GetConnect {
               headers: {
                 // "accept-language": (AppData.selectedLanguage=="English")?"en":"ar",
                 'Content-Type': 'application/json',
-                "Authorization": "Bearer " +
-                    ((Get.find<MainController>().user != null)
-                        ? Get.find<MainController>().user?.token ?? ""
-                        : ""),
+                "Authorization": "Bearer " + ((Get.find<MainController>().user != null) ? Get.find<MainController>().user?.token ?? "" : ""),
 
-                "PersonnelNo": ((Get.find<MainController>().user != null)
-                    ? Aes.encrypt(
-                    Get.find<MainController>().user?.personnelNo ?? "")
-                    : ""),
-                "Userid": ((Get.find<MainController>().user != null)
-                    ? Aes.encrypt(
-                    Get.find<MainController>().user?.logincode ?? "")
-                    : ""),
-                "FormName": ((Get.find<MainController>().formName != null)
-                    ? Get.find<MainController>().formName ?? ""
-                    : "")
+                "PersonnelNo": ((Get.find<MainController>().user != null) ? Aes.encrypt(Get.find<MainController>().user?.personnelNo ?? "") : ""),
+                "Userid": ((Get.find<MainController>().user != null) ? Aes.encrypt(Get.find<MainController>().user?.logincode ?? "") : ""),
+                "FormName": ((Get.find<MainController>().formName != null) ? Get.find<MainController>().formName ?? "" : "")
               },
               responseType: ResponseType.json));
       if (response.statusCode == 200 || response.statusCode == 201) {
@@ -462,12 +492,13 @@ class ConnectorControl extends GetConnect {
       }
     }
   }
+
   GET_METHOD_CALL_HEADER(
       {required String api,
-        // required String formName,
-        required Function fun,
-        Function? failed,
-        ResponseType? responseType}) async {
+      // required String formName,
+      required Function fun,
+      Function? failed,
+      ResponseType? responseType}) async {
     print("<<>>>>>API CALL>>>>>>\n\n\n\n\n\n\n\n\n" + api);
     try {
       service.Response response = await dio.get(api,
@@ -475,21 +506,10 @@ class ConnectorControl extends GetConnect {
             responseType: responseType,
             headers: {
               "Access-Control-Allow-Origin": "*",
-              "Authorization": "Bearer " +
-                  ((Get.find<MainController>().user != null)
-                      ? Get.find<MainController>().user?.token ?? ""
-                      : ""),
-              "PersonnelNo": ((Get.find<MainController>().user != null)
-                  ? Aes.encrypt(
-                  Get.find<MainController>().user?.personnelNo ?? "")
-                  : ""),
-              "Userid": ((Get.find<MainController>().user != null)
-                  ? Aes.encrypt(
-                  Get.find<MainController>().user?.logincode ?? "")
-                  : ""),
-              "FormName": ((Get.find<MainController>().formName != null)
-                  ? Get.find<MainController>().formName ?? ""
-                  : "")
+              "Authorization": "Bearer " + ((Get.find<MainController>().user != null) ? Get.find<MainController>().user?.token ?? "" : ""),
+              "PersonnelNo": ((Get.find<MainController>().user != null) ? Aes.encrypt(Get.find<MainController>().user?.personnelNo ?? "") : ""),
+              "Userid": ((Get.find<MainController>().user != null) ? Aes.encrypt(Get.find<MainController>().user?.logincode ?? "") : ""),
+              "FormName": ((Get.find<MainController>().formName != null) ? Get.find<MainController>().formName ?? "" : "")
             },
           ));
       if (response.statusCode == 200) {

@@ -22,14 +22,15 @@ import '../FillerSegmentModel.dart';
 import 'package:dio/dio.dart' as dio;
 
 class FillerController extends GetxController {
-  var locations = RxList<DropDownValue>();
-  var importLocations = RxList<DropDownValue>();
-  var channels = RxList<DropDownValue>([]);
-  var importChannels = RxList<DropDownValue>([]);
-  var captions = RxList<DropDownValue>([]);
+  var locations = <DropDownValue>[].obs;
+  var importLocations = <DropDownValue>[].obs;
+  var channels = <DropDownValue>[].obs;
+  var importChannels = <DropDownValue>[].obs;
+  var captions = <DropDownValue>[].obs;
+  var locationFN = FocusNode();
 
-  List<FillerDailyFPCModel>? fillerDailyFpcList = [];
-  List<FillerSegmentModel>? fillerSegmentList = [];
+  var fillerDailyFpcList = <FillerDailyFPCModel>[].obs;
+  var fillerSegmentList = <FillerSegmentModel>[].obs;
 
   RxBool isEnable = RxBool(true);
   bool isSearchFromCaption = false;
@@ -51,7 +52,7 @@ class FillerController extends GetxController {
   //input controllers
   DropDownValue? selectLocation;
   DropDownValue? selectChannel;
-  var selectCaption = Rxn<DropDownValue>();
+  var selectCaption = Rxn<DropDownValue?>();
   PlutoGridStateManager? gridStateManager;
 
   List<PermissionModel>? formPermissions;
@@ -101,6 +102,24 @@ class FillerController extends GetxController {
   SystemEnviroment? selectedLocationEnv;
   SystemEnviroment? selectedCaption;
 
+  void clear() {
+    selectLocation = null;
+    selectChannel = null;
+    selectCaption.value = null;
+    tapeId_.clear();
+    segNo_.clear();
+    fillerDailyFpcList.clear();
+    fillerSegmentList.clear();
+    segDur_.clear();
+    totalFiller.clear();
+    totalFillerDur.text = "00:00:00:00";
+    segDur_.text = "00:00:00:00";
+    listData?.clear();
+    locationEnable.value = true;
+    channelEnable.value = true;
+    locationFN.requestFocus();
+  }
+
   /// List for Columns
   FillerDailyFPCModel? selectedDailyFPC;
   FillerSegmentModel? selectedSegment;
@@ -121,54 +140,19 @@ class FillerController extends GetxController {
   var importedFile = Rxn<PlatformFile>();
   TextEditingController fileController = TextEditingController();
 
-  @override
-  void onInit() {
-    super.onInit();
-    getLocation();
-  }
-
   formHandler(btnName) async {
     if (btnName == "Clear") {
-      initData = null;
-      initRows = [];
-      initColumn = [];
-
-      conflictReport = [];
-
-      beams = [];
-      conflictDays = 4;
-      conflictPrograms = [];
-      beamRows = [];
-      selectedChannels.value = [];
-
-      Map<String, dynamic> reportBody = {};
-      update(["initData"]);
-      //getInitData();
+      clear();
     }
   }
 
-  // fetchInitial() {
-  //   Get.find<ConnectorControl>().GETMETHODCALL(
-  //     api: ApiFactory.FILLER_LOCATION,
-  //     fun: (Map<String, dynamic> map) {
-  //       locationList?.clear();
-  //       channelList?.clear();
-  //       map["lstLocations"].forEach((element) {
-  //         locationList?.add(SystemEnviroment(key: element["locationCode"], value: element["locationName"]));
-  //       });
-  //       map["lstChannels"].forEach((element) {
-  //         channelList?.add(SystemEnviroment(key: element["channelcode"], value: element["channelName"]));
-  //       });
-  //       update(["initialData"]);
-  //     },
-  //   );
-  // }
-
   getLocation() {
+    LoadingDialog.call();
     try {
       Get.find<ConnectorControl>().GETMETHODCALL(
           api: ApiFactory.FILLER_LOCATION,
           fun: (data) {
+            Get.back();
             if (data is List) {
               locations.value = data.map((e) => DropDownValue(key: e["locationCode"], value: e["locationName"])).toList();
             } else {
@@ -181,10 +165,12 @@ class FillerController extends GetxController {
   }
 
   getChannel(locationCode) {
+    LoadingDialog.call();
     try {
       Get.find<ConnectorControl>().GETMETHODCALL(
           api: ApiFactory.FILLER_CHANNEL(locationCode),
           fun: (data) {
+            Get.back();
             if (data is List) {
               channels.value = data.map((e) => DropDownValue(key: e["channelCode"], value: e["channelName"])).toList();
             } else {
@@ -198,18 +184,20 @@ class FillerController extends GetxController {
 
   importfile() async {
     LoadingDialog.call();
-    dio.FormData formData = dio.FormData.fromMap({
-      "LocationCode": selectedLocation!.key,
-      "ChannelCode": selectChannel!.key,
-      "TelecastDate": df3.format(df1.parse(date_.text)),
-      'ImportFile': dio.MultipartFile.fromBytes(
-        importedFile.value!.bytes!.toList(),
-        filename: importedFile.value!.name,
-      )
-    });
+    dio.FormData formData = dio.FormData.fromMap(
+      {
+        "ChannelCode": selectedChannel?.key ?? "",
+        "LocationCode": selectedLocation?.key ?? "",
+        'ImportFile': dio.MultipartFile.fromBytes(
+          importedFile.value!.bytes!.toList(),
+          filename: importedFile.value!.name,
+        ),
+        "TelecastDate": DateFormat("dd/MM/yyyy").format(DateFormat("dd-MM-yyyy").parse(date_.text)), //05 / 31 / 2023,
+      },
+    );
 
     Get.find<ConnectorControl>().POSTMETHOD_FORMDATA(
-        api: ApiFactory.FILLER_IMPORT_FILE,
+        api: ApiFactory.FILLER_IMPORT_EXCEL,
         json: formData,
         fun: (value) {
           Get.back();
@@ -223,7 +211,6 @@ class FillerController extends GetxController {
 
   pickFile() async {
     FilePickerResult? result = await FilePicker.platform.pickFiles();
-
     if (result != null && result.files.single != null) {
       importedFile.value = result.files.single;
       fileController.text = result.files.single.name;
@@ -232,20 +219,6 @@ class FillerController extends GetxController {
       // User canceled the pic5ker
     }
   }
-
-  // getFillerValueByCaption(fillerCaption) {
-  //   try {
-  //     Get.find<ConnectorControl>().GETMETHODCALL(
-  //         api: ApiFactory.FILLER_VALUE_BY_CAPTION(fillerCaption),
-  //         fun: (dynamic data) {
-  //           print('>>> Filler Caption Code data $data');
-  //           print('>>> Filler Code data ${data['fillerCode']}');
-  //           getFillerValuesByFillerCode(data['fillerCode']);
-  //         });
-  //   } catch (e) {
-  //     LoadingDialog.callErrorMessage1(msg: "Failed To Load Initial Data");
-  //   }
-  // }
 
   getFillerValuesByFillerCode(fillerCode) {
     try {
@@ -256,15 +229,6 @@ class FillerController extends GetxController {
             tapeId_.text = data['exportTapeCode'];
             segNo_.text = data['segmentNumber'];
             segDur_.text = data['fillerDuration'];
-            // if (data is List) {
-            //   channels.value = data
-            //       .map((e) => DropDownValue(
-            //       key: e["fillerCode"], value: e["fillerCaption"]))
-            //       .toList();
-            // } else {
-            //   LoadingDialog.callErrorMessage1(
-            //       msg: "Failed To Load Initial Data");
-            // }
           });
     } catch (e) {
       LoadingDialog.callErrorMessage1(msg: "Failed To Load Initial Data");
@@ -292,39 +256,36 @@ class FillerController extends GetxController {
   }
 
   getFillerValuesByImportFillersWithTapeCode() {
-    try {
-      var jsonRequest = {
-        "LocationCode": selectedImportLocation?.key.toString(),
-        "ChannelCode": selectedImportChannel?.key.toString(),
-        "ImportFromDate": df3.format(df1.parse(fillerFromDate_.text)),
-        "ImportToDate": df3.format(df1.parse(fillerToDate_.text)),
-        "TelecastTime": fromTime_.text ?? "",
-        "ImportTime": toTime_.text ?? ""
-      };
-      print("requestedData1>>>" + jsonEncode(json));
-      Get.find<ConnectorControl>().POSTMETHOD(
-          api: ApiFactory.FILLER_SAVE_IMPORT_FILLERS,
-          fun: (dynamic data) {
-            /// Date will be saved after importing Fillers with
-            /// selected Location, Channel, Date and time...
-            /// Response is "Data saved successfully"
-
-            // print('>>> Data from Tape Code : $data');
-            // /// Need to show date in Filler caption, filler dropdown,tape idseg dur,total dur
-            // fillerCode = data['fillerCode'];
-            // ///selectCaption.value = data['fillerCaption'];
-            // tapeId_.text = data['exportTapeCode'];
-            // segNo_.text = data['segmentNumber'];
-            // segDur_.text = data['fillerDuration'];
-          },
-          json: jsonRequest);
-    } catch (e) {
-      LoadingDialog.callErrorMessage1(msg: "Failed To Load Initial Data");
-    }
+    var jsonRequest = {
+      "LocationCode": selectedImportLocation?.key.toString(),
+      "ChannelCode": selectedImportChannel?.key.toString(),
+      "ImportFromDate": DateFormat("dd/MM/yyyy").format(DateFormat("dd-MM-yyyy").parse(fillerFromDate_.text)),
+      "ImportToDate": DateFormat("dd/MM/yyyy").format(DateFormat("dd-MM-yyyy").parse(fillerToDate_.text)),
+      "TelecastTime": fromTime_.text,
+      "ImportTime": toTime_.text,
+    };
+    LoadingDialog.call();
+    Get.find<ConnectorControl>().POSTMETHOD(
+      api: ApiFactory.FILLER_IMPORT_FILLERS,
+      fun: (dynamic data) {
+        Get.back();
+        if (data.toString() == "Saved Successfully!") {
+          LoadingDialog.callDataSaved(
+              msg: data.toString(),
+              callback: () {
+                Get.back();
+                Get.back();
+                Get.back();
+              });
+        } else {
+          LoadingDialog.showErrorDialog(data.toString());
+        }
+      },
+      json: jsonRequest,
+    );
   }
 
   fetchFPCDetails() {
-    print(">>Key is>>>>>" + (selectedChannel?.key ?? ""));
     if (selectedLocation == null) {
       Snack.callError("Please select location");
     } else if (selectedChannel == null) {
@@ -332,28 +293,25 @@ class FillerController extends GetxController {
     } else if (selectedDate == null) {
       Snack.callError("Please select date");
     } else {
-      // LoadingDialog.call();
+      LoadingDialog.call();
       selectedDate = df1.parse(date_.text);
       Get.find<ConnectorControl>().GETMETHODCALL(
           api: ApiFactory.FPC_DETAILS(selectedLocation?.key ?? "", selectedChannel?.key ?? "", dfFinal.format(selectedDate!)),
           fun: (dynamic list) {
-            print("Json response is>>>" + jsonEncode(list));
-            // Get.back();
-            fillerDailyFpcList?.clear();
+            Get.back();
+            fillerDailyFpcList.clear();
             list['dailyFPC'].forEach((element) {
-              fillerDailyFpcList?.add(FillerDailyFPCModel.fromJson(element));
+              fillerDailyFpcList.add(FillerDailyFPCModel.fromJson(element));
             });
-            print(">>Update Called");
-            update(["fillerFPCTable"]);
           },
           failed: (val) {
+            Get.back();
             Snack.callError(val.toString());
           });
     }
   }
 
   fetchSegmentDetails(FillerDailyFPCModel fillerDailyFpc) {
-    print(">>Key is>>>>>" + (selectedChannel?.key ?? ""));
     if (selectedLocation == null) {
       Snack.callError("Please select location");
     } else if (selectedChannel == null) {
@@ -361,113 +319,30 @@ class FillerController extends GetxController {
     } else if (selectedDate == null) {
       Snack.callError("Please select date");
     } else {
-      // LoadingDialog.call();
+      LoadingDialog.call();
       selectedDate = df1.parse(date_.text);
       Get.find<ConnectorControl>().GETMETHODCALL(
           api: ApiFactory.SEGMENT_DETAILS(
-              //    programCode, exportTapeCode, episodeNumber, originalRepeatCode, locationCode, channelCode, startTime, date),
-              fillerDailyFpc.programCode,
-              fillerDailyFpc.tapeID,
-              fillerDailyFpc.epsNo,
-              fillerDailyFpc.oriRep,
-              selectedLocation?.key ?? "",
-              selectedChannel?.key ?? "",
-              fillerDailyFpc.fpcTime,
-              dfFinal.format(selectedDate!)),
-          //  selectedLocation?.key ?? "", selectedChannel?.key ?? "",
-          //      df2.format(selectedDate!),fillerDailyFpc,"","","",""),
+            fillerDailyFpc.programCode,
+            fillerDailyFpc.tapeID,
+            fillerDailyFpc.epsNo,
+            fillerDailyFpc.oriRep,
+            selectedLocation?.key ?? "",
+            selectedChannel?.key ?? "",
+            fillerDailyFpc.fpcTime,
+            dfFinal.format(selectedDate!),
+          ),
           fun: (List list) {
-            // Get.back();
-            fillerSegmentList?.clear();
-            list.forEach((element) {
-              fillerSegmentList?.add(FillerSegmentModel.fromJson(element));
-            });
-            update(["fillerSegmentTable"]);
+            Get.back();
+            fillerSegmentList.clear();
+            for (var element in list) {
+              fillerSegmentList.add(FillerSegmentModel.fromJson(element));
+            }
           },
           failed: (val) {
             Snack.callError(val.toString());
           });
     }
-  }
-
-  /// Useful in Columns
-  loadColumnBeams(column) {
-    List<PlutoRow> rows = [];
-    for (Map row in beams.where((element) => element["beam"] == column)) {
-      Map<String, PlutoCell> cells = {};
-
-      for (var element in row.entries) {
-        print(element.value);
-        cells[element.key] = PlutoCell(
-          value: element.key == "selected" || element.value == null
-              ? ""
-              : element.key.toString().toLowerCase().contains("date")
-                  ? (element.value.toString().contains('T') && element.value.toString().split('T')[1] == '00:00:00')
-                      ? DateFormat("dd/MM/yyyy").format(DateFormat('yyyy-MM-ddTHH:mm:ss').parse(element.value.toString()))
-                      : DateFormat("dd/MM/yyyy HH:mm:ss").format(DateFormat('yyyy-MM-ddTHH:mm:ss').parse(element.value.toString()))
-                  // DateFormat("dd-MM-yyyy hh:mm").format(DateTime.parse(element.value.toString().replaceAll("T", " ")))
-                  : element.value.toString(),
-        );
-      }
-
-      rows.add(PlutoRow(
-        cells: cells,
-      ));
-    }
-    if (bmsReportStateManager != null) {
-      print("state working");
-
-      bmsReportStateManager!.removeRows(bmsReportStateManager!.rows);
-      bmsReportStateManager!.resetCurrentState();
-      bmsReportStateManager!.appendRows(rows);
-    }
-    beamRows = [];
-    update(["beams"]);
-    beamRows = rows;
-    rows = [];
-    update(["beams"]);
-  }
-
-  /// Useful in Columns
-  void loadBeams() {
-    if (conflictReportStateManager.currentRow == null) {
-      return;
-    }
-    // log("Rows");
-    // log(conflictReportStateManager.currentRow!.cells["Program"]!.value);
-    List<PlutoRow> rows = [];
-    for (Map row in beams.where((element) => element["program"] == conflictReportStateManager.currentRow!.cells["Program"]!.value)) {
-      Map<String, PlutoCell> cells = {};
-
-      for (var element in row.entries) {
-        cells[element.key] = PlutoCell(
-          value: element.key == "selected" || element.value == null
-              ? ""
-              : element.key.toString().toLowerCase().contains("date")
-                  ? (element.value.toString().contains('T') && element.value.toString().split('T')[1] == '00:00:00')
-                      ? DateFormat("dd/MM/yyyy").format(DateFormat('yyyy-MM-ddTHH:mm:ss').parse(element.value.toString()))
-                      : DateFormat("dd/MM/yyyy HH:mm:ss").format(DateFormat('yyyy-MM-ddTHH:mm:ss').parse(element.value.toString()))
-                  // ? DateFormat("dd/MM/yyyy hh:mm").format(DateTime.parse(element.value.toString().replaceAll("T", " ")))
-                  : element.value.toString(),
-        );
-      }
-
-      rows.add(PlutoRow(
-        cells: cells,
-      ));
-    }
-    if (bmsReportStateManager != null) {
-      print("state working");
-
-      bmsReportStateManager!.removeRows(bmsReportStateManager!.rows);
-      bmsReportStateManager!.resetCurrentState();
-      bmsReportStateManager!.appendRows(rows);
-    }
-    beamRows = [];
-    update(["beams"]);
-    beamRows = rows;
-    rows = [];
-    update(["beams"]);
   }
 
   fetchGenerate() {
@@ -475,8 +350,6 @@ class FillerController extends GetxController {
       Snack.callError("Please select Location");
     } else if (selectedChannel == null) {
       Snack.callError("Please select Channel");
-    } else if (selectDate == null) {
-      Snack.callError("Please select from date");
     } else {
       selectDate = df1.parse(date_.text);
       listData?.clear();
@@ -495,24 +368,9 @@ class FillerController extends GetxController {
     return false;
   }
 
-  void clear() {
-    listData?.clear();
-    locationEnable.value = true;
-    channelEnable.value = true;
-  }
-
-  void exit() {
-    Get.find<HomeController>().selectChild1.value = null;
-    Get.delete<FillerController>();
-  }
-
   @override
   void onReady() {
     super.onReady();
-  }
-
-  @override
-  void onClose() {
-    super.onClose();
+    getLocation();
   }
 }

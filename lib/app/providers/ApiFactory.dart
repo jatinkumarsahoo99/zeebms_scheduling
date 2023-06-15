@@ -221,9 +221,11 @@ class ApiFactory {
 
   static String FILLER_LOCATION = "$BASE_URL/api/FillerScheduling/GetLocations";
 
-  static String FILLER_CHANNEL(locationCode) => "$BASE_URL/api/FillerScheduling/GetChannels/$locationCode";
+  static String FILLER_CHANNEL(locationCode) => "$BASE_URL/api/FillerScheduling/GetChannels?LocationCode=$locationCode";
 
   static String FILLER_CAPTION = "$BASE_URL/api/FillerScheduling/GetFillerCaption/";
+  static String get FILLER_IMPORT_EXCEL => "$BASE_URL/api/FillerScheduling/ImportFillerExcel";
+  static String get FILLER_IMPORT_FILLERS => "$BASE_URL/api/FillerScheduling/SaveImportExistingFillers";
 
   /// to Search Caption in dropdown
   static String FILLER_VALUE_BY_CAPTION(fillerCaption) => "$BASE_URL/api/FillerScheduling/GetFillerCaption/$fillerCaption";
@@ -340,6 +342,42 @@ class ApiFactory {
       "$BASE_URL/api/Transmissionlog/GetLoadColours?locationcode=$locId&channelcode=$channelId&telecastdate=$telcastDt";
   static String TRANSMISSION_LOG_AUTO(String locId, String channelId, String telecastDt, bool isPromoReq, bool chkTxComm) =>
       "$BASE_URL/api/Transmissionlog/GetAutoClick?Locationcode=$locId&channelcode=$channelId&telecastdate=$telecastDt&addpromosAuto=$isPromoReq&chkTxCommercial=$chkTxComm";
+  static String TRANSMISSION_LOG_COMMERCIAL_CLICK(String locId, String channelId, String telecastDt, bool standBy) =>
+      "$BASE_URL/api/Transmissionlog/GetCommercialsClick?locationcode=$locId&channelcode=$channelId&Date=$telecastDt&standbyLog=$standBy";
+  static String TRANSMISSION_LOG_UPDATED_CLICK(String locId, String channelId, String telecastDt, bool standBy) =>
+      "$BASE_URL/api/Transmissionlog/GetUpdatedLogClick?Locationcode=$locId&channelcode=$channelId&Date=$telecastDt&standbyLog=$standBy";
+  static String TRANSMISSION_LOG_VERIFY_CLICK(String locId, String channelId, String telecastDt, bool standBy) =>
+      "$BASE_URL/api/Transmissionlog/GetbtnVerifyClick?locationcode=$locId&channelcode=$channelId&txtDate=$telecastDt&chkStandBy=$standBy";
+  static String TRANSMISSION_LOG_POST_VERIFY() => "$BASE_URL/api/Transmissionlog/PostVerifyTime";
+  static String TRANSMISSION_LOG_SEARCH_INSERT(
+          String locId, String channelId, String telecastDt, bool isMine, String eventType, String txId, String caption) =>
+      "$BASE_URL/api/Transmissionlog/GetFastInsertsearchClick?locationcode=$locId&channelcode=$channelId&telecastdate=$telecastDt&mine=$isMine&eventType=$eventType&TxID=$txId&Caption=$caption";
+  static String TRANSMISSION_LOG_BUTTON_VERIFY(String locId, String channelId, String telecastDt, bool isStandBy) =>
+      "$BASE_URL/api/Transmissionlog/GetbtnVerifyClick?locationcode=$locId&channelcode=$channelId&txtDate=$telecastDt&chkStandBy=$isStandBy";
+  static String TRANSMISSION_LOG_BUTTON_DETAILS_VERIFY(String locId, String channelId, String telecastDt) =>
+      "$BASE_URL/api/Transmissionlog/GetbtnDetailClick?locationcode=$locId&channelcode=$channelId&txtDate=$telecastDt";
+  static String TRANSMISSION_LOG_EVENT_LIST() => "$BASE_URL/api/Transmissionlog/GetLoadFastInsertEventType";
+  static String TRANSMISSION_LOG_POST_PIVOT_LOG() => "$BASE_URL/api/Transmissionlog/PostPivotLog";
+  static String TRANSMISSION_LOG_POST_TS() => "$BASE_URL/api/Transmissionlog/PostTsCalc";
+  static String TRANSMISSION_LOG_LAST_SAVEDLOG(
+    String locId,
+    String chnlId,
+    String txtDt,
+  ) =>
+      "$BASE_URL/api/Transmissionlog/GetbtnLastSavedLogClick?locationcode=$locId&channelcode=$chnlId&txtDate=$txtDt";
+  static String TRANSMISSION_LOG_TS_GET_HIGHLIGHT(
+    String locId,
+    String chnlId,
+  ) =>
+      "$BASE_URL/api/Transmissionlog/GetHighlightTSGrid?Locationcode=$locId&ChannelCode=$chnlId";
+static String TRANSMISSION_LOG_SEGMENT_PROGRAM_SEARCH() =>
+      "$BASE_URL/api/Transmissionlog/GetProgramSearch?TextSourceProgram=";
+static String TRANSMISSION_LOG_POST_RESCHEDULE() =>
+      "$BASE_URL/api/Transmissionlog/PostRescheduleSpotsClick";
+static String TRANSMISSION_LOG_PROF_LEAVE(String progCode,String epNo,) =>
+      "$BASE_URL/api/Transmissionlog/GettxtInsProgpisodeNoLeave?programcode=$progCode&EpisodeNo=$epNo";
+static String TRANSMISSION_LOG_SEARCH_SEGMENT(String progCode,String epNo,String tapeCode,bool defaultSeg) =>
+      "$BASE_URL/api/Transmissionlog/GetinsProgSearchClick?programcode=$progCode&episodenumber=$epNo&tapecode=$tapeCode&Defaultsegments=$defaultSeg";
 
   /////////////////////////// RO DISTRIBUTION START/////////////////////
   static String get RO_DISTRIBUTION_GET_LOCATION => "$BASE_URL/api/RosDistribution/GetRosDistribution";
@@ -378,6 +416,95 @@ class ApiFactory {
   ///
   ///
   ///
+  ////////////////////////////// FINAL-AUDIT-MASTER-AT-API-START  ////////////////////////////////////////////
+  static String get FINAL_REPORT_AT_INITAIL => "$BASE_URL/api/FinalAuditReportAT/ZoneWiseInventoryLoad";
+  static String get FINAL_REPORT_AT_GET_DATA => "$BASE_URL/api/FinalAuditReportAT/GenrateClick";
+  static String FINAL_REPORT_AT_GET_CHANNELS(String lc) => "$BASE_URL/api/FinalAuditReportAT/GetChannel?LocationCode=$lc";
+  ////////////////////////////// FINAL-AUDIT-MASTER-AT-API-END  //////////////////////////////////////////////
+  ///
+  ///
+  ///
+  ///
+  ///
+  ////////////////////////////// SECONDARY-EVENT-MASTER-API-START  ////////////////////////////////////////////
+  static String get SECONDARY_EVENT_MASTER_INITAIL => "$BASE_URL/api/SecondaryEventMaster/FormLoad";
+  static String get SECONDARY_EVENT_MASTER_SAVE_DATA => "$BASE_URL/api/SecondaryEventMaster/Save";
+  static String SECONDARY_EVENT_MASTER_GET_CHANNELS(String lc) => "$BASE_URL/api/SecondaryEventMaster/Getlistchannel?LocationCode=$lc";
+  static String SECONDARY_EVENT_MASTER_DISPLAY_DATA(String txid) => "$BASE_URL/api/SecondaryEventMaster/DisplaySecondaryEvent?TXid=$txid";
+  ////////////////////////////// SECONDARY-EVENT-MASTER-API-END  //////////////////////////////////////////////
+  ///
+  ///
+  ///
+  ///
+  ////////////////////////////// PROMO-API-START  ////////////////////////////////////////////
+  static String get PROMOS_GET_LOCATION => "$BASE_URL/api/PromoScheduling/GetLocations";
+  static String get PROMOS_SAVE_AUTO_PROMO => "$BASE_URL/api/PromoScheduling/SaveAutoPromo";
+  static String get PROMOS_SAVE => "$BASE_URL/api/PromoScheduling/SavePromoScheduling";
+  static String get PROMOS_IMPORT_EXCEL_VALIDATE => "$BASE_URL/api/PromoScheduling/ImportExcelValidate";
+  static String get PROMOS_IMPORT_EXCEL => "$BASE_URL/api/PromoScheduling/ImportExcel";
+  static String get PROMOS_LEFT_2ND_GET_DATA => "$BASE_URL/api/PromoScheduling/ProgramSegaments";
+  static String get PROMOS_SEARCH => "$BASE_URL/api/PromoScheduling/FastInsertSearch";
+  static String PROMOS_GET_CHANNELS(String lc) => "$BASE_URL/api/PromoScheduling/GetChannels?LocationCode=$lc";
+  static String PROMOS_SHOW_DETAILS(String lc, String channelCode, String teleCasteDate) =>
+      "$BASE_URL/api/PromoScheduling/GetPromoSchDetails?LocationCode=$lc&ChannelCode=$channelCode&TelecastDate=$teleCasteDate";
+  static String PROMOS_DELETE(String lc, String channelCode, String teleCasteDate) =>
+      "$BASE_URL/api/PromoScheduling/DeletePromoSchDetails?LocationCode=$lc&ChannelCode=$channelCode&TelecastDate=$teleCasteDate";
+  ////////////////////////////// PROMO-API-END  //////////////////////////////////////////////
+  ///
+  ///
+  ///
+  ///
+  ////////////////////////////// EVENT-SECONDARY-API-START  ////////////////////////////////////////////
+  static String get EVENT_GET_LOCATION => "$BASE_URL/api/ScheduleSecondayEvents/GetLocations";
+  static String get EVENT_SAVE => "$BASE_URL/api/ScheduleSecondayEvents/EventSave";
+  // static String get EVENT_IMPORT_EXCEL_VALIDATE => "$BASE_URL/api/ScheduleSecondayEvents/ImportExcelValidate";
+  // static String get EVENT_IMPORT_EXCEL => "$BASE_URL/api/ScheduleSecondayEvents/ImportExcel";
+  // static String get EVENT_LEFT_2ND_GET_DATA => "$BASE_URL/api/ScheduleSecondayEvents/ProgramSegaments";
+  static String get EVENT_SEARCH => "$BASE_URL/api/ScheduleSecondayEvents/EventSearch";
+  static String EVENT_GET_CHANNELS(String lc) => "$BASE_URL/api/ScheduleSecondayEvents/GetChannels?LocationCode=$lc";
+  static String get EVENT_SHOW_DETAILS => "$BASE_URL/api/ScheduleSecondayEvents/ShowDetails";
+  static String get EVENT_PREVIOUS_DETAILS => "$BASE_URL/api/ScheduleSecondayEvents/PreviousEvent";
+  static String EVENT_DELETE_ALL(String lc, String channelCode, String teleCasteDate) =>
+      "$BASE_URL/api/ScheduleSecondayEvents/DeletePromoSchDetails?LocationCode=$lc&ChannelCode=$channelCode&TelecastDate=$teleCasteDate";
+  ////////////////////////////// EVENT-SECONDARY-API-END  //////////////////////////////////////////////
+  ///
+  ///
+  ///
+  ///
+  ///
+  ///
+  ////////////////////////////// SLIDE-API-START  ////////////////////////////////////////////
+  static String get SLIDE_GET_LOCATION => "$BASE_URL/api/ScheduleSlides/GetSlideSchedulingLoad";
+  static String get SLIDE_SAVE => "$BASE_URL/api/ScheduleSlides/PostSave";
+  static String get SLIDE_GET_DATA => "$BASE_URL/api/ScheduleSlides/GetLstDailyFPC";
+  static String SLIDE_GET_CHANNELS(String lc) => "$BASE_URL/api/ScheduleSlides/GetLocationLeave?LocationCode=$lc";
+  ////////////////////////////// SLIDE-API-END  //////////////////////////////////////////////
+  ///
+  ///
+  ///
+  ///
+  ///
+  ////////////////////////////// FINAL-AUDIT-MASTER-BT-API-START  ////////////////////////////////////////////
+  static String get FINAL_REPORT_BT_INITAIL => "$BASE_URL/api/FinalAuditReportBT/FormLoad";
+  static String get FINAL_REPORT_BT_GET_DATA => "$BASE_URL/api/FinalAuditReportBT/DateLeave";
+  static String FINAL_REPORT_BT_GET_CHANNELS(String lc) => "$BASE_URL/api/FinalAuditReportBT/GetChannel?LocationCode=$lc";
+  //////////////////////////// FINAL-AUDIT-MASTER-BT-API-END  //////////////////////////////////////////////
+  ///
+  ///
+  ///
+  ///
+  ////////////////////////////// STILL-MASTER-API-START  ////////////////////////////////////////////
+  static String get STILL_MASTER_FORM_LOAD => "$BASE_URL/api/StillMaster/GetPageLoad";
+  static String get STILL_MASTER_TAPE_ID_LEAVE => "$BASE_URL/api/StillMaster/TapeIDLeave";
+  static String get STILL_MASTER_TAPE_SEG_NO_LEAVE => "$BASE_URL/api/StillMaster/SegNoLeave";
+  static String get STILL_MASTER_TAPE_HOUSE_ID_LEAVE => "$BASE_URL/api/StillMaster/HouseIDLeave";
+  static String get STILL_MASTER_TAPE_SAVE_DATA => "$BASE_URL/api/StillMaster/SaveRecord";
+  // static String get FINAL_REPORT_BT_GET_DATA => "$BASE_URL/api/FinalAuditReportBT/DateLeave";
+  static String STILL_MASTER_GET_CHANNELS(String lc) => "$BASE_URL/api/StillMaster/ListMyChannels?LocationCode=$lc";
+  static String STILL_MASTER_GET_PROGRAM_DATA(String lc, String cc) => "$BASE_URL/api/StillMaster/GetProgramPicker?locationcode=$lc&channelcode=$cc";
+  static String get STILL_MASTER_GET_RETRIVE_DATA => "$BASE_URL/api/StillMaster/GetRetrieveRecord";
+  static String get STILL_MASTER_PROGRAM_SEARCH => "$BASE_URL/api/StillMaster/GetSourceProgramSearch?TextSourceProgram=";
+  //////////////////////////// STILL-MASTER-API-END  //////////////////////////////////////////////
   ///
   ///
   ///

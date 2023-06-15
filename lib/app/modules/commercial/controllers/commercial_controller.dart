@@ -26,6 +26,7 @@ class CommercialController extends GetxController {
   int? tabIndex = 0;
   int selectIndex = 0;
   int? selectedDDIndex;
+  int leftTableSelectedIdx = 0;
 
   int selectedGroup = 0;
   double widthSize = 0.17;
@@ -42,8 +43,8 @@ class CommercialController extends GetxController {
   var channelEnable = RxBool(true);
   var locationEnable = RxBool(true);
   var selectedChannels = RxList([]);
-  var commercialSpots = RxString("");
-  var commercialDuration = RxString("");
+  var commercialSpots = "".obs;
+  var commercialDuration = "".obs;
 
   var locations = RxList<DropDownValue>();
   var channels = RxList<DropDownValue>([]);
@@ -60,10 +61,8 @@ class CommercialController extends GetxController {
   List<PlutoColumn> initColumn = [];
   List<PermissionModel>? formPermissions;
   List<CommercialProgramModel>? commercialProgramList = [];
-  RxList<CommercialShowOnTabModel>? showCommercialDetailsList =
-      <CommercialShowOnTabModel>[].obs;
-  RxList<CommercialShowOnTabModel>? mainCommercialShowDetailsList =
-      <CommercialShowOnTabModel>[].obs;
+  RxList<CommercialShowOnTabModel>? showCommercialDetailsList = <CommercialShowOnTabModel>[].obs;
+  RxList<CommercialShowOnTabModel>? mainCommercialShowDetailsList = <CommercialShowOnTabModel>[].obs;
 
   /////////////Pluto Grid////////////
   PlutoGridStateManager? stateManager;
@@ -99,8 +98,7 @@ class CommercialController extends GetxController {
   CommercialShowOnTabModel? selectedShowOnTab;
 
   TextEditingController date_ = TextEditingController();
-  TextEditingController refDateControl = TextEditingController(
-      text: DateFormat("dd-MM-yyyy").format(DateTime.now()));
+  TextEditingController refDateControl = TextEditingController(text: DateFormat("dd-MM-yyyy").format(DateTime.now()));
 
   @override
   void onInit() {
@@ -125,13 +123,9 @@ class CommercialController extends GetxController {
           api: ApiFactory.COMMERCIAL_CHANNEL(locationCode),
           fun: (data) {
             if (data["locationSelect"] is List) {
-              channels.value = (data["locationSelect"] as List)
-                  .map((e) => DropDownValue(
-                      key: e["channelCode"], value: e["channelName"]))
-                  .toList();
+              channels.value = (data["locationSelect"] as List).map((e) => DropDownValue(key: e["channelCode"], value: e["channelName"])).toList();
             } else {
-              LoadingDialog.callErrorMessage1(
-                  msg: "Failed To Load Initial Data");
+              LoadingDialog.callErrorMessage1(msg: "Failed To Load Initial Data");
             }
           });
     } catch (e) {
@@ -151,46 +145,33 @@ class CommercialController extends GetxController {
       LoadingDialog.call();
       selectedDate = df1.parse(date_.text);
       Get.find<ConnectorControl>().GETMETHODCALL(
-          api: ApiFactory.COMMERCIAL_SHOW_FPC_SCHEDULLING_DETAILS(
-              selectedLocation?.key ?? "",
-              selectedChannel?.key ?? "",
-              df1.format(selectedDate!)),
+          api: ApiFactory.COMMERCIAL_SHOW_FPC_SCHEDULLING_DETAILS(selectedLocation?.key ?? "", selectedChannel?.key ?? "", df1.format(selectedDate!)),
           fun: (dynamic list) {
             print("Json response is>>>" + jsonEncode(list));
 
+            leftTableSelectedIdx = 0;
             commercialProgramList?.clear();
             list['showDetails']["lstDailyFPC"].forEach((element) {
-              commercialProgramList
-                  ?.add(CommercialProgramModel.fromJson(element));
+              commercialProgramList?.add(CommercialProgramModel.fromJson(element));
             });
 
             mainCommercialShowDetailsList?.clear();
             showCommercialDetailsList?.clear();
-            list['showDetails']['lstCommercialShuffling']
-                .asMap()
-                .forEach((index, element) {
-              mainCommercialShowDetailsList
-                  ?.add(CommercialShowOnTabModel.fromJson(element, index));
+            list['showDetails']['lstCommercialShuffling'].asMap().forEach((index, element) {
+              mainCommercialShowDetailsList?.add(CommercialShowOnTabModel.fromJson(element, index));
             });
-            showCommercialDetailsList?.value = mainCommercialShowDetailsList!
-                .where((o) => o.bStatus.toString() == 'B')
-                .toList();
 
-            var cList = mainCommercialShowDetailsList!
-                .where((o) =>
-                    o.eventType.toString() == 'C' &&
-                    o.bStatus.toString() == 'B')
-                .toList();
+            showCommercialDetailsList?.value = mainCommercialShowDetailsList!.where((o) => o.bStatus.toString() == 'B').toList();
+
+            var cList = mainCommercialShowDetailsList!.where((o) => o.eventType.toString() == 'C' && o.bStatus.toString() == 'B').toList();
             commercialSpots.value = cList.length.toString();
             print("commercialSpots value is : ${commercialSpots.value}");
 
             double intTotalDuration = 0;
             for (int i = 0; i <= cList.length - 1; i++) {
-              intTotalDuration = intTotalDuration +
-                  Utils.oldBMSConvertToSecondsValue(value: cList[i].duration!);
+              intTotalDuration = intTotalDuration + Utils.oldBMSConvertToSecondsValue(value: cList[i].duration!);
             }
-            commercialDuration.value =
-                Utils.convertToTimeFromDouble(value: intTotalDuration);
+            commercialDuration.value = Utils.convertToTimeFromDouble(value: intTotalDuration);
             print("commercialDuration value is : ${commercialDuration.value}");
 
             // commercialSpots.value =
@@ -198,7 +179,7 @@ class CommercialController extends GetxController {
             // commercialDuration.value = list['showDetails']['bindGridOutPut']
             // ['commercialDuration'] ?? "";
 
-            updateTab();
+            updateAllTabs();
             Get.back();
           },
           failed: (val) {
@@ -207,7 +188,7 @@ class CommercialController extends GetxController {
     }
   }
 
-  updateTab() {
+  updateAllTabs() {
     update(["programTable"]);
     update(["schedulingTable"]);
     update(["fpcMismatchTable"]);
@@ -232,24 +213,18 @@ class CommercialController extends GetxController {
     showCommercialDetailsList?.clear();
     if (selectedIndex.value == 1) {
       ///Filter bStatus F, calculate spot duration then calling ColorGrid filter
-      showCommercialDetailsList?.value = mainCommercialShowDetailsList!
-          .where((o) => o.bStatus.toString() == 'F')
-          .toList();
+      showCommercialDetailsList?.value = mainCommercialShowDetailsList!.where((o) => o.bStatus.toString() == 'F').toList();
       showCommercialDetailsList?.refresh();
     } else if (selectedIndex.value == 2) {
       ///Filter bStatus E, calculate spot duration then calling ColorGrid filter
-      showCommercialDetailsList?.value = mainCommercialShowDetailsList!
-          .where((o) => o.bStatus.toString() == 'E')
-          .toList();
+      showCommercialDetailsList?.value = mainCommercialShowDetailsList!.where((o) => o.bStatus.toString() == 'E').toList();
       showCommercialDetailsList?.refresh();
     } else {
       ///Filter bStatus B, calculate spot duration then calling ColorGrid filter
-      showCommercialDetailsList?.value = mainCommercialShowDetailsList!
-          .where((o) => o.bStatus.toString() == 'B')
-          .toList();
+      showCommercialDetailsList?.value = mainCommercialShowDetailsList!.where((o) => o.bStatus.toString() == 'B').toList();
       showCommercialDetailsList?.refresh();
     }
-    updateTab();
+    updateAllTabs();
     return showCommercialDetailsList?.value;
   }
 
@@ -257,31 +232,30 @@ class CommercialController extends GetxController {
     if (selectedIndex.value == 1) {
       ///Filter F, calculate spot duration then calling ColorGrid filter
       print(programFpcTimeSelected.toString());
-      showCommercialDetailsList?.value = mainCommercialShowDetailsList!
-          .where((o) =>
-              o.fpcTime.toString() == programFpcTimeSelected &&
-              o.bStatus.toString() == 'F')
-          .toList();
+      showCommercialDetailsList?.value =
+          mainCommercialShowDetailsList!.where((o) => o.fpcTime.toString() == programFpcTimeSelected && o.bStatus.toString() == 'F').toList();
       showCommercialDetailsList?.refresh();
     } else if (selectedIndex.value == 2) {
       ///Filter E, calculate spot duration then calling ColorGrid filter
       print(programFpcTimeSelected.toString());
-      showCommercialDetailsList?.value = mainCommercialShowDetailsList!
-          .where((o) =>
-              o.fpcTime.toString() == programFpcTimeSelected &&
-              o.bStatus.toString() == 'E')
-          .toList();
+      showCommercialDetailsList?.value =
+          mainCommercialShowDetailsList!.where((o) => o.fpcTime.toString() == programFpcTimeSelected && o.bStatus.toString() == 'E').toList();
       showCommercialDetailsList?.refresh();
     } else {
       /// Filter B, calculate spot duration then calling ColorGrid filter.
-      showCommercialDetailsList?.value = mainCommercialShowDetailsList!
-          .where((o) =>
-              o.fpcTime.toString() == programFpcTimeSelected &&
-              o.bStatus.toString() == 'B')
-          .toList();
+      showCommercialDetailsList?.value =
+          mainCommercialShowDetailsList!.where((o) => o.fpcTime.toString() == programFpcTimeSelected && o.bStatus.toString() == 'B').toList();
+      commercialSpots.value = showCommercialDetailsList?.where((o) => o.eventType == "C").toList().length.toString() ?? "0";
+      num intTotalDuration = 0;
+      for (int i = 0; i < (showCommercialDetailsList?.length ?? 0); i++) {
+        if (showCommercialDetailsList?[i].eventType == "C") {
+          intTotalDuration = intTotalDuration + Utils.oldBMSConvertToSecondsValue(value: showCommercialDetailsList?[i].duration ?? "");
+        }
+      }
+      commercialDuration.value = Utils.convertToTimeFromDouble(value: intTotalDuration);
       showCommercialDetailsList?.refresh();
     }
-    updateTab();
+    updateAllTabs();
     return showCommercialDetailsList?.value;
   }
 
@@ -291,9 +265,7 @@ class CommercialController extends GetxController {
     /// PProgramMaster = programProgramCodeSelected &&
     /// PDailyFPC == programProgramCodeSelected
     print(exportTapeCodeSelected.toString());
-    var list = mainCommercialShowDetailsList!
-        .where((o) => o.bStatus.toString() == 'F')
-        .toList();
+    var list = mainCommercialShowDetailsList!.where((o) => o.bStatus.toString() == 'F').toList();
     var target = list[mainSelectedIndex!];
     print(mainSelectedIndex!.toString());
     print("changeFPCOnClick : $target");
@@ -302,7 +274,7 @@ class CommercialController extends GetxController {
     target.pProgramMaster = programCodeSelected;
     target.pDailyFPC = programCodeSelected;
     mainCommercialShowDetailsList?.refresh();
-    updateTab();
+    updateAllTabs();
     showTabList();
 
     return mainCommercialShowDetailsList;
@@ -314,15 +286,13 @@ class CommercialController extends GetxController {
     // var target = mainCommercialShowDetailsList!
     //     .firstWhere((item) => item.exportTapeCode == exportTapeCodeSelected);
 
-    var list = mainCommercialShowDetailsList!
-        .where((o) => o.bStatus.toString() == 'F')
-        .toList();
+    var list = mainCommercialShowDetailsList!.where((o) => o.bStatus.toString() == 'F').toList();
     var target = list[mainSelectedIndex!];
     print("misMatchOnClick : $target");
     target.bStatus = 'B';
     target.pProgramMaster = pDailyFPCSelected;
     mainCommercialShowDetailsList?.refresh();
-    updateTab();
+    updateAllTabs();
     showTabList();
     return mainCommercialShowDetailsList;
   }
@@ -330,14 +300,12 @@ class CommercialController extends GetxController {
   RxList<CommercialShowOnTabModel>? markAsErrorOnClick() {
     /// BStatus == "E"
     print(exportTapeCodeSelected.toString());
-    var list = mainCommercialShowDetailsList!
-        .where((o) => o.bStatus.toString() == 'F')
-        .toList();
+    var list = mainCommercialShowDetailsList!.where((o) => o.bStatus.toString() == 'F').toList();
     var target = list[mainSelectedIndex!];
     print("markAsErrorOnClick : $target");
     target.bStatus = 'E';
     mainCommercialShowDetailsList?.refresh();
-    updateTab();
+    updateAllTabs();
     showTabList();
     return mainCommercialShowDetailsList;
   }
@@ -347,14 +315,12 @@ class CommercialController extends GetxController {
     print(exportTapeCodeSelected.toString());
     // var target = mainCommercialShowDetailsList!
     //     .firstWhere((item) => item.exportTapeCode == exportTapeCodeSelected);
-    var list = mainCommercialShowDetailsList!
-        .where((o) => o.bStatus.toString() == 'E')
-        .toList();
+    var list = mainCommercialShowDetailsList!.where((o) => o.bStatus.toString() == 'E').toList();
     var target = list[mainSelectedIndex!];
     print("unMarkAsErrorOnClick : $target");
     target.bStatus = 'B';
     mainCommercialShowDetailsList?.refresh();
-    updateTab();
+    updateAllTabs();
     showTabList();
     return mainCommercialShowDetailsList;
   }
@@ -374,8 +340,7 @@ class CommercialController extends GetxController {
           "locationCode": selectedLocation?.key.toString(),
           "channelCode": selectedChannel?.key.toString(),
           "scheduleDate": df1.format(selectedDate!),
-          "lstCommercialShuffling":
-              mainCommercialShowDetailsList?.map((e) => e.toJson()).toList(),
+          "lstCommercialShuffling": mainCommercialShowDetailsList?.map((e) => e.toJson()).toList(),
         };
         print("requestedToSaveData >>>" + jsonEncode(jsonRequest));
         Get.find<ConnectorControl>().POSTMETHOD(
@@ -510,6 +475,9 @@ class CommercialController extends GetxController {
   }
 
   void clear() {
+    leftTableSelectedIdx = 0;
+    programFpcTimeSelected = null;
+    selectedProgram = null;
     date_.text = "";
     selectedChannel = null;
     selectedLocation = null;

@@ -1,4 +1,5 @@
 import 'package:bms_scheduling/app/controller/MainController.dart';
+import 'package:bms_scheduling/app/modules/EventSecondary/views/event_secondary_view.dart';
 import 'package:bms_scheduling/app/modules/FillerMaster/views/filler_master_view.dart';
 import 'package:bms_scheduling/app/modules/FinalAuditReportAfterTelecast/views/final_audit_report_after_telecast_view.dart';
 import 'package:bms_scheduling/app/modules/FinalAuditReportBeforeLog/views/final_audit_report_before_log_view.dart';
@@ -7,12 +8,14 @@ import 'package:bms_scheduling/app/modules/ImportDigitextRunOrder/views/import_d
 import 'package:bms_scheduling/app/modules/MamWorkOrders/views/mam_work_orders_view.dart';
 import 'package:bms_scheduling/app/modules/RoBooking/views/ro_booking_view.dart';
 import 'package:bms_scheduling/app/modules/RoCancellation/views/ro_cancellation_view.dart';
+import 'package:bms_scheduling/app/modules/SecondaryEventMaster/views/secondary_event_master_view.dart';
 import 'package:bms_scheduling/app/modules/commercial/views/commercial_view.dart';
 import 'package:bms_scheduling/app/modules/filler/views/filler_view.dart';
 import 'package:bms_scheduling/app/modules/RoReschedule/views/ro_reschedule_view.dart';
 import 'package:bms_scheduling/app/modules/RosDistribution/views/ros_distribution_view.dart';
 import 'package:bms_scheduling/app/modules/SalesAuditExtraSpotsReport/views/sales_audit_extra_spots_report_view.dart';
 import 'package:bms_scheduling/app/modules/SalesAuditNotTelecastReport/views/SalesAuditNotTelecastReportView.dart';
+import 'package:bms_scheduling/app/modules/promos/views/promos_view.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import '../../widgets/LoadingScreen.dart';
@@ -28,6 +31,7 @@ import '../modules/StillMaster/views/still_master_view.dart';
 import '../modules/TransmissionLog/views/TransmissionLogView.dart';
 import '../modules/commercial/views/commercial_view.dart';
 import '../modules/home/views/home_view.dart';
+import '../modules/slide/views/slide_view.dart';
 import '../routes/app_pages.dart';
 
 class AuthGuard1 extends StatelessWidget {
@@ -55,6 +59,15 @@ class AuthGuard1 extends StatelessWidget {
             case Routes.HOME:
               currentWidget = HomeView();
               break;
+            case Routes.SLIDE:
+              currentWidget = SlideView();
+              break;
+            case Routes.EVENT_SECONDARY:
+              currentWidget = EventSecondaryView();
+              break;
+            case Routes.SECONDARY_EVENT_MASTER:
+              currentWidget = SecondaryEventMasterView();
+              break;
             case Routes.TRANSMISSION_LOG:
               currentWidget = TransmissionLogView();
               break;
@@ -78,6 +91,9 @@ class AuthGuard1 extends StatelessWidget {
               break;
             case Routes.FILLER:
               currentWidget = FillerView();
+              break;
+            case Routes.PROMOS:
+              currentWidget = PromosView();
               break;
             case Routes.COMMERCIAL:
               currentWidget = CommercialView();

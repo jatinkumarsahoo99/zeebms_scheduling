@@ -1,16 +1,14 @@
-import 'dart:convert';
-import 'package:flutter/cupertino.dart';
+import 'package:bms_scheduling/widgets/PlutoGrid/pluto_grid.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:bms_scheduling/widgets/PlutoGrid/pluto_grid.dart';
+
+import '../../../../widgets/CheckBoxWidget.dart';
 import '../../../../widgets/DateTime/DateWithThreeTextField.dart';
 import '../../../../widgets/FormButton.dart';
 import '../../../../widgets/dropdown.dart';
 import '../../../../widgets/gridFromMap.dart';
 import '../../../../widgets/input_fields.dart';
 import '../../../controller/HomeController.dart';
-import '../../../providers/SizeDefine.dart';
-import '../../filler/controllers/filler_controller.dart';
 import '../controllers/promos_controller.dart';
 
 class PromosView extends GetView<PromosController> {
@@ -20,8 +18,8 @@ class PromosView extends GetView<PromosController> {
   var formName = 'Scheduling Promo';
 
   void handleOnRowChecked(PlutoGridOnRowCheckedEvent event) {}
-  //PromosController controllerX = Get.put(PromosController());
-  FillerController controllerX = Get.put(FillerController());
+  //PromosController controller = Get.put(PromosController());
+  // FillerController controller = Get.put(FillerController());
 
   @override
   Widget build(BuildContext context) {
@@ -54,263 +52,186 @@ class PromosView extends GetView<PromosController> {
                                 crossAxisAlignment: CrossAxisAlignment.start,
                                 children: [
                                   Padding(
-                                    padding:
-                                        const EdgeInsets.fromLTRB(0, 5, 0, 5),
-                                    child: GetBuilder<FillerController>(
-                                      id: "initialData",
-                                      builder: (control) {
-                                        return Row(
-                                          children: [
-                                            Obx(
-                                              () => DropDownField
-                                                  .formDropDown1WidthMap(
-                                                      controller.locations
-                                                          .value, (value) {
-                                                // controller.selectedLocation = value;
-                                                // controller.getChannel(value.key);
-                                              }, "Location", 0.15),
-                                            ),
-                                            const SizedBox(width: 15),
-                                            Obx(
-                                              () => DropDownField
-                                                  .formDropDown1WidthMap(
-                                                controller.channels.value,
-                                                (value) {
-                                                  //controller.selectedChannel = value;
-                                                },
-                                                "Channel",
-                                                0.15,
-                                                dialogHeight: Get.height * .7,
-                                              ),
-                                            ),
-                                            const SizedBox(width: 15),
-                                            Obx(
-                                                  () => DateWithThreeTextField(
-                                                title: "From Date",
-                                                splitType: "-",
-                                                widthRation: controllerX.widthSize,
-                                                isEnable: controller.isEnable.value,
-                                                onFocusChange: (data) {
-                                                  print('Selected Date $data');
-
-                                                },
-                                                mainTextController: controllerX.date_,
-                                              ),
-                                            ),
-                                            Padding(
-                                              padding: const EdgeInsets.only(
-                                                  left: 10, top: 17.0),
-                                              child: FormButton(
-                                                btnText: "Show Details",
-                                                callback: () {},
-                                              ),
-                                            ),
-                                            const SizedBox(width: 10),
-                                            Padding(
-                                              padding: const EdgeInsets.only(
-                                                  top: 17.0),
-                                              child: FormButton(
-                                                btnText: "Import",
-                                                callback: () {},
-                                              ),
-                                            ),
-                                            Padding(
-                                              padding: const EdgeInsets.only(
-                                                  left: 10, top: 17.0),
-                                              child: FormButton(
-                                                btnText: "Delete",
-                                                callback: () {},
-                                              ),
-                                            ),
-                                          ],
-                                        );
-                                      },
-                                    ),
-                                  ),
-                                  // Padding(
-                                  //   padding:
-                                  //       const EdgeInsets.fromLTRB(0, 5, 0, 5),
-                                  //   child: GetBuilder<PromosController>(
-                                  //     id: "initialData",
-                                  //     builder: (control) {
-                                  //       return Expanded(
-                                  //         child: Row(
-                                  //           children: [
-                                  //             Obx(
-                                  //               () => DropDownField
-                                  //                   .formDropDown1WidthMap(
-                                  //                 controllerX.locations.value,
-                                  //                 (value) {
-                                  //                   controllerX.selectLocation =
-                                  //                       value;
-                                  //                   // controllerX.selectedLocationId.text = value.key!;
-                                  //                   // controllerX.selectedLocationName.text = value.value!;
-                                  //                   // controller.getChannelsBasedOnLocation(value.key!);
-                                  //                 },
-                                  //                 "Location",
-                                  //                 0.14,
-                                  //                 isEnable: controllerX
-                                  //                     .isEnable.value,
-                                  //                 selected: controllerX
-                                  //                     .selectLocation,
-                                  //                 autoFocus: true,
-                                  //                 dialogWidth: 330,
-                                  //                 dialogHeight: Get.height * .7,
-                                  //               ),
-                                  //             ),
-                                  //             const SizedBox(width: 10),
-                                  //             Obx(() {
-                                  //               return DropDownField
-                                  //                   .formDropDown1Width(
-                                  //                 Get.context!,
-                                  //                 controllerX.channelList ?? [],
-                                  //                 (value) {
-                                  //                   controllerX
-                                  //                           .selectedChannel =
-                                  //                       value;
-                                  //                 },
-                                  //                 "Channel",
-                                  //                 controllerX.widthSize + 0.02,
-                                  //                 paddingLeft: 5,
-                                  //                 searchReq: true,
-                                  //                 isEnable: control
-                                  //                     .channelEnable.value,
-                                  //                 selected: controllerX
-                                  //                     .selectedChannelEnv,
-                                  //                 dialogHeight: Get.height * .7,
-                                  //               );
-                                  //             }),
-                                  //             const SizedBox(width: 10),
-                                  //             DateWithThreeTextField(
-                                  //               title: "From Date",
-                                  //               mainTextController:
-                                  //                   controllerX.date_,
-                                  //               widthRation: 0.10,
-                                  //             ),
-                                  //             Padding(
-                                  //               padding: const EdgeInsets.only(
-                                  //                   left: 10, top: 17.0),
-                                  //               child: FormButton(
-                                  //                 btnText: "Show Details",
-                                  //                 callback: () {},
-                                  //               ),
-                                  //             ),
-                                  //             const SizedBox(width: 10),
-                                  //             Padding(
-                                  //               padding: const EdgeInsets.only(
-                                  //                   top: 17.0),
-                                  //               child: FormButton(
-                                  //                 btnText: "Import",
-                                  //                 callback: () {},
-                                  //               ),
-                                  //             ),
-                                  //             Padding(
-                                  //               padding: const EdgeInsets.only(
-                                  //                   left: 10, top: 17.0),
-                                  //               child: FormButton(
-                                  //                 btnText: "Delete",
-                                  //                 callback: () {},
-                                  //               ),
-                                  //             ),
-                                  //           ],
-                                  //         ),
-                                  //       );
-                                  //     },
-                                  //   ),
-                                  // ),
-                                  Expanded(
-                                    //flex: 1,
-                                    child: GetBuilder<FillerController>(
-                                        init: FillerController(),
-                                        id: "eventTable",
-                                        builder: (controller) {
-                                          if (controller
-                                                  .conflictReport.isEmpty ||
-                                              controller.beams.isEmpty) {
-                                            return Column(
-                                              crossAxisAlignment:
-                                                  CrossAxisAlignment.start,
-                                              children: [
-                                                fillerTable(context),
-                                              ],
-                                            );
-                                          } else {
-                                            return Container();
-                                          }
-                                        }),
-                                  ),
-                                  Expanded(
-                                    //flex: 1,
-                                    child: GetBuilder<FillerController>(
-                                        init: FillerController(),
-                                        id: "eventCaptionTable",
-                                        builder: (controller) {
-                                          if (controller
-                                                  .conflictReport.isEmpty ||
-                                              controller.beams.isEmpty) {
-                                            return Column(
-                                              crossAxisAlignment:
-                                                  CrossAxisAlignment.start,
-                                              children: [
-                                                fillerSegmentTable(context),
-                                              ],
-                                            );
-                                          } else {
-                                            return Container();
-                                          }
-                                        }),
-                                  ),
-                                  const Padding(
-                                      padding: EdgeInsets.fromLTRB(0, 10, 0, 0),
-                                      child: Text("Time Band : 00:00:00")),
-                                  Padding(
-                                    padding:
-                                        const EdgeInsets.fromLTRB(0, 0, 0, 10),
+                                    padding: const EdgeInsets.fromLTRB(0, 5, 0, 5),
                                     child: Row(
-                                      crossAxisAlignment:
-                                          CrossAxisAlignment.end,
                                       children: [
-                                        const Text("Program : PrgName"),
-                                        const Spacer(),
-                                        Padding(
-                                          padding:
-                                              const EdgeInsets.only(top: 5.0),
-                                          child: InputFields.formField1Width(
-                                              widthRatio: 0.09,
-                                              paddingLeft: 5,
-                                              hintTxt: "Available",
-                                              controller: controllerX.segNo_,
-                                              maxLen: 10),
+                                        Obx(
+                                          () => DropDownField.formDropDown1WidthMap(
+                                            controller.locations.value,
+                                            (value) => controller.getChannel(value),
+                                            "Location",
+                                            0.15,
+                                            selected: controller.selectLocation,
+                                            isEnable: controller.controllsEnabled.value,
+                                            autoFocus: true,
+                                            inkWellFocusNode: controller.locationFN,
+                                          ),
+                                        ),
+                                        const SizedBox(width: 15),
+                                        Obx(
+                                          () => DropDownField.formDropDown1WidthMap(
+                                            controller.channels.value,
+                                            (value) => controller.selectChannel = value,
+                                            isEnable: controller.controllsEnabled.value,
+                                            "Channel",
+                                            0.15,
+                                            dialogHeight: Get.height * .7,
+                                            selected: controller.selectChannel,
+                                          ),
+                                        ),
+                                        const SizedBox(width: 15),
+                                        Obx(
+                                          () => DateWithThreeTextField(
+                                            title: "From Date",
+                                            widthRation: .10,
+                                            isEnable: controller.controllsEnabled.value,
+                                            mainTextController: controller.fromdateTC,
+                                          ),
                                         ),
                                         Padding(
-                                          padding:
-                                              const EdgeInsets.only(top: 5.0),
-                                          child: InputFields.formField1Width(
-                                              widthRatio: 0.09,
-                                              paddingLeft: 5,
-                                              hintTxt: "Scheduled",
-                                              controller: controllerX.segNo_,
-                                              maxLen: 10),
+                                          padding: const EdgeInsets.only(left: 10, top: 17.0),
+                                          child: FormButton(
+                                            btnText: "Show Details",
+                                            callback: controller.showDetails,
+                                          ),
+                                        ),
+                                        const SizedBox(width: 10),
+                                        Padding(
+                                          padding: const EdgeInsets.only(top: 17.0),
+                                          child: Obx(() {
+                                            return FormButton(
+                                              btnText: "Import",
+                                              isEnabled: controller.left1stDT.value.isNotEmpty,
+                                              callback: controller.handleImportTap,
+                                            );
+                                          }),
                                         ),
                                         Padding(
-                                          padding:
-                                              const EdgeInsets.only(top: 5.0),
-                                          child: InputFields.formField1Width(
-                                              widthRatio: 0.09,
-                                              paddingLeft: 5,
-                                              hintTxt: "Count",
-                                              controller: controllerX.segNo_,
-                                              maxLen: 10),
+                                          padding: const EdgeInsets.only(left: 10, top: 17.0),
+                                          child: FormButton(
+                                            btnText: "Delete",
+                                            callback: controller.handleDelete,
+                                          ),
                                         ),
                                       ],
                                     ),
+                                  ),
+                                  Expanded(
+                                    child: Obx(() {
+                                      return Container(
+                                        decoration: controller.left1stDT.value.isEmpty ? BoxDecoration(border: Border.all(color: Colors.grey)) : null,
+                                        child: controller.left1stDT.value.isEmpty
+                                            ? null
+                                            : DataGridFromMap(
+                                                mapData: controller.left1stDT.value.map((e) => e.toJson()).toList(),
+                                                onRowDoubleTap: (row) => controller.handleDoubleTapInLeft1stTable(row.rowIdx),
+                                                onload: (event) {
+                                                  controller.left1stSM = event.stateManager;
+                                                  event.stateManager.setSelectingMode(PlutoGridSelectingMode.row);
+                                                  event.stateManager.setSelecting(true);
+                                                  event.stateManager.setCurrentCell(
+                                                      event.stateManager.getRowByIdx(controller.left1stGridSelectedIdx)?.cells['startTime'],
+                                                      controller.left1stGridSelectedIdx);
+                                                },
+                                                colorCallback: (row) => controller.left1stDT[row.rowIdx].exceed
+                                                    ? Colors.red
+                                                    : ((row.row.cells.containsValue(controller.left1stSM?.currentCell))
+                                                        ? Colors.deepPurple.shade200
+                                                        : Colors.white),
+                                                mode: PlutoGridMode.selectWithOneTap,
+                                                onSelected: (row) => controller.left1stGridSelectedIdx = row.rowIdx ?? 0,
+                                              ),
+                                      );
+                                    }),
+                                  ),
+                                  SizedBox(height: 5),
+                                  Expanded(
+                                    child: Obx(() {
+                                      return Container(
+                                        decoration: controller.left2ndDT.value.isEmpty ? BoxDecoration(border: Border.all(color: Colors.grey)) : null,
+                                        child: controller.left2ndDT.value.isEmpty
+                                            ? null
+                                            : DataGridFromMap(
+                                                mapData: controller.left2ndDT.value.map((e) => e.toJson()).toList(),
+                                                mode: PlutoGridMode.selectWithOneTap,
+                                                colorCallback: (row) => (row.row.cells.containsValue(controller.left2ndSM?.currentCell))
+                                                    ? Colors.deepPurple.shade200
+                                                    : Colors.white,
+                                                onload: (event) {
+                                                  controller.left2ndSM = event.stateManager;
+                                                  event.stateManager.setSelectingMode(PlutoGridSelectingMode.row);
+                                                  event.stateManager.setSelecting(true);
+                                                  event.stateManager.setCurrentCell(
+                                                      event.stateManager.getRowByIdx(controller.left2ndGridSelectedIdx)?.cells['promoPolicyName'],
+                                                      controller.left2ndGridSelectedIdx);
+                                                  // event.stateManager.moveCurrentCell(PlutoMoveDirection.down, force: true, notify: true);
+                                                  event.stateManager.moveCurrentCellByRowIdx(
+                                                      controller.left2ndGridSelectedIdx, PlutoMoveDirection.down,
+                                                      notify: true);
+                                                },
+                                                onSelected: (row) => controller.left2ndGridSelectedIdx = row.rowIdx ?? 0,
+                                              ),
+                                      );
+                                    }),
+                                  ),
+                                  Padding(
+                                    padding: EdgeInsets.fromLTRB(0, 10, 0, 0),
+                                    child: Obx(
+                                      () {
+                                        return Text("Time Band : ${controller.timeBand.value}");
+                                      },
+                                    ),
+                                  ),
+                                  Row(
+                                    crossAxisAlignment: CrossAxisAlignment.end,
+                                    children: [
+                                      Obx(
+                                        () {
+                                          return Text("Program : ${controller.programName.value}");
+                                        },
+                                      ),
+                                      const Spacer(),
+                                      Padding(
+                                        padding: const EdgeInsets.only(top: 5.0),
+                                        child: InputFields.formField1Width(
+                                          widthRatio: 0.09,
+                                          paddingLeft: 5,
+                                          hintTxt: "Available",
+                                          controller: controller.availableTC,
+                                          maxLen: 10,
+                                          isEnable: false,
+                                        ),
+                                      ),
+                                      Padding(
+                                        padding: const EdgeInsets.only(top: 5.0),
+                                        child: InputFields.formField1Width(
+                                          widthRatio: 0.09,
+                                          paddingLeft: 5,
+                                          hintTxt: "Scheduled",
+                                          controller: controller.scheduledTC,
+                                          maxLen: 10,
+                                          isEnable: false,
+                                        ),
+                                      ),
+                                      Padding(
+                                        padding: const EdgeInsets.only(top: 5.0),
+                                        child: InputFields.formField1Width(
+                                          widthRatio: 0.09,
+                                          paddingLeft: 5,
+                                          hintTxt: "Count",
+                                          controller: controller.countTC,
+                                          maxLen: 10,
+                                          isEnable: false,
+                                        ),
+                                      ),
+                                    ],
                                   ),
                                 ],
                               ),
                             ),
                           ),
 
-                          /// Program Table
+                          /// right ui part
                           Expanded(
                             child: Padding(
                               padding: const EdgeInsets.fromLTRB(0, 10, 15, 0),
@@ -321,29 +242,27 @@ class PromosView extends GetView<PromosController> {
                                       Expanded(
                                         flex: 1,
                                         child: Padding(
-                                          padding:
-                                              const EdgeInsets.only(top: 5.0),
+                                          padding: const EdgeInsets.only(top: 5.0),
                                           child: InputFields.formField1Width(
-                                              widthRatio: .15,
-                                              paddingLeft: 5,
-                                              hintTxt: "Promo Caption",
-                                              controller: controllerX.tapeId_,
-                                              maxLen: 10),
+                                            widthRatio: .15,
+                                            paddingLeft: 5,
+                                            hintTxt: "Promo Caption",
+                                            controller: controller.promoCaptionTC,
+                                            maxLen: 10,
+                                          ),
                                         ),
                                       ),
                                       Expanded(
                                         flex: 1,
                                         child: Padding(
-                                          padding:
-                                              const EdgeInsets.only(top: 5.0),
-                                          child: InputFields.formField1Width(
-                                              widthRatio:
-                                                  (Get.width * 0.2) / 2 + 7,
-                                              paddingLeft: 5,
-                                              isEnable: false,
+                                          padding: const EdgeInsets.only(top: 5.0),
+                                          child: Obx(() {
+                                            return InputFields.formFieldDisable(
+                                              widthRatio: (Get.width * 0.2) / 2 + 7,
                                               hintTxt: "",
-                                              controller: controllerX.segNo_,
-                                              maxLen: 10),
+                                              value: controller.rightCount.value,
+                                            );
+                                          }),
                                         ),
                                       ),
                                     ],
@@ -352,63 +271,81 @@ class PromosView extends GetView<PromosController> {
                                     children: [
                                       Expanded(
                                         child: Padding(
-                                          padding:
-                                              const EdgeInsets.only(top: 5.0),
+                                          padding: const EdgeInsets.only(top: 5.0),
                                           child: InputFields.formField1Width(
-                                              widthRatio:
-                                                  (Get.width * 0.2) / 2 + 7,
-                                              paddingLeft: 5,
-                                              hintTxt: "Promo Id",
-                                              controller: controllerX.tapeId_,
-                                              maxLen: 10),
+                                            widthRatio: (Get.width * 0.2) / 2 + 7,
+                                            paddingLeft: 5,
+                                            hintTxt: "Promo Id",
+                                            controller: controller.promoIDTC,
+                                            maxLen: 10,
+                                          ),
                                         ),
                                       ),
                                     ],
                                   ),
                                   Row(
-                                    mainAxisAlignment:
-                                        MainAxisAlignment.spaceBetween,
+                                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
                                     children: [
                                       Padding(
-                                        padding: const EdgeInsets.only(
-                                            bottom: 8.0, top: 8.0),
+                                        padding: const EdgeInsets.only(bottom: 8.0, top: 8.0),
                                         child: Row(children: [
-                                          Radio(
-                                            value: 0,
-                                            groupValue:
-                                                controllerX.selectedAfter,
-                                            onChanged: (int? value) {},
+                                          CheckBoxWidget1(
+                                            title: "My",
+                                            value: controller.myEnabled.value,
+                                            onChanged: (val) {
+                                              controller.myEnabled.value = val ?? false;
+                                            },
                                           ),
-                                          const Text('My')
                                         ]),
                                       ),
                                       Padding(
-                                        padding: const EdgeInsets.only(
-                                            left: 10, bottom: 5.0, top: 5.0),
+                                        padding: const EdgeInsets.only(left: 10, bottom: 5.0, top: 5.0),
                                         child: FormButton(
                                           btnText: "Search",
-                                          callback: () {},
+                                          callback: controller.handleSearchTap,
                                         ),
                                       ),
                                       Padding(
-                                        padding: const EdgeInsets.only(
-                                            left: 10, bottom: 5.0, top: 5.0),
+                                        padding: const EdgeInsets.only(left: 10, bottom: 5.0, top: 5.0),
                                         child: FormButton(
                                           btnText: "Add",
-                                          callback: () {},
+                                          callback: controller.handleAddTap,
                                         ),
                                       ),
                                       Padding(
-                                        padding: const EdgeInsets.only(
-                                            left: 10, bottom: 5.0, top: 5.0),
+                                        padding: const EdgeInsets.only(left: 10, bottom: 5.0, top: 5.0),
                                         child: FormButton(
                                           btnText: "Auto Add",
-                                          callback: () {},
+                                          callback: controller.handleAutoAddTap,
                                         ),
                                       ),
                                     ],
                                   ),
-                                  programTable(context)
+                                  Expanded(
+                                    child: Obx(() {
+                                      return Container(
+                                        decoration:
+                                            controller.right3rdDT.value.isEmpty ? BoxDecoration(border: Border.all(color: Colors.grey)) : null,
+                                        child: controller.right3rdDT.value.isEmpty
+                                            ? null
+                                            : DataGridFromMap(
+                                                mapData: controller.right3rdDT.value,
+                                                onRowDoubleTap: (row) => controller.handleDoubleTapInRightTable(row.rowIdx),
+                                                onload: (event) {
+                                                  controller.rightSM = event.stateManager;
+                                                  event.stateManager.setSelectingMode(PlutoGridSelectingMode.row);
+                                                  event.stateManager.setSelecting(true);
+                                                  // event.stateManager.setCurrentCell(event.stateManager.firstCell, 0);
+                                                },
+                                                colorCallback: (row) => (row.row.cells.containsValue(controller.rightSM?.currentCell))
+                                                    ? Colors.deepPurple.shade200
+                                                    : Colors.white,
+                                                mode: PlutoGridMode.selectWithOneTap,
+                                                onSelected: (row) => controller.handleOnSelectRightTable(row.rowIdx ?? -1),
+                                              ),
+                                      );
+                                    }),
+                                  ),
                                 ],
                               ),
                             ),
@@ -448,132 +385,6 @@ class PromosView extends GetView<PromosController> {
               ),
             ),
           );
-        });
-  }
-
-  Widget fillerTable(context) {
-    return GetBuilder<FillerController>(
-        id: "fillerTable",
-        // init: CreateBreakPatternController(),
-        builder: (controller) {
-          if (controllerX.fillerDailyFpcList != null &&
-              (controllerX.fillerDailyFpcList?.isNotEmpty)!) {
-            // final key = GlobalKey();
-            return DataGridFromMap(
-              mapData: (controllerX.fillerDailyFpcList
-                  ?.map((e) => e.toJson())
-                  .toList())!,
-              widthRatio: (Get.width * 0.2) / 2 + 7,
-              // mode: PlutoGridMode.select,
-              onSelected: (plutoGrid) {
-                controllerX.selectedDailyFPC =
-                    controllerX.fillerDailyFpcList![plutoGrid.rowIdx!];
-                print(jsonEncode(controllerX.selectedDailyFPC?.toJson()));
-              },
-            );
-          } else {
-            return Expanded(
-              child: Card(
-                clipBehavior: Clip.hardEdge,
-                shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(0), // if you need this
-                  side: BorderSide(
-                    color: Colors.grey.shade300,
-                    width: 1,
-                  ),
-                ),
-                child: Container(
-                  height: Get.height - (4 * kToolbarHeight),
-                ),
-              ),
-            );
-          }
-        });
-  }
-
-  Widget fillerSegmentTable(context) {
-    return GetBuilder<FillerController>(
-        id: "fillerSegmentTable",
-        // init: CreateBreakPatternController(),
-        builder: (controller) {
-          if (controllerX.fillerSegmentList != null &&
-              (controllerX.fillerSegmentList?.isNotEmpty)!) {
-            // final key = GlobalKey();
-            return Expanded(
-              // height: 400,
-              child: DataGridFromMap(
-                mapData: (controllerX.fillerSegmentList
-                    ?.map((e) => e.toJson())
-                    .toList())!,
-                widthRatio: (Get.width * 0.2) / 2 + 7,
-                // mode: PlutoGridMode.select,
-                onSelected: (plutoGrid) {
-                  controllerX.selectedSegment =
-                      controllerX.fillerSegmentList![plutoGrid.rowIdx!];
-                  print(jsonEncode(controllerX.selectedSegment?.toJson()));
-                },
-              ),
-            );
-          } else {
-            return Expanded(
-              child: Card(
-                clipBehavior: Clip.hardEdge,
-                shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(0), // if you need this
-                  side: BorderSide(
-                    color: Colors.grey.shade300,
-                    width: 1,
-                  ),
-                ),
-                child: Container(
-                  height: Get.height - (4 * kToolbarHeight),
-                ),
-              ),
-            );
-          }
-        });
-  }
-
-  Widget programTable(context) {
-    return GetBuilder<PromosController>(
-        id: "programTable",
-        // init: CreateBreakPatternController(),
-        builder: (controller) {
-          if (controllerX.fillerDailyFpcList != null &&
-              (controllerX.fillerDailyFpcList?.isNotEmpty)!) {
-            // final key = GlobalKey();
-            return Expanded(
-              // height: 400,
-              child: DataGridFromMap(
-                mapData: (controllerX.fillerDailyFpcList
-                    ?.map((e) => e.toJson())
-                    .toList())!,
-                widthRatio: (Get.width * 0.2) / 2 + 7,
-                // mode: PlutoGridMode.select,
-                onSelected: (plutoGrid) {
-                  controllerX.selectedDailyFPC =
-                      controllerX.fillerDailyFpcList![plutoGrid.rowIdx!];
-                  print(jsonEncode(controllerX.selectedDailyFPC?.toJson()));
-                },
-              ),
-            );
-          } else {
-            return Expanded(
-              child: Card(
-                clipBehavior: Clip.hardEdge,
-                shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(0), // if you need this
-                  side: BorderSide(
-                    color: Colors.grey.shade300,
-                    width: 1,
-                  ),
-                ),
-                child: Container(
-                  height: Get.height - (4 * kToolbarHeight),
-                ),
-              ),
-            );
-          }
         });
   }
 }

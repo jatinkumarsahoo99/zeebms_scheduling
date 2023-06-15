@@ -542,7 +542,7 @@ class InputFields {
       children: [
         Padding(
           padding: EdgeInsets.only(left: paddingLeft ?? 10),
-          child: LabelText.style(hint: hintTxt),
+          child: LabelText.style(hint: hintTxt, txtColor: (isEnable ?? true) ? Colors.black : Colors.grey),
         ),
         Container(
           // padding: const EdgeInsets.only(
@@ -566,7 +566,7 @@ class InputFields {
             keyboardType: TextInputType.datetime,
             textAlign: TextAlign.left,
             controller: controller,
-            style: TextStyle(fontSize: 12),
+            style: TextStyle(fontSize: 12, color: (isEnable ?? true) ? Colors.black : Colors.grey),
             onChanged: (val) {
               if (onChange != null) {
                 onChange(val);
@@ -578,7 +578,7 @@ class InputFields {
                 contentPadding: const EdgeInsets.only(left: 10),
                 // labelText: hintTxt,
                 counterText: "",
-                labelStyle: TextStyle(fontSize: SizeDefine.labelSize, color: Colors.black),
+                labelStyle: TextStyle(fontSize: SizeDefine.labelSize, color: (isEnable ?? true) ? Colors.black : Colors.grey),
                 border: InputBorder.none,
 
                 // suffixIcon: Icon(
@@ -704,6 +704,7 @@ class InputFields {
     Function(String)? onchanged,
     bool isTime = false,
     bool isEnable = true,
+    FocusNode? textFieldFN,
   }) {
     if (controller.text.isEmpty) {
       controller.text = isTime ? "00:00:00" : "00:00:00:00";
@@ -716,6 +717,7 @@ class InputFields {
           widthRatio: widthRatio,
           isTime: isTime,
           isEnable: isEnable,
+          textFieldFN: textFieldFN,
           onFocusChange: (time) {
             if (onEditComplete != null) {
               onEditComplete(time);
@@ -823,7 +825,7 @@ class InputFields {
             textAlign: TextAlign.left,
             maxLength: maxLen ?? 25,
             controller: controller,
-            style: TextStyle(fontSize: 12),
+            style: TextStyle(fontSize: 12, color: (isEnable != null && isEnable) ? Colors.grey : Colors.black),
             focusNode: focusNode ?? null,
             enabled: isEnable ?? true,
             inputFormatters: [
@@ -938,6 +940,7 @@ class InputFields {
     double widthRatio = .4,
     void Function(String time)? onFocusChange,
     bool isTime = true,
+    FocusNode? textFieldFN,
   }) {
     bool backSpaceEnter = false;
     setCursor(int index) {
@@ -1088,6 +1091,7 @@ class InputFields {
               height: SizeDefine.heightInputField,
               child: TextFormField(
                 enabled: isEnable,
+                focusNode: textFieldFN,
                 maxLength: (isTime ? 8 : 11),
                 controller: controller,
                 decoration: InputDecoration(
