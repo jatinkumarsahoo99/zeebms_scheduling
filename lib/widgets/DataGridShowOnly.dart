@@ -28,6 +28,7 @@ class DataGridShowOnlyKeys extends StatelessWidget {
     this.actionIconKey,
     this.columnAutoResize = true,
     this.actionOnPress,
+    this.rowCheckColor = const Color(0xFFD1C4E9),
     this.onSelected,
     this.keysWidths,
     this.checkRowKey = "selected",
@@ -68,6 +69,7 @@ class DataGridShowOnlyKeys extends StatelessWidget {
   final List<String>? editKeys;
   final Function? actionOnPress;
   final bool hideCheckKeysValue;
+  final Color? rowCheckColor;
   final bool doPasccal;
   Color Function(PlutoRowColorContext)? colorCallback;
   Function(PlutoGridOnLoadedEvent)? onload;
@@ -273,6 +275,7 @@ class DataGridShowOnlyKeys extends StatelessWidget {
                 focusNode: focusNode!,
                 autoScale: columnAutoResize,
                 actionOnPress: actionOnPress,
+                checkColor: rowCheckColor,
                 actionKey: actionIconKey,
                 previousWidgetFN: previousWidgetFN,
               ),
