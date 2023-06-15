@@ -1312,7 +1312,7 @@ class DataGridMenu {
         child: Text('Export To XML', style: TextStyle(fontSize: 13)),
       ),
       const PopupMenuItem<DataGridMenuItem>(
-        value: DataGridMenuItem.noaction,
+        value: DataGridMenuItem.export,
         height: 36,
         enabled: true,
         child: Text('Fast Export To Excel', style: TextStyle(fontSize: 13)),
