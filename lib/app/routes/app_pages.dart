@@ -1,4 +1,3 @@
-import 'package:bms_scheduling/app/modules/SecondaryEventMaster/bindings/secondary_event_master_binding.dart';
 import 'package:get/get.dart';
 
 import '../modules/AsrunImportAdRevenue/bindings/asrun_import_binding.dart';
@@ -34,25 +33,17 @@ import '../modules/RosDistribution/bindings/ros_distribution_binding.dart';
 import '../modules/SalesAuditExtraSpotsReport/bindings/sales_audit_extra_spots_report_binding.dart';
 import '../modules/SalesAuditNew/bindings/sales_audit_new_binding.dart';
 import '../modules/SalesAuditNotTelecastReport/bindings/sales_audit_not_telecast_report_binding.dart';
+import '../modules/SecondaryEventMaster/bindings/secondary_event_master_binding.dart';
 import '../modules/SlideMaster/bindings/slide_master_binding.dart';
 import '../modules/SpotPriority/bindings/spot_priority_binding.dart';
-import '../modules/SpotPriority/bindings/spot_priority_binding.dart';
-import '../modules/SpotPriority/views/SpotPriorityView.dart';
 import '../modules/StillMaster/bindings/still_master_binding.dart';
 import '../modules/TransmissionLog/bindings/transmission_log_binding.dart';
-import '../modules/TransmissionLog/bindings/transmission_log_binding.dart';
-import '../modules/TransmissionLog/views/TransmissionLogView.dart';
 import '../modules/commercial/bindings/commercial_binding.dart';
-import '../modules/commercial/bindings/commercial_binding.dart';
-import '../modules/commercial/views/commercial_view.dart';
 import '../modules/filler/bindings/filler_binding.dart';
-import '../modules/filler/views/filler_view.dart';
 import '../modules/home/bindings/home_binding.dart';
 import '../modules/home/views/home_view.dart';
 import '../modules/promos/bindings/promos_binding.dart';
-import '../modules/promos/views/promos_view.dart';
 import '../modules/slide/bindings/slide_binding.dart';
-import '../modules/slide/views/slide_view.dart';
 import '../providers/AuthGuard1.dart';
 
 part 'app_routes.dart';
@@ -61,7 +52,7 @@ class AppPages {
   AppPages._();
 
   // static const INITIAL = Routes.ROS_DISTRIBUTION +
-  static const INITIAL = Routes.COMMERCIAL +
+  static const INITIAL = Routes.TRANSMISSION_LOG +
       "?personalNo=kW5Bkf17%2FS5YF7ML28FmVg%3D%3D&loginCode=1BWIoBKeDl7qDSAAhxvXsQ%3D%3D&formName=OI8ukDpPPVN0I2BEXu2h4nuFu%2BZm1ZRpvP8NL4XCXzQ%3D";
   static final routes = [
     GetPage(
