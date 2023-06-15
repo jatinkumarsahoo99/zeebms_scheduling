@@ -237,6 +237,7 @@ class RoBookingController extends GetxController {
         fun: (response) {
           if (response is Map && response.containsKey("info_SearchTapeId")) {
             bookingTapeSearchData = RoBookingTapeSearchData.fromJson(response["info_SearchTapeId"]);
+            update(["programView"]);
           }
         });
   }
