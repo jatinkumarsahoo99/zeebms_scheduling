@@ -417,7 +417,7 @@ class RoBookingController extends GetxController {
           "lstdgvDealDetails": bookingNoLeaveData!.lstdgvDealDetails!.map((e) => e.toJson()).toList(),
           "lstSpots": bookingNoLeaveData!.lstSpots!.map((e) => e.toJson()).toList(),
         },
-        fun: (value) {
+        fun: (value) async {
           if (value is Map && value.containsKey("info_dgvDealDetailCellDouble") && value["info_dgvDealDetailCellDouble"]["message"] == null) {
             dealDblClickData = RoBookingDealDblClick.fromJson(value["info_dgvDealDetailCellDouble"]);
             var _selectedPostion = roBookingInitData?.lstPosition
@@ -428,7 +428,7 @@ class RoBookingController extends GetxController {
             selectedPremid = DropDownValue(key: _selectedPredMid?.spotPositionTypeCode ?? "", value: _selectedPredMid?.spotPositionTypeName ?? "");
 
             selectedBreak = DropDownValue(key: dealDblClickData?.breakNo.toString() ?? "", value: dealDblClickData?.breakNo.toString() ?? "");
-
+            await getTapeID();
             pagecontroller.jumpToPage(1);
           }
           if (value is Map && value.containsKey("info_dgvDealDetailCellDouble") && value["info_dgvDealDetailCellDouble"]["message"] != null) {
@@ -437,8 +437,8 @@ class RoBookingController extends GetxController {
         });
   }
 
-  getTapeID() {
-    Get.find<ConnectorControl>().POSTMETHOD(
+  getTapeID() async {
+    await Get.find<ConnectorControl>().POSTMETHOD(
         api: ApiFactory.RO_BOOKING_cboTapeIdFocusLost,
         json: {
           "brandCode": bookingNoLeaveData?.brandcode ?? "",

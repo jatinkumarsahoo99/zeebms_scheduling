@@ -27,7 +27,7 @@ class ProgramView extends GetView<RoBookingController> {
                 controller.tapeIds.map((e) => DropDownValue(key: e["exporttapecode"], value: e["commercialcaption"])).toList(),
                 (value) => {},
                 "Tape ID",
-                0.03,
+                0.12,
               ),
               // DropDownField.formDropDownSearchAPI2(GlobalKey(), context,
               //     width: Get.width * 0.12, title: "Tape Id", url: "url", onchanged: (value) {}),
