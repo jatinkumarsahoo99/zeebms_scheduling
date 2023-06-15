@@ -13,16 +13,15 @@ class VerifySpotsView extends GetView<RoBookingController> {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.center,
       children: [
-        Expanded(
-            child: Container(
-          child: DataGridShowOnlyKeys(
-            mapData: dummyProgram,
-            formatDate: false,
-          ),
-        )),
+        Expanded(child: Container()),
+        const SizedBox(
+          height: 5,
+        ),
         FormButtonWrapper(
           btnText: "Set Verify",
-          callback: () {},
+          callback: () {
+            controller.setVerify();
+          },
         ),
       ],
     );
