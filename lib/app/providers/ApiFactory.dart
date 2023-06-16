@@ -218,11 +218,9 @@ class ApiFactory {
   static String IMPORT_DIGITEX_RUN_ORDER_SAVE(locationCode, channelCode, date) =>
       "$BASE_URL/api/ImportDigitexRunOrder/SaveRunOrder?LocationCode=$locationCode&ChannelCode=$channelCode&BookingDate=$date";
 //////////////// Filler: UI:VISHAL GORE, API: INDRESH ///////////////
-
   static String FILLER_LOCATION = "$BASE_URL/api/FillerScheduling/GetLocations";
-
+  static String FILLER_SAVE = "$BASE_URL/api/FillerScheduling/GetLocations";
   static String FILLER_CHANNEL(locationCode) => "$BASE_URL/api/FillerScheduling/GetChannels?LocationCode=$locationCode";
-
   static String FILLER_CAPTION = "$BASE_URL/api/FillerScheduling/GetFillerCaption/";
   static String get FILLER_IMPORT_EXCEL => "$BASE_URL/api/FillerScheduling/ImportFillerExcel";
   static String get FILLER_IMPORT_FILLERS => "$BASE_URL/api/FillerScheduling/SaveImportExistingFillers";

@@ -214,10 +214,20 @@ class FillerView extends GetView<FillerController> {
                     child: DataGridFromMap(
                       showSrNo: true,
                       mapData: (controller.fillerDailyFpcList.value.map((e) => e.toJson()).toList()),
-                      showonly: ["programCode", "endTime", "programName", "epsNo", "tapeID", "episodeCaption"],
+                      showonly: ["fpcTime", "endTime", "programName", "epsNo", "tapeID", "episodeCaption"],
                       widthRatio: (Get.width * 0.2) / 2 + 7,
                       mode: PlutoGridMode.selectWithOneTap,
-                      onSelected: (plutoGrid) => controller.fetchSegmentDetails(controller.fillerDailyFpcList[plutoGrid.rowIdx!]),
+                      onload: (event) {
+                        controller.gridStateManager = event.stateManager;
+                        event.stateManager.setCurrentCell(
+                            event.stateManager.getRowByIdx(controller.topLastSelectedIdx)?.cells['rowNo'], controller.bottomLastSelectedIdx);
+                      },
+                      onSelected: (plutoGrid) {
+                        controller.topLastSelectedIdx = plutoGrid.rowIdx ?? 0;
+                        controller.fetchSegmentDetails(controller.fillerDailyFpcList[plutoGrid.rowIdx!]);
+                      },
+                      colorCallback: (row) =>
+                          (row.row.cells.containsValue(controller.gridStateManager?.currentCell)) ? Colors.deepPurple.shade200 : Colors.white,
                     ),
                   );
                 }),
@@ -242,7 +252,7 @@ class FillerView extends GetView<FillerController> {
                             url: ApiFactory.FILLER_CAPTION,
                             parseKeyForKey: "fillerCode",
                             parseKeyForValue: "fillerCaption",
-                            onchanged: (data) => controller.getFillerValuesByFillerCode(data.key.toString()),
+                            onchanged: (data) => controller.getFillerValuesByFillerCode(data),
                             selectedValue: controller.selectCaption.value,
                             width: w * 0.45,
                             // padding: const EdgeInsets.only()
@@ -326,7 +336,7 @@ class FillerView extends GetView<FillerController> {
                           padding: const EdgeInsets.only(top: 15.0),
                           child: FormButton(
                             btnText: "Add",
-                            callback: () {},
+                            callback: controller.handleAddTap,
                           ),
                         ),
                       ],
@@ -340,7 +350,22 @@ class FillerView extends GetView<FillerController> {
                           child: DataGridFromMap(
                             mapData: (controller.fillerSegmentList.map((e) => e.toJson()).toList()),
                             widthRatio: (Get.width * 0.2) / 2 + 7,
-                            onSelected: (plutoGrid) => controller.selectedSegment = controller.fillerSegmentList[plutoGrid.rowIdx!],
+                            onload: (event) {
+                              controller.bottomSM = event.stateManager;
+                              event.stateManager.setCurrentCell(
+                                  event.stateManager.getRowByIdx(controller.bottomLastSelectedIdx)?.cells['segNo'], controller.bottomLastSelectedIdx);
+                            },
+                            colorCallback: (row) => controller.fillerSegmentList[row.rowIdx].allowMove == "1"
+                                ? Colors.red
+                                : (row.row.cells.containsValue(controller.bottomSM?.currentCell))
+                                    ? Colors.deepPurple.shade200
+                                    : Colors.white,
+                            onSelected: (plutoGrid) {
+                              controller.bottomLastSelectedIdx = plutoGrid.rowIdx ?? 0;
+                              controller.selectedSegment = controller.fillerSegmentList[plutoGrid.rowIdx!];
+                            },
+                            mode: PlutoGridMode.selectWithOneTap,
+                            showonly: ["segNo", "seq", "brkNo", "ponumber", "tapeID", "segmentCaption", "som", "segDur"],
                           ),
                         );
                       }),
