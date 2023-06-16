@@ -586,9 +586,9 @@ class TransmissionLogView extends GetView<TransmissionLogController> {
         });
         break;
       case "Segments":
-        controller.getEventListForInsert(function: () {
+        // controller.getEventListForInsert(function: () {
         showSegmentDialog(Get.context);
-        });
+        // });
         break;
       case "Change":
         controller.setChangeTime(function: () {
@@ -1192,7 +1192,7 @@ class TransmissionLogView extends GetView<TransmissionLogController> {
                           context,
                           title: "Program",
                           onchanged: (DropDownValue? value) async {
-                            controller.selectProgramSegment=value;
+                            controller.selectProgramSegment = value;
                             // selectedProgramId.text = value?.key ?? "";
                             // selectedProgram.text = value?.value ?? "";
                             // selectProgram = value;
@@ -1204,14 +1204,15 @@ class TransmissionLogView extends GetView<TransmissionLogController> {
                           // selectedValue: selectProgram,
                           widthofDialog: 350,
                           dialogHeight: Get.height * .65,
-                              parseKeyForKey: "ProgramCode",parseKeyForValue: "ProgramName",
+                          parseKeyForKey: "ProgramCode",
+                          parseKeyForValue: "ProgramName",
                         ),
                       ),
                       Focus(
                         onFocusChange: (focus) {
                           if (!focus) {
                             controller.getEpisodeLeaveSegment();
-                                                     }
+                          }
                         },
                         canRequestFocus: false,
                         skipTraversal: true,
@@ -1277,7 +1278,9 @@ class TransmissionLogView extends GetView<TransmissionLogController> {
                         child: FormButtonWrapper(
                           btnText: "Add",
                           showIcon: false,
-                          callback: () {},
+                          callback: () {
+                            controller.btnInsProg_Addsegments_Click();
+                          },
                         ),
                       ),
                     ],
@@ -1297,6 +1300,9 @@ class TransmissionLogView extends GetView<TransmissionLogController> {
                               ? DataGridFromMap(
                                   hideCode: false,
                                   formatDate: false,
+                                  onload: (PlutoGridOnLoadedEvent load) {
+                                    controller.tblSegement = load.stateManager;
+                                  },
                                   // colorCallback: (renderC) => Colors.red[200]!,
                                   mapData: (controller.segmentList!))
                               // _dataTable3()
@@ -1468,7 +1474,9 @@ class TransmissionLogView extends GetView<TransmissionLogController> {
                       // padLeft: 0,
                       // isEnable: false,
                       value: controller.selectLocation?.value ?? ""),
-                  SizedBox(height: 5,),
+                  SizedBox(
+                    height: 5,
+                  ),
                   InputFields.formFieldDisable(
                       widthRatio: 0.12,
                       // onchanged: (value) {},
@@ -1477,7 +1485,9 @@ class TransmissionLogView extends GetView<TransmissionLogController> {
                       // padLeft: 0,
                       // isEnable: false,
                       value: controller.selectChannel?.value ?? ""),
-                  SizedBox(height: 5,),
+                  SizedBox(
+                    height: 5,
+                  ),
                   InputFields.formFieldDisable(
                       widthRatio: 0.12,
                       // onchanged: (value) {},
@@ -1486,9 +1496,11 @@ class TransmissionLogView extends GetView<TransmissionLogController> {
                       // padLeft: 0,
                       // isEnable: false,
                       value: controller.selectedDate.text),
-                  SizedBox(height: 5,),
+                  SizedBox(
+                    height: 5,
+                  ),
                   Padding(
-                    padding: const EdgeInsets.only(left:10.0),
+                    padding: const EdgeInsets.only(left: 10.0),
                     child: DateWithThreeTextField(
                       title: "Reschedule To",
                       splitType: "-",
