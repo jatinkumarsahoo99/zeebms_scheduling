@@ -219,7 +219,8 @@ class AppPages {
     ),
     GetPage(
       name: _Paths.COMMERCIAL_MASTER,
-      page: () => const CommercialMasterView(),
+      // page: () => const CommercialMasterView(),
+      page: () => AuthGuard1(childName: _Paths.COMMERCIAL_MASTER),
       binding: CommercialMasterBinding(),
     ),
   ];

@@ -22,6 +22,7 @@ import '../../widgets/LoadingScreen.dart';
 import '../../widgets/NoDataFoundPage.dart';
 import '../modules/AsrunImportAdRevenue/views/AsrunImportAdRevenueView.dart';
 import '../modules/AuditStatus/views/audit_status_view.dart';
+import '../modules/CommercialMaster/views/commercial_master_view.dart';
 import '../modules/LogAdditions/views/LogAdditionsView.dart';
 import '../modules/PromoMaster/views/promo_master_view.dart';
 import '../modules/SalesAuditNew/views/sales_audit_new_view.dart';
@@ -145,6 +146,9 @@ class AuthGuard1 extends StatelessWidget {
               break;
             case Routes.FILLER_MASTER:
               currentWidget = FillerMasterView();
+              break;
+            case Routes.COMMERCIAL_MASTER:
+              currentWidget = CommercialMasterView();
               break;
             default:
               currentWidget = const NoDataFoundPage();

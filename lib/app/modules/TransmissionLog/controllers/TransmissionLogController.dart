@@ -421,9 +421,11 @@ class TransmissionLogController extends GetxController {
   }
 
   void btnInsProg_Addsegments_Click() {
+    // Get.back();
     int insrow = gridStateManager?.currentRowIdx ?? 0;
     int rowCount = tblSegement?.rows.length ?? 0;
     List<PlutoRow> listAdd=[];
+    gridStateManager?.setShowLoading(true);
     for (int i = rowCount - 1; i >= 0; i--) {
       var dr = tblSegement?.rows[i];
       listAdd.add(InsertRow(
@@ -444,14 +446,36 @@ class TransmissionLogController extends GetxController {
                 0,
       ));
     }
-    gridStateManager?.insertRows(insrow, listAdd);
+    addEventToUndo();
+    gridStateManager?.insertRows(insrow, listAdd.reversed.toList());
     gridStateManager?.notifyListeners();
     // gridStateManager?.appendRows(listAdd);
     colorGrid(false);
+    gridStateManager?.setShowLoading(false);
 
     gridStateManager?.moveScrollByRow(PlutoMoveDirection.down, insrow);
     // tblLog.firstDisplayedScrollingRowIndex = insrow;
   }
+
+  void tblCommercials_CellDoubleClick(rowIndex) {
+    int insrow = gridStateManager?.currentRowIdx??0;
+    addEventToUndo();
+    PlutoRow? row = gridStateManagerCommercial?.rows[rowIndex];
+    InsertCommercial(row?.cells["tonumber"]?.value, row?.cells["bookingdetailcode"]?.value, row?.cells["Scheduletime"]?.value,
+        row?.cells["productname"]?.value, (row?.cells["ROsTime"]?.value == null) ? "" : row?.cells["ROsTime"]?.value,
+        row?.cells["Exporttapecaption"]?.value, row?.cells["Exporttapecode"]?.value, Utils.convertToTimeFromDouble(value:num.tryParse(row?.cells["Duration"]?.value.toString()??"0")??0),
+        row?.cells["som"]?.value);
+    gridStateManagerCommercial?.removeCurrentRow();
+    // tblLog.firstDisplayedScrollingRowIndex = insrow;
+  }
+
+  void InsertCommercial(String BookingNumber, String BookingDetailCode, String ScheduleTime, String ProductName, String ROsTimeBand,
+      String ExportTapeCaption, String Exporttapecode, String Tapeduration, String SOM) {
+
+    InsertRow(ScheduleTime, "C ", ExportTapeCaption, Exporttapecode, Tapeduration, SOM,BreakNumber: 0,EpisodeNumber: 0,BookingNumber: BookingNumber, BookingDetailCode:BookingDetailCode,ScheduleTime: ScheduleTime,ProductName: ProductName,ROsTimeBand: ROsTimeBand);
+  }
+
+
 
   InsertRow(String FpcTime, String EventType, String ExportTapeCaption,
       String Exporttapecode, String Tapeduration, String SOM,
@@ -466,35 +490,6 @@ class TransmissionLogController extends GetxController {
     // int insertRowId = int.tryParse(gridStateManager?.currentRowIdx?.cells["rownumber"]?.value??"0")??0;
     int insertRowId = intRowIndex;
     if (insertRowId > 0) insertRowId = insertRowId - 1;
-
-    // DataRow dr = dt.NewRow();
-    // PlutoRow dr=PlutoRow(cells: {});
-    Map<String, PlutoCell> dr = {};
-
-    dr["fpCtime"] = PlutoCell(value: FpcTime??"");
-    dr["transmissionTime"] = PlutoCell(value: "");
-    dr["exportTapeCode"] = PlutoCell(value: Exporttapecode??"");
-    dr["exportTapeCaption"] = PlutoCell(value: ExportTapeCaption??"");
-    dr["tapeduration"] = PlutoCell(value: Tapeduration??"");
-    dr["som"] = PlutoCell(value: SOM??"");
-    dr["breakNumber"] = PlutoCell(value: BreakNumber.toString());
-    dr["episodeNumber"] = PlutoCell(value: EpisodeNumber.toString());
-    dr["breakEvent"] = PlutoCell(value: "");
-    dr["rownumber"] = PlutoCell(value: "0");
-    dr["eventType"] = PlutoCell(value: EventType);
-    dr["bookingNumber"] = PlutoCell(value: BookingNumber);
-    dr["bookingdetailcode"] = PlutoCell(value: BookingDetailCode.toString());
-    dr["scheduleTime"] = PlutoCell(value: ScheduleTime ?? "");
-    dr["productName"] = PlutoCell(value: ProductName ?? "");
-    dr["rosTimeBand"] = PlutoCell(value: ROsTimeBand ?? "");
-    dr["client"] = PlutoCell(value: "");
-    dr["promoTypecode"] = PlutoCell(value: "");
-    dr["datechange"] = PlutoCell(value: 0);
-    dr["productGroup"] = PlutoCell(value: "");
-    dr["longCaption"] = PlutoCell(value: "");
-    dr["productname_Font"] = PlutoCell(value: "");
-    dr["exporttapecode_Font"] = PlutoCell(value: "");
-    dr["rosTimeBand_Font"] = PlutoCell(value: "");
     // PlutoRow rowData = PlutoRow(cells: dr);
     PlutoRow rowData = PlutoRow(cells: {
     "fpCtime" : PlutoCell(value: FpcTime??""),
