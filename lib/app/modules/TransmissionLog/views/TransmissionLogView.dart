@@ -796,6 +796,11 @@ class TransmissionLogView extends GetView<TransmissionLogController> {
                                     controller.gridStateManagerCommercial =
                                         load.stateManager;
                                   },
+                                  onRowDoubleTap:
+                                      (PlutoGridOnRowDoubleTapEvent? event) {
+                                    controller.tblCommercials_CellDoubleClick(
+                                        event?.rowIdx ?? 0);
+                                  },
                                   // colorCallback: (renderC) => Colors.red[200]!,
                                   mapData: (model.lstListLoggedCommercials
                                       ?.map((e) => e.toJson())
@@ -1279,6 +1284,7 @@ class TransmissionLogView extends GetView<TransmissionLogController> {
                           btnText: "Add",
                           showIcon: false,
                           callback: () {
+                            Get.back();
                             controller.btnInsProg_Addsegments_Click();
                           },
                         ),
