@@ -355,11 +355,12 @@ class FillerView extends GetView<FillerController> {
                               event.stateManager.setCurrentCell(
                                   event.stateManager.getRowByIdx(controller.bottomLastSelectedIdx)?.cells['segNo'], controller.bottomLastSelectedIdx);
                             },
-                            colorCallback: (row) => controller.fillerSegmentList[row.rowIdx].allowMove == "1"
-                                ? Colors.red
-                                : (row.row.cells.containsValue(controller.bottomSM?.currentCell))
-                                    ? Colors.deepPurple.shade200
-                                    : Colors.white,
+                            colorCallback: (row) =>
+                                (controller.fillerSegmentList[row.rowIdx].allowMove == "1" || controller.fillerSegmentList[row.rowIdx].ponumber == 1)
+                                    ? Colors.red
+                                    : (row.row.cells.containsValue(controller.bottomSM?.currentCell))
+                                        ? Colors.deepPurple.shade200
+                                        : Colors.white,
                             onSelected: (plutoGrid) {
                               controller.bottomLastSelectedIdx = plutoGrid.rowIdx ?? 0;
                               controller.selectedSegment = controller.fillerSegmentList[plutoGrid.rowIdx!];

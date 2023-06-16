@@ -1,5 +1,6 @@
 import 'dart:convert';
 
+import 'package:bms_scheduling/app/controller/MainController.dart';
 import 'package:bms_scheduling/app/modules/filler/FillerDailyFPCModel.dart';
 import 'package:bms_scheduling/app/modules/filler/FillerDailyFPCModel.dart';
 import 'package:file_picker/file_picker.dart';
@@ -159,9 +160,22 @@ class FillerController extends GetxController {
     if (selectLocation == null) {
       LoadingDialog.showErrorDialog("Please select Location,Channel");
     } else {
+      LoadingDialog.call();
       Get.find<ConnectorControl>().POSTMETHOD(
-        api: ApiFactory.FILLER_SAVE,
-        fun: (resp) {},
+        api: ApiFactory.FILLER_SAVE_IMPORT_FILLERS,
+        fun: (resp) {
+          Get.back();
+          LoadingDialog.showErrorDialog(resp.toString());
+        },
+        json: {
+          "locationCode": selectedImportLocation?.key.toString(),
+          "channelCode": selectedImportChannel?.key.toString(),
+          "telecastDate": DateFormat("yyyy-MM-dd").format(DateFormat("dd-MM-yyyy").parse(fillerFromDate_.text)),
+          "telecastTime": fillerDailyFpcList[topLastSelectedIdx].fpcTime,
+          "programCode": fillerDailyFpcList[topLastSelectedIdx].programCode,
+          "loggedUser": Get.find<MainController>().user?.logincode,
+          "details": fillerSegmentList.map((element) => element.toJson()).toList(),
+        },
       );
     }
   }

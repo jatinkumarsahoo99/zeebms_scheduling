@@ -48,6 +48,7 @@ class CommercialController extends GetxController {
 
   var locations = RxList<DropDownValue>();
   var channels = RxList<DropDownValue>([]);
+  bool autoShuffle = true;
 
   DateTime? selectedDate = DateTime.now();
   DateFormat df = DateFormat("dd/MM/yyyy");
@@ -91,6 +92,7 @@ class CommercialController extends GetxController {
 
   var locationFN = FocusNode();
   void clear() {
+    autoShuffle = false;
     insertAfter.value = true;
     programFpcTimeSelected = null;
     selectedProgram = null;
@@ -236,6 +238,13 @@ class CommercialController extends GetxController {
     } else {
       /// SCHEDULING
       showCommercialDetailsList?.value = mainCommercialShowDetailsList!.where((o) => o.bStatus.toString() == 'B').toList();
+      commercialSpots.value = showCommercialDetailsList?.value.where((element) => element.eventType == "E").toList().length.toString() ?? "";
+      // commercialDuration
+      double intTotalDuration = 0;
+      for (int i = 0; i < (showCommercialDetailsList?.length ?? 0); i++) {
+        intTotalDuration = intTotalDuration + Utils.oldBMSConvertToSecondsValue(value: showCommercialDetailsList![i].duration!);
+      }
+      commercialDuration.value = Utils.convertToTimeFromDouble(value: intTotalDuration);
     }
     showCommercialDetailsList?.refresh();
     updateTab();

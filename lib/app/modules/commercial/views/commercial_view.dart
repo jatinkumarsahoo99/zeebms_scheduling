@@ -115,7 +115,7 @@ class CommercialView extends GetView<CommercialController> {
                                       }),
                                       CheckBoxWidget1(
                                         title: "Auto Shuffle",
-                                        value: true,
+                                        value: controller.autoShuffle,
                                       ),
                                     ],
                                   ),
@@ -235,7 +235,6 @@ class CommercialView extends GetView<CommercialController> {
                       print("Selected tab index is : $value");
                       controller.selectedIndex.value = value!;
                       await controller.showTabList();
-
                       //controller.fetchSchedulingShowOnTabDetails();
                     },
                   ),
@@ -446,18 +445,17 @@ class CommercialView extends GetView<CommercialController> {
                         print(">>>>>> Commercial Data >>>>>>${jsonEncode(controller.selectedShowOnTab?.toJson())}");
                       },
                       onRowsMoved: (PlutoGridOnRowsMovedEvent onRowMoved) {
-                        if (controller.showCommercialDetailsList![onRowMoved.idx].eventType.toString().trim() == "C") {
+                        if (controller.showCommercialDetailsList![onRowMoved.idx].eventType.toString().trim() != "C") {
+                          controller.gridStateManager?.notifyListeners();
                           if (controller.showCommercialDetailsList != null) {
                             for (var i = 0; i < (controller.showCommercialDetailsList!.length); i++) {
                               if (controller.showCommercialDetailsList?[i].rownumber ==
                                   controller.showCommercialDetailsList![onRowMoved.idx].rownumber) {}
                             }
-                            controller.gridStateManager?.notifyListeners();
                           }
                         } else {
                           LoadingDialog.showErrorDialog("You cannot move selected segment");
                         }
-                        controller.updateTab();
                       },
                       mode: controller.selectedTabPlutoGridMode,
                       mapData: controller.showCommercialDetailsList!.value.map((e) => e.toJson()).toList()));
@@ -497,6 +495,8 @@ class CommercialView extends GetView<CommercialController> {
                   child: DataGridFromMap(
                     onload: (sm) {
                       controller.fpcMisMatchSM = sm.stateManager;
+                      sm.stateManager.setSelectingMode(PlutoGridSelectingMode.row);
+                      sm.stateManager.setSelecting(true);
                     },
                     mapData: (controller.showCommercialDetailsList?.map((e) => e.toJson()).toList())!,
                     showonly: const [
@@ -598,6 +598,8 @@ class CommercialView extends GetView<CommercialController> {
                     mode: PlutoGridMode.normal,
                     onload: (sm) {
                       controller.markedAsErrorSM = sm.stateManager;
+                      sm.stateManager.setSelectingMode(PlutoGridSelectingMode.row);
+                      sm.stateManager.setSelecting(true);
                     },
                     onSelected: (plutoGrid) {
                       print(plutoGrid.rowIdx!.toString());
