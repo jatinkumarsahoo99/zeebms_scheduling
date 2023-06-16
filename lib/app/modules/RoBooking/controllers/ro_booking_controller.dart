@@ -4,6 +4,7 @@ import 'package:bms_scheduling/app/data/DropDownValue.dart';
 import 'package:bms_scheduling/app/modules/RoBooking/bindings/ro_booking_agency_leave_data.dart';
 import 'package:bms_scheduling/app/modules/RoBooking/bindings/ro_booking_bkg_data.dart';
 import 'package:bms_scheduling/app/modules/RoBooking/bindings/ro_booking_deal_click.dart';
+import 'package:bms_scheduling/app/modules/RoBooking/bindings/ro_booking_tape_search_data.dart';
 import 'package:bms_scheduling/app/modules/RoBooking/bindings/ro_dealno_leave.dart';
 import 'package:bms_scheduling/app/modules/RoBooking/views/booking_summary_view.dart';
 import 'package:bms_scheduling/app/modules/RoBooking/views/deal_view.dart';
@@ -45,6 +46,7 @@ class RoBookingController extends GetxController {
   RoBookingBkgNOLeaveData? bookingNoLeaveData;
   RoBookingDealNoLeave? dealNoLeaveData;
   RoBookingDealDblClick? dealDblClickData;
+  RoBookingTapeSearchData? bookingTapeSearchData;
 
   FocusNode bookingNoFocusNode = FocusNode();
   var spotsNotVerifiedData = RxList();
@@ -227,6 +229,17 @@ class RoBookingController extends GetxController {
           "loggedUser": Get.find<MainController>().user?.logincode,
         },
         fun: (response) {});
+  }
+
+  tapIdLeave(exportCode) {
+    Get.find<ConnectorControl>().GETMETHODCALL(
+        api: ApiFactory.RO_BOOKING_SearchTapeIdLeave(exportCode),
+        fun: (response) {
+          if (response is Map && response.containsKey("info_SearchTapeId")) {
+            bookingTapeSearchData = RoBookingTapeSearchData.fromJson(response["info_SearchTapeId"]);
+            update(["programView"]);
+          }
+        });
   }
 
   dealNoLeave() {

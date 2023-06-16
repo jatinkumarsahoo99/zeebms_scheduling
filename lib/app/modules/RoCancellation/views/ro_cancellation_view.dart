@@ -180,6 +180,7 @@ class RoCancellationView extends GetView<RoCancellationController> {
                                       rowcheckEvent.isChecked;
                                   rowcheckEvent.row!.cells["requested"]!.value = "${rowcheckEvent.isChecked}";
                                 },
+                                rowCheckColor: Colors.white,
                                 checkRow: true,
                                 onload: (loadEvent) {
                                   controller.roCancellationGridManager = loadEvent.stateManager;
@@ -265,7 +266,9 @@ class RoCancellationView extends GetView<RoCancellationController> {
                                   : btn["name"] == "Refresh"
                                       ? FormButtonWrapper(
                                           btnText: btn["name"],
-                                          callback: () {},
+                                          callback: () {
+                                            print("Refresh");
+                                          },
                                         )
                                       : FormButtonWrapper(
                                           btnText: btn["name"],

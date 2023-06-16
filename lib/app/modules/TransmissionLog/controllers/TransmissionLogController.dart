@@ -49,6 +49,7 @@ class TransmissionLogController extends GetxController {
   PlutoGridStateManager? dgvCommercialsStateManager;
   PlutoGridStateManager? dgvTimeStateManager;
   PlutoGridStateManager? tblFastInsert;
+  PlutoGridStateManager? tblSegement;
   InsertSearchModel? inserSearchModel;
 
   // TsModel? tsModel;
@@ -350,18 +351,17 @@ class TransmissionLogController extends GetxController {
     LoadingDialog.call();
     Get.find<ConnectorControl>().GETMETHODCALL(
         api: ApiFactory.TRANSMISSION_LOG_SEARCH_SEGMENT(
-          selectProgramSegment?.key ?? "",
-          txtSegment_epNo.text,
-            selectTapeSegmentDialog?.key??"",
-          false
-        ),
+            selectProgramSegment?.key ?? "",
+            txtSegment_epNo.text,
+            selectTapeSegmentDialog?.key ?? "",
+            false),
         fun: (map) {
           Get.back();
           segmentList?.clear();
           if (map is Map &&
               map.containsKey("lstProgramSegments") &&
               map["lstProgramSegments"] != null) {
-            segmentList=map["lstProgramSegments"];
+            segmentList = map["lstProgramSegments"];
             update(["segmentList"]);
           } else {
             Snack.callError(map.toString());
@@ -418,6 +418,124 @@ class TransmissionLogController extends GetxController {
             LoadingDialog.showErrorDialog("No data found");
           }
         });
+  }
+
+  void btnInsProg_Addsegments_Click() {
+    int insrow = gridStateManager?.currentRowIdx ?? 0;
+    int rowCount = tblSegement?.rows.length ?? 0;
+    List<PlutoRow> listAdd=[];
+    for (int i = rowCount - 1; i >= 0; i--) {
+      var dr = tblSegement?.rows[i];
+      listAdd.add(InsertRow(
+        segmentFpcTime_.text.substring(0, 8),
+        i == 0 ? "P " : "S ",
+        dr?.cells["exporttapeCaption"]?.value.toString() ?? "",
+        dr?.cells["exportTapeCode"]?.value.toString() ?? "",
+        Utils.convertToTimeFromDouble(
+            value: num.tryParse(
+                    dr?.cells["seGMENTdURATION"]?.value.toString() ?? "") ??
+                0),
+        dr?.cells["som"]?.value.toString() ?? "",
+        BreakNumber:
+            int.tryParse(dr?.cells["breakNumber"]?.value.toString() ?? "0") ??
+                0,
+        EpisodeNumber:
+            int.tryParse(dr?.cells["episodeNumber"]?.value.toString() ?? "0") ??
+                0,
+      ));
+    }
+    gridStateManager?.insertRows(insrow, listAdd);
+    gridStateManager?.notifyListeners();
+    // gridStateManager?.appendRows(listAdd);
+    colorGrid(false);
+
+    gridStateManager?.moveScrollByRow(PlutoMoveDirection.down, insrow);
+    // tblLog.firstDisplayedScrollingRowIndex = insrow;
+  }
+
+  InsertRow(String FpcTime, String EventType, String ExportTapeCaption,
+      String Exporttapecode, String Tapeduration, String SOM,
+      {int BreakNumber = 0,
+      int EpisodeNumber = 0,
+      String BookingNumber = "",
+      String BookingDetailCode = "",
+      String ScheduleTime = "",
+      String ProductName = "",
+      String ROsTimeBand = ""}) {
+    int intRowIndex = gridStateManager?.currentRowIdx ?? 0;
+    // int insertRowId = int.tryParse(gridStateManager?.currentRowIdx?.cells["rownumber"]?.value??"0")??0;
+    int insertRowId = intRowIndex;
+    if (insertRowId > 0) insertRowId = insertRowId - 1;
+
+    // DataRow dr = dt.NewRow();
+    // PlutoRow dr=PlutoRow(cells: {});
+    Map<String, PlutoCell> dr = {};
+
+    dr["fpCtime"] = PlutoCell(value: FpcTime??"");
+    dr["transmissionTime"] = PlutoCell(value: "");
+    dr["exportTapeCode"] = PlutoCell(value: Exporttapecode??"");
+    dr["exportTapeCaption"] = PlutoCell(value: ExportTapeCaption??"");
+    dr["tapeduration"] = PlutoCell(value: Tapeduration??"");
+    dr["som"] = PlutoCell(value: SOM??"");
+    dr["breakNumber"] = PlutoCell(value: BreakNumber.toString());
+    dr["episodeNumber"] = PlutoCell(value: EpisodeNumber.toString());
+    dr["breakEvent"] = PlutoCell(value: "");
+    dr["rownumber"] = PlutoCell(value: "0");
+    dr["eventType"] = PlutoCell(value: EventType);
+    dr["bookingNumber"] = PlutoCell(value: BookingNumber);
+    dr["bookingdetailcode"] = PlutoCell(value: BookingDetailCode.toString());
+    dr["scheduleTime"] = PlutoCell(value: ScheduleTime ?? "");
+    dr["productName"] = PlutoCell(value: ProductName ?? "");
+    dr["rosTimeBand"] = PlutoCell(value: ROsTimeBand ?? "");
+    dr["client"] = PlutoCell(value: "");
+    dr["promoTypecode"] = PlutoCell(value: "");
+    dr["datechange"] = PlutoCell(value: 0);
+    dr["productGroup"] = PlutoCell(value: "");
+    dr["longCaption"] = PlutoCell(value: "");
+    dr["productname_Font"] = PlutoCell(value: "");
+    dr["exporttapecode_Font"] = PlutoCell(value: "");
+    dr["rosTimeBand_Font"] = PlutoCell(value: "");
+    // PlutoRow rowData = PlutoRow(cells: dr);
+    PlutoRow rowData = PlutoRow(cells: {
+    "fpCtime" : PlutoCell(value: FpcTime??""),
+    "transmissionTime": PlutoCell(value: ""),
+    "exportTapeCode": PlutoCell(value: Exporttapecode??""),
+    "exportTapeCaption": PlutoCell(value: ExportTapeCaption??""),
+    "tapeduration": PlutoCell(value: Tapeduration??""),
+    "som": PlutoCell(value: SOM??""),
+    "breakNumber": PlutoCell(value: BreakNumber.toString()),
+    "episodeNumber": PlutoCell(value: EpisodeNumber.toString()),
+    "breakEvent": PlutoCell(value: ""),
+    "rownumber": PlutoCell(value: "0"),
+    "eventType": PlutoCell(value: EventType),
+    "bookingNumber": PlutoCell(value: BookingNumber),
+    "bookingdetailcode": PlutoCell(value: BookingDetailCode.toString()),
+    "scheduleTime": PlutoCell(value: ScheduleTime ?? ""),
+    "productName": PlutoCell(value: ProductName ?? ""),
+    "rosTimeBand": PlutoCell(value: ROsTimeBand ?? ""),
+    "client": PlutoCell(value: ""),
+    "promoTypecode": PlutoCell(value: ""),
+    "datechange": PlutoCell(value: 0),
+    "productGroup": PlutoCell(value: ""),
+    "longCaption": PlutoCell(value: ""),
+    "productname_Font": PlutoCell(value: ""),
+    "exporttapecode_Font": PlutoCell(value: ""),
+    "rosTimeBand_Font": PlutoCell(value: ""),
+    "no": PlutoCell(value: 0),
+    });
+    return rowData;
+    // if (insertRowId == 0) insertRowId = -1;
+    // gridStateManager.Rows.insertAt(dr, InsertRow + 1);
+    print("Row val=>>" + insertRowId.toString());
+    // gridStateManager?.appendNewRows();
+    gridStateManager?.insertRows(0, [rowData]);
+    // gridStateManager?.insertRows(insertRowId, [dr]);
+    // dt.acceptChanges();
+    colorGrid(false);
+    // UnSelectAllRows(tblLog);
+    // tblLog.firstDisplayedScrollingRowIndex = intCurrentRowIndex[3];
+    // tblLog.rows[intRowIndex].selected = true;
+    // tblLog.currentCell = tblLog.rows[intRowIndex].cells[1];
   }
 
   void btnFastInsert_Add_Click() {

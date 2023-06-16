@@ -253,7 +253,7 @@ class ApiFactory {
 
   static String COMMERCIAL_SHOW_ON_TAB_DETAILS() => "$BASE_URL/api/CommercialScheduling/GetTabChange";
 
-  static String SAVE_COMMERCIAL_DETAILS() => "$BASE_URL/api/CommercialScheduling/PostSave";
+  static String get SAVE_COMMERCIAL_DETAILS => "$BASE_URL/api/CommercialScheduling/PostSave";
 
 //////// RO CANCELLATION ///////
   static String RO_CANCELLATION_LOCATION = "$BASE_URL/api/ROCancellation/GetCboLocation";
@@ -370,13 +370,14 @@ class ApiFactory {
     String chnlId,
   ) =>
       "$BASE_URL/api/Transmissionlog/GetHighlightTSGrid?Locationcode=$locId&ChannelCode=$chnlId";
-static String TRANSMISSION_LOG_SEGMENT_PROGRAM_SEARCH() =>
-      "$BASE_URL/api/Transmissionlog/GetProgramSearch?TextSourceProgram=";
-static String TRANSMISSION_LOG_POST_RESCHEDULE() =>
-      "$BASE_URL/api/Transmissionlog/PostRescheduleSpotsClick";
-static String TRANSMISSION_LOG_PROF_LEAVE(String progCode,String epNo,) =>
+  static String TRANSMISSION_LOG_SEGMENT_PROGRAM_SEARCH() => "$BASE_URL/api/Transmissionlog/GetProgramSearch?TextSourceProgram=";
+  static String TRANSMISSION_LOG_POST_RESCHEDULE() => "$BASE_URL/api/Transmissionlog/PostRescheduleSpotsClick";
+  static String TRANSMISSION_LOG_PROF_LEAVE(
+    String progCode,
+    String epNo,
+  ) =>
       "$BASE_URL/api/Transmissionlog/GettxtInsProgpisodeNoLeave?programcode=$progCode&EpisodeNo=$epNo";
-static String TRANSMISSION_LOG_SEARCH_SEGMENT(String progCode,String epNo,String tapeCode,bool defaultSeg) =>
+  static String TRANSMISSION_LOG_SEARCH_SEGMENT(String progCode, String epNo, String tapeCode, bool defaultSeg) =>
       "$BASE_URL/api/Transmissionlog/GetinsProgSearchClick?programcode=$progCode&episodenumber=$epNo&tapecode=$tapeCode&Defaultsegments=$defaultSeg";
 
   /////////////////////////// RO DISTRIBUTION START/////////////////////
@@ -533,6 +534,9 @@ static String TRANSMISSION_LOG_SEARCH_SEGMENT(String progCode,String epNo,String
   static String RO_BOOKING_GetSetVerify = "$BASE_URL/api/ROBooking/GetSetVerify";
   static String RO_BOOKING_ImportAndMark = "$BASE_URL/api/ROBooking/ImportAndMark";
   static String RO_BOOKING_cboPDCSelectedIndexChanged = "$BASE_URL/api/ROBooking/cboPDCSelectedIndexChanged";
+
+  static String RO_BOOKING_SearchTapeIdLeave(exportCode) => "$BASE_URL/api/ROBooking/SearchTapeId?ExportTapeCode=$exportCode";
+
   static String RO_BOOKING_cboTapeIdLeave = "$BASE_URL/api/ROBooking/cboTapeIdLeave";
   static String RO_BOOKING_cboTapeIdFocusLost = "$BASE_URL/api/ROBooking/GetTapeIdLostFocus";
 
