@@ -114,7 +114,7 @@ class RoCancellationView extends GetView<RoCancellationController> {
                           mainAxisSize: MainAxisSize.min,
                           children: [
                             Icon(controller.selectAll.value ? Icons.check_box_outlined : Icons.check_box_outline_blank_outlined),
-                            Text("Select All Sports"),
+                            Text("Select All Spots"),
                           ],
                         ),
                       ))
@@ -193,8 +193,9 @@ class RoCancellationView extends GetView<RoCancellationController> {
                                 },
                                 hideCheckKeysValue: true,
                                 checkRowKey: "requested",
-                                mapData:
-                                    cancelDatactrl.roCancellationData!.cancellationData!.lstBookingNoStatusData!.map((e) => e.toJson()).toList()),
+                                mapData: cancelDatactrl.roCancellationData!.cancellationData!.lstBookingNoStatusData!
+                                    .map((e) => e.toJson(fromSave: false))
+                                    .toList()),
                           );
                         }
                       }),

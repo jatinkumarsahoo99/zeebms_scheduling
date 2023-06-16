@@ -1,24 +1,33 @@
 import 'dart:convert';
-
-import 'package:bms_scheduling/widgets/PlutoGrid/pluto_grid.dart';
+import 'dart:developer';
+import 'package:bms_scheduling/app/providers/extensions/string_extensions.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:intl/intl.dart';
-
+import 'package:bms_scheduling/widgets/PlutoGrid/pluto_grid.dart';
 import '../../../../widgets/LoadingDialog.dart';
 import '../../../../widgets/Snack.dart';
 import '../../../controller/ConnectorControl.dart';
 import '../../../controller/HomeController.dart';
+import '../../../controller/MainController.dart';
 import '../../../data/DropDownValue.dart';
 import '../../../data/PermissionModel.dart';
+import '../../../data/system_envirtoment.dart';
 import '../../../providers/ApiFactory.dart';
+import '../../../providers/DataGridMenu.dart';
+import '../../../providers/SizeDefine.dart';
 import '../../../providers/Utils.dart';
+import '../../../routes/app_pages.dart';
 import '../CommercialProgramModel.dart';
 import '../CommercialShowOnTabModel.dart';
 
 class CommercialController extends GetxController {
+  /// Radio Button
+  int? tabIndex = 0;
+  int selectIndex = 0;
   int? selectedDDIndex;
-  int leftTableSelectedIdx = 0;
+
+  int selectedGroup = 0;
   double widthSize = 0.17;
   String? programFpcTimeSelected;
   int? mainSelectedIndex;
@@ -30,41 +39,62 @@ class CommercialController extends GetxController {
 
   var selectedIndex = RxInt(0);
   RxBool isEnable = RxBool(true);
-  var commercialSpots = "".obs;
-  var commercialDuration = "".obs;
-  var locationFN = FocusNode();
+  var channelEnable = RxBool(true);
+  var locationEnable = RxBool(true);
+  var selectedChannels = RxList([]);
+  var commercialSpots = RxString("");
+  var commercialDuration = RxString("");
+  int lastProgramSelectedIdx = 0;
 
-  var locations = <DropDownValue>[].obs;
-  var channels = <DropDownValue>[].obs;
+  var locations = RxList<DropDownValue>();
+  var channels = RxList<DropDownValue>([]);
+  bool autoShuffle = true;
 
   DateTime? selectedDate = DateTime.now();
   DateFormat df = DateFormat("dd/MM/yyyy");
   DateFormat df1 = DateFormat("dd-MM-yyyy");
   DateFormat df2 = DateFormat("MM-dd-yyyy");
   DateFormat dfFinal = DateFormat("yyyy-MM-ddThh:mm:ss");
+  PlutoGridStateManager? sm;
+
+  List beams = [];
+  List<PlutoRow> beamRows = [];
+  List<PlutoRow> initRows = [];
+  List<PlutoColumn> initColumn = [];
   List<PermissionModel>? formPermissions;
   List<CommercialProgramModel>? commercialProgramList = [];
-  var showCommercialDetailsList = <CommercialShowOnTabModel>[].obs;
-  var mainCommercialShowDetailsList = <CommercialShowOnTabModel>[].obs;
+  RxList<CommercialShowOnTabModel>? showCommercialDetailsList = <CommercialShowOnTabModel>[].obs;
+  RxList<CommercialShowOnTabModel>? mainCommercialShowDetailsList = <CommercialShowOnTabModel>[].obs;
 
   /////////////Pluto Grid////////////
+  PlutoGridStateManager? stateManager;
   PlutoGridStateManager? gridStateManager;
-  PlutoGridStateManager? fpcMisMatchStateManager;
-  PlutoGridStateManager? markedAsErrorStateManager;
+  PlutoGridStateManager? locChanStateManager;
+  PlutoGridStateManager? bmsReportStateManager;
   PlutoGridMode selectedTabPlutoGridMode = PlutoGridMode.select;
-  // PlutoGridMode selectedProgramPlutoGridMode = PlutoGridMode.selectWithOneTap;
+  PlutoGridMode selectedProgramPlutoGridMode = PlutoGridMode.selectWithOneTap;
+  late PlutoGridStateManager conflictReportStateManager;
+
+  List<SystemEnviroment>? channelList = [];
+  List<SystemEnviroment>? locationList = [];
 
   CommercialProgramModel? selectedProgram;
   CommercialShowOnTabModel? selectedShowOnTab;
 
   TextEditingController date_ = TextEditingController();
   TextEditingController refDateControl = TextEditingController(text: DateFormat("dd-MM-yyyy").format(DateTime.now()));
-  String? previousTimeSelected;
 
+  @override
+  void onInit() {
+    super.onInit();
+    getLocations();
+  }
+
+  var locationFN = FocusNode();
   void clear() {
-    leftTableSelectedIdx = 0;
+    autoShuffle = false;
+    insertAfter.value = true;
     programFpcTimeSelected = null;
-    previousTimeSelected = null;
     selectedProgram = null;
     selectedIndex.value = 0;
     mainSelectedIndex = null;
@@ -74,18 +104,26 @@ class CommercialController extends GetxController {
     commercialSpots.value = "";
     commercialDuration.value = "";
     commercialProgramList?.clear();
-    mainCommercialShowDetailsList.clear();
-    showCommercialDetailsList.clear();
-    updateAllTabs();
-    update(['initialData']);
+    mainCommercialShowDetailsList?.clear();
+    showCommercialDetailsList?.clear();
 
-    locationFN.requestFocus();
-  }
+    date_.text = "";
+    selectedChannel = null;
+    selectedLocation = null;
+    commercialSpots.value = "";
+    commercialDuration.value = "";
 
-  @override
-  void onInit() {
-    super.onInit();
-    getLocations();
+    commercialProgramList?.clear();
+    mainCommercialShowDetailsList?.clear();
+    showCommercialDetailsList?.clear();
+
+    locationEnable.value = true;
+    channelEnable.value = true;
+    update(["initData"]);
+    update(["programTable"]);
+    update(["schedulingTable"]);
+    update(["fpcMismatchTable"]);
+    update(["misMatchTable"]);
   }
 
   getLocations() {
@@ -129,25 +167,21 @@ class CommercialController extends GetxController {
       Get.find<ConnectorControl>().GETMETHODCALL(
           api: ApiFactory.COMMERCIAL_SHOW_FPC_SCHEDULLING_DETAILS(selectedLocation?.key ?? "", selectedChannel?.key ?? "", df1.format(selectedDate!)),
           fun: (dynamic list) {
-            // print("Json response is>>>" + jsonEncode(list));
-            programFpcTimeSelected = null;
-            selectedProgram = null;
-            selectedIndex.value = 0;
-            leftTableSelectedIdx = 0;
+            print("Json response is>>>" + jsonEncode(list));
+
             commercialProgramList?.clear();
             list['showDetails']["lstDailyFPC"].forEach((element) {
               commercialProgramList?.add(CommercialProgramModel.fromJson(element));
             });
 
-            mainCommercialShowDetailsList.clear();
-            showCommercialDetailsList.clear();
+            mainCommercialShowDetailsList?.clear();
+            showCommercialDetailsList?.clear();
             list['showDetails']['lstCommercialShuffling'].asMap().forEach((index, element) {
-              mainCommercialShowDetailsList.add(CommercialShowOnTabModel.fromJson(element, index));
+              mainCommercialShowDetailsList?.add(CommercialShowOnTabModel.fromJson(element, index));
             });
+            showCommercialDetailsList?.value = mainCommercialShowDetailsList!.where((o) => o.bStatus.toString() == 'B').toList();
 
-            showCommercialDetailsList.value = mainCommercialShowDetailsList.where((o) => o.bStatus.toString() == 'B').toList();
-
-            var cList = mainCommercialShowDetailsList.where((o) => o.eventType.toString() == 'C' && o.bStatus.toString() == 'B').toList();
+            var cList = mainCommercialShowDetailsList!.where((o) => o.eventType.toString() == 'C' && o.bStatus.toString() == 'B').toList();
             commercialSpots.value = cList.length.toString();
             print("commercialSpots value is : ${commercialSpots.value}");
 
@@ -156,18 +190,23 @@ class CommercialController extends GetxController {
               intTotalDuration = intTotalDuration + Utils.oldBMSConvertToSecondsValue(value: cList[i].duration!);
             }
             commercialDuration.value = Utils.convertToTimeFromDouble(value: intTotalDuration);
-            // print("commercialDuration value is : ${commercialDuration.value}");
-            updateAllTabs();
+            print("commercialDuration value is : ${commercialDuration.value}");
+
+            // commercialSpots.value =
+            //     list['showDetails']['bindGridOutPut']['commercialSpots'] ?? "";
+            // commercialDuration.value = list['showDetails']['bindGridOutPut']
+            // ['commercialDuration'] ?? "";
+
+            updateTab();
             Get.back();
           },
           failed: (val) {
-            Get.back();
             Snack.callError(val.toString());
           });
     }
   }
 
-  updateAllTabs() {
+  updateTab() {
     update(["programTable"]);
     update(["schedulingTable"]);
     update(["fpcMismatchTable"]);
@@ -189,247 +228,281 @@ class CommercialController extends GetxController {
   }
 
   Future<dynamic> showTabList() async {
-    showCommercialDetailsList.clear();
+    showCommercialDetailsList?.clear();
     if (selectedIndex.value == 1) {
-      ///Filter bStatus F, calculate spot duration then calling ColorGrid filter
-      showCommercialDetailsList.value = mainCommercialShowDetailsList.where((o) => o.bStatus.toString() == 'F').toList();
-      showCommercialDetailsList.refresh();
+      /// FPC MISMATCH
+      showCommercialDetailsList?.value = mainCommercialShowDetailsList!.where((o) => o.bStatus.toString() == 'F').toList();
     } else if (selectedIndex.value == 2) {
-      ///Filter bStatus E, calculate spot duration then calling ColorGrid filter
-      showCommercialDetailsList.value = mainCommercialShowDetailsList.where((o) => o.bStatus.toString() == 'E').toList();
-      showCommercialDetailsList.refresh();
+      /// MARK AS ERROR
+      showCommercialDetailsList?.value = mainCommercialShowDetailsList!.where((o) => o.bStatus.toString() == 'E').toList();
     } else {
-      ///Filter bStatus B, calculate spot duration then calling ColorGrid filter
-      showCommercialDetailsList.value = mainCommercialShowDetailsList.where((o) => o.bStatus.toString() == 'B').toList();
-      showCommercialDetailsList.refresh();
+      /// SCHEDULING
+      showCommercialDetailsList?.value = mainCommercialShowDetailsList!.where((o) => o.bStatus.toString() == 'B').toList();
+      commercialSpots.value = showCommercialDetailsList?.value.where((element) => element.eventType == "E").toList().length.toString() ?? "";
+      // commercialDuration
+      double intTotalDuration = 0;
+      for (int i = 0; i < (showCommercialDetailsList?.length ?? 0); i++) {
+        intTotalDuration = intTotalDuration + Utils.oldBMSConvertToSecondsValue(value: showCommercialDetailsList![i].duration!);
+      }
+      commercialDuration.value = Utils.convertToTimeFromDouble(value: intTotalDuration);
     }
-    updateAllTabs();
-    return showCommercialDetailsList.value;
+    showCommercialDetailsList?.refresh();
+    updateTab();
+    return showCommercialDetailsList?.value;
   }
 
   Future<dynamic> showSelectedProgramList(BuildContext context) async {
     if (selectedIndex.value == 1) {
-      ///Filter F, calculate spot duration then calling ColorGrid filter
-      print(programFpcTimeSelected.toString());
-      showCommercialDetailsList.value =
-          mainCommercialShowDetailsList.where((o) => o.fpcTime.toString() == programFpcTimeSelected && o.bStatus.toString() == 'F').toList();
-      showCommercialDetailsList.refresh();
+      /// FPC MISMATCH
+      showCommercialDetailsList?.value =
+          mainCommercialShowDetailsList!.where((o) => o.fpcTime.toString() == programFpcTimeSelected && o.bStatus.toString() == 'F').toList();
     } else if (selectedIndex.value == 2) {
-      ///Filter E, calculate spot duration then calling ColorGrid filter
-      print(programFpcTimeSelected.toString());
-      showCommercialDetailsList.value =
-          mainCommercialShowDetailsList.where((o) => o.fpcTime.toString() == programFpcTimeSelected && o.bStatus.toString() == 'E').toList();
-      showCommercialDetailsList.refresh();
+      /// MARK AS ERROR
+      showCommercialDetailsList?.value =
+          mainCommercialShowDetailsList!.where((o) => o.fpcTime.toString() == programFpcTimeSelected && o.bStatus.toString() == 'E').toList();
     } else {
-      /// Filter B, calculate spot duration then calling ColorGrid filter.
-      showCommercialDetailsList.value =
-          mainCommercialShowDetailsList.where((o) => o.fpcTime.toString() == programFpcTimeSelected && o.bStatus.toString() == 'B').toList();
-      commercialSpots.value = showCommercialDetailsList.where((o) => o.eventType == "C").toList().length.toString();
-      num intTotalDuration = 0;
-      for (int i = 0; i < (showCommercialDetailsList.length); i++) {
-        if (showCommercialDetailsList[i].eventType == "C") {
-          intTotalDuration = intTotalDuration + Utils.oldBMSConvertToSecondsValue(value: showCommercialDetailsList[i].duration ?? "");
-        }
-      }
-      commercialDuration.value = Utils.convertToTimeFromDouble(value: intTotalDuration);
-      showCommercialDetailsList.refresh();
+      /// SCHEDULING
+      showCommercialDetailsList?.value =
+          mainCommercialShowDetailsList!.where((o) => o.fpcTime.toString() == programFpcTimeSelected && o.bStatus.toString() == 'B').toList();
     }
-    updateAllTabs();
-    return showCommercialDetailsList.value;
+    showCommercialDetailsList?.refresh();
+    print(programFpcTimeSelected.toString());
+    updateTab();
+    return showCommercialDetailsList?.value;
   }
 
-  changeFPCOnClick() async {
+  PlutoGridStateManager? fpcMisMatchSM;
+
+  changeFPCOnClick() {
+    if (fpcMisMatchSM?.currentRowIdx == null || fpcMisMatchSM?.currentRowIdx == null) {
+      LoadingDialog.showErrorDialog("Please select row first");
+    } else if ((fpcMisMatchSM!.currentSelectingRows.isEmpty)) {
+      for (var i = 0; i < mainCommercialShowDetailsList!.length; i++) {
+        if (mainCommercialShowDetailsList![i].bStatus == "F" &&
+            (showCommercialDetailsList![fpcMisMatchSM!.currentRowIdx!].rownumber) == mainCommercialShowDetailsList![i].rownumber) {
+          mainCommercialShowDetailsList![i].bStatus = "B";
+          mainCommercialShowDetailsList![i].fpcTime = programFpcTimeSelected;
+          mainCommercialShowDetailsList![i].pProgramMaster = programCodeSelected;
+          mainCommercialShowDetailsList![i].pDailyFPC = programCodeSelected;
+          fpcMisMatchSM?.changeCellValue(
+            fpcMisMatchSM!.getRowByIdx(fpcMisMatchSM!.currentRowIdx!)!.cells['fpcTime']!,
+            programFpcTimeSelected,
+            force: true,
+            notify: true,
+          );
+          break;
+        }
+      }
+    } else {
+      for (var i = 0; i < mainCommercialShowDetailsList!.length; i++) {
+        if (mainCommercialShowDetailsList![i].bStatus == "F") {
+          for (var element in fpcMisMatchSM!.currentSelectingRows) {
+            if (mainCommercialShowDetailsList![i].rownumber == showCommercialDetailsList![element.sortIdx].rownumber) {
+              mainCommercialShowDetailsList![i].bStatus = "B";
+              mainCommercialShowDetailsList![i].fpcTime = programFpcTimeSelected;
+              mainCommercialShowDetailsList![i].pProgramMaster = programCodeSelected;
+              mainCommercialShowDetailsList![i].pDailyFPC = programCodeSelected;
+              fpcMisMatchSM?.changeCellValue(
+                fpcMisMatchSM!.getRowByIdx(element.sortIdx)!.cells['fpcTime']!,
+                programFpcTimeSelected,
+                force: true,
+                notify: true,
+              );
+            }
+          }
+        }
+      }
+    }
+
+    // for (var i = 0; i < (mainCommercialShowDetailsList?.length ?? 0); i++) {
+    //   if (mainCommercialShowDetailsList![i].bStatus == "F" &&
+    //       (showCommercialDetailsList![mainSelectedIndex!].rownumber == mainCommercialShowDetailsList![i].rownumber)) {
+    //     mainCommercialShowDetailsList?[i].bStatus = "B";
+    //     mainCommercialShowDetailsList?[i].fpcTime = programFpcTimeSelected;
+    //     mainCommercialShowDetailsList?[i].pProgramMaster = programCodeSelected;
+    //     mainCommercialShowDetailsList?[i].pDailyFPC = programCodeSelected;
+    //     break;
+    //   }
+    // }
+    // fpcMisMatchSM?.changeCellValue(
+    //   fpcMisMatchSM!.getRowByIdx(mainSelectedIndex)!.cells['fpcTime']!,
+    //   programFpcTimeSelected,
+    //   force: true,
+    //   notify: true,
+    // );
+    fpcMisMatchSM?.setCurrentCell(fpcMisMatchSM!.getRowByIdx(mainSelectedIndex)!.cells['fpcTime']!, mainSelectedIndex);
+
     /// BStatus == "B" &&
     /// FPCTime == programFpcTimeSelected &&
     /// PProgramMaster = programProgramCodeSelected &&
     /// PDailyFPC == programProgramCodeSelected
-    // var list = mainCommercialShowDetailsList.where((o) => o.bStatus.toString() == 'F').toList();
-    if (fpcMisMatchStateManager?.currentRowIdx == null || fpcMisMatchStateManager?.currentRowIdx == null) {
-      LoadingDialog.showErrorDialog("Please select row first");
-      return;
-    } else if ((fpcMisMatchStateManager!.currentSelectingRows.isEmpty)) {
-      for (var i = 0; i < mainCommercialShowDetailsList.length; i++) {
-        if (mainCommercialShowDetailsList[i].bStatus == "F" &&
-            (showCommercialDetailsList[fpcMisMatchStateManager!.currentRowIdx!].rownumber) == mainCommercialShowDetailsList[i].rownumber) {
-          mainCommercialShowDetailsList[i].bStatus = "B";
-          mainCommercialShowDetailsList[i].fpcTime = programFpcTimeSelected;
-          mainCommercialShowDetailsList[i].pProgramMaster = programCodeSelected;
-          mainCommercialShowDetailsList[i].pDailyFPC = programCodeSelected;
-        }
-      }
-    } else {
-      for (var i = 0; i < mainCommercialShowDetailsList.length; i++) {
-        if (mainCommercialShowDetailsList[i].bStatus == "F") {
-          for (var element in fpcMisMatchStateManager!.currentSelectingRows) {
-            if (mainCommercialShowDetailsList[i].rownumber == showCommercialDetailsList[element.sortIdx].rownumber) {
-              mainCommercialShowDetailsList[i].bStatus = "B";
-              mainCommercialShowDetailsList[i].fpcTime = programFpcTimeSelected;
-              mainCommercialShowDetailsList[i].pProgramMaster = programCodeSelected;
-              mainCommercialShowDetailsList[i].pDailyFPC = programCodeSelected;
-            }
-          }
-        }
-      }
-    }
-    if (previousTimeSelected != null) {
-      programFpcTimeSelected = previousTimeSelected;
-    }
-    // mainCommercialShowDetailsList.refresh();
-    await showSelectedProgramList(Get.context!);
-    updateAllTabs();
+    // print(exportTapeCodeSelected.toString());
+    // var list = mainCommercialShowDetailsList!.where((o) => o.bStatus.toString() == 'F').toList();
+    // var target = list[mainSelectedIndex!];
+    // print(mainSelectedIndex!.toString());
+    // print("changeFPCOnClick : $target");
+    // target.bStatus = 'B';
+    // target.fpcTime = programFpcTimeSelected;
+    // target.pProgramMaster = programCodeSelected;
+    // target.pDailyFPC = programCodeSelected;
+    // mainCommercialShowDetailsList?.refresh();
+    // updateTab();
+    // showTabList();
+
+    return mainCommercialShowDetailsList;
   }
 
   misMatchOnClick() {
-    /// BStatus == "B" && PProgramMaster = PDailyFPC
-    // var list = mainCommercialShowDetailsList.where((o) => o.bStatus.toString() == 'F').toList();
-    // var target = list[mainSelectedIndex!];
-    // target.bStatus = 'B';
-    // target.pProgramMaster = pDailyFPCSelected;
     LoadingDialog.recordExists("Want to change FPC of selected record(s)?", () async {
-      if (fpcMisMatchStateManager?.currentRowIdx == null || fpcMisMatchStateManager?.currentRowIdx == null) {
+      if (fpcMisMatchSM?.currentRowIdx == null || fpcMisMatchSM?.currentRowIdx == null) {
         LoadingDialog.showErrorDialog("Please select row first");
-        return;
-      } else if ((fpcMisMatchStateManager!.currentSelectingRows.isEmpty)) {
-        for (var i = 0; i < mainCommercialShowDetailsList.length; i++) {
-          if (mainCommercialShowDetailsList[i].bStatus == "F" &&
-              (showCommercialDetailsList[fpcMisMatchStateManager!.currentRowIdx!].rownumber) == mainCommercialShowDetailsList[i].rownumber) {
-            mainCommercialShowDetailsList[i].bStatus = "B";
-            mainCommercialShowDetailsList[i].pProgramMaster = pDailyFPCSelected;
+      } else if ((fpcMisMatchSM!.currentSelectingRows.isEmpty)) {
+        for (var i = 0; i < mainCommercialShowDetailsList!.length; i++) {
+          if (mainCommercialShowDetailsList![i].bStatus == "F" &&
+              (showCommercialDetailsList![fpcMisMatchSM!.currentRowIdx!].rownumber) == mainCommercialShowDetailsList![i].rownumber) {
+            mainCommercialShowDetailsList![i].bStatus = "B";
+            mainCommercialShowDetailsList![i].pProgramMaster = pDailyFPCSelected;
+            break;
           }
         }
+        fpcMisMatchSM?.removeCurrentRow();
       } else {
-        for (var i = 0; i < mainCommercialShowDetailsList.length; i++) {
-          if (mainCommercialShowDetailsList[i].bStatus == "F") {
-            for (var element in fpcMisMatchStateManager!.currentSelectingRows) {
-              if (mainCommercialShowDetailsList[i].rownumber == showCommercialDetailsList[element.sortIdx].rownumber) {
-                mainCommercialShowDetailsList[i].bStatus = "B";
-                mainCommercialShowDetailsList[i].pProgramMaster = pDailyFPCSelected;
+        for (var i = 0; i < mainCommercialShowDetailsList!.length; i++) {
+          if (mainCommercialShowDetailsList![i].bStatus == "F") {
+            for (var element in fpcMisMatchSM!.currentSelectingRows) {
+              if (mainCommercialShowDetailsList![i].rownumber == showCommercialDetailsList![element.sortIdx].rownumber) {
+                mainCommercialShowDetailsList![i].bStatus = "B";
+                mainCommercialShowDetailsList![i].pProgramMaster = pDailyFPCSelected;
               }
             }
           }
         }
+        fpcMisMatchSM?.removeRows((fpcMisMatchSM?.currentSelectingRows ?? []));
       }
-      if (previousTimeSelected != null) {
-        programFpcTimeSelected = previousTimeSelected;
-      }
-      // mainCommercialShowDetailsList.refresh();
-      await showSelectedProgramList(Get.context!);
-      updateAllTabs();
-      // mainCommercialShowDetailsList.refresh();
-      // updateAllTabs();
-      // showTabList();
-      // return mainCommercialShowDetailsList;
     });
+
+    // /// BStatus == "B" && PProgramMaster = PDailyFPC
+    // print(exportTapeCodeSelected.toString());
+    // // var target = mainCommercialShowDetailsList!
+    // //     .firstWhere((item) => item.exportTapeCode == exportTapeCodeSelected);
+    // var list = mainCommercialShowDetailsList!.where((o) => o.bStatus.toString() == 'F').toList();
+    // var target = list[mainSelectedIndex!];
+    // print("misMatchOnClick : $target");
+    // target.bStatus = 'B';
+    // target.pProgramMaster = pDailyFPCSelected;
+    // mainCommercialShowDetailsList?.refresh();
+    // updateTab();
+    // showTabList();
   }
 
   markAsErrorOnClick() {
+    LoadingDialog.recordExists("Want to mark as error to selected record(s)?", () {
+      if (fpcMisMatchSM?.currentRowIdx == null || fpcMisMatchSM?.currentRowIdx == null) {
+        LoadingDialog.showErrorDialog("Please select row first");
+      } else if ((fpcMisMatchSM!.currentSelectingRows.isEmpty)) {
+        for (var i = 0; i < mainCommercialShowDetailsList!.length; i++) {
+          if (mainCommercialShowDetailsList![i].bStatus == "F" &&
+              (showCommercialDetailsList![fpcMisMatchSM!.currentRowIdx!].rownumber) == mainCommercialShowDetailsList![i].rownumber) {
+            mainCommercialShowDetailsList![i].bStatus = "E";
+            break;
+          }
+        }
+        fpcMisMatchSM?.removeCurrentRow();
+      } else {
+        for (var i = 0; i < mainCommercialShowDetailsList!.length; i++) {
+          if (mainCommercialShowDetailsList![i].bStatus == "F") {
+            for (var element in fpcMisMatchSM!.currentSelectingRows) {
+              if (mainCommercialShowDetailsList![i].rownumber == showCommercialDetailsList![element.sortIdx].rownumber) {
+                mainCommercialShowDetailsList![i].bStatus = "E";
+              }
+            }
+          }
+        }
+        fpcMisMatchSM?.removeRows((fpcMisMatchSM?.currentSelectingRows ?? []));
+      }
+    });
+
     /// BStatus == "E"
     // print(exportTapeCodeSelected.toString());
-    // var list = mainCommercialShowDetailsList.where((o) => o.bStatus.toString() == 'F').toList();
+    // var list = mainCommercialShowDetailsList!.where((o) => o.bStatus.toString() == 'F').toList();
     // var target = list[mainSelectedIndex!];
     // print("markAsErrorOnClick : $target");
     // target.bStatus = 'E';
-    LoadingDialog.recordExists("Want to mark as error to selected record(s)?", () {
-      if (fpcMisMatchStateManager?.currentRowIdx == null || fpcMisMatchStateManager?.currentRowIdx == null) {
-        LoadingDialog.showErrorDialog("Please select row first");
-        return;
-      } else if ((fpcMisMatchStateManager!.currentSelectingRows.isEmpty)) {
-        for (var i = 0; i < mainCommercialShowDetailsList.length; i++) {
-          if (mainCommercialShowDetailsList[i].bStatus == "F" &&
-              (showCommercialDetailsList[fpcMisMatchStateManager!.currentRowIdx!].rownumber) == mainCommercialShowDetailsList[i].rownumber) {
-            mainCommercialShowDetailsList[i].bStatus = "E";
-          }
-        }
-      } else {
-        for (var i = 0; i < mainCommercialShowDetailsList.length; i++) {
-          if (mainCommercialShowDetailsList[i].bStatus == "F") {
-            for (var element in fpcMisMatchStateManager!.currentSelectingRows) {
-              if (mainCommercialShowDetailsList[i].rownumber == showCommercialDetailsList[element.sortIdx].rownumber) {
-                mainCommercialShowDetailsList[i].bStatus = "E";
-              }
-            }
-          }
-        }
-      }
-      mainCommercialShowDetailsList.refresh();
-      // updateAllTabs();
-      showTabList();
-    });
+    // mainCommercialShowDetailsList?.refresh();
+    // updateTab();
+    // showTabList();
     // return mainCommercialShowDetailsList;
   }
 
+  var insertAfter = true.obs;
+  PlutoGridStateManager? markedAsErrorSM;
   unMarkAsErrorOnClick() {
-    /// BStatus == "B"
-    // var list = mainCommercialShowDetailsList.where((o) => o.bStatus.toString() == 'E').toList();
-    // var target = list[mainSelectedIndex!];
-    // target.bStatus = 'B';
-    // mainCommercialShowDetailsList.refresh();
-    // updateAllTabs();
-    // showTabList();
-
     LoadingDialog.recordExists("Want to un-mark selected record(s)?", () {
-      if (markedAsErrorStateManager?.currentRowIdx == null || markedAsErrorStateManager?.currentRowIdx == null) {
+      if (markedAsErrorSM?.currentRowIdx == null || markedAsErrorSM?.currentRowIdx == null) {
         LoadingDialog.showErrorDialog("Please select row first");
-        return;
-      } else if ((markedAsErrorStateManager!.currentSelectingRows.isEmpty)) {
-        for (var i = 0; i < mainCommercialShowDetailsList.length; i++) {
-          if (mainCommercialShowDetailsList[i].bStatus == "E" &&
-              (showCommercialDetailsList[markedAsErrorStateManager!.currentRowIdx!].rownumber) == mainCommercialShowDetailsList[i].rownumber) {
-            mainCommercialShowDetailsList[i].bStatus = "B";
+      } else if ((markedAsErrorSM!.currentSelectingRows.isEmpty)) {
+        for (var i = 0; i < mainCommercialShowDetailsList!.length; i++) {
+          if (mainCommercialShowDetailsList![i].bStatus == "E" &&
+              (showCommercialDetailsList![markedAsErrorSM!.currentRowIdx!].rownumber) == mainCommercialShowDetailsList![i].rownumber) {
+            mainCommercialShowDetailsList![i].bStatus = "B";
+            break;
           }
         }
+        markedAsErrorSM?.removeCurrentRow();
       } else {
-        for (var i = 0; i < mainCommercialShowDetailsList.length; i++) {
-          if (mainCommercialShowDetailsList[i].bStatus == "E") {
-            for (var element in markedAsErrorStateManager!.currentSelectingRows) {
-              if (mainCommercialShowDetailsList[i].rownumber == showCommercialDetailsList[element.sortIdx].rownumber) {
-                mainCommercialShowDetailsList[i].bStatus = "B";
+        for (var i = 0; i < mainCommercialShowDetailsList!.length; i++) {
+          if (mainCommercialShowDetailsList![i].bStatus == "E") {
+            for (var element in markedAsErrorSM!.currentSelectingRows) {
+              if (mainCommercialShowDetailsList![i].rownumber == showCommercialDetailsList![element.sortIdx].rownumber) {
+                mainCommercialShowDetailsList![i].bStatus = "B";
               }
             }
           }
         }
+        markedAsErrorSM?.removeRows((markedAsErrorSM?.currentSelectingRows ?? []));
       }
-      mainCommercialShowDetailsList.refresh();
-      // updateAllTabs();
-      showTabList();
     });
+    // /// BStatus == "B"
+    // print(exportTapeCodeSelected.toString());
+    // // var target = mainCommercialShowDetailsList!
+    // //     .firstWhere((item) => item.exportTapeCode == exportTapeCodeSelected);
+    // var list = mainCommercialShowDetailsList!.where((o) => o.bStatus.toString() == 'E').toList();
+    // var target = list[mainSelectedIndex!];
+    // print("unMarkAsErrorOnClick : $target");
+    // target.bStatus = 'B';
+    // mainCommercialShowDetailsList?.refresh();
+    // updateTab();
+    // showTabList();
     // return mainCommercialShowDetailsList;
   }
 
   /// Not Completed
   saveSchedulingData() {
     if (selectedLocation == null) {
-      LoadingDialog.showErrorDialog("Please select location");
+      Snack.callError("Please select location");
     } else if (selectedChannel == null) {
-      LoadingDialog.showErrorDialog("Please select location");
-    } else if (selectedDate == null) {
-      LoadingDialog.showErrorDialog("Please select date");
-    } else if (mainCommercialShowDetailsList.where((o) => o.bStatus.toString() == 'F').toList().isNotEmpty) {
+      Snack.callError("Please select location");
+    } else if (mainCommercialShowDetailsList?.where((o) => o.bStatus.toString() == 'F').toList().isNotEmpty ?? true) {
       LoadingDialog.showErrorDialog("Please clear all mismatch spots.");
     } else {
-      LoadingDialog.call();
+      selectedDate = df1.parse(date_.text);
       try {
         var jsonRequest = {
           "locationCode": selectedLocation?.key.toString(),
           "channelCode": selectedChannel?.key.toString(),
-          "scheduleDate": df1.format(DateFormat("dd-MM-yyyy").parse(date_.text)),
-          "lstCommercialShuffling": mainCommercialShowDetailsList.map((e) => e.toJson()).toList(),
+          "scheduleDate": df1.format(selectedDate!),
+          "lstCommercialShuffling": mainCommercialShowDetailsList?.map((e) => e.toJson()).toList(),
         };
+        print("requestedToSaveData >>>" + jsonEncode(jsonRequest));
         Get.find<ConnectorControl>().POSTMETHOD(
-          api: ApiFactory.SAVE_COMMERCIAL_DETAILS,
-          fun: (dynamic data) {
-            Get.back();
-            if (data != null &&
-                data is Map<String, dynamic> &&
-                data['csSaveOutput'] != null &&
-                data['csSaveOutput'].toString().contains("Record(s) saved successfully.")) {
-              LoadingDialog.callDataSaved(msg: data['csSaveOutput'].toString());
-            } else {
-              LoadingDialog.showErrorDialog(data.toString());
-            }
-          },
-          json: jsonRequest,
-        );
+            api: ApiFactory.SAVE_COMMERCIAL_DETAILS,
+            fun: (dynamic data) {
+              print("Json response is>>>" + jsonEncode(data));
+
+              print("saveSchedulingData Called");
+              update(["fillerShowOnTabTable"]);
+            },
+            json: jsonRequest);
       } catch (e) {
         LoadingDialog.callErrorMessage1(msg: "Failed To Save Data");
       }

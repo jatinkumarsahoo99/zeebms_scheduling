@@ -1,5 +1,6 @@
 import 'dart:convert';
 
+import 'package:bms_scheduling/app/controller/MainController.dart';
 import 'package:bms_scheduling/app/modules/filler/FillerDailyFPCModel.dart';
 import 'package:bms_scheduling/app/modules/filler/FillerDailyFPCModel.dart';
 import 'package:file_picker/file_picker.dart';
@@ -17,6 +18,7 @@ import '../../../data/PermissionModel.dart';
 import '../../../data/system_envirtoment.dart';
 import '../../../providers/ApiFactory.dart';
 import '../../../providers/ExportData.dart';
+import '../../../providers/Utils.dart';
 import '../FillerDailyFPCModel.dart';
 import '../FillerSegmentModel.dart';
 import 'package:dio/dio.dart' as dio;
@@ -43,6 +45,7 @@ class FillerController extends GetxController {
   TextEditingController totalFillerDur = TextEditingController()..text = "";
   TextEditingController fromTime_ = TextEditingController()..text = "00:00:00:00";
   TextEditingController toTime_ = TextEditingController()..text = "00:00:00:00";
+  int bottomLastSelectedIdx = 0, topLastSelectedIdx = 0;
 
   late String fillerCode;
 
@@ -118,6 +121,9 @@ class FillerController extends GetxController {
     locationEnable.value = true;
     channelEnable.value = true;
     locationFN.requestFocus();
+    bottomLastSelectedIdx = 0;
+    topLastSelectedIdx = 0;
+    clearBottonControlls();
   }
 
   /// List for Columns
@@ -139,10 +145,38 @@ class FillerController extends GetxController {
 
   var importedFile = Rxn<PlatformFile>();
   TextEditingController fileController = TextEditingController();
+  PlutoGridStateManager? bottomSM;
+  var tempMap = {};
 
   formHandler(btnName) async {
     if (btnName == "Clear") {
       clear();
+    } else if (btnName == "Save") {
+      saveData();
+    }
+  }
+
+  saveData() {
+    if (selectLocation == null) {
+      LoadingDialog.showErrorDialog("Please select Location,Channel");
+    } else {
+      LoadingDialog.call();
+      Get.find<ConnectorControl>().POSTMETHOD(
+        api: ApiFactory.FILLER_SAVE_IMPORT_FILLERS,
+        fun: (resp) {
+          Get.back();
+          LoadingDialog.showErrorDialog(resp.toString());
+        },
+        json: {
+          "locationCode": selectedImportLocation?.key.toString(),
+          "channelCode": selectedImportChannel?.key.toString(),
+          "telecastDate": DateFormat("yyyy-MM-dd").format(DateFormat("dd-MM-yyyy").parse(fillerFromDate_.text)),
+          "telecastTime": fillerDailyFpcList[topLastSelectedIdx].fpcTime,
+          "programCode": fillerDailyFpcList[topLastSelectedIdx].programCode,
+          "loggedUser": Get.find<MainController>().user?.logincode,
+          "details": fillerSegmentList.map((element) => element.toJson()).toList(),
+        },
+      );
     }
   }
 
@@ -220,12 +254,14 @@ class FillerController extends GetxController {
     }
   }
 
-  getFillerValuesByFillerCode(fillerCode) {
+  getFillerValuesByFillerCode(DropDownValue fillerCode) {
     try {
+      selectCaption.value = fillerCode;
       Get.find<ConnectorControl>().GETMETHODCALL(
-          api: ApiFactory.FILLER_VALUES_BY_FILLER_CODE(fillerCode),
+          api: ApiFactory.FILLER_VALUES_BY_FILLER_CODE(fillerCode.key),
           fun: (data) {
-            print('>> Fillers Value : ${data}');
+            // print('>> Fillers Value : ${data}');
+            tempMap = data;
             tapeId_.text = data['exportTapeCode'];
             segNo_.text = data['segmentNumber'];
             segDur_.text = data['fillerDuration'];
@@ -372,5 +408,71 @@ class FillerController extends GetxController {
   void onReady() {
     super.onReady();
     getLocation();
+  }
+
+  void handleAddTap() {
+    if (selectCaption.value == null || selectCaption.value?.key == null || tempMap.isEmpty) {
+      LoadingDialog.showErrorDialog("Please select caption");
+      return;
+    }
+    try {
+      var tempMode = FillerSegmentModel(
+        segNo: null,
+        brkNo: (fillerSegmentList[bottomLastSelectedIdx].segNo == null)
+            ? fillerSegmentList[bottomLastSelectedIdx].brkNo
+            : fillerSegmentList[bottomLastSelectedIdx].segNo,
+        brktype: "A",
+        fillerCode: tempMap['fillerCode'],
+        allowMove: "1",
+        segmentCaption: selectCaption.value?.value,
+        segDur: segDur_.text,
+        tapeID: tapeId_.text,
+        som: Utils.convertToTimeFromDouble(
+            value: ((Utils.convertToSecond(value: fillerSegmentList[bottomLastSelectedIdx].som ?? "")) +
+                (Utils.convertToSecond(value: fillerSegmentList[bottomLastSelectedIdx].segDur ?? "")))),
+      );
+      bottomLastSelectedIdx = bottomLastSelectedIdx + 1;
+      fillerSegmentList.insert(bottomLastSelectedIdx, tempMode);
+      fillerSegmentList.refresh();
+      var temp1st = fillerDailyFpcList[topLastSelectedIdx];
+      var totalDuration = temp1st.fpcTime;
+      var segDur = "0";
+      int i = 1;
+      fillerSegmentList.map((element) {
+        if (i == 1) {
+          element.som = totalDuration;
+          i = 2;
+        } else {
+          element.som = totalDuration;
+        }
+        if (element.allowMove == "1") {
+          segDur = "${Utils.convertToSecond(value: element.segDur ?? "")}$segDur";
+        }
+        totalDuration = Utils.convertToTimeFromDouble(
+            value: (Utils.convertToSecond(value: totalDuration ?? "") + Utils.convertToSecond(value: element.segDur ?? "")));
+        return element;
+      });
+      totalFiller.text = fillerSegmentList.where((o) => o.allowMove == "1").toList().length.toString();
+      if (totalFillerDur.text == "00:00:00:00") {
+        totalFillerDur.text = tempMap['fillerDuration'];
+      } else {
+        totalFillerDur.text = Utils.convertToTimeFromDouble(
+            value: Utils.convertToSecond(value: totalFillerDur.text) + Utils.convertToSecond(value: tempMap['fillerDuration']));
+      }
+      // totalFillerDur.text = Utils.convertToTimeFromDouble(value: Utils.convertToSecond(value: segDur));
+      clearBottonControlls();
+      bottomSM?.setCurrentCell(bottomSM?.getRowByIdx(bottomLastSelectedIdx)?.cells['segNo'], bottomLastSelectedIdx);
+    } catch (e) {
+      LoadingDialog.showErrorDialog(e.toString());
+    }
+  }
+
+  clearBottonControlls() {
+    selectCaption.value = null;
+    selectCaption.refresh();
+    tapeId_.clear();
+    segNo_.clear();
+    segDur_.clear();
+    tempMap.clear();
   }
 }

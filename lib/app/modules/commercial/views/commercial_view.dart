@@ -1,5 +1,3 @@
-// ignore_for_file: use_build_context_synchronously
-
 import 'dart:convert';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
@@ -14,19 +12,18 @@ import '../../../../widgets/gridFromMap.dart';
 import '../../../../widgets/gridFromMap1.dart';
 import '../../../controller/HomeController.dart';
 import '../../../providers/SizeDefine.dart';
-import '../../../providers/Utils.dart';
 import '../controllers/commercial_controller.dart';
 
 class CommercialView extends GetView<CommercialController> {
-  const CommercialView({Key? key}) : super(key: key);
+  CommercialView({Key? key}) : super(key: key);
 
-  // var formName = 'Schedule Commercials';
-  // void handleOnRowChecked(PlutoGridOnRowCheckedEvent event) {}
+  var formName = 'Schedule Commercials';
+  void handleOnRowChecked(PlutoGridOnRowCheckedEvent event) {}
 
   @override
   Widget build(BuildContext context) {
     return GetBuilder<CommercialController>(
-        init: controller,
+        init: CommercialController(),
         id: "initData",
         builder: (controller) {
           return Scaffold(
@@ -42,7 +39,6 @@ class CommercialView extends GetView<CommercialController> {
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
                       GetBuilder<CommercialController>(
-                        init: controller,
                         id: "initialData",
                         builder: (control) {
                           return Padding(
@@ -63,7 +59,6 @@ class CommercialView extends GetView<CommercialController> {
                                     autoFocus: true,
                                     dialogWidth: 330,
                                     dialogHeight: Get.height * .7,
-                                    inkWellFocusNode: controller.locationFN,
                                   ),
                                 ),
                                 const SizedBox(width: 15),
@@ -92,6 +87,7 @@ class CommercialView extends GetView<CommercialController> {
                                   child: FormButton(
                                     btnText: "show details",
                                     callback: () {
+                                      controller.selectedIndex.value = 0;
                                       controller.fetchSchedulingDetails();
                                     },
                                   ),
@@ -110,9 +106,17 @@ class CommercialView extends GetView<CommercialController> {
                                   padding: const EdgeInsets.only(top: 16.0, left: 15),
                                   child: Row(
                                     children: [
-                                      CheckBoxWidget1(title: "Insert After"),
-                                      const SizedBox(width: 10),
-                                      CheckBoxWidget1(title: "Auto Shuffle"),
+                                      Obx(() {
+                                        return CheckBoxWidget1(
+                                          title: "Insert After",
+                                          value: controller.insertAfter.value,
+                                          onChanged: (a) => controller.insertAfter.value = a ?? false,
+                                        );
+                                      }),
+                                      CheckBoxWidget1(
+                                        title: "Auto Shuffle",
+                                        value: controller.autoShuffle,
+                                      ),
                                     ],
                                   ),
                                 ),
@@ -228,13 +232,9 @@ class CommercialView extends GetView<CommercialController> {
                       ),
                     },
                     onValueChanged: (int? value) async {
-                      // print("Selected tab index is : $value");
+                      print("Selected tab index is : $value");
                       controller.selectedIndex.value = value!;
                       await controller.showTabList();
-                      if (controller.programFpcTimeSelected != null && controller.selectedProgram != null) {
-                        await controller.showSelectedProgramList(context);
-                        controller.updateAllTabs();
-                      }
                       //controller.fetchSchedulingShowOnTabDetails();
                     },
                   ),
@@ -258,21 +258,27 @@ class CommercialView extends GetView<CommercialController> {
                       children: [
                         FormButton(
                           btnText: "Change FPC",
-                          callback: () => controller.changeFPCOnClick(),
+                          callback: () {
+                            controller.changeFPCOnClick();
+                          },
                         ),
                         const SizedBox(
                           width: 20,
                         ),
                         FormButton(
                           btnText: "Mis-Match",
-                          callback: () => controller.misMatchOnClick(),
+                          callback: () {
+                            controller.misMatchOnClick();
+                          },
                         ),
                         const SizedBox(
                           width: 20,
                         ),
                         FormButton(
                           btnText: "Mark-as-Error",
-                          callback: () => controller.markAsErrorOnClick(),
+                          callback: () {
+                            controller.markAsErrorOnClick();
+                          },
                         ),
                       ],
                     )
@@ -321,41 +327,39 @@ class CommercialView extends GetView<CommercialController> {
         builder: (controller) {
           if (controller.commercialProgramList != null && (controller.commercialProgramList?.isNotEmpty)!) {
             return DataGridFromMap(
-              onload: (sm) {
-                sm.stateManager
-                    .setCurrentCell(sm.stateManager.getRowByIdx(controller.leftTableSelectedIdx)?.cells['fpcTime'], controller.leftTableSelectedIdx);
-                sm.stateManager.moveCurrentCellByRowIdx(
-                  controller.leftTableSelectedIdx,
-                  PlutoMoveDirection.down,
-                );
-              },
-              colorCallback: (colorRow) {
-                if (colorRow.rowIdx == controller.leftTableSelectedIdx) {
-                  return Colors.deepPurple[200]!;
-                } else {
-                  return Colors.white;
-                }
-              },
-              mode: PlutoGridMode.selectWithOneTap,
+              // colorCallback: (colorRow) {
+              //   if (controller.commercialProgramList![colorRow.rowIdx].fpcTime == controller.programFpcTimeSelected) {
+              //     return Colors.deepPurple[200]!;
+              //   } else {
+              //     return Colors.white;
+              //   }
+              // },
+              mode: controller.selectedProgramPlutoGridMode,
               showonly: const [
                 "fpcTime",
                 "programname",
               ],
+              colorCallback: (row) => (row.row.cells.containsValue(controller.sm?.currentCell)) ? Colors.deepPurple.shade200 : Colors.white,
+              onload: (sm) {
+                controller.sm = sm.stateManager;
+                sm.stateManager.setCurrentCell(
+                    sm.stateManager.getRowByIdx(controller.lastProgramSelectedIdx)?.cells['fpcTime'], controller.lastProgramSelectedIdx);
+              },
               mapData: (controller.commercialProgramList?.map((e) => e.toJson()).toList())!,
               onSelected: (plutoGrid) {
-                controller.leftTableSelectedIdx = plutoGrid.rowIdx ?? 0;
+                controller.lastProgramSelectedIdx = plutoGrid.rowIdx ?? 0;
                 controller.selectedProgram = controller.commercialProgramList![plutoGrid.rowIdx!];
                 controller.programFpcTimeSelected = controller.commercialProgramList![plutoGrid.rowIdx!].fpcTime;
                 controller.programCodeSelected = controller.commercialProgramList![plutoGrid.rowIdx!].programcode;
-                // print(jsonEncode(controller.selectedProgram?.toJson()));
+                print(jsonEncode(controller.selectedProgram?.toJson()));
               },
               onRowDoubleTap: (plutoGrid) async {
-                controller.leftTableSelectedIdx = plutoGrid.rowIdx;
+                controller.lastProgramSelectedIdx = plutoGrid.rowIdx;
                 controller.selectedProgram = controller.commercialProgramList![plutoGrid.rowIdx];
                 controller.programFpcTimeSelected = controller.commercialProgramList![plutoGrid.rowIdx].fpcTime;
-                controller.previousTimeSelected = controller.commercialProgramList![plutoGrid.rowIdx].fpcTime;
                 await controller.showSelectedProgramList(context);
-                controller.updateAllTabs();
+                controller.updateTab();
+                print('on Double tap ${jsonEncode(controller.selectedProgram?.toJson())}');
               },
             );
           } else {
@@ -381,7 +385,8 @@ class CommercialView extends GetView<CommercialController> {
         GetBuilder<CommercialController>(
           id: "schedulingTable",
           builder: (controller) {
-            if ((controller.showCommercialDetailsList.isNotEmpty)) {
+            if (controller.showCommercialDetailsList != null && (controller.showCommercialDetailsList?.isNotEmpty)!) {
+              print(' schedulingTable : ${controller.showCommercialDetailsList?.length.toString()}');
               return Expanded(
                   child: DataGridFromMap1(
                       onload: (event) {
@@ -390,7 +395,7 @@ class CommercialView extends GetView<CommercialController> {
                           event.stateManager.moveScrollByRow(PlutoMoveDirection.down, controller.selectedDDIndex);
                           event.stateManager.setCurrentCell(
                               event.stateManager.rows[controller.selectedDDIndex!].cells.entries.first.value, controller.selectedDDIndex);
-                          controller.updateAllTabs();
+                          controller.updateTab();
                         }
                       },
                       showSrNo: true,
@@ -416,7 +421,7 @@ class CommercialView extends GetView<CommercialController> {
                       ],
                       colorCallback: (PlutoRowColorContext plutoContext) {
                         try {
-                          return controller.colorSort(controller.showCommercialDetailsList[plutoContext.rowIdx].eventType.toString());
+                          return controller.colorSort(controller.showCommercialDetailsList![plutoContext.rowIdx].eventType.toString());
                           // return Color(int.parse(
                           //     '0x${controller.showCommercialDetailsList![plutoContext.rowIdx].backColor}'));
                         } catch (e) {
@@ -436,22 +441,24 @@ class CommercialView extends GetView<CommercialController> {
                       //           : Colors.orange.shade700;
                       // },
                       onSelected: (PlutoGridOnSelectedEvent event) {
-                        controller.selectedShowOnTab = controller.showCommercialDetailsList[event.rowIdx!];
+                        controller.selectedShowOnTab = controller.showCommercialDetailsList![event.rowIdx!];
                         print(">>>>>> Commercial Data >>>>>>${jsonEncode(controller.selectedShowOnTab?.toJson())}");
                       },
                       onRowsMoved: (PlutoGridOnRowsMovedEvent onRowMoved) {
-                        if (controller.showCommercialDetailsList[onRowMoved.idx].eventType != "S ") {
-                          print(" onRowMoved Index is>>${onRowMoved.idx}");
-                          Map map = onRowMoved.rows[0].cells;
-                          print(" On Print moved${jsonEncode(onRowMoved.rows[0].cells.toString())}");
+                        if (controller.showCommercialDetailsList![onRowMoved.idx].eventType.toString().trim() != "C") {
                           controller.gridStateManager?.notifyListeners();
+                          if (controller.showCommercialDetailsList != null) {
+                            for (var i = 0; i < (controller.showCommercialDetailsList!.length); i++) {
+                              if (controller.showCommercialDetailsList?[i].rownumber ==
+                                  controller.showCommercialDetailsList![onRowMoved.idx].rownumber) {}
+                            }
+                          }
                         } else {
                           LoadingDialog.showErrorDialog("You cannot move selected segment");
                         }
-                        controller.updateAllTabs();
                       },
                       mode: controller.selectedTabPlutoGridMode,
-                      mapData: controller.showCommercialDetailsList.value.map((e) => e.toJson()).toList()));
+                      mapData: controller.showCommercialDetailsList!.value.map((e) => e.toJson()).toList()));
             } else {
               return Expanded(
                 child: Card(
@@ -482,16 +489,16 @@ class CommercialView extends GetView<CommercialController> {
         GetBuilder<CommercialController>(
             id: "fpcMismatchTable",
             builder: (controller) {
-              if ((controller.showCommercialDetailsList.isNotEmpty)) {
-                // print(' fpcMisMatchTable : ${controller.showCommercialDetailsList.length.toString()}');
+              if (controller.showCommercialDetailsList != null && (controller.showCommercialDetailsList?.isNotEmpty)!) {
+                print(' fpcMisMatchTable : ${controller.showCommercialDetailsList?.length.toString()}');
                 return Expanded(
                   child: DataGridFromMap(
-                    onload: (event) {
-                      controller.fpcMisMatchStateManager = event.stateManager;
-                      event.stateManager.setSelectingMode(PlutoGridSelectingMode.row);
-                      event.stateManager.setSelecting(true);
+                    onload: (sm) {
+                      controller.fpcMisMatchSM = sm.stateManager;
+                      sm.stateManager.setSelectingMode(PlutoGridSelectingMode.row);
+                      sm.stateManager.setSelecting(true);
                     },
-                    mapData: (controller.showCommercialDetailsList.map((e) => e.toJson()).toList()),
+                    mapData: (controller.showCommercialDetailsList?.map((e) => e.toJson()).toList())!,
                     showonly: const [
                       "fpcTime",
                       "breakNumber",
@@ -514,14 +521,18 @@ class CommercialView extends GetView<CommercialController> {
                     ],
                     mode: PlutoGridMode.normal,
                     colorCallback: (row) =>
-                        (row.row.cells.containsValue(controller.fpcMisMatchStateManager?.currentCell)) ? Colors.deepPurple.shade200 : Colors.white,
-                    onRowDoubleTap: (plutoGrid) {
-                      controller.mainSelectedIndex = plutoGrid.rowIdx;
-                      controller.selectedShowOnTab = controller.showCommercialDetailsList[plutoGrid.rowIdx];
-                      controller.exportTapeCodeSelected = controller.showCommercialDetailsList[plutoGrid.rowIdx].exportTapeCode.toString();
-                      controller.pDailyFPCSelected = controller.showCommercialDetailsList[plutoGrid.rowIdx].pDailyFPC.toString();
-                      controller.fpcMisMatchStateManager
-                          ?.setCurrentCell(controller.fpcMisMatchStateManager?.getRowByIdx(plutoGrid.rowIdx)?.cells['fpcTime'], plutoGrid.rowIdx);
+                        (row.row.cells.containsValue(controller.fpcMisMatchSM?.currentCell)) ? Colors.deepPurple.shade200 : Colors.white,
+                    onSelected: (plutoGrid) {
+                      // print(plutoGrid.rowIdx!.toString());
+
+                      controller.mainSelectedIndex = plutoGrid.rowIdx!;
+                      controller.selectedShowOnTab = controller.showCommercialDetailsList![plutoGrid.rowIdx!];
+
+                      controller.exportTapeCodeSelected = controller.showCommercialDetailsList![plutoGrid.rowIdx!].exportTapeCode.toString();
+
+                      controller.pDailyFPCSelected = controller.showCommercialDetailsList![plutoGrid.rowIdx!].pDailyFPC.toString();
+
+                      // print(">>>>>> fpcMismatchTable Data >>>>>>${jsonEncode(controller.selectedShowOnTab?.toJson())}");
                     },
                   ),
                 );
@@ -555,10 +566,15 @@ class CommercialView extends GetView<CommercialController> {
             id: "misMatchTable",
             // init: CreateBreakPatternController(),
             builder: (controller) {
-              if ((controller.showCommercialDetailsList.isNotEmpty)) {
+              if (controller.showCommercialDetailsList != null && (controller.showCommercialDetailsList?.isNotEmpty)!) {
+                print(' misMatchTable : ${controller.showCommercialDetailsList?.length.toString()}');
+                // final key = GlobalKey();
                 return Expanded(
+                  // height: 400,
                   child: DataGridFromMap(
-                    mapData: (controller.showCommercialDetailsList.map((e) => e.toJson()).toList()),
+                    colorCallback: (row) =>
+                        (row.row.cells.containsValue(controller.markedAsErrorSM?.currentCell)) ? Colors.deepPurple.shade200 : Colors.white,
+                    mapData: (controller.showCommercialDetailsList?.map((e) => e.toJson()).toList())!,
                     showonly: const [
                       "fpcTime",
                       "breakNumber",
@@ -580,20 +596,16 @@ class CommercialView extends GetView<CommercialController> {
                       "pProgramMaster"
                     ],
                     mode: PlutoGridMode.normal,
-                    onload: (event) {
-                      controller.markedAsErrorStateManager = event.stateManager;
-                      event.stateManager.setSelectingMode(PlutoGridSelectingMode.row);
-                      event.stateManager.setSelecting(true);
-                    },
-                    colorCallback: (row) =>
-                        (row.row.cells.containsValue(controller.markedAsErrorStateManager?.currentCell)) ? Colors.deepPurple.shade200 : Colors.white,
-                    onRowDoubleTap: (plutoGrid) {
-                      controller.mainSelectedIndex = plutoGrid.rowIdx;
-                      controller.selectedShowOnTab = controller.showCommercialDetailsList[plutoGrid.rowIdx];
+                    onload: (sm) {
+                      controller.markedAsErrorSM = sm.stateManager;
+                      sm.stateManager.setSelectingMode(PlutoGridSelectingMode.row);
+                      sm.stateManager.setSelecting(true);
                     },
                     onSelected: (plutoGrid) {
+                      print(plutoGrid.rowIdx!.toString());
                       controller.mainSelectedIndex = plutoGrid.rowIdx!;
-                      controller.selectedShowOnTab = controller.showCommercialDetailsList[plutoGrid.rowIdx!];
+                      controller.selectedShowOnTab = controller.showCommercialDetailsList![plutoGrid.rowIdx!];
+                      print(">>>>>>Error Data>>>>>>${jsonEncode(controller.selectedShowOnTab?.toJson())}");
                     },
                   ),
                 );
