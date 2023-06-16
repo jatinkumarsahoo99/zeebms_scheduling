@@ -538,4 +538,20 @@ static String TRANSMISSION_LOG_SEARCH_SEGMENT(String progCode,String epNo,String
 
   static String RO_BOOKING_OnSaveData = "$BASE_URL/api/ROBooking/OnSaveData";
   static String RO_BOOKING_GetClientPDC = "$BASE_URL/api/ROBooking/GetClientPDC";
+
+
+  /////////////////////////////////// Commercial Tape Master /////////////////////////////
+
+
+  static String COMMERCIAL_MASTER_ALLDROPDOWN = BASE_URL + "/api/CommercialTapeMaster/PageOnLoadData";
+
+
+
+
+
+
+
+
+
+
 }
