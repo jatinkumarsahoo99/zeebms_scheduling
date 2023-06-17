@@ -232,7 +232,7 @@ class ApiFactory {
 
   static String FILLER_VALUES_BY_TAPE_CODE(tapeCode) => "$BASE_URL/api/FillerScheduling/GetFillerValuesByTapeCode/$tapeCode";
   static String FILLER_IMPORT_FILE = "$BASE_URL/api/FillerScheduling/ImportFillerExcel";
-  static String FILLER_SAVE_IMPORT_FILLERS = "$BASE_URL/api/FillerScheduling/SaveImportExistingFillers";
+  static String FILLER_SAVE_IMPORT_FILLERS = "$BASE_URL/api/FillerScheduling/SaveImportFillers";
 
   static String FPC_DETAILS(locationCode, channelCode, date) =>
       "$BASE_URL/api/FillerScheduling/GetFpcDetails?LocationCode=$locationCode&ChannelCode=$channelCode&TelecastDate=$date";

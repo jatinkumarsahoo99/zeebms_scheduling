@@ -237,6 +237,7 @@ class CommercialController extends GetxController {
     } else {
       /// SCHEDULING
       showCommercialDetailsList?.value = mainCommercialShowDetailsList!.where((o) => o.bStatus.toString() == 'B').toList();
+
       commercialSpots.value = showCommercialDetailsList?.value.where((element) => element.eventType == "E").toList().length.toString() ?? "";
       // commercialDuration
       double intTotalDuration = 0;

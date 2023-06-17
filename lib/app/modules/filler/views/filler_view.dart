@@ -178,23 +178,10 @@ class FillerView extends GetView<FillerController> {
                               ),
                             ],
                           ),
-                          cancel: Padding(
-                            padding: const EdgeInsets.fromLTRB(0, 0, 10, 10),
-                            child: FormButtonWrapper(
-                                btnText: "Exit",
-                                callback: () {
-                                  Get.back();
-                                }),
-                          ),
-                          confirm: Padding(
-                            padding: const EdgeInsets.fromLTRB(10, 0, 0, 10),
-                            child: FormButtonWrapper(
-                              btnText: "Import",
-                              callback: () {
-                                controller.getFillerValuesByImportFillersWithTapeCode();
-                              },
-                            ),
-                          ),
+                          textCancel: "Cancel",
+                          onConfirm: () {
+                            controller.getFillerValuesByImportFillersWithTapeCode();
+                          },
                         );
                       },
                     ),
@@ -229,6 +216,8 @@ class FillerView extends GetView<FillerController> {
                       },
                       onSelected: (plutoGrid) {
                         controller.topLastSelectedIdx = plutoGrid.rowIdx ?? 0;
+                        controller.totalFiller.clear();
+                        controller.totalFillerDur.text = "00:00:00:00";
                         controller.fetchSegmentDetails(controller.fillerDailyFpcList[plutoGrid.rowIdx!]);
                       },
                       colorCallback: (row) =>
