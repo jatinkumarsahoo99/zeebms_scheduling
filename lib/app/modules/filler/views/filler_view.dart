@@ -39,6 +39,7 @@ class FillerView extends GetView<FillerController> {
                       0.15,
                       autoFocus: true,
                       inkWellFocusNode: controller.locationFN,
+                      selected: controller.selectedLocation,
                     ),
                   ),
                   const SizedBox(width: 15),
@@ -49,6 +50,7 @@ class FillerView extends GetView<FillerController> {
                       "Channel",
                       0.15,
                       dialogHeight: Get.height * .7,
+                      selected: controller.selectedChannel,
                     ),
                   ),
                   const SizedBox(width: 15),
@@ -94,6 +96,7 @@ class FillerView extends GetView<FillerController> {
                                         "Location",
                                         0.15,
                                         autoFocus: true,
+                                        selected: controller.selectedImportLocation,
                                       ),
                                     ),
                                     const SizedBox(width: 15),
@@ -106,6 +109,7 @@ class FillerView extends GetView<FillerController> {
                                         "Channel",
                                         0.15,
                                         dialogHeight: Get.height * .7,
+                                        selected: controller.selectedImportChannel,
                                       ),
                                     ),
                                   ],
@@ -203,7 +207,7 @@ class FillerView extends GetView<FillerController> {
                 padding: const EdgeInsets.symmetric(horizontal: 10),
                 child: Obx(() {
                   return Visibility(
-                    visible: (controller.conflictReport.isEmpty || controller.beams.isEmpty) && ((controller.fillerDailyFpcList.isNotEmpty)),
+                    visible: ((controller.fillerDailyFpcList.isNotEmpty)),
                     replacement: Container(
                       decoration: BoxDecoration(
                         border: Border.all(
@@ -213,6 +217,7 @@ class FillerView extends GetView<FillerController> {
                     ),
                     child: DataGridFromMap(
                       showSrNo: true,
+                      formatDate: false,
                       mapData: (controller.fillerDailyFpcList.value.map((e) => e.toJson()).toList()),
                       showonly: ["fpcTime", "endTime", "programName", "epsNo", "tapeID", "episodeCaption"],
                       widthRatio: (Get.width * 0.2) / 2 + 7,
@@ -220,7 +225,7 @@ class FillerView extends GetView<FillerController> {
                       onload: (event) {
                         controller.gridStateManager = event.stateManager;
                         event.stateManager.setCurrentCell(
-                            event.stateManager.getRowByIdx(controller.topLastSelectedIdx)?.cells['rowNo'], controller.bottomLastSelectedIdx);
+                            event.stateManager.getRowByIdx(controller.topLastSelectedIdx)?.cells['fpcTime'], controller.bottomLastSelectedIdx);
                       },
                       onSelected: (plutoGrid) {
                         controller.topLastSelectedIdx = plutoGrid.rowIdx ?? 0;
@@ -350,6 +355,7 @@ class FillerView extends GetView<FillerController> {
                           child: DataGridFromMap(
                             mapData: (controller.fillerSegmentList.map((e) => e.toJson()).toList()),
                             widthRatio: (Get.width * 0.2) / 2 + 7,
+                            formatDate: false,
                             onload: (event) {
                               controller.bottomSM = event.stateManager;
                               event.stateManager.setCurrentCell(
@@ -384,8 +390,8 @@ class FillerView extends GetView<FillerController> {
                       decoration: const BoxDecoration(
                         color: Colors.white,
                       ),
-                      child: ButtonBar(
-                        alignment: MainAxisAlignment.start,
+                      child: Row(
+                        // alignment: MainAxisAlignment.start,
                         mainAxisSize: MainAxisSize.min,
                         children: [
                           for (var btn in btcontroller.buttons!)

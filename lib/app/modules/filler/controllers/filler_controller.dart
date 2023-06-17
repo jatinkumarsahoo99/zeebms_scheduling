@@ -25,18 +25,12 @@ import 'package:dio/dio.dart' as dio;
 
 class FillerController extends GetxController {
   var locations = <DropDownValue>[].obs;
-  var importLocations = <DropDownValue>[].obs;
   var channels = <DropDownValue>[].obs;
-  var importChannels = <DropDownValue>[].obs;
-  var captions = <DropDownValue>[].obs;
   var locationFN = FocusNode();
 
   var fillerDailyFpcList = <FillerDailyFPCModel>[].obs;
   var fillerSegmentList = <FillerSegmentModel>[].obs;
-
   RxBool isEnable = RxBool(true);
-  bool isSearchFromCaption = false;
-  bool candoFocusOnCaptionGrid = false;
 
   TextEditingController tapeId_ = TextEditingController()..text = "";
   TextEditingController segNo_ = TextEditingController()..text = "";
@@ -52,33 +46,8 @@ class FillerController extends GetxController {
   /// Radio Button
   int selectedAfter = 0;
 
-  //input controllers
-  DropDownValue? selectLocation;
-  DropDownValue? selectChannel;
   var selectCaption = Rxn<DropDownValue?>();
   PlutoGridStateManager? gridStateManager;
-
-  List<PermissionModel>? formPermissions;
-  List<PlutoRow> initRows = [];
-  List<PlutoColumn> initColumn = [];
-
-  List conflictReport = [];
-  List beams = [];
-  int? conflictDays = 4;
-  List conflictPrograms = [];
-  List<PlutoRow> beamRows = [];
-  var selectedChannels = RxList([]);
-  Map<String, dynamic> reportBody = {};
-
-  var selectedIndex = RxInt(0);
-  late PlutoGridStateManager conflictReportStateManager;
-  PlutoGridStateManager? bmsReportStateManager;
-  PlutoGridStateManager? locChanStateManager;
-  Map? initData;
-
-  List<SystemEnviroment>? channelList = [];
-  List<SystemEnviroment>? locationList = [];
-
   TextEditingController refDateContrl = TextEditingController(text: DateFormat("dd-MM-yyyy").format(DateTime.now()));
   TextEditingController programName_ = TextEditingController();
   TextEditingController date_ = TextEditingController();
@@ -97,33 +66,36 @@ class FillerController extends GetxController {
 
   DropDownValue? selectedLocation;
   DropDownValue? selectedChannel;
-
   DropDownValue? selectedImportLocation;
   DropDownValue? selectedImportChannel;
 
-  SystemEnviroment? selectedChannelEnv;
-  SystemEnviroment? selectedLocationEnv;
-  SystemEnviroment? selectedCaption;
-
   void clear() {
-    selectLocation = null;
-    selectChannel = null;
-    selectCaption.value = null;
-    tapeId_.clear();
-    segNo_.clear();
-    fillerDailyFpcList.clear();
-    fillerSegmentList.clear();
-    segDur_.clear();
-    totalFiller.clear();
-    totalFillerDur.text = "00:00:00:00";
-    segDur_.text = "00:00:00:00";
-    listData?.clear();
-    locationEnable.value = true;
-    channelEnable.value = true;
+    try {
+      selectedImportLocation = null;
+      selectedImportChannel = null;
+      selectedChannel = null;
+      selectedLocation = null;
+      selectCaption.value = null;
+      tapeId_.clear();
+      segNo_.clear();
+      fillerDailyFpcList.clear();
+      fillerSegmentList.clear();
+      segDur_.clear();
+      totalFiller.clear();
+      totalFillerDur.text = "00:00:00:00";
+      segDur_.text = "00:00:00:00";
+      listData?.clear();
+      locationEnable.value = true;
+      channelEnable.value = true;
+      bottomLastSelectedIdx = 0;
+      topLastSelectedIdx = 0;
+      locations.refresh();
+      channels.refresh();
+      clearBottonControlls();
+    } catch (e) {
+      print(e.toString());
+    }
     locationFN.requestFocus();
-    bottomLastSelectedIdx = 0;
-    topLastSelectedIdx = 0;
-    clearBottonControlls();
   }
 
   /// List for Columns
@@ -157,7 +129,7 @@ class FillerController extends GetxController {
   }
 
   saveData() {
-    if (selectLocation == null) {
+    if (selectedLocation == null || selectedChannel == null) {
       LoadingDialog.showErrorDialog("Please select Location,Channel");
     } else {
       LoadingDialog.call();
@@ -170,7 +142,7 @@ class FillerController extends GetxController {
         json: {
           "locationCode": selectedImportLocation?.key.toString(),
           "channelCode": selectedImportChannel?.key.toString(),
-          "telecastDate": DateFormat("yyyy-MM-dd").format(DateFormat("dd-MM-yyyy").parse(fillerFromDate_.text)),
+          "telecastDate": DateFormat("yyyy-MM-dd").format(DateFormat("dd-MM-yyyy").parse(date_.text)),
           "telecastTime": fillerDailyFpcList[topLastSelectedIdx].fpcTime,
           "programCode": fillerDailyFpcList[topLastSelectedIdx].programCode,
           "loggedUser": Get.find<MainController>().user?.logincode,
@@ -295,8 +267,8 @@ class FillerController extends GetxController {
     var jsonRequest = {
       "LocationCode": selectedImportLocation?.key.toString(),
       "ChannelCode": selectedImportChannel?.key.toString(),
-      "ImportFromDate": DateFormat("dd/MM/yyyy").format(DateFormat("dd-MM-yyyy").parse(fillerFromDate_.text)),
-      "ImportToDate": DateFormat("dd/MM/yyyy").format(DateFormat("dd-MM-yyyy").parse(fillerToDate_.text)),
+      "ImportFromDate": DateFormat("yyyy-MM-ddT00:00:00").format(DateFormat("dd-MM-yyyy").parse(fillerFromDate_.text)),
+      "ImportToDate": DateFormat("yyyy-MM-ddT00:00:00").format(DateFormat("dd-MM-yyyy").parse(fillerToDate_.text)),
       "TelecastTime": fromTime_.text,
       "ImportTime": toTime_.text,
     };
