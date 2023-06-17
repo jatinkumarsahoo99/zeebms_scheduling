@@ -74,6 +74,7 @@ class CommercialView extends GetView<CommercialController> {
                                     "Channel",
                                     0.15,
                                     dialogHeight: Get.height * .7,
+                                    selected: controller.selectedChannel,
                                   ),
                                 ),
                                 const SizedBox(width: 15),
@@ -235,7 +236,8 @@ class CommercialView extends GetView<CommercialController> {
                       ),
                     },
                     onValueChanged: (int? value) async {
-                      print("Selected tab index is : $value");
+                      // print("Selected tab index is : $value");
+                      controller.canshowFilterList = false;
                       controller.selectedIndex.value = value!;
                       await controller.showTabList();
                       //controller.fetchSchedulingShowOnTabDetails();
@@ -357,6 +359,7 @@ class CommercialView extends GetView<CommercialController> {
                 print(jsonEncode(controller.selectedProgram?.toJson()));
               },
               onRowDoubleTap: (plutoGrid) async {
+                controller.canshowFilterList = true;
                 controller.lastProgramSelectedIdx = plutoGrid.rowIdx;
                 controller.selectedProgram = controller.commercialProgramList![plutoGrid.rowIdx];
                 controller.programFpcTimeSelected = controller.commercialProgramList![plutoGrid.rowIdx].fpcTime;
@@ -443,31 +446,17 @@ class CommercialView extends GetView<CommercialController> {
                         } else {
                           int? rownumber =
                               int.tryParse(controller.gridStateManager?.rows[onRowMoved.idx].cells['rownumber']?.value.toString() ?? "0");
-                          int? moveRowNumber;
+                          int? moveRowNumber = controller.showCommercialDetailsList?[onRowMoved.idx].rownumber;
 
-                          ///
-                          if (onRowMoved.idx == 0) {
-                            moveRowNumber = int.tryParse(controller.gridStateManager?.rows.first.cells['rownumber']?.value.toString() ?? "0");
-                          } else if (onRowMoved.idx == ((controller.showCommercialDetailsList?.length ?? 1) - 0)) {
-                            moveRowNumber = int.tryParse(controller.gridStateManager?.rows.last.cells['rownumber']?.value.toString() ?? "0");
-                          } else {
-                            moveRowNumber =
-                                int.tryParse(controller.gridStateManager?.rows[onRowMoved.idx + 1].cells['rownumber']?.value.toString() ?? "0");
-                          }
-
-                          ///
                           int? oldIdx, newIdx;
                           for (var i = 0; i < (controller.mainCommercialShowDetailsList?.length ?? 0); i++) {
-                            if (controller.mainCommercialShowDetailsList?[i].bStatus == "B") {
-                              if (controller.mainCommercialShowDetailsList?[i].rownumber == rownumber) {
-                                oldIdx = i;
-                              }
-                              if (controller.mainCommercialShowDetailsList?[i].rownumber == moveRowNumber) {
-                                newIdx = i;
-                              }
+                            if (controller.mainCommercialShowDetailsList?[i].rownumber == rownumber) {
+                              oldIdx = i;
+                            }
+                            if (controller.mainCommercialShowDetailsList?[i].rownumber == moveRowNumber) {
+                              newIdx = i;
                             }
                           }
-
                           if (oldIdx != null && newIdx != null) {
                             var removedObject = controller.mainCommercialShowDetailsList?.removeAt(oldIdx);
                             if (removedObject != null) {
@@ -478,26 +467,15 @@ class CommercialView extends GetView<CommercialController> {
                           for (var i = 0; i < (controller.mainCommercialShowDetailsList?.length ?? 0); i++) {
                             controller.mainCommercialShowDetailsList?[i].rownumber = i;
                           }
-                          // var temp = controller.gridStateManager?.rows[onRowMoved.idx];
-                          // if (temp != null) {
-                          //   controller.gridStateManager?.removeRows([temp]);
-                          //   controller.gridStateManager?.insertRows(onRowMoved.idx, [temp]);
-                          // }
                         }
-                        controller.updateTab();
+                        if (controller.canshowFilterList) {
+                          controller.showSelectedProgramList(context);
+                        } else {
+                          controller.showTabList();
+                        }
                       } catch (e) {
                         LoadingDialog.showErrorDialog(e.toString());
                       }
-                      // if (controller.showCommercialDetailsList![onRowMoved.idx].eventType.toString().trim() != "C") {
-                      // if (controller.showCommercialDetailsList != null) {
-                      //   for (var i = 0; i < (controller.showCommercialDetailsList!.length); i++) {
-                      //     if (controller.showCommercialDetailsList?[i].rownumber ==
-                      //         controller.showCommercialDetailsList![onRowMoved.idx].rownumber) {}
-                      //   }
-                      // }
-                      // } else {
-                      //   LoadingDialog.showErrorDialog("You cannot move selected segment");
-                      // }
                     },
                     mode: controller.selectedTabPlutoGridMode,
                     mapData: controller.showCommercialDetailsList!.value.map((e) => e.toJson()).toList()),
@@ -537,6 +515,7 @@ class CommercialView extends GetView<CommercialController> {
                 return Expanded(
                   child: DataGridFromMap(
                     onload: (sm) {
+                      print("OnLoad FPC Missmatch called");
                       controller.fpcMisMatchSM = sm.stateManager;
                       sm.stateManager.setSelectingMode(PlutoGridSelectingMode.row);
                       sm.stateManager.setSelecting(true);
