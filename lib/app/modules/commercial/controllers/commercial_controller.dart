@@ -1,23 +1,19 @@
 import 'dart:convert';
-import 'dart:developer';
-import 'package:bms_scheduling/app/providers/extensions/string_extensions.dart';
+
+import 'package:bms_scheduling/widgets/PlutoGrid/pluto_grid.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:intl/intl.dart';
-import 'package:bms_scheduling/widgets/PlutoGrid/pluto_grid.dart';
+
 import '../../../../widgets/LoadingDialog.dart';
 import '../../../../widgets/Snack.dart';
 import '../../../controller/ConnectorControl.dart';
 import '../../../controller/HomeController.dart';
-import '../../../controller/MainController.dart';
 import '../../../data/DropDownValue.dart';
 import '../../../data/PermissionModel.dart';
 import '../../../data/system_envirtoment.dart';
 import '../../../providers/ApiFactory.dart';
-import '../../../providers/DataGridMenu.dart';
-import '../../../providers/SizeDefine.dart';
 import '../../../providers/Utils.dart';
-import '../../../routes/app_pages.dart';
 import '../CommercialProgramModel.dart';
 import '../CommercialShowOnTabModel.dart';
 
@@ -124,6 +120,7 @@ class CommercialController extends GetxController {
     update(["schedulingTable"]);
     update(["fpcMismatchTable"]);
     update(["misMatchTable"]);
+    locationFN.requestFocus();
   }
 
   getLocations() {
@@ -138,10 +135,12 @@ class CommercialController extends GetxController {
   }
 
   getChannel(locationCode) {
+    LoadingDialog.call();
     try {
       Get.find<ConnectorControl>().GETMETHODCALL(
           api: ApiFactory.COMMERCIAL_CHANNEL(locationCode),
           fun: (data) {
+            Get.back();
             if (data["locationSelect"] is List) {
               channels.value = (data["locationSelect"] as List).map((e) => DropDownValue(key: e["channelCode"], value: e["channelName"])).toList();
             } else {
@@ -277,6 +276,9 @@ class CommercialController extends GetxController {
     if (fpcMisMatchSM?.currentRowIdx == null || fpcMisMatchSM?.currentRowIdx == null) {
       LoadingDialog.showErrorDialog("Please select row first");
     } else if ((fpcMisMatchSM!.currentSelectingRows.isEmpty)) {
+      if (fpcMisMatchSM?.currentRowIdx == null) {
+        print("got null");
+      }
       for (var i = 0; i < mainCommercialShowDetailsList!.length; i++) {
         if (mainCommercialShowDetailsList![i].bStatus == "F" &&
             (showCommercialDetailsList![fpcMisMatchSM!.currentRowIdx!].rownumber) == mainCommercialShowDetailsList![i].rownumber) {
@@ -330,7 +332,7 @@ class CommercialController extends GetxController {
     //   force: true,
     //   notify: true,
     // );
-    fpcMisMatchSM?.setCurrentCell(fpcMisMatchSM!.getRowByIdx(mainSelectedIndex)!.cells['fpcTime']!, mainSelectedIndex);
+    fpcMisMatchSM?.setCurrentCell(fpcMisMatchSM?.getRowByIdx(mainSelectedIndex)?.cells['fpcTime'], mainSelectedIndex);
 
     /// BStatus == "B" &&
     /// FPCTime == programFpcTimeSelected &&

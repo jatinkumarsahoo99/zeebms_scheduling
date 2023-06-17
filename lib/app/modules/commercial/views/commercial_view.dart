@@ -1,8 +1,10 @@
 import 'dart:convert';
+
+import 'package:bms_scheduling/widgets/PlutoGrid/pluto_grid.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:bms_scheduling/widgets/PlutoGrid/pluto_grid.dart';
+
 import '../../../../widgets/CheckBoxWidget.dart';
 import '../../../../widgets/DateTime/DateWithThreeTextField.dart';
 import '../../../../widgets/FormButton.dart';
@@ -59,6 +61,7 @@ class CommercialView extends GetView<CommercialController> {
                                     autoFocus: true,
                                     dialogWidth: 330,
                                     dialogHeight: Get.height * .7,
+                                    inkWellFocusNode: controller.locationFN,
                                   ),
                                 ),
                                 const SizedBox(width: 15),
@@ -429,33 +432,32 @@ class CommercialView extends GetView<CommercialController> {
                           return Colors.white;
                         }
                       },
-
-                      /// From lstLoadColours List check If EventType 'S' or etc show colors accordingly
-                      // colorCallback: (row) {
-                      //   return row.row.cells.containsValue(
-                      //           controller.stateManager?.currentCell)
-                      //       ? Colors.blueAccent
-                      //       : controller.redBreaks.contains(row.rowIdx -
-                      //               1)
-                      //           ? Colors.white
-                      //           : Colors.orange.shade700;
-                      // },
                       onSelected: (PlutoGridOnSelectedEvent event) {
                         controller.selectedShowOnTab = controller.showCommercialDetailsList![event.rowIdx!];
-                        print(">>>>>> Commercial Data >>>>>>${jsonEncode(controller.selectedShowOnTab?.toJson())}");
                       },
                       onRowsMoved: (PlutoGridOnRowsMovedEvent onRowMoved) {
-                        if (controller.showCommercialDetailsList![onRowMoved.idx].eventType.toString().trim() != "C") {
-                          controller.gridStateManager?.notifyListeners();
-                          if (controller.showCommercialDetailsList != null) {
-                            for (var i = 0; i < (controller.showCommercialDetailsList!.length); i++) {
-                              if (controller.showCommercialDetailsList?[i].rownumber ==
-                                  controller.showCommercialDetailsList![onRowMoved.idx].rownumber) {}
-                            }
+                        controller.gridStateManager?.notifyListeners();
+                        print(controller.gridStateManager?.rows[onRowMoved.idx].cells['eventType']?.value);
+                        try {
+                          if (controller.gridStateManager?.rows[onRowMoved.idx].cells['eventType']?.value.toString().trim() == "S") {
+                            LoadingDialog.showErrorDialog("You cannot move selected segment");
+                            controller.gridStateManager?.resetPage();
+                          } else {
+                            print("you can move");
                           }
-                        } else {
-                          LoadingDialog.showErrorDialog("You cannot move selected segment");
+                        } catch (e) {
+                          LoadingDialog.showErrorDialog(e.toString());
                         }
+                        // if (controller.showCommercialDetailsList![onRowMoved.idx].eventType.toString().trim() != "C") {
+                        // if (controller.showCommercialDetailsList != null) {
+                        //   for (var i = 0; i < (controller.showCommercialDetailsList!.length); i++) {
+                        //     if (controller.showCommercialDetailsList?[i].rownumber ==
+                        //         controller.showCommercialDetailsList![onRowMoved.idx].rownumber) {}
+                        //   }
+                        // }
+                        // } else {
+                        //   LoadingDialog.showErrorDialog("You cannot move selected segment");
+                        // }
                       },
                       mode: controller.selectedTabPlutoGridMode,
                       mapData: controller.showCommercialDetailsList!.value.map((e) => e.toJson()).toList()));
