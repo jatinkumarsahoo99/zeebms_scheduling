@@ -197,7 +197,7 @@ class FillerController extends GetxController {
           importedFile.value!.bytes!.toList(),
           filename: importedFile.value!.name,
         ),
-        "TelecastDate": DateFormat("dd/MM/yyyy").format(DateFormat("dd-MM-yyyy").parse(date_.text)), //05 / 31 / 2023,
+        "TelecastDate": DateFormat("yyyy-MM-dd").format(DateFormat("dd-MM-yyyy").parse(date_.text)), //05 / 31 / 2023,
       },
     );
 
@@ -206,22 +206,32 @@ class FillerController extends GetxController {
         json: formData,
         fun: (value) {
           Get.back();
-          try {
-            ExportData().exportFilefromByte(base64Decode(value), importedFile.value!.name);
-          } catch (e) {
-            LoadingDialog.callErrorMessage1(msg: "Failed To Import File");
+          if (value != null && value.toString().contains("recognized")) {
+            LoadingDialog.showErrorDialog(value.toString());
+          } else {
+            try {
+              ExportData().exportFilefromByte(base64Decode(value), importedFile.value!.name);
+            } catch (e) {
+              LoadingDialog.callErrorMessage1(msg: "Failed To Import File");
+            }
           }
         });
   }
 
   pickFile() async {
-    FilePickerResult? result = await FilePicker.platform.pickFiles();
-    if (result != null && result.files.single != null) {
-      importedFile.value = result.files.single;
-      fileController.text = result.files.single.name;
-      importfile();
+    if (selectedLocation == null) {
+      Snack.callError("Please select location");
+    } else if (selectedChannel == null) {
+      Snack.callError("Please select location");
     } else {
-      // User canceled the pic5ker
+      FilePickerResult? result = await FilePicker.platform.pickFiles();
+      if (result != null && result.files.single != null) {
+        importedFile.value = result.files.single;
+        fileController.text = result.files.single.name;
+        importfile();
+      } else {
+        // User canceled the pic5ker
+      }
     }
   }
 
