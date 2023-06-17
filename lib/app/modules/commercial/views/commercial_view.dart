@@ -74,6 +74,7 @@ class CommercialView extends GetView<CommercialController> {
                                     "Channel",
                                     0.15,
                                     dialogHeight: Get.height * .7,
+                                    selected: controller.selectedChannel,
                                   ),
                                 ),
                                 const SizedBox(width: 15),
@@ -235,7 +236,8 @@ class CommercialView extends GetView<CommercialController> {
                       ),
                     },
                     onValueChanged: (int? value) async {
-                      print("Selected tab index is : $value");
+                      // print("Selected tab index is : $value");
+                      controller.canshowFilterList = false;
                       controller.selectedIndex.value = value!;
                       await controller.showTabList();
                       //controller.fetchSchedulingShowOnTabDetails();
@@ -357,6 +359,7 @@ class CommercialView extends GetView<CommercialController> {
                 print(jsonEncode(controller.selectedProgram?.toJson()));
               },
               onRowDoubleTap: (plutoGrid) async {
+                controller.canshowFilterList = true;
                 controller.lastProgramSelectedIdx = plutoGrid.rowIdx;
                 controller.selectedProgram = controller.commercialProgramList![plutoGrid.rowIdx];
                 controller.programFpcTimeSelected = controller.commercialProgramList![plutoGrid.rowIdx].fpcTime;
@@ -389,78 +392,94 @@ class CommercialView extends GetView<CommercialController> {
           id: "schedulingTable",
           builder: (controller) {
             if (controller.showCommercialDetailsList != null && (controller.showCommercialDetailsList?.isNotEmpty)!) {
-              print(' schedulingTable : ${controller.showCommercialDetailsList?.length.toString()}');
               return Expanded(
-                  child: DataGridFromMap1(
-                      onload: (event) {
-                        controller.gridStateManager = event.stateManager;
-                        if (controller.selectedDDIndex != null) {
-                          event.stateManager.moveScrollByRow(PlutoMoveDirection.down, controller.selectedDDIndex);
-                          event.stateManager.setCurrentCell(
-                              event.stateManager.rows[controller.selectedDDIndex!].cells.entries.first.value, controller.selectedDDIndex);
-                          controller.updateTab();
-                        }
-                      },
-                      showSrNo: true,
-                      showonly: const [
-                        "fpcTime",
-                        "breakNumber",
-                        "eventType",
-                        "exportTapeCode",
-                        "segmentCaption",
-                        "client",
-                        "brand",
-                        "duration",
-                        "product",
-                        "bookingNumber",
-                        "bookingDetailcode",
-                        "rostimeBand",
-                        "randid",
-                        "programName",
-                        "rownumber",
-                        "bStatus",
-                        "pDailyFPC",
-                        "pProgramMaster"
-                      ],
-                      colorCallback: (PlutoRowColorContext plutoContext) {
-                        try {
-                          return controller.colorSort(controller.showCommercialDetailsList![plutoContext.rowIdx].eventType.toString());
-                          // return Color(int.parse(
-                          //     '0x${controller.showCommercialDetailsList![plutoContext.rowIdx].backColor}'));
-                        } catch (e) {
-                          print(" Color Call Back error from schedulingTable ${e.toString()}");
-                          return Colors.white;
-                        }
-                      },
-                      onSelected: (PlutoGridOnSelectedEvent event) {
-                        controller.selectedShowOnTab = controller.showCommercialDetailsList![event.rowIdx!];
-                      },
-                      onRowsMoved: (PlutoGridOnRowsMovedEvent onRowMoved) {
-                        controller.gridStateManager?.notifyListeners();
-                        print(controller.gridStateManager?.rows[onRowMoved.idx].cells['eventType']?.value);
-                        try {
-                          if (controller.gridStateManager?.rows[onRowMoved.idx].cells['eventType']?.value.toString().trim() == "S") {
-                            LoadingDialog.showErrorDialog("You cannot move selected segment");
-                            controller.gridStateManager?.resetPage();
-                          } else {
-                            print("you can move");
+                child: DataGridFromMap1(
+                    onload: (event) {
+                      controller.gridStateManager = event.stateManager;
+                      if (controller.selectedDDIndex != null) {
+                        event.stateManager.setCurrentCell(
+                            event.stateManager.getRowByIdx(controller.selectedDDIndex)?.cells['eventType'], controller.selectedDDIndex);
+                        event.stateManager.moveScrollByRow(PlutoMoveDirection.down, controller.selectedDDIndex);
+                      }
+                    },
+                    showSrNo: true,
+                    showonly: const [
+                      "fpcTime",
+                      "breakNumber",
+                      "eventType",
+                      "exportTapeCode",
+                      "segmentCaption",
+                      "client",
+                      "brand",
+                      "duration",
+                      "product",
+                      "bookingNumber",
+                      "bookingDetailcode",
+                      "rostimeBand",
+                      "randid",
+                      "programName",
+                      "rownumber",
+                      "bStatus",
+                      "pDailyFPC",
+                      "pProgramMaster"
+                    ],
+                    colorCallback: (PlutoRowColorContext plutoContext) {
+                      try {
+                        return controller.colorSort(controller.showCommercialDetailsList![plutoContext.rowIdx].eventType.toString());
+                        // return Color(int.parse(
+                        //     '0x${controller.showCommercialDetailsList![plutoContext.rowIdx].backColor}'));
+                      } catch (e) {
+                        print(" Color Call Back error from schedulingTable ${e.toString()}");
+                        return Colors.white;
+                      }
+                    },
+                    onSelected: (PlutoGridOnSelectedEvent event) {
+                      controller.selectedShowOnTab = controller.showCommercialDetailsList![event.rowIdx!];
+                    },
+                    onRowsMoved: (PlutoGridOnRowsMovedEvent onRowMoved) {
+                      controller.selectedDDIndex = onRowMoved.idx;
+                      // controller.gridStateManager?.notifyListeners();
+
+                      try {
+                        if (controller.gridStateManager?.rows[onRowMoved.idx].cells['eventType']?.value.toString().trim() == "S") {
+                          LoadingDialog.showErrorDialog("You cannot move selected segment");
+                        } else {
+                          int? rownumber =
+                              int.tryParse(controller.gridStateManager?.rows[onRowMoved.idx].cells['rownumber']?.value.toString() ?? "0");
+                          int? moveRowNumber = controller.showCommercialDetailsList?[onRowMoved.idx].rownumber;
+
+                          int? oldIdx, newIdx;
+                          for (var i = 0; i < (controller.mainCommercialShowDetailsList?.length ?? 0); i++) {
+                            if (controller.mainCommercialShowDetailsList?[i].rownumber == rownumber) {
+                              oldIdx = i;
+                            }
+                            if (controller.mainCommercialShowDetailsList?[i].rownumber == moveRowNumber) {
+                              newIdx = i;
+                            }
                           }
-                        } catch (e) {
-                          LoadingDialog.showErrorDialog(e.toString());
+                          if (oldIdx != null && newIdx != null) {
+                            var removedObject = controller.mainCommercialShowDetailsList?.removeAt(oldIdx);
+                            if (removedObject != null) {
+                              controller.mainCommercialShowDetailsList?.insert(newIdx, removedObject);
+                            }
+                          }
+
+                          for (var i = 0; i < (controller.mainCommercialShowDetailsList?.length ?? 0); i++) {
+                            controller.mainCommercialShowDetailsList?[i].rownumber = i;
+                          }
                         }
-                        // if (controller.showCommercialDetailsList![onRowMoved.idx].eventType.toString().trim() != "C") {
-                        // if (controller.showCommercialDetailsList != null) {
-                        //   for (var i = 0; i < (controller.showCommercialDetailsList!.length); i++) {
-                        //     if (controller.showCommercialDetailsList?[i].rownumber ==
-                        //         controller.showCommercialDetailsList![onRowMoved.idx].rownumber) {}
-                        //   }
-                        // }
-                        // } else {
-                        //   LoadingDialog.showErrorDialog("You cannot move selected segment");
-                        // }
-                      },
-                      mode: controller.selectedTabPlutoGridMode,
-                      mapData: controller.showCommercialDetailsList!.value.map((e) => e.toJson()).toList()));
+                        if (controller.canshowFilterList) {
+                          controller.showSelectedProgramList(context);
+                        } else {
+                          controller.showTabList();
+                        }
+                      } catch (e) {
+                        LoadingDialog.showErrorDialog(e.toString());
+                      }
+                    },
+                    mode: controller.selectedTabPlutoGridMode,
+                    mapData: controller.showCommercialDetailsList!.value.map((e) => e.toJson()).toList()),
+              );
             } else {
               return Expanded(
                 child: Card(
@@ -496,6 +515,7 @@ class CommercialView extends GetView<CommercialController> {
                 return Expanded(
                   child: DataGridFromMap(
                     onload: (sm) {
+                      print("OnLoad FPC Missmatch called");
                       controller.fpcMisMatchSM = sm.stateManager;
                       sm.stateManager.setSelectingMode(PlutoGridSelectingMode.row);
                       sm.stateManager.setSelecting(true);

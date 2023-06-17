@@ -178,23 +178,10 @@ class FillerView extends GetView<FillerController> {
                               ),
                             ],
                           ),
-                          cancel: Padding(
-                            padding: const EdgeInsets.fromLTRB(0, 0, 10, 10),
-                            child: FormButtonWrapper(
-                                btnText: "Exit",
-                                callback: () {
-                                  Get.back();
-                                }),
-                          ),
-                          confirm: Padding(
-                            padding: const EdgeInsets.fromLTRB(10, 0, 0, 10),
-                            child: FormButtonWrapper(
-                              btnText: "Import",
-                              callback: () {
-                                controller.getFillerValuesByImportFillersWithTapeCode();
-                              },
-                            ),
-                          ),
+                          textCancel: "Cancel",
+                          onConfirm: () {
+                            controller.getFillerValuesByImportFillersWithTapeCode();
+                          },
                         );
                       },
                     ),
@@ -229,6 +216,8 @@ class FillerView extends GetView<FillerController> {
                       },
                       onSelected: (plutoGrid) {
                         controller.topLastSelectedIdx = plutoGrid.rowIdx ?? 0;
+                        controller.totalFiller.clear();
+                        controller.totalFillerDur.text = "00:00:00:00";
                         controller.fetchSegmentDetails(controller.fillerDailyFpcList[plutoGrid.rowIdx!]);
                       },
                       colorCallback: (row) =>
@@ -381,32 +370,38 @@ class FillerView extends GetView<FillerController> {
                 ),
               ),
             ),
-            GetBuilder<HomeController>(
-                id: "buttons",
-                init: Get.find<HomeController>(),
-                builder: (btcontroller) {
-                  if (btcontroller.buttons != null) {
-                    return Container(
-                      decoration: const BoxDecoration(
-                        color: Colors.white,
-                      ),
-                      child: Row(
-                        // alignment: MainAxisAlignment.start,
-                        mainAxisSize: MainAxisSize.min,
-                        children: [
-                          for (var btn in btcontroller.buttons!)
-                            FormButtonWrapper(
-                              btnText: btn["name"],
-                              callback: () => controller.formHandler(
-                                btn['name'],
-                              ),
-                            )
-                        ],
-                      ),
-                    );
-                  }
-                  return Container();
-                }),
+            Padding(
+              padding: const EdgeInsets.all(10.0),
+              child: GetBuilder<HomeController>(
+                  id: "buttons",
+                  init: Get.find<HomeController>(),
+                  builder: (btcontroller) {
+                    if (btcontroller.buttons != null) {
+                      return Container(
+                        decoration: const BoxDecoration(
+                          color: Colors.white,
+                        ),
+                        child: Row(
+                          // alignment: MainAxisAlignment.start,
+                          mainAxisSize: MainAxisSize.min,
+                          children: [
+                            for (var btn in btcontroller.buttons!)
+                              Padding(
+                                padding: const EdgeInsets.only(right: 8),
+                                child: FormButtonWrapper(
+                                  btnText: btn["name"],
+                                  callback: () => controller.formHandler(
+                                    btn['name'],
+                                  ),
+                                ),
+                              )
+                          ],
+                        ),
+                      );
+                    }
+                    return Container();
+                  }),
+            ),
           ],
         ),
       ),
