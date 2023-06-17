@@ -370,32 +370,38 @@ class FillerView extends GetView<FillerController> {
                 ),
               ),
             ),
-            GetBuilder<HomeController>(
-                id: "buttons",
-                init: Get.find<HomeController>(),
-                builder: (btcontroller) {
-                  if (btcontroller.buttons != null) {
-                    return Container(
-                      decoration: const BoxDecoration(
-                        color: Colors.white,
-                      ),
-                      child: Row(
-                        // alignment: MainAxisAlignment.start,
-                        mainAxisSize: MainAxisSize.min,
-                        children: [
-                          for (var btn in btcontroller.buttons!)
-                            FormButtonWrapper(
-                              btnText: btn["name"],
-                              callback: () => controller.formHandler(
-                                btn['name'],
-                              ),
-                            )
-                        ],
-                      ),
-                    );
-                  }
-                  return Container();
-                }),
+            Padding(
+              padding: const EdgeInsets.all(10.0),
+              child: GetBuilder<HomeController>(
+                  id: "buttons",
+                  init: Get.find<HomeController>(),
+                  builder: (btcontroller) {
+                    if (btcontroller.buttons != null) {
+                      return Container(
+                        decoration: const BoxDecoration(
+                          color: Colors.white,
+                        ),
+                        child: Row(
+                          // alignment: MainAxisAlignment.start,
+                          mainAxisSize: MainAxisSize.min,
+                          children: [
+                            for (var btn in btcontroller.buttons!)
+                              Padding(
+                                padding: const EdgeInsets.only(right: 8),
+                                child: FormButtonWrapper(
+                                  btnText: btn["name"],
+                                  callback: () => controller.formHandler(
+                                    btn['name'],
+                                  ),
+                                ),
+                              )
+                          ],
+                        ),
+                      );
+                    }
+                    return Container();
+                  }),
+            ),
           ],
         ),
       ),

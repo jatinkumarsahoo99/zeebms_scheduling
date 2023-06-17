@@ -65,31 +65,28 @@ class FillerController extends GetxController {
   DropDownValue? selectedImportChannel;
 
   void clear() {
-    try {
-      selectedImportLocation = null;
-      selectedImportChannel = null;
-      selectedChannel = null;
-      selectedLocation = null;
-      tapeId_.clear();
-      segNo_.clear();
-      fillerDailyFpcList.clear();
-      fillerSegmentList.clear();
-      segDur_.clear();
-      totalFiller.clear();
-      totalFillerDur.text = "00:00:00:00";
-      segDur_.text = "00:00:00:00";
-      listData?.clear();
-      locationFN.requestFocus();
-      locationEnable.value = true;
-      channelEnable.value = true;
-      bottomLastSelectedIdx = 0;
-      topLastSelectedIdx = 0;
-      locations.refresh();
-      channels.refresh();
-      // clearBottonControlls();
-    } catch (e) {
-      print(e.toString());
-    }
+    locationFN.requestFocus();
+    fillerSegmentList.value = [];
+    fillerDailyFpcList.value = [];
+    selectedImportLocation = null;
+    selectedImportChannel = null;
+    selectedChannel = null;
+    selectedLocation = null;
+
+    tapeId_.clear();
+    segNo_.clear();
+    segDur_.clear();
+    totalFiller.clear();
+    totalFillerDur.text = "00:00:00:00";
+    segDur_.text = "00:00:00:00";
+    listData?.clear();
+    // // locationEnable.value = true;
+    // // channelEnable.value = true;
+    bottomLastSelectedIdx = 0;
+    topLastSelectedIdx = 0;
+    locations.refresh();
+    channels.refresh();
+    clearBottonControlls();
   }
 
   /// List for Columns
@@ -131,7 +128,15 @@ class FillerController extends GetxController {
         api: ApiFactory.FILLER_SAVE_IMPORT_FILLERS,
         fun: (resp) {
           Get.back();
-          LoadingDialog.showErrorDialog(resp.toString());
+          if (resp != null && resp.toString() == "Saved Successfully!") {
+            LoadingDialog.callDataSaved(
+                msg: resp.toString(),
+                callback: () {
+                  clear();
+                });
+          } else {
+            LoadingDialog.showErrorDialog(resp.toString());
+          }
         },
         json: {
           "LocationCode": selectedLocation?.key.toString(),

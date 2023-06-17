@@ -1,8 +1,8 @@
 class FillerSegmentModel {
-  int? segNo;
-  int? seq;
-  int? brkNo;
-  int? ponumber;
+  num? segNo;
+  num? seq;
+  num? brkNo;
+  num? ponumber;
   String? brktype;
   String? fillerCode;
   String? tapeID;
