@@ -645,16 +645,25 @@ class RoRescheduleController extends GetxController {
         });
   }
 
-  docs() {
+  docs() async {
     PlutoGridStateManager? viewDocsStateManger;
-    LoadingDialog.call();
-    Get.find<ConnectorControl>().GETMETHODCALL(
-        api: ApiFactory.RO_CANCELLATION_LOAD_DOC(
-            "RoReschedule ${selectedLocation!.key}${selectedChannel!.key}${bookingMonthCtrl.text}${reSchedNoCtrl.text}"),
-        fun: (data) {
-          if (data is Map && data.containsKey("addingDocument")) {}
-        });
-    Get.back();
+    try {
+      LoadingDialog.call();
+      await Get.find<ConnectorControl>().GETMETHODCALL(
+          api: ApiFactory.RO_CANCELLATION_LOAD_DOC(
+              "ROReschedule ${selectedLocation!.key}${selectedChannel!.key}${bookingMonthCtrl.text}${reSchedNoCtrl.text}"),
+          fun: (data) {
+            if (data is Map && data.containsKey("info_GetAllDocument")) {
+              documents = [];
+              for (var doc in data["info_GetAllDocument"]) {
+                documents.add(RoCancellationDocuments.fromJson(doc));
+              }
+              Get.back();
+            }
+          });
+    } catch (e) {
+      Get.back();
+    }
 
     Get.defaultDialog(
         title: "Documents",
@@ -699,7 +708,7 @@ class RoRescheduleController extends GetxController {
                                 },
                                 json: {
                                   "documentKey":
-                                      "RoReschedule ${selectedLocation!.key}${selectedChannel!.key}${bookingMonthCtrl.text}${reSchedNoCtrl.text}",
+                                      "ROReschedule ${selectedLocation!.key}${selectedChannel!.key}${bookingMonthCtrl.text}${reSchedNoCtrl.text}",
                                   "strFilePath": result.files.first.name,
                                   "bytes": base64.encode(List<int>.from(
                                       result.files.first.bytes ?? []))
