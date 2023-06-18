@@ -121,10 +121,10 @@ class FillerController extends GetxController {
     } else if (btnName == "Search") {
       Get.to(
         SearchPage(
-          key: Key("Filler"),
-          screenName: "Filler",
-          appBarName: "Schedule Filler",
-          strViewName: "BMS_View_AnnotationDetail",
+          key: Key("Schedule Fillers"),
+          screenName: "Schedule Fillers",
+          appBarName: "Schedule Fillers",
+          strViewName: "vTesting",
           isAppBarReq: true,
         ),
       );
@@ -419,6 +419,8 @@ class FillerController extends GetxController {
     try {
       var tempMode = FillerSegmentModel(
         segNo: null,
+        seq: null,
+        ponumber: null,
         brkNo: (fillerSegmentList[bottomLastSelectedIdx].segNo == null)
             ? fillerSegmentList[bottomLastSelectedIdx].brkNo
             : fillerSegmentList[bottomLastSelectedIdx].segNo,

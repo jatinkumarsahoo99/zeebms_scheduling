@@ -356,7 +356,9 @@ class FillerView extends GetView<FillerController> {
                               SecondaryShowDialogModel(
                                 "Delete",
                                 () {
-                                  controller.fillerSegmentList.removeAt(controller.bottomLastSelectedIdx);
+                                  if (controller.fillerSegmentList[controller.bottomLastSelectedIdx].allowMove == "1") {
+                                    controller.fillerSegmentList.removeAt(controller.bottomLastSelectedIdx);
+                                  }
                                   // controller.fillerSegmentList.removeAt(controller.bottomLastSelectedIdx);
                                 },
                               )

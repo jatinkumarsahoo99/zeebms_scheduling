@@ -181,9 +181,11 @@ class CommercialView extends GetView<CommercialController> {
                                       //if (Utils.btnAccessHandler(btn['name'], controller.formPermissions!) != null)
                                       FormButtonWrapper(
                                         btnText: btn["name"],
-                                        callback: () => controller.formHandler(
-                                          btn['name'],
-                                        ),
+                                        callback: btn["name"] == "Delete"
+                                            ? null
+                                            : () => controller.formHandler(
+                                                  btn['name'],
+                                                ),
                                       )
                                   ],
                                 );

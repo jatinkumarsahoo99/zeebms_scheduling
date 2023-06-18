@@ -54,10 +54,10 @@ class FillerSegmentModel {
       // data['som'] = this.som;
       // data['segDur'] = this.segDur;
     } else {
-      data['segNo'] = segNo;
-      data['seq'] = seq;
-      data['brkNo'] = brkNo;
-      data['ponumber'] = ponumber;
+      data['segNo'] = segNo ?? "";
+      data['seq'] = seq ?? "";
+      data['brkNo'] = brkNo ?? "";
+      data['ponumber'] = ponumber ?? "";
       data['brktype'] = brktype;
       data['fillerCode'] = fillerCode;
       data['tapeID'] = tapeID;
