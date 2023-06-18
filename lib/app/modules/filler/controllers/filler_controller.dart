@@ -16,6 +16,7 @@ import '../../../data/DropDownValue.dart';
 import '../../../providers/ApiFactory.dart';
 import '../../../providers/ExportData.dart';
 import '../../../providers/Utils.dart';
+import '../../CommonSearch/views/common_search_view.dart';
 import '../FillerSegmentModel.dart';
 
 class FillerController extends GetxController {
@@ -72,6 +73,7 @@ class FillerController extends GetxController {
     selectedImportChannel = null;
     selectedChannel = null;
     selectedLocation = null;
+    date_.clear();
 
     tapeId_.clear();
     segNo_.clear();
@@ -116,7 +118,18 @@ class FillerController extends GetxController {
       clear();
     } else if (btnName == "Save") {
       saveData();
+    } else if (btnName == "Search") {
+      Get.to(
+        SearchPage(
+          key: Key("Filler"),
+          screenName: "Filler",
+          appBarName: "Schedule Filler",
+          strViewName: "BMS_View_AnnotationDetail",
+          isAppBarReq: true,
+        ),
+      );
     }
+    // Search
   }
 
   saveData() {
