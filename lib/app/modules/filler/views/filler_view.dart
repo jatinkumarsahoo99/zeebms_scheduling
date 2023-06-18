@@ -1,3 +1,4 @@
+import 'package:bms_scheduling/app/providers/DataGridMenu.dart';
 import 'package:bms_scheduling/widgets/PlutoGrid/pluto_grid.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
@@ -202,9 +203,10 @@ class FillerView extends GetView<FillerController> {
                         ),
                       ),
                     ),
-                    child: DataGridFromMap(
+                    child: DataGridFromMap3(
                       showSrNo: true,
                       formatDate: false,
+                      showSecondaryDialog: false,
                       mapData: (controller.fillerDailyFpcList.value.map((e) => e.toJson()).toList()),
                       showonly: ["fpcTime", "endTime", "programName", "epsNo", "tapeID", "episodeCaption"],
                       widthRatio: (Get.width * 0.2) / 2 + 7,
@@ -214,12 +216,17 @@ class FillerView extends GetView<FillerController> {
                         event.stateManager.setCurrentCell(
                             event.stateManager.getRowByIdx(controller.topLastSelectedIdx)?.cells['fpcTime'], controller.bottomLastSelectedIdx);
                       },
-                      onSelected: (plutoGrid) {
-                        controller.topLastSelectedIdx = plutoGrid.rowIdx ?? 0;
+                      onRowDoubleTap: (plutoGrid) {
+                        controller.topLastSelectedIdx = plutoGrid.rowIdx;
+                        controller.gridStateManager?.setCurrentCell(
+                            controller.gridStateManager?.getRowByIdx(controller.topLastSelectedIdx)?.cells['fpcTime'],
+                            controller.bottomLastSelectedIdx);
+                        controller.topLastSelectedIdx = plutoGrid.rowIdx;
                         controller.totalFiller.clear();
                         controller.totalFillerDur.text = "00:00:00:00";
-                        controller.fetchSegmentDetails(controller.fillerDailyFpcList[plutoGrid.rowIdx!]);
+                        controller.fetchSegmentDetails(controller.fillerDailyFpcList[plutoGrid.rowIdx]);
                       },
+                      // onSelected: (plutoGrid) {},
                       colorCallback: (row) =>
                           (row.row.cells.containsValue(controller.gridStateManager?.currentCell)) ? Colors.deepPurple.shade200 : Colors.white,
                     ),
@@ -341,10 +348,19 @@ class FillerView extends GetView<FillerController> {
                         return Visibility(
                           visible: ((controller.fillerSegmentList.value.isNotEmpty)),
                           replacement: Container(decoration: BoxDecoration(border: Border.all(color: Colors.grey))),
-                          child: DataGridFromMap(
+                          child: DataGridFromMap3(
                             mapData: (controller.fillerSegmentList.map((e) => e.toJson()).toList()),
                             widthRatio: (Get.width * 0.2) / 2 + 7,
                             formatDate: false,
+                            secondaryExtraDialogList: [
+                              SecondaryShowDialogModel(
+                                "Delete",
+                                () {
+                                  controller.fillerSegmentList.removeAt(controller.bottomLastSelectedIdx);
+                                  // controller.fillerSegmentList.removeAt(controller.bottomLastSelectedIdx);
+                                },
+                              )
+                            ],
                             onload: (event) {
                               controller.bottomSM = event.stateManager;
                               event.stateManager.setCurrentCell(
@@ -390,9 +406,11 @@ class FillerView extends GetView<FillerController> {
                                 padding: const EdgeInsets.only(right: 8),
                                 child: FormButtonWrapper(
                                   btnText: btn["name"],
-                                  callback: () => controller.formHandler(
-                                    btn['name'],
-                                  ),
+                                  callback: btn["name"] == "Delete"
+                                      ? null
+                                      : () => controller.formHandler(
+                                            btn['name'],
+                                          ),
                                 ),
                               )
                           ],
