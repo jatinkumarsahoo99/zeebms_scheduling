@@ -13,8 +13,11 @@ import 'package:bms_scheduling/widgets/PlutoGrid/pluto_grid.dart';
 
 import '../controllers/ro_reschedule_controller.dart';
 
-class RoRescheduleView extends GetView<RoRescheduleController> {
-  const RoRescheduleView({Key? key}) : super(key: key);
+class RoRescheduleView extends StatelessWidget {
+  RoRescheduleView({Key? key}) : super(key: key);
+  var controller = Get.put<RoRescheduleController>(
+    RoRescheduleController(),
+  );
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -41,8 +44,11 @@ class RoRescheduleView extends GetView<RoRescheduleController> {
                           children: [
                             Obx(
                               () => DropDownField.formDropDown1WidthMap(
-                                controller.reschedulngInitData!.lstlocationMaters!
-                                    .map((e) => DropDownValue(key: e.locationCode, value: e.locationName))
+                                controller
+                                    .reschedulngInitData!.lstlocationMaters!
+                                    .map((e) => DropDownValue(
+                                        key: e.locationCode,
+                                        value: e.locationName))
                                     .toList(),
                                 (data) {
                                   controller.selectedLocation = data;
@@ -77,29 +83,42 @@ class RoRescheduleView extends GetView<RoRescheduleController> {
                             ),
                             Obx(
                               () => InputFields.formField1(
-                                  hintTxt: "Client", isEnable: controller.enableFields.value, controller: controller.clientCtrl, width: 0.24),
+                                  hintTxt: "Client",
+                                  isEnable: controller.enableFields.value,
+                                  controller: controller.clientCtrl,
+                                  width: 0.24),
                             ),
                             Obx(
                               () => InputFields.formField1(
-                                  hintTxt: "Agency", isEnable: controller.enableFields.value, controller: controller.agencyCtrl, width: 0.24),
+                                  hintTxt: "Agency",
+                                  isEnable: controller.enableFields.value,
+                                  controller: controller.agencyCtrl,
+                                  width: 0.24),
                             ),
                             Obx(
                               () => DateWithThreeTextField(
                                   title: "Eff Date.",
                                   isEnable: controller.enableFields.value,
                                   onFocusChange: (date) {
-                                    controller.bookingMonthCtrl.text = date.split("-")[2] + date.split("-")[1];
+                                    controller.bookingMonthCtrl.text =
+                                        date.split("-")[2] + date.split("-")[1];
                                   },
                                   widthRation: 0.24,
                                   mainTextController: controller.effDateCtrl),
                             ),
                             Obx(
                               () => InputFields.formField1(
-                                  hintTxt: "Reference", isEnable: controller.enableFields.value, controller: controller.referenceCtrl, width: 0.24),
+                                  hintTxt: "Reference",
+                                  isEnable: controller.enableFields.value,
+                                  controller: controller.referenceCtrl,
+                                  width: 0.24),
                             ),
                             Obx(
                               () => InputFields.formField1(
-                                  hintTxt: "Brand", isEnable: controller.enableFields.value, controller: controller.branCtrl, width: 0.24),
+                                  hintTxt: "Brand",
+                                  isEnable: controller.enableFields.value,
+                                  controller: controller.branCtrl,
+                                  width: 0.24),
                             ),
                             Obx(
                               () => DateWithThreeTextField(
@@ -110,11 +129,17 @@ class RoRescheduleView extends GetView<RoRescheduleController> {
                             ),
                             Obx(
                               () => InputFields.formField1(
-                                  hintTxt: "Deal No", isEnable: controller.enableFields.value, controller: controller.delnoCtrl, width: 0.24),
+                                  hintTxt: "Deal No",
+                                  isEnable: controller.enableFields.value,
+                                  controller: controller.delnoCtrl,
+                                  width: 0.24),
                             ),
                             Obx(
                               () => InputFields.formField1(
-                                  hintTxt: "Pay Route", isEnable: controller.enableFields.value, controller: controller.payrouteCtrl, width: 0.24),
+                                  hintTxt: "Pay Route",
+                                  isEnable: controller.enableFields.value,
+                                  controller: controller.payrouteCtrl,
+                                  width: 0.24),
                             ),
                             Obx(
                               () => DateWithThreeTextField(
@@ -125,7 +150,10 @@ class RoRescheduleView extends GetView<RoRescheduleController> {
                             ),
                             Obx(
                               () => InputFields.formField1(
-                                  hintTxt: "Zone", isEnable: controller.enableFields.value, controller: controller.zoneCtrl, width: 0.24),
+                                  hintTxt: "Zone",
+                                  isEnable: controller.enableFields.value,
+                                  controller: controller.zoneCtrl,
+                                  width: 0.24),
                             ),
                             Obx(() => Container(
                                   width: Get.width * 0.24,
@@ -133,11 +161,16 @@ class RoRescheduleView extends GetView<RoRescheduleController> {
                                     children: [
                                       InputFields.formField1(
                                           hintTxt: "Re-Sch No.",
-                                          isEnable: controller.enableFields.value,
-                                          controller: controller.bookingMonthCtrl,
+                                          isEnable:
+                                              controller.enableFields.value,
+                                          controller:
+                                              controller.bookingMonthCtrl,
                                           width: 0.06),
                                       InputFields.formField1(
-                                          hintTxt: "", focusNode: controller.reScheduleFocus, controller: controller.reSchedNoCtrl, width: 0.18),
+                                          hintTxt: "",
+                                          focusNode: controller.reScheduleFocus,
+                                          controller: controller.reSchedNoCtrl,
+                                          width: 0.18),
                                     ],
                                   ),
                                 ))
@@ -157,18 +190,32 @@ class RoRescheduleView extends GetView<RoRescheduleController> {
                               init: controller,
                               id: "dgvGrid",
                               builder: (gridController) {
-                                return (gridController.roRescheduleOnLeaveData == null || gridController.roRescheduleOnLeaveData!.lstDgvRO!.isEmpty)
+                                return (gridController
+                                                .roRescheduleOnLeaveData ==
+                                            null ||
+                                        gridController.roRescheduleOnLeaveData!
+                                            .lstDgvRO!.isEmpty)
                                     ? Container(
                                         child: Container(
-                                          decoration: BoxDecoration(border: Border.all()),
+                                          decoration: BoxDecoration(
+                                              border: Border.all()),
                                         ),
                                       )
                                     : DataGridShowOnlyKeys(
                                         mode: PlutoGridMode.selectWithOneTap,
                                         hideKeys: [],
                                         colorCallback: (p0) {
-                                          if (controller.roRescheduleOnLeaveData!.lstDgvRO![p0.rowIdx].colorName!.isNotEmpty) {
-                                            return controller.roRescheduleOnLeaveData!.lstDgvRO![p0.rowIdx].colorName!.toLowerCase() == "rosybrown"
+                                          if (controller
+                                              .roRescheduleOnLeaveData!
+                                              .lstDgvRO![p0.rowIdx]
+                                              .colorName!
+                                              .isNotEmpty) {
+                                            return controller
+                                                        .roRescheduleOnLeaveData!
+                                                        .lstDgvRO![p0.rowIdx]
+                                                        .colorName!
+                                                        .toLowerCase() ==
+                                                    "rosybrown"
                                                 ? Colors.brown
                                                 : Colors.white;
                                           }
@@ -178,12 +225,17 @@ class RoRescheduleView extends GetView<RoRescheduleController> {
                                           controller.closeModify();
                                         },
                                         onload: (load) {
-                                          controller.plutoGridStateManager = load.stateManager;
+                                          controller.plutoGridStateManager =
+                                              load.stateManager;
                                         },
                                         onRowDoubleTap: (tapEvent) {
-                                          controller.dgvGridnRowDoubleTap(tapEvent.rowIdx);
+                                          controller.dgvGridnRowDoubleTap(
+                                              tapEvent.rowIdx);
                                         },
-                                        mapData: gridController.roRescheduleOnLeaveData!.lstDgvRO!.map((e) => e.toJson()).toList(),
+                                        mapData: gridController
+                                            .roRescheduleOnLeaveData!.lstDgvRO!
+                                            .map((e) => e.toJson())
+                                            .toList(),
                                         formatDate: true,
                                       );
                               }),
@@ -197,15 +249,23 @@ class RoRescheduleView extends GetView<RoRescheduleController> {
                               init: controller,
                               id: "updatedgvGrid",
                               builder: (gridController) {
-                                return (gridController.roRescheduleOnLeaveData == null ||
-                                        gridController.roRescheduleOnLeaveData!.lstdgvUpdated!.isEmpty)
+                                return (gridController
+                                                .roRescheduleOnLeaveData ==
+                                            null ||
+                                        gridController.roRescheduleOnLeaveData!
+                                            .lstdgvUpdated!.isEmpty)
                                     ? Container(
                                         child: Container(
-                                          decoration: BoxDecoration(border: Border.all()),
+                                          decoration: BoxDecoration(
+                                              border: Border.all()),
                                         ),
                                       )
                                     : DataGridShowOnlyKeys(
-                                        mapData: gridController.roRescheduleOnLeaveData!.lstdgvUpdated!.map((e) => e.toJson()).toList(),
+                                        mapData: gridController
+                                            .roRescheduleOnLeaveData!
+                                            .lstdgvUpdated!
+                                            .map((e) => e.toJson())
+                                            .toList(),
                                         formatDate: false,
                                       );
                               }),
@@ -223,14 +283,23 @@ class RoRescheduleView extends GetView<RoRescheduleController> {
                             children: [
                               InkWell(
                                 onTap: () {
-                                  if (controller.plutoGridStateManager!.currentCell != null) {
+                                  if (controller
+                                          .plutoGridStateManager!.currentCell !=
+                                      null) {
                                     controller.onChangeTapeIDClick();
                                   }
                                 },
-                                child: Row(mainAxisSize: MainAxisSize.max, mainAxisAlignment: MainAxisAlignment.start, children: [
-                                  Obx(() => Icon(controller.changeTapeId.value ? Icons.check_box_outlined : Icons.check_box_outline_blank_outlined)),
-                                  Text("Change Tape ID")
-                                ]),
+                                child: Row(
+                                    mainAxisSize: MainAxisSize.max,
+                                    mainAxisAlignment: MainAxisAlignment.start,
+                                    children: [
+                                      Obx(() => Icon(controller
+                                              .changeTapeId.value
+                                          ? Icons.check_box_outlined
+                                          : Icons
+                                              .check_box_outline_blank_outlined)),
+                                      Text("Change Tape ID")
+                                    ]),
                               ),
                               SizedBox(
                                 width: 10,
@@ -238,19 +307,40 @@ class RoRescheduleView extends GetView<RoRescheduleController> {
                               Obx(() => controller.changeTapeId.value
                                   ? Wrap(
                                       spacing: 5,
-                                      crossAxisAlignment: WrapCrossAlignment.end,
+                                      crossAxisAlignment:
+                                          WrapCrossAlignment.end,
                                       children: [
                                         DropDownField.formDropDown1WidthMap(
-                                            (controller.roRescheduleOnLeaveData?.lstcmbTapeID ?? [])
-                                                .map((e) => DropDownValue(key: e.exporttapecode, value: e.exporttapecode))
+                                            (controller.roRescheduleOnLeaveData
+                                                        ?.lstcmbTapeID ??
+                                                    [])
+                                                .map((e) => DropDownValue(
+                                                    key: e.exporttapecode,
+                                                    value: e.exporttapecode))
                                                 .toList(), (data) {
                                           // controller.selectedLocation = data;
                                           // controller.getChannel(data.key);
-                                        }, "Tape ID", 0.12, selected: controller.modifySelectedTapeCode),
-                                        InputFields.formField1(hintTxt: "Seg", isEnable: false, controller: controller.changeTapeIdSeg, width: 0.06),
-                                        InputFields.formField1(hintTxt: "Dur", isEnable: false, controller: controller.changeTapeIdDur, width: 0.06),
+                                        }, "Tape ID", 0.12,
+                                            selected: controller
+                                                .modifySelectedTapeCode),
                                         InputFields.formField1(
-                                            hintTxt: "Caption", isEnable: false, controller: controller.chnageTapeIdCap, width: 0.18),
+                                            hintTxt: "Seg",
+                                            isEnable: false,
+                                            controller:
+                                                controller.changeTapeIdSeg,
+                                            width: 0.06),
+                                        InputFields.formField1(
+                                            hintTxt: "Dur",
+                                            isEnable: false,
+                                            controller:
+                                                controller.changeTapeIdDur,
+                                            width: 0.06),
+                                        InputFields.formField1(
+                                            hintTxt: "Caption",
+                                            isEnable: false,
+                                            controller:
+                                                controller.chnageTapeIdCap,
+                                            width: 0.18),
                                         FormButtonWrapper(
                                           btnText: "Modify",
                                           callback: () {
@@ -282,7 +372,9 @@ class RoRescheduleView extends GetView<RoRescheduleController> {
                           return Card(
                             margin: EdgeInsets.fromLTRB(4, 4, 4, 0),
                             shape: RoundedRectangleBorder(
-                              borderRadius: BorderRadius.only(topLeft: Radius.circular(10), topRight: Radius.circular(10)),
+                              borderRadius: BorderRadius.only(
+                                  topLeft: Radius.circular(10),
+                                  topRight: Radius.circular(10)),
                             ),
                             child: Container(
                               width: Get.width,
@@ -310,7 +402,10 @@ class RoRescheduleView extends GetView<RoRescheduleController> {
 
                                                 // isEnabled: btn['isDisabled'],
                                                 callback: () {
-                                                  btncontroller.clearPage1();
+                                                  Get.delete<
+                                                      RoRescheduleController>();
+                                                  Get.find<HomeController>()
+                                                      .clearPage1();
                                                 },
                                               )
                                             : FormButtonWrapper(

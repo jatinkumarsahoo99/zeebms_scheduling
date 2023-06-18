@@ -83,13 +83,16 @@ class RoCancellationController extends GetxController {
       Get.find<ConnectorControl>().GETMETHODCALL(
           api: ApiFactory.RO_CANCELLATION_LOCATION,
           fun: (data) {
-            if ((data as Map).containsKey("lstLocation") && data["lstLocation"] is List) {
+            if ((data as Map).containsKey("lstLocation") &&
+                data["lstLocation"] is List) {
               for (var e in data["lstLocation"]) {
-                locations.add(DropDownValue(key: e["locationCode"], value: e["locationName"]));
+                locations.add(DropDownValue(
+                    key: e["locationCode"], value: e["locationName"]));
               }
               locations.refresh();
             } else {
-              LoadingDialog.callErrorMessage1(msg: "Failed To Load Initial Data");
+              LoadingDialog.callErrorMessage1(
+                  msg: "Failed To Load Initial Data");
             }
           });
     } catch (e) {
@@ -103,9 +106,11 @@ class RoCancellationController extends GetxController {
       Get.find<ConnectorControl>().GETMETHODCALL(
           api: ApiFactory.RO_CANCELLATION_CHANNNEL(locationCode),
           fun: (data) {
-            if ((data as Map).containsKey("lstChannel") && data["lstChannel"] is List) {
+            if ((data as Map).containsKey("lstChannel") &&
+                data["lstChannel"] is List) {
               for (var e in data["lstChannel"]) {
-                channels.add(DropDownValue(key: e["channelcode"], value: e["channelName"]));
+                channels.add(DropDownValue(
+                    key: e["channelcode"], value: e["channelName"]));
               }
               channels.refresh();
               // channels.value = data["lstChannel"]
@@ -113,7 +118,8 @@ class RoCancellationController extends GetxController {
               //         key: e["channelcode"], value: e["channelName"]))
               //     .toList();
             } else {
-              LoadingDialog.callErrorMessage1(msg: "Failed To Load Initial Data");
+              LoadingDialog.callErrorMessage1(
+                  msg: "Failed To Load Initial Data");
             }
           });
     } catch (e) {
@@ -136,11 +142,13 @@ class RoCancellationController extends GetxController {
           fun: (data) {
             try {
               roCancellationData = RoCancellationData.fromJson(data);
-              if (roCancellationData != null && roCancellationData!.cancellationData != null) {
+              if (roCancellationData != null &&
+                  roCancellationData!.cancellationData != null) {
                 parseCancellationData();
               }
             } catch (e) {
-              LoadingDialog.callErrorMessage1(msg: "Failed To Load Cancellation Data");
+              LoadingDialog.callErrorMessage1(
+                  msg: "Failed To Load Cancellation Data");
             }
           });
     } catch (e) {
@@ -228,8 +236,26 @@ class RoCancellationController extends GetxController {
     } catch (e) {}
   }
 
-  docs() {
+  docs() async {
     PlutoGridStateManager? viewDocsStateManger;
+    try {
+      LoadingDialog.call();
+      await Get.find<ConnectorControl>().GETMETHODCALL(
+          api: ApiFactory.RO_CANCELLATION_LOAD_DOC(
+              "ROCancellation ${selectedLocation!.key}${selectedChannel!.key}${cancelMonthctrl.text}${cancelNumberctrl.text}"),
+          fun: (data) {
+            if (data is Map && data.containsKey("info_GetAllDocument")) {
+              documents = [];
+              for (var doc in data["info_GetAllDocument"]) {
+                documents.add(RoCancellationDocuments.fromJson(doc));
+              }
+              Get.back();
+            }
+          });
+    } catch (e) {
+      Get.back();
+    }
+
     Get.defaultDialog(
         title: "Documents",
         content: Container(
@@ -242,22 +268,30 @@ class RoCancellationController extends GetxController {
             },
           ),
         ),
-        actions: {"Add Doc": () async {}, "View Doc": () {}, "Attach Email": () {}}
+        actions: {
+          "Add Doc": () async {},
+          "View Doc": () {},
+          "Attach Email": () {}
+        }
             .entries
             .map((e) => FormButtonWrapper(
                   btnText: e.key,
                   callback: e.key == "Add Doc"
                       ? () async {
-                          FilePickerResult? result = await FilePicker.platform.pickFiles();
+                          FilePickerResult? result =
+                              await FilePicker.platform.pickFiles();
 
                           if (result != null && result.files.single != null) {
                             LoadingDialog.call();
                             await Get.find<ConnectorControl>().POSTMETHOD(
                                 api: ApiFactory.RO_CANCELLATION_ADD_DOC,
                                 fun: (data) {
-                                  if (data is Map && data.containsKey("addingDocument")) {
+                                  if (data is Map &&
+                                      data.containsKey("addingDocument")) {
                                     for (var doc in data["addingDocument"]) {
-                                      documents.add(RoCancellationDocuments.fromJson(doc));
+                                      documents.add(
+                                          RoCancellationDocuments.fromJson(
+                                              doc));
                                     }
                                     Get.back();
                                     docs();
@@ -267,7 +301,8 @@ class RoCancellationController extends GetxController {
                                   "documentKey":
                                       "ROCancellation ${selectedLocation!.key}${selectedChannel!.key}${cancelMonthctrl.text}${cancelNumberctrl.text}",
                                   "strFilePath": result.files.first.name,
-                                  "bytes": base64.encode(List<int>.from(result.files.first.bytes ?? []))
+                                  "bytes": base64.encode(List<int>.from(
+                                      result.files.first.bytes ?? []))
                                 });
                             Get.back();
                           }
@@ -275,11 +310,18 @@ class RoCancellationController extends GetxController {
                       : e.key == "View Doc"
                           ? () {
                               Get.find<ConnectorControl>().GETMETHODCALL(
-                                  api: ApiFactory.RO_CANCELLATION_VIEW_DOC(documents[viewDocsStateManger!.currentCell!.row.sortIdx].documentId),
+                                  api: ApiFactory.RO_CANCELLATION_VIEW_DOC(
+                                      documents[viewDocsStateManger!
+                                              .currentCell!.row.sortIdx]
+                                          .documentId),
                                   fun: (data) {
-                                    if (data is Map && data.containsKey("addingDocument")) {
+                                    if (data is Map &&
+                                        data.containsKey("addingDocument")) {
                                       ExportData().exportFilefromByte(
-                                          base64Decode(data["addingDocument"][0]["documentData"]), data["addingDocument"][0]["documentname"]);
+                                          base64Decode(data["addingDocument"][0]
+                                              ["documentData"]),
+                                          data["addingDocument"][0]
+                                              ["documentname"]);
                                     }
                                   });
                             }
@@ -297,10 +339,16 @@ class RoCancellationController extends GetxController {
     for (var row in roCancellationGridManager!.rows) {
       if (row.checked! && row.cells["cancelNumber"]!.value == "") {
         intTotalCount.value = (intTotalCount.value ?? 0) + 1;
-        intTotalDuration.value = (intTotalDuration.value ?? 0) + (num.parse((row.cells["tapeDuration"]?.value ?? 0).toString())).toInt();
-        intTotalAmount.value = (intTotalAmount.value ?? 0) + (double.parse((row.cells["spotAmount"]?.value ?? 0).toString())).toDouble();
-        intTotalValuationAmount.value =
-            (intTotalValuationAmount.value ?? 0) + (double.parse((row.cells["valuationAmount"]?.value ?? 0).toString())).toDouble();
+        intTotalDuration.value = (intTotalDuration.value ?? 0) +
+            (num.parse((row.cells["tapeDuration"]?.value ?? 0).toString()))
+                .toInt();
+        intTotalAmount.value = (intTotalAmount.value ?? 0) +
+            (double.parse((row.cells["spotAmount"]?.value ?? 0).toString()))
+                .toDouble();
+        intTotalValuationAmount.value = (intTotalValuationAmount.value ?? 0) +
+            (double.parse(
+                    (row.cells["valuationAmount"]?.value ?? 0).toString()))
+                .toDouble();
       }
     }
 
@@ -329,11 +377,15 @@ class RoCancellationController extends GetxController {
           "channelCode": selectedChannel!.key,
           "cancelMonth": int.tryParse(cancelMonthctrl.text) ?? 0,
           "cancelNumber": int.tryParse(cancelNumberctrl.text) ?? 0,
-          "cancelDate": DateFormat("yyyy-MM-dd").format(DateFormat("dd-MM-yyyy").parse(cancelDatectrl.text)),
+          "cancelDate": DateFormat("yyyy-MM-dd")
+              .format(DateFormat("dd-MM-yyyy").parse(cancelDatectrl.text)),
           "referenceNumber": refNumberctrl.text,
           "bookingnumber": bookingNumberctrl.text,
           "modifiedBy": "string",
-          "lstdgvList": roCancellationData!.cancellationData!.lstBookingNoStatusData!.map((e) => e.toJson()).toList()
+          "lstdgvList": roCancellationData!
+              .cancellationData!.lstBookingNoStatusData!
+              .map((e) => e.toJson())
+              .toList()
         },
         fun: (data) {
           Get.back();
@@ -370,9 +422,11 @@ class RoCancellationController extends GetxController {
           try {
             List<LstBookingNoStatusData> _lstBookingNoStatusData = [];
             for (var element in data["importExcelResponse"]) {
-              _lstBookingNoStatusData.add(LstBookingNoStatusData.fromJson(element));
+              _lstBookingNoStatusData
+                  .add(LstBookingNoStatusData.fromJson(element));
             }
-            roCancellationData!.cancellationData!.lstBookingNoStatusData = _lstBookingNoStatusData;
+            roCancellationData!.cancellationData!.lstBookingNoStatusData =
+                _lstBookingNoStatusData;
             update(["cancelData"]);
           } catch (e) {
             LoadingDialog.callErrorMessage1(msg: "Failed To Import File");
