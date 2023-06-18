@@ -223,6 +223,8 @@ class RoCancellationView extends StatelessWidget {
                                   rowcheckEvent.row!.cells["requested"]!.value =
                                       "${rowcheckEvent.isChecked}";
                                 },
+                                hideCode: false,
+                                hideKeys: ["channelcode", "locationcode"],
                                 rowCheckColor: Colors.white,
                                 checkRow: true,
                                 onload: (loadEvent) {

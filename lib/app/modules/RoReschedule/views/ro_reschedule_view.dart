@@ -109,6 +109,7 @@ class RoRescheduleView extends StatelessWidget {
                             Obx(
                               () => InputFields.formField1(
                                   hintTxt: "Reference",
+                                  maxLen: 100,
                                   isEnable: controller.enableFields.value,
                                   controller: controller.referenceCtrl,
                                   width: 0.24),
@@ -139,6 +140,7 @@ class RoRescheduleView extends StatelessWidget {
                                   hintTxt: "Pay Route",
                                   isEnable: controller.enableFields.value,
                                   controller: controller.payrouteCtrl,
+                                  maxLen: 100,
                                   width: 0.24),
                             ),
                             Obx(
@@ -408,11 +410,25 @@ class RoRescheduleView extends StatelessWidget {
                                                       .clearPage1();
                                                 },
                                               )
-                                            : FormButtonWrapper(
-                                                btnText: btn["name"],
-                                                // isEnabled: btn['isDisabled'],
-                                                callback: null,
-                                              ),
+                                            : btn["name"] == "Docs"
+                                                ? FormButtonWrapper(
+                                                    btnText: btn["name"],
+                                                    callback: () {
+                                                      controller.docs();
+                                                    },
+                                                  )
+                                                : btn["name"] == "Refresh"
+                                                    ? FormButtonWrapper(
+                                                        btnText: btn["name"],
+                                                        callback: () {
+                                                          print("Refresh");
+                                                        },
+                                                      )
+                                                    : FormButtonWrapper(
+                                                        btnText: btn["name"],
+                                                        // isEnabled: btn['isDisabled'],
+                                                        callback: null,
+                                                      ),
                                 ],
                               ),
                             ),
