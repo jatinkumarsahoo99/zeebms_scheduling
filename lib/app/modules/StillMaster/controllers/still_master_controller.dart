@@ -549,7 +549,8 @@ class StillMasterController extends GetxController {
               }
             }
             strTapeID = tapIDTC.text;
-            controllsEnabled.value = false;
+            controllsEnabled.value = true;
+            controllsEnabled.refresh();
             if (map['eom'] != null) {
               eomTC.text = map['eom'];
             }
