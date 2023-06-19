@@ -231,14 +231,26 @@ class RoBookingController extends GetxController {
         fun: (response) {});
   }
 
-  tapIdLeave(exportCode) {
-    Get.find<ConnectorControl>().GETMETHODCALL(
-        api: ApiFactory.RO_BOOKING_SearchTapeIdLeave(exportCode),
+  tapIdLeave(selectedvalue) {
+    Get.find<ConnectorControl>().POSTMETHOD(
+        api: ApiFactory.RO_BOOKING_cboTapeIdLeave,
+        json: {"cboTapeIdSelectedValue": selectedvalue, "lstTapeDetails": [], "rate": dealDblClickData?.rate},
         fun: (response) {
           if (response is Map && response.containsKey("info_SearchTapeId")) {
             bookingTapeSearchData = RoBookingTapeSearchData.fromJson(response["info_SearchTapeId"]);
             update(["programView"]);
           }
+        });
+  }
+
+  tapeIdSearch(exportCode) {
+    Get.find<ConnectorControl>().GETMETHODCALL(
+        api: ApiFactory.RO_BOOKING_SearchTapeIdLeave(exportCode),
+        fun: (response) {
+          // if (response is Map && response.containsKey("info_SearchTapeId")) {
+          //   bookingTapeSearchData = RoBookingTapeSearchData.fromJson(response["info_SearchTapeId"]);
+          //   update(["programView"]);
+          // }
         });
   }
 
@@ -282,51 +294,46 @@ class RoBookingController extends GetxController {
   //         "Spots": intSpots,
   //         "TapeId": selectedTapeID!.key,
   //         "SegNo": selectedSeg!.key,
-  //         "Duration": int.parse(txtDuration.Text) * intSpots,
+  //         "Duration": (bookingTapeSearchData?.lstSearchTapeId?.first.commercialDuration??1) * intSpots,
   //         "PreMid": selectedPremid!.key,
   //         "BreakNo": selectedBreak!.key,
   //         "PositionNo": selectedPosition!.key,
-  //         "Total": txtTotal.Text,
-  //         "TotalSpots": int.parse(txtTotal.Text) * intSpots,
+  //         "Total": 1,
+  //         "TotalSpots": 1* intSpots,
   //         "DealNo": selectedDeal!.key,
   //         "DealRowNo": rowIdx,
   //         "EmptyField": "",
   //         "Field": "0-0",
-  //         "Caption": txtCaption.Text,
+  //         "Caption": bookingTapeSearchData?.lstSearchTapeId?.first.commercialCaption,
   //         "ProgramCode": strProgramCode,
   //         "PreMidValue": selectedPremid!.value,
   //         "PositionNoValue": selectedPosition!.value
   //       });
   //     }
   //   }
-  //   dgvSpots[0] = dtSpotsData;
-
-  //   // Hiding columns from Programcode onwards
-  //   for (int j = 18; j <= 20; j++) {
-  //     dgvSpots[0][j]["Visible"] = false;
-  //   }
+  //   dtSpotsData;
 
   //   // Updating Deal Grid and DT
-  //   for (int i = 0; i < dtDealDetails[0].length; i++) {
-  //     if (int.parse(dtDealDetails[0][i]["recordnumber"]) == rowIdx &&
-  //         dtDealDetails[0][i]["locationname"] == selectedLocation!.value &&
-  //         dtDealDetails[0][i]["channelname"] == selectedChannel!.value &&
-  //         dtD ealDetails[0][i]["dealnumber"] == selectedDeal!.key) {
-  //       if (strAccountCode != "I000100010" && strAccountCode != "I000100005" && strAccountCode != "I000100004" && strAccountCode != "I000100013") {
+  //   for (int i = 0; i < dtDealDetails.length; i++) {
+  //     if (int.parse(dtDealDetails[i]["recordnumber"]) == rowIdx &&
+  //         dtDealDetails[i]["locationname"] == selectedLocation!.value &&
+  //         dtDealDetails[i]["channelname"] == selectedChannel!.value &&
+  //         dtDealDetails[i]["dealnumber"] == selectedDeal!.key) {
+  //       if (bookingNoLeaveData?.accountCode != "I000100010" && bookingNoLeaveData?.accountCode != "I000100005" && bookingNoLeaveData?.accountCode != "I000100004" && bookingNoLeaveData?.accountCode != "I000100013") {
   //         dtDealDetails[0][i]["bookedseconds"] =
-  //             int.parse(dtDealDetails[0][i]["bookedseconds"]) + (int.parse(txtDuration.Text) * intTotalBookedSpots);
-  //       } else if (strAccountCode == "I000100010" && int.parse(intSubRevenueTypeCode) == 9) {
-  //         dtDealDetails[0][i]["bookedseconds"] =
-  //             int.parse(dtDealDetails[0][i]["bookedseconds"]) + (int.parse(txtDuration.Text) * intTotalBookedSpots);
+  //             int.parse(dtDealDetails[0][i]["bookedseconds"]) + (bookingTapeSearchData?.lstSearchTapeId?.first.commercialDuration??1 * intTotalBookedSpots);
+  //       } else if (bookingNoLeaveData?.accountCode == "I000100010" && int.parse(intSubRevenueTypeCode) == 9) {
+  //         dtDealDetails[i]["bookedseconds"] =
+  //             int.parse(dtDealDetails[i]["bookedseconds"]) + (int.parse(txtDuration.Text) * intTotalBookedSpots);
   //       } else {
-  //         dtDealDetails[0][i]["bookedseconds"] = int.parse(dtDealDetails[0][i]["bookedseconds"]) + intTotalBookedSpots;
+  //         dtDealDetails[i]["bookedseconds"] = int.parse(dtDealDetails[i]["bookedseconds"]) + intTotalBookedSpots;
   //       }
 
-  //       dtDealDetails[0][i]["balanceseconds"] = int.parse(dtDealDetails[0][i]["seconds"]) - int.parse(dtDealDetails[0][i]["bookedseconds"]);
-  //       BalanceSeconds = dtDealDetails[0][i]["balanceseconds"];
-  //       dtDealDetails[0].acceptChanges();
-  //       dgvDealDetail[0] = dtDealDetails;
-  //       hideDealGridCols();
+  //       dtDealDetails[i]["balanceseconds"] = int.parse(dtDealDetails[i]["seconds"]) - int.parse(dtDealDetails[i]["bookedseconds"]);
+  //       // BalanceSeconds = dtDealDetails[i]["balanceseconds"];
+  //       // dtDealDetails[0].acceptChanges();
+  //       // dgvDealDetail[0] = dtDealDetails;
+  //       // hideDealGridCols();
   //       break;
   //     }
   //   }

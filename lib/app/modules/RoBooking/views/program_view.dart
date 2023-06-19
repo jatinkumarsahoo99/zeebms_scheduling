@@ -19,6 +19,7 @@ class ProgramView extends GetView<RoBookingController> {
         id: "programView",
         builder: (controller) {
           return Row(
+            crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               Container(
                 width: Get.width * 0.40,
@@ -29,9 +30,13 @@ class ProgramView extends GetView<RoBookingController> {
                   children: [
                     DropDownField.formDropDown1WidthMap(
                         controller.tapeIds.map((e) => DropDownValue(key: e["exporttapecode"], value: e["commercialcaption"])).toList(),
-                        (value) => {controller.tapIdLeave(value.key)},
+                        (value) => {
+                              controller.selectedTapeID = value,
+                              controller.tapIdLeave(value.value),
+                            },
                         "Tape ID",
                         0.12,
+                        selected: controller.selectedTapeID,
                         dialogWidth: Get.width * 0.24),
                     // DropDownField.formDropDownSearchAPI2(GlobalKey(), context,
                     //     width: Get.width * 0.12, title: "Tape Id", url: "url", onchanged: (value) {}),
@@ -61,7 +66,7 @@ class ProgramView extends GetView<RoBookingController> {
                         hintTxt: "Agency Id",
                         isEnable: false,
                         controller:
-                            TextEditingController(text: (controller.bookingTapeSearchData?.lstSearchTapeId?.first.agencyTapeId ?? "NA").toString()),
+                            TextEditingController(text: (controller.bookingTapeSearchData?.lstSearchTapeId?.first.agencyTapeId ?? "").toString()),
                         width: 0.12),
                     InputFields.formField1(
                         // showTitle: false,
