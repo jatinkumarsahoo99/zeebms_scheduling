@@ -122,7 +122,7 @@ class StillMasterController extends GetxController {
 
     /// SEG NO.
     segFN.onKey = (node, event) {
-      if (event.logicalKey == LogicalKeyboardKey.tab && !event.data.isShiftPressed && segTC.text.isNotEmpty) {
+      if (event.logicalKey == LogicalKeyboardKey.tab && !event.data.isShiftPressed) {
         segNoLeave().then((value) {
           if (value) {
             segFN.requestFocus();
@@ -235,6 +235,8 @@ class StillMasterController extends GetxController {
       LoadingDialog.showErrorDialog("Please select Location Name.");
     } else if (selectedChannel == null) {
       LoadingDialog.showErrorDialog("Please select Channel Name.");
+    } else if (selectedTape == null) {
+      LoadingDialog.showErrorDialog("Please select Tape.");
     } else if (selectedProgram == null) {
       LoadingDialog.showErrorDialog("Please select Program.");
     } else if (tapIDTC.text.isEmpty) {
@@ -279,7 +281,15 @@ class StillMasterController extends GetxController {
         api: ApiFactory.STILL_MASTER_TAPE_SAVE_DATA,
         fun: (resp) {
           closeDialog();
-          LoadingDialog.callDataSaved(msg: resp.toString());
+          if (resp != null && resp is Map<String, dynamic> && resp['stillmaster'] != null && resp['stillmaster']['strmessage'] != null) {
+            if (resp['stillmaster']['strmessage'].toString().contains("Record is inserted successfully.")) {
+              LoadingDialog.callDataSaved(msg: resp.toString());
+            } else {
+              LoadingDialog.showErrorDialog(resp.toString());
+            }
+          } else {
+            LoadingDialog.showErrorDialog(resp.toString());
+          }
         },
         json: {
           "stillCode": strCode,
@@ -323,7 +333,7 @@ class StillMasterController extends GetxController {
     bool hasError = false;
     if (tapIDTC.text.isNotEmpty) {
       houseIDTC.text = tapIDTC.text;
-      checkRetrieve();
+      await checkRetrieve();
       if (tapIDTC.text.isNotEmpty && segTC.text != "0") {
         LoadingDialog.call();
         await Get.find<ConnectorControl>().POSTMETHOD(
@@ -358,7 +368,7 @@ class StillMasterController extends GetxController {
     if (segTC.value.text.isEmpty) {
       segTC.text = "1";
     }
-    checkRetrieve();
+    await checkRetrieve();
     if (tapIDTC.text.isNotEmpty && segTC.text != "0") {
       LoadingDialog.call();
       await Get.find<ConnectorControl>().POSTMETHOD(
@@ -464,9 +474,11 @@ class StillMasterController extends GetxController {
   }
 
   retrievRecord({required String tapeid, required String segNoT, required String locationCode, required String channelCode}) async {
+    LoadingDialog.call();
     await Get.find<ConnectorControl>().POSTMETHOD(
         api: ApiFactory.STILL_MASTER_GET_RETRIVE_DATA,
         fun: (resp) {
+          closeDialog();
           if (resp != null && (resp['getRecord'] is Map<String, dynamic>) && resp['getRecord'] != null) {
             var map = resp['getRecord'];
             if (map['stillCode'] != null) {
