@@ -190,12 +190,12 @@ class RoBookingView extends GetView<RoBookingController> {
                                         isEnable: controller.bookingNoLeaveData == null,
                                         selected: controller.selectedDeal),
                                   ),
-                                  DropDownField.formDropDown1WidthMap([], (value) => {}, "Deal Type", 0.11,
-                                      isEnable: controller.bookingNoLeaveData == null,
-                                      selected: controller.bookingNoLeaveData == null
-                                          ? null
-                                          : DropDownValue(
-                                              key: controller.bookingNoLeaveData!.dealType, value: controller.bookingNoLeaveData!.dealType)),
+                                  InputFields.formField1(
+                                    hintTxt: "Deal Type",
+                                    controller: TextEditingController(text: controller.bookingNoLeaveData?.dealType ?? ""),
+                                    onchanged: (value) {},
+                                    width: 0.11,
+                                  ),
                                   FocusTraversalOrder(
                                     order: NumericFocusOrder(8),
                                     child: Obx(
