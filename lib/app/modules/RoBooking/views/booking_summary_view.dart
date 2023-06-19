@@ -14,20 +14,17 @@ class BookingSummaryView extends GetView {
           children: [
             Text("Summary"),
             Row(
-              children: [
-                Icon(Icons.check_box_outline_blank_outlined),
-                Text("Default")
-              ],
+              children: [Icon(Icons.check_box_outline_blank_outlined), Text("Default")],
             )
           ],
         ),
-          SizedBox(
+        SizedBox(
           height: 5,
         ),
         Expanded(
             child: Container(
           child: DataGridShowOnlyKeys(
-            mapData: dummyProgram,
+            mapData: [],
             formatDate: false,
           ),
         ))
