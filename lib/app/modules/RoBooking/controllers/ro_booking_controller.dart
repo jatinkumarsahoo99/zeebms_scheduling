@@ -17,6 +17,7 @@ import 'package:bms_scheduling/app/providers/ApiFactory.dart';
 import 'package:bms_scheduling/app/providers/extensions/string_extensions.dart';
 import 'package:bms_scheduling/widgets/LoadingDialog.dart';
 import 'package:bms_scheduling/widgets/PlutoGrid/pluto_grid.dart';
+import 'package:bms_scheduling/widgets/dropdown.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
@@ -62,6 +63,7 @@ class RoBookingController extends GetxController {
   DropDownValue? selectedPosition;
   DropDownValue? selectedExecutive;
   DropDownValue? selectedBreak;
+  DropDownValue? selectedGST;
 
   var channels = RxList<DropDownValue>();
   var clients = RxList<DropDownValue>();
@@ -149,7 +151,7 @@ class RoBookingController extends GetxController {
 
   brandLeave(brandCode) {
     Get.find<ConnectorControl>().POSTMETHOD(
-        api: ApiFactory.RO_BOOKING_OnAgencyLeave,
+        api: ApiFactory.RO_BOOKING_BRAND_LEAVE,
         json: {
           "dealNo": selectedDeal?.key,
           "clientcode": selectedClient?.key,
@@ -195,6 +197,23 @@ class RoBookingController extends GetxController {
             selectedExecutive = DropDownValue(
                 key: agencyLeaveData?.excutiveDetails?.first.personnelCode ?? "", value: agencyLeaveData?.excutiveDetails?.first.personnelname);
             update(["init"]);
+            Get.defaultDialog(
+                title: "GST Plant",
+                content: SizedBox(
+                  height: Get.height / 4,
+                  width: Get.width / 4,
+                  child: Column(
+                    children: [
+                      DropDownField.formDropDown1WidthMap(
+                        agencyLeaveData?.lstGstPlants?.map((e) => DropDownValue(key: e.plantid?.toString(), value: e.column1)).toList(),
+                        (value) => {},
+                        "Rev Type",
+                        0.11,
+                        selected: selectedGST,
+                      )
+                    ],
+                  ),
+                ));
           }
           // if (data is Map && data.containsKey("info_ClientList") && data["info_ClientList"] is List) {
           //   List<DropDownValue> _agencies = [];
@@ -286,6 +305,8 @@ class RoBookingController extends GetxController {
         fun: (response) {
           if (response is Map && response.containsKey("info_LeaveDealNumber")) {
             dealNoLeaveData = RoBookingDealNoLeave.fromJson(response["info_LeaveDealNumber"]);
+
+            update(["init"]);
           }
         });
   }
@@ -438,25 +459,60 @@ class RoBookingController extends GetxController {
     Get.find<ConnectorControl>().POSTMETHOD(
         api: ApiFactory.RO_BOOKING_DEAL_DOUBLE_CLICK,
         json: {
-          "locationCode": selectedLocation!.key,
-          "channelCode": selectedChannel!.key,
-          "brandCode": bookingNoLeaveData!.brandcode,
-          "zone": bookingNoLeaveData!.zone,
-          "executiveCode": bookingNoLeaveData!.executiveCode,
-          "payroute": bookingNoLeaveData!.payrouteName,
-          "dealNo": bookingNoLeaveData!.dealno,
-          "revenueType": bookingNoLeaveData!.revenueType,
-          "effectiveDate": bookingNoLeaveData!.bookingEffectiveDate,
-          "zoneCode": bookingNoLeaveData!.zonecode,
-          "tapeId": "",
-          "duration": bookingNoLeaveData!.totalDuration,
           "dgvDealDetail_RowIndex": rowId,
           "dgvDealDetail_ColumnIndex": colId,
-          "previousBookedAmount": bookingNoLeaveData!.previousBookedAmount,
-          "previousValAmount": bookingNoLeaveData!.previousValAmount,
-          "lstdgvDealDetails": bookingNoLeaveData!.lstdgvDealDetails!.map((e) => e.toJson()).toList(),
-          "lstSpots": bookingNoLeaveData!.lstSpots!.map((e) => e.toJson()).toList(),
+          "previousBookedAmount": bookingNoLeaveData?.previousBookedAmount,
+          "previousValAmount": bookingNoLeaveData?.previousValAmount,
+          "channelCode": bookingNoLeaveData?.channelcode,
+          "lstdgvDealDetails": bookingNoLeaveData?.lstdgvDealDetails?.map((e) => e.toJson()).toList(),
+          "lstSpots": bookingNoLeaveData?.lstSpots?.map((e) => e.toJson()).toList(),
+          "brandCode": bookingNoLeaveData?.brandcode,
+          "zone": bookingNoLeaveData?.zone,
+          "executiveCode": bookingNoLeaveData?.executiveCode,
+          "payroute": bookingNoLeaveData?.payrouteName,
+          "dealNo": bookingNoLeaveData?.dealno,
+          "locationCode": bookingNoLeaveData?.locationCode,
+          "revenueType": bookingNoLeaveData?.revenueType,
+          "effectiveDate": bookingNoLeaveData?.bookingEffectiveDate,
+          "zoneCode": bookingNoLeaveData?.zonecode,
+          "tapeId": "",
+          "duration": bookingNoLeaveData?.totalDuration,
+          "intEditMode": bookingNoLeaveData?.intEditMode,
+          "brandRequest": {
+            "dealNo": bookingNoLeaveData?.dealno,
+            "clientcode": bookingNoLeaveData?.clientcode,
+            "effectivedate": bookingNoLeaveData?.bookingEffectiveDate,
+            "agencycode": bookingNoLeaveData?.agencycode,
+            "brandcode": bookingNoLeaveData?.brandcode,
+            "locationCode": bookingNoLeaveData?.locationCode,
+            "channelCode": bookingNoLeaveData?.channelcode,
+            "activityMonth": bookingMonthCtrl.text,
+            "accountCode": bookingNoLeaveData?.accountCode,
+            "subRevenueTypeCode": bookingNoLeaveData?.revenueType,
+            "revenueType": bookingNoLeaveData?.revenueType
+          }
         },
+
+        //  {
+        //   "locationCode": selectedLocation!.key,
+        //   "channelCode": selectedChannel!.key,
+        //   "brandCode": bookingNoLeaveData!.brandcode,
+        //   "zone": bookingNoLeaveData!.zone,
+        //   "executiveCode": bookingNoLeaveData!.executiveCode,
+        //   "payroute": bookingNoLeaveData!.payrouteName,
+        //   "dealNo": bookingNoLeaveData!.dealno,
+        //   "revenueType": bookingNoLeaveData!.revenueType,
+        //   "effectiveDate": bookingNoLeaveData!.bookingEffectiveDate,
+        //   "zoneCode": bookingNoLeaveData!.zonecode,
+        //   "tapeId": "",
+        //   "duration": bookingNoLeaveData!.totalDuration,
+        //   "dgvDealDetail_RowIndex": rowId,
+        //   "dgvDealDetail_ColumnIndex": colId,
+        //   "previousBookedAmount": bookingNoLeaveData!.previousBookedAmount,
+        //   "previousValAmount": bookingNoLeaveData!.previousValAmount,
+        //   "lstdgvDealDetails": bookingNoLeaveData!.lstdgvDealDetails!.map((e) => e.toJson()).toList(),
+        //   "lstSpots": bookingNoLeaveData!.lstSpots!.map((e) => e.toJson()).toList(),
+        // },
         fun: (value) async {
           if (value is Map && value.containsKey("info_dgvDealDetailCellDouble") && value["info_dgvDealDetailCellDouble"]["message"] == null) {
             dealDblClickData = RoBookingDealDblClick.fromJson(value["info_dgvDealDetailCellDouble"]);

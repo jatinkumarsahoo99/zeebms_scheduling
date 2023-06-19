@@ -15,8 +15,11 @@ import 'package:get/get.dart';
 import '../controllers/ro_booking_controller.dart';
 import 'deal_view.dart';
 
-class RoBookingView extends GetView<RoBookingController> {
-  const RoBookingView({Key? key}) : super(key: key);
+class RoBookingView extends StatelessWidget {
+  RoBookingView({Key? key}) : super(key: key);
+  var controller = Get.put<RoBookingController>(
+    RoBookingController(),
+  );
   @override
   Widget build(BuildContext context) {
     return GetBuilder<RoBookingController>(
@@ -472,7 +475,8 @@ class RoBookingView extends GetView<RoBookingController> {
 
                                                     // isEnabled: btn['isDisabled'],
                                                     callback: () {
-                                                      btncontroller.clearPage1();
+                                                      Get.delete<RoBookingController>();
+                                                      Get.find<HomeController>().clearPage1();
                                                     },
                                                   )
                                                 : FormButtonWrapper(

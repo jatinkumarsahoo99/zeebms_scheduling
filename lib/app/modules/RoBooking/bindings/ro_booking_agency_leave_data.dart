@@ -6,10 +6,13 @@ class RoBookingAgencyLeaveData {
   String? gstRegNoCheck;
   String? gstRegN;
   String? gstPlants;
+  List<LstGstPlants>? lstGstPlants;
   List? lstPdcList;
   List<LstDealNumber>? lstDealNumber;
   List<ExcutiveDetails>? excutiveDetails;
   List<LstExcutive>? lstExcutive;
+  String? selectedExcutiveCode;
+  String? selectedExcutiveName;
   String? zone;
   String? zoneName;
   String? zoneCode;
@@ -25,10 +28,13 @@ class RoBookingAgencyLeaveData {
       this.gstRegNoCheck,
       this.gstRegN,
       this.gstPlants,
+      this.lstGstPlants,
       this.lstPdcList,
       this.lstDealNumber,
       this.excutiveDetails,
       this.lstExcutive,
+      this.selectedExcutiveCode,
+      this.selectedExcutiveName,
       this.zone,
       this.zoneName,
       this.zoneCode,
@@ -44,6 +50,12 @@ class RoBookingAgencyLeaveData {
     gstRegNoCheck = json['gstRegNo_Check'];
     gstRegN = json['gstRegN'];
     gstPlants = json['gstPlants'];
+    if (json['lstGstPlants'] != null) {
+      lstGstPlants = <LstGstPlants>[];
+      json['lstGstPlants'].forEach((v) {
+        lstGstPlants!.add(LstGstPlants.fromJson(v));
+      });
+    }
     if (json['lstPdcList'] != null) {
       lstPdcList = <Null>[];
       json['lstPdcList'].forEach((v) {
@@ -53,22 +65,23 @@ class RoBookingAgencyLeaveData {
     if (json['lstDealNumber'] != null) {
       lstDealNumber = <LstDealNumber>[];
       json['lstDealNumber'].forEach((v) {
-        lstDealNumber!.add(new LstDealNumber.fromJson(v));
+        lstDealNumber!.add(LstDealNumber.fromJson(v));
       });
     }
-
     if (json['excutiveDetails'] != null) {
       excutiveDetails = <ExcutiveDetails>[];
       json['excutiveDetails'].forEach((v) {
-        excutiveDetails!.add(new ExcutiveDetails.fromJson(v));
+        excutiveDetails!.add(ExcutiveDetails.fromJson(v));
       });
     }
     if (json['lstExcutive'] != null) {
       lstExcutive = <LstExcutive>[];
       json['lstExcutive'].forEach((v) {
-        lstExcutive!.add(new LstExcutive.fromJson(v));
+        lstExcutive!.add(LstExcutive.fromJson(v));
       });
     }
+    selectedExcutiveCode = json['selectedExcutiveCode'];
+    selectedExcutiveName = json['selectedExcutiveName'];
     zone = json['zone'];
     zoneName = json['zoneName'];
     zoneCode = json['zoneCode'];
@@ -78,30 +91,75 @@ class RoBookingAgencyLeaveData {
   }
 
   Map<String, dynamic> toJson() {
-    final Map<String, dynamic> data = new Map<String, dynamic>();
-    data['message'] = this.message;
-    data['gstPlantID'] = this.gstPlantID;
-    data['gstRegNo'] = this.gstRegNo;
-    data['gstPlantID_Check'] = this.gstPlantIDCheck;
-    data['gstRegNo_Check'] = this.gstRegNoCheck;
-    data['gstRegN'] = this.gstRegN;
-    data['gstPlants'] = this.gstPlants;
-    if (this.lstPdcList != null) {
-      data['lstPdcList'] = this.lstPdcList!.map((v) => v).toList();
+    final Map<String, dynamic> data = <String, dynamic>{};
+    data['message'] = message;
+    data['gstPlantID'] = gstPlantID;
+    data['gstRegNo'] = gstRegNo;
+    data['gstPlantID_Check'] = gstPlantIDCheck;
+    data['gstRegNo_Check'] = gstRegNoCheck;
+    data['gstRegN'] = gstRegN;
+    data['gstPlants'] = gstPlants;
+    if (lstGstPlants != null) {
+      data['lstGstPlants'] = lstGstPlants!.map((v) => v.toJson()).toList();
     }
-    if (this.lstDealNumber != null) {
-      data['lstDealNumber'] = this.lstDealNumber!.map((v) => v.toJson()).toList();
+    if (lstPdcList != null) {
+      data['lstPdcList'] = lstPdcList!.map((v) => v).toList();
     }
-    data['excutiveDetails'] = this.excutiveDetails;
-    if (this.lstExcutive != null) {
-      data['lstExcutive'] = this.lstExcutive!.map((v) => v.toJson()).toList();
+    if (lstDealNumber != null) {
+      data['lstDealNumber'] = lstDealNumber!.map((v) => v.toJson()).toList();
     }
-    data['zone'] = this.zone;
-    data['zoneName'] = this.zoneName;
-    data['zoneCode'] = this.zoneCode;
-    data['payroute'] = this.payroute;
-    data['payRouteCode'] = this.payRouteCode;
-    data['bookingNumber'] = this.bookingNumber;
+    if (excutiveDetails != null) {
+      data['excutiveDetails'] = excutiveDetails!.map((v) => v.toJson()).toList();
+    }
+    if (lstExcutive != null) {
+      data['lstExcutive'] = lstExcutive!.map((v) => v.toJson()).toList();
+    }
+    data['selectedExcutiveCode'] = selectedExcutiveCode;
+    data['selectedExcutiveName'] = selectedExcutiveName;
+    data['zone'] = zone;
+    data['zoneName'] = zoneName;
+    data['zoneCode'] = zoneCode;
+    data['payroute'] = payroute;
+    data['payRouteCode'] = payRouteCode;
+    data['bookingNumber'] = bookingNumber;
+    return data;
+  }
+}
+
+class LstGstPlants {
+  int? plantid;
+  String? column1;
+
+  LstGstPlants({this.plantid, this.column1});
+
+  LstGstPlants.fromJson(Map<String, dynamic> json) {
+    plantid = json['plantid'];
+    column1 = json['column1'];
+  }
+
+  Map<String, dynamic> toJson() {
+    final Map<String, dynamic> data = <String, dynamic>{};
+    data['plantid'] = plantid;
+    data['column1'] = column1;
+    return data;
+  }
+}
+
+class LstDealNumber {
+  String? dealNumber;
+  String? dealNumber1;
+
+  LstDealNumber({this.dealNumber, this.dealNumber1});
+
+  LstDealNumber.fromJson(Map<String, dynamic> json) {
+    dealNumber = json['dealNumber'];
+    dealNumber1 = json['dealNumber1'];
+  }
+
+  Map<String, dynamic> toJson() {
+    final Map<String, dynamic> data = <String, dynamic>{};
+    data['dealNumber'] = dealNumber;
+    data['dealNumber1'] = dealNumber1;
     return data;
   }
 }
@@ -128,33 +186,14 @@ class ExcutiveDetails {
   }
 
   Map<String, dynamic> toJson() {
-    final Map<String, dynamic> data = new Map<String, dynamic>();
-    data['personnelCode'] = this.personnelCode;
-    data['personnelname'] = this.personnelname;
-    data['zonename'] = this.zonename;
-    data['payroutename'] = this.payroutename;
-    data['zoneshortname'] = this.zoneshortname;
-    data['zonecode'] = this.zonecode;
-    data['payRouteCode'] = this.payRouteCode;
-    return data;
-  }
-}
-
-class LstDealNumber {
-  String? dealNumber;
-  String? dealNumber2;
-
-  LstDealNumber({this.dealNumber, this.dealNumber2});
-
-  LstDealNumber.fromJson(Map<String, dynamic> json) {
-    dealNumber = json['dealNumber'];
-    dealNumber2 = json['dealNumber2'];
-  }
-
-  Map<String, dynamic> toJson() {
-    final Map<String, dynamic> data = new Map<String, dynamic>();
-    data['dealNumber'] = this.dealNumber;
-    data['dealNumber2'] = this.dealNumber2;
+    final Map<String, dynamic> data = <String, dynamic>{};
+    data['personnelCode'] = personnelCode;
+    data['personnelname'] = personnelname;
+    data['zonename'] = zonename;
+    data['payroutename'] = payroutename;
+    data['zoneshortname'] = zoneshortname;
+    data['zonecode'] = zonecode;
+    data['payRouteCode'] = payRouteCode;
     return data;
   }
 }
@@ -171,9 +210,9 @@ class LstExcutive {
   }
 
   Map<String, dynamic> toJson() {
-    final Map<String, dynamic> data = new Map<String, dynamic>();
-    data['personnelCode'] = this.personnelCode;
-    data['personnelName'] = this.personnelName;
+    final Map<String, dynamic> data = <String, dynamic>{};
+    data['personnelCode'] = personnelCode;
+    data['personnelName'] = personnelName;
     return data;
   }
 }
