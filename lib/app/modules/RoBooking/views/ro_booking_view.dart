@@ -15,8 +15,11 @@ import 'package:get/get.dart';
 import '../controllers/ro_booking_controller.dart';
 import 'deal_view.dart';
 
-class RoBookingView extends GetView<RoBookingController> {
-  const RoBookingView({Key? key}) : super(key: key);
+class RoBookingView extends StatelessWidget {
+  RoBookingView({Key? key}) : super(key: key);
+  var controller = Get.put<RoBookingController>(
+    RoBookingController(),
+  );
   @override
   Widget build(BuildContext context) {
     return GetBuilder<RoBookingController>(
@@ -38,265 +41,308 @@ class RoBookingView extends GetView<RoBookingController> {
                           padding: const EdgeInsets.all(8.0),
                           child: SizedBox(
                             width: Get.width * .84,
-                            child: Wrap(
-                              runSpacing: 5.0,
-                              spacing: Get.width * .01,
-                              crossAxisAlignment: WrapCrossAlignment.end,
-                              alignment: WrapAlignment.start,
-                              children: [
-                                DropDownField.formDropDown1WidthMap(
-                                  controller.roBookingInitData!.lstLocation!
-                                      .map((e) => DropDownValue(key: e.locationCode, value: e.locationName))
-                                      .toList(),
-                                  (value) {
-                                    controller.selectedLocation = value;
-                                    controller.getChannel(value.key);
-                                  },
-                                  "Location",
-                                  0.11,
-                                  selected: controller.selectedLocation,
-                                  isEnable: controller.bookingNoLeaveData == null,
-                                ),
-                                Obx(
-                                  () => DropDownField.formDropDown1WidthMap(
-                                    controller.channels.value,
-                                    (value) {
-                                      controller.selectedChannel = value;
-                                    },
-                                    "Channel",
-                                    0.23,
-                                    selected: controller.selectedChannel,
-                                    isEnable: controller.bookingNoLeaveData == null,
-                                  ),
-                                ),
-                                DateWithThreeTextField(
-                                  title: "FPC Eff. Dt.",
-                                  isEnable: controller.bookingNoLeaveData == null,
-                                  widthRation: 0.11,
-                                  mainTextController: controller.fpcEffectiveDateCtrl,
-                                  onFocusChange: (date) {
-                                    controller.effDtLeave();
-                                  },
-                                ),
-                                DateWithThreeTextField(
-                                  title: "Booking Date",
-                                  widthRation: 0.11,
-                                  mainTextController: controller.bookDateCtrl,
-                                  isEnable: controller.bookingNoLeaveData == null,
-                                ),
-                                InputFields.formField1(
-                                  hintTxt: "Ref No",
-                                  controller: controller.refNoCtrl,
-                                  width: 0.11,
-                                  isEnable: controller.bookingNoLeaveData == null,
-                                ),
-                                DateWithThreeTextField(
-                                  title: "Ref Date",
-                                  widthRation: 0.11,
-                                  mainTextController: controller.fpcEffectiveDateCtrl,
-                                  isEnable: controller.bookingNoLeaveData == null,
-                                ),
-                                DropDownField.formDropDown1WidthMap([], (value) => {}, "Rev Type", 0.11,
-                                    isEnable: controller.bookingNoLeaveData == null,
-                                    selected: controller.bookingNoLeaveData != null
-                                        ? DropDownValue(
-                                            key: controller.bookingNoLeaveData!.revenueType ?? "",
-                                            value: controller.bookingNoLeaveData!.revenueType ?? "")
-                                        : null),
-                                Row(
-                                  mainAxisSize: MainAxisSize.min,
-                                  mainAxisAlignment: MainAxisAlignment.center,
-                                  children: [
-                                    InputFields.formField1(
-                                      hintTxt: "Booking No",
-                                      width: 0.09,
-                                      controller: controller.bookingMonthCtrl,
-                                      isEnable: controller.bookingNoLeaveData == null,
-                                    ),
-                                    InputFields.formField1(
-                                        hintTxt: "", controller: controller.bookingNoCtrl, focusNode: controller.bookingNoFocusNode, width: 0.06),
-                                    InputFields.formField1(
-                                      hintTxt: "",
-                                      controller: controller.bookingNoTrailCtrl,
-                                      width: 0.08,
-                                      isEnable: controller.bookingNoLeaveData == null,
-                                    ),
-                                  ],
-                                ),
-                                Obx(
-                                  () => DropDownField.formDropDown1WidthMap(
-                                    controller.bookingNoLeaveData != null
-                                        ? controller.bookingNoLeaveData?.lstClientAgency
-                                                ?.map((e) => DropDownValue(value: e.clientname, key: e.clientcode))
-                                                .toList() ??
-                                            []
-                                        : controller.clients.value,
-                                    (value) {
-                                      controller.selectedClient = value;
-                                      controller.clientLeave(value.key);
-                                    },
-                                    "Client",
-                                    0.23,
-                                    selected: controller.selectedClient,
-                                    isEnable: controller.bookingNoLeaveData == null,
-                                  ),
-                                ),
-                                DropDownField.formDropDown1WidthMap(
-                                    controller.agencyLeaveData?.lstDealNumber
-                                            ?.map((e) => DropDownValue(
-                                                  key: e.dealNumber,
-                                                  value: e.dealNumber,
-                                                ))
-                                            .toList() ??
-                                        [],
-                                    (value) {
-                                      controller.selectedDeal = value;
-                                    },
-                                    "Deal No",
-                                    0.11,
-                                    onFocusChange: (value) {
-                                      if (!value) {
-                                        controller.dealNoLeave();
-                                      }
-                                    },
-                                    isEnable: controller.bookingNoLeaveData == null,
-                                    selected: controller.selectedDeal),
-                                DropDownField.formDropDown1WidthMap([], (value) => {}, "Deal Type", 0.11,
-                                    isEnable: controller.bookingNoLeaveData == null,
-                                    selected: controller.bookingNoLeaveData == null
-                                        ? null
-                                        : DropDownValue(
-                                            key: controller.bookingNoLeaveData!.dealType, value: controller.bookingNoLeaveData!.dealType)),
-                                Obx(
-                                  () => DropDownField.formDropDown1WidthMap(
-                                      controller.agencies.value, (value) => {controller.agencyLeave(value.key)}, "Agency", 0.23,
-                                      isEnable: controller.bookingNoLeaveData == null, selected: controller.selectedAgnecy),
-                                ),
-                                DropDownField.formDropDown1WidthMap([], (value) => {}, "Pay route", 0.11,
-                                    isEnable: controller.bookingNoLeaveData == null,
-                                    selected: controller.bookingNoLeaveData != null
-                                        ? DropDownValue(
-                                            key: controller.bookingNoLeaveData!.payroutecode ?? "",
-                                            value: controller.bookingNoLeaveData!.payrouteName ?? "")
-                                        : null),
-                                DropDownField.formDropDown1WidthMap([], (value) => {}, "Brand", 0.23,
-                                    isEnable: controller.bookingNoLeaveData == null,
-                                    selected: controller.bookingNoLeaveData != null
-                                        ? DropDownValue(
-                                            key: controller.bookingNoLeaveData!.lstBrand?.first.brandcode ?? "",
-                                            value: controller.bookingNoLeaveData!.lstBrand?.first.brandname ?? "")
-                                        : null),
-                                SizedBox(
-                                  width: Get.width * 0.11,
-                                  child: ElevatedButton(
-                                      onPressed: () {
-                                        var data = Rxn<List>();
-                                        Get.defaultDialog(
-                                          content: Container(
-                                            width: Get.width * 0.60,
-                                            child: Column(
-                                              children: [
-                                                Row(
-                                                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                                                  children: [
-                                                    SizedBox(),
-                                                    InputFields.formField1(
-                                                      hintTxt: "Tape ID",
-                                                      controller: TextEditingController(),
-                                                      onchanged: (tapeID) {
-                                                        if (tapeID.isNotEmpty) {
-                                                          Get.find<ConnectorControl>().GETMETHODCALL(
-                                                            api: ApiFactory.RO_BOOKING_BOOKING_SEARCH_TAPE_ID(tapeID),
-                                                            fun: (apidata) {
-                                                              if (apidata is Map &&
-                                                                  apidata.containsKey("searchTapeId") &&
-                                                                  apidata["searchTapeId"] is Map) {
-                                                                data.value = apidata["searchTapeId"]["lstSearchTapeId"];
-                                                              }
-                                                            },
-                                                          );
-                                                        }
-                                                      },
-                                                      width: 0.11,
-                                                    ),
-                                                    FormButtonWrapper(
-                                                      btnText: "Back To Booking",
-                                                      callback: () {
-                                                        Get.back();
-                                                      },
-                                                    )
-                                                  ],
-                                                ),
-                                                Container(
-                                                    height: Get.height * 0.30,
-                                                    child: Obx(() => data.value == null
-                                                        ? SizedBox()
-                                                        : DataGridShowOnlyKeys(
-                                                            mapData: data.value!,
-                                                            formatDate: false,
-                                                          )))
-                                              ],
-                                            ),
-                                          ),
-                                        );
+                            child: FocusTraversalGroup(
+                              policy: OrderedTraversalPolicy(),
+                              child: Wrap(
+                                runSpacing: 5.0,
+                                spacing: Get.width * .01,
+                                crossAxisAlignment: WrapCrossAlignment.end,
+                                alignment: WrapAlignment.start,
+                                children: [
+                                  FocusTraversalOrder(
+                                    order: NumericFocusOrder(1),
+                                    child: DropDownField.formDropDown1WidthMap(
+                                      controller.roBookingInitData!.lstLocation!
+                                          .map((e) => DropDownValue(key: e.locationCode, value: e.locationName))
+                                          .toList(),
+                                      (value) {
+                                        controller.selectedLocation = value;
+                                        controller.getChannel(value.key);
                                       },
-                                      child: Text("Search Tape")),
-                                ),
-                                DropDownField.formDropDown1WidthMap([], (value) => {}, "Pay Mode", 0.11,
-                                    isEnable: controller.bookingNoLeaveData == null,
-                                    selected: controller.bookingNoLeaveData != null
-                                        ? DropDownValue(
-                                            key: controller.bookingNoLeaveData!.payMode ?? "", value: controller.bookingNoLeaveData!.payMode ?? "")
-                                        : null),
-                                Wrap(
-                                  runAlignment: WrapAlignment.spaceBetween,
-                                  alignment: WrapAlignment.spaceEvenly,
-                                  runSpacing: 5.0,
-                                  spacing: Get.width * .01,
-                                  children: [
-                                    DropDownField.formDropDown1WidthMap(
-                                        (controller.roBookingInitData?.lstExecutives
-                                                ?.map((e) => DropDownValue(key: e.personnelCode, value: e.personnelName))
-                                                .toList()) ??
+                                      "Location",
+                                      0.11,
+                                      selected: controller.selectedLocation,
+                                      isEnable: controller.bookingNoLeaveData == null,
+                                    ),
+                                  ),
+                                  FocusTraversalOrder(
+                                    order: NumericFocusOrder(2),
+                                    child: Obx(
+                                      () => DropDownField.formDropDown1WidthMap(
+                                        controller.channels.value,
+                                        (value) {
+                                          controller.selectedChannel = value;
+                                        },
+                                        "Channel",
+                                        0.23,
+                                        selected: controller.selectedChannel,
+                                        isEnable: controller.bookingNoLeaveData == null,
+                                      ),
+                                    ),
+                                  ),
+                                  FocusTraversalOrder(
+                                    order: NumericFocusOrder(3),
+                                    child: DateWithThreeTextField(
+                                      title: "FPC Eff. Dt.",
+                                      isEnable: controller.bookingNoLeaveData == null,
+                                      widthRation: 0.11,
+                                      mainTextController: controller.fpcEffectiveDateCtrl,
+                                      onFocusChange: (date) {
+                                        controller.effDtLeave();
+                                      },
+                                    ),
+                                  ),
+                                  FocusTraversalOrder(
+                                    order: NumericFocusOrder(4),
+                                    child: DateWithThreeTextField(
+                                      title: "Booking Date",
+                                      widthRation: 0.11,
+                                      mainTextController: controller.bookDateCtrl,
+                                      isEnable: controller.bookingNoLeaveData == null,
+                                    ),
+                                  ),
+                                  FocusTraversalOrder(
+                                    order: NumericFocusOrder(6),
+                                    child: InputFields.formField1(
+                                      hintTxt: "Ref No",
+                                      controller: controller.refNoCtrl,
+                                      width: 0.11,
+                                      isEnable: controller.bookingNoLeaveData == null,
+                                    ),
+                                  ),
+                                  FocusTraversalOrder(
+                                    order: NumericFocusOrder(13),
+                                    child: DateWithThreeTextField(
+                                      title: "Ref Date",
+                                      widthRation: 0.11,
+                                      mainTextController: controller.fpcEffectiveDateCtrl,
+                                      isEnable: controller.bookingNoLeaveData == null,
+                                    ),
+                                  ),
+                                  DropDownField.formDropDown1WidthMap([], (value) => {}, "Rev Type", 0.11,
+                                      isEnable: controller.bookingNoLeaveData == null,
+                                      selected: controller.bookingNoLeaveData != null
+                                          ? DropDownValue(
+                                              key: controller.bookingNoLeaveData!.revenueType ?? "",
+                                              value: controller.bookingNoLeaveData!.revenueType ?? "")
+                                          : null),
+                                  Row(
+                                    mainAxisSize: MainAxisSize.min,
+                                    mainAxisAlignment: MainAxisAlignment.center,
+                                    children: [
+                                      InputFields.formField1(
+                                        hintTxt: "Booking No",
+                                        width: 0.09,
+                                        controller: controller.bookingMonthCtrl,
+                                        isEnable: false,
+                                      ),
+                                      FocusTraversalOrder(
+                                        order: NumericFocusOrder(5),
+                                        child: InputFields.formField1(
+                                            hintTxt: "", controller: controller.bookingNoCtrl, focusNode: controller.bookingNoFocusNode, width: 0.06),
+                                      ),
+                                      InputFields.formField1(
+                                        hintTxt: "",
+                                        controller: controller.bookingNoTrailCtrl,
+                                        width: 0.08,
+                                        isEnable: controller.bookingNoLeaveData == null,
+                                      ),
+                                    ],
+                                  ),
+                                  FocusTraversalOrder(
+                                    order: NumericFocusOrder(7),
+                                    child: Obx(
+                                      () => DropDownField.formDropDown1WidthMap(
+                                        controller.bookingNoLeaveData != null
+                                            ? controller.bookingNoLeaveData?.lstClientAgency
+                                                    ?.map((e) => DropDownValue(value: e.clientname, key: e.clientcode))
+                                                    .toList() ??
+                                                []
+                                            : controller.clients.value,
+                                        (value) {
+                                          controller.selectedClient = value;
+                                          controller.clientLeave(value.key);
+                                        },
+                                        "Client",
+                                        0.23,
+                                        selected: controller.selectedClient,
+                                        isEnable: controller.bookingNoLeaveData == null,
+                                      ),
+                                    ),
+                                  ),
+                                  FocusTraversalOrder(
+                                    order: NumericFocusOrder(9),
+                                    child: DropDownField.formDropDown1WidthMap(
+                                        controller.agencyLeaveData?.lstDealNumber
+                                                ?.map((e) => DropDownValue(
+                                                      key: e.dealNumber,
+                                                      value: e.dealNumber,
+                                                    ))
+                                                .toList() ??
                                             [],
-                                        (value) => {},
-                                        "Executive",
+                                        (value) {
+                                          controller.selectedDeal = value;
+                                        },
+                                        "Deal No",
+                                        0.11,
+                                        onFocusChange: (value) {
+                                          if (!value) {
+                                            controller.dealNoLeave();
+                                          }
+                                        },
+                                        isEnable: controller.bookingNoLeaveData == null,
+                                        selected: controller.selectedDeal),
+                                  ),
+                                  InputFields.formField1(
+                                    hintTxt: "Deal Type",
+                                    controller: TextEditingController(text: controller.bookingNoLeaveData?.dealType ?? ""),
+                                    onchanged: (value) {},
+                                    width: 0.11,
+                                  ),
+                                  FocusTraversalOrder(
+                                    order: NumericFocusOrder(8),
+                                    child: Obx(
+                                      () => DropDownField.formDropDown1WidthMap(
+                                          controller.agencies.value, (value) => {controller.agencyLeave(value.key)}, "Agency", 0.23,
+                                          isEnable: controller.bookingNoLeaveData == null, selected: controller.selectedAgnecy),
+                                    ),
+                                  ),
+                                  DropDownField.formDropDown1WidthMap([], (value) => {}, "Pay route", 0.11,
+                                      isEnable: controller.bookingNoLeaveData == null,
+                                      selected: controller.bookingNoLeaveData != null
+                                          ? DropDownValue(
+                                              key: controller.bookingNoLeaveData!.payroutecode ?? "",
+                                              value: controller.bookingNoLeaveData!.payrouteName ?? "")
+                                          : null),
+                                  FocusTraversalOrder(
+                                    order: NumericFocusOrder(10),
+                                    child: DropDownField.formDropDown1WidthMap(
+                                        controller.dealNoLeaveData?.lstBrand
+                                                ?.map((e) => DropDownValue(key: e.brandcode, value: e.brandname))
+                                                .toList() ??
+                                            [],
+                                        (value) => {controller.brandLeave(value.key)},
+                                        "Brand",
                                         0.23,
                                         isEnable: controller.bookingNoLeaveData == null,
-                                        selected: controller.selectedExecutive),
-                                    InputFields.formField1(
-                                      hintTxt: "Tot Spots",
-                                      controller: controller.totSpotCtrl,
-                                      width: 0.11,
+                                        selected: controller.bookingNoLeaveData != null
+                                            ? DropDownValue(
+                                                key: controller.bookingNoLeaveData!.lstBrand?.first.brandcode ?? "",
+                                                value: controller.bookingNoLeaveData!.lstBrand?.first.brandname ?? "")
+                                            : null),
+                                  ),
+                                  SizedBox(
+                                    width: Get.width * 0.11,
+                                    child: ElevatedButton(
+                                        onPressed: () {
+                                          var data = Rxn<List>();
+                                          Get.defaultDialog(
+                                            content: Container(
+                                              width: Get.width * 0.60,
+                                              child: Column(
+                                                children: [
+                                                  Row(
+                                                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                                    children: [
+                                                      SizedBox(),
+                                                      InputFields.formField1(
+                                                        hintTxt: "Tape ID",
+                                                        controller: TextEditingController(),
+                                                        onchanged: (tapeID) {
+                                                          if (tapeID.isNotEmpty) {
+                                                            Get.find<ConnectorControl>().GETMETHODCALL(
+                                                              api: ApiFactory.RO_BOOKING_BOOKING_SEARCH_TAPE_ID(tapeID),
+                                                              fun: (apidata) {
+                                                                if (apidata is Map &&
+                                                                    apidata.containsKey("searchTapeId") &&
+                                                                    apidata["searchTapeId"] is Map) {
+                                                                  data.value = apidata["searchTapeId"]["lstSearchTapeId"];
+                                                                }
+                                                              },
+                                                            );
+                                                          }
+                                                        },
+                                                        width: 0.11,
+                                                      ),
+                                                      FormButtonWrapper(
+                                                        btnText: "Back To Booking",
+                                                        callback: () {
+                                                          Get.back();
+                                                        },
+                                                      )
+                                                    ],
+                                                  ),
+                                                  Container(
+                                                      height: Get.height * 0.30,
+                                                      child: Obx(() => data.value == null
+                                                          ? SizedBox()
+                                                          : DataGridShowOnlyKeys(
+                                                              mapData: data.value!,
+                                                              formatDate: false,
+                                                            )))
+                                                ],
+                                              ),
+                                            ),
+                                          );
+                                        },
+                                        child: Text("Search Tape")),
+                                  ),
+                                  DropDownField.formDropDown1WidthMap([], (value) => {}, "Pay Mode", 0.11,
                                       isEnable: controller.bookingNoLeaveData == null,
-                                    ),
-                                    InputFields.formField1(
-                                      hintTxt: "Tot Dur",
-                                      controller: controller.totDurCtrl,
-                                      width: 0.11,
-                                      isEnable: controller.bookingNoLeaveData == null,
-                                    ),
-                                    InputFields.formField1(
-                                      hintTxt: "Tot Amt",
-                                      controller: controller.totAmtCtrl,
-                                      width: 0.11,
-                                      isEnable: controller.bookingNoLeaveData == null,
-                                    ),
-                                    InputFields.formField1(
-                                      hintTxt: "Zone",
-                                      controller: controller.zoneCtrl,
-                                      width: 0.11,
-                                      isEnable: controller.bookingNoLeaveData == null,
-                                    ),
-                                    InputFields.formField1(
-                                      hintTxt: "Max Spend",
-                                      controller: controller.maxspendCtrl,
-                                      width: 0.11,
-                                      isEnable: controller.bookingNoLeaveData == null,
-                                    ),
-                                  ],
-                                )
-                              ],
+                                      selected: controller.bookingNoLeaveData != null
+                                          ? DropDownValue(
+                                              key: controller.bookingNoLeaveData!.payMode ?? "", value: controller.bookingNoLeaveData!.payMode ?? "")
+                                          : null),
+                                  Wrap(
+                                    runAlignment: WrapAlignment.spaceBetween,
+                                    alignment: WrapAlignment.spaceEvenly,
+                                    runSpacing: 5.0,
+                                    spacing: Get.width * .01,
+                                    children: [
+                                      DropDownField.formDropDown1WidthMap(
+                                          (controller.roBookingInitData?.lstExecutives
+                                                  ?.map((e) => DropDownValue(key: e.personnelCode, value: e.personnelName))
+                                                  .toList()) ??
+                                              [],
+                                          (value) => {},
+                                          "Executive",
+                                          0.23,
+                                          isEnable: controller.bookingNoLeaveData == null,
+                                          selected: controller.selectedExecutive),
+                                      InputFields.formField1(
+                                        hintTxt: "Tot Spots",
+                                        controller: controller.totSpotCtrl,
+                                        width: 0.11,
+                                        isEnable: controller.bookingNoLeaveData == null,
+                                      ),
+                                      InputFields.formField1(
+                                        hintTxt: "Tot Dur",
+                                        controller: controller.totDurCtrl,
+                                        width: 0.11,
+                                        isEnable: controller.bookingNoLeaveData == null,
+                                      ),
+                                      InputFields.formField1(
+                                        hintTxt: "Tot Amt",
+                                        controller: controller.totAmtCtrl,
+                                        width: 0.11,
+                                        isEnable: controller.bookingNoLeaveData == null,
+                                      ),
+                                      InputFields.formField1(
+                                        hintTxt: "Zone",
+                                        controller: controller.zoneCtrl,
+                                        width: 0.11,
+                                        isEnable: controller.bookingNoLeaveData == null,
+                                      ),
+                                      InputFields.formField1(
+                                        hintTxt: "Max Spend",
+                                        controller: controller.maxspendCtrl,
+                                        width: 0.11,
+                                        isEnable: controller.bookingNoLeaveData == null,
+                                      ),
+                                    ],
+                                  )
+                                ],
+                              ),
                             ),
                           ),
                         ),
@@ -429,7 +475,8 @@ class RoBookingView extends GetView<RoBookingController> {
 
                                                     // isEnabled: btn['isDisabled'],
                                                     callback: () {
-                                                      btncontroller.clearPage1();
+                                                      Get.delete<RoBookingController>();
+                                                      Get.find<HomeController>().clearPage1();
                                                     },
                                                   )
                                                 : FormButtonWrapper(

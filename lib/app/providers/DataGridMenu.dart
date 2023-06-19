@@ -22,7 +22,13 @@ import 'ApiFactory.dart';
 import 'ExportData.dart';
 
 class DataGridMenu {
-  showGridMenu(PlutoGridStateManager stateManager, TapDownDetails details, BuildContext context, {String? exportFileName}) async {
+  showGridMenu(
+    PlutoGridStateManager stateManager,
+    TapDownDetails details,
+    BuildContext context, {
+    String? exportFileName,
+    List<SecondaryShowDialogModel>? extraList,
+  }) async {
     clearFilterList() {
       Get.find<MainController>().filters1[stateManager.hashCode.toString()] = RxList([]);
     }
@@ -122,103 +128,121 @@ class DataGridMenu {
           ]);
     }
 
-    var selected = await showMenu(context: context, position: RelativeRect.fromSize(details.globalPosition & Size(40, 40), Get.size), items: [
-      const PopupMenuItem<DataGridMenuItem>(
-        value: DataGridMenuItem.find,
-        height: 36,
-        enabled: true,
-        child: Text('Find', style: TextStyle(fontSize: 13)),
-      ),
-      const PopupMenuItem<DataGridMenuItem>(
-        value: DataGridMenuItem.selectedfilter,
-        height: 36,
-        enabled: true,
-        child: Text('Filter By Selection', style: TextStyle(fontSize: 13)),
-      ),
-      const PopupMenuItem<DataGridMenuItem>(
-        value: DataGridMenuItem.excludeslected,
-        height: 36,
-        enabled: true,
-        child: Text('Filter By Exclusion', style: TextStyle(fontSize: 13)),
-      ),
-      PopupMenuItem<DataGridMenuItem>(
-        value: DataGridMenuItem.removeLastFilter,
-        height: 36,
-        enabled: true,
-        child: Obx(
-          () {
-            checkStateManagerIsNew();
-            return ((Get.find<MainController>().filters1[stateManager.hashCode.toString()] ?? []).isEmpty)
-                ? Text('Remove Last Filter', style: TextStyle(fontSize: 13))
-                : PopupMenuButton<RowFilter>(
-                    child: Text(
-                      'Remove Last Filter',
-                      style: TextStyle(fontSize: 12, fontWeight: FontWeight.normal),
-                    ),
-                    // onSelected: (Filter result) {
-                    //   // setState(() { _selection = result; });
-                    // Navigator.pop(context); },
-                    itemBuilder: (BuildContext context) {
-                      var _filters = Get.find<MainController>().filters1[stateManager.hashCode.toString()]!;
-                      return <PopupMenuEntry<RowFilter>>[
-                        for (var i = 0; i < _filters.length; i++)
-                          PopupMenuItem(
-                            child: Text("[${_filters[i].field}] ${_filters[i].operator == 'equal' ? '=' : '<>'} ${_filters[i].value}"),
-                            onTap: () {
-                              _filters.removeAt(i);
-                              applyfilters(stateManager);
-                              Get.back();
-                            },
-                          )
-                      ];
-                    },
-                  );
-          },
+    var selected = await showMenu(
+      context: context,
+      position: RelativeRect.fromSize(details.globalPosition & Size(40, 40), Get.size),
+      items: [
+        const PopupMenuItem<DataGridMenuItem>(
+          value: DataGridMenuItem.find,
+          height: 36,
+          enabled: true,
+          child: Text('Find', style: TextStyle(fontSize: 13)),
         ),
-      ),
-      const PopupMenuItem<DataGridMenuItem>(
-        value: DataGridMenuItem.clearfilter,
-        height: 36,
-        enabled: true,
-        child: Text('Remove All Filters', style: TextStyle(fontSize: 13)),
-      ),
-      const PopupMenuItem<DataGridMenuItem>(
-        value: DataGridMenuItem.export,
-        height: 36,
-        enabled: true,
-        child: Text('Export To Excel', style: TextStyle(fontSize: 13)),
-      ),
-      const PopupMenuItem<DataGridMenuItem>(
-        value: DataGridMenuItem.print,
-        height: 36,
-        enabled: true,
-        child: Text('Print', style: TextStyle(fontSize: 13)),
-      ),
-      const PopupMenuItem<DataGridMenuItem>(
-        value: DataGridMenuItem.customFilter,
-        height: 36,
-        enabled: true,
-        child: Text('Custom Filter', style: TextStyle(fontSize: 13)),
-      ),
-      const PopupMenuItem<DataGridMenuItem>(
-        value: DataGridMenuItem.exportToXml,
-        height: 36,
-        enabled: true,
-        child: Text('Export To XML', style: TextStyle(fontSize: 13)),
-      ),
-      const PopupMenuItem<DataGridMenuItem>(
-        value: DataGridMenuItem.export,
-        height: 36,
-        enabled: true,
-        child: Text('Fast Export To Excel', style: TextStyle(fontSize: 13)),
-      ),
-      const PopupMenuItem<DataGridMenuItem>(
-        value: DataGridMenuItem.exportToCSv,
-        height: 36,
-        enabled: true,
-        child: Text('Export To CSV', style: TextStyle(fontSize: 13)),
-      ),
-    ]);
+        const PopupMenuItem<DataGridMenuItem>(
+          value: DataGridMenuItem.selectedfilter,
+          height: 36,
+          enabled: true,
+          child: Text('Filter By Selection', style: TextStyle(fontSize: 13)),
+        ),
+        const PopupMenuItem<DataGridMenuItem>(
+          value: DataGridMenuItem.excludeslected,
+          height: 36,
+          enabled: true,
+          child: Text('Filter By Exclusion', style: TextStyle(fontSize: 13)),
+        ),
+        PopupMenuItem<DataGridMenuItem>(
+          value: DataGridMenuItem.removeLastFilter,
+          height: 36,
+          enabled: true,
+          child: Obx(
+            () {
+              checkStateManagerIsNew();
+              return ((Get.find<MainController>().filters1[stateManager.hashCode.toString()] ?? []).isEmpty)
+                  ? Text('Remove Last Filter', style: TextStyle(fontSize: 13))
+                  : PopupMenuButton<RowFilter>(
+                      child: Text(
+                        'Remove Last Filter',
+                        style: TextStyle(fontSize: 12, fontWeight: FontWeight.normal),
+                      ),
+                      // onSelected: (Filter result) {
+                      //   // setState(() { _selection = result; });
+                      // Navigator.pop(context); },
+                      itemBuilder: (BuildContext context) {
+                        var _filters = Get.find<MainController>().filters1[stateManager.hashCode.toString()]!;
+                        return <PopupMenuEntry<RowFilter>>[
+                          for (var i = 0; i < _filters.length; i++)
+                            PopupMenuItem(
+                              child: Text("[${_filters[i].field}] ${_filters[i].operator == 'equal' ? '=' : '<>'} ${_filters[i].value}"),
+                              onTap: () {
+                                _filters.removeAt(i);
+                                applyfilters(stateManager);
+                                Get.back();
+                              },
+                            )
+                        ];
+                      },
+                    );
+            },
+          ),
+        ),
+        const PopupMenuItem<DataGridMenuItem>(
+          value: DataGridMenuItem.clearfilter,
+          height: 36,
+          enabled: true,
+          child: Text('Remove All Filters', style: TextStyle(fontSize: 13)),
+        ),
+        const PopupMenuItem<DataGridMenuItem>(
+          value: DataGridMenuItem.export,
+          height: 36,
+          enabled: true,
+          child: Text('Export To Excel', style: TextStyle(fontSize: 13)),
+        ),
+        const PopupMenuItem<DataGridMenuItem>(
+          value: DataGridMenuItem.print,
+          height: 36,
+          enabled: true,
+          child: Text('Print', style: TextStyle(fontSize: 13)),
+        ),
+        const PopupMenuItem<DataGridMenuItem>(
+          value: DataGridMenuItem.customFilter,
+          height: 36,
+          enabled: true,
+          child: Text('Custom Filter', style: TextStyle(fontSize: 13)),
+        ),
+        const PopupMenuItem<DataGridMenuItem>(
+          value: DataGridMenuItem.exportToXml,
+          height: 36,
+          enabled: true,
+          child: Text('Export To XML', style: TextStyle(fontSize: 13)),
+        ),
+        const PopupMenuItem<DataGridMenuItem>(
+          value: DataGridMenuItem.export,
+          height: 36,
+          enabled: true,
+          child: Text('Fast Export To Excel', style: TextStyle(fontSize: 13)),
+        ),
+        const PopupMenuItem<DataGridMenuItem>(
+          value: DataGridMenuItem.exportToCSv,
+          height: 36,
+          enabled: true,
+          child: Text('Export To CSV', style: TextStyle(fontSize: 13)),
+        ),
+        if (extraList != null && extraList.isNotEmpty) ...{
+          ...List.generate(
+            extraList.length,
+            (index) {
+              return PopupMenuItem<DataGridMenuItem>(
+                value: DataGridMenuItem.extraList,
+                height: 36,
+                enabled: true,
+                onTap: () => extraList[index].callback(),
+                child: Text(extraList[index].title, style: TextStyle(fontSize: 13)),
+              );
+            },
+          ).toList(),
+        }
+      ],
+    );
 
     switch (selected) {
       case DataGridMenuItem.selectedfilter:
@@ -301,7 +325,6 @@ class DataGridMenu {
         // await FileSaver.instance.saveFile("$title.csv", exported, ".csv");
         break;
       case DataGridMenuItem.exportToXml:
-        //TODO
         Get.find<ConnectorControl>().POSTMETHOD_FORMDATAWITHTYPE(
           api: ApiFactory.EXPORT_TO_XML,
           fun: (value) {
@@ -311,30 +334,6 @@ class DataGridMenu {
         );
         break;
       case DataGridMenuItem.find:
-        // ScaffoldMessenger.of(context).showSnackBar(SnackBar(
-        //     margin:
-        //         EdgeInsets.symmetric(vertical: kToolbarHeight, horizontal: 10),
-        //     duration: Duration(minutes: 10),
-        //     behavior: SnackBarBehavior.floating,
-        //     content: Container(
-        //       height: 40,
-        //       child: Row(
-        //         mainAxisAlignment: MainAxisAlignment.center,
-        //         mainAxisSize: MainAxisSize.min,
-        //         children: [
-        //           DropDownField.simpleDropDownwithWidthRatio(
-        //               stateManager.columns
-        //                   .map((e) =>
-        //                       DropDownValue(key: e.field, value: e.title))
-        //                   .toList(),
-        //               (value) {},
-        //               "Columns",
-        //               0.20,
-        //               context)
-        //         ],
-        //       ),
-        //     )));
-
         showBottomSheet(
             context: context,
             builder: (context) {
@@ -559,8 +558,7 @@ class DataGridMenu {
       case DataGridMenuItem.customFilter:
         customFilter(stateManager);
         break;
-
-      case null:
+      case DataGridMenuItem.extraList:
         break;
     }
   }
@@ -1767,5 +1765,12 @@ enum DataGridMenuItem {
   clearfilter,
   noaction,
   setPriority,
-  clearPriority
+  clearPriority,
+  extraList,
+}
+
+class SecondaryShowDialogModel {
+  String title;
+  Function callback;
+  SecondaryShowDialogModel(this.title, this.callback);
 }

@@ -2,41 +2,31 @@ import 'dart:convert';
 
 import 'package:bms_scheduling/app/controller/MainController.dart';
 import 'package:bms_scheduling/app/modules/filler/FillerDailyFPCModel.dart';
-import 'package:bms_scheduling/app/modules/filler/FillerDailyFPCModel.dart';
+import 'package:bms_scheduling/widgets/PlutoGrid/pluto_grid.dart';
+import 'package:dio/dio.dart' as dio;
 import 'package:file_picker/file_picker.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:intl/intl.dart';
-import 'package:bms_scheduling/widgets/PlutoGrid/pluto_grid.dart';
 
 import '../../../../widgets/LoadingDialog.dart';
 import '../../../../widgets/Snack.dart';
 import '../../../controller/ConnectorControl.dart';
-import '../../../controller/HomeController.dart';
 import '../../../data/DropDownValue.dart';
-import '../../../data/PermissionModel.dart';
-import '../../../data/system_envirtoment.dart';
 import '../../../providers/ApiFactory.dart';
 import '../../../providers/ExportData.dart';
 import '../../../providers/Utils.dart';
-import '../FillerDailyFPCModel.dart';
+import '../../CommonSearch/views/common_search_view.dart';
 import '../FillerSegmentModel.dart';
-import 'package:dio/dio.dart' as dio;
 
 class FillerController extends GetxController {
   var locations = <DropDownValue>[].obs;
-  var importLocations = <DropDownValue>[].obs;
   var channels = <DropDownValue>[].obs;
-  var importChannels = <DropDownValue>[].obs;
-  var captions = <DropDownValue>[].obs;
   var locationFN = FocusNode();
 
   var fillerDailyFpcList = <FillerDailyFPCModel>[].obs;
   var fillerSegmentList = <FillerSegmentModel>[].obs;
-
   RxBool isEnable = RxBool(true);
-  bool isSearchFromCaption = false;
-  bool candoFocusOnCaptionGrid = false;
 
   TextEditingController tapeId_ = TextEditingController()..text = "";
   TextEditingController segNo_ = TextEditingController()..text = "";
@@ -52,33 +42,8 @@ class FillerController extends GetxController {
   /// Radio Button
   int selectedAfter = 0;
 
-  //input controllers
-  DropDownValue? selectLocation;
-  DropDownValue? selectChannel;
   var selectCaption = Rxn<DropDownValue?>();
   PlutoGridStateManager? gridStateManager;
-
-  List<PermissionModel>? formPermissions;
-  List<PlutoRow> initRows = [];
-  List<PlutoColumn> initColumn = [];
-
-  List conflictReport = [];
-  List beams = [];
-  int? conflictDays = 4;
-  List conflictPrograms = [];
-  List<PlutoRow> beamRows = [];
-  var selectedChannels = RxList([]);
-  Map<String, dynamic> reportBody = {};
-
-  var selectedIndex = RxInt(0);
-  late PlutoGridStateManager conflictReportStateManager;
-  PlutoGridStateManager? bmsReportStateManager;
-  PlutoGridStateManager? locChanStateManager;
-  Map? initData;
-
-  List<SystemEnviroment>? channelList = [];
-  List<SystemEnviroment>? locationList = [];
-
   TextEditingController refDateContrl = TextEditingController(text: DateFormat("dd-MM-yyyy").format(DateTime.now()));
   TextEditingController programName_ = TextEditingController();
   TextEditingController date_ = TextEditingController();
@@ -97,32 +62,32 @@ class FillerController extends GetxController {
 
   DropDownValue? selectedLocation;
   DropDownValue? selectedChannel;
-
   DropDownValue? selectedImportLocation;
   DropDownValue? selectedImportChannel;
 
-  SystemEnviroment? selectedChannelEnv;
-  SystemEnviroment? selectedLocationEnv;
-  SystemEnviroment? selectedCaption;
-
   void clear() {
-    selectLocation = null;
-    selectChannel = null;
-    selectCaption.value = null;
+    locationFN.requestFocus();
+    fillerSegmentList.value = [];
+    fillerDailyFpcList.value = [];
+    selectedImportLocation = null;
+    selectedImportChannel = null;
+    selectedChannel = null;
+    selectedLocation = null;
+    date_.clear();
+
     tapeId_.clear();
     segNo_.clear();
-    fillerDailyFpcList.clear();
-    fillerSegmentList.clear();
     segDur_.clear();
     totalFiller.clear();
     totalFillerDur.text = "00:00:00:00";
     segDur_.text = "00:00:00:00";
     listData?.clear();
-    locationEnable.value = true;
-    channelEnable.value = true;
-    locationFN.requestFocus();
+    // // locationEnable.value = true;
+    // // channelEnable.value = true;
     bottomLastSelectedIdx = 0;
     topLastSelectedIdx = 0;
+    locations.refresh();
+    channels.refresh();
     clearBottonControlls();
   }
 
@@ -153,11 +118,22 @@ class FillerController extends GetxController {
       clear();
     } else if (btnName == "Save") {
       saveData();
+    } else if (btnName == "Search") {
+      Get.to(
+        SearchPage(
+          key: Key("Schedule Fillers"),
+          screenName: "Schedule Fillers",
+          appBarName: "Schedule Fillers",
+          strViewName: "vTesting",
+          isAppBarReq: true,
+        ),
+      );
     }
+    // Search
   }
 
   saveData() {
-    if (selectLocation == null) {
+    if (selectedLocation == null || selectedChannel == null) {
       LoadingDialog.showErrorDialog("Please select Location,Channel");
     } else {
       LoadingDialog.call();
@@ -165,16 +141,24 @@ class FillerController extends GetxController {
         api: ApiFactory.FILLER_SAVE_IMPORT_FILLERS,
         fun: (resp) {
           Get.back();
-          LoadingDialog.showErrorDialog(resp.toString());
+          if (resp != null && resp.toString() == "Saved Successfully!") {
+            LoadingDialog.callDataSaved(
+                msg: resp.toString(),
+                callback: () {
+                  clear();
+                });
+          } else {
+            LoadingDialog.showErrorDialog(resp.toString());
+          }
         },
         json: {
-          "locationCode": selectedImportLocation?.key.toString(),
-          "channelCode": selectedImportChannel?.key.toString(),
-          "telecastDate": DateFormat("yyyy-MM-dd").format(DateFormat("dd-MM-yyyy").parse(fillerFromDate_.text)),
-          "telecastTime": fillerDailyFpcList[topLastSelectedIdx].fpcTime,
-          "programCode": fillerDailyFpcList[topLastSelectedIdx].programCode,
-          "loggedUser": Get.find<MainController>().user?.logincode,
-          "details": fillerSegmentList.map((element) => element.toJson()).toList(),
+          "LocationCode": selectedLocation?.key.toString(),
+          "ChannelCode": selectedChannel?.key.toString(),
+          "TelecastDate": DateFormat("yyyy-MM-dd").format(DateFormat("dd-MM-yyyy").parse(date_.text)),
+          "TelecastTime": fillerDailyFpcList[topLastSelectedIdx].fpcTime,
+          "ProgramCode": fillerDailyFpcList[topLastSelectedIdx].programCode,
+          // "loggedUser": Get.find<MainController>().user?.logincode,
+          "Details": fillerSegmentList.map((element) => element.toJson(fromSave: true)).toList(),
         },
       );
     }
@@ -226,7 +210,7 @@ class FillerController extends GetxController {
           importedFile.value!.bytes!.toList(),
           filename: importedFile.value!.name,
         ),
-        "TelecastDate": DateFormat("dd/MM/yyyy").format(DateFormat("dd-MM-yyyy").parse(date_.text)), //05 / 31 / 2023,
+        "TelecastDate": DateFormat("yyyy-MM-dd").format(DateFormat("dd-MM-yyyy").parse(date_.text)), //05 / 31 / 2023,
       },
     );
 
@@ -235,22 +219,32 @@ class FillerController extends GetxController {
         json: formData,
         fun: (value) {
           Get.back();
-          try {
-            ExportData().exportFilefromByte(base64Decode(value), importedFile.value!.name);
-          } catch (e) {
-            LoadingDialog.callErrorMessage1(msg: "Failed To Import File");
+          if (value != null && value.toString().contains("recognized")) {
+            LoadingDialog.showErrorDialog(value.toString());
+          } else {
+            try {
+              ExportData().exportFilefromByte(base64Decode(value), importedFile.value!.name);
+            } catch (e) {
+              LoadingDialog.callErrorMessage1(msg: "Failed To Import File");
+            }
           }
         });
   }
 
   pickFile() async {
-    FilePickerResult? result = await FilePicker.platform.pickFiles();
-    if (result != null && result.files.single != null) {
-      importedFile.value = result.files.single;
-      fileController.text = result.files.single.name;
-      importfile();
+    if (selectedLocation == null) {
+      Snack.callError("Please select location");
+    } else if (selectedChannel == null) {
+      Snack.callError("Please select location");
     } else {
-      // User canceled the pic5ker
+      FilePickerResult? result = await FilePicker.platform.pickFiles();
+      if (result != null && result.files.single != null) {
+        importedFile.value = result.files.single;
+        fileController.text = result.files.single.name;
+        importfile();
+      } else {
+        // User canceled the pic5ker
+      }
     }
   }
 
@@ -292,33 +286,39 @@ class FillerController extends GetxController {
   }
 
   getFillerValuesByImportFillersWithTapeCode() {
-    var jsonRequest = {
-      "LocationCode": selectedImportLocation?.key.toString(),
-      "ChannelCode": selectedImportChannel?.key.toString(),
-      "ImportFromDate": DateFormat("dd/MM/yyyy").format(DateFormat("dd-MM-yyyy").parse(fillerFromDate_.text)),
-      "ImportToDate": DateFormat("dd/MM/yyyy").format(DateFormat("dd-MM-yyyy").parse(fillerToDate_.text)),
-      "TelecastTime": fromTime_.text,
-      "ImportTime": toTime_.text,
-    };
-    LoadingDialog.call();
-    Get.find<ConnectorControl>().POSTMETHOD(
-      api: ApiFactory.FILLER_IMPORT_FILLERS,
-      fun: (dynamic data) {
-        Get.back();
-        if (data.toString() == "Saved Successfully!") {
-          LoadingDialog.callDataSaved(
-              msg: data.toString(),
-              callback: () {
-                Get.back();
-                Get.back();
-                Get.back();
-              });
-        } else {
-          LoadingDialog.showErrorDialog(data.toString());
-        }
-      },
-      json: jsonRequest,
-    );
+    if (selectedImportLocation == null) {
+      Snack.callError("Please select location");
+    } else if (selectedImportChannel == null) {
+      Snack.callError("Please select channel");
+    } else {
+      var jsonRequest = {
+        "LocationCode": selectedImportLocation?.key.toString(),
+        "ChannelCode": selectedImportChannel?.key.toString(),
+        "ImportFromDate": DateFormat("yyyy-MM-ddT00:00:00").format(DateFormat("dd-MM-yyyy").parse(fillerFromDate_.text)),
+        "ImportToDate": DateFormat("yyyy-MM-ddT00:00:00").format(DateFormat("dd-MM-yyyy").parse(fillerToDate_.text)),
+        "TelecastTime": fromTime_.text,
+        "ImportTime": toTime_.text,
+      };
+      LoadingDialog.call();
+      Get.find<ConnectorControl>().POSTMETHOD(
+        api: ApiFactory.FILLER_IMPORT_FILLERS,
+        fun: (dynamic data) {
+          Get.back();
+          if (data.toString() == "Saved Successfully!") {
+            LoadingDialog.callDataSaved(
+                msg: data.toString(),
+                callback: () {
+                  Get.back();
+                  Get.back();
+                  Get.back();
+                });
+          } else {
+            LoadingDialog.showErrorDialog(data.toString());
+          }
+        },
+        json: jsonRequest,
+      );
+    }
   }
 
   fetchFPCDetails() {
@@ -351,10 +351,11 @@ class FillerController extends GetxController {
     if (selectedLocation == null) {
       Snack.callError("Please select location");
     } else if (selectedChannel == null) {
-      Snack.callError("Please select location");
+      Snack.callError("Please select channel");
     } else if (selectedDate == null) {
       Snack.callError("Please select date");
     } else {
+      clearBottonControlls();
       LoadingDialog.call();
       selectedDate = df1.parse(date_.text);
       Get.find<ConnectorControl>().GETMETHODCALL(
@@ -418,6 +419,8 @@ class FillerController extends GetxController {
     try {
       var tempMode = FillerSegmentModel(
         segNo: null,
+        seq: null,
+        ponumber: null,
         brkNo: (fillerSegmentList[bottomLastSelectedIdx].segNo == null)
             ? fillerSegmentList[bottomLastSelectedIdx].brkNo
             : fillerSegmentList[bottomLastSelectedIdx].segNo,

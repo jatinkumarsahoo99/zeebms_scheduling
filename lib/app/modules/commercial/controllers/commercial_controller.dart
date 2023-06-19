@@ -1,30 +1,24 @@
 import 'dart:convert';
-import 'dart:developer';
-import 'package:bms_scheduling/app/providers/extensions/string_extensions.dart';
+
+import 'package:bms_scheduling/widgets/PlutoGrid/pluto_grid.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:intl/intl.dart';
-import 'package:bms_scheduling/widgets/PlutoGrid/pluto_grid.dart';
+
 import '../../../../widgets/LoadingDialog.dart';
 import '../../../../widgets/Snack.dart';
 import '../../../controller/ConnectorControl.dart';
 import '../../../controller/HomeController.dart';
-import '../../../controller/MainController.dart';
 import '../../../data/DropDownValue.dart';
-import '../../../data/PermissionModel.dart';
-import '../../../data/system_envirtoment.dart';
 import '../../../providers/ApiFactory.dart';
-import '../../../providers/DataGridMenu.dart';
-import '../../../providers/SizeDefine.dart';
 import '../../../providers/Utils.dart';
-import '../../../routes/app_pages.dart';
 import '../CommercialProgramModel.dart';
 import '../CommercialShowOnTabModel.dart';
 
 class CommercialController extends GetxController {
   /// Radio Button
-  int? tabIndex = 0;
-  int selectIndex = 0;
+  // int? tabIndex = 0;
+  // int selectIndex = 0;
   int? selectedDDIndex;
 
   int selectedGroup = 0;
@@ -40,8 +34,8 @@ class CommercialController extends GetxController {
   var selectedIndex = RxInt(0);
   RxBool isEnable = RxBool(true);
   var channelEnable = RxBool(true);
-  var locationEnable = RxBool(true);
-  var selectedChannels = RxList([]);
+  // var locationEnable = RxBool(true);
+  // var selectedChannels = RxList([]);
   var commercialSpots = RxString("");
   var commercialDuration = RxString("");
   int lastProgramSelectedIdx = 0;
@@ -57,26 +51,26 @@ class CommercialController extends GetxController {
   DateFormat dfFinal = DateFormat("yyyy-MM-ddThh:mm:ss");
   PlutoGridStateManager? sm;
 
-  List beams = [];
-  List<PlutoRow> beamRows = [];
-  List<PlutoRow> initRows = [];
-  List<PlutoColumn> initColumn = [];
-  List<PermissionModel>? formPermissions;
+  // List beams = [];
+  // List<PlutoRow> beamRows = [];
+  // List<PlutoRow> initRows = [];
+  // List<PlutoColumn> initColumn = [];
+  // List<PermissionModel>? formPermissions;
   List<CommercialProgramModel>? commercialProgramList = [];
   RxList<CommercialShowOnTabModel>? showCommercialDetailsList = <CommercialShowOnTabModel>[].obs;
   RxList<CommercialShowOnTabModel>? mainCommercialShowDetailsList = <CommercialShowOnTabModel>[].obs;
 
   /////////////Pluto Grid////////////
-  PlutoGridStateManager? stateManager;
+  // PlutoGridStateManager? stateManager;
   PlutoGridStateManager? gridStateManager;
-  PlutoGridStateManager? locChanStateManager;
-  PlutoGridStateManager? bmsReportStateManager;
+  // PlutoGridStateManager? locChanStateManager;
+  // PlutoGridStateManager? bmsReportStateManager;
   PlutoGridMode selectedTabPlutoGridMode = PlutoGridMode.select;
   PlutoGridMode selectedProgramPlutoGridMode = PlutoGridMode.selectWithOneTap;
   late PlutoGridStateManager conflictReportStateManager;
 
-  List<SystemEnviroment>? channelList = [];
-  List<SystemEnviroment>? locationList = [];
+  // List<SystemEnviroment>? channelList = [];
+  // List<SystemEnviroment>? locationList = [];
 
   CommercialProgramModel? selectedProgram;
   CommercialShowOnTabModel? selectedShowOnTab;
@@ -92,6 +86,14 @@ class CommercialController extends GetxController {
 
   var locationFN = FocusNode();
   void clear() {
+    exportTapeCodeSelected = null;
+    pDailyFPCSelected = null;
+    selectedIndex.value = 0;
+    isEnable.value = true;
+    programCodeSelected = null;
+    selectedDDIndex = null;
+    lastProgramSelectedIdx = 0;
+    canshowFilterList = false;
     autoShuffle = false;
     insertAfter.value = true;
     programFpcTimeSelected = null;
@@ -106,7 +108,6 @@ class CommercialController extends GetxController {
     commercialProgramList?.clear();
     mainCommercialShowDetailsList?.clear();
     showCommercialDetailsList?.clear();
-
     date_.text = "";
     selectedChannel = null;
     selectedLocation = null;
@@ -117,13 +118,14 @@ class CommercialController extends GetxController {
     mainCommercialShowDetailsList?.clear();
     showCommercialDetailsList?.clear();
 
-    locationEnable.value = true;
+    // locationEnable.value = true;
     channelEnable.value = true;
     update(["initData"]);
     update(["programTable"]);
     update(["schedulingTable"]);
     update(["fpcMismatchTable"]);
     update(["misMatchTable"]);
+    locationFN.requestFocus();
   }
 
   getLocations() {
@@ -138,10 +140,12 @@ class CommercialController extends GetxController {
   }
 
   getChannel(locationCode) {
+    LoadingDialog.call();
     try {
       Get.find<ConnectorControl>().GETMETHODCALL(
           api: ApiFactory.COMMERCIAL_CHANNEL(locationCode),
           fun: (data) {
+            Get.back();
             if (data["locationSelect"] is List) {
               channels.value = (data["locationSelect"] as List).map((e) => DropDownValue(key: e["channelCode"], value: e["channelName"])).toList();
             } else {
@@ -154,7 +158,7 @@ class CommercialController extends GetxController {
   }
 
   fetchSchedulingDetails() {
-    print("Selected Channel is : ${selectedChannel?.key ?? ""}");
+    // print("Selected Channel is : ${selectedChannel?.key ?? ""}");
     if (selectedLocation == null) {
       Snack.callError("Please select location");
     } else if (selectedChannel == null) {
@@ -167,7 +171,18 @@ class CommercialController extends GetxController {
       Get.find<ConnectorControl>().GETMETHODCALL(
           api: ApiFactory.COMMERCIAL_SHOW_FPC_SCHEDULLING_DETAILS(selectedLocation?.key ?? "", selectedChannel?.key ?? "", df1.format(selectedDate!)),
           fun: (dynamic list) {
-            print("Json response is>>>" + jsonEncode(list));
+            var map = {};
+            map["loc"] = selectedLocation;
+            map["ch"] = selectedChannel;
+            map["date"] = date_.text;
+            map["auto"] = autoShuffle;
+            clear();
+            selectedLocation = map['loc'];
+            selectedChannel = map['ch'];
+            date_.text = map['date'];
+            autoShuffle = map['auto'];
+
+            // print("Json response is>>>" + jsonEncode(list));
 
             commercialProgramList?.clear();
             list['showDetails']["lstDailyFPC"].forEach((element) {
@@ -187,7 +202,9 @@ class CommercialController extends GetxController {
 
             double intTotalDuration = 0;
             for (int i = 0; i <= cList.length - 1; i++) {
-              intTotalDuration = intTotalDuration + Utils.oldBMSConvertToSecondsValue(value: cList[i].duration!);
+              if ((cList[i].eventType?.trim()) == "C") {
+                intTotalDuration = intTotalDuration + Utils.oldBMSConvertToSecondsValue(value: cList[i].duration!);
+              }
             }
             commercialDuration.value = Utils.convertToTimeFromDouble(value: intTotalDuration);
             print("commercialDuration value is : ${commercialDuration.value}");
@@ -238,18 +255,28 @@ class CommercialController extends GetxController {
     } else {
       /// SCHEDULING
       showCommercialDetailsList?.value = mainCommercialShowDetailsList!.where((o) => o.bStatus.toString() == 'B').toList();
-      commercialSpots.value = showCommercialDetailsList?.value.where((element) => element.eventType == "E").toList().length.toString() ?? "";
-      // commercialDuration
-      double intTotalDuration = 0;
-      for (int i = 0; i < (showCommercialDetailsList?.length ?? 0); i++) {
-        intTotalDuration = intTotalDuration + Utils.oldBMSConvertToSecondsValue(value: showCommercialDetailsList![i].duration!);
-      }
-      commercialDuration.value = Utils.convertToTimeFromDouble(value: intTotalDuration);
+      calculateSpotAndDuration();
     }
     showCommercialDetailsList?.refresh();
     updateTab();
     return showCommercialDetailsList?.value;
   }
+
+  void calculateSpotAndDuration() {
+    commercialSpots.value = showCommercialDetailsList?.where((element) => element.eventType?.trim() == "C").toList().length.toString() ?? "0";
+    // commercialDuration
+    double intTotalDuration = 0;
+    for (int i = 0; i < (showCommercialDetailsList?.length ?? 0); i++) {
+      if (showCommercialDetailsList?[i].eventType?.trim() == "C") {
+        intTotalDuration = intTotalDuration + Utils.oldBMSConvertToSecondsValue(value: showCommercialDetailsList![i].duration!);
+      }
+    }
+    commercialDuration.value = Utils.convertToTimeFromDouble(value: intTotalDuration);
+    // commercialSpots.refresh();
+    // commercialDuration.refresh();
+  }
+
+  bool canshowFilterList = false;
 
   Future<dynamic> showSelectedProgramList(BuildContext context) async {
     if (selectedIndex.value == 1) {
@@ -268,6 +295,7 @@ class CommercialController extends GetxController {
     showCommercialDetailsList?.refresh();
     print(programFpcTimeSelected.toString());
     updateTab();
+    calculateSpotAndDuration();
     return showCommercialDetailsList?.value;
   }
 
@@ -277,6 +305,9 @@ class CommercialController extends GetxController {
     if (fpcMisMatchSM?.currentRowIdx == null || fpcMisMatchSM?.currentRowIdx == null) {
       LoadingDialog.showErrorDialog("Please select row first");
     } else if ((fpcMisMatchSM!.currentSelectingRows.isEmpty)) {
+      if (fpcMisMatchSM?.currentRowIdx == null) {
+        print("got null");
+      }
       for (var i = 0; i < mainCommercialShowDetailsList!.length; i++) {
         if (mainCommercialShowDetailsList![i].bStatus == "F" &&
             (showCommercialDetailsList![fpcMisMatchSM!.currentRowIdx!].rownumber) == mainCommercialShowDetailsList![i].rownumber) {
@@ -330,7 +361,7 @@ class CommercialController extends GetxController {
     //   force: true,
     //   notify: true,
     // );
-    fpcMisMatchSM?.setCurrentCell(fpcMisMatchSM!.getRowByIdx(mainSelectedIndex)!.cells['fpcTime']!, mainSelectedIndex);
+    fpcMisMatchSM?.setCurrentCell(fpcMisMatchSM?.getRowByIdx(mainSelectedIndex)?.cells['fpcTime'], mainSelectedIndex);
 
     /// BStatus == "B" &&
     /// FPCTime == programFpcTimeSelected &&

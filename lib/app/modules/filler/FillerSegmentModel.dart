@@ -1,8 +1,8 @@
 class FillerSegmentModel {
-  int? segNo;
-  int? seq;
-  int? brkNo;
-  int? ponumber;
+  num? segNo;
+  num? seq;
+  num? brkNo;
+  num? ponumber;
   String? brktype;
   String? fillerCode;
   String? tapeID;
@@ -39,19 +39,33 @@ class FillerSegmentModel {
     segDur = (json['segDur'] ?? "").toString();
   }
 
-  Map<String, dynamic> toJson() {
+  Map<String, dynamic> toJson({bool fromSave = false}) {
     final Map<String, dynamic> data = <String, dynamic>{};
-    data['segNo'] = this.segNo;
-    data['seq'] = this.seq;
-    data['brkNo'] = this.brkNo;
-    data['ponumber'] = this.ponumber;
-    data['brktype'] = this.brktype;
-    data['fillerCode'] = this.fillerCode;
-    data['tapeID'] = this.tapeID;
-    data['allowMove'] = this.allowMove;
-    data['segmentCaption'] = this.segmentCaption;
-    data['som'] = this.som;
-    data['segDur'] = this.segDur;
+    if (fromSave) {
+      data['fillerCode'] = fillerCode;
+      data['brktype'] = brktype;
+      data['brkNo'] = (brkNo ?? "").toString();
+      data['segmentCaption'] = segmentCaption;
+      // data['segNo'] = this.segNo;
+      // data['seq'] = this.seq;
+      // data['ponumber'] = this.ponumber;
+      // data['tapeID'] = this.tapeID;
+      // data['allowMove'] = this.allowMove;
+      // data['som'] = this.som;
+      // data['segDur'] = this.segDur;
+    } else {
+      data['segNo'] = segNo ?? "";
+      data['seq'] = seq ?? "";
+      data['brkNo'] = brkNo ?? "";
+      data['ponumber'] = ponumber ?? "";
+      data['brktype'] = brktype;
+      data['fillerCode'] = fillerCode;
+      data['tapeID'] = tapeID;
+      data['allowMove'] = allowMove;
+      data['segmentCaption'] = segmentCaption;
+      data['som'] = som;
+      data['segDur'] = segDur;
+    }
     return data;
   }
 }

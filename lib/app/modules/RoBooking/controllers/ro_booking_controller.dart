@@ -17,6 +17,7 @@ import 'package:bms_scheduling/app/providers/ApiFactory.dart';
 import 'package:bms_scheduling/app/providers/extensions/string_extensions.dart';
 import 'package:bms_scheduling/widgets/LoadingDialog.dart';
 import 'package:bms_scheduling/widgets/PlutoGrid/pluto_grid.dart';
+import 'package:bms_scheduling/widgets/dropdown.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
@@ -62,6 +63,7 @@ class RoBookingController extends GetxController {
   DropDownValue? selectedPosition;
   DropDownValue? selectedExecutive;
   DropDownValue? selectedBreak;
+  DropDownValue? selectedGST;
 
   var channels = RxList<DropDownValue>();
   var clients = RxList<DropDownValue>();
@@ -147,6 +149,26 @@ class RoBookingController extends GetxController {
         });
   }
 
+  brandLeave(brandCode) {
+    Get.find<ConnectorControl>().POSTMETHOD(
+        api: ApiFactory.RO_BOOKING_BRAND_LEAVE,
+        json: {
+          "dealNo": selectedDeal?.key,
+          "clientcode": selectedClient?.key,
+          "effectivedate": fpcEffectiveDateCtrl.text.fromdMyToyMd(),
+          "agencycode": selectedAgnecy?.key,
+          "brandcode": brandCode,
+          "locationCode": selectedLocation?.key,
+          "channelCode": selectedChannel?.key,
+          "brandCode": brandCode,
+          "activityMonth": bookingMonthCtrl.text,
+          "accountCode": bookingNoLeaveData?.accountCode ?? "",
+          "subRevenueTypeCode": dealNoLeaveData?.strRevenueTypeCode,
+          "revenueType": dealNoLeaveData?.strRevenueTypeCode
+        },
+        fun: (value) {});
+  }
+
   agencyLeave(agencyCode) {
     Get.find<ConnectorControl>().POSTMETHOD(
         api: ApiFactory.RO_BOOKING_OnAgencyLeave,
@@ -175,6 +197,23 @@ class RoBookingController extends GetxController {
             selectedExecutive = DropDownValue(
                 key: agencyLeaveData?.excutiveDetails?.first.personnelCode ?? "", value: agencyLeaveData?.excutiveDetails?.first.personnelname);
             update(["init"]);
+            Get.defaultDialog(
+                title: "GST Plant",
+                content: SizedBox(
+                  height: Get.height / 4,
+                  width: Get.width / 4,
+                  child: Column(
+                    children: [
+                      DropDownField.formDropDown1WidthMap(
+                        agencyLeaveData?.lstGstPlants?.map((e) => DropDownValue(key: e.plantid?.toString(), value: e.column1)).toList(),
+                        (value) => {},
+                        "Rev Type",
+                        0.11,
+                        selected: selectedGST,
+                      )
+                    ],
+                  ),
+                ));
           }
           // if (data is Map && data.containsKey("info_ClientList") && data["info_ClientList"] is List) {
           //   List<DropDownValue> _agencies = [];
@@ -231,14 +270,26 @@ class RoBookingController extends GetxController {
         fun: (response) {});
   }
 
-  tapIdLeave(exportCode) {
-    Get.find<ConnectorControl>().GETMETHODCALL(
-        api: ApiFactory.RO_BOOKING_SearchTapeIdLeave(exportCode),
+  tapIdLeave(selectedvalue) {
+    Get.find<ConnectorControl>().POSTMETHOD(
+        api: ApiFactory.RO_BOOKING_cboTapeIdLeave,
+        json: {"cboTapeIdSelectedValue": selectedvalue, "lstTapeDetails": [], "rate": dealDblClickData?.rate},
         fun: (response) {
           if (response is Map && response.containsKey("info_SearchTapeId")) {
             bookingTapeSearchData = RoBookingTapeSearchData.fromJson(response["info_SearchTapeId"]);
             update(["programView"]);
           }
+        });
+  }
+
+  tapeIdSearch(exportCode) {
+    Get.find<ConnectorControl>().GETMETHODCALL(
+        api: ApiFactory.RO_BOOKING_SearchTapeIdLeave(exportCode),
+        fun: (response) {
+          // if (response is Map && response.containsKey("info_SearchTapeId")) {
+          //   bookingTapeSearchData = RoBookingTapeSearchData.fromJson(response["info_SearchTapeId"]);
+          //   update(["programView"]);
+          // }
         });
   }
 
@@ -254,6 +305,8 @@ class RoBookingController extends GetxController {
         fun: (response) {
           if (response is Map && response.containsKey("info_LeaveDealNumber")) {
             dealNoLeaveData = RoBookingDealNoLeave.fromJson(response["info_LeaveDealNumber"]);
+
+            update(["init"]);
           }
         });
   }
@@ -282,51 +335,46 @@ class RoBookingController extends GetxController {
   //         "Spots": intSpots,
   //         "TapeId": selectedTapeID!.key,
   //         "SegNo": selectedSeg!.key,
-  //         "Duration": int.parse(txtDuration.Text) * intSpots,
+  //         "Duration": (bookingTapeSearchData?.lstSearchTapeId?.first.commercialDuration??1) * intSpots,
   //         "PreMid": selectedPremid!.key,
   //         "BreakNo": selectedBreak!.key,
   //         "PositionNo": selectedPosition!.key,
-  //         "Total": txtTotal.Text,
-  //         "TotalSpots": int.parse(txtTotal.Text) * intSpots,
+  //         "Total": 1,
+  //         "TotalSpots": 1* intSpots,
   //         "DealNo": selectedDeal!.key,
   //         "DealRowNo": rowIdx,
   //         "EmptyField": "",
   //         "Field": "0-0",
-  //         "Caption": txtCaption.Text,
+  //         "Caption": bookingTapeSearchData?.lstSearchTapeId?.first.commercialCaption,
   //         "ProgramCode": strProgramCode,
   //         "PreMidValue": selectedPremid!.value,
   //         "PositionNoValue": selectedPosition!.value
   //       });
   //     }
   //   }
-  //   dgvSpots[0] = dtSpotsData;
-
-  //   // Hiding columns from Programcode onwards
-  //   for (int j = 18; j <= 20; j++) {
-  //     dgvSpots[0][j]["Visible"] = false;
-  //   }
+  //   dtSpotsData;
 
   //   // Updating Deal Grid and DT
-  //   for (int i = 0; i < dtDealDetails[0].length; i++) {
-  //     if (int.parse(dtDealDetails[0][i]["recordnumber"]) == rowIdx &&
-  //         dtDealDetails[0][i]["locationname"] == selectedLocation!.value &&
-  //         dtDealDetails[0][i]["channelname"] == selectedChannel!.value &&
-  //         dtD ealDetails[0][i]["dealnumber"] == selectedDeal!.key) {
-  //       if (strAccountCode != "I000100010" && strAccountCode != "I000100005" && strAccountCode != "I000100004" && strAccountCode != "I000100013") {
+  //   for (int i = 0; i < dtDealDetails.length; i++) {
+  //     if (int.parse(dtDealDetails[i]["recordnumber"]) == rowIdx &&
+  //         dtDealDetails[i]["locationname"] == selectedLocation!.value &&
+  //         dtDealDetails[i]["channelname"] == selectedChannel!.value &&
+  //         dtDealDetails[i]["dealnumber"] == selectedDeal!.key) {
+  //       if (bookingNoLeaveData?.accountCode != "I000100010" && bookingNoLeaveData?.accountCode != "I000100005" && bookingNoLeaveData?.accountCode != "I000100004" && bookingNoLeaveData?.accountCode != "I000100013") {
   //         dtDealDetails[0][i]["bookedseconds"] =
-  //             int.parse(dtDealDetails[0][i]["bookedseconds"]) + (int.parse(txtDuration.Text) * intTotalBookedSpots);
-  //       } else if (strAccountCode == "I000100010" && int.parse(intSubRevenueTypeCode) == 9) {
-  //         dtDealDetails[0][i]["bookedseconds"] =
-  //             int.parse(dtDealDetails[0][i]["bookedseconds"]) + (int.parse(txtDuration.Text) * intTotalBookedSpots);
+  //             int.parse(dtDealDetails[0][i]["bookedseconds"]) + (bookingTapeSearchData?.lstSearchTapeId?.first.commercialDuration??1 * intTotalBookedSpots);
+  //       } else if (bookingNoLeaveData?.accountCode == "I000100010" && int.parse(intSubRevenueTypeCode) == 9) {
+  //         dtDealDetails[i]["bookedseconds"] =
+  //             int.parse(dtDealDetails[i]["bookedseconds"]) + (int.parse(txtDuration.Text) * intTotalBookedSpots);
   //       } else {
-  //         dtDealDetails[0][i]["bookedseconds"] = int.parse(dtDealDetails[0][i]["bookedseconds"]) + intTotalBookedSpots;
+  //         dtDealDetails[i]["bookedseconds"] = int.parse(dtDealDetails[i]["bookedseconds"]) + intTotalBookedSpots;
   //       }
 
-  //       dtDealDetails[0][i]["balanceseconds"] = int.parse(dtDealDetails[0][i]["seconds"]) - int.parse(dtDealDetails[0][i]["bookedseconds"]);
-  //       BalanceSeconds = dtDealDetails[0][i]["balanceseconds"];
-  //       dtDealDetails[0].acceptChanges();
-  //       dgvDealDetail[0] = dtDealDetails;
-  //       hideDealGridCols();
+  //       dtDealDetails[i]["balanceseconds"] = int.parse(dtDealDetails[i]["seconds"]) - int.parse(dtDealDetails[i]["bookedseconds"]);
+  //       // BalanceSeconds = dtDealDetails[i]["balanceseconds"];
+  //       // dtDealDetails[0].acceptChanges();
+  //       // dgvDealDetail[0] = dtDealDetails;
+  //       // hideDealGridCols();
   //       break;
   //     }
   //   }
@@ -411,25 +459,60 @@ class RoBookingController extends GetxController {
     Get.find<ConnectorControl>().POSTMETHOD(
         api: ApiFactory.RO_BOOKING_DEAL_DOUBLE_CLICK,
         json: {
-          "locationCode": selectedLocation!.key,
-          "channelCode": selectedChannel!.key,
-          "brandCode": bookingNoLeaveData!.brandcode,
-          "zone": bookingNoLeaveData!.zone,
-          "executiveCode": bookingNoLeaveData!.executiveCode,
-          "payroute": bookingNoLeaveData!.payrouteName,
-          "dealNo": bookingNoLeaveData!.dealno,
-          "revenueType": bookingNoLeaveData!.revenueType,
-          "effectiveDate": bookingNoLeaveData!.bookingEffectiveDate,
-          "zoneCode": bookingNoLeaveData!.zonecode,
-          "tapeId": "",
-          "duration": bookingNoLeaveData!.totalDuration,
           "dgvDealDetail_RowIndex": rowId,
           "dgvDealDetail_ColumnIndex": colId,
-          "previousBookedAmount": bookingNoLeaveData!.previousBookedAmount,
-          "previousValAmount": bookingNoLeaveData!.previousValAmount,
-          "lstdgvDealDetails": bookingNoLeaveData!.lstdgvDealDetails!.map((e) => e.toJson()).toList(),
-          "lstSpots": bookingNoLeaveData!.lstSpots!.map((e) => e.toJson()).toList(),
+          "previousBookedAmount": bookingNoLeaveData?.previousBookedAmount,
+          "previousValAmount": bookingNoLeaveData?.previousValAmount,
+          "channelCode": bookingNoLeaveData?.channelcode,
+          "lstdgvDealDetails": bookingNoLeaveData?.lstdgvDealDetails?.map((e) => e.toJson()).toList(),
+          "lstSpots": bookingNoLeaveData?.lstSpots?.map((e) => e.toJson()).toList(),
+          "brandCode": bookingNoLeaveData?.brandcode,
+          "zone": bookingNoLeaveData?.zone,
+          "executiveCode": bookingNoLeaveData?.executiveCode,
+          "payroute": bookingNoLeaveData?.payrouteName,
+          "dealNo": bookingNoLeaveData?.dealno,
+          "locationCode": bookingNoLeaveData?.locationCode,
+          "revenueType": bookingNoLeaveData?.revenueType,
+          "effectiveDate": bookingNoLeaveData?.bookingEffectiveDate,
+          "zoneCode": bookingNoLeaveData?.zonecode,
+          "tapeId": "",
+          "duration": bookingNoLeaveData?.totalDuration,
+          "intEditMode": bookingNoLeaveData?.intEditMode,
+          "brandRequest": {
+            "dealNo": bookingNoLeaveData?.dealno,
+            "clientcode": bookingNoLeaveData?.clientcode,
+            "effectivedate": bookingNoLeaveData?.bookingEffectiveDate,
+            "agencycode": bookingNoLeaveData?.agencycode,
+            "brandcode": bookingNoLeaveData?.brandcode,
+            "locationCode": bookingNoLeaveData?.locationCode,
+            "channelCode": bookingNoLeaveData?.channelcode,
+            "activityMonth": bookingMonthCtrl.text,
+            "accountCode": bookingNoLeaveData?.accountCode,
+            "subRevenueTypeCode": bookingNoLeaveData?.revenueType,
+            "revenueType": bookingNoLeaveData?.revenueType
+          }
         },
+
+        //  {
+        //   "locationCode": selectedLocation!.key,
+        //   "channelCode": selectedChannel!.key,
+        //   "brandCode": bookingNoLeaveData!.brandcode,
+        //   "zone": bookingNoLeaveData!.zone,
+        //   "executiveCode": bookingNoLeaveData!.executiveCode,
+        //   "payroute": bookingNoLeaveData!.payrouteName,
+        //   "dealNo": bookingNoLeaveData!.dealno,
+        //   "revenueType": bookingNoLeaveData!.revenueType,
+        //   "effectiveDate": bookingNoLeaveData!.bookingEffectiveDate,
+        //   "zoneCode": bookingNoLeaveData!.zonecode,
+        //   "tapeId": "",
+        //   "duration": bookingNoLeaveData!.totalDuration,
+        //   "dgvDealDetail_RowIndex": rowId,
+        //   "dgvDealDetail_ColumnIndex": colId,
+        //   "previousBookedAmount": bookingNoLeaveData!.previousBookedAmount,
+        //   "previousValAmount": bookingNoLeaveData!.previousValAmount,
+        //   "lstdgvDealDetails": bookingNoLeaveData!.lstdgvDealDetails!.map((e) => e.toJson()).toList(),
+        //   "lstSpots": bookingNoLeaveData!.lstSpots!.map((e) => e.toJson()).toList(),
+        // },
         fun: (value) async {
           if (value is Map && value.containsKey("info_dgvDealDetailCellDouble") && value["info_dgvDealDetailCellDouble"]["message"] == null) {
             dealDblClickData = RoBookingDealDblClick.fromJson(value["info_dgvDealDetailCellDouble"]);

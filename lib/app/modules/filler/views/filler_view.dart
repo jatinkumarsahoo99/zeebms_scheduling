@@ -1,3 +1,4 @@
+import 'package:bms_scheduling/app/providers/DataGridMenu.dart';
 import 'package:bms_scheduling/widgets/PlutoGrid/pluto_grid.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
@@ -39,6 +40,7 @@ class FillerView extends GetView<FillerController> {
                       0.15,
                       autoFocus: true,
                       inkWellFocusNode: controller.locationFN,
+                      selected: controller.selectedLocation,
                     ),
                   ),
                   const SizedBox(width: 15),
@@ -49,6 +51,7 @@ class FillerView extends GetView<FillerController> {
                       "Channel",
                       0.15,
                       dialogHeight: Get.height * .7,
+                      selected: controller.selectedChannel,
                     ),
                   ),
                   const SizedBox(width: 15),
@@ -94,6 +97,7 @@ class FillerView extends GetView<FillerController> {
                                         "Location",
                                         0.15,
                                         autoFocus: true,
+                                        selected: controller.selectedImportLocation,
                                       ),
                                     ),
                                     const SizedBox(width: 15),
@@ -106,6 +110,7 @@ class FillerView extends GetView<FillerController> {
                                         "Channel",
                                         0.15,
                                         dialogHeight: Get.height * .7,
+                                        selected: controller.selectedImportChannel,
                                       ),
                                     ),
                                   ],
@@ -174,23 +179,10 @@ class FillerView extends GetView<FillerController> {
                               ),
                             ],
                           ),
-                          cancel: Padding(
-                            padding: const EdgeInsets.fromLTRB(0, 0, 10, 10),
-                            child: FormButtonWrapper(
-                                btnText: "Exit",
-                                callback: () {
-                                  Get.back();
-                                }),
-                          ),
-                          confirm: Padding(
-                            padding: const EdgeInsets.fromLTRB(10, 0, 0, 10),
-                            child: FormButtonWrapper(
-                              btnText: "Import",
-                              callback: () {
-                                controller.getFillerValuesByImportFillersWithTapeCode();
-                              },
-                            ),
-                          ),
+                          textCancel: "Cancel",
+                          onConfirm: () {
+                            controller.getFillerValuesByImportFillersWithTapeCode();
+                          },
                         );
                       },
                     ),
@@ -203,7 +195,7 @@ class FillerView extends GetView<FillerController> {
                 padding: const EdgeInsets.symmetric(horizontal: 10),
                 child: Obx(() {
                   return Visibility(
-                    visible: (controller.conflictReport.isEmpty || controller.beams.isEmpty) && ((controller.fillerDailyFpcList.isNotEmpty)),
+                    visible: ((controller.fillerDailyFpcList.isNotEmpty)),
                     replacement: Container(
                       decoration: BoxDecoration(
                         border: Border.all(
@@ -211,8 +203,10 @@ class FillerView extends GetView<FillerController> {
                         ),
                       ),
                     ),
-                    child: DataGridFromMap(
+                    child: DataGridFromMap3(
                       showSrNo: true,
+                      formatDate: false,
+                      showSecondaryDialog: false,
                       mapData: (controller.fillerDailyFpcList.value.map((e) => e.toJson()).toList()),
                       showonly: ["fpcTime", "endTime", "programName", "epsNo", "tapeID", "episodeCaption"],
                       widthRatio: (Get.width * 0.2) / 2 + 7,
@@ -220,12 +214,19 @@ class FillerView extends GetView<FillerController> {
                       onload: (event) {
                         controller.gridStateManager = event.stateManager;
                         event.stateManager.setCurrentCell(
-                            event.stateManager.getRowByIdx(controller.topLastSelectedIdx)?.cells['rowNo'], controller.bottomLastSelectedIdx);
+                            event.stateManager.getRowByIdx(controller.topLastSelectedIdx)?.cells['fpcTime'], controller.bottomLastSelectedIdx);
                       },
-                      onSelected: (plutoGrid) {
-                        controller.topLastSelectedIdx = plutoGrid.rowIdx ?? 0;
-                        controller.fetchSegmentDetails(controller.fillerDailyFpcList[plutoGrid.rowIdx!]);
+                      onRowDoubleTap: (plutoGrid) {
+                        controller.topLastSelectedIdx = plutoGrid.rowIdx;
+                        controller.gridStateManager?.setCurrentCell(
+                            controller.gridStateManager?.getRowByIdx(controller.topLastSelectedIdx)?.cells['fpcTime'],
+                            controller.bottomLastSelectedIdx);
+                        controller.topLastSelectedIdx = plutoGrid.rowIdx;
+                        controller.totalFiller.clear();
+                        controller.totalFillerDur.text = "00:00:00:00";
+                        controller.fetchSegmentDetails(controller.fillerDailyFpcList[plutoGrid.rowIdx]);
                       },
+                      // onSelected: (plutoGrid) {},
                       colorCallback: (row) =>
                           (row.row.cells.containsValue(controller.gridStateManager?.currentCell)) ? Colors.deepPurple.shade200 : Colors.white,
                     ),
@@ -347,9 +348,21 @@ class FillerView extends GetView<FillerController> {
                         return Visibility(
                           visible: ((controller.fillerSegmentList.value.isNotEmpty)),
                           replacement: Container(decoration: BoxDecoration(border: Border.all(color: Colors.grey))),
-                          child: DataGridFromMap(
+                          child: DataGridFromMap3(
                             mapData: (controller.fillerSegmentList.map((e) => e.toJson()).toList()),
                             widthRatio: (Get.width * 0.2) / 2 + 7,
+                            formatDate: false,
+                            secondaryExtraDialogList: [
+                              SecondaryShowDialogModel(
+                                "Delete",
+                                () {
+                                  if (controller.fillerSegmentList[controller.bottomLastSelectedIdx].allowMove == "1") {
+                                    controller.fillerSegmentList.removeAt(controller.bottomLastSelectedIdx);
+                                  }
+                                  // controller.fillerSegmentList.removeAt(controller.bottomLastSelectedIdx);
+                                },
+                              )
+                            ],
                             onload: (event) {
                               controller.bottomSM = event.stateManager;
                               event.stateManager.setCurrentCell(
@@ -375,32 +388,40 @@ class FillerView extends GetView<FillerController> {
                 ),
               ),
             ),
-            GetBuilder<HomeController>(
-                id: "buttons",
-                init: Get.find<HomeController>(),
-                builder: (btcontroller) {
-                  if (btcontroller.buttons != null) {
-                    return Container(
-                      decoration: const BoxDecoration(
-                        color: Colors.white,
-                      ),
-                      child: ButtonBar(
-                        alignment: MainAxisAlignment.start,
-                        mainAxisSize: MainAxisSize.min,
-                        children: [
-                          for (var btn in btcontroller.buttons!)
-                            FormButtonWrapper(
-                              btnText: btn["name"],
-                              callback: () => controller.formHandler(
-                                btn['name'],
-                              ),
-                            )
-                        ],
-                      ),
-                    );
-                  }
-                  return Container();
-                }),
+            Padding(
+              padding: const EdgeInsets.all(10.0),
+              child: GetBuilder<HomeController>(
+                  id: "buttons",
+                  init: Get.find<HomeController>(),
+                  builder: (btcontroller) {
+                    if (btcontroller.buttons != null) {
+                      return Container(
+                        decoration: const BoxDecoration(
+                          color: Colors.white,
+                        ),
+                        child: Row(
+                          // alignment: MainAxisAlignment.start,
+                          mainAxisSize: MainAxisSize.min,
+                          children: [
+                            for (var btn in btcontroller.buttons!)
+                              Padding(
+                                padding: const EdgeInsets.only(right: 8),
+                                child: FormButtonWrapper(
+                                  btnText: btn["name"],
+                                  callback: btn["name"] == "Delete"
+                                      ? null
+                                      : () => controller.formHandler(
+                                            btn['name'],
+                                          ),
+                                ),
+                              )
+                          ],
+                        ),
+                      );
+                    }
+                    return Container();
+                  }),
+            ),
           ],
         ),
       ),

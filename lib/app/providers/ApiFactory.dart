@@ -232,7 +232,7 @@ class ApiFactory {
 
   static String FILLER_VALUES_BY_TAPE_CODE(tapeCode) => "$BASE_URL/api/FillerScheduling/GetFillerValuesByTapeCode/$tapeCode";
   static String FILLER_IMPORT_FILE = "$BASE_URL/api/FillerScheduling/ImportFillerExcel";
-  static String FILLER_SAVE_IMPORT_FILLERS = "$BASE_URL/api/FillerScheduling/SaveImportExistingFillers";
+  static String FILLER_SAVE_IMPORT_FILLERS = "$BASE_URL/api/FillerScheduling/SaveImportFillers";
 
   static String FPC_DETAILS(locationCode, channelCode, date) =>
       "$BASE_URL/api/FillerScheduling/GetFpcDetails?LocationCode=$locationCode&ChannelCode=$channelCode&TelecastDate=$date";
@@ -263,6 +263,8 @@ class ApiFactory {
   static String RO_CANCELLATION_IMPORT = "$BASE_URL/api/ROCancellation/ImportExcel";
   static String RO_CANCELLATION_ADD_DOC = "$BASE_URL/api/ROCancellation/AddingDocument";
   static String RO_CANCELLATION_VIEW_DOC(id) => "$BASE_URL/api/ROCancellation/ViewDocument?DocId=$id";
+  static String RO_CANCELLATION_LOAD_DOC(docKey) => "$BASE_URL/api/ROCancellation/loadDocument?DocumentKey=$docKey";
+
   static String RO_CANCELLATION_LIST_DOC = "$BASE_URL/api/ROCancellation/AddingDocument";
 
   ////////////////////////////// MAM WORK ORDERS API START////////////////////////////////////////////////
@@ -530,6 +532,8 @@ class ApiFactory {
   static String RO_BOOKING_GetClientLeave(String locationCode, String channelCode, String clientCode) =>
       "$BASE_URL/api/ROBooking/GetClientLeave?LocationCode=$locationCode&ChannelCode=$channelCode&ClientCode=$clientCode";
   static String RO_BOOKING_GetSetVerify = "$BASE_URL/api/ROBooking/GetSetVerify";
+  static String RO_BOOKING_BRAND_LEAVE = "$BASE_URL/api/ROBooking/GetBrand";
+
   static String RO_BOOKING_ImportAndMark = "$BASE_URL/api/ROBooking/ImportAndMark";
   static String RO_BOOKING_cboPDCSelectedIndexChanged = "$BASE_URL/api/ROBooking/cboPDCSelectedIndexChanged";
 
