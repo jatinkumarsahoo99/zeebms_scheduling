@@ -147,6 +147,26 @@ class RoBookingController extends GetxController {
         });
   }
 
+  brandLeave(brandCode) {
+    Get.find<ConnectorControl>().POSTMETHOD(
+        api: ApiFactory.RO_BOOKING_OnAgencyLeave,
+        json: {
+          "dealNo": selectedDeal?.key,
+          "clientcode": selectedClient?.key,
+          "effectivedate": fpcEffectiveDateCtrl.text.fromdMyToyMd(),
+          "agencycode": selectedAgnecy?.key,
+          "brandcode": brandCode,
+          "locationCode": selectedLocation?.key,
+          "channelCode": selectedChannel?.key,
+          "brandCode": brandCode,
+          "activityMonth": bookingMonthCtrl.text,
+          "accountCode": bookingNoLeaveData?.accountCode ?? "",
+          "subRevenueTypeCode": dealNoLeaveData?.strRevenueTypeCode,
+          "revenueType": dealNoLeaveData?.strRevenueTypeCode
+        },
+        fun: (value) {});
+  }
+
   agencyLeave(agencyCode) {
     Get.find<ConnectorControl>().POSTMETHOD(
         api: ApiFactory.RO_BOOKING_OnAgencyLeave,

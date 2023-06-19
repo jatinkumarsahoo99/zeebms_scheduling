@@ -213,7 +213,14 @@ class RoBookingView extends GetView<RoBookingController> {
                                           : null),
                                   FocusTraversalOrder(
                                     order: NumericFocusOrder(10),
-                                    child: DropDownField.formDropDown1WidthMap([], (value) => {}, "Brand", 0.23,
+                                    child: DropDownField.formDropDown1WidthMap(
+                                        controller.dealNoLeaveData?.lstBrand
+                                                ?.map((e) => DropDownValue(key: e.brandcode, value: e.brandname))
+                                                .toList() ??
+                                            [],
+                                        (value) => {controller.brandLeave(value.key)},
+                                        "Brand",
+                                        0.23,
                                         isEnable: controller.bookingNoLeaveData == null,
                                         selected: controller.bookingNoLeaveData != null
                                             ? DropDownValue(
