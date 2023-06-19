@@ -80,6 +80,7 @@ class StillMasterView extends GetView<StillMasterController> {
                         selectedValue: controller.selectedProgram,
                         parseKeyForKey: "ProgramCode",
                         parseKeyForValue: "ProgramName",
+                        inkwellFocus: controller.programFN,
                       );
                     }),
                     SizedBox(width: 20),
@@ -112,12 +113,15 @@ class StillMasterView extends GetView<StillMasterController> {
                             focusNode: controller.tapeIDFN,
                           ),
                           SizedBox(width: 10),
-                          InputFields.formField1(
-                            hintTxt: "Seg No.",
-                            controller: controller.segTC,
-                            width: 0.11,
-                            focusNode: controller.segFN,
-                          ),
+                          Obx(() {
+                            return InputFields.formField1(
+                              hintTxt: "Seg No.",
+                              controller: controller.segTC,
+                              width: 0.11,
+                              isEnable: controller.controllsEnabled.value,
+                              focusNode: controller.segFN,
+                            );
+                          }),
                         ],
                       ),
                       SizedBox(width: 20),
@@ -160,7 +164,8 @@ class StillMasterView extends GetView<StillMasterController> {
                             return RadioRow(
                               items: ["Closing", "Generic"],
                               groupValue: controller.firststSelectedRadio.value,
-                              onchange: (val) => controller.firststSelectedRadio.value = val,
+                              // onchange: (val) => controller.firststSelectedRadio.value = val,
+                              onchange: controller.handleChangeInRadio,
                             );
                           }),
                         ],
