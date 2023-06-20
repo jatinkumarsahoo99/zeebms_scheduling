@@ -20,6 +20,7 @@ class RoBookingView extends StatelessWidget {
   var controller = Get.put<RoBookingController>(
     RoBookingController(),
   );
+
   @override
   Widget build(BuildContext context) {
     return GetBuilder<RoBookingController>(
@@ -424,16 +425,20 @@ class RoBookingView extends StatelessWidget {
                   Expanded(
                       child: Container(
                           child: Card(
-                    child: Padding(
-                      padding: const EdgeInsets.all(8.0),
-                      child: PageView.builder(
-                          itemCount: controller.tabs.length,
-                          physics: NeverScrollableScrollPhysics(),
-                          controller: controller.pagecontroller,
-                          itemBuilder: (context, int) {
-                            return controller.tabs[controller.tabs.keys.toList()[int]];
-                          }),
-                    ),
+                    child: GetBuilder<RoBookingController>(
+                        id: "pageView",
+                        builder: (controller) => controller.currentTab.value == null
+                            ? Container()
+                            : Padding(
+                                padding: const EdgeInsets.all(8.0),
+                                child: PageView.builder(
+                                    itemCount: controller.tabs.length,
+                                    physics: NeverScrollableScrollPhysics(),
+                                    controller: controller.pagecontroller,
+                                    itemBuilder: (context, int) {
+                                      return controller.tabs[controller.tabs.keys.toList()[int]];
+                                    }),
+                              )),
                   ))),
                   GetBuilder<HomeController>(
                       id: "buttons",
