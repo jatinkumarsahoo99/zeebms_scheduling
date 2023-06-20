@@ -20,6 +20,7 @@ import 'package:bms_scheduling/widgets/PlutoGrid/pluto_grid.dart';
 import 'package:bms_scheduling/widgets/dropdown.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:intl/intl.dart';
 
 import '../bindings/ro_booking_init_data.dart';
 
@@ -42,7 +43,7 @@ class RoBookingController extends GetxController {
   TextEditingController mgfromDateCtrl = TextEditingController(), mgtoDateCtrl = TextEditingController();
   PlutoGridStateManager? dealViewGrid;
   RoBookingAgencyLeaveData? agencyLeaveData;
-  RxString currentTab = RxString("Deal");
+  RxnString currentTab = RxnString();
   RoBookingInitData? roBookingInitData;
   RoBookingBkgNOLeaveData? bookingNoLeaveData;
   RoBookingDealNoLeave? dealNoLeaveData;
@@ -114,23 +115,25 @@ class RoBookingController extends GetxController {
   }
 
   effDtLeave() {
-    Get.find<ConnectorControl>().GETMETHODCALL(
-        api: ApiFactory.RO_BOOKING_EFFDT_LEAVE(selectedLocation!.key!, selectedChannel!.key!, fpcEffectiveDateCtrl.text.fromdMyToyMd()),
-        fun: (dataMap) {
-          if (dataMap is Map && dataMap.containsKey("info_GetEffectiveDateLeave")) {
-            Map data = dataMap["info_GetEffectiveDateLeave"];
-            if (data.containsKey("lstClientAgency") && data["lstClientAgency"] is List) {
-              List<DropDownValue> _clients = [];
-              for (var e in data["lstClientAgency"]) {
-                _clients.add(DropDownValue(key: e["clientcode"], value: e["clientname"]));
+    if (selectedLocation != null && selectedChannel != null) {
+      Get.find<ConnectorControl>().GETMETHODCALL(
+          api: ApiFactory.RO_BOOKING_EFFDT_LEAVE(selectedLocation!.key!, selectedChannel!.key!, fpcEffectiveDateCtrl.text.fromdMyToyMd()),
+          fun: (dataMap) {
+            if (dataMap is Map && dataMap.containsKey("info_GetEffectiveDateLeave")) {
+              Map data = dataMap["info_GetEffectiveDateLeave"];
+              if (data.containsKey("lstClientAgency") && data["lstClientAgency"] is List) {
+                List<DropDownValue> _clients = [];
+                for (var e in data["lstClientAgency"]) {
+                  _clients.add(DropDownValue(key: e["clientcode"], value: e["clientname"]));
+                }
+                clients.value = _clients;
               }
-              clients.value = _clients;
+              if (data.containsKey("bookingMonth")) {
+                bookingMonthCtrl.text = data["bookingMonth"];
+              }
             }
-            if (data.containsKey("bookingMonth")) {
-              bookingMonthCtrl.text = data["bookingMonth"];
-            }
-          }
-        });
+          });
+    }
   }
 
   clientLeave(clientCode) {
@@ -473,7 +476,7 @@ class RoBookingController extends GetxController {
           "dealNo": bookingNoLeaveData?.dealno,
           "locationCode": bookingNoLeaveData?.locationCode,
           "revenueType": bookingNoLeaveData?.revenueType,
-          "effectiveDate": bookingNoLeaveData?.bookingEffectiveDate,
+          "effectiveDate": DateFormat("dd-MM-yyyy").format(DateFormat("dd/MM/yyyy").parse(bookingNoLeaveData?.bookingEffectiveDate ?? "")),
           "zoneCode": bookingNoLeaveData?.zonecode,
           "tapeId": "",
           "duration": bookingNoLeaveData?.totalDuration,
@@ -481,7 +484,7 @@ class RoBookingController extends GetxController {
           "brandRequest": {
             "dealNo": bookingNoLeaveData?.dealno,
             "clientcode": bookingNoLeaveData?.clientcode,
-            "effectivedate": bookingNoLeaveData?.bookingEffectiveDate,
+            "effectivedate": DateFormat("dd-MM-yyyy").format(DateFormat("dd/MM/yyyy").parse(bookingNoLeaveData?.bookingEffectiveDate ?? "")),
             "agencycode": bookingNoLeaveData?.agencycode,
             "brandcode": bookingNoLeaveData?.brandcode,
             "locationCode": bookingNoLeaveData?.locationCode,
@@ -525,7 +528,9 @@ class RoBookingController extends GetxController {
 
             selectedBreak = DropDownValue(key: dealDblClickData?.breakNo.toString() ?? "", value: dealDblClickData?.breakNo.toString() ?? "");
             await getTapeID();
+
             pagecontroller.jumpToPage(1);
+            currentTab.value = "Programs";
           }
           if (value is Map && value.containsKey("info_dgvDealDetailCellDouble") && value["info_dgvDealDetailCellDouble"]["message"] != null) {
             LoadingDialog.callErrorMessage1(msg: value["info_dgvDealDetailCellDouble"]["message"]);
@@ -555,6 +560,8 @@ class RoBookingController extends GetxController {
 
   @override
   void onReady() {
+    currentTab.value = "Deal";
+    update(["pageView"]);
     super.onReady();
   }
 

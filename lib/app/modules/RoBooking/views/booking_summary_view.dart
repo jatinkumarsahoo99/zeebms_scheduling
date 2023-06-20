@@ -1,10 +1,11 @@
+import 'package:bms_scheduling/app/modules/RoBooking/controllers/ro_booking_controller.dart';
 import 'package:bms_scheduling/app/modules/RoBooking/views/dummydata.dart';
 import 'package:bms_scheduling/widgets/DataGridShowOnly.dart';
 import 'package:flutter/material.dart';
 
 import 'package:get/get.dart';
 
-class BookingSummaryView extends GetView {
+class BookingSummaryView extends GetView<RoBookingController> {
   const BookingSummaryView({Key? key}) : super(key: key);
   @override
   Widget build(BuildContext context) {
