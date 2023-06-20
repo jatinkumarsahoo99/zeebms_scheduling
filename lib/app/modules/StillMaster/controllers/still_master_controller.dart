@@ -9,6 +9,7 @@ import 'package:get/get.dart';
 import 'package:intl/intl.dart';
 
 import '../../../providers/Utils.dart';
+import '../../CommonSearch/views/common_search_view.dart';
 
 class StillMasterController extends GetxController {
   var locationList = <DropDownValue>[].obs, channelList = <DropDownValue>[].obs, tapeList = <DropDownValue>[].obs;
@@ -627,6 +628,16 @@ class StillMasterController extends GetxController {
       clearPage();
     } else if (btnName == "Refresh") {
       refreshPage();
+    } else if (btnName == "Search") {
+      Get.to(
+        SearchPage(
+          key: Key("Still Master"),
+          screenName: "Still Master",
+          appBarName: "Still Master",
+          strViewName: "Vstillmaster",
+          isAppBarReq: true,
+        ),
+      );
     }
   }
 
