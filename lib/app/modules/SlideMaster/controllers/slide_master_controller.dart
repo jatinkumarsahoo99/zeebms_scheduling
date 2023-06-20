@@ -57,63 +57,71 @@ class SlideMasterController extends GetxController {
     });
 
     /// TAPE ID
-    tapeIDFN.addListener(() {
-      if (!tapeIDFN.hasFocus) {
-        tapeIDLeave();
-      }
-    });
-    // tapeIDFN.onKey = (node, event) {
-    //   print("isShiftPressed:${!event.isShiftPressed} hasPrimaryFocus:${tapeIDFN.hasFocus} logicalKey:${event.logicalKey.debugName}");
-    //   if (!event.isShiftPressed && event.logicalKey == LogicalKeyboardKey.tab) {
-    //     return KeyEventResult.handled;
-    //   } else {
-    //     return KeyEventResult.ignored;
+    // tapeIDFN.addListener(() {
+    //   if (!tapeIDFN.hasFocus) {
+    //     tapeIDLeave();
     //   }
-    // };
+    // });
+    tapeIDFN.onKey = (node, event) {
+      // print("isShiftPressed:${!event.isShiftPressed} hasPrimaryFocus:${tapeIDFN.hasFocus} logicalKey:${event.logicalKey.debugName}");
+      if (!event.isShiftPressed && event.logicalKey == LogicalKeyboardKey.tab && tapeIDCtr.text.isNotEmpty) {
+        tapeIDLeave().then((value) {
+          if (value) {
+            tapeIDFN.requestFocus();
+          } else {
+            closeDialog();
+            segFN.requestFocus();
+          }
+        });
+        return KeyEventResult.handled;
+      } else {
+        return KeyEventResult.ignored;
+      }
+    };
 
     /// SEG NO.
-    segFN.addListener(() {
-      if (!segFN.hasFocus) {
-        segNoLeave();
-      }
-    });
-    // segFN.onKey = (node, event) {
-    //   if (!event.isShiftPressed && event.logicalKey == LogicalKeyboardKey.tab && !segFN.hasFocus) {
-    //     segNoLeave().then((value) {
-    //       if (value) {
-    //         segFN.requestFocus();
-    //       } else {
-    //         closeDialog();
-    //         houseIDFN.requestFocus();
-    //       }
-    //     });
-    //     return KeyEventResult.handled;
-    //   } else {
-    //     return KeyEventResult.ignored;
+    // segFN.addListener(() {
+    //   if (!segFN.hasFocus) {
+    //     segNoLeave();
     //   }
-    // };
+    // });
+    segFN.onKey = (node, event) {
+      if (!event.isShiftPressed && event.logicalKey == LogicalKeyboardKey.tab && segNoCtr.text.isNotEmpty) {
+        segNoLeave().then((value) {
+          if (value) {
+            segFN.requestFocus();
+          } else {
+            closeDialog();
+            houseIDFN.requestFocus();
+          }
+        });
+        return KeyEventResult.handled;
+      } else {
+        return KeyEventResult.ignored;
+      }
+    };
 
     /// HOUSE ID
-    houseIDFN.addListener(() {
-      if (!houseIDFN.hasFocus) {
-        houseIDLeave();
-      }
-    });
-    // houseIDFN.onKey = (node, event) {
-    //   if (!event.isShiftPressed && event.logicalKey == LogicalKeyboardKey.tab && !houseIDFN.hasFocus) {
-    //     houseIDLeave().then((value) {
-    //       if (value) {
-    //         houseIDFN.requestFocus();
-    //       } else {
-    //         closeDialog();
-    //         txCaptionFN.requestFocus();
-    //       }
-    //     });
-    //     return KeyEventResult.handled;
-    //   } else {
-    //     return KeyEventResult.ignored;
+    // houseIDFN.addListener(() {
+    //   if (!houseIDFN.hasFocus) {
+    //     houseIDLeave();
     //   }
-    // };
+    // });
+    houseIDFN.onKey = (node, event) {
+      if (!event.isShiftPressed && event.logicalKey == LogicalKeyboardKey.tab && houseIDCtr.text.isNotEmpty) {
+        houseIDLeave().then((value) {
+          if (value) {
+            houseIDFN.requestFocus();
+          } else {
+            closeDialog();
+            txCaptionFN.requestFocus();
+          }
+        });
+        return KeyEventResult.handled;
+      } else {
+        return KeyEventResult.ignored;
+      }
+    };
 
     /// EOM
     eomFN.addListener(() {
@@ -167,9 +175,6 @@ class SlideMasterController extends GetxController {
 
   Future<bool> segNoLeave() async {
     bool hasError = false;
-    // if (segNoCtr.value.text.isEmpty) {
-    //   segNoCtr.text = "1";
-    // }
     await checkRetrieve();
     if (tapeIDCtr.text.isNotEmpty && segNoCtr.text != "0") {
       LoadingDialog.call();
@@ -466,8 +471,8 @@ class SlideMasterController extends GetxController {
         api: ApiFactory.SLIDE_MASTER_TAPE_SAVE_DATA,
         fun: (resp) {
           closeDialog();
-          if (resp != null && resp is Map<String, dynamic> && resp['saveRecords'] != null && resp['saveRecords']['strmessage'] != null) {
-            if (resp['saveRecords']['strmessage'].toString().contains("Record is inserted successfully.")) {
+          if (resp != null && resp is Map<String, dynamic> && resp['saveRecords'] != null && resp['saveRecords']['strMessage'] != null) {
+            if (resp['saveRecords']['strMessage'].toString().contains("Record is inserted successfully.")) {
               LoadingDialog.callDataSaved(msg: resp.toString());
             } else {
               LoadingDialog.showErrorDialog(resp.toString());
