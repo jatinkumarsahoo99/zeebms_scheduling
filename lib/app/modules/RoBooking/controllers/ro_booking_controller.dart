@@ -631,21 +631,9 @@ class RoBookingController extends GetxController {
           "tapeId": "",
           "duration": bookingNoLeaveData?.totalDuration,
           "intEditMode": bookingNoLeaveData?.intEditMode ?? 0,
-          "brandRequest": {
-            "dealNo": bookingNoLeaveData?.dealno ?? selectedDeal!.key,
-            "clientcode": bookingNoLeaveData?.clientcode ?? selectedClient?.key ?? "",
-            "effectivedate": DateFormat("yyyy-MM-dd").format(
-                DateFormat(bookingNoLeaveData?.bookingEffectiveDate == null ? "dd-MM-yyyy" : "dd/MM/yyyy")
-                    .parse(bookingNoLeaveData?.bookingEffectiveDate ?? fpcEffectiveDateCtrl.text)),
-            "agencycode": bookingNoLeaveData?.agencycode ?? selectedAgnecy?.key,
-            "brandcode": bookingNoLeaveData?.brandcode ?? selectedBrand?.key,
-            "locationCode": bookingNoLeaveData?.locationCode ?? selectedLocation!.key,
-            "channelCode": bookingNoLeaveData?.channelcode ?? selectedChannel!.key ?? "",
-            "activityMonth": bookingMonthCtrl.text,
-            "accountCode": bookingNoLeaveData?.accountCode,
-            "subRevenueTypeCode": bookingNoLeaveData?.revenueType,
-            "revenueType": bookingNoLeaveData?.revenueType
-          }
+          "clientCode": selectedClient?.key,
+          "agencyCode": selectedAgnecy?.key,
+          "activityMonth": bookingMonthCtrl.text
         },
 
         //  {
@@ -698,7 +686,7 @@ class RoBookingController extends GetxController {
         api: ApiFactory.RO_BOOKING_cboTapeIdFocusLost,
         json: {
           "brandCode": bookingNoLeaveData?.brandcode ?? selectedBrand?.key,
-          "strAccountCode": bookingNoLeaveData?.accountCode ?? "",
+          "strAccountCode": dealDblClickData?.strAccountCode,
           "locationCode": selectedLocation?.key ?? "",
           "channelCode": selectedChannel?.key,
           "intSubRevenueTypeCode": "0"
