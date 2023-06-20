@@ -164,8 +164,19 @@ class ProgramView extends GetView<RoBookingController> {
               Container(
                 width: Get.width * 0.57,
                 child: (controller.dealDblClickData?.lstProgram ?? []).isEmpty
-                    ? Container()
-                    : DataGridFromMap(mapData: controller.dealDblClickData?.lstProgram?.map((e) => e.toJson()).toList() ?? []),
+                    ? Container(
+                        decoration: BoxDecoration(border: Border.all(width: 1.0, color: Colors.grey)),
+                      )
+                    : DataGridFromMap(
+                        mapData: controller.dealDblClickData?.lstProgram?.map((e) => e.toJson()).toList() ?? [],
+                        onRowDoubleTap: (dblclick) {
+                          controller.dealDblClickData?.lstProgram?[dblclick.rowIdx].bookedSpots = 1;
+                          controller.programViewGrid?.changeCellValue(dblclick.cell, dblclick.cell.value is int ? 1 : "1", force: true, notify: true);
+                        },
+                        onload: (load) {
+                          controller.programViewGrid = load.stateManager;
+                        },
+                      ),
               )
             ],
           );

@@ -3,6 +3,7 @@ import 'package:bms_scheduling/app/controller/MainController.dart';
 import 'package:bms_scheduling/app/data/DropDownValue.dart';
 import 'package:bms_scheduling/app/modules/RoBooking/bindings/ro_booking_agency_leave_data.dart';
 import 'package:bms_scheduling/app/modules/RoBooking/bindings/ro_booking_bkg_data.dart';
+import 'package:bms_scheduling/app/modules/RoBooking/bindings/ro_booking_brand_leave.dart';
 import 'package:bms_scheduling/app/modules/RoBooking/bindings/ro_booking_deal_click.dart';
 import 'package:bms_scheduling/app/modules/RoBooking/bindings/ro_booking_tape_search_data.dart';
 import 'package:bms_scheduling/app/modules/RoBooking/bindings/ro_dealno_leave.dart';
@@ -18,6 +19,7 @@ import 'package:bms_scheduling/app/providers/extensions/string_extensions.dart';
 import 'package:bms_scheduling/widgets/LoadingDialog.dart';
 import 'package:bms_scheduling/widgets/PlutoGrid/pluto_grid.dart';
 import 'package:bms_scheduling/widgets/dropdown.dart';
+import 'package:bms_scheduling/widgets/input_fields.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:intl/intl.dart';
@@ -42,6 +44,7 @@ class RoBookingController extends GetxController {
   PageController pagecontroller = PageController(keepPage: false);
   TextEditingController mgfromDateCtrl = TextEditingController(), mgtoDateCtrl = TextEditingController();
   PlutoGridStateManager? dealViewGrid;
+  PlutoGridStateManager? programViewGrid;
   RoBookingAgencyLeaveData? agencyLeaveData;
   RxnString currentTab = RxnString();
   RoBookingInitData? roBookingInitData;
@@ -49,6 +52,7 @@ class RoBookingController extends GetxController {
   RoBookingDealNoLeave? dealNoLeaveData;
   RoBookingDealDblClick? dealDblClickData;
   RoBookingTapeSearchData? bookingTapeSearchData;
+  RoBookingBrandLeave? bookingBrandLeaveData;
 
   FocusNode bookingNoFocusNode = FocusNode();
   var spotsNotVerifiedData = RxList();
@@ -63,7 +67,9 @@ class RoBookingController extends GetxController {
   DropDownValue? selectedTapeID;
   DropDownValue? selectedPosition;
   DropDownValue? selectedExecutive;
+  DropDownValue? selectedBrand;
   DropDownValue? selectedBreak;
+
   DropDownValue? selectedGST;
 
   var channels = RxList<DropDownValue>();
@@ -169,7 +175,133 @@ class RoBookingController extends GetxController {
           "subRevenueTypeCode": dealNoLeaveData?.strRevenueTypeCode,
           "revenueType": dealNoLeaveData?.strRevenueTypeCode
         },
-        fun: (value) {});
+        fun: (value) {
+          if (value is Map && value.containsKey("info_GetBrand")) {
+            bookingBrandLeaveData = RoBookingBrandLeave.fromJson(value["info_GetBrand"]);
+          }
+        });
+  }
+
+  addSpot() {
+    Get.find<ConnectorControl>().POSTMETHOD(api: ApiFactory.RO_BOOKING_AddSpot, fun: (value) {}, json: {
+      "cboTapeId_SelectedValue": selectedTapeID?.key,
+      "cboSegNo_SelectedText": "",
+      "txtDuration_SelectedText": "string",
+      "cboPreMid_SelectedValue": "string",
+      "cboPositionNo_SelectedValue": "string",
+      "strAccountCode": "string",
+      "lstdgvProgram": [
+        {
+          "telecastdate": "2023-06-20T11:49:11.128Z",
+          "bookedSpots": 0,
+          "startTime": {"ticks": 0},
+          "endTime": {"ticks": 0},
+          "programName": "string",
+          "availableDuration": 0,
+          "programcode": "string"
+        }
+      ],
+      "dealType": "string",
+      "intBookingCount": 0,
+      "intSubRevenueTypeCode": 0,
+      "locationCode": "string",
+      "channelCode": "string",
+      "brandCode": "string",
+      "caption": "string",
+      "revenueType": "string",
+      "lstdgvDealDetails": [
+        {
+          "primaryEventCode": 0,
+          "recordnumber": 0,
+          "networkName": "string",
+          "timeBand": "string",
+          "sponsorTypeName": "string",
+          "programName": "string",
+          "startTime": {"ticks": 0},
+          "endTime": {"ticks": 0},
+          "rate": 0,
+          "seconds": 0,
+          "amount": 0,
+          "valuationRate": 0,
+          "bookedSeconds": 0,
+          "balanceSeconds": 0,
+          "sun": 0,
+          "mon": 0,
+          "tue": 0,
+          "wed": 0,
+          "thu": 0,
+          "fri": 0,
+          "sat": 0,
+          "revFlag": 0,
+          "accountName": "string",
+          "eventName": "string",
+          "spots": 0,
+          "paymentModeCaption": "string",
+          "revenueTypeName": "string",
+          "subRevenueTypeName": "string",
+          "programCategoryName": "string",
+          "sponsorTypeCode": "string",
+          "programCode": "string",
+          "programCategoryCode": "string",
+          "bandcode": "string",
+          "netcode": 0,
+          "accountCode": "string",
+          "eventCode": 0,
+          "revenueTypeCode": "string",
+          "subrevenuetypecode": 0,
+          "locationname": "string",
+          "channelname": "string",
+          "dealNumber": "string",
+          "clientname": "string",
+          "agencyname": "string",
+          "dealStartDate": "2023-06-20T11:49:11.128Z",
+          "dealEndDate": "2023-06-20T11:49:11.128Z",
+          "recoTakenOn": "2023-06-20T11:49:11.128Z",
+          "dealValuationAmount": 0,
+          "bookedAmount": 0,
+          "bookedValuationAmount": 0,
+          "balanceAmount": 0,
+          "balanceValuationAmount": 0,
+          "countbased": 0,
+          "baseduration": 0,
+          "locationcode": "string",
+          "channelcode": "string"
+        }
+      ],
+      "intDealRowNo": 0,
+      "intEditMode": 0,
+      "lstSpots": [
+        {
+          "programName": "string",
+          "telecastDate": "2023-06-20T11:49:11.128Z",
+          "startTime": {"ticks": 0},
+          "endTime": {"ticks": 0},
+          "spots": 0,
+          "tapeId": "string",
+          "segmentNumber": 0,
+          "tapeDuration": 0,
+          "spotPositionTypeName": "string",
+          "breaknumber": 0,
+          "positionName": "string",
+          "ratePer10Sec": 0,
+          "spotAmount": 0,
+          "dealNo": "string",
+          "dealrownumber": 0,
+          "toNo": "string",
+          "schId": "string",
+          "commercialCaption": "string",
+          "programCode": "string",
+          "spotPositionTypeCode": "string",
+          "positionCode": "string"
+        }
+      ],
+      "dblOldBookingAmount": 0,
+      "cboBreakNo_text": "string",
+      "txtTotal_text": 0,
+      "cboDealNo_selectedValue": "string",
+      "locationName": "string",
+      "channelName": "string"
+    });
   }
 
   agencyLeave(agencyCode) {
@@ -197,11 +329,23 @@ class RoBookingController extends GetxController {
               key: agencyLeaveData?.lstDealNumber?.first.dealNumber ?? "",
               value: agencyLeaveData?.lstDealNumber?.first.dealNumber ?? "",
             );
+
+            zoneCtrl.text = agencyLeaveData?.zoneName ?? "";
+            payrouteCtrl.text = agencyLeaveData?.payroute ?? "";
+            bookingNoCtrl.text = agencyLeaveData?.bookingNumber ?? "";
+            bookingNoTrailCtrl.text = agencyLeaveData?.zone ?? "";
+            selectedGST = DropDownValue(key: agencyLeaveData?.selectedExcutiveCode ?? "", value: agencyLeaveData?.selectedExcutiveName ?? "");
+
             selectedExecutive = DropDownValue(
                 key: agencyLeaveData?.excutiveDetails?.first.personnelCode ?? "", value: agencyLeaveData?.excutiveDetails?.first.personnelname);
             update(["init"]);
             Get.defaultDialog(
                 title: "GST Plant",
+                textConfirm: "Done",
+                onConfirm: () {
+                  print("DONE");
+                  Get.back();
+                },
                 content: SizedBox(
                   height: Get.height / 4,
                   width: Get.width / 4,
@@ -209,10 +353,15 @@ class RoBookingController extends GetxController {
                     children: [
                       DropDownField.formDropDown1WidthMap(
                         agencyLeaveData?.lstGstPlants?.map((e) => DropDownValue(key: e.plantid?.toString(), value: e.column1)).toList(),
-                        (value) => {},
-                        "Rev Type",
-                        0.11,
+                        (value) => {selectedGST = value},
+                        "GST Plant",
+                        0.20,
                         selected: selectedGST,
+                      ),
+                      InputFields.formField1(
+                        hintTxt: "GST Reg#",
+                        controller: TextEditingController(text: agencyLeaveData?.gstRegNo ?? ""),
+                        width: 0.20,
                       )
                     ],
                   ),
@@ -309,7 +458,7 @@ class RoBookingController extends GetxController {
           if (response is Map && response.containsKey("info_LeaveDealNumber")) {
             dealNoLeaveData = RoBookingDealNoLeave.fromJson(response["info_LeaveDealNumber"]);
 
-            update(["init"]);
+            update(["init", "dealGrid"]);
           }
         });
   }
@@ -464,31 +613,34 @@ class RoBookingController extends GetxController {
         json: {
           "dgvDealDetail_RowIndex": rowId,
           "dgvDealDetail_ColumnIndex": colId,
-          "previousBookedAmount": bookingNoLeaveData?.previousBookedAmount,
-          "previousValAmount": bookingNoLeaveData?.previousValAmount,
-          "channelCode": bookingNoLeaveData?.channelcode,
-          "lstdgvDealDetails": bookingNoLeaveData?.lstdgvDealDetails?.map((e) => e.toJson()).toList(),
-          "lstSpots": bookingNoLeaveData?.lstSpots?.map((e) => e.toJson()).toList(),
-          "brandCode": bookingNoLeaveData?.brandcode,
-          "zone": bookingNoLeaveData?.zone,
-          "executiveCode": bookingNoLeaveData?.executiveCode,
-          "payroute": bookingNoLeaveData?.payrouteName,
-          "dealNo": bookingNoLeaveData?.dealno,
-          "locationCode": bookingNoLeaveData?.locationCode,
+          "previousBookedAmount": bookingNoLeaveData?.previousBookedAmount ?? dealNoLeaveData?.previousBookedAmount ?? "",
+          "previousValAmount": bookingNoLeaveData?.previousValAmount ?? dealNoLeaveData?.previousValAmount ?? "",
+          "channelCode": bookingNoLeaveData?.channelcode ?? selectedChannel!.key ?? "",
+          "lstdgvDealDetails": (bookingNoLeaveData?.lstdgvDealDetails ?? dealNoLeaveData?.lstdgvDealDetails)?.map((e) => e.toJson()).toList() ?? [],
+          "lstSpots": bookingNoLeaveData?.lstSpots?.map((e) => e.toJson()).toList() ?? [],
+          "brandCode": bookingNoLeaveData?.brandcode ?? selectedBrand?.key,
+          "zone": bookingNoLeaveData?.zone ?? agencyLeaveData?.zone ?? "",
+          "executiveCode": bookingNoLeaveData?.executiveCode ?? agencyLeaveData?.selectedExcutiveCode,
+          "payroute": bookingNoLeaveData?.payrouteName ?? agencyLeaveData?.payroute,
+          "dealNo": bookingNoLeaveData?.dealno ?? selectedDeal?.key,
+          "locationCode": bookingNoLeaveData?.locationCode ?? selectedLocation!.key,
           "revenueType": bookingNoLeaveData?.revenueType,
-          "effectiveDate": DateFormat("dd-MM-yyyy").format(DateFormat("dd/MM/yyyy").parse(bookingNoLeaveData?.bookingEffectiveDate ?? "")),
-          "zoneCode": bookingNoLeaveData?.zonecode,
+          "effectiveDate": DateFormat("yyyy-MM-dd").format(DateFormat(bookingNoLeaveData?.bookingEffectiveDate == null ? "dd-MM-yyyy" : "dd/MM/yyyy")
+              .parse(bookingNoLeaveData?.bookingEffectiveDate ?? fpcEffectiveDateCtrl.text)),
+          "zoneCode": bookingNoLeaveData?.zonecode ?? agencyLeaveData?.zoneCode,
           "tapeId": "",
           "duration": bookingNoLeaveData?.totalDuration,
-          "intEditMode": bookingNoLeaveData?.intEditMode,
+          "intEditMode": bookingNoLeaveData?.intEditMode ?? 0,
           "brandRequest": {
-            "dealNo": bookingNoLeaveData?.dealno,
-            "clientcode": bookingNoLeaveData?.clientcode,
-            "effectivedate": DateFormat("dd-MM-yyyy").format(DateFormat("dd/MM/yyyy").parse(bookingNoLeaveData?.bookingEffectiveDate ?? "")),
-            "agencycode": bookingNoLeaveData?.agencycode,
-            "brandcode": bookingNoLeaveData?.brandcode,
-            "locationCode": bookingNoLeaveData?.locationCode,
-            "channelCode": bookingNoLeaveData?.channelcode,
+            "dealNo": bookingNoLeaveData?.dealno ?? selectedDeal!.key,
+            "clientcode": bookingNoLeaveData?.clientcode ?? selectedClient?.key ?? "",
+            "effectivedate": DateFormat("yyyy-MM-dd").format(
+                DateFormat(bookingNoLeaveData?.bookingEffectiveDate == null ? "dd-MM-yyyy" : "dd/MM/yyyy")
+                    .parse(bookingNoLeaveData?.bookingEffectiveDate ?? fpcEffectiveDateCtrl.text)),
+            "agencycode": bookingNoLeaveData?.agencycode ?? selectedAgnecy?.key,
+            "brandcode": bookingNoLeaveData?.brandcode ?? selectedBrand?.key,
+            "locationCode": bookingNoLeaveData?.locationCode ?? selectedLocation!.key,
+            "channelCode": bookingNoLeaveData?.channelcode ?? selectedChannel!.key ?? "",
             "activityMonth": bookingMonthCtrl.text,
             "accountCode": bookingNoLeaveData?.accountCode,
             "subRevenueTypeCode": bookingNoLeaveData?.revenueType,
@@ -519,13 +671,16 @@ class RoBookingController extends GetxController {
         fun: (value) async {
           if (value is Map && value.containsKey("info_dgvDealDetailCellDouble") && value["info_dgvDealDetailCellDouble"]["message"] == null) {
             dealDblClickData = RoBookingDealDblClick.fromJson(value["info_dgvDealDetailCellDouble"]);
-            var _selectedPostion = roBookingInitData?.lstPosition
-                ?.firstWhere((element) => element.column1?.toLowerCase() == dealDblClickData?.positionNo!.toLowerCase());
-            selectedPosition = DropDownValue(key: _selectedPostion?.positioncode ?? "", value: _selectedPostion?.column1 ?? "");
-            var _selectedPredMid = roBookingInitData?.lstspotpositiontype
-                ?.firstWhere((element) => element.spotPositionTypeName?.toLowerCase() == dealDblClickData?.preMid!.toLowerCase());
-            selectedPremid = DropDownValue(key: _selectedPredMid?.spotPositionTypeCode ?? "", value: _selectedPredMid?.spotPositionTypeName ?? "");
-
+            if (dealDblClickData?.positionNo != null) {
+              var _selectedPostion = roBookingInitData?.lstPosition
+                  ?.firstWhere((element) => element.column1?.toLowerCase() == dealDblClickData?.positionNo!.toLowerCase());
+              selectedPosition = DropDownValue(key: _selectedPostion?.positioncode ?? "", value: _selectedPostion?.column1 ?? "");
+            }
+            if (dealDblClickData?.preMid != null) {
+              var _selectedPredMid = roBookingInitData?.lstspotpositiontype
+                  ?.firstWhere((element) => element.spotPositionTypeName?.toLowerCase() == dealDblClickData?.preMid!.toLowerCase());
+              selectedPremid = DropDownValue(key: _selectedPredMid?.spotPositionTypeCode ?? "", value: _selectedPredMid?.spotPositionTypeName ?? "");
+            }
             selectedBreak = DropDownValue(key: dealDblClickData?.breakNo.toString() ?? "", value: dealDblClickData?.breakNo.toString() ?? "");
             await getTapeID();
 
@@ -542,8 +697,8 @@ class RoBookingController extends GetxController {
     await Get.find<ConnectorControl>().POSTMETHOD(
         api: ApiFactory.RO_BOOKING_cboTapeIdFocusLost,
         json: {
-          "brandCode": bookingNoLeaveData?.brandcode ?? "",
-          "strAccountCode": bookingNoLeaveData?.accountCode,
+          "brandCode": bookingNoLeaveData?.brandcode ?? selectedBrand?.key,
+          "strAccountCode": bookingNoLeaveData?.accountCode ?? "",
           "locationCode": selectedLocation?.key ?? "",
           "channelCode": selectedChannel?.key,
           "intSubRevenueTypeCode": "0"
