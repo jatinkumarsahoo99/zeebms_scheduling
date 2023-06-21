@@ -123,7 +123,9 @@ class CommercialMasterView extends StatelessWidget {
                                               (value) {
                                                 controllerX.selectedSecType =
                                                     value;
+
                                                 controllerX.getTapeId();
+                                                controllerX.isListenerActive = true;
                                               },
                                               "Sec Type",
                                               isEnable: controllerX.isEnable,
@@ -139,6 +141,7 @@ class CommercialMasterView extends StatelessWidget {
                                           width: 0.17,
                                           isEnable: controllerX.isEnable,
                                           autoFocus: true,
+
                                           focusNode: controllerX.tapeIdFocus
                                         ),
                                       ],
@@ -156,15 +159,16 @@ class CommercialMasterView extends StatelessWidget {
                                                   val.toString();
                                               /*controllerX.txNoController.text =
                                                 controllerX.tapeIdController.value.text +"-"+ val.toString() ;*/
-                                              controllerX.validateTxNo(controllerX.tapeIdController.value.text +"-"+ val.toString());
+                                              controllerX.validateTxNo("",controllerX.tapeIdController.value.text, controllerX.segController.text);
                                               controllerX.fetchCommercialTapeMasterData(
-                                                  controllerX.captionController.text,
+                                                  "",
                                                   controllerX.tapeIdController.value.text,
                                                   int.parse((controllerX.segController.text != null && controllerX.segController.text != "")
                                                       ? controllerX.segController.text
                                                       : "0"),
-                                                  controllerX.clockIdController.text);
+                                                  "");
                                             },
+
                                             count: int.parse((controllerX
                                                             .segController
                                                             .text !=
@@ -184,8 +188,9 @@ class CommercialMasterView extends StatelessWidget {
                                             width: 0.17,
                                             isEnable: controllerX.isEnable,
                                             autoFocus: true,
+                                            focusNode: controllerX.txNoFocus,
                                             onchanged: (val) {
-                                              controllerX.validateTxNo(val);
+                                              controllerX.validateTxNo(val,"", "");
                                             }),
                                         InputFields.formField1(
                                           hintTxt: "Agency Id",
@@ -248,9 +253,9 @@ class CommercialMasterView extends StatelessWidget {
                                       controller:   controllerX.somController,
                                       widthRatio: 0.17,
                                       isEnable: controllerX.isEnable,
-                                      onEditComplete: (val){
+                                      /*onEditComplete: (val){
                                         controllerX.calculateDuration();
-                                      },
+                                      },*/
                                       // isTime: true,
                                       // isEnable: controller.isEnable.value,
                                       paddingLeft: 0),
@@ -409,6 +414,7 @@ class CommercialMasterView extends StatelessWidget {
                                             isEnable: controllerX.isEnable,
                                             onchanged: (val) {
                                               controllerX.getAgencyDetails(val);
+                                              controllerX.isListenerActive = true;
                                             },
                                             autoFocus: true,
                                           ),
@@ -458,19 +464,18 @@ class CommercialMasterView extends StatelessWidget {
                                         ),
                                         InputFields.formField1(
                                           hintTxt: "Clock ID",
+                                          focusNode: controllerX.clockIdFocus,
                                           controller:
                                               controllerX.clockIdController,
                                           width: 0.17,
                                           isEnable: controllerX.isEnable,
-                                          onchanged: (val){
+                                        /*  onchanged: (val){
                                             controllerX.fetchCommercialTapeMasterData(
-                                                controllerX.captionController.text,
-                                                controllerX.tapeIdController.value.text,
-                                                int.parse((controllerX.segController.text != null && controllerX.segController.text != "")
-                                                    ? controllerX.segController.text
-                                                    : "0"),
+                                                "",
+                                                "",
+                                                0,
                                                 controllerX.clockIdController.text);
-                                          }
+                                          }*/
                                         ),
                                       ],
                                     ),
