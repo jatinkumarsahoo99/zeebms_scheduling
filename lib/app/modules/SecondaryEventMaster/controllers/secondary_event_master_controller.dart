@@ -6,11 +6,21 @@ import 'package:get/get.dart';
 import 'package:intl/intl.dart';
 
 import '../../../controller/ConnectorControl.dart';
+import '../../../data/PermissionModel.dart';
 import '../../../providers/ApiFactory.dart';
 import '../../../providers/Utils.dart';
+import '../../../routes/app_pages.dart';
+import '../../CommonSearch/views/common_search_view.dart';
 import '../model/secondary_event_master_model.dart';
 
 class SecondaryEventMasterController extends GetxController {
+  List<PermissionModel>? formPermissions;
+  @override
+  void onInit() {
+    formPermissions = Utils.fetchPermissions1(Routes.SECONDARY_EVENT_MASTER.replaceAll("/", ""));
+    super.onInit();
+  }
+
   var locationList = <DropDownValue>[].obs, channelList = <DropDownValue>[].obs;
   DropDownValue? selectedLoc, selectedChannel;
   var locFN = FocusNode();
@@ -30,6 +40,8 @@ class SecondaryEventMasterController extends GetxController {
   String? eventCode;
 
   clearPage() {
+    startDateTC.clear();
+    endDateTC.clear();
     selectedLoc = null;
     eventCode = null;
     secondaryEventModel = null;
@@ -74,6 +86,14 @@ class SecondaryEventMasterController extends GetxController {
               if (tempChannel != null) {
                 selectedChannel = tempChannel;
                 channelList.refresh();
+              } else if (selectedLoc != null) {
+                getChannels(selectedLoc).then((value) {
+                  var tempChannel2 = channelList.firstWhereOrNull((element) => element.key == secondaryEventModel!.display?[0].channelCode);
+                  if (tempChannel2 != null) {
+                    selectedChannel = tempChannel2;
+                    channelList.refresh();
+                  }
+                });
               }
               if (secondaryEventModel!.display?[0].houseID != null) {
                 txNoTC.text = secondaryEventModel!.display?[0].houseID ?? "";
@@ -89,24 +109,27 @@ class SecondaryEventMasterController extends GetxController {
               }
               if (secondaryEventModel!.display?[0].startDate != null) {
                 startDateTC.text =
-                    DateFormat("dd-MM-yyyy").format(DateFormat("yyyy-MM-ddT00:00:00").parse(secondaryEventModel!.display![0].startDate!));
+                    DateFormat("dd-MM-yyyy").format(DateFormat("yyyy-MM-ddThh:mm:ss").parse(secondaryEventModel!.display![0].startDate!));
               }
               if (secondaryEventModel!.display?[0].killDate != null) {
-                endDateTC.text = DateFormat("dd-MM-yyyy").format(DateFormat("yyyy-MM-ddT00:00:00").parse(secondaryEventModel!.display![0].killDate!));
+                endDateTC.text = DateFormat("dd-MM-yyyy").format(DateFormat("yyyy-MM-ddThh:mm:ss").parse(secondaryEventModel!.display![0].killDate!));
               }
               if (secondaryEventModel!.display?[0].som != null) {
-                somTC.text = (secondaryEventModel!.display?[0].som ?? "00:00:00:00").contains("T")
-                    ? (secondaryEventModel!.display?[0].som ?? "00:00:00:00").split("T")[1]
-                    : (secondaryEventModel!.display?[0].som ?? "00:00:00:00");
-              }
-              if (secondaryEventModel!.display?[0].killTime != null) {
-                var tempEOM = (secondaryEventModel!.display?[0].killTime ?? "00:00:00:00").contains("T")
-                    ? (secondaryEventModel!.display?[0].killTime ?? "00:00:00:00").split("T")[1]
-                    : (secondaryEventModel!.display?[0].killTime ?? "00:00:00:00");
-
+                // somTC.text = (secondaryEventModel!.display?[0].som ?? "00:00:00:00").contains("T")
+                //     ? (secondaryEventModel!.display?[0].som ?? "00:00:00:00").split("T")[1]
+                //     : (secondaryEventModel!.display?[0].som ?? "00:00:00:00");
+                somTC.text = (secondaryEventModel!.display?[0].som ?? "00:00:00:00");
                 eomTC.text = Utils.convertToTimeFromDouble(
-                    value: Utils.oldBMSConvertToSecondsValue(value: tempEOM) + Utils.oldBMSConvertToSecondsValue(value: duration.value));
+                    value: Utils.oldBMSConvertToSecondsValue(value: somTC.text) + Utils.oldBMSConvertToSecondsValue(value: duration.value));
               }
+              // if (secondaryEventModel!.display?[0].killTime != null) {
+              //   var tempEOM = (secondaryEventModel!.display?[0].killTime ?? "00:00:00:00").contains("T")
+              //       ? (secondaryEventModel!.display?[0].killTime ?? "00:00:00:00").split("T")[1]
+              //       : (secondaryEventModel!.display?[0].killTime ?? "00:00:00:00");
+
+              //   eomTC.text = Utils.convertToTimeFromDouble(
+              //       value: Utils.oldBMSConvertToSecondsValue(value: tempEOM) + Utils.oldBMSConvertToSecondsValue(value: duration.value));
+              // }
             } else {
               secondaryEventModel = null;
               controllsEnabled.value = true;
@@ -156,7 +179,6 @@ class SecondaryEventMasterController extends GetxController {
       if (!eomFN.hasFocus) {
         try {
           num diff = (Utils.oldBMSConvertToSecondsValue(value: eomTC.text) - Utils.oldBMSConvertToSecondsValue(value: somTC.text));
-          print(diff);
           if (diff.isNegative) {
             eomTC.clear();
             LoadingDialog.showErrorDialog("EOM should not less than SOM", callback: () {
@@ -172,14 +194,14 @@ class SecondaryEventMasterController extends GetxController {
     });
   }
 
-  getChannels(DropDownValue? val) {
+  Future<void> getChannels(DropDownValue? val) async {
     if (val == null) {
       LoadingDialog.showErrorDialog("Please select location.");
       return;
     }
     selectedLoc = val;
     LoadingDialog.call();
-    Get.find<ConnectorControl>().GETMETHODCALL(
+    await Get.find<ConnectorControl>().GETMETHODCALL(
       api: ApiFactory.SECONDARY_EVENT_MASTER_GET_CHANNELS(selectedLoc!.key!),
       fun: (resp) {
         closeDialog();
@@ -218,6 +240,8 @@ class SecondaryEventMasterController extends GetxController {
           if (resp != null && resp is Map<String, dynamic> && resp['save'] != null) {
             if (resp['save']['strmessage'] != null) {
               LoadingDialog.callDataSaved(msg: resp['save']['strmessage'].toString());
+            } else {
+              LoadingDialog.showErrorDialog(resp['save']['strmessage'].toString());
             }
           } else {
             LoadingDialog.showErrorDialog(resp.toString());
@@ -254,6 +278,16 @@ class SecondaryEventMasterController extends GetxController {
       } else {
         saveData();
       }
+    } else if (btnName == "Search") {
+      Get.to(
+        SearchPage(
+          key: Key("Non Commercial Secondary Events"),
+          screenName: "Non Commercial Secondary Events",
+          appBarName: "Non Commercial Secondary Events",
+          strViewName: "BMS_view_secondaryEventMaster",
+          isAppBarReq: true,
+        ),
+      );
     }
   }
 }

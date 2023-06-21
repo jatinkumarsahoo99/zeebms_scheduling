@@ -8,7 +8,9 @@ import 'package:flutter/widgets.dart';
 import 'package:get/get.dart';
 import 'package:intl/intl.dart';
 
+import '../../../data/PermissionModel.dart';
 import '../../../providers/Utils.dart';
+import '../../../routes/app_pages.dart';
 import '../../CommonSearch/views/common_search_view.dart';
 
 class SlideMasterController extends GetxController {
@@ -37,10 +39,17 @@ class SlideMasterController extends GetxController {
       eomCtr = TextEditingController(text: "00:00:00:00"),
       durationCtr = TextEditingController(text: "00:00:00:00"),
       updateTodateCtr = TextEditingController();
+  List<PermissionModel>? formPermissions;
 
   DropDownValue? selectedLocation, selectedChannel, selectedTape, selectedSlide;
 
   String strCode = "", strTapeID = "", strSegmentNumber = "", strHouseID = "";
+
+  @override
+  void onInit() {
+    formPermissions = Utils.fetchPermissions1(Routes.SLIDE_MASTER.replaceAll("/", ""));
+    super.onInit();
+  }
 
   @override
   void onReady() {

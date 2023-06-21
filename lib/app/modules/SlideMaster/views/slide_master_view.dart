@@ -8,6 +8,7 @@ import '../../../../widgets/FormButton.dart';
 import '../../../../widgets/input_fields.dart';
 import '../../../../widgets/radio_row.dart';
 import '../../../controller/HomeController.dart';
+import '../../../providers/Utils.dart';
 import '../controllers/slide_master_controller.dart';
 
 class SlideMasterView extends GetView<SlideMasterController> {
@@ -232,11 +233,19 @@ class SlideMasterView extends GetView<SlideMasterController> {
                               // alignment: MainAxisAlignment.start,
                               // mainAxisSize: MainAxisSize.min,
                               children: [
-                                for (var btn in btncontroller.buttons!)
+                                for (var btn in btncontroller.buttons!) ...{
                                   FormButtonWrapper(
                                     btnText: btn["name"],
-                                    callback: () => controller.formHandler(btn['name'].toString()),
-                                  ),
+                                    callback: ((Utils.btnAccessHandler(btn['name'], controller.formPermissions!) == null))
+                                        ? null
+                                        : () => controller.formHandler(btn['name']),
+                                  )
+                                },
+                                // for (var btn in btncontroller.buttons!)
+                                //   FormButtonWrapper(
+                                //     btnText: btn["name"],
+                                //     callback: () => controller.formHandler(btn['name'].toString()),
+                                //   ),
                               ],
                             ),
                           );

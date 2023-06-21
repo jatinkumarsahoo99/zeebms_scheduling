@@ -21,6 +21,10 @@ import '../../../../widgets/dropdown.dart';
 import '../../../../widgets/gridFromMap.dart';
 import '../../../../widgets/input_fields.dart';
 import '../../../../widgets/radio_row.dart';
+import '../../../data/PermissionModel.dart';
+import '../../../providers/Utils.dart';
+import '../../../routes/app_pages.dart';
+import '../../CommonSearch/views/common_search_view.dart';
 import '../model/ros_show_model.dart';
 import '../model/ros_cell_click_model.dart' as cellModel;
 
@@ -31,6 +35,7 @@ class RosDistributionController extends GetxController {
   var locationFN = FocusNode();
   var enableControllos = true.obs;
   PlutoGridStateManager? mainGSM;
+  List<PermissionModel>? formPermissions;
 
   var topButtons = <Map<String, dynamic>>[].obs;
   var showDataModel = ROSDistuibutionShowModel().obs;
@@ -43,6 +48,7 @@ class RosDistributionController extends GetxController {
 
   @override
   void onInit() {
+    formPermissions = Utils.fetchPermissions1(Routes.ROS_DISTRIBUTION.replaceAll("/", ""));
     topButtons.value = [
       {"name": "Show", "callback": handleShowTap, "btnShowBucket": true, "isEnabled": true},
       {"name": "Empty", "callback": handleEmptyTap, "btnEmpty": true, "isEnabled": true},
@@ -1056,6 +1062,22 @@ class RosDistributionController extends GetxController {
             closeDialogIfOpen();
             LoadingDialog.showErrorDialog(resp.toString());
           });
+    }
+  }
+
+  bottomFormHandler(String btnName) {
+    if (btnName == "Clear") {
+      clearAllPage();
+    } else if (btnName == "Search") {
+      Get.to(
+        SearchPage(
+          key: Key("ROS Distribution"),
+          screenName: "ROS Distribution",
+          appBarName: "ROS Distribution",
+          strViewName: "BMS_view_BookingDetail",
+          isAppBarReq: true,
+        ),
+      );
     }
   }
   ///////////////////////////////////// COMMON FUNCTION END///////////
