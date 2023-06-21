@@ -189,7 +189,11 @@ class ProgramView extends GetView<RoBookingController> {
                         controller: TextEditingController(
                             text: controller.dealDblClickData?.total ?? ""),
                         width: 0.12),
-                    ElevatedButton(onPressed: () {}, child: Text("Add Spots")),
+                    ElevatedButton(
+                        onPressed: () {
+                          controller.addSpot();
+                        },
+                        child: Text("Add Spots")),
                     ElevatedButton(onPressed: () {}, child: Text("Deal")),
                     // Row(
                     //   mainAxisSize: MainAxisSize.min,
@@ -215,8 +219,19 @@ class ProgramView extends GetView<RoBookingController> {
                                 .toList() ??
                             [],
                         onRowDoubleTap: (dblclick) {
-                          controller.dealDblClickData
-                              ?.lstProgram?[dblclick.rowIdx].bookedSpots = 1;
+                          if (controller.bookingTapeLeaveData?.lstdgvProgram !=
+                                  null &&
+                              (controller.bookingTapeLeaveData?.lstdgvProgram ??
+                                      [])
+                                  .isNotEmpty) {
+                            controller
+                                .bookingTapeLeaveData
+                                ?.lstdgvProgram?[dblclick.rowIdx]
+                                .bookedSpots = 1;
+                          } else {
+                            controller.dealDblClickData
+                                ?.lstProgram?[dblclick.rowIdx].bookedSpots = 1;
+                          }
                           controller.programViewGrid?.changeCellValue(
                               dblclick.cell,
                               dblclick.cell.value is int ? 1 : "1",

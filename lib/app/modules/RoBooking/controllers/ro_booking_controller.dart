@@ -221,7 +221,7 @@ class RoBookingController extends GetxController {
       "lstdgvDealDetails":
           dealNoLeaveData?.lstdgvDealDetails?.map((e) => e.toJson()).toList(),
       "intBookingCount": 0,
-      "dblOldBookingAmount": 0,
+      "dblOldBookingAmount": bookingNoLeaveData?.dblOldBookingAmount ?? 0,
       "lstSpots":
           bookingNoLeaveData?.lstSpots?.map((e) => e.toJson()).toList() ?? [],
       "intEditMode": bookingNoLeaveData?.intEditMode ?? 0,
