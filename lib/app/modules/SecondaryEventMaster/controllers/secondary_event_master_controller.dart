@@ -97,6 +97,11 @@ class SecondaryEventMasterController extends GetxController {
               }
               if (secondaryEventModel!.display?[0].houseID != null) {
                 txNoTC.text = secondaryEventModel!.display?[0].houseID ?? "";
+                if (txNoTC.text.contains("BSE")) {
+                  selectedRadio.value = "Bug";
+                } else {
+                  selectedRadio.value = "";
+                }
               }
               if (secondaryEventModel!.display?[0].eventCaption != null) {
                 eventNameTC.text = secondaryEventModel!.display?[0].eventCaption ?? "";
@@ -240,8 +245,9 @@ class SecondaryEventMasterController extends GetxController {
           if (resp != null && resp is Map<String, dynamic> && resp['save'] != null) {
             if (resp['save']['strmessage'] != null) {
               LoadingDialog.callDataSaved(msg: resp['save']['strmessage'].toString());
-            } else {
-              LoadingDialog.showErrorDialog(resp['save']['strmessage'].toString());
+              if (resp['save']['strmessage'].toString().contains("id is")) {
+                txNoTC.text = resp['save']['strmessage'].toString().split("is")[1];
+              }
             }
           } else {
             LoadingDialog.showErrorDialog(resp.toString());
