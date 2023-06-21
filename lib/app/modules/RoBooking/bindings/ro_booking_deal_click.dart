@@ -7,13 +7,18 @@ class RoBookingDealDblClick {
   List<LstProgram>? lstProgram;
   List? lstDealConsumption;
   String? strAccountCode;
-  String? intSubRevenueTypeCode;
+  int? intSubRevenueTypeCode;
   String? revenueType;
   String? preMid;
   String? positionNo;
   String? breakNo;
   String? rate;
   String? total;
+  int? intBaseDuration;
+  int? intCountBased;
+  int? intSeconds;
+  int? balanceSeconds;
+  int? intDealRowNo;
   BrandResponse? brandResponse;
 
   RoBookingDealDblClick(
@@ -32,23 +37,33 @@ class RoBookingDealDblClick {
       this.breakNo,
       this.rate,
       this.total,
+      this.intBaseDuration,
+      this.intCountBased,
+      this.intSeconds,
+      this.balanceSeconds,
+      this.intDealRowNo,
       this.brandResponse});
 
   RoBookingDealDblClick.fromJson(Map<String, dynamic> json) {
     message = json['message'];
-    dgvProgramsAllowColumnsEditingTrue = json['dgvPrograms_AllowColumnsEditing_True'].cast<String>();
-    dgvProgramsVisiableTrue = json['dgvPrograms_Visiable_True'].cast<String>();
+    dgvProgramsAllowColumnsEditingTrue =
+        (json['dgvPrograms_AllowColumnsEditing_True'] ?? <String>[])
+            .cast<String>();
+    dgvProgramsVisiableTrue =
+        (json['dgvPrograms_Visiable_True'] ?? <String>[]).cast<String>();
     if (json['dgvPrograms_Visiable_False'] != null) {
-      dgvProgramsVisiableFalse = [];
+      dgvProgramsVisiableFalse = <String>[];
       json['dgvPrograms_Visiable_False'].forEach((v) {
         dgvProgramsVisiableFalse!.add(v);
       });
     }
-    dgvProgramsColumnMaxInputLength4 = json['dgvPrograms_Column_MaxInputLength_4'].cast<String>();
+    dgvProgramsColumnMaxInputLength4 =
+        (json['dgvPrograms_Column_MaxInputLength_4'] ?? <String>[])
+            .cast<String>();
     if (json['lstProgram'] != null) {
       lstProgram = <LstProgram>[];
       json['lstProgram'].forEach((v) {
-        lstProgram!.add(new LstProgram.fromJson(v));
+        lstProgram!.add(LstProgram.fromJson(v));
       });
     }
     if (json['lstDealConsumption'] != null) {
@@ -65,34 +80,46 @@ class RoBookingDealDblClick {
     breakNo = json['breakNo'];
     rate = json['rate'];
     total = json['total'];
-    brandResponse = json['brandResponse'] != null ? new BrandResponse.fromJson(json['brandResponse']) : null;
+    intBaseDuration = json['intBaseDuration'];
+    intCountBased = json['intCountBased'];
+    intSeconds = json['intSeconds'];
+    balanceSeconds = json['balanceSeconds'];
+    intDealRowNo = json['intDealRowNo'];
+    brandResponse = json['brandResponse'] != null
+        ? BrandResponse.fromJson(json['brandResponse'])
+        : null;
   }
 
   Map<String, dynamic> toJson() {
-    final Map<String, dynamic> data = new Map<String, dynamic>();
-    data['message'] = this.message;
-    data['dgvPrograms_AllowColumnsEditing_True'] = this.dgvProgramsAllowColumnsEditingTrue;
-    data['dgvPrograms_Visiable_True'] = this.dgvProgramsVisiableTrue;
-    if (this.dgvProgramsVisiableFalse != null) {
-      data['dgvPrograms_Visiable_False'] = this.dgvProgramsVisiableFalse!.map((v) => v.toJson()).toList();
+    final Map<String, dynamic> data = <String, dynamic>{};
+    data['message'] = message;
+    data['dgvPrograms_AllowColumnsEditing_True'] =
+        dgvProgramsAllowColumnsEditingTrue;
+    data['dgvPrograms_Visiable_True'] = dgvProgramsVisiableTrue;
+    data['dgvPrograms_Visiable_False'] = dgvProgramsVisiableFalse;
+    data['dgvPrograms_Column_MaxInputLength_4'] =
+        dgvProgramsColumnMaxInputLength4;
+    if (lstProgram != null) {
+      data['lstProgram'] = lstProgram!.map((v) => v.toJson()).toList();
     }
-    data['dgvPrograms_Column_MaxInputLength_4'] = this.dgvProgramsColumnMaxInputLength4;
-    if (this.lstProgram != null) {
-      data['lstProgram'] = this.lstProgram!.map((v) => v.toJson()).toList();
+    if (lstDealConsumption != null) {
+      data['lstDealConsumption'] = lstDealConsumption!.map((v) => v).toList();
     }
-    if (this.lstDealConsumption != null) {
-      data['lstDealConsumption'] = this.lstDealConsumption!.map((v) => v.toJson()).toList();
-    }
-    data['strAccountCode'] = this.strAccountCode;
-    data['intSubRevenueTypeCode'] = this.intSubRevenueTypeCode;
-    data['revenueType'] = this.revenueType;
-    data['preMid'] = this.preMid;
-    data['positionNo'] = this.positionNo;
-    data['breakNo'] = this.breakNo;
-    data['rate'] = this.rate;
-    data['total'] = this.total;
-    if (this.brandResponse != null) {
-      data['brandResponse'] = this.brandResponse!.toJson();
+    data['strAccountCode'] = strAccountCode;
+    data['intSubRevenueTypeCode'] = intSubRevenueTypeCode;
+    data['revenueType'] = revenueType;
+    data['preMid'] = preMid;
+    data['positionNo'] = positionNo;
+    data['breakNo'] = breakNo;
+    data['rate'] = rate;
+    data['total'] = total;
+    data['intBaseDuration'] = intBaseDuration;
+    data['intCountBased'] = intCountBased;
+    data['intSeconds'] = intSeconds;
+    data['balanceSeconds'] = balanceSeconds;
+    data['intDealRowNo'] = intDealRowNo;
+    if (brandResponse != null) {
+      data['brandResponse'] = brandResponse!.toJson();
     }
     return data;
   }
@@ -107,7 +134,14 @@ class LstProgram {
   int? availableDuration;
   String? programcode;
 
-  LstProgram({this.telecastdate, this.bookedSpots, this.startTime, this.endTime, this.programName, this.availableDuration, this.programcode});
+  LstProgram(
+      {this.telecastdate,
+      this.bookedSpots,
+      this.startTime,
+      this.endTime,
+      this.programName,
+      this.availableDuration,
+      this.programcode});
 
   LstProgram.fromJson(Map<String, dynamic> json) {
     telecastdate = json['telecastdate'];
@@ -120,20 +154,20 @@ class LstProgram {
   }
 
   Map<String, dynamic> toJson() {
-    final Map<String, dynamic> data = new Map<String, dynamic>();
-    data['telecastdate'] = this.telecastdate;
-    data['bookedSpots'] = this.bookedSpots;
-    data['startTime'] = this.startTime;
-    data['endTime'] = this.endTime;
-    data['programName'] = this.programName;
-    data['availableDuration'] = this.availableDuration;
-    data['programcode'] = this.programcode;
+    final Map<String, dynamic> data = <String, dynamic>{};
+    data['telecastdate'] = telecastdate;
+    data['bookedSpots'] = bookedSpots;
+    data['startTime'] = startTime;
+    data['endTime'] = endTime;
+    data['programName'] = programName;
+    data['availableDuration'] = availableDuration;
+    data['programcode'] = programcode;
     return data;
   }
 }
 
 class BrandResponse {
-  Null? lstDealNumber;
+  String? lstDealNumber;
   List<LstTapeDetails>? lstTapeDetails;
   List<LstTapeCampaign>? lstTapeCampaign;
   String? dealNo;
@@ -141,20 +175,27 @@ class BrandResponse {
   String? positionNo;
   String? breakNo;
 
-  BrandResponse({this.lstDealNumber, this.lstTapeDetails, this.lstTapeCampaign, this.dealNo, this.preMid, this.positionNo, this.breakNo});
+  BrandResponse(
+      {this.lstDealNumber,
+      this.lstTapeDetails,
+      this.lstTapeCampaign,
+      this.dealNo,
+      this.preMid,
+      this.positionNo,
+      this.breakNo});
 
   BrandResponse.fromJson(Map<String, dynamic> json) {
     lstDealNumber = json['lstDealNumber'];
     if (json['lstTapeDetails'] != null) {
       lstTapeDetails = <LstTapeDetails>[];
       json['lstTapeDetails'].forEach((v) {
-        lstTapeDetails!.add(new LstTapeDetails.fromJson(v));
+        lstTapeDetails!.add(LstTapeDetails.fromJson(v));
       });
     }
     if (json['lstTapeCampaign'] != null) {
       lstTapeCampaign = <LstTapeCampaign>[];
       json['lstTapeCampaign'].forEach((v) {
-        lstTapeCampaign!.add(new LstTapeCampaign.fromJson(v));
+        lstTapeCampaign!.add(LstTapeCampaign.fromJson(v));
       });
     }
     dealNo = json['dealNo'];
@@ -164,18 +205,19 @@ class BrandResponse {
   }
 
   Map<String, dynamic> toJson() {
-    final Map<String, dynamic> data = new Map<String, dynamic>();
-    data['lstDealNumber'] = this.lstDealNumber;
-    if (this.lstTapeDetails != null) {
-      data['lstTapeDetails'] = this.lstTapeDetails!.map((v) => v.toJson()).toList();
+    final Map<String, dynamic> data = <String, dynamic>{};
+    data['lstDealNumber'] = lstDealNumber;
+    if (lstTapeDetails != null) {
+      data['lstTapeDetails'] = lstTapeDetails!.map((v) => v.toJson()).toList();
     }
-    if (this.lstTapeCampaign != null) {
-      data['lstTapeCampaign'] = this.lstTapeCampaign!.map((v) => v.toJson()).toList();
+    if (lstTapeCampaign != null) {
+      data['lstTapeCampaign'] =
+          lstTapeCampaign!.map((v) => v.toJson()).toList();
     }
-    data['dealNo'] = this.dealNo;
-    data['preMid'] = this.preMid;
-    data['positionNo'] = this.positionNo;
-    data['breakNo'] = this.breakNo;
+    data['dealNo'] = dealNo;
+    data['preMid'] = preMid;
+    data['positionNo'] = positionNo;
+    data['breakNo'] = breakNo;
     return data;
   }
 }
@@ -190,7 +232,7 @@ class LstTapeDetails {
   String? languageName;
   String? eventtypecode;
   String? accountName;
-  Null? subRevenueTypeCode;
+  String? subRevenueTypeCode;
   String? subRevenueTypeName;
   String? killDate;
   String? campaignStartDate;
@@ -230,21 +272,21 @@ class LstTapeDetails {
   }
 
   Map<String, dynamic> toJson() {
-    final Map<String, dynamic> data = new Map<String, dynamic>();
-    data['commercialCode'] = this.commercialCode;
-    data['exporttapecode'] = this.exporttapecode;
-    data['commercialcaption'] = this.commercialcaption;
-    data['segmentnumber'] = this.segmentnumber;
-    data['commercialduration'] = this.commercialduration;
-    data['agencytapeid'] = this.agencytapeid;
-    data['languageName'] = this.languageName;
-    data['eventtypecode'] = this.eventtypecode;
-    data['accountName'] = this.accountName;
-    data['subRevenueTypeCode'] = this.subRevenueTypeCode;
-    data['subRevenueTypeName'] = this.subRevenueTypeName;
-    data['killDate'] = this.killDate;
-    data['campaignStartDate'] = this.campaignStartDate;
-    data['campaignEndDate'] = this.campaignEndDate;
+    final Map<String, dynamic> data = <String, dynamic>{};
+    data['commercialCode'] = commercialCode;
+    data['exporttapecode'] = exporttapecode;
+    data['commercialcaption'] = commercialcaption;
+    data['segmentnumber'] = segmentnumber;
+    data['commercialduration'] = commercialduration;
+    data['agencytapeid'] = agencytapeid;
+    data['languageName'] = languageName;
+    data['eventtypecode'] = eventtypecode;
+    data['accountName'] = accountName;
+    data['subRevenueTypeCode'] = subRevenueTypeCode;
+    data['subRevenueTypeName'] = subRevenueTypeName;
+    data['killDate'] = killDate;
+    data['campaignStartDate'] = campaignStartDate;
+    data['campaignEndDate'] = campaignEndDate;
     return data;
   }
 }
@@ -255,7 +297,8 @@ class LstTapeCampaign {
   String? endDate;
   String? brandCode;
 
-  LstTapeCampaign({this.exportTapeCode, this.startDate, this.endDate, this.brandCode});
+  LstTapeCampaign(
+      {this.exportTapeCode, this.startDate, this.endDate, this.brandCode});
 
   LstTapeCampaign.fromJson(Map<String, dynamic> json) {
     exportTapeCode = json['exportTapeCode'];
@@ -265,11 +308,11 @@ class LstTapeCampaign {
   }
 
   Map<String, dynamic> toJson() {
-    final Map<String, dynamic> data = new Map<String, dynamic>();
-    data['exportTapeCode'] = this.exportTapeCode;
-    data['startDate'] = this.startDate;
-    data['endDate'] = this.endDate;
-    data['brandCode'] = this.brandCode;
+    final Map<String, dynamic> data = <String, dynamic>{};
+    data['exportTapeCode'] = exportTapeCode;
+    data['startDate'] = startDate;
+    data['endDate'] = endDate;
+    data['brandCode'] = brandCode;
     return data;
   }
 }
