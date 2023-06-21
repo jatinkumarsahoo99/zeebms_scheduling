@@ -21,6 +21,10 @@ import '../../../../widgets/dropdown.dart';
 import '../../../../widgets/gridFromMap.dart';
 import '../../../../widgets/input_fields.dart';
 import '../../../../widgets/radio_row.dart';
+import '../../../data/PermissionModel.dart';
+import '../../../providers/Utils.dart';
+import '../../../routes/app_pages.dart';
+import '../../CommonSearch/views/common_search_view.dart';
 import '../model/ros_show_model.dart';
 import '../model/ros_cell_click_model.dart' as cellModel;
 
@@ -31,6 +35,7 @@ class RosDistributionController extends GetxController {
   var locationFN = FocusNode();
   var enableControllos = true.obs;
   PlutoGridStateManager? mainGSM;
+  List<PermissionModel>? formPermissions;
 
   var topButtons = <Map<String, dynamic>>[].obs;
   var showDataModel = ROSDistuibutionShowModel().obs;
@@ -41,19 +46,9 @@ class RosDistributionController extends GetxController {
   var checkBoxes = [].obs;
   int mainGridIdx = 0;
 
-  var data = {
-    "medium": ["English", "Hindi", "Marathi"],
-    "English": {
-      "Subjects": ["English", "Maths", "Science"],
-      "English": {
-        "Standard": [1, 2, 3, 4, 5],
-        1: {"name"}
-      }
-    }
-  };
-
   @override
   void onInit() {
+    formPermissions = Utils.fetchPermissions1(Routes.ROS_DISTRIBUTION.replaceAll("/", ""));
     topButtons.value = [
       {"name": "Show", "callback": handleShowTap, "btnShowBucket": true, "isEnabled": true},
       {"name": "Empty", "callback": handleEmptyTap, "btnEmpty": true, "isEnabled": true},
@@ -124,12 +119,12 @@ class RosDistributionController extends GetxController {
   ///
   ///
   ///////////////////////////Head section button click start/////////
-  void handleShowTap() {
+  handleShowTap() async {
     if (selectedLocation == null || selectedChannel == null) {
       LoadingDialog.showErrorDialog("Please select Location and Channel.");
     } else {
       LoadingDialog.call();
-      Get.find<ConnectorControl>().GETMETHODCALL(
+      await Get.find<ConnectorControl>().GETMETHODCALL(
           api: ApiFactory.RO_DISTRIBUTION_SHOW_DATA(
               selectedLocation!.key!, selectedChannel!.key!, DateFormat("yyyy-MM-dd").format(DateFormat("dd-MM-yyyy").parse(date.text))),
           fun: (resp) {
@@ -222,15 +217,26 @@ class RosDistributionController extends GetxController {
                             : DataGridShowOnlyKeys(
                                 mapData: reportList.value,
                                 onSelected: (row) {
-                                  if (selectedReportTab.value != "Zone Wise" && selectedReportTab.value != "Zone & Time") {
-                                    // mainGSM?.setFilter((element) {
-                                    //   return element.cells['clientName']?.value.toString() == reportList.value[row.rowIdx ?? 0]['clientName'];
-                                    // });
-                                    showDataModel.value.infoShowBucketList?.lstROSSpots
-                                        ?.removeWhere((element) => element.clientName != reportList.value[row.rowIdx ?? 0]['clientName']);
+                                  showDataModel.value.infoShowBucketList?.lstROSSpots?.clear();
+                                  showDataModel.value.infoShowBucketList?.lstROSSpots
+                                      ?.addAll(tempShowDataModel.infoShowBucketList?.lstROSSpots?.toList() ?? []);
+                                  if (selectedReportTab.value == "Zone Wise" || selectedReportTab.value == "Client Pivot") {
+                                    showDataModel.value.infoShowBucketList?.lstROSSpots?.removeWhere((element) =>
+                                        element.clientName.toString().trim() != reportList.value[row.rowIdx ?? 0]['ClientName'].toString().trim());
                                     Get.back();
-                                    showDataModel.refresh();
+                                  } else if (selectedReportTab.value != "Client & Brand Wise" || selectedReportTab.value != "Brand Pivot") {
+                                    showDataModel.value.infoShowBucketList?.lstROSSpots?.removeWhere((element) =>
+                                        element.clientName.toString().trim() != reportList.value[row.rowIdx ?? 0]['ClientName'].toString().trim() &&
+                                        element.brandname.toString().trim() != reportList.value[row.rowIdx ?? 0]['BrandName'].toString().trim());
+                                    Get.back();
+                                  } else if (selectedReportTab.value == "Zone Wise") {
+                                    showDataModel.value.infoShowBucketList?.lstROSSpots?.removeWhere((element) =>
+                                        element.allocatedSpot.toString().trim() != reportList.value[row.rowIdx ?? 0]['zonename'].toString().trim());
+                                  } else if (selectedReportTab.value == "Zone & Time") {
+                                    showDataModel.value.infoShowBucketList?.lstROSSpots
+                                        ?.removeWhere((element) => element.allocatedSpot.toString().trim() != "");
                                   }
+                                  showDataModel.refresh();
                                 },
                                 mode: PlutoGridMode.selectWithOneTap,
                               ),
@@ -272,7 +278,7 @@ class RosDistributionController extends GetxController {
         "optBrandPivot": newVal == "Brand Pivot",
         "optZoneWise": newVal == "Zone Wise",
         "optZoneTime": newVal == "Zone & Time",
-        "lstROSSpots": showDataModel.value.infoShowBucketList?.lstROSSpots?.map((e) => e.toJson()).toList() ?? [],
+        "lstROSSpots": tempShowDataModel.infoShowBucketList?.lstROSSpots?.map((e) => e.toJson()).toList() ?? [],
       },
     );
   }
@@ -333,7 +339,10 @@ class RosDistributionController extends GetxController {
     }
   }
 
-  void handleFPCTap() {
+  void handleFPCTap() async {
+    if (selectedLocation != null && selectedChannel != null && (showDataModel.value.infoShowBucketList?.lstFPC?.isEmpty ?? true)) {
+      await handleShowTap();
+    }
     var tempProgramName = "".obs, tempAlloc = "100".obs, tempFpcTime = "".obs, tempCommercialCap = "".obs, tempBookedDur = "".obs, tempBal = "".obs;
     var includeROS = true.obs, includeOpenDeal = true.obs, moveSpotbuys = false.obs;
 
@@ -1053,6 +1062,22 @@ class RosDistributionController extends GetxController {
             closeDialogIfOpen();
             LoadingDialog.showErrorDialog(resp.toString());
           });
+    }
+  }
+
+  bottomFormHandler(String btnName) {
+    if (btnName == "Clear") {
+      clearAllPage();
+    } else if (btnName == "Search") {
+      Get.to(
+        SearchPage(
+          key: Key("ROS Distribution"),
+          screenName: "ROS Distribution",
+          appBarName: "ROS Distribution",
+          strViewName: "BMS_view_BookingDetail",
+          isAppBarReq: true,
+        ),
+      );
     }
   }
   ///////////////////////////////////// COMMON FUNCTION END///////////

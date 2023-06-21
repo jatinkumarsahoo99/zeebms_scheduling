@@ -4,10 +4,12 @@ import 'package:bms_scheduling/app/data/DropDownValue.dart';
 import 'package:bms_scheduling/app/providers/ApiFactory.dart';
 import 'package:bms_scheduling/widgets/LoadingDialog.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:get/get.dart';
 import 'package:intl/intl.dart';
 
 import '../../../providers/Utils.dart';
+import '../../CommonSearch/views/common_search_view.dart';
 
 class StillMasterController extends GetxController {
   var locationList = <DropDownValue>[].obs, channelList = <DropDownValue>[].obs, tapeList = <DropDownValue>[].obs;
@@ -20,6 +22,7 @@ class StillMasterController extends GetxController {
       copyFN = FocusNode(),
       captionFN = FocusNode(),
       eomFN = FocusNode(),
+      programFN = FocusNode(),
       txCaptionFN = FocusNode();
   var firststSelectedRadio = "Opening".obs, secondSelectedRadio = "Dated".obs;
   var captionTC = TextEditingController(),
@@ -44,6 +47,7 @@ class StillMasterController extends GetxController {
   }
 
   clearPage() {
+    upToDateTC.clear();
     controllsEnabled.value = true;
     strCode = "";
     strTapeID = "";
@@ -77,34 +81,127 @@ class StillMasterController extends GetxController {
   }
 
   addListeners() {
+    programFN.addListener(() {
+      if (!programFN.hasFocus && txCaptionTC.text.isEmpty) {
+        createCaption(selectedProgram?.value ?? "");
+      }
+    });
     copyFN.addListener(() {
       if (!copyFN.hasFocus) {
         copyLeave();
       }
     });
+
+    /// TAPE ID
+    tapeIDFN.onKey = (node, event) {
+      if (event.logicalKey == LogicalKeyboardKey.tab && !event.data.isShiftPressed && tapIDTC.text.isNotEmpty) {
+        tapeIDLeave().then((value) {
+          if (value) {
+            tapeIDFN.requestFocus();
+          } else {
+            closeDialog();
+            segFN.requestFocus();
+          }
+        });
+        return KeyEventResult.handled;
+      }
+      //  else if (event.logicalKey == LogicalKeyboardKey.tab && event.data.isShiftPressed) {
+      //   tapeIDLeave().then((value) {
+      //     if (value) {
+      //       tapeIDFN.requestFocus();
+      //     } else {
+      //       closeDialog();
+      //       FocusScope.of(Get.context!).previousFocus();
+      //     }
+      //   });
+      //   return KeyEventResult.handled;
+      // }
+      else {
+        return KeyEventResult.ignored;
+      }
+    };
+
+    /// SEG NO.
+    segFN.onKey = (node, event) {
+      if (event.logicalKey == LogicalKeyboardKey.tab && !event.data.isShiftPressed) {
+        segNoLeave().then((value) {
+          if (value) {
+            segFN.requestFocus();
+          } else {
+            closeDialog();
+            houseIDFN.requestFocus();
+          }
+        });
+        return KeyEventResult.handled;
+      }
+      // else if (event.logicalKey == LogicalKeyboardKey.tab && event.data.isShiftPressed) {
+      //   segNoLeave().then((value) {
+      //     if (value) {
+      //       segFN.requestFocus();
+      //     } else {
+      //       closeDialog();
+      //       tapeIDFN.requestFocus();
+      //     }
+      //   });
+      //   return KeyEventResult.handled;
+      // }
+      else {
+        return KeyEventResult.ignored;
+      }
+    };
+
+    /// HOUSE ID
+    houseIDFN.onKey = (node, event) {
+      if (event.logicalKey == LogicalKeyboardKey.tab && !event.data.isShiftPressed && houseIDTC.text.isNotEmpty) {
+        houseIDLeave().then((value) {
+          if (value) {
+            houseIDFN.requestFocus();
+          } else {
+            closeDialog();
+            copyFN.requestFocus();
+          }
+        });
+        return KeyEventResult.handled;
+      }
+      // else if (event.data.isShiftPressed && event.logicalKey == LogicalKeyboardKey.tab) {
+      //   houseIDLeave().then((value) {
+      //     if (value) {
+      //       houseIDFN.requestFocus();
+      //     } else {
+      //       closeDialog();
+      //       segFN.requestFocus();
+      //     }
+      //   });
+      //   return KeyEventResult.handled;
+      // }
+      else {
+        return KeyEventResult.ignored;
+      }
+    };
+
     captionFN.addListener(() {
       if (!captionFN.hasFocus) {
         captionLeave();
       }
     });
 
-    tapeIDFN.addListener(() {
-      if (!tapeIDFN.hasFocus) {
-        tapeIDLeave();
-      }
-    });
+    // tapeIDFN.addListener(() {
+    //   if (!tapeIDFN.hasFocus) {
+    //     tapeIDLeave();
+    //   }
+    // });
 
-    segFN.addListener(() {
-      if (!segFN.hasFocus) {
-        segNoLeave();
-      }
-    });
+    // segFN.addListener(() {
+    //   if (!segFN.hasFocus) {
+    //     segNoLeave();
+    //   }
+    // });
 
-    houseIDFN.addListener(() {
-      if (!houseIDFN.hasFocus) {
-        houseIDLeave();
-      }
-    });
+    // houseIDFN.addListener(() {
+    //   if (!houseIDFN.hasFocus) {
+    //     houseIDLeave();
+    //   }
+    // });
 
     eomFN.addListener(() {
       if (!eomFN.hasFocus) {
@@ -138,7 +235,9 @@ class StillMasterController extends GetxController {
     if (selectedLocation == null) {
       LoadingDialog.showErrorDialog("Please select Location Name.");
     } else if (selectedChannel == null) {
-      LoadingDialog.showErrorDialog("Please select Location Name.");
+      LoadingDialog.showErrorDialog("Please select Channel Name.");
+    } else if (selectedTape == null) {
+      LoadingDialog.showErrorDialog("Please select Tape.");
     } else if (selectedProgram == null) {
       LoadingDialog.showErrorDialog("Please select Program.");
     } else if (tapIDTC.text.isEmpty) {
@@ -161,6 +260,18 @@ class StillMasterController extends GetxController {
       LoadingDialog.showErrorDialog("Export Tape Caption cannot be empty.", callback: () {
         txCaptionFN.requestFocus();
       });
+    } else if (somTC.text.isEmpty) {
+      LoadingDialog.showErrorDialog("Please enter SOM", callback: () {
+        txCaptionFN.requestFocus();
+      });
+    } else if (duration.value.isEmpty || duration.value == "00:00:00:00") {
+      LoadingDialog.showErrorDialog("Duration cannot be empty or 00:00:00:00.", callback: () {
+        txCaptionFN.requestFocus();
+      });
+    } else if (eomTC.text.isEmpty) {
+      LoadingDialog.showErrorDialog("Please enter EOM", callback: () {
+        txCaptionFN.requestFocus();
+      });
     } else if ((Utils.oldBMSConvertToSecondsValue(value: eomTC.text) - Utils.oldBMSConvertToSecondsValue(value: somTC.text)).isNegative) {
       LoadingDialog.showErrorDialog("EOM should not less than SOM", callback: () {
         eomFN.requestFocus();
@@ -169,24 +280,35 @@ class StillMasterController extends GetxController {
       LoadingDialog.call();
       Get.find<ConnectorControl>().POSTMETHOD(
         api: ApiFactory.STILL_MASTER_TAPE_SAVE_DATA,
-        fun: (resp) {},
+        fun: (resp) {
+          closeDialog();
+          if (resp != null && resp is Map<String, dynamic> && resp['stillmaster'] != null && resp['stillmaster']['strmessage'] != null) {
+            if (resp['stillmaster']['strmessage'].toString().contains("Record is inserted successfully.")) {
+              LoadingDialog.callDataSaved(msg: resp.toString());
+            } else {
+              LoadingDialog.showErrorDialog(resp.toString());
+            }
+          } else {
+            LoadingDialog.showErrorDialog(resp.toString());
+          }
+        },
         json: {
           "stillCode": strCode,
           "locationCode": selectedLocation?.key,
           "channelCode": selectedChannel?.key,
           "modifiedBy": Get.find<MainController>().user?.logincode,
-          "stillDuration": duration.value,
+          "stillDuration": Utils.convertToSecond(value: duration.value),
           "exportTapeCode": tapIDTC.text,
           "exportTapeCaption": prefixText.value + txCaptionTC.text,
           "programCode": selectedProgram?.key,
-          "tapeTypeCode": tapIDTC.text,
+          "tapeTypeCode": selectedTape?.key,
           "houseId": houseIDTC.text,
           "segmentNumber": segTC.text,
           "som": somTC.text,
           "eom": eomTC.text,
           "killDate": DateFormat("yyyy-MM-ddT00:00:00").format(DateFormat("dd-MM-yyyy").parse(upToDateTC.text)),
           "dated": "Y",
-          "stillCaption": "<string>",
+          "stillCaption": captionTC.text,
           "optBumper": firststSelectedRadio.value == "Bumper",
           "optOpening": firststSelectedRadio.value == "Opening",
           "optClosing": firststSelectedRadio.value == "Closing",
@@ -201,22 +323,26 @@ class StillMasterController extends GetxController {
       strCode = "";
       await retrievRecord(
         tapeid: tapIDTC.text,
-        segNo: segTC.text,
+        segNoT: segTC.text,
         locationCode: selectedLocation?.key ?? " ",
         channelCode: selectedChannel?.key ?? " ",
       );
     }
   }
 
-  tapeIDLeave() {
+  Future<bool> tapeIDLeave() async {
+    bool hasError = false;
     if (tapIDTC.text.isNotEmpty) {
       houseIDTC.text = tapIDTC.text;
-      checkRetrieve();
+      await checkRetrieve();
       if (tapIDTC.text.isNotEmpty && segTC.text != "0") {
-        Get.find<ConnectorControl>().POSTMETHOD(
+        LoadingDialog.call();
+        await Get.find<ConnectorControl>().POSTMETHOD(
           api: ApiFactory.STILL_MASTER_TAPE_ID_LEAVE,
           fun: (resp) {
+            closeDialog();
             if (resp != null && resp is Map<String, dynamic> && resp['tapeid'] != null && resp['tapeid']['eventName'] != null) {
+              hasError = true;
               LoadingDialog.showErrorDialog(resp['tapeid']['eventName'].toString(), callback: () {
                 tapeIDFN.requestFocus();
               });
@@ -235,18 +361,23 @@ class StillMasterController extends GetxController {
         );
       }
     }
+    return hasError;
   }
 
-  segNoLeave() {
-    if (segTC.text.isEmpty) {
+  Future<bool> segNoLeave() async {
+    bool hasError = false;
+    if (segTC.value.text.isEmpty) {
       segTC.text = "1";
     }
-    checkRetrieve();
+    await checkRetrieve();
     if (tapIDTC.text.isNotEmpty && segTC.text != "0") {
-      Get.find<ConnectorControl>().POSTMETHOD(
+      LoadingDialog.call();
+      await Get.find<ConnectorControl>().POSTMETHOD(
         api: ApiFactory.STILL_MASTER_TAPE_SEG_NO_LEAVE,
         fun: (resp) {
+          closeDialog();
           if (resp != null && resp is Map<String, dynamic> && resp['segnoleave'] != null && resp['segnoleave']['eventName'] != null) {
+            hasError = true;
             LoadingDialog.showErrorDialog(resp['segnoleave']['eventName'].toString(), callback: () {
               segFN.requestFocus();
             });
@@ -264,14 +395,19 @@ class StillMasterController extends GetxController {
         },
       );
     }
+    return hasError;
   }
 
-  houseIDLeave() {
+  Future<bool> houseIDLeave() async {
+    bool foundData = false;
     if (houseIDTC.text.isNotEmpty) {
-      Get.find<ConnectorControl>().POSTMETHOD(
+      LoadingDialog.call();
+      await Get.find<ConnectorControl>().POSTMETHOD(
         api: ApiFactory.STILL_MASTER_TAPE_HOUSE_ID_LEAVE,
         fun: (resp) {
+          closeDialog();
           if (resp != null && resp is Map<String, dynamic> && resp['houseid'] != null && resp['houseid']['eventName'] != null) {
+            foundData = true;
             LoadingDialog.showErrorDialog(resp['houseid']['eventName'].toString(), callback: () {
               houseIDFN.requestFocus();
             });
@@ -289,14 +425,16 @@ class StillMasterController extends GetxController {
         },
       );
     }
+    return foundData;
   }
 
   copyLeave() async {
-    retrievRecord(
-        tapeid: copyTC.text.isEmpty ? " " : copyTC.text,
-        segNo: "1",
-        locationCode: selectedLocation?.key ?? "",
-        channelCode: selectedChannel?.key ?? "");
+    await retrievRecord(
+      tapeid: copyTC.text.isEmpty ? " " : copyTC.text,
+      segNoT: "1",
+      locationCode: selectedLocation?.key ?? "",
+      channelCode: selectedChannel?.key ?? "",
+    );
     strCode = "";
     tapIDTC.text = "AUTO";
     controllsEnabled.value = true;
@@ -336,20 +474,58 @@ class StillMasterController extends GetxController {
     }
   }
 
-  retrievRecord({required String tapeid, required String segNo, required String locationCode, required String channelCode}) async {
+  retrievRecord({required String tapeid, required String segNoT, required String locationCode, required String channelCode}) async {
+    LoadingDialog.call();
     await Get.find<ConnectorControl>().POSTMETHOD(
         api: ApiFactory.STILL_MASTER_GET_RETRIVE_DATA,
         fun: (resp) {
-          if (resp != null && resp['getRecord'] != null && (resp['getRecord'] is List<dynamic>) && (resp['getRecord'] as List<dynamic>).isNotEmpty) {
-            var map = resp['getRecord'][0];
+          closeDialog();
+          if (resp != null && (resp['getRecord'] is Map<String, dynamic>) && resp['getRecord'] != null) {
+            var map = resp['getRecord'];
             if (map['stillCode'] != null) {
               strCode = map['stillCode'];
+            }
+            if (map['stillCaption'] != null) {
+              txCaptionTC.text = map['stillCaption'];
+            }
+            if (map['programCode'] != null && map['programName'] != null) {
+              selectedProgram = DropDownValue(key: map['programCode'].toString(), value: map['programName'].toString());
+              locationList.refresh();
+            }
+
+            if (map['exportTapeCaption'] != null) {
+              if (map['exportTapeCaption'].toString().contains("S/")) {
+                handleChangeInRadio("Bumper");
+                txCaptionTC.text = map['exportTapeCaption'].toString().split("/")[1];
+              } else if (map['exportTapeCaption'].toString().contains("OE/")) {
+                handleChangeInRadio("Opening");
+                txCaptionTC.text = map['exportTapeCaption'].toString().split("/")[1];
+              } else if (map['exportTapeCaption'].toString().contains("CE/")) {
+                handleChangeInRadio("Closing");
+                txCaptionTC.text = map['exportTapeCaption'].toString().split("/")[1];
+              }
+            }
+            if (map['segmentNumber'] != null) {
+              segTC.text = map['segmentNumber'].toString();
             }
             if (map['stillDuration'] != null) {
               duration.value = Utils.convertToTimeFromDouble(value: map['stillDuration']);
             }
-            if (map['stillCaption'] != null) {
-              txCaptionTC.text = map['stillCaption'];
+            if (map['houseId'] != null) {
+              tapIDTC.text = map['houseId'];
+            }
+            if (map['som'] != null) {
+              somTC.text = map['som'];
+            }
+            if (map['tapeTypeCode'] != null) {
+              var tempTapeType = channelList.firstWhereOrNull((element) => element.key == map['tapeTypeCode']);
+              if (tempTapeType != null) {
+                selectedTape = tempTapeType;
+                tapeList.refresh();
+              }
+            }
+            if (map['killDate'] != null) {
+              upToDateTC.text = DateFormat("dd-MM-yyyy").format(DateFormat("yyyy-MM-ddThh:mm:ss").parse(map['killDate'].toString()));
             }
             if (map['locationcode'] != null) {
               var tempLoc = locationList.firstWhereOrNull((element) => element.key == map['locationcode']);
@@ -373,48 +549,20 @@ class StillMasterController extends GetxController {
                 });
               }
             }
-            if (map['exportTapeCode'] != null) {
-              tapIDTC.text = map['exportTapeCode'];
-            }
             strTapeID = tapIDTC.text;
-            controllsEnabled.value = false;
-            if (map['exportTapeCaption'] != null) {
-              if (map['exportTapeCaption'].toString().contains("S/")) {
-                handleChangeInRadio("Bumper");
-                txCaptionTC.text = map['exportTapeCaption'].toString().split("/")[1];
-              } else if (map['exportTapeCaption'].toString().contains("OE/")) {
-                handleChangeInRadio("Opening");
-                txCaptionTC.text = map['exportTapeCaption'].toString().split("/")[1];
-              } else if (map['exportTapeCaption'].toString().contains("CE/")) {
-                handleChangeInRadio("Closing");
-                txCaptionTC.text = map['exportTapeCaption'].toString().split("/")[1];
-              }
-            }
-
-            if (map['programCode'] != null && map['programName'] != null) {
-              selectedProgram = DropDownValue(key: map['programCode'].toString(), value: map['programName'].toString());
-              locationList.refresh();
+            controllsEnabled.value = true;
+            controllsEnabled.refresh();
+            if (map['eom'] != null) {
+              eomTC.text = map['eom'];
             }
             if (map['houseId'] != null) {
               houseIDTC.text = map['houseId'].toString();
             }
             strHouseID = houseIDTC.text;
-            if (map['segmentNumber'] != null) {
-              segTC.text = map['segmentNumber'].toString();
-            }
-            if (map['eom'] != null) {
-              eomTC.text = map[''];
-            }
-            if (map['som'] != null) {
-              somTC.text = map[''];
-            }
-            if (map['killDate'] != null) {
-              upToDateTC.text = DateFormat("dd-MM-yyyy").format(DateFormat("yyyy-MM-ddThh:mm:ss").parse(map['killDate'].toString()));
-            }
           }
         },
         json: {
-          "segmentNumber": num.parse(segNo),
+          "segmentNumber": num.parse(segNoT),
           "exportTapeCode": tapeid,
         });
   }
@@ -438,13 +586,24 @@ class StillMasterController extends GetxController {
       fun: (resp) {
         closeDialog();
         if (resp != null && resp is Map<String, dynamic> && resp['pageload'] != null && resp['pageload']['lstLocaction'] != null) {
-          locationList.clear();
-          locationList.addAll((resp['pageload']['lstLocaction'] as List<dynamic>)
-              .map((e) => DropDownValue.fromJson({
-                    "key": e['locationCode'].toString(),
-                    "value": e["locationName"].toString(),
-                  }))
-              .toList());
+          if ((resp['pageload']['lstLocaction'] != null)) {
+            locationList.clear();
+            locationList.addAll((resp['pageload']['lstLocaction'] as List<dynamic>)
+                .map((e) => DropDownValue.fromJson({
+                      "key": e['locationCode'].toString(),
+                      "value": e["locationName"].toString(),
+                    }))
+                .toList());
+          }
+          if (resp['pageload']['lstTapemaster'] != null) {
+            tapeList.clear();
+            tapeList.addAll((resp['pageload']['lstTapemaster'] as List<dynamic>)
+                .map((e) => DropDownValue.fromJson({
+                      "key": e['tapetypecode'].toString(),
+                      "value": e["tapeTypeName"].toString(),
+                    }))
+                .toList());
+          }
         } else {
           LoadingDialog.showErrorDialog(resp.toString());
         }
@@ -462,17 +621,32 @@ class StillMasterController extends GetxController {
         LoadingDialog.recordExists("Record Already exist!\nDo you want to modify it?", () {
           saveData();
         });
+      } else {
+        saveData();
       }
     } else if (btnName == "Clear") {
       clearPage();
     } else if (btnName == "Refresh") {
       refreshPage();
+    } else if (btnName == "Search") {
+      Get.to(
+        SearchPage(
+          key: Key("Still Master"),
+          screenName: "Still Master",
+          appBarName: "Still Master",
+          strViewName: "Vstillmaster",
+          isAppBarReq: true,
+        ),
+      );
     }
   }
 
   closeDialog() {
     if (Get.isDialogOpen ?? false) {
       Get.back();
+      while ((Get.isDialogOpen ?? false)) {
+        Get.back();
+      }
     }
   }
 

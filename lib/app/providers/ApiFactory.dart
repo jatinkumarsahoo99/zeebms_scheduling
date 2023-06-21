@@ -408,9 +408,13 @@ class ApiFactory {
   ///
   ///
 ////////////////////////////// SLIDE-MASTER-API-START//////////////////////////////////////////////
-  static String SLIDE_MASTER_ON_LOAD(String loginCode) => "$BASE_URL/api/SlideMaster/SlideMasteronLoad?LoginCode=$loginCode";
   static String SLIDE_MASTER_GET_CHANNEL(String locationCode) => "$BASE_URL/api/SlideMaster/onLeaveLocation?LocationCode=$locationCode";
-  static String get SLIDE_MASTER_RETRIVE_DATA => "$BASE_URL/api/SlideMaster/TapeID_Leave";
+  static String get SLIDE_MASTER_TAPE_ID_LEAVE => "$BASE_URL/api/SlideMaster/TapeID_Leave";
+  static String get SLIDE_MASTER_ON_LOAD => "$BASE_URL/api/SlideMaster/SlideMasteronLoad";
+  static String get SLIDE_MASTER_TAPE_SEG_NO_LEAVE => "$BASE_URL/api/SlideMaster/SegNo_Leave";
+  static String get SLIDE_MASTER_TAPE_SAVE_DATA => "$BASE_URL/api/SlideMaster/SaveRecord";
+  static String get SLIDE_MASTER_GET_RETRIVE_DATA => "$BASE_URL/api/SlideMaster/RetriveRecord";
+  static String get SLIDE_MASTER_TAPE_HOUSE_ID_LEAVE => "$BASE_URL/api/SlideMaster/HouseID_Leave";
 ////////////////////////////// SLIDE-MASTER-API-END  //////////////////////////////////////////////
   ///
   ///
