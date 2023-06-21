@@ -545,7 +545,9 @@ class ApiFactory {
 
   static String RO_BOOKING_cboTapeIdLeave = "$BASE_URL/api/ROBooking/cboTapeIdLeave";
   static String RO_BOOKING_cboTapeIdFocusLost = "$BASE_URL/api/ROBooking/GetTapeIdLostFocus";
-
+  static String RO_BOOKING_AddSpot = "$BASE_URL/api/ROBooking/OnAddSpots";
   static String RO_BOOKING_OnSaveData = "$BASE_URL/api/ROBooking/OnSaveData";
   static String RO_BOOKING_GetClientPDC = "$BASE_URL/api/ROBooking/GetClientPDC";
+
+  //////////////////////////////// ASRUN IMPORT /////////////////////////////////
 }
