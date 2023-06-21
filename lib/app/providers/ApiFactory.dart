@@ -561,4 +561,10 @@ class ApiFactory {
   static String COMMERCIAL_MASTER_SAVE_COMMERCIALTAPE = BASE_URL + "/api/CommercialTapeMaster/CommercialTapeSave";
 
 
+  //////////////////////////////// Sales Audit Not Select Report ///////////////////////////////////////////
+
+  static String SALESAUDIT_NOT_TELECASTLOAD = BASE_URL + "/api/SalesAuditNotTR/SalesauditnottelecastLoad";
+  static String SALESAUDIT_NOT_TELECAST_GETGENERATE = BASE_URL + "/api/SalesAuditNotTR/GetGenrate";
+
+
 }

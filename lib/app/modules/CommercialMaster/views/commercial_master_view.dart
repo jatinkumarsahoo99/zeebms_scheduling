@@ -125,7 +125,7 @@ class CommercialMasterView extends StatelessWidget {
                                                     value;
 
                                                 controllerX.getTapeId();
-                                                controllerX.isListenerActive = true;
+                                                // controllerX.isListenerActive = true;
                                               },
                                               "Sec Type",
                                               isEnable: controllerX.isEnable,
@@ -414,7 +414,7 @@ class CommercialMasterView extends StatelessWidget {
                                             isEnable: controllerX.isEnable,
                                             onchanged: (val) {
                                               controllerX.getAgencyDetails(val);
-                                              controllerX.isListenerActive = true;
+                                              // controllerX.isListenerActive = true;
                                             },
                                             autoFocus: true,
                                           ),

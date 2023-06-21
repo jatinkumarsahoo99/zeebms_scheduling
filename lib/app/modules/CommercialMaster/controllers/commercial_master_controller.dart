@@ -97,7 +97,10 @@ class CommercialMasterController extends GetxController {
             "",
             0,
             "");
+      }if(captionFocus.hasFocus){
+        isListenerActive=true;
       }
+
     });
     tapeIdFocus.addListener(() {
       if (isListenerActive && !tapeIdFocus.hasFocus) {
@@ -108,6 +111,8 @@ class CommercialMasterController extends GetxController {
           // validateTxNo(tapeIdController.value.text + "-" + segController.text, "", "");
           validateTxNo("",tapeIdController.value.text,segController.text);
         }
+      }if(tapeIdFocus.hasFocus){
+        isListenerActive=true;
       }
     });
     txNoFocus.addListener(() {
@@ -122,6 +127,8 @@ class CommercialMasterController extends GetxController {
             "",
             0,
             clockIdController.text);
+      }if(clockIdFocus.hasFocus){
+        isListenerActive=true;
       }
     });
 
@@ -450,7 +457,7 @@ class CommercialMasterController extends GetxController {
       "commercialCode": commercialCode ?? "0",
       "houseid": houseId ?? ""
     };
-    isListenerActive =true;
+    // isListenerActive =true;
     print(">>>>"+postData.toString());
     Get.find<ConnectorControl>().POSTMETHOD(
         api: ApiFactory.COMMERCIAL_MASTER_VALIDATE_TXNO,
@@ -511,7 +518,7 @@ class CommercialMasterController extends GetxController {
   fetchCommercialTapeMasterData(
       String caption, String tapeCode, int segNumber, String clockId) {
     LoadingDialog.call();
-    isListenerActive = true;
+    // isListenerActive = true;
     Map<String, dynamic> postData = {
       "commercialCode": "0",
       "commercialCaption": caption ?? "",
@@ -640,15 +647,17 @@ class CommercialMasterController extends GetxController {
 
             isEnable = false;
             isListenerActive =false;
+
             update(['updateLeft']);
           }else{
+            isListenerActive =false;
             commercialCode="0";
           }
         });
   }
 
   getTapeId() {
-    isListenerActive = true;
+    // isListenerActive = true;
     Get.find<ConnectorControl>().GETMETHODCALL(
         api: ApiFactory.COMMERCIAL_MASTER_GET_TAPID(
             selectedRevenueType!.key ?? "", selectedSecType!.key ?? ""),
@@ -656,6 +665,7 @@ class CommercialMasterController extends GetxController {
           if (map != "" && map != null) {
             tapeIdController.value.text = map ?? "";
             // validateTxNo(tapeIdController.value.text +"-"+ segController.text);
+            isListenerActive =false;
             update(['tapeId']);
             fetchCommercialTapeMasterData(
                 "",
@@ -665,7 +675,9 @@ class CommercialMasterController extends GetxController {
                         ? segController.text
                         : "0"),
                 "");
+
           } else {
+            // isListenerActive =true;
             tapeIdController.value.text = "";
             // update(['tapeId']);
           }

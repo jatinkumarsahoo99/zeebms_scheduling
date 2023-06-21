@@ -15,9 +15,11 @@ import '../../../controller/HomeController.dart';
 import '../controllers/SalesAuditNotTelecastReportController.dart';
 
 class SalesAuditNotTelecastReportView
-    extends GetView<SalesAuditNotTelecastReportController> {
+    extends StatelessWidget  {
+
   SalesAuditNotTelecastReportController controllerX =
-      Get.put(SalesAuditNotTelecastReportController());
+      Get.put<SalesAuditNotTelecastReportController>(SalesAuditNotTelecastReportController());
+
   final GlobalKey rebuildKey = GlobalKey();
 
   void formHandler(btnText) {
@@ -98,36 +100,26 @@ class SalesAuditNotTelecastReportView
                                             const EdgeInsets.only(top: 8.0),
                                         child: Row(
                                           children: [
-                                            Checkbox(
-                                              value: ((controllerX.progNameList
-                                                          ?.isNotEmpty)! &&
-                                                      controllerX
-                                                              .selectedProgramIndexes
-                                                              ?.length ==
-                                                          controllerX
-                                                              .progNameList
-                                                              ?.length)
-                                                  ? true
-                                                  : false,
-                                              onChanged: (bool? value) {
-                                                if (value!) {
-                                                  controllerX.selectedProgramIndexes =
-                                                      List.generate(
-                                                          controllerX
-                                                                  .progNameList
-                                                                  ?.length ??
-                                                              0,
-                                                          (index) => 0 + index);
-                                                } else {
-                                                  controllerX
-                                                      .selectedProgramIndexes
-                                                      ?.clear();
-                                                }
+                                           Obx(()=>Checkbox(
+                                             value: controllerX.checked.value,
+                                             onChanged: (bool? value) {
+                                               controllerX.checked.value = value!;
+                                               if(value!){
+                                                 for (var element in controllerX
+                                                     .channelList) {
+                                                       element.ischecked = true;
+                                                 }
+                                                 controllerX.update(['updateTable1']);
+                                               }else{
+                                                 for (var element in controllerX
+                                                     .channelList) {
+                                                   element.ischecked = false;
+                                                 }
+                                                 controllerX.update(['updateTable1']);
+                                               }
 
-                                                controllerX
-                                                    .update(["initialData"]);
-                                              },
-                                            ),
+                                             },
+                                           )) ,
                                             Text(
                                               "Channel",
                                               style: TextStyle(fontSize: 12),
@@ -139,12 +131,7 @@ class SalesAuditNotTelecastReportView
                                                 hintTxt: "Search",
                                                 controller: controllerX.search_,
                                                 onChange: (val) {
-                                                  controllerX.debouncer
-                                                      .call(() {
-                                                    // if (val != null && val != "")
-                                                    controllerX
-                                                        .fetchProgram(val);
-                                                  });
+
                                                 }),
                                           ],
                                         ),
@@ -176,7 +163,7 @@ class SalesAuditNotTelecastReportView
                                                     controller:
                                                         ScrollController(),
                                                     itemCount: controllerX
-                                                            .progNameList
+                                                            .channelList
                                                             ?.length ??
                                                         0,
                                                     itemBuilder:
@@ -185,40 +172,20 @@ class SalesAuditNotTelecastReportView
                                                         children: [
                                                           Checkbox(
                                                             value: controllerX
-                                                                .selectedProgramIndexes
-                                                                ?.contains(
-                                                                    index),
+                                                                .channelList[index].ischecked,
                                                             onChanged:
                                                                 (bool? value) {
-                                                              if (controllerX
-                                                                      .selectedProgramIndexes
-                                                                      ?.contains(
-                                                                          index) ??
-                                                                  false) {
-                                                                controllerX
-                                                                    .selectedProgramIndexes
-                                                                    ?.remove(
-                                                                        index); // unselect
-                                                              } else {
-                                                                controllerX
-                                                                    .selectedProgramIndexes
-                                                                    ?.add(
-                                                                        index); // select
-                                                              }
-                                                              controllerX
-                                                                  .update([
-                                                                "initialData"
-                                                              ]);
-                                                              /*controllerX.update(
-                                                                  ["updateTable1"]);*/
-                                                            },
+                                                                  controllerX
+                                                                      .channelList[index].ischecked = value;
+                                                                  controllerX.update(['updateTable1']);
+                                                                },
                                                           ),
                                                           Expanded(
                                                             child: Text(
                                                               controllerX
-                                                                      .progNameList![
+                                                                      .channelList[
                                                                           index]
-                                                                      .value ??
+                                                                      .channelName ??
                                                                   "",
                                                               style: TextStyle(
                                                                   fontSize: 12),
@@ -269,8 +236,9 @@ class SalesAuditNotTelecastReportView
                                             ],
                                             groupValue:
                                                 controllerX.selectValue.value ?? "",
-                                            onchange: (v) {
+                                            onchange: (String v) {
                                               controllerX.selectValue.value=v;
+                                              controllerX.getType(v);
                                             },
                                           )),
                                       const SizedBox(
