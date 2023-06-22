@@ -62,11 +62,17 @@ class SalesAuditNotTelecastReportController extends GetxController {
   SalesAuditNotTRLstChannelModel? salesAuditNotTRLstChannelModel;
    getType(String name){
     if(name == 'Not telecasted'){
+      chk_raderror=false;
       chk_radnottel = true;
     }else{
-      chk_raderror =true ;
+      chk_radnottel=false;
+      chk_raderror =true;
     }
 
+  }
+  clearAll(){
+    Get.delete<SalesAuditNotTelecastReportController>();
+    Get.find<HomeController>().clearPage1();
   }
 
   @override
@@ -146,7 +152,7 @@ class SalesAuditNotTelecastReportController extends GetxController {
         "chk_radnottel": chk_radnottel,
         "chk_raderror": chk_raderror
       };
-      print(">>>>>"+(postData).toString());
+      print(">>>>>postData>>>"+(postData).toString());
       Get.find<ConnectorControl>().POSTMETHOD(
           api: ApiFactory.SALESAUDIT_NOT_TELECAST_GETGENERATE,
           json: postData,
