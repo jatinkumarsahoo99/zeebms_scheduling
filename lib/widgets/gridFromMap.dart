@@ -64,7 +64,7 @@ class DataGridFromMap extends StatelessWidget {
   final Function(PlutoGridOnRowDoubleTapEvent)? onRowDoubleTap;
   final Function(PlutoGridOnChangedEvent)? onEdit;
   final Function(bool)? onFocusChange;
-  final Function(DataGridMenuItem,int)? onContextMenuClick;
+  final Function(DataGridMenuItem, int)? onContextMenuClick;
   final List? hideKeys;
   final Function(PlutoGridOnSelectedEvent)? onSelected;
   final Function(PlutoGridOnRowCheckedEvent)? onRowCheck;
@@ -116,8 +116,7 @@ class DataGridFromMap extends StatelessWidget {
                               : key.toString().pascalCaseToNormal()
                       : key.toString().pascalCaseToNormal()
                   : key.toString(),
-              enableRowChecked:
-                  (checkRow == true && key == checkRowKey) ? true : false,
+              enableRowChecked: (checkRow == true && key == checkRowKey) ? true : false,
               renderer: ((rendererContext) {
                 if (actionIconKey != null && key == actionIconKey) {
                   return GestureDetector(
@@ -135,11 +134,8 @@ class DataGridFromMap extends StatelessWidget {
                       if (onContextMenuClick == null) {
                         DataGridMenu().showGridMenu(rendererContext.stateManager, detail, context, exportFileName: exportFileName);
                       } else {
-                        DataGridMenu().showGridCustomMenu(
-                            rendererContext.stateManager, detail, context,
-                            exportFileName: exportFileName,
-                            onPressedClick: onContextMenuClick,
-                            plutoContext: rendererContext);
+                        DataGridMenu().showGridCustomMenu(rendererContext.stateManager, detail, context,
+                            exportFileName: exportFileName, onPressedClick: onContextMenuClick, plutoContext: rendererContext);
                       }
                     },
                     child: Text(
@@ -179,8 +175,7 @@ class DataGridFromMap extends StatelessWidget {
                     ? "FPC Caption"
                     : key.toString().pascalCaseToNormal()
                 : key,
-            enableRowChecked:
-                (checkRow == true && key == checkRowKey) ? true : false,
+            enableRowChecked: (checkRow == true && key == checkRowKey) ? true : false,
             renderer: ((rendererContext) {
               if (actionIconKey != null) {
                 if (key == actionIconKey) {
@@ -198,9 +193,7 @@ class DataGridFromMap extends StatelessWidget {
                   return GestureDetector(
                     onSecondaryTapDown: (detail) {
                       if (onContextMenuClick == null) {
-                        DataGridMenu().showGridMenu(
-                            rendererContext.stateManager, detail, context,
-                            exportFileName: exportFileName);
+                        DataGridMenu().showGridMenu(rendererContext.stateManager, detail, context, exportFileName: exportFileName);
                       } else {
                         DataGridMenu().showGridCustomMenu(rendererContext.stateManager, detail, context,
                             exportFileName: exportFileName, onPressedClick: onContextMenuClick, plutoContext: rendererContext);
@@ -214,48 +207,29 @@ class DataGridFromMap extends StatelessWidget {
                     ),
                   );
                 }
-              } else if (GetInstance()
-                      .isRegistered<TransmissionLogController>() &&
+              } else if (GetInstance().isRegistered<TransmissionLogController>() &&
                   Get.find<TransmissionLogController>().tsListData != null &&
-                  ((Get.find<TransmissionLogController>().tsListData?.length ??
-                          0) >
-                      0)) {
+                  ((Get.find<TransmissionLogController>().tsListData?.length ?? 0) > 0)) {
                 bool isColorRed = false;
-                int intPromoCap =
-                    Get.find<TransmissionLogController>().tsPromoCap.value;
-                int intCommercialCap =
-                    Get.find<TransmissionLogController>().tsCommercialCap.value;
+                int intPromoCap = Get.find<TransmissionLogController>().tsPromoCap.value;
+                int intCommercialCap = Get.find<TransmissionLogController>().tsCommercialCap.value;
                 if (key == "promoDuration") {
-                  if (num.tryParse(rendererContext
-                              .row.cells["promoDuration"]?.value
-                              .toString() ??
-                          "0")! >
-                      intPromoCap / 60.0) {
+                  if (num.tryParse(rendererContext.row.cells["promoDuration"]?.value.toString() ?? "0")! > intPromoCap / 60.0) {
                     isColorRed = true;
                   }
                 }
                 if (key == "commercialduration") {
-                  if (num.tryParse(rendererContext
-                              .row.cells["commercialduration"]?.value
-                              .toString() ??
-                          "0")! >
-                      intCommercialCap / 60.0) {
+                  if (num.tryParse(rendererContext.row.cells["commercialduration"]?.value.toString() ?? "0")! > intCommercialCap / 60.0) {
                     isColorRed = true;
                   }
                 }
                 if (key == "totaladd") {
-                  if (num.tryParse(rendererContext.row.cells["totaladd"]?.value
-                              .toString() ??
-                          "0")! >
-                      (intCommercialCap + intPromoCap) / 60.0) {
+                  if (num.tryParse(rendererContext.row.cells["totaladd"]?.value.toString() ?? "0")! > (intCommercialCap + intPromoCap) / 60.0) {
                     isColorRed = true;
                   }
                 }
                 if (key == "Commercial & Promo") {
-                  if (num.tryParse(rendererContext
-                              .row.cells["Commercial & Promo"]?.value
-                              .toString() ??
-                          "0")! >
+                  if (num.tryParse(rendererContext.row.cells["Commercial & Promo"]?.value.toString() ?? "0")! >
                       (intCommercialCap + intPromoCap) / 60.0) {
                     isColorRed = true;
                   }
@@ -270,32 +244,25 @@ class DataGridFromMap extends StatelessWidget {
                   // color: (key == "epsNo" || key == "tapeid" || key == "status") ? ColorData.cellColor(rendererContext.row.cells[key]?.value, key) : null,
                   child: GestureDetector(
                     onSecondaryTapDown: (detail) {
-                      DataGridMenu().showGridMenu(
-                          rendererContext.stateManager, detail, context);
+                      DataGridMenu().showGridMenu(rendererContext.stateManager, detail, context);
                     },
                     child: Text(
                       rendererContext.cell.value.toString(),
                       style: TextStyle(
                           fontSize: SizeDefine.columnTitleFontSize,
-                          fontWeight: rendererContext
-                                      .row.cells["modifed"]?.value
-                                      .toString()
-                                      .toLowerCase() ==
-                                  "y"
-                              ? FontWeight.bold
-                              : FontWeight.normal),
+                          fontWeight:
+                              rendererContext.row.cells["modifed"]?.value.toString().toLowerCase() == "y" ? FontWeight.bold : FontWeight.normal),
                     ),
                   ),
                 );
               } else {
                 return GestureDetector(
                   onSecondaryTapDown: (detail) {
-                    if(onContextMenuClick==null) {
+                    if (onContextMenuClick == null) {
                       DataGridMenu().showGridMenu(rendererContext.stateManager, detail, context, exportFileName: exportFileName);
-                    }else {
-                      DataGridMenu().showGridCustomMenu(
-                          rendererContext.stateManager, detail, context,
-                          exportFileName: exportFileName,onPressedClick: onContextMenuClick,plutoContext: rendererContext);
+                    } else {
+                      DataGridMenu().showGridCustomMenu(rendererContext.stateManager, detail, context,
+                          exportFileName: exportFileName, onPressedClick: onContextMenuClick, plutoContext: rendererContext);
                     }
                   },
                   child: Text(
@@ -424,7 +391,11 @@ class DataGridFromMap3 extends StatelessWidget {
     this.focusNode,
     this.gridStyle,
     this.checkBoxColumnNoEditKey,
+    this.showSecondaryDialog = true,
+    this.secondaryExtraDialogList,
   }) : super(key: key);
+  final List<SecondaryShowDialogModel>? secondaryExtraDialogList;
+  final bool showSecondaryDialog;
   final FocusNode? previousWidgetFN;
   PlutoGridStyleConfig? gridStyle;
   final List<String>? enableColumnDoubleTap;
@@ -521,9 +492,12 @@ class DataGridFromMap3 extends StatelessWidget {
             if (checkBoxColumnKey != null && checkBoxColumnKey!.isNotEmpty && checkBoxColumnKey!.contains(key)) {
               return GestureDetector(
                 // canRequestFocus: false,
-                onSecondaryTapDown: (detail) {
-                  DataGridMenu().showGridMenu(rendererContext.stateManager, detail, context, exportFileName: exportFileName);
-                },
+                onSecondaryTapDown: showSecondaryDialog
+                    ? (detail) {
+                        DataGridMenu().showGridMenu(rendererContext.stateManager, detail, context,
+                            exportFileName: exportFileName, extraList: secondaryExtraDialogList);
+                      }
+                    : null,
                 onTap: !(checkBoxColumnNoEditKey?.contains(key) ?? false)
                     ? () {
                         if (showTitleInCheckBox != null && showTitleInCheckBox!.isNotEmpty) {
@@ -580,9 +554,12 @@ class DataGridFromMap3 extends StatelessWidget {
               );
             } else {
               return GestureDetector(
-                onSecondaryTapDown: (detail) {
-                  DataGridMenu().showGridMenu(rendererContext.stateManager, detail, context, exportFileName: exportFileName);
-                },
+                onSecondaryTapDown: showSecondaryDialog
+                    ? (detail) {
+                        DataGridMenu().showGridMenu(rendererContext.stateManager, detail, context,
+                            exportFileName: exportFileName, extraList: secondaryExtraDialogList);
+                      }
+                    : null,
                 child: Text(
                   rendererContext.cell.value.toString(),
                   style: TextStyle(

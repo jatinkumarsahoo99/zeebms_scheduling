@@ -51,18 +51,12 @@ class ApiFactory {
         "/api/MDI/SaveApplicationPagesFootprintData?UserName=$mail&PageName=$pageName&AccessDate=$currentDate";
   }
 
-  static String SEARCH_VARIANCE(
-      {required String viewName,
-      required String screenName,
-      required String loginCode}) {
+  static String SEARCH_VARIANCE({required String viewName, required String screenName, required String loginCode}) {
     // return BASE_URL + "/api/$screenName/SearchVariance/$viewName";
     return BASE_URL_COMMON + "/api/CommonSearch/SearchVariance/$viewName";
   }
 
-  static String SEARCH_BINDGRID(
-      {required String viewName,
-      required String screenName,
-      required String code}) {
+  static String SEARCH_BINDGRID({required String viewName, required String screenName, required String code}) {
     // return BASE_URL + "/api/$screenName/BindGrid/$viewName,$code";
     return BASE_URL_COMMON + "/api/CommonSearch/BindGrid/$viewName,$code";
   }
@@ -86,8 +80,7 @@ class ApiFactory {
     required String screenName,
   }) {
     // return BASE_URL + "/api/$screenName/SearchExecute?strViewName=$strViewName";
-    return BASE_URL_COMMON +
-        "/api/CommonSearch/SearchExecute?strViewName=$strViewName";
+    return BASE_URL_COMMON + "/api/CommonSearch/SearchExecute?strViewName=$strViewName";
   }
 
   // static String SEARCH_PIVOT({required String screenName,}) => BASE_URL + "/api/$screenName/SearchPivot";
@@ -101,8 +94,7 @@ class ApiFactory {
     required String screenName,
     required String strViewname,
   }) =>
-      BASE_URL_COMMON +
-      "/api/CommonSearch/SearchExecutePivot?strViewName=$strViewname";
+      BASE_URL_COMMON + "/api/CommonSearch/SearchExecutePivot?strViewName=$strViewname";
 
   static String ADD_SEARCH_VARIANCE({
     required String strViewName,
@@ -112,8 +104,7 @@ class ApiFactory {
     // required String pivotTemplate,
   }) {
     // return BASE_URL + "/api/$screenName/InsertSearchVariance?strViewName=$strViewName&sVariant=$sVariant";
-    return BASE_URL_COMMON +
-        "/api/CommonSearch/InsertSearchVariance?strViewName=$strViewName&sVariant=$sVariant";
+    return BASE_URL_COMMON + "/api/CommonSearch/InsertSearchVariance?strViewName=$strViewName&sVariant=$sVariant";
   }
 
   static String DELETE_SEARCH_VARIANCE({
@@ -122,75 +113,59 @@ class ApiFactory {
     required String screenName,
   }) {
     // return BASE_URL + "/api/$screenName/DeleteSearchVariance?VarianceId=$varianceId";
-    return BASE_URL_COMMON +
-        "/api/CommonSearch/DeleteSearchVariance?VarianceId=$varianceId";
+    return BASE_URL_COMMON + "/api/CommonSearch/DeleteSearchVariance?VarianceId=$varianceId";
   }
 
   /////////////////////////////////////////////////////////
 
-  static String AZURE_REDIRECT_UI =
-      "${kReleaseMode ? WEB_URL : LOCAL_URL}/dashboard";
+  static String AZURE_REDIRECT_UI = "${kReleaseMode ? WEB_URL : LOCAL_URL}/dashboard";
   static String NOTIFY_URL = (kReleaseMode ? WEB_URL_COMMON : LOCAL_URL);
   static String SPLIT_CLEAR_PAGE = (kReleaseMode ? "in/" : "92/");
 
-  static String MS_TOKEN =
-      "https://login.microsoftonline.com/56bd48cd-f312-49e8-b6c7-7b5b926c03d6/oauth2/token";
+  static String MS_TOKEN = "https://login.microsoftonline.com/56bd48cd-f312-49e8-b6c7-7b5b926c03d6/oauth2/token";
 
   static String LOGIN_API = "$BASE_URL_LOGIN/api/Login/GetLogin?";
   static String LOGOUT_API = "$BASE_URL_LOGIN/api/Login/GetLogout?PersonnelNo=";
   static String USER_INFO = "$BASE_URL_LOGIN/api/Login/GetUserinfo";
-  static String PERMISSION_API =
-      "$BASE_URL_COMMON/api/MDI/GetAllFormDetailsAndPermission?Userid=";
+  static String PERMISSION_API = "$BASE_URL_COMMON/api/MDI/GetAllFormDetailsAndPermission?Userid=";
   static String MS_PROFILE = "$BASE_URL_LOGIN/api/Login/PostUserProfile";
   static String MS_TOKEN_BACKEND = "$BASE_URL_LOGIN/api/Login/PostApiToken";
 
-  static String MS_TOKEN1 =
-      "https://login.microsoftonline.com/56bd48cd-f312-49e8-b6c7-7b5b926c03d6/oauth2/v2.0/token";
-  static String MS_AUTH =
-      "https://login.microsoftonline.com/56bd48cd-f312-49e8-b6c7-7b5b926c03d6/oauth2/v2.0/token";
+  static String MS_TOKEN1 = "https://login.microsoftonline.com/56bd48cd-f312-49e8-b6c7-7b5b926c03d6/oauth2/v2.0/token";
+  static String MS_AUTH = "https://login.microsoftonline.com/56bd48cd-f312-49e8-b6c7-7b5b926c03d6/oauth2/v2.0/token";
 
   // static String MS_GRAPH_USER_DETAILS = "https://graph.microsoft.com/v1.0/me?\$select=employeeId,mail,givenName";
   static String MS_GRAPH_USER_DETAILS =
       "https://graph.microsoft.com/v1.0/me?\$select=employeeId,mail,givenName,jobTitle,givenName,id,mobilePhone,displayName";
-  static String MS_LOGOUT =
-      "https://login.microsoftonline.com/common/oauth2/v2.0/logout?post_logout_redirect_uri=";
+  static String MS_LOGOUT = "https://login.microsoftonline.com/common/oauth2/v2.0/logout?post_logout_redirect_uri=";
 
   /*static String PERMISSION_API =
       BASE_URL + "/api/MDI/GetAllFormDetailsAndPermission?Userid=";
 */
 ///////////////////////XML Download API////////////////////////
   static String EXPORT_TO_XML = "$BASE_URL_COMMON/api/Common/ConvertTableToXml";
-  static String OPERATIONAL_FPC_PROGRAM_SEARCH =
-      "$BASE_URL/api/DailyFPCReport/ProgramSearch?SearchText=";
-  static String MOVIE_PLANNER_GET_LOCATIONS =
-      BASE_URL + "/api/MoviePlanner/GetSchedulerLoadLocation";
+  static String OPERATIONAL_FPC_PROGRAM_SEARCH = "$BASE_URL/api/DailyFPCReport/ProgramSearch?SearchText=";
+  static String MOVIE_PLANNER_GET_LOCATIONS = BASE_URL + "/api/MoviePlanner/GetSchedulerLoadLocation";
 
-  static String MOVIE_PLANNER_GET_DATA_ON_LOCATION_SELECT(
-      {required location, required userId}) {
-    return BASE_URL +
-        '/api/MoviePlanner/GetLocationSelect?Locationcode=$location&logincode=$userId';
+  static String MOVIE_PLANNER_GET_DATA_ON_LOCATION_SELECT({required location, required userId}) {
+    return BASE_URL + '/api/MoviePlanner/GetLocationSelect?Locationcode=$location&logincode=$userId';
   }
 
   //////////////////// FPC MISMATCH - UI: Sanjaya Jena API: PATTA NIGAM ////////////////
-  static String FPC_MISMATCH_LOCATION =
-      BASE_URL + "/api/FpcMismatch/GetLocations";
+  static String FPC_MISMATCH_LOCATION = BASE_URL + "/api/FpcMismatch/GetLocations";
 
-  static String FPC_MISMATCH_CHANNEL(String userId, String locCode) =>
-      BASE_URL + "/api/FpcMismatch/GetChannelMaster?locationCode=$locCode";
+  static String FPC_MISMATCH_CHANNEL(String userId, String locCode) => BASE_URL + "/api/FpcMismatch/GetChannelMaster?locationCode=$locCode";
 
   static String FPC_MISMATCH(String location, String channelCode, String dt) =>
       // BASE_URL + "/api/FpcMismatch/BindFPCMismatchGrid/$location,$channelCode,$dt";
-      BASE_URL +
-      "/api/FpcMismatch/BindFPCMismatchGrid?LocationCode=$location&ChannelCode=$channelCode&EffectiveDate=$dt";
+      BASE_URL + "/api/FpcMismatch/BindFPCMismatchGrid?LocationCode=$location&ChannelCode=$channelCode&EffectiveDate=$dt";
 
-  static String FPC_MISMATCH_ERROR(
-          String location, String channelCode, String dt) =>
+  static String FPC_MISMATCH_ERROR(String location, String channelCode, String dt) =>
       BASE_URL +
       // "/api/FpcMismatch/BindFPCMismatchGridError/$location,$channelCode,$dt";
       "/api/FpcMismatch/BindFPCMismatchGridError?LocationCode=$location&ChannelCode=$channelCode&EffectiveDate=$dt";
 
-  static String FPC_MISMATCH_ALL(
-          String location, String channelCode, String dt) =>
+  static String FPC_MISMATCH_ALL(String location, String channelCode, String dt) =>
       BASE_URL +
       // "/api/FpcMismatch/BindFPCMismatchGridAll/$location,$channelCode,$dt";
       "/api/FpcMismatch/BindFPCMismatchGridAll?LocationCode=$location&ChannelCode=$channelCode&EffectiveDate=$dt";
@@ -212,10 +187,8 @@ class ApiFactory {
 /////////////////////////////////////End FPC Mismatch////////////////////////////////////////////////////
 
 //////////////////////////////////////////Log Additions API: Deven UI: Sanjaya///////////////////////////////////////////////
-  static String LOG_ADDITION_LOCATION =
-      BASE_URL + "/api/Additions/GetLoadLocation";
-  static String LOG_ADDITION_CHANNEL =
-      BASE_URL + "/api/Additions/GetLocationSelect?Locationcode=";
+  static String LOG_ADDITION_LOCATION = BASE_URL + "/api/Additions/GetLoadLocation";
+  static String LOG_ADDITION_CHANNEL = BASE_URL + "/api/Additions/GetLocationSelect?Locationcode=";
 
   static String LOG_ADDITION_PREVIOUS_ADDITION(
     String locName,
@@ -223,67 +196,42 @@ class ApiFactory {
     String date,
     String aditionNo,
   ) =>
-      BASE_URL +
-      "/api/Additions/GetDisplayPreviousAdditon?locationName=$locName&channelName=$chnlName&Date=$date&additionnumber=$aditionNo";
+      BASE_URL + "/api/Additions/GetDisplayPreviousAdditon?locationName=$locName&channelName=$chnlName&Date=$date&additionnumber=$aditionNo";
 
   static String LOG_ADDITION_SHOW_DETAILS(
-          DropDownValue locDetail,
-          DropDownValue chnlDetails,
-          String date,
-          bool isPrimary,
-          bool checkStandBy,
-          bool checkIgnore) =>
+          DropDownValue locDetail, DropDownValue chnlDetails, String date, bool isPrimary, bool checkStandBy, bool checkIgnore) =>
       BASE_URL +
       "/api/Additions/GetShowDetails?Locationcode=${locDetail.key}&locationName=${locDetail.value}&channelcode=${chnlDetails.key}&channelName=${chnlDetails.value}&logdate=$date&optPrimary=$isPrimary&chkStandby=$checkStandBy&chkIgnore=$checkIgnore";
 
-  static String LOG_ADDITION_GET_ADDITIONS(
-          DropDownValue locDetail, DropDownValue chnlDetails, String date) =>
-      BASE_URL +
-      "/api/Additions/GetPopulateAdditions?Locationcode=${locDetail.key}&channelcode=${chnlDetails.key}&Date=$date";
+  static String LOG_ADDITION_GET_ADDITIONS(DropDownValue locDetail, DropDownValue chnlDetails, String date) =>
+      BASE_URL + "/api/Additions/GetPopulateAdditions?Locationcode=${locDetail.key}&channelcode=${chnlDetails.key}&Date=$date";
 
-  static String LOG_ADDITION_SAVE_ADDITION() =>
-      BASE_URL + "/api/Additions/PostAddition";
+  static String LOG_ADDITION_SAVE_ADDITION() => BASE_URL + "/api/Additions/PostAddition";
 
   //////////////////////////////////////////End Log Addition///////////////////////////////////////////////
 
 //////////////// Import Digitex Run Order: UI:SHOEB SHAIKH, API: INDRESH ///////////////
 
-  static String IMPORT_DIGITEX_RUN_ORDER_LOCATION =
-      "$BASE_URL/api/ImportDigitexRunOrder/GetLocations";
+  static String IMPORT_DIGITEX_RUN_ORDER_LOCATION = "$BASE_URL/api/ImportDigitexRunOrder/GetLocations";
 
-  static String IMPORT_DIGITEX_RUN_ORDER_CHANNEL(locationCode) =>
-      "$BASE_URL/api/ImportDigitexRunOrder/GetChannels/$locationCode";
-  static String IMPORT_DIGITEX_RUN_ORDER_AGENCY =
-      "$BASE_URL/api/ImportDigitexRunOrder/GetAgencyMasters/";
-  static String IMPORT_DIGITEX_RUN_ORDER_CLIENT =
-      "$BASE_URL/api/ImportDigitexRunOrder/GetClientMasters/";
-  static String IMPORT_DIGITEX_RUN_ORDER_MAP_CLIENT =
-      "$BASE_URL/api/ImportDigitexRunOrder/SaveMissingClientMaster";
-  static String IMPORT_DIGITEX_RUN_ORDER_MAP_AGENCY =
-      "$BASE_URL/api/ImportDigitexRunOrder/SaveMissingAgencyMaster";
+  static String IMPORT_DIGITEX_RUN_ORDER_CHANNEL(locationCode) => "$BASE_URL/api/ImportDigitexRunOrder/GetChannels/$locationCode";
+  static String IMPORT_DIGITEX_RUN_ORDER_AGENCY = "$BASE_URL/api/ImportDigitexRunOrder/GetAgencyMasters/";
+  static String IMPORT_DIGITEX_RUN_ORDER_CLIENT = "$BASE_URL/api/ImportDigitexRunOrder/GetClientMasters/";
+  static String IMPORT_DIGITEX_RUN_ORDER_MAP_CLIENT = "$BASE_URL/api/ImportDigitexRunOrder/SaveMissingClientMaster";
+  static String IMPORT_DIGITEX_RUN_ORDER_MAP_AGENCY = "$BASE_URL/api/ImportDigitexRunOrder/SaveMissingAgencyMaster";
 
   static String IMPORT_DIGITEX_RUN_ORDER_IMPORT(locationCode, channelCode) =>
       "$BASE_URL/api/ImportDigitexRunOrder/LoadDigitexRunOrder?LocationCode=$locationCode&ChannelCode=$channelCode";
-
-  static String IMPORT_DIGITEX_RUN_ORDER_SAVE(
-          locationCode, channelCode, date) =>
+  static String IMPORT_DIGITEX_RUN_ORDER_SAVE(locationCode, channelCode, date) =>
       "$BASE_URL/api/ImportDigitexRunOrder/SaveRunOrder?LocationCode=$locationCode&ChannelCode=$channelCode&BookingDate=$date";
 
 //////////////// Filler: UI:VISHAL GORE, API: INDRESH ///////////////
-
   static String FILLER_LOCATION = "$BASE_URL/api/FillerScheduling/GetLocations";
-
-  static String FILLER_CHANNEL(locationCode) =>
-      "$BASE_URL/api/FillerScheduling/GetChannels?LocationCode=$locationCode";
-
-  static String FILLER_CAPTION =
-      "$BASE_URL/api/FillerScheduling/GetFillerCaption/";
-
-  static String get FILLER_IMPORT_EXCEL =>
-      "$BASE_URL/api/FillerScheduling/ImportFillerExcel";
-
-  static String get FILLER_IMPORT_FILLERS =>
-      "$BASE_URL/api/FillerScheduling/SaveImportExistingFillers";
+  static String FILLER_SAVE = "$BASE_URL/api/FillerScheduling/GetLocations";
+  static String FILLER_CHANNEL(locationCode) => "$BASE_URL/api/FillerScheduling/GetChannels?LocationCode=$locationCode";
+  static String FILLER_CAPTION = "$BASE_URL/api/FillerScheduling/GetFillerCaption/";
+  static String get FILLER_IMPORT_EXCEL => "$BASE_URL/api/FillerScheduling/ImportFillerExcel";
+  static String get FILLER_IMPORT_FILLERS => "$BASE_URL/api/FillerScheduling/SaveImportExistingFillers";
 
   /// to Search Caption in dropdown
   static String FILLER_VALUE_BY_CAPTION(fillerCaption) =>
@@ -292,12 +240,9 @@ class ApiFactory {
   static String FILLER_VALUES_BY_FILLER_CODE(fillerCode) =>
       "$BASE_URL/api/FillerScheduling/GetFillerValuesByFillerCode/$fillerCode";
 
-  static String FILLER_VALUES_BY_TAPE_CODE(tapeCode) =>
-      "$BASE_URL/api/FillerScheduling/GetFillerValuesByTapeCode/$tapeCode";
-  static String FILLER_IMPORT_FILE =
-      "$BASE_URL/api/FillerScheduling/ImportFillerExcel";
-  static String FILLER_SAVE_IMPORT_FILLERS =
-      "$BASE_URL/api/FillerScheduling/SaveImportExistingFillers";
+  static String FILLER_VALUES_BY_TAPE_CODE(tapeCode) => "$BASE_URL/api/FillerScheduling/GetFillerValuesByTapeCode/$tapeCode";
+  static String FILLER_IMPORT_FILE = "$BASE_URL/api/FillerScheduling/ImportFillerExcel";
+  static String FILLER_SAVE_IMPORT_FILLERS = "$BASE_URL/api/FillerScheduling/SaveImportFillers";
 
   static String FPC_DETAILS(locationCode, channelCode, date) =>
       "$BASE_URL/api/FillerScheduling/GetFpcDetails?LocationCode=$locationCode&ChannelCode=$channelCode&TelecastDate=$date";
@@ -331,21 +276,15 @@ class ApiFactory {
   static String RO_CANCELLATION_CHANNNEL(locationCode) =>
       "$BASE_URL/api/ROCancellation/OnLeaveLocation?LocationCode=$locationCode";
 
-  static String RO_CANCELLATION_BOOKINGNO_LEAVE =
-      "$BASE_URL/api/ROCancellation/OnLeaveBookingNumbers";
-  static String RO_CANCELLATION_CANCEL_LEAVE =
-      "$BASE_URL/api/ROCancellation/OnLeaveCancelNumber";
-  static String RO_CANCELLATION_SAVE =
-      "$BASE_URL/api/ROCancellation/SaveRoCancellation";
-  static String RO_CANCELLATION_IMPORT =
-      "$BASE_URL/api/ROCancellation/ImportExcel";
-  static String RO_CANCELLATION_ADD_DOC =
-      "$BASE_URL/api/ROCancellation/AddingDocument";
+  static String RO_CANCELLATION_BOOKINGNO_LEAVE = "$BASE_URL/api/ROCancellation/OnLeaveBookingNumbers";
+  static String RO_CANCELLATION_CANCEL_LEAVE = "$BASE_URL/api/ROCancellation/OnLeaveCancelNumber";
+  static String RO_CANCELLATION_SAVE = "$BASE_URL/api/ROCancellation/SaveRoCancellation";
+  static String RO_CANCELLATION_IMPORT = "$BASE_URL/api/ROCancellation/ImportExcel";
+  static String RO_CANCELLATION_ADD_DOC = "$BASE_URL/api/ROCancellation/AddingDocument";
+  static String RO_CANCELLATION_VIEW_DOC(id) => "$BASE_URL/api/ROCancellation/ViewDocument?DocId=$id";
+  static String RO_CANCELLATION_LOAD_DOC(docKey) => "$BASE_URL/api/ROCancellation/loadDocument?DocumentKey=$docKey";
 
-  static String RO_CANCELLATION_VIEW_DOC(id) =>
-      "$BASE_URL/api/ROCancellation/ViewDocument?DocId=$id";
-  static String RO_CANCELLATION_LIST_DOC =
-      "$BASE_URL/api/ROCancellation/AddingDocument";
+  static String RO_CANCELLATION_LIST_DOC = "$BASE_URL/api/ROCancellation/AddingDocument";
 
   ////////////////////////////// MAM WORK ORDERS API START////////////////////////////////////////////////
   static String get MAM_WORK_ORDER_INITIALIZE =>
@@ -530,27 +469,19 @@ class ApiFactory {
     String txtDt,
   ) =>
       "$BASE_URL/api/Transmissionlog/GetbtnLastSavedLogClick?locationcode=$locId&channelcode=$chnlId&txtDate=$txtDt";
-
   static String TRANSMISSION_LOG_TS_GET_HIGHLIGHT(
     String locId,
     String chnlId,
   ) =>
       "$BASE_URL/api/Transmissionlog/GetHighlightTSGrid?Locationcode=$locId&ChannelCode=$chnlId";
-
-  static String TRANSMISSION_LOG_SEGMENT_PROGRAM_SEARCH() =>
-      "$BASE_URL/api/Transmissionlog/GetProgramSearch?TextSourceProgram=";
-
-  static String TRANSMISSION_LOG_POST_RESCHEDULE() =>
-      "$BASE_URL/api/Transmissionlog/PostRescheduleSpotsClick";
-
+  static String TRANSMISSION_LOG_SEGMENT_PROGRAM_SEARCH() => "$BASE_URL/api/Transmissionlog/GetProgramSearch?TextSourceProgram=";
+  static String TRANSMISSION_LOG_POST_RESCHEDULE() => "$BASE_URL/api/Transmissionlog/PostRescheduleSpotsClick";
   static String TRANSMISSION_LOG_PROF_LEAVE(
     String progCode,
     String epNo,
   ) =>
       "$BASE_URL/api/Transmissionlog/GettxtInsProgpisodeNoLeave?programcode=$progCode&EpisodeNo=$epNo";
-
-  static String TRANSMISSION_LOG_SEARCH_SEGMENT(
-          String progCode, String epNo, String tapeCode, bool defaultSeg) =>
+  static String TRANSMISSION_LOG_SEARCH_SEGMENT(String progCode, String epNo, String tapeCode, bool defaultSeg) =>
       "$BASE_URL/api/Transmissionlog/GetinsProgSearchClick?programcode=$progCode&episodenumber=$epNo&tapecode=$tapeCode&Defaultsegments=$defaultSeg";
 
   static String TRANSMISSION_LOG_MARK_AS_ERROR(
@@ -562,53 +493,23 @@ class ApiFactory {
       "$BASE_URL/api/Transmissionlog/GetRemoveAndMarkAsError?locationcode=$locId&channelcode=$chnlId&BookingNumber=$bookNo&BookingDetailCode=$bookCode&txtDate=$date";
 
   /////////////////////////// RO DISTRIBUTION START/////////////////////
-  static String get RO_DISTRIBUTION_GET_LOCATION =>
-      "$BASE_URL/api/RosDistribution/GetRosDistribution";
+  static String get RO_DISTRIBUTION_GET_LOCATION => "$BASE_URL/api/RosDistribution/GetRosDistribution";
+  static String get RO_DISTRIBUTION_GET_RETRIVE_DATA => "$BASE_URL/api/RosDistribution/GetView";
+  static String get RO_DISTRIBUTION_GET_EMPTY_DATA => "$BASE_URL/api/RosDistribution/GetEmptyList";
+  static String get RO_DISTRIBUTION_GET_UN_DATA => "$BASE_URL/api/RosDistribution/GetUnalloacted";
+  static String get RO_DISTRIBUTION_GET_SERVICE_DATA => "$BASE_URL/api/RosDistribution/GetServices";
+  static String get RO_DISTRIBUTION_GET_ALLOCATION_DATA => "$BASE_URL/api/RosDistribution/GetAllocateClick";
+  static String get RO_DISTRIBUTION_GET_DEALLOCATE_DATA => "$BASE_URL/api/RosDistribution/GetRollback";
+  static String get RO_DISTRIBUTION_GET_FPC_DOUBLE_CLICK_DATA => "$BASE_URL/api/RosDistribution/GetFpcCellDoubleClick";
+  static String get RO_DISTRIBUTION_GET_OPENDEAL_FILTER_DATA => "$BASE_URL/api/RosDistribution/GetOpenDealFilter";
+  static String get RO_DISTRIBUTION_GET_ALLOCATE_FPC_DATA => "$BASE_URL/api/RosDistribution/GetAllocateFPC";
+  static String get RO_DISTRIBUTION_GET_DEALLOCATE_FPC_DATA => "$BASE_URL/api/RosDistribution/GetDeallocateFPC";
+  static String get RO_DISTRIBUTION_GET_INCLUDE_ROS_FILTER_FPC_DATA => "$BASE_URL/api/RosDistribution/GetIncludeROSFilter";
+  static String get RO_DISTRIBUTION_GET_OPEN_DEAL_FILTER_FPC_DATA => "$BASE_URL/api/RosDistribution/GetOpenDealFilter";
+  static String get RO_DISTRIBUTION_GET_MOVE_SPOT_FILTER_FPC_DATA => "$BASE_URL/api/RosDistribution/GetOpenDealFilter";
 
-  static String get RO_DISTRIBUTION_GET_RETRIVE_DATA =>
-      "$BASE_URL/api/RosDistribution/GetView";
-
-  static String get RO_DISTRIBUTION_GET_EMPTY_DATA =>
-      "$BASE_URL/api/RosDistribution/GetEmptyList";
-
-  static String get RO_DISTRIBUTION_GET_UN_DATA =>
-      "$BASE_URL/api/RosDistribution/GetUnalloacted";
-
-  static String get RO_DISTRIBUTION_GET_SERVICE_DATA =>
-      "$BASE_URL/api/RosDistribution/GetServices";
-
-  static String get RO_DISTRIBUTION_GET_ALLOCATION_DATA =>
-      "$BASE_URL/api/RosDistribution/GetAllocateClick";
-
-  static String get RO_DISTRIBUTION_GET_DEALLOCATE_DATA =>
-      "$BASE_URL/api/RosDistribution/GetRollback";
-
-  static String get RO_DISTRIBUTION_GET_FPC_DOUBLE_CLICK_DATA =>
-      "$BASE_URL/api/RosDistribution/GetFpcCellDoubleClick";
-
-  static String get RO_DISTRIBUTION_GET_OPENDEAL_FILTER_DATA =>
-      "$BASE_URL/api/RosDistribution/GetOpenDealFilter";
-
-  static String get RO_DISTRIBUTION_GET_ALLOCATE_FPC_DATA =>
-      "$BASE_URL/api/RosDistribution/GetAllocateFPC";
-
-  static String get RO_DISTRIBUTION_GET_DEALLOCATE_FPC_DATA =>
-      "$BASE_URL/api/RosDistribution/GetDeallocateFPC";
-
-  static String get RO_DISTRIBUTION_GET_INCLUDE_ROS_FILTER_FPC_DATA =>
-      "$BASE_URL/api/RosDistribution/GetIncludeROSFilter";
-
-  static String get RO_DISTRIBUTION_GET_OPEN_DEAL_FILTER_FPC_DATA =>
-      "$BASE_URL/api/RosDistribution/GetOpenDealFilter";
-
-  static String get RO_DISTRIBUTION_GET_MOVE_SPOT_FILTER_FPC_DATA =>
-      "$BASE_URL/api/RosDistribution/GetOpenDealFilter";
-
-  static String RO_DISTRIBUTION_GET_CHANNEL(String locId) =>
-      "$BASE_URL/api/RosDistribution/cboLocationCode_Leave?LocationCode=$locId";
-
-  static String RO_DISTRIBUTION_SHOW_DATA(
-          String locId, String channelID, String date) =>
+  static String RO_DISTRIBUTION_GET_CHANNEL(String locId) => "$BASE_URL/api/RosDistribution/cboLocationCode_Leave?LocationCode=$locId";
+  static String RO_DISTRIBUTION_SHOW_DATA(String locId, String channelID, String date) =>
       "$BASE_URL/api/RosDistribution/GetShowBucket?LocationCode=$locId&ChannelCode=$channelID&Date=$date";
 
   /////////////////////////// RO DISTRIBUTION END/////////////////////
@@ -620,15 +521,13 @@ class ApiFactory {
   ///
   ///
 ////////////////////////////// SLIDE-MASTER-API-START//////////////////////////////////////////////
-  static String SLIDE_MASTER_ON_LOAD(String loginCode) =>
-      "$BASE_URL/api/SlideMaster/SlideMasteronLoad?LoginCode=$loginCode";
-
-  static String SLIDE_MASTER_GET_CHANNEL(String locationCode) =>
-      "$BASE_URL/api/SlideMaster/onLeaveLocation?LocationCode=$locationCode";
-
-  static String get SLIDE_MASTER_RETRIVE_DATA =>
-      "$BASE_URL/api/SlideMaster/TapeID_Leave";
-
+  static String SLIDE_MASTER_GET_CHANNEL(String locationCode) => "$BASE_URL/api/SlideMaster/onLeaveLocation?LocationCode=$locationCode";
+  static String get SLIDE_MASTER_TAPE_ID_LEAVE => "$BASE_URL/api/SlideMaster/TapeID_Leave";
+  static String get SLIDE_MASTER_ON_LOAD => "$BASE_URL/api/SlideMaster/SlideMasteronLoad";
+  static String get SLIDE_MASTER_TAPE_SEG_NO_LEAVE => "$BASE_URL/api/SlideMaster/SegNo_Leave";
+  static String get SLIDE_MASTER_TAPE_SAVE_DATA => "$BASE_URL/api/SlideMaster/SaveRecord";
+  static String get SLIDE_MASTER_GET_RETRIVE_DATA => "$BASE_URL/api/SlideMaster/RetriveRecord";
+  static String get SLIDE_MASTER_TAPE_HOUSE_ID_LEAVE => "$BASE_URL/api/SlideMaster/HouseID_Leave";
 ////////////////////////////// SLIDE-MASTER-API-END  //////////////////////////////////////////////
   ///
   ///
@@ -636,15 +535,9 @@ class ApiFactory {
   ///
   ///
   ////////////////////////////// FINAL-AUDIT-MASTER-AT-API-START  ////////////////////////////////////////////
-  static String get FINAL_REPORT_AT_INITAIL =>
-      "$BASE_URL/api/FinalAuditReportAT/ZoneWiseInventoryLoad";
-
-  static String get FINAL_REPORT_AT_GET_DATA =>
-      "$BASE_URL/api/FinalAuditReportAT/GenrateClick";
-
-  static String FINAL_REPORT_AT_GET_CHANNELS(String lc) =>
-      "$BASE_URL/api/FinalAuditReportAT/GetChannel?LocationCode=$lc";
-
+  static String get FINAL_REPORT_AT_INITAIL => "$BASE_URL/api/FinalAuditReportAT/ZoneWiseInventoryLoad";
+  static String get FINAL_REPORT_AT_GET_DATA => "$BASE_URL/api/FinalAuditReportAT/GenrateClick";
+  static String FINAL_REPORT_AT_GET_CHANNELS(String lc) => "$BASE_URL/api/FinalAuditReportAT/GetChannel?LocationCode=$lc";
   ////////////////////////////// FINAL-AUDIT-MASTER-AT-API-END  //////////////////////////////////////////////
   ///
   ///
@@ -652,54 +545,27 @@ class ApiFactory {
   ///
   ///
   ////////////////////////////// SECONDARY-EVENT-MASTER-API-START  ////////////////////////////////////////////
-  static String get SECONDARY_EVENT_MASTER_INITAIL =>
-      "$BASE_URL/api/SecondaryEventMaster/FormLoad";
-
-  static String get SECONDARY_EVENT_MASTER_SAVE_DATA =>
-      "$BASE_URL/api/SecondaryEventMaster/Save";
-
-  static String SECONDARY_EVENT_MASTER_GET_CHANNELS(String lc) =>
-      "$BASE_URL/api/SecondaryEventMaster/Getlistchannel?LocationCode=$lc";
-
-  static String SECONDARY_EVENT_MASTER_DISPLAY_DATA(String txid) =>
-      "$BASE_URL/api/SecondaryEventMaster/DisplaySecondaryEvent?TXid=$txid";
-
+  static String get SECONDARY_EVENT_MASTER_INITAIL => "$BASE_URL/api/SecondaryEventMaster/FormLoad";
+  static String get SECONDARY_EVENT_MASTER_SAVE_DATA => "$BASE_URL/api/SecondaryEventMaster/Save";
+  static String SECONDARY_EVENT_MASTER_GET_CHANNELS(String lc) => "$BASE_URL/api/SecondaryEventMaster/Getlistchannel?LocationCode=$lc";
+  static String SECONDARY_EVENT_MASTER_DISPLAY_DATA(String txid) => "$BASE_URL/api/SecondaryEventMaster/DisplaySecondaryEvent?TXid=$txid";
   ////////////////////////////// SECONDARY-EVENT-MASTER-API-END  //////////////////////////////////////////////
   ///
   ///
   ///
   ///
   ////////////////////////////// PROMO-API-START  ////////////////////////////////////////////
-  static String get PROMOS_GET_LOCATION =>
-      "$BASE_URL/api/PromoScheduling/GetLocations";
-
-  static String get PROMOS_SAVE_AUTO_PROMO =>
-      "$BASE_URL/api/PromoScheduling/SaveAutoPromo";
-
-  static String get PROMOS_SAVE =>
-      "$BASE_URL/api/PromoScheduling/SavePromoScheduling";
-
-  static String get PROMOS_IMPORT_EXCEL_VALIDATE =>
-      "$BASE_URL/api/PromoScheduling/ImportExcelValidate";
-
-  static String get PROMOS_IMPORT_EXCEL =>
-      "$BASE_URL/api/PromoScheduling/ImportExcel";
-
-  static String get PROMOS_LEFT_2ND_GET_DATA =>
-      "$BASE_URL/api/PromoScheduling/ProgramSegaments";
-
-  static String get PROMOS_SEARCH =>
-      "$BASE_URL/api/PromoScheduling/FastInsertSearch";
-
-  static String PROMOS_GET_CHANNELS(String lc) =>
-      "$BASE_URL/api/PromoScheduling/GetChannels?LocationCode=$lc";
-
-  static String PROMOS_SHOW_DETAILS(
-          String lc, String channelCode, String teleCasteDate) =>
+  static String get PROMOS_GET_LOCATION => "$BASE_URL/api/PromoScheduling/GetLocations";
+  static String get PROMOS_SAVE_AUTO_PROMO => "$BASE_URL/api/PromoScheduling/SaveAutoPromo";
+  static String get PROMOS_SAVE => "$BASE_URL/api/PromoScheduling/SavePromoScheduling";
+  static String get PROMOS_IMPORT_EXCEL_VALIDATE => "$BASE_URL/api/PromoScheduling/ImportExcelValidate";
+  static String get PROMOS_IMPORT_EXCEL => "$BASE_URL/api/PromoScheduling/ImportExcel";
+  static String get PROMOS_LEFT_2ND_GET_DATA => "$BASE_URL/api/PromoScheduling/ProgramSegaments";
+  static String get PROMOS_SEARCH => "$BASE_URL/api/PromoScheduling/FastInsertSearch";
+  static String PROMOS_GET_CHANNELS(String lc) => "$BASE_URL/api/PromoScheduling/GetChannels?LocationCode=$lc";
+  static String PROMOS_SHOW_DETAILS(String lc, String channelCode, String teleCasteDate) =>
       "$BASE_URL/api/PromoScheduling/GetPromoSchDetails?LocationCode=$lc&ChannelCode=$channelCode&TelecastDate=$teleCasteDate";
-
-  static String PROMOS_DELETE(
-          String lc, String channelCode, String teleCasteDate) =>
+  static String PROMOS_DELETE(String lc, String channelCode, String teleCasteDate) =>
       "$BASE_URL/api/PromoScheduling/DeletePromoSchDetails?LocationCode=$lc&ChannelCode=$channelCode&TelecastDate=$teleCasteDate";
 
   ////////////////////////////// PROMO-API-END  //////////////////////////////////////////////
@@ -708,29 +574,16 @@ class ApiFactory {
   ///
   ///
   ////////////////////////////// EVENT-SECONDARY-API-START  ////////////////////////////////////////////
-  static String get EVENT_GET_LOCATION =>
-      "$BASE_URL/api/ScheduleSecondayEvents/GetLocations";
-
-  static String get EVENT_SAVE =>
-      "$BASE_URL/api/ScheduleSecondayEvents/EventSave";
-
+  static String get EVENT_GET_LOCATION => "$BASE_URL/api/ScheduleSecondayEvents/GetLocations";
+  static String get EVENT_SAVE => "$BASE_URL/api/ScheduleSecondayEvents/EventSave";
   // static String get EVENT_IMPORT_EXCEL_VALIDATE => "$BASE_URL/api/ScheduleSecondayEvents/ImportExcelValidate";
   // static String get EVENT_IMPORT_EXCEL => "$BASE_URL/api/ScheduleSecondayEvents/ImportExcel";
   // static String get EVENT_LEFT_2ND_GET_DATA => "$BASE_URL/api/ScheduleSecondayEvents/ProgramSegaments";
-  static String get EVENT_SEARCH =>
-      "$BASE_URL/api/ScheduleSecondayEvents/EventSearch";
-
-  static String EVENT_GET_CHANNELS(String lc) =>
-      "$BASE_URL/api/ScheduleSecondayEvents/GetChannels?LocationCode=$lc";
-
-  static String get EVENT_SHOW_DETAILS =>
-      "$BASE_URL/api/ScheduleSecondayEvents/ShowDetails";
-
-  static String get EVENT_PREVIOUS_DETAILS =>
-      "$BASE_URL/api/ScheduleSecondayEvents/PreviousEvent";
-
-  static String EVENT_DELETE_ALL(
-          String lc, String channelCode, String teleCasteDate) =>
+  static String get EVENT_SEARCH => "$BASE_URL/api/ScheduleSecondayEvents/EventSearch";
+  static String EVENT_GET_CHANNELS(String lc) => "$BASE_URL/api/ScheduleSecondayEvents/GetChannels?LocationCode=$lc";
+  static String get EVENT_SHOW_DETAILS => "$BASE_URL/api/ScheduleSecondayEvents/ShowDetails";
+  static String get EVENT_PREVIOUS_DETAILS => "$BASE_URL/api/ScheduleSecondayEvents/PreviousEvent";
+  static String EVENT_DELETE_ALL(String lc, String channelCode, String teleCasteDate) =>
       "$BASE_URL/api/ScheduleSecondayEvents/DeletePromoSchDetails?LocationCode=$lc&ChannelCode=$channelCode&TelecastDate=$teleCasteDate";
 
   ////////////////////////////// EVENT-SECONDARY-API-END  //////////////////////////////////////////////
@@ -741,17 +594,10 @@ class ApiFactory {
   ///
   ///
   ////////////////////////////// SLIDE-API-START  ////////////////////////////////////////////
-  static String get SLIDE_GET_LOCATION =>
-      "$BASE_URL/api/ScheduleSlides/GetSlideSchedulingLoad";
-
+  static String get SLIDE_GET_LOCATION => "$BASE_URL/api/ScheduleSlides/GetSlideSchedulingLoad";
   static String get SLIDE_SAVE => "$BASE_URL/api/ScheduleSlides/PostSave";
-
-  static String get SLIDE_GET_DATA =>
-      "$BASE_URL/api/ScheduleSlides/GetLstDailyFPC";
-
-  static String SLIDE_GET_CHANNELS(String lc) =>
-      "$BASE_URL/api/ScheduleSlides/GetLocationLeave?LocationCode=$lc";
-
+  static String get SLIDE_GET_DATA => "$BASE_URL/api/ScheduleSlides/GetLstDailyFPC";
+  static String SLIDE_GET_CHANNELS(String lc) => "$BASE_URL/api/ScheduleSlides/GetLocationLeave?LocationCode=$lc";
   ////////////////////////////// SLIDE-API-END  //////////////////////////////////////////////
   ///
   ///
@@ -759,49 +605,25 @@ class ApiFactory {
   ///
   ///
   ////////////////////////////// FINAL-AUDIT-MASTER-BT-API-START  ////////////////////////////////////////////
-  static String get FINAL_REPORT_BT_INITAIL =>
-      "$BASE_URL/api/FinalAuditReportBT/FormLoad";
-
-  static String get FINAL_REPORT_BT_GET_DATA =>
-      "$BASE_URL/api/FinalAuditReportBT/DateLeave";
-
-  static String FINAL_REPORT_BT_GET_CHANNELS(String lc) =>
-      "$BASE_URL/api/FinalAuditReportBT/GetChannel?LocationCode=$lc";
-
+  static String get FINAL_REPORT_BT_INITAIL => "$BASE_URL/api/FinalAuditReportBT/FormLoad";
+  static String get FINAL_REPORT_BT_GET_DATA => "$BASE_URL/api/FinalAuditReportBT/DateLeave";
+  static String FINAL_REPORT_BT_GET_CHANNELS(String lc) => "$BASE_URL/api/FinalAuditReportBT/GetChannel?LocationCode=$lc";
   //////////////////////////// FINAL-AUDIT-MASTER-BT-API-END  //////////////////////////////////////////////
   ///
   ///
   ///
   ///
   ////////////////////////////// STILL-MASTER-API-START  ////////////////////////////////////////////
-  static String get STILL_MASTER_FORM_LOAD =>
-      "$BASE_URL/api/StillMaster/GetPageLoad";
-
-  static String get STILL_MASTER_TAPE_ID_LEAVE =>
-      "$BASE_URL/api/StillMaster/TapeIDLeave";
-
-  static String get STILL_MASTER_TAPE_SEG_NO_LEAVE =>
-      "$BASE_URL/api/StillMaster/SegNoLeave";
-
-  static String get STILL_MASTER_TAPE_HOUSE_ID_LEAVE =>
-      "$BASE_URL/api/StillMaster/HouseIDLeave";
-
-  static String get STILL_MASTER_TAPE_SAVE_DATA =>
-      "$BASE_URL/api/StillMaster/SaveRecord";
-
+  static String get STILL_MASTER_FORM_LOAD => "$BASE_URL/api/StillMaster/GetPageLoad";
+  static String get STILL_MASTER_TAPE_ID_LEAVE => "$BASE_URL/api/StillMaster/TapeIDLeave";
+  static String get STILL_MASTER_TAPE_SEG_NO_LEAVE => "$BASE_URL/api/StillMaster/SegNoLeave";
+  static String get STILL_MASTER_TAPE_HOUSE_ID_LEAVE => "$BASE_URL/api/StillMaster/HouseIDLeave";
+  static String get STILL_MASTER_TAPE_SAVE_DATA => "$BASE_URL/api/StillMaster/SaveRecord";
   // static String get FINAL_REPORT_BT_GET_DATA => "$BASE_URL/api/FinalAuditReportBT/DateLeave";
-  static String STILL_MASTER_GET_CHANNELS(String lc) =>
-      "$BASE_URL/api/StillMaster/ListMyChannels?LocationCode=$lc";
-
-  static String STILL_MASTER_GET_PROGRAM_DATA(String lc, String cc) =>
-      "$BASE_URL/api/StillMaster/GetProgramPicker?locationcode=$lc&channelcode=$cc";
-
-  static String get STILL_MASTER_GET_RETRIVE_DATA =>
-      "$BASE_URL/api/StillMaster/GetRetrieveRecord";
-
-  static String get STILL_MASTER_PROGRAM_SEARCH =>
-      "$BASE_URL/api/StillMaster/GetSourceProgramSearch?TextSourceProgram=";
-
+  static String STILL_MASTER_GET_CHANNELS(String lc) => "$BASE_URL/api/StillMaster/ListMyChannels?LocationCode=$lc";
+  static String STILL_MASTER_GET_PROGRAM_DATA(String lc, String cc) => "$BASE_URL/api/StillMaster/GetProgramPicker?locationcode=$lc&channelcode=$cc";
+  static String get STILL_MASTER_GET_RETRIVE_DATA => "$BASE_URL/api/StillMaster/GetRetrieveRecord";
+  static String get STILL_MASTER_PROGRAM_SEARCH => "$BASE_URL/api/StillMaster/GetSourceProgramSearch?TextSourceProgram=";
   //////////////////////////// STILL-MASTER-API-END  //////////////////////////////////////////////
   ///
   ///
@@ -809,56 +631,56 @@ class ApiFactory {
 
   ///////////////// RO BOOKING //////////////////////////
   static String RO_BOOKING_INIT = "$BASE_URL/api/ROBooking/RoBookingOnLoad";
+  static String RO_BOOKING_CHANNNEL(locationCode) => "$BASE_URL/api/ROBooking/Location_Leave?LocationCode=$locationCode";
 
-  static String RO_BOOKING_CHANNNEL(locationCode) =>
-      "$BASE_URL/api/ROBooking/Location_Leave?LocationCode=$locationCode";
-
-  static String RO_BOOKING_EFFDT_LEAVE(
-          String locId, String channelId, String effDt) =>
+  static String RO_BOOKING_EFFDT_LEAVE(String locId, String channelId, String effDt) =>
       "$BASE_URL/api/ROBooking/EffectiveDate_Leave?LocationCode=$locId&ChannelCode=$channelId&EffectiveDate=$effDt";
-
-  static String RO_BOOKING_CLIENT_LEAVE(
-          String locId, String channelId, String clientCode) =>
+  static String RO_BOOKING_CLIENT_LEAVE(String locId, String channelId, String clientCode) =>
       "$BASE_URL/api/ROBooking/ClientInfo?LocationCode=$locId&ChannelCode=$channelId&ClientCode=$clientCode";
 
-  static String RO_BOOKING_BOOKING_NO_LEAVE =
-      "$BASE_URL/api/ROBooking/OnLeaveBookingNumber";
-
-  static String RO_BOOKING_BOOKING_SEARCH_TAPE_ID(tapeID) =>
-      "$BASE_URL/api/ROBooking/SearchTapeId?ExportTapeCode=$tapeID";
-  static String RO_BOOKING_GET_SpotsNotVerified =
-      "$BASE_URL/api/ROBooking/SpotsNotVerified";
+  static String RO_BOOKING_BOOKING_NO_LEAVE = "$BASE_URL/api/ROBooking/OnLeaveBookingNumber";
+  static String RO_BOOKING_BOOKING_SEARCH_TAPE_ID(tapeID) => "$BASE_URL/api/ROBooking/SearchTapeId?ExportTapeCode=$tapeID";
+  static String RO_BOOKING_GET_SpotsNotVerified = "$BASE_URL/api/ROBooking/SpotsNotVerified";
   static String RO_BOOKING_RefreshPDC = "$BASE_URL/api/ROBooking/RefreshPDC";
-  static String RO_BOOKING_OnLeaveDealNumber =
-      "$BASE_URL/api/ROBooking/OnLeaveDealNumber";
-  static String RO_BOOKING_OnAgencyLeave =
-      "$BASE_URL/api/ROBooking/OnAgencyLeave";
+  static String RO_BOOKING_OnLeaveDealNumber = "$BASE_URL/api/ROBooking/OnLeaveDealNumber";
+  static String RO_BOOKING_OnAgencyLeave = "$BASE_URL/api/ROBooking/OnAgencyLeave";
   static String RO_BOOKING_GET_DISPLAY = "$BASE_URL/api/ROBooking/GetDisplay";
   static String RO_BOOKING_GetSegment = "$BASE_URL/api/ROBooking/GetSegment";
-  static String RO_BOOKING_GetTapeIdLostFocus =
-      "$BASE_URL/api/ROBooking/GetTapeIdLostFocus";
-  static String RO_BOOKING_DEAL_DOUBLE_CLICK =
-      "$BASE_URL/api/ROBooking/OndgvDealDetailCellDouble";
-
-  static String RO_BOOKING_GetClientLeave(
-          String locationCode, String channelCode, String clientCode) =>
+  static String RO_BOOKING_GetTapeIdLostFocus = "$BASE_URL/api/ROBooking/GetTapeIdLostFocus";
+  static String RO_BOOKING_DEAL_DOUBLE_CLICK = "$BASE_URL/api/ROBooking/OndgvDealDetailCellDouble";
+  static String RO_BOOKING_GetClientLeave(String locationCode, String channelCode, String clientCode) =>
       "$BASE_URL/api/ROBooking/GetClientLeave?LocationCode=$locationCode&ChannelCode=$channelCode&ClientCode=$clientCode";
-  static String RO_BOOKING_GetSetVerify =
-      "$BASE_URL/api/ROBooking/GetSetVerify";
-  static String RO_BOOKING_ImportAndMark =
-      "$BASE_URL/api/ROBooking/ImportAndMark";
-  static String RO_BOOKING_cboPDCSelectedIndexChanged =
-      "$BASE_URL/api/ROBooking/cboPDCSelectedIndexChanged";
+  static String RO_BOOKING_GetSetVerify = "$BASE_URL/api/ROBooking/GetSetVerify";
+  static String RO_BOOKING_BRAND_LEAVE = "$BASE_URL/api/ROBooking/GetBrand";
 
-  static String RO_BOOKING_SearchTapeIdLeave(exportCode) =>
-      "$BASE_URL/api/ROBooking/SearchTapeId?ExportTapeCode=$exportCode";
+  static String RO_BOOKING_ImportAndMark = "$BASE_URL/api/ROBooking/ImportAndMark";
+  static String RO_BOOKING_cboPDCSelectedIndexChanged = "$BASE_URL/api/ROBooking/cboPDCSelectedIndexChanged";
 
-  static String RO_BOOKING_cboTapeIdLeave =
-      "$BASE_URL/api/ROBooking/cboTapeIdLeave";
-  static String RO_BOOKING_cboTapeIdFocusLost =
-      "$BASE_URL/api/ROBooking/GetTapeIdLostFocus";
+  static String RO_BOOKING_SearchTapeIdLeave(exportCode) => "$BASE_URL/api/ROBooking/SearchTapeId?ExportTapeCode=$exportCode";
 
+  static String RO_BOOKING_cboTapeIdLeave = "$BASE_URL/api/ROBooking/cboTapeIdLeave";
+  static String RO_BOOKING_cboTapeIdFocusLost = "$BASE_URL/api/ROBooking/GetTapeIdLostFocus";
+  static String RO_BOOKING_AddSpot = "$BASE_URL/api/ROBooking/OnAddSpots";
   static String RO_BOOKING_OnSaveData = "$BASE_URL/api/ROBooking/OnSaveData";
+  static String RO_BOOKING_GetClientPDC = "$BASE_URL/api/ROBooking/GetClientPDC";
+
+  //////////////////////////////// ASRUN IMPORT /////////////////////////////////
+  static String AsrunImport_GetLoadLocation = "$BASE_URL/api/AsrunImport/GetLoadLocation";
+  static String AsrunImport_GetLocationSelect(locationCode) => "$BASE_URL/api/AsrunImport/GetLocationSelect?Locationcode=$locationCode";
+  static String AsrunImport_LoadFPCData(locationCode, channelCode, telecastDate) =>
+      "$BASE_URL/api/AsrunImport/LoadFPCData?LocationCode=$locationCode&ChannelCode=$channelCode&TelecastDate=$telecastDate";
+  static String AsrunImport_GetChannelCode = "$BASE_URL/api/AsrunImport/GetChannelCode";
+  static String AsrunImport_LoadImportSpecifications(String locationCode, String channelCode) =>
+      "$BASE_URL/api/AsrunImport/LoadImportSpecifications?LocationCode=$locationCode&ChannelCode=$channelCode";
+
+  static String AsrunImport_CheckSapBillingStatus(String locationCode, String channelCode, String telecastDate) =>
+      "$BASE_URL/api/AsrunImport/CheckSapBillingStatus?LocationCode=$locationCode&ChannelCode=$channelCode&TelecastDate=$telecastDate";
+
+  static String AsrunImport_GetAsrunProgramList = "$BASE_URL/api/AsrunImport/GetAsrunProgramList";
+  static String AsrunImport_GetDeleteStatus = "$BASE_URL/api/AsrunImport/GetDeleteStatus";
+  static String AsrunImport_SaveAsrunDetail = "$BASE_URL/api/AsrunImport/SaveAsrunDetail";
+  static String AsrunImport_SaveTempDetail = "$BASE_URL/api/AsrunImport/SaveTempDetail";
+  static String AsrunImport_AsunOnImport = "$BASE_URL/api/AsrunImport/AsrunOnImport";
   static String RO_BOOKING_GetClientPDC =
       "$BASE_URL/api/ROBooking/GetClientPDC";
 

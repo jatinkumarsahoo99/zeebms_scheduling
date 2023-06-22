@@ -449,32 +449,59 @@ class LstDgvRO {
     colorName = json['colorName'];
   }
 
-  Map<String, dynamic> toJson() {
+  Map<String, dynamic> toJson({bool fromSave = true}) {
     final Map<String, dynamic> data = <String, dynamic>{};
-    data['programCode'] = programCode;
-    data['revType'] = revType;
-    data['tapeLanguage'] = tapeLanguage;
-    data['midPre'] = midPre;
-    data['positionCode'] = positionCode;
-    data['programName'] = programName;
-    data['scheduleDate'] = scheduleDate;
-    data['scheduleTime'] = scheduleTime;
-    data['exportTapeCode'] = exportTapeCode;
-    data['commercialCaption'] = commercialCaption;
-    data['tapeDuration'] = tapeDuration;
-    data['spotAmount'] = spotAmount;
-    data['bookingDetailCode'] = bookingDetailCode;
-    data['recordnumber'] = recordnumber;
-    data['segmentNumber'] = segmentNumber;
-    data['breaknumber'] = breaknumber;
-    data['spotPositionTypeName'] = spotPositionTypeName;
-    data['positionName'] = positionName;
-    data['edit'] = edit;
-    data['bookingstatus'] = bookingstatus;
-    data['killDate'] = killDate;
-    data['campaignStartDate'] = campaignStartDate;
-    data['campaignEndDate'] = campaignEndDate;
-    data['colorName'] = colorName;
+    if (fromSave) {
+      data['programCode'] = programCode;
+      data['revType'] = revType;
+      data['tapeLanguage'] = tapeLanguage;
+      data['midPre'] = midPre;
+      data['positionCode'] = positionCode;
+      data['programName'] = programName;
+      data['scheduleDate'] = scheduleDate;
+      data['scheduleTime'] = scheduleTime;
+      data['exportTapeCode'] = exportTapeCode;
+      data['commercialCaption'] = commercialCaption;
+      data['tapeDuration'] = tapeDuration;
+      data['spotAmount'] = spotAmount;
+      data['bookingDetailCode'] = bookingDetailCode;
+      data['recordnumber'] = recordnumber;
+      data['segmentNumber'] = segmentNumber;
+      data['breaknumber'] = breaknumber;
+      data['spotPositionTypeName'] = spotPositionTypeName;
+      data['positionName'] = positionName;
+      data['edit'] = edit;
+      data['bookingstatus'] = bookingstatus;
+      data['killDate'] = killDate;
+      data['campaignStartDate'] = campaignStartDate;
+      data['campaignEndDate'] = campaignEndDate;
+      data['colorName'] = colorName;
+    } else {
+      data['programName'] = programName;
+      data['scheduleDate'] = scheduleDate;
+      data['scheduleTime'] = scheduleTime;
+      data['exportTapeCode'] = exportTapeCode;
+      data['commercialCaption'] = commercialCaption;
+      data['tapeDuration'] = tapeDuration;
+      data['spotAmount'] = spotAmount;
+      data['bookingDetailCode'] = bookingDetailCode;
+      data['recordnumber'] = recordnumber;
+      data['segmentNumber'] = segmentNumber;
+      data['breaknumber'] = breaknumber;
+      data['spotPositionTypeName'] = spotPositionTypeName;
+      data['positionName'] = positionName;
+      data['bookingstatus'] = bookingstatus;
+      data['killDate'] = killDate;
+      data['campaignStartDate'] = campaignStartDate;
+      data['campaignEndDate'] = campaignEndDate;
+      // data['programCode'] = programCode;
+      // data['revType'] = revType;
+      // data['tapeLanguage'] = tapeLanguage;
+      // data['midPre'] = midPre;
+      // data['positionCode'] = positionCode;
+      // data['edit'] = edit;
+      // data['colorName'] = colorName;
+    }
     return data;
   }
 }

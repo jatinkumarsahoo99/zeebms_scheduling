@@ -4,9 +4,7 @@ class RoCancellationData {
   RoCancellationData({this.cancellationData});
 
   RoCancellationData.fromJson(Map<String, dynamic> json) {
-    cancellationData = json['cancellationData'] != null
-        ? CancellationData.fromJson(json['cancellationData'])
-        : null;
+    cancellationData = json['cancellationData'] != null ? CancellationData.fromJson(json['cancellationData']) : null;
   }
 
   Map<String, dynamic> toJson() {
@@ -88,8 +86,7 @@ class CancellationData {
     data['controlEnableTrue'] = controlEnableTrue;
     data['allowColumnsEditing'] = allowColumnsEditing;
     if (lstBookingNoStatusData != null) {
-      data['lstBookingNoStatusData'] =
-          lstBookingNoStatusData!.map((v) => v.toJson()).toList();
+      data['lstBookingNoStatusData'] = lstBookingNoStatusData!.map((v) => v.toJson()).toList();
     }
     return data;
   }
@@ -177,33 +174,61 @@ class LstBookingNoStatusData {
     valuationAmount = json['valuationAmount'];
   }
 
-  Map<String, dynamic> toJson() {
+  Map<String, dynamic> toJson({bool fromSave = true}) {
     final Map<String, dynamic> data = <String, dynamic>{};
-    data['requested'] = requested;
-    data['programName'] = programName;
-    data['scheduleDate'] = scheduleDate;
-    data['scheduleTime'] = scheduleTime;
-    data['tapeCaption'] = tapeCaption;
-    data['tapeID'] = tapeID;
-    data['tapeDuration'] = tapeDuration;
-    data['spotAmount'] = spotAmount;
-    data['cancelNumber'] = cancelNumber;
-    data['bookingDetailCode'] = bookingDetailCode;
-    data['dealno'] = dealno;
-    data['recordnumber'] = recordnumber;
-    data['locationcode'] = locationcode;
-    data['channelcode'] = channelcode;
-    data['bookingnumber'] = bookingnumber;
-    data['spotStatus'] = spotStatus;
-    data['bookingStatus'] = bookingStatus;
-    data['logged'] = logged;
-    data['telecastProgramCode'] = telecastProgramCode;
-    data['status'] = status;
-    data['auditedBy'] = auditedBy;
-    data['auditedOn'] = auditedOn;
-    data['clientname'] = clientname;
-    data['agencyname'] = agencyname;
-    data['valuationAmount'] = valuationAmount;
+    if (fromSave) {
+      data['requested'] = requested;
+      data['programName'] = programName;
+      data['scheduleDate'] = scheduleDate;
+      data['scheduleTime'] = scheduleTime;
+      data['tapeCaption'] = tapeCaption;
+      data['tapeID'] = tapeID;
+      data['tapeDuration'] = tapeDuration;
+      data['spotAmount'] = spotAmount;
+      data['cancelNumber'] = cancelNumber;
+      data['bookingDetailCode'] = bookingDetailCode;
+      data['dealno'] = dealno;
+      data['recordnumber'] = recordnumber;
+      data['locationcode'] = locationcode;
+      data['channelcode'] = channelcode;
+      data['bookingnumber'] = bookingnumber;
+      data['spotStatus'] = spotStatus;
+      data['bookingStatus'] = bookingStatus;
+      data['logged'] = logged;
+      data['telecastProgramCode'] = telecastProgramCode;
+      data['status'] = status;
+      data['auditedBy'] = auditedBy;
+      data['auditedOn'] = auditedOn;
+      data['clientname'] = clientname;
+      data['agencyname'] = agencyname;
+      data['valuationAmount'] = valuationAmount;
+    } else {
+      data['requested'] = requested;
+      data['programName'] = programName;
+      data['scheduleDate'] = scheduleDate;
+      data['scheduleTime'] = scheduleTime;
+      data['tapeCaption'] = tapeCaption;
+      data['tapeID'] = tapeID;
+      data['tapeDuration'] = tapeDuration;
+      data['spotAmount'] = spotAmount;
+      data['cancelNumber'] = cancelNumber;
+      data['bookingDetailCode'] = bookingDetailCode;
+      data['dealno'] = dealno;
+      data['recordnumber'] = recordnumber;
+      // data['locationcode'] = locationcode;
+      // data['channelcode'] = channelcode;
+      data['bookingnumber'] = bookingnumber;
+      // data['spotStatus'] = spotStatus;
+      // data['bookingStatus'] = bookingStatus;
+      // data['logged'] = logged;
+      // data['telecastProgramCode'] = telecastProgramCode;
+      // data['status'] = status;
+      // data['auditedBy'] = auditedBy;
+      // data['auditedOn'] = auditedOn;
+      // data['clientname'] = clientname;
+      // data['agencyname'] = agencyname;
+      data['valuationAmount'] = valuationAmount;
+    }
     return data;
   }
 }

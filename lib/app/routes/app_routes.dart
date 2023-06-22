@@ -37,6 +37,7 @@ abstract class Routes {
   static const EVENT_SECONDARY = _Paths.EVENT_SECONDARY;
   static const SLIDE = _Paths.SLIDE;
   static const COMMERCIAL_MASTER = _Paths.COMMERCIAL_MASTER;
+  static const ASURN_IMPORT = _Paths.ASURN_IMPORT;
 }
 
 abstract class RoutesList {
@@ -92,4 +93,5 @@ abstract class _Paths {
   static const EVENT_SECONDARY = '/frmSecondaryEventSchedulingNew';
   static const SLIDE = '/frmSlideScheduling';
   static const COMMERCIAL_MASTER = '/frmCommercialMaster';
+  static const ASURN_IMPORT = '/asurn-import';
 }

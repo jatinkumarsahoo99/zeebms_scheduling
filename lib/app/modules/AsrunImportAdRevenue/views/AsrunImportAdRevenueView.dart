@@ -21,414 +21,334 @@ import '../controllers/AsrunImportController.dart';
 
 class AsrunImportAdRevenueView extends GetView<AsrunImportController> {
   AsrunImportController controllerX = Get.put(AsrunImportController());
-  final GlobalKey rebuildKey = GlobalKey();
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: SizedBox(
-        height: double.maxFinite,
-        width: double.maxFinite,
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            GetBuilder<AsrunImportController>(
-              init: controllerX,
-              id: "updateView",
-              builder: (control) {
-                return Padding(
-                  padding:
-                      const EdgeInsets.symmetric(vertical: 8, horizontal: 15),
-                  child: SizedBox(
-                    width: double.maxFinite,
-                    child: Wrap(
-                      crossAxisAlignment: WrapCrossAlignment.center,
-                      runSpacing: 5,
-                      spacing: 5,
-                      children: [
-                        Obx(
-                          () => DropDownField.formDropDown1WidthMap(
-                            controllerX.locations.value,
-                            (value) {
-                              controllerX.selectLocation = value;
-                              controllerX.getChannels(
-                                  controllerX.selectLocation?.key ?? "");
-                            },
-                            "Location",
-                            0.12,
-                            isEnable: controllerX.isEnable.value,
-                            selected: controllerX.selectLocation,
-                            autoFocus: true,
-                            dialogWidth: 330,
-                            dialogHeight: Get.height * .7,
-                          ),
-                        ),
+      body: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Wrap(
+            crossAxisAlignment: WrapCrossAlignment.center,
+            runSpacing: 5,
+            spacing: 5,
+            children: [
+              Obx(
+                () => DropDownField.formDropDown1WidthMap(
+                  controllerX.locations.value,
+                  (value) {
+                    controllerX.selectLocation = value;
+                    controllerX.getChannels(controllerX.selectLocation?.key ?? "");
+                  },
+                  "Location",
+                  0.12,
+                  isEnable: controllerX.isEnable.value,
+                  selected: controllerX.selectLocation,
+                  autoFocus: true,
+                  dialogWidth: 330,
+                  dialogHeight: Get.height * .7,
+                ),
+              ),
 
-                        /// channel
-                        Obx(
-                          () => DropDownField.formDropDown1WidthMap(
-                            controllerX.channels.value,
-                            (value) {
-                              controllerX.selectChannel = value;
+              /// channel
+              Obx(
+                () => DropDownField.formDropDown1WidthMap(
+                  controllerX.channels.value,
+                  (value) {
+                    controllerX.selectChannel = value;
+                  },
+                  "Channel",
+                  0.12,
+                  isEnable: controllerX.isEnable.value,
+                  selected: controllerX.selectChannel,
+                  autoFocus: true,
+                  dialogWidth: 330,
+                  dialogHeight: Get.height * .7,
+                ),
+              ),
+              Obx(
+                () => DateWithThreeTextField(
+                  title: "Log Date",
+                  splitType: "-",
+                  widthRation: 0.09,
+                  isEnable: controllerX.isEnable.value,
+                  onFocusChange: (data) {
+                    controllerX.loadFPCData();
+                  },
+                  mainTextController: controllerX.selectedDate,
+                ),
+              ),
+              // Padding(
+              //   padding: const EdgeInsets.only(top: 14.0, left: 5, right: 5),
+              //   child: FormButtonWrapper(
+              //     btnText: "ProgMismatch",
+              //     callback: () {},
+              //     showIcon: false,
+              //   ),
+              // ),
+              FittedBox(
+                child: Row(
+                  children: [
+                    Obx(() => Padding(
+                          padding: const EdgeInsets.only(top: 15.0),
+                          child: Checkbox(
+                            value: controllerX.isStandby.value,
+                            onChanged: (val) {
+                              controllerX.isStandby.value = val!;
                             },
-                            "Channel",
-                            0.12,
-                            isEnable: controllerX.isEnable.value,
-                            selected: controllerX.selectChannel,
-                            autoFocus: true,
-                            dialogWidth: 330,
-                            dialogHeight: Get.height * .7,
+                            materialTapTargetSize: MaterialTapTargetSize.shrinkWrap,
                           ),
-                        ),
-                        Obx(
-                          () => DateWithThreeTextField(
-                            title: "Log Date",
-                            splitType: "-",
-                            widthRation: 0.12,
-                            isEnable: controllerX.isEnable.value,
-                            onFocusChange: (data) {
-                              // controllerX.selectedDate.text =
-                              //     DateFormat('dd/MM/yyyy').format(
-                              //         DateFormat("dd-MM-yyyy").parse(data));
-                              // DateFormat("dd-MM-yyyy").parse(data);
-                              print("Called when focus changed");
-                              /*controller.getDailyFPCDetailsList(
-                                controllerX.selectedLocationId.text,
-                                controllerX.selectedChannelId.text,
-                                controllerX.convertToAPIDateType(),
-                              );*/
-
-                              // controller.isTableDisplayed.value = true;
-                            },
-                            mainTextController: controllerX.selectedDate,
-                          ),
-                        ),
-                        Padding(
-                          padding: const EdgeInsets.only(
-                              top: 14.0, left: 5, right: 5),
-                          child: FormButtonWrapper(
-                            btnText: "ProgMismatch",
-                            callback: () {},
-                            showIcon: false,
-                          ),
-                        ),
-                        FittedBox(
-                          child: Row(
-                            children: [
-                              Obx(() => Padding(
-                                    padding: const EdgeInsets.only(top: 15.0),
-                                    child: Checkbox(
-                                      value: controllerX.isStandby.value,
-                                      onChanged: (val) {
-                                        controllerX.isStandby.value = val!;
-                                      },
-                                      materialTapTargetSize:
-                                          MaterialTapTargetSize.shrinkWrap,
-                                    ),
-                                  )),
-                              Padding(
-                                padding:
-                                    const EdgeInsets.only(top: 15.0, left: 3),
-                                child: Text(
-                                  "FPC",
-                                  style: TextStyle(
-                                      fontSize: SizeDefine.labelSize1),
-                                ),
-                              ),
-                            ],
-                          ),
-                        ),
-                        FittedBox(
-                          child: Row(
-                            children: [
-                              Obx(() => Padding(
-                                    padding: const EdgeInsets.only(top: 15.0),
-                                    child: Checkbox(
-                                      value: controllerX.isStandby.value,
-                                      onChanged: (val) {
-                                        controllerX.isStandby.value = val!;
-                                      },
-                                      materialTapTargetSize:
-                                          MaterialTapTargetSize.shrinkWrap,
-                                    ),
-                                  )),
-                              Padding(
-                                padding:
-                                    const EdgeInsets.only(top: 15.0, left: 3),
-                                child: Text(
-                                  "Mark Slot",
-                                  style: TextStyle(
-                                      fontSize: SizeDefine.labelSize1),
-                                ),
-                              ),
-                            ],
-                          ),
-                        ),
-
-                        FittedBox(
-                          child: Row(
-                            children: [
-                              Obx(() => Padding(
-                                    padding: const EdgeInsets.only(top: 15.0),
-                                    child: Checkbox(
-                                      value: controllerX.isStandby.value,
-                                      onChanged: (val) {
-                                        controllerX.isStandby.value = val!;
-                                      },
-                                      materialTapTargetSize:
-                                          MaterialTapTargetSize.shrinkWrap,
-                                    ),
-                                  )),
-                              Padding(
-                                padding:
-                                    const EdgeInsets.only(top: 15.0, left: 3),
-                                child: Text(
-                                  "Dont update exposure program",
-                                  style: TextStyle(
-                                      fontSize: SizeDefine.labelSize1),
-                                ),
-                              ),
-                            ],
-                          ),
-                        ),
-                        FittedBox(
-                          child: Row(
-                            children: [
-                              Obx(() => Padding(
-                                    padding: const EdgeInsets.only(top: 15.0),
-                                    child: Checkbox(
-                                      value: controllerX.isStandby.value,
-                                      onChanged: (val) {
-                                        controllerX.isStandby.value = val!;
-                                      },
-                                      materialTapTargetSize:
-                                          MaterialTapTargetSize.shrinkWrap,
-                                    ),
-                                  )),
-                              Padding(
-                                padding:
-                                    const EdgeInsets.only(top: 15.0, left: 3),
-                                child: Text(
-                                  "GFK",
-                                  style: TextStyle(
-                                      fontSize: SizeDefine.labelSize1),
-                                ),
-                              ),
-                            ],
-                          ),
-                        ),
-                        FittedBox(
-                          child: Row(
-                            children: [
-                              Obx(() => Padding(
-                                    padding: const EdgeInsets.only(top: 15.0),
-                                    child: Checkbox(
-                                      value: controllerX.isStandby.value,
-                                      onChanged: (val) {
-                                        controllerX.isStandby.value = val!;
-                                      },
-                                      materialTapTargetSize:
-                                          MaterialTapTargetSize.shrinkWrap,
-                                    ),
-                                  )),
-                              Padding(
-                                padding:
-                                    const EdgeInsets.only(top: 15.0, left: 3),
-                                child: Text(
-                                  "DailyFPC",
-                                  style: TextStyle(
-                                      fontSize: SizeDefine.labelSize1),
-                                ),
-                              ),
-                            ],
-                          ),
-                        ),
-                        FittedBox(
-                          child: Row(
-                            children: [
-                              Obx(() => Padding(
-                                    padding: const EdgeInsets.only(top: 15.0),
-                                    child: Checkbox(
-                                      value: controllerX.isStandby.value,
-                                      onChanged: (val) {
-                                        controllerX.isStandby.value = val!;
-                                      },
-                                      materialTapTargetSize:
-                                          MaterialTapTargetSize.shrinkWrap,
-                                    ),
-                                  )),
-                              Padding(
-                                padding:
-                                    const EdgeInsets.only(top: 15.0, left: 3),
-                                child: Text(
-                                  "Amagi",
-                                  style: TextStyle(
-                                      fontSize: SizeDefine.labelSize1),
-                                ),
-                              ),
-                            ],
-                          ),
-                        ),
-                        InputFields.formFieldNumberMask(
-                            hintTxt: "Start Time",
-                            controller: controllerX.startTime_,
-                            widthRatio: 0.12,
-                            isTime: true,
-                            paddingLeft: 0),
-                      ],
+                        )),
+                    Padding(
+                      padding: const EdgeInsets.only(top: 15.0, left: 3),
+                      child: Text(
+                        "FPC",
+                        style: TextStyle(fontSize: SizeDefine.labelSize1),
+                      ),
                     ),
-                  ),
-                );
-              },
-            ),
-            // Divider(),
+                  ],
+                ),
+              ),
+              FittedBox(
+                child: Row(
+                  children: [
+                    Obx(() => Padding(
+                          padding: const EdgeInsets.only(top: 15.0),
+                          child: Checkbox(
+                            value: controllerX.isStandby.value,
+                            onChanged: (val) {
+                              controllerX.isStandby.value = val!;
+                            },
+                            materialTapTargetSize: MaterialTapTargetSize.shrinkWrap,
+                          ),
+                        )),
+                    Padding(
+                      padding: const EdgeInsets.only(top: 15.0, left: 3),
+                      child: Text(
+                        "Mark Slot",
+                        style: TextStyle(fontSize: SizeDefine.labelSize1),
+                      ),
+                    ),
+                  ],
+                ),
+              ),
 
-            GetBuilder<AsrunImportController>(
-              id: "transmissionList",
-              init: controllerX,
-              builder: (controller) {
-                return Expanded(
+              FittedBox(
+                child: Row(
+                  children: [
+                    Obx(() => Padding(
+                          padding: const EdgeInsets.only(top: 15.0),
+                          child: Checkbox(
+                            value: controllerX.isStandby.value,
+                            onChanged: (val) {
+                              controllerX.isStandby.value = val!;
+                            },
+                            materialTapTargetSize: MaterialTapTargetSize.shrinkWrap,
+                          ),
+                        )),
+                    Padding(
+                      padding: const EdgeInsets.only(top: 15.0, left: 3),
+                      child: Text(
+                        "Dont update exposure program",
+                        style: TextStyle(fontSize: SizeDefine.labelSize1),
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+              FittedBox(
+                child: Row(
+                  children: [
+                    Obx(() => Padding(
+                          padding: const EdgeInsets.only(top: 15.0),
+                          child: Checkbox(
+                            value: controllerX.isStandby.value,
+                            onChanged: (val) {
+                              controllerX.isStandby.value = val!;
+                            },
+                            materialTapTargetSize: MaterialTapTargetSize.shrinkWrap,
+                          ),
+                        )),
+                    Padding(
+                      padding: const EdgeInsets.only(top: 15.0, left: 3),
+                      child: Text(
+                        "GFK",
+                        style: TextStyle(fontSize: SizeDefine.labelSize1),
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+              FittedBox(
+                child: Row(
+                  children: [
+                    Obx(() => Padding(
+                          padding: const EdgeInsets.only(top: 15.0),
+                          child: Checkbox(
+                            value: controllerX.isStandby.value,
+                            onChanged: (val) {
+                              controllerX.isStandby.value = val!;
+                            },
+                            materialTapTargetSize: MaterialTapTargetSize.shrinkWrap,
+                          ),
+                        )),
+                    Padding(
+                      padding: const EdgeInsets.only(top: 15.0, left: 3),
+                      child: Text(
+                        "DailyFPC",
+                        style: TextStyle(fontSize: SizeDefine.labelSize1),
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+              FittedBox(
+                child: Row(
+                  children: [
+                    Obx(() => Padding(
+                          padding: const EdgeInsets.only(top: 15.0),
+                          child: Checkbox(
+                            value: controllerX.isStandby.value,
+                            onChanged: (val) {
+                              controllerX.isStandby.value = val!;
+                            },
+                            materialTapTargetSize: MaterialTapTargetSize.shrinkWrap,
+                          ),
+                        )),
+                    Padding(
+                      padding: const EdgeInsets.only(top: 15.0, left: 3),
+                      child: Text(
+                        "Amagi",
+                        style: TextStyle(fontSize: SizeDefine.labelSize1),
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+              InputFields.formFieldNumberMask(
+                  hintTxt: "Start Time", controller: controllerX.startTime_, widthRatio: 0.09, isTime: true, paddingLeft: 0),
+            ],
+          ),
+
+          // Divider(),
+
+          GetBuilder<AsrunImportController>(
+            id: "fpcData",
+            init: controllerX,
+            builder: (controller) {
+              return Expanded(
                   // width: Get.width,
                   // height: Get.height * .33,
-                  child: (controllerX.transmissionLogList != null &&
-                          (controllerX.transmissionLogList?.isNotEmpty)!)
-                      ? DataGridFromMap1(
-                          onFocusChange: (value) {
-                            controllerX.gridStateManager!
-                                .setGridMode(PlutoGridMode.selectWithOneTap);
-                            controllerX.selectedPlutoGridMode =
-                                PlutoGridMode.selectWithOneTap;
-                          },
-                          onload: (loadevent) {
-                            controllerX.gridStateManager =
-                                loadevent.stateManager;
-                            if (controller.selectedIndex != null) {
-                              loadevent.stateManager.moveScrollByRow(
-                                  PlutoMoveDirection.down,
-                                  controller.selectedIndex);
-                              loadevent.stateManager.setCurrentCell(
-                                  loadevent
-                                      .stateManager
-                                      .rows[controller.selectedIndex!]
-                                      .cells
-                                      .entries
-                                      .first
-                                      .value,
-                                  controller.selectedIndex);
-                            }
-                          },
-                          hideKeys: ["color", "modifed"],
-                          showSrNo: true,
-                          // mode: PlutoGridMode.selectWithOneTap,
-                          colorCallback: (PlutoRowColorContext plutoContext) {
-                            return Color(controllerX
-                                    .transmissionLogList![plutoContext.rowIdx]
-                                    .colorNo ??
-                                Colors.white.value);
-                          },
-                          onSelected: (PlutoGridOnSelectedEvent event) {
-                            event.selectedRows?.forEach((element) {
-                              print("On Print select" +
-                                  jsonEncode(element.toJson()));
-                            });
-                          },
-                          onRowsMoved: (PlutoGridOnRowsMovedEvent onRowMoved) {
-                            print("Index is>>" + onRowMoved.idx.toString());
-                            Map map = onRowMoved.rows[0].cells;
-                            print("On Print moved" +
-                                jsonEncode(
-                                    onRowMoved.rows[0].cells.toString()));
-                            int? val = int.tryParse((onRowMoved
-                                .rows[0].cells["Episode Dur"]?.value
-                                .toString())!)!;
-                            // print("After On select>>" + data.toString());
-                            for (int i = (onRowMoved.idx) ?? 0; i >= 0; i--) {
-                              print("On Print moved" + i.toString());
-                              print("On select>>" +
-                                  map["Episode Dur"].value.toString());
+                  child: Container(
+                padding: EdgeInsets.all(4),
+                child: (controller.asrunFpcData != null)
+                    ? DataGridFromMap(
+                        // onFocusChange: (value) {
+                        //   // controllerX.gridStateManager!.setGridMode(PlutoGridMode.selectWithOneTap);
+                        //   // controllerX.selectedPlutoGridMode = PlutoGridMode.selectWithOneTap;
+                        // },
+                        onload: (loadevent) {
+                          controller.gridStateManager = loadevent.stateManager;
+                          // if (controller.selectedIndex != null) {
+                          //   loadevent.stateManager.moveScrollByRow(PlutoMoveDirection.down, controller.selectedIndex);
+                          //   loadevent.stateManager.setCurrentCell(
+                          //       loadevent.stateManager.rows[controller.selectedIndex!].cells.entries.first.value, controller.selectedIndex);
+                          // }
+                        },
+                        // hideKeys: ["color", "modifed"],
+                        showSrNo: true,
+                        // mode: PlutoGridMode.selectWithOneTap,
+                        // colorCallback: (PlutoRowColorContext plutoContext) {
+                        //   // return Color(controllerX.transmissionLogList![plutoContext.rowIdx].colorNo ?? Colors.white.value);
+                        // },
+                        onSelected: (PlutoGridOnSelectedEvent event) {
+                          event.selectedRows?.forEach((element) {
+                            print("On Print select" + jsonEncode(element.toJson()));
+                          });
+                        },
+                        // onRowsMoved: (PlutoGridOnRowsMovedEvent onRowMoved) {
+                        //   print("Index is>>" + onRowMoved.idx.toString());
+                        //   Map map = onRowMoved.rows[0].cells;
+                        //   print("On Print moved" + jsonEncode(onRowMoved.rows[0].cells.toString()));
+                        //   int? val = int.tryParse((onRowMoved.rows[0].cells["Episode Dur"]?.value.toString())!)!;
+                        //   // print("After On select>>" + data.toString());
+                        //   for (int i = (onRowMoved.idx) ?? 0; i >= 0; i--) {
+                        //     print("On Print moved" + i.toString());
+                        //     print("On select>>" + map["Episode Dur"].value.toString());
 
-                              print("On Print moved cell>>>" +
-                                  jsonEncode(controllerX.gridStateManager
-                                      ?.rows[i].cells["Episode Dur"]?.value
-                                      .toString()));
+                        //     print("On Print moved cell>>>" +
+                        //         jsonEncode(controllerX.gridStateManager?.rows[i].cells["Episode Dur"]?.value.toString()));
 
-                              controllerX.gridStateManager?.rows[i]
-                                      .cells["Episode Dur"] =
-                                  PlutoCell(value: val - (i - onRowMoved.idx));
-                            }
-                            controllerX.gridStateManager?.notifyListeners();
-                          },
-                          mode: controllerX.selectedPlutoGridMode,
-                          widthRatio: (Get.width / 11.4),
-                          mapData: controllerX.transmissionLogList!
-                              .map((e) => e.toJson1())
-                              .toList())
-                      : Container(
-                          // height: Get.height * .33,
-                          // width: Get.width,
-                          decoration: BoxDecoration(
-                            border: Border.all(
-                              color: Colors.grey.shade400,
-                              width: 1,
-                            ),
+                        //     controllerX.gridStateManager?.rows[i].cells["Episode Dur"] = PlutoCell(value: val - (i - onRowMoved.idx));
+                        //   }
+                        //   controllerX.gridStateManager?.notifyListeners();
+                        // },
+                        mode: controllerX.selectedPlutoGridMode,
+                        mapData: controllerX.asrunFpcData!.map((e) => e.toJson()).toList())
+                    : Container(
+                        // height: Get.height * .33,
+                        // width: Get.width,
+                        decoration: BoxDecoration(
+                          border: Border.all(
+                            color: Colors.grey.shade400,
+                            width: 1,
                           ),
                         ),
-                );
-              },
-            ),
-            // Expanded(child: Container(),),
-            GetBuilder<HomeController>(
-                id: "transButtons",
-                init: Get.find<HomeController>(),
-                builder: (controller) {
-                  /* PermissionModel formPermissions = Get.find<MainController>()
-                      .permissionList!
-                      .lastWhere((element) {
-                    return element.appFormName == "frmSegmentsDetails";
-                  });*/
-                  if (controller.asurunImportButtoons != null) {
-                    return SizedBox(
-                      height: 40,
-                      child: ButtonBar(
-                        // buttonHeight: 20,
-                        alignment: MainAxisAlignment.start,
-                        mainAxisSize: MainAxisSize.min,
-                        // pa
-                        children: [
-                          for (var btn in controller.asurunImportButtoons!)
-                            FormButtonWrapper(
-                              btnText: btn["name"],
-                              showIcon: false,
-                              // isEnabled: btn['isDisabled'],
-                              callback: /*btn["name"] != "Delete" &&
-                                      Utils.btnAccessHandler2(btn['name'],
-                                              controller, formPermissions) ==
-                                          null
-                                  ? null
-                                  :*/
-                                  () => formHandler(btn['name']),
-                            ),
-                          IconButton(
-                            onPressed: () {},
-                            icon: Icon(Icons.arrow_upward),
-                            padding: EdgeInsets.symmetric(horizontal: 8.0),
-                          ),
-                          IconButton(
-                            onPressed: () {},
-                            icon: Icon(Icons.arrow_downward),
-                            padding: EdgeInsets.symmetric(horizontal: 8.0),
-                          ),
-
-                        ],
                       ),
-                    );
-                  } else {
-                    return Container();
-                  }
-                }),
-            const SizedBox(height: 5),
-          ],
-        ),
+              ));
+            },
+          ),
+          // Expanded(child: Container(),),
+          GetBuilder<HomeController>(
+              id: "transButtons",
+              init: Get.find<HomeController>(),
+              builder: (controller) {
+                /* PermissionModel formPermissions = Get.find<MainController>()
+                    .permissionList!
+                    .lastWhere((element) {
+                  return element.appFormName == "frmSegmentsDetails";
+                });*/
+                if (controller.asurunImportButtoons != null) {
+                  return SizedBox(
+                    height: 40,
+                    child: ButtonBar(
+                      // buttonHeight: 20,
+                      alignment: MainAxisAlignment.start,
+                      mainAxisSize: MainAxisSize.min,
+                      // pa
+                      children: [
+                        for (var btn in controller.asurunImportButtoons!)
+                          FormButtonWrapper(
+                            btnText: btn["name"],
+                            showIcon: false,
+                            // isEnabled: btn['isDisabled'],
+                            callback: /*btn["name"] != "Delete" &&
+                                    Utils.btnAccessHandler2(btn['name'],
+                                            controller, formPermissions) ==
+                                        null
+                                ? null
+                                :*/
+                                () => formHandler(btn['name']),
+                          ),
+                        IconButton(
+                          onPressed: () {},
+                          icon: Icon(Icons.arrow_upward),
+                          padding: EdgeInsets.symmetric(horizontal: 8.0),
+                        ),
+                        IconButton(
+                          onPressed: () {},
+                          icon: Icon(Icons.arrow_downward),
+                          padding: EdgeInsets.symmetric(horizontal: 8.0),
+                        ),
+                      ],
+                    ),
+                  );
+                } else {
+                  return Container();
+                }
+              }),
+          const SizedBox(height: 5),
+        ],
       ),
     );
   }
@@ -517,20 +437,14 @@ class AsrunImportAdRevenueView extends GetView<AsrunImportController> {
                           // width: 500,
                           width: Get.width * 0.8,
                           height: 300,
-                          child: (controllerX.transmissionLogList != null &&
-                                  (controllerX
-                                      .transmissionLogList?.isNotEmpty)!)
+                          child: (controllerX.transmissionLogList != null && (controllerX.transmissionLogList?.isNotEmpty)!)
                               ? DataGridFromMap(
                                   hideCode: false,
                                   formatDate: false,
                                   colorCallback: (renderC) => Colors.red[200]!,
-                                  mapData: controllerX.transmissionLogList!
-                                      .map((e) => e.toJson())
-                                      .toList())
+                                  mapData: controllerX.transmissionLogList!.map((e) => e.toJson()).toList())
                               // _dataTable3()
-                              : const WarningBox(
-                                  text:
-                                      'Enter Location, Channel & Date to get the Break Definitions'),
+                              : const WarningBox(text: 'Enter Location, Channel & Date to get the Break Definitions'),
                         );
                       })
                 ],
@@ -611,20 +525,14 @@ class AsrunImportAdRevenueView extends GetView<AsrunImportController> {
                           // width: 500,
                           width: Get.width * 0.8,
                           height: 300,
-                          child: (controllerX.transmissionLogList != null &&
-                                  (controllerX
-                                      .transmissionLogList?.isNotEmpty)!)
+                          child: (controllerX.transmissionLogList != null && (controllerX.transmissionLogList?.isNotEmpty)!)
                               ? DataGridFromMap(
                                   hideCode: false,
                                   formatDate: false,
                                   colorCallback: (renderC) => Colors.red[200]!,
-                                  mapData: controllerX.transmissionLogList!
-                                      .map((e) => e.toJson())
-                                      .toList())
+                                  mapData: controllerX.transmissionLogList!.map((e) => e.toJson()).toList())
                               // _dataTable3()
-                              : const WarningBox(
-                                  text:
-                                      'Enter Location, Channel & Date to get the Break Definitions'),
+                              : const WarningBox(text: 'Enter Location, Channel & Date to get the Break Definitions'),
                         );
                       })
                 ],
@@ -685,17 +593,8 @@ class AsrunImportAdRevenueView extends GetView<AsrunImportController> {
                         ),
                       ),
                       InputFields.formField1(
-                          width: 0.13,
-                          onchanged: (value) {},
-                          hintTxt: "TX Caption",
-                          margin: true,
-                          controller: controllerX.txCaption_),
-                      InputFields.formField1(
-                          width: 0.13,
-                          onchanged: (value) {},
-                          hintTxt: "TX Id",
-                          margin: true,
-                          controller: controllerX.txId_),
+                          width: 0.13, onchanged: (value) {}, hintTxt: "TX Caption", margin: true, controller: controllerX.txCaption_),
+                      InputFields.formField1(width: 0.13, onchanged: (value) {}, hintTxt: "TX Id", margin: true, controller: controllerX.txId_),
                       SizedBox(
                         width: Get.width * 0.05,
                         child: Row(
@@ -708,17 +607,14 @@ class AsrunImportAdRevenueView extends GetView<AsrunImportController> {
                                     onChanged: (val) {
                                       controllerX.isMy.value = val!;
                                     },
-                                    materialTapTargetSize:
-                                        MaterialTapTargetSize.shrinkWrap,
+                                    materialTapTargetSize: MaterialTapTargetSize.shrinkWrap,
                                   ),
                                 )),
                             Padding(
-                              padding:
-                                  const EdgeInsets.only(top: 15.0, left: 5),
+                              padding: const EdgeInsets.only(top: 15.0, left: 5),
                               child: Text(
                                 "My",
-                                style:
-                                    TextStyle(fontSize: SizeDefine.labelSize1),
+                                style: TextStyle(fontSize: SizeDefine.labelSize1),
                               ),
                             ),
                           ],
@@ -752,17 +648,14 @@ class AsrunImportAdRevenueView extends GetView<AsrunImportController> {
                                     onChanged: (val) {
                                       controllerX.isInsertAfter.value = val!;
                                     },
-                                    materialTapTargetSize:
-                                        MaterialTapTargetSize.shrinkWrap,
+                                    materialTapTargetSize: MaterialTapTargetSize.shrinkWrap,
                                   ),
                                 )),
                             Padding(
-                              padding:
-                                  const EdgeInsets.only(top: 15.0, left: 5),
+                              padding: const EdgeInsets.only(top: 15.0, left: 5),
                               child: Text(
                                 "Insert After",
-                                style:
-                                    TextStyle(fontSize: SizeDefine.labelSize1),
+                                style: TextStyle(fontSize: SizeDefine.labelSize1),
                               ),
                             ),
                           ],
@@ -771,8 +664,7 @@ class AsrunImportAdRevenueView extends GetView<AsrunImportController> {
                       Spacer(),
                       InputFields.formFieldNumberMask(
                           hintTxt: "",
-                          controller: controllerX.insertDuration_
-                            ..text = "00:00:00",
+                          controller: controllerX.insertDuration_..text = "00:00:00",
                           widthRatio: 0.13,
                           isTime: true,
                           isEnable: false,
@@ -790,20 +682,14 @@ class AsrunImportAdRevenueView extends GetView<AsrunImportController> {
                           // width: 500,
                           width: Get.width * 0.8,
                           height: Get.height * 0.6,
-                          child: (controllerX.transmissionLogList != null &&
-                                  (controllerX
-                                      .transmissionLogList?.isNotEmpty)!)
+                          child: (controllerX.transmissionLogList != null && (controllerX.transmissionLogList?.isNotEmpty)!)
                               ? DataGridFromMap(
                                   hideCode: false,
                                   formatDate: false,
                                   colorCallback: (renderC) => Colors.red[200]!,
-                                  mapData: controllerX.transmissionLogList!
-                                      .map((e) => e.toJson())
-                                      .toList())
+                                  mapData: controllerX.transmissionLogList!.map((e) => e.toJson()).toList())
                               // _dataTable3()
-                              : const WarningBox(
-                                  text:
-                                      'Enter Location, Channel & Date to get the Break Definitions'),
+                              : const WarningBox(text: 'Enter Location, Channel & Date to get the Break Definitions'),
                         );
                       })
                 ],
@@ -841,18 +727,12 @@ class AsrunImportAdRevenueView extends GetView<AsrunImportController> {
                 crossAxisAlignment: CrossAxisAlignment.center,
                 children: <Widget>[
                   InputFields.formField1(
-                      width: 0.12,
-                      onchanged: (value) {},
-                      hintTxt: "TX Id",
-                      margin: true,
-                      padLeft: 0,
-                      controller: controllerX.txId_),
+                      width: 0.12, onchanged: (value) {}, hintTxt: "TX Id", margin: true, padLeft: 0, controller: controllerX.txId_),
                   Padding(
                     padding: EdgeInsets.only(top: 3),
                     child: InputFields.formFieldNumberMask(
                         hintTxt: "Duration",
-                        controller: controllerX.segmentFpcTime_
-                          ..text = "00:00:00",
+                        controller: controllerX.segmentFpcTime_..text = "00:00:00",
                         widthRatio: 0.12,
                         isTime: true,
                         paddingLeft: 0),
@@ -861,8 +741,7 @@ class AsrunImportAdRevenueView extends GetView<AsrunImportController> {
                     padding: EdgeInsets.only(top: 3),
                     child: InputFields.formFieldNumberMask(
                         hintTxt: "OffSet",
-                        controller: controllerX.segmentFpcTime_
-                          ..text = "00:00:00",
+                        controller: controllerX.segmentFpcTime_..text = "00:00:00",
                         widthRatio: 0.12,
                         isTime: true,
                         isEnable: false,
@@ -872,8 +751,7 @@ class AsrunImportAdRevenueView extends GetView<AsrunImportController> {
                     padding: EdgeInsets.only(top: 3),
                     child: InputFields.formFieldNumberMask(
                         hintTxt: "FPC Time",
-                        controller: controllerX.segmentFpcTime_
-                          ..text = "00:00:00",
+                        controller: controllerX.segmentFpcTime_..text = "00:00:00",
                         widthRatio: 0.12,
                         isTime: true,
                         isEnable: false,
@@ -894,17 +772,14 @@ class AsrunImportAdRevenueView extends GetView<AsrunImportController> {
                                     onChanged: (val) {
                                       controllerX.isMy.value = val!;
                                     },
-                                    materialTapTargetSize:
-                                        MaterialTapTargetSize.shrinkWrap,
+                                    materialTapTargetSize: MaterialTapTargetSize.shrinkWrap,
                                   ),
                                 )),
                             Padding(
-                              padding:
-                                  const EdgeInsets.only(top: 15.0, left: 5),
+                              padding: const EdgeInsets.only(top: 15.0, left: 5),
                               child: Text(
                                 "All",
-                                style:
-                                    TextStyle(fontSize: SizeDefine.labelSize1),
+                                style: TextStyle(fontSize: SizeDefine.labelSize1),
                               ),
                             ),
                           ],
@@ -984,21 +859,14 @@ class AsrunImportAdRevenueView extends GetView<AsrunImportController> {
                               // width: 500,
                               width: Get.width * 0.49,
                               height: Get.height * 0.53,
-                              child: (controllerX.transmissionLogList != null &&
-                                      (controllerX
-                                          .transmissionLogList?.isNotEmpty)!)
+                              child: (controllerX.transmissionLogList != null && (controllerX.transmissionLogList?.isNotEmpty)!)
                                   ? DataGridFromMap(
                                       hideCode: false,
                                       formatDate: false,
-                                      colorCallback: (renderC) =>
-                                          Colors.red[200]!,
-                                      mapData: controllerX.transmissionLogList!
-                                          .map((e) => e.toJson())
-                                          .toList())
+                                      colorCallback: (renderC) => Colors.red[200]!,
+                                      mapData: controllerX.transmissionLogList!.map((e) => e.toJson()).toList())
                                   // _dataTable3()
-                                  : const WarningBox(
-                                      text:
-                                          'Enter Location, Channel & Date to get the Break Definitions'),
+                                  : const WarningBox(text: 'Enter Location, Channel & Date to get the Break Definitions'),
                             );
                           }),
                       GetBuilder<AsrunImportController>(
@@ -1009,21 +877,14 @@ class AsrunImportAdRevenueView extends GetView<AsrunImportController> {
                               // width: 500,
                               width: Get.width * 0.3,
                               height: Get.height * 0.53,
-                              child: (controllerX.transmissionLogList != null &&
-                                      (controllerX
-                                          .transmissionLogList?.isNotEmpty)!)
+                              child: (controllerX.transmissionLogList != null && (controllerX.transmissionLogList?.isNotEmpty)!)
                                   ? DataGridFromMap(
                                       hideCode: false,
                                       formatDate: false,
-                                      colorCallback: (renderC) =>
-                                          Colors.red[200]!,
-                                      mapData: controllerX.transmissionLogList!
-                                          .map((e) => e.toJson())
-                                          .toList())
+                                      colorCallback: (renderC) => Colors.red[200]!,
+                                      mapData: controllerX.transmissionLogList!.map((e) => e.toJson()).toList())
                                   // _dataTable3()
-                                  : const WarningBox(
-                                      text:
-                                          'Enter Location, Channel & Date to get the Break Definitions'),
+                                  : const WarningBox(text: 'Enter Location, Channel & Date to get the Break Definitions'),
                             );
                           }),
                     ],
@@ -1035,8 +896,7 @@ class AsrunImportAdRevenueView extends GetView<AsrunImportController> {
                         padding: EdgeInsets.only(top: 3),
                         child: InputFields.formFieldNumberMask(
                             hintTxt: "Min Time Difference",
-                            controller: controllerX.segmentFpcTime_
-                              ..text = "00:00:00",
+                            controller: controllerX.segmentFpcTime_..text = "00:00:00",
                             widthRatio: 0.12,
                             isTime: true,
                             paddingLeft: 0),
@@ -1098,20 +958,14 @@ class AsrunImportAdRevenueView extends GetView<AsrunImportController> {
                           // width: 500,
                           width: Get.width * 0.8,
                           height: Get.height * 0.6,
-                          child: (controllerX.transmissionLogList != null &&
-                                  (controllerX
-                                      .transmissionLogList?.isNotEmpty)!)
+                          child: (controllerX.transmissionLogList != null && (controllerX.transmissionLogList?.isNotEmpty)!)
                               ? DataGridFromMap(
                                   hideCode: false,
                                   formatDate: false,
                                   colorCallback: (renderC) => Colors.red[200]!,
-                                  mapData: controllerX.transmissionLogList!
-                                      .map((e) => e.toJson())
-                                      .toList())
+                                  mapData: controllerX.transmissionLogList!.map((e) => e.toJson()).toList())
                               // _dataTable3()
-                              : const WarningBox(
-                                  text:
-                                      'Enter Location, Channel & Date to get the Break Definitions'),
+                              : const WarningBox(text: 'Enter Location, Channel & Date to get the Break Definitions'),
                         );
                       }),
                 ],

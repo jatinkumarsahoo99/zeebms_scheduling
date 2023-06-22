@@ -19,6 +19,7 @@ class ProgramView extends GetView<RoBookingController> {
         id: "programView",
         builder: (controller) {
           return Row(
+            crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               Container(
                 width: Get.width * 0.40,
@@ -29,9 +30,13 @@ class ProgramView extends GetView<RoBookingController> {
                   children: [
                     DropDownField.formDropDown1WidthMap(
                         controller.tapeIds.map((e) => DropDownValue(key: e["exporttapecode"], value: e["commercialcaption"])).toList(),
-                        (value) => {controller.tapIdLeave(value.key)},
+                        (value) => {
+                              controller.selectedTapeID = value,
+                              controller.tapIdLeave(value.key),
+                            },
                         "Tape ID",
                         0.12,
+                        selected: controller.selectedTapeID,
                         dialogWidth: Get.width * 0.24),
                     // DropDownField.formDropDownSearchAPI2(GlobalKey(), context,
                     //     width: Get.width * 0.12, title: "Tape Id", url: "url", onchanged: (value) {}),
@@ -46,55 +51,49 @@ class ProgramView extends GetView<RoBookingController> {
                         // showTitle: false,
                         hintTxt: "Duration",
                         isEnable: false,
-                        controller: TextEditingController(
-                            text: (controller.bookingTapeSearchData?.lstSearchTapeId?.first.commercialDuration ?? "").toString()),
+                        controller: TextEditingController(text: (controller.bookingTapeLeaveData?.duration ?? "").toString()),
                         width: 0.09 - (5 / Get.width)),
                     InputFields.formField1(
                         // showTitle: false,
                         hintTxt: "Caption",
                         isEnable: false,
-                        controller: TextEditingController(
-                            text: (controller.bookingTapeSearchData?.lstSearchTapeId?.first.commercialCaption ?? "").toString()),
+                        controller: TextEditingController(text: (controller.bookingTapeLeaveData?.caption ?? "").toString()),
                         width: 0.12),
                     InputFields.formField1(
                         // showTitle: false,
                         hintTxt: "Agency Id",
                         isEnable: false,
-                        controller:
-                            TextEditingController(text: (controller.bookingTapeSearchData?.lstSearchTapeId?.first.agencyTapeId ?? "NA").toString()),
+                        controller: TextEditingController(text: (controller.bookingTapeLeaveData?.agencyId ?? "").toString()),
                         width: 0.12),
                     InputFields.formField1(
                         // showTitle: false,
                         hintTxt: "Lanaguge",
                         isEnable: false,
-                        controller:
-                            TextEditingController(text: (controller.bookingTapeSearchData?.lstSearchTapeId?.first.languageName ?? "").toString()),
+                        controller: TextEditingController(text: (controller.bookingTapeLeaveData?.language ?? "").toString()),
                         width: 0.12),
                     InputFields.formField1(
                         // showTitle: false,
                         hintTxt: "Rev Type",
                         isEnable: false,
-                        controller:
-                            TextEditingController(text: (controller.bookingTapeSearchData?.lstSearchTapeId?.first.revenueType ?? "").toString()),
+                        controller: TextEditingController(text: (controller.bookingTapeLeaveData?.tapeRevenue ?? "").toString()),
                         width: 0.12),
                     InputFields.formField1(
                         // showTitle: false,
                         hintTxt: "Sub Rev",
                         isEnable: false,
-                        controller:
-                            TextEditingController(text: (controller.bookingTapeSearchData?.lstSearchTapeId?.first.subRevenueType ?? "").toString()),
+                        controller: TextEditingController(text: (controller.bookingTapeLeaveData?.tapeSubRevenue ?? "").toString()),
                         width: 0.12),
                     InputFields.formField1(
                         // showTitle: false,
                         hintTxt: "Camp Peroid",
                         isEnable: false,
-                        controller: TextEditingController(),
+                        controller: TextEditingController(text: controller.bookingTapeLeaveData?.campStartDate),
                         width: 0.12),
                     InputFields.formField1(
                         // showTitle: false,
                         hintTxt: "",
                         isEnable: false,
-                        controller: TextEditingController(),
+                        controller: TextEditingController(text: controller.bookingTapeLeaveData?.campEndDate),
                         width: 0.12),
                     DateWithThreeTextField(
                         isEnable: false, widthRation: 0.12, title: "Deal Start", mainTextController: controller.fpcEffectiveDateCtrl),
@@ -144,9 +143,13 @@ class ProgramView extends GetView<RoBookingController> {
                         // showTitle: false,
                         hintTxt: "Total",
                         isEnable: false,
-                        controller: TextEditingController(text: controller.dealDblClickData?.total ?? ""),
+                        controller: TextEditingController(text: controller.bookingTapeLeaveData?.total ?? controller.dealDblClickData?.total ?? ""),
                         width: 0.12),
-                    ElevatedButton(onPressed: () {}, child: Text("Add Spots")),
+                    ElevatedButton(
+                        onPressed: () {
+                          controller.addSpot();
+                        },
+                        child: Text("Add Spots")),
                     ElevatedButton(onPressed: () {}, child: Text("Deal")),
                     // Row(
                     //   mainAxisSize: MainAxisSize.min,
@@ -159,8 +162,26 @@ class ProgramView extends GetView<RoBookingController> {
               Container(
                 width: Get.width * 0.57,
                 child: (controller.dealDblClickData?.lstProgram ?? []).isEmpty
-                    ? Container()
-                    : DataGridFromMap(mapData: controller.dealDblClickData?.lstProgram?.map((e) => e.toJson()).toList() ?? []),
+                    ? Container(
+                        decoration: BoxDecoration(border: Border.all(width: 1.0, color: Colors.grey)),
+                      )
+                    : DataGridFromMap(
+                        mapData: controller.bookingTapeLeaveData?.lstdgvProgram?.map((e) => e.toJson()).toList() ??
+                            controller.dealDblClickData?.lstProgram?.map((e) => e.toJson()).toList() ??
+                            [],
+                        onRowDoubleTap: (dblclick) {
+                          if (controller.bookingTapeLeaveData?.lstdgvProgram != null &&
+                              (controller.bookingTapeLeaveData?.lstdgvProgram ?? []).isNotEmpty) {
+                            controller.bookingTapeLeaveData?.lstdgvProgram?[dblclick.rowIdx].bookedSpots = 1;
+                          } else {
+                            controller.dealDblClickData?.lstProgram?[dblclick.rowIdx].bookedSpots = 1;
+                          }
+                          controller.programViewGrid?.changeCellValue(dblclick.cell, dblclick.cell.value is int ? 1 : "1", force: true, notify: true);
+                        },
+                        onload: (load) {
+                          controller.programViewGrid = load.stateManager;
+                        },
+                      ),
               )
             ],
           );
