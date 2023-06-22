@@ -46,7 +46,7 @@ class SalesAuditNotTelecastReportView
     return Scaffold(
       key: rebuildKey,
       body: FocusTraversalGroup(
-        policy: ReadingOrderTraversalPolicy(),
+        policy: OrderedTraversalPolicy(),
         child: SizedBox(
           height: double.maxFinite,
           width: double.maxFinite,
@@ -68,7 +68,7 @@ class SalesAuditNotTelecastReportView
                               padding:
                                   const EdgeInsets.only(left: 10.0, top: 0),
                               child: FocusTraversalGroup(
-                                policy: WidgetOrderTraversalPolicy(),
+                                policy: OrderedTraversalPolicy(),
                                 child: SingleChildScrollView(
                                   // padding: EdgeInsets.only(top: 1),
                                   controller: ScrollController(),
@@ -131,7 +131,7 @@ class SalesAuditNotTelecastReportView
                                                 hintTxt: "Search",
                                                 controller: controllerX.search_,
                                                 onChange: (val) {
-
+                                                  controllerX.search(val);
                                                 }),
                                           ],
                                         ),
@@ -250,7 +250,7 @@ class SalesAuditNotTelecastReportView
                                             child: FormButton(
                                               btnText: "Generate",
                                               callback: () {
-                                                controllerX.fetchGenerate();
+                                                controllerX.fetchGetGenerate();
                                               },
                                             ),
                                           ),
@@ -270,35 +270,6 @@ class SalesAuditNotTelecastReportView
                   ),
                 ),
               ),
-              /*GetBuilder<HomeController>(
-                  id: "buttons",
-                  init: Get.find<HomeController>(),
-                  builder: (controller) {
-                    PermissionModel formPermissions = Get.find<MainController>()
-                        .permissionList!
-                        .lastWhere(
-                            (element) => element.appFormName == "frmFPCMismatch");
-                    if (controller.buttons != null) {
-                      return ButtonBar(
-                        alignment: MainAxisAlignment.start,
-                        mainAxisSize: MainAxisSize.min,
-                        children: [
-                          for (var btn in controller.buttons!)
-                            FormButtonWrapper(
-                              btnText: btn["name"],
-                              callback: Utils.btnAccessHandler2(btn['name'],
-                                  controller, formPermissions) ==
-                                  null
-                                  ? null
-                                  : () => formHandler(
-                                btn['name'],
-                              ),
-                            )
-                        ],
-                      );
-                    }
-                    return Container();
-                  }),*/
             ],
           ),
         ),
@@ -311,23 +282,21 @@ class SalesAuditNotTelecastReportView
         id: "listUpdate",
         // init: CreateBreakPatternController(),
         builder: (controller) {
-          if (controllerX.programTapeList != null &&
-              (controllerX.programTapeList?.isNotEmpty)!) {
-            // final key = GlobalKey();
-            int count = 0;
+          if (controllerX.listData!.isNotEmpty ) {
             return Expanded(
               flex: 10,
               // height: 400,
               child: DataGridFromMap(
                 showSrNo: false,
-                mapData: (controllerX.programTapeList
-                    ?.map((e) => e.toJson1())
+                mapData: (controllerX.listData
+                    ?.map((e) => e.toJson())
                     .toList())!,
                 // mapData: (controllerX.dataList)!,
                 widthRatio: Get.width / 9 - 1,
               ),
             );
-          } else {
+          }
+          else {
             // return _dataTable2();
             return Expanded(
               flex: 10,

@@ -19,4 +19,14 @@ class ChannelListModel{
     return data;
 
   }
+  Map<String, dynamic> toJson1() {
+    final Map<String, dynamic> data = new Map<String, dynamic>();
+    data['channelCode'] = this.channelCode;
+    // data['channelName'] = this.channelName;
+    data['ischecked'] = this.ischecked;
+
+
+    return data;
+
+  }
 }
