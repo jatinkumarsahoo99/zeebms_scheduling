@@ -861,4 +861,37 @@ class ApiFactory {
   static String RO_BOOKING_OnSaveData = "$BASE_URL/api/ROBooking/OnSaveData";
   static String RO_BOOKING_GetClientPDC =
       "$BASE_URL/api/ROBooking/GetClientPDC";
+
+  //////////////////////////////////////// Commercial Tape Master //////////////////////////////
+
+  static String COMMERCIAL_MASTER_ALLDROPDOWN = BASE_URL + "/api/CommercialTapeMaster/PageOnLoadData";
+  static String COMMERCIAL_MASTER_GETSECTYPE = BASE_URL + "/api/CommercialTapeMaster/GetSecType?RevenueCode=";
+  static String COMMERCIAL_MASTER_GETCLIENTDETAILS = BASE_URL + "/api/CommercialTapeMaster/ClientDetails?clientName=";
+  static String COMMERCIAL_MASTER_GETAGENCYBRAND = BASE_URL + "/api/CommercialTapeMaster/AgencyBrandTypeForClient?clientCode=";
+  static String COMMERCIAL_MASTER_GETLEVELSDETAILS = BASE_URL + "/api/CommercialTapeMaster/LevelsDetails?BrandCode=";
+  static String COMMERCIAL_MASTER_GETLEVENT = BASE_URL + "/api/CommercialTapeMaster/Events?Event=";
+  static String COMMERCIAL_MASTER_VALIDATE_TXNO = BASE_URL + "/api/CommercialTapeMaster/ValidateTxNo";
+  static String COMMERCIAL_MASTER_GET_AGENCYDETAILS = BASE_URL + "/api/CommercialTapeMaster/AgencyDetails";
+  static String COMMERCIAL_MASTER_GET_TAPID(String revenueCode, String secTypeId) =>
+      "$BASE_URL/api/CommercialTapeMaster/GetTapeId?RevenueCode=$revenueCode&SecTypeId=$secTypeId";
+  static String COMMERCIAL_MASTER_GET_COMMERCIALTAPEMASTER = BASE_URL + "/api/CommercialTapeMaster/CommercialTapeMasterData";
+  static String COMMERCIAL_MASTER_SAVE_COMMERCIALTAPE = BASE_URL + "/api/CommercialTapeMaster/CommercialTapeSave";
+
+
+//////////////////////////////// Sales Audit Not Select Report ///////////////////////////////////////////
+
+  static String SALESAUDIT_NOT_TELECASTLOAD = BASE_URL + "/api/SalesAuditNotTR/SalesauditnottelecastLoad";
+  static String SALESAUDIT_NOT_TELECAST_GETGENERATE = BASE_URL + "/api/SalesAuditNotTR/GetGenrate";
+
+  /////////////////////////////////// Sales Audit New ////////////////////////////////
+
+  static String SALESAUDIT_NEW_LOAD = BASE_URL + "/api/SalesAduitNew/GetLocations";
+
+
+
+
+
+
+
+
 }

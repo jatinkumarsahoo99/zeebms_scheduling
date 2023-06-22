@@ -142,9 +142,9 @@ class SalesAuditNotTelecastReportController extends GetxController {
     }else{
       LoadingDialog.call();
       Map<String,dynamic> postData = {
-        "lstchannelCheckbox": channelListFilter.map((e) => e.toJson1()).toList(),
+        "lstChannelList": channelListFilter.map((e) => e.toJson1()).toList(),
         "locationcode": selectLocation!.key??"",
-        "channelCode": selectLocation!.key??"",
+        // "channelCode": selectLocation!.key??"",
         "fromdate":DateFormat('yyyy-MM-ddTHH:mm:ss').format(
             DateFormat("dd-MM-yyyy").parse(frmDate.text)),
         "todate": DateFormat('yyyy-MM-ddTHH:mm:ss').format(

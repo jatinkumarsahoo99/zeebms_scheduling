@@ -14,14 +14,12 @@ import '../../../providers/SizeDefine.dart';
 import '../../../providers/Utils.dart';
 import '../controllers/SalesAuditNewController.dart';
 
-class SalesAuditNewView extends GetView<SalesAuditNewController> {
+class SalesAuditNewView  extends StatelessWidget  {
+
+  SalesAuditNewController controller = Get.put<SalesAuditNewController>(SalesAuditNewController());
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        title: Text('SalesAuditNewView'),
-        centerTitle: true,
-      ),
       body: SizedBox(
         height: double.maxFinite,
         width: double.maxFinite,
@@ -47,14 +45,15 @@ class SalesAuditNewView extends GetView<SalesAuditNewController> {
                             children: [
                               Obx(
                                 () => DropDownField.formDropDown1WidthMap(
-                                  [],
+                                  controller.locationList.value??[],
                                   (value) {
+                                    controller.selectedLocation = value;
                                     // controller.selectLocation = value;
                                     // controller.getChannels(
                                     //     controller.selectLocation?.key ?? "");
                                   },
                                   "Location",
-                                  0.12,
+                                   0.12,
                                   // isEnable: controller.isEnable.value,
                                   // selected: controller.selectLocation,
                                   autoFocus: true,
@@ -66,7 +65,7 @@ class SalesAuditNewView extends GetView<SalesAuditNewController> {
                               /// channel
                               Obx(
                                 () => DropDownField.formDropDown1WidthMap(
-                                  [],
+                                  controller.list.value??[],
                                   (value) {
                                     // controller.selectChannel = value;
                                     // controller.getChannelFocusOut();
@@ -86,7 +85,7 @@ class SalesAuditNewView extends GetView<SalesAuditNewController> {
                                   title: "Schedule Date",
                                   splitType: "-",
                                   widthRation: 0.12,
-                                  // isEnable: controller.isEnable.value,
+                                  isEnable: controller.isEnable.value,
                                   onFocusChange: (data) {
                                     // controller.selectedDate.text =
                                     //     DateFormat('dd/MM/yyyy').format(
@@ -129,13 +128,13 @@ class SalesAuditNewView extends GetView<SalesAuditNewController> {
                       children: [
                         Text("Not Telacast Spots"),
                         SizedBox(
-                          width: Get.width * 0.077,
+                          width: Get.width * 0.079,
                           child: Row(
                             children: [
                               SizedBox(width: 5),
                               Obx(() =>
                                   Padding(
-                                    padding: const EdgeInsets.only(top: 15.0),
+                                    padding: const EdgeInsets.only(top: 1.0),
                                     child: Checkbox(
                                       value: controller.isStandby.value,
                                       onChanged: controller.isEnable.value
@@ -152,7 +151,7 @@ class SalesAuditNewView extends GetView<SalesAuditNewController> {
                                     () =>
                                     Padding(
                                         padding: const EdgeInsets.only(
-                                            top: 15.0, left: 5),
+                                            top: 1.0, left: 5),
                                         child: Text(
                                           "Show Error",
                                           style: TextStyle(
@@ -166,13 +165,13 @@ class SalesAuditNewView extends GetView<SalesAuditNewController> {
                           ),
                         ),
                         SizedBox(
-                          width: Get.width * 0.077,
+                          width: Get.width * 0.079,
                           child: Row(
                             children: [
                               SizedBox(width: 5),
                               Obx(() =>
                                   Padding(
-                                    padding: const EdgeInsets.only(top: 15.0),
+                                    padding: const EdgeInsets.only(top: 1.0),
                                     child: Checkbox(
                                       value: controller.isStandby.value,
                                       onChanged: controller.isEnable.value
@@ -189,7 +188,7 @@ class SalesAuditNewView extends GetView<SalesAuditNewController> {
                                     () =>
                                     Padding(
                                         padding: const EdgeInsets.only(
-                                            top: 15.0, left: 5),
+                                            top: 1.0, left: 5),
                                         child: Text(
                                           "Show Cancel",
                                           style: TextStyle(
@@ -205,22 +204,45 @@ class SalesAuditNewView extends GetView<SalesAuditNewController> {
                         Text("Missiing Asrun SA Not Saved"),
                       ],
                     ),),
-                    Expanded(child: Container(),),
+                    Expanded(child:
+                    Padding(
+                      padding: const EdgeInsets.all(8.0),
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.end,
+                        children: [
+                          Container(
+                            child: Text("Telecast Spots"),
+                          ),
+                        ],
+                      ),
+                    ),),
                     ],
                   ),
-                  Row(
-                    children: [
-                      Expanded(
-                          child: Container(
-                              decoration: BoxDecoration(
-                                  border: Border.all(color: Colors.black)))),
-                      Expanded(
-                          child: Container(
-                              decoration: BoxDecoration(
-                                  border: Border.all(color: Colors.black)))),
-                    ],
+                  Expanded(
+                    // padding: const EdgeInsets.all(8.0),
+                    child: Padding(
+                      padding: const EdgeInsets.all(8.0),
+                      child: Row(
+                        children: [
+                          Expanded(
+                              child: Container(
+                                  // height: Get.height*0.6,
+                                  decoration: BoxDecoration(
+                                      border: Border.all(color: Colors.black)))),
+                          SizedBox(
+                            width: 5,
+                          ),
+                          Expanded(
+                              child: Container(
+                                  // height: Get.height*0.6,
+                                  decoration: BoxDecoration(
+                                      border: Border.all(color: Colors.black)))),
+                        ],
+                      ),
+                    ),
                   ),
                   Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceAround,
                     children: [
                       FormButtonWrapper(
                         btnText: "Un Cancel",
