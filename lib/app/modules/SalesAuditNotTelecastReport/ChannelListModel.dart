@@ -24,8 +24,6 @@ class ChannelListModel{
     data['channelCode'] = this.channelCode;
     data['channelName'] = this.channelName;
     data['ischecked'] = this.ischecked;
-
-
     return data;
 
   }
