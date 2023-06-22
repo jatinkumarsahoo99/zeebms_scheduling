@@ -681,8 +681,8 @@ class ApiFactory {
   static String AsrunImport_SaveAsrunDetail = "$BASE_URL/api/AsrunImport/SaveAsrunDetail";
   static String AsrunImport_SaveTempDetail = "$BASE_URL/api/AsrunImport/SaveTempDetail";
   static String AsrunImport_AsunOnImport = "$BASE_URL/api/AsrunImport/AsrunOnImport";
-  static String RO_BOOKING_GetClientPDC =
-      "$BASE_URL/api/ROBooking/GetClientPDC";
+  /*static String RO_BOOKING_GetClientPDC =
+      "$BASE_URL/api/ROBooking/GetClientPDC";*/
 
   //////////////////////////////////////// Commercial Tape Master //////////////////////////////
 
