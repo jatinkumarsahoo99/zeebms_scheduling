@@ -421,6 +421,17 @@ class ApiFactory {
   ///
   ///
   ///
+  ///
+  ///
+////////////////////////////// SALES-AUDIT-EXTRA-SPOTS-API-START//////////////////////////////////////////////
+  static String get SALES_AUDIT_EXTRA_SPOTS_ON_LOAD => "$BASE_URL/api/SalesAuditExtraSR/GetextraspotsreportLoad";
+  static String get SALES_AUDIT_EXTRA_SPOTS_GENERATE => "$BASE_URL/api/SalesAuditExtraSR/GetGenrate";
+////////////////////////////// SALES-AUDIT-EXTRA-SPOTS-API-END  //////////////////////////////////////////////
+  ///
+  ///
+  ///
+  ///
+  ///
   ////////////////////////////// FINAL-AUDIT-MASTER-AT-API-START  ////////////////////////////////////////////
   static String get FINAL_REPORT_AT_INITAIL => "$BASE_URL/api/FinalAuditReportAT/ZoneWiseInventoryLoad";
   static String get FINAL_REPORT_AT_GET_DATA => "$BASE_URL/api/FinalAuditReportAT/GenrateClick";
