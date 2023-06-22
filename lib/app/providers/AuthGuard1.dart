@@ -25,7 +25,7 @@ import '../modules/AuditStatus/views/audit_status_view.dart';
 import '../modules/CommercialMaster/views/commercial_master_view.dart';
 import '../modules/LogAdditions/views/LogAdditionsView.dart';
 import '../modules/PromoMaster/views/promo_master_view.dart';
-import '../modules/SalesAuditNew/views/sales_audit_new_view.dart';
+import '../modules/SalesAuditNew/views/SalesAuditNewView.dart';
 import '../modules/SlideMaster/views/slide_master_view.dart';
 import '../modules/SpotPriority/views/SpotPriorityView.dart';
 import '../modules/StillMaster/views/still_master_view.dart';
