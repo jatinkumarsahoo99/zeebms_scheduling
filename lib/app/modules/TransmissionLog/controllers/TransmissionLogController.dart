@@ -1,10 +1,15 @@
 import 'dart:convert';
+import 'dart:html' as html;
+import 'dart:html';
 
+import 'package:bms_scheduling/app/providers/ExportData.dart';
+import 'package:download/download.dart';
 import 'package:bms_scheduling/widgets/LoadingDialog.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:bms_scheduling/widgets/PlutoGrid/pluto_grid.dart';
+import 'package:intl/intl.dart';
 import '../../../../widgets/Snack.dart';
 import '../../../controller/ConnectorControl.dart';
 import '../../../data/DropDownValue.dart';
@@ -63,7 +68,7 @@ class TransmissionLogController extends GetxController {
   var isMy = RxBool(true);
   var isAllByChange = RxBool(false);
   var isInsertAfter = RxBool(false);
-  var isAllDay = RxBool(true);
+  var isAllDayReplace = RxBool(true);
   var isRowFilter = RxBool(false);
   TextEditingController selectedDate = TextEditingController();
   TextEditingController startTime_ = TextEditingController();
@@ -71,13 +76,15 @@ class TransmissionLogController extends GetxController {
   TextEditingController txtDtChange = TextEditingController();
   TextEditingController txtTransmissionTime = TextEditingController();
   TextEditingController txId_ = TextEditingController();
-  TextEditingController txReplace_ = TextEditingController();
+  TextEditingController txReplaceTxId_ = TextEditingController();
   TextEditingController txReplaceSegment_ = TextEditingController();
   TextEditingController txReplaceEvent_ = TextEditingController();
   TextEditingController txCaption_ = TextEditingController();
   TextEditingController insertDuration_ = TextEditingController();
-  TextEditingController fromInsert_ = TextEditingController();
-  TextEditingController toInsert_ = TextEditingController();
+  TextEditingController fromReplaceInsert_ = TextEditingController();
+  TextEditingController toReplaceInsert_ = TextEditingController();
+  TextEditingController fromReplaceIndexInsert_ = TextEditingController();
+  TextEditingController toReplaceIndexInsert_ = TextEditingController();
   TextEditingController segmentFpcTime_ = TextEditingController();
   TextEditingController verifyMinTime = TextEditingController();
   TextEditingController txId_Change = TextEditingController();
@@ -96,7 +103,7 @@ class TransmissionLogController extends GetxController {
   RxList<DropDownValue>? listTapeDetailsSegment = RxList([]);
 
   TransmissionLogModel? transmissionLog;
-  PlutoGridMode selectedPlutoGridMode = PlutoGridMode.selectWithOneTap;
+  PlutoGridMode selectedPlutoGridMode = PlutoGridMode.normal;
   int? selectedIndex;
   RxnString verifyType = RxnString();
   RxList<DropDownValue> listLocation = RxList([]);
@@ -259,11 +266,19 @@ class TransmissionLogController extends GetxController {
   }
 
   void btnRescheduleSpots({Function? fun}) {
+    if (DateFormat("dd-MM-yyyy")
+        .parse(selectedDate.text)
+        .isAfter(DateFormat("dd-MM-yyyy").parse(txtDate_Reschedule.text))) {
+      LoadingDialog.callInfoMessage(
+          "Resceduling date should not be less than ");
+      return;
+    }
     LoadingDialog.call();
     var postMap = {
       "locationcode": selectLocation?.key ?? "",
       "channelcode": selectChannel?.key ?? "",
       "txtDate": selectedDate.text,
+      "RescheduleToDate": txtDate_Reschedule.text,
       "lstBookingDetails": [
         {
           "bookingNumber":
@@ -279,6 +294,7 @@ class TransmissionLogController extends GetxController {
         fun: (map) {
           Get.back();
           print("Data is>>>>" + map.toString());
+          LoadingDialog.callInfoMessage(map.toString());
           // print("jsonData"+map.toString());
           /* if (map is Map &&
               map.containsKey("restscalc") &&
@@ -424,11 +440,11 @@ class TransmissionLogController extends GetxController {
     // Get.back();
     int insrow = gridStateManager?.currentRowIdx ?? 0;
     int rowCount = tblSegement?.rows.length ?? 0;
-    List<PlutoRow> listAdd=[];
+    List<PlutoRow> listAdd = [];
     gridStateManager?.setShowLoading(true);
     for (int i = rowCount - 1; i >= 0; i--) {
       var dr = tblSegement?.rows[i];
-      listAdd.add(InsertRow(
+      listAdd.add(insertPlutoRow(
         segmentFpcTime_.text.substring(0, 8),
         i == 0 ? "P " : "S ",
         dr?.cells["exporttapeCaption"]?.value.toString() ?? "",
@@ -454,30 +470,54 @@ class TransmissionLogController extends GetxController {
     gridStateManager?.setShowLoading(false);
 
     gridStateManager?.moveScrollByRow(PlutoMoveDirection.down, insrow);
-    // tblLog.firstDisplayedScrollingRowIndex = insrow;
+    // gridStateManager.firstDisplayedScrollingRowIndex = insrow;
   }
 
   void tblCommercials_CellDoubleClick(rowIndex) {
-    int insrow = gridStateManager?.currentRowIdx??0;
+    int insrow = gridStateManager?.currentRowIdx ?? 0;
     addEventToUndo();
     PlutoRow? row = gridStateManagerCommercial?.rows[rowIndex];
-    InsertCommercial(row?.cells["tonumber"]?.value, row?.cells["bookingdetailcode"]?.value, row?.cells["Scheduletime"]?.value,
-        row?.cells["productname"]?.value, (row?.cells["ROsTime"]?.value == null) ? "" : row?.cells["ROsTime"]?.value,
-        row?.cells["Exporttapecaption"]?.value, row?.cells["Exporttapecode"]?.value, Utils.convertToTimeFromDouble(value:num.tryParse(row?.cells["Duration"]?.value.toString()??"0")??0),
+    InsertCommercial(
+        row?.cells["tonumber"]?.value,
+        row?.cells["bookingdetailcode"]?.value,
+        row?.cells["Scheduletime"]?.value,
+        row?.cells["productname"]?.value,
+        (row?.cells["ROsTime"]?.value == null)
+            ? ""
+            : row?.cells["ROsTime"]?.value,
+        row?.cells["Exporttapecaption"]?.value,
+        row?.cells["Exporttapecode"]?.value,
+        Utils.convertToTimeFromDouble(
+            value:
+                num.tryParse(row?.cells["Duration"]?.value.toString() ?? "0") ??
+                    0),
         row?.cells["som"]?.value);
     gridStateManagerCommercial?.removeCurrentRow();
-    // tblLog.firstDisplayedScrollingRowIndex = insrow;
+    // gridStateManager.firstDisplayedScrollingRowIndex = insrow;
   }
 
-  void InsertCommercial(String BookingNumber, String BookingDetailCode, String ScheduleTime, String ProductName, String ROsTimeBand,
-      String ExportTapeCaption, String Exporttapecode, String Tapeduration, String SOM) {
-
-    InsertRow(ScheduleTime, "C ", ExportTapeCaption, Exporttapecode, Tapeduration, SOM,BreakNumber: 0,EpisodeNumber: 0,BookingNumber: BookingNumber, BookingDetailCode:BookingDetailCode,ScheduleTime: ScheduleTime,ProductName: ProductName,ROsTimeBand: ROsTimeBand);
+  void InsertCommercial(
+      String BookingNumber,
+      String BookingDetailCode,
+      String ScheduleTime,
+      String ProductName,
+      String ROsTimeBand,
+      String ExportTapeCaption,
+      String Exporttapecode,
+      String Tapeduration,
+      String SOM) {
+    insertPlutoRow(ScheduleTime, "C ", ExportTapeCaption, Exporttapecode,
+        Tapeduration, SOM,
+        BreakNumber: 0,
+        EpisodeNumber: 0,
+        BookingNumber: BookingNumber,
+        BookingDetailCode: BookingDetailCode,
+        ScheduleTime: ScheduleTime,
+        ProductName: ProductName,
+        ROsTimeBand: ROsTimeBand);
   }
 
-
-
-  InsertRow(String FpcTime, String EventType, String ExportTapeCaption,
+  insertPlutoRow(String FpcTime, String EventType, String ExportTapeCaption,
       String Exporttapecode, String Tapeduration, String SOM,
       {int BreakNumber = 0,
       int EpisodeNumber = 0,
@@ -492,54 +532,178 @@ class TransmissionLogController extends GetxController {
     if (insertRowId > 0) insertRowId = insertRowId - 1;
     // PlutoRow rowData = PlutoRow(cells: dr);
     PlutoRow rowData = PlutoRow(cells: {
-    "fpCtime" : PlutoCell(value: FpcTime??""),
-    "transmissionTime": PlutoCell(value: ""),
-    "exportTapeCode": PlutoCell(value: Exporttapecode??""),
-    "exportTapeCaption": PlutoCell(value: ExportTapeCaption??""),
-    "tapeduration": PlutoCell(value: Tapeduration??""),
-    "som": PlutoCell(value: SOM??""),
-    "breakNumber": PlutoCell(value: BreakNumber.toString()),
-    "episodeNumber": PlutoCell(value: EpisodeNumber.toString()),
-    "breakEvent": PlutoCell(value: ""),
-    "rownumber": PlutoCell(value: "0"),
-    "eventType": PlutoCell(value: EventType),
-    "bookingNumber": PlutoCell(value: BookingNumber),
-    "bookingdetailcode": PlutoCell(value: BookingDetailCode.toString()),
-    "scheduleTime": PlutoCell(value: ScheduleTime ?? ""),
-    "productName": PlutoCell(value: ProductName ?? ""),
-    "rosTimeBand": PlutoCell(value: ROsTimeBand ?? ""),
-    "client": PlutoCell(value: ""),
-    "promoTypecode": PlutoCell(value: ""),
-    "datechange": PlutoCell(value: 0),
-    "productGroup": PlutoCell(value: ""),
-    "longCaption": PlutoCell(value: ""),
-    "productname_Font": PlutoCell(value: ""),
-    "exporttapecode_Font": PlutoCell(value: ""),
-    "rosTimeBand_Font": PlutoCell(value: ""),
-    "no": PlutoCell(value: 0),
+      "fpCtime": PlutoCell(value: FpcTime ?? ""),
+      "transmissionTime": PlutoCell(value: ""),
+      "exportTapeCode": PlutoCell(value: Exporttapecode ?? ""),
+      "exportTapeCaption": PlutoCell(value: ExportTapeCaption ?? ""),
+      "tapeduration": PlutoCell(value: Tapeduration ?? ""),
+      "som": PlutoCell(value: SOM ?? ""),
+      "breakNumber": PlutoCell(value: BreakNumber.toString()),
+      "episodeNumber": PlutoCell(value: EpisodeNumber.toString()),
+      "breakEvent": PlutoCell(value: ""),
+      "rownumber": PlutoCell(value: "0"),
+      "eventType": PlutoCell(value: EventType),
+      "bookingNumber": PlutoCell(value: BookingNumber),
+      "bookingdetailcode": PlutoCell(value: BookingDetailCode.toString()),
+      "scheduleTime": PlutoCell(value: ScheduleTime ?? ""),
+      "productName": PlutoCell(value: ProductName ?? ""),
+      "rosTimeBand": PlutoCell(value: ROsTimeBand ?? ""),
+      "client": PlutoCell(value: ""),
+      "promoTypecode": PlutoCell(value: ""),
+      "datechange": PlutoCell(value: 0),
+      "productGroup": PlutoCell(value: ""),
+      "longCaption": PlutoCell(value: ""),
+      "productname_Font": PlutoCell(value: ""),
+      "exporttapecode_Font": PlutoCell(value: ""),
+      "rosTimeBand_Font": PlutoCell(value: ""),
+      "no": PlutoCell(value: 0),
     });
     return rowData;
     // if (insertRowId == 0) insertRowId = -1;
-    // gridStateManager.Rows.insertAt(dr, InsertRow + 1);
+    // gridStateManager.rows.insertAt(dr, InsertRow + 1);
     print("Row val=>>" + insertRowId.toString());
     // gridStateManager?.appendNewRows();
     gridStateManager?.insertRows(0, [rowData]);
     // gridStateManager?.insertRows(insertRowId, [dr]);
     // dt.acceptChanges();
     colorGrid(false);
-    // UnSelectAllRows(tblLog);
-    // tblLog.firstDisplayedScrollingRowIndex = intCurrentRowIndex[3];
-    // tblLog.rows[intRowIndex].selected = true;
-    // tblLog.currentCell = tblLog.rows[intRowIndex].cells[1];
+    // UnSelectAllRows(gridStateManager);
+    // gridStateManager.firstDisplayedScrollingRowIndex = intCurrentRowIndex[3];
+    // gridStateManager.rows[intRowIndex].selected = true;
+    // gridStateManager.currentCell = gridStateManager.rows[intRowIndex].cells[1];
+  }
+
+  void btnReplace_Click(sender, e) {
+    int replaceCount = 0;
+    for (var dr in (tblFastInsert?.rows)!) {
+      if (dr.cells["eventtype"]?.value.toString().trim().toLowerCase() !=
+          txReplaceEvent_.text.toString().trim().toLowerCase()) {
+        if (!["a", "w", "o", "t", "i"].contains(
+            dr.cells["eventtype"]?.value.toString().trim().toLowerCase())) {
+          LoadingDialog.callInfoMessage("Invalid events type");
+          return;
+        }
+      }
+    }
+
+    int i = 0;
+    int fromRow = 0;
+    int toRow = 0;
+    if (isAllDayReplace.value) {
+      /*if (showDialog(
+            context: context,
+            builder: (context) => AlertDialog(
+              title: Text('You are replacing in all day, want to proceed?'),
+              actions: [
+                TextButton(
+                  onPressed: () {
+                    Navigator.pop(context, true);
+                  },
+                  child: Text('Yes'),
+                ),
+                TextButton(
+                  onPressed: () {
+                    Navigator.pop(context, false);
+                  },
+                  child: Text('No'),
+                ),
+              ],
+            ),
+          ) ==
+          true) {
+        fromRow = 0;
+        toRow = gridStateManager.RowCount - 1;
+      } else {
+        return;
+      }*/
+
+      LoadingDialog.recordExists(
+          "You are replacing in all day, want to proceed?",
+          () {
+            fromRow = 0;
+            toRow = gridStateManager?.rows.length ?? 0 - 1;
+          },
+          deleteTitle: "Yes",
+          deleteCancel: "No",
+          cancel: () {
+            Navigator.pop(Get.context!);
+            return;
+          });
+    } else {
+      // fromRow = txtReplaceFrom.text == "" ? 0 : int.parse(txtReplaceFrom.text);
+      // toRow = txtReplaceTo.text == "" ? 0 : int.parse(txtReplaceTo.text);
+
+      fromRow = fromReplaceIndexInsert_.text == ""
+          ? 0
+          : int.parse(fromReplaceIndexInsert_.text);
+      toRow = toReplaceIndexInsert_.text == ""
+          ? 0
+          : int.parse(toReplaceIndexInsert_.text);
+    }
+
+    for (int row = fromRow; row <= toRow; row++) {
+      if (gridStateManager?.rows[row].cells["exportTapeCode"]?.value ==
+              txReplaceTxId_.text &&
+          (gridStateManager?.rows[row].cells["eventType"]?.value
+                      .toString()
+                      .trim() ==
+                  txReplaceEvent_.text.trim() ||
+              ["a", "w", "o", "t", "i"].contains(gridStateManager
+                  ?.rows[row].cells["eventType"]?.value
+                  .toString()
+                  .trim()
+                  .toLowerCase()))) {
+        replaceCount++;
+        gridStateManager?.rows[row].cells["exportTapeCode"]?.value =
+            tblFastInsert?.rows[i].cells["txId"]?.value;
+        gridStateManager?.rows[row].cells["breakNumber"]?.value =
+            tblFastInsert?.rows[i].cells["segmentNumber"]?.value;
+        gridStateManager?.rows[row].cells["som"]?.value =
+            tblFastInsert?.rows[i].cells["som"]?.value;
+        gridStateManager?.rows[row].cells["tapeduration"]?.value =
+            Utils.convertToTimeFromDouble(
+                value: num.tryParse(tblFastInsert
+                        ?.rows[i].cells["duration"]?.value
+                        .toString() ??
+                    "0")!);
+        gridStateManager?.rows[row].cells["exportTapeCaption"]?.value =
+            tblFastInsert?.rows[i].cells["txCaption"]?.value;
+        gridStateManager?.rows[row].cells["eventType"]?.value =
+            tblFastInsert?.rows[i].cells["eventtype"]?.value;
+
+        i++;
+        if (i >= (tblFastInsert?.rows.length ?? 0)) {
+          i = 0;
+        }
+      }
+    }
+
+    colorGrid(false);
+    LoadingDialog.callInfoMessage('$replaceCount replacements made');
+    /*showDialog(
+      context: context,
+      builder: (context) => AlertDialog(
+        title: Text('$replaceCount replacements made'),
+        content: Text('$replaceCount replacements made'),
+        actions: [
+          TextButton(
+            onPressed: () {
+              Navigator.pop(context);
+            },
+            child: Text('OK'),
+          ),
+        ],
+      ),
+    );*/
   }
 
   void btnFastInsert_Add_Click() {
     int row;
     // int eventdurat;
     blnMultipleGLs = false;
-    print("Selected is>>" +
-        (tblFastInsert?.currentSelectingRows.length.toString() ?? ""));
-    for (var dr in (tblFastInsert?.currentSelectingRows)!) {
+    print(
+        "Selected is>>" + (tblFastInsert?.checkedRows.length.toString() ?? ""));
+    for (var dr in (tblFastInsert?.checkedRows)!) {
       String FPCTime;
       if (gridStateManager?.currentRowIdx == 0) {
         FPCTime = gridStateManager?.rows[gridStateManager?.currentRowIdx ?? 0]
@@ -673,7 +837,7 @@ class TransmissionLogController extends GetxController {
     // DataTable dt = gridStateManager?.dataSource;
     // PlutoRow dr = dt.newRow();
     PlutoRow dr = PlutoRow(cells: {});
-
+    String? tapeDuration, transmissionTime;
     dr.cells["fpCtime"]?.value = FpcTime;
 
     if (EventType.trim().toLowerCase() == "gl" &&
@@ -686,15 +850,19 @@ class TransmissionLogController extends GetxController {
             .toLowerCase())) {
           dr.cells["tapeduration"] =
               gridStateManager?.rows[myRow].cells["tapeduration"]?.value;
+          tapeDuration =
+              gridStateManager?.rows[myRow].cells["tapeduration"]?.value;
           break;
         }
       }
+      transmissionTime = "00:00:00:00";
       dr.cells["transmissionTime"]?.value = "00:00:00:00";
     } else {
+      transmissionTime = "";
       dr.cells["transmissionTime"]?.value = "";
+      tapeDuration = Tapeduration;
       dr.cells["tapeduration"]?.value = Tapeduration;
     }
-
     dr.cells["exportTapeCaption"]?.value = ExportTapeCaption;
     dr.cells["exportTapeCode"]?.value = Exporttapecode;
     dr.cells["som"]?.value = SOM;
@@ -706,11 +874,19 @@ class TransmissionLogController extends GetxController {
     dr.cells["eventType"]?.value = EventType;
     dr.cells["promoTypecode"]?.value = Promotypecode;
 
+    PlutoRow rowData = insertPlutoRow(
+      FpcTime,
+      EventType,
+      ExportTapeCaption,
+      Exporttapecode,
+      tapeDuration!,
+      SOM,
+      BreakNumber: ((BreakNumber != null) ? int.tryParse(BreakNumber!) : 0)!,
+    );
     if (InsertRow == 0) {
       InsertRow = -1;
     }
 
-    // dt.Rows.insert(InsertRow + 1, dr);
     gridStateManager?.insertRows(InsertRow + 1, [dr]);
     // dt.acceptChanges();
     colorGrid(false);
@@ -733,7 +909,7 @@ class TransmissionLogController extends GetxController {
     insertDuration_.text =
         gridStateManager?.currentRow?.cells["tapeduration"]?.value.toString() ??
             "";
-    txReplace_.text = gridStateManager
+    txReplaceTxId_.text = gridStateManager
             ?.currentRow?.cells["exportTapeCode"]?.value
             .toString() ??
         "";
@@ -743,14 +919,14 @@ class TransmissionLogController extends GetxController {
     txReplaceEvent_.text =
         gridStateManager?.currentRow?.cells["eventType"]?.value.toString() ??
             "";
-    fromInsert_.text = gridStateManager
+    /*fromReplaceInsert_.text = gridStateManager
             ?.currentRow?.cells["transmissionTime"]?.value
             .toString() ??
         "";
-    toInsert_.text = gridStateManager
+    toReplaceInsert_.text = gridStateManager
             ?.currentRow?.cells["transmissionTime"]?.value
             .toString() ??
-        "";
+        "";*/
   }
 
   btnCopyLogClick({Function? fun}) {
@@ -866,7 +1042,7 @@ class TransmissionLogController extends GetxController {
     // var counts1 = groupBy<PlutoRow, PlutoRow>(list!, (item) => item.cells["bookingNumber"]?.value));
 
     */ /* counts.forEach((key, value) {
-      print("KeyList:>>"+key.toString()+">>>Value>>"+(value.toString()??""));
+      print("KeyList:>>"+key.toString()+">>>value>>"+(value.toString()??""));
     });*/ /*
 
     listFilterAa = list;
@@ -1080,11 +1256,53 @@ class TransmissionLogController extends GetxController {
                 Utils.dateFormatChange(
                     selectedDate.text, "dd-MM-yyyy", "M/d/yyyy"),
                 isStandby.value),
-            fun: (Map map) {
+            fun: (map) {
               Get.back();
+              if (map is Map) {
+              } else {
+                LoadingDialog.callInfoMessage(map.toString());
+              }
             });
       }
     }, deleteCancel: "No", deleteTitle: "Yes");
+  }
+
+  btn_markError_Click(index) {
+    if (["c", "cl"].contains(gridStateManager
+        ?.rows[index].cells["eventType"]?.value
+        .toString()
+        .trim()
+        .toLowerCase())) {
+      LoadingDialog.recordExists("Want to remove and mark as error?", () {
+        LoadingDialog.call();
+        String bookNo =
+            gridStateManager?.rows[index].cells["bookingNumber"]?.value;
+        String bookCode =
+            gridStateManager?.rows[index].cells["bookingdetailcode"]?.value;
+        if (selectLocation != null && selectChannel != null) {
+          Get.find<ConnectorControl>().GETMETHODCALL(
+              api: ApiFactory.TRANSMISSION_LOG_MARK_AS_ERROR(
+                  selectLocation?.key ?? "",
+                  selectChannel?.key ?? "",
+                  bookNo,
+                  bookCode,
+                  selectedDate.text),
+              fun: (map) {
+                Get.back();
+                if (map is Map) {
+                  gridStateManager
+                      ?.removeRows([(gridStateManager?.rows[index])!]);
+                  colorGrid(false);
+                } else {
+                  LoadingDialog.callInfoMessage(map.toString());
+                }
+              });
+        }
+      }, deleteCancel: "No", deleteTitle: "Yes");
+    } else {
+      LoadingDialog.callInfoMessage(
+          "You can't remove and mark as error to event type other than C & CL");
+    }
   }
 
   getEventListForInsert({required Function function}) {
@@ -1152,7 +1370,7 @@ class TransmissionLogController extends GetxController {
     } else {
       LoadingDialog.call();
       var sendData = {
-        "lstTblLog": gridStateManager?.rows
+        "lstgridStateManager": gridStateManager?.rows
             .map((e) => e.toJson1(stringConverterKeys: ["datechange"]))
             .toList()
       };
@@ -1608,6 +1826,7 @@ class TransmissionLogController extends GetxController {
       if (!dontSavefile) {
         calculateTransmissionTime();
         updateRowNumber();
+        _download();
       }
     } catch (ex) {
     } finally {
@@ -1640,14 +1859,14 @@ class TransmissionLogController extends GetxController {
     }
 
     if (DontSavefile) {
-      gridStateManager?.Rows[intCurrentRowIndex(1)].cells[0].Selected = true;
-      gridStateManager?.CurrentCell = gridStateManager?.Rows[intCurrentRowIndex(1)].cells[0];
+      gridStateManager?.rows[intCurrentRowIndex(1)].cells[0].Selected = true;
+      gridStateManager?.CurrentCell = gridStateManager?.rows[intCurrentRowIndex(1)].cells[0];
       gridStateManager?.FirstDisplayedScrollingRowIndex = intCurrentRowIndex(3);
       intCurrentRowIndex(0) = -1;
     }
     else {
-      gridStateManager?.Rows[intCurrentRowIndex(0)].cells[0].Selected = true;
-      gridStateManager?.CurrentCell = gridStateManager?.Rows[intCurrentRowIndex(0)].cells[0];
+      gridStateManager?.rows[intCurrentRowIndex(0)].cells[0].Selected = true;
+      gridStateManager?.CurrentCell = gridStateManager?.rows[intCurrentRowIndex(0)].cells[0];
       gridStateManager?.FirstDisplayedScrollingRowIndex = intCurrentRowIndex(3);
     }
 
@@ -1932,5 +2151,154 @@ class TransmissionLogController extends GetxController {
     // gridStateManager.filteredCellValue(column: column)
     gridStateManagerCommercial
         ?.setFilter((element) => element.cells[filterKey]?.value == matchValue);
+  }
+
+  void _download() async {
+    String data = await jsonEncode(gridStateManager?.rows.map((e) => e.toJson()).toList());
+    // final stream = await Stream.fromIterable(data!.codeUnits);
+    // download(stream, 'hello.txt');
+    // final FileSystemAccessHandle? handle = await html.window.();
+    // if (handle != null) {
+      // Permission granted, continue with folder creation
+    // } else {
+      // Permission denied, handle accordingly
+    // }
+
+    ExportData().exportFilefromString(data,"lib/hello.txt");
+  }
+
+  void selectFolder() async {
+   /* final html.InputElement uploadInput = InputElement();
+    uploadInput.type = 'file';
+    uploadInput.multiple = true;
+    uploadInput.directory = true;
+    uploadInput.click();
+
+    await uploadInput.onChange.first;
+
+    // final directoryHandle = await uploadInput.getDirectoryHandle();
+    final directoryHandle = await uploadInput.getDirectoryHandle();
+    if (directoryHandle != null) {
+      // Folder selected, continue with file operations
+    } else {
+      // No folder selected or error occurred
+    }*/
+  }
+
+
+  void btnSave_Click(sender, e) async {
+    int replaceCount = 0;
+    // String strMessageLogFileName = "${Directory.current.path}\\MessageLogFiles\\${cboLocations.text}_${cboChannels.text}_${DateFormat('yyyyMMdd').format(txtDate.value)}.txt";
+    try {
+      // tblLog.MyDataGridRowFilter(true, false);
+      colorGrid(false);
+   /*   DataTable dt = tblLog.DataSource;
+
+      tblLog.currentCell = null;
+      if (!CheckPromoTags()) {
+        Cursor = Cursors.Default;
+        return;
+      } else {
+        UnSelectAllRows(tblLog);
+      }
+
+      if (!ProgramSequenceValidation()) {
+        Cursor = Cursors.Default;
+        return;
+      }
+
+      if (!CheckLostSecondaryEvents()) {
+        Cursor = Cursors.Default;
+        return;
+      }
+
+      if (HasWrongSecondaryEventOffset(true)) {
+        if (await showDialog(
+          context: context,
+          builder: (context) => AlertDialog(
+            title: Text(
+                'Secondary events Scheduled beyond primary event Duration!'),
+            content: Text('Do you want to proceed?'),
+            actions: [
+              TextButton(
+                onPressed: () {
+                  Navigator.pop(context, false);
+                },
+                child: Text('No'),
+              ),
+              TextButton(
+                onPressed: () {
+                  Navigator.pop(context, true);
+                },
+                child: Text('Yes'),
+              ),
+            ],
+          ),
+        )) {
+          Cursor = Cursors.Default;
+          return;
+        }
+      }
+
+      tblLog.currentCell = null;
+      if (!CHeckRosTransmissionTime()) {
+        Cursor = Cursors.Default;
+        return;
+      }
+
+      tblLog.currentCell = null;
+      if (!Diff_FPC_Transmission_Time(MaxProgramStarttimeDiff)) {
+        Cursor = Cursors.Default;
+        return;
+      } else {
+        UnSelectAllRows(tblLog);
+      }
+
+      tblLog.currentCell = null;
+      if (!CheckBackToBackProducts()) {
+        Cursor = Cursors.Default;
+        return;
+      } else {
+        UnSelectAllRows(tblLog);
+      }
+      tblLog.currentCell = null;
+      if (!CheckBackToBackproductGroup()) {
+        Cursor = Cursors.Default;
+        return;
+      } else {
+        UnSelectAllRows(tblLog);
+      }
+
+      tblLog.currentCell = null;
+      if (!CHeckRosTransmissionTime(300)) {
+        Cursor = Cursors.Default;
+        return;
+      }*/
+
+      /*Cursor = Cursors.WaitCursor;
+
+      var query = tblLog.Rows.cast<DataGridRow>().map((t) =>
+      {
+        "RowIndex": t.Index,
+        "FPCTime": "${t.Cells["FPCTime"].Value}",
+        "TransmissionTime": "${t.Cells["TransmissionTime"].Value}",
+        "ExportTapeCaption": "${t.Cells["ExportTapeCaption"].Value}",
+        "ExportTapeCode": "${t.Cells["ExportTapeCode"].Value}",
+        "TapeDuration": "${t.Cells["TapeDuration"].Value}",
+        "SOM": "${t.Cells["SOM"].Value}",
+        "EventType": "${t.Cells["EventType"].Value}",
+        "BreakEvent": "${t.Cells["BreakEvent"].Value}",
+        "BreakNumber": t.Cells["BreakNumber"].Value ?? 0,
+        "EpisodeNumber": t.Cells["EpisodeNumber"].Value ?? 0,
+        "BookingNumber": "${t.Cells["BookingNumber"].Value}",
+        "BookingDetailCode": t.Cells["BookingDetailCode"].Value ?? 0,
+        "datechange": t.Cells["datechange"].Value ?? 0
+      }).toList();
+
+      DataTable _dt = LINQToDataTable(query);
+
+      db.AddParameter("@locationcode", cboLocations.selectedValue);
+      db.AddParameter("@channelcode*/
+    } catch (e) {}
   }
 }
