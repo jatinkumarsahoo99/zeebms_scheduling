@@ -4,11 +4,11 @@ import 'package:bms_scheduling/widgets/dropdown.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
-import '../../../../widgets/DateTime/TimeWithThreeTextField.dart';
 import '../../../../widgets/FormButton.dart';
 import '../../../../widgets/input_fields.dart';
 import '../../../../widgets/radio_row.dart';
 import '../../../controller/HomeController.dart';
+import '../../../providers/Utils.dart';
 import '../controllers/slide_master_controller.dart';
 
 class SlideMasterView extends GetView<SlideMasterController> {
@@ -41,13 +41,14 @@ class SlideMasterView extends GetView<SlideMasterController> {
                         .23,
                         autoFocus: true,
                         selected: controller.selectedLocation,
+                        inkWellFocusNode: controller.locationFn,
                       );
                     }),
                     SizedBox(width: 20),
                     Obx(() {
                       return DropDownField.formDropDown1WidthMap(
                         controller.channelList.value,
-                        controller.handleOnChangedChannel,
+                        (v) => controller.selectedChannel = v,
                         "Channel",
                         .23,
                         selected: controller.selectedChannel,
@@ -62,35 +63,47 @@ class SlideMasterView extends GetView<SlideMasterController> {
                     children: [
                       Row(
                         children: [
-                          InputFields.formField1(
-                            hintTxt: "Tape ID",
-                            controller: controller.tapeIDCtr,
-                            width: 0.112,
-                            focusNode: controller.tapIDFN,
-                            // isEnable: controllsEnable,
-                          ),
+                          Obx(() {
+                            return InputFields.formField1(
+                              hintTxt: "Tape ID",
+                              controller: controller.tapeIDCtr,
+                              width: 0.11,
+                              focusNode: controller.tapeIDFN,
+                              padLeft: 0,
+                              isEnable: controller.controllsEnable.value,
+                            );
+                          }),
                           SizedBox(width: 10),
-                          InputFields.formField1(
-                            hintTxt: "Seg No.",
-                            controller: controller.segNoCtr,
-                            width: 0.11,
-                          ),
+                          Obx(() {
+                            return InputFields.formField1(
+                              hintTxt: "Seg No.",
+                              controller: controller.segNoCtr,
+                              focusNode: controller.segFN,
+                              width: 0.11,
+                              isEnable: controller.controllsEnable.value,
+                            );
+                          }),
                         ],
                       ),
                       SizedBox(width: 20),
                       Row(
                         children: [
-                          InputFields.formField1(
-                            hintTxt: "House ID",
-                            controller: controller.houseIDCtr,
-                            width: 0.11,
-                          ),
+                          Obx(() {
+                            return InputFields.formField1(
+                              hintTxt: "House ID",
+                              controller: controller.houseIDCtr,
+                              focusNode: controller.houseIDFN,
+                              width: 0.11,
+                              isEnable: controller.controllsEnable.value,
+                            );
+                          }),
                           SizedBox(width: 10),
                           InputFields.formField1(
                             hintTxt: "TX Caption",
                             controller: controller.txCaptionCtr,
                             width: 0.11,
                             prefixText: "L/",
+                            focusNode: controller.txCaptionFN,
                           ),
                         ],
                       ),
@@ -104,6 +117,7 @@ class SlideMasterView extends GetView<SlideMasterController> {
                       hintTxt: "Caption",
                       controller: controller.captionCtr,
                       width: 0.23,
+                      focusNode: controller.captionFN,
                     ),
                     SizedBox(width: 20),
                     Obx(() {
@@ -111,12 +125,13 @@ class SlideMasterView extends GetView<SlideMasterController> {
                         controller.slideTypeList.value
                             .map((e) => DropDownValue(
                                   key: e['lookupCode'].toString(),
-                                  value: e['lookupType'].toString(),
+                                  value: e['lookupName'].toString(),
                                 ))
                             .toList(),
-                        controller.handleOnChangedSlideType,
+                        (v) => controller.selectedSlide = v,
                         "Slide type",
                         .23,
+                        selected: controller.selectedSlide,
                       );
                     }),
                   ],
@@ -136,36 +151,35 @@ class SlideMasterView extends GetView<SlideMasterController> {
                                         value: e['tapeTypeName'],
                                       ))
                                   .toList(),
-                              controller.handleOnChangedTapeType,
+                              (v) => controller.selectedTape = v,
                               "Tape Type",
                               .112,
                               selected: controller.selectedTape,
                             );
                           }),
                           SizedBox(width: 13),
-                          TimeWithThreeTextField(
-                            title: "SOM",
-                            mainTextController: controller.somCtr,
-                            widthRation: 0.11,
-                            isTime: false,
+                          InputFields.formFieldNumberMask(
+                            controller: controller.somCtr,
+                            hintTxt: 'SOM',
+                            widthRatio: .11,
                           ),
                         ],
                       ),
                       SizedBox(width: 20),
                       Row(
                         children: [
-                          TimeWithThreeTextField(
-                            title: "EOM",
-                            mainTextController: controller.eomCtr,
-                            widthRation: 0.11,
-                            isTime: false,
+                          InputFields.formFieldNumberMask(
+                            controller: controller.eomCtr,
+                            hintTxt: 'EOM',
+                            widthRatio: .11,
+                            textFieldFN: controller.eomFN,
                           ),
                           SizedBox(width: 10),
-                          TimeWithThreeTextField(
-                            title: "Duration",
-                            mainTextController: controller.durationCtr,
-                            widthRation: 0.11,
-                            isTime: false,
+                          InputFields.formField1(
+                            controller: controller.durationCtr,
+                            hintTxt: 'Duration',
+                            width: .11,
+                            isEnable: false,
                           ),
                         ],
                       ),
@@ -219,11 +233,19 @@ class SlideMasterView extends GetView<SlideMasterController> {
                               // alignment: MainAxisAlignment.start,
                               // mainAxisSize: MainAxisSize.min,
                               children: [
-                                for (var btn in btncontroller.buttons!)
+                                for (var btn in btncontroller.buttons!) ...{
                                   FormButtonWrapper(
                                     btnText: btn["name"],
-                                    callback: btn["name"] == "Save" ? null : () => controller.formHandler(btn['name'].toString()),
-                                  ),
+                                    callback: ((Utils.btnAccessHandler(btn['name'], controller.formPermissions!) == null))
+                                        ? null
+                                        : () => controller.formHandler(btn['name']),
+                                  )
+                                },
+                                // for (var btn in btncontroller.buttons!)
+                                //   FormButtonWrapper(
+                                //     btnText: btn["name"],
+                                //     callback: () => controller.formHandler(btn['name'].toString()),
+                                //   ),
                               ],
                             ),
                           );
