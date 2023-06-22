@@ -39,7 +39,7 @@ class AppPages {
   AppPages._();
 
   // static const INITIAL = Routes.ROS_DISTRIBUTION +
-  static const INITIAL = Routes.RO_BOOKING +
+  static const INITIAL = Routes.SALES_AUDIT_NOT_TELECAST_REPORT +
       "?personalNo=kW5Bkf17%2FS5YF7ML28FmVg%3D%3D&loginCode=1BWIoBKeDl7qDSAAhxvXsQ%3D%3D&formName=OI8ukDpPPVN0I2BEXu2h4nuFu%2BZm1ZRpvP8NL4XCXzQ%3D";
   static final routes = [
     GetPage(
@@ -206,7 +206,8 @@ class AppPages {
     ),
     GetPage(
       name: _Paths.COMMERCIAL_MASTER,
-      page: () => const CommercialMasterView(),
+      // page: () => const CommercialMasterView(),
+      page: () => AuthGuard1(childName: _Paths.COMMERCIAL_MASTER),
       binding: CommercialMasterBinding(),
     ),
   ];
