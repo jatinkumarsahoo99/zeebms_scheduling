@@ -20,7 +20,11 @@ class SpotsView extends GetView<RoBookingController> {
         Expanded(
             child: Container(
           child: controller.bookingNoLeaveData != null
-              ? DataGridShowOnlyKeys(mapData: controller.bookingNoLeaveData!.lstMakeGood!.map((e) => e.toJson()).toList(), formatDate: false)
+              ? DataGridShowOnlyKeys(
+                  mapData: controller.addSpotData?.lstSpots?.map((e) => e.toJson()).toList() ??
+                      controller.bookingNoLeaveData?.lstSpots?.map((e) => e.toJson()).toList() ??
+                      [],
+                  formatDate: false)
               : SizedBox(),
         )),
         SizedBox(

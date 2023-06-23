@@ -11,8 +11,10 @@ import 'package:get/get.dart';
 
 import '../controllers/audit_status_controller.dart';
 
-class AuditStatusView extends GetView<AuditStatusController> {
-  const AuditStatusView({Key? key}) : super(key: key);
+class AuditStatusView extends StatelessWidget {
+  AuditStatusView({Key? key}) : super(key: key);
+  AuditStatusController controller = Get.put(AuditStatusController());
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -29,9 +31,17 @@ class AuditStatusView extends GetView<AuditStatusController> {
                 // buttonHeight: 20,
                 alignment: WrapAlignment.start,
                 children: [
-                  DropDownField.formDropDown1WidthMap([], (data) {}, "Location", 0.24),
-                  DropDownField.formDropDown1WidthMap([], (data) {}, "Channel", 0.24),
-                  DateWithThreeTextField(title: "From Date.", widthRation: 0.12, mainTextController: TextEditingController()),
+                  Obx(
+                    () => DropDownField.formDropDown1WidthMap(controller.locations, (data) {
+                      controller.selectLocation = data;
+                    }, "Location", 0.24),
+                  ),
+                  Obx(
+                    () => DropDownField.formDropDown1WidthMap(controller.channels, (data) {
+                      controller.selectChannel = data;
+                    }, "Channel", 0.24),
+                  ),
+                  DateWithThreeTextField(title: "From Date.", widthRation: 0.12, mainTextController: controller.dateController),
                   Row(
                     mainAxisSize: MainAxisSize.min,
                     crossAxisAlignment: CrossAxisAlignment.end,
@@ -44,7 +54,9 @@ class AuditStatusView extends GetView<AuditStatusController> {
                   ),
                   FormButtonWrapper(
                     btnText: "Show",
-                    callback: () {},
+                    callback: () {
+                      controller.showBtnData();
+                    },
                   )
                 ],
               ),
