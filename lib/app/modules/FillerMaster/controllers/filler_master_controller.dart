@@ -5,9 +5,12 @@ import 'package:bms_scheduling/app/routes/app_pages.dart';
 import 'package:bms_scheduling/widgets/LoadingDialog.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:intl/intl.dart';
 
 import '../../../data/PermissionModel.dart';
 import '../../../providers/Utils.dart';
+import '../../CommonSearch/views/common_search_view.dart';
+import '../model/filler_annotation_model.dart';
 import '../model/filler_master_on_load_model.dart';
 import '../model/retrive_record_f_m.dart';
 
@@ -31,11 +34,13 @@ class FillerMasterController extends GetxController {
   /// 16=>source
   /// 17=>ID NO
   /// 18=>event
+  /// 19=>channel
   late List<DropDownValue?> selectedDropDowns;
   List<PermissionModel>? formPermissions;
   FillerMasterOnLoadModel? onloadModel;
-  var rightDataTable = [].obs;
+  var rightDataTable = <FillerMasterAnnotationModel>[].obs;
   String fillerCode = "";
+  var channelList = <DropDownValue>[].obs;
 
   var startDateCtr = TextEditingController(),
       endDateCtr = TextEditingController(),
@@ -84,7 +89,7 @@ class FillerMasterController extends GetxController {
     singerCtr.clear();
     musicDirectorCtr.clear();
     musicCompanyCtr.clear();
-    selectedDropDowns = List.generate(19, (index) => null);
+    selectedDropDowns = List.generate(20, (index) => null);
     if (onloadModel?.fillerMasterOnload?.lsttapesource != null && onloadModel!.fillerMasterOnload!.lsttapesource!.isNotEmpty) {
       selectedDropDowns[16] = onloadModel!.fillerMasterOnload!.lsttapesource![0];
     }
@@ -97,7 +102,7 @@ class FillerMasterController extends GetxController {
 
   @override
   void onInit() {
-    selectedDropDowns = List.generate(19, (index) => null);
+    selectedDropDowns = List.generate(20, (index) => null);
 
     formPermissions = Utils.fetchPermissions1(Routes.FILLER_MASTER.replaceAll("/", ""));
     super.onInit();
@@ -123,8 +128,19 @@ class FillerMasterController extends GetxController {
   }
 
   formHandler(String btnName) {
-    if (btnName == "Clear") {}
-    clearPage();
+    if (btnName == "Clear") {
+      clearPage();
+    } else if (btnName == "Search") {
+      Get.to(
+        SearchPage(
+          key: Key("Filler Master"),
+          screenName: "Filler Master",
+          appBarName: "Filler Master",
+          strViewName: "bms_view_fillermaster",
+          isAppBarReq: true,
+        ),
+      );
+    }
   }
 
   updateUI() {
@@ -225,6 +241,35 @@ class FillerMasterController extends GetxController {
     }
   }
 
+  Future<void> locationOnChanged(DropDownValue? val) async {
+    if (val != null) {
+      selectedDropDowns[0] = val;
+      LoadingDialog.call();
+      await Get.find<ConnectorControl>().GETMETHODCALL(
+        api: ApiFactory.FILLER_MASTER_ON_LEAVE_LOCATION(val.key ?? ""),
+        fun: (resp) {
+          closeDialogIfOpen();
+          if (resp != null && resp is Map<String, dynamic> && resp["onLeaveLocation"] != null) {
+            selectedDropDowns[19] = val;
+            channelList.clear();
+            channelList.addAll((resp['onLeaveLocation'] as List<dynamic>)
+                .map((e) => DropDownValue(
+                      key: e['channelCode'].toString(),
+                      value: e['channelName'].toString(),
+                    ))
+                .toList());
+          } else {
+            LoadingDialog.showErrorDialog(resp.toString());
+          }
+        },
+        failed: (resp) {
+          closeDialogIfOpen();
+          LoadingDialog.showErrorDialog(resp.toString());
+        },
+      );
+    }
+  }
+
   retrievRecord({String text = "", String code = "", String tapeCode = "", String segNo = ""}) async {
     LoadingDialog.call();
     await Get.find<ConnectorControl>().POSTMETHOD(
@@ -234,68 +279,193 @@ class FillerMasterController extends GetxController {
         if (resp != null && resp is Map<String, dynamic>) {
           var tempModel = RetriveRecordFillerMasterModel.fromJson(resp);
           HouseID? tempModel2 = (tempModel.houseID?.isNotEmpty ?? false) ? tempModel.houseID![0] : null;
+
           if (tempModel2 != null && onloadModel != null) {
+            /// FILLER CODE
             if (tempModel2.fillerCode != null) {
               fillerCode = tempModel2.fillerCode!;
             }
+
+            ///LOCATION
             var tempLocation = onloadModel?.fillerMasterOnload?.lstLocation?.firstWhereOrNull((element) => element.key == tempModel2.locationcode);
             if (tempLocation != null) {
               selectedDropDowns[0] = tempLocation;
             }
+            var tempChannel = channelList.firstWhereOrNull((element) => element.key == tempModel2.channelcode);
+            if (tempChannel != null) {
+              selectedDropDowns[19] = tempChannel;
+            } else if (selectedDropDowns[0] != null) {
+              locationOnChanged(selectedDropDowns[0]).then((value) {
+                var tempChannel2 = channelList.firstWhereOrNull((element) => element.key == tempModel2.channelcode);
+                if (tempChannel2 != null) {
+                  selectedDropDowns[19] = tempChannel2;
+                }
+              });
+            }
 
+            ///MOVIE GRADE
             var movieGrade = onloadModel?.fillerMasterOnload?.lstMovieGrade?.firstWhereOrNull((element) => element.key == tempModel2.grade);
             if (movieGrade != null) {
               selectedDropDowns[15] = movieGrade;
             }
 
-            /// banner code
+            /// BANNER CODE
 
+            /// TX-CAPTION
+            if (tempModel2.fillerCaption != null) {
+              txCaptionCtr.text = tempModel2.fillerCaption ?? "";
+            }
+
+            /// TAPE-ID
             if (tempModel2.exportTapeCode != null) {
               tapeIDCtr.text = tempModel2.exportTapeCode ?? "";
             }
+
+            /// SEG-NO-LEFT
             if (tempModel2.segmentNumber != null) {
               segNoCtrLeft.text = tempModel2.segmentNumber.toString();
             }
+
+            /// TX-NO
             if (tempModel2.houseId != null) {
               txNoCtr.text = tempModel2.houseId.toString();
             }
 
-            if (tempModel2.houseId != null) {
-              txNoCtr.text = tempModel2.houseId.toString();
-            }
-
+            /// SOM
             if (tempModel2.som != null) {
               somCtr.text = tempModel2.som.toString();
             }
+
+            /// EOM
             if (tempModel2.eom != null) {
               eomCtr.text = tempModel2.eom.toString();
             }
             calculateDuration();
 
+            /// TAPE-TYPE
             var tapeTypeCode =
                 onloadModel?.fillerMasterOnload?.lstTapetypemaster?.firstWhereOrNull((element) => element.key == tempModel2.tapeTypeCode);
-            if (movieGrade != null) {
+            if (tapeTypeCode != null) {
               selectedDropDowns[3] = tapeTypeCode;
             }
+
+            /// TYPE
             var typeCode =
                 onloadModel?.fillerMasterOnload?.lstfillertypemaster?.firstWhereOrNull((element) => element.key == tempModel2.fillerTypeCode);
-            if (movieGrade != null) {
+            if (typeCode != null) {
               selectedDropDowns[4] = typeCode;
             }
+
+            /// CENSHORSHIP
             var censhorShipCode =
                 onloadModel?.fillerMasterOnload?.lstCensorshipMaster?.firstWhereOrNull((element) => element.key == tempModel2.censorshipCode);
-            if (movieGrade != null) {
+            if (censhorShipCode != null) {
               selectedDropDowns[5] = censhorShipCode;
             }
+
+            /// LANGAUGE
             var langaugeCode =
                 onloadModel?.fillerMasterOnload?.lstLanguagemaster?.firstWhereOrNull((element) => element.key == tempModel2.languageCode);
-            if (movieGrade != null) {
+            if (langaugeCode != null) {
               selectedDropDowns[6] = langaugeCode;
             }
-            var production = onloadModel?.fillerMasterOnload?.lstproduction?.firstWhereOrNull((element) => element.key == tempModel2.fillerCode);
-            if (movieGrade != null) {
+
+            /// PRODUCTION
+            var production = onloadModel?.fillerMasterOnload?.lstproduction?.firstWhereOrNull((element) => element.key == tempModel2.inHouseOutHouse);
+            if (production != null) {
               selectedDropDowns[7] = production;
             }
+
+            /// SEG-ID
+            /// COLOR
+            var color = onloadModel?.fillerMasterOnload?.lstcolor?.firstWhereOrNull((element) => element.key == tempModel2.blackWhite);
+            if (color != null) {
+              selectedDropDowns[8] = color;
+            }
+
+            /// REGION
+            var region = onloadModel?.fillerMasterOnload?.lstRegion?.firstWhereOrNull((element) => element.key == tempModel2.regioncode.toString());
+            if (region != null) {
+              selectedDropDowns[9] = color;
+            }
+
+            /// ENERGY
+            var energy = onloadModel?.fillerMasterOnload?.lstEnegry?.firstWhereOrNull((element) => element.key == tempModel2.energyCode.toString());
+            if (energy != null) {
+              selectedDropDowns[10] = energy;
+            }
+
+            /// ERA
+            var era = onloadModel?.fillerMasterOnload?.lstEra?.firstWhereOrNull((element) => element.key == tempModel2.eraCode.toString());
+            if (era != null) {
+              selectedDropDowns[11] = era;
+            }
+
+            /// SONG-GRADE
+            var songGrade =
+                onloadModel?.fillerMasterOnload?.lstSongGrade?.firstWhereOrNull((element) => element.key == tempModel2.gradeCode.toString());
+            if (songGrade != null) {
+              selectedDropDowns[12] = songGrade;
+            }
+
+            /// MOOD
+            var mood = onloadModel?.fillerMasterOnload?.lstMood?.firstWhereOrNull((element) => element.key == tempModel2.moodCode.toString());
+            if (mood != null) {
+              selectedDropDowns[13] = mood;
+            }
+
+            /// TEMPO
+            var tempo = onloadModel?.fillerMasterOnload?.lstTempo?.firstWhereOrNull((element) => element.key == tempModel2.tempoCode.toString());
+            if (tempo != null) {
+              selectedDropDowns[14] = tempo;
+            }
+
+            /// MOVIE-NAME
+            if (tempModel2.moviename != null) {
+              movieNameCtr.text = tempModel2.moviename.toString();
+            }
+
+            /// RELEASE-YEAR
+            if (tempModel2.releaseYear != null) {
+              releaseYearCtr.text = tempModel2.releaseYear.toString();
+            }
+
+            /// SINGER
+            if (tempModel2.singerName != null) {
+              singerCtr.text = tempModel2.singerName.toString();
+            }
+
+            /// MUSIC-DIRECTOR
+            if (tempModel2.musicDirector != null) {
+              musicDirectorCtr.text = tempModel2.musicDirector.toString();
+            }
+
+            /// MUSIC-COMPANY
+            if (tempModel2.musicCompany != null) {
+              musicCompanyCtr.text = tempModel2.musicCompany.toString();
+            }
+
+            /// SOURCE
+            /// ID-NO
+
+            /// START-DATE
+            if (tempModel2.fromDate != null) {
+              startDateCtr.text =
+                  DateFormat("dd-MM-yyyy").format(DateFormat("yyyy-MM-ddThh:mm:ss").parse(tempModel2.fromDate ?? "2023-06-14T23:59:59"));
+            }
+
+            /// END-DATE
+            if (tempModel2.killDate != null) {
+              endDateCtr.text =
+                  DateFormat("dd-MM-yyyy").format(DateFormat("yyyy-MM-ddThh:mm:ss").parse(tempModel2.killDate ?? "2023-06-14T23:59:59"));
+            }
+
+            /// SYNOPSIS
+            /// EVENT
+            /// TC-IN
+            /// TC-OUT
+            /// COPY
+            /// SEG-NO-RIGHT
             updateUI();
           }
         } else {
@@ -313,9 +483,38 @@ class FillerMasterController extends GetxController {
 
   saveRecord() {}
 
-  void handleAddTap() {}
+  void handleAddTap() {
+    if (selectedDropDowns[18] == null) {
+      return;
+    }
+    rightDataTable.add(FillerMasterAnnotationModel(
+      eventID: selectedDropDowns[18]?.key,
+      eventName: selectedDropDowns[18]?.key,
+      tCIn: tcInCtr.text,
+      tCOut: tcOutCtr.text,
+    ));
+  }
 
-  void handleCopyTap() {}
+  void loadAnnotationDataTable() {}
+
+  Future<void> handleCopyTap() async {
+    await retrievRecord(
+      tapeCode: copyCtr.text.trim(),
+      segNo: segNoCtrRight.text.trim(),
+    );
+    tapeIDCtr.text = "AUTO";
+    txNoCtr.text = "AUTO";
+    segNoCtrLeft.text = "1";
+    var now = DateTime.now();
+    fillerNameCtr.text =
+        "${"${fillerNameCtr.text}                                        ".toString().substring(0, 31)}-${now.day}-${now.month}-${now.year}";
+    fillerNameFN.requestFocus();
+    txCaptionCtr.clear();
+    startDateCtr.text = "${now.day}-${now.month}-${now.year}";
+    now = now.copyWith(month: now.month + 3);
+    endDateCtr.text = "${now.day}-${now.month}-${now.year}";
+    fillerCode = "";
+  }
 
   void onLoadData() {
     LoadingDialog.call();

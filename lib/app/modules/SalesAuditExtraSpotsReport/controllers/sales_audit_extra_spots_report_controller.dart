@@ -52,13 +52,16 @@ class SalesAuditExtraSpotsReportController extends GetxController {
   generateData() {
     if (selectedLocation == null || selectedChannel == null) {
       LoadingDialog.showErrorDialog("Please select Location, Channel");
+      return;
     } else {
       LoadingDialog.call();
       Get.find<ConnectorControl>().POSTMETHOD(
         api: ApiFactory.SALES_AUDIT_EXTRA_SPOTS_GENERATE,
         fun: (resp) {
           closeDialogIfOpen();
-          if (resp != null && resp is Map<String, dynamic> && resp['onLoad_SlideMaster'] != null) {
+          if (resp != null && resp is Map<String, dynamic> && resp['generate'] != null) {
+            dataTBList.clear();
+            dataTBList.value.addAll(resp['generate'] as List<dynamic>);
           } else {
             LoadingDialog.showErrorDialog(resp.toString());
           }

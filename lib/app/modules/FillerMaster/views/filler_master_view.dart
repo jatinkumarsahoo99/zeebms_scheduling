@@ -4,6 +4,7 @@ import 'package:get/get.dart';
 import '../../../../widgets/DateTime/DateWithThreeTextField.dart';
 import '../../../../widgets/FormButton.dart';
 import '../../../../widgets/dropdown.dart';
+import '../../../../widgets/gridFromMap.dart';
 import '../../../../widgets/input_fields.dart';
 import '../../../controller/HomeController.dart';
 import '../../../providers/ApiFactory.dart';
@@ -44,7 +45,7 @@ class FillerMasterView extends GetView<FillerMasterController> {
                                       children: [
                                         DropDownField.formDropDown1WidthMap(
                                           controller.onloadModel?.fillerMasterOnload?.lstLocation ?? [],
-                                          (a) => controller.selectedDropDowns[0] = a,
+                                          controller.locationOnChanged,
                                           "Location",
                                           .17,
                                           autoFocus: true,
@@ -52,13 +53,15 @@ class FillerMasterView extends GetView<FillerMasterController> {
                                           inkWellFocusNode: controller.locationFN,
                                         ),
                                         // SizedBox(width: 20),
-                                        DropDownField.formDropDown1WidthMap(
-                                          [],
-                                          (a) => controller.selectedDropDowns[1] = a,
-                                          "Channel",
-                                          .17,
-                                          selected: controller.selectedDropDowns[1],
-                                        ),
+                                        Obx(() {
+                                          return DropDownField.formDropDown1WidthMap(
+                                            controller.channelList.value,
+                                            (a) => controller.selectedDropDowns[19] = a,
+                                            "Channel",
+                                            .17,
+                                            selected: controller.selectedDropDowns[19],
+                                          );
+                                        }),
                                         // SizedBox(width: 20),
                                         DropDownField.formDropDown1WidthMap(
                                           controller.onloadModel?.fillerMasterOnload?.lstMovieGrade ?? [],
@@ -357,34 +360,41 @@ class FillerMasterView extends GetView<FillerMasterController> {
                                                   ),
                                                 ),
                                                 const SizedBox(height: 5),
-                                                TextFormField(
-                                                  maxLines: 110 ~/ 20,
-                                                  controller: controller.synopsisCtr,
-                                                  decoration: InputDecoration(
-                                                    filled: true,
-                                                    fillColor: Colors.white,
-                                                    border: OutlineInputBorder(
-                                                      borderRadius: BorderRadius.circular(0),
-                                                      borderSide: BorderSide(
-                                                        color: Colors.deepPurpleAccent,
+                                                Expanded(
+                                                  child: TextFormField(
+                                                    expands: true,
+                                                    minLines: null,
+                                                    maxLines: null,
+                                                    controller: controller.synopsisCtr,
+                                                    textAlignVertical: TextAlignVertical.top,
+                                                    keyboardType: TextInputType.multiline,
+                                                    decoration: InputDecoration(
+                                                      filled: true,
+                                                      fillColor: Colors.white,
+                                                      contentPadding: EdgeInsets.all(10),
+                                                      border: OutlineInputBorder(
+                                                        borderRadius: BorderRadius.circular(0),
+                                                        borderSide: BorderSide(
+                                                          color: Colors.deepPurpleAccent,
+                                                        ),
                                                       ),
-                                                    ),
-                                                    enabledBorder: OutlineInputBorder(
-                                                      borderRadius: BorderRadius.circular(0),
-                                                      borderSide: BorderSide(
-                                                        color: Colors.deepPurpleAccent,
+                                                      enabledBorder: OutlineInputBorder(
+                                                        borderRadius: BorderRadius.circular(0),
+                                                        borderSide: BorderSide(
+                                                          color: Colors.deepPurpleAccent,
+                                                        ),
                                                       ),
-                                                    ),
-                                                    focusedBorder: OutlineInputBorder(
-                                                      borderRadius: BorderRadius.circular(0),
-                                                      borderSide: BorderSide(
-                                                        color: Colors.deepPurpleAccent,
+                                                      focusedBorder: OutlineInputBorder(
+                                                        borderRadius: BorderRadius.circular(0),
+                                                        borderSide: BorderSide(
+                                                          color: Colors.deepPurpleAccent,
+                                                        ),
                                                       ),
-                                                    ),
-                                                    errorBorder: OutlineInputBorder(
-                                                      borderRadius: BorderRadius.circular(0),
-                                                      borderSide: BorderSide(
-                                                        color: Colors.deepPurpleAccent,
+                                                      errorBorder: OutlineInputBorder(
+                                                        borderRadius: BorderRadius.circular(0),
+                                                        borderSide: BorderSide(
+                                                          color: Colors.deepPurpleAccent,
+                                                        ),
                                                       ),
                                                     ),
                                                   ),
@@ -440,12 +450,19 @@ class FillerMasterView extends GetView<FillerMasterController> {
                                           ),
                                           SizedBox(height: 14),
                                           Expanded(
-                                            child: Container(
-                                              decoration: BoxDecoration(
-                                                  border: Border.all(
-                                                color: Colors.grey,
-                                              )),
-                                            ),
+                                            child: Obx(() {
+                                              return Container(
+                                                decoration: controller.rightDataTable.value.isEmpty
+                                                    ? BoxDecoration(
+                                                        border: Border.all(
+                                                        color: Colors.grey,
+                                                      ))
+                                                    : null,
+                                                child: controller.rightDataTable.value.isEmpty
+                                                    ? null
+                                                    : DataGridFromMap(mapData: controller.rightDataTable.value.map((e) => e.toJson()).toList()),
+                                              );
+                                            }),
                                           ),
                                           SizedBox(height: 14),
                                           Row(

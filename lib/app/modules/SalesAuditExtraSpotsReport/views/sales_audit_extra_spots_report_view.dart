@@ -84,7 +84,7 @@ class SalesAuditExtraSpotsReportView extends GetView<SalesAuditExtraSpotsReportC
                                   decoration: BoxDecoration(border: Border.all(color: Colors.grey)),
                                 )
                               : DataGridFromMap(
-                                  mapData: controller.dataTBList.value.map((e) => e.toJson()).toList(),
+                                  mapData: controller.dataTBList.value,
                                   formatDate: false,
                                 );
                         },
