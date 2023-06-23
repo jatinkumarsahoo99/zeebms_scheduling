@@ -566,4 +566,12 @@ class ApiFactory {
   static String AsrunImport_SaveAsrunDetail = "$BASE_URL/api/AsrunImport/SaveAsrunDetail";
   static String AsrunImport_SaveTempDetail = "$BASE_URL/api/AsrunImport/SaveTempDetail";
   static String AsrunImport_AsunOnImport = "$BASE_URL/api/AsrunImport/AsrunOnImport";
+  ////////////////////////////// Audit Status ////////////////////////////////////////
+  static String NewBookingActivityReport_GetLoadLocation = "$BASE_URL/api/AsrunImport/GetLoadLocation";
+  static String NewBookingActivityReport_cbolocationLeave(String locationCode) =>
+      "$BASE_URL/api/NewBookingActivityReport/cbolocation_Leave?LocationCode=$locationCode";
+  static String NewBookingActivityReport_Getshowdeal = "$BASE_URL/api/NewBookingActivityReport/Getshowdeal";
+  static String NewBookingActivityReport_GetShowEbooking = "$BASE_URL/api/NewBookingActivityReport/GetShowEbooking";
+  static String NewBookingActivityReport_BtnShow = "$BASE_URL/api/NewBookingActivityReport/BtnShow";
+  static String NewBookingActivityReport_Refresh = "$BASE_URL/api/NewBookingActivityReport/Refresh";
 }
