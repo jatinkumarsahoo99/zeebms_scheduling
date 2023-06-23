@@ -1,25 +1,16 @@
 import 'package:get/get.dart';
 
-class PromoMasterController extends GetxController {
-  //TODO: Implement PromoMasterController
+import '../../../data/PermissionModel.dart';
+import '../../../providers/Utils.dart';
+import '../../../routes/app_pages.dart';
 
-  final count = 0.obs;
+class PromoMasterController extends GetxController {
+  List<PermissionModel>? formPermissions;
   @override
   void onInit() {
+    formPermissions = Utils.fetchPermissions1(Routes.PROMO_MASTER.replaceAll("/", ""));
     super.onInit();
   }
-
-  @override
-  void onReady() {
-    super.onReady();
-  }
-
-  @override
-  void onClose() {
-    super.onClose();
-  }
-
-  void increment() => count.value++;
 
   formHandler(String string) {}
 }

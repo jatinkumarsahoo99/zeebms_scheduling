@@ -525,7 +525,7 @@ class ApiFactory {
   ///
   ///
 
-  ///////////////// RO BOOKING //////////////////////////
+  ///////////////// RO BOOKING START //////////////////////////
   static String RO_BOOKING_INIT = "$BASE_URL/api/ROBooking/RoBookingOnLoad";
   static String RO_BOOKING_CHANNNEL(locationCode) => "$BASE_URL/api/ROBooking/Location_Leave?LocationCode=$locationCode";
 
@@ -560,5 +560,23 @@ class ApiFactory {
   static String RO_BOOKING_OnSaveData = "$BASE_URL/api/ROBooking/OnSaveData";
   static String RO_BOOKING_GetClientPDC = "$BASE_URL/api/ROBooking/GetClientPDC";
 
-  //////////////////////////////// ASRUN IMPORT /////////////////////////////////
+  //////////////////////////////// RO BOOKING END /////////////////////////////////
+  ///
+  ///
+  ///
+  ///
+  ///
+  ///
+  ///
+  ///
+  ///
+  //////////////////////////////// FILLER-MASTER-API-START /////////////////////////////////
+
+  static String FILLER_MASTER_ON_LOAD = "$BASE_URL/api/FillerMaster/FillerMasterOnLoad";
+  static String FILLER_MASTER_BANNER_SEARCH = "$BASE_URL/api/FillerMaster/GetSourceBannerSearch?TextSourceBanner=";
+  static String FILLER_MASTER_RETRIVE_RECORDS = "$BASE_URL/api/FillerMaster/RetriveRecords";
+  static String FILLER_MASTER_SEGNO_LEAVE = "$BASE_URL/api/FillerMaster/SegNoLeave";
+  static String FILLER_MASTER_TAPE_ID_LEAVE = "$BASE_URL/api/FillerMaster/TapeIDLeave";
+
+  //////////////////////////////// FILLER-MASTER-API-END /////////////////////////////////
 }

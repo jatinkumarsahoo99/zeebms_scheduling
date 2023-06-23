@@ -10,6 +10,7 @@ import '../../../../widgets/dropdown.dart';
 import '../../../../widgets/input_fields.dart';
 import '../../../controller/HomeController.dart';
 import '../../../providers/SizeDefine.dart';
+import '../../../providers/Utils.dart';
 import '../controllers/promo_master_controller.dart';
 
 class PromoMasterView extends GetView<PromoMasterController> {
@@ -39,12 +40,28 @@ class PromoMasterView extends GetView<PromoMasterController> {
                               Row(
                                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                                 children: [
-                                  InputFields.formField1(hintTxt: "Caption", controller: TextEditingController(), width: 0.17, autoFocus: true),
+                                  InputFields.formField1(
+                                    hintTxt: "Caption",
+                                    controller: TextEditingController(),
+                                    width: 0.17,
+                                    autoFocus: true,
+                                  ),
                                   // SizedBox(width: 20),
-                                  DropDownField.formDropDown1WidthMap([], (p0) => null, "Category", .17),
+                                  DropDownField.formDropDown1WidthMap(
+                                    [],
+                                    (p0) => null,
+                                    "Category",
+                                    .17,
+                                  ),
                                   // SizedBox(width: 20),
-                                  DropDownField.formDropDownSearchAPI2(GlobalKey(), context,
-                                      width: context.width * 0.17, onchanged: (val) {}, title: 'TX Caption', url: ''),
+                                  DropDownField.formDropDownSearchAPI2(
+                                    GlobalKey(),
+                                    context,
+                                    width: context.width * 0.17,
+                                    onchanged: (val) {},
+                                    title: 'TX Caption',
+                                    url: '',
+                                  ),
                                 ],
                               ),
                               SizedBox(height: 14),
@@ -144,7 +161,7 @@ class PromoMasterView extends GetView<PromoMasterController> {
                         ),
                       ),
                     ),
-                    SizedBox(width: 14),
+                    const SizedBox(width: 14),
                     FocusTraversalGroup(
                       policy: WidgetOrderTraversalPolicy(),
                       child: Expanded(
@@ -312,32 +329,32 @@ class PromoMasterView extends GetView<PromoMasterController> {
             ),
             SizedBox(height: 8),
 
-            /// bottom common buttons
-            GetBuilder<HomeController>(
-                id: "buttons",
-                init: Get.find<HomeController>(),
-                builder: (btncontroller) {
-                  if (btncontroller.buttons != null) {
-                    return SizedBox(
-                      height: 40,
-                      child: Wrap(
+            /// Commom Buttons
+            Align(
+              alignment: Alignment.bottomLeft,
+              child: GetBuilder<HomeController>(
+                  init: Get.find<HomeController>(),
+                  builder: (btncontroller) {
+                    if (btncontroller.buttons != null) {
+                      return Wrap(
                         spacing: 5,
                         runSpacing: 15,
-                        alignment: WrapAlignment.start,
-                        // alignment: MainAxisAlignment.start,
-                        // mainAxisSize: MainAxisSize.min,
+                        alignment: WrapAlignment.center,
                         children: [
-                          for (var btn in btncontroller.buttons!)
+                          for (var btn in btncontroller.buttons!) ...{
                             FormButtonWrapper(
                               btnText: btn["name"],
-                              callback: btn["name"] == "Save" ? null : () => controller.formHandler(btn['name'].toString()),
-                            ),
+                              callback: ((Utils.btnAccessHandler(btn['name'], controller.formPermissions!) == null))
+                                  ? null
+                                  : () => controller.formHandler(btn['name']),
+                            )
+                          },
                         ],
-                      ),
-                    );
-                  }
-                  return Container();
-                }),
+                      );
+                    }
+                    return Container();
+                  }),
+            ),
           ],
         ),
       ),
