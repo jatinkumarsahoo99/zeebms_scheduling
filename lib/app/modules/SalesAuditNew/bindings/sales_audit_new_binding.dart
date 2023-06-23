@@ -1,6 +1,6 @@
 import 'package:get/get.dart';
 
-import '../controllers/sales_audit_new_controller.dart';
+import '../controllers/SalesAuditNewController.dart';
 
 class SalesAuditNewBinding extends Bindings {
   @override
