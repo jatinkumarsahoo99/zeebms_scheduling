@@ -3,7 +3,8 @@ import 'dart:html' as html;
 import 'dart:html';
 
 import 'package:bms_scheduling/app/providers/ExportData.dart';
-import 'package:download/download.dart';
+
+// import 'package:download/download.dart';
 import 'package:bms_scheduling/widgets/LoadingDialog.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
@@ -17,6 +18,7 @@ import '../../../providers/ApiFactory.dart';
 import '../../../providers/Utils.dart';
 import '../ColorDataModel.dart';
 import '../CommercialModel.dart';
+import '../ExportFpcTimeModel.dart';
 import '../InsertSearchModel.dart';
 import '../TransmissionLogModel.dart';
 import 'dart:html' as html;
@@ -49,6 +51,9 @@ class TransmissionLogController extends GetxController {
   DropDownValue? selectChannelCopyLog;
   DropDownValue? selectEvent;
   DropDownValue? selectTimeForCommercial;
+  DropDownValue? selectExportFpcFrom;
+  DropDownValue? selectExportFpcTo;
+
   PlutoGridStateManager? gridStateManager;
   PlutoGridStateManager? gridStateManagerCommercial;
   PlutoGridStateManager? dgvCommercialsStateManager;
@@ -67,6 +72,7 @@ class TransmissionLogController extends GetxController {
   var isStandby = RxBool(false);
   var isMy = RxBool(true);
   var isAllByChange = RxBool(false);
+  var isPartialLog = RxBool(false);
   var isInsertAfter = RxBool(false);
   var isAllDayReplace = RxBool(true);
   var isRowFilter = RxBool(false);
@@ -123,6 +129,10 @@ class TransmissionLogController extends GetxController {
   CommercialModel? commercailModel;
 
   List<int> intCurrentRowIndex = List<int>.filled(4, 0);
+
+  RxnString selectExportType = RxnString("Excel");
+
+  ExportFPCTimeModel? exportFPCTime;
 
   @override
   void onInit() {
@@ -259,6 +269,29 @@ class TransmissionLogController extends GetxController {
             tsListData = map["restscalc"]["lstOutPutTblTs"];
             getInitTsCall();
             // update(['tsList']);
+          } else {
+            Snack.callError(map.toString());
+          }
+        });
+  }
+
+  void btnExportClick({Function? fun}) {
+    LoadingDialog.call();
+    Get.find<ConnectorControl>().GETMETHODCALL(
+        api: ApiFactory.TRANSMISSION_LOG_EXPORT_FPC_TIME(
+            selectLocation?.key ?? '',
+            selectChannel?.key ?? '',
+            selectedDate.text,
+            isStandby.value),
+        fun: (map) {
+          Get.back();
+          // print("jsonData"+map.toString());
+          if (map is Map &&
+              map.containsKey("resFPCTime")) {
+            exportFPCTime = ExportFPCTimeModel.fromJson(map as Map<String,dynamic>);
+            if(fun!=null) {
+              fun();
+            }
           } else {
             Snack.callError(map.toString());
           }
@@ -2154,21 +2187,22 @@ class TransmissionLogController extends GetxController {
   }
 
   void _download() async {
-    String data = await jsonEncode(gridStateManager?.rows.map((e) => e.toJson()).toList());
+    String data = await jsonEncode(
+        gridStateManager?.rows.map((e) => e.toJson()).toList());
     // final stream = await Stream.fromIterable(data!.codeUnits);
     // download(stream, 'hello.txt');
     // final FileSystemAccessHandle? handle = await html.window.();
     // if (handle != null) {
-      // Permission granted, continue with folder creation
+    // Permission granted, continue with folder creation
     // } else {
-      // Permission denied, handle accordingly
+    // Permission denied, handle accordingly
     // }
 
-    ExportData().exportFilefromString(data,"lib/hello.txt");
+    ExportData().exportFilefromString(data, "lib/hello.txt");
   }
 
   void selectFolder() async {
-   /* final html.InputElement uploadInput = InputElement();
+    /* final html.InputElement uploadInput = InputElement();
     uploadInput.type = 'file';
     uploadInput.multiple = true;
     uploadInput.directory = true;
@@ -2185,14 +2219,13 @@ class TransmissionLogController extends GetxController {
     }*/
   }
 
-
   void btnSave_Click(sender, e) async {
     int replaceCount = 0;
     // String strMessageLogFileName = "${Directory.current.path}\\MessageLogFiles\\${cboLocations.text}_${cboChannels.text}_${DateFormat('yyyyMMdd').format(txtDate.value)}.txt";
     try {
       // tblLog.MyDataGridRowFilter(true, false);
       colorGrid(false);
-   /*   DataTable dt = tblLog.DataSource;
+      /*   DataTable dt = tblLog.DataSource;
 
       tblLog.currentCell = null;
       if (!CheckPromoTags()) {

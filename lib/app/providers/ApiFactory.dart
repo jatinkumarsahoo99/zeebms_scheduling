@@ -524,6 +524,10 @@ class ApiFactory {
   static String TRANSMISSION_LOG_POST_TS() =>
       "$BASE_URL/api/Transmissionlog/PostTsCalc";
 
+
+  static String TRANSMISSION_LOG_EXPORT_FPC_TIME(String loc,String chnl,String txtDt,bool standBy) =>
+      "$BASE_URL/api/Transmissionlog/GetExportClick?locationcode=$loc&channelcode=$chnl&txtDate=$txtDt&chkStandBy=$standBy";
+
   static String TRANSMISSION_LOG_LAST_SAVEDLOG(
     String locId,
     String chnlId,
