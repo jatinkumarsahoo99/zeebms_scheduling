@@ -393,6 +393,10 @@ class ApiFactory {
 
   static String TRANSMISSION_LOG_POST_TS() => "$BASE_URL/api/Transmissionlog/PostTsCalc";
 
+
+  static String TRANSMISSION_LOG_EXPORT_FPC_TIME(String loc,String chnl,String txtDt,bool standBy) =>
+      "$BASE_URL/api/Transmissionlog/GetExportClick?locationcode=$loc&channelcode=$chnl&txtDate=$txtDt&chkStandBy=$standBy";
+
   static String TRANSMISSION_LOG_LAST_SAVEDLOG(
     String locId,
     String chnlId,
@@ -413,6 +417,10 @@ class ApiFactory {
       "$BASE_URL/api/Transmissionlog/GettxtInsProgpisodeNoLeave?programcode=$progCode&EpisodeNo=$epNo";
   static String TRANSMISSION_LOG_SEARCH_SEGMENT(String progCode, String epNo, String tapeCode, bool defaultSeg) =>
       "$BASE_URL/api/Transmissionlog/GetinsProgSearchClick?programcode=$progCode&episodenumber=$epNo&tapecode=$tapeCode&Defaultsegments=$defaultSeg";
+
+  static String TRANSMISSION_LOG_CHECK_PROMOTAGS(
+          String loc, String chnl, String telecaseDt, bool standBy) =>
+      "$BASE_URL/api/Transmissionlog/GetCheckPromoTags?locationcode=$loc&channelcode=$chnl&telecastdate=$telecaseDt&standbyLog=$standBy";
 
   static String TRANSMISSION_LOG_MARK_AS_ERROR(
     String locId,
