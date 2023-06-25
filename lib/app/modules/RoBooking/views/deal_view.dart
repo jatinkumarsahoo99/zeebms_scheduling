@@ -47,10 +47,10 @@ class DealView extends GetView<RoBookingController> {
                         },
                       )
                     : (gridcontroller.dealNoLeaveData != null &&
-                            gridcontroller.bookingNoLeaveData!.lstdgvDealDetails != null &&
-                            gridcontroller.bookingNoLeaveData!.lstdgvDealDetails!.isNotEmpty
+                            gridcontroller.dealNoLeaveData!.lstdgvDealDetails != null &&
+                            gridcontroller.dealNoLeaveData!.lstdgvDealDetails!.isNotEmpty
                         ? DataGridShowOnlyKeys(
-                            mapData: gridcontroller.bookingNoLeaveData!.lstdgvDealDetails!.map((e) => e.toJson()).toList(),
+                            mapData: gridcontroller.dealNoLeaveData!.lstdgvDealDetails!.map((e) => e.toJson()).toList(),
                             onload: (load) {
                               gridcontroller.dealViewGrid = load.stateManager;
                             },

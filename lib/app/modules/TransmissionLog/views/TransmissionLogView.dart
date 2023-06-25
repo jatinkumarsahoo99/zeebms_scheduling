@@ -111,7 +111,7 @@ class TransmissionLogView extends StatelessWidget {
                             ),
                           ),
                           SizedBox(
-                            width: Get.width * 0.077,
+                            width: Get.width * 0.079,
                             child: Row(
                               children: [
                                 SizedBox(width: 5),

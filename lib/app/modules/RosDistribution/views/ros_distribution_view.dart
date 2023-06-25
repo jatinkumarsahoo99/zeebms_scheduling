@@ -8,6 +8,9 @@ import '../../../../widgets/FormButton.dart';
 import '../../../../widgets/PlutoGrid/src/pluto_grid.dart';
 import '../../../../widgets/dropdown.dart';
 import '../../../controller/HomeController.dart';
+import '../../../controller/MainController.dart';
+import '../../../data/PermissionModel.dart';
+import '../../../providers/Utils.dart';
 import '../controllers/ros_distribution_controller.dart';
 
 class RosDistributionView extends GetView<RosDistributionController> {
@@ -113,11 +116,9 @@ class RosDistributionView extends GetView<RosDistributionController> {
                 id: "buttons",
                 init: Get.find<HomeController>(),
                 builder: (btncontroller) {
-                  /* PermissionModel formPermissions = Get.find<MainController>()
-                      .permissionList!
-                      .lastWhere((element) {
-                    return element.appFormName == "frmSegmentsDetails";
-                  });*/
+                  PermissionModel formPermissions = Get.find<MainController>().permissionList!.lastWhere((element) {
+                    return element.appFormName == "FrmRosDistribution";
+                  });
 
                   return Card(
                     margin: const EdgeInsets.fromLTRB(4, 4, 4, 0),
@@ -130,45 +131,18 @@ class RosDistributionView extends GetView<RosDistributionController> {
                       padding: EdgeInsets.all(Get.width * 0.005),
                       child: Obx(
                         () => Wrap(
-                          // buttonHeight: 20,
                           alignment: WrapAlignment.start,
                           spacing: 10,
                           // pa
                           children: [
-                            for (var btn in btncontroller.buttons!)
-                              btn["name"] == "Save"
-                                  ? FormButtonWrapper(
-                                      btnText: btn["name"],
-
-                                      // isEnabled: btn['isDisabled'],
-                                      callback: () async {
-                                        String email = Uri.encodeComponent("mail@fluttercampus.com");
-                                        String subject = Uri.encodeComponent("Hello Flutter");
-                                        String body = Uri.encodeComponent("Hi! I'm Flutter Developer");
-                                        print(subject); //output: Hello%20Flutter
-                                        Uri mail = Uri.parse("mailto:$email?subject=$subject&body=$body");
-                                        if (await launchUrl(mail)) {
-                                          //email app opened
-                                        } else {
-                                          //email app is not opened
-                                        }
-                                      },
-                                    )
-                                  : btn["name"] == "Clear"
-                                      ? FormButtonWrapper(
-                                          btnText: btn["name"],
-
-                                          // isEnabled: btn['isDisabled'],
-                                          callback: () {
-                                            controller.clearAllPage();
-                                            // btncontroller.clearPage1();
-                                          },
-                                        )
-                                      : FormButtonWrapper(
-                                          btnText: btn["name"],
-                                          // isEnabled: btn['isDisabled'],
-                                          callback: null,
-                                        ),
+                            for (var btn in btncontroller.buttons!) ...{
+                              FormButtonWrapper(
+                                btnText: btn["name"],
+                                callback: ((Utils.btnAccessHandler(btn['name'], controller.formPermissions!) == null))
+                                    ? null
+                                    : () => controller.bottomFormHandler(btn['name']),
+                              )
+                            },
                             for (var checkBox in controller.checkBoxes)
                               InkWell(
                                 onTap: () {

@@ -5,29 +5,15 @@ import '../modules/AuditStatus/bindings/audit_status_binding.dart';
 import '../modules/CommercialMaster/bindings/commercial_master_binding.dart';
 import '../modules/CommercialMaster/views/commercial_master_view.dart';
 import '../modules/EventSecondary/bindings/event_secondary_binding.dart';
-import '../modules/EventSecondary/views/event_secondary_view.dart';
 import '../modules/FinalAuditReportAfterTelecast/bindings/final_audit_report_after_telecast_binding.dart';
 import '../modules/FinalAuditReportBeforeLog/bindings/final_audit_report_before_log_binding.dart';
 import '../modules/FpcMismatch/bindings/fpc_mismatch_binding.dart';
-import '../modules/FpcMismatch/bindings/fpc_mismatch_binding.dart';
-import '../modules/FpcMismatch/views/FpcMismatchView.dart';
 import '../modules/ImportDigitextRunOrder/bindings/import_digitext_run_order_binding.dart';
-import '../modules/ImportDigitextRunOrder/bindings/import_digitext_run_order_binding.dart';
-import '../modules/ImportDigitextRunOrder/views/import_digitext_run_order_view.dart';
 import '../modules/LogAdditions/bindings/log_additions_binding.dart';
-import '../modules/LogAdditions/views/LogAdditionsView.dart';
 import '../modules/MamWorkOrders/bindings/mam_work_orders_binding.dart';
-import '../modules/MamWorkOrders/bindings/mam_work_orders_binding.dart';
-import '../modules/MamWorkOrders/views/mam_work_orders_view.dart';
 import '../modules/PromoMaster/bindings/promo_master_binding.dart';
-import '../modules/PromoMaster/controllers/promo_master_controller.dart';
-import '../modules/PromoMaster/views/promo_master_view.dart';
 import '../modules/RoBooking/bindings/ro_booking_binding.dart';
-import '../modules/RoBooking/bindings/ro_booking_binding.dart';
-import '../modules/RoBooking/views/ro_booking_view.dart';
 import '../modules/RoCancellation/bindings/ro_cancellation_binding.dart';
-import '../modules/RoCancellation/bindings/ro_cancellation_binding.dart';
-import '../modules/RoCancellation/views/ro_cancellation_view.dart';
 import '../modules/RoReschedule/bindings/ro_reschedule_binding.dart';
 import '../modules/RosDistribution/bindings/ros_distribution_binding.dart';
 import '../modules/SalesAuditExtraSpotsReport/bindings/sales_audit_extra_spots_report_binding.dart';
@@ -38,6 +24,7 @@ import '../modules/SlideMaster/bindings/slide_master_binding.dart';
 import '../modules/SpotPriority/bindings/spot_priority_binding.dart';
 import '../modules/StillMaster/bindings/still_master_binding.dart';
 import '../modules/TransmissionLog/bindings/transmission_log_binding.dart';
+
 import '../modules/commercial/bindings/commercial_binding.dart';
 import '../modules/filler/bindings/filler_binding.dart';
 import '../modules/home/bindings/home_binding.dart';
@@ -52,7 +39,7 @@ class AppPages {
   AppPages._();
 
   // static const INITIAL = Routes.ROS_DISTRIBUTION +
-  static const INITIAL = Routes.TRANSMISSION_LOG +
+  static const INITIAL = Routes.SALES_AUDIT_NOT_TELECAST_REPORT +
       "?personalNo=kW5Bkf17%2FS5YF7ML28FmVg%3D%3D&loginCode=1BWIoBKeDl7qDSAAhxvXsQ%3D%3D&formName=OI8ukDpPPVN0I2BEXu2h4nuFu%2BZm1ZRpvP8NL4XCXzQ%3D";
   static final routes = [
     GetPage(

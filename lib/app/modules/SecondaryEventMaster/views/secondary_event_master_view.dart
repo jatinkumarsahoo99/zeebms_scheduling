@@ -9,6 +9,7 @@ import '../../../../widgets/dropdown.dart';
 import '../../../../widgets/input_fields.dart';
 import '../../../../widgets/radio_row.dart';
 import '../../../controller/HomeController.dart';
+import '../../../providers/Utils.dart';
 import '../controllers/secondary_event_master_controller.dart';
 
 class SecondaryEventMasterView extends GetView<SecondaryEventMasterController> {
@@ -166,11 +167,19 @@ class SecondaryEventMasterView extends GetView<SecondaryEventMasterController> {
                               // alignment: MainAxisAlignment.start,
                               // mainAxisSize: MainAxisSize.min,
                               children: [
-                                for (var btn in btncontroller.buttons!)
+                                for (var btn in btncontroller.buttons!) ...{
                                   FormButtonWrapper(
                                     btnText: btn["name"],
-                                    callback: () => controller.formHandler(btn['name'].toString()),
-                                  ),
+                                    callback: ((Utils.btnAccessHandler(btn['name'], controller.formPermissions!) == null))
+                                        ? null
+                                        : () => controller.formHandler(btn['name']),
+                                  )
+                                },
+                                // for (var btn in btncontroller.buttons!)
+                                //   FormButtonWrapper(
+                                //     btnText: btn["name"],
+                                //     callback: () => controller.formHandler(btn['name'].toString()),
+                                //   ),
                               ],
                             ),
                           );
