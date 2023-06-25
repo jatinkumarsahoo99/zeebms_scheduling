@@ -10,7 +10,6 @@ import '../../../../widgets/FormButton.dart';
 import '../../../../widgets/WarningBox.dart';
 import '../../../../widgets/dropdown.dart';
 import '../../../../widgets/gridFromMap.dart';
-import '../../../../widgets/gridFromMap1.dart';
 import '../../../../widgets/gridFromMapTransmissionLog.dart';
 import '../../../../widgets/input_fields.dart';
 import '../../../../widgets/radio_column.dart';
@@ -23,8 +22,8 @@ import '../ColorDataModel.dart';
 import '../CommercialModel.dart';
 import '../controllers/TransmissionLogController.dart';
 
-class TransmissionLogView extends GetView<TransmissionLogController> {
-  // TransmissionLogController controller = Get.put(TransmissionLogController());
+class TransmissionLogView extends StatelessWidget {
+  TransmissionLogController controller = Get.put(TransmissionLogController());
   var rebuildKey = GlobalKey<ScaffoldState>();
 
   @override
@@ -576,6 +575,8 @@ class TransmissionLogView extends GetView<TransmissionLogController> {
     );
   }
 
+
+
   formHandler(btn) {
     switch (btn) {
       case "Commercials":
@@ -585,6 +586,12 @@ class TransmissionLogView extends GetView<TransmissionLogController> {
         break;
       case "Next Time":
         controller.selectNextProgramClockHour();
+        break;
+      case "Load":
+        controller.pickFile();
+        break;
+      case "Clear":
+        controller.btnClear_Click();
         break;
       case "Updated":
         controller.getUpdateClick();
@@ -1610,8 +1617,8 @@ class TransmissionLogView extends GetView<TransmissionLogController> {
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: [
                         DropDownField.formDropDown1WidthMap(
-                          controller.exportFPCTime?.resFPCTime
-                                  ?.lstFPCFromTime ??
+                          controller
+                                  .exportFPCTime?.resFPCTime?.lstFPCFromTime ??
                               [],
                           (value) {
                             controller.selectExportFpcFrom = value;
@@ -1627,8 +1634,7 @@ class TransmissionLogView extends GetView<TransmissionLogController> {
 
                         /// channel
                         DropDownField.formDropDown1WidthMap(
-                          controller
-                                  .exportFPCTime?.resFPCTime?.lstFPCToTime ??
+                          controller.exportFPCTime?.resFPCTime?.lstFPCToTime ??
                               [],
                           (value) {
                             controller.selectExportFpcTo = value;

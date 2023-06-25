@@ -557,6 +557,10 @@ class ApiFactory {
           String progCode, String epNo, String tapeCode, bool defaultSeg) =>
       "$BASE_URL/api/Transmissionlog/GetinsProgSearchClick?programcode=$progCode&episodenumber=$epNo&tapecode=$tapeCode&Defaultsegments=$defaultSeg";
 
+  static String TRANSMISSION_LOG_CHECK_PROMOTAGS(
+          String loc, String chnl, String telecaseDt, bool standBy) =>
+      "$BASE_URL/api/Transmissionlog/GetCheckPromoTags?locationcode=$loc&channelcode=$chnl&telecastdate=$telecaseDt&standbyLog=$standBy";
+
   static String TRANSMISSION_LOG_MARK_AS_ERROR(
       String locId,
       String chnlId,
