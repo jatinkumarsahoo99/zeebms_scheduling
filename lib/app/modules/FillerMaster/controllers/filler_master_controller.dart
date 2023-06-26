@@ -250,7 +250,7 @@ class FillerMasterController extends GetxController {
         fun: (resp) {
           closeDialogIfOpen();
           if (resp != null && resp is Map<String, dynamic> && resp["onLeaveLocation"] != null) {
-            selectedDropDowns[19] = val;
+            selectedDropDowns[19] = null;
             channelList.clear();
             channelList.addAll((resp['onLeaveLocation'] as List<dynamic>)
                 .map((e) => DropDownValue(
@@ -291,6 +291,8 @@ class FillerMasterController extends GetxController {
             if (tempLocation != null) {
               selectedDropDowns[0] = tempLocation;
             }
+
+            /// CHANNELS
             var tempChannel = channelList.firstWhereOrNull((element) => element.key == tempModel2.channelcode);
             if (tempChannel != null) {
               selectedDropDowns[19] = tempChannel;
@@ -310,6 +312,9 @@ class FillerMasterController extends GetxController {
             }
 
             /// BANNER CODE
+            if (tempModel2.bannerCode != null && tempModel2.bannerName != null) {
+              selectedDropDowns[15] = DropDownValue(key: tempModel2.bannerCode, value: tempModel2.bannerName);
+            }
 
             /// TX-CAPTION
             if (tempModel2.fillerCaption != null) {
@@ -483,8 +488,14 @@ class FillerMasterController extends GetxController {
 
   saveRecord() {}
 
+  clearBottomAnnotation() {
+    tcInCtr.text = "00:00:00:00";
+    tcOutCtr.text = "00:00:00:00";
+  }
+
   void handleAddTap() {
     if (selectedDropDowns[18] == null) {
+      LoadingDialog.showErrorDialog("Please enter event name.");
       return;
     }
     rightDataTable.add(FillerMasterAnnotationModel(
@@ -493,9 +504,8 @@ class FillerMasterController extends GetxController {
       tCIn: tcInCtr.text,
       tCOut: tcOutCtr.text,
     ));
+    clearBottomAnnotation();
   }
-
-  void loadAnnotationDataTable() {}
 
   Future<void> handleCopyTap() async {
     await retrievRecord(

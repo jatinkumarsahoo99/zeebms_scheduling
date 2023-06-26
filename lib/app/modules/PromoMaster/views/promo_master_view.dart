@@ -42,7 +42,7 @@ class PromoMasterView extends GetView<PromoMasterController> {
                                 children: [
                                   InputFields.formField1(
                                     hintTxt: "Caption",
-                                    controller: TextEditingController(),
+                                    controller: controller.captionCtr,
                                     width: 0.17,
                                     autoFocus: true,
                                   ),
@@ -53,70 +53,154 @@ class PromoMasterView extends GetView<PromoMasterController> {
                                     "Category",
                                     .17,
                                   ),
+                                  Obx(() {
+                                    return InputFields.formField1(
+                                      hintTxt: "TX Caption",
+                                      controller: controller.txCaptionCtr,
+                                      width: 0.17,
+                                      prefixText: controller.txCaptionPreFix.value,
+                                    );
+                                  }),
+                                ],
+                              ),
+                              SizedBox(height: 14),
+                              Row(
+                                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                children: [
+                                  InputFields.formField1(
+                                    hintTxt: "Tape ID",
+                                    controller: controller.tapeIDCtr,
+                                    width: 0.17,
+                                    focusNode: controller.tapeIDFN,
+                                  ),
                                   // SizedBox(width: 20),
+                                  SizedBox(
+                                    width: context.width * .17,
+                                    child: Obx(
+                                      () {
+                                        return NumericStepButton(
+                                          onChanged: (val) {},
+                                          hint: "Seg #",
+                                          isEnable: false,
+                                          minValue: controller.segHash.value,
+                                          maxValue: 100000,
+                                        );
+                                      },
+                                    ),
+                                  ),
+                                  // SizedBox(width: 20),
+                                  InputFields.formField1(
+                                    hintTxt: "TX No",
+                                    controller: controller.txNoCtr,
+                                    focusNode: controller.txNoFN,
+                                    width: 0.17,
+                                  ),
+                                ],
+                              ),
+                              SizedBox(height: 14),
+                              Row(
+                                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                children: [
                                   DropDownField.formDropDownSearchAPI2(
                                     GlobalKey(),
                                     context,
                                     width: context.width * 0.17,
                                     onchanged: (val) {},
-                                    title: 'TX Caption',
+                                    title: 'Company',
                                     url: '',
                                   ),
-                                ],
-                              ),
-                              SizedBox(height: 14),
-                              Row(
-                                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                                children: [
-                                  InputFields.formField1(hintTxt: "Tape ID", controller: TextEditingController(), width: 0.17),
-                                  // SizedBox(width: 20),
-                                  SizedBox(
-                                    width: context.width * .17,
-                                    child: NumericStepButton(
-                                      onChanged: (val) {},
-                                      hint: "Seg #",
-                                    ),
+                                  DropDownField.formDropDown1WidthMap(
+                                    [],
+                                    (a) {},
+                                    "Location",
+                                    .17,
+                                    autoFocus: true,
+                                    // selected: controller.selectedDropDowns[0],
+                                    // inkWellFocusNode: controller.locationFN,
                                   ),
                                   // SizedBox(width: 20),
-                                  InputFields.formField1(hintTxt: "TX No", controller: TextEditingController(), width: 0.17),
+                                  DropDownField.formDropDown1WidthMap(
+                                    [],
+                                    (a) {},
+                                    "Channel",
+                                    .17,
+                                    autoFocus: true,
+                                    // selected: controller.selectedDropDowns[0],
+                                    // inkWellFocusNode: controller.locationFN,
+                                  ),
                                 ],
                               ),
                               SizedBox(height: 14),
                               Row(
                                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                                 children: [
-                                  DropDownField.formDropDownSearchAPI2(GlobalKey(), context,
-                                      width: context.width * 0.17, onchanged: (val) {}, title: 'Company', url: ''),
+                                  DropDownField.formDropDown1WidthMap(
+                                    [],
+                                    (a) {},
+                                    "Promo Type",
+                                    .17,
+                                    autoFocus: true,
+                                    // selected: controller.selectedDropDowns[0],
+                                    // inkWellFocusNode: controller.locationFN,
+                                  ),
                                   // SizedBox(width: 20),
-                                  InputFields.formField1(hintTxt: "Location", controller: TextEditingController(), width: 0.17),
-                                  // SizedBox(width: 20),
-                                  InputFields.formField1(hintTxt: "Channel", controller: TextEditingController(), width: 0.17),
+                                  InputFields.formField1(
+                                    hintTxt: "Blan Tape ID",
+                                    controller: controller.blankTapeIDCtr,
+                                    width: 0.17,
+                                  ),
+                                ],
+                              ),
+                              SizedBox(height: 14),
+                              Align(
+                                alignment: Alignment.topRight,
+                                child: DropDownField.formDropDown1WidthMap(
+                                  [],
+                                  (a) {},
+                                  "",
+                                  .17,
+                                  autoFocus: true,
+                                  // selected: controller.selectedDropDowns[0],
+                                  // inkWellFocusNode: controller.locationFN,
+                                ),
+                              ),
+                              SizedBox(height: 14),
+                              Row(
+                                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                crossAxisAlignment: CrossAxisAlignment.end,
+                                children: [
+                                  DropDownField.formDropDownSearchAPI2(
+                                    GlobalKey(),
+                                    context,
+                                    width: context.width * 0.5,
+                                    onchanged: (val) {},
+                                    title: 'Program',
+                                    url: '',
+                                  ),
+                                  FormButton(
+                                    btnText: "...",
+                                    callback: () {},
+                                    showIcon: false,
+                                  )
                                 ],
                               ),
                               SizedBox(height: 14),
                               Row(
                                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                                 children: [
-                                  InputFields.formField1(hintTxt: "Promo Type", controller: TextEditingController(), width: 0.17),
-                                  // SizedBox(width: 20),
-                                  InputFields.formField1(hintTxt: "Blan Tape ID", controller: TextEditingController(), width: 0.17),
-                                  InputFields.formField1(hintTxt: "", controller: TextEditingController(), width: 0.17),
-                                ],
-                              ),
-                              SizedBox(height: 14),
-                              Row(
-                                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                                children: [
-                                  DropDownField.formDropDownSearchAPI2(GlobalKey(), context,
-                                      width: context.width * 0.17, onchanged: (val) {}, title: 'Program', url: ''),
                                   DropDownField.formDropDown1WidthMap(
                                     [],
                                     (p0) => null,
                                     "Tag Detail",
-                                    .17,
+                                    .27,
                                   ),
                                   // SizedBox(width: 20),
-                                  DropDownField.formDropDown1WidthMap([], (p0) => null, "Org/Repeat", .17),
+                                  DropDownField.formDropDown1WidthMap(
+                                    [],
+                                    (p0) => null,
+                                    "Org/Repeat",
+                                    .27,
+                                  ),
                                   // SizedBox(width: 20),
                                 ],
                               ),
@@ -128,16 +212,37 @@ class PromoMasterView extends GetView<PromoMasterController> {
                                   "Billing",
                                   .27,
                                 ),
-                                DropDownField.formDropDown1WidthMap([], (p0) => null, "Tape Type", .27),
+                                DropDownField.formDropDown1WidthMap(
+                                  [],
+                                  (p0) => null,
+                                  "Tape Type",
+                                  .27,
+                                ),
                               ]),
                               SizedBox(height: 14),
                               Row(
                                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                                 children: [
-                                  TimeWithThreeTextField(title: "SOM", mainTextController: TextEditingController(), widthRation: 0.17, isTime: false),
-                                  TimeWithThreeTextField(title: "EOM", mainTextController: TextEditingController(), widthRation: 0.17, isTime: false),
-                                  TimeWithThreeTextField(
-                                      title: "Duration", mainTextController: TextEditingController(), widthRation: 0.17, isTime: false),
+                                  InputFields.formFieldNumberMask(
+                                    controller: controller.somCtr,
+                                    hintTxt: 'SOM',
+                                    widthRatio: .17,
+                                    paddingLeft: 0,
+                                    // textFieldFN: controller.eomFN,
+                                  ),
+                                  InputFields.formFieldNumberMask(
+                                    controller: controller.eomCtr,
+                                    hintTxt: 'EOM',
+                                    widthRatio: .17,
+                                    paddingLeft: 0,
+                                    // textFieldFN: controller.eomFN,
+                                  ),
+                                  InputFields.formField1(
+                                    controller: controller.durationCtr,
+                                    hintTxt: 'Duration',
+                                    width: .17,
+                                    isEnable: false,
+                                  ),
                                 ],
                               ),
                               SizedBox(height: 4),
@@ -146,12 +251,12 @@ class PromoMasterView extends GetView<PromoMasterController> {
                                 children: [
                                   DateWithThreeTextField(
                                     title: "Start Date",
-                                    mainTextController: TextEditingController(),
+                                    mainTextController: controller.startDateCtr,
                                     widthRation: 0.27,
                                   ),
                                   DateWithThreeTextField(
                                     title: "End Date",
-                                    mainTextController: TextEditingController(),
+                                    mainTextController: controller.endDateCtr,
                                     widthRation: 0.27,
                                   ),
                                 ],
@@ -170,89 +275,6 @@ class PromoMasterView extends GetView<PromoMasterController> {
                           crossAxisAlignment: CrossAxisAlignment.start,
                           mainAxisSize: MainAxisSize.max,
                           children: [
-                            //   Expanded(
-                            //     child: Container(
-                            //       width: double.infinity,
-                            //       decoration: BoxDecoration(border: Border.all(color: Colors.grey)),
-                            //       padding: const EdgeInsets.all(16.0),
-                            //       child: Column(
-                            //         children: [
-                            //           Row(
-                            //             mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                            //             children: [
-                            //               DropDownField.formDropDown1WidthMap([], (p0) => null, "Source", .17),
-                            //               // SizedBox(width: 20),
-                            //               DropDownField.formDropDown1WidthMap([], (p0) => null, "ID No", .17),
-                            //             ],
-                            //           ),
-                            //           SizedBox(height: 14),
-                            //           Row(
-                            //             mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                            //             children: [
-                            //               DropDownField.formDropDown1WidthMap(
-                            //                 [],
-                            //                 (p0) => null,
-                            //                 "Start Date",
-                            //                 .17,
-                            //               ),
-                            //               // SizedBox(width: 20),
-                            //               DropDownField.formDropDown1WidthMap([], (p0) => null, "End Date", .17),
-                            //             ],
-                            //           ),
-                            //           SizedBox(height: 14),
-                            //           Expanded(
-                            //             child: Column(
-                            //               crossAxisAlignment: CrossAxisAlignment.start,
-                            //               children: [
-                            //                 Text(
-                            //                   "Synopsis",
-                            //                   style: TextStyle(
-                            //                     fontSize: SizeDefine.labelSize1,
-                            //                     color: Colors.black,
-                            //                     fontWeight: FontWeight.w500,
-                            //                   ),
-                            //                 ),
-                            //                 const SizedBox(height: 5),
-                            //                 TextFormField(
-                            //                   maxLines: 110 ~/ 20,
-                            //                   decoration: InputDecoration(
-                            //                     filled: true,
-                            //                     fillColor: Colors.white,
-                            //                     border: OutlineInputBorder(
-                            //                       borderRadius: BorderRadius.circular(0),
-                            //                       borderSide: BorderSide(
-                            //                         color: Colors.deepPurpleAccent,
-                            //                       ),
-                            //                     ),
-                            //                     enabledBorder: OutlineInputBorder(
-                            //                       borderRadius: BorderRadius.circular(0),
-                            //                       borderSide: BorderSide(
-                            //                         color: Colors.deepPurpleAccent,
-                            //                       ),
-                            //                     ),
-                            //                     focusedBorder: OutlineInputBorder(
-                            //                       borderRadius: BorderRadius.circular(0),
-                            //                       borderSide: BorderSide(
-                            //                         color: Colors.deepPurpleAccent,
-                            //                       ),
-                            //                     ),
-                            //                     errorBorder: OutlineInputBorder(
-                            //                       borderRadius: BorderRadius.circular(0),
-                            //                       borderSide: BorderSide(
-                            //                         color: Colors.deepPurpleAccent,
-                            //                       ),
-                            //                     ),
-                            //                   ),
-                            //                 ),
-                            //               ],
-                            //             ),
-                            //           ),
-                            //           SizedBox(height: 14),
-                            //         ],
-                            //       ),
-                            //     ),
-                            //   ),
-                            //   SizedBox(height: 14),
                             Text("Annotation Details"),
                             SizedBox(height: 5),
                             Expanded(
@@ -274,17 +296,29 @@ class PromoMasterView extends GetView<PromoMasterController> {
                                     Row(
                                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                                       children: [
-                                        TimeWithThreeTextField(
-                                            title: "TC In", mainTextController: TextEditingController(), widthRation: 0.11, isTime: false),
+                                        InputFields.formFieldNumberMask(
+                                          controller: controller.tcInCtr,
+                                          hintTxt: 'TC In',
+                                          widthRatio: .17,
+                                          paddingLeft: 0,
+                                          // textFieldFN: controller.eomFN,
+                                        ),
                                         Spacer(),
-                                        TimeWithThreeTextField(
-                                            title: "TC Out", mainTextController: TextEditingController(), widthRation: 0.11, isTime: false),
+                                        InputFields.formFieldNumberMask(
+                                          controller: controller.tcOutCtr,
+                                          hintTxt: 'TC Out',
+                                          widthRatio: .17,
+                                          paddingLeft: 0,
+                                          // textFieldFN: controller.eomFN,
+                                        ),
+                                        // TimeWithThreeTextField(
+                                        //     title: "TC Out", mainTextController: TextEditingController(), widthRation: 0.11, isTime: false),
                                       ],
                                     ),
                                     SizedBox(height: 14),
                                     Row(
                                       children: [
-                                        FormButton(btnText: "Add", callback: () {}),
+                                        FormButton(btnText: "Add", callback: controller.handleAddTapFromAnnotations),
                                         Spacer(),
                                         Text(
                                           'Press "DEL" to delete Annotation Detail',
@@ -308,11 +342,11 @@ class PromoMasterView extends GetView<PromoMasterController> {
                                     Row(
                                       crossAxisAlignment: CrossAxisAlignment.end,
                                       children: [
-                                        InputFields.formField1(hintTxt: "Copy", controller: TextEditingController(), width: 0.11),
+                                        InputFields.formField1(hintTxt: "Copy", controller: controller.copyCtr, width: 0.11),
                                         Spacer(),
-                                        InputFields.formField1(hintTxt: "Seg No", controller: TextEditingController(), width: 0.11),
+                                        InputFields.formField1(hintTxt: "Seg No", controller: controller.segIDCtr, width: 0.11),
                                         SizedBox(width: 20),
-                                        FormButton(btnText: "Copy", callback: () {}),
+                                        FormButton(btnText: "Copy", callback: controller.handleCopyTap),
                                       ],
                                     )
                                   ],

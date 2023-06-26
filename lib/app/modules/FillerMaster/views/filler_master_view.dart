@@ -138,7 +138,6 @@ class FillerMasterView extends GetView<FillerMasterController> {
                                           hintTxt: 'SOM',
                                           widthRatio: .17,
                                           paddingLeft: 0,
-                                          // textFieldFN: controller.eomFN,
                                         ),
                                         InputFields.formFieldNumberMask(
                                           controller: controller.eomCtr,
@@ -424,7 +423,11 @@ class FillerMasterView extends GetView<FillerMasterController> {
                                             onchanged: (v) => controller.selectedDropDowns[18] = v,
                                             title: 'Event',
                                             selectedValue: controller.selectedDropDowns[18],
-                                            url: '',
+                                            url: ApiFactory.FILLER_MASTER_GET_EVENT,
+                                            customInData: "onLeaveEvent",
+                                            parseKeyForKey: "eventid",
+                                            parseKeyForValue: "eventname",
+                                            miniumSearchLength: 1,
                                           ),
                                           SizedBox(height: 14),
                                           Row(

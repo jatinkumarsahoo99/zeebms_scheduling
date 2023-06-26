@@ -8,17 +8,17 @@ class FillerMasterAnnotationModel {
 
   FillerMasterAnnotationModel.fromJson(Map<String, dynamic> json) {
     eventID = json['EventID'];
-    eventName = json['EventName'];
-    tCIn = json['TCIn'];
-    tCOut = json['TCOut'];
+    eventName = json['eventName'];
+    tCIn = json['TCin'];
+    tCOut = json['TCout'];
   }
 
   Map<String, dynamic> toJson() {
     final Map<String, dynamic> data = new Map<String, dynamic>();
     data['EventID'] = this.eventID;
-    data['EventName'] = this.eventName;
-    data['TCIn'] = this.tCIn;
-    data['TCOut'] = this.tCOut;
+    data['eventName'] = this.eventName;
+    data['TCin'] = this.tCIn;
+    data['TCout'] = this.tCOut;
     return data;
   }
 }

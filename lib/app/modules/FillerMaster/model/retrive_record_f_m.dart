@@ -1,12 +1,14 @@
+import 'filler_annotation_model.dart';
+
 class RetriveRecordFillerMasterModel {
   List<HouseID>? houseID;
 
   RetriveRecordFillerMasterModel({this.houseID});
 
   RetriveRecordFillerMasterModel.fromJson(Map<String, dynamic> json) {
-    if (json['houseID'] != null) {
+    if (json['retriveRecord'] != null) {
       houseID = <HouseID>[];
-      json['houseID'].forEach((v) {
+      json['retriveRecord'].forEach((v) {
         houseID!.add(new HouseID.fromJson(v));
       });
     }
@@ -15,7 +17,7 @@ class RetriveRecordFillerMasterModel {
   Map<String, dynamic> toJson() {
     final Map<String, dynamic> data = new Map<String, dynamic>();
     if (this.houseID != null) {
-      data['houseID'] = this.houseID!.map((v) => v.toJson()).toList();
+      data['retriveRecord'] = this.houseID!.map((v) => v.toJson()).toList();
     }
     return data;
   }
@@ -40,7 +42,7 @@ class HouseID {
   String? killDate;
   String? fillerSynopsis;
   String? modifiedBy;
-  Null? dated;
+  String? dated;
   String? houseId;
   String? blanktapeid;
   String? locationcode;
@@ -51,17 +53,20 @@ class HouseID {
   String? singerName;
   String? musicCompany;
   String? musicDirector;
-  Null? grade;
+  String? grade;
   int? moodCode;
   int? energyCode;
   int? tempoCode;
   int? eraCode;
   int? gradeCode;
   int? regioncode;
+  String? bannerName;
+  List<dynamic>? lstAnnotationLoadDatas;
 
   HouseID(
       {this.fillerCode,
       this.fillerCaption,
+      this.bannerName,
       this.fillerDuration,
       this.fillerTypeCode,
       this.bannerCode,
@@ -95,6 +100,7 @@ class HouseID {
       this.tempoCode,
       this.eraCode,
       this.gradeCode,
+      this.lstAnnotationLoadDatas,
       this.regioncode});
 
   HouseID.fromJson(Map<String, dynamic> json) {
@@ -134,6 +140,13 @@ class HouseID {
     eraCode = json['eraCode'];
     gradeCode = json['gradeCode'];
     regioncode = json['regioncode'];
+    bannerName = json['bannerName'];
+    if (json['lstAnnotationLoadDatas'] != null && json['lstAnnotationLoadDatas'] is List<dynamic>) {
+      lstAnnotationLoadDatas = [];
+      for (var element in json['lstAnnotationLoadDatas']) {
+        lstAnnotationLoadDatas?.add(FillerMasterAnnotationModel.fromJson(element));
+      }
+    }
   }
 
   Map<String, dynamic> toJson() {
