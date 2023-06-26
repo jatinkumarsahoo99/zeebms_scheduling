@@ -392,6 +392,8 @@ class ApiFactory {
   static String TRANSMISSION_LOG_POST_PIVOT_LOG() => "$BASE_URL/api/Transmissionlog/PostPivotLog";
 
   static String TRANSMISSION_LOG_POST_TS() => "$BASE_URL/api/Transmissionlog/PostTsCalc";
+  static String TRANSMISSION_LOG_EXPORT_CLICK(String locId,String chnlId,String txtDt,String chnlNm,String locName,int expRowno,String exportTime,bool secEvnt,String apiCallVal ) => "$BASE_URL/api/Transmissionlog/GetbtnExportDataClick?Locationcode=$locId&Txtdate=$txtDt&channelName=$chnlNm&LocationName=$locName&ExportRowNumber=$expRowno&ExportTime=$exportTime&AddSecondaryEvents=$secEvnt&ApiCallValue=$apiCallVal&ChannelCode=$chnlId";
+  static String TRANSMISSION_LOG_WRITE_OLDEXCEL(String locId,String chnlId,String txtDt,bool standBy,String fileName, ) => "$BASE_URL/api/Transmissionlog/GetWriteOLDExcel?locationcode=$locId&channelcode=$chnlId&txtDate=$txtDt&chkStandBy=$standBy&type=NEWS&FileName=$fileName";
 
   static String TRANSMISSION_LOG_EXPORT_FPC_TIME(String loc, String chnl, String txtDt, bool standBy) =>
       "$BASE_URL/api/Transmissionlog/GetExportClick?locationcode=$loc&channelcode=$chnl&txtDate=$txtDt&chkStandBy=$standBy";
