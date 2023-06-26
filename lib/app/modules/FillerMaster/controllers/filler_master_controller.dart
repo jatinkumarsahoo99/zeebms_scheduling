@@ -632,10 +632,10 @@ class FillerMasterController extends GetxController {
       return;
     }
     rightDataTable.add(FillerMasterAnnotationModel(
-      eventID: selectedDropDowns[18]?.key,
-      eventName: selectedDropDowns[18]?.key,
-      tCIn: tcInCtr.text,
-      tCOut: tcOutCtr.text,
+      eventId: int.tryParse(selectedDropDowns[18]?.key ?? "0") ?? 0,
+      eventname: selectedDropDowns[18]?.key,
+      tCin: tcInCtr.text,
+      tCout: tcOutCtr.text,
     ));
     clearBottomAnnotation();
   }
