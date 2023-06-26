@@ -257,6 +257,7 @@ class RoBookingView extends StatelessWidget {
                                           });
 
                                           Get.defaultDialog(
+                                            radius: 05,
                                             title: "",
                                             content: Container(
                                               width: Get.width * 0.60,

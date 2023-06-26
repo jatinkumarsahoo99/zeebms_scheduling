@@ -83,6 +83,9 @@ class AuditStatusView extends StatelessWidget {
                       : DataGridShowOnlyKeys(
                           mapData: gridcontroller.bookingData,
                           formatDate: false,
+                          colorCallback: (colorEvent) {
+                            return gridcontroller.getColor(gridcontroller.bookingData[colorEvent.rowIdx]);
+                          },
                           onRowDoubleTap: (event) {
                             controller.showEbooking(event.rowIdx);
                           },
