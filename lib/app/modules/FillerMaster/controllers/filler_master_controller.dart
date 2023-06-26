@@ -313,7 +313,7 @@ class FillerMasterController extends GetxController {
 
             /// BANNER CODE
             if (tempModel2.bannerCode != null && tempModel2.bannerName != null) {
-              selectedDropDowns[15] = DropDownValue(key: tempModel2.bannerCode, value: tempModel2.bannerName);
+              selectedDropDowns[2] = DropDownValue(key: tempModel2.bannerCode, value: tempModel2.bannerName);
             }
 
             /// TX-CAPTION
@@ -486,7 +486,38 @@ class FillerMasterController extends GetxController {
     );
   }
 
-  saveRecord() {}
+  saveValidate() {
+    if (selectedDropDowns[0] == null) {
+      LoadingDialog.showErrorDialog("Location cannot be empty.");
+    } else if (selectedDropDowns[1] == null) {
+      LoadingDialog.showErrorDialog("Channel cannot be empty.");
+    } else if (selectedDropDowns[17] == null) {
+      LoadingDialog.showErrorDialog("ID No cannot be empty.");
+    } else if (fillerNameCtr.text.trim().isEmpty) {
+      LoadingDialog.showErrorDialog("Filler Caption cannot be empty.");
+    } else if (txCaptionCtr.text.trim().isEmpty) {
+      LoadingDialog.showErrorDialog("Export Tape Caption cannot be empty.");
+    } else if (tapeIDCtr.text.trim().isEmpty) {
+      LoadingDialog.showErrorDialog("Export Tape Code cannot be empty.");
+    } else if (segNoCtrLeft.text.trim().isEmpty) {
+      LoadingDialog.showErrorDialog("Segment Number cannot be empty.");
+    } else if (txNoCtr.text.trim().isEmpty) {
+      LoadingDialog.showErrorDialog("House ID cannot be empty.");
+    } else {
+      if (fillerCode.isNotEmpty) {
+        LoadingDialog.recordExists(
+          "Record Already exits!\nDo you want to modify it?",
+          () {
+            saveRecord();
+          },
+        );
+      } else {
+        saveRecord();
+      }
+    }
+  }
+
+  void saveRecord() {}
 
   clearBottomAnnotation() {
     tcInCtr.text = "00:00:00:00";
