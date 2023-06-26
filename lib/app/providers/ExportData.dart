@@ -15,8 +15,8 @@ class ExportData {
   static void topLevelFunction(Map<String, dynamic> args) {
     // performs work in an isolate
   }
-  exportExcelFromJsonList(jsonList, screenName,{Function? callBack}) {
-    print("Call json List>>>"+jsonEncode(jsonList));
+  exportExcelFromJsonList(jsonList, screenName, {Function? callBack}) {
+    print("Call json List>>>" + jsonEncode(jsonList));
     if (jsonList!.isNotEmpty) {
       var excel = Excel.createExcel();
       Sheet sheetObject = excel[screenName];
@@ -29,7 +29,7 @@ class ExportData {
       String time = DateTime.now().toString();
       // var fileBytes = excel.save(fileName: "$screenName-$time.xlsx");
       var fileBytes = excel.save(fileName: screenName);
-      if(callBack!=null){
+      if (callBack != null) {
         callBack();
       }
       // FlutterFileSaver()
@@ -45,9 +45,17 @@ class ExportData {
 
   exportFilefromString(String data, String fileName) async {
     try {
-      await FlutterFileSaver()
-          .writeFileAsString(fileName: fileName, data: data)
-          .then((value) {
+      await FlutterFileSaver().writeFileAsString(fileName: fileName, data: data).then((value) {
+        return value;
+      });
+    } catch (e) {
+      Snack.callError("Failed To Save File");
+    }
+  }
+
+  exportFilefromBase64(String data, String fileName) async {
+    try {
+      await FlutterFileSaver().writeFileAsBytes(fileName: fileName, bytes: base64.decode(data)).then((value) {
         return value;
       });
     } catch (e) {
@@ -57,9 +65,7 @@ class ExportData {
 
   exportFilefromByte(Uint8List data, String fileName) async {
     try {
-      await FlutterFileSaver()
-          .writeFileAsBytes(fileName: fileName, bytes: data)
-          .then((value) {
+      await FlutterFileSaver().writeFileAsBytes(fileName: fileName, bytes: data).then((value) {
         return value;
       });
     } catch (e) {
@@ -86,9 +92,7 @@ class ExportData {
         });
   }
 
-  exportPdfFromGridData(
-      pluto_grid_export.PlutoGridDefaultPdfExport plutoGridPdfExport,
-      stateManager) async {
+  exportPdfFromGridData(pluto_grid_export.PlutoGridDefaultPdfExport plutoGridPdfExport, stateManager) async {
     LoadingDialog.call();
 
     plutoGridPdfExport.themeData = pluto_grid_export.ThemeData.withFont(
@@ -99,9 +103,7 @@ class ExportData {
         await rootBundle.load('assets/fonts/OpenSans-Bold.ttf'),
       ),
     );
-    await pluto_grid_export.Printing.sharePdf(
-        bytes: await plutoGridPdfExport.export(stateManager),
-        filename: plutoGridPdfExport.getFilename());
+    await pluto_grid_export.Printing.sharePdf(bytes: await plutoGridPdfExport.export(stateManager), filename: plutoGridPdfExport.getFilename());
 
     Get.back();
   }

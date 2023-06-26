@@ -19,7 +19,7 @@ class AuditStatusController extends GetxController {
   RxBool isEnable = RxBool(true);
   TextEditingController dateController = TextEditingController();
   List<String> auditTypes = ["Additions", "Re-Schedule", "Cancellation"];
-  RxString currentType = RxString("Additions");
+  RxnString currentType = RxnString();
   AuditStatusShowEbooking? showEbookingData;
   //input controllers
   DropDownValue? selectLocation;
@@ -57,7 +57,7 @@ class AuditStatusController extends GetxController {
           "channelCode": selectChannel?.key,
           "date": dateController.text.fromdMyToyMd(),
           "loggedUser": Get.find<MainController>().user?.logincode,
-          "type": currentType.value
+          "type": currentType.value ?? ""
         },
         fun: (map) {
           if (map is Map && map.containsKey("inFo_Show")) {
