@@ -24,8 +24,8 @@ ENV PATH "$PATH:/Android/sdk/platform-tools"
 # Download Flutter SDK
 RUN mkdir /flutter-home
 WORKDIR /flutter-home
-RUN wget https://storage.googleapis.com/flutter_infra_release/releases/stable/linux/flutter_linux_3.3.9-stable.tar.xz
-RUN tar xvf flutter_linux_3.3.9-stable.tar.xz
+RUN wget https://storage.googleapis.com/flutter_infra_release/releases/stable/linux/flutter_linux_3.7.10-stable.tar.xz
+RUN tar xvf flutter_linux_3.7.10-stable.tar.xz
 RUN git config --global --add safe.directory /flutter-home/flutter
 ENV PATH "$PATH:/flutter-home/flutter/bin"
 
@@ -36,7 +36,7 @@ RUN chown developer /app/
 COPY . /app/
 WORKDIR /app/
 #RUN flutter build web
-RUN flutter build web -v --dart-define=ENV=${Environment_name} 
+RUN flutter build web  --dart-define=ENV=${Environment_name} 
 #RUN flutter run
 
 FROM zeelakscontainer.azurecr.io/bms-web-va:1.1
