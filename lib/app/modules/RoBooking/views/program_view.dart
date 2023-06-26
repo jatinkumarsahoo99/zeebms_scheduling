@@ -131,26 +131,19 @@ class ProgramView extends GetView<RoBookingController> {
                         0.12,
                         selected: controller.selectedPosition,
                         isEnable: true),
-                    Row(
-                      crossAxisAlignment: CrossAxisAlignment.end,
-                      children: [
-                        DropDownField.formDropDown1WidthMap(
-                            List.generate(10, (index) => DropDownValue(key: (index + 1).toString(), value: (index + 1).toString())),
-                            (value) => {},
-                            "Break",
-                            0.12,
-                            selected: controller.selectedBreak,
-                            isEnable: true),
-                        SizedBox(
-                          width: 5,
-                        ),
-                        ElevatedButton(
-                            onPressed: () {
-                              controller.getSegment();
-                            },
-                            child: Text("Seg"))
-                      ],
-                    ),
+                    DropDownField.formDropDown1WidthMap(
+                        List.generate(10, (index) => DropDownValue(key: (index + 1).toString(), value: (index + 1).toString())),
+                        (value) => {},
+                        "Break",
+                        0.12,
+                        selected: controller.selectedBreak,
+                        isEnable: true),
+
+                    ElevatedButton(
+                        onPressed: () {
+                          controller.getSegment();
+                        },
+                        child: Text("Seg")),
                     InputFields.formField1(
                         // showTitle: false,
                         hintTxt: "Rate",

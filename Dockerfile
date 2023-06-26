@@ -36,7 +36,7 @@ RUN chown developer /app/
 COPY . /app/
 WORKDIR /app/
 #RUN flutter build web
-RUN flutter build web --dart-define=ENV=${Environment_name}
+RUN flutter build web -v --dart-define=ENV=${Environment_name} 
 #RUN flutter run
 
 FROM zeelakscontainer.azurecr.io/bms-web-va:1.1
