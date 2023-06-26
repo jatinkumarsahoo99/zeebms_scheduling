@@ -55,6 +55,16 @@ class ExportData {
     }
   }
 
+  exportFilefromBase64(String data, String fileName) async {
+    try {
+      await FlutterFileSaver().writeFileAsBytes(fileName: fileName, bytes: base64.decode(data)).then((value) {
+        return value;
+      });
+    } catch (e) {
+      Snack.callError("Failed To Save File");
+    }
+  }
+
   exportFilefromByte(Uint8List data, String fileName) async {
     try {
       await FlutterFileSaver()

@@ -307,7 +307,7 @@ class TransmissionLogController extends GetxController {
         });
   }
 
-  void btnExportClick({Function? fun}) {
+  void btnExportFetchFpc({Function? fun}) {
     LoadingDialog.call();
     Get.find<ConnectorControl>().GETMETHODCALL(
         api: ApiFactory.TRANSMISSION_LOG_EXPORT_FPC_TIME(
@@ -745,21 +745,76 @@ class TransmissionLogController extends GetxController {
 
     colorGrid(false);
     LoadingDialog.callInfoMessage('$replaceCount replacements made');
-    /*showDialog(
-      context: context,
-      builder: (context) => AlertDialog(
-        title: Text('$replaceCount replacements made'),
-        content: Text('$replaceCount replacements made'),
-        actions: [
-          TextButton(
-            onPressed: () {
-              Navigator.pop(context);
-            },
-            child: Text('OK'),
-          ),
-        ],
-      ),
-    );*/
+  }
+
+  void btnExportClick(type) async {
+    bool? isDone =
+        await showDialogForYesNo("Do you want to add secondary event?");
+    LoadingDialog.call();
+    Get.find<ConnectorControl>().GETMETHODCALL(
+        api: ApiFactory.TRANSMISSION_LOG_EXPORT_CLICK(
+            selectLocation?.key ?? "",
+            selectChannel?.key ?? "",
+            selectedDate.text,
+            selectLocation?.value ?? "",
+            selectChannel?.value ?? "",
+            gridStateManager?.currentRowIdx ?? 0,
+            "00:00",
+            isDone!,
+            "GetWriteOLDExcel"),
+        fun: (map) {
+          Get.back();
+          if (map is Map && map.containsKey("outExportDataClick")) {
+            String outputFormat = map["outExportDataClick"]["outputFormat"];
+            String strFilePrefix = map["outExportDataClick"]["strFilePrefix"];
+            String filechannel = map["outExportDataClick"]["filechannel"];
+            logWrite(strFilePrefix + outputFormat.split("|")[1]);
+          } else {}
+        });
+  }
+
+  void logWrite(String fileName) async {
+    // bool? isDone = await showDialogForYesNo("Do you want to add secondary event?");
+    LoadingDialog.call();
+    Get.find<ConnectorControl>().GETMETHODCALL(
+        api: ApiFactory.TRANSMISSION_LOG_WRITE_OLDEXCEL(
+            selectLocation?.key ?? "",
+            selectChannel?.key ?? "",
+            selectedDate.text,
+            isStandby.value,
+            fileName ?? ""),
+        fun: (map) {
+          Get.back();
+          // print("Data>>>>"+map.toString());
+          ExportData().exportFilefromBase64(map, fileName);
+        });
+  }
+
+  String? getExportMethod(String type) {
+    switch (type) {
+      case "Excel":
+        return "";
+      case "Excel":
+        return "";
+      case "Excel":
+        return "";
+      case "Excel":
+        return "";
+      case "Excel":
+        return "";
+      case "Excel":
+        return "";
+      case "Excel":
+        return "";
+      case "Excel":
+        return "";
+      case "Excel":
+        return "";
+      case "Excel":
+        return "";
+      case "Excel":
+        return "";
+    }
   }
 
   void btnFastInsert_Add_Click() {
@@ -1520,12 +1575,12 @@ class TransmissionLogController extends GetxController {
         "gl") {
       visibleChangeOffset.value = true;
       offset_change.text =
-          gridStateManager?.currentRow?.cells["transmissionTime"]?.value;
+          gridStateManager?.currentRow?.cells["transmissionTime"]?.value ?? "";
       visibleChangeDuration.value = true;
       duration_change.text =
-          gridStateManager?.currentRow?.cells["tapeduration"]?.value;
+          gridStateManager?.currentRow?.cells["tapeduration"]?.value ?? "";
       fpctime_change.text =
-          gridStateManager?.currentRow?.cells["fpCtime"]?.value + ":00";
+          (gridStateManager?.currentRow?.cells["fpCtime"]?.value ?? "") + ":00";
       visibleChangeFpc.value = true;
     } else {
       visibleChangeDuration.value = false;
@@ -1538,11 +1593,11 @@ class TransmissionLogController extends GetxController {
       }
       visibleChangeOffset.value = true;
       offset_change.text =
-          gridStateManager?.currentRow?.cells["transmissionTime"]?.value;
+          gridStateManager?.currentRow?.cells["transmissionTime"]?.value ?? "";
       duration_change.text =
-          gridStateManager?.currentRow?.cells["tapeduration"]?.value;
+          gridStateManager?.currentRow?.cells["tapeduration"]?.value ?? "";
       fpctime_change.text =
-          gridStateManager?.currentRow?.cells["fpCtime"]?.value + ":00";
+          (gridStateManager?.currentRow?.cells["fpCtime"]?.value ?? "") + ":00";
       visibleChangeFpc.value = true;
     }
 
