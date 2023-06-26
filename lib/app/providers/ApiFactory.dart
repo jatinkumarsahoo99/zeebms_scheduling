@@ -708,8 +708,8 @@ class ApiFactory {
   /////////////////////////////////// Sales Audit New ////////////////////////////////
 
   static String SALESAUDIT_NEW_LOAD = BASE_URL + "/api/SalesAduitNew/GetLocations";
-
-
+  static String SALESAUDIT_NEW_GETCHANNEL= BASE_URL + "/api/SalesAduitNew/GetChannels?LocationCode=";
+  static String SALESAUDIT_NEW_GETRETRIEVE (String locationCode,String channelCode,String scheduleDate) => BASE_URL + "/api/SalesAduitNew/GetRetrieve?Locationcode=$locationCode&channelcode=$channelCode&date=$scheduleDate";
 
 
 

@@ -271,8 +271,7 @@ class TransmissionLogView extends GetView<TransmissionLogController> {
                           ColorDataModel? data =
                           Get.find<TransmissionLogController>()
                               .getMatchWithKey(currentRow
-                              .cells["eventType"]?.value ??
-                              "");
+                              .cells["eventType"]?.value ?? "");
                           Color color = Colors.white;
                           if (data != null) {
                             // print("Index is>> ${colorData.rowIdx.toString()} >>>> ${data.backColor}");
