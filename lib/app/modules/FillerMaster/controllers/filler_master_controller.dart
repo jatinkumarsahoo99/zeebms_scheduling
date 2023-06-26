@@ -474,6 +474,11 @@ class FillerMasterController extends GetxController {
                   DateFormat("dd-MM-yyyy").format(DateFormat("yyyy-MM-ddThh:mm:ss").parse(tempModel2.killDate ?? "2023-06-14T23:59:59"));
             }
 
+            if (tempModel2.lstAnnotationLoadDatas != null) {
+              rightDataTable.clear();
+              rightDataTable.addAll(tempModel2.lstAnnotationLoadDatas!);
+            }
+
             /// SYNOPSIS
             /// EVENT
             /// TC-IN
