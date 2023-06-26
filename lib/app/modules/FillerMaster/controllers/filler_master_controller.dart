@@ -279,7 +279,7 @@ class FillerMasterController extends GetxController {
     }
   }
 
-  retrievRecord({String text = "", String code = "", String tapeCode = "", String segNo = ""}) async {
+  retrievRecord({String text = "", String code = "", String tapeCode = "", String segNo = "", bool fromCopy = false}) async {
     LoadingDialog.call();
     await Get.find<ConnectorControl>().POSTMETHOD(
       api: ApiFactory.FILLER_MASTER_RETRIVE_RECORDS,
@@ -326,8 +326,13 @@ class FillerMasterController extends GetxController {
             }
 
             /// TX-CAPTION
-            if (tempModel2.fillerCaption != null) {
-              txCaptionCtr.text = tempModel2.fillerCaption ?? "";
+            if (tempModel2.exportTapeCaption != null) {
+              txCaptionCtr.text = tempModel2.exportTapeCaption ?? "";
+            }
+
+            /// FILLER-NAME
+            if (fromCopy && tempModel2.fillerCaption != null) {
+              fillerNameCtr.text = tempModel2.fillerCaption ?? "";
             }
 
             /// TAPE-ID
@@ -460,6 +465,7 @@ class FillerMasterController extends GetxController {
             }
 
             /// SOURCE
+
             /// ID-NO
 
             /// START-DATE
@@ -480,6 +486,10 @@ class FillerMasterController extends GetxController {
             }
 
             /// SYNOPSIS
+            if (tempModel2.fillerSynopsis != null) {
+              synopsisCtr.text = tempModel2.fillerSynopsis ?? "";
+            }
+
             /// EVENT
             /// TC-IN
             /// TC-OUT
@@ -488,7 +498,7 @@ class FillerMasterController extends GetxController {
             updateUI();
           }
         } else {
-          LoadingDialog.showErrorDialog(resp.toString());
+          // LoadingDialog.showErrorDialog(resp.toString());
         }
       },
       json: {
@@ -649,15 +659,29 @@ class FillerMasterController extends GetxController {
     await retrievRecord(
       tapeCode: copyCtr.text.trim(),
       segNo: segNoCtrRight.text.trim(),
+      fromCopy: true,
     );
     tapeIDCtr.text = "AUTO";
     txNoCtr.text = "AUTO";
     segNoCtrLeft.text = "1";
     var now = DateTime.now();
-    fillerNameCtr.text =
-        "${"${fillerNameCtr.text}                                        ".toString().substring(0, 31)}-${now.day}-${now.month}-${now.year}";
-    fillerNameFN.requestFocus();
-    txCaptionCtr.clear();
+    // DateFormat("yyyyMMdd").format(now);
+    fillerNameCtr.text = "${fillerNameCtr.text}-${DateFormat("yyyyMMdd").format(now)}";
+    // txCaptionCtr.text = "${txCaptionCtr.text}-${DateFormat("yyyyMMdd").format(now)}";
+    // print(txCaptionCtr.text);
+    // if (txCaptionCtr.text.contains("F/")) {
+    //   txCaptionCtr.text = txCaptionCtr.text.split("F/")[1];
+    // }
+    // txCaptionCtr.clear();
+    // fillerNameFN.requestFocus();
+    var l = txCaptionCtr.text.split("/");
+    for (var element in l) {
+      if (element != "F") {
+        txCaptionCtr.text = "$element-${DateFormat("yyyyMMdd").format(now)}";
+        break;
+      }
+    }
+
     startDateCtr.text = "${now.day}-${now.month}-${now.year}";
     now = now.copyWith(month: now.month + 3);
     endDateCtr.text = "${now.day}-${now.month}-${now.year}";
