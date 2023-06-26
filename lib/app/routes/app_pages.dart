@@ -1,3 +1,4 @@
+import 'package:bms_scheduling/app/modules/FillerMaster/bindings/filler_master_binding.dart';
 import 'package:get/get.dart';
 
 import '../modules/AsrunImportAdRevenue/bindings/asrun_import_binding.dart';
@@ -39,7 +40,7 @@ class AppPages {
   AppPages._();
 
   // static const INITIAL = Routes.ROS_DISTRIBUTION +
-  static const INITIAL = Routes.RO_BOOKING +
+  static const INITIAL = Routes.FILLER_MASTER +
       "?personalNo=kW5Bkf17%2FS5YF7ML28FmVg%3D%3D&loginCode=1BWIoBKeDl7qDSAAhxvXsQ%3D%3D&formName=OI8ukDpPPVN0I2BEXu2h4nuFu%2BZm1ZRpvP8NL4XCXzQ%3D";
   static final routes = [
     GetPage(
@@ -202,7 +203,7 @@ class AppPages {
       page: () => AuthGuard1(
         childName: _Paths.FILLER_MASTER,
       ),
-      binding: PromoMasterBinding(),
+      binding: FillerMasterBinding(),
     ),
     GetPage(
       name: _Paths.COMMERCIAL_MASTER,

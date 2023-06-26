@@ -6,16 +6,10 @@ class NumericStepButton extends StatefulWidget {
   final int minValue;
   final int maxValue;
   final String? hint;
-
+  final bool? isEnable;
   final ValueChanged<int> onChanged;
 
-  NumericStepButton(
-      {Key? key,
-      this.minValue = 1,
-      this.maxValue = 100,
-      required this.onChanged,
-      this.hint})
-      : super(key: key);
+  const NumericStepButton({Key? key, this.isEnable, this.minValue = 1, this.maxValue = 100, required this.onChanged, this.hint}) : super(key: key);
 
   @override
   State<NumericStepButton> createState() {
@@ -34,14 +28,13 @@ class _NumericStepButtonState extends State<NumericStepButton> {
       children: [
         Text(
           widget.hint ?? "No",
-          style: TextStyle(fontSize: SizeDefine.labelSize1),
+          style: TextStyle(fontSize: SizeDefine.labelSize1, color: ((widget.isEnable ?? true) ? Colors.black : Colors.grey)),
         ),
         SizedBox(
           height: SizeDefine.marginGap,
         ),
         Container(
-          decoration:
-              BoxDecoration(border: Border.all(color: Colors.deepPurpleAccent)),
+          decoration: BoxDecoration(border: Border.all(color: Colors.deepPurpleAccent)),
           height: 25,
           child: Row(
             mainAxisAlignment: MainAxisAlignment.spaceAround,
@@ -54,21 +47,23 @@ class _NumericStepButtonState extends State<NumericStepButton> {
                 padding: EdgeInsets.symmetric(vertical: 0.0, horizontal: 10.0),
                 iconSize: 18.0,
                 color: Theme.of(context).primaryColor,
-                onPressed: () {
-                  setState(() {
-                    if (counter > widget.minValue) {
-                      counter--;
-                    }
-                    widget.onChanged(counter);
-                  });
-                },
+                onPressed: ((widget.isEnable ?? true))
+                    ? () {
+                        setState(() {
+                          if (counter > widget.minValue) {
+                            counter--;
+                          }
+                          widget.onChanged(counter);
+                        });
+                      }
+                    : null,
               ),
               Text(
                 '$counter',
                 // controller: txtCont,
                 textAlign: TextAlign.center,
                 style: TextStyle(
-                  color: Colors.black87,
+                  color: ((widget.isEnable ?? true) ? Colors.black : Colors.grey),
                   fontSize: 16.0,
                   fontWeight: FontWeight.w500,
                 ),
@@ -81,15 +76,17 @@ class _NumericStepButtonState extends State<NumericStepButton> {
                 padding: EdgeInsets.symmetric(vertical: 0.0, horizontal: 10.0),
                 iconSize: 18.0,
                 color: Theme.of(context).primaryColor,
-                onPressed: () {
-                  setState(() {
-                    if (counter < widget.maxValue) {
-                      counter++;
-                    }
-                    txtCont.text = counter.toString();
-                    widget.onChanged(counter);
-                  });
-                },
+                onPressed: ((widget.isEnable ?? true))
+                    ? () {
+                        setState(() {
+                          if (counter < widget.maxValue) {
+                            counter++;
+                          }
+                          txtCont.text = counter.toString();
+                          widget.onChanged(counter);
+                        });
+                      }
+                    : null,
               ),
             ],
           ),
