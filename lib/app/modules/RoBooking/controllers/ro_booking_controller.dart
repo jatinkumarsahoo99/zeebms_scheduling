@@ -292,6 +292,7 @@ class RoBookingController extends GetxController {
             update(["init"]);
             agencyFocus.requestFocus();
             Get.defaultDialog(
+                radius: 05,
                 title: "GST Plant",
                 confirm: FormButtonWrapper(
                   btnText: "Done",
