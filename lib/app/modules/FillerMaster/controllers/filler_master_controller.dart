@@ -552,7 +552,7 @@ class FillerMasterController extends GetxController {
     fillerNameFN.requestFocus();
     txCaptionCtr.clear();
     startDateCtr.text = "${now.day}-${now.month}-${now.year}";
-    now = now.copyWith(month: now.month + 3);
+    // now = now.copyWith(month: now.month + 3);
     endDateCtr.text = "${now.day}-${now.month}-${now.year}";
     fillerCode = "";
   }
