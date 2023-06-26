@@ -324,9 +324,10 @@ class LoadingDialog {
     );
   }
 
-  static callErrorMessage1({required String msg}) {
+  static callErrorMessage1({required String msg, bool? barrierDismissible = true, Function()? callback}) {
     Get.defaultDialog(
       title: "",
+      barrierDismissible: barrierDismissible ?? true,
       titleStyle: TextStyle(fontSize: 1),
       content: Column(
         mainAxisAlignment: MainAxisAlignment.center,
@@ -348,7 +349,7 @@ class LoadingDialog {
         autoFocus: true,
         callback: () {
           Get.back();
-          // callback!();
+          callback!();
         },
         btnText: "OK",
       ),
@@ -451,7 +452,7 @@ class LoadingDialog {
           autoFocus: false,
           callback: () {
             Get.back();
-            if(cancel!=null){
+            if (cancel != null) {
               cancel();
             }
           },

@@ -395,8 +395,7 @@ class ApiFactory {
   static String TRANSMISSION_LOG_EXPORT_CLICK(String locId,String chnlId,String txtDt,String chnlNm,String locName,int expRowno,String exportTime,bool secEvnt,String apiCallVal ) => "$BASE_URL/api/Transmissionlog/GetbtnExportDataClick?Locationcode=$locId&Txtdate=$txtDt&channelName=$chnlNm&LocationName=$locName&ExportRowNumber=$expRowno&ExportTime=$exportTime&AddSecondaryEvents=$secEvnt&ApiCallValue=$apiCallVal&ChannelCode=$chnlId";
   static String TRANSMISSION_LOG_WRITE_OLDEXCEL(String locId,String chnlId,String txtDt,bool standBy,String fileName, ) => "$BASE_URL/api/Transmissionlog/GetWriteOLDExcel?locationcode=$locId&channelcode=$chnlId&txtDate=$txtDt&chkStandBy=$standBy&type=NEWS&FileName=$fileName";
 
-
-  static String TRANSMISSION_LOG_EXPORT_FPC_TIME(String loc,String chnl,String txtDt,bool standBy) =>
+  static String TRANSMISSION_LOG_EXPORT_FPC_TIME(String loc, String chnl, String txtDt, bool standBy) =>
       "$BASE_URL/api/Transmissionlog/GetExportClick?locationcode=$loc&channelcode=$chnl&txtDate=$txtDt&chkStandBy=$standBy";
 
   static String TRANSMISSION_LOG_LAST_SAVEDLOG(
@@ -420,8 +419,7 @@ class ApiFactory {
   static String TRANSMISSION_LOG_SEARCH_SEGMENT(String progCode, String epNo, String tapeCode, bool defaultSeg) =>
       "$BASE_URL/api/Transmissionlog/GetinsProgSearchClick?programcode=$progCode&episodenumber=$epNo&tapecode=$tapeCode&Defaultsegments=$defaultSeg";
 
-  static String TRANSMISSION_LOG_CHECK_PROMOTAGS(
-          String loc, String chnl, String telecaseDt, bool standBy) =>
+  static String TRANSMISSION_LOG_CHECK_PROMOTAGS(String loc, String chnl, String telecaseDt, bool standBy) =>
       "$BASE_URL/api/Transmissionlog/GetCheckPromoTags?locationcode=$loc&channelcode=$chnl&telecastdate=$telecaseDt&standbyLog=$standBy";
 
   static String TRANSMISSION_LOG_MARK_AS_ERROR(
@@ -470,6 +468,17 @@ class ApiFactory {
   static String get SLIDE_MASTER_GET_RETRIVE_DATA => "$BASE_URL/api/SlideMaster/RetriveRecord";
   static String get SLIDE_MASTER_TAPE_HOUSE_ID_LEAVE => "$BASE_URL/api/SlideMaster/HouseID_Leave";
 ////////////////////////////// SLIDE-MASTER-API-END  //////////////////////////////////////////////
+  ///
+  ///
+  ///
+  ///
+  ///
+  ///
+  ///
+////////////////////////////// SALES-AUDIT-EXTRA-SPOTS-API-START//////////////////////////////////////////////
+  static String get SALES_AUDIT_EXTRA_SPOTS_ON_LOAD => "$BASE_URL/api/SalesAuditExtraSR/GetextraspotsreportLoad";
+  static String get SALES_AUDIT_EXTRA_SPOTS_GENERATE => "$BASE_URL/api/SalesAuditExtraSR/GetGenrate";
+////////////////////////////// SALES-AUDIT-EXTRA-SPOTS-API-END  //////////////////////////////////////////////
   ///
   ///
   ///
@@ -570,7 +579,7 @@ class ApiFactory {
   ///
   ///
 
-  ///////////////// RO BOOKING //////////////////////////
+  ///////////////// RO BOOKING START //////////////////////////
   static String RO_BOOKING_INIT = "$BASE_URL/api/ROBooking/RoBookingOnLoad";
   static String RO_BOOKING_CHANNNEL(locationCode) => "$BASE_URL/api/ROBooking/Location_Leave?LocationCode=$locationCode";
 
@@ -605,6 +614,32 @@ class ApiFactory {
   static String RO_BOOKING_OnSaveData = "$BASE_URL/api/ROBooking/OnSaveData";
   static String RO_BOOKING_GetClientPDC = "$BASE_URL/api/ROBooking/GetClientPDC";
 
+  //////////////////////////////// RO BOOKING END /////////////////////////////////
+  ///
+  ///
+  ///
+  ///
+  ///
+  ///
+  ///
+  ///
+  ///
+  //////////////////////////////// FILLER-MASTER-API-START /////////////////////////////////
+
+  static String FILLER_MASTER_ON_LOAD = "$BASE_URL/api/FillerMaster/FillerMasterOnLoad";
+  static String FILLER_MASTER_ON_LEAVE_LOCATION(String code) => "$BASE_URL/api/FillerMaster/onLeaveLocation?LocationCode=$code";
+  static String FILLER_MASTER_BANNER_SEARCH = "$BASE_URL/api/FillerMaster/GetSourceBannerSearch?TextSourceBanner=";
+  static String FILLER_MASTER_RETRIVE_RECORDS = "$BASE_URL/api/FillerMaster/RetriveRecords";
+  static String FILLER_MASTER_SEGNO_LEAVE = "$BASE_URL/api/FillerMaster/SegNoLeave";
+  static String FILLER_MASTER_GET_EVENT = "$BASE_URL/api/FillerMaster/GetEvent?text=";
+  static String FILLER_MASTER_TAPE_ID_LEAVE = "$BASE_URL/api/FillerMaster/TapeIDLeave";
+
+  //////////////////////////////// FILLER-MASTER-API-END /////////////////////////////////
+  ///
+  ///
+  ///
+  ///
+  ///
   //////////////////////////////// ASRUN IMPORT /////////////////////////////////
   static String AsrunImport_GetLoadLocation = "$BASE_URL/api/AsrunImport/GetLoadLocation";
   static String AsrunImport_GetLocationSelect(locationCode) => "$BASE_URL/api/AsrunImport/GetLocationSelect?Locationcode=$locationCode";

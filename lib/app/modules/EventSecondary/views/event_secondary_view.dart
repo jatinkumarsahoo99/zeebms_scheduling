@@ -383,9 +383,7 @@ class EventSecondaryView extends GetView<EventSecondaryController> {
                               //if (Utils.btnAccessHandler(btn['name'], controller.formPermissions!) != null)
                               FormButtonWrapper(
                                 btnText: btn["name"],
-                                callback: () => controller.formHandler(
-                                  btn['name'],
-                                ),
+                                callback: () => controller.formHandler(btn['name']),
                               )
                           ],
                         ),

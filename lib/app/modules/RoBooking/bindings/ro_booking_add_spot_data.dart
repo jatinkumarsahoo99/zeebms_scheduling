@@ -4,11 +4,11 @@ class RoBookingAddSpotData {
   List<String>? message;
   String? revenueType;
   String? strAccountCode;
-  String? dblOldBookingAmount;
-  String? totalSpots;
+  num? dblOldBookingAmount;
+  num? totalSpots;
   String? totalDuration;
-  String? totalAmount;
-  String? totSpots;
+  num? totalAmount;
+  num? totSpots;
   int? intSecondsToBook;
   int? intBookingCount;
   List<LstSpots>? lstSpots;
@@ -32,7 +32,8 @@ class RoBookingAddSpotData {
       this.lstdgvProgram});
 
   RoBookingAddSpotData.fromJson(Map<String, dynamic> json) {
-    message = json['message'].cast<String>();
+    message = json['message'] != null ? json['message'].cast<String>() : null;
+
     revenueType = json['revenueType'];
     strAccountCode = json['strAccountCode'];
     dblOldBookingAmount = json['dblOldBookingAmount'];

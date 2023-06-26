@@ -32,26 +32,35 @@ class AuditStatusView extends StatelessWidget {
                 alignment: WrapAlignment.start,
                 children: [
                   Obx(
-                    () => DropDownField.formDropDown1WidthMap(controller.locations, (data) {
+                    () => DropDownField.formDropDown1WidthMap(controller.locations.value, (data) {
                       controller.selectLocation = data;
+                      controller.getChannels(data?.key);
                     }, "Location", 0.24),
                   ),
                   Obx(
-                    () => DropDownField.formDropDown1WidthMap(controller.channels, (data) {
+                    () => DropDownField.formDropDown1WidthMap(controller.channels.value, (data) {
                       controller.selectChannel = data;
                     }, "Channel", 0.24),
                   ),
                   DateWithThreeTextField(title: "From Date.", widthRation: 0.12, mainTextController: controller.dateController),
-                  Row(
-                    mainAxisSize: MainAxisSize.min,
-                    crossAxisAlignment: CrossAxisAlignment.end,
-                    children: ["Addition", "Cancellation", "Reschedule"]
-                        .map((e) => Row(
-                              mainAxisSize: MainAxisSize.min,
-                              children: [Radio(value: e, groupValue: "Addition", onChanged: (value) {}), Text(e)],
-                            ))
-                        .toList(),
-                  ),
+                  Obx(() => Row(
+                        mainAxisSize: MainAxisSize.min,
+                        crossAxisAlignment: CrossAxisAlignment.end,
+                        children: controller.auditTypes
+                            .map((e) => Row(
+                                  mainAxisSize: MainAxisSize.min,
+                                  children: [
+                                    Radio(
+                                        value: e,
+                                        groupValue: controller.currentType.value,
+                                        onChanged: (value) {
+                                          controller.currentType.value = e;
+                                        }),
+                                    Text(e)
+                                  ],
+                                ))
+                            .toList(),
+                      )),
                   FormButtonWrapper(
                     btnText: "Show",
                     callback: () {
@@ -65,10 +74,20 @@ class AuditStatusView extends StatelessWidget {
           Expanded(
               child: Container(
             padding: EdgeInsets.symmetric(horizontal: 4, vertical: 2),
-            child: DataGridShowOnlyKeys(
-              mapData: dummydata,
-              formatDate: false,
-            ),
+            child: GetBuilder<AuditStatusController>(
+                id: "gridView",
+                init: controller,
+                builder: (gridcontroller) {
+                  return gridcontroller.bookingData.isEmpty
+                      ? Container()
+                      : DataGridShowOnlyKeys(
+                          mapData: gridcontroller.bookingData,
+                          formatDate: false,
+                          onRowDoubleTap: (event) {
+                            controller.showEbooking(event.rowIdx);
+                          },
+                        );
+                }),
           )),
           GetBuilder<HomeController>(
               id: "buttons",
