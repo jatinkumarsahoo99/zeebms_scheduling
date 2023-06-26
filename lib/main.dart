@@ -1,3 +1,4 @@
+import 'dart:async';
 import 'dart:ui';
 
 import 'package:flutter/material.dart';
@@ -37,4 +38,24 @@ void main() async {
       logWriterCallback: Logger.write,
     ),
   );
+}
+
+Future<bool?>? getData() async {
+  for (int i = 0; i < 10; i++) {
+    if (i == 5) {
+      bool? data = await getT();
+      return data;
+    }
+  }
+  return true;
+}
+
+Future<bool> getT() {
+  Completer<bool> completer = Completer<bool>();
+
+  Timer(Duration(seconds: 5), () {
+    completer.complete(false);
+  });
+
+  return completer.future;
 }

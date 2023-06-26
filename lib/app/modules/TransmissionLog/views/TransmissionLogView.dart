@@ -4,14 +4,15 @@ import 'package:bms_scheduling/widgets/radio_row.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:bms_scheduling/widgets/PlutoGrid/pluto_grid.dart';
+import 'package:intl/intl.dart';
 import '../../../../widgets/DateTime/DateWithThreeTextField.dart';
 import '../../../../widgets/FormButton.dart';
 import '../../../../widgets/WarningBox.dart';
 import '../../../../widgets/dropdown.dart';
 import '../../../../widgets/gridFromMap.dart';
-import '../../../../widgets/gridFromMap1.dart';
 import '../../../../widgets/gridFromMapTransmissionLog.dart';
 import '../../../../widgets/input_fields.dart';
+import '../../../../widgets/radio_column.dart';
 import '../../../controller/HomeController.dart';
 import '../../../data/DropDownValue.dart';
 import '../../../providers/ApiFactory.dart';
@@ -21,17 +22,18 @@ import '../ColorDataModel.dart';
 import '../CommercialModel.dart';
 import '../controllers/TransmissionLogController.dart';
 
-class TransmissionLogView extends GetView<TransmissionLogController> {
-  // TransmissionLogController controller = Get.put(TransmissionLogController());
-  final GlobalKey rebuildKey = GlobalKey();
+class TransmissionLogView extends StatelessWidget {
+  TransmissionLogController controller = Get.put(TransmissionLogController());
+  var rebuildKey = GlobalKey<ScaffoldState>();
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      key: rebuildKey,
       body: RawKeyboardListener(
         focusNode: new FocusNode(),
         onKey: (RawKeyEvent raw) {
-          print("RAw is.>>>" + raw.toString());
+          // print("RAw is.>>>" + raw.toString());
           switch (raw.logicalKey.keyLabel) {
             case "F3":
               if (controller.gridStateManager != null) {
@@ -47,6 +49,9 @@ class TransmissionLogView extends GetView<TransmissionLogController> {
               break;
             case "F4":
               controller.paste(controller.gridStateManager?.currentRowIdx);
+              break;
+            case "F5":
+              controller.checkVerifyTime();
               break;
           }
         },
@@ -106,7 +111,7 @@ class TransmissionLogView extends GetView<TransmissionLogController> {
                             ),
                           ),
                           SizedBox(
-                            width: Get.width * 0.077,
+                            width: Get.width * 0.079,
                             child: Row(
                               children: [
                                 SizedBox(width: 5),
@@ -398,6 +403,9 @@ class TransmissionLogView extends GetView<TransmissionLogController> {
                                 case DataGridMenuItem.rescheduleSpots:
                                   showRescheduleDialog(Get.context);
                                   break;
+                                case DataGridMenuItem.removeMarkError:
+                                  controller.btn_markError_Click(index);
+                                  break;
                                 case DataGridMenuItem.paste:
                                   controller.paste(index);
                                   /*if (controller.lastSelectOption != null &&
@@ -567,6 +575,8 @@ class TransmissionLogView extends GetView<TransmissionLogController> {
     );
   }
 
+
+
   formHandler(btn) {
     switch (btn) {
       case "Commercials":
@@ -576,6 +586,12 @@ class TransmissionLogView extends GetView<TransmissionLogController> {
         break;
       case "Next Time":
         controller.selectNextProgramClockHour();
+        break;
+      case "Load":
+        controller.pickFile();
+        break;
+      case "Clear":
+        controller.btnClear_Click();
         break;
       case "Updated":
         controller.getUpdateClick();
@@ -610,6 +626,10 @@ class TransmissionLogView extends GetView<TransmissionLogController> {
         break;
       case "Export":
         // controller.colorGrid(false);
+        controller.btnExportClick(fun: () {
+          showExportDialog(Get.context);
+        });
+
         break;
       case "Undo":
         controller.undoClick();
@@ -749,10 +769,7 @@ class TransmissionLogView extends GetView<TransmissionLogController> {
                             matchValue: value.value ?? "",
                             filterKey: 'fpCtime',
                           );
-                          controller.dataGridRowFilterCommercial(
-                            matchValue: value.value ?? "",
-                            filterKey: 'scheduletime',
-                          );
+
                           // controller.selectedLocationId.text = value.key!;
                           // controller.selectedLocationName.text = value.value!;
                           // controller.getChannelsBasedOnLocation(value.key!);
@@ -770,7 +787,14 @@ class TransmissionLogView extends GetView<TransmissionLogController> {
                         child: FormButtonWrapper(
                           btnText: "Filter",
                           showIcon: false,
-                          callback: () {},
+                          callback: () {
+                            controller.dataGridRowFilterCommercial(
+                              matchValue:
+                                  controller.selectTimeForCommercial?.value ??
+                                      "",
+                              filterKey: 'scheduletime',
+                            );
+                          },
                         ),
                       ),
                     ],
@@ -795,6 +819,11 @@ class TransmissionLogView extends GetView<TransmissionLogController> {
                                   onload: (PlutoGridOnLoadedEvent load) {
                                     controller.gridStateManagerCommercial =
                                         load.stateManager;
+                                  },
+                                  onRowDoubleTap:
+                                      (PlutoGridOnRowDoubleTapEvent? event) {
+                                    controller.tblCommercials_CellDoubleClick(
+                                        event?.rowIdx ?? 0);
                                   },
                                   // colorCallback: (renderC) => Colors.red[200]!,
                                   mapData: (model.lstListLoggedCommercials
@@ -1009,7 +1038,7 @@ class TransmissionLogView extends GetView<TransmissionLogController> {
                                   hideCode: false,
                                   formatDate: false,
                                   checkRow: true,
-                                  checkRowKey: "no",
+                                  checkRowKey: "eventtype",
                                   onload: (PlutoGridOnLoadedEvent load) {
                                     controller.tblFastInsert =
                                         load.stateManager;
@@ -1053,7 +1082,7 @@ class TransmissionLogView extends GetView<TransmissionLogController> {
                           onchanged: (value) {},
                           hintTxt: "TX Id",
                           margin: true,
-                          controller: controller.txReplace_),
+                          controller: controller.txReplaceTxId_),
                       SizedBox(
                         width: 10,
                       ),
@@ -1091,9 +1120,9 @@ class TransmissionLogView extends GetView<TransmissionLogController> {
                             Obx(() => Padding(
                                   padding: const EdgeInsets.only(top: 15.0),
                                   child: Checkbox(
-                                    value: controller.isAllDay.value,
+                                    value: controller.isAllDayReplace.value,
                                     onChanged: (val) {
-                                      controller.isAllDay.value = val!;
+                                      controller.isAllDayReplace.value = val!;
                                     },
                                     materialTapTargetSize:
                                         MaterialTapTargetSize.shrinkWrap,
@@ -1114,19 +1143,84 @@ class TransmissionLogView extends GetView<TransmissionLogController> {
                       SizedBox(width: 5),
                       InputFields.formFieldNumberMask(
                           hintTxt: "From",
-                          controller: controller.fromInsert_,
+                          controller: controller.fromReplaceInsert_,
                           widthRatio: 0.1,
                           isTime: true,
                           isEnable: false,
                           paddingLeft: 0),
                       SizedBox(width: 10),
+                      /*FormButtonWrapper(
+                        btnText: "",
+                        showIcon: false,
+                        callback: () {
+                          controller.fromReplaceInsert_.text = controller.gridStateManager?.currentRow?.cells["transmissionTime"]?.value ?? "";
+                          controller.fromReplaceIndexInsert_.text = controller.gridStateManager?.currentRowIdx.toString()??"";
+                        },
+                      ),*/
+                      Padding(
+                        padding: const EdgeInsets.only(top: 15.0, right: 5),
+                        child: ElevatedButton(
+                          style: ButtonStyle(
+                              overlayColor: MaterialStateProperty.all(
+                                Colors.deepPurple[900],
+                              ),
+                              alignment: Alignment.center),
+                          onPressed: () {
+                            controller.fromReplaceInsert_.text = controller
+                                    .gridStateManager
+                                    ?.currentRow
+                                    ?.cells["transmissionTime"]
+                                    ?.value ??
+                                "";
+                            controller.fromReplaceIndexInsert_.text = controller
+                                    .gridStateManager?.currentRowIdx
+                                    .toString() ??
+                                "";
+                          },
+                          // icon: showIcon ? Icon(iconData, size: 16) : Container(),
+                          child: Text("",
+                              style: TextStyle(
+                                fontSize: SizeDefine.fontSizeButton,
+                              ),
+                              textAlign: TextAlign.center),
+                        ),
+                      ),
                       InputFields.formFieldNumberMask(
                           hintTxt: "To",
-                          controller: controller.toInsert_,
+                          controller: controller.toReplaceInsert_,
                           widthRatio: 0.1,
                           isTime: true,
                           isEnable: false,
                           paddingLeft: 0),
+                      Padding(
+                        padding:
+                            const EdgeInsets.only(top: 15.0, right: 5, left: 5),
+                        child: ElevatedButton(
+                          style: ButtonStyle(
+                              overlayColor: MaterialStateProperty.all(
+                                Colors.deepPurple[900],
+                              ),
+                              alignment: Alignment.center),
+                          onPressed: () {
+                            controller.toReplaceInsert_.text = controller
+                                    .gridStateManager
+                                    ?.currentRow
+                                    ?.cells["transmissionTime"]
+                                    ?.value ??
+                                "";
+                            controller.toReplaceIndexInsert_.text = controller
+                                    .gridStateManager?.currentRowIdx
+                                    .toString() ??
+                                "";
+                          },
+                          // icon: showIcon ? Icon(iconData, size: 16) : Container(),
+                          child: Text("",
+                              style: TextStyle(
+                                fontSize: SizeDefine.fontSizeButton,
+                              ),
+                              textAlign: TextAlign.center),
+                        ),
+                      ),
                       Padding(
                         padding: const EdgeInsets.only(left: 10, top: 15),
                         child: FormButtonWrapper(
@@ -1165,6 +1259,10 @@ class TransmissionLogView extends GetView<TransmissionLogController> {
   }
 
   showSegmentDialog(context) {
+    controller.listTapeDetailsSegment?.value = [];
+    controller.selectTapeSegmentDialog = null;
+    controller.segmentList = null;
+    controller.selectProgramSegment = null;
     return Get.defaultDialog(
       barrierDismissible: false,
       title: "Segments",
@@ -1279,6 +1377,7 @@ class TransmissionLogView extends GetView<TransmissionLogController> {
                           btnText: "Add",
                           showIcon: false,
                           callback: () {
+                            Get.back();
                             controller.btnInsProg_Addsegments_Click();
                           },
                         ),
@@ -1446,6 +1545,153 @@ class TransmissionLogView extends GetView<TransmissionLogController> {
     );
   }
 
+  showExportDialog(context) {
+    return Get.defaultDialog(
+      barrierDismissible: false,
+      title: "Export",
+      titleStyle: const TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+      titlePadding: const EdgeInsets.only(top: 10),
+      contentPadding: const EdgeInsets.symmetric(horizontal: 10, vertical: 5),
+      content: SingleChildScrollView(
+        child: SizedBox(
+          height: Get.height * 0.5,
+          child: SingleChildScrollView(
+            child: SizedBox(
+              width: Get.width * 0.22,
+              // height: Get.he,
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.center,
+                children: <Widget>[
+                  Obx(
+                    () => Padding(
+                      padding: EdgeInsets.only(top: 3),
+                      child: InputFields.formFieldNumberMask(
+                          hintTxt: "Duration",
+                          controller: controller.duration_change,
+                          widthRatio: 0.2,
+                          // isTime: true,
+                          isEnable: controller.visibleChangeDuration.value,
+                          paddingLeft: 0),
+                    ),
+                  ),
+                  SizedBox(
+                    width: Get.width * 0.2,
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: [
+                        FittedBox(
+                          child: Row(
+                            children: [
+                              SizedBox(width: 5),
+                              Obx(() => Padding(
+                                    padding: const EdgeInsets.only(top: 15.0),
+                                    child: Checkbox(
+                                      value: controller.isPartialLog.value,
+                                      onChanged: (val) {
+                                        controller.isPartialLog.value = val!;
+                                      },
+                                      materialTapTargetSize:
+                                          MaterialTapTargetSize.shrinkWrap,
+                                    ),
+                                  )),
+                              Padding(
+                                padding:
+                                    const EdgeInsets.only(top: 15.0, left: 5),
+                                child: Text(
+                                  "Partial Log",
+                                  style: TextStyle(
+                                      fontSize: SizeDefine.labelSize1),
+                                ),
+                              ),
+                            ],
+                          ),
+                        ),
+                        InputFields.formFieldDisable(
+                            hintTxt: "", widthRatio: 0.04, value: ''),
+                      ],
+                    ),
+                  ),
+                  SizedBox(
+                    width: Get.width * 0.2,
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: [
+                        DropDownField.formDropDown1WidthMap(
+                          controller
+                                  .exportFPCTime?.resFPCTime?.lstFPCFromTime ??
+                              [],
+                          (value) {
+                            controller.selectExportFpcFrom = value;
+                          },
+                          "FPC From",
+                          0.095,
+                          // isEnable: controller.isEnable.value,
+                          selected: controller.selectExportFpcFrom,
+                          autoFocus: true,
+                          // dialogWidth: 330,
+                          dialogHeight: Get.height * .7,
+                        ),
+
+                        /// channel
+                        DropDownField.formDropDown1WidthMap(
+                          controller.exportFPCTime?.resFPCTime?.lstFPCToTime ??
+                              [],
+                          (value) {
+                            controller.selectExportFpcTo = value;
+                            controller.getChannelFocusOut();
+                          },
+                          "FPC To",
+                          0.095,
+                          // isEnable: controller.isEnable.value,
+                          selected: controller.selectExportFpcTo,
+                          autoFocus: true,
+                          // dialogWidth: 330,
+                          dialogHeight: Get.height * .7,
+                        ),
+                      ],
+                    ),
+                  ),
+                  Obx(
+                    () => RadioColumn(
+                      items: const [
+                        "Excel",
+                        "Excel - Old",
+                        "Excel - NEWS",
+                        "VizRT",
+                        "D Series",
+                        "ADC -lst",
+                        "Grass Valley",
+                        "ADC Noida",
+                        "Commercial Replace",
+                        "Videocon GV",
+                        "Playbox",
+                        "Eventz (Dubai)",
+                        "ITX",
+                      ],
+                      groupValue: controller.selectExportType.value ?? "",
+                      onchange: (val) {
+                        print("Response>>>" + val);
+                        controller.selectExportType.value = val;
+                      },
+                    ),
+                  ),
+                ],
+              ),
+            ),
+          ),
+        ),
+      ),
+      confirm: FormButtonWrapper(
+        btnText: "Close",
+        showIcon: false,
+        callback: () {
+          Navigator.pop(context);
+        },
+      ),
+      radius: 10,
+    );
+  }
+
   showRescheduleDialog(context) {
     return Get.defaultDialog(
       barrierDismissible: false,
@@ -1505,6 +1751,8 @@ class TransmissionLogView extends GetView<TransmissionLogController> {
                       title: "Reschedule To",
                       splitType: "-",
                       widthRation: 0.12,
+                      startDate: DateFormat("dd-MM-yyyy")
+                          .parse(controller.selectedDate.text),
                       // isEnable: controller.isEnable.value,
                       mainTextController: controller.txtDate_Reschedule,
                     ),
