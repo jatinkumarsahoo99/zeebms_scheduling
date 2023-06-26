@@ -18,6 +18,7 @@ import 'package:bms_scheduling/app/modules/RoBooking/views/spots_view.dart';
 import 'package:bms_scheduling/app/modules/RoBooking/views/verify_spots_view.dart';
 import 'package:bms_scheduling/app/providers/ApiFactory.dart';
 import 'package:bms_scheduling/app/providers/extensions/string_extensions.dart';
+import 'package:bms_scheduling/widgets/FormButton.dart';
 import 'package:bms_scheduling/widgets/LoadingDialog.dart';
 import 'package:bms_scheduling/widgets/PlutoGrid/pluto_grid.dart';
 import 'package:bms_scheduling/widgets/dropdown.dart';
@@ -84,6 +85,13 @@ class RoBookingController extends GetxController {
   var agencies = RxList<DropDownValue>();
   List tapeIds = [];
 
+  FocusNode bookingNoFocus = FocusNode(),
+      dealNoFocus = FocusNode(),
+      clientFocus = FocusNode(),
+      agencyFocus = FocusNode(),
+      brandFocus = FocusNode(),
+      refrenceFocus = FocusNode();
+
   //TODO: Implement RoBookingController
   Map tabs = {
     "Deal": DealView(),
@@ -105,9 +113,19 @@ class RoBookingController extends GetxController {
             update(["init"]);
           }
         });
-    bookingNoFocusNode.addListener(() {
+    bookingNoFocus.addListener(() {
       if (!bookingNoFocusNode.hasFocus && bookingNoCtrl.text.isNotEmpty) {
         onBookingNoLeave();
+      }
+    });
+    refrenceFocus.addListener(() {
+      if (!refrenceFocus.hasFocus && refNoCtrl.text.isEmpty) {
+        LoadingDialog.callErrorMessage1(
+            msg: "Reference No cannot be left blank.",
+            barrierDismissible: false,
+            callback: () {
+              refrenceFocus.requestFocus();
+            });
       }
     });
     super.onInit();
@@ -161,6 +179,8 @@ class RoBookingController extends GetxController {
             agencies.value = _agencies;
             selectedAgnecy = agencies.value.first;
             update(["init"]);
+
+            clientFocus.requestFocus();
           }
         });
   }
@@ -270,13 +290,16 @@ class RoBookingController extends GetxController {
             selectedExecutive = DropDownValue(
                 key: agencyLeaveData?.excutiveDetails?.first.personnelCode ?? "", value: agencyLeaveData?.excutiveDetails?.first.personnelname);
             update(["init"]);
+            agencyFocus.requestFocus();
             Get.defaultDialog(
                 title: "GST Plant",
-                textConfirm: "Done",
-                onConfirm: () {
-                  print("DONE");
-                  Get.back();
-                },
+                confirm: FormButtonWrapper(
+                  btnText: "Done",
+                  callback: () {
+                    Get.back();
+                    agencyFocus.requestFocus();
+                  },
+                ),
                 content: SizedBox(
                   height: Get.height / 4,
                   width: Get.width / 4,
@@ -402,7 +425,6 @@ class RoBookingController extends GetxController {
             dealNoLeaveData = RoBookingDealNoLeave.fromJson(response["info_LeaveDealNumber"]);
 
             update(["init", "dealGrid"]);
-            FocusManager.instance.rootScope.unfocus();
           }
         });
   }
