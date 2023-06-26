@@ -627,6 +627,7 @@ class ApiFactory {
   static String FILLER_MASTER_ON_LOAD = "$BASE_URL/api/FillerMaster/FillerMasterOnLoad";
   static String FILLER_MASTER_ON_LEAVE_LOCATION(String code) => "$BASE_URL/api/FillerMaster/onLeaveLocation?LocationCode=$code";
   static String FILLER_MASTER_BANNER_SEARCH = "$BASE_URL/api/FillerMaster/GetSourceBannerSearch?TextSourceBanner=";
+  static String FILLER_MASTER_SAVE = "$BASE_URL/api/FillerMaster/SaveRecord";
   static String FILLER_MASTER_RETRIVE_RECORDS = "$BASE_URL/api/FillerMaster/RetriveRecords";
   static String FILLER_MASTER_SEGNO_LEAVE = "$BASE_URL/api/FillerMaster/SegNoLeave";
   static String FILLER_MASTER_GET_EVENT = "$BASE_URL/api/FillerMaster/GetEvent?text=";

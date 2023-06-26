@@ -15,10 +15,10 @@ class FillerMasterAnnotationModel {
 
   Map<String, dynamic> toJson() {
     final Map<String, dynamic> data = new Map<String, dynamic>();
-    data['EventID'] = this.eventID;
+    // data['EventID'] = this.eventID;
     data['eventName'] = this.eventName;
-    data['TCin'] = this.tCIn;
-    data['TCout'] = this.tCOut;
+    data['tcIn'] = this.tCIn;
+    data['tcOut'] = this.tCOut;
     return data;
   }
 }

@@ -32,7 +32,7 @@ class FillerMasterView extends GetView<FillerMasterController> {
                       child: Row(
                         children: [
                           FocusTraversalGroup(
-                            policy: WidgetOrderTraversalPolicy(),
+                            policy: OrderedTraversalPolicy(),
                             child: Expanded(
                               flex: 12,
                               child: Container(
@@ -296,7 +296,7 @@ class FillerMasterView extends GetView<FillerMasterController> {
                           ),
                           SizedBox(width: 14),
                           FocusTraversalGroup(
-                            policy: WidgetOrderTraversalPolicy(),
+                            policy: OrderedTraversalPolicy(),
                             child: Expanded(
                               flex: 8,
                               child: Column(
