@@ -67,7 +67,8 @@ class SpotsView extends GetView<RoBookingController> {
                             children: [
                               Wrap(
                                 crossAxisAlignment: WrapCrossAlignment.end,
-                                spacing: 5,
+                                spacing: Get.width * 0.01,
+                                runSpacing: 05,
                                 children: [
                                   InputFields.formField1(hintTxt: "Location", width: 0.18, controller: TextEditingController()),
                                   InputFields.formField1(hintTxt: "Channel", width: 0.18, controller: TextEditingController()),
@@ -81,20 +82,22 @@ class SpotsView extends GetView<RoBookingController> {
                                 thickness: 1,
                               ),
                               Wrap(
+                                spacing: Get.width * 0.01,
+                                runSpacing: 05,
                                 children: [
-                                  InputFields.formField1(hintTxt: "Cheque", width: 0.12, controller: TextEditingController()),
+                                  InputFields.formField1(hintTxt: "Cheque", width: 0.086, controller: TextEditingController()),
                                   DateWithThreeTextField(
                                     title: "Chq Dt",
-                                    widthRation: 0.12,
+                                    widthRation: 0.087,
                                     mainTextController: controller.fpcEffectiveDateCtrl,
                                     isEnable: controller.bookingNoLeaveData == null,
                                   ),
-                                  InputFields.formField1(hintTxt: "Chq Dt", width: 0.12, controller: TextEditingController()),
-                                  InputFields.formField1(hintTxt: "Bank", width: 0.36, controller: TextEditingController()),
-                                  InputFields.formField1(hintTxt: "Chq Recd By", width: 0.36, controller: TextEditingController()),
+                                  InputFields.formField1(hintTxt: "Chq Amt", width: 0.086, controller: TextEditingController()),
+                                  InputFields.formField1(hintTxt: "Bank", width: 0.27, controller: TextEditingController()),
+                                  InputFields.formField1(hintTxt: "Chq Recd By", width: 0.27, controller: TextEditingController()),
                                   DateWithThreeTextField(
                                     title: "Recd On",
-                                    widthRation: 0.12,
+                                    widthRation: 0.27,
                                     mainTextController: controller.fpcEffectiveDateCtrl,
                                     isEnable: controller.bookingNoLeaveData == null,
                                   ),

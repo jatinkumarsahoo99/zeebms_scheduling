@@ -371,6 +371,19 @@ class RoBookingController extends GetxController {
     }
   }
 
+  getClient() {
+    Get.find<ConnectorControl>().POSTMETHOD(
+        api: ApiFactory.RO_BOOKING_GetSegment,
+        json: {
+          "locationCode": selectedLocation!.key,
+          "channelCode": selectedClient!.key,
+          "telecastDate": dealTelecastDate,
+          "telecastTime": dealStartTime,
+          "programCode": dealProgramCode
+        },
+        fun: (data) {});
+  }
+
   setVerify() {
     Get.find<ConnectorControl>().POSTMETHOD(
         api: ApiFactory.RO_BOOKING_GetSetVerify,
@@ -470,8 +483,8 @@ class RoBookingController extends GetxController {
           "intEditMode": 0,
           "gstPlants": selectedGST?.key ?? bookingNoLeaveData?.gstPlants,
           "gstRegN": bookingNoLeaveData?.gstPlants ?? gstNoCtrl.text,
-          "secondaryEvents": selectedSecEvent?.key,
-          "triggerAt": selectedTriggerAt?.key,
+          "secondaryEvents": selectedSecEvent?.key ?? bookingNoLeaveData?.secondaryEventId,
+          "triggerAt": selectedTriggerAt?.key ?? bookingNoLeaveData?.triggerId,
           "previousBookedAmount": dealNoLeaveData?.previousBookedAmount ?? bookingNoLeaveData?.previousBookedAmount,
           "previousValAmount": dealNoLeaveData?.previousValAmount ?? bookingNoLeaveData?.previousValAmount,
           "dblOldBookingAmount": addSpotData?.dblOldBookingAmount ?? bookingNoLeaveData?.dblOldBookingAmount,
@@ -482,8 +495,12 @@ class RoBookingController extends GetxController {
           "strAccountCode": dealDblClickData?.strAccountCode
         },
         fun: (response) {
-          if (response is Map && response.containsKey("info_SpotsNotVerified")) {
-            spotsNotVerifiedData.value = response["info_SpotsNotVerified"];
+          if (response is Map && response.containsKey("info_OnSave")) {
+            for (var msg in response["info_OnSave"]["message"]) {
+              LoadingDialog.callDataSavedMessage(msg);
+            }
+          } else if (response is String) {
+            LoadingDialog.callErrorMessage1(msg: response);
           }
         });
   }
