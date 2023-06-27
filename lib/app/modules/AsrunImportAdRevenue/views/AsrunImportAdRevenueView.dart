@@ -30,208 +30,209 @@ class AsrunImportAdRevenueView extends GetView<AsrunImportController> {
       body: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          Wrap(
-            crossAxisAlignment: WrapCrossAlignment.center,
-            runSpacing: 5,
-            spacing: 5,
-            children: [
-              Obx(
-                () => DropDownField.formDropDown1WidthMap(
-                  controllerX.locations.value,
-                  (value) {
-                    controllerX.selectLocation = value;
-                    controllerX.getChannels(controllerX.selectLocation?.key ?? "");
-                  },
-                  "Location",
-                  0.12,
-                  isEnable: controllerX.isEnable.value,
-                  selected: controllerX.selectLocation,
-                  autoFocus: true,
-                  dialogWidth: 330,
-                  dialogHeight: Get.height * .7,
+          Card(
+            child: Wrap(
+              crossAxisAlignment: WrapCrossAlignment.center,
+              runSpacing: 5,
+              spacing: 5,
+              children: [
+                Obx(
+                  () => DropDownField.formDropDown1WidthMap(
+                    controllerX.locations.value,
+                    (value) {
+                      controllerX.selectLocation = value;
+                      controllerX.getChannels(controllerX.selectLocation?.key ?? "");
+                    },
+                    "Location",
+                    0.12,
+                    isEnable: controllerX.isEnable.value,
+                    selected: controllerX.selectLocation,
+                    autoFocus: true,
+                    dialogWidth: 330,
+                    dialogHeight: Get.height * .7,
+                  ),
                 ),
-              ),
 
-              /// channel
-              Obx(
-                () => DropDownField.formDropDown1WidthMap(
-                  controllerX.channels.value,
-                  (value) {
-                    controllerX.selectChannel = value;
-                  },
-                  "Channel",
-                  0.12,
-                  isEnable: controllerX.isEnable.value,
-                  selected: controllerX.selectChannel,
-                  autoFocus: true,
-                  dialogWidth: 330,
-                  dialogHeight: Get.height * .7,
+                /// channel
+                Obx(
+                  () => DropDownField.formDropDown1WidthMap(
+                    controllerX.channels.value,
+                    (value) {
+                      controllerX.selectChannel = value;
+                    },
+                    "Channel",
+                    0.12,
+                    isEnable: controllerX.isEnable.value,
+                    selected: controllerX.selectChannel,
+                    autoFocus: true,
+                    dialogWidth: 330,
+                    dialogHeight: Get.height * .7,
+                  ),
                 ),
-              ),
-              Obx(
-                () => DateWithThreeTextField(
-                  title: "Log Date",
-                  splitType: "-",
-                  widthRation: 0.09,
-                  isEnable: controllerX.isEnable.value,
-                  onFocusChange: (data) {
-                    controllerX.loadAsrunData();
-                  },
-                  mainTextController: controllerX.selectedDate,
+                Obx(
+                  () => DateWithThreeTextField(
+                    title: "Log Date",
+                    splitType: "-",
+                    widthRation: 0.09,
+                    isEnable: controllerX.isEnable.value,
+                    onFocusChange: (data) {
+                      controllerX.loadAsrunData();
+                    },
+                    mainTextController: controllerX.selectedDate,
+                  ),
                 ),
-              ),
-              // Padding(
-              //   padding: const EdgeInsets.only(top: 14.0, left: 5, right: 5),
-              //   child: FormButtonWrapper(
-              //     btnText: "ProgMismatch",
-              //     callback: () {},
-              //     showIcon: false,
-              //   ),
-              // ),
-              FittedBox(
-                child: Row(
-                  children: [
-                    Obx(() => Padding(
-                          padding: const EdgeInsets.only(top: 15.0),
-                          child: Checkbox(
-                            value: controllerX.isStandby.value,
-                            onChanged: (val) {
-                              controllerX.isStandby.value = val!;
-                            },
-                            materialTapTargetSize: MaterialTapTargetSize.shrinkWrap,
-                          ),
-                        )),
-                    Padding(
-                      padding: const EdgeInsets.only(top: 15.0, left: 3),
-                      child: Text(
-                        "FPC",
-                        style: TextStyle(fontSize: SizeDefine.labelSize1),
+                // Padding(
+                //   padding: const EdgeInsets.only(top: 14.0, left: 5, right: 5),
+                //   child: FormButtonWrapper(
+                //     btnText: "ProgMismatch",
+                //     callback: () {},
+                //     showIcon: false,
+                //   ),
+                // ),
+                FittedBox(
+                  child: Row(
+                    children: [
+                      Obx(() => Padding(
+                            padding: const EdgeInsets.only(top: 15.0),
+                            child: Checkbox(
+                              value: controllerX.isStandby.value,
+                              onChanged: (val) {
+                                controllerX.isStandby.value = val!;
+                              },
+                              materialTapTargetSize: MaterialTapTargetSize.shrinkWrap,
+                            ),
+                          )),
+                      Padding(
+                        padding: const EdgeInsets.only(top: 15.0, left: 3),
+                        child: Text(
+                          "FPC",
+                          style: TextStyle(fontSize: SizeDefine.labelSize1),
+                        ),
                       ),
-                    ),
-                  ],
+                    ],
+                  ),
                 ),
-              ),
-              FittedBox(
-                child: Row(
-                  children: [
-                    Obx(() => Padding(
-                          padding: const EdgeInsets.only(top: 15.0),
-                          child: Checkbox(
-                            value: controllerX.isStandby.value,
-                            onChanged: (val) {
-                              controllerX.isStandby.value = val!;
-                            },
-                            materialTapTargetSize: MaterialTapTargetSize.shrinkWrap,
-                          ),
-                        )),
-                    Padding(
-                      padding: const EdgeInsets.only(top: 15.0, left: 3),
-                      child: Text(
-                        "Mark Slot",
-                        style: TextStyle(fontSize: SizeDefine.labelSize1),
+                FittedBox(
+                  child: Row(
+                    children: [
+                      Obx(() => Padding(
+                            padding: const EdgeInsets.only(top: 15.0),
+                            child: Checkbox(
+                              value: controllerX.isStandby.value,
+                              onChanged: (val) {
+                                controllerX.isStandby.value = val!;
+                              },
+                              materialTapTargetSize: MaterialTapTargetSize.shrinkWrap,
+                            ),
+                          )),
+                      Padding(
+                        padding: const EdgeInsets.only(top: 15.0, left: 3),
+                        child: Text(
+                          "Mark Slot",
+                          style: TextStyle(fontSize: SizeDefine.labelSize1),
+                        ),
                       ),
-                    ),
-                  ],
+                    ],
+                  ),
                 ),
-              ),
 
-              FittedBox(
-                child: Row(
-                  children: [
-                    Obx(() => Padding(
-                          padding: const EdgeInsets.only(top: 15.0),
-                          child: Checkbox(
-                            value: controllerX.isStandby.value,
-                            onChanged: (val) {
-                              controllerX.isStandby.value = val!;
-                            },
-                            materialTapTargetSize: MaterialTapTargetSize.shrinkWrap,
-                          ),
-                        )),
-                    Padding(
-                      padding: const EdgeInsets.only(top: 15.0, left: 3),
-                      child: Text(
-                        "Dont update exposure program",
-                        style: TextStyle(fontSize: SizeDefine.labelSize1),
+                FittedBox(
+                  child: Row(
+                    children: [
+                      Obx(() => Padding(
+                            padding: const EdgeInsets.only(top: 15.0),
+                            child: Checkbox(
+                              value: controllerX.isStandby.value,
+                              onChanged: (val) {
+                                controllerX.isStandby.value = val!;
+                              },
+                              materialTapTargetSize: MaterialTapTargetSize.shrinkWrap,
+                            ),
+                          )),
+                      Padding(
+                        padding: const EdgeInsets.only(top: 15.0, left: 3),
+                        child: Text(
+                          "Dont update exposure program",
+                          style: TextStyle(fontSize: SizeDefine.labelSize1),
+                        ),
                       ),
-                    ),
-                  ],
+                    ],
+                  ),
                 ),
-              ),
-              FittedBox(
-                child: Row(
-                  children: [
-                    Obx(() => Padding(
-                          padding: const EdgeInsets.only(top: 15.0),
-                          child: Checkbox(
-                            value: controllerX.isStandby.value,
-                            onChanged: (val) {
-                              controllerX.isStandby.value = val!;
-                            },
-                            materialTapTargetSize: MaterialTapTargetSize.shrinkWrap,
-                          ),
-                        )),
-                    Padding(
-                      padding: const EdgeInsets.only(top: 15.0, left: 3),
-                      child: Text(
-                        "GFK",
-                        style: TextStyle(fontSize: SizeDefine.labelSize1),
+                FittedBox(
+                  child: Row(
+                    children: [
+                      Obx(() => Padding(
+                            padding: const EdgeInsets.only(top: 15.0),
+                            child: Checkbox(
+                              value: controllerX.isStandby.value,
+                              onChanged: (val) {
+                                controllerX.isStandby.value = val!;
+                              },
+                              materialTapTargetSize: MaterialTapTargetSize.shrinkWrap,
+                            ),
+                          )),
+                      Padding(
+                        padding: const EdgeInsets.only(top: 15.0, left: 3),
+                        child: Text(
+                          "GFK",
+                          style: TextStyle(fontSize: SizeDefine.labelSize1),
+                        ),
                       ),
-                    ),
-                  ],
+                    ],
+                  ),
                 ),
-              ),
-              FittedBox(
-                child: Row(
-                  children: [
-                    Obx(() => Padding(
-                          padding: const EdgeInsets.only(top: 15.0),
-                          child: Checkbox(
-                            value: controllerX.isStandby.value,
-                            onChanged: (val) {
-                              controllerX.isStandby.value = val!;
-                            },
-                            materialTapTargetSize: MaterialTapTargetSize.shrinkWrap,
-                          ),
-                        )),
-                    Padding(
-                      padding: const EdgeInsets.only(top: 15.0, left: 3),
-                      child: Text(
-                        "DailyFPC",
-                        style: TextStyle(fontSize: SizeDefine.labelSize1),
+                FittedBox(
+                  child: Row(
+                    children: [
+                      Obx(() => Padding(
+                            padding: const EdgeInsets.only(top: 15.0),
+                            child: Checkbox(
+                              value: controllerX.isStandby.value,
+                              onChanged: (val) {
+                                controllerX.isStandby.value = val!;
+                              },
+                              materialTapTargetSize: MaterialTapTargetSize.shrinkWrap,
+                            ),
+                          )),
+                      Padding(
+                        padding: const EdgeInsets.only(top: 15.0, left: 3),
+                        child: Text(
+                          "DailyFPC",
+                          style: TextStyle(fontSize: SizeDefine.labelSize1),
+                        ),
                       ),
-                    ),
-                  ],
+                    ],
+                  ),
                 ),
-              ),
-              FittedBox(
-                child: Row(
-                  children: [
-                    Obx(() => Padding(
-                          padding: const EdgeInsets.only(top: 15.0),
-                          child: Checkbox(
-                            value: controllerX.isStandby.value,
-                            onChanged: (val) {
-                              controllerX.isStandby.value = val!;
-                            },
-                            materialTapTargetSize: MaterialTapTargetSize.shrinkWrap,
-                          ),
-                        )),
-                    Padding(
-                      padding: const EdgeInsets.only(top: 15.0, left: 3),
-                      child: Text(
-                        "Amagi",
-                        style: TextStyle(fontSize: SizeDefine.labelSize1),
+                FittedBox(
+                  child: Row(
+                    children: [
+                      Obx(() => Padding(
+                            padding: const EdgeInsets.only(top: 15.0),
+                            child: Checkbox(
+                              value: controllerX.isStandby.value,
+                              onChanged: (val) {
+                                controllerX.isStandby.value = val!;
+                              },
+                              materialTapTargetSize: MaterialTapTargetSize.shrinkWrap,
+                            ),
+                          )),
+                      Padding(
+                        padding: const EdgeInsets.only(top: 15.0, left: 3),
+                        child: Text(
+                          "Amagi",
+                          style: TextStyle(fontSize: SizeDefine.labelSize1),
+                        ),
                       ),
-                    ),
-                  ],
+                    ],
+                  ),
                 ),
-              ),
-              InputFields.formFieldNumberMask(
-                  hintTxt: "Start Time", controller: controllerX.startTime_, widthRatio: 0.09, isTime: true, paddingLeft: 0),
-            ],
+                InputFields.formFieldNumberMask(
+                    hintTxt: "Start Time", controller: controllerX.startTime_, widthRatio: 0.09, isTime: true, paddingLeft: 0),
+              ],
+            ),
           ),
-
           // Divider(),
 
           GetBuilder<AsrunImportController>(
@@ -328,38 +329,46 @@ class AsrunImportAdRevenueView extends GetView<AsrunImportController> {
                   return element.appFormName == "frmSegmentsDetails";
                 });*/
                 if (controller.asurunImportButtoons != null) {
-                  return SizedBox(
-                    height: 40,
-                    child: ButtonBar(
-                      // buttonHeight: 20,
-                      alignment: MainAxisAlignment.start,
-                      mainAxisSize: MainAxisSize.min,
-                      // pa
-                      children: [
-                        for (var btn in controller.asurunImportButtoons!)
-                          FormButtonWrapper(
-                            btnText: btn["name"],
-                            showIcon: false,
-                            // isEnabled: btn['isDisabled'],
-                            callback: /*btn["name"] != "Delete" &&
-                                    Utils.btnAccessHandler2(btn['name'],
-                                            controller, formPermissions) ==
-                                        null
-                                ? null
-                                :*/
-                                () => formHandler(btn['name']),
+                  return Card(
+                    margin: EdgeInsets.fromLTRB(4, 4, 4, 0),
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.only(topLeft: Radius.circular(10), topRight: Radius.circular(10)),
+                    ),
+                    child: Container(
+                      width: Get.width,
+                      padding: const EdgeInsets.all(8.0),
+                      child: Wrap(
+                        // buttonHeight: 20,
+                        spacing: 10,
+                        // buttonHeight: 20,
+                        alignment: WrapAlignment.start,
+                        // pa
+                        children: [
+                          for (var btn in controller.asurunImportButtoons!)
+                            FormButtonWrapper(
+                              btnText: btn["name"],
+                              showIcon: false,
+                              // isEnabled: btn['isDisabled'],
+                              callback: /*btn["name"] != "Delete" &&
+                                      Utils.btnAccessHandler2(btn['name'],
+                                              controller, formPermissions) ==
+                                          null
+                                  ? null
+                                  :*/
+                                  () => formHandler(btn['name']),
+                            ),
+                          IconButton(
+                            onPressed: () {},
+                            icon: Icon(Icons.arrow_upward),
+                            padding: EdgeInsets.symmetric(horizontal: 8.0),
                           ),
-                        IconButton(
-                          onPressed: () {},
-                          icon: Icon(Icons.arrow_upward),
-                          padding: EdgeInsets.symmetric(horizontal: 8.0),
-                        ),
-                        IconButton(
-                          onPressed: () {},
-                          icon: Icon(Icons.arrow_downward),
-                          padding: EdgeInsets.symmetric(horizontal: 8.0),
-                        ),
-                      ],
+                          IconButton(
+                            onPressed: () {},
+                            icon: Icon(Icons.arrow_downward),
+                            padding: EdgeInsets.symmetric(horizontal: 8.0),
+                          ),
+                        ],
+                      ),
                     ),
                   );
                 } else {
