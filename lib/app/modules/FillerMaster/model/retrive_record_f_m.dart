@@ -61,7 +61,7 @@ class HouseID {
   int? gradeCode;
   int? regioncode;
   String? bannerName;
-  List<dynamic>? lstAnnotationLoadDatas;
+  List<FillerMasterAnnotationModel>? lstAnnotationLoadDatas;
 
   HouseID(
       {this.fillerCode,

@@ -32,7 +32,7 @@ class FillerMasterView extends GetView<FillerMasterController> {
                       child: Row(
                         children: [
                           FocusTraversalGroup(
-                            policy: WidgetOrderTraversalPolicy(),
+                            policy: OrderedTraversalPolicy(),
                             child: Expanded(
                               flex: 12,
                               child: Container(
@@ -296,7 +296,7 @@ class FillerMasterView extends GetView<FillerMasterController> {
                           ),
                           SizedBox(width: 14),
                           FocusTraversalGroup(
-                            policy: WidgetOrderTraversalPolicy(),
+                            policy: OrderedTraversalPolicy(),
                             child: Expanded(
                               flex: 8,
                               child: Column(
@@ -463,7 +463,10 @@ class FillerMasterView extends GetView<FillerMasterController> {
                                                     : null,
                                                 child: controller.rightDataTable.value.isEmpty
                                                     ? null
-                                                    : DataGridFromMap(mapData: controller.rightDataTable.value.map((e) => e.toJson()).toList()),
+                                                    : DataGridFromMap(
+                                                        mapData: controller.rightDataTable.value.map((e) => e.toJson()).toList(),
+                                                        focusNode: controller.rightTableFN,
+                                                      ),
                                               );
                                             }),
                                           ),

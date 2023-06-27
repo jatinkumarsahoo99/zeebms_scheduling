@@ -1,4 +1,7 @@
+import 'dart:math';
+
 import 'package:bms_scheduling/app/controller/ConnectorControl.dart';
+import 'package:bms_scheduling/app/controller/MainController.dart';
 import 'package:bms_scheduling/app/data/DropDownValue.dart';
 import 'package:bms_scheduling/app/providers/ApiFactory.dart';
 import 'package:bms_scheduling/app/routes/app_pages.dart';
@@ -64,7 +67,12 @@ class FillerMasterController extends GetxController {
       musicDirectorCtr = TextEditingController(),
       musicCompanyCtr = TextEditingController();
 
-  var locationFN = FocusNode(), eomFN = FocusNode(), fillerNameFN = FocusNode(), segNoFN = FocusNode(), tapeIDFN = FocusNode();
+  var locationFN = FocusNode(),
+      eomFN = FocusNode(),
+      fillerNameFN = FocusNode(),
+      segNoFN = FocusNode(),
+      tapeIDFN = FocusNode(),
+      rightTableFN = FocusNode();
 
   clearPage() {
     rightDataTable.clear();
@@ -115,9 +123,10 @@ class FillerMasterController extends GetxController {
     addListeneres2();
   }
 
-  calculateDuration() {
+  calculateDuration({bool showDialog = true}) {
     var diff = (Utils.oldBMSConvertToSecondsValue(value: eomCtr.text) - Utils.oldBMSConvertToSecondsValue(value: somCtr.text));
-    if (diff.isNegative) {
+
+    if (diff.isNegative && showDialog) {
       eomCtr.clear();
       LoadingDialog.showErrorDialog("EOM should not less than SOM", callback: () {
         eomFN.requestFocus();
@@ -130,6 +139,8 @@ class FillerMasterController extends GetxController {
   formHandler(String btnName) {
     if (btnName == "Clear") {
       clearPage();
+    } else if (btnName == "Save") {
+      saveValidate();
     } else if (btnName == "Search") {
       Get.to(
         SearchPage(
@@ -148,6 +159,10 @@ class FillerMasterController extends GetxController {
   }
 
   addListeneres2() {
+    rightTableFN.onKeyEvent = (focus, event) {
+      // if(Presse)
+      return KeyEventResult.ignored;
+    };
     segNoFN.addListener(() {
       if (!segNoFN.hasFocus) {
         segNoLeftLeave();
@@ -158,10 +173,11 @@ class FillerMasterController extends GetxController {
         tapeIDLeave();
       }
     });
-    fillerNameFN.addListener(() {
+    fillerNameFN.addListener(() async {
       if (!fillerNameFN.hasFocus) {
         if (fillerNameCtr.text.isNotEmpty) {
-          retrievRecord(text: fillerNameCtr.text.trim());
+          await retrievRecord(text: fillerNameCtr.text.trim());
+          closeDialogIfOpen();
         }
       }
     });
@@ -172,39 +188,45 @@ class FillerMasterController extends GetxController {
     });
   }
 
-  setCartNo() {
+  setCartNo() async {
     if (tapeIDCtr.text.trim().isNotEmpty && segNoCtrLeft.text.trim().isNotEmpty) {
-      txNoCtr.text = "${tapeIDCtr.text.trim()}-${segNoCtrLeft.text.trim()}";
+      var cartNo = tapeIDCtr.text.trim();
+      txNoCtr.text = cartNo.substring(0, min(cartNo.length, 13));
     } else {
       txNoCtr.text = "";
     }
+    txNoCtr.text = txNoCtr.text.trim();
   }
 
   segNoLeftLeave() async {
     if (segNoCtrLeft.text.trim().isEmpty) {
       segNoCtrLeft.text = "0";
     }
-    setCartNo();
-    if (tapeIDCtr.text.trim().isNotEmpty && (segNoCtrLeft.text.trim().isNotEmpty && segNoCtrLeft.text != "0")) {
-      LoadingDialog.call();
-      await Get.find<ConnectorControl>().POSTMETHOD(
-        api: ApiFactory.FILLER_MASTER_SEGNO_LEAVE,
-        fun: (resp) {
-          closeDialogIfOpen();
-          if (resp != null && resp is Map<String, dynamic> && resp['segNumber'] != null && resp['segNumber']['eventName'] != null) {
-            LoadingDialog.showErrorDialog(resp['segNumber']['eventName'].toString(), callback: () {
-              tapeIDFN.requestFocus();
-            });
-          }
-        },
-        json: {
-          "exportTapeCode": tapeIDCtr.text,
-          "segmentNumber": segNoCtrLeft.text,
-          "code": fillerCode,
-          "houseID": txNoCtr.text,
-          "eventType": "",
-        },
-      );
+    await setCartNo();
+    if (segNoCtrLeft.text.trim().isNotEmpty) {
+      tapeIDCtr.text = tapeIDCtr.text.trim();
+      // txNoCtr.text = "${tapeIDCtr.text.trim()}-${segNoCtrLeft.text.trim()}";
+      if (tapeIDCtr.text.trim().isNotEmpty && segNoCtrLeft.text.trim() != "0" && segNoCtrLeft.text.trim().isNotEmpty) {
+        LoadingDialog.call();
+        await Get.find<ConnectorControl>().POSTMETHOD(
+          api: ApiFactory.FILLER_MASTER_SEGNO_LEAVE,
+          fun: (resp) {
+            closeDialogIfOpen();
+            if (resp != null && resp is Map<String, dynamic> && resp['segNumber'] != null && resp['segNumber']['eventName'] != null) {
+              LoadingDialog.showErrorDialog(resp['segNumber']['eventName'].toString(), callback: () {
+                tapeIDFN.requestFocus();
+              });
+            }
+          },
+          json: {
+            "exportTapeCode": tapeIDCtr.text,
+            "segmentNumber": segNoCtrLeft.text,
+            "code": fillerCode,
+            "houseID": txNoCtr.text,
+            "eventType": "",
+          },
+        );
+      }
     } else {
       segNoCtrLeft.text = "0";
     }
@@ -213,9 +235,7 @@ class FillerMasterController extends GetxController {
 
   tapeIDLeave() async {
     tapeIDCtr.text = tapeIDCtr.text.trim();
-    setCartNo();
-    txNoCtr.text = txNoCtr.text.trim();
-
+    await setCartNo();
     if (tapeIDCtr.text.trim().isNotEmpty && (segNoCtrLeft.text.trim().isNotEmpty && segNoCtrLeft.text != "0")) {
       LoadingDialog.call();
       await Get.find<ConnectorControl>().POSTMETHOD(
@@ -270,7 +290,7 @@ class FillerMasterController extends GetxController {
     }
   }
 
-  retrievRecord({String text = "", String code = "", String tapeCode = "", String segNo = ""}) async {
+  retrievRecord({String text = "", String code = "", String tapeCode = "", String segNo = "", bool fromCopy = false}) async {
     LoadingDialog.call();
     await Get.find<ConnectorControl>().POSTMETHOD(
       api: ApiFactory.FILLER_MASTER_RETRIVE_RECORDS,
@@ -317,8 +337,16 @@ class FillerMasterController extends GetxController {
             }
 
             /// TX-CAPTION
-            if (tempModel2.fillerCaption != null) {
-              txCaptionCtr.text = tempModel2.fillerCaption ?? "";
+            if (tempModel2.exportTapeCaption != null) {
+              txCaptionCtr.text = tempModel2.exportTapeCaption ?? "";
+              if (txCaptionCtr.text.contains("F/")) {
+                txCaptionCtr.text = txCaptionCtr.text.replaceAll(r'F/', "");
+              }
+            }
+
+            /// FILLER-NAME
+            if (fromCopy && tempModel2.fillerCaption != null) {
+              fillerNameCtr.text = tempModel2.fillerCaption ?? "";
             }
 
             /// TAPE-ID
@@ -345,7 +373,7 @@ class FillerMasterController extends GetxController {
             if (tempModel2.eom != null) {
               eomCtr.text = tempModel2.eom.toString();
             }
-            calculateDuration();
+            calculateDuration(showDialog: false);
 
             /// TAPE-TYPE
             var tapeTypeCode =
@@ -451,6 +479,7 @@ class FillerMasterController extends GetxController {
             }
 
             /// SOURCE
+
             /// ID-NO
 
             /// START-DATE
@@ -465,7 +494,16 @@ class FillerMasterController extends GetxController {
                   DateFormat("dd-MM-yyyy").format(DateFormat("yyyy-MM-ddThh:mm:ss").parse(tempModel2.killDate ?? "2023-06-14T23:59:59"));
             }
 
+            if (tempModel2.lstAnnotationLoadDatas != null) {
+              rightDataTable.clear();
+              rightDataTable.addAll(tempModel2.lstAnnotationLoadDatas!);
+            }
+
             /// SYNOPSIS
+            if (tempModel2.fillerSynopsis != null) {
+              synopsisCtr.text = tempModel2.fillerSynopsis ?? "";
+            }
+
             /// EVENT
             /// TC-IN
             /// TC-OUT
@@ -474,7 +512,7 @@ class FillerMasterController extends GetxController {
             updateUI();
           }
         } else {
-          LoadingDialog.showErrorDialog(resp.toString());
+          // LoadingDialog.showErrorDialog(resp.toString());
         }
       },
       json: {
@@ -489,7 +527,7 @@ class FillerMasterController extends GetxController {
   saveValidate() {
     if (selectedDropDowns[0] == null) {
       LoadingDialog.showErrorDialog("Location cannot be empty.");
-    } else if (selectedDropDowns[1] == null) {
+    } else if (selectedDropDowns[19] == null) {
       LoadingDialog.showErrorDialog("Channel cannot be empty.");
     } else if (selectedDropDowns[17] == null) {
       LoadingDialog.showErrorDialog("ID No cannot be empty.");
@@ -517,7 +555,100 @@ class FillerMasterController extends GetxController {
     }
   }
 
-  void saveRecord() {}
+  void saveRecord() {
+    late DateTime startDate, endDate;
+    try {
+      startDate = DateFormat("dd-MM-yyyy").parse(startDateCtr.text);
+      endDate = DateFormat("dd-MM-yyyy").parse(endDateCtr.text);
+    } catch (e) {
+      print(e.toString());
+    }
+    if (somCtr.text.trim().isEmpty || somCtr.text.trim() == "00:00:00:00") {
+      LoadingDialog.showErrorDialog("Please enter SOM.");
+    } else if (eomCtr.text.trim().isEmpty || eomCtr.text.trim() == "00:00:00:00") {
+      LoadingDialog.showErrorDialog("Please enter EOM.");
+    } else if ((Utils.oldBMSConvertToSecondsValue(value: eomCtr.text) - Utils.oldBMSConvertToSecondsValue(value: somCtr.text)).isNegative) {
+      eomCtr.clear();
+      LoadingDialog.showErrorDialog("EOM should not less than SOM", callback: () {
+        eomFN.requestFocus();
+      });
+    } else if (selectedDropDowns[3] == null) {
+      LoadingDialog.showErrorDialog("Tape Type cannot be empty.");
+    } else if (selectedDropDowns[4] == null) {
+      LoadingDialog.showErrorDialog("Filler Type cannot be empty.");
+    } else if (selectedDropDowns[5] == null) {
+      LoadingDialog.showErrorDialog("Censhor ship cannot be empty.");
+    } else if (selectedDropDowns[6] == null) {
+      LoadingDialog.showErrorDialog("Langauge cannot be empty.");
+    } else if (selectedDropDowns[7] == null) {
+      LoadingDialog.showErrorDialog("Production cannot be empty.");
+    } else if (selectedDropDowns[8] == null) {
+      LoadingDialog.showErrorDialog("BlackWhite cannot be empty.");
+    } else if (selectedDropDowns[2] == null) {
+      LoadingDialog.showErrorDialog("Banner cannot be empty.");
+    } else if (startDate.isAfter(endDate)) {
+      LoadingDialog.showErrorDialog("Start date should not more than end date");
+    } else if (endDate.isAfter(DateTime.now())) {
+      LoadingDialog.showErrorDialog("End date should not less than today.");
+    } else {
+      LoadingDialog.call();
+      Get.find<ConnectorControl>().POSTMETHOD(
+        api: ApiFactory.FILLER_MASTER_SAVE,
+        fun: (resp) {
+          closeDialogIfOpen();
+          if (resp != null &&
+              resp is Map<String, dynamic> &&
+              resp['saveRecord'] != null &&
+              resp['saveRecord']['strMessage'] != null &&
+              resp['saveRecord']['strMessage'].toString().contains("Record is updated successfully.")) {
+            LoadingDialog.callDataSaved(msg: resp['saveRecord']['strMessage'].toString());
+          } else {
+            LoadingDialog.showErrorDialog(resp.toString());
+          }
+        },
+        json: {
+          "fillerCode": fillerCode,
+          "fillerCaption": fillerNameCtr.text,
+          "fillerDuration": Utils.convertToSecond(value: durationCtr.text),
+          "fillerTypeCode": selectedDropDowns[4]?.key,
+          "bannerCode": selectedDropDowns[2]?.key,
+          "languageCode": selectedDropDowns[6]?.key,
+          "censorshipCode": selectedDropDowns[5]?.key,
+          "tapeTypeCode": selectedDropDowns[3]?.key,
+          "exportTapeCode": tapeIDCtr.text,
+          "exportTapeCaption": "F/${txCaptionCtr.text}",
+          "blackWhite": selectedDropDowns[8]?.key,
+          "inHouseOutHouse": selectedDropDowns[7]?.key,
+          "segmentNumber": num.tryParse(segNoCtrLeft.text) ?? 0,
+          "som": somCtr.text,
+          "fromDate": DateFormat("yyyy-MM-ddT00:00:00").format(startDate), // "2023-06-26T09:54:57.806Z"
+          "killDate": DateFormat("yyyy-MM-ddT00:00:00").format(endDate), // "2023-06-26T09:54:57.806Z"
+          "fillerSynopsis": synopsisCtr.text,
+          "modifiedBy": Get.find<MainController>().user?.logincode,
+          "houseId": txNoCtr.text,
+          "blanktapeid": selectedDropDowns[17]?.key,
+          "locationcode": selectedDropDowns[0]?.key,
+          "channelcode": selectedDropDowns[19]?.key,
+          "seg": segIDCtr.text,
+          "eom": eomCtr.text,
+          "locationShortName": "AS",
+          "movieName": movieNameCtr.text,
+          "singer": singerCtr.text,
+          "musicDirector": musicDirectorCtr.text,
+          "musicCompany": musicCompanyCtr.text,
+          "releaseYear": releaseYearCtr.text,
+          "grade": selectedDropDowns[15]?.key, //
+          "moodCode": num.tryParse(selectedDropDowns[13]?.key ?? "0") ?? 0,
+          "energyCode": num.tryParse(selectedDropDowns[10]?.key ?? "0") ?? 0,
+          "tempoCode": num.tryParse(selectedDropDowns[14]?.key ?? "0") ?? 0,
+          "eraCode": num.tryParse(selectedDropDowns[11]?.key ?? "0") ?? 0,
+          "gradeCode": num.tryParse(selectedDropDowns[12]?.key ?? "0") ?? 0, //
+          "regioncode": num.tryParse(selectedDropDowns[9]?.key ?? "0") ?? 0, //
+          "lstAnnotation": rightDataTable.value.map((e) => e.toJson()).toList(),
+        },
+      );
+    }
+  }
 
   clearBottomAnnotation() {
     tcInCtr.text = "00:00:00:00";
@@ -530,10 +661,10 @@ class FillerMasterController extends GetxController {
       return;
     }
     rightDataTable.add(FillerMasterAnnotationModel(
-      eventID: selectedDropDowns[18]?.key,
-      eventName: selectedDropDowns[18]?.key,
-      tCIn: tcInCtr.text,
-      tCOut: tcOutCtr.text,
+      eventId: int.tryParse(selectedDropDowns[18]?.key ?? "0") ?? 0,
+      eventname: selectedDropDowns[18]?.key,
+      tCin: tcInCtr.text,
+      tCout: tcOutCtr.text,
     ));
     clearBottomAnnotation();
   }
@@ -542,15 +673,23 @@ class FillerMasterController extends GetxController {
     await retrievRecord(
       tapeCode: copyCtr.text.trim(),
       segNo: segNoCtrRight.text.trim(),
+      fromCopy: true,
     );
     tapeIDCtr.text = "AUTO";
     txNoCtr.text = "AUTO";
     segNoCtrLeft.text = "1";
     var now = DateTime.now();
-    fillerNameCtr.text =
-        "${"${fillerNameCtr.text}                                        ".toString().substring(0, 31)}-${now.day}-${now.month}-${now.year}";
-    fillerNameFN.requestFocus();
-    txCaptionCtr.clear();
+    // DateFormat("yyyyMMdd").format(now);;
+    var tempName = fillerNameCtr.text;
+    fillerNameCtr.text = "$tempName-${DateFormat("yyyyMMdd").format(now)}";
+    // txCaptionCtr.text = "${txCaptionCtr.text}-${DateFormat("yyyyMMdd").format(now)}";
+    // txCaptionCtr.clear();
+    // fillerNameFN.requestFocus();
+    if (tempName.contains("F/")) {
+      tempName = tempName.replaceAll(r'F/', "");
+    }
+
+    txCaptionCtr.text = "$tempName-${DateFormat("yyyyMMdd").format(now)}";
     startDateCtr.text = "${now.day}-${now.month}-${now.year}";
     // now = now.copyWith(month: now.month + 3);
     endDateCtr.text = "${now.day}-${now.month}-${now.year}";
@@ -586,6 +725,9 @@ class FillerMasterController extends GetxController {
   closeDialogIfOpen() {
     if (Get.isDialogOpen ?? false) {
       Get.back();
+      while (Get.isDialogOpen ?? false) {
+        Get.back();
+      }
     }
   }
 }
