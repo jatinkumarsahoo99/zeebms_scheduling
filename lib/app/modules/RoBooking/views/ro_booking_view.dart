@@ -492,7 +492,9 @@ class RoBookingView extends StatelessWidget {
                                             ? FormButtonWrapper(
                                                 btnText: btn["name"],
                                                 // isEnabled: btn['isDisabled'],
-                                                callback: () {},
+                                                callback: () {
+                                                  controller.saveCheck();
+                                                },
                                               )
                                             : btn["name"] == "Clear"
                                                 ? FormButtonWrapper(

@@ -32,7 +32,6 @@ class ProgramView extends GetView<RoBookingController> {
                     InputFields.formField1(
                         // showTitle: false,
                         hintTxt: "Tape ID",
-                        isEnable: false,
                         controller: TextEditingController(),
                         width: 0.06),
                     DropDownField.formDropDown1WidthMap(
