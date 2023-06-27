@@ -463,7 +463,10 @@ class FillerMasterView extends GetView<FillerMasterController> {
                                                     : null,
                                                 child: controller.rightDataTable.value.isEmpty
                                                     ? null
-                                                    : DataGridFromMap(mapData: controller.rightDataTable.value.map((e) => e.toJson()).toList()),
+                                                    : DataGridFromMap(
+                                                        mapData: controller.rightDataTable.value.map((e) => e.toJson()).toList(),
+                                                        focusNode: controller.rightTableFN,
+                                                      ),
                                               );
                                             }),
                                           ),

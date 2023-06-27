@@ -67,7 +67,12 @@ class FillerMasterController extends GetxController {
       musicDirectorCtr = TextEditingController(),
       musicCompanyCtr = TextEditingController();
 
-  var locationFN = FocusNode(), eomFN = FocusNode(), fillerNameFN = FocusNode(), segNoFN = FocusNode(), tapeIDFN = FocusNode();
+  var locationFN = FocusNode(),
+      eomFN = FocusNode(),
+      fillerNameFN = FocusNode(),
+      segNoFN = FocusNode(),
+      tapeIDFN = FocusNode(),
+      rightTableFN = FocusNode();
 
   clearPage() {
     rightDataTable.clear();
@@ -153,6 +158,10 @@ class FillerMasterController extends GetxController {
   }
 
   addListeneres2() {
+    rightTableFN.onKeyEvent = (focus, event) {
+      // if(Presse)
+      return KeyEventResult.ignored;
+    };
     segNoFN.addListener(() {
       if (!segNoFN.hasFocus) {
         segNoLeftLeave();
@@ -674,7 +683,7 @@ class FillerMasterController extends GetxController {
     // }
     // txCaptionCtr.clear();
     // fillerNameFN.requestFocus();
-    var l = txCaptionCtr.text.split("/");
+    var l = fillerNameCtr.text.split("/");
     for (var element in l) {
       if (element != "F") {
         txCaptionCtr.text = "$element-${DateFormat("yyyyMMdd").format(now)}";
