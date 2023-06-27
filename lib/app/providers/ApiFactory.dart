@@ -392,20 +392,60 @@ class ApiFactory {
   static String TRANSMISSION_LOG_POST_PIVOT_LOG() => "$BASE_URL/api/Transmissionlog/PostPivotLog";
 
   static String TRANSMISSION_LOG_POST_TS() => "$BASE_URL/api/Transmissionlog/PostTsCalc";
-  static String TRANSMISSION_LOG_EXPORT_CLICK(String locId,String chnlId,String txtDt,String chnlNm,String locName,int expRowno,String exportTime,bool secEvnt,String apiCallVal ) => "$BASE_URL/api/Transmissionlog/GetbtnExportDataClick?Locationcode=$locId&Txtdate=$txtDt&channelName=$chnlNm&LocationName=$locName&ExportRowNumber=$expRowno&ExportTime=$exportTime&AddSecondaryEvents=$secEvnt&ApiCallValue=$apiCallVal&ChannelCode=$chnlId";
+  static String TRANSMISSION_LOG_EXPORT_CLICK(String locId, String chnlId, String txtDt, String chnlNm, String locName, int expRowno,
+          String exportTime, bool secEvnt, String apiCallVal) =>
+      "$BASE_URL/api/Transmissionlog/GetbtnExportDataClick?Locationcode=$locId&Txtdate=$txtDt&channelName=$chnlNm&LocationName=$locName&ExportRowNumber=$expRowno&ExportTime=$exportTime&AddSecondaryEvents=$secEvnt&ApiCallValue=$apiCallVal&ChannelCode=$chnlId";
 
-  static String TRANSMISSION_LOG_WRITE_EXCEL(String locId,String chnlId,String txtDt,bool standBy) => "$BASE_URL/api/Transmissionlog/GetWriteExcel?locationcode=$locId&channelcode=$chnlId&TxtDate=$txtDt&chkStandBy=$standBy";
-  static String TRANSMISSION_LOG_WRITE_VIZRT(String locId,String chnlId,String txtDt,bool standBy) => "$BASE_URL/api/Transmissionlog/GetExportVizrt?locationcode=$locId&channelcode=$chnlId&TxtDate=$txtDt&chkStandBy=$standBy";
-  static String TRANSMISSION_LOG_WRITE_OLDEXCEL(String locId,String chnlId,String txtDt,bool standBy,String fileName, String type) => "$BASE_URL/api/Transmissionlog/GetWriteOLDExcel?locationcode=$locId&channelcode=$chnlId&txtDate=$txtDt&chkStandBy=$standBy&type=$type&FileName=$fileName";
-  static String TRANSMISSION_LOG_WRITE_DSERIES(String locId,String chnlId,String txtDt,bool standBy,bool addSecondaryEvent,bool chkPartialLog,String fromTime,String toTime) => "$BASE_URL/api/Transmissionlog/GetWriteDSeriesLog?locationcode=$locId&channelcode=$chnlId&txtDate=$txtDt&chkStandBy=$standBy&AddSecondaryEvent=$addSecondaryEvent&chkPartialLog=$chkPartialLog&FromTime=$fromTime&ToTime=$toTime";
-  static String TRANSMISSION_LOG_WRITE_LST(String locId,String chnlId,String txtDt,bool standBy,bool chkPartialLog,String fromTime,String toTime) => "$BASE_URL/api/Transmissionlog/GetWriteLst?locationcode=$locId&channelcode=$chnlId&telecastdate=$txtDt&standbyLog=$standBy&chkPartialLog=$chkPartialLog&FromTime=$fromTime&ToTime=$toTime";
-  static String TRANSMISSION_LOG_WRITE_LST_NOIDA(String locId,String chnlId,String txtDt,bool standBy,bool addSecondaryEvent,bool chkPartialLog,String fromTime,String toTime,String fileName) => "$BASE_URL/api/Transmissionlog/GetWriteLst?locationcode=$locId&channelcode=$chnlId&telecastdate=$txtDt&standbyLog=$standBy&chkPartialLog=$chkPartialLog&FromTime=$fromTime&ToTime=$toTime&AddSecondaryEvents=$addSecondaryEvent&Noida=true&fileName=$fileName";
-  static String TRANSMISSION_LOG_WRITE_GRASS_VALLEY(String locId,String chnlId,String txtDt,bool standBy,) => "$BASE_URL/api/Transmissionlog/GetGVLog?locationcode=$locId&channelcode=$chnlId&txtDate=$txtDt&chkStandBy=$standBy";
-  static String TRANSMISSION_LOG_WRITE_VIDEOCON_GV(String locId,String chnlId,String txtDt,bool standBy,) => "$BASE_URL/api/Transmissionlog/GetWriteVideoconGV?locationcode=$locId&channelcode=$chnlId&txtDate=$txtDt&chkStandBy=$standBy";
-  static String TRANSMISSION_LOG_WRITE_PLAYBOX(String locId,String chnlId,String txtDt,bool standBy,) => "$BASE_URL/api/Transmissionlog/GetWritePlaybox?locationcode=$locId&channelcode=$chnlId&TxtDate=$txtDt&chkStandBy=$standBy";
-  static String TRANSMISSION_LOG_WRITE_COMMERCIAL_REPLACE(String locId,String chnlId,String txtDt,) => "$BASE_URL/api/Transmissionlog/GetWriteCommercialReplacement?locationcode=$locId&channelcode=$chnlId&txtDate=$txtDt";
-  static String TRANSMISSION_LOG_WRITE_VZRT(String locId,String chnlId,String txtDt,) => "$BASE_URL/api/Transmissionlog/GetWriteExcelevzrt?locationcode=$locId&channelcode=$chnlId&txtDate=$txtDt";
-  static String TRANSMISSION_LOG_WRITE_ITX(String locId,String chnlId,String txtDt,String chnlName,String fileName) => "$BASE_URL/api/Transmissionlog/GetExportITX?locationcode=$locId&channelcode=$chnlId&txtDate=$txtDt&ChannelName=$chnlName&filename=$fileName";
+  static String TRANSMISSION_LOG_WRITE_EXCEL(String locId, String chnlId, String txtDt, bool standBy) =>
+      "$BASE_URL/api/Transmissionlog/GetWriteExcel?locationcode=$locId&channelcode=$chnlId&TxtDate=$txtDt&chkStandBy=$standBy";
+  static String TRANSMISSION_LOG_WRITE_VIZRT(String locId, String chnlId, String txtDt, bool standBy) =>
+      "$BASE_URL/api/Transmissionlog/GetExportVizrt?locationcode=$locId&channelcode=$chnlId&TxtDate=$txtDt&chkStandBy=$standBy";
+  static String TRANSMISSION_LOG_WRITE_OLDEXCEL(String locId, String chnlId, String txtDt, bool standBy, String fileName, String type) =>
+      "$BASE_URL/api/Transmissionlog/GetWriteOLDExcel?locationcode=$locId&channelcode=$chnlId&txtDate=$txtDt&chkStandBy=$standBy&type=$type&FileName=$fileName";
+  static String TRANSMISSION_LOG_WRITE_DSERIES(
+          String locId, String chnlId, String txtDt, bool standBy, bool addSecondaryEvent, bool chkPartialLog, String fromTime, String toTime) =>
+      "$BASE_URL/api/Transmissionlog/GetWriteDSeriesLog?locationcode=$locId&channelcode=$chnlId&txtDate=$txtDt&chkStandBy=$standBy&AddSecondaryEvent=$addSecondaryEvent&chkPartialLog=$chkPartialLog&FromTime=$fromTime&ToTime=$toTime";
+  static String TRANSMISSION_LOG_WRITE_LST(
+          String locId, String chnlId, String txtDt, bool standBy, bool chkPartialLog, String fromTime, String toTime) =>
+      "$BASE_URL/api/Transmissionlog/GetWriteLst?locationcode=$locId&channelcode=$chnlId&telecastdate=$txtDt&standbyLog=$standBy&chkPartialLog=$chkPartialLog&FromTime=$fromTime&ToTime=$toTime";
+  static String TRANSMISSION_LOG_WRITE_LST_NOIDA(String locId, String chnlId, String txtDt, bool standBy, bool addSecondaryEvent, bool chkPartialLog,
+          String fromTime, String toTime, String fileName) =>
+      "$BASE_URL/api/Transmissionlog/GetWriteLst?locationcode=$locId&channelcode=$chnlId&telecastdate=$txtDt&standbyLog=$standBy&chkPartialLog=$chkPartialLog&FromTime=$fromTime&ToTime=$toTime&AddSecondaryEvents=$addSecondaryEvent&Noida=true&fileName=$fileName";
+  static String TRANSMISSION_LOG_WRITE_GRASS_VALLEY(
+    String locId,
+    String chnlId,
+    String txtDt,
+    bool standBy,
+  ) =>
+      "$BASE_URL/api/Transmissionlog/GetGVLog?locationcode=$locId&channelcode=$chnlId&txtDate=$txtDt&chkStandBy=$standBy";
+  static String TRANSMISSION_LOG_WRITE_VIDEOCON_GV(
+    String locId,
+    String chnlId,
+    String txtDt,
+    bool standBy,
+  ) =>
+      "$BASE_URL/api/Transmissionlog/GetWriteVideoconGV?locationcode=$locId&channelcode=$chnlId&txtDate=$txtDt&chkStandBy=$standBy";
+  static String TRANSMISSION_LOG_WRITE_PLAYBOX(
+    String locId,
+    String chnlId,
+    String txtDt,
+    bool standBy,
+  ) =>
+      "$BASE_URL/api/Transmissionlog/GetWritePlaybox?locationcode=$locId&channelcode=$chnlId&TxtDate=$txtDt&chkStandBy=$standBy";
+  static String TRANSMISSION_LOG_WRITE_COMMERCIAL_REPLACE(
+    String locId,
+    String chnlId,
+    String txtDt,
+  ) =>
+      "$BASE_URL/api/Transmissionlog/GetWriteCommercialReplacement?locationcode=$locId&channelcode=$chnlId&txtDate=$txtDt";
+  static String TRANSMISSION_LOG_WRITE_VZRT(
+    String locId,
+    String chnlId,
+    String txtDt,
+  ) =>
+      "$BASE_URL/api/Transmissionlog/GetWriteExcelevzrt?locationcode=$locId&channelcode=$chnlId&txtDate=$txtDt";
+  static String TRANSMISSION_LOG_WRITE_ITX(String locId, String chnlId, String txtDt, String chnlName, String fileName) =>
+      "$BASE_URL/api/Transmissionlog/GetExportITX?locationcode=$locId&channelcode=$chnlId&txtDate=$txtDt&ChannelName=$chnlName&filename=$fileName";
 
   static String TRANSMISSION_LOG_EXPORT_FPC_TIME(String loc, String chnl, String txtDt, bool standBy) =>
       "$BASE_URL/api/Transmissionlog/GetExportClick?locationcode=$loc&channelcode=$chnl&txtDate=$txtDt&chkStandBy=$standBy";
@@ -660,7 +700,7 @@ class ApiFactory {
   static String AsrunImport_LoadFPCData(locationCode, channelCode, telecastDate) =>
       "$BASE_URL/api/AsrunImport/LoadFPCData?LocationCode=$locationCode&ChannelCode=$channelCode&TelecastDate=$telecastDate";
   static String AsrunImport_LoadRunData(locationCode, channelCode, telecastDate) =>
-      "$BASE_URL/api/AsrunImport/LoadAsRunData?LocationCode=$locationCode&ChannelCode=$channelCode&TelecastDate=$telecastDate";
+      "$BASE_URL/api/AsrunImport/LoadAsRunData?LocationCode=$locationCode&ChannelCode=$channelCode&LogDate=$telecastDate";
 
   static String AsrunImport_GetChannelCode = "$BASE_URL/api/AsrunImport/GetChannelCode";
   static String AsrunImport_LoadImportSpecifications(String locationCode, String channelCode) =>
