@@ -28,6 +28,7 @@ import 'package:get/get.dart';
 import 'package:intl/intl.dart';
 
 import '../bindings/ro_booking_init_data.dart';
+import '../bindings/ro_booking_save_check.dart';
 
 class RoBookingController extends GetxController {
   TextEditingController fpcEffectiveDateCtrl = TextEditingController(),
@@ -43,6 +44,7 @@ class RoBookingController extends GetxController {
       totDurCtrl = TextEditingController(),
       totAmtCtrl = TextEditingController(),
       zoneCtrl = TextEditingController(),
+      gstNoCtrl = TextEditingController(),
       maxspendCtrl = TextEditingController();
   PageController pagecontroller = PageController(keepPage: false);
   TextEditingController mgfromDateCtrl = TextEditingController(), mgtoDateCtrl = TextEditingController();
@@ -74,9 +76,14 @@ class RoBookingController extends GetxController {
   DropDownValue? selectedExecutive;
   DropDownValue? selectedBrand;
   DropDownValue? selectedBreak;
+  DropDownValue? selectedSecEvent;
+  DropDownValue? selectedTriggerAt;
+  DropDownValue? selectedPdc;
+
   String? dealProgramCode;
   String? dealStartTime;
   String? dealTelecastDate;
+  RoBookingSaveCheckTapeId? savecheckData;
 
   DropDownValue? selectedGST;
 
@@ -290,6 +297,7 @@ class RoBookingController extends GetxController {
             selectedExecutive = DropDownValue(
                 key: agencyLeaveData?.excutiveDetails?.first.personnelCode ?? "", value: agencyLeaveData?.excutiveDetails?.first.personnelname);
             update(["init"]);
+            gstNoCtrl.text = agencyLeaveData?.gstRegNo ?? "";
             agencyFocus.requestFocus();
             Get.defaultDialog(
                 radius: 05,
@@ -315,7 +323,7 @@ class RoBookingController extends GetxController {
                       ),
                       InputFields.formField1(
                         hintTxt: "GST Reg#",
-                        controller: TextEditingController(text: agencyLeaveData?.gstRegNo ?? ""),
+                        controller: gstNoCtrl,
                         width: 0.20,
                       )
                     ],
@@ -430,7 +438,55 @@ class RoBookingController extends GetxController {
         });
   }
 
-  save() {}
+  save() {
+    Get.find<ConnectorControl>().POSTMETHOD(
+        api: ApiFactory.RO_BOOKING_OnSaveData,
+        json: {
+          "chkGSTValidate": true,
+          "lstdgvSpots":
+              addSpotData?.lstSpots?.map((e) => e.toJson()).toList() ?? bookingNoLeaveData?.lstSpots?.map((e) => e.toJson()).toList() ?? [],
+          "lstDealDetails": dealNoLeaveData?.lstdgvDealDetails?.map((e) => e.toJson()).toList() ??
+              bookingNoLeaveData?.lstdgvDealDetails?.map((e) => e.toJson()).toList() ??
+              [],
+          "lstdgvMakeGood": [],
+          "locationCode": selectedLocation?.key,
+          "channelCode": selectedChannel?.key,
+          "bookingMonth": bookingMonthCtrl.text,
+          "bookingNumber": bookingNoCtrl.text,
+          "bookingDate": bookDateCtrl.text.fromdMyToyMd(),
+          "effectiveDate": fpcEffectiveDateCtrl.text.fromdMyToyMd(),
+          "referenceNumber": refNoCtrl.text,
+          "clientCode": selectedClient?.key,
+          "agencyCode": selectedAgnecy?.key,
+          "brandCode": selectedBrand?.key,
+          "payroute": agencyLeaveData?.payroute ?? bookingNoLeaveData?.payrouteName,
+          "totalDuration": bookingNoLeaveData?.totalDuration,
+          "totalAmount": bookingNoLeaveData?.totalAmount,
+          "executive": selectedExecutive?.key,
+          "zoneCode": agencyLeaveData?.zoneCode ?? bookingNoLeaveData?.zonecode,
+          "dealNo": selectedDeal?.key,
+          "pdcNumber": selectedPdc?.key ?? "",
+          "loggedUser": Get.find<MainController>().user?.logincode,
+          "intEditMode": 0,
+          "gstPlants": selectedGST?.key ?? bookingNoLeaveData?.gstPlants,
+          "gstRegN": bookingNoLeaveData?.gstPlants ?? gstNoCtrl.text,
+          "secondaryEvents": selectedSecEvent?.key,
+          "triggerAt": selectedTriggerAt?.key,
+          "previousBookedAmount": dealNoLeaveData?.previousBookedAmount ?? bookingNoLeaveData?.previousBookedAmount,
+          "previousValAmount": dealNoLeaveData?.previousValAmount ?? bookingNoLeaveData?.previousValAmount,
+          "dblOldBookingAmount": addSpotData?.dblOldBookingAmount ?? bookingNoLeaveData?.dblOldBookingAmount,
+          "revenueType": dealNoLeaveData?.strRevenueTypeCode ?? bookingNoLeaveData?.revenueType,
+          "maxSpend": dealNoLeaveData?.maxSpend ?? bookingNoLeaveData?.maxSpend,
+          "intPDCReqd": 0,
+          "pdc": selectedPdc?.key,
+          "strAccountCode": dealDblClickData?.strAccountCode
+        },
+        fun: (response) {
+          if (response is Map && response.containsKey("info_SpotsNotVerified")) {
+            spotsNotVerifiedData.value = response["info_SpotsNotVerified"];
+          }
+        });
+  }
 
   // void addToSpotsGrid(List<Map<String, dynamic>> dgvPrograms, List<Map<String, dynamic>> dtSpotsData, List<Map<String, dynamic>> dtDealDetails,
   //     List<Map<String, dynamic>> dgvSpots,rowIdx) {
@@ -666,6 +722,31 @@ class RoBookingController extends GetxController {
               value["info_GetTapeLost"].containsKey("lstTape") &&
               value["info_GetTapeLost"]["lstTape"] is List) {
             tapeIds = value["info_GetTapeLost"]["lstTape"];
+          }
+        });
+  }
+
+  saveCheck() {
+    Get.find<ConnectorControl>().POSTMETHOD(
+        api: ApiFactory.RO_BOOKING_OnSave_Check,
+        json: {
+          "chkSummaryType": true,
+          "lstdgvSpots":
+              addSpotData?.lstSpots?.map((e) => e.toJson()).toList() ?? bookingNoLeaveData?.lstSpots?.map((e) => e.toJson()).toList() ?? [],
+          "brandName": selectedBrand?.key
+        },
+        fun: (response) {
+          if (response is Map && response.containsKey("info_OnSaveCheckTapeId")) {
+            savecheckData = RoBookingSaveCheckTapeId.fromJson(response["info_OnSaveCheckTapeId"]);
+            pagecontroller.jumpToPage(4);
+            currentTab.value = "Booking Summary";
+            LoadingDialog.modify(savecheckData?.message ?? "", () {
+              save();
+            }, () {
+              Get.back();
+            }, deleteTitle: "Yes", cancelTitle: "No");
+          } else if (response is String) {
+            LoadingDialog.callErrorMessage1(msg: response);
           }
         });
   }

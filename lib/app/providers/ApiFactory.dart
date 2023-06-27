@@ -611,6 +611,7 @@ class ApiFactory {
   static String RO_BOOKING_AddSpot = "$BASE_URL/api/ROBooking/OnAddSpots";
   static String RO_BOOKING_OnSaveData = "$BASE_URL/api/ROBooking/OnSaveData";
   static String RO_BOOKING_GetClientPDC = "$BASE_URL/api/ROBooking/GetClientPDC";
+  static String RO_BOOKING_OnSave_Check = "$BASE_URL/api/ROBooking/OnSaveData_CheckTapeId";
 
   //////////////////////////////// RO BOOKING END /////////////////////////////////
   ///
@@ -643,6 +644,9 @@ class ApiFactory {
   static String AsrunImport_GetLocationSelect(locationCode) => "$BASE_URL/api/AsrunImport/GetLocationSelect?Locationcode=$locationCode";
   static String AsrunImport_LoadFPCData(locationCode, channelCode, telecastDate) =>
       "$BASE_URL/api/AsrunImport/LoadFPCData?LocationCode=$locationCode&ChannelCode=$channelCode&TelecastDate=$telecastDate";
+  static String AsrunImport_LoadRunData(locationCode, channelCode, telecastDate) =>
+      "$BASE_URL/api/AsrunImport/LoadAsRunData?LocationCode=$locationCode&ChannelCode=$channelCode&TelecastDate=$telecastDate";
+
   static String AsrunImport_GetChannelCode = "$BASE_URL/api/AsrunImport/GetChannelCode";
   static String AsrunImport_LoadImportSpecifications(String locationCode, String channelCode) =>
       "$BASE_URL/api/AsrunImport/LoadImportSpecifications?LocationCode=$locationCode&ChannelCode=$channelCode";
