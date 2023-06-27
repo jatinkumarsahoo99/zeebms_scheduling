@@ -307,7 +307,7 @@ class TransmissionLogController extends GetxController {
         });
   }
 
-  void btnExportClick({Function? fun}) {
+  void btnExportFetchFpc({Function? fun}) {
     LoadingDialog.call();
     Get.find<ConnectorControl>().GETMETHODCALL(
         api: ApiFactory.TRANSMISSION_LOG_EXPORT_FPC_TIME(
@@ -745,21 +745,265 @@ class TransmissionLogController extends GetxController {
 
     colorGrid(false);
     LoadingDialog.callInfoMessage('$replaceCount replacements made');
-    /*showDialog(
-      context: context,
-      builder: (context) => AlertDialog(
-        title: Text('$replaceCount replacements made'),
-        content: Text('$replaceCount replacements made'),
-        actions: [
-          TextButton(
-            onPressed: () {
-              Navigator.pop(context);
-            },
-            child: Text('OK'),
-          ),
-        ],
-      ),
-    );*/
+  }
+
+  void btnExportClick(type) async {
+    bool? isDone =
+        await showDialogForYesNo("Do you want to add secondary event?");
+    LoadingDialog.call();
+    String methodName = getExportMethod(type)!;
+    Get.find<ConnectorControl>().GETMETHODCALL(
+        api: ApiFactory.TRANSMISSION_LOG_EXPORT_CLICK(
+            selectLocation?.key ?? "",
+            selectChannel?.key ?? "",
+            selectedDate.text,
+            selectLocation?.value ?? "",
+            selectChannel?.value ?? "",
+            gridStateManager?.currentRowIdx ?? 0,
+            "00:00",
+            isDone!,
+            methodName),
+        fun: (map) {
+          Get.back();
+          if (map is Map && map.containsKey("outExportDataClick")) {
+            String outputFormat = map["outExportDataClick"]["outputFormat"];
+            String strFilePrefix = map["outExportDataClick"]["strFilePrefix"];
+            String filechannel = map["outExportDataClick"]["filechannel"];
+            logWrite(
+              strFilePrefix + outputFormat.split("|")[1],
+              type,
+              isDone!,
+            );
+          } else {}
+        });
+  }
+
+  void logWrite(String fileName, String type, bool isSecondary) async {
+    switch (type) {
+      case "Excel":
+        LoadingDialog.call();
+        Get.find<ConnectorControl>().GETMETHODCALL(
+            api: ApiFactory.TRANSMISSION_LOG_WRITE_EXCEL(
+                selectLocation?.key ?? "",
+                selectChannel?.key ?? "",
+                selectedDate.text,
+                isStandby.value),
+            fun: (map) {
+              Get.back();
+              ExportData().exportFilefromBase64(map, fileName);
+            });
+        break;
+      case "Excel - Old":
+        LoadingDialog.call();
+        Get.find<ConnectorControl>().GETMETHODCALL(
+            api: ApiFactory.TRANSMISSION_LOG_WRITE_OLDEXCEL(
+                selectLocation?.key ?? "",
+                selectChannel?.key ?? "",
+                selectedDate.text,
+                isStandby.value,
+                fileName ?? "",
+                ""),
+            fun: (map) {
+              Get.back();
+              ExportData().exportFilefromBase64(map, fileName);
+            });
+        break;
+      case "Excel - NEWS":
+        LoadingDialog.call();
+        Get.find<ConnectorControl>().GETMETHODCALL(
+            api: ApiFactory.TRANSMISSION_LOG_WRITE_OLDEXCEL(
+                selectLocation?.key ?? "",
+                selectChannel?.key ?? "",
+                selectedDate.text,
+                isStandby.value,
+                fileName ?? "",
+                "NEWS"),
+            fun: (map) {
+              Get.back();
+              ExportData().exportFilefromBase64(map, fileName);
+            });
+        break;
+      case "VizRT":
+        LoadingDialog.call();
+        Get.find<ConnectorControl>().GETMETHODCALL(
+            api: ApiFactory.TRANSMISSION_LOG_WRITE_VIZRT(
+              selectLocation?.key ?? "",
+              selectChannel?.key ?? "",
+              selectedDate.text,
+              isStandby.value,
+            ),
+            fun: (map) {
+              Get.back();
+              ExportData().exportFilefromBase64(map, fileName);
+            });
+        break;
+      case "D Series":
+        LoadingDialog.call();
+        Get.find<ConnectorControl>().GETMETHODCALL(
+            api: ApiFactory.TRANSMISSION_LOG_WRITE_DSERIES(
+              selectLocation?.key ?? "",
+              selectChannel?.key ?? "",
+              selectedDate.text,
+              isStandby.value,
+              isSecondary,
+              isPartialLog.value,
+              selectExportFpcFrom?.value ?? "",
+              selectExportFpcTo?.value ?? '',
+            ),
+            fun: (map) {
+              Get.back();
+              ExportData().exportFilefromBase64(map, fileName);
+            });
+        break;
+      case "ADC -lst":
+        LoadingDialog.call();
+        Get.find<ConnectorControl>().GETMETHODCALL(
+            api: ApiFactory.TRANSMISSION_LOG_WRITE_LST(
+              selectLocation?.key ?? "",
+              selectChannel?.key ?? "",
+              selectedDate.text,
+              isStandby.value,
+              isPartialLog.value,
+              selectExportFpcFrom?.value ?? "",
+              selectExportFpcTo?.value ?? '',
+            ),
+            fun: (map) {
+              Get.back();
+              ExportData().exportFilefromBase64(map, fileName);
+            });
+        break;
+      case "Grass Valley":
+        LoadingDialog.call();
+        Get.find<ConnectorControl>().GETMETHODCALL(
+            api: ApiFactory.TRANSMISSION_LOG_WRITE_GRASS_VALLEY(
+              selectLocation?.key ?? "",
+              selectChannel?.key ?? "",
+              selectedDate.text,
+              isStandby.value,
+            ),
+            fun: (map) {
+              Get.back();
+              ExportData().exportFilefromBase64(map, fileName);
+            });
+        break;
+      case "ADC Noida":
+        LoadingDialog.call();
+        Get.find<ConnectorControl>().GETMETHODCALL(
+            api: ApiFactory.TRANSMISSION_LOG_WRITE_LST_NOIDA(
+                selectLocation?.key ?? "",
+                selectChannel?.key ?? "",
+                selectedDate.text,
+                isStandby.value,
+                isSecondary,
+                isPartialLog.value,
+                selectExportFpcFrom?.value ?? "",
+                selectExportFpcTo?.value ?? '',
+                fileName),
+            fun: (map) {
+              Get.back();
+              ExportData().exportFilefromBase64(map, fileName);
+            });
+        break;
+      case "Commercial Replace":
+        LoadingDialog.call();
+        Get.find<ConnectorControl>().GETMETHODCALL(
+            api: ApiFactory.TRANSMISSION_LOG_WRITE_COMMERCIAL_REPLACE(
+              selectLocation?.key ?? "",
+              selectChannel?.key ?? "",
+              selectedDate.text,
+            ),
+            fun: (map) {
+              Get.back();
+              ExportData().exportFilefromBase64(map, fileName);
+            });
+        break;
+      case "Videocon GV":
+        LoadingDialog.call();
+        Get.find<ConnectorControl>().GETMETHODCALL(
+            api: ApiFactory.TRANSMISSION_LOG_WRITE_VIDEOCON_GV(
+              selectLocation?.key ?? "",
+              selectChannel?.key ?? "",
+              selectedDate.text,
+              isStandby.value,
+            ),
+            fun: (map) {
+              Get.back();
+              ExportData().exportFilefromBase64(map, fileName);
+            });
+        break;
+      case "Playbox":
+        LoadingDialog.call();
+        Get.find<ConnectorControl>().GETMETHODCALL(
+            api: ApiFactory.TRANSMISSION_LOG_WRITE_PLAYBOX(
+              selectLocation?.key ?? "",
+              selectChannel?.key ?? "",
+              selectedDate.text,
+              isStandby.value,
+            ),
+            fun: (map) {
+              Get.back();
+              ExportData().exportFilefromBase64(map, fileName);
+            });
+        break;
+      case "Eventz (Dubai)":
+        LoadingDialog.call();
+        Get.find<ConnectorControl>().GETMETHODCALL(
+            api: ApiFactory.TRANSMISSION_LOG_WRITE_VZRT(
+                selectLocation?.key ?? "",
+                selectChannel?.key ?? "",
+                selectedDate.text,
+            ),
+            fun: (map) {
+              Get.back();
+              ExportData().exportFilefromBase64(map, fileName);
+            });
+        break;
+      case "ITX":
+        LoadingDialog.call();
+        Get.find<ConnectorControl>().GETMETHODCALL(
+            api: ApiFactory.TRANSMISSION_LOG_WRITE_ITX(
+                selectLocation?.key ?? "",
+                selectChannel?.key ?? "",
+                selectedDate.text,
+                selectChannel?.value ?? "",
+                fileName),
+            fun: (map) {
+              Get.back();
+              ExportData().exportFilefromBase64(map, fileName);
+            });
+        break;
+    }
+  }
+
+  String? getExportMethod(String type) {
+    switch (type) {
+      case "Excel":
+        return "GetWriteExcel";
+      case "Excel - Old":
+        return "GetWriteOLDExcel";
+      case "Excel - NEWS":
+        return "GetWriteOLDExcel";
+      case "VizRT":
+        return "GetExportVizrt";
+      case "D Series":
+        return "GetWriteDSeriesLog";
+      case "ADC -lst":
+        return "GetWriteLst";
+      case "Grass Valley":
+        return "GetGVLog";
+      case "ADC Noida":
+        return "GetWriteLst";
+      case "Commercial Replace":
+        return "GetWriteCommercialReplacement";
+      case "Videocon GV":
+        return "GetWriteVideoconGV";
+      case "Playbox":
+        return "GetWritePlaybox";
+      case "Eventz (Dubai)":
+        return "GetWriteExcelevzrt";
+      case "ITX":
+        return "GetExportITX";
+    }
   }
 
   void btnFastInsert_Add_Click() {
@@ -1520,12 +1764,12 @@ class TransmissionLogController extends GetxController {
         "gl") {
       visibleChangeOffset.value = true;
       offset_change.text =
-          gridStateManager?.currentRow?.cells["transmissionTime"]?.value;
+          gridStateManager?.currentRow?.cells["transmissionTime"]?.value ?? "";
       visibleChangeDuration.value = true;
       duration_change.text =
-          gridStateManager?.currentRow?.cells["tapeduration"]?.value;
+          gridStateManager?.currentRow?.cells["tapeduration"]?.value ?? "";
       fpctime_change.text =
-          gridStateManager?.currentRow?.cells["fpCtime"]?.value + ":00";
+          (gridStateManager?.currentRow?.cells["fpCtime"]?.value ?? "") + ":00";
       visibleChangeFpc.value = true;
     } else {
       visibleChangeDuration.value = false;
@@ -1538,11 +1782,11 @@ class TransmissionLogController extends GetxController {
       }
       visibleChangeOffset.value = true;
       offset_change.text =
-          gridStateManager?.currentRow?.cells["transmissionTime"]?.value;
+          gridStateManager?.currentRow?.cells["transmissionTime"]?.value ?? "";
       duration_change.text =
-          gridStateManager?.currentRow?.cells["tapeduration"]?.value;
+          gridStateManager?.currentRow?.cells["tapeduration"]?.value ?? "";
       fpctime_change.text =
-          gridStateManager?.currentRow?.cells["fpCtime"]?.value + ":00";
+          (gridStateManager?.currentRow?.cells["fpCtime"]?.value ?? "") + ":00";
       visibleChangeFpc.value = true;
     }
 

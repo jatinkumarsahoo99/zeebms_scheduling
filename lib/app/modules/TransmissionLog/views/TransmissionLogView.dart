@@ -626,7 +626,7 @@ class TransmissionLogView extends StatelessWidget {
         break;
       case "Export":
         // controller.colorGrid(false);
-        controller.btnExportClick(fun: () {
+        controller.btnExportFetchFpc(fun: () {
           showExportDialog(Get.context);
         });
 
@@ -1681,12 +1681,25 @@ class TransmissionLogView extends StatelessWidget {
           ),
         ),
       ),
-      confirm: FormButtonWrapper(
-        btnText: "Close",
-        showIcon: false,
-        callback: () {
-          Navigator.pop(context);
-        },
+      confirm: Row(
+        mainAxisAlignment: MainAxisAlignment.center,
+        children: [
+          FormButtonWrapper(
+            btnText: "Close",
+            showIcon: false,
+            callback: () {
+              Navigator.pop(context);
+            },
+          ),
+          SizedBox(width: 5,),
+          FormButtonWrapper(
+            btnText: "Export",
+            showIcon: false,
+            callback: () {
+              controller.btnExportClick(controller.selectExportType.value);
+            },
+          ),
+        ],
       ),
       radius: 10,
     );
