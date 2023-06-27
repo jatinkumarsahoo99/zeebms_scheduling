@@ -3,6 +3,7 @@ import 'package:get/get.dart';
 
 import '../../../../widgets/DateTime/DateWithThreeTextField.dart';
 import '../../../../widgets/FormButton.dart';
+import '../../../../widgets/PlutoGrid/src/pluto_grid.dart';
 import '../../../../widgets/dropdown.dart';
 import '../../../../widgets/gridFromMap.dart';
 import '../../../../widgets/input_fields.dart';
@@ -466,6 +467,8 @@ class FillerMasterView extends GetView<FillerMasterController> {
                                                     : DataGridFromMap(
                                                         mapData: controller.rightDataTable.value.map((e) => e.toJson()).toList(),
                                                         focusNode: controller.rightTableFN,
+                                                        mode: PlutoGridMode.selectWithOneTap,
+                                                        onSelected: (selected) => controller.rightTableSelectedIdx = selected.rowIdx ?? -1,
                                                       ),
                                               );
                                             }),

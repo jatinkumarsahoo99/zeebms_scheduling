@@ -7,6 +7,7 @@ import 'package:bms_scheduling/app/providers/ApiFactory.dart';
 import 'package:bms_scheduling/app/routes/app_pages.dart';
 import 'package:bms_scheduling/widgets/LoadingDialog.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:get/get.dart';
 import 'package:intl/intl.dart';
 
@@ -44,6 +45,7 @@ class FillerMasterController extends GetxController {
   var rightDataTable = <FillerMasterAnnotationModel>[].obs;
   String fillerCode = "";
   var channelList = <DropDownValue>[].obs;
+  int rightTableSelectedIdx = -1;
 
   var startDateCtr = TextEditingController(),
       endDateCtr = TextEditingController(),
@@ -159,8 +161,13 @@ class FillerMasterController extends GetxController {
   }
 
   addListeneres2() {
-    rightTableFN.onKeyEvent = (focus, event) {
-      // if(Presse)
+    rightTableFN.onKey = (focus, event) {
+      if (event.isKeyPressed(LogicalKeyboardKey.delete)) {
+        if (rightTableSelectedIdx != -1) {
+          rightDataTable.removeAt(rightTableSelectedIdx);
+          rightDataTable.refresh();
+        }
+      }
       return KeyEventResult.ignored;
     };
     segNoFN.addListener(() {
