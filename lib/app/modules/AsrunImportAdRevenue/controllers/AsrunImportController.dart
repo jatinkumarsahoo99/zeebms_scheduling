@@ -1,4 +1,6 @@
+import 'package:bms_scheduling/app/modules/AsrunImportAdRevenue/bindings/arun_data.dart';
 import 'package:bms_scheduling/app/modules/AsrunImportAdRevenue/bindings/asrun_fpc_data.dart';
+import 'package:bms_scheduling/app/providers/extensions/string_extensions.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:get/get.dart';
@@ -18,7 +20,7 @@ class AsrunImportController extends GetxController {
   //input controllers
   DropDownValue? selectLocation;
   DropDownValue? selectChannel;
-  List<AsrunFPCData>? asrunFpcData;
+  List<AsRunData>? asrunData;
   PlutoGridStateManager? gridStateManager;
 
   // PlutoGridMode selectedPlutoGridMode = PlutoGridMode.normal;
@@ -68,20 +70,40 @@ class AsrunImportController extends GetxController {
         });
   }
 
-  loadFPCData() {
+  loadAsrunData() {
     Get.find<ConnectorControl>().POSTMETHOD(
-        api: ApiFactory.AsrunImport_LoadFPCData(
-            selectLocation?.key, selectChannel?.key, DateFormat("yyyy/MM/dd").format(DateFormat("dd-MM-yyyy").parse(selectedDate.text))),
+        api: ApiFactory.AsrunImport_LoadRunData(selectLocation?.key, selectChannel?.key, selectedDate.text.fromdMyToyMd()),
+        json: {},
         fun: (map) {
-          if (map is Map && map.containsKey("fpcData")) {
+          if (map is Map && map.containsKey("asRunData")) {
             print("list found");
-            asrunFpcData = <AsrunFPCData>[];
-            for (var element in map["fpcData"]) {
-              asrunFpcData!.add(AsrunFPCData.fromJson(element));
+
+            if (map['asRunData'] != null) {
+              asrunData = <AsRunData>[];
+              map['asRunData'].forEach((v) {
+                asrunData!.add(AsRunData.fromJson(v));
+              });
             }
 
             update(["fpcData"]);
           }
         });
+  }
+
+  checkError() {
+    if (gridStateManager?.currentCell == null) {
+      gridStateManager?.setCurrentCell(gridStateManager?.rows.first.cells.values.first, 0);
+    }
+    bool rowFound = false;
+    for (var row in gridStateManager?.rows ?? <PlutoRow>[]) {
+      if (row.sortIdx > gridStateManager!.currentCell!.row.sortIdx) {
+        if ((row.cells["isMismatch"]?.value.toString() ?? "") == "1") {
+          gridStateManager?.setCurrentCell(row.cells["isMismatch"], row.sortIdx);
+          gridStateManager?.moveScrollByRow(PlutoMoveDirection.down, row.sortIdx);
+          gridStateManager?.scrollByDirection(PlutoMoveDirection.down, 20);
+          rowFound = true;
+        }
+      }
+    }
   }
 }

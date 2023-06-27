@@ -1,5 +1,7 @@
 import 'dart:convert';
 
+import 'package:bms_scheduling/app/providers/DataGridMenu.dart';
+import 'package:bms_scheduling/widgets/DataGridShowOnly.dart';
 import 'package:flutter/material.dart';
 
 import 'package:get/get.dart';
@@ -73,7 +75,7 @@ class AsrunImportAdRevenueView extends GetView<AsrunImportController> {
                   widthRation: 0.09,
                   isEnable: controllerX.isEnable.value,
                   onFocusChange: (data) {
-                    controllerX.loadFPCData();
+                    controllerX.loadAsrunData();
                   },
                   mainTextController: controllerX.selectedDate,
                 ),
@@ -241,8 +243,8 @@ class AsrunImportAdRevenueView extends GetView<AsrunImportController> {
                   // height: Get.height * .33,
                   child: Container(
                 padding: EdgeInsets.all(4),
-                child: (controller.asrunFpcData != null)
-                    ? DataGridFromMap(
+                child: (controller.asrunData != null)
+                    ? DataGridShowOnlyKeys(
                         // onFocusChange: (value) {
                         //   // controllerX.gridStateManager!.setGridMode(PlutoGridMode.selectWithOneTap);
                         //   // controllerX.selectedPlutoGridMode = PlutoGridMode.selectWithOneTap;
@@ -255,8 +257,25 @@ class AsrunImportAdRevenueView extends GetView<AsrunImportController> {
                           //       loadevent.stateManager.rows[controller.selectedIndex!].cells.entries.first.value, controller.selectedIndex);
                           // }
                         },
+                        extraList: [
+                          SecondaryShowDialogModel("Mark Error", () {
+                            controller.gridStateManager
+                                ?.changeCellValue(controller.gridStateManager!.currentRow!.cells["isMismatch"]!, "1", force: true);
+                          })
+                        ],
                         // hideKeys: ["color", "modifed"],
                         showSrNo: true,
+                        colorCallback: (colorContext) {
+                          if (controller.asrunData?[colorContext.rowIdx] != null) {
+                            try {
+                              return Color(int.parse("0x${controller.asrunData?[colorContext.rowIdx]}"));
+                            } catch (e) {
+                              return Colors.white;
+                            }
+                          } else {
+                            return Colors.white;
+                          }
+                        },
                         // mode: PlutoGridMode.selectWithOneTap,
                         // colorCallback: (PlutoRowColorContext plutoContext) {
                         //   // return Color(controllerX.transmissionLogList![plutoContext.rowIdx].colorNo ?? Colors.white.value);
@@ -284,7 +303,7 @@ class AsrunImportAdRevenueView extends GetView<AsrunImportController> {
                         //   controllerX.gridStateManager?.notifyListeners();
                         // },
                         mode: controllerX.selectedPlutoGridMode,
-                        mapData: controllerX.asrunFpcData!.map((e) => e.toJson()).toList())
+                        mapData: controllerX.asrunData!.map((e) => e.toJson()).toList())
                     : Container(
                         // height: Get.height * .33,
                         // width: Get.width,

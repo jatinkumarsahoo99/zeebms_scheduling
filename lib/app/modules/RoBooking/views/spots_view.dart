@@ -66,12 +66,14 @@ class SpotsView extends GetView<RoBookingController> {
                           child: Column(
                             children: [
                               Wrap(
+                                crossAxisAlignment: WrapCrossAlignment.end,
+                                spacing: 5,
                                 children: [
-                                  InputFields.formField1(hintTxt: "Location", width: 0.24, controller: TextEditingController()),
-                                  InputFields.formField1(hintTxt: "Channel", width: 0.24, controller: TextEditingController()),
-                                  InputFields.formField1(hintTxt: "Client", width: 0.24, controller: TextEditingController()),
-                                  InputFields.formField1(hintTxt: "Agency", width: 0.24, controller: TextEditingController()),
-                                  InputFields.formField1(hintTxt: "Activity Period", width: 0.24, controller: TextEditingController()),
+                                  InputFields.formField1(hintTxt: "Location", width: 0.18, controller: TextEditingController()),
+                                  InputFields.formField1(hintTxt: "Channel", width: 0.18, controller: TextEditingController()),
+                                  InputFields.formField1(hintTxt: "Client", width: 0.18, controller: TextEditingController()),
+                                  InputFields.formField1(hintTxt: "Agency", width: 0.18, controller: TextEditingController()),
+                                  InputFields.formField1(hintTxt: "Activity Period", width: 0.18, controller: TextEditingController()),
                                   Text("[YYYYMM]")
                                 ],
                               ),
@@ -80,7 +82,7 @@ class SpotsView extends GetView<RoBookingController> {
                               ),
                               Wrap(
                                 children: [
-                                  InputFields.formField1(hintTxt: "Cheque", width: 0.24, controller: TextEditingController()),
+                                  InputFields.formField1(hintTxt: "Cheque", width: 0.12, controller: TextEditingController()),
                                   DateWithThreeTextField(
                                     title: "Chq Dt",
                                     widthRation: 0.12,
@@ -88,7 +90,7 @@ class SpotsView extends GetView<RoBookingController> {
                                     isEnable: controller.bookingNoLeaveData == null,
                                   ),
                                   InputFields.formField1(hintTxt: "Chq Dt", width: 0.12, controller: TextEditingController()),
-                                  InputFields.formField1(hintTxt: "Bank", width: 0.48, controller: TextEditingController()),
+                                  InputFields.formField1(hintTxt: "Bank", width: 0.36, controller: TextEditingController()),
                                   InputFields.formField1(hintTxt: "Chq Recd By", width: 0.36, controller: TextEditingController()),
                                   DateWithThreeTextField(
                                     title: "Recd On",
@@ -96,7 +98,7 @@ class SpotsView extends GetView<RoBookingController> {
                                     mainTextController: controller.fpcEffectiveDateCtrl,
                                     isEnable: controller.bookingNoLeaveData == null,
                                   ),
-                                  InputFields.formField1(hintTxt: "Remarks", width: 0.48, controller: TextEditingController()),
+                                  InputFields.formField1(hintTxt: "Remarks", width: 0.36, controller: TextEditingController()),
                                 ],
                               ),
                             ],

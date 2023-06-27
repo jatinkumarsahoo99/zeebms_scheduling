@@ -37,6 +37,7 @@ class DataGridShowOnlyKeys extends StatelessWidget {
     this.dateFromat = "dd-MM-yyyy",
     this.onFocusChange,
     this.checkRow,
+    this.extraList,
     this.doPasccal = true,
     this.exportFileName,
     this.focusNode,
@@ -71,6 +72,7 @@ class DataGridShowOnlyKeys extends StatelessWidget {
   final bool hideCheckKeysValue;
   final Color? rowCheckColor;
   final bool doPasccal;
+  final List<SecondaryShowDialogModel>? extraList;
   Color Function(PlutoRowColorContext)? colorCallback;
   Function(PlutoGridOnLoadedEvent)? onload;
   final GlobalKey rebuildKey = GlobalKey();
@@ -143,7 +145,9 @@ class DataGridShowOnlyKeys extends StatelessWidget {
                   } else {
                     return GestureDetector(
                       onSecondaryTapDown: (detail) {
-                        DataGridMenu().showGridMenu(rendererContext.stateManager, detail, context, exportFileName: exportFileName);
+                        rendererContext.stateManager.setCurrentCell(rendererContext.cell, rendererContext.rowIdx);
+                        DataGridMenu()
+                            .showGridMenu(rendererContext.stateManager, detail, context, exportFileName: exportFileName, extraList: extraList);
                       },
                       child: Text(
                         (rendererContext.cell.value ?? "").toString(),
@@ -198,7 +202,10 @@ class DataGridShowOnlyKeys extends StatelessWidget {
                   } else {
                     return GestureDetector(
                       onSecondaryTapDown: (detail) {
-                        DataGridMenu().showGridMenu(rendererContext.stateManager, detail, context, exportFileName: exportFileName);
+                        rendererContext.stateManager.setCurrentCell(rendererContext.cell, rendererContext.rowIdx);
+
+                        DataGridMenu()
+                            .showGridMenu(rendererContext.stateManager, detail, context, exportFileName: exportFileName, extraList: extraList);
                       },
                       child: Text(
                         (checkRow == true && key == checkRowKey && hideCheckKeysValue) ? "" : rendererContext.cell.value.toString(),
@@ -211,7 +218,10 @@ class DataGridShowOnlyKeys extends StatelessWidget {
                 } else {
                   return GestureDetector(
                     onSecondaryTapDown: (detail) {
-                      DataGridMenu().showGridMenu(rendererContext.stateManager, detail, context, exportFileName: exportFileName);
+                      rendererContext.stateManager.setCurrentCell(rendererContext.cell, rendererContext.rowIdx);
+
+                      DataGridMenu()
+                          .showGridMenu(rendererContext.stateManager, detail, context, exportFileName: exportFileName, extraList: extraList);
                     },
                     child: Text(
                       (checkRow == true && key == checkRowKey && hideCheckKeysValue) ? "" : rendererContext.cell.value.toString(),
