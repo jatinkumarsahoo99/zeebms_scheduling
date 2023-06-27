@@ -123,9 +123,10 @@ class FillerMasterController extends GetxController {
     addListeneres2();
   }
 
-  calculateDuration() {
+  calculateDuration({bool showDialog = true}) {
     var diff = (Utils.oldBMSConvertToSecondsValue(value: eomCtr.text) - Utils.oldBMSConvertToSecondsValue(value: somCtr.text));
-    if (diff.isNegative) {
+
+    if (diff.isNegative && showDialog) {
       eomCtr.clear();
       LoadingDialog.showErrorDialog("EOM should not less than SOM", callback: () {
         eomFN.requestFocus();
@@ -172,10 +173,11 @@ class FillerMasterController extends GetxController {
         tapeIDLeave();
       }
     });
-    fillerNameFN.addListener(() {
+    fillerNameFN.addListener(() async {
       if (!fillerNameFN.hasFocus) {
         if (fillerNameCtr.text.isNotEmpty) {
-          retrievRecord(text: fillerNameCtr.text.trim());
+          await retrievRecord(text: fillerNameCtr.text.trim());
+          closeDialogIfOpen();
         }
       }
     });
@@ -337,6 +339,9 @@ class FillerMasterController extends GetxController {
             /// TX-CAPTION
             if (tempModel2.exportTapeCaption != null) {
               txCaptionCtr.text = tempModel2.exportTapeCaption ?? "";
+              if (txCaptionCtr.text.contains("F/")) {
+                txCaptionCtr.text = txCaptionCtr.text.replaceAll(r'F/', "");
+              }
             }
 
             /// FILLER-NAME
@@ -368,7 +373,7 @@ class FillerMasterController extends GetxController {
             if (tempModel2.eom != null) {
               eomCtr.text = tempModel2.eom.toString();
             }
-            calculateDuration();
+            calculateDuration(showDialog: false);
 
             /// TAPE-TYPE
             var tapeTypeCode =
@@ -674,23 +679,17 @@ class FillerMasterController extends GetxController {
     txNoCtr.text = "AUTO";
     segNoCtrLeft.text = "1";
     var now = DateTime.now();
-    // DateFormat("yyyyMMdd").format(now);
-    fillerNameCtr.text = "${fillerNameCtr.text}-${DateFormat("yyyyMMdd").format(now)}";
+    // DateFormat("yyyyMMdd").format(now);;
+    var tempName = fillerNameCtr.text;
+    fillerNameCtr.text = "$tempName-${DateFormat("yyyyMMdd").format(now)}";
     // txCaptionCtr.text = "${txCaptionCtr.text}-${DateFormat("yyyyMMdd").format(now)}";
-    // print(txCaptionCtr.text);
-    // if (txCaptionCtr.text.contains("F/")) {
-    //   txCaptionCtr.text = txCaptionCtr.text.split("F/")[1];
-    // }
     // txCaptionCtr.clear();
     // fillerNameFN.requestFocus();
-    var l = fillerNameCtr.text.split("/");
-    for (var element in l) {
-      if (element != "F") {
-        txCaptionCtr.text = "$element-${DateFormat("yyyyMMdd").format(now)}";
-        break;
-      }
+    if (tempName.contains("F/")) {
+      tempName = tempName.replaceAll(r'F/', "");
     }
 
+    txCaptionCtr.text = "$tempName-${DateFormat("yyyyMMdd").format(now)}";
     startDateCtr.text = "${now.day}-${now.month}-${now.year}";
     now = now.copyWith(month: now.month + 3);
     endDateCtr.text = "${now.day}-${now.month}-${now.year}";
@@ -726,6 +725,9 @@ class FillerMasterController extends GetxController {
   closeDialogIfOpen() {
     if (Get.isDialogOpen ?? false) {
       Get.back();
+      while (Get.isDialogOpen ?? false) {
+        Get.back();
+      }
     }
   }
 }

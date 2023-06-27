@@ -88,7 +88,3 @@ localhost:9992/commercial?personalNo=2Jri%2FF8CQnRN4E%2Fc777Cgw%3D%3D&loginCode=
 
 
 
-
---- filler master
-    locationshortname
-    retriverecords getting error
