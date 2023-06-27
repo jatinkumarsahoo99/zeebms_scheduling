@@ -115,7 +115,7 @@ class RoBookingView extends StatelessWidget {
                                   FocusTraversalOrder(
                                     order: NumericFocusOrder(13),
                                     child: DateWithThreeTextField(
-                                      title: "Ref Date",
+                                      title: "",
                                       widthRation: 0.11,
                                       mainTextController: controller.fpcEffectiveDateCtrl,
                                       isEnable: controller.bookingNoLeaveData == null,
@@ -257,12 +257,15 @@ class RoBookingView extends StatelessWidget {
                                           });
 
                                           Get.defaultDialog(
+                                            radius: 05,
+                                            title: "",
                                             content: Container(
                                               width: Get.width * 0.60,
                                               child: Column(
                                                 children: [
                                                   Row(
                                                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                                    crossAxisAlignment: CrossAxisAlignment.end,
                                                     children: [
                                                       SizedBox(),
                                                       InputFields.formField1(
@@ -281,8 +284,11 @@ class RoBookingView extends StatelessWidget {
                                                   ),
                                                   Container(
                                                       height: Get.height * 0.30,
+                                                      padding: EdgeInsets.only(top: 4),
                                                       child: Obx(() => data.value == null
-                                                          ? SizedBox()
+                                                          ? Container(
+                                                              decoration: BoxDecoration(border: Border.all(color: Colors.grey)),
+                                                            )
                                                           : DataGridShowOnlyKeys(
                                                               mapData: data.value!,
                                                               formatDate: false,

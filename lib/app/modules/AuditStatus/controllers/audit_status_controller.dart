@@ -19,7 +19,7 @@ class AuditStatusController extends GetxController {
   RxBool isEnable = RxBool(true);
   TextEditingController dateController = TextEditingController();
   List<String> auditTypes = ["Additions", "Re-Schedule", "Cancellation"];
-  RxString currentType = RxString("Additions");
+  RxnString currentType = RxnString();
   AuditStatusShowEbooking? showEbookingData;
   //input controllers
   DropDownValue? selectLocation;
@@ -73,6 +73,23 @@ class AuditStatusController extends GetxController {
         });
   }
 
+  Color getColor(Map<String, dynamic> dr) {
+    if (dr.containsKey("verifyStatus") && dr["verifyStatus"] == "No") {
+      return const Color(0xFF00FFFF);
+    }
+    if (dr.containsKey("auditedSpots") && dr["auditedSpots"] == null) {
+      return const Color.fromRGBO(255, 230, 230, 1);
+    }
+    if (dr.containsKey("auditedSpots") &&
+        dr.containsKey("totalspots") &&
+        dr["auditedSpots"] != dr["totalspots"] &&
+        dr["auditedSpots"] < dr["totalspots"]) {
+      return const Color.fromRGBO(255, 150, 150, 1);
+    }
+
+    return Colors.white; // Return null if no color conditions are met.
+  }
+
   showEbooking(index) {
     Get.find<ConnectorControl>().POSTMETHOD(
         api: ApiFactory.NewBookingActivityReport_GetShowEbooking,
@@ -87,119 +104,128 @@ class AuditStatusController extends GetxController {
           if (map is Map && map.containsKey("inFo_ShowEbooking")) {
             showEbookingData = AuditStatusShowEbooking.fromJson(map["inFo_ShowEbooking"]);
             Get.defaultDialog(
+                radius: 05,
+                title: "",
                 content: Container(
-              width: Get.width * 0.70,
-              height: Get.height * 0.70,
-              child: Column(
-                children: [
-                  Wrap(
-                    spacing: 05,
+                  width: Get.width * 0.74,
+                  height: Get.height * 0.70,
+                  child: Column(
                     children: [
-                      InputFields.formField1(
-                        hintTxt: "Location",
-                        controller: TextEditingController(text: showEbookingData?.location),
-                        width: 0.18,
+                      Wrap(
+                        spacing: Get.width * 0.01,
+                        runSpacing: 5,
+                        children: [
+                          InputFields.formField1(
+                            hintTxt: "Location",
+                            controller: TextEditingController(text: showEbookingData?.location),
+                            width: 0.175,
+                          ),
+                          InputFields.formField1(
+                            hintTxt: "Channel",
+                            controller: TextEditingController(text: showEbookingData?.channel),
+                            width: 0.175,
+                          ),
+                          InputFields.formField1(
+                            hintTxt: "Booking NO",
+                            controller: TextEditingController(text: showEbookingData?.bkmonth),
+                            width: 0.0825,
+                          ),
+                          InputFields.formField1(
+                            hintTxt: "",
+                            controller: TextEditingController(text: showEbookingData?.bkno),
+                            width: 0.0825,
+                          ),
+                          DateWithThreeTextField(
+                            title: "BKDate",
+                            widthRation: 0.0825,
+                            mainTextController: TextEditingController(),
+                          ),
+                          DateWithThreeTextField(
+                            title: "Eff Date",
+                            widthRation: 0.0825,
+                            mainTextController: TextEditingController(),
+                          ),
+                          InputFields.formField1(
+                            hintTxt: "Client",
+                            controller: TextEditingController(text: showEbookingData?.client),
+                            width: 0.36,
+                          ),
+                          InputFields.formField1(
+                            hintTxt: "Agency",
+                            controller: TextEditingController(text: showEbookingData?.ageny),
+                            width: 0.36,
+                          ),
+                          InputFields.formField1(
+                            hintTxt: "Brand",
+                            controller: TextEditingController(text: showEbookingData?.brand),
+                            width: 0.36,
+                          ),
+                          InputFields.formField1(
+                            hintTxt: "Zone",
+                            controller: TextEditingController(text: showEbookingData?.zone),
+                            width: 0.175,
+                          ),
+                          InputFields.formField1(
+                            hintTxt: "Pay Route",
+                            controller: TextEditingController(),
+                            width: 0.175,
+                          ),
+                          InputFields.formField1(
+                            hintTxt: "PayMode",
+                            controller: TextEditingController(),
+                            width: 0.36,
+                          ),
+                          InputFields.formField1(
+                            hintTxt: "",
+                            controller: TextEditingController(),
+                            width: 0.0825,
+                          ),
+                          InputFields.formField1(
+                            hintTxt: "",
+                            controller: TextEditingController(),
+                            width: 0.0825,
+                          ),
+                          InputFields.formField1(
+                            hintTxt: "",
+                            controller: TextEditingController(),
+                            width: 0.0825,
+                          ),
+                        ],
                       ),
-                      InputFields.formField1(
-                        hintTxt: "Channel",
-                        controller: TextEditingController(text: showEbookingData?.channel),
-                        width: 0.18,
+                      SizedBox(
+                        height: 5,
                       ),
-                      InputFields.formField1(
-                        hintTxt: "Booking NO",
-                        controller: TextEditingController(text: showEbookingData?.bkmonth),
-                        width: 0.12,
-                      ),
-                      InputFields.formField1(
-                        hintTxt: "",
-                        controller: TextEditingController(text: showEbookingData?.bkno),
-                        width: 0.09,
-                      ),
-                      DateWithThreeTextField(
-                        title: "BKDate",
-                        widthRation: 0.09,
-                        mainTextController: TextEditingController(),
-                      ),
-                      DateWithThreeTextField(
-                        title: "Eff Date",
-                        widthRation: 0.09,
-                        mainTextController: TextEditingController(),
-                      ),
-                      InputFields.formField1(
-                        hintTxt: "Client",
-                        controller: TextEditingController(text: showEbookingData?.client),
-                        width: 0.36,
-                      ),
-                      InputFields.formField1(
-                        hintTxt: "Agency",
-                        controller: TextEditingController(text: showEbookingData?.ageny),
-                        width: 0.36,
-                      ),
-                      InputFields.formField1(
-                        hintTxt: "Brand",
-                        controller: TextEditingController(text: showEbookingData?.brand),
-                        width: 0.36,
-                      ),
-                      InputFields.formField1(
-                        hintTxt: "Zone",
-                        controller: TextEditingController(text: showEbookingData?.zone),
-                        width: 0.18,
-                      ),
-                      InputFields.formField1(
-                        hintTxt: "Pay Route",
-                        controller: TextEditingController(),
-                        width: 0.18,
-                      ),
-                      InputFields.formField1(
-                        hintTxt: "PayMode",
-                        controller: TextEditingController(),
-                        width: 0.36,
-                      ),
-                      InputFields.formField1(
-                        hintTxt: "",
-                        controller: TextEditingController(),
-                        width: 0.09,
-                      ),
-                      InputFields.formField1(
-                        hintTxt: "",
-                        controller: TextEditingController(),
-                        width: 0.09,
-                      ),
-                      InputFields.formField1(
-                        hintTxt: "",
-                        controller: TextEditingController(),
-                        width: 0.09,
-                      ),
+                      Expanded(
+                          child: Container(
+                        width: Get.width * 0.73,
+                        child: DataGridShowOnlyKeys(
+                          mapData: showEbookingData?.lstShowEbook?.map((e) => e.toJson()).toList() ?? [],
+                          onRowDoubleTap: (event) {
+                            showDeals(showEbookingData?.lstShowEbook?[event.rowIdx].dealno);
+                          },
+                        ),
+                      ))
                     ],
                   ),
-                  Expanded(
-                      child: Container(
-                    child: DataGridShowOnlyKeys(
-                      mapData: showEbookingData?.lstShowEbook?.map((e) => e.toJson()).toList() ?? [],
-                      onRowDoubleTap: (event) {
-                        showDeals(showEbookingData?.lstShowEbook?[event.rowIdx].dealno);
-                      },
-                    ),
-                  ))
-                ],
-              ),
-            ));
+                ));
           }
         });
   }
 
   showDeals(dealNo) {
     Get.find<ConnectorControl>().POSTMETHOD(
-        api: ApiFactory.NewBookingActivityReport_GetShowEbooking,
+        api: ApiFactory.NewBookingActivityReport_Getshowdeal,
         json: {"locationCode": selectLocation?.key, "channelCode": selectChannel?.key, "dealno": dealNo},
         fun: (value) {
           if (value is Map && value.containsKey("inFo_showdeal")) {
             Get.defaultDialog(
+                radius: 05,
+                title: "",
                 content: Container(
-              width: Get.width * 0.60,
-              height: Get.height * 0.50,
-              child: DataGridShowOnlyKeys(mapData: value["inFo_showdeal"]["lstshowdeal"]),
-            ));
+                  width: Get.width * 0.60,
+                  height: Get.height * 0.50,
+                  child: DataGridShowOnlyKeys(mapData: value["inFo_showdeal"]["lstshowdeal"]),
+                ));
           }
         });
   }
