@@ -661,6 +661,7 @@ class ApiFactory {
     String loggedUser,
   ) =>
       "$BASE_URL/api/ROBooking/SpotsNotVerified?LocationCode=$locationCode&ChannelCode=$channelCode&BookingMonth=$bookingMonth&LoggedUser=$loggedUser";
+  static String RO_BOOKING_SPOT_DBL_CLICK = "$BASE_URL/api/ROBooking/SpotsNVerified_CellDoubleClick";
 
   static String RO_BOOKING_ImportAndMark = "$BASE_URL/api/ROBooking/ImportAndMark";
   static String RO_BOOKING_cboPDCSelectedIndexChanged = "$BASE_URL/api/ROBooking/cboPDCSelectedIndexChanged";
@@ -696,6 +697,28 @@ class ApiFactory {
   static String FILLER_MASTER_TAPE_ID_LEAVE = "$BASE_URL/api/FillerMaster/TapeIDLeave";
 
   //////////////////////////////// FILLER-MASTER-API-END /////////////////////////////////
+  ///
+  ///
+  ///
+  ///
+  //////////////////////////////// PROMO-MASTER-API-START /////////////////////////////////
+
+  static String get PROMO_MASTER_ON_LOAD => "$BASE_URL/api/PromoMaster/PromoMasterOnLoad";
+  static String PROMO_MASTER_ON_LEAVE_LOCATION(String code) => "$BASE_URL/api/PromoMaster/onLeaveLocation?LocationCode=$code";
+  static String get PROMO_MASTER_COMPANY_SEARCH => "$BASE_URL/api/PromoMaster/GetSourceCompanySearch?TextSourceCompany=";
+  static String get PROMO_MASTER_PROGRAM_SEARCH => "$BASE_URL/api/PromoMaster/GetSourceProgramSearch?TextSourceProgram=";
+  static String get PROMO_MASTER_GET_PROGRAM_PICKER => "$BASE_URL/api/PromoMaster/GetProgramPicker";
+  static String get PROMO_MASTER_EVENT_SEARCH => "$BASE_URL/api/PromoMaster/GetEvent?text=";
+  static String get PROMO_MASTER_RETRIVE_RECORDS => "$BASE_URL/api/PromoMaster/GetRetrieveRecord";
+  static String get PROMO_MASTER_TX_NO_LEAVE => "$BASE_URL/api/PromoMaster/GetCartNo_Leave";
+  static String get PROMO_MASTER_SAVE_RECORD => "$BASE_URL/api/PromoMaster/SaveRecord";
+  static String PROMO_MASTER_BLANK_TAPE_ID_LEAVE(String code) => "$BASE_URL/api/PromoMaster/OnLeaveBlankTapeId?BlankTapeId=$code";
+  // static String PROMO_MASTER_BANNER_SEARCH = "$BASE_URL/api/FillerMaster/GetSourceBannerSearch?TextSourceBanner=";
+  // static String PROMO_MASTER_SAVE = "$BASE_URL/api/FillerMaster/SaveRecord";
+  // static String PROMO_MASTER_SEGNO_LEAVE = "$BASE_URL/api/FillerMaster/SegNoLeave";
+  // static String PROMO_MASTER_GET_EVENT = "$BASE_URL/api/FillerMaster/GetEvent?text=";
+
+  //////////////////////////////// PROMO-MASTER-API-END /////////////////////////////////
   ///
   ///
   ///
