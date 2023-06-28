@@ -57,6 +57,7 @@ abstract class RoutesList {
     _Paths.IMPORT_DIGITEXT_RUN_ORDER,
     _Paths.COMMERCIAL_MASTER,
     _Paths.SALES_AUDIT_NOT_TELECAST_REPORT,
+    _Paths.SALES_AUDIT_NEW
   ];
 }
 

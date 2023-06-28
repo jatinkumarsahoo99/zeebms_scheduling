@@ -173,6 +173,22 @@ class LstAsrunlog2 {
     data['previousBookingStatus'] = this.previousBookingStatus;
     return data;
   }
+  Map<String, dynamic> toJson1() {
+    final Map<String, dynamic> data = new Map<String, dynamic>();
+    /*data['locationcode'] = this.locationcode;
+    data['channelcode'] = this.channelcode;*/
+
+    data['bookingNumber'] = this.bookingNumber??"";
+    data['bookingDetailCode'] = this.bookingDetailCode??"";
+    data['telecastTime'] = "2023-03-03T${this.telecastTime??'00:00:00'}";
+    data['programCode'] = this.programCode??"";
+    data['tapeDuration'] = this.tapeDuration;
+    data['bookingStatus'] = this.bookingStatus;
+    data['rowNumber'] = this.rowNumber;
+    data['remarks'] = this.remarks;
+
+    return data;
+  }
 }
 
 class LstAsrunlog1 {
@@ -232,6 +248,18 @@ class LstAsrunlog1 {
     data['programCode'] = this.programCode;
     data['programName'] = this.programName;
     data['remark'] = this.remark;
+    return data;
+  }
+  Map<String, dynamic> toJson1() {
+    final Map<String, dynamic> data = new Map<String, dynamic>();
+
+    data['telecastTime'] = "2023-03-03T${this.telecastTime??'00:00:00'}" ;
+
+    data['exportTapeCode'] = this.exportTapeCode;
+    data['tapeDuration'] = this.tapeDuration;
+    data['programCode'] = this.programCode;
+    data['remark'] = this.remark;
+
     return data;
   }
 }
