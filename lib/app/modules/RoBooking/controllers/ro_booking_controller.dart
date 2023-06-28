@@ -470,7 +470,6 @@ class RoBookingController extends GetxController {
         fun: (response) {
           if (response is Map && response.containsKey("info_LeaveDealNumber")) {
             dealNoLeaveData = RoBookingDealNoLeave.fromJson(response["info_LeaveDealNumber"]);
-
             update(["init", "dealGrid"]);
           }
         });
