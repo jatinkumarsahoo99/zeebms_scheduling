@@ -7,6 +7,7 @@ import 'package:bms_scheduling/app/modules/RoBooking/bindings/ro_booking_bkg_dat
 import 'package:bms_scheduling/app/modules/RoBooking/bindings/ro_booking_brand_leave.dart';
 import 'package:bms_scheduling/app/modules/RoBooking/bindings/ro_booking_deal_click.dart';
 import 'package:bms_scheduling/app/modules/RoBooking/bindings/ro_booking_spot_not_verified.dart';
+import 'package:bms_scheduling/app/modules/RoBooking/bindings/ro_booking_spot_view_click.dart';
 import 'package:bms_scheduling/app/modules/RoBooking/bindings/ro_booking_tape_leave_data.dart';
 import 'package:bms_scheduling/app/modules/RoBooking/bindings/ro_booking_tape_search_data.dart';
 import 'package:bms_scheduling/app/modules/RoBooking/bindings/ro_dealno_leave.dart';
@@ -65,7 +66,7 @@ class RoBookingController extends GetxController {
 
   FocusNode bookingNoFocusNode = FocusNode();
   // var spotsNotVerifiedData = RxList();
-
+  SpotsNotVerifiedClickData? spotsNotVerifiedClickData;
   DropDownValue? selectedLocation;
   DropDownValue? selectedChannel;
   DropDownValue? selectedClient;
@@ -425,8 +426,15 @@ class RoBookingController extends GetxController {
           "locationCode": selectedLocation!.key,
           "channelCode": selectedChannel!.key,
           "loggedUser": Get.find<MainController>().user?.logincode,
+          "lstdgvVerifySpot": spotsNotVerifiedClickData?.lstdgvVerifySpot,
         },
-        fun: (response) {});
+        fun: (response) {
+          if (response is Map && response.containsKey("info_SetVerify")) {
+            if (response["info_SetVerify"]["message"] != null) {
+              LoadingDialog.callErrorMessage1(msg: response["info_SetVerify"]["message"]);
+            }
+          }
+        });
   }
 
   tapIdLeave(selectedvalue) {
@@ -610,6 +618,51 @@ class RoBookingController extends GetxController {
   //     dgvPrograms[i]["bookedspots"] = 0;
   //   }
   // }
+  spotnotverifiedclick(index) {
+    Get.find<ConnectorControl>().POSTMETHOD(
+        api: ApiFactory.RO_BOOKING_SPOT_DBL_CLICK,
+        json: {
+          "locationCode": selectedLocation?.key,
+          "locationName": selectedLocation?.value,
+          "channelCode": selectedChannel?.key,
+          "channelName": selectedChannel?.value,
+          "loggedUser": Get.find<MainController>().user?.logincode,
+          "rowIndex": index,
+          "lstdgvSpotsNotVerified": spotsNotVerified.value.map((e) => e.toJson()).toList()
+        },
+        fun: (response) {
+          if (response is Map && response.containsKey("info_SpotsNotVerified_CellDoubleClick")) {
+            // spotsNotVerifiedData.value = response["info_SpotsNotVerified"];
+
+            spotsNotVerifiedClickData = SpotsNotVerifiedClickData.fromJson(response["info_SpotsNotVerified_CellDoubleClick"]);
+
+            bookingNoLeaveData = spotsNotVerifiedClickData?.lstDisplayResponse;
+
+            selectedClient = DropDownValue(
+                key: bookingNoLeaveData!.lstClientAgency!.first.clientcode, value: bookingNoLeaveData!.lstClientAgency!.first.clientname);
+            selectedAgnecy =
+                DropDownValue(key: bookingNoLeaveData!.lstAgency!.first.agencycode, value: bookingNoLeaveData!.lstAgency!.first.agencyname);
+            selectedDeal =
+                DropDownValue(key: bookingNoLeaveData!.lstDealNumber!.first.dealNumber, value: bookingNoLeaveData!.lstDealNumber!.first.dealNumber);
+            bookingMonthCtrl.text = (spotsNotVerifiedClickData?.bookingMonth ?? "").toString();
+            bookingNoCtrl.text = (spotsNotVerifiedClickData?.bookingNumber ?? "").toString();
+
+            refNoCtrl.text = bookingNoLeaveData!.bookingReferenceNumber ?? "";
+            bookingNoTrailCtrl.text = bookingNoLeaveData!.zone ?? "";
+            dealTypeCtrl.text = bookingNoLeaveData!.dealType ?? "";
+            payModeCtrl.text = bookingNoLeaveData!.payMode ?? "";
+            payrouteCtrl.text = bookingNoLeaveData!.payrouteName ?? "";
+            totSpotCtrl.text = bookingNoLeaveData!.totalSpots ?? "";
+            totDurCtrl.text = bookingNoLeaveData!.totalDuration ?? "";
+            totAmtCtrl.text = bookingNoLeaveData!.totalAmount ?? "";
+            zoneCtrl.text = bookingNoLeaveData!.zonename ?? "";
+            maxspendCtrl.text = bookingNoLeaveData!.maxSpend ?? "";
+            update(["dealGrid", "init"]);
+            pagecontroller.jumpToPage(6);
+            currentTab.value = "Verify Spots";
+          }
+        });
+  }
 
   getSpotsNotVerified(location, channel, month) {
     Get.find<ConnectorControl>().POSTMETHOD(

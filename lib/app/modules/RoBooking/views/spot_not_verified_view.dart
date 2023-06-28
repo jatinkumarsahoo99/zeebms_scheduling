@@ -57,6 +57,9 @@ class SpotNotVerifiedView extends GetView<RoBookingController> {
               ? DataGridShowOnlyKeys(
                   mapData: controller.spotsNotVerified.value.map((e) => e.toJson()).toList(),
                   formatDate: false,
+                  onRowDoubleTap: (rowEvent) {
+                    controller.spotnotverifiedclick(rowEvent.rowIdx);
+                  },
                 )
               : Container(
                   decoration: BoxDecoration(border: Border.all(width: 1.0, color: Colors.grey)),

@@ -661,6 +661,7 @@ class ApiFactory {
     String loggedUser,
   ) =>
       "$BASE_URL/api/ROBooking/SpotsNotVerified?LocationCode=$locationCode&ChannelCode=$channelCode&BookingMonth=$bookingMonth&LoggedUser=$loggedUser";
+  static String RO_BOOKING_SPOT_DBL_CLICK = "$BASE_URL/api/ROBooking/SpotsNVerified_CellDoubleClick";
 
   static String RO_BOOKING_ImportAndMark = "$BASE_URL/api/ROBooking/ImportAndMark";
   static String RO_BOOKING_cboPDCSelectedIndexChanged = "$BASE_URL/api/ROBooking/cboPDCSelectedIndexChanged";
