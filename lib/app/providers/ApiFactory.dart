@@ -654,6 +654,13 @@ class ApiFactory {
       "$BASE_URL/api/ROBooking/GetClientLeave?LocationCode=$locationCode&ChannelCode=$channelCode&ClientCode=$clientCode";
   static String RO_BOOKING_GetSetVerify = "$BASE_URL/api/ROBooking/GetSetVerify";
   static String RO_BOOKING_BRAND_LEAVE = "$BASE_URL/api/ROBooking/GetBrand";
+  static String RO_BOOKING_GetSpotNotVerified(
+    String locationCode,
+    String channelCode,
+    String bookingMonth,
+    String loggedUser,
+  ) =>
+      "$BASE_URL/api/ROBooking/SpotsNotVerified?LocationCode=$locationCode&ChannelCode=$channelCode&BookingMonth=$bookingMonth&LoggedUser=$loggedUser";
 
   static String RO_BOOKING_ImportAndMark = "$BASE_URL/api/ROBooking/ImportAndMark";
   static String RO_BOOKING_cboPDCSelectedIndexChanged = "$BASE_URL/api/ROBooking/cboPDCSelectedIndexChanged";
