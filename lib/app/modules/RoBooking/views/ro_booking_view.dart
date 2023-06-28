@@ -238,8 +238,9 @@ class RoBookingView extends StatelessWidget {
                                   ),
                                   SizedBox(
                                     width: Get.width * 0.11,
-                                    child: ElevatedButton(
-                                        onPressed: () {
+                                    child: FormButtonWrapper(
+                                        btnText: "Search Tape",
+                                        callback: () {
                                           var data = Rxn<List>();
                                           FocusNode tapeIdFocus = FocusNode();
                                           TextEditingController tapeIdCtrl = TextEditingController();
@@ -298,8 +299,7 @@ class RoBookingView extends StatelessWidget {
                                               ),
                                             ),
                                           );
-                                        },
-                                        child: Text("Search Tape")),
+                                        }),
                                   ),
 
                                   InputFields.formField1(

@@ -41,13 +41,15 @@ class SpotsView extends GetView<RoBookingController> {
               children: [
                 DropDownField.formDropDown1WidthMap(
                     controller.agencyLeaveData?.lstPdcList
-                        ?.map((e) => DropDownValue(key: e.chequeId.toString(), value: e.chequeNo.toString()))
-                        .toList(),
+                            ?.map((e) => DropDownValue(key: e.chequeId.toString(), value: e.chequeNo.toString()))
+                            .toList() ??
+                        [],
                     (value) => {},
                     "PDC",
                     0.12),
                 InputFields.formField1(
                     hintTxt: "Amt",
+                    isEnable: false,
                     controller: TextEditingController(
                         text: (controller.agencyLeaveData?.lstPdcList?.isNotEmpty ?? false)
                             ? (controller.agencyLeaveData?.lstPdcList?.first.chequeAmount ?? "").toString()
@@ -55,12 +57,14 @@ class SpotsView extends GetView<RoBookingController> {
                 InputFields.formField1(
                     hintTxt: "Bank",
                     width: 0.24,
+                    isEnable: false,
                     controller: TextEditingController(
                         text: (controller.agencyLeaveData?.lstPdcList?.isNotEmpty ?? false)
                             ? (controller.agencyLeaveData?.lstPdcList?.first.bankName ?? "").toString()
                             : "")),
                 InputFields.formField1(
                     hintTxt: "Bal Amt",
+                    isEnable: false,
                     controller: TextEditingController(
                         text: (controller.agencyLeaveData?.lstPdcList?.isNotEmpty ?? false)
                             ? (controller.agencyLeaveData?.lstPdcList?.first.chequeAmount ?? "").toString()
