@@ -13,7 +13,10 @@ class VerifySpotsView extends GetView<RoBookingController> {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.center,
       children: [
-        Expanded(child: Container()),
+        Expanded(
+            child: Container(
+          decoration: BoxDecoration(border: Border.all(width: 1.0, color: Colors.grey)),
+        )),
         const SizedBox(
           height: 5,
         ),

@@ -4,12 +4,14 @@ import 'package:bms_scheduling/app/modules/RoBooking/views/dummydata.dart';
 import 'package:bms_scheduling/widgets/DataGridShowOnly.dart';
 import 'package:bms_scheduling/widgets/DateTime/DateWithThreeTextField.dart';
 import 'package:bms_scheduling/widgets/FormButton.dart';
-import 'package:bms_scheduling/widgets/cutom_dropdown.dart';
+
 import 'package:bms_scheduling/widgets/dropdown.dart';
 import 'package:bms_scheduling/widgets/input_fields.dart';
 import 'package:flutter/material.dart';
 
 import 'package:get/get.dart';
+
+import '../../../data/DropDownValue.dart';
 
 class SpotsView extends GetView<RoBookingController> {
   const SpotsView({Key? key}) : super(key: key);
@@ -25,7 +27,9 @@ class SpotsView extends GetView<RoBookingController> {
                       controller.bookingNoLeaveData?.lstSpots?.map((e) => e.toJson()).toList() ??
                       [],
                   formatDate: false)
-              : SizedBox(),
+              : Container(
+                  decoration: BoxDecoration(border: Border.all(width: 1.0, color: Colors.grey)),
+                ),
         )),
         SizedBox(
           height: 5,
@@ -37,10 +41,36 @@ class SpotsView extends GetView<RoBookingController> {
             Wrap(
               spacing: 5,
               children: [
-                DropDownField.formDropDown1WidthMap([], (value) => {}, "PDC", 0.12),
-                InputFields.formField1(hintTxt: "Amt", controller: TextEditingController()),
-                InputFields.formField1(hintTxt: "Bank", width: 0.24, controller: controller.refNoCtrl),
-                InputFields.formField1(hintTxt: "Bal Amt", controller: TextEditingController()),
+                DropDownField.formDropDown1WidthMap(
+                    controller.agencyLeaveData?.lstPdcList
+                            ?.map((e) => DropDownValue(key: e.chequeId.toString(), value: e.chequeNo.toString()))
+                            .toList() ??
+                        [],
+                    (value) => {},
+                    "PDC",
+                    0.12),
+                InputFields.formField1(
+                    hintTxt: "Amt",
+                    isEnable: false,
+                    controller: TextEditingController(
+                        text: (controller.agencyLeaveData?.lstPdcList?.isNotEmpty ?? false)
+                            ? (controller.agencyLeaveData?.lstPdcList?.first.chequeAmount ?? "").toString()
+                            : "")),
+                InputFields.formField1(
+                    hintTxt: "Bank",
+                    width: 0.24,
+                    isEnable: false,
+                    controller: TextEditingController(
+                        text: (controller.agencyLeaveData?.lstPdcList?.isNotEmpty ?? false)
+                            ? (controller.agencyLeaveData?.lstPdcList?.first.bankName ?? "").toString()
+                            : "")),
+                InputFields.formField1(
+                    hintTxt: "Bal Amt",
+                    isEnable: false,
+                    controller: TextEditingController(
+                        text: (controller.agencyLeaveData?.lstPdcList?.isNotEmpty ?? false)
+                            ? (controller.agencyLeaveData?.lstPdcList?.first.chequeAmount ?? "").toString()
+                            : "")),
               ],
             ),
             Wrap(
@@ -49,14 +79,19 @@ class SpotsView extends GetView<RoBookingController> {
               children: [
                 FormButtonWrapper(
                   btnText: "Refresh PDC",
-                  callback: () {},
+                  iconDataM: Icons.refresh_rounded,
+                  callback: () {
+                    controller.refreshPDC();
+                  },
                 ),
                 FormButtonWrapper(
+                  iconDataM: Icons.delete_outline_rounded,
                   btnText: "Del Spot Row",
                   callback: () {},
                 ),
                 FormButtonWrapper(
                   btnText: "PDC Cheques",
+                  iconDataM: Icons.wallet_rounded,
                   callback: () {
                     Get.defaultDialog(
                         title: "Client PDC",
@@ -85,14 +120,14 @@ class SpotsView extends GetView<RoBookingController> {
                                 spacing: Get.width * 0.01,
                                 runSpacing: 05,
                                 children: [
-                                  InputFields.formField1(hintTxt: "Cheque", width: 0.086, controller: TextEditingController()),
+                                  InputFields.formField1(hintTxt: "Cheque", width: 0.083, controller: TextEditingController()),
                                   DateWithThreeTextField(
                                     title: "Chq Dt",
-                                    widthRation: 0.087,
+                                    widthRation: 0.084,
                                     mainTextController: controller.fpcEffectiveDateCtrl,
                                     isEnable: controller.bookingNoLeaveData == null,
                                   ),
-                                  InputFields.formField1(hintTxt: "Chq Amt", width: 0.086, controller: TextEditingController()),
+                                  InputFields.formField1(hintTxt: "Chq Amt", width: 0.083, controller: TextEditingController()),
                                   InputFields.formField1(hintTxt: "Bank", width: 0.27, controller: TextEditingController()),
                                   InputFields.formField1(hintTxt: "Chq Recd By", width: 0.27, controller: TextEditingController()),
                                   DateWithThreeTextField(
@@ -101,7 +136,7 @@ class SpotsView extends GetView<RoBookingController> {
                                     mainTextController: controller.fpcEffectiveDateCtrl,
                                     isEnable: controller.bookingNoLeaveData == null,
                                   ),
-                                  InputFields.formField1(hintTxt: "Remarks", width: 0.36, controller: TextEditingController()),
+                                  InputFields.formField1(hintTxt: "Remarks", width: 0.27, controller: TextEditingController()),
                                 ],
                               ),
                             ],

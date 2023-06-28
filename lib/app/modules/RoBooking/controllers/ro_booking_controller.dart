@@ -43,6 +43,7 @@ class RoBookingController extends GetxController {
       totSpotCtrl = TextEditingController(),
       totDurCtrl = TextEditingController(),
       totAmtCtrl = TextEditingController(),
+      tapeIDCtrl = TextEditingController(),
       zoneCtrl = TextEditingController(),
       gstNoCtrl = TextEditingController(),
       maxspendCtrl = TextEditingController();
@@ -97,6 +98,7 @@ class RoBookingController extends GetxController {
       clientFocus = FocusNode(),
       agencyFocus = FocusNode(),
       brandFocus = FocusNode(),
+      tapeIdFocus = FocusNode(),
       refrenceFocus = FocusNode();
 
   //TODO: Implement RoBookingController
@@ -135,6 +137,10 @@ class RoBookingController extends GetxController {
             });
       }
     });
+    tapeIdFocus.addListener(() {
+      if (!tapeIdFocus.hasFocus && tapeIDCtrl.text.isEmpty) {}
+    });
+
     super.onInit();
   }
 
@@ -222,6 +228,10 @@ class RoBookingController extends GetxController {
         fun: (value) {
           if (value is Map && value.containsKey("info_OnAddSpots")) {
             addSpotData = RoBookingAddSpotData.fromJson(value["info_OnAddSpots"]);
+            totSpotCtrl.text = (addSpotData?.totalSpots ?? "").toString();
+            totDurCtrl.text = (addSpotData?.totalDuration ?? "").toString();
+            totAmtCtrl.text = (addSpotData?.totalAmount ?? "").toString();
+
             if (addSpotData?.message != null) {
               for (var msg in addSpotData?.message ?? []) {
                 LoadingDialog.callErrorMessage1(msg: msg);
@@ -230,6 +240,7 @@ class RoBookingController extends GetxController {
               pagecontroller.jumpToPage(0);
               currentTab.value = "Deal";
             }
+            update(["init"]);
           }
         },
         json: {
@@ -274,7 +285,7 @@ class RoBookingController extends GetxController {
           "bookingMonth": bookingMonthCtrl.text,
           "bookingnumber": bookingNoCtrl.text,
           "payroutecode": "",
-          "intEditMode": 1,
+          "intEditMode": 0,
           "effectiveDate": fpcEffectiveDateCtrl.text.fromdMyToyMd(),
           "loginCode": Get.find<MainController>().user?.logincode,
           "GSTPlants": ""
@@ -338,6 +349,20 @@ class RoBookingController extends GetxController {
           //   agencies.value = _agencies;
           // }
         });
+  }
+
+  refreshPDC() {
+    Get.find<ConnectorControl>().POSTMETHOD(
+      api: ApiFactory.RO_BOOKING_RefreshPDC,
+      json: {
+        "clientCode": selectedClient?.key,
+        "agencyCode": selectedAgnecy?.key,
+        "editMode": 1,
+        "locationCode": selectedLocation?.key,
+        "channelCode": selectedChannel?.key
+      },
+      fun: () {},
+    );
   }
 
   getSegment() {
@@ -416,7 +441,7 @@ class RoBookingController extends GetxController {
           if (response is Map && response.containsKey("info_LeaveTapedId")) {
             bookingTapeLeaveData = RoBookingTapeLeave.fromJson(response["info_LeaveTapedId"]);
             selectedSeg = DropDownValue(key: bookingTapeLeaveData?.cboSegNo, value: bookingTapeLeaveData?.cboSegNo);
-
+            update(["init"]);
             update(["programView"]);
           }
         });
@@ -445,7 +470,9 @@ class RoBookingController extends GetxController {
         fun: (response) {
           if (response is Map && response.containsKey("info_LeaveDealNumber")) {
             dealNoLeaveData = RoBookingDealNoLeave.fromJson(response["info_LeaveDealNumber"]);
-
+            payModeCtrl.text = dealNoLeaveData?.payMode ?? "";
+            dealTypeCtrl.text = dealNoLeaveData?.dealType ?? "";
+            maxspendCtrl.text = dealNoLeaveData?.maxSpend ?? 0.toString();
             update(["init", "dealGrid"]);
           }
         });
@@ -473,14 +500,14 @@ class RoBookingController extends GetxController {
           "agencyCode": selectedAgnecy?.key,
           "brandCode": selectedBrand?.key,
           "payroute": agencyLeaveData?.payroute ?? bookingNoLeaveData?.payrouteName,
-          "totalDuration": bookingNoLeaveData?.totalDuration,
-          "totalAmount": bookingNoLeaveData?.totalAmount,
-          "executive": selectedExecutive?.key,
+          "totalDuration": (bookingNoLeaveData?.totalDuration ?? addSpotData?.totalDuration ?? 0).toString(),
+          "totalAmount": (bookingNoLeaveData?.totalAmount ?? addSpotData?.totalAmount ?? 0).toString(),
+          "executive": selectedExecutive?.value,
           "zoneCode": agencyLeaveData?.zoneCode ?? bookingNoLeaveData?.zonecode,
           "dealNo": selectedDeal?.key,
           "pdcNumber": selectedPdc?.key ?? "",
           "loggedUser": Get.find<MainController>().user?.logincode,
-          "intEditMode": 0,
+          "intEditMode": bookingNoLeaveData?.intEditMode ?? 1,
           "gstPlants": selectedGST?.key ?? bookingNoLeaveData?.gstPlants,
           "gstRegN": bookingNoLeaveData?.gstPlants ?? gstNoCtrl.text,
           "secondaryEvents": selectedSecEvent?.key ?? bookingNoLeaveData?.secondaryEventId,
@@ -757,6 +784,7 @@ class RoBookingController extends GetxController {
             savecheckData = RoBookingSaveCheckTapeId.fromJson(response["info_OnSaveCheckTapeId"]);
             pagecontroller.jumpToPage(4);
             currentTab.value = "Booking Summary";
+
             LoadingDialog.modify(savecheckData?.message ?? "", () {
               save();
             }, () {

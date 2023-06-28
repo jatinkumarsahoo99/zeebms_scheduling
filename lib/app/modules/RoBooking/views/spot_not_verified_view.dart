@@ -51,7 +51,9 @@ class SpotNotVerifiedView extends GetView<RoBookingController> {
                   mapData: controller.spotsNotVerifiedData.value,
                   formatDate: false,
                 )
-              : SizedBox()),
+              : Container(
+                  decoration: BoxDecoration(border: Border.all(width: 1.0, color: Colors.grey)),
+                )),
         ))
       ],
     );
