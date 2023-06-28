@@ -1,10 +1,12 @@
 import 'package:bms_scheduling/app/controller/ConnectorControl.dart';
 import 'package:bms_scheduling/app/controller/MainController.dart';
 import 'package:bms_scheduling/app/data/DropDownValue.dart';
+import 'package:bms_scheduling/app/modules/RoBooking/bindings/ro_booking_add_spot_data.dart';
 import 'package:bms_scheduling/app/modules/RoBooking/bindings/ro_booking_agency_leave_data.dart';
 import 'package:bms_scheduling/app/modules/RoBooking/bindings/ro_booking_bkg_data.dart';
 import 'package:bms_scheduling/app/modules/RoBooking/bindings/ro_booking_brand_leave.dart';
 import 'package:bms_scheduling/app/modules/RoBooking/bindings/ro_booking_deal_click.dart';
+import 'package:bms_scheduling/app/modules/RoBooking/bindings/ro_booking_spot_not_verified.dart';
 import 'package:bms_scheduling/app/modules/RoBooking/bindings/ro_booking_tape_leave_data.dart';
 import 'package:bms_scheduling/app/modules/RoBooking/bindings/ro_booking_tape_search_data.dart';
 import 'package:bms_scheduling/app/modules/RoBooking/bindings/ro_dealno_leave.dart';
@@ -17,6 +19,7 @@ import 'package:bms_scheduling/app/modules/RoBooking/views/spots_view.dart';
 import 'package:bms_scheduling/app/modules/RoBooking/views/verify_spots_view.dart';
 import 'package:bms_scheduling/app/providers/ApiFactory.dart';
 import 'package:bms_scheduling/app/providers/extensions/string_extensions.dart';
+import 'package:bms_scheduling/widgets/FormButton.dart';
 import 'package:bms_scheduling/widgets/LoadingDialog.dart';
 import 'package:bms_scheduling/widgets/PlutoGrid/pluto_grid.dart';
 import 'package:bms_scheduling/widgets/dropdown.dart';
@@ -26,6 +29,7 @@ import 'package:get/get.dart';
 import 'package:intl/intl.dart';
 
 import '../bindings/ro_booking_init_data.dart';
+import '../bindings/ro_booking_save_check.dart';
 
 class RoBookingController extends GetxController {
   TextEditingController fpcEffectiveDateCtrl = TextEditingController(),
@@ -40,7 +44,9 @@ class RoBookingController extends GetxController {
       totSpotCtrl = TextEditingController(),
       totDurCtrl = TextEditingController(),
       totAmtCtrl = TextEditingController(),
+      tapeIDCtrl = TextEditingController(),
       zoneCtrl = TextEditingController(),
+      gstNoCtrl = TextEditingController(),
       maxspendCtrl = TextEditingController();
   PageController pagecontroller = PageController(keepPage: false);
   TextEditingController mgfromDateCtrl = TextEditingController(), mgtoDateCtrl = TextEditingController();
@@ -55,9 +61,10 @@ class RoBookingController extends GetxController {
   RoBookingTapeSearchData? bookingTapeSearchData;
   RoBookingTapeLeave? bookingTapeLeaveData;
   RoBookingBrandLeave? bookingBrandLeaveData;
+  RoBookingAddSpotData? addSpotData;
 
   FocusNode bookingNoFocusNode = FocusNode();
-  var spotsNotVerifiedData = RxList();
+  // var spotsNotVerifiedData = RxList();
 
   DropDownValue? selectedLocation;
   DropDownValue? selectedChannel;
@@ -71,13 +78,30 @@ class RoBookingController extends GetxController {
   DropDownValue? selectedExecutive;
   DropDownValue? selectedBrand;
   DropDownValue? selectedBreak;
+  DropDownValue? selectedSecEvent;
+  DropDownValue? selectedTriggerAt;
+  DropDownValue? selectedPdc;
+
+  String? dealProgramCode;
+  String? dealStartTime;
+  String? dealTelecastDate;
+  RoBookingSaveCheckTapeId? savecheckData;
 
   DropDownValue? selectedGST;
-
+  RxList<SpotsNotVerified> spotsNotVerified = RxList<SpotsNotVerified>([]);
   var channels = RxList<DropDownValue>();
   var clients = RxList<DropDownValue>();
   var agencies = RxList<DropDownValue>();
-  List tapeIds = [];
+  RxList tapeIds = RxList([]);
+
+  FocusNode bookingNoFocus = FocusNode(),
+      dealNoFocus = FocusNode(),
+      clientFocus = FocusNode(),
+      agencyFocus = FocusNode(),
+      brandFocus = FocusNode(),
+      tapeIdFocus = FocusNode(),
+      tapeIddropdownFocus = FocusNode(),
+      refrenceFocus = FocusNode();
 
   //TODO: Implement RoBookingController
   Map tabs = {
@@ -100,11 +124,27 @@ class RoBookingController extends GetxController {
             update(["init"]);
           }
         });
-    bookingNoFocusNode.addListener(() {
+    bookingNoFocus.addListener(() {
       if (!bookingNoFocusNode.hasFocus && bookingNoCtrl.text.isNotEmpty) {
         onBookingNoLeave();
       }
     });
+    refrenceFocus.addListener(() {
+      if (!refrenceFocus.hasFocus && refNoCtrl.text.isEmpty) {
+        LoadingDialog.callErrorMessage1(
+            msg: "Reference No cannot be left blank.",
+            barrierDismissible: false,
+            callback: () {
+              refrenceFocus.requestFocus();
+            });
+      }
+    });
+    tapeIdFocus.addListener(() async {
+      if (!tapeIdFocus.hasFocus && tapeIDCtrl.text.isEmpty) {
+        getTapeID(tapeIDCtrl.text);
+      }
+    });
+
     super.onInit();
   }
 
@@ -156,6 +196,8 @@ class RoBookingController extends GetxController {
             agencies.value = _agencies;
             selectedAgnecy = agencies.value.first;
             update(["init"]);
+
+            clientFocus.requestFocus();
           }
         });
   }
@@ -185,33 +227,53 @@ class RoBookingController extends GetxController {
   }
 
   addSpot() {
-    Get.find<ConnectorControl>().POSTMETHOD(api: ApiFactory.RO_BOOKING_AddSpot, fun: (value) {}, json: {
-      "cboTapeId_SelectedValue": selectedTapeID?.key,
-      "cboSegNo_SelectedText": selectedSeg?.key,
-      "txtDuration_SelectedText": bookingTapeLeaveData?.duration,
-      "cboPreMid_SelectedValue": selectedPremid?.key,
-      "cboPositionNo_SelectedValue": selectedPosition?.key,
-      "strAccountCode": dealDblClickData?.strAccountCode,
-      "lstdgvProgram": bookingTapeLeaveData?.lstdgvProgram?.map((e) => e.toJson()).toList() ?? [],
-      "dealType": dealNoLeaveData?.dealType,
-      "intSubRevenueTypeCode": dealDblClickData?.intSubRevenueTypeCode,
-      "locationCode": selectedLocation?.key,
-      "channelCode": selectedChannel?.key,
-      "brandCode": selectedBrand?.key,
-      "caption": bookingTapeLeaveData?.caption,
-      "revenueType": bookingTapeLeaveData?.tapeRevenue,
-      "lstdgvDealDetails": dealNoLeaveData?.lstdgvDealDetails?.map((e) => e.toJson()).toList(),
-      "intBookingCount": 0,
-      "dblOldBookingAmount": bookingNoLeaveData?.dblOldBookingAmount ?? 0,
-      "lstSpots": bookingNoLeaveData?.lstSpots?.map((e) => e.toJson()).toList() ?? [],
-      "intEditMode": bookingNoLeaveData?.intEditMode ?? 0,
-      "intDealRowNo": dealDblClickData?.intDealRowNo,
-      "cboBreakNo_text": selectedBreak?.key,
-      "txtTotal_text": dealDblClickData?.total ?? bookingTapeLeaveData?.total,
-      "cboDealNo_selectedValue": selectedDeal?.key,
-      "locationName": selectedLocation?.value,
-      "channelName": selectedChannel?.key
-    });
+    Get.find<ConnectorControl>().POSTMETHOD(
+        api: ApiFactory.RO_BOOKING_AddSpot,
+        fun: (value) {
+          if (value is Map && value.containsKey("info_OnAddSpots")) {
+            addSpotData = RoBookingAddSpotData.fromJson(value["info_OnAddSpots"]);
+            totSpotCtrl.text = (addSpotData?.totalSpots ?? "").toString();
+            totDurCtrl.text = (addSpotData?.totalDuration ?? "").toString();
+            totAmtCtrl.text = (addSpotData?.totalAmount ?? "").toString();
+
+            if (addSpotData?.message != null) {
+              for (var msg in addSpotData?.message ?? []) {
+                LoadingDialog.callErrorMessage1(msg: msg);
+              }
+            } else {
+              pagecontroller.jumpToPage(0);
+              currentTab.value = "Deal";
+            }
+            update(["init"]);
+          }
+        },
+        json: {
+          "cboTapeId_SelectedValue": selectedTapeID?.key,
+          "cboSegNo_SelectedText": selectedSeg?.key,
+          "txtDuration_SelectedText": bookingTapeLeaveData?.duration,
+          "cboPreMid_SelectedValue": selectedPremid?.key,
+          "cboPositionNo_SelectedValue": selectedPosition?.key,
+          "strAccountCode": dealDblClickData?.strAccountCode,
+          "lstdgvProgram": bookingTapeLeaveData?.lstdgvProgram?.map((e) => e.toJson()).toList() ?? [],
+          "dealType": dealNoLeaveData?.dealType,
+          "intSubRevenueTypeCode": dealDblClickData?.intSubRevenueTypeCode,
+          "locationCode": selectedLocation?.key,
+          "channelCode": selectedChannel?.key,
+          "brandCode": selectedBrand?.key,
+          "caption": bookingTapeLeaveData?.caption,
+          "revenueType": bookingTapeLeaveData?.tapeRevenue,
+          "lstdgvDealDetails": dealNoLeaveData?.lstdgvDealDetails?.map((e) => e.toJson()).toList(),
+          "intBookingCount": 0,
+          "dblOldBookingAmount": bookingNoLeaveData?.dblOldBookingAmount ?? 0,
+          "lstSpots": bookingNoLeaveData?.lstSpots?.map((e) => e.toJson()).toList() ?? [],
+          "intEditMode": bookingNoLeaveData?.intEditMode ?? 0,
+          "intDealRowNo": dealDblClickData?.intDealRowNo,
+          "cboBreakNo_text": selectedBreak?.key,
+          "txtTotal_text": dealDblClickData?.total ?? bookingTapeLeaveData?.total,
+          "cboDealNo_selectedValue": selectedDeal?.key,
+          "locationName": selectedLocation?.value,
+          "channelName": selectedChannel?.key
+        });
   }
 
   agencyLeave(agencyCode) {
@@ -227,7 +289,7 @@ class RoBookingController extends GetxController {
           "bookingMonth": bookingMonthCtrl.text,
           "bookingnumber": bookingNoCtrl.text,
           "payroutecode": "",
-          "intEditMode": 1,
+          "intEditMode": 0,
           "effectiveDate": fpcEffectiveDateCtrl.text.fromdMyToyMd(),
           "loginCode": Get.find<MainController>().user?.logincode,
           "GSTPlants": ""
@@ -250,13 +312,18 @@ class RoBookingController extends GetxController {
             selectedExecutive = DropDownValue(
                 key: agencyLeaveData?.excutiveDetails?.first.personnelCode ?? "", value: agencyLeaveData?.excutiveDetails?.first.personnelname);
             update(["init"]);
+            gstNoCtrl.text = agencyLeaveData?.gstRegNo ?? "";
+            agencyFocus.requestFocus();
             Get.defaultDialog(
+                radius: 05,
                 title: "GST Plant",
-                textConfirm: "Done",
-                onConfirm: () {
-                  print("DONE");
-                  Get.back();
-                },
+                confirm: FormButtonWrapper(
+                  btnText: "Done",
+                  callback: () {
+                    Get.back();
+                    agencyFocus.requestFocus();
+                  },
+                ),
                 content: SizedBox(
                   height: Get.height / 4,
                   width: Get.width / 4,
@@ -271,7 +338,7 @@ class RoBookingController extends GetxController {
                       ),
                       InputFields.formField1(
                         hintTxt: "GST Reg#",
-                        controller: TextEditingController(text: agencyLeaveData?.gstRegNo ?? ""),
+                        controller: gstNoCtrl,
                         width: 0.20,
                       )
                     ],
@@ -288,33 +355,62 @@ class RoBookingController extends GetxController {
         });
   }
 
+  refreshPDC() {
+    Get.find<ConnectorControl>().POSTMETHOD(
+      api: ApiFactory.RO_BOOKING_RefreshPDC,
+      json: {
+        "clientCode": selectedClient?.key,
+        "agencyCode": selectedAgnecy?.key,
+        "editMode": 1,
+        "locationCode": selectedLocation?.key,
+        "channelCode": selectedChannel?.key
+      },
+      fun: () {},
+    );
+  }
+
   getSegment() {
+    if (dealProgramCode != null && dealProgramCode!.isNotEmpty) {
+      Get.find<ConnectorControl>().POSTMETHOD(
+          api: ApiFactory.RO_BOOKING_GetSegment,
+          json: {
+            "locationCode": selectedLocation!.key,
+            "channelCode": selectedClient!.key,
+            "telecastDate": dealTelecastDate,
+            "telecastTime": dealStartTime,
+            "programCode": dealProgramCode
+          },
+          fun: (data) {
+            // if (data is Map && data.containsKey("info_AgencyLeave")) {
+            //   agencyLeaveData = RoBookingAgencyLeaveData.fromJson(data["info_AgencyLeave"]);
+            //   selectedDeal = DropDownValue(
+            //     key: agencyLeaveData?.lstDealNumber?.first.dealNumber ?? "",
+            //     value: agencyLeaveData?.lstDealNumber?.first.dealNumber ?? "",
+            //   );
+            //   update(["init"]);
+            // }
+            // if (data is Map && data.containsKey("info_ClientList") && data["info_ClientList"] is List) {
+            //   List<DropDownValue> _agencies = [];
+            //   for (var e in data["info_ClientList"]) {
+            //     _agencies.add(DropDownValue(key: e["agencycode"], value: e["agencyname"]));
+            //   }
+            //   agencies.value = _agencies;
+            // }
+          });
+    }
+  }
+
+  getClient() {
     Get.find<ConnectorControl>().POSTMETHOD(
         api: ApiFactory.RO_BOOKING_GetSegment,
         json: {
           "locationCode": selectedLocation!.key,
           "channelCode": selectedClient!.key,
-          "telecastDate": "2023-03-01",
-          "telecastTime": "",
-          "programCode": "00:10:00"
+          "telecastDate": dealTelecastDate,
+          "telecastTime": dealStartTime,
+          "programCode": dealProgramCode
         },
-        fun: (data) {
-          if (data is Map && data.containsKey("info_AgencyLeave")) {
-            agencyLeaveData = RoBookingAgencyLeaveData.fromJson(data["info_AgencyLeave"]);
-            selectedDeal = DropDownValue(
-              key: agencyLeaveData?.lstDealNumber?.first.dealNumber ?? "",
-              value: agencyLeaveData?.lstDealNumber?.first.dealNumber ?? "",
-            );
-            update(["init"]);
-          }
-          // if (data is Map && data.containsKey("info_ClientList") && data["info_ClientList"] is List) {
-          //   List<DropDownValue> _agencies = [];
-          //   for (var e in data["info_ClientList"]) {
-          //     _agencies.add(DropDownValue(key: e["agencycode"], value: e["agencyname"]));
-          //   }
-          //   agencies.value = _agencies;
-          // }
-        });
+        fun: (data) {});
   }
 
   setVerify() {
@@ -349,7 +445,7 @@ class RoBookingController extends GetxController {
           if (response is Map && response.containsKey("info_LeaveTapedId")) {
             bookingTapeLeaveData = RoBookingTapeLeave.fromJson(response["info_LeaveTapedId"]);
             selectedSeg = DropDownValue(key: bookingTapeLeaveData?.cboSegNo, value: bookingTapeLeaveData?.cboSegNo);
-
+            update(["init"]);
             update(["programView"]);
           }
         });
@@ -378,8 +474,64 @@ class RoBookingController extends GetxController {
         fun: (response) {
           if (response is Map && response.containsKey("info_LeaveDealNumber")) {
             dealNoLeaveData = RoBookingDealNoLeave.fromJson(response["info_LeaveDealNumber"]);
-
+            payModeCtrl.text = dealNoLeaveData?.payMode ?? "";
+            dealTypeCtrl.text = dealNoLeaveData?.dealType ?? "";
+            maxspendCtrl.text = dealNoLeaveData?.maxSpend ?? 0.toString();
             update(["init", "dealGrid"]);
+          }
+        });
+  }
+
+  save() {
+    Get.find<ConnectorControl>().POSTMETHOD(
+        api: ApiFactory.RO_BOOKING_OnSaveData,
+        json: {
+          "chkGSTValidate": true,
+          "lstdgvSpots":
+              addSpotData?.lstSpots?.map((e) => e.toJson()).toList() ?? bookingNoLeaveData?.lstSpots?.map((e) => e.toJson()).toList() ?? [],
+          "lstDealDetails": dealNoLeaveData?.lstdgvDealDetails?.map((e) => e.toJson()).toList() ??
+              bookingNoLeaveData?.lstdgvDealDetails?.map((e) => e.toJson()).toList() ??
+              [],
+          "lstdgvMakeGood": [],
+          "locationCode": selectedLocation?.key,
+          "channelCode": selectedChannel?.key,
+          "bookingMonth": bookingMonthCtrl.text,
+          "bookingNumber": bookingNoCtrl.text,
+          "bookingDate": bookDateCtrl.text.fromdMyToyMd(),
+          "effectiveDate": fpcEffectiveDateCtrl.text.fromdMyToyMd(),
+          "referenceNumber": refNoCtrl.text,
+          "clientCode": selectedClient?.key,
+          "agencyCode": selectedAgnecy?.key,
+          "brandCode": selectedBrand?.key,
+          "payroute": agencyLeaveData?.payroute ?? bookingNoLeaveData?.payrouteName,
+          "totalDuration": (bookingNoLeaveData?.totalDuration ?? addSpotData?.totalDuration ?? 0).toString(),
+          "totalAmount": (bookingNoLeaveData?.totalAmount ?? addSpotData?.totalAmount ?? 0).toString(),
+          "executive": selectedExecutive?.value,
+          "zoneCode": agencyLeaveData?.zoneCode ?? bookingNoLeaveData?.zonecode,
+          "dealNo": selectedDeal?.key,
+          "pdcNumber": selectedPdc?.key ?? "",
+          "loggedUser": Get.find<MainController>().user?.logincode,
+          "intEditMode": bookingNoLeaveData?.intEditMode ?? 1,
+          "gstPlants": selectedGST?.key ?? bookingNoLeaveData?.gstPlants,
+          "gstRegN": bookingNoLeaveData?.gstPlants ?? gstNoCtrl.text,
+          "secondaryEvents": selectedSecEvent?.key ?? bookingNoLeaveData?.secondaryEventId,
+          "triggerAt": selectedTriggerAt?.key ?? bookingNoLeaveData?.triggerId,
+          "previousBookedAmount": dealNoLeaveData?.previousBookedAmount ?? bookingNoLeaveData?.previousBookedAmount,
+          "previousValAmount": dealNoLeaveData?.previousValAmount ?? bookingNoLeaveData?.previousValAmount,
+          "dblOldBookingAmount": addSpotData?.dblOldBookingAmount ?? bookingNoLeaveData?.dblOldBookingAmount,
+          "revenueType": dealNoLeaveData?.strRevenueTypeCode ?? bookingNoLeaveData?.revenueType,
+          "maxSpend": dealNoLeaveData?.maxSpend ?? bookingNoLeaveData?.maxSpend,
+          "intPDCReqd": 0,
+          "pdc": selectedPdc?.key,
+          "strAccountCode": dealDblClickData?.strAccountCode
+        },
+        fun: (response) {
+          if (response is Map && response.containsKey("info_OnSave")) {
+            for (var msg in response["info_OnSave"]["message"]) {
+              LoadingDialog.callDataSavedMessage(msg);
+            }
+          } else if (response is String) {
+            LoadingDialog.callErrorMessage1(msg: response);
           }
         });
   }
@@ -470,7 +622,7 @@ class RoBookingController extends GetxController {
         },
         fun: (response) {
           if (response is Map && response.containsKey("info_SpotsNotVerified")) {
-            spotsNotVerifiedData.value = response["info_SpotsNotVerified"];
+            // spotsNotVerifiedData.value = response["info_SpotsNotVerified"];
           }
         });
   }
@@ -591,7 +743,6 @@ class RoBookingController extends GetxController {
               selectedPremid = DropDownValue(key: _selectedPredMid?.spotPositionTypeCode ?? "", value: _selectedPredMid?.spotPositionTypeName ?? "");
             }
             selectedBreak = DropDownValue(key: dealDblClickData?.breakNo.toString() ?? "", value: dealDblClickData?.breakNo.toString() ?? "");
-            await getTapeID();
 
             pagecontroller.jumpToPage(1);
             currentTab.value = "Programs";
@@ -602,7 +753,7 @@ class RoBookingController extends GetxController {
         });
   }
 
-  getTapeID() async {
+  getTapeID(searchContain) async {
     await Get.find<ConnectorControl>().POSTMETHOD(
         api: ApiFactory.RO_BOOKING_cboTapeIdFocusLost,
         json: {
@@ -610,14 +761,56 @@ class RoBookingController extends GetxController {
           "strAccountCode": dealDblClickData?.strAccountCode,
           "locationCode": selectedLocation?.key ?? "",
           "channelCode": selectedChannel?.key,
-          "intSubRevenueTypeCode": "0"
+          "intSubRevenueTypeCode": "0",
+          "searchContain": searchContain
         },
         fun: (value) {
           if (value is Map &&
               value.containsKey("info_GetTapeLost") &&
               value["info_GetTapeLost"].containsKey("lstTape") &&
               value["info_GetTapeLost"]["lstTape"] is List) {
-            tapeIds = value["info_GetTapeLost"]["lstTape"];
+            tapeIds.value = value["info_GetTapeLost"]["lstTape"];
+          }
+        });
+  }
+
+  getSpotNotVerified(String locationCode, String channelCode, String bookingMonth, String loggedUser) {
+    Get.find<ConnectorControl>().GETMETHODCALL(
+        api: ApiFactory.RO_BOOKING_GetSpotNotVerified(locationCode, channelCode, bookingMonth, loggedUser),
+        fun: (json) {
+          if (json is Map && json.containsKey("info_SpotsNotVerified")) {
+            if (json['info_SpotsNotVerified'] != null) {
+              spotsNotVerified.value = <SpotsNotVerified>[];
+              json['info_SpotsNotVerified'].forEach((v) {
+                spotsNotVerified.add(SpotsNotVerified.fromJson(v));
+              });
+            }
+          }
+        });
+  }
+
+  saveCheck() {
+    Get.find<ConnectorControl>().POSTMETHOD(
+        api: ApiFactory.RO_BOOKING_OnSave_Check,
+        json: {
+          "chkSummaryType": true,
+          "lstdgvSpots":
+              addSpotData?.lstSpots?.map((e) => e.toJson()).toList() ?? bookingNoLeaveData?.lstSpots?.map((e) => e.toJson()).toList() ?? [],
+          "brandName": selectedBrand?.key
+        },
+        fun: (response) {
+          if (response is Map && response.containsKey("info_OnSaveCheckTapeId")) {
+            savecheckData = RoBookingSaveCheckTapeId.fromJson(response["info_OnSaveCheckTapeId"]);
+            pagecontroller.jumpToPage(4);
+            currentTab.value = "Booking Summary";
+
+            LoadingDialog.modify(savecheckData?.message ?? "", () {
+              save();
+            }, () {
+              Get.back();
+            }, deleteTitle: "Yes", cancelTitle: "No");
+          } else if (response is String) {
+            LoadingDialog.callErrorMessage1(msg: response);
           }
         });
   }

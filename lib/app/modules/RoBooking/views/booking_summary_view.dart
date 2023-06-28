@@ -24,8 +24,9 @@ class BookingSummaryView extends GetView<RoBookingController> {
         ),
         Expanded(
             child: Container(
+          decoration: BoxDecoration(border: Border.all(width: 1.0, color: Colors.grey)),
           child: DataGridShowOnlyKeys(
-            mapData: [],
+            mapData: controller.savecheckData?.lstdgvbookingSummary?.map((e) => e.toJson()).toList() ?? [],
             formatDate: false,
           ),
         ))

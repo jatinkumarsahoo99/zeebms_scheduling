@@ -1,10 +1,12 @@
+import 'dart:async';
 import 'dart:convert';
-import 'dart:html' as html;
 import 'dart:html';
-
+import 'dart:io' as io;
+import 'dart:typed_data';
+import 'package:bms_scheduling/app/controller/HomeController.dart';
 import 'package:bms_scheduling/app/providers/ExportData.dart';
-// import 'package:download/download.dart';
 import 'package:bms_scheduling/widgets/LoadingDialog.dart';
+import 'package:file_picker/file_picker.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
@@ -15,12 +17,12 @@ import '../../../controller/ConnectorControl.dart';
 import '../../../data/DropDownValue.dart';
 import '../../../providers/ApiFactory.dart';
 import '../../../providers/Utils.dart';
+import '../CheckPromoTagModel.dart';
 import '../ColorDataModel.dart';
 import '../CommercialModel.dart';
+import '../ExportFpcTimeModel.dart';
 import '../InsertSearchModel.dart';
 import '../TransmissionLogModel.dart';
-import 'dart:html' as html;
-
 import '../VerifyListModel.dart';
 
 class TransmissionLogController extends GetxController {
@@ -49,6 +51,9 @@ class TransmissionLogController extends GetxController {
   DropDownValue? selectChannelCopyLog;
   DropDownValue? selectEvent;
   DropDownValue? selectTimeForCommercial;
+  DropDownValue? selectExportFpcFrom;
+  DropDownValue? selectExportFpcTo;
+
   PlutoGridStateManager? gridStateManager;
   PlutoGridStateManager? gridStateManagerCommercial;
   PlutoGridStateManager? dgvCommercialsStateManager;
@@ -67,6 +72,7 @@ class TransmissionLogController extends GetxController {
   var isStandby = RxBool(false);
   var isMy = RxBool(true);
   var isAllByChange = RxBool(false);
+  var isPartialLog = RxBool(false);
   var isInsertAfter = RxBool(false);
   var isAllDayReplace = RxBool(true);
   var isRowFilter = RxBool(false);
@@ -124,10 +130,46 @@ class TransmissionLogController extends GetxController {
 
   List<int> intCurrentRowIndex = List<int>.filled(4, 0);
 
+  RxnString selectExportType = RxnString("Excel");
+
+  ExportFPCTimeModel? exportFPCTime;
+
   @override
   void onInit() {
     super.onInit();
     getLocations();
+  }
+
+  pickFile() async {
+    FilePickerResult? result = await FilePicker.platform.pickFiles(
+      allowedExtensions: ["json"],
+      dialogTitle: "Select import file",
+      type: FileType.custom,
+    );
+
+    if (result != null && result.files.single != null) {
+      Uint8List? fileBytes = result.files.first.bytes;
+      String fileContent = String.fromCharCodes(fileBytes!);
+      // print(fileContent);
+      Map<String, dynamic> mapData = jsonDecode(fileContent);
+      transmissionLog = TransmissionLogModel.fromJson(mapData);
+      if (transmissionLog != null &&
+          transmissionLog?.loadSavedLogOutput != null &&
+          transmissionLog?.loadSavedLogOutput?.lstTransmissionLog != null &&
+          ((transmissionLog?.loadSavedLogOutput?.lstTransmissionLog?.length ??
+                  0) !=
+              0)) {
+        startTime_.text = transmissionLog
+                ?.loadSavedLogOutput?.lstTransmissionLog![0].transmissionTime ??
+            "";
+        isEnable.value = false;
+        isFetch.value = true;
+        update(["transmissionList"]);
+        colorGrid(false);
+      } else {
+        LoadingDialog.callInfoMessage("No Data Found");
+      }
+    } else {}
   }
 
   getLocations() {
@@ -259,6 +301,29 @@ class TransmissionLogController extends GetxController {
             tsListData = map["restscalc"]["lstOutPutTblTs"];
             getInitTsCall();
             // update(['tsList']);
+          } else {
+            Snack.callError(map.toString());
+          }
+        });
+  }
+
+  void btnExportFetchFpc({Function? fun}) {
+    LoadingDialog.call();
+    Get.find<ConnectorControl>().GETMETHODCALL(
+        api: ApiFactory.TRANSMISSION_LOG_EXPORT_FPC_TIME(
+            selectLocation?.key ?? '',
+            selectChannel?.key ?? '',
+            selectedDate.text,
+            isStandby.value),
+        fun: (map) {
+          Get.back();
+          // print("jsonData"+map.toString());
+          if (map is Map && map.containsKey("resFPCTime")) {
+            exportFPCTime =
+                ExportFPCTimeModel.fromJson(map as Map<String, dynamic>);
+            if (fun != null) {
+              fun();
+            }
           } else {
             Snack.callError(map.toString());
           }
@@ -680,21 +745,265 @@ class TransmissionLogController extends GetxController {
 
     colorGrid(false);
     LoadingDialog.callInfoMessage('$replaceCount replacements made');
-    /*showDialog(
-      context: context,
-      builder: (context) => AlertDialog(
-        title: Text('$replaceCount replacements made'),
-        content: Text('$replaceCount replacements made'),
-        actions: [
-          TextButton(
-            onPressed: () {
-              Navigator.pop(context);
-            },
-            child: Text('OK'),
-          ),
-        ],
-      ),
-    );*/
+  }
+
+  void btnExportClick(type) async {
+    bool? isDone =
+        await showDialogForYesNo("Do you want to add secondary event?");
+    LoadingDialog.call();
+    String methodName = getExportMethod(type)!;
+    Get.find<ConnectorControl>().GETMETHODCALL(
+        api: ApiFactory.TRANSMISSION_LOG_EXPORT_CLICK(
+            selectLocation?.key ?? "",
+            selectChannel?.key ?? "",
+            selectedDate.text,
+            selectLocation?.value ?? "",
+            selectChannel?.value ?? "",
+            gridStateManager?.currentRowIdx ?? 0,
+            "00:00",
+            isDone!,
+            methodName),
+        fun: (map) {
+          Get.back();
+          if (map is Map && map.containsKey("outExportDataClick")) {
+            String outputFormat = map["outExportDataClick"]["outputFormat"];
+            String strFilePrefix = map["outExportDataClick"]["strFilePrefix"];
+            String filechannel = map["outExportDataClick"]["filechannel"];
+            logWrite(
+              strFilePrefix + outputFormat.split("|")[1],
+              type,
+              isDone!,
+            );
+          } else {}
+        });
+  }
+
+  void logWrite(String fileName, String type, bool isSecondary) async {
+    switch (type) {
+      case "Excel":
+        LoadingDialog.call();
+        Get.find<ConnectorControl>().GETMETHODCALL(
+            api: ApiFactory.TRANSMISSION_LOG_WRITE_EXCEL(
+                selectLocation?.key ?? "",
+                selectChannel?.key ?? "",
+                selectedDate.text,
+                isStandby.value),
+            fun: (map) {
+              Get.back();
+              ExportData().exportFilefromBase64(map, fileName);
+            });
+        break;
+      case "Excel - Old":
+        LoadingDialog.call();
+        Get.find<ConnectorControl>().GETMETHODCALL(
+            api: ApiFactory.TRANSMISSION_LOG_WRITE_OLDEXCEL(
+                selectLocation?.key ?? "",
+                selectChannel?.key ?? "",
+                selectedDate.text,
+                isStandby.value,
+                fileName ?? "",
+                ""),
+            fun: (map) {
+              Get.back();
+              ExportData().exportFilefromBase64(map, fileName);
+            });
+        break;
+      case "Excel - NEWS":
+        LoadingDialog.call();
+        Get.find<ConnectorControl>().GETMETHODCALL(
+            api: ApiFactory.TRANSMISSION_LOG_WRITE_OLDEXCEL(
+                selectLocation?.key ?? "",
+                selectChannel?.key ?? "",
+                selectedDate.text,
+                isStandby.value,
+                fileName ?? "",
+                "NEWS"),
+            fun: (map) {
+              Get.back();
+              ExportData().exportFilefromBase64(map, fileName);
+            });
+        break;
+      case "VizRT":
+        LoadingDialog.call();
+        Get.find<ConnectorControl>().GETMETHODCALL(
+            api: ApiFactory.TRANSMISSION_LOG_WRITE_VIZRT(
+              selectLocation?.key ?? "",
+              selectChannel?.key ?? "",
+              selectedDate.text,
+              isStandby.value,
+            ),
+            fun: (map) {
+              Get.back();
+              ExportData().exportFilefromBase64(map, fileName);
+            });
+        break;
+      case "D Series":
+        LoadingDialog.call();
+        Get.find<ConnectorControl>().GETMETHODCALL(
+            api: ApiFactory.TRANSMISSION_LOG_WRITE_DSERIES(
+              selectLocation?.key ?? "",
+              selectChannel?.key ?? "",
+              selectedDate.text,
+              isStandby.value,
+              isSecondary,
+              isPartialLog.value,
+              selectExportFpcFrom?.value ?? "",
+              selectExportFpcTo?.value ?? '',
+            ),
+            fun: (map) {
+              Get.back();
+              ExportData().exportFilefromBase64(map, fileName);
+            });
+        break;
+      case "ADC -lst":
+        LoadingDialog.call();
+        Get.find<ConnectorControl>().GETMETHODCALL(
+            api: ApiFactory.TRANSMISSION_LOG_WRITE_LST(
+              selectLocation?.key ?? "",
+              selectChannel?.key ?? "",
+              selectedDate.text,
+              isStandby.value,
+              isPartialLog.value,
+              selectExportFpcFrom?.value ?? "",
+              selectExportFpcTo?.value ?? '',
+            ),
+            fun: (map) {
+              Get.back();
+              ExportData().exportFilefromBase64(map, fileName);
+            });
+        break;
+      case "Grass Valley":
+        LoadingDialog.call();
+        Get.find<ConnectorControl>().GETMETHODCALL(
+            api: ApiFactory.TRANSMISSION_LOG_WRITE_GRASS_VALLEY(
+              selectLocation?.key ?? "",
+              selectChannel?.key ?? "",
+              selectedDate.text,
+              isStandby.value,
+            ),
+            fun: (map) {
+              Get.back();
+              ExportData().exportFilefromBase64(map, fileName);
+            });
+        break;
+      case "ADC Noida":
+        LoadingDialog.call();
+        Get.find<ConnectorControl>().GETMETHODCALL(
+            api: ApiFactory.TRANSMISSION_LOG_WRITE_LST_NOIDA(
+                selectLocation?.key ?? "",
+                selectChannel?.key ?? "",
+                selectedDate.text,
+                isStandby.value,
+                isSecondary,
+                isPartialLog.value,
+                selectExportFpcFrom?.value ?? "",
+                selectExportFpcTo?.value ?? '',
+                fileName),
+            fun: (map) {
+              Get.back();
+              ExportData().exportFilefromBase64(map, fileName);
+            });
+        break;
+      case "Commercial Replace":
+        LoadingDialog.call();
+        Get.find<ConnectorControl>().GETMETHODCALL(
+            api: ApiFactory.TRANSMISSION_LOG_WRITE_COMMERCIAL_REPLACE(
+              selectLocation?.key ?? "",
+              selectChannel?.key ?? "",
+              selectedDate.text,
+            ),
+            fun: (map) {
+              Get.back();
+              ExportData().exportFilefromBase64(map, fileName);
+            });
+        break;
+      case "Videocon GV":
+        LoadingDialog.call();
+        Get.find<ConnectorControl>().GETMETHODCALL(
+            api: ApiFactory.TRANSMISSION_LOG_WRITE_VIDEOCON_GV(
+              selectLocation?.key ?? "",
+              selectChannel?.key ?? "",
+              selectedDate.text,
+              isStandby.value,
+            ),
+            fun: (map) {
+              Get.back();
+              ExportData().exportFilefromBase64(map, fileName);
+            });
+        break;
+      case "Playbox":
+        LoadingDialog.call();
+        Get.find<ConnectorControl>().GETMETHODCALL(
+            api: ApiFactory.TRANSMISSION_LOG_WRITE_PLAYBOX(
+              selectLocation?.key ?? "",
+              selectChannel?.key ?? "",
+              selectedDate.text,
+              isStandby.value,
+            ),
+            fun: (map) {
+              Get.back();
+              ExportData().exportFilefromBase64(map, fileName);
+            });
+        break;
+      case "Eventz (Dubai)":
+        LoadingDialog.call();
+        Get.find<ConnectorControl>().GETMETHODCALL(
+            api: ApiFactory.TRANSMISSION_LOG_WRITE_VZRT(
+                selectLocation?.key ?? "",
+                selectChannel?.key ?? "",
+                selectedDate.text,
+            ),
+            fun: (map) {
+              Get.back();
+              ExportData().exportFilefromBase64(map, fileName);
+            });
+        break;
+      case "ITX":
+        LoadingDialog.call();
+        Get.find<ConnectorControl>().GETMETHODCALL(
+            api: ApiFactory.TRANSMISSION_LOG_WRITE_ITX(
+                selectLocation?.key ?? "",
+                selectChannel?.key ?? "",
+                selectedDate.text,
+                selectChannel?.value ?? "",
+                fileName),
+            fun: (map) {
+              Get.back();
+              ExportData().exportFilefromBase64(map, fileName);
+            });
+        break;
+    }
+  }
+
+  String? getExportMethod(String type) {
+    switch (type) {
+      case "Excel":
+        return "GetWriteExcel";
+      case "Excel - Old":
+        return "GetWriteOLDExcel";
+      case "Excel - NEWS":
+        return "GetWriteOLDExcel";
+      case "VizRT":
+        return "GetExportVizrt";
+      case "D Series":
+        return "GetWriteDSeriesLog";
+      case "ADC -lst":
+        return "GetWriteLst";
+      case "Grass Valley":
+        return "GetGVLog";
+      case "ADC Noida":
+        return "GetWriteLst";
+      case "Commercial Replace":
+        return "GetWriteCommercialReplacement";
+      case "Videocon GV":
+        return "GetWriteVideoconGV";
+      case "Playbox":
+        return "GetWritePlaybox";
+      case "Eventz (Dubai)":
+        return "GetWriteExcelevzrt";
+      case "ITX":
+        return "GetExportITX";
+    }
   }
 
   void btnFastInsert_Add_Click() {
@@ -1455,12 +1764,12 @@ class TransmissionLogController extends GetxController {
         "gl") {
       visibleChangeOffset.value = true;
       offset_change.text =
-          gridStateManager?.currentRow?.cells["transmissionTime"]?.value;
+          gridStateManager?.currentRow?.cells["transmissionTime"]?.value ?? "";
       visibleChangeDuration.value = true;
       duration_change.text =
-          gridStateManager?.currentRow?.cells["tapeduration"]?.value;
+          gridStateManager?.currentRow?.cells["tapeduration"]?.value ?? "";
       fpctime_change.text =
-          gridStateManager?.currentRow?.cells["fpCtime"]?.value + ":00";
+          (gridStateManager?.currentRow?.cells["fpCtime"]?.value ?? "") + ":00";
       visibleChangeFpc.value = true;
     } else {
       visibleChangeDuration.value = false;
@@ -1473,11 +1782,11 @@ class TransmissionLogController extends GetxController {
       }
       visibleChangeOffset.value = true;
       offset_change.text =
-          gridStateManager?.currentRow?.cells["transmissionTime"]?.value;
+          gridStateManager?.currentRow?.cells["transmissionTime"]?.value ?? "";
       duration_change.text =
-          gridStateManager?.currentRow?.cells["tapeduration"]?.value;
+          gridStateManager?.currentRow?.cells["tapeduration"]?.value ?? "";
       fpctime_change.text =
-          gridStateManager?.currentRow?.cells["fpCtime"]?.value + ":00";
+          (gridStateManager?.currentRow?.cells["fpCtime"]?.value ?? "") + ":00";
       visibleChangeFpc.value = true;
     }
 
@@ -2154,151 +2463,417 @@ class TransmissionLogController extends GetxController {
   }
 
   void _download() async {
-    String data = await jsonEncode(gridStateManager?.rows.map((e) => e.toJson()).toList());
+    List<Map<String, dynamic>>? list =
+        gridStateManager?.rows.map((e) => e.toJson()).toList();
+    var map = {
+      "loadSavedLogOutput": {"lstTransmissionLog": list}
+    };
+    /*String data = await jsonEncode(
+        gridStateManager?.rows.map((e) => e.toJson()).toList());*/
     // final stream = await Stream.fromIterable(data!.codeUnits);
     // download(stream, 'hello.txt');
     // final FileSystemAccessHandle? handle = await html.window.();
     // if (handle != null) {
-      // Permission granted, continue with folder creation
+    // Permission granted, continue with folder creation
     // } else {
-      // Permission denied, handle accordingly
+    // Permission denied, handle accordingly
     // }
 
-    ExportData().exportFilefromString(data,"lib/hello.txt");
+    ExportData().exportFilefromString(jsonEncode(map), "lib_hello.json");
   }
 
-  void selectFolder() async {
-   /* final html.InputElement uploadInput = InputElement();
-    uploadInput.type = 'file';
-    uploadInput.multiple = true;
-    uploadInput.directory = true;
-    uploadInput.click();
+  /*void btnSave_Click(sender, e) {
+    DataTable dt = new DataTable();
+    strMessageLogFileName = Application.startupPath + "\\MessageLogFiles\\" + (cboLocations.text + "_" + cboChannels.text + "_" + DateTime.parse(txtDate.value.toString()).toString("yyyyMMdd")).replaceAll(" ", "_") + ".txt";
 
-    await uploadInput.onChange.first;
-
-    // final directoryHandle = await uploadInput.getDirectoryHandle();
-    final directoryHandle = await uploadInput.getDirectoryHandle();
-    if (directoryHandle != null) {
-      // Folder selected, continue with file operations
-    } else {
-      // No folder selected or error occurred
-    }*/
-  }
-
-
-  void btnSave_Click(sender, e) async {
-    int replaceCount = 0;
-    // String strMessageLogFileName = "${Directory.current.path}\\MessageLogFiles\\${cboLocations.text}_${cboChannels.text}_${DateFormat('yyyyMMdd').format(txtDate.value)}.txt";
     try {
-      // tblLog.MyDataGridRowFilter(true, false);
+      gridStateManager.myDataGridRowFilter(true, false);
       colorGrid(false);
-   /*   DataTable dt = tblLog.DataSource;
+      dt = gridStateManager.dataSource;
 
-      tblLog.currentCell = null;
-      if (!CheckPromoTags()) {
-        Cursor = Cursors.Default;
-        return;
+      gridStateManager.currentCell = null;
+      if (!checkPromoTags()) {
+        cursor = Cursors.default;
+    return;
+    } else {
+    unselectAllRows(gridStateManager);
+    }
+
+    if (!programSequenceValidation()) {
+    cursor = Cursors.default;
+    return;
+    }
+
+    if (!checkLostSecondaryEvents()) {
+    cursor = Cursors.default;
+    return;
+    }
+
+    if (hasWrongSecondaryEventOffset(true)) {
+    if (showMessageBox("Secondary events Scheduled beyond primary event Duration!\nDo you want to proceed?", MessageBoxType.warning, MessageBoxButtons.yesNo, MessageBoxDefaultButton.button2) == DialogResult.no) {
+    cursor = Cursors.default;
+    return;
+    }
+    }
+
+    gridStateManager.currentCell = null;
+    if (!checkRosTransmissionTime()) {
+    cursor = Cursors.default;
+    return;
+    }
+
+    gridStateManager.currentCell = null;
+    if (!diffFpcTransmissionTime(maxProgramStarttimeDiff)) {
+    cursor = Cursors.default;
+    return;
+    } else {
+    unselectAllRows(gridStateManager);
+    }
+
+    gridStateManager.currentCell = null;
+    if (!checkBackToBackProducts()) {
+    cursor = Cursors.default;
+    return;
+    } else {
+    unselectAllRows(gridStateManager);
+    }
+
+    gridStateManager.currentCell = null;
+    if (!checkBackToBackProductGroup()) {
+    cursor = Cursors.default;
+    return;
+    } else {
+    unselectAllRows(gridStateManager);
+    }
+
+    gridStateManager.currentCell = null;
+    if (!checkRosTransmissionTime(300)) {
+    cursor = Cursors.default;
+    return;
+    }
+
+    cursor = Cursors.waitCursor;
+
+    var query = (from t in gridStateManager.rows.Cast<DataGridRow>()
+    select new {
+    RowIndex = t.index,
+    FPCTime = t.cells["FPCTime"].value.toString(),
+    TransmissionTime = t.cells["TransmissionTime"].value.toString(),
+    ExportTapeCaption = t.cells["ExportTapeCaption"].value.toString(),
+    ExportTapeCode = t.cells["ExportTapeCode"].value.toString(),
+    TapeDuration = t.cells["TapeDuration"].value.toString(),
+    SOM = t.cells["SOM"].value.toString(),
+    EventType = t.cells["EventType"].value.toString(),
+    BreakEvent = t.cells["BreakEvent"].value.toString(),
+    BreakNumber = t.cells["BreakNumber"].value == null ? 0 : Convert.toInt(t.cells["BreakNumber"].value),
+    EpisodeNumber = t.cells["EpisodeNumber"].value == null ? 0 : Convert.toInt(t.cells["EpisodeNumber"].value),
+    BookingNumber = t.cells["BookingNumber"].value.toString(),
+    BookingDetailCode = t.cells["BookingDetailCode"].value == null ? 0 : Convert.toInt(t.cells["BookingDetailCode"].value),
+    DateChange = t.cells["datechange"].value == null ? 0 : Convert.toInt(t.cells["datechange"].value)
+    }).toList();
+
+    DataTable _dt = linqToDataTable(query);
+
+    db.addParameter("@locationcode", cboLocations.selectedValue);
+    db.addParameter("@channelcode", cboChannels.selectedValue);
+    db.addParameter("@telecastdate", DateTime.parse(txtDate.value.toString()).date);
+    db.addParameter("@modifiedby", BMS.loggedUser);
+    db.addParameter("@standbyLog", chkStandBy.checked);
+    db.addParameter("@dt", _dt);
+    db.ExecuteNonQuery("BMS_Save_transmissionLog", CommandType.storedProcedure);
+    logSaved = true;
+    showMessageBox("Log Saved", MessageBoxType.information);
+    logMessage(0, "Log Saved", "");
+
+    if (File.exists(strMessageLogFileName)) {
+    process.start(strMessageLogFileName);
+    }
+
+    cursor = Cursors.default;
+    // } catch (SqlClient.SqlException ex) {
+    //   showMessageBox(ex.message);
+    } catch (Exception ex) {
+    cursor = Cursors.default;
+    showMessageBox(errorLog(ex.message, BMS.globals.loggedUser, this), MessageBoxType.critical, strAlertMessageTitle);
+    }
+  }*/
+
+  Future<bool>? checkPromoTags() {
+    String strTapeCode;
+    if (selectLocation != null && selectChannel != null) {
+      LoadingDialog.call();
+      Get.find<ConnectorControl>().GETMETHODCALL(
+          api: ApiFactory.TRANSMISSION_LOG_CHECK_PROMOTAGS(
+              selectLocation?.key ?? "",
+              selectChannel?.key ?? "",
+              Utils.dateFormatChange(
+                  selectedDate.text, "dd-MM-yyyy", "M/d/yyyy"),
+              isStandby.value),
+          fun: (map) async {
+            Get.back();
+            if (map is Map) {
+              if (map.containsKey("lstCheckPromoTags") &&
+                  map["lstCheckPromoTags"] != null) {
+                CheckPromoTagModel data =
+                    CheckPromoTagModel.fromJson(map as Map<String, dynamic>);
+                // List<dynamic> _dt = map["lstCheckPromoTags"];
+                for (PlutoRow dr in (gridStateManager?.rows)!) {
+                  strTapeCode = dr.cells["ExportTapeCode"]?.value;
+                  bool blnBefore = true;
+                  List<LstCheckPromoTags>? query = data.lstCheckPromoTags
+                      ?.where((x) => (x.cRtapeid == strTapeCode))
+                      .toList();
+                  if ((query?.length ?? 0) > 0) {
+                    // DataTable queryDataTable = query.copyToDataTable();
+                    // if (queryDataTable != null) {
+                    for (var _dr in query!) {
+                      if (_dr.act.toString().toLowerCase() == "before") {
+                        // if (_dr.tgtapeid.toString() == gridStateManager?.rows[dr.index - (dr.index == 0 ? 0 : 1)].cells["ExportTapeCode"].value.toString()) {
+                        if (_dr.tgtapeid.toString() ==
+                            gridStateManager
+                                ?.rows[dr.sortIdx - (dr.sortIdx == 0 ? 0 : 1)]
+                                .cells["ExportTapeCode"]
+                                ?.value
+                                .toString()) {
+                          blnBefore = true;
+                          break;
+                        } else {
+                          blnBefore = false;
+                        }
+                      } else {
+                        if (_dr.tgtapeid.toString() !=
+                            gridStateManager?.rows[dr.sortIdx + 1]
+                                .cells["ExportTapeCode"]?.value
+                                .toString()) {
+                          // gridStateManager.firstDisplayedScrollingRowIndex = dr.cells["rownumber"].value - 10;
+                          gridStateManager?.moveScrollByRow(
+                              PlutoMoveDirection.down,
+                              int.tryParse(dr.cells["rownumber"]?.value)! - 10);
+                          // gridStateManager.rows[dr.cells["rownumber"].value - 1].selected = true; //major change
+                          gridStateManager?.setCurrentCell(
+                              dr.cells["rownumber"],
+                              int.tryParse(dr.cells["rownumber"]?.value)! - 1);
+                          bool? data = await showDialogForYesNo(
+                              "Promo & Tag mismatch! Tape ID: ${dr.cells["exporttapecode"]?.value} on row number: ${dr.cells["rownumber"]?.value}\nDo you want to proceed with Save?");
+                          if (data == null) {
+                            data = false;
+                          }
+                          if (!data) {
+                            return false;
+                          }
+                        }
+                      }
+                    }
+
+                    if (!blnBefore) {
+                      // gridStateManager.firstDisplayedScrollingRowIndex = dr.cells["rownumber"].value - 10;
+                      gridStateManager?.moveScrollByRow(PlutoMoveDirection.down,
+                          int.tryParse(dr.cells["rownumber"]?.value)! - 10);
+                      // gridStateManager.rows[dr.cells["rownumber"].value - 1].selected = true; //major change
+                      gridStateManager?.setCurrentCell(dr.cells["no"],
+                          int.tryParse(dr.cells["rownumber"]?.value)!);
+                      // gridStateManager.rows[dr.cells["rownumber"].value].selected = true;
+                      bool? data = await showDialogForYesNo(
+                          "Promo & Tag mismatch! Tape ID: ${dr.cells["exporttapecode"]?.value} on row number: ${dr.cells["rownumber"]?.value}\nDo you want to proceed with Save?");
+                      if (data == null) {
+                        data = false;
+                      }
+                      if (!data) {
+                        return false;
+                      }
+                    }
+                    // }
+                  }
+                }
+                return true;
+              } else {
+                return true;
+              }
+            } else {
+              return false;
+            }
+          },
+          failed: (map) {
+            return false;
+          });
+    }
+  }
+
+  Future<bool> programSequenceValidation() async {
+    try {
+      int row = 0;
+      // DataTable _dt = tblLog.dataSource;
+
+      if (gridStateManager == null) {
+        LoadingDialog.callInfoMessage("Nothing To save");
+        return false;
+      }
+
+      // List<PlutoRow> query = _dt.select((x) => x["EventType"].trim() == "P" || x["EventType"].trim() == "S").toList();
+      List<PlutoRow>? query = gridStateManager?.rows
+          .where((element) => ["s", "p"].contains(element
+                  .cells["eventType"]?.value
+                  ?.toString()
+                  .trim()
+                  .toLowerCase() ??
+              ""))
+          .toList();
+      if ((query?.length ?? 0) > 0) {
+        // DataTable __dt = query.copyToDataTable();
+        if (query != null) {
+          String? strTapeID = "";
+          int intSegmentNumber = 0;
+          // for (var dr in __dt.rows) {
+          for (var dr in query) {
+            if (dr.cells["exporttapecode"]?.value?.toLowerCase() != "tba" &&
+                dr.cells["exporttapecode"]?.value?.toLowerCase() != "news" &&
+                dr.cells["exporttapecode"]?.value?.toLowerCase() != "live") {
+              if (strTapeID == dr.cells["exporttapecode"]?.value.toString()) {
+                if (intSegmentNumber >
+                    int.parse(
+                        dr.cells["breaknumber"]?.value.toString() ?? '')) {
+                  // gridStateManager.firstDisplayedScrollingRowIndex = int.parse(dr["rownumber"].toString()) - 10;
+                  gridStateManager?.moveScrollByRow(PlutoMoveDirection.down,
+                      int.parse(dr.cells["rownumber"]?.value)! - 10);
+                  // tblLog.rows[int.parse(dr.cells["rownumber"]?.value)].selected = true;
+                  gridStateManager?.setCurrentCell(
+                      dr.cells["no"], int.parse(dr.cells["rownumber"]?.value));
+                  bool? data = await showDialogForYesNo(
+                      "Program sequence mismatch on Tape ID: $strTapeID between Segment Numbers:  $intSegmentNumber and ${int.parse(dr.cells["BreakNumber"]?.value.toString() ?? "0")}\nExit Save?");
+                  if (data == null) {
+                    data = false;
+                  }
+                  if (data) {
+                    return false;
+                  }
+                }
+              } else {
+                strTapeID = dr.cells["exporttapecode"]?.value.toString();
+                if (strTapeID == "tba" ||
+                    strTapeID == "live" ||
+                    strTapeID == "news") {
+                  strTapeID = "z y x w v u";
+                }
+              }
+            }
+            intSegmentNumber =
+                int.parse(dr.cells["breaknumber"]?.value.toString() ?? "0");
+            row = row + 1;
+          }
+        }
+        return true;
       } else {
-        UnSelectAllRows(tblLog);
+        return true;
       }
+    } catch (Exception) {
+      return false;
+    }
+  }
 
-      if (!ProgramSequenceValidation()) {
-        Cursor = Cursors.Default;
-        return;
-      }
-
-      if (!CheckLostSecondaryEvents()) {
-        Cursor = Cursors.Default;
-        return;
-      }
-
-      if (HasWrongSecondaryEventOffset(true)) {
-        if (await showDialog(
-          context: context,
-          builder: (context) => AlertDialog(
-            title: Text(
-                'Secondary events Scheduled beyond primary event Duration!'),
-            content: Text('Do you want to proceed?'),
-            actions: [
-              TextButton(
-                onPressed: () {
-                  Navigator.pop(context, false);
-                },
-                child: Text('No'),
-              ),
-              TextButton(
-                onPressed: () {
-                  Navigator.pop(context, true);
-                },
-                child: Text('Yes'),
-              ),
-            ],
-          ),
-        )) {
-          Cursor = Cursors.Default;
-          return;
+  bool checkLostSecondaryEvents() {
+    int i;
+    List<String> allowedEvents = ["p", "s", "gl"];
+    for (PlutoRow row in (gridStateManager?.rows)!) {
+      String? eventType =
+          row.cells["eventType"]?.value.toString().trim().toLowerCase();
+      if (row.cells["eventtype"]?.value.toString().trim().toLowerCase() ==
+          "gl") {
+        if (allowedEvents.contains(eventType)) {
+          // gridStateManager.firstDisplayedScrollingRowIndex = i - 12;
+          gridStateManager?.moveScrollByRow(
+              PlutoMoveDirection.down, row.sortIdx - 12);
+          // tblLog.rows[i].selected = true;
+          gridStateManager?.setCurrentCell(row.cells["no"], row.sortIdx);
+          LoadingDialog.callInfoMessage(
+              "Lost secondary event!\nUnable to proceed");
+          // logMessage(tblLog.rows[i - 1].cells["rownumber"].value, "Lost secondary event!\nUnable to proceed", "");
+          return false;
         }
       }
+    }
+    return true;
+  }
 
-      tblLog.currentCell = null;
-      if (!CHeckRosTransmissionTime()) {
-        Cursor = Cursors.Default;
-        return;
+  Future<bool> hasWrongSecondaryEventOffset({bool showMessage = false}) async {
+    num? tapeDuration;
+    String? eventType;
+    bool errors = false;
+
+    for (PlutoRow currentRow in (gridStateManager?.rows)!) {
+      eventType = currentRow.cells["Eventtype"]?.value.toString().trim();
+
+      if (eventType == "S" || eventType == "P") {
+        tapeDuration = Utils.oldBMSConvertToSecondsValue(
+            value: (currentRow.cells["Tapeduration"]?.value ?? ""));
       }
 
-      tblLog.currentCell = null;
-      if (!Diff_FPC_Transmission_Time(MaxProgramStarttimeDiff)) {
-        Cursor = Cursors.Default;
-        return;
+      if (eventType == "GL") {
+        if (tapeDuration! <
+            Utils.oldBMSConvertToSecondsValue(
+                value: currentRow.cells["Transmissiontime"]?.value)) {
+          errors = true;
+
+          if (showMessage == false) {
+            // currentRow.cells["Transmissiontime"]?.style.font = new Font(Control.defaultFont, FontStyle.bold);
+            // gridStateManager?.
+          } else {
+            // currentRow.selected = true;
+            // gridStateManager?.firstDisplayedScrollingRowIndex = currentRow.index - 12;
+            gridStateManager?.moveScrollByRow(
+                PlutoMoveDirection.down, currentRow.sortIdx - 12);
+            gridStateManager?.setCurrentCell(
+                currentRow.cells["no"], currentRow.sortIdx);
+
+            bool? response = await showDialogForYesNo(
+                "Secondary events scheduled with an offset exceeding duration!\nDo you want to proceed?");
+            if (response == null) {
+              response = false;
+            }
+            if (!response) {
+              break;
+            }
+          }
+        }
+      }
+    }
+
+    return errors;
+  }
+
+  void btnClear_Click() async {
+    if (!logSaved) {
+      bool? data = await showDialogForYesNo(
+          "Log is not saved and all the work done will be lost. Do you want to proceed?");
+      print("Data clicked clear");
+      if (data != null) {
+        if (data) {
+          Get.delete<TransmissionLogController>();
+          Get.find<HomeController>().clearPage1();
+        } else {
+          return;
+        }
       } else {
-        UnSelectAllRows(tblLog);
-      }
-
-      tblLog.currentCell = null;
-      if (!CheckBackToBackProducts()) {
-        Cursor = Cursors.Default;
         return;
-      } else {
-        UnSelectAllRows(tblLog);
       }
-      tblLog.currentCell = null;
-      if (!CheckBackToBackproductGroup()) {
-        Cursor = Cursors.Default;
-        return;
-      } else {
-        UnSelectAllRows(tblLog);
-      }
+    } else {
+      Get.delete<TransmissionLogController>();
+      Get.find<HomeController>().clearPage1();
+    }
+  }
 
-      tblLog.currentCell = null;
-      if (!CHeckRosTransmissionTime(300)) {
-        Cursor = Cursors.Default;
-        return;
-      }*/
-
-      /*Cursor = Cursors.WaitCursor;
-
-      var query = tblLog.Rows.cast<DataGridRow>().map((t) =>
-      {
-        "RowIndex": t.Index,
-        "FPCTime": "${t.Cells["FPCTime"].Value}",
-        "TransmissionTime": "${t.Cells["TransmissionTime"].Value}",
-        "ExportTapeCaption": "${t.Cells["ExportTapeCaption"].Value}",
-        "ExportTapeCode": "${t.Cells["ExportTapeCode"].Value}",
-        "TapeDuration": "${t.Cells["TapeDuration"].Value}",
-        "SOM": "${t.Cells["SOM"].Value}",
-        "EventType": "${t.Cells["EventType"].Value}",
-        "BreakEvent": "${t.Cells["BreakEvent"].Value}",
-        "BreakNumber": t.Cells["BreakNumber"].Value ?? 0,
-        "EpisodeNumber": t.Cells["EpisodeNumber"].Value ?? 0,
-        "BookingNumber": "${t.Cells["BookingNumber"].Value}",
-        "BookingDetailCode": t.Cells["BookingDetailCode"].Value ?? 0,
-        "datechange": t.Cells["datechange"].Value ?? 0
-      }).toList();
-
-      DataTable _dt = LINQToDataTable(query);
-
-      db.AddParameter("@locationcode", cboLocations.selectedValue);
-      db.AddParameter("@channelcode*/
-    } catch (e) {}
+  Future<bool>? showDialogForYesNo(String text) {
+    Completer<bool> completer = Completer<bool>();
+    LoadingDialog.recordExists(
+      text,
+      () {
+        completer.complete(true);
+        // return true;
+      },
+      cancel: () {
+        completer.complete(false);
+        // return false;
+      },
+    );
+    return completer.future;
   }
 }

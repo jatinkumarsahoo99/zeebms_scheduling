@@ -1246,6 +1246,7 @@ class DropDownField {
     FocusNode? inkwellFocus,
     bool startFromLeft = true,
     int maxLength = 40,
+    int miniumSearchLength = 2,
   }) {
     final textColor = isEnable ? Colors.black : Colors.grey;
     final iconLineColor = isEnable ? Colors.deepPurpleAccent : Colors.grey;
@@ -1271,7 +1272,6 @@ class DropDownField {
             } else {
               msg.value = "";
             }
-            print(items.length);
           });
     }
 
@@ -1307,7 +1307,7 @@ class DropDownField {
                       final width = renderBox.size.width;
 
                       searchData(String value) {
-                        if (value.length > 2 && (!isLoading.value)) {
+                        if (value.length >= miniumSearchLength && (!isLoading.value)) {
                           isLoading.value = true;
                           getDataFromAPI(value).then((value) {
                             isLoading.value = false;

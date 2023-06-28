@@ -208,7 +208,7 @@ class SlideMasterView extends GetView<SlideMasterController> {
                       SizedBox(width: 20),
                       DateWithThreeTextField(
                         title: "Upto Date",
-                        mainTextController: TextEditingController(),
+                        mainTextController: controller.updateTodateCtr,
                         widthRation: .225,
                       )
                     ],

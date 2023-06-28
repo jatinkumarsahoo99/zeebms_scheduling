@@ -13,12 +13,16 @@ class VerifySpotsView extends GetView<RoBookingController> {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.center,
       children: [
-        Expanded(child: Container()),
+        Expanded(
+            child: Container(
+          decoration: BoxDecoration(border: Border.all(width: 1.0, color: Colors.grey)),
+        )),
         const SizedBox(
           height: 5,
         ),
         FormButtonWrapper(
           btnText: "Set Verify",
+          iconDataM: Icons.domain_verification_rounded,
           callback: () {
             controller.setVerify();
           },

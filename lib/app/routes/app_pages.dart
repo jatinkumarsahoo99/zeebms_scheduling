@@ -1,3 +1,4 @@
+import 'package:bms_scheduling/app/modules/FillerMaster/bindings/filler_master_binding.dart';
 import 'package:get/get.dart';
 
 import '../modules/AsrunImportAdRevenue/bindings/asrun_import_binding.dart';
@@ -202,7 +203,7 @@ class AppPages {
       page: () => AuthGuard1(
         childName: _Paths.FILLER_MASTER,
       ),
-      binding: PromoMasterBinding(),
+      binding: FillerMasterBinding(),
     ),
     GetPage(
       name: _Paths.COMMERCIAL_MASTER,
