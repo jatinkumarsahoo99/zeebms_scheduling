@@ -431,8 +431,20 @@ class RoBookingController extends GetxController {
         fun: (response) {
           if (response is Map && response.containsKey("info_SetVerify")) {
             if (response["info_SetVerify"]["message"] != null) {
-              LoadingDialog.callErrorMessage1(msg: response["info_SetVerify"]["message"]);
+              if (response["info_SetVerify"]["message"].toString().toLowerCase().contains("verification status updated")) {
+                LoadingDialog.callDataSaved(msg: response["info_SetVerify"]["message"]);
+              } else {
+                LoadingDialog.callErrorMessage1(msg: response["info_SetVerify"]["message"]);
+              }
             }
+            if (response["info_SetVerify"]['info_SpotsNotVerified'] != null) {
+              spotsNotVerified.value = <SpotsNotVerified>[];
+              response["info_SetVerify"]['info_SpotsNotVerified'].forEach((v) {
+                spotsNotVerified.add(SpotsNotVerified.fromJson(v));
+              });
+            }
+            pagecontroller.jumpToPage(5);
+            currentTab.value = "Spots Not Verified";
           }
         });
   }
