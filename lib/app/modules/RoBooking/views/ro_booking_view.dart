@@ -125,7 +125,7 @@ class RoBookingView extends StatelessWidget {
                                       isEnable: controller.bookingNoLeaveData == null && controller.agencyLeaveData == null,
                                       selected: controller.bookingNoLeaveData != null
                                           ? DropDownValue(
-                                              key: controller.bookingNoLeaveData!.revenueType ?? "",
+                                              key: controller.bookingNoLeaveData!.revenueType ?? controller.dealNoLeaveData?.strRevenueTypeCode ?? "",
                                               value: controller.bookingNoLeaveData!.revenueType ?? "")
                                           : null),
                                   Row(
@@ -194,7 +194,8 @@ class RoBookingView extends StatelessWidget {
                                   InputFields.formField1(
                                     hintTxt: "Deal Type",
                                     isEnable: controller.bookingNoLeaveData == null && controller.agencyLeaveData == null,
-                                    controller: TextEditingController(text: controller.bookingNoLeaveData?.dealType ?? ""),
+                                    controller: TextEditingController(
+                                        text: controller.bookingNoLeaveData?.dealType ?? controller.dealNoLeaveData?.dealType ?? ""),
                                     onchanged: (value) {},
                                     width: 0.11,
                                   ),
@@ -380,17 +381,23 @@ class RoBookingView extends StatelessWidget {
                                 InputFields.formField1(
                                     isEnable: false,
                                     hintTxt: "Prev. V Amt",
-                                    controller: TextEditingController(text: controller.bookingNoLeaveData?.previousValAmount ?? ""),
+                                    controller: TextEditingController(
+                                        text:
+                                            controller.bookingNoLeaveData?.previousValAmount ?? controller.dealNoLeaveData?.previousValAmount ?? ""),
                                     width: 0.06),
                                 InputFields.formField1(
                                     isEnable: false,
                                     hintTxt: "Prev. B Amt",
-                                    controller: TextEditingController(text: controller.bookingNoLeaveData?.previousValAmount ?? ""),
+                                    controller: TextEditingController(
+                                        text: controller.bookingNoLeaveData?.previousValAmount ??
+                                            controller.dealNoLeaveData?.previousBookedAmount ??
+                                            ""),
                                     width: 0.06),
                                 InputFields.formField1(
                                     isEnable: false,
                                     hintTxt: "",
-                                    controller: TextEditingController(text: controller.bookingNoLeaveData?.payroutecode ?? ""),
+                                    controller: TextEditingController(
+                                        text: controller.bookingNoLeaveData?.payroutecode ?? controller.agencyLeaveData?.payRouteCode ?? ""),
                                     width: 0.06),
                                 DropDownField.formDropDown1WidthMap(
                                   controller.roBookingInitData?.lstsecondaryevents

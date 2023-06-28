@@ -7,7 +7,8 @@ class RoBookingAgencyLeaveData {
   String? gstRegN;
   String? gstPlants;
   List<LstGstPlants>? lstGstPlants;
-  List? lstPdcList;
+  List? lstPdcChannelList;
+  List<LstPdcList>? lstPdcList;
   List<LstDealNumber>? lstDealNumber;
   List<ExcutiveDetails>? excutiveDetails;
   List<LstExcutive>? lstExcutive;
@@ -31,6 +32,7 @@ class RoBookingAgencyLeaveData {
       this.lstGstPlants,
       this.lstPdcList,
       this.lstDealNumber,
+      this.lstPdcChannelList,
       this.excutiveDetails,
       this.lstExcutive,
       this.selectedExcutiveCode,
@@ -56,12 +58,19 @@ class RoBookingAgencyLeaveData {
         lstGstPlants!.add(LstGstPlants.fromJson(v));
       });
     }
-    if (json['lstPdcList'] != null) {
-      lstPdcList = <Null>[];
-      json['lstPdcList'].forEach((v) {
-        lstPdcList!.add(v);
+    if (json['lstPdcChannelList'] != null) {
+      lstPdcList = [];
+      json['lstPdcChannelList'].forEach((v) {
+        lstPdcChannelList!.add(v);
       });
     }
+    if (json['lstPdcList'] != null) {
+      lstPdcList = <LstPdcList>[];
+      json['lstPdcList'].forEach((v) {
+        lstPdcList!.add(LstPdcList.fromJson(v));
+      });
+    }
+
     if (json['lstDealNumber'] != null) {
       lstDealNumber = <LstDealNumber>[];
       json['lstDealNumber'].forEach((v) {
@@ -213,6 +222,31 @@ class LstExcutive {
     final Map<String, dynamic> data = <String, dynamic>{};
     data['personnelCode'] = personnelCode;
     data['personnelName'] = personnelName;
+    return data;
+  }
+}
+
+class LstPdcList {
+  int? chequeId;
+  String? chequeNo;
+  int? chequeAmount;
+  String? bankName;
+
+  LstPdcList({this.chequeId, this.chequeNo, this.chequeAmount, this.bankName});
+
+  LstPdcList.fromJson(Map<String, dynamic> json) {
+    chequeId = json['chequeId'];
+    chequeNo = json['chequeNo'];
+    chequeAmount = json['chequeAmount'];
+    bankName = json['bankName'];
+  }
+
+  Map<String, dynamic> toJson() {
+    final Map<String, dynamic> data = new Map<String, dynamic>();
+    data['chequeId'] = this.chequeId;
+    data['chequeNo'] = this.chequeNo;
+    data['chequeAmount'] = this.chequeAmount;
+    data['bankName'] = this.bankName;
     return data;
   }
 }
