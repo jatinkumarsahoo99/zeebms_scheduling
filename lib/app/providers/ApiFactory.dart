@@ -390,8 +390,10 @@ class ApiFactory {
   static String TRANSMISSION_LOG_EVENT_LIST() => "$BASE_URL/api/Transmissionlog/GetLoadFastInsertEventType";
 
   static String TRANSMISSION_LOG_POST_PIVOT_LOG() => "$BASE_URL/api/Transmissionlog/PostPivotLog";
+  static String TRANSMISSION_LOG_POST_SAVE_LOG() => "$BASE_URL/api/Transmissionlog/PostSaveTransmissionlog";
 
   static String TRANSMISSION_LOG_POST_TS() => "$BASE_URL/api/Transmissionlog/PostTsCalc";
+  static String TRANSMISSION_LOG_GET_BACKTOBACK_PRODUCT() => "$BASE_URL/api/Transmissionlog/GetCheckBackToBackProducts";
   static String TRANSMISSION_LOG_EXPORT_CLICK(String locId,String chnlId,String txtDt,String chnlNm,String locName,int expRowno,String exportTime,bool secEvnt,String apiCallVal ) => "$BASE_URL/api/Transmissionlog/GetbtnExportDataClick?Locationcode=$locId&Txtdate=$txtDt&channelName=$chnlNm&LocationName=$locName&ExportRowNumber=$expRowno&ExportTime=$exportTime&AddSecondaryEvents=$secEvnt&ApiCallValue=$apiCallVal&ChannelCode=$chnlId";
 
   static String TRANSMISSION_LOG_WRITE_EXCEL(String locId,String chnlId,String txtDt,bool standBy) => "$BASE_URL/api/Transmissionlog/GetWriteExcel?locationcode=$locId&channelcode=$chnlId&TxtDate=$txtDt&chkStandBy=$standBy";
@@ -440,8 +442,9 @@ class ApiFactory {
     String bookNo,
     String bookCode,
     String date,
+    String eventType,
   ) =>
-      "$BASE_URL/api/Transmissionlog/GetRemoveAndMarkAsError?locationcode=$locId&channelcode=$chnlId&BookingNumber=$bookNo&BookingDetailCode=$bookCode&txtDate=$date";
+      "$BASE_URL/api/Transmissionlog/GetRemoveAndMarkAsError?locationcode=$locId&channelcode=$chnlId&BookingNumber=$bookNo&BookingDetailCode=$bookCode&txtDate=$date&EventType=$eventType";
 
   /////////////////////////// RO DISTRIBUTION START/////////////////////
   static String get RO_DISTRIBUTION_GET_LOCATION => "$BASE_URL/api/RosDistribution/GetRosDistribution";
