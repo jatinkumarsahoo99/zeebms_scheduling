@@ -699,6 +699,7 @@ class ApiFactory {
   static String PROMO_MASTER_ON_LEAVE_LOCATION(String code) => "$BASE_URL/api/PromoMaster/onLeaveLocation?LocationCode=$code";
   static String get PROMO_MASTER_COMPANY_SEARCH => "$BASE_URL/api/PromoMaster/GetSourceCompanySearch?TextSourceCompany=";
   static String get PROMO_MASTER_PROGRAM_SEARCH => "$BASE_URL/api/PromoMaster/GetSourceProgramSearch?TextSourceProgram=";
+  static String get PROMO_MASTER_GET_PROGRAM_PICKER => "$BASE_URL/api/PromoMaster/GetProgramPicker";
   static String get PROMO_MASTER_EVENT_SEARCH => "$BASE_URL/api/PromoMaster/GetEvent?text=";
   static String get PROMO_MASTER_RETRIVE_RECORDS => "$BASE_URL/api/PromoMaster/GetRetrieveRecord";
   static String get PROMO_MASTER_TX_NO_LEAVE => "$BASE_URL/api/PromoMaster/GetCartNo_Leave";

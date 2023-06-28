@@ -4,16 +4,21 @@ import 'package:bms_scheduling/app/modules/LogAdditions/bindings/log_additions_b
 // import 'package:bms_scheduling/app/data/DropDownValue.dart';
 import 'package:bms_scheduling/app/providers/ApiFactory.dart';
 import 'package:bms_scheduling/widgets/LoadingDialog.dart';
+import 'package:bms_scheduling/widgets/gridFromMap.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:get/get.dart';
+import 'package:intl/intl.dart';
 
 // import '../../../../widgets/cutom_dropdown.dart';
+import '../../../../widgets/PlutoGrid/src/pluto_grid.dart';
 import '../../../data/PermissionModel.dart';
 import '../../../providers/Utils.dart';
 import '../../../routes/app_pages.dart';
 import '../../CommonSearch/views/common_search_view.dart';
 import '../../FillerMaster/model/filler_annotation_model.dart';
 import '../model/promo_master_on_load_model.dart';
+import '../model/promo_master_retrive_model.dart';
 
 class PromoMasterController extends GetxController {
   /// 0=>category
@@ -31,12 +36,13 @@ class PromoMasterController extends GetxController {
   late List<DropDownValue?> selectedDropDowns;
   List<PermissionModel>? formPermissions;
 
-  var rightDataTable = <FillerMasterAnnotationModel>[].obs;
+  var rightDataTable = <LstAnnotationLoadDatas>[].obs;
   String promoCode = "", strHouseID = "", strSegmentNumber = "", commercialCode = "";
   PromoMasterOnloadModel? onloadModel;
   var channelList = <DropDownValue>[].obs;
   var txCaptionPreFix = "".obs;
-  var segHash = 2.obs;
+  var segHash = 1.obs;
+  int rightTableSelectedIdx = -1;
 
   var startDateCtr = TextEditingController(),
       endDateCtr = TextEditingController(),
@@ -78,6 +84,16 @@ class PromoMasterController extends GetxController {
   }
 
   addListeners2() {
+    // rightTableFN.onKey = (focus, event) {
+    //   if (event.isKeyPressed(LogicalKeyboardKey.delete)) {
+    //     if (rightTableSelectedIdx != -1) {
+    //       rightDataTable.removeAt(rightTableSelectedIdx);
+    //       rightDataTable.refresh();
+    //       return KeyEventResult.handled;
+    //     }
+    //   }
+    //   return KeyEventResult.ignored;
+    // };
     captionFN.addListener(() {
       if (!captionFN.hasFocus) {
         captionLeave();
@@ -167,8 +183,8 @@ class PromoMasterController extends GetxController {
 
   tapeIdLeave() async {
     if (tapeIDCtr.text.trim().isNotEmpty && segHash.value != 0) {
-      await retrieveRecord("", "", tapeIDCtr.text.trim(), segHash.value);
-      if (promoCode.isNotEmpty) {
+      await retrieveRecord("", "", tapeIDCtr.text, segHash.value, "");
+      if (promoCode.isEmpty) {
         txNoCtr.text = tapeIDCtr.text;
       }
     }
@@ -196,8 +212,8 @@ class PromoMasterController extends GetxController {
   }
 
   txNoLeave() async {
-    LoadingDialog.call();
     if (txNoCtr.text.isNotEmpty) {
+      LoadingDialog.call();
       await Get.find<ConnectorControl>().POSTMETHOD(
         api: ApiFactory.PROMO_MASTER_TX_NO_LEAVE,
         fun: (resp) {
@@ -227,25 +243,184 @@ class PromoMasterController extends GetxController {
       txNoCtr.text = "AUTO";
     }
 
-    if (txNoCtr.text.trim().isNotEmpty && segHash.value != 0) {
-      retrieveRecord("", "", "", 0, houseid: txNoCtr.text.trim());
+    if (txNoCtr.text.trim().isNotEmpty && segHash.value != 0 && !Get.isDialogOpen!) {
+      retrieveRecord("", "", "", 0, txNoCtr.text.trim());
     }
   }
 
-  Future<void> retrieveRecord(String text, String code, String exporttapecode, int segno, {houseid = 0}) async {
+  Future<void> retrieveRecord(String text, String code, String exporttapecode, int segno, String houseID) async {
     LoadingDialog.call();
     await Get.find<ConnectorControl>().POSTMETHOD(
       api: ApiFactory.PROMO_MASTER_RETRIVE_RECORDS,
       fun: (resp) {
         closeDialogIfOpen();
-        if (resp != null && resp['retrieveRecord'] != null) {}
+        PromoMasterRetriveModel retriveM = PromoMasterRetriveModel.fromJson(resp);
+        if (retriveM.retrieveRecord != null && (retriveM.retrieveRecord?.isNotEmpty ?? false)) {
+          RetrieveRecord record = retriveM.retrieveRecord![0];
+
+          /// promo code
+          if (record.promoCode != null) {
+            promoCode = record.promoCode ?? "";
+          }
+
+          /// caption
+          if (record.promoCaption != null) {
+            captionCtr.text = record.promoCaption ?? "";
+          }
+
+          /// duration
+          if (record.promoDuration != null) {
+            durationCtr.text = Utils.convertToTimeFromDouble(value: record.promoDuration ?? 0);
+          }
+
+          /// promo-type
+          if (record.promoTypeCode != null) {
+            var tempPromoType = onloadModel?.promoMasterOnLoad?.lstPromoType?.firstWhereOrNull((element) => element.key == record.promoTypeCode);
+            if (tempPromoType != null) {
+              selectedDropDowns[4] = tempPromoType;
+            }
+          }
+
+          /// category
+          if (record.promoCategoryCode != null && record.promoCategoryName != null) {
+            handleOnChangedCategory(DropDownValue(
+              key: record.promoCategoryCode,
+              value: record.promoCategoryName,
+            ));
+          }
+
+          /// tape-id
+          if (record.exportTapeCode != null) {
+            tapeIDCtr.text = record.exportTapeCode ?? "";
+          }
+
+          /// tx-caption
+          if (record.promoCaption != null) {
+            txCaptionCtr.text = record.promoCaption ?? "";
+          }
+
+          /// tape-type
+          if (record.tapeTypeCode != null) {
+            var tempTapetype = onloadModel?.promoMasterOnLoad?.lstTapeType?.firstWhereOrNull((element) => element.key == record.tapeTypeCode);
+            if (tempTapetype != null) {
+              selectedDropDowns[10] = tempTapetype;
+            }
+          }
+
+          /// location
+          if (record.locationcode != null) {
+            var tempLoaction = onloadModel?.promoMasterOnLoad?.lstLocation?.firstWhereOrNull((element) => element.key == record.locationcode);
+            if (tempLoaction != null) {
+              selectedDropDowns[2] = tempLoaction;
+            }
+          }
+
+          /// CHANNELS
+          var tempChannel = channelList.firstWhereOrNull((element) => element.key == record.channelCode);
+          if (tempChannel != null) {
+            selectedDropDowns[3] = tempChannel;
+          } else if (selectedDropDowns[0] != null) {
+            locationOnChanged(selectedDropDowns[2]).then((value) {
+              var tempChannel2 = channelList.firstWhereOrNull((element) => element.key == record.channelCode);
+              if (tempChannel2 != null) {
+                selectedDropDowns[3] = tempChannel2;
+              }
+            });
+          }
+
+          /// program
+          if (record.programCode != null && record.programName != null) {
+            selectedDropDowns[6] = DropDownValue(
+              key: record.programCode,
+              value: record.programName,
+            );
+          }
+
+          /// org/repeat
+          if (record.originalRepeatCode != null) {
+            var temporiginalRepeatCode =
+                onloadModel?.promoMasterOnLoad?.lstOriginalRepeat?.firstWhereOrNull((element) => element.key == record.originalRepeatCode);
+            if (temporiginalRepeatCode != null) {
+              selectedDropDowns[8] = temporiginalRepeatCode;
+            }
+          }
+
+          /// tx-no
+          if (record.houseId != null) {
+            txNoCtr.text = record.houseId ?? "";
+            strHouseID = (record.houseId ?? "");
+          }
+
+          /// segNo
+          if (record.segmentNumber != null) {
+            segHash.value = record.segmentNumber ?? 0;
+            strSegmentNumber = (record.segmentNumber ?? 0).toString();
+          }
+
+          /// som
+          if (record.som != null) {
+            somCtr.text = record.som ?? "00:00:00:00";
+          }
+
+          /// eom
+          if (record.eom != null) {
+            eomCtr.text = record.som ?? "00:00:00:00";
+          }
+
+          /// start-date
+          if (record.startDate != null) {
+            startDateCtr.text = DateFormat("dd-MM-yyyy").format(DateFormat("yyyy-MM-ddThh:mm:ss").parse(record.startDate!));
+          }
+
+          /// blan tape id
+          if (record.blanktapeid != null) {
+            blankTapeIDCtr.text = record.blanktapeid!;
+          }
+
+          /// billing
+          if (record.billflag != null) {
+            var tempBilling = onloadModel?.promoMasterOnLoad?.lstBilling?.firstWhereOrNull((element) => element.key == record.billflag.toString());
+            if (tempBilling != null) {
+              selectedDropDowns[9] = tempBilling;
+            }
+          }
+
+          /// company
+          if (record.companycode != null && record.companyName != null) {
+            selectedDropDowns[1] = DropDownValue(
+              key: record.companycode,
+              value: record.companyName,
+            );
+          }
+
+          /// empty title dropdown
+          if (record.ptype != null) {
+            var tempPtype = onloadModel?.promoMasterOnLoad?.lstptype?.firstWhereOrNull((element) => element.key == record.ptype);
+            if (tempPtype != null) {
+              selectedDropDowns[5] = tempPtype;
+            }
+          }
+
+          /// end-date
+          if (record.killDate != null) {
+            endDateCtr.text = DateFormat("dd-MM-yyyy").format(DateFormat("yyyy-MM-ddThh:mm:ss").parse(record.killDate!));
+          }
+
+          /// right-table-data
+          if (record.lstAnnotationLoadDatas != null) {
+            rightDataTable.clear();
+            rightDataTable.addAll(record.lstAnnotationLoadDatas ?? []);
+          }
+
+          updateUI();
+        }
       },
       json: {
         "promoCode": promoCode,
-        "promoCaption": txCaptionCtr.text,
+        "promoCaption": captionCtr.text,
         "exportTapeCode": exporttapecode,
         "segmentNumber": segno,
-        "houseid": num.tryParse(houseid) ?? 0,
+        "houseid": houseID,
       },
     );
   }
@@ -279,9 +454,35 @@ class PromoMasterController extends GetxController {
     }
   }
 
-  void handleAddTapFromAnnotations() {}
+  void handleAddTapFromAnnotations() {
+    if (selectedDropDowns[11] == null) {
+      LoadingDialog.showErrorDialog("Please select Event");
+      return;
+    }
+    rightDataTable.add(LstAnnotationLoadDatas(
+      eventId: int.tryParse(selectedDropDowns[11]?.key ?? "0") ?? 0,
+      eventname: selectedDropDowns[11]?.value,
+      tCin: tcInCtr.text,
+      tCout: tcOutCtr.text,
+    ));
+    tcInCtr.text = "00:00:00:00";
+    tcOutCtr.text = "00:00:00:00";
+  }
 
-  void handleCopyTap() {}
+  Future<void> handleCopyTap() async {
+    await retrieveRecord("", "", copyCtr.text, (int.tryParse(segNoCtr.text) ?? 0), "");
+    tapeIDCtr.text = "AUTO";
+    txNoCtr.text = "AUTO";
+    segHash.value = 1;
+    segNoCtr.text = 1.toString();
+    var now = DateTime.now();
+    captionCtr.text = "${captionCtr.text}-${DateFormat("yyyyMMdd").format(now)}";
+    txCaptionCtr.text = "${txCaptionCtr.text}-${DateFormat("yyyyMMdd").format(now)}";
+    startDateCtr.text = "${now.day}-${now.month}-${now.year}";
+    now = now.copyWith(month: now.month + 1);
+    endDateCtr.text = "${now.day}-${now.month}-${now.year}";
+    promoCode = "";
+  }
 
   initailAPICall() {
     LoadingDialog.call();
@@ -312,5 +513,72 @@ class PromoMasterController extends GetxController {
     if (val != null && val.value != null && val.value!.length >= 2) {
       txCaptionPreFix.value = "${val.value!.substring(0, 2)}/".toUpperCase();
     }
+  }
+
+  void handleProgramPickerTap() {
+    List<dynamic> tempList = [];
+    if (selectedDropDowns[2] == null || selectedDropDowns[3] == null) {
+      LoadingDialog.showErrorDialog("Please select Location, Channel");
+      return;
+    }
+    Future<bool> getData() async {
+      await Get.find<ConnectorControl>().POSTMETHOD(
+        api: ApiFactory.PROMO_MASTER_GET_PROGRAM_PICKER,
+        fun: (resp) {
+          if (resp != null && resp is Map<String, dynamic> && resp['programPicker'] != null) {
+            tempList = resp['programPicker'];
+          }
+        },
+        json: {
+          "locationcode": selectedDropDowns[2]?.key,
+          "channelcode": selectedDropDowns[3]?.key,
+        },
+      );
+      return true;
+    }
+
+    SizedBox();
+    Get.defaultDialog(
+      title: "Program Picker",
+      content: SizedBox(
+        width: Get.width * .5,
+        height: Get.height * .5,
+        child: FutureBuilder(
+          initialData: false,
+          future: getData(),
+          builder: (_, sn) {
+            return Visibility(
+              visible: sn.data!,
+              replacement: const Center(
+                child: CircularProgressIndicator(),
+              ),
+              child: Visibility(
+                visible: tempList.isNotEmpty,
+                replacement: const Center(
+                  child: Text("No Data found"),
+                ),
+                child: Padding(
+                  padding: EdgeInsets.all(16),
+                  child: DataGridFromMap(
+                    mapData: tempList,
+                    hideCode: false,
+                    mode: PlutoGridMode.selectWithOneTap,
+                    onRowDoubleTap: (row) {
+                      selectedDropDowns[6] = DropDownValue(
+                        key: tempList[row.rowIdx]['programCode'].toString(),
+                        value: tempList[row.rowIdx]['programName'].toString(),
+                      );
+                      Get.back();
+                      updateUI();
+                      print(tempList[row.rowIdx]);
+                    },
+                  ),
+                ),
+              ),
+            );
+          },
+        ),
+      ),
+    );
   }
 }

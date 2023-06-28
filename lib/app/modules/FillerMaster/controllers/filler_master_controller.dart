@@ -161,15 +161,15 @@ class FillerMasterController extends GetxController {
   }
 
   addListeneres2() {
-    rightTableFN.onKey = (focus, event) {
-      if (event.isKeyPressed(LogicalKeyboardKey.delete)) {
-        if (rightTableSelectedIdx != -1) {
-          rightDataTable.removeAt(rightTableSelectedIdx);
-          rightDataTable.refresh();
-        }
-      }
-      return KeyEventResult.ignored;
-    };
+    // rightTableFN.onKey = (focus, event) {
+    //   if (event.isKeyPressed(LogicalKeyboardKey.delete)) {
+    //     if (rightTableSelectedIdx != -1) {
+    //       rightDataTable.removeAt(rightTableSelectedIdx);
+    //       rightDataTable.refresh();
+    //     }
+    //   }
+    //   return KeyEventResult.ignored;
+    // };
     segNoFN.addListener(() {
       if (!segNoFN.hasFocus) {
         segNoLeftLeave();
@@ -669,7 +669,7 @@ class FillerMasterController extends GetxController {
     }
     rightDataTable.add(FillerMasterAnnotationModel(
       eventId: int.tryParse(selectedDropDowns[18]?.key ?? "0") ?? 0,
-      eventname: selectedDropDowns[18]?.key,
+      eventname: selectedDropDowns[18]?.value,
       tCin: tcInCtr.text,
       tCout: tcOutCtr.text,
     ));
@@ -698,7 +698,7 @@ class FillerMasterController extends GetxController {
 
     txCaptionCtr.text = "$tempName-${DateFormat("yyyyMMdd").format(now)}";
     startDateCtr.text = "${now.day}-${now.month}-${now.year}";
-    // now = now.copyWith(month: now.month + 3);
+    now = now.copyWith(month: now.month + 3);
     endDateCtr.text = "${now.day}-${now.month}-${now.year}";
     fillerCode = "";
   }

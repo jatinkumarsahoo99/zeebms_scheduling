@@ -2,10 +2,13 @@ import 'package:bms_scheduling/app/providers/ApiFactory.dart';
 import 'package:bms_scheduling/widgets/DateTime/DateWithThreeTextField.dart';
 import 'package:bms_scheduling/widgets/NumericStepButton.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:get/get.dart';
 
 import '../../../../widgets/FormButton.dart';
+import '../../../../widgets/PlutoGrid/src/pluto_grid.dart';
 import '../../../../widgets/dropdown.dart';
+import '../../../../widgets/gridFromMap.dart';
 import '../../../../widgets/input_fields.dart';
 import '../../../controller/HomeController.dart';
 import '../../../providers/Utils.dart';
@@ -181,7 +184,7 @@ class PromoMasterView extends GetView<PromoMasterController> {
                                         ),
                                         FormButton(
                                           btnText: "...",
-                                          callback: () {},
+                                          callback: controller.handleProgramPickerTap,
                                           showIcon: false,
                                         )
                                       ],
@@ -340,12 +343,33 @@ class PromoMasterView extends GetView<PromoMasterController> {
                                           ),
                                           SizedBox(height: 14),
                                           Expanded(
-                                            child: Container(
-                                              decoration: BoxDecoration(
-                                                  border: Border.all(
-                                                color: Colors.grey,
-                                              )),
-                                            ),
+                                            child: Obx(() {
+                                              return Container(
+                                                decoration: controller.rightDataTable.value.isEmpty
+                                                    ? BoxDecoration(
+                                                        border: Border.all(
+                                                        color: Colors.grey,
+                                                      ))
+                                                    : null,
+                                                child: controller.rightDataTable.value.isEmpty
+                                                    ? null
+                                                    : RawKeyboardListener(
+                                                        onKey: (value) {
+                                                          if (value.isKeyPressed(LogicalKeyboardKey.delete) && controller.rightDataTable.isNotEmpty) {
+                                                            controller.rightDataTable.removeAt(controller.rightTableSelectedIdx);
+                                                            controller.rightTableSelectedIdx = 0;
+                                                          }
+                                                        },
+                                                        focusNode: controller.rightTableFN,
+                                                        child: DataGridFromMap(
+                                                          mapData: controller.rightDataTable.value.map((e) => e.toJson()).toList(),
+                                                          // focusNode: controller.rightTableFN,
+                                                          mode: PlutoGridMode.selectWithOneTap,
+                                                          onSelected: (selected) => controller.rightTableSelectedIdx = selected.rowIdx ?? -1,
+                                                        ),
+                                                      ),
+                                              );
+                                            }),
                                           ),
                                           SizedBox(height: 14),
                                           Row(
