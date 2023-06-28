@@ -470,6 +470,9 @@ class RoBookingController extends GetxController {
         fun: (response) {
           if (response is Map && response.containsKey("info_LeaveDealNumber")) {
             dealNoLeaveData = RoBookingDealNoLeave.fromJson(response["info_LeaveDealNumber"]);
+            payModeCtrl.text = dealNoLeaveData?.payMode ?? "";
+            dealTypeCtrl.text = dealNoLeaveData?.dealType ?? "";
+            maxspendCtrl.text = dealNoLeaveData?.maxSpend ?? 0.toString();
             update(["init", "dealGrid"]);
           }
         });
@@ -497,14 +500,14 @@ class RoBookingController extends GetxController {
           "agencyCode": selectedAgnecy?.key,
           "brandCode": selectedBrand?.key,
           "payroute": agencyLeaveData?.payroute ?? bookingNoLeaveData?.payrouteName,
-          "totalDuration": bookingNoLeaveData?.totalDuration,
-          "totalAmount": bookingNoLeaveData?.totalAmount,
-          "executive": selectedExecutive?.key,
+          "totalDuration": bookingNoLeaveData?.totalDuration ?? addSpotData?.totalDuration ?? 0,
+          "totalAmount": bookingNoLeaveData?.totalAmount ?? addSpotData?.totalAmount ?? 0,
+          "executive": selectedExecutive?.value,
           "zoneCode": agencyLeaveData?.zoneCode ?? bookingNoLeaveData?.zonecode,
           "dealNo": selectedDeal?.key,
           "pdcNumber": selectedPdc?.key ?? "",
           "loggedUser": Get.find<MainController>().user?.logincode,
-          "intEditMode": 0,
+          "intEditMode": bookingNoLeaveData?.intEditMode ?? 1,
           "gstPlants": selectedGST?.key ?? bookingNoLeaveData?.gstPlants,
           "gstRegN": bookingNoLeaveData?.gstPlants ?? gstNoCtrl.text,
           "secondaryEvents": selectedSecEvent?.key ?? bookingNoLeaveData?.secondaryEventId,

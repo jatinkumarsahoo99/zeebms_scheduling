@@ -240,6 +240,7 @@ class RoBookingView extends StatelessWidget {
                                     width: Get.width * 0.11,
                                     child: FormButtonWrapper(
                                         btnText: "Search Tape",
+                                        iconDataM: Icons.search_rounded,
                                         callback: () {
                                           var data = Rxn<List>();
                                           FocusNode tapeIdFocus = FocusNode();

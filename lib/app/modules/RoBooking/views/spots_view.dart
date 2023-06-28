@@ -27,7 +27,9 @@ class SpotsView extends GetView<RoBookingController> {
                       controller.bookingNoLeaveData?.lstSpots?.map((e) => e.toJson()).toList() ??
                       [],
                   formatDate: false)
-              : SizedBox(),
+              : Container(
+                  decoration: BoxDecoration(border: Border.all(width: 1.0, color: Colors.grey)),
+                ),
         )),
         SizedBox(
           height: 5,
@@ -77,16 +79,19 @@ class SpotsView extends GetView<RoBookingController> {
               children: [
                 FormButtonWrapper(
                   btnText: "Refresh PDC",
+                  iconDataM: Icons.refresh_rounded,
                   callback: () {
                     controller.refreshPDC();
                   },
                 ),
                 FormButtonWrapper(
+                  iconDataM: Icons.delete_outline_rounded,
                   btnText: "Del Spot Row",
                   callback: () {},
                 ),
                 FormButtonWrapper(
                   btnText: "PDC Cheques",
+                  iconDataM: Icons.wallet_rounded,
                   callback: () {
                     Get.defaultDialog(
                         title: "Client PDC",
