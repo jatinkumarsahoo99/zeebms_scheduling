@@ -43,7 +43,7 @@ class SalesAuditNewController extends GetxController {
   List<LstAsrunlog1> listAsrunLog1 = [];
   List<LstAsrunlog2> listAsrunLog2 = [];
   int? selectedIndex = 0;
-  // int? selectedRightIndex = 0;
+  int? selectedRightIndex = 0;
   List<LstAsrunlog1> masterListAsrunLog1 = [];
   List<LstAsrunlog2> masterListAsrunLog2 = [];
   bool leftTblFocus = false;
