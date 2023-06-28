@@ -1,4 +1,5 @@
 // import 'package:bms_scheduling/widgets/cutom_dropdown.dart';
+import 'package:bms_scheduling/app/controller/ConnectorControl.dart';
 import 'package:bms_scheduling/app/modules/RoBooking/controllers/ro_booking_controller.dart';
 import 'package:bms_scheduling/app/modules/RoBooking/views/dummydata.dart';
 import 'package:bms_scheduling/widgets/DataGridShowOnly.dart';
@@ -12,6 +13,7 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
 import '../../../data/DropDownValue.dart';
+import '../../../providers/ApiFactory.dart';
 
 class SpotsView extends GetView<RoBookingController> {
   const SpotsView({Key? key}) : super(key: key);
@@ -92,7 +94,25 @@ class SpotsView extends GetView<RoBookingController> {
                 FormButtonWrapper(
                   btnText: "PDC Cheques",
                   iconDataM: Icons.wallet_rounded,
-                  callback: () {
+                  callback: () async {
+                    await Get.find<ConnectorControl>().POSTMETHOD(
+                        api: ApiFactory.RO_BOOKING_GetClientPDC,
+                        json: {
+                          "locationName": controller.selectedLocation?.value,
+                          "channelName": controller.selectedChannel?.value,
+                          "clientName": controller.selectedClient?.value,
+                          "agencyName": controller.selectedAgnecy?.value,
+                          "activityPeriod": controller.bookingMonthCtrl.text
+                        },
+                        fun: (value) {});
+                    TextEditingController chequeNoCtrl = TextEditingController(),
+                        chqDateCtrl = TextEditingController(),
+                        chequeAmtCtrl = TextEditingController(),
+                        bankCtrl = TextEditingController(),
+                        chequeRecByCtrl = TextEditingController(),
+                        chequeRecOnCtrl = TextEditingController(),
+                        remarkCtrl = TextEditingController();
+
                     Get.defaultDialog(
                         title: "Client PDC",
                         content: SizedBox(
@@ -120,25 +140,44 @@ class SpotsView extends GetView<RoBookingController> {
                                 spacing: Get.width * 0.01,
                                 runSpacing: 05,
                                 children: [
-                                  InputFields.formField1(hintTxt: "Cheque", width: 0.083, controller: TextEditingController()),
+                                  InputFields.formField1(hintTxt: "Cheque No", width: 0.083, controller: chequeNoCtrl),
                                   DateWithThreeTextField(
                                     title: "Chq Dt",
                                     widthRation: 0.084,
-                                    mainTextController: controller.fpcEffectiveDateCtrl,
+                                    mainTextController: chqDateCtrl,
                                     isEnable: controller.bookingNoLeaveData == null,
                                   ),
-                                  InputFields.formField1(hintTxt: "Chq Amt", width: 0.083, controller: TextEditingController()),
-                                  InputFields.formField1(hintTxt: "Bank", width: 0.27, controller: TextEditingController()),
-                                  InputFields.formField1(hintTxt: "Chq Recd By", width: 0.27, controller: TextEditingController()),
+                                  InputFields.formField1(hintTxt: "Chq Amt", width: 0.083, controller: chequeAmtCtrl),
+                                  InputFields.formField1(hintTxt: "Bank", width: 0.27, controller: bankCtrl),
+                                  InputFields.formField1(hintTxt: "Chq Recd By", width: 0.27, controller: chequeRecOnCtrl),
                                   DateWithThreeTextField(
                                     title: "Recd On",
                                     widthRation: 0.27,
-                                    mainTextController: controller.fpcEffectiveDateCtrl,
+                                    mainTextController: chequeRecOnCtrl,
                                     isEnable: controller.bookingNoLeaveData == null,
                                   ),
-                                  InputFields.formField1(hintTxt: "Remarks", width: 0.27, controller: TextEditingController()),
+                                  InputFields.formField1(hintTxt: "Remarks", width: 0.27, controller: remarkCtrl),
                                 ],
                               ),
+                              Expanded(
+                                child: Container(),
+                              ),
+                              Row(
+                                mainAxisAlignment: MainAxisAlignment.center,
+                                children: [
+                                  FormButtonWrapper(
+                                    btnText: "Save",
+                                    callback: () {},
+                                  ),
+                                  SizedBox(
+                                    width: 5,
+                                  ),
+                                  FormButtonWrapper(
+                                    btnText: "Clear",
+                                    callback: () {},
+                                  ),
+                                ],
+                              )
                             ],
                           ),
                         ));

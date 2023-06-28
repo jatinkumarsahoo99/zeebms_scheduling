@@ -1,3 +1,4 @@
+import 'package:bms_scheduling/app/controller/MainController.dart';
 import 'package:bms_scheduling/app/data/DropDownValue.dart';
 import 'package:bms_scheduling/app/modules/RoBooking/controllers/ro_booking_controller.dart';
 import 'package:bms_scheduling/widgets/DataGridShowOnly.dart';
@@ -33,9 +34,15 @@ class SpotNotVerifiedView extends GetView<RoBookingController> {
             DateWithThreeTextField(title: "FPC Eff. Dt.", widthRation: 0.12, mainTextController: effectdateController),
             FormButtonWrapper(
               btnText: "Spot Not Verified",
+              iconDataM: Icons.cancel_presentation_outlined,
               callback: () {
-                controller.getSpotsNotVerified(
-                    selectedLocation!.key, selectedChannel!.key, effectdateController.text.split("-")[2] + effectdateController.text.split("-")[1]);
+                controller.getSpotNotVerified(
+                    selectedLocation?.key ?? "",
+                    selectedChannel?.key ?? "",
+                    effectdateController.text.split("-")[2] + effectdateController.text.split("-")[1],
+                    Get.find<MainController>().user?.logincode ?? "");
+                // controller.getSpotsNotVerified(
+                //     selectedLocation!.key, selectedChannel!.key, effectdateController.text.split("-")[2] + effectdateController.text.split("-")[1]);
               },
             ),
             SizedBox(width: 5)
@@ -46,9 +53,9 @@ class SpotNotVerifiedView extends GetView<RoBookingController> {
         ),
         Expanded(
             child: Container(
-          child: Obx(() => controller.spotsNotVerifiedData.value.isNotEmpty
+          child: Obx(() => controller.spotsNotVerified.value.isNotEmpty
               ? DataGridShowOnlyKeys(
-                  mapData: controller.spotsNotVerifiedData.value,
+                  mapData: controller.spotsNotVerified.value.map((e) => e.toJson()).toList(),
                   formatDate: false,
                 )
               : Container(
