@@ -178,7 +178,11 @@ class SalesAuditNotTelecastReportController extends GetxController {
 
   }
 
-
+  formHandler(String string) {
+    if (string == "Clear") {
+      clearAll();
+    }
+  }
 
 
 }

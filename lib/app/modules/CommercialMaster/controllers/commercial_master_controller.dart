@@ -289,7 +289,7 @@ class CommercialMasterController extends GetxController {
       Get.find<ConnectorControl>().POSTMETHOD(
           api: ApiFactory.COMMERCIAL_MASTER_SAVE_COMMERCIALTAPE,
           json: commercialTapeMasterPostData.toJson(),
-          fun: (Map map) {
+          fun: (map) {
             Get.back();
             print("map>>>>>" + map.toString());
             if (map is Map && map.containsKey("isError")) {
@@ -336,7 +336,7 @@ class CommercialMasterController extends GetxController {
   getAllDropDownList() {
     Get.find<ConnectorControl>().GETMETHODCALL(
         api: ApiFactory.COMMERCIAL_MASTER_ALLDROPDOWN,
-        fun: (Map map) {
+        fun: (map) {
           log(">>>" + map.toString());
           if (map is Map) {
             if (map.containsKey("language") && map["language"].length > 0) {

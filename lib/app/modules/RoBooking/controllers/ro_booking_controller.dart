@@ -6,6 +6,7 @@ import 'package:bms_scheduling/app/modules/RoBooking/bindings/ro_booking_agency_
 import 'package:bms_scheduling/app/modules/RoBooking/bindings/ro_booking_bkg_data.dart';
 import 'package:bms_scheduling/app/modules/RoBooking/bindings/ro_booking_brand_leave.dart';
 import 'package:bms_scheduling/app/modules/RoBooking/bindings/ro_booking_deal_click.dart';
+import 'package:bms_scheduling/app/modules/RoBooking/bindings/ro_booking_spot_not_verified.dart';
 import 'package:bms_scheduling/app/modules/RoBooking/bindings/ro_booking_tape_leave_data.dart';
 import 'package:bms_scheduling/app/modules/RoBooking/bindings/ro_booking_tape_search_data.dart';
 import 'package:bms_scheduling/app/modules/RoBooking/bindings/ro_dealno_leave.dart';
@@ -63,7 +64,7 @@ class RoBookingController extends GetxController {
   RoBookingAddSpotData? addSpotData;
 
   FocusNode bookingNoFocusNode = FocusNode();
-  var spotsNotVerifiedData = RxList();
+  // var spotsNotVerifiedData = RxList();
 
   DropDownValue? selectedLocation;
   DropDownValue? selectedChannel;
@@ -87,11 +88,11 @@ class RoBookingController extends GetxController {
   RoBookingSaveCheckTapeId? savecheckData;
 
   DropDownValue? selectedGST;
-
+  RxList<SpotsNotVerified> spotsNotVerified = RxList<SpotsNotVerified>([]);
   var channels = RxList<DropDownValue>();
   var clients = RxList<DropDownValue>();
   var agencies = RxList<DropDownValue>();
-  List tapeIds = [];
+  RxList tapeIds = RxList([]);
 
   FocusNode bookingNoFocus = FocusNode(),
       dealNoFocus = FocusNode(),
@@ -99,6 +100,7 @@ class RoBookingController extends GetxController {
       agencyFocus = FocusNode(),
       brandFocus = FocusNode(),
       tapeIdFocus = FocusNode(),
+      tapeIddropdownFocus = FocusNode(),
       refrenceFocus = FocusNode();
 
   //TODO: Implement RoBookingController
@@ -137,8 +139,10 @@ class RoBookingController extends GetxController {
             });
       }
     });
-    tapeIdFocus.addListener(() {
-      if (!tapeIdFocus.hasFocus && tapeIDCtrl.text.isEmpty) {}
+    tapeIdFocus.addListener(() async {
+      if (!tapeIdFocus.hasFocus && tapeIDCtrl.text.isEmpty) {
+        getTapeID(tapeIDCtrl.text);
+      }
     });
 
     super.onInit();
@@ -618,7 +622,7 @@ class RoBookingController extends GetxController {
         },
         fun: (response) {
           if (response is Map && response.containsKey("info_SpotsNotVerified")) {
-            spotsNotVerifiedData.value = response["info_SpotsNotVerified"];
+            // spotsNotVerifiedData.value = response["info_SpotsNotVerified"];
           }
         });
   }
@@ -739,7 +743,6 @@ class RoBookingController extends GetxController {
               selectedPremid = DropDownValue(key: _selectedPredMid?.spotPositionTypeCode ?? "", value: _selectedPredMid?.spotPositionTypeName ?? "");
             }
             selectedBreak = DropDownValue(key: dealDblClickData?.breakNo.toString() ?? "", value: dealDblClickData?.breakNo.toString() ?? "");
-            await getTapeID();
 
             pagecontroller.jumpToPage(1);
             currentTab.value = "Programs";
@@ -750,7 +753,7 @@ class RoBookingController extends GetxController {
         });
   }
 
-  getTapeID() async {
+  getTapeID(searchContain) async {
     await Get.find<ConnectorControl>().POSTMETHOD(
         api: ApiFactory.RO_BOOKING_cboTapeIdFocusLost,
         json: {
@@ -758,14 +761,30 @@ class RoBookingController extends GetxController {
           "strAccountCode": dealDblClickData?.strAccountCode,
           "locationCode": selectedLocation?.key ?? "",
           "channelCode": selectedChannel?.key,
-          "intSubRevenueTypeCode": "0"
+          "intSubRevenueTypeCode": "0",
+          "searchContain": searchContain
         },
         fun: (value) {
           if (value is Map &&
               value.containsKey("info_GetTapeLost") &&
               value["info_GetTapeLost"].containsKey("lstTape") &&
               value["info_GetTapeLost"]["lstTape"] is List) {
-            tapeIds = value["info_GetTapeLost"]["lstTape"];
+            tapeIds.value = value["info_GetTapeLost"]["lstTape"];
+          }
+        });
+  }
+
+  getSpotNotVerified(String locationCode, String channelCode, String bookingMonth, String loggedUser) {
+    Get.find<ConnectorControl>().GETMETHODCALL(
+        api: ApiFactory.RO_BOOKING_GetSpotNotVerified(locationCode, channelCode, bookingMonth, loggedUser),
+        fun: (json) {
+          if (json is Map && json.containsKey("info_SpotsNotVerified")) {
+            if (json['info_SpotsNotVerified'] != null) {
+              spotsNotVerified.value = <SpotsNotVerified>[];
+              json['info_SpotsNotVerified'].forEach((v) {
+                spotsNotVerified.add(SpotsNotVerified.fromJson(v));
+              });
+            }
           }
         });
   }

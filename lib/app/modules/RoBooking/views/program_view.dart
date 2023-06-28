@@ -33,18 +33,21 @@ class ProgramView extends GetView<RoBookingController> {
                     InputFields.formField1(
                         // showTitle: false,
                         hintTxt: "Tape ID",
+                        focusNode: controller.tapeIdFocus,
                         controller: controller.tapeIDCtrl,
                         width: 0.06),
-                    DropDownField.formDropDown1WidthMap(
-                        controller.tapeIds.map((e) => DropDownValue(key: e["exporttapecode"], value: e["commercialcaption"])).toList(),
-                        (value) => {
-                              controller.selectedTapeID = value,
-                              controller.tapIdLeave(value.key),
-                            },
-                        "",
-                        0.18 - (5 / Get.width),
-                        selected: controller.selectedTapeID,
-                        dialogWidth: Get.width * 0.24),
+                    Obx(
+                      () => DropDownField.formDropDown1WidthMap(
+                          controller.tapeIds.value.map((e) => DropDownValue(key: e["exporttapecode"], value: e["commercialcaption"])).toList(),
+                          (value) => {
+                                controller.selectedTapeID = value,
+                                controller.tapIdLeave(value.key),
+                              },
+                          "",
+                          0.18 - (5 / Get.width),
+                          selected: controller.selectedTapeID,
+                          dialogWidth: Get.width * 0.24),
+                    ),
                     // DropDownField.formDropDownSearchAPI2(GlobalKey(), context,
                     //     width: Get.width * 0.12, title: "Tape Id", url: "url", onchanged: (value) {}),
                     DropDownField.formDropDown1WidthMap(

@@ -22,6 +22,7 @@ class VerifySpotsView extends GetView<RoBookingController> {
         ),
         FormButtonWrapper(
           btnText: "Set Verify",
+          iconDataM: Icons.domain_verification_rounded,
           callback: () {
             controller.setVerify();
           },
