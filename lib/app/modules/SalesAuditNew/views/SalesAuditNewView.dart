@@ -6,7 +6,12 @@ import 'package:get/get.dart';
 
 import '../../../../widgets/DateTime/DateWithThreeTextField.dart';
 import '../../../../widgets/FormButton.dart';
+import '../../../../widgets/LoadingDialog.dart';
+import '../../../../widgets/PlutoGrid/src/helper/pluto_move_direction.dart';
+import '../../../../widgets/PlutoGrid/src/pluto_grid.dart';
+import '../../../../widgets/Snack.dart';
 import '../../../../widgets/dropdown.dart';
+import '../../../../widgets/gridFromMap.dart';
 import '../../../controller/HomeController.dart';
 import '../../../controller/MainController.dart';
 import '../../../data/PermissionModel.dart';
@@ -20,327 +25,546 @@ class SalesAuditNewView  extends StatelessWidget  {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: SizedBox(
-        height: double.maxFinite,
-        width: double.maxFinite,
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Expanded(
-              child: Column(
-                children: [
-                  GetBuilder<SalesAuditNewController>(
-                    init: controller,
-                    id: "updateView",
-                    builder: (control) {
-                      return Padding(
-                        padding:
-                            const EdgeInsets.symmetric(vertical: 8, horizontal: 15),
-                        child: SizedBox(
-                          width: double.maxFinite,
-                          child: Wrap(
-                            crossAxisAlignment: WrapCrossAlignment.center,
-                            runSpacing: 5,
-                            spacing: 5,
-                            children: [
-                              Obx(
-                                () => DropDownField.formDropDown1WidthMap(
-                                  controller.locationList.value??[],
-                                  (value) {
-                                    controller.selectedLocation = value;
-                                    // controller.selectLocation = value;
-                                    // controller.getChannels(
-                                    //     controller.selectLocation?.key ?? "");
-                                  },
-                                  "Location",
-                                   0.12,
-                                  // isEnable: controller.isEnable.value,
-                                  // selected: controller.selectLocation,
-                                  autoFocus: true,
-                                  dialogWidth: 330,
-                                  dialogHeight: Get.height * .7,
-                                ),
-                              ),
+      body: RawKeyboardListener(
 
-                              /// channel
-                              Obx(
-                                () => DropDownField.formDropDown1WidthMap(
-                                  controller.list.value??[],
-                                  (value) {
-                                    // controller.selectChannel = value;
-                                    // controller.getChannelFocusOut();
-                                  },
-                                  "Channel",
-                                  0.12,
-                                  // isEnable: controller.isEnable.value,
-                                  // selected: controller.selectChannel,
-                                  autoFocus: true,
-                                  dialogWidth: 330,
-                                  dialogHeight: Get.height * .7,
-                                ),
-                              ),
+        focusNode: new FocusNode(),
+        onKey: (RawKeyEvent raw) {
+          // print("RAw is.>>>" + raw.toString());
+          switch (raw.logicalKey.keyLabel) {
+            case "F5":
+              if(controller.listAsrunLog2[controller.gridStateManager!.currentRowIdx??0].bookingStatus != "E"){
+                if(controller.listAsrunLog2[controller.gridStateManager!.currentRowIdx??0].telecastTime == null ||
+                    controller.listAsrunLog2[controller.gridStateManager!.currentRowIdx??0].telecastTime == "" ||
+                    controller.listAsrunLog2[controller.gridStateManager!.currentRowIdx??0].telecastTime == "null" ){
 
-                              Obx(
-                                () => DateWithThreeTextField(
-                                  title: "Schedule Date",
-                                  splitType: "-",
-                                  widthRation: 0.12,
-                                  isEnable: controller.isEnable.value,
-                                  onFocusChange: (data) {
-                                    // controller.selectedDate.text =
-                                    //     DateFormat('dd/MM/yyyy').format(
-                                    //         DateFormat("dd-MM-yyyy").parse(data));
-                                    // DateFormat("dd-MM-yyyy").parse(data);
-                                    print("Called when focus changed");
-                                    /*controller.getDailyFPCDetailsList(
-                                        controller.selectedLocationId.text,
-                                        controller.selectedChannelId.text,
-                                        controller.convertToAPIDateType(),
-                                      );*/
+                  LoadingDialog.recordExists(
+                      "Do you want to mark as Error?",
+                          (){
+                        controller.markError(controller.gridStateManager!.currentRowIdx??0);
+                      },
+                      cancel: (){
+                        Get.back();
+                      });
 
-                                    // controller.isTableDisplayed.value = true;
-                                  },
-                                  mainTextController: TextEditingController(),
-                                ),
-                              ),
-                              Padding(
-                                padding: const EdgeInsets.only(
-                                    top: 14.0, left: 10, right: 10),
-                                child: FormButtonWrapper(
-                                  btnText: "Retrieve",
-                                  callback: () {
-                                    // controller.callRetrieve();
-                                    // controller.getColorList();
-                                  },
-                                  showIcon: false,
-                                ),
-                              ),
-                            ],
-                          ),
-                        ),
-                      );
+                }
+                else{
+                  Snack.callError("Telecast Spot!\nUnable To mark as error!");
+                }
+              }
+              else{
+                LoadingDialog.recordExists(
+                    "Do you want to clear Error making?",
+                        (){
+                      controller.markError(controller.gridStateManager!.currentRowIdx??0);
                     },
-                  ),
-                  Row(
+                    cancel: (){
+                      Get.back();
+                    });
+              }
+              break;
+          }
+        },
+
+        child: SizedBox(
+          height: double.maxFinite,
+          width: double.maxFinite,
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Expanded(
+                child: FocusTraversalGroup(
+                  policy: OrderedTraversalPolicy(),
+                  child: Column(
                     children: [
-                    Expanded(child: Row(
-                      mainAxisAlignment:MainAxisAlignment.spaceEvenly,
-                      children: [
-                        Text("Not Telacast Spots"),
-                        SizedBox(
-                          width: Get.width * 0.079,
-                          child: Row(
-                            children: [
-                              SizedBox(width: 5),
-                              Obx(() =>
-                                  Padding(
-                                    padding: const EdgeInsets.only(top: 1.0),
-                                    child: Checkbox(
-                                      value: controller.isStandby.value,
-                                      onChanged: controller.isEnable.value
-                                          ? (val) {
-                                        controller.isStandby.value =
-                                        val!;
-                                      }
-                                          : null,
-                                      materialTapTargetSize:
-                                      MaterialTapTargetSize.shrinkWrap,
+                      GetBuilder<SalesAuditNewController>(
+                        init: controller,
+                        id: "updateView",
+                        builder: (control) {
+                          return Padding(
+                            padding:
+                                const EdgeInsets.symmetric(vertical: 8, horizontal: 15),
+                            child: SizedBox(
+                              width: double.maxFinite,
+                              child: Wrap(
+                                crossAxisAlignment: WrapCrossAlignment.center,
+                                runSpacing: 5,
+                                spacing: 5,
+                                children: [
+                                  Obx(
+                                    () => DropDownField.formDropDown1WidthMap(
+                                      controller.locationList.value??[],
+                                      (value) {
+                                        controller.selectedLocation = value;
+                                        controller.fetchListOfChannel(value.key??"");
+                                        // controller.selectLocation = value;
+                                        // controller.getChannels(
+                                        //     controller.selectLocation?.key ?? "");
+                                      },
+                                      "Location",
+                                       0.12,
+                                      // isEnable: controller.isEnable.value,
+                                      // selected: controller.selectLocation,
+                                      autoFocus: true,
+                                      dialogWidth: 330,
+                                      dialogHeight: Get.height * .7,
                                     ),
-                                  )),
-                              Obx(
-                                    () =>
-                                    Padding(
-                                        padding: const EdgeInsets.only(
-                                            top: 1.0, left: 5),
-                                        child: Text(
-                                          "Show Error",
-                                          style: TextStyle(
-                                              fontSize: SizeDefine.labelSize1,
-                                              color: controller.isEnable.value
-                                                  ? Colors.black
-                                                  : Colors.grey),
-                                        )),
+                                  ),
+
+                                  /// channel
+                                  Obx(
+                                    () => DropDownField.formDropDown1WidthMap(
+                                      controller.channelList.value??[],
+                                      (value) {
+                                        controller.selectedChannel = value;
+                                        // controller.selectChannel = value;
+                                        // controller.getChannelFocusOut();
+                                      },
+                                      "Channel",
+                                      0.12,
+                                      // isEnable: controller.isEnable.value,
+                                      // selected: controller.selectChannel,
+                                      autoFocus: true,
+                                      dialogWidth: 330,
+                                      dialogHeight: Get.height * .7,
+                                    ),
+                                  ),
+
+                                  Obx(
+                                    () => DateWithThreeTextField(
+                                      title: "Schedule Date",
+                                      splitType: "-",
+                                      widthRation: 0.12,
+                                      isEnable: controller.isEnable.value,
+                                      onFocusChange: (data) {
+
+                                      },
+                                      mainTextController: controller.scheduledController,
+                                    ),
+                                  ),
+                                  Padding(
+                                    padding: const EdgeInsets.only(
+                                        top: 14.0, left: 10, right: 10),
+                                    child: FormButtonWrapper(
+                                      btnText: "Retrieve",
+                                      callback: () {
+                                         controller.callGetRetrieve();
+                                      },
+                                      showIcon: false,
+                                    ),
+                                  ),
+                                ],
+                              ),
+                            ),
+                          );
+                        },
+                      ),
+                      Row(
+                        children: [
+                        Expanded(child: Row(
+                          mainAxisAlignment:MainAxisAlignment.spaceEvenly,
+                          children: [
+                            Text("Not Telacast Spots"),
+                            SizedBox(
+                              width: Get.width * 0.079,
+                              child: Row(
+                                children: [
+                                  SizedBox(width: 5),
+                                  Obx(() =>
+                                      Padding(
+                                        padding: const EdgeInsets.only(top: 1.0),
+                                        child: Checkbox(
+                                          value: controller.showError.value,
+                                          onChanged: (val) {
+                                            controller.showError.value = val!;
+                                            controller.filterSearchAndCancel();
+                                          },
+                                          materialTapTargetSize:
+                                          MaterialTapTargetSize.shrinkWrap,
+                                        ),
+                                      )),
+                                  Obx(
+                                        () =>
+                                        Padding(
+                                            padding: const EdgeInsets.only(
+                                                top: 1.0, left: 5),
+                                            child: Text(
+                                              "Show Error",
+                                              style: TextStyle(
+                                                  fontSize: SizeDefine.labelSize1,
+                                                  color: controller.isEnable.value
+                                                      ? Colors.black
+                                                      : Colors.grey),
+                                            )),
+                                  ),
+                                ],
+                              ),
+                            ),
+                            SizedBox(
+                              width: Get.width * 0.079,
+                              child: Row(
+                                children: [
+                                  SizedBox(width: 5),
+                                  Obx(() =>
+                                      Padding(
+                                        padding: const EdgeInsets.only(top: 1.0),
+                                        child: Checkbox(
+                                          value: controller.showCancel.value,
+                                          onChanged: (val) {
+                                            controller.showCancel.value = val!;
+                                            controller.filterSearchAndCancel();
+                                          },
+                                          materialTapTargetSize:
+                                          MaterialTapTargetSize.shrinkWrap,
+                                        ),
+                                      )),
+                                  Obx(
+                                        () =>
+                                        Padding(
+                                            padding: const EdgeInsets.only(
+                                                top: 1.0, left: 5),
+                                            child: Text(
+                                              "Show Cancel",
+                                              style: TextStyle(
+                                                  fontSize: SizeDefine.labelSize1,
+                                                  color: controller.isEnable.value
+                                                      ? Colors.black
+                                                      : Colors.grey),
+                                            )),
+                                  ),
+                                ],
+                              ),
+                            ),
+                            GetBuilder<SalesAuditNewController>(
+                              id:"text",
+                              builder: (controller) {
+                                return (controller.salesAuditGetRetrieveModel != null &&
+                                    controller.salesAuditGetRetrieveModel!.gettables!.asrunStatus != null)?
+                                Text( controller.salesAuditGetRetrieveModel!.gettables!.asrunStatus ??""):Text("");
+                              }
+                            ),
+                          ],
+                        ),),
+                        Expanded(child:
+                        Padding(
+                          padding: const EdgeInsets.all(8.0),
+                          child: Row(
+                            mainAxisAlignment: MainAxisAlignment.end,
+                            children: [
+                              Container(
+                                child: Text("Telecast Spots"),
                               ),
                             ],
                           ),
-                        ),
-                        SizedBox(
-                          width: Get.width * 0.079,
+                        ),),
+                        ],
+                      ),
+                      Expanded(
+                        // padding: const EdgeInsets.all(8.0),
+                        child: Padding(
+                          padding: const EdgeInsets.all(8.0),
                           child: Row(
                             children: [
-                              SizedBox(width: 5),
-                              Obx(() =>
-                                  Padding(
-                                    padding: const EdgeInsets.only(top: 1.0),
-                                    child: Checkbox(
-                                      value: controller.isStandby.value,
-                                      onChanged: controller.isEnable.value
-                                          ? (val) {
-                                        controller.isStandby.value =
-                                        val!;
-                                      }
-                                          : null,
-                                      materialTapTargetSize:
-                                      MaterialTapTargetSize.shrinkWrap,
-                                    ),
+                              Expanded(
+                                  child: GetBuilder<SalesAuditNewController>(
+                                    id:"leftOne",
+                                    builder: (controller) {
+                                      return
+                                      Container(
+                                          // height: Get.height*0.6,
+                                          decoration: BoxDecoration(
+                                              border: Border.all(color: Colors.black)),
+                                        child:(controller.salesAuditGetRetrieveModel != null)?
+                                        (controller.listAsrunLog2.length >0 )?
+                                        DataGridFromMap(
+                                            hideCode: false,
+                                            formatDate: false,
+                                            focusNode: controller.leftFocusNode,
+                                            onRowDoubleTap: (PlutoGridOnRowDoubleTapEvent? val){
+                                                  print(">>>>>>>>"+val!.rowIdx .toString());
+                                                  controller.onDoubleTap(val.rowIdx,controller.gridStateManagerRight!.currentRowIdx??0);
+
+                                               },
+                                            colorCallback: (PlutoRowColorContext colorData){
+                                              Color color = Colors.white;
+                                              if(controller.gridStateManager?.currentRowIdx == colorData.rowIdx){
+                                                color = Color(0xFFD1C4E9);
+                                              }
+                                              else if(colorData.row.cells['telecastTime']!.value != "" &&
+                                                  colorData.row.cells['telecastTime']!.value != null &&
+                                                  colorData.row.cells['telecastTime']!.value != "null"
+                                              ){
+                                                color = Colors.greenAccent;
+                                              }
+                                              else if(colorData.row.cells['bookingStatus']!.value == "E"){
+                                                color = Colors.redAccent;
+                                              }else{
+                                                color = Colors.white;
+                                              }
+                                              return color;
+                                            },
+
+                                            // checkRow: true,
+                                            // checkRowKey: "no",
+                                            mode: PlutoGridMode.selectWithOneTap,
+                                            onSelected: (PlutoGridOnSelectedEvent? val ){
+                                                 // print("singlr click"+val!.row!.toJson().toString());
+                                                 print("singlr click"+val!.rowIdx.toString());
+                                                 controller.selectedIndex = val.rowIdx;
+                                                 // controller.gridStateManagerRight?.setCurrentCell(controller.gridStateManagerRight?.rows[2].cells["no"], 2) ;
+                                             },
+
+                                            onload:
+                                                (PlutoGridOnLoadedEvent load) {
+                                              controller.gridStateManager = load.stateManager;
+                                              controller.gridStateManager!.setCurrentCell(controller.gridStateManager!.getRowByIdx(controller.selectedIndex)!.cells['exportTapeCode'],
+                                                  controller.selectedIndex);
+                                              controller.gridStateManager!.moveCurrentCellByRowIdx(controller.selectedIndex??0, PlutoMoveDirection.down);
+                                              // controller.selectedIndex = controller.gridStateManager?.currentRowIdx ;
+
+                                              /*controller.tblFastInsert =
+                                                                load.stateManager;*/
+                                            },
+                                            // colorCallback: (renderC) => Colors.red[200]!,
+                                            mapData:controller.listAsrunLog2.map((e) =>
+                                                e.toJson()).toList() ):Container():Container(),
+                                      );
+                                    }
                                   )),
-                              Obx(
-                                    () =>
-                                    Padding(
-                                        padding: const EdgeInsets.only(
-                                            top: 1.0, left: 5),
-                                        child: Text(
-                                          "Show Cancel",
-                                          style: TextStyle(
-                                              fontSize: SizeDefine.labelSize1,
-                                              color: controller.isEnable.value
-                                                  ? Colors.black
-                                                  : Colors.grey),
-                                        )),
+                              SizedBox(
+                                width: 5,
                               ),
+                              Expanded(
+                                  child: GetBuilder<SalesAuditNewController>(
+                                      id:"rightOne",
+                                      builder: (controller) {
+                                        return
+                                          Container(
+                                            // height: Get.height*0.6,
+                                            decoration: BoxDecoration(
+                                                border: Border.all(color: Colors.black)),
+                                            child:(controller.salesAuditGetRetrieveModel != null)?
+                                            (controller.listAsrunLog1.length >0 )?
+                                            DataGridFromMap(
+                                                hideCode: false,
+                                                formatDate: false,
+                                                focusNode: controller.rightFocusNode,
+                                                onRowDoubleTap: (PlutoGridOnRowDoubleTapEvent? val){
+                                                  print(">>>>>>>>"+val!.row.toString());
+                                                  controller.onDoubleTap(controller.gridStateManager!.currentRowIdx??0,val.rowIdx);
+                                                },
+                                                colorCallback: (PlutoRowColorContext colorData){
+                                                  Color color = Colors.white;
+                                                  if(controller.gridStateManagerRight?.currentRowIdx == colorData.rowIdx ){
+                                                    color = Color(0xFFD1C4E9);
+                                                  }else if(colorData.row.cells['bookingNumber']!.value != "" &&
+                                                      colorData.row.cells['bookingNumber']!.value != null &&
+                                                      colorData.row.cells['bookingNumber']!.value != "null"
+                                                  ){
+                                                    color = Colors.greenAccent;
+                                                  }else{
+                                                    color = Colors.white;
+                                                  }
+                                                  return color;
+                                                },
+
+
+                                                // checkRow: true,
+                                                // checkRowKey: "no",
+                                                mode: PlutoGridMode.selectWithOneTap,
+                                                onSelected: (PlutoGridOnSelectedEvent? val ){
+                                                  // print("singlr click"+val!.row!.toJson().toString());
+                                                  print("singlr click"+val!.rowIdx.toString());
+                                                  // controller.selectedRightIndex = val.rowIdx;
+                                                },
+
+                                                onload:
+                                                    (PlutoGridOnLoadedEvent
+                                                load) {
+                                                  controller.gridStateManagerRight = load.stateManager;
+                                                  /*controller.tblFastInsert =
+                                                                load.stateManager;*/
+                                                },
+                                                // colorCallback: (renderC) => Colors.red[200]!,
+                                                mapData:controller.listAsrunLog1.map((e) =>
+                                                    e.toJson()).toList() ):Container():Container(),
+                                          );
+                                      }
+                                  )),
                             ],
                           ),
                         ),
-                        Text("Missiing Asrun SA Not Saved"),
-                      ],
-                    ),),
-                    Expanded(child:
-                    Padding(
-                      padding: const EdgeInsets.all(8.0),
-                      child: Row(
-                        mainAxisAlignment: MainAxisAlignment.end,
+                      ),
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceAround,
                         children: [
-                          Container(
-                            child: Text("Telecast Spots"),
-                          ),
-                        ],
-                      ),
-                    ),),
-                    ],
-                  ),
-                  Expanded(
-                    // padding: const EdgeInsets.all(8.0),
-                    child: Padding(
-                      padding: const EdgeInsets.all(8.0),
-                      child: Row(
-                        children: [
-                          Expanded(
-                              child: Container(
-                                  // height: Get.height*0.6,
-                                  decoration: BoxDecoration(
-                                      border: Border.all(color: Colors.black)))),
-                          SizedBox(
-                            width: 5,
-                          ),
-                          Expanded(
-                              child: Container(
-                                  // height: Get.height*0.6,
-                                  decoration: BoxDecoration(
-                                      border: Border.all(color: Colors.black)))),
-                        ],
-                      ),
-                    ),
-                  ),
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceAround,
-                    children: [
-                      FormButtonWrapper(
-                        btnText: "Un Cancel",
-                        showIcon: false,
-                        // isEnabled: btn['isDisabled'],
-                        callback: (){},
-                      ),
-                      FormButtonWrapper(
-                        btnText: "Error",
-                        showIcon: false,
-                        // isEnabled: btn['isDisabled'],
-                        callback: (){},
-                      ),FormButtonWrapper(
-                        btnText: "Auto",
-                        showIcon: false,
-                        // isEnabled: btn['isDisabled'],
-                        callback: (){},
-                      ),FormButtonWrapper(
-                        btnText: "Un Match",
-                        showIcon: false,
-                        // isEnabled: btn['isDisabled'],
-                        callback: (){},
-                      ),FormButtonWrapper(
-                        btnText: "Tapes",
-                        showIcon: false,
-                        // isEnabled: btn['isDisabled'],
-                        callback: (){},
-                      ),FormButtonWrapper(
-                        btnText: "Show All",
-                        showIcon: false,
-                        // isEnabled: btn['isDisabled'],
-                        callback: (){},
-                      ),FormButtonWrapper(
-                        btnText: "Map",
-                        showIcon: false,
-                        // isEnabled: btn['isDisabled'],
-                        callback: (){},
-                      ),FormButtonWrapper(
-                        btnText: "Telecast",
-                        showIcon: false,
-                        // isEnabled: btn['isDisabled'],
-                        callback: (){},
-                      ),FormButtonWrapper(
-                        btnText: "Clear",
-                        showIcon: false,
-                        // isEnabled: btn['isDisabled'],
-                        callback: (){},
-                      ),FormButtonWrapper(
-                        btnText: "B2E",
-                        showIcon: false,
-                        // isEnabled: btn['isDisabled'],
-                        callback: (){},
-                      ),
-                    ],
-                  ),
-                ],
-              ),
-            ),
-            GetBuilder<HomeController>(
-                id: "buttons",
-                init: Get.find<HomeController>(),
-                builder: (controller) {
-                  PermissionModel formPermissions =
-                  Get
-                      .find<MainController>()
-                      .permissionList!
-                      .lastWhere((element) =>
-                  element.appFormName == "frmProgramMaster");
-                  print("Log>> Permission>>" +
-                      jsonEncode(formPermissions.toJson()));
-                  if (controller.buttons != null) {
-                    return ButtonBar(
-                      alignment: MainAxisAlignment.start,
-                      mainAxisSize: MainAxisSize.min,
-                      children: [
-                        for (var btn in controller.buttons!)
                           FormButtonWrapper(
-                              btnText: btn["name"],
-                              callback: Utils.btnAccessHandler2(
-                                  btn['name'], controller,
-                                  formPermissions) == null
-                                  ? null
-                                  : () =>
-                                  formHandler(
-                                    btn['name'],
-                                  ))
-                      ],
-                    );
-                  }
-                  return Container();
-                })
-          ],
+                            btnText: "Un Cancel",
+                            showIcon: false,
+                            // isEnabled: btn['isDisabled'],
+                            callback: (){
+                              // controller.unCancel(controller.selectedIndex!);
+                              // controller.gridStateManager?.setCurrentCell(controller.gridStateManager?.rows[2].cells["no"], 2,notify: true) ;
+                              // print(">>>>>>count>> "+controller.gridStateManager!.rows.length.toString());
+                              // print(">>>>>>count>> "+controller.gridStateManager!.rows[2].cells[0].toString());
+                              // controller.gridStateManager?.notifyListeners();
+                            },
+                          ),
+                          FormButtonWrapper(
+                            btnText: "Error",
+                            showIcon: false,
+                            // isEnabled: btn['isDisabled'],
+                            callback: (){
+                              if(controller.listAsrunLog2[controller.gridStateManager!.currentRowIdx??0].bookingStatus != "E"){
+                                if(controller.listAsrunLog2[controller.gridStateManager!.currentRowIdx??0].telecastTime == null ||
+                                    controller.listAsrunLog2[controller.gridStateManager!.currentRowIdx??0].telecastTime == "" ||
+                                    controller.listAsrunLog2[controller.gridStateManager!.currentRowIdx??0].telecastTime == "null" ){
+
+                                  LoadingDialog.recordExists(
+                                      "Do you want to mark as Error?",
+                                          (){
+                                        controller.markError(controller.gridStateManager!.currentRowIdx??0);
+                                      },
+                                      cancel: (){
+                                        Get.back();
+                                      });
+
+                                }
+                                else{
+                                  Snack.callError("Telecast Spot!\nUnable To mark as error!");
+                                }
+                              }
+                              else{
+                                LoadingDialog.recordExists(
+                                    "Do you want to clear Error making?",
+                                        (){
+                                      controller.markError(controller.gridStateManager!.currentRowIdx??0);
+                                    },
+                                    cancel: (){
+                                      Get.back();
+                                    });
+                              }
+                            },
+                          ),FormButtonWrapper(
+                            btnText: "Auto",
+                            showIcon: false,
+                            // isEnabled: btn['isDisabled'],
+                            callback: (){
+                              controller.btnAuto_Click();
+                              // print("singlr click"+controller.selectedIndex.toString());
+                              // print("singlr click"+ controller.gridStateManager!.currentRowIdx.toString());
+                            },
+                          ),FormButtonWrapper(
+                            btnText: "Un Match",
+                            showIcon: false,
+                            // isEnabled: btn['isDisabled'],
+                            callback: (){
+                              controller.unMatchBtn();
+                            },
+                          ),FormButtonWrapper(
+                            btnText: "Tapes",
+                            showIcon: false,
+                            // isEnabled: btn['isDisabled'],
+                            callback: (){
+                              controller.onDoubleTap(controller.gridStateManager!.currentRowIdx??0,
+                                  controller.gridStateManagerRight!.currentRowIdx??0);
+                            },
+                          ),FormButtonWrapper(
+                            btnText: "Show All",
+                            showIcon: false,
+                            // isEnabled: btn['isDisabled'],
+                            callback: (){
+                              controller.showAll();
+                            },
+                          ),FormButtonWrapper(
+                            btnText: "Map",
+                            showIcon: false,
+                            // isEnabled: btn['isDisabled'],
+                            callback: (){
+                              controller.btnMap_Click(controller.gridStateManagerRight!.currentRowIdx??0,controller.gridStateManager!.currentRowIdx??0);
+                            },
+                          ),FormButtonWrapper(
+                            btnText: "Telecast",
+                            showIcon: false,
+                            // isEnabled: btn['isDisabled'],
+                            callback: (){
+                             for(int i=0;i<controller.listAsrunLog2.length;i++){
+                               if(i == controller.gridStateManager!.currentRowIdx! ){
+                                 controller.listAsrunLog2[i].telecastTime =
+                                     controller.listAsrunLog2[i].scheduleTime;
+                                 controller.listAsrunLog2[i].programCode =  controller.listAsrunLog2[i].scheduleProgramCode;
+                                 controller.listAsrunLog2[i].rowNumber = 0;
+
+                                 controller.update(['leftOne']);
+                                 break;
+                               }
+                             }
+                            },
+                          ),FormButtonWrapper(
+                            btnText: "Clear",
+                            showIcon: false,
+                            // isEnabled: btn['isDisabled'],
+                            callback: (){
+                              controller.clearBtn(controller.gridStateManager!.currentRowIdx??0,controller.gridStateManagerRight!.currentRowIdx??0);
+                            },
+                          ),FormButtonWrapper(
+                            btnText: "B2E",
+                            showIcon: false,
+                            // isEnabled: btn['isDisabled'],
+                            callback: (){
+                              LoadingDialog.recordExists("Will mark all booked spots as error!\n"
+                                  " Do you want tp proceed", (){
+                                controller.allBToE();
+                              },cancel: (){
+                                Get.back();
+                              });
+
+
+                            },
+                          ),
+                        ],
+                      ),
+                    ],
+                  ),
+                ),
+              ),
+              GetBuilder<HomeController>(
+                  id: "buttons",
+                  init: Get.find<HomeController>(),
+                  builder: (controller1) {
+                    PermissionModel formPermissions =
+                    Get
+                        .find<MainController>()
+                        .permissionList!
+                        .lastWhere((element) =>
+                    element.appFormName == "frmProgramMaster");
+                    print("Log>> Permission>>" +
+                        jsonEncode(formPermissions.toJson()));
+                    if (controller1.buttons != null) {
+                      return ButtonBar(
+                        alignment: MainAxisAlignment.start,
+                        mainAxisSize: MainAxisSize.min,
+                        children: [
+                          for (var btn in controller1.buttons!)
+                            FormButtonWrapper(
+                                btnText: btn["name"],
+                                callback: Utils.btnAccessHandler2(
+                                    btn['name'], controller1,
+                                    formPermissions) == null
+                                    ? null
+                                    : () =>
+                                    controller.formHandler(
+                                      btn['name'],),)
+                        ],
+                      );
+                    }
+                    return Container();
+                  })
+            ],
+          ),
         ),
       ),
     );
   }
 
-  formHandler(v){
 
-  }
 }

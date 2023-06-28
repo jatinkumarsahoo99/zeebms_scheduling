@@ -747,6 +747,7 @@ class ApiFactory {
   static String COMMERCIAL_MASTER_GET_COMMERCIALTAPEMASTER = BASE_URL + "/api/CommercialTapeMaster/CommercialTapeMasterData";
   static String COMMERCIAL_MASTER_SAVE_COMMERCIALTAPE = BASE_URL + "/api/CommercialTapeMaster/CommercialTapeSave";
 
+
 //////////////////////////////// Sales Audit Not Select Report ///////////////////////////////////////////
 
   static String SALESAUDIT_NOT_TELECASTLOAD = BASE_URL + "/api/SalesAuditNotTR/SalesauditnottelecastLoad";
@@ -755,4 +756,13 @@ class ApiFactory {
   /////////////////////////////////// Sales Audit New ////////////////////////////////
 
   static String SALESAUDIT_NEW_LOAD = BASE_URL + "/api/SalesAduitNew/GetLocations";
+  static String SALESAUDIT_NEW_GETCHANNEL= BASE_URL + "/api/SalesAduitNew/GetChannels?LocationCode=";
+  static String SALESAUDIT_NEW_SAVEDATA= BASE_URL + "/api/SalesAduitNew/PostSalesAduit";
+  static String SALESAUDIT_NEW_GETRETRIEVE (String locationCode,String channelCode,String scheduleDate) => BASE_URL + "/api/SalesAduitNew/GetRetrieve?Locationcode=$locationCode&channelcode=$channelCode&date=$scheduleDate";
+
+
+
+
+
+
 }
