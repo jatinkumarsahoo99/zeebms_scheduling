@@ -1,6 +1,7 @@
 import 'package:bms_scheduling/app/modules/RoBooking/controllers/ro_booking_controller.dart';
 import 'package:bms_scheduling/app/modules/RoBooking/views/dummydata.dart';
 import 'package:bms_scheduling/widgets/DateTime/DateWithThreeTextField.dart';
+import 'package:bms_scheduling/widgets/FormButton.dart';
 import 'package:bms_scheduling/widgets/dropdown.dart';
 import 'package:bms_scheduling/widgets/gridFromMap.dart';
 import 'package:bms_scheduling/widgets/input_fields.dart';
@@ -137,12 +138,13 @@ class ProgramView extends GetView<RoBookingController> {
                         0.12,
                         selected: controller.selectedBreak,
                         isEnable: true),
-
-                    ElevatedButton(
-                        onPressed: () {
-                          controller.getSegment();
-                        },
-                        child: Text("Seg")),
+                    FormButtonWrapper(
+                      btnText: "Seg",
+                      iconDataM: Icons.segment_rounded,
+                      callback: () {
+                        controller.getSegment();
+                      },
+                    ),
                     InputFields.formField1(
                         // showTitle: false,
                         hintTxt: "Rate",
@@ -155,17 +157,22 @@ class ProgramView extends GetView<RoBookingController> {
                         isEnable: false,
                         controller: TextEditingController(text: controller.bookingTapeLeaveData?.total ?? controller.dealDblClickData?.total ?? ""),
                         width: 0.12),
-                    ElevatedButton(
-                        onPressed: () {
-                          controller.addSpot();
-                        },
-                        child: Text("Add Spots")),
-                    ElevatedButton(
-                        onPressed: () {
-                          controller.pagecontroller.jumpToPage(0);
-                          controller.currentTab.value = "Deal";
-                        },
-                        child: Text("Deal")),
+                    FormButtonWrapper(
+                      btnText: "Add Spots",
+                      iconDataM: Icons.addchart_rounded,
+                      callback: () {
+                        controller.addSpot();
+                      },
+                    ),
+                    FormButtonWrapper(
+                      btnText: "Deal",
+                      iconDataM: Icons.arrow_back_ios_new_rounded,
+                      callback: () {
+                        controller.pagecontroller.jumpToPage(0);
+                        controller.currentTab.value = "Deal";
+                      },
+                    ),
+
                     // Row(
                     //   mainAxisSize: MainAxisSize.min,
                     //   crossAxisAlignment: CrossAxisAlignment.end,
