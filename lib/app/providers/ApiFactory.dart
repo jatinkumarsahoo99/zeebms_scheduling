@@ -701,6 +701,28 @@ class ApiFactory {
   ///
   ///
   ///
+  //////////////////////////////// PROMO-MASTER-API-START /////////////////////////////////
+
+  static String get PROMO_MASTER_ON_LOAD => "$BASE_URL/api/PromoMaster/PromoMasterOnLoad";
+  static String PROMO_MASTER_ON_LEAVE_LOCATION(String code) => "$BASE_URL/api/PromoMaster/onLeaveLocation?LocationCode=$code";
+  static String get PROMO_MASTER_COMPANY_SEARCH => "$BASE_URL/api/PromoMaster/GetSourceCompanySearch?TextSourceCompany=";
+  static String get PROMO_MASTER_PROGRAM_SEARCH => "$BASE_URL/api/PromoMaster/GetSourceProgramSearch?TextSourceProgram=";
+  static String get PROMO_MASTER_GET_PROGRAM_PICKER => "$BASE_URL/api/PromoMaster/GetProgramPicker";
+  static String get PROMO_MASTER_EVENT_SEARCH => "$BASE_URL/api/PromoMaster/GetEvent?text=";
+  static String get PROMO_MASTER_RETRIVE_RECORDS => "$BASE_URL/api/PromoMaster/GetRetrieveRecord";
+  static String get PROMO_MASTER_TX_NO_LEAVE => "$BASE_URL/api/PromoMaster/GetCartNo_Leave";
+  static String get PROMO_MASTER_SAVE_RECORD => "$BASE_URL/api/PromoMaster/SaveRecord";
+  static String PROMO_MASTER_BLANK_TAPE_ID_LEAVE(String code) => "$BASE_URL/api/PromoMaster/OnLeaveBlankTapeId?BlankTapeId=$code";
+  // static String PROMO_MASTER_BANNER_SEARCH = "$BASE_URL/api/FillerMaster/GetSourceBannerSearch?TextSourceBanner=";
+  // static String PROMO_MASTER_SAVE = "$BASE_URL/api/FillerMaster/SaveRecord";
+  // static String PROMO_MASTER_SEGNO_LEAVE = "$BASE_URL/api/FillerMaster/SegNoLeave";
+  // static String PROMO_MASTER_GET_EVENT = "$BASE_URL/api/FillerMaster/GetEvent?text=";
+
+  //////////////////////////////// PROMO-MASTER-API-END /////////////////////////////////
+  ///
+  ///
+  ///
+  ///
   ///
   //////////////////////////////// ASRUN IMPORT /////////////////////////////////
   static String AsrunImport_GetLoadLocation = "$BASE_URL/api/AsrunImport/GetLoadLocation";
@@ -748,6 +770,7 @@ class ApiFactory {
   static String COMMERCIAL_MASTER_GET_COMMERCIALTAPEMASTER = BASE_URL + "/api/CommercialTapeMaster/CommercialTapeMasterData";
   static String COMMERCIAL_MASTER_SAVE_COMMERCIALTAPE = BASE_URL + "/api/CommercialTapeMaster/CommercialTapeSave";
 
+
 //////////////////////////////// Sales Audit Not Select Report ///////////////////////////////////////////
 
   static String SALESAUDIT_NOT_TELECASTLOAD = BASE_URL + "/api/SalesAuditNotTR/SalesauditnottelecastLoad";
@@ -756,4 +779,13 @@ class ApiFactory {
   /////////////////////////////////// Sales Audit New ////////////////////////////////
 
   static String SALESAUDIT_NEW_LOAD = BASE_URL + "/api/SalesAduitNew/GetLocations";
+  static String SALESAUDIT_NEW_GETCHANNEL= BASE_URL + "/api/SalesAduitNew/GetChannels?LocationCode=";
+  static String SALESAUDIT_NEW_SAVEDATA= BASE_URL + "/api/SalesAduitNew/PostSalesAduit";
+  static String SALESAUDIT_NEW_GETRETRIEVE (String locationCode,String channelCode,String scheduleDate) => BASE_URL + "/api/SalesAduitNew/GetRetrieve?Locationcode=$locationCode&channelcode=$channelCode&date=$scheduleDate";
+
+
+
+
+
+
 }
