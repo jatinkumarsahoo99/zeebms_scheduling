@@ -422,7 +422,7 @@ class RoBookingController extends GetxController {
           "channelName": selectedChannel!.value,
           "bookingMonth": bookingMonthCtrl.text,
           "bookingNumber": bookingNoCtrl.text,
-          "loginName": Get.find<MainController>().user?.loginName,
+          "loginName": Get.find<MainController>().user?.logincode,
           "locationCode": selectedLocation!.key,
           "channelCode": selectedChannel!.key,
           "loggedUser": Get.find<MainController>().user?.logincode,
