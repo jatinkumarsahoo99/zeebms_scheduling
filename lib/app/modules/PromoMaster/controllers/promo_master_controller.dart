@@ -1,4 +1,5 @@
 import 'package:bms_scheduling/app/controller/ConnectorControl.dart';
+import 'package:bms_scheduling/app/controller/MainController.dart';
 import 'package:bms_scheduling/app/data/DropDownValue.dart';
 import 'package:bms_scheduling/app/modules/LogAdditions/bindings/log_additions_binding.dart';
 // import 'package:bms_scheduling/app/data/DropDownValue.dart';
@@ -64,6 +65,7 @@ class PromoMasterController extends GetxController {
       fillerNameFN = FocusNode(),
       captionFN = FocusNode(),
       segNoFN = FocusNode(),
+      companyFN = FocusNode(),
       tapeIDFN = FocusNode(),
       txNoFN = FocusNode(),
       blanktapeIdFN = FocusNode(),
@@ -99,13 +101,14 @@ class PromoMasterController extends GetxController {
         captionLeave();
       }
     });
+
     tapeIDFN.addListener(() {
       if (!tapeIDFN.hasFocus) {
         tapeIdLeave();
       }
     });
     txNoFN.addListener(() {
-      if (!txNoFN.hasFocus) {
+      if (!txNoFN.hasFocus && !Get.isDialogOpen!) {
         txNoLeave();
       }
     });
@@ -116,11 +119,98 @@ class PromoMasterController extends GetxController {
     });
   }
 
+  validateAndSaveRecord() {
+    if (captionCtr.text.isEmpty) {
+      LoadingDialog.showErrorDialog("Please enter caption.");
+    } else if (selectedDropDowns[0] == null) {
+      LoadingDialog.showErrorDialog("Please select category.");
+    } else if (txCaptionCtr.text.isEmpty) {
+      LoadingDialog.showErrorDialog("Please enter Tx No.");
+    } else if (selectedDropDowns[1] == null) {
+      LoadingDialog.showErrorDialog("Please select company.");
+    } else if (selectedDropDowns[2] == null) {
+      LoadingDialog.showErrorDialog("Please select Short location.");
+    } else if (selectedDropDowns[3] == null) {
+      LoadingDialog.showErrorDialog("Please select Channel.");
+    } else if (selectedDropDowns[4] == null) {
+      LoadingDialog.showErrorDialog("Please select Promo type.");
+    } else if (txNoCtr.text.isEmpty) {
+      LoadingDialog.showErrorDialog("Please enter cart no.");
+    } else if (selectedDropDowns[9] == null) {
+      LoadingDialog.showErrorDialog("Please select Promo type.");
+    } else if (selectedDropDowns[10] == null) {
+      LoadingDialog.showErrorDialog("Please select tape type.");
+    } else if (tapeIDCtr.text.isEmpty) {
+      LoadingDialog.showErrorDialog("Please enter Tape Id.");
+    } else if (durationCtr.text.isEmpty || durationCtr.text == "00:00:00:00") {
+      LoadingDialog.showErrorDialog("Please enter duration.");
+    } else if (somCtr.text.isEmpty) {
+      LoadingDialog.showErrorDialog("Please enter SOM.");
+    } else if ((Utils.oldBMSConvertToSecondsValue(value: eomCtr.text) - Utils.oldBMSConvertToSecondsValue(value: somCtr.text)).isNegative) {
+      eomCtr.clear();
+      LoadingDialog.showErrorDialog("EOM should not less than SOM", callback: () {
+        eomFN.requestFocus();
+      });
+    } else {
+      if (promoCode.isNotEmpty) {
+        LoadingDialog.recordExists("Record Already exist!\nDo you want to modify it?", saveRecord);
+      } else {
+        saveRecord();
+      }
+    }
+  }
+
+  saveRecord() {
+    LoadingDialog.call();
+    Get.find<ConnectorControl>().POSTMETHOD(
+      api: ApiFactory.PROMO_MASTER_SAVE_RECORD,
+      fun: (resp) {
+        closeDialogIfOpen();
+        if (resp != null &&
+            resp is Map<String, dynamic> &&
+            resp['saveRecords'] != null &&
+            resp['saveRecords']['strMessage'] != null &&
+            resp['saveRecords']['strMessage'].toString().contains("Record is updated successfully.")) {
+          LoadingDialog.callDataSaved(msg: resp['saveRecords']['strMessage'].toString());
+        } else {
+          LoadingDialog.showErrorDialog(resp.toString());
+        }
+      },
+      json: {
+        "promoCode": promoCode,
+        "promoCaption": captionCtr.text,
+        "promoDuration": Utils.convertToSecond(value: durationCtr.text),
+        "promoTypeCode": selectedDropDowns[4]?.key,
+        "promoCategoryCode": selectedDropDowns[0]?.key,
+        "exportTapeCode": tapeIDCtr.text,
+        "exportTapeCaption": txCaptionPreFix + txCaptionCtr.text,
+        "tapeTypeCode": selectedDropDowns[10]?.key,
+        "channelCode": selectedDropDowns[3]?.key,
+        "programCode": selectedDropDowns[6]?.key,
+        "originalRepeatCode": selectedDropDowns[8]?.key,
+        "houseId": txNoCtr.text,
+        "segmentNumber": segHash.value,
+        "som": somCtr.text,
+        "dated": "D",
+        "killDate": DateFormat('yyyy-MM-dd').format(DateFormat("dd-MM-yyyy").parse(endDateCtr.text)),
+        "modifiedBy": Get.find<MainController>().user?.logincode,
+        "startDate": DateFormat('yyyy-MM-dd').format(DateFormat("dd-MM-yyyy").parse(startDateCtr.text)),
+        "ptype": selectedDropDowns[5]?.key,
+        "remarks": "",
+        "blanktapeid": blankTapeIDCtr.text,
+        "locationcode": selectedDropDowns[2]?.key,
+        "billflag": num.tryParse(selectedDropDowns[9]?.key ?? "0") ?? 0,
+        "companycode": selectedDropDowns[1]?.key,
+        "lstAnnotation": rightDataTable.map((element) => element.toJson()).toList(),
+      },
+    );
+  }
+
   formHandler(String btnName) {
     if (btnName == "Clear") {
       clearPage();
     } else if (btnName == "Save") {
-      // saveValidate();
+      validateAndSaveRecord();
     } else if (btnName == "Search") {
       Get.to(
         SearchPage(
@@ -223,12 +313,14 @@ class PromoMasterController extends GetxController {
               resp['cartNo_Leave'] != null &&
               resp['cartNo_Leave']['eventName'] != null &&
               resp['cartNo_Leave']['eventName'].toString().contains("House ID you entered is already used for")) {
-            if (promoCode.isNotEmpty) {
-              txNoCtr.text = strHouseID;
-            }
+            // if (promoCode.isNotEmpty) {
+            //   txNoCtr.text = strHouseID;
+            // }
             LoadingDialog.showErrorDialog(resp['cartNo_Leave']['eventName'].toString(), callback: () {
               txNoFN.requestFocus();
             });
+          } else {
+            companyFN.requestFocus();
           }
         },
         json: {

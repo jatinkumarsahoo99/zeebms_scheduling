@@ -115,6 +115,7 @@ class PromoMasterView extends GetView<PromoMasterController> {
                                           url: ApiFactory.PROMO_MASTER_COMPANY_SEARCH,
                                           parseKeyForKey: "CompanyCode",
                                           parseKeyForValue: "CompanyName",
+                                          inkwellFocus: controller.companyFN,
                                         ),
                                         DropDownField.formDropDown1WidthMap(
                                           controller.onloadModel?.promoMasterOnLoad?.lstLocation ?? [],

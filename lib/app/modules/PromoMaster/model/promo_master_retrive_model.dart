@@ -206,9 +206,9 @@ class LstAnnotationLoadDatas {
     final Map<String, dynamic> data = new Map<String, dynamic>();
     // data['rowno'] = this.rowno;
     // data['eventId'] = this.eventId;
-    data['eventname'] = this.eventname;
-    data['tCin'] = this.tCin;
-    data['tCout'] = this.tCout;
+    data['eventName'] = this.eventname;
+    data['tcIn'] = this.tCin;
+    data['tcOut'] = this.tCout;
     return data;
   }
 }
