@@ -160,9 +160,11 @@ class RoBookingBkgNOLeaveData {
       });
     }
     executiveCode = json['executiveCode'];
+
     maxSpend = json['maxSpend'];
     dealFromDate = json['dealFromDate'];
     dealtoDate = json['dealtoDate'];
+
     secondaryEventId = json['secondaryEventId'];
     secondaryEvent = json['secondaryEvent'];
     triggerId = json['triggerId'];

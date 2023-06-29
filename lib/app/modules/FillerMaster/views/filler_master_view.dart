@@ -1,8 +1,10 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:get/get.dart';
 
 import '../../../../widgets/DateTime/DateWithThreeTextField.dart';
 import '../../../../widgets/FormButton.dart';
+import '../../../../widgets/PlutoGrid/src/pluto_grid.dart';
 import '../../../../widgets/dropdown.dart';
 import '../../../../widgets/gridFromMap.dart';
 import '../../../../widgets/input_fields.dart';
@@ -32,7 +34,7 @@ class FillerMasterView extends GetView<FillerMasterController> {
                       child: Row(
                         children: [
                           FocusTraversalGroup(
-                            policy: WidgetOrderTraversalPolicy(),
+                            policy: OrderedTraversalPolicy(),
                             child: Expanded(
                               flex: 12,
                               child: Container(
@@ -296,7 +298,7 @@ class FillerMasterView extends GetView<FillerMasterController> {
                           ),
                           SizedBox(width: 14),
                           FocusTraversalGroup(
-                            policy: WidgetOrderTraversalPolicy(),
+                            policy: OrderedTraversalPolicy(),
                             child: Expanded(
                               flex: 8,
                               child: Column(
@@ -463,7 +465,21 @@ class FillerMasterView extends GetView<FillerMasterController> {
                                                     : null,
                                                 child: controller.rightDataTable.value.isEmpty
                                                     ? null
-                                                    : DataGridFromMap(mapData: controller.rightDataTable.value.map((e) => e.toJson()).toList()),
+                                                    : RawKeyboardListener(
+                                                        onKey: (value) {
+                                                          if (value.isKeyPressed(LogicalKeyboardKey.delete) && controller.rightDataTable.isNotEmpty) {
+                                                            controller.rightDataTable.removeAt(controller.rightTableSelectedIdx);
+                                                            controller.rightTableSelectedIdx = 0;
+                                                          }
+                                                        },
+                                                        focusNode: controller.rightTableFN,
+                                                        child: DataGridFromMap(
+                                                          mapData: controller.rightDataTable.value.map((e) => e.toJson()).toList(),
+                                                          // focusNode: controller.rightTableFN,
+                                                          mode: PlutoGridMode.selectWithOneTap,
+                                                          onSelected: (selected) => controller.rightTableSelectedIdx = selected.rowIdx ?? -1,
+                                                        ),
+                                                      ),
                                               );
                                             }),
                                           ),

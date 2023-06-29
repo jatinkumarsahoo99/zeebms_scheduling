@@ -617,6 +617,14 @@ class ApiFactory {
       "$BASE_URL/api/ROBooking/GetClientLeave?LocationCode=$locationCode&ChannelCode=$channelCode&ClientCode=$clientCode";
   static String RO_BOOKING_GetSetVerify = "$BASE_URL/api/ROBooking/GetSetVerify";
   static String RO_BOOKING_BRAND_LEAVE = "$BASE_URL/api/ROBooking/GetBrand";
+  static String RO_BOOKING_GetSpotNotVerified(
+    String locationCode,
+    String channelCode,
+    String bookingMonth,
+    String loggedUser,
+  ) =>
+      "$BASE_URL/api/ROBooking/SpotsNotVerified?LocationCode=$locationCode&ChannelCode=$channelCode&BookingMonth=$bookingMonth&LoggedUser=$loggedUser";
+  static String RO_BOOKING_SPOT_DBL_CLICK = "$BASE_URL/api/ROBooking/SpotsNVerified_CellDoubleClick";
 
   static String RO_BOOKING_ImportAndMark = "$BASE_URL/api/ROBooking/ImportAndMark";
   static String RO_BOOKING_cboPDCSelectedIndexChanged = "$BASE_URL/api/ROBooking/cboPDCSelectedIndexChanged";
@@ -628,6 +636,7 @@ class ApiFactory {
   static String RO_BOOKING_AddSpot = "$BASE_URL/api/ROBooking/OnAddSpots";
   static String RO_BOOKING_OnSaveData = "$BASE_URL/api/ROBooking/OnSaveData";
   static String RO_BOOKING_GetClientPDC = "$BASE_URL/api/ROBooking/GetClientPDC";
+  static String RO_BOOKING_OnSave_Check = "$BASE_URL/api/ROBooking/OnSaveData_CheckTapeId";
 
   //////////////////////////////// RO BOOKING END /////////////////////////////////
   ///
@@ -644,6 +653,7 @@ class ApiFactory {
   static String FILLER_MASTER_ON_LOAD = "$BASE_URL/api/FillerMaster/FillerMasterOnLoad";
   static String FILLER_MASTER_ON_LEAVE_LOCATION(String code) => "$BASE_URL/api/FillerMaster/onLeaveLocation?LocationCode=$code";
   static String FILLER_MASTER_BANNER_SEARCH = "$BASE_URL/api/FillerMaster/GetSourceBannerSearch?TextSourceBanner=";
+  static String FILLER_MASTER_SAVE = "$BASE_URL/api/FillerMaster/SaveRecord";
   static String FILLER_MASTER_RETRIVE_RECORDS = "$BASE_URL/api/FillerMaster/RetriveRecords";
   static String FILLER_MASTER_SEGNO_LEAVE = "$BASE_URL/api/FillerMaster/SegNoLeave";
   static String FILLER_MASTER_GET_EVENT = "$BASE_URL/api/FillerMaster/GetEvent?text=";
@@ -654,12 +664,37 @@ class ApiFactory {
   ///
   ///
   ///
+  //////////////////////////////// PROMO-MASTER-API-START /////////////////////////////////
+
+  static String get PROMO_MASTER_ON_LOAD => "$BASE_URL/api/PromoMaster/PromoMasterOnLoad";
+  static String PROMO_MASTER_ON_LEAVE_LOCATION(String code) => "$BASE_URL/api/PromoMaster/onLeaveLocation?LocationCode=$code";
+  static String get PROMO_MASTER_COMPANY_SEARCH => "$BASE_URL/api/PromoMaster/GetSourceCompanySearch?TextSourceCompany=";
+  static String get PROMO_MASTER_PROGRAM_SEARCH => "$BASE_URL/api/PromoMaster/GetSourceProgramSearch?TextSourceProgram=";
+  static String get PROMO_MASTER_GET_PROGRAM_PICKER => "$BASE_URL/api/PromoMaster/GetProgramPicker";
+  static String get PROMO_MASTER_EVENT_SEARCH => "$BASE_URL/api/PromoMaster/GetEvent?text=";
+  static String get PROMO_MASTER_RETRIVE_RECORDS => "$BASE_URL/api/PromoMaster/GetRetrieveRecord";
+  static String get PROMO_MASTER_TX_NO_LEAVE => "$BASE_URL/api/PromoMaster/GetCartNo_Leave";
+  static String get PROMO_MASTER_SAVE_RECORD => "$BASE_URL/api/PromoMaster/SaveRecord";
+  static String PROMO_MASTER_BLANK_TAPE_ID_LEAVE(String code) => "$BASE_URL/api/PromoMaster/OnLeaveBlankTapeId?BlankTapeId=$code";
+  // static String PROMO_MASTER_BANNER_SEARCH = "$BASE_URL/api/FillerMaster/GetSourceBannerSearch?TextSourceBanner=";
+  // static String PROMO_MASTER_SAVE = "$BASE_URL/api/FillerMaster/SaveRecord";
+  // static String PROMO_MASTER_SEGNO_LEAVE = "$BASE_URL/api/FillerMaster/SegNoLeave";
+  // static String PROMO_MASTER_GET_EVENT = "$BASE_URL/api/FillerMaster/GetEvent?text=";
+
+  //////////////////////////////// PROMO-MASTER-API-END /////////////////////////////////
+  ///
+  ///
+  ///
+  ///
   ///
   //////////////////////////////// ASRUN IMPORT /////////////////////////////////
   static String AsrunImport_GetLoadLocation = "$BASE_URL/api/AsrunImport/GetLoadLocation";
   static String AsrunImport_GetLocationSelect(locationCode) => "$BASE_URL/api/AsrunImport/GetLocationSelect?Locationcode=$locationCode";
   static String AsrunImport_LoadFPCData(locationCode, channelCode, telecastDate) =>
       "$BASE_URL/api/AsrunImport/LoadFPCData?LocationCode=$locationCode&ChannelCode=$channelCode&TelecastDate=$telecastDate";
+  static String AsrunImport_LoadRunData(locationCode, channelCode, telecastDate) =>
+      "$BASE_URL/api/AsrunImport/LoadAsRunData?LocationCode=$locationCode&ChannelCode=$channelCode&LogDate=$telecastDate";
+
   static String AsrunImport_GetChannelCode = "$BASE_URL/api/AsrunImport/GetChannelCode";
   static String AsrunImport_LoadImportSpecifications(String locationCode, String channelCode) =>
       "$BASE_URL/api/AsrunImport/LoadImportSpecifications?LocationCode=$locationCode&ChannelCode=$channelCode";
@@ -698,6 +733,7 @@ class ApiFactory {
   static String COMMERCIAL_MASTER_GET_COMMERCIALTAPEMASTER = BASE_URL + "/api/CommercialTapeMaster/CommercialTapeMasterData";
   static String COMMERCIAL_MASTER_SAVE_COMMERCIALTAPE = BASE_URL + "/api/CommercialTapeMaster/CommercialTapeSave";
 
+
 //////////////////////////////// Sales Audit Not Select Report ///////////////////////////////////////////
 
   static String SALESAUDIT_NOT_TELECASTLOAD = BASE_URL + "/api/SalesAuditNotTR/SalesauditnottelecastLoad";
@@ -706,4 +742,13 @@ class ApiFactory {
   /////////////////////////////////// Sales Audit New ////////////////////////////////
 
   static String SALESAUDIT_NEW_LOAD = BASE_URL + "/api/SalesAduitNew/GetLocations";
+  static String SALESAUDIT_NEW_GETCHANNEL= BASE_URL + "/api/SalesAduitNew/GetChannels?LocationCode=";
+  static String SALESAUDIT_NEW_SAVEDATA= BASE_URL + "/api/SalesAduitNew/PostSalesAduit";
+  static String SALESAUDIT_NEW_GETRETRIEVE (String locationCode,String channelCode,String scheduleDate) => BASE_URL + "/api/SalesAduitNew/GetRetrieve?Locationcode=$locationCode&channelcode=$channelCode&date=$scheduleDate";
+
+
+
+
+
+
 }

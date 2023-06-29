@@ -12,6 +12,9 @@ import '../../../../widgets/gridFromMap.dart';
 import '../../../../widgets/input_fields.dart';
 import '../../../../widgets/radio_row.dart';
 import '../../../controller/HomeController.dart';
+import '../../../controller/MainController.dart';
+import '../../../data/PermissionModel.dart';
+import '../../../providers/Utils.dart';
 import '../controllers/SalesAuditNotTelecastReportController.dart';
 
 class SalesAuditNotTelecastReportView
@@ -270,6 +273,34 @@ class SalesAuditNotTelecastReportView
                   ),
                 ),
               ),
+              SizedBox(height: 8),
+              GetBuilder<HomeController>(
+                  id: "buttons",
+                  init: Get.find<HomeController>(),
+                  builder: (controller) {
+                    PermissionModel formPermissions = Get.find<MainController>()
+                        .permissionList!
+                        .lastWhere((element) =>
+                    element.appFormName == "frmCommercialMaster");
+                    if (controller.buttons != null) {
+                      return ButtonBar(
+                        alignment: MainAxisAlignment.start,
+                        mainAxisSize: MainAxisSize.min,
+                        children: [
+                          for (var btn in controller.buttons!)
+                            FormButtonWrapper(
+                              btnText: btn["name"],
+                              callback: Utils.btnAccessHandler2(btn['name'],
+                                  controller, formPermissions) ==
+                                  null
+                                  ? null
+                                  : () => controllerX.formHandler(btn['name'],),
+                            )
+                        ],
+                      );
+                    }
+                    return Container();
+                  })
             ],
           ),
         ),

@@ -1395,7 +1395,7 @@ class DropDownField {
                                                         child: Padding(
                                                           padding: const EdgeInsets.symmetric(vertical: 8),
                                                           child: Text(
-                                                            element[parseKeyForValue] ?? "null",
+                                                            (element[parseKeyForValue] ?? "null").toString(),
                                                             style: TextStyle(
                                                               fontSize: SizeDefine.dropDownFontSize - 1,
                                                             ),

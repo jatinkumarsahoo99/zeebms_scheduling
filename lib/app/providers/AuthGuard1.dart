@@ -154,7 +154,8 @@ class AuthGuard1 extends StatelessWidget {
               currentWidget = const NoDataFoundPage();
           }
           // currentWidget = child;
-        } else if (controller.loginVal.value == 2) {
+        }
+        else if (controller.loginVal.value == 2) {
           currentWidget = const NoDataFoundPage();
         } else {
           currentWidget = const LoadingScreen();

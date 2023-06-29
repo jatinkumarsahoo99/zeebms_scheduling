@@ -13,12 +13,26 @@ class VerifySpotsView extends GetView<RoBookingController> {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.center,
       children: [
-        Expanded(child: Container()),
+        Expanded(
+            child: Container(
+          decoration: BoxDecoration(border: Border.all(width: 1.0, color: Colors.grey)),
+          child: DataGridShowOnlyKeys(
+            mapData: controller.spotsNotVerifiedClickData?.lstdgvVerifySpot ?? [],
+            editKeys: const [
+              "spotsEntered",
+            ],
+            onEdit: (editEvent) {
+              controller.spotsNotVerifiedClickData?.lstdgvVerifySpot?[editEvent.rowIdx]["spotsEntered"] = editEvent.value;
+            },
+            formatDate: false,
+          ),
+        )),
         const SizedBox(
           height: 5,
         ),
         FormButtonWrapper(
           btnText: "Set Verify",
+          iconDataM: Icons.domain_verification_rounded,
           callback: () {
             controller.setVerify();
           },
