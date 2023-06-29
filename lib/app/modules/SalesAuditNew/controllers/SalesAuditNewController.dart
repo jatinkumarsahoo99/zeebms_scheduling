@@ -149,6 +149,10 @@ class SalesAuditNewController extends GetxController {
 
 
 
+
+
+
+
     // String exportTapeCode = tblSpots.rows[spots].cells["Exporttapecode"].value;
     String exportTapeCode = listAsrunLog2[spots].exportTapeCode??"";
 
