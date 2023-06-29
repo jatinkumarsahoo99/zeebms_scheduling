@@ -82,7 +82,21 @@ class SalesAuditNewController extends GetxController {
         });
   }
 
-
+  Future<bool>? showDialogForYesNo(String text) {
+    Completer<bool> completer = Completer<bool>();
+    LoadingDialog.recordExists(
+      text,
+          () {
+        completer.complete(true);
+        // return true;
+      },
+      cancel: () {
+        completer.complete(false);
+        // return false;
+      },
+    );
+    return completer.future;
+  }
 
   filterSearchAndCancel(){
     if(salesAuditGetRetrieveModel != null){
@@ -126,6 +140,54 @@ class SalesAuditNewController extends GetxController {
          update(['rightOne']);
        }
   }
+  void btnMapClear_Click() {
+    // tblSpots - listAsrunLog2 - leftIndex
+    // tblAsrun - listAsrunLog1 - rightindex
+    int spots = gridStateManager?.currentRowIdx??0;
+    int asrun = gridStateManagerRight?.currentRowIdx??0;
+
+
+
+
+
+
+
+
+    // String exportTapeCode = tblSpots.rows[spots].cells["Exporttapecode"].value;
+    String exportTapeCode = listAsrunLog2[spots].exportTapeCode??"";
+
+    if (listAsrunLog2[spots].exportTapeCode == listAsrunLog1[asrun].exportTapeCode) {
+      listAsrunLog1[asrun].bookingNumber = null;
+      listAsrunLog1[asrun].bookingDetailCode = 0;
+     /* tblSpots.rows[spots].cells["Telecasttime"].value = null;
+      tblSpots.rows[spots].cells["ProgramCode"].value = "";
+      tblSpots.rows[spots].cells["RowNumber"].value = null;*/
+
+      listAsrunLog2[spots].telecastTime = null;
+      listAsrunLog2[spots].programCode = "";
+      listAsrunLog2[spots].rowNumber = null;
+      update(['leftOne','rightOne']);
+      // tblSpots.rows[spots].selected = true;
+    } else {
+      LoadingDialog.recordExists("The Tapes Dont Match!\nDo you still want to clear telecast info?",
+              (){
+                /*tblSpots.rows[spots].cells["Telecasttime"].value = "";
+                tblSpots.rows[spots].cells["ProgramCode"].value = "";
+                tblSpots.rows[spots].cells["RowNumber"].value = null;
+                tblSpots.rows[spots].selected = true;*/
+                listAsrunLog2[spots].telecastTime = "";
+                listAsrunLog2[spots].programCode = "";
+                listAsrunLog2[spots].rowNumber = null;
+                update(['leftOne']);
+              },
+          cancel: (){
+            Get.back();
+          });
+
+
+    }
+  }
+
 
   markError(int index){
       for(int i=0;i<listAsrunLog2.length;i++){
