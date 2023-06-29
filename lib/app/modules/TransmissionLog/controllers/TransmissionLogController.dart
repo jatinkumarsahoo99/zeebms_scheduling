@@ -1,6 +1,6 @@
 import 'dart:async';
 import 'dart:convert';
-import 'dart:html';
+import 'dart:html' as html;
 import 'dart:io' as io;
 import 'dart:typed_data';
 import 'package:bms_scheduling/app/controller/HomeController.dart';
@@ -2823,8 +2823,9 @@ class TransmissionLogController extends GetxController {
       print("Data clicked clear");
       if (data != null) {
         if (data) {
-          Get.delete<TransmissionLogController>();
-          Get.find<HomeController>().clearPage1();
+          // Get.delete<TransmissionLogController>();
+          // Get.find<HomeController>().clearPage1();
+          html.window.location.reload();
         } else {
           return;
         }
@@ -2832,8 +2833,9 @@ class TransmissionLogController extends GetxController {
         return;
       }
     } else {
-      Get.delete<TransmissionLogController>();
-      Get.find<HomeController>().clearPage1();
+      // Get.delete<TransmissionLogController>();
+      // Get.find<HomeController>().clearPage1();
+      html.window.location.reload();
     }
   }
 
