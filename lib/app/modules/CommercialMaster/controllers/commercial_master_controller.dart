@@ -122,11 +122,15 @@ class CommercialMasterController extends GetxController {
     });
     clockIdFocus.addListener(() {
       if (isListenerActive && !clockIdFocus.hasFocus) {
-       fetchCommercialTapeMasterData(
-            "",
-            "",
-            0,
-            clockIdController.text);
+        if(clockIdController.text != "" && clockIdController.text != null){
+          fetchCommercialTapeMasterData(
+              "",
+              "",
+              0,
+              clockIdController.text);
+        }else{
+          Snack.callError("Please enter clock id");
+        }
       }if(clockIdFocus.hasFocus){
         isListenerActive=true;
       }
@@ -488,6 +492,56 @@ class CommercialMasterController extends GetxController {
           }
         });
   }
+  validateTxNo1(String houseId,String exportTapeCode,String segNumber) {
+    Map<String, dynamic> postData = {
+      "exportTapeCode": exportTapeCode ?? "",
+      "segmentNumber": segNumber ?? "",
+      "commercialCode": commercialCode ?? "0",
+      "houseid": houseId ?? ""
+    };
+    // isListenerActive =true;
+    print(">>>>"+postData.toString());
+    Get.find<ConnectorControl>().POSTMETHOD(
+        api: ApiFactory.COMMERCIAL_MASTER_VALIDATE_TXNO,
+        json: postData,
+        fun: (Map map) {
+          log("genericMessage>>>>" + map.toString());
+          if (map is Map) {
+            if (map['isError'] == false) {
+              if (map['genericMessage'] != null &&
+                  map['genericMessage'] != "null") {
+                txNoController.text = "";
+                Snack.callError(map['genericMessage'] ?? "");
+              } else if (map['genericMessage'] == null ||
+                  map['genericMessage'] == "null") {
+                txNoController.text =
+                    tapeIdController.value.text + "-" + segController.text;
+                isListenerActive =false;
+                update(['updateLeft']);
+                fetchCommercialTapeMasterData(
+                    "",
+                    tapeIdController.value.text,
+                    int.parse((segController.text != null && segController.text != "")
+                        ? segController.text
+                        : "0"), "");
+              } else {
+                txNoController.text =
+                    tapeIdController.value.text + "-" + segController.text;
+                isListenerActive =false;
+                update(['updateLeft']);
+                fetchCommercialTapeMasterData(
+                    "",
+                    tapeIdController.value.text,
+                    int.parse((segController.text != null && segController.text != "")
+                        ? segController.text
+                        : "0"), "");
+              }
+            }
+          } else {
+            Snack.callError("Something went wrong");
+          }
+        });
+  }
 
   getAgencyDetails(String data) {
     Map<String, dynamic> postData = {
@@ -531,10 +585,10 @@ class CommercialMasterController extends GetxController {
     Get.find<ConnectorControl>().POSTMETHOD(
         api: ApiFactory.COMMERCIAL_MASTER_GET_COMMERCIALTAPEMASTER,
         json: postData,
-        fun: (List<dynamic> map) {
+        fun: (map) {
           Get.back();
           log("map>>> " + map.toString());
-          if (map.isNotEmpty) {
+          if (map is List && map.isNotEmpty) {
             commercialTapeMasterData =
                 CommercialTapeMasterData.fromJson(map[0]);
             print(">>>>" + commercialTapeMasterData!.toJson().toString());
@@ -649,7 +703,8 @@ class CommercialMasterController extends GetxController {
             isListenerActive =false;
 
             update(['updateLeft']);
-          }else{
+          }
+          else{
             isListenerActive =false;
             commercialCode="0";
           }

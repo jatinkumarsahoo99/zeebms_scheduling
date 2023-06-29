@@ -151,22 +151,14 @@ class CommercialMasterView extends StatelessWidget {
                                       mainAxisAlignment:
                                           MainAxisAlignment.spaceBetween,
                                       children: [
-                                        SizedBox(
+                                       /* SizedBox(
                                           width: Get.width * .17,
                                           child: NumericStepButton1(
                                             onChanged: (val) {
-                                              controllerX.segController.text =
-                                                  val.toString();
-                                              /*controllerX.txNoController.text =
-                                                controllerX.tapeIdController.value.text +"-"+ val.toString() ;*/
-                                              controllerX.validateTxNo("",controllerX.tapeIdController.value.text, controllerX.segController.text);
-                                              controllerX.fetchCommercialTapeMasterData(
-                                                  "",
-                                                  controllerX.tapeIdController.value.text,
-                                                  int.parse((controllerX.segController.text != null && controllerX.segController.text != "")
-                                                      ? controllerX.segController.text
-                                                      : "0"),
-                                                  "");
+                                              controllerX.segController.text = val.toString();
+
+                                              controllerX.validateTxNo1("",controllerX.tapeIdController.value.text, controllerX.segController.text);
+
                                             },
 
                                             count: int.parse((controllerX
@@ -180,6 +172,23 @@ class CommercialMasterView extends StatelessWidget {
                                                 : "1"),
                                             hint: "Seg #",
                                           ),
+
+                                        ),*/
+                                        SizedBox(
+                                          // width: Get.width * .17,
+                                          child: InputFields.numbers(
+                                            hintTxt: "Seg #",
+                                            padLeft: 0,
+                                            onchanged: (val) {
+                                              controllerX.segController.text = val.toString();
+
+                                              controllerX.validateTxNo1("",controllerX.tapeIdController.value.text, controllerX.segController.text);
+                                            },
+                                            controller:controllerX.segController,
+                                            isNegativeReq: false,
+                                            width: 0.17,
+                                          )
+
                                         ),
                                         InputFields.formField1(
                                             hintTxt: "TX No",
