@@ -519,7 +519,8 @@ class SalesAuditNewView  extends StatelessWidget  {
                               showIcon: false,
                               // isEnabled: btn['isDisabled'],
                               callback: (){
-                                controller.clearBtn(controller.gridStateManager!.currentRowIdx??0,controller.gridStateManagerRight!.currentRowIdx??0);
+                                // controller.clearBtn(controller.gridStateManager!.currentRowIdx??0,controller.gridStateManagerRight!.currentRowIdx??0);
+                                controller.btnMapClear_Click();
                               },
                             ),
                             FormButtonWrapper(
