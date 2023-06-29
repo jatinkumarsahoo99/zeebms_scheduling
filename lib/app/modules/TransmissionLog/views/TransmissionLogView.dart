@@ -303,11 +303,11 @@ class TransmissionLogView extends StatelessWidget {
                               return color;
                             },
                             onload: (loadevent) {
-                              controller.gridStateManager =
-                                  loadevent.stateManager;
+                              controller.gridStateManager = loadevent.stateManager;
                               if (controller.isFetch.value) {
                                 controller.isFetch.value = false;
                                 controller.colorGrid(false);
+                                loadevent.stateManager.setCurrentCell(loadevent.stateManager.rows[0].cells["no"], 0);
                               }
                               if (controller.selectedIndex != null) {
                                 loadevent.stateManager.moveScrollByRow(
@@ -587,8 +587,14 @@ class TransmissionLogView extends StatelessWidget {
       case "Next Time":
         controller.selectNextProgramClockHour();
         break;
+      case "Save":
+        controller.btnSave_Click();
+        break;
       case "Load":
         controller.pickFile();
+        break;
+      case "Search":
+        controller.search();
         break;
       case "Clear":
         controller.btnClear_Click();
@@ -1236,7 +1242,9 @@ class TransmissionLogView extends StatelessWidget {
                         child: FormButtonWrapper(
                           btnText: "Replace",
                           showIcon: false,
-                          callback: () {},
+                          callback: () {
+                            controller.btnReplace_Click();
+                          },
                         ),
                       ),
                     ],

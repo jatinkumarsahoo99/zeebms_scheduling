@@ -294,13 +294,15 @@ class PlutoRow {
     return json;
   }
 
-  Map<String, dynamic> toJson1({
-    bool includeChildren = true,
-    String childrenField = 'children',
-    List<String>? stringConverterKeys
-  }) {
+  Map<String, dynamic> toJson1(
+      {bool includeChildren = true,
+      String childrenField = 'children',
+      List<String>? stringConverterKeys}) {
     final json = cells.map((key, value) => MapEntry(
-        key, (stringConverterKeys??[]).contains(key) ? value.value.toString() : value.value));
+        key,
+        (stringConverterKeys ?? []).contains(key)
+            ? value.value.toString()
+            : value.value));
 
     if (!includeChildren || !type.isGroup) return json;
 
@@ -313,6 +315,48 @@ class PlutoRow {
     json[childrenField] = children;
 
     return json;
+  }
+
+  Map<String, dynamic> toTransmissionLogJson(
+      {bool includeChildren = true,
+      String childrenField = 'children',
+      List<String>? intConverterKeys}) {
+    final json = cells.map((key, value) => MapEntry(
+        getName(key),
+        (intConverterKeys ?? []).contains(key)
+            ? int.tryParse(value.value.toString())
+            : value.value.toString()));
+
+    if (!includeChildren || !type.isGroup) return json;
+
+    final List<Map<String, dynamic>> children = type.group.children
+        .map(
+          (e) => e.toJson(childrenField: childrenField),
+        )
+        .toList();
+
+    json[childrenField] = children;
+
+    return json;
+  }
+
+  String getName(String key) {
+    switch (key) {
+      case "rownumber":
+        return "rowIndex";
+      case "fpCtime":
+        return "fpcTime";
+      case "tapeduration":
+        return "tapeDuration";
+      case "tapeduration":
+        return "tapeDuration";
+      case "bookingdetailcode":
+        return "bookingDetailCode";
+      case "bookingdetailcode":
+        return "bookingDetailCode";
+      default:
+        return key;
+    }
   }
 }
 
