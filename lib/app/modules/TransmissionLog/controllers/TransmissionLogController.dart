@@ -8,6 +8,7 @@ import 'package:bms_scheduling/app/providers/ExportData.dart';
 import 'package:bms_scheduling/widgets/LoadingDialog.dart';
 import 'package:file_picker/file_picker.dart';
 import 'package:flutter/cupertino.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:bms_scheduling/widgets/PlutoGrid/pluto_grid.dart';
@@ -1558,8 +1559,8 @@ class TransmissionLogController extends GetxController {
             api: ApiFactory.TRANSMISSION_LOG_UPDATED_CLICK(
                 selectLocation?.key ?? "",
                 selectChannel?.key ?? "",
-                Utils.dateFormatChange(
-                    selectedDate.text, "dd-MM-yyyy", "M/d/yyyy"),
+                // Utils.dateFormatChange(selectedDate.text, "dd-MM-yyyy", "M/d/yyyy"),
+                selectedDate.text,
                 isStandby.value),
             fun: (map) {
               Get.back();
@@ -2444,6 +2445,9 @@ class TransmissionLogController extends GetxController {
   }
 
   void _download() async {
+    if(kDebugMode){
+      return;
+    }
     List<Map<String, dynamic>>? list =
         gridStateManager?.rows.map((e) => e.toJson()).toList();
     var map = {
