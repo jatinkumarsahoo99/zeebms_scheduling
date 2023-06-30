@@ -779,10 +779,10 @@ class TransmissionLogView extends StatelessWidget {
                         model?.timelist?.toList(),
                         (value) {
                           controller.selectTimeForCommercial = value;
-                          controller.dataGridRowFilter(
-                            matchValue: value.value ?? "",
-                            filterKey: 'fpCtime',
-                          );
+                          // controller.dataGridRowFilter(
+                          //   matchValue: value.value ?? "",
+                          //   filterKey: 'fpCtime',
+                          // );
 
                           // controller.selectedLocationId.text = value.key!;
                           // controller.selectedLocationName.text = value.value!;
@@ -802,6 +802,10 @@ class TransmissionLogView extends StatelessWidget {
                           btnText: "Filter",
                           showIcon: false,
                           callback: () {
+                            if(controller.selectTimeForCommercial==null){
+                              LoadingDialog.callInfoMessage("Please select time");
+                              return;
+                            }
                             controller.dataGridRowFilterCommercial(
                               matchValue:
                                   controller.selectTimeForCommercial?.value ??
