@@ -730,6 +730,14 @@ class TransmissionLogView extends StatelessWidget {
                               ? DataGridFromMap(
                                   hideCode: false,
                                   formatDate: false,
+                                  onRowDoubleTap: (PlutoGridOnRowDoubleTapEvent? tap){
+                                    // datechange
+                                    // hour
+                                    controller.dataGridRowFilter(
+                                      matchValue: tap?.row.cells["hour"]?.value.toString()??"",
+                                      filterKey: 'datechange',
+                                    );
+                                  },
                                   mapData: controller.tsListData!)
                               : const WarningBox(
                                   text:
@@ -1018,9 +1026,9 @@ class TransmissionLogView extends StatelessWidget {
                       InputFields.formFieldNumberMask(
                           hintTxt: "",
                           controller: controller.insertDuration_
-                            ..text = "00:00:00",
+                            ..text = "00:00:00:00",
                           widthRatio: 0.13,
-                          isTime: true,
+                          isTime: false,
                           isEnable: false,
                           paddingLeft: 0),
                     ],
@@ -1056,12 +1064,18 @@ class TransmissionLogView extends StatelessWidget {
                                   hideCode: false,
                                   formatDate: false,
                                   checkRow: true,
+                                  showSrNo: false,
                                   checkRowKey: "eventtype",
                                   onload: (PlutoGridOnLoadedEvent load) {
                                     controller.tblFastInsert =
                                         load.stateManager;
                                   },
                                   // colorCallback: (renderC) => Colors.red[200]!,
+                              onRowDoubleTap: (PlutoGridOnRowDoubleTapEvent tap){
+                                // controller.tblFastInsert?.unCheckedRows;
+                                controller.tblFastInsert?.setRowChecked(tap.row, true);
+                                controller.btnFastInsert_Add_Click();
+                              },
                                   mapData: (controller.inserSearchModel
                                       ?.lstListMyEventData?.lstListMyEventClips!
                                       .map((e) => e.toJson())
@@ -1116,7 +1130,7 @@ class TransmissionLogView extends StatelessWidget {
                       ),
                       InputFields.formFieldNumberMask(
                           hintTxt: "Duration",
-                          controller: controller.insertDuration_,
+                          controller: controller.replaceDuration,
                           widthRatio: 0.1,
                           isTime: true,
                           paddingLeft: 0),
@@ -1397,7 +1411,7 @@ class TransmissionLogView extends StatelessWidget {
                           btnText: "Add",
                           showIcon: false,
                           callback: () {
-                            Get.back();
+                            // Get.back();
                             controller.btnInsProg_Addsegments_Click();
                           },
                         ),
@@ -1488,7 +1502,7 @@ class TransmissionLogView extends StatelessWidget {
                             hintTxt: "OffSet",
                             controller: controller.offset_change,
                             widthRatio: 0.12,
-                            // isTime: true,
+                            isTime: false,
                             isEnable: controller.visibleChangeOffset.value,
                             paddingLeft: 0),
                       )),

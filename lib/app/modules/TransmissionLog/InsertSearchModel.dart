@@ -21,6 +21,7 @@ class InsertSearchModel {
 class LstListMyEventData {
   List<LstListMyEventClips>? lstListMyEventClips;
   List<LstFastInsertTags>? lstFastInsertTags;
+  num totalDuration = 0;
 
   LstListMyEventData({this.lstListMyEventClips, this.lstFastInsertTags});
 
@@ -28,6 +29,7 @@ class LstListMyEventData {
     if (json['lstListMyEventClips'] != null) {
       lstListMyEventClips = <LstListMyEventClips>[];
       json['lstListMyEventClips'].forEach((v) {
+        totalDuration = totalDuration + v["duration"];
         lstListMyEventClips!.add(new LstListMyEventClips.fromJson(v));
       });
     }
@@ -67,15 +69,15 @@ class LstListMyEventClips {
 
   LstListMyEventClips(
       {this.eventtype,
-        this.caption,
-        this.txCaption,
-        this.txId,
-        this.duration,
-        this.som,
-        this.segmentNumber,
-        this.languagename,
-        this.promoTypeCode,
-        this.eventCode});
+      this.caption,
+      this.txCaption,
+      this.txId,
+      this.duration,
+      this.som,
+      this.segmentNumber,
+      this.languagename,
+      this.promoTypeCode,
+      this.eventCode});
 
   LstListMyEventClips.fromJson(Map<String, dynamic> json) {
     eventtype = json['eventtype'];
@@ -119,14 +121,14 @@ class LstFastInsertTags {
 
   LstFastInsertTags(
       {this.crTapeID,
-        this.tagSegmentnumber,
-        this.eventtype,
-        this.exportTapeCaption,
-        this.promoDuration,
-        this.som,
-        this.promoTypeCode,
-        this.tagTapeid,
-        this.segmentNumber});
+      this.tagSegmentnumber,
+      this.eventtype,
+      this.exportTapeCaption,
+      this.promoDuration,
+      this.som,
+      this.promoTypeCode,
+      this.tagTapeid,
+      this.segmentNumber});
 
   LstFastInsertTags.fromJson(Map<String, dynamic> json) {
     crTapeID = json['crTapeID'];
