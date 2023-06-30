@@ -87,6 +87,7 @@ class RoBookingController extends GetxController {
   String? dealProgramCode;
   String? dealStartTime;
   String? dealTelecastDate;
+
   RoBookingSaveCheckTapeId? savecheckData;
 
   DropDownValue? selectedGST;
@@ -95,6 +96,7 @@ class RoBookingController extends GetxController {
   var clients = RxList<DropDownValue>();
   var agencies = RxList<DropDownValue>();
   RxList tapeIds = RxList([]);
+  RxList makeGoodData = RxList([]);
 
   FocusNode bookingNoFocus = FocusNode(),
       dealNoFocus = FocusNode(),
@@ -143,7 +145,7 @@ class RoBookingController extends GetxController {
       }
     });
     tapeIdFocus.addListener(() async {
-      if (!tapeIdFocus.hasFocus && tapeIDCtrl.text.isEmpty) {
+      if (!tapeIdFocus.hasFocus) {
         getTapeID(tapeIDCtrl.text);
       }
     });
@@ -771,20 +773,24 @@ class RoBookingController extends GetxController {
     Get.find<ConnectorControl>().POSTMETHOD(
         api: ApiFactory.RO_BOOKING_GET_DISPLAY,
         json: {
-          "locationName": selectedLocation!.key,
-          "channelName": selectedChannel!.key,
-          "clientName": selectedClient?.key ??
-              bookingNoLeaveData!.lstClientAgency!.first.clientcode,
-          "agencyName": selectedAgnecy?.key ??
-              bookingNoLeaveData!.lstAgency!.first.agencycode,
-          "brandName": selectedBrand?.key ??
-              bookingNoLeaveData!.lstBrand!.first.brandcode,
+          "locationName": selectedLocation?.value,
+          "channelName": selectedChannel?.value,
+          "clientName": selectedClient?.value ??
+              bookingNoLeaveData!.lstClientAgency!.first.clientname,
+          "agencyName": selectedAgnecy?.value ??
+              bookingNoLeaveData!.lstAgency!.first.agencyname,
+          "brandName": selectedBrand?.value ??
+              bookingNoLeaveData!.lstBrand!.first.brandname,
           "fromDate": mgfromDateCtrl.text.fromdMyToyMd(),
           "toDate": mgtoDateCtrl.text.fromdMyToyMd(),
           "eBookingMonth": bookingMonthCtrl.text,
           "eBookingNumber": bookingNoCtrl.text,
         },
-        fun: (response) {});
+        fun: (response) {
+          if (response is Map && response.containsKey("info_GetDisplay")) {
+            makeGoodData.value = response["info_GetDisplay"]["lstMakeGood"];
+          }
+        });
   }
 
   onBookingNoLeave() {
