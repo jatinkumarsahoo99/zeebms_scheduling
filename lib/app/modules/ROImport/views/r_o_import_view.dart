@@ -1,3 +1,4 @@
+import 'package:bms_scheduling/widgets/gridFromMap.dart';
 import 'package:flutter/material.dart';
 
 import 'package:get/get.dart';
@@ -49,7 +50,7 @@ class ROImportView extends GetView<ROImportController> {
                   SizedBox(width: 20),
                   FormButton(
                     btnText: "Import",
-                    callback: () {},
+                    callback: controller.handleImportTap,
                   )
                 ],
               ),
@@ -57,29 +58,74 @@ class ROImportView extends GetView<ROImportController> {
 
               Expanded(
                 child: Row(
+                  mainAxisSize: MainAxisSize.max,
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
                     /// left-datagrid
-                    Expanded(
-                      child: Container(
-                        decoration: BoxDecoration(
-                          border: Border.all(
-                            color: Colors.grey,
-                          ),
+                    Obx(() {
+                      return SizedBox(
+                        width: (context.width / 2) - 20,
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          mainAxisSize: MainAxisSize.max,
+                          children: [
+                            Text(
+                              controller.leftMsg.value,
+                              style: TextStyle(
+                                color: Colors.red,
+                                fontWeight: FontWeight.bold,
+                              ),
+                            ),
+                            Expanded(
+                              child: Container(
+                                decoration: controller.topLeftDataTable.isEmpty
+                                    ? BoxDecoration(
+                                        border: Border.all(
+                                          color: Colors.grey,
+                                        ),
+                                      )
+                                    : null,
+                                child: controller.topLeftDataTable.isNotEmpty ? DataGridFromMap(mapData: controller.topLeftDataTable.value) : null,
+                              ),
+                            )
+                          ],
                         ),
-                      ),
-                    ),
+                      );
+                    }),
+
                     SizedBox(width: 10),
 
                     /// right-datagrid
-                    Expanded(
-                      child: Container(
-                        decoration: BoxDecoration(
-                          border: Border.all(
-                            color: Colors.grey,
-                          ),
+                    Obx(() {
+                      return SizedBox(
+                        width: (context.width / 2) - 20,
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          mainAxisSize: MainAxisSize.max,
+                          children: [
+                            Text(
+                              controller.rightMsg.value,
+                              style: TextStyle(
+                                color: Colors.red,
+                                fontWeight: FontWeight.bold,
+                              ),
+                            ),
+                            Expanded(
+                              child: Container(
+                                decoration: controller.topRightDataTable.isEmpty
+                                    ? BoxDecoration(
+                                        border: Border.all(
+                                          color: Colors.grey,
+                                        ),
+                                      )
+                                    : null,
+                                child: controller.topRightDataTable.isNotEmpty ? DataGridFromMap(mapData: controller.topRightDataTable.value) : null,
+                              ),
+                            )
+                          ],
                         ),
-                      ),
-                    ),
+                      );
+                    }),
                   ],
                 ),
               ),
@@ -112,14 +158,16 @@ class ROImportView extends GetView<ROImportController> {
                             FormButtonWrapper(
                               btnText: btn["name"],
                               callback: ((Utils.btnAccessHandler(btn['name'], controller.formPermissions!) == null))
-                                  ? null
+                                  ? (btn["name"] == "Clear")
+                                      ? () => controller.formHandler(btn['name'])
+                                      : null
                                   : () => controller.formHandler(btn['name']),
                             )
                           },
                         ],
                       );
                     }
-                    return Container();
+                    return SizedBox();
                   }),
             ],
           ),
