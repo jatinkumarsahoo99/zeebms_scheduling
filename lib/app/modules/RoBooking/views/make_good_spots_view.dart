@@ -18,11 +18,20 @@ class MakeGoodSpotsView extends GetView<RoBookingController> {
           children: [
             Row(
               mainAxisSize: MainAxisSize.min,
-              children: [Checkbox(value: false, onChanged: (value) {}), Text("Select All")],
+              children: [
+                Checkbox(value: false, onChanged: (value) {}),
+                Text("Select All")
+              ],
             ),
             Spacer(),
-            DateWithThreeTextField(title: "From Date", widthRation: 0.09, mainTextController: controller.mgfromDateCtrl),
-            DateWithThreeTextField(title: "to Date", widthRation: 0.09, mainTextController: controller.mgtoDateCtrl),
+            DateWithThreeTextField(
+                title: "From Date",
+                widthRation: 0.09,
+                mainTextController: controller.mgfromDateCtrl),
+            DateWithThreeTextField(
+                title: "to Date",
+                widthRation: 0.09,
+                mainTextController: controller.mgtoDateCtrl),
             Spacer(),
           ],
         ),
@@ -31,9 +40,20 @@ class MakeGoodSpotsView extends GetView<RoBookingController> {
         ),
         Expanded(
             child: Container(
-          child: controller.bookingNoLeaveData != null
-              ? DataGridShowOnlyKeys(mapData: controller.bookingNoLeaveData!.lstMakeGood!.map((e) => e.toJson()).toList(), formatDate: false)
-              : SizedBox(),
+          child: Obx(() => controller.bookingNoLeaveData != null ||
+                  controller.makeGoodData.value.isNotEmpty
+              ? DataGridShowOnlyKeys(
+                  mapData: controller.makeGoodData.value.isEmpty
+                      ? controller.bookingNoLeaveData?.lstSpots
+                              ?.map((e) => e.toJson())
+                              .toList() ??
+                          controller.makeGoodData.value
+                      : controller.makeGoodData.value,
+                  formatDate: false)
+              : Container(
+                  decoration: BoxDecoration(
+                      border: Border.all(width: 1.0, color: Colors.grey)),
+                )),
         )),
         SizedBox(
           height: 5,

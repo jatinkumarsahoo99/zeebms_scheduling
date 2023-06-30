@@ -1,6 +1,6 @@
 import 'dart:async';
 import 'dart:convert';
-import 'dart:html';
+import 'dart:html' as html;
 import 'dart:io' as io;
 import 'dart:typed_data';
 import 'package:bms_scheduling/app/controller/HomeController.dart';
@@ -508,7 +508,8 @@ class TransmissionLogController extends GetxController {
         api: ApiFactory.TRANSMISSION_LOG_SEARCH_INSERT(
             selectLocation?.key ?? "",
             selectChannel?.key ?? "",
-            Utils.dateFormatChange(selectedDate.text, "dd-MM-yyyy", "M/d/yyyy"),
+            // Utils.dateFormatChange(selectedDate.text, "dd-MM-yyyy", "M/d/yyyy"),
+            selectedDate.text,
             isMine,
             eventType,
             txId,
@@ -568,7 +569,7 @@ class TransmissionLogController extends GetxController {
     int insrow = gridStateManager?.currentRowIdx ?? 0;
     addEventToUndo();
     PlutoRow? row = gridStateManagerCommercial?.rows[rowIndex];
-    InsertCommercial(
+    PlutoRow? insertRowDta=insertCommercial(
         row?.cells["tonumber"]?.value,
         row?.cells["bookingdetailcode"]?.value,
         row?.cells["Scheduletime"]?.value,
@@ -583,11 +584,12 @@ class TransmissionLogController extends GetxController {
             num.tryParse(row?.cells["Duration"]?.value.toString() ?? "0") ??
                 0),
         row?.cells["som"]?.value);
+    gridStateManager?.insertRows(insrow, [insertRowDta]);
     gridStateManagerCommercial?.removeCurrentRow();
     // gridStateManager.firstDisplayedScrollingRowIndex = insrow;
   }
 
-  void InsertCommercial(String BookingNumber,
+  PlutoRow insertCommercial(String BookingNumber,
       String BookingDetailCode,
       String ScheduleTime,
       String ProductName,
@@ -596,7 +598,7 @@ class TransmissionLogController extends GetxController {
       String Exporttapecode,
       String Tapeduration,
       String SOM) {
-    insertPlutoRow(ScheduleTime, "C ", ExportTapeCaption, Exporttapecode,
+    return insertPlutoRow(ScheduleTime, "C ", ExportTapeCaption, Exporttapecode,
         Tapeduration, SOM,
         BreakNumber: 0,
         EpisodeNumber: 0,
@@ -607,7 +609,7 @@ class TransmissionLogController extends GetxController {
         ROsTimeBand: ROsTimeBand);
   }
 
-  insertPlutoRow(String FpcTime, String EventType, String ExportTapeCaption,
+  PlutoRow insertPlutoRow(String FpcTime, String EventType, String ExportTapeCaption,
       String Exporttapecode, String Tapeduration, String SOM,
       {int BreakNumber = 0,
         int EpisodeNumber = 0,
@@ -1622,11 +1624,15 @@ class TransmissionLogController extends GetxController {
   }
 
   getEventListForInsert({required Function function}) {
+    if((listEventsinInsert.value.length??0)>0){
+      return;
+    }
     LoadingDialog.call();
     Get.find<ConnectorControl>().GETMETHODCALL(
         api: ApiFactory.TRANSMISSION_LOG_EVENT_LIST(),
         fun: (Map map) {
           Get.back();
+          listEventsinInsert.value.clear();
           map["lstFastInsertEventType"].forEach((e) {
             listEventsinInsert.add(DropDownValue(key: e, value: e));
           });
@@ -2513,8 +2519,9 @@ class TransmissionLogController extends GetxController {
         return;
       }
 
+      print("maxProgramStarttimeDiff>>>"+maxProgramStarttimeDiff.value.toInt().toString());
       bool? diffFpcTransmission = await diffFPCTransmissionTime(seconds: maxProgramStarttimeDiff.value.toInt());
-      if (!(diffFpcTransmission!)) {
+      if (!(diffFpcTransmission)) {
         return;
       }
 
@@ -2537,6 +2544,7 @@ class TransmissionLogController extends GetxController {
       postTransmissionLog();
 
     } catch (ex) {
+      print("Error is>>"+ex.toString());
     // cursor = Cursors.default;
     // showMessageBox(errorLog(ex.message, BMS.globals.loggedUser, this), MessageBoxType.critical, strAlertMessageTitle);
     }
@@ -2823,8 +2831,9 @@ class TransmissionLogController extends GetxController {
       print("Data clicked clear");
       if (data != null) {
         if (data) {
-          Get.delete<TransmissionLogController>();
-          Get.find<HomeController>().clearPage1();
+          // Get.delete<TransmissionLogController>();
+          // Get.find<HomeController>().clearPage1();
+          html.window.location.reload();
         } else {
           return;
         }
@@ -2832,8 +2841,9 @@ class TransmissionLogController extends GetxController {
         return;
       }
     } else {
-      Get.delete<TransmissionLogController>();
-      Get.find<HomeController>().clearPage1();
+      // Get.delete<TransmissionLogController>();
+      // Get.find<HomeController>().clearPage1();
+      html.window.location.reload();
     }
   }
 
@@ -2860,7 +2870,7 @@ class TransmissionLogController extends GetxController {
       element.cells["eventType"]?.value
           .toString()
           .trim()
-          .toLowerCase() !=
+          .toLowerCase() ==
           "p")
           .toList();
 
@@ -2976,7 +2986,7 @@ class TransmissionLogController extends GetxController {
             // tblLog.FirstDisplayedScrollingRowIndex = int.tryParse(dr.cells['rownumber']?.value??"")! - 10;
             // tblLog.Rows[dr['rownumber']].Selected = true;
             gridStateManager?.moveScrollByRow(PlutoMoveDirection.down,
-                int.tryParse(dr.cells['rownumber']?.value ?? "")! - 10);
+                int.tryParse(dr.cells['rownumber']?.value ?? "")!);
             gridStateManager?.setCurrentCell(dr.cells["no"],
                 int.tryParse(dr.cells['rownumber']?.value ?? "")!);
             LoadingDialog.callInfoMessage(
@@ -2987,13 +2997,14 @@ class TransmissionLogController extends GetxController {
             // tblLog.FirstDisplayedScrollingRowIndex = dr['rownumber'] - 10;
             // tblLog.Rows[dr['rownumber']].Selected = true;
             gridStateManager?.moveScrollByRow(PlutoMoveDirection.down,
-                int.tryParse(dr.cells['rownumber']?.value ?? "")! - 10);
+                int.tryParse(dr.cells['rownumber']?.value ?? ""));
             gridStateManager?.setCurrentCell(dr.cells["no"],
                 int.tryParse(dr.cells['rownumber']?.value ?? "")!);
             bool? isYesClick = await showDialogForYesNo(
                 "Ros spot within 5 minutes of contracted timeband!\nDo you want to proceed with Save?");
             if (isYesClick != null) {
               if (!isYesClick) {
+                print("checkRosTransmissionTime(300)>>>>"+dr.sortIdx.toString());
                 completer.complete(false);
                 // return false;
               }
@@ -3001,9 +3012,11 @@ class TransmissionLogController extends GetxController {
           }
         }
       }
+      print("checkRosTransmissionTime(300)>>>>yes1");
       completer.complete(true);
       // return true;
     } else {
+      print("checkRosTransmissionTime(300)>>>>yes2");
       completer.complete(true);
       // return true;
     }
@@ -3020,8 +3033,15 @@ class TransmissionLogController extends GetxController {
     String lastProduct = '';
     Get.find<ConnectorControl>().GETMETHODCALL(
         api: ApiFactory.TRANSMISSION_LOG_GET_BACKTOBACK_PRODUCT(),
-        fun: (List<dynamic> list) async {
-          List<String> strAllowBackToBackProducts = list as List<String>;
+        fun: (Map<String,dynamic> map) async {
+          
+          List<String> strAllowBackToBackProducts = [];
+          if(map is Map && map.containsKey("lstAllowBackToBackProducts")){
+            map["lstAllowBackToBackProducts"].forEach((e){
+              strAllowBackToBackProducts.add(e["productName"]);
+            });
+          }
+          print("List of product is>>"+strAllowBackToBackProducts.toString());
           try {
             for (var dr in (gridStateManager?.rows)!) {
               if (dr.cells['productName']?.value == lastProduct) {

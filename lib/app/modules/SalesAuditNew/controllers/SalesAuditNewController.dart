@@ -145,14 +145,6 @@ class SalesAuditNewController extends GetxController {
     // tblAsrun - listAsrunLog1 - rightindex
     int spots = gridStateManager?.currentRowIdx??0;
     int asrun = gridStateManagerRight?.currentRowIdx??0;
-
-
-
-
-
-
-
-
     // String exportTapeCode = tblSpots.rows[spots].cells["Exporttapecode"].value;
     String exportTapeCode = listAsrunLog2[spots].exportTapeCode??"";
 
