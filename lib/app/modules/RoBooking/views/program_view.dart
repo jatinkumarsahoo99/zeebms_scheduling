@@ -189,7 +189,8 @@ class ProgramView extends GetView<RoBookingController> {
                       btnText: "Seg",
                       iconDataM: Icons.segment_rounded,
                       callback: () {
-                        controller.getSegment();
+                        controller.getSegment(
+                            controller.programViewGrid?.currentRowIdx);
                       },
                     ),
                     InputFields.formField1(

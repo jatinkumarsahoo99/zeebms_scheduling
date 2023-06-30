@@ -264,7 +264,8 @@ class TransmissionLogView extends StatelessWidget {
                                               .cells["eventType"]?.value ??
                                           "");
                               Color color = Colors.white;
-                              if(controller.gridStateManager?.currentRowIdx==colorData.rowIdx){
+                              if (controller.gridStateManager?.currentRowIdx ==
+                                  colorData.rowIdx) {
                                 return Color(0xFFD1C4E9);
                               }
 
@@ -307,12 +308,15 @@ class TransmissionLogView extends StatelessWidget {
                               return color;
                             },
                             onload: (loadevent) {
-                              controller.gridStateManager = loadevent.stateManager;
+                              controller.gridStateManager =
+                                  loadevent.stateManager;
                               if (controller.isFetch.value) {
                                 controller.isFetch.value = false;
                                 controller.colorGrid(false);
-                                controller.logSaved=true;
-                                loadevent.stateManager.setCurrentCell(loadevent.stateManager.rows[0].cells["no"], 0);
+                                controller.logSaved = true;
+                                loadevent.stateManager.setCurrentCell(
+                                    loadevent.stateManager.rows[0].cells["no"],
+                                    0);
                               }
                               if (controller.selectedIndex != null) {
                                 loadevent.stateManager.moveScrollByRow(
@@ -580,12 +584,10 @@ class TransmissionLogView extends StatelessWidget {
     );
   }
 
-
-
   formHandler(btn) {
     switch (btn) {
       case "Commercials":
-        if(!controller.logSaved){
+        if (!controller.logSaved) {
           LoadingDialog.callInfoMessage("Please save the log first!");
         }
         controller.getCommercialList(fun: (model) {
@@ -730,11 +732,14 @@ class TransmissionLogView extends StatelessWidget {
                               ? DataGridFromMap(
                                   hideCode: false,
                                   formatDate: false,
-                                  onRowDoubleTap: (PlutoGridOnRowDoubleTapEvent? tap){
+                                  onRowDoubleTap:
+                                      (PlutoGridOnRowDoubleTapEvent? tap) {
                                     // datechange
                                     // hour
                                     controller.dataGridRowFilter(
-                                      matchValue: tap?.row.cells["hour"]?.value.toString()??"",
+                                      matchValue: tap?.row.cells["hourCode"]?.value
+                                              .toString() ??
+                                          "",
                                       filterKey: 'datechange',
                                     );
                                   },
@@ -810,8 +815,9 @@ class TransmissionLogView extends StatelessWidget {
                           btnText: "Filter",
                           showIcon: false,
                           callback: () {
-                            if(controller.selectTimeForCommercial==null){
-                              LoadingDialog.callInfoMessage("Please select time");
+                            if (controller.selectTimeForCommercial == null) {
+                              LoadingDialog.callInfoMessage(
+                                  "Please select time");
                               return;
                             }
                             controller.dataGridRowFilterCommercial(
@@ -882,6 +888,14 @@ class TransmissionLogView extends StatelessWidget {
   }
 
   showInsertDialog(context) {
+    controller.inserSearchModel = null;
+    controller.txReplaceTxId_.text = "";
+    controller.txReplaceSegment_.text = "";
+    controller.replaceDuration.text = "00:00:00:00";
+    controller.txReplaceEvent_.text = "";
+    controller.fromReplaceInsert_.text = "00:00:00:00";
+    controller.toReplaceInsert_.text = "00:00:00:00";
+
     return Get.defaultDialog(
       barrierDismissible: false,
       title: "Insert",
@@ -1071,11 +1085,13 @@ class TransmissionLogView extends StatelessWidget {
                                         load.stateManager;
                                   },
                                   // colorCallback: (renderC) => Colors.red[200]!,
-                              onRowDoubleTap: (PlutoGridOnRowDoubleTapEvent tap){
-                                // controller.tblFastInsert?.unCheckedRows;
-                                controller.tblFastInsert?.setRowChecked(tap.row, true);
-                                controller.btnFastInsert_Add_Click();
-                              },
+                                  onRowDoubleTap:
+                                      (PlutoGridOnRowDoubleTapEvent tap) {
+                                    // controller.tblFastInsert?.unCheckedRows;
+                                    controller.tblFastInsert
+                                        ?.setRowChecked(tap.row, true);
+                                    controller.btnFastInsert_Add_Click();
+                                  },
                                   mapData: (controller.inserSearchModel
                                       ?.lstListMyEventData?.lstListMyEventClips!
                                       .map((e) => e.toJson())
@@ -1725,7 +1741,9 @@ class TransmissionLogView extends StatelessWidget {
               Navigator.pop(context);
             },
           ),
-          SizedBox(width: 5,),
+          SizedBox(
+            width: 5,
+          ),
           FormButtonWrapper(
             btnText: "Export",
             showIcon: false,

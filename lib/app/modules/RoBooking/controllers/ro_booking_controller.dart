@@ -415,35 +415,33 @@ class RoBookingController extends GetxController {
     );
   }
 
-  getSegment() {
-    if (dealProgramCode != null && dealProgramCode!.isNotEmpty) {
-      Get.find<ConnectorControl>().POSTMETHOD(
-          api: ApiFactory.RO_BOOKING_GetSegment,
-          json: {
-            "locationCode": selectedLocation!.key,
-            "channelCode": selectedClient!.key,
-            "telecastDate": dealTelecastDate,
-            "telecastTime": dealStartTime,
-            "programCode": dealProgramCode
-          },
-          fun: (data) {
-            // if (data is Map && data.containsKey("info_AgencyLeave")) {
-            //   agencyLeaveData = RoBookingAgencyLeaveData.fromJson(data["info_AgencyLeave"]);
-            //   selectedDeal = DropDownValue(
-            //     key: agencyLeaveData?.lstDealNumber?.first.dealNumber ?? "",
-            //     value: agencyLeaveData?.lstDealNumber?.first.dealNumber ?? "",
-            //   );
-            //   update(["init"]);
-            // }
-            // if (data is Map && data.containsKey("info_ClientList") && data["info_ClientList"] is List) {
-            //   List<DropDownValue> _agencies = [];
-            //   for (var e in data["info_ClientList"]) {
-            //     _agencies.add(DropDownValue(key: e["agencycode"], value: e["agencyname"]));
-            //   }
-            //   agencies.value = _agencies;
-            // }
-          });
-    }
+  getSegment(index) {
+    Get.find<ConnectorControl>().POSTMETHOD(
+        api: ApiFactory.RO_BOOKING_GetSegment,
+        json: {
+          "locationCode": selectedLocation!.key,
+          "channelCode": selectedClient!.key,
+          "telecastDate": dealDblClickData?.lstProgram?[index].telecastdate,
+          "telecastTime": dealDblClickData?.lstProgram?[index].startTime,
+          "programCode": dealDblClickData?.lstProgram?[index].programcode,
+        },
+        fun: (data) {
+          // if (data is Map && data.containsKey("info_AgencyLeave")) {
+          //   agencyLeaveData = RoBookingAgencyLeaveData.fromJson(data["info_AgencyLeave"]);
+          //   selectedDeal = DropDownValue(
+          //     key: agencyLeaveData?.lstDealNumber?.first.dealNumber ?? "",
+          //     value: agencyLeaveData?.lstDealNumber?.first.dealNumber ?? "",
+          //   );
+          //   update(["init"]);
+          // }
+          // if (data is Map && data.containsKey("info_ClientList") && data["info_ClientList"] is List) {
+          //   List<DropDownValue> _agencies = [];
+          //   for (var e in data["info_ClientList"]) {
+          //     _agencies.add(DropDownValue(key: e["agencycode"], value: e["agencyname"]));
+          //   }
+          //   agencies.value = _agencies;
+          // }
+        });
   }
 
   getClient() {
