@@ -239,7 +239,8 @@ class RoBookingBkgNOLeaveData {
     data['zonecode'] = zonecode;
     data['clientcode'] = clientcode;
     if (lstClientAgency != null) {
-      data['lstClientAgency'] = lstClientAgency!.map((v) => v.toJson()).toList();
+      data['lstClientAgency'] =
+          lstClientAgency!.map((v) => v.toJson()).toList();
     }
     data['dealno'] = dealno;
     if (lstDealNumber != null) {
@@ -273,7 +274,8 @@ class RoBookingBkgNOLeaveData {
     data['payMode'] = payMode;
     data['message'] = message;
     if (lstdgvDealDetails != null) {
-      data['lstdgvDealDetails'] = lstdgvDealDetails!.map((v) => v.toJson()).toList();
+      data['lstdgvDealDetails'] =
+          lstdgvDealDetails!.map((v) => v.toJson()).toList();
     }
     data['previousBookedAmount'] = previousBookedAmount;
     data['previousValAmount'] = previousValAmount;
@@ -386,7 +388,8 @@ class LstAddInfo {
   int? isRequired;
   String? allowedValues;
 
-  LstAddInfo({this.infoname, this.infovalue, this.isRequired, this.allowedValues});
+  LstAddInfo(
+      {this.infoname, this.infovalue, this.isRequired, this.allowedValues});
 
   LstAddInfo.fromJson(Map<String, dynamic> json) {
     infoname = json['infoname'];
@@ -414,10 +417,10 @@ class LstdgvDealDetails {
   String? programName;
   String? startTime;
   String? endTime;
-  int? rate;
+  num? rate;
   int? seconds;
-  int? amount;
-  int? valuationRate;
+  num? amount;
+  num? valuationRate;
   int? bookedSeconds;
   int? balanceSeconds;
   int? sun;
@@ -452,11 +455,11 @@ class LstdgvDealDetails {
   String? dealStartDate;
   String? dealEndDate;
   String? recoTakenOn;
-  int? dealValuationAmount;
-  int? bookedAmount;
-  int? bookedValuationAmount;
-  int? balanceAmount;
-  int? balanceValuationAmount;
+  num? dealValuationAmount;
+  num? bookedAmount;
+  num? bookedValuationAmount;
+  num? balanceAmount;
+  num? balanceValuationAmount;
   int? countbased;
   int? baseduration;
   String? locationcode;

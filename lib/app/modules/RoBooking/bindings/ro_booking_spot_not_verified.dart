@@ -7,8 +7,8 @@ class SpotsNotVerified {
   String? brandName;
   int? totalSpots;
   int? auditedSpots;
-  int? bookedAmount;
-  int? auditedAmount;
+  num? bookedAmount;
+  num? auditedAmount;
   String? payrouteName;
   int? unAuditedSpots;
   int? dropped;
