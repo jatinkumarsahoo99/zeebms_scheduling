@@ -71,7 +71,9 @@ class MakeGoodSpotsView extends GetView<RoBookingController> {
             SizedBox(width: 5),
             FormButtonWrapper(
               btnText: "Import & Mark",
-              callback: () {},
+              callback: () {
+                controller.pickFile();
+              },
             ),
           ],
         ),
