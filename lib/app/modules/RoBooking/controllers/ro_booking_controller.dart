@@ -1,3 +1,5 @@
+import 'dart:convert';
+
 import 'package:bms_scheduling/app/controller/ConnectorControl.dart';
 import 'package:bms_scheduling/app/controller/MainController.dart';
 import 'package:bms_scheduling/app/data/DropDownValue.dart';
@@ -25,6 +27,7 @@ import 'package:bms_scheduling/widgets/LoadingDialog.dart';
 import 'package:bms_scheduling/widgets/PlutoGrid/pluto_grid.dart';
 import 'package:bms_scheduling/widgets/dropdown.dart';
 import 'package:bms_scheduling/widgets/input_fields.dart';
+import 'package:file_picker/file_picker.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:intl/intl.dart';
@@ -395,43 +398,50 @@ class RoBookingController extends GetxController {
       json: {
         "clientCode": selectedClient?.key,
         "agencyCode": selectedAgnecy?.key,
-        "editMode": 1,
+        "editMode": 0,
         "locationCode": selectedLocation?.key,
         "channelCode": selectedChannel?.key
       },
-      fun: () {},
+      fun: (json) {
+        if (json is Map && json.containsKey("info_RefreshPDC")) {
+          if (json["info_RefreshPDC"]['lstPDCModel'] != null) {
+            agencyLeaveData?.lstPdcList = <LstPdcList>[];
+            json["info_RefreshPDC"]['lstPDCModel'].forEach((v) {
+              agencyLeaveData?.lstPdcList!.add(LstPdcList.fromJson(v));
+            });
+          }
+        }
+      },
     );
   }
 
-  getSegment() {
-    if (dealProgramCode != null && dealProgramCode!.isNotEmpty) {
-      Get.find<ConnectorControl>().POSTMETHOD(
-          api: ApiFactory.RO_BOOKING_GetSegment,
-          json: {
-            "locationCode": selectedLocation!.key,
-            "channelCode": selectedClient!.key,
-            "telecastDate": dealTelecastDate,
-            "telecastTime": dealStartTime,
-            "programCode": dealProgramCode
-          },
-          fun: (data) {
-            // if (data is Map && data.containsKey("info_AgencyLeave")) {
-            //   agencyLeaveData = RoBookingAgencyLeaveData.fromJson(data["info_AgencyLeave"]);
-            //   selectedDeal = DropDownValue(
-            //     key: agencyLeaveData?.lstDealNumber?.first.dealNumber ?? "",
-            //     value: agencyLeaveData?.lstDealNumber?.first.dealNumber ?? "",
-            //   );
-            //   update(["init"]);
-            // }
-            // if (data is Map && data.containsKey("info_ClientList") && data["info_ClientList"] is List) {
-            //   List<DropDownValue> _agencies = [];
-            //   for (var e in data["info_ClientList"]) {
-            //     _agencies.add(DropDownValue(key: e["agencycode"], value: e["agencyname"]));
-            //   }
-            //   agencies.value = _agencies;
-            // }
-          });
-    }
+  getSegment(index) {
+    Get.find<ConnectorControl>().POSTMETHOD(
+        api: ApiFactory.RO_BOOKING_GetSegment,
+        json: {
+          "locationCode": selectedLocation!.key,
+          "channelCode": selectedClient!.key,
+          "telecastDate": dealDblClickData?.lstProgram?[index].telecastdate,
+          "telecastTime": dealDblClickData?.lstProgram?[index].startTime,
+          "programCode": dealDblClickData?.lstProgram?[index].programcode,
+        },
+        fun: (data) {
+          // if (data is Map && data.containsKey("info_AgencyLeave")) {
+          //   agencyLeaveData = RoBookingAgencyLeaveData.fromJson(data["info_AgencyLeave"]);
+          //   selectedDeal = DropDownValue(
+          //     key: agencyLeaveData?.lstDealNumber?.first.dealNumber ?? "",
+          //     value: agencyLeaveData?.lstDealNumber?.first.dealNumber ?? "",
+          //   );
+          //   update(["init"]);
+          // }
+          // if (data is Map && data.containsKey("info_ClientList") && data["info_ClientList"] is List) {
+          //   List<DropDownValue> _agencies = [];
+          //   for (var e in data["info_ClientList"]) {
+          //     _agencies.add(DropDownValue(key: e["agencycode"], value: e["agencyname"]));
+          //   }
+          //   agencies.value = _agencies;
+          // }
+        });
   }
 
   getClient() {
@@ -791,6 +801,30 @@ class RoBookingController extends GetxController {
             makeGoodData.value = response["info_GetDisplay"]["lstMakeGood"];
           }
         });
+  }
+
+  importMark(PlatformFile fileData) {
+    Get.find<ConnectorControl>().POSTMETHOD(
+        api: ApiFactory.RO_BOOKING_ImportAndMark,
+        json: {
+          "file": base64.encode(fileData.bytes as List<int>),
+          "lstdgvMakeGood": makeGoodData.value
+        },
+        fun: (response) {
+          if (response is Map && response.containsKey("info_GetDisplay")) {
+            makeGoodData.value = response["info_GetDisplay"]["lstMakeGood"];
+          }
+        });
+  }
+
+  pickFile() async {
+    FilePickerResult? result = await FilePicker.platform.pickFiles();
+
+    if (result != null && result.files.single != null) {
+      importMark(result.files.first);
+    } else {
+      // User canceled the pic5ker
+    }
   }
 
   onBookingNoLeave() {
