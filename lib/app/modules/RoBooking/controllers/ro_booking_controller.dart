@@ -579,7 +579,7 @@ class RoBookingController extends GetxController {
                   ?.map((e) => e.toJson())
                   .toList() ??
               [],
-          "lstdgvMakeGood": [],
+          "lstdgvMakeGood": makeGoodData.value,
           "locationCode": selectedLocation?.key,
           "channelCode": selectedChannel?.key,
           "bookingMonth": bookingMonthCtrl.text,
