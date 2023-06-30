@@ -188,13 +188,13 @@ class TransmissionLogView extends StatelessWidget {
                               paddingLeft: 0),
 
                           /// duration
-                          Obx(() => InputFields.formFieldNumberMask(
+                          InputFields.formFieldNumberMask(
                               hintTxt: "Offset Time",
                               controller: controller.offsetTime_,
                               widthRatio: 0.12,
                               isTime: true,
-                              isEnable: controller.isEnable.value,
-                              paddingLeft: 0)),
+                              isEnable: false,
+                              paddingLeft: 0),
                           SizedBox(
                             width: Get.width * 0.1,
                             child: Row(
@@ -264,6 +264,10 @@ class TransmissionLogView extends StatelessWidget {
                                               .cells["eventType"]?.value ??
                                           "");
                               Color color = Colors.white;
+                              if(controller.gridStateManager?.currentRowIdx==colorData.rowIdx){
+                                return Color(0xFFD1C4E9);
+                              }
+
                               if (data != null) {
                                 // print("Index is>> ${colorData.rowIdx.toString()} >>>> ${data.backColor}");
                                 /*print(
@@ -303,11 +307,12 @@ class TransmissionLogView extends StatelessWidget {
                               return color;
                             },
                             onload: (loadevent) {
-                              controller.gridStateManager =
-                                  loadevent.stateManager;
+                              controller.gridStateManager = loadevent.stateManager;
                               if (controller.isFetch.value) {
                                 controller.isFetch.value = false;
                                 controller.colorGrid(false);
+                                controller.logSaved=true;
+                                loadevent.stateManager.setCurrentCell(loadevent.stateManager.rows[0].cells["no"], 0);
                               }
                               if (controller.selectedIndex != null) {
                                 loadevent.stateManager.moveScrollByRow(
@@ -580,6 +585,9 @@ class TransmissionLogView extends StatelessWidget {
   formHandler(btn) {
     switch (btn) {
       case "Commercials":
+        if(!controller.logSaved){
+          LoadingDialog.callInfoMessage("Please save the log first!");
+        }
         controller.getCommercialList(fun: (model) {
           showCommercialDialog(Get.context, model);
         });
@@ -587,8 +595,14 @@ class TransmissionLogView extends StatelessWidget {
       case "Next Time":
         controller.selectNextProgramClockHour();
         break;
+      case "Save":
+        controller.btnSave_Click();
+        break;
       case "Load":
         controller.pickFile();
+        break;
+      case "Search":
+        controller.search();
         break;
       case "Clear":
         controller.btnClear_Click();
@@ -765,10 +779,10 @@ class TransmissionLogView extends StatelessWidget {
                         model?.timelist?.toList(),
                         (value) {
                           controller.selectTimeForCommercial = value;
-                          controller.dataGridRowFilter(
-                            matchValue: value.value ?? "",
-                            filterKey: 'fpCtime',
-                          );
+                          // controller.dataGridRowFilter(
+                          //   matchValue: value.value ?? "",
+                          //   filterKey: 'fpCtime',
+                          // );
 
                           // controller.selectedLocationId.text = value.key!;
                           // controller.selectedLocationName.text = value.value!;
@@ -788,6 +802,10 @@ class TransmissionLogView extends StatelessWidget {
                           btnText: "Filter",
                           showIcon: false,
                           callback: () {
+                            if(controller.selectTimeForCommercial==null){
+                              LoadingDialog.callInfoMessage("Please select time");
+                              return;
+                            }
                             controller.dataGridRowFilterCommercial(
                               matchValue:
                                   controller.selectTimeForCommercial?.value ??
@@ -1236,7 +1254,9 @@ class TransmissionLogView extends StatelessWidget {
                         child: FormButtonWrapper(
                           btnText: "Replace",
                           showIcon: false,
-                          callback: () {},
+                          callback: () {
+                            controller.btnReplace_Click();
+                          },
                         ),
                       ),
                     ],

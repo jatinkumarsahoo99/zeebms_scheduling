@@ -1,5 +1,6 @@
 import 'package:bms_scheduling/widgets/DateTime/DateWithThreeTextField.dart';
 import 'package:bms_scheduling/widgets/NumericStepButton.dart';
+import 'package:bms_scheduling/widgets/Snack.dart';
 import 'package:flutter/material.dart';
 
 import 'package:get/get.dart';
@@ -151,22 +152,14 @@ class CommercialMasterView extends StatelessWidget {
                                       mainAxisAlignment:
                                           MainAxisAlignment.spaceBetween,
                                       children: [
-                                        SizedBox(
+                                       /* SizedBox(
                                           width: Get.width * .17,
                                           child: NumericStepButton1(
                                             onChanged: (val) {
-                                              controllerX.segController.text =
-                                                  val.toString();
-                                              /*controllerX.txNoController.text =
-                                                controllerX.tapeIdController.value.text +"-"+ val.toString() ;*/
-                                              controllerX.validateTxNo("",controllerX.tapeIdController.value.text, controllerX.segController.text);
-                                              controllerX.fetchCommercialTapeMasterData(
-                                                  "",
-                                                  controllerX.tapeIdController.value.text,
-                                                  int.parse((controllerX.segController.text != null && controllerX.segController.text != "")
-                                                      ? controllerX.segController.text
-                                                      : "0"),
-                                                  "");
+                                              controllerX.segController.text = val.toString();
+
+                                              controllerX.validateTxNo1("",controllerX.tapeIdController.value.text, controllerX.segController.text);
+
                                             },
 
                                             count: int.parse((controllerX
@@ -180,6 +173,27 @@ class CommercialMasterView extends StatelessWidget {
                                                 : "1"),
                                             hint: "Seg #",
                                           ),
+
+                                        ),*/
+                                        SizedBox(
+                                          // width: Get.width * .17,
+                                          child: InputFields.numbers3(
+                                            hintTxt: "Seg #",
+                                            padLeft: 0,
+                                            onchanged: (val) {
+                                              print("onchanged call");
+                                              // controllerX.segController.text = val.toString();
+                                              controllerX.txNoController.text = controllerX.tapeIdController.value.text + "-" + controllerX.segController.text;
+
+                                              controllerX.validateTxNo1("",controllerX.tapeIdController.value.text, controllerX.segController.text);
+                                            },
+                                            controller:controllerX.segController,
+                                            isNegativeReq: false,
+                                            width: 0.17,
+                                            fN: controllerX.segNoFocus,
+                                            // isEnabled: true,
+                                          )
+
                                         ),
                                         InputFields.formField1(
                                             hintTxt: "TX No",
@@ -381,7 +395,7 @@ class CommercialMasterView extends StatelessWidget {
                                                     .level1Controller,
                                                 width: 0.17,
                                                 autoFocus: true,
-                                                isEnable: controllerX.isEnable,
+                                                isEnable: false,
                                               ),
                                               InputFields.formField1(
                                                 hintTxt: "Level 2",
@@ -389,7 +403,7 @@ class CommercialMasterView extends StatelessWidget {
                                                     .level2Controller,
                                                 width: 0.17,
                                                 autoFocus: true,
-                                                isEnable: controllerX.isEnable,
+                                                isEnable: false,
                                               ),
                                               InputFields.formField1(
                                                 hintTxt: "Level 3",
@@ -397,7 +411,7 @@ class CommercialMasterView extends StatelessWidget {
                                                     .level3Controller,
                                                 width: 0.17,
                                                 autoFocus: true,
-                                                isEnable: controllerX.isEnable,
+                                                isEnable: false,
                                               ),
                                             ],
                                           );
@@ -618,7 +632,9 @@ class CommercialMasterView extends StatelessWidget {
                                           alignment: Alignment.topRight,
                                           child: FormButton(
                                             btnText: "Print Bar Code",
-                                            callback: () {},
+                                            callback: () {
+                                              Snack.callError("Still Under Development");
+                                            },
                                           ),
                                         ),
                                       ],

@@ -1,6 +1,6 @@
 import 'dart:async';
 import 'dart:convert';
-import 'dart:html';
+import 'dart:html' as html;
 import 'dart:io' as io;
 import 'dart:typed_data';
 import 'package:bms_scheduling/app/controller/HomeController.dart';
@@ -17,6 +17,7 @@ import '../../../controller/ConnectorControl.dart';
 import '../../../data/DropDownValue.dart';
 import '../../../providers/ApiFactory.dart';
 import '../../../providers/Utils.dart';
+import '../../CommonSearch/views/common_search_view.dart';
 import '../CheckPromoTagModel.dart';
 import '../ColorDataModel.dart';
 import '../CommercialModel.dart';
@@ -102,7 +103,7 @@ class TransmissionLogController extends GetxController {
   TextEditingController fpctime_change = TextEditingController()
     ..text = "00:00:00";
   TextEditingController segment_change =
-      TextEditingController(); //txtChangeSegment
+  TextEditingController(); //txtChangeSegment
   TextEditingController txtSegment_fpctime = TextEditingController();
   TextEditingController txtSegment_epNo = TextEditingController();
   DropDownValue? selectProgramSegment;
@@ -146,7 +147,8 @@ class TransmissionLogController extends GetxController {
       dialogTitle: "Select import file",
       type: FileType.custom,
     );
-
+    print("Called>>>");
+    LoadingDialog.call();
     if (result != null && result.files.single != null) {
       Uint8List? fileBytes = result.files.first.bytes;
       String fileContent = String.fromCharCodes(fileBytes!);
@@ -157,19 +159,23 @@ class TransmissionLogController extends GetxController {
           transmissionLog?.loadSavedLogOutput != null &&
           transmissionLog?.loadSavedLogOutput?.lstTransmissionLog != null &&
           ((transmissionLog?.loadSavedLogOutput?.lstTransmissionLog?.length ??
-                  0) !=
+              0) !=
               0)) {
         startTime_.text = transmissionLog
-                ?.loadSavedLogOutput?.lstTransmissionLog![0].transmissionTime ??
+            ?.loadSavedLogOutput?.lstTransmissionLog![0].transmissionTime ??
             "";
         isEnable.value = false;
         isFetch.value = true;
         update(["transmissionList"]);
-        colorGrid(false);
+        colorGrid(true);
+        Get.back();
       } else {
+        Get.back();
         LoadingDialog.callInfoMessage("No Data Found");
       }
-    } else {}
+    } else {
+      Get.back();
+    }
   }
 
   getLocations() {
@@ -275,6 +281,27 @@ class TransmissionLogController extends GetxController {
           }
         });
   }
+  void postTransmissionLog({Function? fun}) {
+    LoadingDialog.call();
+    var postMap = {
+      "locationcode": selectLocation?.key??'',
+      "channelcode": selectChannel?.key??'',
+      "txtDate": selectedDate.text,
+      "chkstandbyLog": isStandby.value,
+      "lstTrassmissionLog": gridStateManager?.rows
+        .map((e) => e.toTransmissionLogJson(intConverterKeys: ["rownumber","breakNumber","episodeNumber","bookingdetailcode","datechange"]))
+        .toList(),
+    };
+    Get.find<ConnectorControl>().POSTMETHOD(
+        api: ApiFactory.TRANSMISSION_LOG_POST_SAVE_LOG(),
+        json: postMap,
+        fun: (map) {
+          Get.back();
+          logSaved = true;
+          LoadingDialog.callInfoMessage("Log Saved");
+          // showMessageBox("Log Saved", MessageBoxType.information);
+        });
+  }
 
   void getBtnClick_TS({Function? fun}) {
     // LoadingDialog.call();
@@ -347,9 +374,9 @@ class TransmissionLogController extends GetxController {
       "lstBookingDetails": [
         {
           "bookingNumber":
-              gridStateManager?.currentRow?.cells["bookingNumber"]?.value,
+          gridStateManager?.currentRow?.cells["bookingNumber"]?.value,
           "bookingDetailCode":
-              gridStateManager?.currentRow?.cells["bookingdetailcode"]?.value
+          gridStateManager?.currentRow?.cells["bookingdetailcode"]?.value
         }
       ]
     };
@@ -463,7 +490,7 @@ class TransmissionLogController extends GetxController {
               map["resHighlightTSGrid"] != null) {
             tsPromoCap.value = map["resHighlightTSGrid"]["intPromoCap"];
             tsCommercialCap.value =
-                map["resHighlightTSGrid"]["intCommercialCap"];
+            map["resHighlightTSGrid"]["intCommercialCap"];
             update(['tsList']);
           } else {
             Snack.callError(map.toString());
@@ -471,18 +498,18 @@ class TransmissionLogController extends GetxController {
         });
   }
 
-  getBtnInsertSearchClick(
-      {Function? fun,
-      required bool isMine,
-      required String eventType,
-      required String txId,
-      required String txCaption}) {
+  getBtnInsertSearchClick({Function? fun,
+    required bool isMine,
+    required String eventType,
+    required String txId,
+    required String txCaption}) {
     LoadingDialog.call();
     Get.find<ConnectorControl>().GETMETHODCALL(
         api: ApiFactory.TRANSMISSION_LOG_SEARCH_INSERT(
             selectLocation?.key ?? "",
             selectChannel?.key ?? "",
-            Utils.dateFormatChange(selectedDate.text, "dd-MM-yyyy", "M/d/yyyy"),
+            // Utils.dateFormatChange(selectedDate.text, "dd-MM-yyyy", "M/d/yyyy"),
+            selectedDate.text,
             isMine,
             eventType,
             txId,
@@ -516,15 +543,15 @@ class TransmissionLogController extends GetxController {
         dr?.cells["exportTapeCode"]?.value.toString() ?? "",
         Utils.convertToTimeFromDouble(
             value: num.tryParse(
-                    dr?.cells["seGMENTdURATION"]?.value.toString() ?? "") ??
+                dr?.cells["seGMENTdURATION"]?.value.toString() ?? "") ??
                 0),
         dr?.cells["som"]?.value.toString() ?? "",
         BreakNumber:
-            int.tryParse(dr?.cells["breakNumber"]?.value.toString() ?? "0") ??
-                0,
+        int.tryParse(dr?.cells["breakNumber"]?.value.toString() ?? "0") ??
+            0,
         EpisodeNumber:
-            int.tryParse(dr?.cells["episodeNumber"]?.value.toString() ?? "0") ??
-                0,
+        int.tryParse(dr?.cells["episodeNumber"]?.value.toString() ?? "0") ??
+            0,
       ));
     }
     addEventToUndo();
@@ -542,7 +569,7 @@ class TransmissionLogController extends GetxController {
     int insrow = gridStateManager?.currentRowIdx ?? 0;
     addEventToUndo();
     PlutoRow? row = gridStateManagerCommercial?.rows[rowIndex];
-    InsertCommercial(
+    PlutoRow? insertRowDta=insertCommercial(
         row?.cells["tonumber"]?.value,
         row?.cells["bookingdetailcode"]?.value,
         row?.cells["Scheduletime"]?.value,
@@ -554,15 +581,15 @@ class TransmissionLogController extends GetxController {
         row?.cells["Exporttapecode"]?.value,
         Utils.convertToTimeFromDouble(
             value:
-                num.tryParse(row?.cells["Duration"]?.value.toString() ?? "0") ??
-                    0),
+            num.tryParse(row?.cells["Duration"]?.value.toString() ?? "0") ??
+                0),
         row?.cells["som"]?.value);
+    gridStateManager?.insertRows(insrow, [insertRowDta]);
     gridStateManagerCommercial?.removeCurrentRow();
     // gridStateManager.firstDisplayedScrollingRowIndex = insrow;
   }
 
-  void InsertCommercial(
-      String BookingNumber,
+  PlutoRow insertCommercial(String BookingNumber,
       String BookingDetailCode,
       String ScheduleTime,
       String ProductName,
@@ -571,7 +598,7 @@ class TransmissionLogController extends GetxController {
       String Exporttapecode,
       String Tapeduration,
       String SOM) {
-    insertPlutoRow(ScheduleTime, "C ", ExportTapeCaption, Exporttapecode,
+    return insertPlutoRow(ScheduleTime, "C ", ExportTapeCaption, Exporttapecode,
         Tapeduration, SOM,
         BreakNumber: 0,
         EpisodeNumber: 0,
@@ -582,15 +609,15 @@ class TransmissionLogController extends GetxController {
         ROsTimeBand: ROsTimeBand);
   }
 
-  insertPlutoRow(String FpcTime, String EventType, String ExportTapeCaption,
+  PlutoRow insertPlutoRow(String FpcTime, String EventType, String ExportTapeCaption,
       String Exporttapecode, String Tapeduration, String SOM,
       {int BreakNumber = 0,
-      int EpisodeNumber = 0,
-      String BookingNumber = "",
-      String BookingDetailCode = "",
-      String ScheduleTime = "",
-      String ProductName = "",
-      String ROsTimeBand = ""}) {
+        int EpisodeNumber = 0,
+        String BookingNumber = "",
+        String BookingDetailCode = "",
+        String ScheduleTime = "",
+        String ProductName = "",
+        String ROsTimeBand = ""}) {
     int intRowIndex = gridStateManager?.currentRowIdx ?? 0;
     // int insertRowId = int.tryParse(gridStateManager?.currentRowIdx?.cells["rownumber"]?.value??"0")??0;
     int insertRowId = intRowIndex;
@@ -638,7 +665,8 @@ class TransmissionLogController extends GetxController {
     // gridStateManager.currentCell = gridStateManager.rows[intRowIndex].cells[1];
   }
 
-  void btnReplace_Click(sender, e) {
+  void btnReplace_Click() {
+    addEventToUndo();
     int replaceCount = 0;
     for (var dr in (tblFastInsert?.rows)!) {
       if (dr.cells["eventtype"]?.value.toString().trim().toLowerCase() !=
@@ -684,7 +712,7 @@ class TransmissionLogController extends GetxController {
 
       LoadingDialog.recordExists(
           "You are replacing in all day, want to proceed?",
-          () {
+              () {
             fromRow = 0;
             toRow = gridStateManager?.rows.length ?? 0 - 1;
           },
@@ -708,11 +736,11 @@ class TransmissionLogController extends GetxController {
 
     for (int row = fromRow; row <= toRow; row++) {
       if (gridStateManager?.rows[row].cells["exportTapeCode"]?.value ==
-              txReplaceTxId_.text &&
+          txReplaceTxId_.text &&
           (gridStateManager?.rows[row].cells["eventType"]?.value
-                      .toString()
-                      .trim() ==
-                  txReplaceEvent_.text.trim() ||
+              .toString()
+              .trim() ==
+              txReplaceEvent_.text.trim() ||
               ["a", "w", "o", "t", "i"].contains(gridStateManager
                   ?.rows[row].cells["eventType"]?.value
                   .toString()
@@ -728,8 +756,8 @@ class TransmissionLogController extends GetxController {
         gridStateManager?.rows[row].cells["tapeduration"]?.value =
             Utils.convertToTimeFromDouble(
                 value: num.tryParse(tblFastInsert
-                        ?.rows[i].cells["duration"]?.value
-                        .toString() ??
+                    ?.rows[i].cells["duration"]?.value
+                    .toString() ??
                     "0")!);
         gridStateManager?.rows[row].cells["exportTapeCaption"]?.value =
             tblFastInsert?.rows[i].cells["txCaption"]?.value;
@@ -749,7 +777,7 @@ class TransmissionLogController extends GetxController {
 
   void btnExportClick(type) async {
     bool? isDone =
-        await showDialogForYesNo("Do you want to add secondary event?");
+    await showDialogForYesNo("Do you want to add secondary event?");
     LoadingDialog.call();
     String methodName = getExportMethod(type)!;
     Get.find<ConnectorControl>().GETMETHODCALL(
@@ -949,9 +977,9 @@ class TransmissionLogController extends GetxController {
         LoadingDialog.call();
         Get.find<ConnectorControl>().GETMETHODCALL(
             api: ApiFactory.TRANSMISSION_LOG_WRITE_VZRT(
-                selectLocation?.key ?? "",
-                selectChannel?.key ?? "",
-                selectedDate.text,
+              selectLocation?.key ?? "",
+              selectChannel?.key ?? "",
+              selectedDate.text,
             ),
             fun: (map) {
               Get.back();
@@ -1007,6 +1035,7 @@ class TransmissionLogController extends GetxController {
   }
 
   void btnFastInsert_Add_Click() {
+    addEventToUndo();
     int row;
     // int eventdurat;
     blnMultipleGLs = false;
@@ -1040,9 +1069,9 @@ class TransmissionLogController extends GetxController {
 
           if ((gridStateManager?.rows.length ?? 0) > row) {
             while (gridStateManager?.rows[row].cells["eventType"]?.value
-                    .toString()
-                    .trim()
-                    .toLowerCase() ==
+                .toString()
+                .trim()
+                .toLowerCase() ==
                 "gl") {
               if (row < (gridStateManager?.rows.length ?? 0)) {
                 row = row + 1;
@@ -1078,10 +1107,10 @@ class TransmissionLogController extends GetxController {
       if (dr.cells["eventtype"]?.value.toString().trim().toLowerCase() ==
           "pr") {
         if ((inserSearchModel?.lstListMyEventData?.lstFastInsertTags
-                    ?.where((x) => x.crTapeID == dr.cells["txId"]?.value)
-                    .toList()
-                    .length ??
-                0) >
+            ?.where((x) => x.crTapeID == dr.cells["txId"]?.value)
+            .toList()
+            .length ??
+            0) >
             0) {
           List<LstFastInsertTags>? filterList = inserSearchModel
               ?.lstListMyEventData?.lstFastInsertTags
@@ -1118,8 +1147,7 @@ class TransmissionLogController extends GetxController {
     }
   }
 
-  void setInsertRowFastInsert(
-      String FpcTime,
+  void setInsertRowFastInsert(String FpcTime,
       String EventType,
       String ExportTapeCaption,
       String Exporttapecode,
@@ -1129,7 +1157,7 @@ class TransmissionLogController extends GetxController {
       String BreakNumber) {
     int intRowIndex = gridStateManager?.currentRowIdx ?? 0;
     int InsertRow = gridStateManager?.currentRow?.cells["rownumber"]?.value;
-
+    addEventToUndo();
     if (InsertRow > 0) {
       if (isInsertAfter.value) {
         InsertRow = InsertRow + 1;
@@ -1219,8 +1247,8 @@ class TransmissionLogController extends GetxController {
         gridStateManager?.currentRow?.cells["tapeduration"]?.value.toString() ??
             "";
     txReplaceTxId_.text = gridStateManager
-            ?.currentRow?.cells["exportTapeCode"]?.value
-            .toString() ??
+        ?.currentRow?.cells["exportTapeCode"]?.value
+        .toString() ??
         "";
     txReplaceSegment_.text =
         gridStateManager?.currentRow?.cells["breakNumber"]?.value.toString() ??
@@ -1258,11 +1286,11 @@ class TransmissionLogController extends GetxController {
               transmissionLog?.loadSavedLogOutput != null &&
               transmissionLog?.loadSavedLogOutput?.lstTransmissionLog != null &&
               ((transmissionLog
-                          ?.loadSavedLogOutput?.lstTransmissionLog?.length ??
-                      0) !=
+                  ?.loadSavedLogOutput?.lstTransmissionLog?.length ??
+                  0) !=
                   0)) {
             startTime_.text = transmissionLog?.loadSavedLogOutput
-                    ?.lstTransmissionLog![0].transmissionTime ??
+                ?.lstTransmissionLog![0].transmissionTime ??
                 "";
             isEnable.value = false;
             isFetch.value = true;
@@ -1274,12 +1302,13 @@ class TransmissionLogController extends GetxController {
   }
 
   void dgvCommercialsCellDoubleClick(int rowIndex) {
+    addEventToUndo();
     try {
       String strExportTapeCode = dgvCommercialsStateManager
           ?.rows[rowIndex].cells["exportTapeCode"]?.value;
       listFilterVerify = gridStateManager?.rows
           .where((element) =>
-              element.cells["exportTapeCode"]?.value == strExportTapeCode)
+      element.cells["exportTapeCode"]?.value == strExportTapeCode)
           .toList();
       update(['filterVerifyList']);
 
@@ -1290,7 +1319,7 @@ class TransmissionLogController extends GetxController {
         for (PlutoRow dr in listFilterVerify!) {
           if (strTimeDiff != "") {
             num intTimeDiff = Utils.oldBMSConvertToSecondsValue(
-                    value: dr.cells["transmissionTime"]?.value)! -
+                value: dr.cells["transmissionTime"]?.value)! -
                 Utils.oldBMSConvertToSecondsValue(value: strTimeDiff)!;
             if (intSetTimeDiff! > intSetTimeDiff! || intSetTimeDiff == 0) {
               intSetTimeDiff = intTimeDiff;
@@ -1312,7 +1341,7 @@ class TransmissionLogController extends GetxController {
     colorGrid(true);
     // unselectAllRows(gridStateManager?);
     int intRowNumber = int.tryParse(
-            dgvTimeStateManager?.rows[rowIndex].cells["rownumber"]?.value) ??
+        dgvTimeStateManager?.rows[rowIndex].cells["rownumber"]?.value) ??
         0;
     // int intRowNumber = rowIndex;
     print("Introw>>>>>>" + intRowNumber.toString());
@@ -1366,9 +1395,9 @@ class TransmissionLogController extends GetxController {
         ),
         fun: (Map<String, dynamic> map) {
           chkTxCommercial.value =
-              map["channelSpecsSettings"]["chkTxCommercial"];
+          map["channelSpecsSettings"]["chkTxCommercial"];
           maxProgramStarttimeDiff.value =
-              map["channelSpecsSettings"]["maxProgramStarttimeDiff"];
+          map["channelSpecsSettings"]["maxProgramStarttimeDiff"];
           print(">>>>Vlaue" +
               chkTxCommercial.value.toString() +
               ">>>>Max>>>" +
@@ -1406,11 +1435,11 @@ class TransmissionLogController extends GetxController {
 
     if (blnLastRecord) {
       LoadingDialog.recordExists("Reached to last record, Want to start again?",
-          () {
-        gridStateManager?.setCurrentCell(
-            gridStateManager?.rows[0].cells["fpCtime"], 0);
-        gridStateManager?.moveScrollByRow(PlutoMoveDirection.up, 0);
-      });
+              () {
+            gridStateManager?.setCurrentCell(
+                gridStateManager?.rows[0].cells["fpCtime"], 0);
+            gridStateManager?.moveScrollByRow(PlutoMoveDirection.up, 0);
+          });
       // if (msgBox("Reached to last record, Want to start again?", MsgBoxStyle.question + MsgBoxStyle.yesNo, strAlertMessageTitle) == MsgBoxResult.yes) {
       //   gridStateManager?.rows[0].cells["FPCTime"].selected = true;
       //   gridStateManager?.currentCell[""]?.value = gridStateManager?.rows[0].cells["FPCTime"]?.value??'';
@@ -1419,6 +1448,7 @@ class TransmissionLogController extends GetxController {
   }
 
   btnUp_Click() {
+    addEventToUndo();
     List<int> intSelectedRows = [];
     int intSelectedRow = 0;
     int intMoveUpDown = 0;
@@ -1454,6 +1484,7 @@ class TransmissionLogController extends GetxController {
   }
 
   btnDown_Click() {
+    addEventToUndo();
     List<int> intSelectedRows = [];
     int intSelectedRow = 0;
     int intMoveUpDown = 0;
@@ -1512,29 +1543,6 @@ class TransmissionLogController extends GetxController {
     }
   }
 
-  highlightTSGrid() {
-    int intPromoCap, intCommercialCap;
-    /*  var _ds = db.ExecuteDataSet("SELECT MaximumSecondsPerHour, PromoCap FROM ChannelSpecs WHERE LocationCode = '${Me.cboLocations.SelectedValue}' AND ChannelCode = '${Me.cboChannels.SelectedValue}'", CommandType.Text);
-    for (var dr in _ds.Tables[0].rows) {
-      intPromoCap = int.parse(dr["PromoCap"].toString());
-      intCommercialCap = int.parse(dr["MaximumSecondsPerHour"].toString());
-    }
-
-    for (var dr in tblTS.rows) {
-      if (dr.cells["PromoDuration"].value > intPromoCap / 60.0) {
-        tblTS.rows[dr.index].cells["PromoDuration"].style.backgroundColor = Colors.red;
-      }
-      if (dr.cells["CommercialDuration"].value > intCommercialCap / 60.0) {
-        tblTS.rows[dr.index].cells["CommercialDuration"].style.backgroundColor = Colors.red;
-      }
-      if (dr.cells["TotalAdd"].value > (intCommercialCap + intPromoCap) / 60.0) {
-        tblTS.rows[dr.index].cells["Totaladd"].style.backgroundColor = Colors.red;
-      }
-    }
-
-    tblTS.columns[0].width = 90;*/
-  }
-
   getCommercialList({required Function fun}) {
     LoadingDialog.call();
     if (selectLocation != null && selectChannel != null) {
@@ -1567,8 +1575,7 @@ class TransmissionLogController extends GetxController {
                 isStandby.value),
             fun: (map) {
               Get.back();
-              if (map is Map) {
-              } else {
+              if (map is Map) {} else {
                 LoadingDialog.callInfoMessage(map.toString());
               }
             });
@@ -1586,8 +1593,8 @@ class TransmissionLogController extends GetxController {
         LoadingDialog.call();
         String bookNo =
             gridStateManager?.rows[index].cells["bookingNumber"]?.value;
-        String bookCode =
-            gridStateManager?.rows[index].cells["bookingdetailcode"]?.value;
+        String bookCode = gridStateManager?.rows[index].cells["bookingdetailcode"]?.value;
+        String eventType = gridStateManager?.rows[index].cells["eventType"]?.value;
         if (selectLocation != null && selectChannel != null) {
           Get.find<ConnectorControl>().GETMETHODCALL(
               api: ApiFactory.TRANSMISSION_LOG_MARK_AS_ERROR(
@@ -1595,10 +1602,12 @@ class TransmissionLogController extends GetxController {
                   selectChannel?.key ?? "",
                   bookNo,
                   bookCode,
-                  selectedDate.text),
+                  selectedDate.text,
+                  eventType),
               fun: (map) {
                 Get.back();
                 if (map is Map) {
+                  addEventToUndo();
                   gridStateManager
                       ?.removeRows([(gridStateManager?.rows[index])!]);
                   colorGrid(false);
@@ -1615,11 +1624,15 @@ class TransmissionLogController extends GetxController {
   }
 
   getEventListForInsert({required Function function}) {
+    if((listEventsinInsert.value.length??0)>0){
+      return;
+    }
     LoadingDialog.call();
     Get.find<ConnectorControl>().GETMETHODCALL(
         api: ApiFactory.TRANSMISSION_LOG_EVENT_LIST(),
         fun: (Map map) {
           Get.back();
+          listEventsinInsert.value.clear();
           map["lstFastInsertEventType"].forEach((e) {
             listEventsinInsert.add(DropDownValue(key: e, value: e));
           });
@@ -1653,11 +1666,11 @@ class TransmissionLogController extends GetxController {
                 transmissionLog?.loadSavedLogOutput?.lstTransmissionLog !=
                     null &&
                 ((transmissionLog
-                            ?.loadSavedLogOutput?.lstTransmissionLog?.length ??
-                        0) !=
+                    ?.loadSavedLogOutput?.lstTransmissionLog?.length ??
+                    0) !=
                     0)) {
               startTime_.text = transmissionLog?.loadSavedLogOutput
-                      ?.lstTransmissionLog![0].transmissionTime ??
+                  ?.lstTransmissionLog![0].transmissionTime ??
                   "";
               isEnable.value = false;
               isFetch.value = true;
@@ -1679,9 +1692,10 @@ class TransmissionLogController extends GetxController {
     } else {
       LoadingDialog.call();
       var sendData = {
-        "lstgridStateManager": gridStateManager?.rows
-            .map((e) => e.toJson1(stringConverterKeys: ["datechange"]))
-            .toList()
+        // "lstgridStateManager": gridStateManager?.rows.map((e) => e.toJson1(stringConverterKeys: ["datechange",""])).toList()
+        "lstTblLog": [
+          gridStateManager?.currentRow?.toJson1(stringConverterKeys: ["datechange","tapeduration"])
+        ]
       };
 
       Get.find<ConnectorControl>().POSTMETHOD(
@@ -1701,9 +1715,10 @@ class TransmissionLogController extends GetxController {
   }
 
   void btnChangeDone_Click() {
+    addEventToUndo();
     intCurrentRowIndex[0] = gridStateManager?.currentRowIdx ?? 0;
     intCurrentRowIndex[1] = int.tryParse(gridStateManager
-            ?.rows[intCurrentRowIndex[0]].cells["rownumber"]?.value) ??
+        ?.rows[intCurrentRowIndex[0]].cells["rownumber"]?.value) ??
         0;
     // intCurrentRowIndex[3] = gridStateManager?.FirstDisplayedScrollingRowIndex;
     intCurrentRowIndex[3] = 0;
@@ -1712,7 +1727,7 @@ class TransmissionLogController extends GetxController {
       // Update all events with the replaced duration
       for (var dr in (gridStateManager?.rows)!) {
         if (dr.cells["exportTapeCode"]?.value.toString().trim() ==
-                txId_Change.text.trim() &&
+            txId_Change.text.trim() &&
             dr.cells["breakNumber"]?.value.toString().trim() ==
                 segment_change.text.trim()) {
           dr.cells["tapeduration"]?.value = duration_change.text.trim();
@@ -1721,17 +1736,17 @@ class TransmissionLogController extends GetxController {
     } else {
       // Update current event with the duration & offset
       if (gridStateManager?.currentRow?.cells["exportTapeCode"]?.value ==
-              txId_Change.text &&
+          txId_Change.text &&
           gridStateManager?.currentRow?.cells["breakNumber"]?.value
-                  .toString() ==
+              .toString() ==
               segment_change.text) {
         gridStateManager?.currentRow?.cells["tapeduration"]?.value =
             duration_change.text;
 
         if (gridStateManager?.currentRow?.cells["eventType"]?.value
-                .toString()
-                .trim()
-                .toLowerCase() ==
+            .toString()
+            .trim()
+            .toLowerCase() ==
             "gl") {
           gridStateManager?.currentRow?.cells["transmissionTime"]?.value =
               offset_change.text;
@@ -1739,7 +1754,7 @@ class TransmissionLogController extends GetxController {
           startTime_.text = Utils.convertToTimeFromDouble(
               value: Utils.oldBMSConvertToSecondsValue(value: startTime_.text) +
                   (Utils.oldBMSConvertToSecondsValue(
-                          value: offset_change.text) -
+                      value: offset_change.text) -
                       Utils.oldBMSConvertToSecondsValue(
                           value: gridStateManager
                               ?.currentRow?.cells["transmissionTime"]?.value)));
@@ -1758,9 +1773,9 @@ class TransmissionLogController extends GetxController {
     if (gridStateManager == null) return;
 
     if (gridStateManager?.currentRow?.cells["eventType"]?.value
-            .toString()
-            .trim()
-            .toLowerCase() ==
+        .toString()
+        .trim()
+        .toLowerCase() ==
         "gl") {
       visibleChangeOffset.value = true;
       offset_change.text =
@@ -1838,9 +1853,9 @@ class TransmissionLogController extends GetxController {
                 Get.back();
                 if (map is Map && map.containsKey("lstTXLog")) {
                   TransmissionLogModel transmissionLogModel =
-                      TransmissionLogModel();
+                  TransmissionLogModel();
                   LoadSavedLogOutput loadSavedLogOutput =
-                      LoadSavedLogOutput.fromJson(map as Map<String, dynamic>);
+                  LoadSavedLogOutput.fromJson(map as Map<String, dynamic>);
                   transmissionLogModel.loadSavedLogOutput = loadSavedLogOutput;
                   transmissionLog = transmissionLogModel;
                   startTime_.text = map["lstTXLog"][0]["transmissionTime"];
@@ -1864,9 +1879,9 @@ class TransmissionLogController extends GetxController {
               Get.back();
               if (map is Map && map.containsKey("lstTXLog")) {
                 TransmissionLogModel transmissionLogModel =
-                    TransmissionLogModel();
+                TransmissionLogModel();
                 LoadSavedLogOutput loadSavedLogOutput =
-                    LoadSavedLogOutput.fromJson(map as Map<String, dynamic>);
+                LoadSavedLogOutput.fromJson(map as Map<String, dynamic>);
                 transmissionLogModel.loadSavedLogOutput = loadSavedLogOutput;
                 transmissionLog = transmissionLogModel;
                 startTime_.text = map["lstTXLog"][0]["transmissionTime"];
@@ -1896,10 +1911,10 @@ class TransmissionLogController extends GetxController {
         (txtTransmissionTime.text.trim() != "")) {
       offsetTime_.text = Utils.convertToTimeFromDouble(
           value: ((Utils.oldBMSConvertToSecondsValue(
-                      value: gridStateManager
-                              ?.rows[0].cells["transmissionTime"]?.value ??
-                          "00:00:00:00") -
-                  Utils.oldBMSConvertToSecondsValue(value: selectedDate.text)))
+              value: gridStateManager
+                  ?.rows[0].cells["transmissionTime"]?.value ??
+                  "00:00:00:00") -
+              Utils.oldBMSConvertToSecondsValue(value: selectedDate.text)))
               .abs());
     } else {
       offsetTime_.text = "00:00:00:00";
@@ -1911,7 +1926,7 @@ class TransmissionLogController extends GetxController {
         transmissionLog?.loadSavedLogOutput == null ||
         transmissionLog?.loadSavedLogOutput?.lstTransmissionLog == null ||
         ((transmissionLog?.loadSavedLogOutput?.lstTransmissionLog?.length ??
-                0) ==
+            0) ==
             0)) {
       return;
     }
@@ -1932,7 +1947,7 @@ class TransmissionLogController extends GetxController {
     } else {
       transmissionTime = Utils.oldBMSConvertToSecondsValue(
           value: gridStateManager
-                  ?.rows[intRowNumber].cells["transmissionTime"]?.value ??
+              ?.rows[intRowNumber].cells["transmissionTime"]?.value ??
               "00:00:00:00");
     }
 
@@ -1941,29 +1956,29 @@ class TransmissionLogController extends GetxController {
         gridStateManager?.rows[i].cells["breakEvent"]?.value = "";
         //duration of secondary events is ignored for secondary events
         if (gridStateManager?.rows[i].cells["eventType"]?.value
-                .toString()
-                .trim()
-                .toLowerCase() !=
+            .toString()
+            .trim()
+            .toLowerCase() !=
             "gl") {
           graphicEventCtr = 0;
           transmissionTime = transmissionTime +
               Utils.oldBMSConvertToSecondsValue(
                   value:
-                      gridStateManager?.rows[i].cells["tapeduration"]?.value ??
-                          "00:00:00:00");
+                  gridStateManager?.rows[i].cells["tapeduration"]?.value ??
+                      "00:00:00:00");
         } else {
           //'Set the transmission time for secondary evnts only
           if (gridStateManager?.rows[i].cells["exportTapeCode"]?.value
-                  .toString()
-                  .substring(0, 2)
-                  .trim()
-                  .toLowerCase() ==
+              .toString()
+              .substring(0, 2)
+              .trim()
+              .toLowerCase() ==
               "gp") {
             if (gridStateManager?.rows[i].cells["transmissionTime"]?.value
-                    .toString() ==
+                .toString() ==
                 "") {
               gridStateManager?.rows[i].cells["transmissionTime"]?.value =
-                  "00:00:00:00";
+              "00:00:00:00";
             }
           } else {
             graphicEventCtr = graphicEventCtr + 1;
@@ -1978,9 +1993,9 @@ class TransmissionLogController extends GetxController {
         // for all secondary events the transmissiontime is the offset and will not be automatically entered from this function
         if ((i + 1) < (gridStateManager?.rows.length ?? 0)) {
           if (gridStateManager?.rows[i + 1].cells["eventType"]?.value
-                  .toString()
-                  .trim()
-                  .toLowerCase() !=
+              .toString()
+              .trim()
+              .toLowerCase() !=
               "gl") {
             gridStateManager?.rows[i + 1].cells["transmissionTime"]?.value =
                 Utils.convertToTimeFromDouble(value: transmissionTime);
@@ -1994,16 +2009,16 @@ class TransmissionLogController extends GetxController {
     } else {
       transmissionTime = Utils.oldBMSConvertToSecondsValue(
           value: gridStateManager
-                  ?.rows[intRowNumber].cells["transmissionTime"]?.value ??
+              ?.rows[intRowNumber].cells["transmissionTime"]?.value ??
               "00:00:00:00");
     }
     for (int i = (intRowNumber - 1); i >= 0; i--) {
       gridStateManager?.rows[i].cells["breakEvent"]?.value = "";
 
       if (gridStateManager?.rows[i].cells["eventType"]?.value
-              .toString()
-              .trim()
-              .toLowerCase() !=
+          .toString()
+          .trim()
+          .toLowerCase() !=
           "gl") {
         transmissionTime = transmissionTime -
             Utils.oldBMSConvertToSecondsValue(
@@ -2018,14 +2033,15 @@ class TransmissionLogController extends GetxController {
   }
 
   void updateRowNumber() {
-    num secondaryEventCtr = 0, hr = 0;
+    num secondaryEventCtr = 0,
+        hr = 0;
     num startHour, datechange;
     int i = 0;
 
     PlutoRow? dr1 = gridStateManager?.rows[0];
     if (num.tryParse(
-            dr1?.cells["transmissionTime"]?.value.toString().substring(0, 2) ??
-                "0")! >
+        dr1?.cells["transmissionTime"]?.value.toString().substring(0, 2) ??
+            "0")! >
         20) {
       datechange = 0;
       startHour = num.parse(
@@ -2050,18 +2066,18 @@ class TransmissionLogController extends GetxController {
         if (strEventType != "gl") {
           secondaryEventCtr = 0;
           if (num.tryParse(
-                  dr.cells["transmissionTime"]?.value.substring(0, 2)!)! <
+              dr.cells["transmissionTime"]?.value.substring(0, 2)!)! <
               num.tryParse(gridStateManager?.rows[strLastEventRowNumber]
-                      .cells["transmissionTime"]?.value
-                      .toString()
-                      .substring(0, 2) ??
+                  .cells["transmissionTime"]?.value
+                  .toString()
+                  .substring(0, 2) ??
                   "0")!) {
             datechange = datechange + 1;
           }
           hr = (datechange * 24) +
               num.parse(dr.cells["transmissionTime"]?.value
-                      .toString()
-                      .substring(0, 2) ??
+                  .toString()
+                  .substring(0, 2) ??
                   "0");
         } else {
           secondaryEventCtr = secondaryEventCtr + 1;
@@ -2075,8 +2091,8 @@ class TransmissionLogController extends GetxController {
             "gl") {
           hr = (datechange * 24) +
               int.parse(dr.cells["transmissionTime"]?.value
-                      .toString()
-                      .substring(0, 2) ??
+                  .toString()
+                  .substring(0, 2) ??
                   "0");
         }
       }
@@ -2106,7 +2122,7 @@ class TransmissionLogController extends GetxController {
     }
     for (int i = 0; (i < (gridStateManager?.rows.length ?? 0)); i++) {
       if (gridStateManager?.rows[i].cells["transmissionTime"]?.value ==
-              txtTransmissionTime.text &&
+          txtTransmissionTime.text &&
           gridStateManager?.rows[i].cells["datechange"]?.value.toString() ==
               txtDtChange.text) {
         return i;
@@ -2116,17 +2132,7 @@ class TransmissionLogController extends GetxController {
   }
 
   void colorGrid(bool dontSavefile) {
-    List<int> dtSTD = [];
-    String rosStart;
-    String RosEnd;
-    String MidRosEnd;
-    String MidRosStart;
-    String TxTime;
-    int CurrentRowIndex;
-    String CurrentProduct;
-    String IsCommercial;
-    String CurrentProductGroup;
-    String CurrentTape;
+    print("Called once" + dontSavefile.toString());
     try {
       if ((gridStateManager?.rows.length == 0)) {
         return;
@@ -2137,8 +2143,7 @@ class TransmissionLogController extends GetxController {
         updateRowNumber();
         _download();
       }
-    } catch (ex) {
-    } finally {
+    } catch (ex) {} finally {
       /* gridStateManager?.PerformLayout();
       if ((DontSavefile == false)) {
         SaveFile();
@@ -2191,7 +2196,7 @@ class TransmissionLogController extends GetxController {
   dataGridView1_DragDrop(index, PlutoRow plutoRow, Function function) {
     int roy;
     int? movedRowIndex =
-        gridStateManager?.rows.indexWhere((element) => element == plutoRow);
+    gridStateManager?.rows.indexWhere((element) => element == plutoRow);
     // int intFirstRow = index;
     int up = 0;
     // Point clientPoint = gridStateManager?.pointToClient(Point(e.x, e.y));
@@ -2199,16 +2204,18 @@ class TransmissionLogController extends GetxController {
 
     intCurrentRowIndex[0] = index;
     intCurrentRowIndex[1] = int.tryParse(gridStateManager
-            ?.rows[intCurrentRowIndex[0]].cells["rownumber"]?.value) ??
+        ?.rows[intCurrentRowIndex[0]].cells["rownumber"]?.value) ??
         0;
     intCurrentRowIndex[2] = int.tryParse(gridStateManager
-            ?.rows[intCurrentRowIndex[0]].cells["rownumber"]?.value) ??
+        ?.rows[intCurrentRowIndex[0]].cells["rownumber"]?.value) ??
         0;
     intCurrentRowIndex[3] = movedRowIndex!;
 
     // List<PlutoRow>? bsPeople = gridStateManager?.rows;
     PlutoRow rowToMove = plutoRow;
-    String strEventType = "", strRosTimeBand = "", strFPCTime = "";
+    String strEventType = "",
+        strRosTimeBand = "",
+        strFPCTime = "";
     Map<String, PlutoCell>? cellsData = {};
     rowToMove.cells.forEach((key, value) {
       cellsData[key] = value;
@@ -2219,29 +2226,14 @@ class TransmissionLogController extends GetxController {
 
     if (strEventType.trim().toLowerCase() == "c") {
       if (strRosTimeBand == "") {
-        // if (strFPCTime != bsPeople?.rows[intCurrentRowIndex[0]]["FPCTime"].toString()) {
         if (strFPCTime !=
             gridStateManager
                 ?.rows[intCurrentRowIndex[0]].cells["fpCtime"]?.value
                 .toString()) {
-          showDialog(
-            context: Get.context!,
-            builder: (BuildContext context) {
-              return AlertDialog(
-                title: Text("Alert"),
-                content: Text(
-                    "You cannot move selected commercial from $strFPCTime FPCTime to ${gridStateManager?.rows[intCurrentRowIndex[0]].cells["fpCtime"]?.value} FPCTime."),
-                actions: [
-                  TextButton(
-                    child: Text("OK"),
-                    onPressed: () {
-                      Navigator.pop(context);
-                    },
-                  ),
-                ],
-              );
-            },
-          );
+          LoadingDialog.callInfoMessage(
+              "You cannot move selected commercial from $strFPCTime FPCTime to ${gridStateManager
+                  ?.rows[intCurrentRowIndex[0]].cells["fpCtime"]
+                  ?.value} FPCTime.");
           return;
         }
       }
@@ -2275,7 +2267,7 @@ class TransmissionLogController extends GetxController {
     if (gridStateManager?.rows.length == movedRowIndex + 1) {
       // gridStateManager.rows.removeAt(gridStateManager?.rows[rowToMove.index].cells["rownumber"].value + 1);
       PlutoRow? row = gridStateManager?.rows[int.tryParse(gridStateManager
-              ?.rows[movedRowIndex].cells["rownumber"]?.value)! +
+          ?.rows[movedRowIndex].cells["rownumber"]?.value)! +
           1];
       gridStateManager?.removeRows([row!]);
     } else {
@@ -2289,18 +2281,16 @@ class TransmissionLogController extends GetxController {
     if (up == 0) {
       intCurrentRowIndex[0] = intCurrentRowIndex[0] - 1;
     }
-    calculateTransmissionTime();
-    // dtSTD[1] = DateTime.now().millisecondsSinceEpoch;
 
-    updateRowNumber();
-    // dtSTD[2] = DateTime.now().millisecondsSinceEpoch;
-    // }
-    // colorGrid(false);
+    colorGrid(false);
     // function();
   }
 
   getUniqueId() {
-    return DateTime.now().microsecondsSinceEpoch.toString();
+    return DateTime
+        .now()
+        .microsecondsSinceEpoch
+        .toString();
   }
 
   addEventToUndo({Function? function}) {
@@ -2351,9 +2341,9 @@ class TransmissionLogController extends GetxController {
       try {
         offsetTime_.text = Utils.convertToTimeFromDouble(
             value: (Utils.oldBMSConvertToSecondsValue(
-                        value: gridStateManager
-                            ?.rows[0].cells["transmissionTime"]?.value) -
-                    Utils.oldBMSConvertToSecondsValue(value: startTime_.text))
+                value: gridStateManager
+                    ?.rows[0].cells["transmissionTime"]?.value) -
+                Utils.oldBMSConvertToSecondsValue(value: startTime_.text))
                 .abs());
       } catch (ex) {
         print("Error is >>>" + ex.toString());
@@ -2464,7 +2454,7 @@ class TransmissionLogController extends GetxController {
 
   void _download() async {
     List<Map<String, dynamic>>? list =
-        gridStateManager?.rows.map((e) => e.toJson()).toList();
+    gridStateManager?.rows.map((e) => e.toJson()).toList();
     var map = {
       "loadSavedLogOutput": {"lstTransmissionLog": list}
     };
@@ -2479,129 +2469,93 @@ class TransmissionLogController extends GetxController {
     // Permission denied, handle accordingly
     // }
 
-    ExportData().exportFilefromString(jsonEncode(map), "lib_hello.json");
+    List<String> dateSplit = selectedDate.text.split("-");
+
+    String filename =
+        "${selectLocation?.value ?? ""}${selectChannel
+        ?.value}${dateSplit[2]}${dateSplit[1]}${dateSplit[0]}.json";
+
+    ExportData().exportFilefromString(jsonEncode(map), filename);
   }
 
-  /*void btnSave_Click(sender, e) {
-    DataTable dt = new DataTable();
-    strMessageLogFileName = Application.startupPath + "\\MessageLogFiles\\" + (cboLocations.text + "_" + cboChannels.text + "_" + DateTime.parse(txtDate.value.toString()).toString("yyyyMMdd")).replaceAll(" ", "_") + ".txt";
+  void btnSave_Click() async {
 
     try {
-      gridStateManager.myDataGridRowFilter(true, false);
+      // gridStateManager.myDataGridRowFilter(true, false);
       colorGrid(false);
-      dt = gridStateManager.dataSource;
+      // dt = gridStateManager.dataSource;
 
-      gridStateManager.currentCell = null;
-      if (!checkPromoTags()) {
-        cursor = Cursors.default;
-    return;
-    } else {
-    unselectAllRows(gridStateManager);
+      // gridStateManager.currentCell = null;
+      bool? checkPromo = await checkPromoTags();
+      if (!(checkPromo!)) {
+        return;
+      } else {
+        // unselectAllRows(gridStateManager);
+      }
+
+      bool programSequence = await programSequenceValidation();
+      if (!programSequence) {
+        // cursor = Cursors.default;
+        return;
+      }
+
+      bool? checkLostSec = await checkLostSecondaryEvents();
+      if (!(checkLostSec!)) {
+        return;
+      }
+
+      bool? hasWrongSec = await hasWrongSecondaryEventOffset(showMessage: true);
+      if (hasWrongSec) {
+        bool? data = await showDialogForYesNo("Secondary events Scheduled beyond primary event Duration!\nDo you want to proceed?");
+        // data=data??false;
+        if(!(data!)){
+          return;
+        }
+      }
+
+
+      bool? checkRosTransmission = await checkRosTransmissionTime();
+      if (!(checkRosTransmission!)) {
+        return;
+      }
+
+      print("maxProgramStarttimeDiff>>>"+maxProgramStarttimeDiff.value.toInt().toString());
+      bool? diffFpcTransmission = await diffFPCTransmissionTime(seconds: maxProgramStarttimeDiff.value.toInt());
+      if (!(diffFpcTransmission)) {
+        return;
+      }
+
+      bool? checkBacktoBackProd = await checkBackToBackProducts();
+      if (!(checkBacktoBackProd!)) {
+        return;
+      }
+
+      bool? checkBacktoBackProdGrp = await checkBackToBackProductGroup();
+      if (!(checkBacktoBackProdGrp!)) {
+        return;
+      }
+
+      bool? checkRosTransmission1 = await checkRosTransmissionTime(seconds: 300);
+      if (!(checkRosTransmission1!)) {
+        return;
+      }
+
+
+      postTransmissionLog();
+
+    } catch (ex) {
+      print("Error is>>"+ex.toString());
+    // cursor = Cursors.default;
+    // showMessageBox(errorLog(ex.message, BMS.globals.loggedUser, this), MessageBoxType.critical, strAlertMessageTitle);
     }
-
-    if (!programSequenceValidation()) {
-    cursor = Cursors.default;
-    return;
-    }
-
-    if (!checkLostSecondaryEvents()) {
-    cursor = Cursors.default;
-    return;
-    }
-
-    if (hasWrongSecondaryEventOffset(true)) {
-    if (showMessageBox("Secondary events Scheduled beyond primary event Duration!\nDo you want to proceed?", MessageBoxType.warning, MessageBoxButtons.yesNo, MessageBoxDefaultButton.button2) == DialogResult.no) {
-    cursor = Cursors.default;
-    return;
-    }
-    }
-
-    gridStateManager.currentCell = null;
-    if (!checkRosTransmissionTime()) {
-    cursor = Cursors.default;
-    return;
-    }
-
-    gridStateManager.currentCell = null;
-    if (!diffFpcTransmissionTime(maxProgramStarttimeDiff)) {
-    cursor = Cursors.default;
-    return;
-    } else {
-    unselectAllRows(gridStateManager);
-    }
-
-    gridStateManager.currentCell = null;
-    if (!checkBackToBackProducts()) {
-    cursor = Cursors.default;
-    return;
-    } else {
-    unselectAllRows(gridStateManager);
-    }
-
-    gridStateManager.currentCell = null;
-    if (!checkBackToBackProductGroup()) {
-    cursor = Cursors.default;
-    return;
-    } else {
-    unselectAllRows(gridStateManager);
-    }
-
-    gridStateManager.currentCell = null;
-    if (!checkRosTransmissionTime(300)) {
-    cursor = Cursors.default;
-    return;
-    }
-
-    cursor = Cursors.waitCursor;
-
-    var query = (from t in gridStateManager.rows.Cast<DataGridRow>()
-    select new {
-    RowIndex = t.index,
-    FPCTime = t.cells["FPCTime"].value.toString(),
-    TransmissionTime = t.cells["TransmissionTime"].value.toString(),
-    ExportTapeCaption = t.cells["ExportTapeCaption"].value.toString(),
-    ExportTapeCode = t.cells["ExportTapeCode"].value.toString(),
-    TapeDuration = t.cells["TapeDuration"].value.toString(),
-    SOM = t.cells["SOM"].value.toString(),
-    EventType = t.cells["EventType"].value.toString(),
-    BreakEvent = t.cells["BreakEvent"].value.toString(),
-    BreakNumber = t.cells["BreakNumber"].value == null ? 0 : Convert.toInt(t.cells["BreakNumber"].value),
-    EpisodeNumber = t.cells["EpisodeNumber"].value == null ? 0 : Convert.toInt(t.cells["EpisodeNumber"].value),
-    BookingNumber = t.cells["BookingNumber"].value.toString(),
-    BookingDetailCode = t.cells["BookingDetailCode"].value == null ? 0 : Convert.toInt(t.cells["BookingDetailCode"].value),
-    DateChange = t.cells["datechange"].value == null ? 0 : Convert.toInt(t.cells["datechange"].value)
-    }).toList();
-
-    DataTable _dt = linqToDataTable(query);
-
-    db.addParameter("@locationcode", cboLocations.selectedValue);
-    db.addParameter("@channelcode", cboChannels.selectedValue);
-    db.addParameter("@telecastdate", DateTime.parse(txtDate.value.toString()).date);
-    db.addParameter("@modifiedby", BMS.loggedUser);
-    db.addParameter("@standbyLog", chkStandBy.checked);
-    db.addParameter("@dt", _dt);
-    db.ExecuteNonQuery("BMS_Save_transmissionLog", CommandType.storedProcedure);
-    logSaved = true;
-    showMessageBox("Log Saved", MessageBoxType.information);
-    logMessage(0, "Log Saved", "");
-
-    if (File.exists(strMessageLogFileName)) {
-    process.start(strMessageLogFileName);
-    }
-
-    cursor = Cursors.default;
-    // } catch (SqlClient.SqlException ex) {
-    //   showMessageBox(ex.message);
-    } catch (Exception ex) {
-    cursor = Cursors.default;
-    showMessageBox(errorLog(ex.message, BMS.globals.loggedUser, this), MessageBoxType.critical, strAlertMessageTitle);
-    }
-  }*/
+  }
 
   Future<bool>? checkPromoTags() {
+    print("Check promo tags");
+    Completer<bool> completer = Completer<bool>();
     String strTapeCode;
     if (selectLocation != null && selectChannel != null) {
-      LoadingDialog.call();
+      // LoadingDialog.call();
       Get.find<ConnectorControl>().GETMETHODCALL(
           api: ApiFactory.TRANSMISSION_LOG_CHECK_PROMOTAGS(
               selectLocation?.key ?? "",
@@ -2610,15 +2564,15 @@ class TransmissionLogController extends GetxController {
                   selectedDate.text, "dd-MM-yyyy", "M/d/yyyy"),
               isStandby.value),
           fun: (map) async {
-            Get.back();
+            // Get.back();
             if (map is Map) {
               if (map.containsKey("lstCheckPromoTags") &&
                   map["lstCheckPromoTags"] != null) {
                 CheckPromoTagModel data =
-                    CheckPromoTagModel.fromJson(map as Map<String, dynamic>);
+                CheckPromoTagModel.fromJson(map as Map<String, dynamic>);
                 // List<dynamic> _dt = map["lstCheckPromoTags"];
                 for (PlutoRow dr in (gridStateManager?.rows)!) {
-                  strTapeCode = dr.cells["ExportTapeCode"]?.value;
+                  strTapeCode = dr.cells["exportTapeCode"]?.value;
                   bool blnBefore = true;
                   List<LstCheckPromoTags>? query = data.lstCheckPromoTags
                       ?.where((x) => (x.cRtapeid == strTapeCode))
@@ -2632,7 +2586,7 @@ class TransmissionLogController extends GetxController {
                         if (_dr.tgtapeid.toString() ==
                             gridStateManager
                                 ?.rows[dr.sortIdx - (dr.sortIdx == 0 ? 0 : 1)]
-                                .cells["ExportTapeCode"]
+                                .cells["exportTapeCode"]
                                 ?.value
                                 .toString()) {
                           blnBefore = true;
@@ -2643,7 +2597,7 @@ class TransmissionLogController extends GetxController {
                       } else {
                         if (_dr.tgtapeid.toString() !=
                             gridStateManager?.rows[dr.sortIdx + 1]
-                                .cells["ExportTapeCode"]?.value
+                                .cells["exportTapeCode"]?.value
                                 .toString()) {
                           // gridStateManager.firstDisplayedScrollingRowIndex = dr.cells["rownumber"].value - 10;
                           gridStateManager?.moveScrollByRow(
@@ -2654,12 +2608,17 @@ class TransmissionLogController extends GetxController {
                               dr.cells["rownumber"],
                               int.tryParse(dr.cells["rownumber"]?.value)! - 1);
                           bool? data = await showDialogForYesNo(
-                              "Promo & Tag mismatch! Tape ID: ${dr.cells["exporttapecode"]?.value} on row number: ${dr.cells["rownumber"]?.value}\nDo you want to proceed with Save?");
+                              "Promo & Tag mismatch! Tape ID: ${dr
+                                  .cells["exportTapeCode"]
+                                  ?.value} on row number: ${dr
+                                  .cells["rownumber"]
+                                  ?.value}\nDo you want to proceed with Save?");
                           if (data == null) {
                             data = false;
                           }
                           if (!data) {
-                            return false;
+                            completer.complete(false);
+                            // return false;
                           }
                         }
                       }
@@ -2674,48 +2633,59 @@ class TransmissionLogController extends GetxController {
                           int.tryParse(dr.cells["rownumber"]?.value)!);
                       // gridStateManager.rows[dr.cells["rownumber"].value].selected = true;
                       bool? data = await showDialogForYesNo(
-                          "Promo & Tag mismatch! Tape ID: ${dr.cells["exporttapecode"]?.value} on row number: ${dr.cells["rownumber"]?.value}\nDo you want to proceed with Save?");
+                          "Promo & Tag mismatch! Tape ID: ${dr
+                              .cells["exportTapeCode"]
+                              ?.value} on row number: ${dr.cells["rownumber"]
+                              ?.value}\nDo you want to proceed with Save?");
                       if (data == null) {
                         data = false;
                       }
                       if (!data) {
-                        return false;
+                        completer.complete(false);
+                        // return false;
                       }
                     }
                     // }
                   }
                 }
-                return true;
+                completer.complete(true);
+                // return true;
               } else {
-                return true;
+                completer.complete(true);
+                // return true;
               }
             } else {
-              return false;
+              completer.complete(false);
+              // return false;
             }
           },
           failed: (map) {
-            return false;
+            completer.complete(false);
+            // return false;
           });
     }
+    return completer.future;
   }
 
   Future<bool> programSequenceValidation() async {
+    Completer<bool> completer = Completer();
     try {
       int row = 0;
       // DataTable _dt = tblLog.dataSource;
 
       if (gridStateManager == null) {
         LoadingDialog.callInfoMessage("Nothing To save");
-        return false;
+        completer.complete(false);
+        // return false;
       }
 
-      // List<PlutoRow> query = _dt.select((x) => x["EventType"].trim() == "P" || x["EventType"].trim() == "S").toList();
       List<PlutoRow>? query = gridStateManager?.rows
-          .where((element) => ["s", "p"].contains(element
-                  .cells["eventType"]?.value
-                  ?.toString()
-                  .trim()
-                  .toLowerCase() ??
+          .where((element) =>
+          ["s", "p"].contains(element
+              .cells["eventType"]?.value
+              ?.toString()
+              .trim()
+              .toLowerCase() ??
               ""))
           .toList();
       if ((query?.length ?? 0) > 0) {
@@ -2725,13 +2695,13 @@ class TransmissionLogController extends GetxController {
           int intSegmentNumber = 0;
           // for (var dr in __dt.rows) {
           for (var dr in query) {
-            if (dr.cells["exporttapecode"]?.value?.toLowerCase() != "tba" &&
-                dr.cells["exporttapecode"]?.value?.toLowerCase() != "news" &&
-                dr.cells["exporttapecode"]?.value?.toLowerCase() != "live") {
-              if (strTapeID == dr.cells["exporttapecode"]?.value.toString()) {
+            if (dr.cells["exportTapeCode"]?.value?.toLowerCase() != "tba" &&
+                dr.cells["exportTapeCode"]?.value?.toLowerCase() != "news" &&
+                dr.cells["exportTapeCode"]?.value?.toLowerCase() != "live") {
+              if (strTapeID == dr.cells["exportTapeCode"]?.value.toString()) {
                 if (intSegmentNumber >
                     int.parse(
-                        dr.cells["breaknumber"]?.value.toString() ?? '')) {
+                        dr.cells["breakNumber"]?.value.toString() ?? '')) {
                   // gridStateManager.firstDisplayedScrollingRowIndex = int.parse(dr["rownumber"].toString()) - 10;
                   gridStateManager?.moveScrollByRow(PlutoMoveDirection.down,
                       int.parse(dr.cells["rownumber"]?.value)! - 10);
@@ -2739,16 +2709,20 @@ class TransmissionLogController extends GetxController {
                   gridStateManager?.setCurrentCell(
                       dr.cells["no"], int.parse(dr.cells["rownumber"]?.value));
                   bool? data = await showDialogForYesNo(
-                      "Program sequence mismatch on Tape ID: $strTapeID between Segment Numbers:  $intSegmentNumber and ${int.parse(dr.cells["BreakNumber"]?.value.toString() ?? "0")}\nExit Save?");
-                  if (data == null) {
+                      "Program sequence mismatch on Tape ID: $strTapeID between Segment Numbers:  $intSegmentNumber and ${int
+                          .parse(dr.cells["breakNumber"]?.value.toString() ??
+                          "0")}\nExit Save?");
+                  /*if (data == null) {
                     data = false;
-                  }
+                  }*/
+                  data = data ?? false;
                   if (data) {
-                    return false;
+                    completer.complete(false);
+                    // return false;
                   }
                 }
               } else {
-                strTapeID = dr.cells["exporttapecode"]?.value.toString();
+                strTapeID = dr.cells["exportTapeCode"]?.value.toString();
                 if (strTapeID == "tba" ||
                     strTapeID == "live" ||
                     strTapeID == "news") {
@@ -2757,33 +2731,42 @@ class TransmissionLogController extends GetxController {
               }
             }
             intSegmentNumber =
-                int.parse(dr.cells["breaknumber"]?.value.toString() ?? "0");
+                int.parse(dr.cells["breakNumber"]?.value.toString() ?? "0");
             row = row + 1;
           }
         }
-        return true;
+        completer.complete(true);
+        // return true;
       } else {
-        return true;
+        completer.complete(true);
+        // return true;
       }
     } catch (Exception) {
-      return false;
+      completer.complete(false);
+      // return false;
     }
+    return completer.future;
   }
 
-  bool checkLostSecondaryEvents() {
+  bool? checkLostSecondaryEvents() {
     int i;
     List<String> allowedEvents = ["p", "s", "gl"];
-    for (PlutoRow row in (gridStateManager?.rows)!) {
+    for (i = 0; i < (gridStateManager?.rows.length ?? 0); i++) {
+      // for (PlutoRow row in (gridStateManager?.rows)!) {
+      PlutoRow? row = gridStateManager?.rows[i];
       String? eventType =
-          row.cells["eventType"]?.value.toString().trim().toLowerCase();
-      if (row.cells["eventtype"]?.value.toString().trim().toLowerCase() ==
-          "gl") {
-        if (allowedEvents.contains(eventType)) {
+      row?.cells["eventType"]?.value.toString().trim().toLowerCase();
+      if (eventType == "gl") {
+        if (allowedEvents.contains(gridStateManager
+            ?.rows[i - 1].cells["eventType"]?.value
+            .toString()
+            .trim()
+            .toLowerCase())) {
           // gridStateManager.firstDisplayedScrollingRowIndex = i - 12;
           gridStateManager?.moveScrollByRow(
-              PlutoMoveDirection.down, row.sortIdx - 12);
+              PlutoMoveDirection.down, (row?.sortIdx)! - 12);
           // tblLog.rows[i].selected = true;
-          gridStateManager?.setCurrentCell(row.cells["no"], row.sortIdx);
+          gridStateManager?.setCurrentCell(row?.cells["no"], row?.sortIdx);
           LoadingDialog.callInfoMessage(
               "Lost secondary event!\nUnable to proceed");
           // logMessage(tblLog.rows[i - 1].cells["rownumber"].value, "Lost secondary event!\nUnable to proceed", "");
@@ -2800,17 +2783,18 @@ class TransmissionLogController extends GetxController {
     bool errors = false;
 
     for (PlutoRow currentRow in (gridStateManager?.rows)!) {
-      eventType = currentRow.cells["Eventtype"]?.value.toString().trim();
+      eventType =
+          currentRow.cells["eventType"]?.value.toString().trim().toLowerCase();
 
-      if (eventType == "S" || eventType == "P") {
+      if (["p", "s"].contains(eventType)) {
         tapeDuration = Utils.oldBMSConvertToSecondsValue(
-            value: (currentRow.cells["Tapeduration"]?.value ?? ""));
+            value: (currentRow.cells["tapeduration"]?.value ?? ""));
       }
 
-      if (eventType == "GL") {
+      if (eventType == "gl") {
         if (tapeDuration! <
             Utils.oldBMSConvertToSecondsValue(
-                value: currentRow.cells["Transmissiontime"]?.value)) {
+                value: currentRow.cells["transmissionTime"]?.value)) {
           errors = true;
 
           if (showMessage == false) {
@@ -2847,8 +2831,9 @@ class TransmissionLogController extends GetxController {
       print("Data clicked clear");
       if (data != null) {
         if (data) {
-          Get.delete<TransmissionLogController>();
-          Get.find<HomeController>().clearPage1();
+          // Get.delete<TransmissionLogController>();
+          // Get.find<HomeController>().clearPage1();
+          html.window.location.reload();
         } else {
           return;
         }
@@ -2856,16 +2841,301 @@ class TransmissionLogController extends GetxController {
         return;
       }
     } else {
-      Get.delete<TransmissionLogController>();
-      Get.find<HomeController>().clearPage1();
+      // Get.delete<TransmissionLogController>();
+      // Get.find<HomeController>().clearPage1();
+      html.window.location.reload();
     }
+  }
+
+  void search() {
+    // Get.delete<TransformationController>();
+    Get.to(SearchPage(
+        key: Key("TransmissionLog"),
+        screenName: "TransmissionLog",
+        appBarName: "Transmission Log",
+        strViewName: "BMS_VTransmissionLog",
+        isAppBarReq: true));
+  }
+
+  Future<bool> diffFPCTransmissionTime({int seconds = 0}) async {
+    Completer<bool> completer = Completer();
+    try {
+      // var _dt = tblLog.DataSource;
+      if (gridStateManager == null || (gridStateManager?.rows.isEmpty)!) {
+        completer.complete(false);
+        // return false;
+      }
+      List<PlutoRow>? eventTypeList = gridStateManager?.rows
+          .where((element) =>
+      element.cells["eventType"]?.value
+          .toString()
+          .trim()
+          .toLowerCase() ==
+          "p")
+          .toList();
+
+      if (eventTypeList != null && (eventTypeList.length ?? 0) > 0) {
+        String? strFPCTime = '';
+        String? strTransmissionTime = '';
+        num intFPCTime = 0;
+        num intTransmissionTime = 0;
+        num Ctr = 0;
+
+        for (PlutoRow dr in eventTypeList) {
+          strFPCTime = dr.cells['fpCtime']?.value != null
+              ? dr.cells['fpCtime']?.value.toString()
+              : '00:00:00';
+          intFPCTime = Utils.oldBMSConvertToSecondsValue(value: strFPCTime!);
+          strTransmissionTime = dr.cells['transmissionTime']?.value != null
+              ? dr.cells['transmissionTime']?.value.toString()
+              : '00:00:00';
+          intTransmissionTime =
+              Utils.oldBMSConvertToSecondsValue(value: strTransmissionTime!);
+
+          if ((intTransmissionTime - intFPCTime).abs() > seconds) {
+            // tblLog.FirstDisplayedScrollingRowIndex = dr['rownumber'] - 10;
+            gridStateManager?.moveScrollByRow(PlutoMoveDirection.down,
+                int.tryParse(dr.cells['rownumber']?.value)! - 10);
+            if (int.tryParse(dr.cells['rownumber']?.value)! > 0) {
+              // tblLog.Rows[dr['rownumber']].Selected = true;
+              gridStateManager?.setCurrentCell(
+                  dr.cells["no"], int.tryParse(dr.cells['rownumber']?.value)!);
+            } else {
+              // tblLog.Rows[0].Selected = true;
+              gridStateManager?.setCurrentCell(dr.cells["no"], 0);
+            }
+
+            bool? isYes = await showDialogForYesNo(
+                "FPC and Transmission time mismatch\nMismatch is ${Utils
+                    .convertToTimeFromDouble(
+                    value: (intTransmissionTime - intFPCTime)
+                        .abs())}\nFPC Time: $strFPCTime\nTransmission Time: $strTransmissionTime.\nDo you want to proceed?");
+            isYes = isYes ?? false;
+            if (!isYes) {
+              completer.complete(false);
+              // return false;
+            }
+          }
+          Ctr++;
+        }
+        completer.complete(true);
+        // return true;
+      } else {
+        completer.complete(true);
+        // return true;
+      }
+    } catch (ex) {
+      completer.complete(false);
+      // return false;
+    }
+
+    return completer.future;
+  }
+
+  Future<bool> checkRosTransmissionTime({int seconds = 0}) async {
+    Completer<bool> completer = Completer();
+    if (gridStateManager == null || (gridStateManager?.rows.isEmpty)!) {
+      completer.complete(false);
+      // return false;
+    }
+    print("checkRosTransmissionTime clicked");
+    num MidStart = 0;
+    num Midend = 0;
+    var RosTimeBand = '';
+    num RosStartTime = 0;
+    num RosEndTime = 0;
+    List<String> timeband = [];
+    num? Telecasttime = 0;
+
+    List<PlutoRow>? rosTimeBandList = gridStateManager?.rows
+        .where((element) =>
+    element.cells["rosTimeBand"]?.value.toString().trim() != "")
+        .toList();
+    // print("Length is>> "+(rosTimeBandList?.length??0).toString());
+    if ((rosTimeBandList?.length ?? 0) > 0) {
+      // var _dt = dt.AsEnumerable().where((x) => x.Field<String>('rostimeband').trim() != '').toList().copyToDataTable();
+      for (PlutoRow dr in rosTimeBandList!) {
+        RosTimeBand = dr.cells['rosTimeBand']?.value ?? "";
+        Telecasttime = Utils.oldBMSConvertToSecondsValue(
+            value: (dr.cells['transmissionTime']?.value
+                .toString()
+                .substring(0, 8) ??
+                "")) ??
+            0;
+        timeband = RosTimeBand.split('-');
+        RosStartTime =
+            Utils.oldBMSConvertToSecondsValue(value: timeband[0] + ':00') +
+                seconds;
+        RosEndTime =
+            Utils.oldBMSConvertToSecondsValue(value: timeband[1] + ':59') -
+                seconds;
+
+        if (RosStartTime > RosEndTime) {
+          Midend = Utils.oldBMSConvertToSecondsValue(value: '23:59:59');
+          MidStart = 0;
+        } else {
+          Midend = RosEndTime;
+          MidStart = RosEndTime;
+        }
+
+        if ((Telecasttime > RosStartTime && Telecasttime < Midend) ||
+            (Telecasttime > MidStart && Telecasttime < RosEndTime)) {
+          // do nothing
+        } else {
+          if (seconds == 0) {
+            // tblLog.FirstDisplayedScrollingRowIndex = int.tryParse(dr.cells['rownumber']?.value??"")! - 10;
+            // tblLog.Rows[dr['rownumber']].Selected = true;
+            gridStateManager?.moveScrollByRow(PlutoMoveDirection.down,
+                int.tryParse(dr.cells['rownumber']?.value ?? "")!);
+            gridStateManager?.setCurrentCell(dr.cells["no"],
+                int.tryParse(dr.cells['rownumber']?.value ?? "")!);
+            LoadingDialog.callInfoMessage(
+                "Ros spot outside contracted timeband!\nUnable to proceed with save");
+            completer.complete(false);
+            // return false;
+          } else {
+            // tblLog.FirstDisplayedScrollingRowIndex = dr['rownumber'] - 10;
+            // tblLog.Rows[dr['rownumber']].Selected = true;
+            gridStateManager?.moveScrollByRow(PlutoMoveDirection.down,
+                int.tryParse(dr.cells['rownumber']?.value ?? ""));
+            gridStateManager?.setCurrentCell(dr.cells["no"],
+                int.tryParse(dr.cells['rownumber']?.value ?? "")!);
+            bool? isYesClick = await showDialogForYesNo(
+                "Ros spot within 5 minutes of contracted timeband!\nDo you want to proceed with Save?");
+            if (isYesClick != null) {
+              if (!isYesClick) {
+                print("checkRosTransmissionTime(300)>>>>"+dr.sortIdx.toString());
+                completer.complete(false);
+                // return false;
+              }
+            } else {}
+          }
+        }
+      }
+      print("checkRosTransmissionTime(300)>>>>yes1");
+      completer.complete(true);
+      // return true;
+    } else {
+      print("checkRosTransmissionTime(300)>>>>yes2");
+      completer.complete(true);
+      // return true;
+    }
+    return completer.future;
+  }
+
+  Future<bool> checkBackToBackProducts() {
+    Completer<bool> completer = Completer();
+    if (gridStateManager == null || (gridStateManager?.rows.isEmpty)!) {
+      completer.complete(false);
+      // return false;
+    }
+    int i = 0;
+    String lastProduct = '';
+    Get.find<ConnectorControl>().GETMETHODCALL(
+        api: ApiFactory.TRANSMISSION_LOG_GET_BACKTOBACK_PRODUCT(),
+        fun: (Map<String,dynamic> map) async {
+          
+          List<String> strAllowBackToBackProducts = [];
+          if(map is Map && map.containsKey("lstAllowBackToBackProducts")){
+            map["lstAllowBackToBackProducts"].forEach((e){
+              strAllowBackToBackProducts.add(e["productName"]);
+            });
+          }
+          print("List of product is>>"+strAllowBackToBackProducts.toString());
+          try {
+            for (var dr in (gridStateManager?.rows)!) {
+              if (dr.cells['productName']?.value == lastProduct) {
+                if (dr.cells['productName']?.value != '') {
+                  if (!strAllowBackToBackProducts
+                      .contains(dr.cells['productName']?.value + ',')) {
+                    // tblLog.FirstDisplayedScrollingRowIndex = dr['rownumber'] - 10;
+                    gridStateManager?.moveScrollByRow(PlutoMoveDirection.down,
+                        int.tryParse(dr.cells['rownumber']?.value ?? "")! - 10);
+
+                    if (int.tryParse(dr.cells['rownumber']?.value)! > 0) {
+                      // tblLog.Rows[dr['rownumber']].Selected = true;
+                      gridStateManager?.setCurrentCell(dr.cells["no"],
+                          int.tryParse(dr.cells['rownumber']?.value ?? "")!);
+                    } else {
+                      // tblLog.Rows[0].Selected = true;
+                      gridStateManager?.setCurrentCell(dr.cells["no"], 0);
+                    }
+                    bool? isYesClick = await showDialogForYesNo(
+                        "Same Products back to back\nDo you want to proceed with Save?");
+                    isYesClick = isYesClick ?? false;
+                    if (!isYesClick) {
+                      completer.complete(false);
+                    }
+                  }
+                }
+              } else {
+                lastProduct = dr.cells['productName']?.value;
+              }
+            }
+            completer.complete(true);
+            // return true;
+          } catch (ex) {
+            completer.complete(false);
+            // return false;
+          }
+        },
+        failed: (v) {
+          completer.complete(true);
+        });
+
+    return completer.future;
+  }
+
+  Future<bool> checkBackToBackProductGroup() async {
+    int i = 0;
+    String lastProduct = '';
+    // var dt = tblLog.DataSource;
+    Completer<bool> completer = Completer();
+    if (gridStateManager == null || (gridStateManager?.rows.isEmpty)!) {
+      completer.complete(false);
+      // return false;
+    }
+    try {
+      for (var dr in (gridStateManager?.rows)!) {
+        if (dr.cells['productGroup']?.value == lastProduct) {
+          if (dr.cells['productGroup']?.value != '') {
+            // tblLog.FirstDisplayedScrollingRowIndex = dr['rownumber'] - 10;
+            gridStateManager?.moveScrollByRow(PlutoMoveDirection.down,
+                int.tryParse(dr.cells['rownumber']?.value ?? "")! - 10);
+            if (int.tryParse(dr.cells['rownumber']?.value)! > 0) {
+              // tblLog.Rows[dr['rownumber']].Selected = true;
+              gridStateManager?.setCurrentCell(dr.cells["no"],
+                  int.tryParse(dr.cells['rownumber']?.value ?? "")!);
+            } else {
+              // tblLog.Rows[0].Selected = true;
+              gridStateManager?.setCurrentCell(dr.cells["no"], 0);
+            }
+
+            bool? isYesClick = await showDialogForYesNo(
+                "Competing Products back to back\nDo you want to exit with Save?");
+            isYesClick = isYesClick ?? false;
+            if (isYesClick) {
+              completer.complete(false);
+            }
+          }
+        } else {
+          lastProduct = dr.cells['productGroup']?.value;
+        }
+      }
+      completer.complete(true);
+      // return true;
+    } catch (ex) {
+      completer.complete(false);
+      // return false;
+    }
+    return completer.future;
   }
 
   Future<bool>? showDialogForYesNo(String text) {
     Completer<bool> completer = Completer<bool>();
     LoadingDialog.recordExists(
       text,
-      () {
+          () {
         completer.complete(true);
         // return true;
       },
