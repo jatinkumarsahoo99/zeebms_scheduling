@@ -12,6 +12,7 @@ import '../../../controller/ConnectorControl.dart';
 import '../../../data/DropDownValue.dart';
 import '../../../providers/ApiFactory.dart';
 import '../../../providers/Utils.dart';
+import '../../CommonSearch/views/common_search_view.dart';
 import '../CommercialTapeMasterData.dart';
 import '../CommercialTapeMasterPostData.dart';
 
@@ -78,9 +79,10 @@ class CommercialMasterController extends GetxController {
   FocusNode tapeIdFocus = FocusNode();
   FocusNode clockIdFocus = FocusNode();
   FocusNode txNoFocus = FocusNode();
+  FocusNode segNoFocus = FocusNode();
 
   // bool segEnable = true;
-  bool isListenerActive = true;
+  bool isListenerActive = false;
 
   @override
   void onInit() {
@@ -90,13 +92,14 @@ class CommercialMasterController extends GetxController {
     captionFocus.addListener(() {
       if ( isListenerActive && !captionFocus.hasFocus) {
         print("api called on focus changed");
-        txCaptionController.text =
-            captionController.text.toString().toUpperCase();
-        fetchCommercialTapeMasterData(
-            captionController.text,
-            "",
-            0,
-            "");
+        if( captionController.text !="" &&  captionController.text != null){
+          txCaptionController.text = captionController.text.toString().toUpperCase();
+          fetchCommercialTapeMasterData(
+              captionController.text,
+              "",
+              0,
+              "");
+        }
       }if(captionFocus.hasFocus){
         isListenerActive=true;
       }
@@ -111,13 +114,16 @@ class CommercialMasterController extends GetxController {
           // validateTxNo(tapeIdController.value.text + "-" + segController.text, "", "");
           validateTxNo("",tapeIdController.value.text,segController.text);
         }
-      }if(tapeIdFocus.hasFocus){
+      }
+      if(tapeIdFocus.hasFocus){
         isListenerActive=true;
       }
     });
     txNoFocus.addListener(() {
-      if (!txNoFocus.hasFocus) {
+      if (isListenerActive && !txNoFocus.hasFocus) {
         validateTxNo(txNoController.text,"", "");
+      } if(txNoFocus.hasFocus){
+        isListenerActive=true;
       }
     });
     clockIdFocus.addListener(() {
@@ -128,15 +134,34 @@ class CommercialMasterController extends GetxController {
               "",
               0,
               clockIdController.text);
-        }else{
-          Snack.callError("Please enter clock id");
         }
-      }if(clockIdFocus.hasFocus){
+      }
+      if(clockIdFocus.hasFocus){
+        isListenerActive=true;
+      }
+    });
+    segNoFocus.addListener(() {
+      if (isListenerActive && !segNoFocus.hasFocus) {
+        print("listener call");
+        validateTxNo1("",tapeIdController.value.text, segController.text);
+      }
+      if(segNoFocus.hasFocus){
+        // txNoController.text = tapeIdController.value.text + "-" + segController.text;
         isListenerActive=true;
       }
     });
 
     super.onInit();
+  }
+
+  void search() {
+    // Get.delete<TransformationController>();
+    Get.to(SearchPage(
+        key: Key("CommercialTapeMaster"),
+        screenName: "Commercial Tape Master",
+        appBarName: "Commercial Tape Master",
+        strViewName: "BMS_View_Commercialmaster",
+        isAppBarReq: true));
   }
 
   clearAll() {
@@ -197,7 +222,50 @@ class CommercialMasterController extends GetxController {
   saveData() {
     if (captionController.text == "" || captionController.text == null) {
       Snack.callError("Please enter caption");
-    } else if((commercialCode != "0" && commercialCode != "") && contin ){
+    }
+    else if (txCaptionController.text == "" ||
+        txCaptionController.text == null) {
+      Snack.callError("Please enter tx-caption");
+    } else if (selectedLanguage == null) {
+      Snack.callError("Please select language");
+    }
+  /*  else if (selectedRevenueType == null) {
+      Snack.callError("Please select revenueType");
+    }
+    else if (selectedSecType == null) {
+      Snack.callError("Please select secType");
+    } */
+
+   /* else if (tapeIdController.value.text == null ||
+        tapeIdController.value.text == "") {
+      Snack.callError("Please enter tapeId");
+    }*/
+    else if(segController.text == null || segController.text == ""){
+      Snack.callError("Please enter Segment Id.");
+    } else if (txNoController.text == null || txNoController.text == "") {
+      Snack.callError("Please enter TX No");
+    }
+   /* else if (selectedTapeType == null) {
+      Snack.callError("Please select tape type");
+    } else if (censorShipType == null) {
+      Snack.callError("Please select censorShipType");
+    }*/
+    else if (selectedTapeType == null) {
+      Snack.callError("Please select tape type");
+    }
+    else if (somController.text == "00:00:00:00" || somController.text == "") {
+      Snack.callError("Please enter SOM.");
+    } else if (eomController.text == "00:00:00:00" || eomController.text == "") {
+      Snack.callError("Please enter EOM.");
+    }else if(duration.value.text == "00:00:00:00" || duration.value.text =="" ) {
+      Snack.callError("Please enter duration.");
+    }
+     else if (selectedBrandType == null) {
+      Snack.callError("Please select brand");
+    } else if (agencyIdController.text == null ||
+        agencyIdController.text == "") {
+      Snack.callError("Please select Agency.");
+    }else if((commercialCode != "0" && commercialCode != "") && contin ){
 
       LoadingDialog.recordExists(
           "Do you want to modify it?",
@@ -211,40 +279,11 @@ class CommercialMasterController extends GetxController {
         Get.back();
       });
     }
-    else if (txCaptionController.text == "" ||
-        txCaptionController.text == null) {
-      Snack.callError("Please enter tx-caption");
-    } else if (selectedLanguage == null) {
-      Snack.callError("Please select language");
-    } else if (selectedRevenueType == null) {
-      Snack.callError("Please select revenueType");
-    } else if (selectedSecType == null) {
-      Snack.callError("Please select secType");
-    } else if (tapeIdController.value.text == null ||
-        tapeIdController.value.text == "") {
-      Snack.callError("Please enter tapeId");
-    } else if (txNoController.text == null || txNoController.text == "") {
-      Snack.callError("Please enter TX No");
-    } else if (agencyIdController.text == null ||
-        agencyIdController.text == "") {
-      Snack.callError("Please enter agency Id");
-    } else if (selectedTapeType == null) {
-      Snack.callError("Please select tape type");
-    } else if (censorShipType == null) {
-      Snack.callError("Please select censorShipType");
-    } else if (somController.text == "00:00:00:00") {
-      Snack.callError("Please enter SOM");
-    } else if (eomController.text == "00:00:00:00") {
-      Snack.callError("Please enter EOM");
-    } else if (selectedClientDetails == null) {
-      Snack.callError("Please select client");
-    } else if (selectedBrandType == null) {
-      Snack.callError("Please select brand");
-    } else if (productNameController.text == null ||
+    /* else if (productNameController.text == null ||
         productNameController.text == "") {
       Snack.callError("Please enter product name");
     }
-    /*else if(level1Controller.text == null || level1Controller.text==""){
+    else if(level1Controller.text == null || level1Controller.text==""){
       Snack.callError("Please enter level1");
     }else if(level2Controller.text == null || level2Controller.text==""){
       Snack.callError("Please enter level2");
@@ -253,11 +292,13 @@ class CommercialMasterController extends GetxController {
     }*/
     /* else if(clockIdController.text == null || clockIdController.text == ""){
       Snack.callError("Please enter clock id");
-    }*/
+    }
 
     else if (eventList.isEmpty) {
       Snack.callError("Please add some event");
-    } else {
+    } */
+
+    else {
       LoadingDialog.call();
       CommercialTapeMasterPostData commercialTapeMasterPostData =
           new CommercialTapeMasterPostData(
@@ -298,7 +339,7 @@ class CommercialMasterController extends GetxController {
             print("map>>>>>" + map.toString());
             if (map is Map && map.containsKey("isError")) {
               if (map['isError'] == false) {
-                LoadingDialog.callDataSavedMessage("Data Saved Successfully",callback: (){
+                LoadingDialog.callDataSavedMessage("Record Saved Successfully",callback: (){
                   clearAll();
                 });
 
@@ -504,40 +545,44 @@ class CommercialMasterController extends GetxController {
     Get.find<ConnectorControl>().POSTMETHOD(
         api: ApiFactory.COMMERCIAL_MASTER_VALIDATE_TXNO,
         json: postData,
-        fun: (Map map) {
+        fun: ( map) {
           log("genericMessage>>>>" + map.toString());
           if (map is Map) {
             if (map['isError'] == false) {
               if (map['genericMessage'] != null &&
                   map['genericMessage'] != "null") {
                 txNoController.text = "";
+                isListenerActive =false;
                 Snack.callError(map['genericMessage'] ?? "");
               } else if (map['genericMessage'] == null ||
                   map['genericMessage'] == "null") {
                 txNoController.text =
                     tapeIdController.value.text + "-" + segController.text;
                 isListenerActive =false;
-                update(['updateLeft']);
+
                 fetchCommercialTapeMasterData(
                     "",
                     tapeIdController.value.text,
                     int.parse((segController.text != null && segController.text != "")
                         ? segController.text
                         : "0"), "");
+                update(['updateLeft']);
               } else {
                 txNoController.text =
                     tapeIdController.value.text + "-" + segController.text;
                 isListenerActive =false;
-                update(['updateLeft']);
+
                 fetchCommercialTapeMasterData(
                     "",
                     tapeIdController.value.text,
                     int.parse((segController.text != null && segController.text != "")
                         ? segController.text
                         : "0"), "");
+                update(['updateLeft']);
               }
             }
-          } else {
+          }
+          else {
             Snack.callError("Something went wrong");
           }
         });
@@ -551,8 +596,9 @@ class CommercialMasterController extends GetxController {
     Get.find<ConnectorControl>().POSTMETHOD(
         api: ApiFactory.COMMERCIAL_MASTER_GET_AGENCYDETAILS,
         json: postData,
-        fun: (List<dynamic> map) {
-          if (map.isNotEmpty) {
+        fun: (map) {
+          print("map>>>"+map.toString());
+          if (map is List && map.isNotEmpty) {
             agencyDetails.clear();
             for (var e in map) {
               agencyDetails.add(
@@ -767,6 +813,8 @@ class CommercialMasterController extends GetxController {
       clearAll();
     } else if (string == "Save") {
       saveData();
+    }else if(string == "Search"){
+      search();
     }
   }
 }

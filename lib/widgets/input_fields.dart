@@ -1619,19 +1619,29 @@ class InputFields {
                   /* controller.text =
                       "${(int.tryParse(controller.text) ?? 1) - 1}";*/
                   if (!isNegativeReq) {
-                    if (int.tryParse(controller.text) != 1 ||
+                    if (int.tryParse(controller.text) != 1 &&
                         int.tryParse(controller.text) != 0) {
-                      controller.text =
-                      "${(int.tryParse(controller.text) ?? 1) - 1}";
+                      controller.text = "${(int.tryParse(controller.text) ?? 1) - 1}";
+                      if(onchanged != null){
+                        onchanged(controller.text);
+                      }
+
                     }
                   } else {
                     controller.text =
                     "${(int.tryParse(controller.text) ?? 1) - 1}";
+                    if(onchanged != null){
+                      onchanged(controller.text);
+                    }
+
                   }
                 }
                 if (keyEvent.isKeyPressed(LogicalKeyboardKey.arrowUp)) {
                   controller.text =
                   "${(int.tryParse(controller.text) ?? 0) + 1}";
+                  if(onchanged != null){
+                    onchanged(controller.text);
+                  }
                 }
               }
             },
