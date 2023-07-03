@@ -1,4 +1,8 @@
+import 'dart:io';
+import 'dart:typed_data';
+
 import 'package:bms_scheduling/app/controller/MainController.dart';
+import 'package:excel/excel.dart';
 import 'package:file_picker/file_picker.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
@@ -14,6 +18,7 @@ import '../../../routes/app_pages.dart';
 import 'package:dio/dio.dart' as dio;
 
 class ROImportController extends GetxController {
+  var saveEnabled = false.obs;
   var locationList = <DropDownValue>[].obs, channelList = <DropDownValue>[].obs;
   List<PermissionModel>? formPermissions;
   DropDownValue? selectedLocation, selectedChannel;
@@ -28,6 +33,7 @@ class ROImportController extends GetxController {
   }
 
   clearPage() {
+    saveEnabled.value = false;
     topLeftDataTable.clear();
     topRightDataTable.clear();
     bottomDataTable.clear();
@@ -114,25 +120,49 @@ class ROImportController extends GetxController {
   formHandler(btn) {
     if (btn == "Clear") {
       clearPage();
+    } else if (btn == "Save") {
+      saveData();
     }
+  }
+
+  saveData() {
+    if (selectedLocation == null) {
+      Snack.callError("Please select location");
+    } else if (selectedChannel == null) {
+      Snack.callError("Please select channel");
+    } else {}
   }
 
   Future<void> handleImportTap() async {
     if (selectedLocation == null) {
       Snack.callError("Please select location");
     } else if (selectedChannel == null) {
-      Snack.callError("Please select location");
+      Snack.callError("Please select channel");
     } else {
       FilePickerResult? result = await FilePicker.platform.pickFiles(allowMultiple: false, type: FileType.custom, allowedExtensions: ['xlsx', 'xls']);
+
       if (result != null && result.files.isNotEmpty) {
         LoadingDialog.call();
+        List<int> encodedFile = [];
+        if (result.files[0].name.endsWith("xls")) {
+          try {
+            var excel = Excel.decodeBytes(result.files[0].bytes!.toList());
+            encodedFile = excel.encode()?.toList() ?? [];
+          } catch (e) {
+            Get.back();
+            LoadingDialog.showErrorDialog(e.toString());
+            return;
+          }
+        } else {
+          encodedFile = result.files[0].bytes?.toList() ?? [];
+        }
         dio.FormData formData = dio.FormData.fromMap(
           {
             "ChannelCode": selectedChannel?.key ?? "",
             "LocationCode": selectedLocation?.key ?? "",
             "ModifiedBy": Get.find<MainController>().user?.logincode,
             'file': dio.MultipartFile.fromBytes(
-              result.files[0].bytes!.toList(),
+              encodedFile,
               filename: result.files[0].name,
             ),
           },
@@ -143,24 +173,33 @@ class ROImportController extends GetxController {
             fun: (r) {
               closeDialogIfOpen();
               if (r != null && r is Map<String, dynamic> && r['info_OnLeaveLocation'] != null) {
+                topLeftDataTable.clear();
+                topRightDataTable.clear();
+                leftMsg.value = '';
+                rightMsg.value = '';
                 var data = r['info_OnLeaveLocation'];
+                if (data['lstImportData'] != null && (data['lstImportData'] is List<dynamic>)) {
+                  topLeftDataTable.clear();
+                  topLeftDataTable.value.addAll((data['lstImportData']));
+                }
+                if (data['lstMissingData'] != null && (data['lstMissingData'] is List<dynamic>)) {
+                  topRightDataTable.value.addAll((data['lstMissingData']));
+                }
                 if (data['message'] != null && data['message'] is List<dynamic> && (data['message'] as List<dynamic>).isNotEmpty) {
                   LoadingDialog.showErrorDialog(data['message'][0]);
                 }
                 if (data['labelMessage'] != null && data['labelMessage'] is List<dynamic> && (data['labelMessage'] as List<dynamic>).isNotEmpty) {
                   leftMsg.value = data['labelMessage'][0];
                 }
-                if (data['message'] != null && data['message'] is List<dynamic> && (data['message'] as List<dynamic>).isNotEmpty) {
+                if (data['message_Missing'] != null &&
+                    data['message_Missing'] is List<dynamic> &&
+                    (data['message_Missing'] as List<dynamic>).isNotEmpty) {
                   rightMsg.value = data['message_Missing'][0];
                 }
-
-                if (data['lstImportData'] != null && (data['lstImportData'] is List<dynamic>)) {
-                  topLeftDataTable.clear();
-                  topLeftDataTable.value.addAll((data['lstImportData'] as List<dynamic>));
-                }
-                if (data['lstMissingData'] != null && (data['lstMissingData'] is List<dynamic>)) {
-                  topRightDataTable.clear();
-                  topRightDataTable.value.addAll((data['lstMissingData'] as List<dynamic>));
+                if (topLeftDataTable.isNotEmpty && topRightDataTable.isEmpty) {
+                  saveEnabled.value = true;
+                } else {
+                  saveEnabled.value = false;
                 }
               } else {
                 LoadingDialog.showErrorDialog(r.toString());
