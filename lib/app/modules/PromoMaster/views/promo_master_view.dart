@@ -195,7 +195,7 @@ class PromoMasterView extends GetView<PromoMasterController> {
                                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                                       children: [
                                         DropDownField.formDropDown1WidthMap(
-                                          controller.onloadModel?.promoMasterOnLoad?.lstTapeType ?? [],
+                                          [],
                                           (val) => controller.selectedDropDowns[7] = val,
                                           "Tag Detail",
                                           .27,
