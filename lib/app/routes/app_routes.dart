@@ -74,8 +74,8 @@ abstract class _Paths {
   static const SPOT_PRIORITY = '/frmSpotPriority';
   static const RO_RESCHEDULE = '/frmRoReschedule';
   static const ROS_DISTRIBUTION = '/FrmRosDistribution';
-  static const FINAL_AUDIT_REPORT_BEFORE_LOG = '/final-audit-report-before-log';
-  static const FINAL_AUDIT_REPORT_AFTER_TELECAST = '/final-audit-report-after-telecast';
+  static const FINAL_AUDIT_REPORT_BEFORE_LOG = '/frmFinalAuditReport';
+  static const FINAL_AUDIT_REPORT_AFTER_TELECAST = '/frmFinalAuditreportasrunlog';
   static const AUDIT_STATUS = '/frmNewBookingActivityReport';
   static const ASRUN_IMPORT_AD_REVENUE = '/frmAsrunImport';
   static const SALES_AUDIT_NOT_TELECAST_REPORT = '/frmsalesauditnottelecast';
