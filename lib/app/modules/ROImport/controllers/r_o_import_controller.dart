@@ -123,7 +123,7 @@ class ROImportController extends GetxController {
     } else if (selectedChannel == null) {
       Snack.callError("Please select location");
     } else {
-      FilePickerResult? result = await FilePicker.platform.pickFiles(allowMultiple: false, type: FileType.custom, allowedExtensions: ['xlsx']);
+      FilePickerResult? result = await FilePicker.platform.pickFiles(allowMultiple: false, type: FileType.custom, allowedExtensions: ['xlsx', 'xls']);
       if (result != null && result.files.isNotEmpty) {
         LoadingDialog.call();
         dio.FormData formData = dio.FormData.fromMap(
