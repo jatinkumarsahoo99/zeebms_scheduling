@@ -27,8 +27,16 @@ class FinalAuditReportBeforeLogController extends GetxController {
   var standByLog = false.obs;
 
   convertToExcelAndSave() {
-    if (dataTBList.value.isNotEmpty) {
-      ExportData().exportExcelFromJsonList(dataTBList.value, "fileName");
+    if (selectedLocation == null) {
+      LoadingDialog.showErrorDialog("Please select Location");
+    } else if (selectedChannel == null) {
+      LoadingDialog.showErrorDialog("Please select Channel");
+    } else if (dataTBList.value.isEmpty) {
+      LoadingDialog.showErrorDialog("No Records Found");
+    } else {
+      // ASIA_ZEE TV_05_Jul_2023_FAR.xls
+      ExportData().exportExcelFromJsonList(dataTBList.value,
+          "${selectedLocation?.value}_${selectedChannel?.value}_${DateFormat("dd_MMM_yyyy").format(DateFormat("dd-MM-yyyy").parse(efficitveDateTC.text))}_FAR");
     }
   }
 
@@ -130,6 +138,8 @@ class FinalAuditReportBeforeLogController extends GetxController {
     locationList.refresh();
     channelList.refresh();
     standByLog.value = false;
+    startTimeTC.text = "00:00:00";
+    efficitveDateTC.clear();
     locationFN.requestFocus();
   }
 

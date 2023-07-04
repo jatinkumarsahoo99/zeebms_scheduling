@@ -712,6 +712,7 @@ class ApiFactory {
   static String R_O_IMPORT_ON_LOAD = "$BASE_URL/api/ROImport/OnRoImportLoad";
   static String R_O_IMPORT_ON_LEAVE_LOCATION(String code) => "$BASE_URL/api/ROImport/OnLeaveLocation?LocationCode=$code";
   static String R_O_IMPORT_IMPORT_CLICK = "$BASE_URL/api/ROImport/ImportClick";
+  static String R_O_IMPORT_IMPORT_SAVE = "$BASE_URL/api/ROImport/SaveROImportData";
   // static String FILLER_MASTER_BANNER_SEARCH = "$BASE_URL/api/FillerMaster/GetSourceBannerSearch?TextSourceBanner=";
   // static String FILLER_MASTER_RETRIVE_RECORDS = "$BASE_URL/api/FillerMaster/RetriveRecords";
   // static String FILLER_MASTER_SEGNO_LEAVE = "$BASE_URL/api/FillerMaster/SegNoLeave";

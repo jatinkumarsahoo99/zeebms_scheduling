@@ -44,6 +44,7 @@ class ROImportController extends GetxController {
     locationList.refresh();
     channelList.refresh();
     locationFn.requestFocus();
+    update(['buttons']);
   }
 
   @override
@@ -130,7 +131,29 @@ class ROImportController extends GetxController {
       Snack.callError("Please select location");
     } else if (selectedChannel == null) {
       Snack.callError("Please select channel");
-    } else {}
+    } else {
+      Get.find<ConnectorControl>().POSTMETHOD(
+        api: ApiFactory.R_O_IMPORT_IMPORT_SAVE,
+        fun: (resp) {
+          print(resp);
+          LoadingDialog.callDataSaved(
+            msg: resp.toString(),
+            callback: () {
+              clearPage();
+            },
+          );
+        },
+        json: {
+          "bookingDetail": "",
+          "locationCode": selectedLocation?.key,
+          "channelCode": selectedChannel?.key,
+          "modifiedBy": Get.find<MainController>().user?.logincode,
+          "action": "",
+          "lstdgvMissingData": topRightDataTable,
+          "lstdgvImportData": topLeftDataTable.value,
+        },
+      );
+    }
   }
 
   Future<void> handleImportTap() async {
@@ -200,9 +223,12 @@ class ROImportController extends GetxController {
                   saveEnabled.value = true;
                 } else {
                   saveEnabled.value = false;
+                  update(['buttons']);
                 }
               } else {
                 LoadingDialog.showErrorDialog(r.toString());
+                saveEnabled.value = false;
+                update(['buttons']);
               }
             });
       }
