@@ -255,7 +255,7 @@ class SecondaryEventMasterController extends GetxController {
         },
         json: {
           "eventCode": num.tryParse(eventCode ?? "0"),
-          "houseid": txNoTC.text.trim(),
+          "hous eid": txNoTC.text.trim(),
           "eventCaption": eventNameTC.text.trim(),
           "txCaption": txCaptionTC.text.trim(),
           "locationcode": selectedLoc?.key,
@@ -267,7 +267,7 @@ class SecondaryEventMasterController extends GetxController {
           "killtime": DateFormat("yyyy-MM-ddT00:00:00").format(DateFormat("dd-MM-yyyy").parse(endDateTC.text)),
           "modifiedby": Get.find<MainController>().user?.logincode,
           "optBug": selectedRadio.value == "Bug",
-          "optAstonLoop": selectedRadio.value == "Aston",
+          "optAstonLoop": false,
         },
       );
     }
