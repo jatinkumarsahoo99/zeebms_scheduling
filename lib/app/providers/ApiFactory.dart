@@ -765,7 +765,7 @@ class ApiFactory {
       "$BASE_URL/api/AsrunImport/CheckSapBillingStatus?LocationCode=$locationCode&ChannelCode=$channelCode&TelecastDate=$telecastDate";
 
   static String AsrunImport_CheckMissingAsRun = "$BASE_URL/api/AsrunImport/CheckMissingAsRun";
-  static String AsrunImport_GetAsrunProgramList = "$BASE_URL/api/AsrunImport/GetAsrunProgramList";
+  static String AsrunImport_GetAsrunProgramList = "$BASE_URL/api/AsrunImport/GetAsrunProgramList?ProgramName=";
   static String AsrunImport_GetDeleteStatus = "$BASE_URL/api/AsrunImport/GetDeleteStatus";
   static String AsrunImport_SaveAsrunDetail = "$BASE_URL/api/AsrunImport/SaveAsrunDetail";
   static String AsrunImport_SaveTempDetail = "$BASE_URL/api/AsrunImport/SaveTempDetail";

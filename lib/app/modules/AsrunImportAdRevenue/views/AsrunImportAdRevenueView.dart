@@ -342,12 +342,25 @@ class AsrunImportAdRevenueView extends GetView<AsrunImportController> {
   paste({bool up = true}) {
     if ((controller.gridStateManager?.currentSelectingRows ?? <PlutoRow>[]).isNotEmpty) {
       print(controller.gridStateManager?.currentSelectingRows.length);
-      String fpcTime = (up ? controller.gridStateManager?.currentSelectingRows.first : controller.gridStateManager?.currentSelectingRows.last)
+      String fpcTime = (up ? controller.gridStateManager?.currentSelectingRows.last : controller.gridStateManager?.currentSelectingRows.first)
           ?.cells["fpctIme"]
           ?.value;
+      String programCode = controller
+              .asrunData?[
+                  (up ? controller.gridStateManager?.currentSelectingRows.last : controller.gridStateManager?.currentSelectingRows.first)!.sortIdx]
+              .programCode ??
+          "";
+
+      String programName = (up ? controller.gridStateManager?.currentSelectingRows.last : controller.gridStateManager?.currentSelectingRows.first)
+          ?.cells["programName"]
+          ?.value;
+      print(fpcTime);
       for (var element in controller.gridStateManager?.currentSelectingRows ?? <PlutoRow>[]) {
-        controller.gridStateManager?.changeCellValue(element.cells["fpctIme"]!, fpcTime);
+        controller.gridStateManager?.changeCellValue(element.cells["fpctIme"]!, fpcTime, force: true);
         controller.asrunData?[element.sortIdx].fpctIme = fpcTime;
+        controller.gridStateManager?.changeCellValue(element.cells["programName"]!, programName, force: true);
+        controller.asrunData?[element.sortIdx].programName = programName;
+        controller.asrunData?[element.sortIdx].programCode = programCode;
       }
     }
   }
@@ -364,10 +377,10 @@ class AsrunImportAdRevenueView extends GetView<AsrunImportController> {
             children: [
               DropDownField.formDropDownSearchAPI2(
                 GlobalKey(), Get.context!,
-                title: "Filler Caption",
+                title: "Program",
                 url: ApiFactory.AsrunImport_GetAsrunProgramList,
-                parseKeyForKey: "fillerCode",
-                parseKeyForValue: "fillerCaption",
+                parseKeyForKey: "programCode",
+                parseKeyForValue: "programName",
                 onchanged: (data) {
                   selectedProgram = data;
                 },
