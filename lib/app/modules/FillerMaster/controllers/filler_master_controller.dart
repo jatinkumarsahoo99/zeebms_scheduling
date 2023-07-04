@@ -7,7 +7,6 @@ import 'package:bms_scheduling/app/providers/ApiFactory.dart';
 import 'package:bms_scheduling/app/routes/app_pages.dart';
 import 'package:bms_scheduling/widgets/LoadingDialog.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
 import 'package:get/get.dart';
 import 'package:intl/intl.dart';
 
@@ -161,23 +160,14 @@ class FillerMasterController extends GetxController {
   }
 
   addListeneres2() {
-    // rightTableFN.onKey = (focus, event) {
-    //   if (event.isKeyPressed(LogicalKeyboardKey.delete)) {
-    //     if (rightTableSelectedIdx != -1) {
-    //       rightDataTable.removeAt(rightTableSelectedIdx);
-    //       rightDataTable.refresh();
-    //     }
-    //   }
-    //   return KeyEventResult.ignored;
-    // };
-    segNoFN.addListener(() {
-      if (!segNoFN.hasFocus) {
-        segNoLeftLeave();
-      }
-    });
     tapeIDFN.addListener(() {
       if (!tapeIDFN.hasFocus) {
         tapeIDLeave();
+      }
+    });
+    segNoFN.addListener(() {
+      if (!segNoFN.hasFocus && !Get.isDialogOpen!) {
+        segNoLeftLeave();
       }
     });
     fillerNameFN.addListener(() async {
@@ -218,7 +208,7 @@ class FillerMasterController extends GetxController {
         await Get.find<ConnectorControl>().POSTMETHOD(
           api: ApiFactory.FILLER_MASTER_SEGNO_LEAVE,
           fun: (resp) {
-            closeDialogIfOpen();
+            Get.back();
             if (resp != null && resp is Map<String, dynamic> && resp['segNumber'] != null && resp['segNumber']['eventName'] != null) {
               LoadingDialog.showErrorDialog(resp['segNumber']['eventName'].toString(), callback: () {
                 tapeIDFN.requestFocus();
@@ -248,9 +238,9 @@ class FillerMasterController extends GetxController {
       await Get.find<ConnectorControl>().POSTMETHOD(
         api: ApiFactory.FILLER_MASTER_TAPE_ID_LEAVE,
         fun: (resp) {
-          closeDialogIfOpen();
-          if (resp != null && resp is Map<String, dynamic> && resp['tapeid'] != null && resp['tapeid']['eventName'] != null) {
-            LoadingDialog.showErrorDialog(resp['tapeid']['eventName'].toString(), callback: () {
+          Get.back();
+          if (resp != null && resp is Map<String, dynamic> && resp['tapeID_Leave'] != null && resp['tapeID_Leave']['eventName'] != null) {
+            LoadingDialog.showErrorDialog(resp['tapeID_Leave']['eventName'].toString(), callback: () {
               tapeIDFN.requestFocus();
             });
           }
@@ -595,7 +585,7 @@ class FillerMasterController extends GetxController {
       LoadingDialog.showErrorDialog("Banner cannot be empty.");
     } else if (startDate.isAfter(endDate)) {
       LoadingDialog.showErrorDialog("Start date should not more than end date");
-    } else if (endDate.isAfter(DateTime.now())) {
+    } else if (endDate.isBefore(DateTime.now())) {
       LoadingDialog.showErrorDialog("End date should not less than today.");
     } else {
       LoadingDialog.call();

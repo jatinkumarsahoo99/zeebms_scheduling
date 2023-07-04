@@ -1,3 +1,5 @@
+import 'dart:convert';
+
 import 'package:bms_scheduling/app/controller/ConnectorControl.dart';
 import 'package:bms_scheduling/app/controller/MainController.dart';
 import 'package:bms_scheduling/app/data/DropDownValue.dart';
@@ -6,18 +8,24 @@ import 'package:bms_scheduling/app/modules/LogAdditions/bindings/log_additions_b
 import 'package:bms_scheduling/app/providers/ApiFactory.dart';
 import 'package:bms_scheduling/widgets/LoadingDialog.dart';
 import 'package:bms_scheduling/widgets/gridFromMap.dart';
+import 'package:file_picker/file_picker.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:get/get.dart';
 import 'package:intl/intl.dart';
 
 // import '../../../../widgets/cutom_dropdown.dart';
+import '../../../../widgets/DataGridShowOnly.dart';
+import '../../../../widgets/FormButton.dart';
+import '../../../../widgets/PlutoGrid/src/manager/pluto_grid_state_manager.dart';
 import '../../../../widgets/PlutoGrid/src/pluto_grid.dart';
 import '../../../data/PermissionModel.dart';
+import '../../../providers/ExportData.dart';
 import '../../../providers/Utils.dart';
 import '../../../routes/app_pages.dart';
 import '../../CommonSearch/views/common_search_view.dart';
 import '../../FillerMaster/model/filler_annotation_model.dart';
+import '../../RoCancellation/bindings/ro_cancellation_doc.dart';
 import '../model/promo_master_on_load_model.dart';
 import '../model/promo_master_retrive_model.dart';
 
@@ -44,6 +52,7 @@ class PromoMasterController extends GetxController {
   var txCaptionPreFix = "".obs;
   var segHash = 1.obs;
   int rightTableSelectedIdx = -1;
+  List<RoCancellationDocuments> documents = [];
 
   var startDateCtr = TextEditingController(),
       endDateCtr = TextEditingController(),
@@ -61,6 +70,7 @@ class PromoMasterController extends GetxController {
       durationCtr = TextEditingController(text: "00:00:00:00");
 
   var locationFN = FocusNode(),
+      somFN = FocusNode(),
       eomFN = FocusNode(),
       fillerNameFN = FocusNode(),
       captionFN = FocusNode(),
@@ -117,6 +127,16 @@ class PromoMasterController extends GetxController {
         onleaveBlankTapeID();
       }
     });
+    eomFN.addListener(() {
+      if (!eomFN.hasFocus) {
+        calculateDuration();
+      }
+    });
+    // somFN.addListener(() {
+    //   if (!somFN.hasFocus && !Get.isDialogOpen!) {
+    //     calculateDuration();
+    //   }
+    // });
   }
 
   validateAndSaveRecord() {
@@ -221,7 +241,92 @@ class PromoMasterController extends GetxController {
           isAppBarReq: true,
         ),
       );
+    } else if (btnName == "Docs") {
+      docs();
     }
+  }
+
+  docs() async {
+    String documentKey = "";
+    if (promoCode.isEmpty) {
+      documentKey = "Promomaster";
+    } else {
+      documentKey = "Promomaster$promoCode";
+    }
+    PlutoGridStateManager? viewDocsStateManger;
+    try {
+      LoadingDialog.call();
+      await Get.find<ConnectorControl>().GETMETHODCALL(
+          api: ApiFactory.RO_CANCELLATION_LOAD_DOC(documentKey),
+          fun: (data) {
+            if (data is Map && data.containsKey("info_GetAllDocument")) {
+              documents = [];
+              for (var doc in data["info_GetAllDocument"]) {
+                documents.add(RoCancellationDocuments.fromJson(doc));
+              }
+              Get.back();
+            }
+          });
+    } catch (e) {
+      Get.back();
+    }
+
+    Get.defaultDialog(
+      title: "Documents",
+      content: Container(
+        width: Get.width / 2.5,
+        height: Get.height / 2.5,
+        child: DataGridShowOnlyKeys(
+          mapData: documents.map((e) => e.toJson()).toList(),
+          onload: (loadGrid) {
+            viewDocsStateManger = loadGrid.stateManager;
+          },
+        ),
+      ),
+      actions: {"Add Doc": () async {}, "View Doc": () {}, "Attach Email": () {}}
+          .entries
+          .map((e) => FormButtonWrapper(
+                btnText: e.key,
+                callback: e.key == "Add Doc"
+                    ? () async {
+                        FilePickerResult? result = await FilePicker.platform.pickFiles(allowMultiple: false);
+
+                        if (result != null && result.files.isNotEmpty) {
+                          LoadingDialog.call();
+                          await Get.find<ConnectorControl>().POSTMETHOD(
+                              api: ApiFactory.RO_CANCELLATION_ADD_DOC,
+                              fun: (data) {
+                                if (data is Map && data.containsKey("addingDocument")) {
+                                  for (var doc in data["addingDocument"]) {
+                                    documents.add(RoCancellationDocuments.fromJson(doc));
+                                  }
+                                  Get.back();
+                                  docs();
+                                }
+                              },
+                              json: {
+                                "documentKey": documentKey,
+                                "strFilePath": result.files.first.name,
+                                "bytes": base64.encode(List<int>.from(result.files.first.bytes ?? []))
+                              });
+                          Get.back();
+                        }
+                      }
+                    : e.key == "View Doc"
+                        ? () {
+                            Get.find<ConnectorControl>().GETMETHODCALL(
+                                api: ApiFactory.RO_CANCELLATION_VIEW_DOC(documents[viewDocsStateManger!.currentCell!.row.sortIdx].documentId),
+                                fun: (data) {
+                                  if (data is Map && data.containsKey("addingDocument")) {
+                                    ExportData().exportFilefromByte(
+                                        base64Decode(data["addingDocument"][0]["documentData"]), data["addingDocument"][0]["documentname"]);
+                                  }
+                                });
+                          }
+                        : () {},
+              ))
+          .toList(),
+    );
   }
 
   clearPage() {

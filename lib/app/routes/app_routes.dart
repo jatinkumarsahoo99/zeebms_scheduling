@@ -34,6 +34,7 @@ abstract class Routes {
   static const SLIDE = _Paths.SLIDE;
   static const COMMERCIAL_MASTER = _Paths.COMMERCIAL_MASTER;
   static const ASURN_IMPORT = _Paths.ASURN_IMPORT;
+  static const R_O_IMPORT = _Paths.R_O_IMPORT;
 }
 
 abstract class RoutesList {
@@ -73,8 +74,8 @@ abstract class _Paths {
   static const SPOT_PRIORITY = '/frmSpotPriority';
   static const RO_RESCHEDULE = '/frmRoReschedule';
   static const ROS_DISTRIBUTION = '/FrmRosDistribution';
-  static const FINAL_AUDIT_REPORT_BEFORE_LOG = '/final-audit-report-before-log';
-  static const FINAL_AUDIT_REPORT_AFTER_TELECAST = '/final-audit-report-after-telecast';
+  static const FINAL_AUDIT_REPORT_BEFORE_LOG = '/frmFinalAuditReport';
+  static const FINAL_AUDIT_REPORT_AFTER_TELECAST = '/frmFinalAuditreportasrunlog';
   static const AUDIT_STATUS = '/frmNewBookingActivityReport';
   static const ASRUN_IMPORT_AD_REVENUE = '/frmAsrunImport';
   static const SALES_AUDIT_NOT_TELECAST_REPORT = '/frmsalesauditnottelecast';
@@ -89,4 +90,5 @@ abstract class _Paths {
   static const SLIDE = '/frmSlideScheduling';
   static const COMMERCIAL_MASTER = '/frmCommercialMaster';
   static const ASURN_IMPORT = '/asurn-import';
+  static const R_O_IMPORT = '/frmROImport';
 }

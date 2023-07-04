@@ -6,7 +6,10 @@ import 'package:flutter/material.dart' show TextEditingController, FocusNode;
 import 'package:get/get.dart';
 import 'package:intl/intl.dart';
 
+import '../../../data/PermissionModel.dart';
 import '../../../providers/ExportData.dart';
+import '../../../providers/Utils.dart';
+import '../../../routes/app_pages.dart';
 
 class FinalAuditReportBeforeLogController extends GetxController {
   @override
@@ -16,6 +19,7 @@ class FinalAuditReportBeforeLogController extends GetxController {
   }
 
   DropDownValue? selectedLocation, selectedChannel;
+  List<PermissionModel>? formPermissions;
   var efficitveDateTC = TextEditingController(), startTimeTC = TextEditingController();
   var dataTBList = <dynamic>[].obs;
   var locationList = <DropDownValue>[].obs, channelList = <DropDownValue>[].obs;
@@ -23,9 +27,23 @@ class FinalAuditReportBeforeLogController extends GetxController {
   var standByLog = false.obs;
 
   convertToExcelAndSave() {
-    if (dataTBList.value.isNotEmpty) {
-      ExportData().exportExcelFromJsonList(dataTBList.value, "fileName");
+    if (selectedLocation == null) {
+      LoadingDialog.showErrorDialog("Please select Location");
+    } else if (selectedChannel == null) {
+      LoadingDialog.showErrorDialog("Please select Channel");
+    } else if (dataTBList.value.isEmpty) {
+      LoadingDialog.showErrorDialog("No Records Found");
+    } else {
+      // ASIA_ZEE TV_05_Jul_2023_FAR.xls
+      ExportData().exportExcelFromJsonList(dataTBList.value,
+          "${selectedLocation?.value}_${selectedChannel?.value}_${DateFormat("dd_MMM_yyyy").format(DateFormat("dd-MM-yyyy").parse(efficitveDateTC.text))}_FAR");
     }
+  }
+
+  @override
+  void onInit() {
+    formPermissions = Utils.fetchPermissions1(Routes.FINAL_AUDIT_REPORT_BEFORE_LOG.replaceAll("/", ""));
+    super.onInit();
   }
 
   initialAPI() {
@@ -120,6 +138,16 @@ class FinalAuditReportBeforeLogController extends GetxController {
     locationList.refresh();
     channelList.refresh();
     standByLog.value = false;
+    startTimeTC.text = "00:00:00";
+    efficitveDateTC.clear();
     locationFN.requestFocus();
+  }
+
+  formHandler(btn) {
+    if (btn == "Save") {
+      convertToExcelAndSave();
+    } else if (btn == "Clear") {
+      clearPage();
+    }
   }
 }

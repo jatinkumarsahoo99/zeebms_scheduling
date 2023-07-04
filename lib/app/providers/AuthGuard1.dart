@@ -25,6 +25,7 @@ import '../modules/AuditStatus/views/audit_status_view.dart';
 import '../modules/CommercialMaster/views/commercial_master_view.dart';
 import '../modules/LogAdditions/views/LogAdditionsView.dart';
 import '../modules/PromoMaster/views/promo_master_view.dart';
+import '../modules/ROImport/views/r_o_import_view.dart';
 import '../modules/SalesAuditNew/views/SalesAuditNewView.dart';
 import '../modules/SlideMaster/views/slide_master_view.dart';
 import '../modules/SpotPriority/views/SpotPriorityView.dart';
@@ -62,6 +63,9 @@ class AuthGuard1 extends StatelessWidget {
               break;
             case Routes.SLIDE:
               currentWidget = SlideView();
+              break;
+            case Routes.R_O_IMPORT:
+              currentWidget = const ROImportView();
               break;
             case Routes.EVENT_SECONDARY:
               currentWidget = EventSecondaryView();
@@ -154,8 +158,7 @@ class AuthGuard1 extends StatelessWidget {
               currentWidget = const NoDataFoundPage();
           }
           // currentWidget = child;
-        }
-        else if (controller.loginVal.value == 2) {
+        } else if (controller.loginVal.value == 2) {
           currentWidget = const NoDataFoundPage();
         } else {
           currentWidget = const LoadingScreen();
