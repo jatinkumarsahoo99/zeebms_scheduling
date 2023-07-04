@@ -143,14 +143,28 @@ class ROImportView extends GetView<ROImportController> {
               SizedBox(height: 10),
 
               /// bottom-datagrid
-              Expanded(
-                child: Container(
-                  decoration: BoxDecoration(
-                    border: Border.all(
-                      color: Colors.grey,
-                    ),
+              Obx(() {
+                return Text(
+                  controller.bottomMsg.value,
+                  style: TextStyle(
+                    color: Colors.green,
+                    fontWeight: FontWeight.bold,
                   ),
-                ),
+                );
+              }),
+              Expanded(
+                child: Obx(() {
+                  return Container(
+                    decoration: controller.bottomDataTable.isEmpty
+                        ? BoxDecoration(
+                            border: Border.all(
+                              color: Colors.grey,
+                            ),
+                          )
+                        : null,
+                    child: controller.bottomDataTable.isEmpty ? null : DataGridFromMap(mapData: controller.bottomDataTable.value),
+                  );
+                }),
               ),
               SizedBox(height: 10),
 
@@ -160,22 +174,25 @@ class ROImportView extends GetView<ROImportController> {
                   init: Get.find<HomeController>(),
                   builder: (btncontroller) {
                     if (btncontroller.buttons != null) {
-                      return Wrap(
-                        spacing: 5,
-                        runSpacing: 5,
-                        alignment: WrapAlignment.start,
-                        children: [
-                          for (var btn in btncontroller.buttons!) ...{
-                            FormButtonWrapper(
-                              btnText: btn["name"],
-                              callback:
-                                  (((btn["name"] == "Save") && !controller.saveEnabled.value) || (btn['name'] == "Clear") || (btn['name'] == "Exit"))
-                                      ? () => controller.formHandler(btn['name'])
-                                      : null,
-                            )
-                          },
-                        ],
-                      );
+                      return Obx(() {
+                        controller.saveEnabled.value;
+                        return Wrap(
+                          spacing: 5,
+                          runSpacing: 5,
+                          alignment: WrapAlignment.start,
+                          children: [
+                            for (var btn in btncontroller.buttons!) ...{
+                              FormButtonWrapper(
+                                btnText: btn["name"],
+                                callback:
+                                    (((btn["name"] == "Save") && controller.saveEnabled.value) || (btn['name'] == "Clear") || (btn['name'] == "Exit"))
+                                        ? () => controller.formHandler(btn['name'])
+                                        : null,
+                              )
+                            },
+                          ],
+                        );
+                      });
                     }
                     return SizedBox();
                   }),
