@@ -382,7 +382,7 @@ class SalesAuditNewView  extends StatelessWidget  {
                                                 load) {
                                                   controller.gridStateManagerRight = load.stateManager;
                                                   controller.gridStateManagerRight!.setCurrentCell(controller.gridStateManagerRight!.
-                                                  getRowByIdx(controller.selectedRightIndex)!.cells['telecastTime'],
+                                                  getRowByIdx(controller.selectedRightIndex)!.cells['exportTapeCode'],
                                                       controller.selectedRightIndex);
                                                   controller.gridStateManagerRight!.moveCurrentCellByRowIdx(controller.selectedRightIndex??0,
                                                       PlutoMoveDirection.down);

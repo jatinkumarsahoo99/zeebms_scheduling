@@ -100,25 +100,30 @@ class SalesAuditNewController extends GetxController {
 
   filterSearchAndCancel(){
     if(salesAuditGetRetrieveModel != null){
-      listAsrunLog2.clear();
-      masterListAsrunLog2.clear();
-      if(showError.value == true && showCancel.value == true){
-        listAsrunLog2.addAll(salesAuditGetRetrieveModel!.gettables!.lstAsrunlog2 as Iterable<LstAsrunlog2>);
-        masterListAsrunLog2.addAll(listAsrunLog2);
-      }else if(showError.value == true){
-        listAsrunLog2.addAll(salesAuditGetRetrieveModel!.gettables!.lstAsrunlog2!.where((element) =>
-        element.bookingStatus.toString().toUpperCase() != "C").toList());
-        masterListAsrunLog2.addAll(listAsrunLog2);
-      }else if(showCancel.value == true){
-        listAsrunLog2.addAll(salesAuditGetRetrieveModel!.gettables!.lstAsrunlog2!.where((element) =>
-        element.bookingStatus.toString().toUpperCase() != "E").toList());
-        masterListAsrunLog2.addAll(listAsrunLog2);
-      }else{
-        listAsrunLog2.addAll(salesAuditGetRetrieveModel!.gettables!.lstAsrunlog2!.where((element) =>
-        element.bookingStatus.toString().toUpperCase() != "C" && element.bookingStatus.toString().toUpperCase() != "E").toList());
-        masterListAsrunLog2.addAll(listAsrunLog2);
+
+      if(salesAuditGetRetrieveModel!.gettables != null &&
+          salesAuditGetRetrieveModel!.gettables!.lstAsrunlog1 != null &&
+          salesAuditGetRetrieveModel!.gettables!.lstAsrunlog1!.isNotEmpty  ){
+        listAsrunLog2.clear();
+        masterListAsrunLog2.clear();
+        if(showError.value == true && showCancel.value == true){
+          listAsrunLog2.addAll(salesAuditGetRetrieveModel!.gettables!.lstAsrunlog2 as Iterable<LstAsrunlog2>);
+          masterListAsrunLog2.addAll(listAsrunLog2);
+        }else if(showError.value == true){
+          listAsrunLog2.addAll(salesAuditGetRetrieveModel!.gettables!.lstAsrunlog2!.where((element) =>
+          element.bookingStatus.toString().toUpperCase() != "C").toList());
+          masterListAsrunLog2.addAll(listAsrunLog2);
+        }else if(showCancel.value == true){
+          listAsrunLog2.addAll(salesAuditGetRetrieveModel!.gettables!.lstAsrunlog2!.where((element) =>
+          element.bookingStatus.toString().toUpperCase() != "E").toList());
+          masterListAsrunLog2.addAll(listAsrunLog2);
+        }else{
+          listAsrunLog2.addAll(salesAuditGetRetrieveModel!.gettables!.lstAsrunlog2!.where((element) =>
+          element.bookingStatus.toString().toUpperCase() != "C" && element.bookingStatus.toString().toUpperCase() != "E").toList());
+          masterListAsrunLog2.addAll(listAsrunLog2);
+        }
+        update(['leftOne']);
       }
-      update(['leftOne']);
     }else{
       listAsrunLog2.clear();
       masterListAsrunLog2.clear();
