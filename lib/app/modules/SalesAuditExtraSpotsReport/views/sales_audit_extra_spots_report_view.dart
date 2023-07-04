@@ -86,6 +86,7 @@ class SalesAuditExtraSpotsReportView extends GetView<SalesAuditExtraSpotsReportC
                               : DataGridFromMap(
                                   mapData: controller.dataTBList.value,
                                   formatDate: false,
+                                  exportFileName: "Sales Audit (Extra Spots Report)",
                                 );
                         },
                       ),

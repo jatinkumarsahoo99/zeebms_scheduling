@@ -72,7 +72,7 @@ class ROImportView extends GetView<ROImportController> {
                             Text(
                               controller.leftMsg.value,
                               style: TextStyle(
-                                color: Colors.red,
+                                color: controller.saveEnabled.value ? Colors.green : Colors.red,
                                 fontWeight: FontWeight.bold,
                               ),
                             ),
@@ -85,7 +85,12 @@ class ROImportView extends GetView<ROImportController> {
                                         ),
                                       )
                                     : null,
-                                child: controller.topLeftDataTable.isNotEmpty ? DataGridFromMap(mapData: controller.topLeftDataTable.value) : null,
+                                child: controller.topLeftDataTable.isNotEmpty
+                                    ? DataGridFromMap(
+                                        mapData: controller.topLeftDataTable.value,
+                                        exportFileName: "RO Import",
+                                      )
+                                    : null,
                               ),
                             )
                           ],
@@ -119,7 +124,13 @@ class ROImportView extends GetView<ROImportController> {
                                         ),
                                       )
                                     : null,
-                                child: controller.topRightDataTable.isNotEmpty ? DataGridFromMap(mapData: controller.topRightDataTable.value) : null,
+                                child: controller.topRightDataTable.isNotEmpty
+                                    ? DataGridFromMap(
+                                        mapData: controller.topRightDataTable.value,
+                                        doPasccal: false,
+                                        exportFileName: "RO Import",
+                                      )
+                                    : null,
                               ),
                             )
                           ],
@@ -157,11 +168,10 @@ class ROImportView extends GetView<ROImportController> {
                           for (var btn in btncontroller.buttons!) ...{
                             FormButtonWrapper(
                               btnText: btn["name"],
-                              callback: ((Utils.btnAccessHandler(btn['name'], controller.formPermissions!) == null))
-                                  ? (btn["name"] == "Clear")
+                              callback:
+                                  (((btn["name"] == "Save") && !controller.saveEnabled.value) || (btn['name'] == "Clear") || (btn['name'] == "Exit"))
                                       ? () => controller.formHandler(btn['name'])
-                                      : null
-                                  : () => controller.formHandler(btn['name']),
+                                      : null,
                             )
                           },
                         ],

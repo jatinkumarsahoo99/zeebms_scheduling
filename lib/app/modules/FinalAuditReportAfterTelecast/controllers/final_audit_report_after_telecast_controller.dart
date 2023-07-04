@@ -114,12 +114,13 @@ class FinalAuditReportAfterTelecastController extends GetxController {
   }
 
   clearPage() {
+    fromTC.clear();
+    toTC.clear();
     selectedLocation = null;
     selectedChannel = null;
     dataTBList.clear();
     locationList.refresh();
     channelList.refresh();
-
     locationFN.requestFocus();
   }
 
