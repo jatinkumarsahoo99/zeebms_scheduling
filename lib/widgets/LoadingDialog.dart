@@ -8,9 +8,10 @@ import '../app/providers/SizeDefine.dart';
 import 'FormButton.dart';
 
 class LoadingDialog {
-  static call() {
+  static call({bool barrierDismissible = true}) {
     Get.defaultDialog(
       title: "",
+      barrierDismissible: barrierDismissible,
       titleStyle: TextStyle(fontSize: 1),
       content: Row(
         mainAxisAlignment: MainAxisAlignment.center,

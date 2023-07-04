@@ -64,14 +64,14 @@ class AsRunData {
     programCode = json['programCode'];
     telecasttime = json['telecasttime'];
     tapeId = json['tapeId'];
-    segmentnumber = json['segmentnumber'];
+    segmentnumber = json['segmentnumber'] is String ? int.tryParse(json['segmentnumber']) : json['segmentnumber'];
     caption = json['caption'];
     telecastDuration = json['telecastDuration'];
     vtr = json['vtr'];
     ch = json['ch'];
     eventtype = json['eventtype'];
     bookingnumber = json['bookingnumber'];
-    bookingdetailcode = json['bookingdetailcode'];
+    bookingdetailcode = json['bookingdetailcode'] is String ? int.tryParse(json['bookingdetailcode']) : json['bookingdetailcode'];
     scheduletime = json['scheduletime'];
     scheduledProgram = json['scheduledProgram'];
     rosBand = json['rosBand'];
