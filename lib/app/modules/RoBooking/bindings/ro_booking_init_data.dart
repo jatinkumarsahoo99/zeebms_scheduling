@@ -197,14 +197,14 @@ class LstSecondaryEventTrigger {
   LstSecondaryEventTrigger({this.secondaryeventid, this.secondaryevent});
 
   LstSecondaryEventTrigger.fromJson(Map<String, dynamic> json) {
-    secondaryeventid = json['secondaryeventid'];
-    secondaryevent = json['secondaryevent'];
+    secondaryeventid = json['triggerId'];
+    secondaryevent = json['triggerCaption'];
   }
 
   Map<String, dynamic> toJson() {
     final Map<String, dynamic> data = new Map<String, dynamic>();
-    data['secondaryeventid'] = this.secondaryeventid;
-    data['secondaryevent'] = this.secondaryevent;
+    data['triggerId'] = this.secondaryeventid;
+    data['triggerCaption'] = this.secondaryevent;
     return data;
   }
 }

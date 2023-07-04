@@ -200,8 +200,15 @@ class AsrunImportController extends GetxController {
   checkMissingAsrun() {
     Get.find<ConnectorControl>().POSTMETHOD(
         api: ApiFactory.AsrunImport_CheckMissingAsRun,
-        json: {"startTime": startTime_.text, "checkMissingAsRuns": asrunData?.map((e) => e.toJson()).toList()},
+        json: {"startTime": startTime_.text, "checkMissingAsRuns": asrunData?.map((e) => e.toJson(isSegInt: false)).toList()},
         fun: (map) {
+          if (map is Map && map.containsKey("isCheck") && map.containsKey("message")) {
+            LoadingDialog.callInfoMessage(map["message"].toString(), callback: () {
+              LoadingDialog.modify("Asrun Missing Do Yount Want To Proceed with Save?", () {
+                saveAsrun();
+              }, () {}, cancelTitle: "No", deleteTitle: "Yes");
+            });
+          }
           // if (map is Map && map.containsKey("progMismatch") && map["progMismatch"]["message"] != null) {
           //   LoadingDialog.callInfoMessage(map["progMismatch"]["message"]);
           // }
@@ -218,6 +225,33 @@ class AsrunImportController extends GetxController {
           "LocationCode": selectLocation?.key,
           "Channelcode": selectChannel?.key,
           "ObjProgList": [FPCProgramList.convertAsRunDataToFPCProgramList(asrunData![gridStateManager?.currentRowIdx ?? 0]).toJson()]
+        },
+        fun: (map) {
+          if (map is Map && map.containsKey("asRunData")) {
+            print("list found");
+
+            // if (map['asRunData'] != null) {
+            //   asrunData = <AsRunData>[];
+            //   map['asRunData'].forEach((v) {
+            //     asrunData!.add(AsRunData.fromJson(v));
+            //   });
+            // }
+
+            // update(["fpcData"]);
+          }
+        });
+  }
+
+  manualUpdateFPCTime(programName, programCode, fpcTime, AsRunData asRunData) {
+    Get.find<ConnectorControl>().POSTMETHOD(
+        api: ApiFactory.AsrunImport_UpdateFPCTime,
+        json: {
+          "programName": programName,
+          "fpcTime": fpcTime,
+          "programCode": programCode,
+          "LocationCode": selectLocation?.key,
+          "Channelcode": selectChannel?.key,
+          "ObjProgList": [FPCProgramList.convertAsRunDataToFPCProgramList(asRunData).toJson()]
         },
         fun: (map) {
           if (map is Map && map.containsKey("asRunData")) {
@@ -276,7 +310,7 @@ class AsrunImportController extends GetxController {
       'TelecastDate': '05/31/2023',
       'ImportFile': dio.MultipartFile.fromBytes(
         file!.bytes!.toList(),
-        filename: file!.name,
+        filename: file.name,
       ),
       'LocationCode': selectLocation?.key,
       'LogDate': selectedDate.text.fromdMyToyMd(),
@@ -298,10 +332,40 @@ class AsrunImportController extends GetxController {
                 asrunData!.add(AsRunData.fromJson(v));
               });
             }
+            update(["fpcData"]);
+            if (value["asrunDetails"]["lstTempResponse"]['showPopup'] != null && value["asrunDetails"]["lstTempResponse"]['showPopup']["isCheck"]) {
+              LoadingDialog.callInfoMessage(value["asrunDetails"]["lstTempResponse"]['showPopup']["message"]);
+            }
           }
-          Get.find<HomeController>().update(["transButtons"]);
 
-          update(["fpcData"]);
+          Get.find<HomeController>().update(["transButtons"]);
+        });
+  }
+
+  saveAsrun() {
+    Get.find<ConnectorControl>().POSTMETHOD(
+        api: ApiFactory.AsrunImport_SaveAsrunDetail,
+        json: {
+          "LocationCode": selectLocation?.key,
+          "ChannelCode": selectChannel?.key,
+          "AsrunDate": selectedDate.text.fromdMyToyMd(),
+          "ModifiedBy": Get.find<MainController>().user?.logincode ?? "",
+          "SaveDt": asrunData?.map((e) => e.toJson(isSegInt: false)).toList(),
+          "IsGFK": checkboxesMap["GFK"]
+        },
+        fun: (map) {
+          if (map is Map && map.containsKey("asRunData")) {
+            print("list found");
+
+            // if (map['asRunData'] != null) {
+            //   asrunData = <AsRunData>[];
+            //   map['asRunData'].forEach((v) {
+            //     asrunData!.add(AsRunData.fromJson(v));
+            //   });
+            // }
+
+            // update(["fpcData"]);
+          }
         });
   }
 }

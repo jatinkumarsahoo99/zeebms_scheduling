@@ -223,7 +223,7 @@ class LoadingDialog {
     );
   }
 
-  static callInfoMessage(String value) {
+  static callInfoMessage(String value, {Function()? callback}) {
     Get.defaultDialog(
       title: "",
       barrierDismissible: true,
@@ -248,7 +248,7 @@ class LoadingDialog {
         autoFocus: true,
         callback: () {
           Get.back();
-          // callback!();
+          callback!();
         },
         btnText: "OK",
       ),

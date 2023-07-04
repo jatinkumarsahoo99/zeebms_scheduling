@@ -1,5 +1,6 @@
 import 'dart:convert';
 
+import 'package:bms_scheduling/app/modules/AsrunImportAdRevenue/bindings/arun_data.dart';
 import 'package:bms_scheduling/app/providers/DataGridMenu.dart';
 import 'package:bms_scheduling/widgets/DataGridShowOnly.dart';
 import 'package:bms_scheduling/widgets/LoadingDialog.dart';
@@ -11,13 +12,14 @@ import 'package:bms_scheduling/widgets/PlutoGrid/pluto_grid.dart';
 import '../../../../widgets/DateTime/DateWithThreeTextField.dart';
 import '../../../../widgets/FormButton.dart';
 import '../../../../widgets/WarningBox.dart';
-import '../../../../widgets/cutom_dropdown.dart';
+// import '../../../../widgets/cutom_dropdown.dart';
 import '../../../../widgets/dropdown.dart';
 import '../../../../widgets/gridFromMap.dart';
 import '../../../../widgets/gridFromMap1.dart';
 import '../../../../widgets/input_fields.dart';
 import '../../../../widgets/radio_row.dart';
 import '../../../controller/HomeController.dart';
+import '../../../data/DropDownValue.dart';
 import '../../../providers/ApiFactory.dart';
 import '../../../providers/SizeDefine.dart';
 import '../controllers/AsrunImportController.dart';
@@ -64,6 +66,9 @@ class AsrunImportAdRevenueView extends GetView<AsrunImportController> {
                       controllerX.channels.value,
                       (value) {
                         controllerX.selectChannel = value;
+                        controllerX.checkboxesMap["FPC"] = true;
+                        controllerX.checkboxesMap["GFK"] = true;
+                        controllerX.checkboxesMap.refresh();
                       },
                       "Channel",
                       0.12,
@@ -319,6 +324,12 @@ class AsrunImportAdRevenueView extends GetView<AsrunImportController> {
       case "View FPC":
         showFPCDialog(Get.context);
         break;
+      case "Paste Up":
+        paste();
+        break;
+      case "Paste Down":
+        paste(up: false);
+        break;
       case "Import":
         controller.pickFile();
         break;
@@ -326,6 +337,71 @@ class AsrunImportAdRevenueView extends GetView<AsrunImportController> {
         controller.checkError();
         break;
     }
+  }
+
+  paste({bool up = true}) {
+    if ((controller.gridStateManager?.currentSelectingRows ?? <PlutoRow>[]).isNotEmpty) {
+      print(controller.gridStateManager?.currentSelectingRows.length);
+      String fpcTime = (up ? controller.gridStateManager?.currentSelectingRows.first : controller.gridStateManager?.currentSelectingRows.last)
+          ?.cells["fpctIme"]
+          ?.value;
+      for (var element in controller.gridStateManager?.currentSelectingRows ?? <PlutoRow>[]) {
+        controller.gridStateManager?.changeCellValue(element.cells["fpctIme"]!, fpcTime);
+        controller.asrunData?[element.sortIdx].fpctIme = fpcTime;
+      }
+    }
+  }
+
+  showVerifyDialog(AsRunData asrunData) {
+    TextEditingController fpcTime = TextEditingController(text: asrunData.fpctIme);
+    DropDownValue? selectedProgram;
+    return Get.defaultDialog(
+        title: "Verify",
+        content: Container(
+          height: Get.height / 4,
+          width: Get.width / 2,
+          child: Column(
+            children: [
+              DropDownField.formDropDownSearchAPI2(
+                GlobalKey(), Get.context!,
+                title: "Filler Caption",
+                url: ApiFactory.AsrunImport_GetAsrunProgramList,
+                parseKeyForKey: "fillerCode",
+                parseKeyForValue: "fillerCaption",
+                onchanged: (data) {
+                  selectedProgram = data;
+                },
+                selectedValue: selectedProgram,
+
+                width: Get.width * 0.45,
+                // padding: const EdgeInsets.only()
+              ),
+              Row(
+                children: [
+                  InputFields.formFieldNumberMask(
+                      isEnable: false, hintTxt: "FPC Time", controller: fpcTime, widthRatio: 0.09, isTime: true, paddingLeft: 0),
+                  InputFields.formFieldNumberMask(
+                      isEnable: false,
+                      hintTxt: "From",
+                      controller: TextEditingController(text: asrunData.fpctIme),
+                      widthRatio: 0.09,
+                      isTime: true,
+                      paddingLeft: 0),
+                  InputFields.formFieldNumberMask(
+                      isEnable: false,
+                      hintTxt: "To",
+                      controller: TextEditingController(text: asrunData.fpctIme),
+                      widthRatio: 0.09,
+                      isTime: true,
+                      paddingLeft: 0),
+                ],
+              )
+            ],
+          ),
+        ),
+        onConfirm: () {
+          controller.manualUpdateFPCTime(selectedProgram?.value, selectedProgram?.key, fpcTime.text, asrunData);
+        });
   }
 
   showFPCDialog(context) {
