@@ -58,14 +58,7 @@ class FormButton extends StatelessWidget {
   final IconData? iconDataM;
   final bool showIcon;
 
-  const FormButton(
-      {Key? key,
-      required this.btnText,
-      this.callback,
-      this.isEnabled,
-      this.focusNode,
-      this.showIcon = true,
-      this.iconDataM})
+  const FormButton({Key? key, required this.btnText, this.callback, this.isEnabled, this.focusNode, this.showIcon = true, this.iconDataM})
       : super(key: key);
 
   @override
@@ -73,8 +66,7 @@ class FormButton extends StatelessWidget {
     var iconData;
     if (btnText.toLowerCase() == "save") {
       iconData = Icons.save;
-    } else if (btnText.toLowerCase() == "delete" ||
-        btnText.toLowerCase() == "delete variance") {
+    } else if (btnText.toLowerCase() == "delete" || btnText.toLowerCase() == "delete variance") {
       iconData = Icons.delete;
     } else if (btnText.toLowerCase() == "verify") {
       iconData = Icons.verified_rounded;
@@ -88,9 +80,7 @@ class FormButton extends StatelessWidget {
       iconData = Icons.search;
     } else if (btnText.toLowerCase() == "docs") {
       iconData = Icons.folder;
-    } else if (btnText.toLowerCase() == "add" ||
-        btnText.toLowerCase() == "add default segment" ||
-        btnText.toLowerCase() == "add variance") {
+    } else if (btnText.toLowerCase() == "add" || btnText.toLowerCase() == "add default segment" || btnText.toLowerCase() == "add variance") {
       iconData = Icons.add;
     } else if (btnText.toLowerCase() == "next") {
       iconData = Icons.next_plan;
@@ -124,8 +114,7 @@ class FormButton extends StatelessWidget {
       iconData = Icons.settings_suggest;
     } else if (btnText.toLowerCase() == "execute") {
       iconData = Icons.start;
-    } else if (btnText.toLowerCase() == "ok" ||
-        btnText.toLowerCase() == "done") {
+    } else if (btnText.toLowerCase() == "ok" || btnText.toLowerCase() == "done") {
       iconData = Icons.done;
     } else if (btnText.toLowerCase() == "show programs") {
       iconData = Icons.remove_red_eye;
@@ -137,6 +126,10 @@ class FormButton extends StatelessWidget {
       iconData = Icons.verified_user_rounded;
     } else if (btnText.toLowerCase() == "fc") {
       iconData = Icons.color_lens_outlined;
+    } else if (btnText.toLowerCase() == "up") {
+      iconData = Icons.arrow_upward_rounded;
+    } else if (btnText.toLowerCase() == "down") {
+      iconData = Icons.arrow_downward_rounded;
     } else if (btnText.toLowerCase() == "bc") {
       iconData = Icons.color_lens;
     } else if (btnText.toLowerCase() == "copy segments/annotation") {
@@ -234,14 +227,7 @@ class DailogCloseButton extends StatefulWidget {
   final FocusNode? focusNode;
   final IconData? iconDataM;
 
-  const DailogCloseButton(
-      {Key? key,
-      required this.btnText,
-      this.callback,
-      this.isEnabled,
-      this.focusNode,
-      this.autoFocus = false,
-      this.iconDataM})
+  const DailogCloseButton({Key? key, required this.btnText, this.callback, this.isEnabled, this.focusNode, this.autoFocus = false, this.iconDataM})
       : super(key: key);
 
   @override
@@ -280,8 +266,7 @@ class _DailogCloseButtonState extends State<DailogCloseButton> {
       iconData = Icons.done;
     } else if (widget.btnText.toLowerCase() == "refresh") {
       iconData = Icons.refresh;
-    } else if (widget.btnText.toLowerCase() == "clear" ||
-        widget.btnText.toLowerCase() == "cancel") {
+    } else if (widget.btnText.toLowerCase() == "clear" || widget.btnText.toLowerCase() == "cancel") {
       iconData = Icons.clear;
     } else if (widget.btnText.toLowerCase() == "exit") {
       iconData = Icons.exit_to_app;
@@ -377,8 +362,7 @@ class _DailogCloseButtonState extends State<DailogCloseButton> {
                 : widget.callback
             : null,
         icon: Icon(iconData),
-        color:
-            (widget.isEnabled ?? true) ? Colors.deepPurpleAccent : Colors.grey,
+        color: (widget.isEnabled ?? true) ? Colors.deepPurpleAccent : Colors.grey,
         tooltip: widget.btnText,
         disabledColor: Colors.grey,
       );
