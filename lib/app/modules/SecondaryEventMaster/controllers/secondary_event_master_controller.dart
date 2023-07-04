@@ -55,7 +55,9 @@ class SecondaryEventMasterController extends GetxController {
     somTC.text = "00:00:00:00";
     eomTC.text = "00:00:00:00";
     duration.value = "00:00:00:00";
+    // controllsEnabled.value = false;
     controllsEnabled.value = true;
+    controllsEnabled.refresh();
     locFN.requestFocus();
   }
 
@@ -67,84 +69,92 @@ class SecondaryEventMasterController extends GetxController {
   }
 
   displayData() {
-    LoadingDialog.call();
-    Get.find<ConnectorControl>().GETMETHODCALL(
-        api: ApiFactory.SECONDARY_EVENT_MASTER_DISPLAY_DATA(txNoTC.text),
-        fun: (resp) {
-          closeDialog();
-          if (resp != null && resp is Map<String, dynamic> && resp['display'] != null) {
-            secondaryEventModel = SecondaryEventModel.fromJson(resp);
-            if ((secondaryEventModel != null) && (secondaryEventModel?.display != null) && (secondaryEventModel!.display?.isNotEmpty ?? false)) {
-              controllsEnabled.value = false;
-              eventCode = secondaryEventModel!.display?[0].eventCode.toString();
-              var tempLoc = locationList.firstWhereOrNull((element) => element.key == secondaryEventModel!.display?[0].locationCode);
-              if (tempLoc != null) {
-                selectedLoc = tempLoc;
-                locationList.refresh();
-              }
-              var tempChannel = channelList.firstWhereOrNull((element) => element.key == secondaryEventModel!.display?[0].channelCode);
-              if (tempChannel != null) {
-                selectedChannel = tempChannel;
-                channelList.refresh();
-              } else if (selectedLoc != null) {
-                getChannels(selectedLoc).then((value) {
-                  var tempChannel2 = channelList.firstWhereOrNull((element) => element.key == secondaryEventModel!.display?[0].channelCode);
-                  if (tempChannel2 != null) {
-                    selectedChannel = tempChannel2;
-                    channelList.refresh();
-                  }
-                });
-              }
-              if (secondaryEventModel!.display?[0].houseID != null) {
-                txNoTC.text = secondaryEventModel!.display?[0].houseID ?? "";
-                if (txNoTC.text.contains("BSE")) {
-                  selectedRadio.value = "Bug";
-                } else {
-                  selectedRadio.value = "";
-                }
-              }
-              if (secondaryEventModel!.display?[0].eventCaption != null) {
-                eventNameTC.text = secondaryEventModel!.display?[0].eventCaption ?? "";
-              }
-              if (secondaryEventModel!.display?[0].tXcaption != null) {
-                txCaptionTC.text = secondaryEventModel!.display?[0].tXcaption ?? "";
-              }
-              if (secondaryEventModel!.display?[0].duration != null) {
-                duration.value = Utils.convertToTimeFromDouble(value: secondaryEventModel!.display?[0].duration ?? 0);
-              }
-              if (secondaryEventModel!.display?[0].startDate != null) {
-                startDateTC.text =
-                    DateFormat("dd-MM-yyyy").format(DateFormat("yyyy-MM-ddThh:mm:ss").parse(secondaryEventModel!.display![0].startDate!));
-              }
-              if (secondaryEventModel!.display?[0].killDate != null) {
-                endDateTC.text = DateFormat("dd-MM-yyyy").format(DateFormat("yyyy-MM-ddThh:mm:ss").parse(secondaryEventModel!.display![0].killDate!));
-              }
-              if (secondaryEventModel!.display?[0].som != null) {
-                // somTC.text = (secondaryEventModel!.display?[0].som ?? "00:00:00:00").contains("T")
-                //     ? (secondaryEventModel!.display?[0].som ?? "00:00:00:00").split("T")[1]
-                //     : (secondaryEventModel!.display?[0].som ?? "00:00:00:00");
-                somTC.text = (secondaryEventModel!.display?[0].som ?? "00:00:00:00");
-                eomTC.text = Utils.convertToTimeFromDouble(
-                    value: Utils.oldBMSConvertToSecondsValue(value: somTC.text) + Utils.oldBMSConvertToSecondsValue(value: duration.value));
-              }
-              // if (secondaryEventModel!.display?[0].killTime != null) {
-              //   var tempEOM = (secondaryEventModel!.display?[0].killTime ?? "00:00:00:00").contains("T")
-              //       ? (secondaryEventModel!.display?[0].killTime ?? "00:00:00:00").split("T")[1]
-              //       : (secondaryEventModel!.display?[0].killTime ?? "00:00:00:00");
-
-              //   eomTC.text = Utils.convertToTimeFromDouble(
-              //       value: Utils.oldBMSConvertToSecondsValue(value: tempEOM) + Utils.oldBMSConvertToSecondsValue(value: duration.value));
-              // }
-            } else {
-              secondaryEventModel = null;
-              controllsEnabled.value = true;
-            }
-          } else {
-            secondaryEventModel = SecondaryEventModel();
+    if (txNoTC.text.isEmpty) {
+      return;
+    }
+    try {
+      LoadingDialog.call();
+      Get.find<ConnectorControl>().GETMETHODCALL(
+          api: ApiFactory.SECONDARY_EVENT_MASTER_DISPLAY_DATA(txNoTC.text),
+          fun: (resp) {
             closeDialog();
-            LoadingDialog.showErrorDialog(resp.toString());
-          }
-        });
+            if (resp != null && resp is Map<String, dynamic> && resp['display'] != null) {
+              secondaryEventModel = SecondaryEventModel.fromJson(resp);
+              if ((secondaryEventModel != null) && (secondaryEventModel?.display != null) && (secondaryEventModel!.display?.isNotEmpty ?? false)) {
+                controllsEnabled.value = false;
+                eventCode = secondaryEventModel!.display?[0].eventCode.toString();
+                var tempLoc = locationList.firstWhereOrNull((element) => element.key == secondaryEventModel!.display?[0].locationCode);
+                if (tempLoc != null) {
+                  selectedLoc = tempLoc;
+                  locationList.refresh();
+                }
+                var tempChannel = channelList.firstWhereOrNull((element) => element.key == secondaryEventModel!.display?[0].channelCode);
+                if (tempChannel != null) {
+                  selectedChannel = tempChannel;
+                  channelList.refresh();
+                } else if (selectedLoc != null) {
+                  getChannels(selectedLoc).then((value) {
+                    var tempChannel2 = channelList.firstWhereOrNull((element) => element.key == secondaryEventModel!.display?[0].channelCode);
+                    if (tempChannel2 != null) {
+                      selectedChannel = tempChannel2;
+                      channelList.refresh();
+                    }
+                  });
+                }
+                if (secondaryEventModel!.display?[0].houseID != null) {
+                  txNoTC.text = secondaryEventModel!.display?[0].houseID ?? "";
+                  if (txNoTC.text.contains("BSE")) {
+                    selectedRadio.value = "Bug";
+                  } else {
+                    selectedRadio.value = "";
+                  }
+                }
+                if (secondaryEventModel!.display?[0].eventCaption != null) {
+                  eventNameTC.text = secondaryEventModel!.display?[0].eventCaption ?? "";
+                }
+                if (secondaryEventModel!.display?[0].tXcaption != null) {
+                  txCaptionTC.text = secondaryEventModel!.display?[0].tXcaption ?? "";
+                }
+                if (secondaryEventModel!.display?[0].duration != null) {
+                  duration.value = Utils.convertToTimeFromDouble(value: secondaryEventModel!.display?[0].duration ?? 0);
+                }
+                if (secondaryEventModel!.display?[0].startDate != null) {
+                  startDateTC.text =
+                      DateFormat("dd-MM-yyyy").format(DateFormat("yyyy-MM-ddThh:mm:ss").parse(secondaryEventModel!.display![0].startDate!));
+                }
+                if (secondaryEventModel!.display?[0].killDate != null) {
+                  endDateTC.text =
+                      DateFormat("dd-MM-yyyy").format(DateFormat("yyyy-MM-ddThh:mm:ss").parse(secondaryEventModel!.display![0].killDate!));
+                }
+                if (secondaryEventModel!.display?[0].som != null) {
+                  // somTC.text = (secondaryEventModel!.display?[0].som ?? "00:00:00:00").contains("T")
+                  //     ? (secondaryEventModel!.display?[0].som ?? "00:00:00:00").split("T")[1]
+                  //     : (secondaryEventModel!.display?[0].som ?? "00:00:00:00");
+                  somTC.text = (secondaryEventModel!.display?[0].som ?? "00:00:00:00");
+                  eomTC.text = Utils.convertToTimeFromDouble(
+                      value: Utils.oldBMSConvertToSecondsValue(value: somTC.text) + Utils.oldBMSConvertToSecondsValue(value: duration.value));
+                }
+                // if (secondaryEventModel!.display?[0].killTime != null) {
+                //   var tempEOM = (secondaryEventModel!.display?[0].killTime ?? "00:00:00:00").contains("T")
+                //       ? (secondaryEventModel!.display?[0].killTime ?? "00:00:00:00").split("T")[1]
+                //       : (secondaryEventModel!.display?[0].killTime ?? "00:00:00:00");
+
+                //   eomTC.text = Utils.convertToTimeFromDouble(
+                //       value: Utils.oldBMSConvertToSecondsValue(value: tempEOM) + Utils.oldBMSConvertToSecondsValue(value: duration.value));
+                // }
+              } else {
+                secondaryEventModel = null;
+                controllsEnabled.value = true;
+              }
+            } else {
+              secondaryEventModel = SecondaryEventModel();
+              closeDialog();
+              LoadingDialog.showErrorDialog(resp.toString());
+            }
+          });
+    } catch (e) {
+      print(e.toString());
+    }
   }
 
   initialAPI() {
@@ -176,7 +186,7 @@ class SecondaryEventMasterController extends GetxController {
       }
     });
     txNOFN.addListener(() {
-      if (!txNOFN.hasFocus && txNoTC.text.isNotEmpty) {
+      if (!txNOFN.hasFocus && txNoTC.text.isNotEmpty && controllsEnabled.value) {
         displayData();
       }
     });
@@ -244,10 +254,15 @@ class SecondaryEventMasterController extends GetxController {
           closeDialog();
           if (resp != null && resp is Map<String, dynamic> && resp['save'] != null) {
             if (resp['save']['strmessage'] != null) {
-              LoadingDialog.callDataSaved(msg: resp['save']['strmessage'].toString());
-              if (resp['save']['strmessage'].toString().contains("id is")) {
-                txNoTC.text = resp['save']['strmessage'].toString().split("is")[1];
-              }
+              LoadingDialog.callDataSaved(
+                  msg: resp['save']['strmessage'].toString(),
+                  callback: () {
+                    controllsEnabled.value = false;
+                    controllsEnabled.refresh();
+                    if (resp['save']['strmessage'].toString().contains("id is")) {
+                      txNoTC.text = resp['save']['strmessage'].toString().split("is")[1];
+                    }
+                  });
             }
           } else {
             LoadingDialog.showErrorDialog(resp.toString());
@@ -255,7 +270,7 @@ class SecondaryEventMasterController extends GetxController {
         },
         json: {
           "eventCode": num.tryParse(eventCode ?? "0"),
-          "hous eid": txNoTC.text.trim(),
+          "houseid": txNoTC.text.trim(),
           "eventCaption": eventNameTC.text.trim(),
           "txCaption": txCaptionTC.text.trim(),
           "locationcode": selectedLoc?.key,
