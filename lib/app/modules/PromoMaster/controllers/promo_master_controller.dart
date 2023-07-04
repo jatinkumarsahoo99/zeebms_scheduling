@@ -61,6 +61,7 @@ class PromoMasterController extends GetxController {
       durationCtr = TextEditingController(text: "00:00:00:00");
 
   var locationFN = FocusNode(),
+      somFN = FocusNode(),
       eomFN = FocusNode(),
       fillerNameFN = FocusNode(),
       captionFN = FocusNode(),
@@ -117,6 +118,16 @@ class PromoMasterController extends GetxController {
         onleaveBlankTapeID();
       }
     });
+    eomFN.addListener(() {
+      if (!eomFN.hasFocus) {
+        calculateDuration();
+      }
+    });
+    // somFN.addListener(() {
+    //   if (!somFN.hasFocus && !Get.isDialogOpen!) {
+    //     calculateDuration();
+    //   }
+    // });
   }
 
   validateAndSaveRecord() {

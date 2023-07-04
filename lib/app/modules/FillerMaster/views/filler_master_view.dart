@@ -95,6 +95,7 @@ class FillerMasterView extends GetView<FillerMasterController> {
                                           controller: controller.fillerNameCtr,
                                           width: 0.17,
                                           focusNode: controller.fillerNameFN,
+                                          maxLen: 40,
                                         ),
                                         // SizedBox(width: 20),
                                         InputFields.formField1(
@@ -102,6 +103,7 @@ class FillerMasterView extends GetView<FillerMasterController> {
                                           controller: controller.txCaptionCtr,
                                           width: 0.17,
                                           prefixText: "F/",
+                                          maxLen: 40,
                                         ),
                                       ],
                                     ),
@@ -114,6 +116,7 @@ class FillerMasterView extends GetView<FillerMasterController> {
                                           controller: controller.tapeIDCtr,
                                           width: 0.17,
                                           focusNode: controller.tapeIDFN,
+                                          maxLen: 10,
                                         ),
                                         // SizedBox(width: 20),
                                         InputFields.formField1(
@@ -121,6 +124,10 @@ class FillerMasterView extends GetView<FillerMasterController> {
                                           controller: controller.segNoCtrLeft,
                                           width: 0.17,
                                           focusNode: controller.segNoFN,
+                                          maxLen: 5,
+                                          inputformatters: [
+                                            FilteringTextInputFormatter.digitsOnly,
+                                          ],
                                         ),
                                         // SizedBox(width: 20),
                                         InputFields.formField1(
@@ -275,19 +282,44 @@ class FillerMasterView extends GetView<FillerMasterController> {
                                           .17,
                                           selected: controller.selectedDropDowns[14],
                                         ),
-                                        InputFields.formField1(hintTxt: "Movie Name", controller: controller.movieNameCtr, width: 0.17),
-                                        InputFields.formField1(hintTxt: "Release Year", controller: controller.releaseYearCtr, width: 0.17),
+                                        InputFields.formField1(
+                                          hintTxt: "Movie Name",
+                                          controller: controller.movieNameCtr,
+                                          width: 0.17,
+                                          maxLen: 80,
+                                        ),
+                                        InputFields.formField1(
+                                          hintTxt: "Release Year",
+                                          controller: controller.releaseYearCtr,
+                                          width: 0.17,
+                                          maxLen: 80,
+                                        ),
                                       ],
                                     ),
                                     SizedBox(height: 14),
                                     Row(
                                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                                       children: [
-                                        InputFields.formField1(hintTxt: "Singer", controller: controller.singerCtr, width: 0.17),
+                                        InputFields.formField1(
+                                          hintTxt: "Singer",
+                                          controller: controller.singerCtr,
+                                          width: 0.17,
+                                          maxLen: 80,
+                                        ),
                                         // SizedBox(width: 20),
-                                        InputFields.formField1(hintTxt: "Music Director", controller: controller.musicDirectorCtr, width: 0.17),
+                                        InputFields.formField1(
+                                          hintTxt: "Music Director",
+                                          controller: controller.musicDirectorCtr,
+                                          width: 0.17,
+                                          maxLen: 80,
+                                        ),
                                         // SizedBox(width: 20),
-                                        InputFields.formField1(hintTxt: "Music Company", controller: controller.musicCompanyCtr, width: 0.17),
+                                        InputFields.formField1(
+                                          hintTxt: "Music Company",
+                                          controller: controller.musicCompanyCtr,
+                                          width: 0.17,
+                                          maxLen: 80,
+                                        ),
                                       ],
                                     ),
                                     // SizedBox(height: 4),
@@ -487,9 +519,21 @@ class FillerMasterView extends GetView<FillerMasterController> {
                                           Row(
                                             crossAxisAlignment: CrossAxisAlignment.end,
                                             children: [
-                                              InputFields.formField1(hintTxt: "Copy", controller: controller.copyCtr, width: 0.11),
+                                              InputFields.formField1(
+                                                hintTxt: "Copy",
+                                                controller: controller.copyCtr,
+                                                width: 0.11,
+                                                maxLen: 99999,
+                                              ),
                                               Spacer(),
-                                              InputFields.formField1(hintTxt: "Seg No", controller: controller.segNoCtrRight, width: 0.11),
+                                              InputFields.formField1(
+                                                hintTxt: "Seg No",
+                                                controller: controller.segNoCtrRight,
+                                                width: 0.11,
+                                                inputformatters: [
+                                                  FilteringTextInputFormatter.digitsOnly,
+                                                ],
+                                              ),
                                               SizedBox(width: 20),
                                               FormButton(btnText: "Copy", callback: controller.handleCopyTap),
                                             ],
