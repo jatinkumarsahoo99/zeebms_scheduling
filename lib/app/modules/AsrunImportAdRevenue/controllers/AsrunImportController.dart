@@ -203,7 +203,7 @@ class AsrunImportController extends GetxController {
         json: {"startTime": startTime_.text, "checkMissingAsRuns": asrunData?.map((e) => e.toJson(isSegInt: false)).toList()},
         fun: (map) {
           if (map is Map && map.containsKey("isCheck") && map.containsKey("message")) {
-            LoadingDialog.callInfoMessage(map["message"].toString(), callback: () {
+            LoadingDialog.callInfoMessage(map["message"].toString().split("\n").first, callback: () {
               LoadingDialog.modify("Asrun Missing Do Yount Want To Proceed with Save?", () {
                 saveAsrun();
               }, () {}, cancelTitle: "No", deleteTitle: "Yes");
