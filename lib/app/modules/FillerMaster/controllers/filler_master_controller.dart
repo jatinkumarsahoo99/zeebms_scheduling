@@ -7,7 +7,6 @@ import 'package:bms_scheduling/app/providers/ApiFactory.dart';
 import 'package:bms_scheduling/app/routes/app_pages.dart';
 import 'package:bms_scheduling/widgets/LoadingDialog.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
 import 'package:get/get.dart';
 import 'package:intl/intl.dart';
 
@@ -586,7 +585,7 @@ class FillerMasterController extends GetxController {
       LoadingDialog.showErrorDialog("Banner cannot be empty.");
     } else if (startDate.isAfter(endDate)) {
       LoadingDialog.showErrorDialog("Start date should not more than end date");
-    } else if (endDate.isAfter(DateTime.now())) {
+    } else if (endDate.isBefore(DateTime.now())) {
       LoadingDialog.showErrorDialog("End date should not less than today.");
     } else {
       LoadingDialog.call();

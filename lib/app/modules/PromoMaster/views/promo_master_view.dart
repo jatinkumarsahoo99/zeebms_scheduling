@@ -238,6 +238,7 @@ class PromoMasterView extends GetView<PromoMasterController> {
                                           hintTxt: 'SOM',
                                           widthRatio: .17,
                                           paddingLeft: 0,
+                                          textFieldFN: controller.somFN,
                                         ),
                                         InputFields.formFieldNumberMask(
                                           controller: controller.eomCtr,

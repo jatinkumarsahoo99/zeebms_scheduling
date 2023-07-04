@@ -95,7 +95,7 @@ class FinalAuditReportBeforeLogView extends GetView<FinalAuditReportBeforeLogCon
                       : DataGridShowOnlyKeys(
                           mapData: controller.dataTBList.value,
                           formatDate: false,
-                          exportFileName: "Final Audit Report Before Telecast",
+                          exportFileName: "Final Audit Report (Before Telecast)",
                         ),
                 );
               },
