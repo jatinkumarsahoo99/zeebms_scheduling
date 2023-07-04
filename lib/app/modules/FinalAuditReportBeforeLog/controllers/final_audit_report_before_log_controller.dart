@@ -6,7 +6,10 @@ import 'package:flutter/material.dart' show TextEditingController, FocusNode;
 import 'package:get/get.dart';
 import 'package:intl/intl.dart';
 
+import '../../../data/PermissionModel.dart';
 import '../../../providers/ExportData.dart';
+import '../../../providers/Utils.dart';
+import '../../../routes/app_pages.dart';
 
 class FinalAuditReportBeforeLogController extends GetxController {
   @override
@@ -16,6 +19,7 @@ class FinalAuditReportBeforeLogController extends GetxController {
   }
 
   DropDownValue? selectedLocation, selectedChannel;
+  List<PermissionModel>? formPermissions;
   var efficitveDateTC = TextEditingController(), startTimeTC = TextEditingController();
   var dataTBList = <dynamic>[].obs;
   var locationList = <DropDownValue>[].obs, channelList = <DropDownValue>[].obs;
@@ -26,6 +30,12 @@ class FinalAuditReportBeforeLogController extends GetxController {
     if (dataTBList.value.isNotEmpty) {
       ExportData().exportExcelFromJsonList(dataTBList.value, "fileName");
     }
+  }
+
+  @override
+  void onInit() {
+    formPermissions = Utils.fetchPermissions1(Routes.FINAL_AUDIT_REPORT_BEFORE_LOG.replaceAll("/", ""));
+    super.onInit();
   }
 
   initialAPI() {
@@ -121,5 +131,13 @@ class FinalAuditReportBeforeLogController extends GetxController {
     channelList.refresh();
     standByLog.value = false;
     locationFN.requestFocus();
+  }
+
+  formHandler(btn) {
+    if (btn == "Save") {
+      convertToExcelAndSave();
+    } else if (btn == "Clear") {
+      clearPage();
+    }
   }
 }

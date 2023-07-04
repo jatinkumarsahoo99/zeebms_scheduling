@@ -11,6 +11,7 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
 import '../../../../widgets/CheckBoxWidget.dart';
+import '../../../providers/Utils.dart';
 import '../controllers/final_audit_report_before_log_controller.dart';
 
 class FinalAuditReportBeforeLogView extends GetView<FinalAuditReportBeforeLogController> {
@@ -99,62 +100,95 @@ class FinalAuditReportBeforeLogView extends GetView<FinalAuditReportBeforeLogCon
               },
             ),
           ),
-          GetBuilder<HomeController>(
-              id: "buttons",
-              init: Get.find<HomeController>(),
-              builder: (btncontroller) {
-                /* PermissionModel formPermissions = Get.find<MainController>()
-                      .permissionList!
-                      .lastWhere((element) {
-                    return element.appFormName == "frmSegmentsDetails";
-                  });*/
-                if (btncontroller.buttons == null) {
+          // GetBuilder<HomeController>(
+          //     id: "buttons",
+          //     init: Get.find<HomeController>(),
+          //     builder: (btncontroller) {
+          //       if (btncontroller.buttons == null) {
+          //         return Container();
+          //       }
+          //       return Card(
+          //         margin: EdgeInsets.fromLTRB(4, 4, 4, 0),
+          //         shape: RoundedRectangleBorder(
+          //           borderRadius: BorderRadius.only(topLeft: Radius.circular(10), topRight: Radius.circular(10)),
+          //         ),
+          //         child: Container(
+          //           width: Get.width,
+          //           padding: const EdgeInsets.all(8.0),
+          //           child: Wrap(
+          //             spacing: 10,
+          //             // buttonHeight: 20,
+          //             alignment: WrapAlignment.start,
+          //             // mainAxisSize: MainAxisSize.max,
+          //             // pa
+          //             children: [
+          //               for (var btn in btncontroller.buttons!)
+          //                 btn["name"] == "Save"
+          //                     ? FormButtonWrapper(
+          //                         btnText: btn["name"],
+
+          //                         // isEnabled: btn['isDisabled'],
+          //                         callback: () {
+          //                           controller.convertToExcelAndSave();
+          //                         },
+          //                       )
+          //                     : btn["name"] == "Clear"
+          //                         ? FormButtonWrapper(
+          //                             btnText: btn["name"],
+
+          //                             // isEnabled: btn['isDisabled'],
+          //                             callback: () {
+          //                               controller.clearPage();
+          //                             },
+          //                           )
+          //                         : FormButtonWrapper(
+          //                             btnText: btn["name"],
+          //                             // isEnabled: btn['isDisabled'],
+          //                             callback: null,
+          //                           ),
+          //             ],
+          //           ),
+          //         ),
+          //       );
+          //     }),
+
+          /// bottom common buttons
+          Align(
+            alignment: Alignment.topLeft,
+            child: GetBuilder<HomeController>(
+                id: "buttons",
+                init: Get.find<HomeController>(),
+                builder: (btncontroller) {
+                  if (btncontroller.buttons != null) {
+                    return SizedBox(
+                      height: 40,
+                      child: Wrap(
+                        spacing: 5,
+                        runSpacing: 15,
+                        alignment: WrapAlignment.center,
+                        // alignment: MainAxisAlignment.start,
+                        // mainAxisSize: MainAxisSize.min,
+                        children: [
+                          for (var btn in btncontroller.buttons!) ...{
+                            FormButtonWrapper(
+                              btnText: btn["name"],
+                              callback: ((Utils.btnAccessHandler(btn['name'], controller.formPermissions!) == null))
+                                  ? null
+                                  : () => controller.formHandler(btn['name']),
+                            )
+                          },
+                          // for (var btn in btncontroller.buttons!)
+                          //   FormButtonWrapper(
+                          //     btnText: btn["name"],
+                          //     callback: () => controller.formHandler(btn['name'].toString()),
+                          //   ),
+                        ],
+                      ),
+                    );
+                  }
                   return Container();
-                }
-                return Card(
-                  margin: EdgeInsets.fromLTRB(4, 4, 4, 0),
-                  shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.only(topLeft: Radius.circular(10), topRight: Radius.circular(10)),
-                  ),
-                  child: Container(
-                    width: Get.width,
-                    padding: const EdgeInsets.all(8.0),
-                    child: Wrap(
-                      spacing: 10,
-                      // buttonHeight: 20,
-                      alignment: WrapAlignment.start,
-                      // mainAxisSize: MainAxisSize.max,
-                      // pa
-                      children: [
-                        for (var btn in btncontroller.buttons!)
-                          btn["name"] == "Save"
-                              ? FormButtonWrapper(
-                                  btnText: btn["name"],
-
-                                  // isEnabled: btn['isDisabled'],
-                                  callback: () {
-                                    controller.convertToExcelAndSave();
-                                  },
-                                )
-                              : btn["name"] == "Clear"
-                                  ? FormButtonWrapper(
-                                      btnText: btn["name"],
-
-                                      // isEnabled: btn['isDisabled'],
-                                      callback: () {
-                                        controller.clearPage();
-                                      },
-                                    )
-                                  : FormButtonWrapper(
-                                      btnText: btn["name"],
-                                      // isEnabled: btn['isDisabled'],
-                                      callback: null,
-                                    ),
-                      ],
-                    ),
-                  ),
-                );
-              }),
+                }),
+          ),
         ],
       ),
     );

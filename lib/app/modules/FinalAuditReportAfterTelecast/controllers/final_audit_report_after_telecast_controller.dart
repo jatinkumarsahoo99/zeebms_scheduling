@@ -6,18 +6,28 @@ import 'package:flutter/material.dart' show TextEditingController, FocusNode;
 import 'package:get/get.dart';
 import 'package:intl/intl.dart';
 
-class FinalAuditReportAfterTelecastController extends GetxController {
-  @override
-  void onReady() {
-    super.onReady();
-    initialAPI();
-  }
+import '../../../data/PermissionModel.dart';
+import '../../../providers/Utils.dart';
+import '../../../routes/app_pages.dart';
 
+class FinalAuditReportAfterTelecastController extends GetxController {
+  List<PermissionModel>? formPermissions;
   DropDownValue? selectedLocation, selectedChannel;
   var fromTC = TextEditingController(), toTC = TextEditingController();
   var dataTBList = <dynamic>[].obs;
   var locationList = <DropDownValue>[].obs, channelList = <DropDownValue>[].obs;
   var locationFN = FocusNode();
+  @override
+  void onInit() {
+    formPermissions = Utils.fetchPermissions1(Routes.FINAL_AUDIT_REPORT_AFTER_TELECAST.replaceAll("/", ""));
+    super.onInit();
+  }
+
+  @override
+  void onReady() {
+    super.onReady();
+    initialAPI();
+  }
 
   initialAPI() {
     LoadingDialog.call();
@@ -111,5 +121,11 @@ class FinalAuditReportAfterTelecastController extends GetxController {
     channelList.refresh();
 
     locationFN.requestFocus();
+  }
+
+  formHandler(btn) {
+    if (btn == "Clear") {
+      clearPage();
+    }
   }
 }
