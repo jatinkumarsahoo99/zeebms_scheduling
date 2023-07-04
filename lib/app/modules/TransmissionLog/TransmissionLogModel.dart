@@ -9,6 +9,13 @@ class TransmissionLogModel {
         : null;
   }
 
+  ////Update button call
+  TransmissionLogModel.fromJson1(Map<String, dynamic> json) {
+    loadSavedLogOutput = json['loadSavedLogOutput'] != null
+        ? new LoadSavedLogOutput.fromJson(json['loadSavedLogOutput'])
+        : null;
+  }
+
   Map<String, dynamic> toJson() {
     final Map<String, dynamic> data = new Map<String, dynamic>();
     if (this.loadSavedLogOutput != null) {
@@ -32,6 +39,12 @@ class LoadSavedLogOutput {
     if (json['lstTransmissionLog'] != null) {
       lstTransmissionLog = <LstTransmissionLog>[];
       json['lstTransmissionLog'].forEach((v) {
+        lstTransmissionLog!.add(new LstTransmissionLog.fromJson(v));
+      });
+    }
+    if (json['lstUpdatedLog'] != null) {
+      lstTransmissionLog = <LstTransmissionLog>[];
+      json['lstUpdatedLog'].forEach((v) {
         lstTransmissionLog!.add(new LstTransmissionLog.fromJson(v));
       });
     }
@@ -109,30 +122,30 @@ class LstTransmissionLog {
         this.rosTimeBandFont});
 
   LstTransmissionLog.fromJson(Map<String, dynamic> json) {
-    fpCtime = json['fpCtime'];
-    transmissionTime = json['transmissionTime'];
-    exportTapeCaption = json['exportTapeCaption'];
-    exportTapeCode = json['exportTapeCode'];
-    tapeduration = json['tapeduration'];
-    som = json['som'];
-    breakNumber = (json['breakNumber'] is int)?json['breakNumber']:int.tryParse(json['breakNumber']);
-    episodeNumber = (json['episodeNumber'] is int)?json['episodeNumber']:int.tryParse(json['episodeNumber']);
-    breakEvent = json['breakEvent'];
-    rownumber = (json['rownumber'] is int)?json['rownumber']:int.tryParse(json['rownumber']);
-    eventType = json['eventType'];
-    bookingNumber = json['bookingNumber'];
-    bookingdetailcode = (json['bookingdetailcode'] is int)?json['bookingdetailcode']:int.tryParse(json['bookingdetailcode']);
-    scheduleTime = json['scheduleTime']??json["scheduletime"];
-    productName = json['productName']??json["productname"];
-    rosTimeBand = json['rosTimeBand'];
-    client = json['client'];
-    promoTypecode = json['promoTypecode']??json["promotypecode"];
-    datechange = (json['datechange'] is String)?json["datechange"]:json["datechange"].toString();
-    productGroup = json['productGroup'];
-    longCaption = json['longCaption'];
-    productnameFont = json['productname_Font'];
-    exporttapecodeFont = json['exporttapecode_Font'];
-    rosTimeBandFont = json['rosTimeBand_Font'];
+    fpCtime = json['fpCtime']??"";
+    transmissionTime = json['transmissionTime']??"";
+    exportTapeCaption = json['exportTapeCaption']??"";
+    exportTapeCode = json['exportTapeCode']??"";
+    tapeduration = json['tapeduration']??"";
+    som = json['som']??"";
+    breakNumber = (json['breakNumber'] is int)?json['breakNumber']??0:int.tryParse(json['breakNumber']??"0")??0;
+    episodeNumber = (json['episodeNumber'] is int)?json['episodeNumber']??0:int.tryParse(json['episodeNumber']??"0")??0;
+    breakEvent = json['breakEvent']??"";
+    rownumber = (json['rownumber'] is int)?json['rownumber']??0:int.tryParse(json['rownumber']??"0")??0;
+    eventType = json['eventType']??"";
+    bookingNumber = json['bookingNumber']??"";
+    bookingdetailcode = (json['bookingdetailcode'] is int)?json['bookingdetailcode']??0:int.tryParse(json['bookingdetailcode']??"0")??0;
+    scheduleTime = json['scheduleTime']??json["scheduletime"]??"";
+    productName = json['productName']??json["productname"]??"";
+    rosTimeBand = json['rosTimeBand']??"";
+    client = json['client']??"";
+    promoTypecode = json['promoTypecode']??json["promotypecode"]??"";
+    datechange = (json['datechange'] is String)?json["datechange"]??"":json["datechange"].toString()??"";
+    productGroup = json['productGroup']??"";
+    longCaption = json['longCaption']??"";
+    productnameFont = json['productname_Font']??"";
+    exporttapecodeFont = json['exporttapecode_Font']??"";
+    rosTimeBandFont = json['rosTimeBand_Font']??"";
   }
 
   Map<String, dynamic> toJson() {
