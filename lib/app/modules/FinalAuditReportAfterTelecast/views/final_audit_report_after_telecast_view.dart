@@ -140,7 +140,7 @@ class FinalAuditReportAfterTelecastView extends GetView<FinalAuditReportAfterTel
           //     }),
           /// bottom common buttons
           Align(
-            alignment: Alignment.topCenter,
+            alignment: Alignment.topLeft,
             child: GetBuilder<HomeController>(
                 id: "buttons",
                 init: Get.find<HomeController>(),
