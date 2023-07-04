@@ -752,9 +752,11 @@ class ApiFactory {
   static String AsrunImport_GetLocationSelect(locationCode) => "$BASE_URL/api/AsrunImport/GetLocationSelect?Locationcode=$locationCode";
   static String AsrunImport_LoadFPCData(locationCode, channelCode, telecastDate) =>
       "$BASE_URL/api/AsrunImport/LoadFPCData?LocationCode=$locationCode&ChannelCode=$channelCode&TelecastDate=$telecastDate";
+  static String AsrunImport_UpdateFPCMismatch(locationCode, channelCode, telecastDate) =>
+      "$BASE_URL/api/AsrunImport/UpdateProgramMismatch?LocationCode=$locationCode&ChannelCode=$channelCode&TelecastDate=$telecastDate";
   static String AsrunImport_LoadRunData(locationCode, channelCode, telecastDate) =>
       "$BASE_URL/api/AsrunImport/LoadAsRunData?LocationCode=$locationCode&ChannelCode=$channelCode&LogDate=$telecastDate";
-
+  static String AsrunImport_UpdateFPCTime = "$BASE_URL/api/AsrunImport/UpdateFPCTime";
   static String AsrunImport_GetChannelCode = "$BASE_URL/api/AsrunImport/GetChannelCode";
   static String AsrunImport_LoadImportSpecifications(String locationCode, String channelCode) =>
       "$BASE_URL/api/AsrunImport/LoadImportSpecifications?LocationCode=$locationCode&ChannelCode=$channelCode";
@@ -762,7 +764,8 @@ class ApiFactory {
   static String AsrunImport_CheckSapBillingStatus(String locationCode, String channelCode, String telecastDate) =>
       "$BASE_URL/api/AsrunImport/CheckSapBillingStatus?LocationCode=$locationCode&ChannelCode=$channelCode&TelecastDate=$telecastDate";
 
-  static String AsrunImport_GetAsrunProgramList = "$BASE_URL/api/AsrunImport/GetAsrunProgramList";
+  static String AsrunImport_CheckMissingAsRun = "$BASE_URL/api/AsrunImport/CheckMissingAsRun";
+  static String AsrunImport_GetAsrunProgramList = "$BASE_URL/api/AsrunImport/GetAsrunProgramList?ProgramName=";
   static String AsrunImport_GetDeleteStatus = "$BASE_URL/api/AsrunImport/GetDeleteStatus";
   static String AsrunImport_SaveAsrunDetail = "$BASE_URL/api/AsrunImport/SaveAsrunDetail";
   static String AsrunImport_SaveTempDetail = "$BASE_URL/api/AsrunImport/SaveTempDetail";
