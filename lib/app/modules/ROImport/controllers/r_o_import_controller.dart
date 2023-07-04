@@ -24,7 +24,7 @@ class ROImportController extends GetxController {
   DropDownValue? selectedLocation, selectedChannel;
   var locationFn = FocusNode();
   var topLeftDataTable = [].obs, topRightDataTable = [].obs, bottomDataTable = [].obs;
-  var leftMsg = "".obs, rightMsg = "".obs;
+  var leftMsg = "".obs, rightMsg = "".obs, bottomMsg = "".obs;
 
   @override
   void onInit() {
@@ -38,13 +38,14 @@ class ROImportController extends GetxController {
     topRightDataTable.clear();
     bottomDataTable.clear();
     leftMsg.value = "";
+    bottomMsg.value = "";
     rightMsg.value = "";
     selectedChannel = null;
     selectedLocation = null;
     locationList.refresh();
     channelList.refresh();
     locationFn.requestFocus();
-    update(['buttons']);
+    // update(['buttons']);
   }
 
   @override
@@ -132,16 +133,37 @@ class ROImportController extends GetxController {
     } else if (selectedChannel == null) {
       Snack.callError("Please select channel");
     } else {
+      LoadingDialog.call();
       Get.find<ConnectorControl>().POSTMETHOD(
         api: ApiFactory.R_O_IMPORT_IMPORT_SAVE,
         fun: (resp) {
-          print(resp);
-          LoadingDialog.callDataSaved(
-            msg: resp.toString(),
-            callback: () {
-              clearPage();
-            },
-          );
+          closeDialogIfOpen();
+          if (resp != null && resp is Map<String, dynamic> && resp['info_OnSave'] != null) {
+            if (resp['info_OnSave']['message'] != null &&
+                (resp['info_OnSave']['message'] is List<dynamic>) &&
+                (resp['info_OnSave']['message'] as List<dynamic>).isNotEmpty &&
+                (resp['info_OnSave']['message'] as List<dynamic>)[0] == "File Imported Successfully." &&
+                resp['info_OnSave']['lstdgvSuccessData'] != null &&
+                (resp['info_OnSave']['lstdgvSuccessData'] is List<dynamic>)) {
+              bottomDataTable.value = resp['info_OnSave']['lstdgvSuccessData'];
+              bottomMsg.value = "File Imported Successfully. Total${bottomDataTable.value.length} row(s) of data to be uploaded";
+              LoadingDialog.callDataSaved(
+                msg: (resp['info_OnSave']['message'] as List<dynamic>)[0].toString(),
+                callback: () {
+                  saveEnabled.value = false;
+                  topLeftDataTable.clear();
+                  topRightDataTable.clear();
+                  leftMsg.value = "";
+                  rightMsg.value = "";
+                  // update(["buttons"]);
+                },
+              );
+            } else {
+              LoadingDialog.showErrorDialog(resp.toString());
+            }
+          } else {
+            LoadingDialog.showErrorDialog(resp.toString());
+          }
         },
         json: {
           "bookingDetail": "",
@@ -223,12 +245,14 @@ class ROImportController extends GetxController {
                   saveEnabled.value = true;
                 } else {
                   saveEnabled.value = false;
-                  update(['buttons']);
                 }
+                // update(['buttons']);
+                bottomDataTable.clear();
+                bottomMsg.value = "";
               } else {
                 LoadingDialog.showErrorDialog(r.toString());
                 saveEnabled.value = false;
-                update(['buttons']);
+                // update(['buttons']);
               }
             });
       }

@@ -60,18 +60,18 @@ class AsRunData {
     eventNumber = json['eventNumber'];
     telecastdate = json['telecastdate'];
     fpctIme = json['fpctIme'];
-    programName = json['programName'];
-    programCode = json['programCode'];
+    programName = json['programName'] ?? json['programname'];
+    programCode = json['programCode'] ?? json['programcode'];
     telecasttime = json['telecasttime'];
     tapeId = json['tapeId'];
-    segmentnumber = json['segmentnumber'];
+    segmentnumber = json['segmentnumber'] is String ? int.tryParse(json['segmentnumber']) : json['segmentnumber'];
     caption = json['caption'];
     telecastDuration = json['telecastDuration'];
     vtr = json['vtr'];
     ch = json['ch'];
     eventtype = json['eventtype'];
     bookingnumber = json['bookingnumber'];
-    bookingdetailcode = json['bookingdetailcode'];
+    bookingdetailcode = json['bookingdetailcode'] is String ? int.tryParse(json['bookingdetailcode']) : json['bookingdetailcode'];
     scheduletime = json['scheduletime'];
     scheduledProgram = json['scheduledProgram'];
     rosBand = json['rosBand'];
@@ -86,35 +86,35 @@ class AsRunData {
     foreColor = json['foreColor'];
   }
 
-  Map<String, dynamic> toJson() {
-    final Map<String, dynamic> data = new Map<String, dynamic>();
-    data['eventNumber'] = this.eventNumber;
-    data['telecastdate'] = this.telecastdate;
-    data['fpctIme'] = this.fpctIme;
-    data['programName'] = this.programName;
-    data['programCode'] = this.programCode;
-    data['telecasttime'] = this.telecasttime;
-    data['tapeId'] = this.tapeId;
-    data['segmentnumber'] = this.segmentnumber;
-    data['caption'] = this.caption;
-    data['telecastDuration'] = this.telecastDuration;
-    data['vtr'] = this.vtr;
-    data['ch'] = this.ch;
-    data['eventtype'] = this.eventtype;
-    data['bookingnumber'] = this.bookingnumber;
-    data['bookingdetailcode'] = this.bookingdetailcode;
-    data['scheduletime'] = this.scheduletime;
-    data['scheduledProgram'] = this.scheduledProgram;
-    data['rosBand'] = this.rosBand;
-    data['programTime'] = this.programTime;
-    data['isMismatch'] = this.isMismatch;
-    data['scheduledate'] = this.scheduledate;
-    data['tapeDuration'] = this.tapeDuration;
-    data['fpc'] = this.fpc;
-    data['dur'] = this.dur;
-    data['ros'] = this.ros;
-    data['backColor'] = this.backColor;
-    data['foreColor'] = this.foreColor;
+  Map<String, dynamic> toJson({isSegInt = true}) {
+    final Map<String, dynamic> data = <String, dynamic>{};
+    data['eventNumber'] = eventNumber;
+    data['telecastdate'] = telecastdate;
+    data['fpctIme'] = fpctIme;
+    data['programName'] = programName;
+    data['programCode'] = programCode;
+    data['telecasttime'] = telecasttime;
+    data['tapeId'] = tapeId;
+    data['segmentnumber'] = isSegInt ? segmentnumber : segmentnumber.toString();
+    data['caption'] = caption;
+    data['telecastDuration'] = telecastDuration;
+    data['vtr'] = vtr;
+    data['ch'] = ch;
+    data['eventtype'] = eventtype;
+    data['bookingnumber'] = bookingnumber;
+    data['bookingdetailcode'] = isSegInt ? bookingdetailcode : bookingdetailcode.toString();
+    data['scheduletime'] = scheduletime;
+    data['scheduledProgram'] = scheduledProgram;
+    data['rosBand'] = rosBand;
+    data['programTime'] = programTime;
+    data['isMismatch'] = isMismatch;
+    data['scheduledate'] = scheduledate;
+    data['tapeDuration'] = tapeDuration;
+    data['fpc'] = fpc;
+    data['dur'] = dur;
+    data['ros'] = ros;
+    data['backColor'] = backColor;
+    data['foreColor'] = foreColor;
     return data;
   }
 }
