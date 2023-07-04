@@ -60,8 +60,8 @@ class AsRunData {
     eventNumber = json['eventNumber'];
     telecastdate = json['telecastdate'];
     fpctIme = json['fpctIme'];
-    programName = json['programName'];
-    programCode = json['programCode'];
+    programName = json['programName'] ?? json['programname'];
+    programCode = json['programCode'] ?? json['programcode'];
     telecasttime = json['telecasttime'];
     tapeId = json['tapeId'];
     segmentnumber = json['segmentnumber'] is String ? int.tryParse(json['segmentnumber']) : json['segmentnumber'];
