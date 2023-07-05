@@ -57,13 +57,13 @@ class AsRunData {
       this.foreColor});
 
   AsRunData.fromJson(Map<String, dynamic> json) {
-    eventNumber = json['eventNumber'];
+    eventNumber = json['eventNumber'] ?? json['eventnumber'];
     telecastdate = json['telecastdate'];
     fpctIme = json['fpctIme'];
     programName = json['programName'] ?? json['programname'];
     programCode = json['programCode'] ?? json['programcode'];
     telecasttime = json['telecasttime'];
-    tapeId = json['tapeId'];
+    tapeId = json['tapeId'] ?? json['tapeid'];
     segmentnumber = json['segmentnumber'] is String
         ? (json['segmentnumber'].toString().isEmpty
             ? null
@@ -101,7 +101,9 @@ class AsRunData {
     data['programCode'] = programCode;
     data['telecasttime'] = telecasttime;
     data['tapeId'] = tapeId;
-    data['segmentnumber'] = isSegInt ? segmentnumber : segmentnumber.toString();
+    data['segmentnumber'] = isSegInt
+        ? segmentnumber
+        : (segmentnumber == null ? null : segmentnumber.toString());
     data['caption'] = caption;
     data['telecastDuration'] = telecastDuration;
     data['vtr'] = vtr;
