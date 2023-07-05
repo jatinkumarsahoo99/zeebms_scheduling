@@ -1,5 +1,6 @@
 import 'package:bms_scheduling/app/controller/ConnectorControl.dart';
 import 'package:bms_scheduling/app/controller/MainController.dart';
+import 'package:bms_scheduling/app/modules/AuditStatus/bindings/audi_status_eshowcancel.dart';
 import 'package:bms_scheduling/app/modules/AuditStatus/bindings/audit_status_eshowbooking.dart';
 import 'package:bms_scheduling/app/modules/RoBooking/views/dummydata.dart';
 import 'package:bms_scheduling/app/providers/ApiFactory.dart';
@@ -11,6 +12,8 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
 import '../../../data/DropDownValue.dart';
+import '../bindings/audit_status_cancel_deals.dart';
+import '../views/audit_cancellatin_view.dart';
 
 class AuditStatusController extends GetxController {
   //TODO: Implement AuditStatusController
@@ -21,6 +24,8 @@ class AuditStatusController extends GetxController {
   List<String> auditTypes = ["Additions", "Re-Schedule", "Cancellation"];
   RxnString currentType = RxnString();
   AuditStatusShowEbooking? showEbookingData;
+  List<AuditShowECancel>? showECancelData;
+  AuditStatusCancelDeals? auditStatusCancelDeals;
   //input controllers
   DropDownValue? selectLocation;
   DropDownValue? selectChannel;
@@ -42,7 +47,8 @@ class AuditStatusController extends GetxController {
         fun: (Map map) {
           channels.clear();
           map["onLeaveLocation"].forEach((e) {
-            channels.add(DropDownValue(key: e["channelCode"], value: e["channelName"]));
+            channels.add(
+                DropDownValue(key: e["channelCode"], value: e["channelName"]));
           });
         });
   }
@@ -90,6 +96,58 @@ class AuditStatusController extends GetxController {
     return Colors.white; // Return null if no color conditions are met.
   }
 
+  showECancel(index) {
+    Get.find<ConnectorControl>().POSTMETHOD(
+        api: ApiFactory.NewBookingActivityReport_GetShowECancel,
+        json: {
+          "locationCode": selectLocation?.key,
+          "channelCode": selectChannel?.key,
+          "cancelMonth": bookingData[index]["cancelmonth"],
+          "cancelNumber": bookingData[index]["cancelNumber"],
+        },
+        fun: (json) async {
+          if (json is Map) {
+            if (json['lstShowECancel'] != null) {
+              showECancelData = <AuditShowECancel>[];
+              json['lstShowECancel'].forEach((v) {
+                showECancelData!.add(AuditShowECancel.fromJson(v));
+              });
+              await showCancelDeals(
+                  showECancelData?.first.bookingNumber,
+                  bookingData[index]["cancelmonth"],
+                  bookingData[index]["cancelNumber"]);
+              Get.defaultDialog(
+                  content: Container(
+                height: Get.height * .80,
+                width: Get.width * .80,
+                child: AuditCanellation(
+                  cancelMonth: bookingData[index]["cancelmonth"],
+                  cancelNumber: bookingData[index]["cancelNumber"],
+                ),
+              ));
+            }
+          }
+        });
+  }
+
+  showCancelDeals(bookingNumber, cancelMonth, cancelNumber) async {
+    await Get.find<ConnectorControl>().POSTMETHOD(
+        api: ApiFactory.NewBookingActivityReport_CancelDisplayDetails,
+        json: {
+          "locationCode": selectLocation?.key,
+          "channelCode": selectChannel?.key,
+          "bookingNumber": bookingNumber,
+          "cancelMonth": cancelMonth,
+          "cancelNumber": cancelNumber
+        },
+        fun: (json) {
+          if (json is Map && json.containsKey("lstcancelDisplay")) {
+            auditStatusCancelDeals =
+                AuditStatusCancelDeals.fromJson(json["lstcancelDisplay"]);
+          }
+        });
+  }
+
   showEbooking(index) {
     Get.find<ConnectorControl>().POSTMETHOD(
         api: ApiFactory.NewBookingActivityReport_GetShowEbooking,
@@ -102,7 +160,8 @@ class AuditStatusController extends GetxController {
         },
         fun: (map) {
           if (map is Map && map.containsKey("inFo_ShowEbooking")) {
-            showEbookingData = AuditStatusShowEbooking.fromJson(map["inFo_ShowEbooking"]);
+            showEbookingData =
+                AuditStatusShowEbooking.fromJson(map["inFo_ShowEbooking"]);
             Get.defaultDialog(
                 radius: 05,
                 title: "",
@@ -117,22 +176,26 @@ class AuditStatusController extends GetxController {
                         children: [
                           InputFields.formField1(
                             hintTxt: "Location",
-                            controller: TextEditingController(text: showEbookingData?.location),
+                            controller: TextEditingController(
+                                text: showEbookingData?.location),
                             width: 0.175,
                           ),
                           InputFields.formField1(
                             hintTxt: "Channel",
-                            controller: TextEditingController(text: showEbookingData?.channel),
+                            controller: TextEditingController(
+                                text: showEbookingData?.channel),
                             width: 0.175,
                           ),
                           InputFields.formField1(
                             hintTxt: "Booking NO",
-                            controller: TextEditingController(text: showEbookingData?.bkmonth),
+                            controller: TextEditingController(
+                                text: showEbookingData?.bkmonth),
                             width: 0.0825,
                           ),
                           InputFields.formField1(
                             hintTxt: "",
-                            controller: TextEditingController(text: showEbookingData?.bkno),
+                            controller: TextEditingController(
+                                text: showEbookingData?.bkno),
                             width: 0.0825,
                           ),
                           DateWithThreeTextField(
@@ -147,22 +210,26 @@ class AuditStatusController extends GetxController {
                           ),
                           InputFields.formField1(
                             hintTxt: "Client",
-                            controller: TextEditingController(text: showEbookingData?.client),
+                            controller: TextEditingController(
+                                text: showEbookingData?.client),
                             width: 0.36,
                           ),
                           InputFields.formField1(
                             hintTxt: "Agency",
-                            controller: TextEditingController(text: showEbookingData?.ageny),
+                            controller: TextEditingController(
+                                text: showEbookingData?.ageny),
                             width: 0.36,
                           ),
                           InputFields.formField1(
                             hintTxt: "Brand",
-                            controller: TextEditingController(text: showEbookingData?.brand),
+                            controller: TextEditingController(
+                                text: showEbookingData?.brand),
                             width: 0.36,
                           ),
                           InputFields.formField1(
                             hintTxt: "Zone",
-                            controller: TextEditingController(text: showEbookingData?.zone),
+                            controller: TextEditingController(
+                                text: showEbookingData?.zone),
                             width: 0.175,
                           ),
                           InputFields.formField1(
@@ -199,9 +266,13 @@ class AuditStatusController extends GetxController {
                           child: Container(
                         width: Get.width * 0.73,
                         child: DataGridShowOnlyKeys(
-                          mapData: showEbookingData?.lstShowEbook?.map((e) => e.toJson()).toList() ?? [],
+                          mapData: showEbookingData?.lstShowEbook
+                                  ?.map((e) => e.toJson())
+                                  .toList() ??
+                              [],
                           onRowDoubleTap: (event) {
-                            showDeals(showEbookingData?.lstShowEbook?[event.rowIdx].dealno);
+                            showDeals(showEbookingData
+                                ?.lstShowEbook?[event.rowIdx].dealno);
                           },
                         ),
                       ))
@@ -215,7 +286,11 @@ class AuditStatusController extends GetxController {
   showDeals(dealNo) {
     Get.find<ConnectorControl>().POSTMETHOD(
         api: ApiFactory.NewBookingActivityReport_Getshowdeal,
-        json: {"locationCode": selectLocation?.key, "channelCode": selectChannel?.key, "dealno": dealNo},
+        json: {
+          "locationCode": selectLocation?.key,
+          "channelCode": selectChannel?.key,
+          "dealno": dealNo
+        },
         fun: (value) {
           if (value is Map && value.containsKey("inFo_showdeal")) {
             Get.defaultDialog(
@@ -224,7 +299,8 @@ class AuditStatusController extends GetxController {
                 content: Container(
                   width: Get.width * 0.60,
                   height: Get.height * 0.50,
-                  child: DataGridShowOnlyKeys(mapData: value["inFo_showdeal"]["lstshowdeal"]),
+                  child: DataGridShowOnlyKeys(
+                      mapData: value["inFo_showdeal"]["lstshowdeal"]),
                 ));
           }
         });

@@ -1,4 +1,5 @@
 import 'package:bms_scheduling/app/controller/HomeController.dart';
+import 'package:bms_scheduling/app/modules/AuditStatus/views/audit_cancellatin_view.dart';
 import 'package:bms_scheduling/app/modules/RoBooking/views/dummydata.dart';
 import 'package:bms_scheduling/app/providers/ColorData.dart';
 import 'package:bms_scheduling/widgets/DataGridShowOnly.dart';
@@ -32,17 +33,22 @@ class AuditStatusView extends StatelessWidget {
                 alignment: WrapAlignment.start,
                 children: [
                   Obx(
-                    () => DropDownField.formDropDown1WidthMap(controller.locations.value, (data) {
+                    () => DropDownField.formDropDown1WidthMap(
+                        controller.locations.value, (data) {
                       controller.selectLocation = data;
                       controller.getChannels(data?.key);
                     }, "Location", 0.24),
                   ),
                   Obx(
-                    () => DropDownField.formDropDown1WidthMap(controller.channels.value, (data) {
+                    () => DropDownField.formDropDown1WidthMap(
+                        controller.channels.value, (data) {
                       controller.selectChannel = data;
                     }, "Channel", 0.24),
                   ),
-                  DateWithThreeTextField(title: "From Date.", widthRation: 0.12, mainTextController: controller.dateController),
+                  DateWithThreeTextField(
+                      title: "From Date.",
+                      widthRation: 0.12,
+                      mainTextController: controller.dateController),
                   Obx(() => Row(
                         mainAxisSize: MainAxisSize.min,
                         crossAxisAlignment: CrossAxisAlignment.end,
@@ -52,7 +58,8 @@ class AuditStatusView extends StatelessWidget {
                                   children: [
                                     Radio(
                                         value: e,
-                                        groupValue: controller.currentType.value,
+                                        groupValue:
+                                            controller.currentType.value,
                                         onChanged: (value) {
                                           controller.currentType.value = e;
                                         }),
@@ -84,10 +91,17 @@ class AuditStatusView extends StatelessWidget {
                           mapData: gridcontroller.bookingData,
                           formatDate: false,
                           colorCallback: (colorEvent) {
-                            return gridcontroller.getColor(gridcontroller.bookingData[colorEvent.rowIdx]);
+                            return gridcontroller.getColor(
+                                gridcontroller.bookingData[colorEvent.rowIdx]);
                           },
                           onRowDoubleTap: (event) {
-                            controller.showEbooking(event.rowIdx);
+                            if (controller.currentType.value ==
+                                "Cancellation") {
+                              controller.showECancel(event.rowIdx);
+                            }
+                            if (controller.currentType.value == "Additions") {
+                              controller.showEbooking(event.rowIdx);
+                            }
                           },
                         );
                 }),
@@ -107,7 +121,9 @@ class AuditStatusView extends StatelessWidget {
                 return Card(
                   margin: EdgeInsets.fromLTRB(4, 4, 4, 0),
                   shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.only(topLeft: Radius.circular(10), topRight: Radius.circular(10)),
+                    borderRadius: BorderRadius.only(
+                        topLeft: Radius.circular(10),
+                        topRight: Radius.circular(10)),
                   ),
                   child: Container(
                     width: Get.width,
