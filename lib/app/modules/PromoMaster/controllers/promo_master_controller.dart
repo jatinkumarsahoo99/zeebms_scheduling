@@ -561,7 +561,7 @@ class PromoMasterController extends GetxController {
 
           /// eom
           if (record.eom != null) {
-            eomCtr.text = record.som ?? "00:00:00:00";
+            eomCtr.text = record.eom ?? "00:00:00:00";
           }
 
           /// start-date
