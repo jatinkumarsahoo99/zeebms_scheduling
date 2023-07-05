@@ -48,7 +48,8 @@ class AsrunImportAdRevenueView extends GetView<AsrunImportController> {
                       controllerX.locations.value,
                       (value) {
                         controllerX.selectLocation = value;
-                        controllerX.getChannels(controllerX.selectLocation?.key ?? "");
+                        controllerX
+                            .getChannels(controllerX.selectLocation?.key ?? "");
                       },
                       "Location",
                       0.12,
@@ -118,12 +119,15 @@ class AsrunImportAdRevenueView extends GetView<AsrunImportController> {
                           Obx(() => Padding(
                                 padding: const EdgeInsets.only(top: 15.0),
                                 child: Checkbox(
-                                  value: controllerX.checkboxesMap.value[checkbox.key],
+                                  value: controllerX
+                                      .checkboxesMap.value[checkbox.key],
                                   onChanged: (val) {
-                                    controllerX.checkboxesMap.value[checkbox.key] = val;
+                                    controllerX.checkboxesMap
+                                        .value[checkbox.key] = val;
                                     controllerX.checkboxesMap.refresh();
                                   },
-                                  materialTapTargetSize: MaterialTapTargetSize.shrinkWrap,
+                                  materialTapTargetSize:
+                                      MaterialTapTargetSize.shrinkWrap,
                                 ),
                               )),
                           Padding(
@@ -137,7 +141,12 @@ class AsrunImportAdRevenueView extends GetView<AsrunImportController> {
                       ),
                     ),
                   InputFields.formFieldNumberMask(
-                      isEnable: false, hintTxt: "Start Time", controller: controllerX.startTime_, widthRatio: 0.09, isTime: true, paddingLeft: 0),
+                      isEnable: false,
+                      hintTxt: "Start Time",
+                      controller: controllerX.startTime_,
+                      widthRatio: 0.09,
+                      isTime: true,
+                      paddingLeft: 0),
                 ],
               ),
             ),
@@ -161,7 +170,8 @@ class AsrunImportAdRevenueView extends GetView<AsrunImportController> {
                         // },
                         onload: (loadevent) {
                           loadevent.stateManager.setSelecting(true);
-                          loadevent.stateManager.setSelectingMode(PlutoGridSelectingMode.row);
+                          loadevent.stateManager
+                              .setSelectingMode(PlutoGridSelectingMode.row);
 
                           controller.gridStateManager = loadevent.stateManager;
 
@@ -173,17 +183,25 @@ class AsrunImportAdRevenueView extends GetView<AsrunImportController> {
                         },
                         extraList: [
                           SecondaryShowDialogModel("Mark Error", () {
-                            controller.gridStateManager
-                                ?.changeCellValue(controller.gridStateManager!.currentRow!.cells["isMismatch"]!, "1", force: true);
-                            controller.asrunData![controller.gridStateManager!.currentRow!.sortIdx].isMismatch = "1";
+                            controller.gridStateManager?.changeCellValue(
+                                controller.gridStateManager!.currentRow!
+                                    .cells["isMismatch"]!,
+                                "1",
+                                force: true);
+                            controller
+                                .asrunData![controller
+                                    .gridStateManager!.currentRow!.sortIdx]
+                                .isMismatch = "1";
                           })
                         ],
                         // hideKeys: ["color", "modifed"],
                         showSrNo: true,
                         colorCallback: (colorContext) {
-                          if (controller.asrunData?[colorContext.rowIdx] != null) {
+                          if (controller.asrunData?[colorContext.rowIdx] !=
+                              null) {
                             try {
-                              return Color(int.parse("0x${controller.asrunData?[colorContext.rowIdx].backColor}"));
+                              return Color(int.parse(
+                                  "0x${controller.asrunData?[colorContext.rowIdx].backColor}"));
                             } catch (e) {
                               return Colors.white;
                             }
@@ -197,7 +215,8 @@ class AsrunImportAdRevenueView extends GetView<AsrunImportController> {
                         // },
                         onSelected: (PlutoGridOnSelectedEvent event) {
                           event.selectedRows?.forEach((element) {
-                            print("On Print select" + jsonEncode(element.toJson()));
+                            print("On Print select" +
+                                jsonEncode(element.toJson()));
                           });
                         },
                         // onRowsMoved: (PlutoGridOnRowsMovedEvent onRowMoved) {
@@ -218,7 +237,9 @@ class AsrunImportAdRevenueView extends GetView<AsrunImportController> {
                         //   controllerX.gridStateManager?.notifyListeners();
                         // },
                         // mode: controllerX.selectedPlutoGridMode,
-                        mapData: controllerX.asrunData!.map((e) => e.toJson()).toList())
+                        mapData: controllerX.asrunData!
+                            .map((e) => e.toJson())
+                            .toList())
                     : Container(
                         // height: Get.height * .33,
                         // width: Get.width,
@@ -247,7 +268,9 @@ class AsrunImportAdRevenueView extends GetView<AsrunImportController> {
                   return Card(
                     margin: EdgeInsets.fromLTRB(4, 4, 4, 0),
                     shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.only(topLeft: Radius.circular(10), topRight: Radius.circular(10)),
+                      borderRadius: BorderRadius.only(
+                          topLeft: Radius.circular(10),
+                          topRight: Radius.circular(10)),
                     ),
                     child: Container(
                       width: Get.width,
@@ -281,22 +304,34 @@ class AsrunImportAdRevenueView extends GetView<AsrunImportController> {
                             child: Icon(Icons.arrow_upward),
                             onTap: () {
                               if (controller.selectedFPCindex == 0) {
-                                controller.selectedFPCindex = controllerX.gridStateManager?.rows.length;
+                                controller.selectedFPCindex =
+                                    controllerX.gridStateManager?.rows.length;
                               } else {
-                                controller.selectedFPCindex = (controller.selectedFPCindex ?? 1) - 1;
+                                controller.selectedFPCindex =
+                                    (controller.selectedFPCindex ?? 1) - 1;
                               }
-                              controller.filterMainGrid(controller.viewFPCData?[controller.selectedFPCindex ?? 0].starttime ?? "");
+                              controller.filterMainGrid(controller
+                                      .viewFPCData?[
+                                          controller.selectedFPCindex ?? 0]
+                                      .starttime ??
+                                  "");
                             },
                           ),
                           InkWell(
                             child: Icon(Icons.arrow_downward),
                             onTap: () {
-                              if (controllerX.gridStateManager?.rows.length == controller.selectedFPCindex) {
+                              if (controllerX.gridStateManager?.rows.length ==
+                                  controller.selectedFPCindex) {
                                 controller.selectedFPCindex = 0;
                               } else {
-                                controller.selectedFPCindex = (controller.selectedFPCindex ?? 0) + 1;
+                                controller.selectedFPCindex =
+                                    (controller.selectedFPCindex ?? 0) + 1;
                               }
-                              controller.filterMainGrid(controller.viewFPCData?[controller.selectedFPCindex ?? 0].starttime ?? "");
+                              controller.filterMainGrid(controller
+                                      .viewFPCData?[
+                                          controller.selectedFPCindex ?? 0]
+                                      .starttime ??
+                                  "");
                             },
                           ),
                         ],
@@ -320,6 +355,10 @@ class AsrunImportAdRevenueView extends GetView<AsrunImportController> {
       case "Save":
         controller.checkMissingAsrun();
         break;
+      case "SP Verify":
+        showVerifyDialog(controller
+            .asrunData![controller.gridStateManager?.currentRowIdx ?? 0]);
+        break;
 
       case "View FPC":
         showFPCDialog(Get.context);
@@ -340,27 +379,39 @@ class AsrunImportAdRevenueView extends GetView<AsrunImportController> {
   }
 
   paste({bool up = true}) {
-    if ((controller.gridStateManager?.currentSelectingRows ?? <PlutoRow>[]).isNotEmpty) {
+    if ((controller.gridStateManager?.currentSelectingRows ?? <PlutoRow>[])
+        .isNotEmpty) {
       print(controller.gridStateManager?.currentSelectingRows.length);
-      String fpcTime = (up ? controller.gridStateManager?.currentSelectingRows.last : controller.gridStateManager?.currentSelectingRows.first)
+      String fpcTime = (up
+              ? controller.gridStateManager?.currentSelectingRows.last
+              : controller.gridStateManager?.currentSelectingRows.first)
           ?.cells["fpctIme"]
           ?.value;
       String programCode = controller
-              .asrunData?[
-                  (up ? controller.gridStateManager?.currentSelectingRows.last : controller.gridStateManager?.currentSelectingRows.first)!.sortIdx]
+              .asrunData?[(up
+                      ? controller.gridStateManager?.currentSelectingRows.last
+                      : controller
+                          .gridStateManager?.currentSelectingRows.first)!
+                  .sortIdx]
               .programCode ??
           "";
 
-      String programName = (up ? controller.gridStateManager?.currentSelectingRows.last : controller.gridStateManager?.currentSelectingRows.first)
+      String programName = (up
+              ? controller.gridStateManager?.currentSelectingRows.last
+              : controller.gridStateManager?.currentSelectingRows.first)
           ?.cells["programName"]
           ?.value;
       print(fpcTime);
       print(programCode);
       print(programName);
-      for (var element in controller.gridStateManager?.currentSelectingRows ?? <PlutoRow>[]) {
-        controller.gridStateManager?.changeCellValue(element.cells["fpctIme"]!, fpcTime, force: true);
+      for (var element in controller.gridStateManager?.currentSelectingRows ??
+          <PlutoRow>[]) {
+        controller.gridStateManager
+            ?.changeCellValue(element.cells["fpctIme"]!, fpcTime, force: true);
         controller.asrunData?[element.sortIdx].fpctIme = fpcTime;
-        controller.gridStateManager?.changeCellValue(element.cells["programName"]!, programName, force: true);
+        controller.gridStateManager?.changeCellValue(
+            element.cells["programName"]!, programName,
+            force: true);
         controller.asrunData?[element.sortIdx].programName = programName;
         controller.asrunData?[element.sortIdx].programCode = programCode;
       }
@@ -368,14 +419,16 @@ class AsrunImportAdRevenueView extends GetView<AsrunImportController> {
   }
 
   showVerifyDialog(AsRunData asrunData) {
-    TextEditingController fpcTime = TextEditingController(text: asrunData.fpctIme);
+    TextEditingController fpcTime =
+        TextEditingController(text: asrunData.fpctIme);
     DropDownValue? selectedProgram;
     return Get.defaultDialog(
         title: "Verify",
         content: Container(
-          height: Get.height / 4,
+          height: 150,
           width: Get.width / 2,
           child: Column(
+            crossAxisAlignment: CrossAxisAlignment.center,
             children: [
               DropDownField.formDropDownSearchAPI2(
                 GlobalKey(), Get.context!,
@@ -391,31 +444,49 @@ class AsrunImportAdRevenueView extends GetView<AsrunImportController> {
                 width: Get.width * 0.45,
                 // padding: const EdgeInsets.only()
               ),
-              Row(
-                children: [
-                  InputFields.formFieldNumberMask(
-                      isEnable: false, hintTxt: "FPC Time", controller: fpcTime, widthRatio: 0.09, isTime: true, paddingLeft: 0),
-                  InputFields.formFieldNumberMask(
-                      isEnable: false,
-                      hintTxt: "From",
-                      controller: TextEditingController(text: asrunData.fpctIme),
-                      widthRatio: 0.09,
-                      isTime: true,
-                      paddingLeft: 0),
-                  InputFields.formFieldNumberMask(
-                      isEnable: false,
-                      hintTxt: "To",
-                      controller: TextEditingController(text: asrunData.fpctIme),
-                      widthRatio: 0.09,
-                      isTime: true,
-                      paddingLeft: 0),
-                ],
+              SizedBox(
+                height: 10,
+              ),
+              Container(
+                width: Get.width * 0.45,
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    InputFields.formFieldNumberMask(
+                        isEnable: true,
+                        hintTxt: "FPC Time",
+                        controller: fpcTime,
+                        widthRatio: 0.09,
+                        isTime: true,
+                        paddingLeft: 0),
+                    InputFields.formFieldNumberMask(
+                        isEnable: false,
+                        hintTxt: "From",
+                        controller:
+                            TextEditingController(text: asrunData.fpctIme),
+                        widthRatio: 0.09,
+                        isTime: true,
+                        paddingLeft: 0),
+                    InputFields.formFieldNumberMask(
+                        isEnable: false,
+                        hintTxt: "To",
+                        controller:
+                            TextEditingController(text: asrunData.fpctIme),
+                        widthRatio: 0.09,
+                        isTime: true,
+                        paddingLeft: 0),
+                  ],
+                ),
               )
             ],
           ),
         ),
+        textConfirm: "Verify",
+        textCancel: "Cancel",
+        onCancel: () {},
         onConfirm: () {
-          controller.manualUpdateFPCTime(selectedProgram?.value, selectedProgram?.key, fpcTime.text, asrunData);
+          controller.manualUpdateFPCTime(selectedProgram?.value,
+              selectedProgram?.key, fpcTime.text, asrunData);
         });
   }
 
@@ -430,7 +501,8 @@ class AsrunImportAdRevenueView extends GetView<AsrunImportController> {
         height: Get.height * 0.80,
         width: Get.width / 2,
         child: DataGridShowOnlyKeys(
-          mapData: controllerX.viewFPCData?.map((e) => e.toJson()).toList() ?? [],
+          mapData:
+              controllerX.viewFPCData?.map((e) => e.toJson()).toList() ?? [],
           onload: (loadEvent) {
             controller.fpcGridStateManager = loadEvent.stateManager;
           },
@@ -439,8 +511,9 @@ class AsrunImportAdRevenueView extends GetView<AsrunImportController> {
           },
           mode: PlutoGridMode.selectWithOneTap,
           onRowDoubleTap: (rowEvent) {
-            controllerX.gridStateManager
-                ?.setFilter((element) => element.cells["fpctIme"]?.value.toString() == rowEvent.row.cells["starttime"]?.value.toString());
+            controllerX.gridStateManager?.setFilter((element) =>
+                element.cells["fpctIme"]?.value.toString() ==
+                rowEvent.row.cells["starttime"]?.value.toString());
           },
         ),
       ),
@@ -455,7 +528,9 @@ class AsrunImportAdRevenueView extends GetView<AsrunImportController> {
         btnText: "Filter",
         showIcon: false,
         callback: () {
-          controller.filterMainGrid(controller.viewFPCData?[controller.selectedFPCindex!].starttime ?? "");
+          controller.filterMainGrid(
+              controller.viewFPCData?[controller.selectedFPCindex!].starttime ??
+                  "");
         },
       ),
       radius: 10,
