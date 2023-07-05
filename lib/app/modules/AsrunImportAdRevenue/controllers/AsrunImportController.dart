@@ -415,11 +415,11 @@ class AsrunImportController extends GetxController {
                     "ExportTapeCode": e.tapeId,
                     "SegmentNumber": e.segmentnumber,
                     "ExportTapeCaption": e.caption,
-                    "TapeDurationss": e.tapeDuration,
+                    "TapeDurationss": e.telecastDuration,
                     "EventType": e.eventtype,
                     "BookingNumber": e.bookingnumber,
                     "BookingDetailcode": e.bookingdetailcode,
-                    "mismatch": e.isMismatch
+                    "mismatch": int.tryParse(e.isMismatch ?? "")
                   })
               .toList(),
           "IsGFK": checkboxesMap["GFK"]
