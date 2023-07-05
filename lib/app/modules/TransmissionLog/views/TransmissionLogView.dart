@@ -184,7 +184,8 @@ class TransmissionLogView extends StatelessWidget {
                               hintTxt: "Start Time",
                               controller: controller.startTime_,
                               widthRatio: 0.12,
-                              isTime: true,
+                              isTime: false,
+                              textFieldFN: controller.startTime_focus,
                               paddingLeft: 0),
 
                           /// duration
@@ -192,7 +193,7 @@ class TransmissionLogView extends StatelessWidget {
                               hintTxt: "Offset Time",
                               controller: controller.offsetTime_,
                               widthRatio: 0.12,
-                              isTime: true,
+                              isTime: false,
                               isEnable: false,
                               paddingLeft: 0),
                           SizedBox(
@@ -589,6 +590,7 @@ class TransmissionLogView extends StatelessWidget {
       case "Commercials":
         if (!controller.logSaved) {
           LoadingDialog.callInfoMessage("Please save the log first!");
+          return;
         }
         controller.getCommercialList(fun: (model) {
           showCommercialDialog(Get.context, model);
