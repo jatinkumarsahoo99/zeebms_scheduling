@@ -643,7 +643,7 @@ class TransmissionLogView extends StatelessWidget {
         showAaDialog(Get.context);
         break;
       case "Export":
-        // controller.colorGrid(false);
+        controller.btnSave_Click();
         controller.btnExportFetchFpc(fun: () {
           showExportDialog(Get.context);
         });
@@ -739,7 +739,8 @@ class TransmissionLogView extends StatelessWidget {
                                     // datechange
                                     // hour
                                     controller.dataGridRowFilter(
-                                      matchValue: tap?.row.cells["hourCode"]?.value
+                                      matchValue: tap
+                                              ?.row.cells["hourCode"]?.value
                                               .toString() ??
                                           "",
                                       filterKey: 'datechange',

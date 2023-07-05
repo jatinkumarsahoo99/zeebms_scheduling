@@ -2,6 +2,7 @@ import 'dart:async';
 import 'dart:ui';
 
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:get/get.dart';
 import 'package:url_strategy/url_strategy.dart';
 
@@ -22,7 +23,12 @@ void main() async {
     return true;
   };
   setPathUrlStrategy();
-  // print("Aes dec>>>"+(Aes.decrypt("1BWIoBKeDl7qDSAAhxvXsQ==")??""));
+
+
+  String data = await rootBundle.loadString('application.json');
+  print(">>Keyvault JSON DATA>>>"+data.toString());
+
+  print("Aes dec>>>");
   runApp(
     GetMaterialApp(
       title: "Zee BMS",
