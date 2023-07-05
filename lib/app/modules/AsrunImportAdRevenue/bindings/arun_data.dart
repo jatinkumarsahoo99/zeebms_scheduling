@@ -64,14 +64,20 @@ class AsRunData {
     programCode = json['programCode'] ?? json['programcode'];
     telecasttime = json['telecasttime'];
     tapeId = json['tapeId'];
-    segmentnumber = json['segmentnumber'] is String ? int.tryParse(json['segmentnumber']) : json['segmentnumber'];
+    segmentnumber = json['segmentnumber'] is String
+        ? (json['segmentnumber'].toString().isEmpty
+            ? null
+            : int.tryParse(json['segmentnumber']))
+        : json['segmentnumber'];
     caption = json['caption'];
     telecastDuration = json['telecastDuration'];
     vtr = json['vtr'];
     ch = json['ch'];
     eventtype = json['eventtype'];
     bookingnumber = json['bookingnumber'];
-    bookingdetailcode = json['bookingdetailcode'] is String ? int.tryParse(json['bookingdetailcode']) : json['bookingdetailcode'];
+    bookingdetailcode = json['bookingdetailcode'] is String
+        ? int.tryParse(json['bookingdetailcode'])
+        : json['bookingdetailcode'];
     scheduletime = json['scheduletime'];
     scheduledProgram = json['scheduledProgram'];
     rosBand = json['rosBand'];
@@ -102,7 +108,8 @@ class AsRunData {
     data['ch'] = ch;
     data['eventtype'] = eventtype;
     data['bookingnumber'] = bookingnumber;
-    data['bookingdetailcode'] = isSegInt ? bookingdetailcode : bookingdetailcode.toString();
+    data['bookingdetailcode'] =
+        isSegInt ? bookingdetailcode : bookingdetailcode.toString();
     data['scheduletime'] = scheduletime;
     data['scheduledProgram'] = scheduledProgram;
     data['rosBand'] = rosBand;
