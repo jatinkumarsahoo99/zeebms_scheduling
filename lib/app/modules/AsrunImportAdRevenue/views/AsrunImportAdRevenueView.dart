@@ -355,6 +355,8 @@ class AsrunImportAdRevenueView extends GetView<AsrunImportController> {
           ?.cells["programName"]
           ?.value;
       print(fpcTime);
+      print(programCode);
+      print(programName);
       for (var element in controller.gridStateManager?.currentSelectingRows ?? <PlutoRow>[]) {
         controller.gridStateManager?.changeCellValue(element.cells["fpctIme"]!, fpcTime, force: true);
         controller.asrunData?[element.sortIdx].fpctIme = fpcTime;

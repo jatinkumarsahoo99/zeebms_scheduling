@@ -44,6 +44,7 @@ class TransmissionLogController extends GetxController {
   RxInt tsPromoCap = RxInt(0);
   RxInt tsCommercialCap = RxInt(0);
   FocusNode epNoSegment_focus = FocusNode();
+  FocusNode startTime_focus = FocusNode();
 
   //input controllers
   DropDownValue? selectLocation;
@@ -141,6 +142,11 @@ class TransmissionLogController extends GetxController {
   void onInit() {
     super.onInit();
     getLocations();
+    startTime_focus.addListener(() {
+      if(!startTime_focus.hasFocus){
+        colorGrid(false);
+      }
+    });
   }
 
   pickFile() async {
@@ -582,17 +588,18 @@ class TransmissionLogController extends GetxController {
     PlutoRow? row = gridStateManagerCommercial?.rows[rowIndex];
     PlutoRow? insertRowDta = insertCommercial(
         row?.cells["tonumber"]?.value,
-        row?.cells["bookingdetailcode"]?.value,
-        row?.cells["Scheduletime"]?.value,
+        row?.cells["bookingdetailcode"]?.value?.toString()??"",
+        // row?.cells["Scheduletime"]?.value,
+        row?.cells["scheduletime"]?.value,
         row?.cells["productname"]?.value,
-        (row?.cells["ROsTime"]?.value == null)
+        (row?.cells["rOsTime"]?.value == null)
             ? ""
-            : row?.cells["ROsTime"]?.value,
-        row?.cells["Exporttapecaption"]?.value,
-        row?.cells["Exporttapecode"]?.value,
+            : row?.cells["rOsTime"]?.value,
+        row?.cells["exportTapeCaption"]?.value,
+        row?.cells["exporttapecode"]?.value,
         Utils.convertToTimeFromDouble(
             value:
-                num.tryParse(row?.cells["Duration"]?.value.toString() ?? "0") ??
+                num.tryParse(row?.cells["duration"]?.value.toString() ?? "0") ??
                     0),
         row?.cells["som"]?.value);
     gridStateManager?.insertRows(insrow, [insertRowDta]);
@@ -1564,7 +1571,30 @@ class TransmissionLogController extends GetxController {
                 isStandby.value),
             fun: (map) {
               Get.back();
-              if (map is Map) {
+              if (map is Map && map.containsKey("lstUpdatedLog")) {
+                TransmissionLogModel transmission=TransmissionLogModel();
+                LoadSavedLogOutput model=LoadSavedLogOutput.fromJson(map as Map<String,dynamic>);
+                transmission.loadSavedLogOutput=model;
+                transmissionLog = transmission;
+                if (transmissionLog != null &&
+                    transmissionLog?.loadSavedLogOutput != null &&
+                    transmissionLog?.loadSavedLogOutput?.lstTransmissionLog != null &&
+                    ((transmissionLog?.loadSavedLogOutput?.lstTransmissionLog?.length ??
+                        0) !=
+                        0)) {
+                  startTime_.text = transmissionLog
+                      ?.loadSavedLogOutput?.lstTransmissionLog![0].transmissionTime ??
+                      "";
+                  // isEnable.value = false;
+                  // isFetch.value = true;
+                  update(["transmissionList"]);
+                  colorGrid(true);
+
+                  btnSave_Click();
+                } else {
+                  // Get.back();
+                  LoadingDialog.callInfoMessage("No Data Found");
+                }
               } else {
                 LoadingDialog.callInfoMessage(map.toString());
               }

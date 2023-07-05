@@ -37,7 +37,14 @@ class AsrunImportController extends GetxController {
     {"name": "DailyFPC", "value": false},
     {"name": "Amagi", "value": false},
   ]);
-  RxMap checkboxesMap = RxMap({"FPC": false, "Mark Slot": false, "Don't Update Exposure": false, "GFK": false, "DailyFPC": false, "Amagi": false});
+  RxMap checkboxesMap = RxMap({
+    "FPC": false,
+    "Mark Slot": false,
+    "Don't Update Exposure": false,
+    "GFK": false,
+    "DailyFPC": false,
+    "Amagi": false
+  });
 
   //  [
   //   {"name": "FPC", "value": false},
@@ -55,7 +62,10 @@ class AsrunImportController extends GetxController {
   TextEditingController selectedDate = TextEditingController();
   TextEditingController startTime_ = TextEditingController();
 
-  List<AsrunImportModel>? transmissionLogList = List.generate(100, (index) => new AsrunImportModel(episodeDuration: (index + 1), status: "data1"));
+  List<AsrunImportModel>? transmissionLogList = List.generate(
+      100,
+      (index) =>
+          new AsrunImportModel(episodeDuration: (index + 1), status: "data1"));
   PlutoGridMode selectedPlutoGridMode = PlutoGridMode.selectWithOneTap;
   int? selectedIndex;
   RxnString verifyType = RxnString();
@@ -96,14 +106,16 @@ class AsrunImportController extends GetxController {
         fun: (Map map) {
           channels.clear();
           map["locationSelect"].forEach((e) {
-            channels.add(DropDownValue.fromJsonDynamic(e, "channelCode", "channelName"));
+            channels.add(
+                DropDownValue.fromJsonDynamic(e, "channelCode", "channelName"));
           });
         });
   }
 
   loadAsrunData() {
     Get.find<ConnectorControl>().POSTMETHOD(
-        api: ApiFactory.AsrunImport_LoadRunData(selectLocation?.key, selectChannel?.key, selectedDate.text.fromdMyToyMd()),
+        api: ApiFactory.AsrunImport_LoadRunData(selectLocation?.key,
+            selectChannel?.key, selectedDate.text.fromdMyToyMd()),
         json: {},
         fun: (map) {
           if (map is Map && map.containsKey("asRunData")) {
@@ -124,7 +136,8 @@ class AsrunImportController extends GetxController {
 
   loadviewFPCData() {
     Get.find<ConnectorControl>().POSTMETHOD(
-        api: ApiFactory.AsrunImport_LoadFPCData(selectLocation?.key, selectChannel?.key, selectedDate.text.fromdMyToyMd()),
+        api: ApiFactory.AsrunImport_LoadFPCData(selectLocation?.key,
+            selectChannel?.key, selectedDate.text.fromdMyToyMd()),
         json: {},
         fun: (map) {
           if (map is Map && map.containsKey("fpcData")) {
@@ -144,10 +157,13 @@ class AsrunImportController extends GetxController {
 
   updateFPCMismatch() {
     Get.find<ConnectorControl>().POSTMETHOD(
-        api: ApiFactory.AsrunImport_UpdateFPCMismatch(selectLocation?.key, selectChannel?.key, selectedDate.text.fromdMyToyMd()),
+        api: ApiFactory.AsrunImport_UpdateFPCMismatch(selectLocation?.key,
+            selectChannel?.key, selectedDate.text.fromdMyToyMd()),
         json: {},
         fun: (map) {
-          if (map is Map && map.containsKey("progMismatch") && map["progMismatch"]["message"] != null) {
+          if (map is Map &&
+              map.containsKey("progMismatch") &&
+              map["progMismatch"]["message"] != null) {
             LoadingDialog.callInfoMessage(map["progMismatch"]["message"]);
           }
         });
@@ -155,7 +171,8 @@ class AsrunImportController extends GetxController {
 
   filterMainGrid(String fpcTime) {
     if (fpcTime.isNotEmpty) {
-      gridStateManager?.setFilter((element) => element.cells["fpctIme"]?.value.toString() == fpcTime);
+      gridStateManager?.setFilter(
+          (element) => element.cells["fpctIme"]?.value.toString() == fpcTime);
     }
   }
 
@@ -173,25 +190,36 @@ class AsrunImportController extends GetxController {
           "ForMarkCommercial": false,
           "TemptableList": [
             {
-              "EventNumber": asrunData?[gridStateManager!.currentRowIdx!].eventNumber,
-              "TelecastDate": asrunData?[gridStateManager!.currentRowIdx!].telecastdate,
-              "TeleCastTime": asrunData?[gridStateManager!.currentRowIdx!].telecasttime,
+              "EventNumber":
+                  asrunData?[gridStateManager!.currentRowIdx!].eventNumber,
+              "TelecastDate":
+                  asrunData?[gridStateManager!.currentRowIdx!].telecastdate,
+              "TeleCastTime":
+                  asrunData?[gridStateManager!.currentRowIdx!].telecasttime,
               "Tapeid": asrunData?[gridStateManager!.currentRowIdx!].tapeId,
-              "SegmentNumber": asrunData?[gridStateManager!.currentRowIdx!].segmentnumber,
+              "SegmentNumber":
+                  asrunData?[gridStateManager!.currentRowIdx!].segmentnumber,
               "caption": asrunData?[gridStateManager!.currentRowIdx!].caption,
-              "TelecastDuration": asrunData?[gridStateManager!.currentRowIdx!].telecastDuration,
-              "EventType": asrunData?[gridStateManager!.currentRowIdx!].eventtype,
+              "TelecastDuration":
+                  asrunData?[gridStateManager!.currentRowIdx!].telecastDuration,
+              "EventType":
+                  asrunData?[gridStateManager!.currentRowIdx!].eventtype,
               "FPCtime": asrunData?[gridStateManager!.currentRowIdx!].fpctIme,
-              "ProgramCode": asrunData?[gridStateManager!.currentRowIdx!].programCode,
-              "BookingNumber": asrunData?[gridStateManager!.currentRowIdx!].bookingnumber,
-              "BookingDetailcode": asrunData?[gridStateManager!.currentRowIdx!].bookingdetailcode,
+              "ProgramCode":
+                  asrunData?[gridStateManager!.currentRowIdx!].programCode,
+              "BookingNumber":
+                  asrunData?[gridStateManager!.currentRowIdx!].bookingnumber,
+              "BookingDetailcode": asrunData?[gridStateManager!.currentRowIdx!]
+                  .bookingdetailcode,
               "CommercialCode": "",
               "ReconKey": ""
             }
           ]
         },
         fun: (map) {
-          if (map is Map && map.containsKey("progMismatch") && map["progMismatch"]["message"] != null) {
+          if (map is Map &&
+              map.containsKey("progMismatch") &&
+              map["progMismatch"]["message"] != null) {
             LoadingDialog.callInfoMessage(map["progMismatch"]["message"]);
           }
         });
@@ -200,11 +228,19 @@ class AsrunImportController extends GetxController {
   checkMissingAsrun() {
     Get.find<ConnectorControl>().POSTMETHOD(
         api: ApiFactory.AsrunImport_CheckMissingAsRun,
-        json: {"startTime": startTime_.text, "checkMissingAsRuns": asrunData?.map((e) => e.toJson(isSegInt: false)).toList()},
+        json: {
+          "startTime": startTime_.text,
+          "checkMissingAsRuns":
+              asrunData?.map((e) => e.toJson(isSegInt: false)).toList()
+        },
         fun: (map) {
-          if (map is Map && map.containsKey("isCheck") && map.containsKey("message")) {
-            LoadingDialog.callInfoMessage(map["message"].toString(), callback: () {
-              LoadingDialog.modify("Asrun Missing Do Yount Want To Proceed with Save?", () {
+          if (map is Map &&
+              map.containsKey("isCheck") &&
+              map.containsKey("message")) {
+            LoadingDialog.callInfoMessage(
+                map["message"].toString().split("\n").first, callback: () {
+              LoadingDialog.modify(
+                  "Asrun Missing Do Yount Want To Proceed with Save?", () {
                 saveAsrun();
               }, () {}, cancelTitle: "No", deleteTitle: "Yes");
             });
@@ -224,7 +260,11 @@ class AsrunImportController extends GetxController {
           "programCode": viewFPCData?[selectedFPCindex!].programcode,
           "LocationCode": selectLocation?.key,
           "Channelcode": selectChannel?.key,
-          "ObjProgList": [FPCProgramList.convertAsRunDataToFPCProgramList(asrunData![gridStateManager?.currentRowIdx ?? 0]).toJson()]
+          "ObjProgList": [
+            FPCProgramList.convertAsRunDataToFPCProgramList(
+                    asrunData![gridStateManager?.currentRowIdx ?? 0])
+                .toJson()
+          ]
         },
         fun: (map) {
           if (map is Map && map.containsKey("asRunData")) {
@@ -251,7 +291,9 @@ class AsrunImportController extends GetxController {
           "programCode": programCode,
           "LocationCode": selectLocation?.key,
           "Channelcode": selectChannel?.key,
-          "ObjProgList": [FPCProgramList.convertAsRunDataToFPCProgramList(asRunData).toJson()]
+          "ObjProgList": [
+            FPCProgramList.convertAsRunDataToFPCProgramList(asRunData).toJson()
+          ]
         },
         fun: (map) {
           if (map is Map && map.containsKey("asRunData")) {
@@ -271,14 +313,17 @@ class AsrunImportController extends GetxController {
 
   checkError() {
     if (gridStateManager?.currentCell == null) {
-      gridStateManager?.setCurrentCell(gridStateManager?.rows.first.cells.values.first, 0);
+      gridStateManager?.setCurrentCell(
+          gridStateManager?.rows.first.cells.values.first, 0);
     }
     bool rowFound = false;
     for (var row in gridStateManager?.rows ?? <PlutoRow>[]) {
       if (row.sortIdx > gridStateManager!.currentCell!.row.sortIdx) {
         if ((row.cells["isMismatch"]?.value.toString() ?? "") == "1") {
-          gridStateManager?.setCurrentCell(row.cells["isMismatch"], row.sortIdx);
-          gridStateManager?.moveScrollByRow(PlutoMoveDirection.down, row.sortIdx);
+          gridStateManager?.setCurrentCell(
+              row.cells["isMismatch"], row.sortIdx);
+          gridStateManager?.moveScrollByRow(
+              PlutoMoveDirection.down, row.sortIdx);
           gridStateManager?.scrollByDirection(PlutoMoveDirection.down, 20);
           rowFound = true;
           break;
@@ -286,8 +331,10 @@ class AsrunImportController extends GetxController {
       }
     }
     if (!rowFound) {
-      LoadingDialog.modify("You have reached the end! Do you wanto restart?", () {
-        gridStateManager?.setCurrentCell(gridStateManager?.rows.first.cells.values.first, 0);
+      LoadingDialog.modify("You have reached the end! Do you wanto restart?",
+          () {
+        gridStateManager?.setCurrentCell(
+            gridStateManager?.rows.first.cells.values.first, 0);
         checkError();
       }, () {}, deleteTitle: "Yes", cancelTitle: "No");
     }
@@ -315,7 +362,8 @@ class AsrunImportController extends GetxController {
       'LocationCode': selectLocation?.key,
       'LogDate': selectedDate.text.fromdMyToyMd(),
       'TelecastDate': selectedDate.text.fromdMyToyMd(),
-      'CheckType': "${checkboxesMap["GFK"] ? "GFK," : ""}${checkboxesMap["DailyFPC"] ? "DailyFPC," : ""}${checkboxesMap["Amagi"] ? "Amagi" : ""}",
+      'CheckType':
+          "${checkboxesMap["GFK"] ? "GFK," : ""}${checkboxesMap["DailyFPC"] ? "DailyFPC," : ""}${checkboxesMap["Amagi"] ? "Amagi" : ""}",
       'StartTime': '00:00:10:00',
       'ProcessFPC': checkboxesMap["FPC"],
     });
@@ -326,15 +374,22 @@ class AsrunImportController extends GetxController {
         fun: (value) {
           Get.back();
           if (value is Map && value.containsKey("asrunDetails")) {
-            if (value["asrunDetails"]["lstTempResponse"]['lstSaveTempDetailResponse'] != null) {
+            if (value["asrunDetails"]["lstTempResponse"]
+                    ['lstSaveTempDetailResponse'] !=
+                null) {
               asrunData = <AsRunData>[];
-              value["asrunDetails"]["lstTempResponse"]['lstSaveTempDetailResponse'].forEach((v) {
+              value["asrunDetails"]["lstTempResponse"]
+                      ['lstSaveTempDetailResponse']
+                  .forEach((v) {
                 asrunData!.add(AsRunData.fromJson(v));
               });
             }
             update(["fpcData"]);
-            if (value["asrunDetails"]["lstTempResponse"]['showPopup'] != null && value["asrunDetails"]["lstTempResponse"]['showPopup']["isCheck"]) {
-              LoadingDialog.callInfoMessage(value["asrunDetails"]["lstTempResponse"]['showPopup']["message"]);
+            if (value["asrunDetails"]["lstTempResponse"]['showPopup'] != null &&
+                value["asrunDetails"]["lstTempResponse"]['showPopup']
+                    ["isCheck"]) {
+              LoadingDialog.callInfoMessage(value["asrunDetails"]
+                  ["lstTempResponse"]['showPopup']["message"]);
             }
           }
 
@@ -350,12 +405,34 @@ class AsrunImportController extends GetxController {
           "ChannelCode": selectChannel?.key,
           "AsrunDate": selectedDate.text.fromdMyToyMd(),
           "ModifiedBy": Get.find<MainController>().user?.logincode ?? "",
-          "SaveDt": asrunData?.map((e) => e.toJson(isSegInt: false)).toList(),
+          "SaveDt": asrunData
+              ?.map((e) => {
+                    "EventNo": e.eventNumber,
+                    "TelecastDate": e.telecastdate,
+                    "fpctime": e.fpctIme,
+                    "ProgramName": e.programName,
+                    "TelecastTime": e.telecasttime,
+                    "ExportTapeCode": e.tapeId,
+                    "SegmentNumber": e.segmentnumber,
+                    "ExportTapeCaption": e.caption,
+                    "TapeDurationss": e.tapeDuration,
+                    "EventType": e.eventtype,
+                    "BookingNumber": e.bookingnumber,
+                    "BookingDetailcode": e.bookingdetailcode,
+                    "mismatch": e.isMismatch
+                  })
+              .toList(),
           "IsGFK": checkboxesMap["GFK"]
         },
         fun: (map) {
-          if (map is Map && map.containsKey("asRunData")) {
-            print("list found");
+          if (map is Map && map.containsKey("asrunDetails")) {
+            if (map["asrunDetails"]["isError"]) {
+              LoadingDialog.callErrorMessage1(
+                  msg: map["asrunDetails"]["errorMessage"]);
+            } else {
+              LoadingDialog.callDataSaved(
+                  msg: map["asrunDetails"]["genericMessage"]);
+            }
 
             // if (map['asRunData'] != null) {
             //   asrunData = <AsRunData>[];
