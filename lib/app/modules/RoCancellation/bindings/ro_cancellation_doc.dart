@@ -18,7 +18,7 @@ class RoCancellationDocuments {
     data['documentId'] = this.documentId;
     data['documentName'] = this.documentName;
     data['uploadedBy'] = this.uploadedBy;
-    data['upLoadedDate'] = this.upLoadedDate;
+    data['uploadedDate'] = this.upLoadedDate;
     return data;
   }
 }

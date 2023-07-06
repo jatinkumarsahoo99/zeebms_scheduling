@@ -274,8 +274,8 @@ class PromoMasterController extends GetxController {
     Get.defaultDialog(
       title: "Documents",
       content: SizedBox(
-        // width: Get.width / 2.5,
-        // height: Get.height / 2.5,
+        width: Get.width / 2.5,
+        height: Get.height / 2.5,
         child: Scaffold(
           body: RawKeyboardListener(
             focusNode: FocusNode(),
@@ -283,14 +283,25 @@ class PromoMasterController extends GetxController {
               if (value.isKeyPressed(LogicalKeyboardKey.delete)) {
                 LoadingDialog.delete(
                   "Want to delete selected row",
-                  () {
+                  () async {
+                    LoadingDialog.call();
+                    await Get.find<ConnectorControl>().DELETEMETHOD(
+                      api: ApiFactory.COMMON_DOCS_DELETE(documents[viewDocsStateManger!.currentRowIdx!].documentId.toString()),
+                      fun: (data) {
+                        Get.back();
+                      },
+                    );
                     Get.back();
+                    docs();
                   },
                   cancel: () {},
                 );
               }
             },
             child: DataGridShowOnlyKeys(
+              hideCode: true,
+              hideKeys: ["documentId"],
+              dateFromat: "dd-MM-yyyy HH:mm",
               mapData: documents.map((e) => e.toJson()).toList(),
               onload: (loadGrid) {
                 viewDocsStateManger = loadGrid.stateManager;
