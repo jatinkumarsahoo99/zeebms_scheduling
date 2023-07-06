@@ -129,7 +129,7 @@ class AuditReschdule extends StatelessWidget {
               child: Row(
                 children: [
                   SizedBox(
-                    width: Get.width * .42,
+                    width: Get.width * .35,
                     child: GetBuilder<AuditStatusController>(
                         init: controller,
                         id: "cancelData",
@@ -150,7 +150,7 @@ class AuditReschdule extends StatelessWidget {
                         }),
                   ),
                   SizedBox(
-                    width: Get.width * .42,
+                    width: Get.width * .35,
                     child: GetBuilder<AuditStatusController>(
                         init: controller,
                         id: "cancelData",
@@ -162,6 +162,7 @@ class AuditReschdule extends StatelessWidget {
                                 exportFileName: "Audit Cancellation",
                                 hideKeys: ["channelcode", "locationcode"],
                                 rowCheckColor: Colors.white,
+                                formatDate: false,
                                 onload: (loadEvent) {},
                                 hideCheckKeysValue: true,
                                 actionIconKey: {"audited": Icons.check_box_rounded, "requested": Icons.check_box_rounded},
