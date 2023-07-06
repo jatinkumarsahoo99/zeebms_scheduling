@@ -149,8 +149,15 @@ class AuditStatusView extends StatelessWidget {
                                     )
                                   : FormButtonWrapper(
                                       btnText: btn["name"],
+
                                       // isEnabled: btn['isDisabled'],
-                                      callback: null,
+                                      callback: () {
+                                        btn["name"] == "Refesh"
+                                            ? controller.showBtnData()
+                                            : btn["name"] == "Delete"
+                                                ? null
+                                                : print(btn["name"]);
+                                      },
                                     ),
                       ],
                     ),
