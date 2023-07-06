@@ -94,7 +94,7 @@ class AuditReschdule extends StatelessWidget {
                   }, "Agency", 0.24, isEnable: false, selected: DropDownValue(key: data.agencyCode, value: data.agencyName)),
                   DropDownField.formDropDown1WidthMap(controller.channels.value, (value) {
                     // controller.selectedChannel = value;
-                  }, "Brand", 0.24, isEnable: false, selected: DropDownValue(key: data.brandName, value: data.brandCode)),
+                  }, "Brand", 0.24, selected: DropDownValue(key: data.brandName, value: data.brandCode)),
                   InkWell(
                     onTap: () {},
                     child: Row(
@@ -109,6 +109,10 @@ class AuditReschdule extends StatelessWidget {
                 ],
               ),
             ),
+          ),
+          Row(
+            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+            children: [Text("Reschedule Details"), Text("Booking Details")],
           ),
           Expanded(
               child: Padding(
@@ -125,7 +129,7 @@ class AuditReschdule extends StatelessWidget {
               child: Row(
                 children: [
                   SizedBox(
-                    width: Get.width / 2.2,
+                    width: Get.width * .42,
                     child: GetBuilder<AuditStatusController>(
                         init: controller,
                         id: "cancelData",
@@ -146,7 +150,7 @@ class AuditReschdule extends StatelessWidget {
                         }),
                   ),
                   SizedBox(
-                    width: Get.width / 2.2,
+                    width: Get.width * .42,
                     child: GetBuilder<AuditStatusController>(
                         init: controller,
                         id: "cancelData",
