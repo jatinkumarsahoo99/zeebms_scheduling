@@ -339,7 +339,7 @@ class AsrunImportAdRevenueView extends GetView<AsrunImportController> {
   formHandler(btn) {
     switch (btn) {
       case "Commercials":
-        controller.updateFPCTime();
+        controller.saveTempDetails();
         break;
       case "Save":
         controller.checkMissingAsrun();
@@ -382,8 +382,12 @@ class AsrunImportAdRevenueView extends GetView<AsrunImportController> {
         child: Column(
           mainAxisSize: MainAxisSize.min,
           children: [
-            Container(),
+            Expanded(
+                child: Container(
+              decoration: BoxDecoration(border: Border.all(color: Colors.grey)),
+            )),
             Obx(() => Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                   crossAxisAlignment: CrossAxisAlignment.end,
                   children: [
                     FormButtonWrapper(
@@ -418,6 +422,7 @@ class AsrunImportAdRevenueView extends GetView<AsrunImportController> {
               height: 5,
             ),
             Obx(() => Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                   crossAxisAlignment: CrossAxisAlignment.end,
                   children: [
                     FormButtonWrapper(
@@ -451,8 +456,8 @@ class AsrunImportAdRevenueView extends GetView<AsrunImportController> {
                         controller: TextEditingController(text: (controller.toSwap.value?.eventNumber ?? "").toString()))
                   ],
                 )),
-            Spacer(),
             Row(
+              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
               children: [
                 FormButtonWrapper(
                   btnText: "Swap",
