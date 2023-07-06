@@ -83,7 +83,7 @@ class AuditCanellation extends StatelessWidget {
                   ),
                   SizedBox(
                       width: Get.width * 0.24,
-                      child: Row(mainAxisSize: MainAxisSize.max, mainAxisAlignment: MainAxisAlignment.start, children: [
+                      child: Row(mainAxisSize: MainAxisSize.max, mainAxisAlignment: MainAxisAlignment.spaceBetween, children: [
                         InputFields.formField1(
                             isEnable: false, width: 0.09, hintTxt: "Cancel No", controller: TextEditingController(text: cancelMonth.toString())),
                         InputFields.formField1(

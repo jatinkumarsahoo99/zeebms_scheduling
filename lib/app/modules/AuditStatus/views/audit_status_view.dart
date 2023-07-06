@@ -14,7 +14,7 @@ import '../controllers/audit_status_controller.dart';
 
 class AuditStatusView extends StatelessWidget {
   AuditStatusView({Key? key}) : super(key: key);
-  AuditStatusController controller = Get.put(AuditStatusController());
+  AuditStatusController controller = Get.put<AuditStatusController>(AuditStatusController());
 
   @override
   Widget build(BuildContext context) {
