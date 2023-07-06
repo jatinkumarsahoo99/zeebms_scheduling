@@ -130,14 +130,15 @@ class AuditStatusController extends GetxController {
               });
               await showCancelDeals(showECancelData?.first.bookingNumber, bookingData[index]["cancelmonth"], bookingData[index]["cancelNumber"]);
               Get.defaultDialog(
+                  title: "Audit Cancellations",
                   content: Container(
-                height: Get.height * .80,
-                width: Get.width * .80,
-                child: AuditCanellation(
-                  cancelMonth: bookingData[index]["cancelmonth"],
-                  cancelNumber: bookingData[index]["cancelNumber"],
-                ),
-              ));
+                    height: Get.height * .80,
+                    width: Get.width * .80,
+                    child: AuditCanellation(
+                      cancelMonth: bookingData[index]["cancelmonth"],
+                      cancelNumber: bookingData[index]["cancelNumber"],
+                    ),
+                  ));
             }
           }
         });
