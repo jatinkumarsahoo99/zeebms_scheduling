@@ -6,6 +6,7 @@ extension StringExtension on String {
   }
 
   String fromdMyToyMd() => DateFormat("yyyy-MM-dd").format(DateFormat("dd-MM-yyyy").parse(this));
+  String fromyMdTodMy() => DateFormat("dd-MM-yyyy").format(DateFormat("yyyy-MM-dd").parse(this));
 
   String pascalCaseToNormal() {
     return split(RegExp(r"(?=(?!^)[A-Z])")).map((e) => e.capitalize()).toList().join(" ");
