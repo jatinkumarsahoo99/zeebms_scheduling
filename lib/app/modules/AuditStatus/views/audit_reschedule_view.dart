@@ -2,6 +2,7 @@ import 'package:bms_scheduling/app/data/DropDownValue.dart';
 import 'package:bms_scheduling/app/modules/AuditStatus/bindings/audi_status_show_reshdule.dart';
 import 'package:bms_scheduling/app/modules/AuditStatus/bindings/audit_status_cancel_deals.dart';
 import 'package:bms_scheduling/app/modules/AuditStatus/controllers/audit_status_controller.dart';
+import 'package:bms_scheduling/app/providers/extensions/string_extensions.dart';
 import 'package:bms_scheduling/widgets/DataGridShowOnly.dart';
 import 'package:bms_scheduling/widgets/DateTime/DateWithThreeTextField.dart';
 import 'package:bms_scheduling/widgets/FormButton.dart';
@@ -19,8 +20,8 @@ class AuditReschdule extends StatelessWidget {
   // AuditCanellation({super.key, required this.cancelNumber, required this.cancelMonth});
   // final int cancelNumber;
   // final int cancelMonth;
-
-  AuditStatusController controller = Get.find<AuditStatusController>();
+  const AuditReschdule({super.key, required this.controller});
+  final AuditStatusController controller;
 
   @override
   Widget build(BuildContext context) {
@@ -56,9 +57,15 @@ class AuditReschdule extends StatelessWidget {
                         mainAxisSize: MainAxisSize.max,
                         mainAxisAlignment: MainAxisAlignment.spaceBetween,
                         children: [
-                          DateWithThreeTextField(widthRation: 0.115, title: "FPC Eff. Dt.", mainTextController: TextEditingController()),
                           DateWithThreeTextField(
-                              widthRation: 0.115, title: "Resch Dt.", onFocusChange: (value) {}, mainTextController: TextEditingController()),
+                              widthRation: 0.115,
+                              title: "FPC Eff. Dt.",
+                              mainTextController: TextEditingController(text: data.bookingEffectiveDate?.fromyMdTodMy())),
+                          DateWithThreeTextField(
+                              widthRation: 0.115,
+                              title: "Resch Dt.",
+                              onFocusChange: (value) {},
+                              mainTextController: TextEditingController(text: data.rescheduledate?.fromyMdTodMy())),
                         ],
                       )),
                   InputFields.formField1(hintTxt: "Ref No", width: 0.24, controller: TextEditingController(text: data.rescheduleReferenceNumber)),
@@ -69,7 +76,7 @@ class AuditReschdule extends StatelessWidget {
                           widthRation: 0.115,
                           title: "Ref Date",
                           onFocusChange: (value) {},
-                          mainTextController: TextEditingController(text: data.rescheduledate)),
+                          mainTextController: TextEditingController(text: data.rescheduledate?.fromyMdTodMy())),
                       InputFields.formField1(
                           hintTxt: "Booking No", width: 0.115, isEnable: false, controller: TextEditingController(text: data.bookingNumber)),
                     ]),
@@ -92,9 +99,9 @@ class AuditReschdule extends StatelessWidget {
                   DropDownField.formDropDown1WidthMap([], (value) {
                     // controller.selectedChannel = value;
                   }, "Agency", 0.24, isEnable: false, selected: DropDownValue(key: data.agencyCode, value: data.agencyName)),
-                  DropDownField.formDropDown1WidthMap(controller.channels.value, (value) {
+                  DropDownField.formDropDown1WidthMap([DropDownValue(key: data.brandCode, value: data.brandName)], (value) {
                     // controller.selectedChannel = value;
-                  }, "Brand", 0.24, selected: DropDownValue(key: data.brandName, value: data.brandCode)),
+                  }, "Brand", 0.24, selected: DropDownValue(key: data.brandCode, value: data.brandName)),
                   InkWell(
                     onTap: () {},
                     child: Row(
@@ -127,9 +134,10 @@ class AuditReschdule extends StatelessWidget {
                     bottom: BorderSide(color: Colors.grey[400]!),
                   )),
               child: Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
                   SizedBox(
-                    width: Get.width * .42,
+                    width: Get.width * .37,
                     child: GetBuilder<AuditStatusController>(
                         init: controller,
                         id: "cancelData",
@@ -142,15 +150,16 @@ class AuditReschdule extends StatelessWidget {
                                 hideKeys: ["channelcode", "locationcode"],
                                 rowCheckColor: Colors.white,
                                 onload: (loadEvent) {},
+                                checkRow: true,
+                                checkRowKey: "auditStatus",
                                 hideCheckKeysValue: true,
-                                actionIconKey: {"audited": Icons.check_box_rounded, "requested": Icons.check_box_rounded},
                                 actionIcon: Icons.check_box_outlined,
                                 mapData: controller.auditStatusReschduleDisplay?.lstReshedule?.map((e) => e.toJson()).toList() ?? []),
                           );
                         }),
                   ),
                   SizedBox(
-                    width: Get.width * .42,
+                    width: Get.width * .37,
                     child: GetBuilder<AuditStatusController>(
                         init: controller,
                         id: "cancelData",
@@ -162,6 +171,7 @@ class AuditReschdule extends StatelessWidget {
                                 exportFileName: "Audit Cancellation",
                                 hideKeys: ["channelcode", "locationcode"],
                                 rowCheckColor: Colors.white,
+                                formatDate: false,
                                 onload: (loadEvent) {},
                                 hideCheckKeysValue: true,
                                 actionIconKey: {"audited": Icons.check_box_rounded, "requested": Icons.check_box_rounded},

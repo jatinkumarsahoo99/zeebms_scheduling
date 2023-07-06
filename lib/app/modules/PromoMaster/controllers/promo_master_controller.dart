@@ -249,15 +249,15 @@ class PromoMasterController extends GetxController {
   docs() async {
     String documentKey = "";
     if (promoCode.isEmpty) {
-      documentKey = "Promomaster";
+      documentKey = "";
     } else {
       documentKey = "Promomaster$promoCode";
     }
     PlutoGridStateManager? viewDocsStateManger;
     try {
       LoadingDialog.call();
-      await Get.find<ConnectorControl>().GETMETHODCALL(
-          api: ApiFactory.RO_CANCELLATION_LOAD_DOC(documentKey),
+      await Get.find<ConnectorControl>().GET_METHOD_CALL_HEADER(
+          api: ApiFactory.COMMON_DOCS_LOAD(documentKey),
           fun: (data) {
             if (data is Map && data.containsKey("info_GetAllDocument")) {
               documents = [];
@@ -273,14 +273,51 @@ class PromoMasterController extends GetxController {
 
     Get.defaultDialog(
       title: "Documents",
-      content: Container(
+      content: SizedBox(
         width: Get.width / 2.5,
         height: Get.height / 2.5,
-        child: DataGridShowOnlyKeys(
-          mapData: documents.map((e) => e.toJson()).toList(),
-          onload: (loadGrid) {
-            viewDocsStateManger = loadGrid.stateManager;
-          },
+        child: Scaffold(
+          body: RawKeyboardListener(
+            focusNode: FocusNode(),
+            onKey: (value) {
+              if (value.isKeyPressed(LogicalKeyboardKey.delete)) {
+                LoadingDialog.delete(
+                  "Want to delete selected row",
+                  () async {
+                    LoadingDialog.call();
+                    await Get.find<ConnectorControl>().DELETEMETHOD(
+                      api: ApiFactory.COMMON_DOCS_DELETE(documents[viewDocsStateManger!.currentRowIdx!].documentId.toString()),
+                      fun: (data) {
+                        Get.back();
+                      },
+                    );
+                    Get.back();
+                    docs();
+                  },
+                  cancel: () {},
+                );
+              }
+            },
+            child: DataGridShowOnlyKeys(
+              hideCode: true,
+              hideKeys: ["documentId"],
+              dateFromat: "dd-MM-yyyy HH:mm",
+              mapData: documents.map((e) => e.toJson()).toList(),
+              onload: (loadGrid) {
+                viewDocsStateManger = loadGrid.stateManager;
+              },
+              onRowDoubleTap: (row) {
+                Get.find<ConnectorControl>().GET_METHOD_CALL_HEADER(
+                    api: ApiFactory.COMMON_DOCS_VIEW((documents[row.rowIdx].documentId).toString()),
+                    fun: (data) {
+                      if (data is Map && data.containsKey("addingDocument")) {
+                        ExportData()
+                            .exportFilefromByte(base64Decode(data["addingDocument"][0]["documentData"]), data["addingDocument"][0]["documentname"]);
+                      }
+                    });
+              },
+            ),
+          ),
         ),
       ),
       actions: {"Add Doc": () async {}, "View Doc": () {}, "Attach Email": () {}}
@@ -293,8 +330,8 @@ class PromoMasterController extends GetxController {
 
                         if (result != null && result.files.isNotEmpty) {
                           LoadingDialog.call();
-                          await Get.find<ConnectorControl>().POSTMETHOD(
-                              api: ApiFactory.RO_CANCELLATION_ADD_DOC,
+                          await Get.find<ConnectorControl>().POSTMETHOD_FORMDATA_HEADER(
+                              api: ApiFactory.COMMON_DOCS_ADD,
                               fun: (data) {
                                 if (data is Map && data.containsKey("addingDocument")) {
                                   for (var doc in data["addingDocument"]) {
@@ -306,6 +343,7 @@ class PromoMasterController extends GetxController {
                               },
                               json: {
                                 "documentKey": documentKey,
+                                "loggedUser": Get.find<MainController>().user?.logincode ?? "",
                                 "strFilePath": result.files.first.name,
                                 "bytes": base64.encode(List<int>.from(result.files.first.bytes ?? []))
                               });
@@ -314,8 +352,8 @@ class PromoMasterController extends GetxController {
                       }
                     : e.key == "View Doc"
                         ? () {
-                            Get.find<ConnectorControl>().GETMETHODCALL(
-                                api: ApiFactory.RO_CANCELLATION_VIEW_DOC(documents[viewDocsStateManger!.currentCell!.row.sortIdx].documentId),
+                            Get.find<ConnectorControl>().GET_METHOD_CALL_HEADER(
+                                api: ApiFactory.COMMON_DOCS_VIEW((documents[viewDocsStateManger!.currentCell!.row.sortIdx].documentId).toString()),
                                 fun: (data) {
                                   if (data is Map && data.containsKey("addingDocument")) {
                                     ExportData().exportFilefromByte(

@@ -46,6 +46,8 @@ abstract class RoutesList {
     _Paths.MAM_WORK_ORDERS,
     _Paths.RO_BOOKING,
     _Paths.FPC_MISMATCH,
+    _Paths.AUDIT_STATUS,
+    _Paths.ASRUN_IMPORT_AD_REVENUE,
     _Paths.COMMERCIAL,
     _Paths.SPOT_PRIORITY,
     _Paths.RO_CANCELLATION,
