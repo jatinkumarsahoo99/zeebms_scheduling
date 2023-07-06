@@ -148,7 +148,7 @@ class AuditStatusView extends GetView<AuditStatusController> {
                                     )
                                   : FormButtonWrapper(
                                       btnText: btn["name"],
-
+                                      isEnabled: btn["name"] != "Delete",
                                       // isEnabled: btn['isDisabled'],
                                       callback: () {
                                         btn["name"] == "Refesh"

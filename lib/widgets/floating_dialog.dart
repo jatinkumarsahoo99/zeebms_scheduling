@@ -45,12 +45,12 @@ class _DraggableFabState extends State<DraggableFab> {
           top: _top,
           child: Container(
             key: key,
-            padding: const EdgeInsets.all(16),
+            padding: const EdgeInsets.all(4),
             decoration: BoxDecoration(
-              boxShadow: const [
-                BoxShadow(color: Colors.black54),
-              ],
-              borderRadius: BorderRadius.circular(12),
+              // boxShadow: const [
+              //   BoxShadow(color: Colors.black54),
+              // ],
+              // borderRadius: BorderRadius.circular(12),
               color: Colors.grey.shade300,
             ),
             child: Draggable(
