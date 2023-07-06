@@ -76,7 +76,7 @@ class AuditReschdule extends StatelessWidget {
                           widthRation: 0.115,
                           title: "Ref Date",
                           onFocusChange: (value) {},
-                          mainTextController: TextEditingController(text: data.bookingEffectiveDate?.fromyMdTodMy())),
+                          mainTextController: TextEditingController(text: data.bookingEffectiveDate?.split("T")[0].fromyMdTodMy())),
                       InputFields.formField1(
                           hintTxt: "Booking No", width: 0.115, isEnable: false, controller: TextEditingController(text: data.bookingNumber)),
                     ]),
@@ -146,14 +146,15 @@ class AuditReschdule extends StatelessWidget {
                             child: DataGridShowOnlyKeys(
                                 onRowChecked: (rowcheckEvent) {},
                                 hideCode: false,
-                                exportFileName: "Audit Reschdule",
+                                exportFileName: "Audit Reschedule",
                                 hideKeys: ["channelcode", "locationcode"],
                                 rowCheckColor: Colors.white,
                                 onload: (loadEvent) {},
                                 colorCallback: (rowEvent) {
-                                  if (rowEvent.row.cells["audited"]?.value == "" || rowEvent.row.cells["audited"]?.value == null) {
+                                  if (controller.auditStatusReschduleDisplay?.lstReshedule?[rowEvent.rowIdx].audited == null) {
                                     return Color(0xFF96FF96);
-                                  } else if ((rowEvent.row.cells["audited"]?.value ?? 0) < (rowEvent.row.cells["totalspots"]?.value ?? 0)) {
+                                  } else if ((controller.auditStatusReschduleDisplay?.lstReshedule?[rowEvent.rowIdx].audited ?? 0) <
+                                      (controller.auditStatusReschduleDisplay?.lstReshedule?[rowEvent.rowIdx].totalspots ?? 0)) {
                                     return Color(0xFFFF9696);
                                   }
 
