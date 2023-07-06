@@ -43,7 +43,7 @@ class ApiFactory {
   static String COMMON_DOCS_LOAD(String docKey) => "$BASE_URL_COMMON/api/CommonDoc/loadDocument?DocumentKey=$docKey";
   static String COMMON_DOCS_VIEW(String docId) => "$BASE_URL_COMMON/api/CommonDoc/ViewDocument?DocId=$docId";
   static String get COMMON_DOCS_ADD => "$BASE_URL_COMMON/api/CommonDoc/AddDocument";
-  static String COMMON_DOCS_DELETE(String docKey) => "$BASE_URL_COMMON/api/CommonDoc/DeleteDocument?DocumentKey=$docKey";
+  static String COMMON_DOCS_DELETE(String docId) => "$BASE_URL_COMMON/api/CommonDoc/DeleteDocument?DocumentID=$docId";
 
   ////////////////////// SEARCH ////////////////////////////
 
