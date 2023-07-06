@@ -356,8 +356,12 @@ class TransmissionLogView extends StatelessWidget {
                                 int index, renderContext) {
                               switch (itemType) {
                                 case DataGridMenuItem.delete:
-                                  controller.gridStateManager
-                                      ?.removeCurrentRow();
+                                  LoadingDialog.recordExists("Want to delete selected record?\nEvent type: ${renderContext.row.cells["eventType"]?.value??""}\nDuration: ${renderContext.row.cells["tapeduration"]?.value??""}\nExportTapeCode: ${renderContext.row.cells["exportTapeCode"]?.value??""}\nExportTapeCaption: ${renderContext.row.cells["exportTapeCaption"]?.value??""}", (){
+                                    controller.addEventToUndo();
+                                    controller.gridStateManager
+                                        ?.removeCurrentRow();
+                                  });
+
                                   break;
                                 case DataGridMenuItem.verifyTime:
                                   controller.checkVerifyTime();
@@ -854,6 +858,7 @@ class TransmissionLogView extends StatelessWidget {
                                   onload: (PlutoGridOnLoadedEvent load) {
                                     controller.gridStateManagerCommercial =
                                         load.stateManager;
+                                    controller.gridStateManager?.setCurrentCell(controller.gridStateManager?.rows[0].cells["no"], 0);
                                   },
                                   onRowDoubleTap:
                                       (PlutoGridOnRowDoubleTapEvent? event) {
