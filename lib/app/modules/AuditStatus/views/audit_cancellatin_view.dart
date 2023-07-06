@@ -68,10 +68,7 @@ class AuditCanellation extends StatelessWidget {
                         ],
                       )),
                   InputFields.formField1(
-                      hintTxt: "Ref No",
-                      width: 0.24,
-                      isEnable: false,
-                      controller: TextEditingController(text: data.bookingReferenceNumber?.split("T")[0])),
+                      hintTxt: "Ref No", width: 0.24, isEnable: false, controller: TextEditingController(text: data.bookingReferenceNumber)),
                   Container(
                     width: Get.width * 0.24,
                     child: Row(mainAxisSize: MainAxisSize.max, mainAxisAlignment: MainAxisAlignment.spaceBetween, children: [
@@ -80,7 +77,8 @@ class AuditCanellation extends StatelessWidget {
                           isEnable: false,
                           title: "Ref Date",
                           onFocusChange: (value) {},
-                          mainTextController: TextEditingController(text: data.referenceDate.toString().fromyMdTodMy())),
+                          mainTextController: TextEditingController(
+                              text: data.bookingEffectiveDate != null ? data.bookingEffectiveDate?.split("T")[0].fromyMdTodMy() : "")),
                       InputFields.formField1(
                           hintTxt: "Booking No", width: 0.115, isEnable: false, controller: TextEditingController(text: displayData.bookingNumber)),
                     ]),
