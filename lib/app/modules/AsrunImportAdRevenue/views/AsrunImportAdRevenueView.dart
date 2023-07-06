@@ -456,6 +456,9 @@ class AsrunImportAdRevenueView extends GetView<AsrunImportController> {
                         controller: TextEditingController(text: (controller.toSwap.value?.eventNumber ?? "").toString()))
                   ],
                 )),
+            SizedBox(
+              height: 5,
+            ),
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceEvenly,
               children: [

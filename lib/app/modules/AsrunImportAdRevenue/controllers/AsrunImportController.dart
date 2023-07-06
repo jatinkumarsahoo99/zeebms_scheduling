@@ -188,15 +188,20 @@ class AsrunImportController extends GetxController {
               "FPCtime": asrunData?[gridStateManager!.currentRowIdx!].fpctIme,
               "ProgramCode": asrunData?[gridStateManager!.currentRowIdx!].programCode,
               "BookingNumber": asrunData?[gridStateManager!.currentRowIdx!].bookingnumber,
-              "BookingDetailcode": asrunData?[gridStateManager!.currentRowIdx!].bookingdetailcode,
+              "BookingDetailcode": (asrunData?[gridStateManager!.currentRowIdx!].bookingdetailcode ?? "").toString(),
               "CommercialCode": "",
               "ReconKey": ""
             }
           ]
         },
         fun: (map) {
-          if (map is Map && map.containsKey("progMismatch") && map["progMismatch"]["message"] != null) {
-            LoadingDialog.callInfoMessage(map["progMismatch"]["message"]);
+          if (map is Map && map.containsKey("asrunTempDetails") && map["asrunTempDetails"]["lstSaveTempDetailResponse"] != null) {
+            asrunData = <AsRunData>[];
+            map["asrunTempDetails"]["lstSaveTempDetailResponse"].forEach((v) {
+              asrunData!.add(AsRunData.fromJson(v));
+            });
+            update(["fpcData"]);
+            update(["transButtons"]);
           }
         });
   }
