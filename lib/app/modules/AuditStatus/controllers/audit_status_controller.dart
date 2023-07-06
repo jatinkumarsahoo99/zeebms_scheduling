@@ -136,11 +136,12 @@ class AuditStatusController extends GetxController {
               });
               await showCancelDeals(showECancelData?.first.bookingNumber, bookingData[index]["cancelmonth"], bookingData[index]["cancelNumber"]);
               Get.defaultDialog(
-                  title: "Audit Reschdules",
+                  title: "Audit Cancellations",
                   content: Container(
                     height: Get.height * .80,
                     width: Get.width * .80,
                     child: AuditCanellation(
+                      controller: this,
                       cancelMonth: bookingData[index]["cancelmonth"],
                       cancelNumber: bookingData[index]["cancelNumber"],
                     ),
@@ -185,11 +186,11 @@ class AuditStatusController extends GetxController {
               });
               await showReschduleDeals(bookingData[index]["reschedulemonth"], bookingData[index]["rescheduleNumber"]);
               Get.defaultDialog(
-                  title: "Audit Cancellations",
+                  title: "Audit Reschdules",
                   content: Container(
                     height: Get.height * .80,
                     width: Get.width * .80,
-                    child: AuditReschdule(),
+                    child: AuditReschdule(controller: this),
                   ));
             }
           }

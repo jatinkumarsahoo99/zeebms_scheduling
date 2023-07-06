@@ -15,11 +15,10 @@ import '../../../controller/HomeController.dart';
 import '../bindings/audi_status_eshowcancel.dart';
 
 class AuditCanellation extends StatelessWidget {
-  AuditCanellation({super.key, required this.cancelNumber, required this.cancelMonth});
+  AuditCanellation({super.key, required this.cancelNumber, required this.cancelMonth, required this.controller});
   final int cancelNumber;
   final int cancelMonth;
-
-  AuditStatusController controller = Get.find<AuditStatusController>();
+  final AuditStatusController controller;
 
   @override
   Widget build(BuildContext context) {
