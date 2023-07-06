@@ -268,7 +268,31 @@ class AsrunImportController extends GetxController {
         },
         fun: (map) {
           if (map is Map && map.containsKey("asRunData")) {
-            print("list found");
+            if (map is Map && map.containsKey("fpcProgramData")) {
+              gridStateManager?.changeCellValue(
+                  gridStateManager!.currentRow!.cells["programName"]!,
+                  map["fpcProgramData"][0]["programName"],
+                  force: true);
+              asrunData![gridStateManager!.currentRow!.sortIdx].fpctIme =
+                  map["fpcProgramData"][0]["fpcTime"];
+              asrunData![gridStateManager!.currentRow!.sortIdx].programCode =
+                  map["fpcProgramData"][0]["programCode"];
+              asrunData![gridStateManager!.currentRow!.sortIdx].programName =
+                  map["fpcProgramData"][0]["programName"];
+              gridStateManager?.changeCellValue(
+                  gridStateManager!.currentRow!.cells["fpctIme"]!,
+                  map["fpcProgramData"][0]["fpcTime"],
+                  force: true);
+
+              // if (map['asRunData'] != null) {
+              //   asrunData = <AsRunData>[];
+              //   map['asRunData'].forEach((v) {
+              //     asrunData!.add(AsRunData.fromJson(v));
+              //   });
+              // }
+
+              // update(["fpcData"]);
+            }
 
             // if (map['asRunData'] != null) {
             //   asrunData = <AsRunData>[];
@@ -296,8 +320,21 @@ class AsrunImportController extends GetxController {
           ]
         },
         fun: (map) {
-          if (map is Map && map.containsKey("asRunData")) {
-            print("list found");
+          if (map is Map && map.containsKey("fpcProgramData")) {
+            gridStateManager?.changeCellValue(
+                gridStateManager!.currentRow!.cells["programName"]!,
+                map["fpcProgramData"][0]["programName"],
+                force: true);
+            asrunData![gridStateManager!.currentRow!.sortIdx].fpctIme =
+                map["fpcProgramData"][0]["fpcTime"];
+            asrunData![gridStateManager!.currentRow!.sortIdx].programCode =
+                map["fpcProgramData"][0]["programCode"];
+            asrunData![gridStateManager!.currentRow!.sortIdx].programName =
+                map["fpcProgramData"][0]["programName"];
+            gridStateManager?.changeCellValue(
+                gridStateManager!.currentRow!.cells["fpctIme"]!,
+                map["fpcProgramData"][0]["fpcTime"],
+                force: true);
 
             // if (map['asRunData'] != null) {
             //   asrunData = <AsRunData>[];

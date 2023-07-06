@@ -1,4 +1,5 @@
 import 'package:bms_scheduling/app/controller/HomeController.dart';
+import 'package:bms_scheduling/app/modules/AuditStatus/views/audit_cancellatin_view.dart';
 import 'package:bms_scheduling/app/modules/RoBooking/views/dummydata.dart';
 import 'package:bms_scheduling/app/providers/ColorData.dart';
 import 'package:bms_scheduling/widgets/DataGridShowOnly.dart';
@@ -42,7 +43,7 @@ class AuditStatusView extends StatelessWidget {
                       controller.selectChannel = data;
                     }, "Channel", 0.24),
                   ),
-                  DateWithThreeTextField(title: "From Date.", widthRation: 0.12, mainTextController: controller.dateController),
+                  DateWithThreeTextField(title: "Date.", widthRation: 0.12, mainTextController: controller.dateController),
                   Obx(() => Row(
                         mainAxisSize: MainAxisSize.min,
                         crossAxisAlignment: CrossAxisAlignment.end,
@@ -87,7 +88,12 @@ class AuditStatusView extends StatelessWidget {
                             return gridcontroller.getColor(gridcontroller.bookingData[colorEvent.rowIdx]);
                           },
                           onRowDoubleTap: (event) {
-                            controller.showEbooking(event.rowIdx);
+                            if (controller.currentType.value == "Cancellation") {
+                              controller.showECancel(event.rowIdx);
+                            }
+                            if (controller.currentType.value == "Additions") {
+                              controller.showEbooking(event.rowIdx);
+                            }
                           },
                         );
                 }),
