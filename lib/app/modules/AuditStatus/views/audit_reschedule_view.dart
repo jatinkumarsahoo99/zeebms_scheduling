@@ -14,8 +14,8 @@ import 'package:bms_scheduling/widgets/PlutoGrid/pluto_grid.dart';
 import '../../../controller/HomeController.dart';
 import '../bindings/audi_status_eshowcancel.dart';
 
-class AuditCanellation extends StatelessWidget {
-  AuditCanellation({super.key, required this.cancelNumber, required this.cancelMonth});
+class AuditSchedule extends StatelessWidget {
+  AuditSchedule({super.key, required this.cancelNumber, required this.cancelMonth});
   final int cancelNumber;
   final int cancelMonth;
 
@@ -118,7 +118,7 @@ class AuditCanellation extends StatelessWidget {
                       mainAxisSize: MainAxisSize.min,
                       children: [
                         Icon(Icons.check_box_outline_blank_outlined),
-                        Text("Select All"),
+                        Text("Select All "),
                       ],
                     ),
                   )
