@@ -84,15 +84,19 @@ class AuditStatusView extends StatelessWidget {
                       : DataGridShowOnlyKeys(
                           mapData: gridcontroller.bookingData,
                           formatDate: false,
+                          exportFileName: "Audit Status",
                           colorCallback: (colorEvent) {
                             return gridcontroller.getColor(gridcontroller.bookingData[colorEvent.rowIdx]);
                           },
                           onRowDoubleTap: (event) {
-                            if (controller.currentType.value == "Cancellation") {
+                            if (controller.currentType.value == "Cancelation") {
                               controller.showECancel(event.rowIdx);
                             }
-                            if (controller.currentType.value == "Additions") {
+                            if (controller.currentType.value == "Addition") {
                               controller.showEbooking(event.rowIdx);
+                            }
+                            if (controller.currentType.value == "Reschedule") {
+                              controller.showEReschdule(event.rowIdx);
                             }
                           },
                         );
@@ -139,7 +143,8 @@ class AuditStatusView extends StatelessWidget {
 
                                       // isEnabled: btn['isDisabled'],
                                       callback: () {
-                                        btncontroller.clearPage1();
+                                        Get.delete<AuditStatusController>();
+                                        Get.find<HomeController>().clearPage1();
                                       },
                                     )
                                   : FormButtonWrapper(
