@@ -187,7 +187,7 @@ class AuditStatusController extends GetxController {
               });
               await showReschduleDeals(bookingData[index]["reschedulemonth"], bookingData[index]["rescheduleNumber"]);
               Get.defaultDialog(
-                  title: "Audit Reschdules",
+                  title: "Audit Reschedules",
                   content: Container(
                     height: Get.height * .80,
                     width: Get.width * .80,
