@@ -1,7 +1,10 @@
 import 'package:bms_scheduling/app/controller/ConnectorControl.dart';
 import 'package:bms_scheduling/app/controller/MainController.dart';
 import 'package:bms_scheduling/app/modules/AuditStatus/bindings/audi_status_eshowcancel.dart';
+import 'package:bms_scheduling/app/modules/AuditStatus/bindings/audi_status_show_reshdule.dart';
+import 'package:bms_scheduling/app/modules/AuditStatus/bindings/audit_status_display.dart';
 import 'package:bms_scheduling/app/modules/AuditStatus/bindings/audit_status_eshowbooking.dart';
+import 'package:bms_scheduling/app/modules/AuditStatus/views/audit_reschedule_view.dart';
 import 'package:bms_scheduling/app/modules/RoBooking/views/dummydata.dart';
 import 'package:bms_scheduling/app/providers/ApiFactory.dart';
 import 'package:bms_scheduling/app/providers/extensions/string_extensions.dart';
@@ -29,7 +32,10 @@ class AuditStatusController extends GetxController {
   RxnString currentType = RxnString();
   AuditStatusShowEbooking? showEbookingData;
   List<AuditShowECancel>? showECancelData;
+  List<AuditStatusShowReschdule>? showReschduleData;
   AuditStatusCancelDeals? auditStatusCancelDeals;
+  AuditStatusReschduleDisplay? auditStatusReschduleDisplay;
+
   //input controllers
   DropDownValue? selectLocation;
   DropDownValue? selectChannel;
@@ -79,7 +85,7 @@ class AuditStatusController extends GetxController {
           "channelCode": selectChannel?.key,
           "date": dateController.text.fromdMyToyMd(),
           "loggedUser": Get.find<MainController>().user?.logincode,
-          "type": currentType.value
+          "type": gettypeName(currentType.value)
         },
         fun: (map) {
           if (map is Map && map.containsKey("inFo_Show")) {
@@ -157,6 +163,51 @@ class AuditStatusController extends GetxController {
         fun: (json) {
           if (json is Map && json.containsKey("lstcancelDisplay")) {
             auditStatusCancelDeals = AuditStatusCancelDeals.fromJson(json["lstcancelDisplay"]);
+          }
+        });
+  }
+
+  showEReschdule(index) {
+    Get.find<ConnectorControl>().POSTMETHOD(
+        api: ApiFactory.NewBookingActivityReport_ShowEReschedule,
+        json: {
+          "locationCode": selectLocation?.key,
+          "channelCode": selectChannel?.key,
+          "rescheduleMonth": bookingData[index]["reschedulemonth"],
+          "rescheduleNumber": bookingData[index]["rescheduleNumber"],
+        },
+        fun: (json) async {
+          if (json is Map) {
+            if (json['lstshowEReschedule'] != null) {
+              showReschduleData = <AuditStatusShowReschdule>[];
+              json['lstshowEReschedule'].forEach((v) {
+                showReschduleData!.add(AuditStatusShowReschdule.fromJson(v));
+              });
+              await showReschduleDeals(bookingData[index]["reschedulemonth"], bookingData[index]["rescheduleNumber"]);
+              Get.defaultDialog(
+                  title: "Audit Cancellations",
+                  content: Container(
+                    height: Get.height * .80,
+                    width: Get.width * .80,
+                    child: AuditReschdule(),
+                  ));
+            }
+          }
+        });
+  }
+
+  showReschduleDeals(rescheduleMonth, rescheduleNumber) async {
+    await Get.find<ConnectorControl>().POSTMETHOD(
+        api: ApiFactory.NewBookingActivityReport_RescheduleDisplay,
+        json: {
+          "locationCode": selectLocation?.key,
+          "channelCode": selectChannel?.key,
+          "rescheduleMonth": rescheduleMonth,
+          "rescheduleNumber": rescheduleNumber
+        },
+        fun: (json) {
+          if (json is Map && json.containsKey("lstReschedule")) {
+            auditStatusReschduleDisplay = AuditStatusReschduleDisplay.fromJson(json["lstReschedule"]);
           }
         });
   }
