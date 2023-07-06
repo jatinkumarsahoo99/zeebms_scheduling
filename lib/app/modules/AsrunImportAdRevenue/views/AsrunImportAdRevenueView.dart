@@ -31,9 +31,9 @@ class AsrunImportAdRevenueView extends GetView<AsrunImportController> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      floatingActionButton: Obx(() => controller.drgabbleDialog?.value != null
+      floatingActionButton: Obx(() => controller.drgabbleDialog.value != null
           ? DraggableFab(
-              child: controller.drgabbleDialog!.value!,
+              child: controller.drgabbleDialog.value!,
             )
           : SizedBox()),
       backgroundColor: Colors.grey[50],
@@ -272,11 +272,7 @@ class AsrunImportAdRevenueView extends GetView<AsrunImportController> {
                                   for (var btn in btncontroller.asurunImportButtoons!)
                                     FormButtonWrapper(
                                       btnText: btn["name"],
-                                      isEnabled: btn["name"] == "Import"
-                                          ? (controllerX.asrunData ?? []).isEmpty
-                                              ? true
-                                              : false
-                                          : null,
+                                      isEnabled: buttonVisibilty(btn["name"]),
                                       showIcon: false,
                                       // isEnabled: btn['isDisabled'],
                                       callback: /*btn["name"] != "Delete" &&
@@ -388,13 +384,18 @@ class AsrunImportAdRevenueView extends GetView<AsrunImportController> {
           children: [
             Container(),
             Obx(() => Row(
+                  crossAxisAlignment: CrossAxisAlignment.end,
                   children: [
                     FormButtonWrapper(
                         btnText: "...",
                         showIcon: false,
                         callback: () {
                           if (controller.gridStateManager?.currentRow != null) {
-                            controller.fromSwap.value = controller.asrunData?[controller.gridStateManager!.currentRowIdx!];
+                            if (controller.asrunData?[controller.gridStateManager!.currentRowIdx!].eventtype?.toLowerCase() != "c") {
+                              LoadingDialog.callInfoMessage("Only Commericial Events Are Allowed for Swap");
+                            } else {
+                              controller.fromSwap.value = controller.asrunData?[controller.gridStateManager!.currentRowIdx!];
+                            }
                           }
                         }),
                     InputFields.formFieldNumberMask(
@@ -413,21 +414,31 @@ class AsrunImportAdRevenueView extends GetView<AsrunImportController> {
                         controller: TextEditingController(text: controller.fromSwap.value?.eventNumber.toString()))
                   ],
                 )),
+            SizedBox(
+              height: 5,
+            ),
             Obx(() => Row(
+                  crossAxisAlignment: CrossAxisAlignment.end,
                   children: [
                     FormButtonWrapper(
                       btnText: "...",
                       showIcon: false,
                       callback: () {
                         if (controller.gridStateManager?.currentRow != null) {
-                          controller.toSwap.value = controller.asrunData?[controller.gridStateManager!.currentRowIdx!];
+                          if (controller.asrunData?[controller.gridStateManager!.currentRowIdx!].eventtype?.toLowerCase() != "c") {
+                            LoadingDialog.callInfoMessage("Only Commericial Events Are Allowed for Swap");
+                          } else if (controller.asrunData?[controller.gridStateManager!.currentRowIdx!].tapeId != controller.fromSwap.value?.tapeId) {
+                            LoadingDialog.callInfoMessage("Only Matching Tapes are allowed for Swap");
+                          } else {
+                            controller.toSwap.value = controller.asrunData?[controller.gridStateManager!.currentRowIdx!];
+                          }
                         }
                       },
                     ),
                     InputFields.formFieldNumberMask(
                         isEnable: false,
                         hintTxt: "",
-                        controller: TextEditingController(text: controller.fromSwap.value?.telecasttime ?? ""),
+                        controller: TextEditingController(text: controller.toSwap.value?.telecasttime ?? ""),
                         widthRatio: 0.12,
                         isTime: true,
                         paddingLeft: 0),
@@ -440,6 +451,7 @@ class AsrunImportAdRevenueView extends GetView<AsrunImportController> {
                         controller: TextEditingController(text: (controller.toSwap.value?.eventNumber ?? "").toString()))
                   ],
                 )),
+            Spacer(),
             Row(
               children: [
                 FormButtonWrapper(
@@ -480,10 +492,10 @@ class AsrunImportAdRevenueView extends GetView<AsrunImportController> {
                   showIcon: false,
                 ),
                 FormButtonWrapper(
-                  btnText: "Exit",
+                  btnText: "Close",
                   showIcon: false,
                   callback: () {
-                    controller.drgabbleDialog?.value = null;
+                    controller.drgabbleDialog.value = null;
                   },
                 ),
               ],
