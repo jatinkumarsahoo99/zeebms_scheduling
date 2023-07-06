@@ -249,15 +249,15 @@ class PromoMasterController extends GetxController {
   docs() async {
     String documentKey = "";
     if (promoCode.isEmpty) {
-      documentKey = "Promomaster";
+      documentKey = "";
     } else {
       documentKey = "Promomaster$promoCode";
     }
     PlutoGridStateManager? viewDocsStateManger;
     try {
       LoadingDialog.call();
-      await Get.find<ConnectorControl>().GETMETHODCALL(
-          api: ApiFactory.RO_CANCELLATION_LOAD_DOC(documentKey),
+      await Get.find<ConnectorControl>().GET_METHOD_CALL_HEADER(
+          api: ApiFactory.COMMON_DOCS_LOAD(documentKey),
           fun: (data) {
             if (data is Map && data.containsKey("info_GetAllDocument")) {
               documents = [];
@@ -293,8 +293,8 @@ class PromoMasterController extends GetxController {
 
                         if (result != null && result.files.isNotEmpty) {
                           LoadingDialog.call();
-                          await Get.find<ConnectorControl>().POSTMETHOD(
-                              api: ApiFactory.RO_CANCELLATION_ADD_DOC,
+                          await Get.find<ConnectorControl>().POSTMETHOD_FORMDATA_HEADER(
+                              api: ApiFactory.COMMON_DOCS_ADD,
                               fun: (data) {
                                 if (data is Map && data.containsKey("addingDocument")) {
                                   for (var doc in data["addingDocument"]) {
@@ -306,6 +306,7 @@ class PromoMasterController extends GetxController {
                               },
                               json: {
                                 "documentKey": documentKey,
+                                "loggedUser": Get.find<MainController>().user?.logincode ?? "",
                                 "strFilePath": result.files.first.name,
                                 "bytes": base64.encode(List<int>.from(result.files.first.bytes ?? []))
                               });
@@ -314,8 +315,8 @@ class PromoMasterController extends GetxController {
                       }
                     : e.key == "View Doc"
                         ? () {
-                            Get.find<ConnectorControl>().GETMETHODCALL(
-                                api: ApiFactory.RO_CANCELLATION_VIEW_DOC(documents[viewDocsStateManger!.currentCell!.row.sortIdx].documentId),
+                            Get.find<ConnectorControl>().GET_METHOD_CALL_HEADER(
+                                api: ApiFactory.COMMON_DOCS_VIEW((documents[viewDocsStateManger!.currentCell!.row.sortIdx].documentId).toString()),
                                 fun: (data) {
                                   if (data is Map && data.containsKey("addingDocument")) {
                                     ExportData().exportFilefromByte(
