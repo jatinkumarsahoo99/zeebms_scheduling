@@ -5,6 +5,7 @@ import 'package:bms_scheduling/widgets/DataGridShowOnly.dart';
 import 'package:bms_scheduling/widgets/DateTime/DateWithThreeTextField.dart';
 import 'package:bms_scheduling/widgets/FormButton.dart';
 import 'package:bms_scheduling/widgets/dropdown.dart';
+import 'package:bms_scheduling/widgets/floating_dialog.dart';
 import 'package:bms_scheduling/widgets/input_fields.dart';
 import 'package:flutter/material.dart';
 
@@ -66,7 +67,10 @@ class AuditCanellation extends StatelessWidget {
                         ],
                       )),
                   InputFields.formField1(
-                      hintTxt: "Ref No", width: 0.24, isEnable: false, controller: TextEditingController(text: data.bookingReferenceNumber)),
+                      hintTxt: "Ref No",
+                      width: 0.24,
+                      isEnable: false,
+                      controller: TextEditingController(text: data.bookingReferenceNumber?.split("T")[0])),
                   Container(
                     width: Get.width * 0.24,
                     child: Row(mainAxisSize: MainAxisSize.max, mainAxisAlignment: MainAxisAlignment.spaceBetween, children: [
@@ -100,11 +104,11 @@ class AuditCanellation extends StatelessWidget {
                       width: 0.24, isEnable: false, hintTxt: "Payroute", controller: TextEditingController(text: data.payrouteName)),
                   DropDownField.formDropDown1WidthMap(controller.channels.value, (value) {
                     // controller.selectedChannel = value;
-                  }, "Brand", 0.24, isEnable: false, selected: DropDownValue(key: data.brandName, value: data.brandCode)),
+                  }, "Brand", 0.24, isEnable: false, selected: DropDownValue(key: data.brandCode, value: data.brandName)),
                   InputFields.formField1(
                       width: 0.24, isEnable: false, hintTxt: "Pay Mode", controller: TextEditingController(text: data.paymentModeCaption)),
                   InputFields.formField1(
-                      width: 0.24, isEnable: false, hintTxt: "Executive", controller: TextEditingController(text: data.executiveCode)),
+                      width: 0.24, isEnable: false, hintTxt: "Executive", controller: TextEditingController(text: data.personnelName)),
                   InputFields.formField1(
                       width: 0.24,
                       isEnable: false,
@@ -142,7 +146,6 @@ class AuditCanellation extends StatelessWidget {
                   id: "cancelData",
                   builder: (cancelDatactrl) {
                     return Container(
-                      width: Get.width * .70,
                       child: DataGridShowOnlyKeys(
                           onRowChecked: (rowcheckEvent) {},
                           hideCode: false,

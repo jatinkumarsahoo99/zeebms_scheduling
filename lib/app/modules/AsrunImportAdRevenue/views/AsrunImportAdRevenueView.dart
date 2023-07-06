@@ -4,6 +4,7 @@ import 'package:bms_scheduling/app/modules/AsrunImportAdRevenue/bindings/arun_da
 import 'package:bms_scheduling/app/providers/DataGridMenu.dart';
 import 'package:bms_scheduling/widgets/DataGridShowOnly.dart';
 import 'package:bms_scheduling/widgets/LoadingDialog.dart';
+import 'package:bms_scheduling/widgets/floating_dialog.dart';
 import 'package:flutter/material.dart';
 
 import 'package:get/get.dart';
@@ -30,6 +31,11 @@ class AsrunImportAdRevenueView extends GetView<AsrunImportController> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      floatingActionButton: GetBuilder<AsrunImportController>(
+          id: "floatingDialog",
+          builder: (controller) => Container(
+                child: controller.drgabbleDialog == null ? null : DraggableFab(child: controller.drgabbleDialog!),
+              )),
       backgroundColor: Colors.grey[50],
       body: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
@@ -326,6 +332,9 @@ class AsrunImportAdRevenueView extends GetView<AsrunImportController> {
         break;
 
       case "View FPC":
+        showSwap();
+        break;
+      case "View FPC":
         showFPCDialog(Get.context);
         break;
       case "Paste Up":
@@ -345,6 +354,124 @@ class AsrunImportAdRevenueView extends GetView<AsrunImportController> {
         Get.find<HomeController>().clearPage1();
         break;
     }
+  }
+
+  showSwap() {
+    controller.drgabbleDialog = Card(
+      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(5)),
+      child: Container(
+        height: Get.height * .35,
+        width: Get.width * .40,
+        child: Column(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            Container(),
+            Obx(() => Row(
+                  children: [
+                    FormButtonWrapper(
+                        btnText: "...",
+                        showIcon: false,
+                        callback: () {
+                          if (controller.gridStateManager?.currentRow != null) {
+                            controller.fromSwap.value = controller.asrunData?[controller.gridStateManager!.currentRowIdx!];
+                          }
+                        }),
+                    InputFields.formFieldNumberMask(
+                        isEnable: false,
+                        hintTxt: "",
+                        controller: TextEditingController(text: controller.fromSwap.value?.telecasttime),
+                        widthRatio: 0.12,
+                        isTime: true,
+                        paddingLeft: 0),
+                    InputFields.formField1(
+                        isEnable: false, width: 0.12, hintTxt: "", controller: TextEditingController(text: controller.fromSwap.value?.tapeId)),
+                    InputFields.formField1(
+                        isEnable: false,
+                        width: 0.09,
+                        hintTxt: "",
+                        controller: TextEditingController(text: controller.fromSwap.value?.eventNumber.toString()))
+                  ],
+                )),
+            Obx(() => Row(
+                  children: [
+                    FormButtonWrapper(
+                      btnText: "...",
+                      showIcon: false,
+                      callback: () {
+                        if (controller.gridStateManager?.currentRow != null) {
+                          controller.toSwap.value = controller.asrunData?[controller.gridStateManager!.currentRowIdx!];
+                        }
+                      },
+                    ),
+                    InputFields.formFieldNumberMask(
+                        isEnable: false,
+                        hintTxt: "",
+                        controller: TextEditingController(text: controller.fromSwap.value?.telecasttime ?? ""),
+                        widthRatio: 0.12,
+                        isTime: true,
+                        paddingLeft: 0),
+                    InputFields.formField1(
+                        isEnable: false, width: 0.12, hintTxt: "", controller: TextEditingController(text: controller.toSwap.value?.tapeId ?? "")),
+                    InputFields.formField1(
+                        isEnable: false,
+                        width: 0.09,
+                        hintTxt: "",
+                        controller: TextEditingController(text: (controller.toSwap.value?.eventNumber ?? "").toString()))
+                  ],
+                )),
+            Row(
+              children: [
+                FormButtonWrapper(
+                  btnText: "Swap",
+                  callback: () {
+                    int? fromIndex = controller.asrunData?.indexWhere((element) => controller.fromSwap.value?.eventNumber == element.eventNumber);
+                    int? toIndex = controller.asrunData?.indexWhere((element) => controller.toSwap.value?.eventNumber == element.eventNumber);
+                    var from = controller.fromSwap.value;
+                    var to = controller.toSwap.value;
+                    controller.asrunData?[fromIndex!].bookingnumber = to?.bookingnumber;
+                    controller.asrunData?[fromIndex!].scheduletime = to?.scheduletime;
+                    controller.asrunData?[fromIndex!].scheduledProgram = to?.scheduledProgram;
+                    controller.asrunData?[fromIndex!].rosBand = to?.rosBand;
+                    controller.asrunData?[fromIndex!].programTime = to?.programTime;
+                    controller.asrunData?[fromIndex!].isMismatch = to?.isMismatch;
+                    controller.asrunData?[fromIndex!].scheduledate = to?.scheduledate;
+                    controller.asrunData?[fromIndex!].tapeDuration = to?.tapeDuration;
+
+                    /// TO DATA
+                    controller.asrunData?[toIndex!].bookingnumber = from?.bookingnumber;
+                    controller.asrunData?[toIndex!].scheduletime = from?.scheduletime;
+                    controller.asrunData?[toIndex!].scheduledProgram = from?.scheduledProgram;
+                    controller.asrunData?[toIndex!].rosBand = from?.rosBand;
+                    controller.asrunData?[toIndex!].programTime = from?.programTime;
+                    controller.asrunData?[toIndex!].isMismatch = from?.isMismatch;
+                    controller.asrunData?[toIndex!].scheduledate = from?.scheduledate;
+                    controller.asrunData?[toIndex!].tapeDuration = from?.tapeDuration;
+                    controller.update(["fpcData"]);
+                  },
+                  showIcon: false,
+                ),
+                FormButtonWrapper(
+                  btnText: "Clear",
+                  callback: () {
+                    controller.fromSwap.value = null;
+                    controller.toSwap.value = null;
+                  },
+                  showIcon: false,
+                ),
+                FormButtonWrapper(
+                  btnText: "Exit",
+                  showIcon: false,
+                  callback: () {
+                    controller.drgabbleDialog = null;
+                    controller.update(["floatingDialog"]);
+                  },
+                ),
+              ],
+            )
+          ],
+        ),
+      ),
+    );
   }
 
   paste({bool up = true}) {
@@ -379,63 +506,71 @@ class AsrunImportAdRevenueView extends GetView<AsrunImportController> {
     TextEditingController fpcTime = TextEditingController(text: asrunData.fpctIme);
     DropDownValue? selectedProgram;
     return Get.defaultDialog(
-        title: "Verify",
-        content: Container(
-          height: 150,
-          width: Get.width / 2,
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.center,
-            children: [
-              DropDownField.formDropDownSearchAPI2(
-                GlobalKey(), Get.context!,
-                title: "Program",
-                url: ApiFactory.AsrunImport_GetAsrunProgramList,
-                parseKeyForKey: "programCode",
-                parseKeyForValue: "programName",
-                onchanged: (data) {
-                  selectedProgram = data;
-                },
-                selectedValue: selectedProgram,
+      title: "Verify",
+      content: Container(
+        height: 150,
+        width: Get.width / 2,
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.center,
+          children: [
+            DropDownField.formDropDownSearchAPI2(
+              GlobalKey(), Get.context!,
+              title: "Program",
+              url: ApiFactory.AsrunImport_GetAsrunProgramList,
+              parseKeyForKey: "programCode",
+              parseKeyForValue: "programName",
+              onchanged: (data) {
+                selectedProgram = data;
+              },
+              selectedValue: selectedProgram,
 
-                width: Get.width * 0.45,
-                // padding: const EdgeInsets.only()
+              width: Get.width * 0.45,
+              // padding: const EdgeInsets.only()
+            ),
+            SizedBox(
+              height: 10,
+            ),
+            Container(
+              width: Get.width * 0.45,
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  InputFields.formFieldNumberMask(
+                      isEnable: true, hintTxt: "FPC Time", controller: fpcTime, widthRatio: 0.12, isTime: true, paddingLeft: 0),
+                  InputFields.formFieldNumberMask(
+                      isEnable: false,
+                      hintTxt: "From",
+                      controller: TextEditingController(text: asrunData.fpctIme),
+                      widthRatio: 0.12,
+                      isTime: true,
+                      paddingLeft: 0),
+                  InputFields.formFieldNumberMask(
+                      isEnable: false,
+                      hintTxt: "To",
+                      controller: TextEditingController(text: asrunData.fpctIme),
+                      widthRatio: 0.12,
+                      isTime: true,
+                      paddingLeft: 0),
+                ],
               ),
-              SizedBox(
-                height: 10,
-              ),
-              Container(
-                width: Get.width * 0.45,
-                child: Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: [
-                    InputFields.formFieldNumberMask(
-                        isEnable: true, hintTxt: "FPC Time", controller: fpcTime, widthRatio: 0.09, isTime: true, paddingLeft: 0),
-                    InputFields.formFieldNumberMask(
-                        isEnable: false,
-                        hintTxt: "From",
-                        controller: TextEditingController(text: asrunData.fpctIme),
-                        widthRatio: 0.09,
-                        isTime: true,
-                        paddingLeft: 0),
-                    InputFields.formFieldNumberMask(
-                        isEnable: false,
-                        hintTxt: "To",
-                        controller: TextEditingController(text: asrunData.fpctIme),
-                        widthRatio: 0.09,
-                        isTime: true,
-                        paddingLeft: 0),
-                  ],
-                ),
-              )
-            ],
-          ),
+            )
+          ],
         ),
-        textConfirm: "Verify",
-        textCancel: "Cancel",
-        onCancel: () {},
-        onConfirm: () {
+      ),
+      cancel: FormButtonWrapper(
+        btnText: "Cancel",
+        showIcon: false,
+        callback: () {},
+      ),
+      onCancel: () {},
+      confirm: FormButtonWrapper(
+        btnText: "Verify",
+        showIcon: false,
+        callback: () {
           controller.manualUpdateFPCTime(selectedProgram?.value, selectedProgram?.key, fpcTime.text, asrunData);
-        });
+        },
+      ),
+    );
   }
 
   showFPCDialog(context) {
