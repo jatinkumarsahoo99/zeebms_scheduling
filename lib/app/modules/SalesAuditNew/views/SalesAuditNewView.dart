@@ -554,7 +554,7 @@ class SalesAuditNewView  extends StatelessWidget  {
                         .find<MainController>()
                         .permissionList!
                         .lastWhere((element) =>
-                    element.appFormName == "frmProgramMaster");
+                    element.appFormName == "TransmissionLog");
                     print("Log>> Permission>>" +
                         jsonEncode(formPermissions.toJson()));
                     if (controller1.buttons != null) {
