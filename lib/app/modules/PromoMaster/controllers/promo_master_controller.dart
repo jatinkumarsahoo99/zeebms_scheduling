@@ -273,14 +273,40 @@ class PromoMasterController extends GetxController {
 
     Get.defaultDialog(
       title: "Documents",
-      content: Container(
-        width: Get.width / 2.5,
-        height: Get.height / 2.5,
-        child: DataGridShowOnlyKeys(
-          mapData: documents.map((e) => e.toJson()).toList(),
-          onload: (loadGrid) {
-            viewDocsStateManger = loadGrid.stateManager;
-          },
+      content: SizedBox(
+        // width: Get.width / 2.5,
+        // height: Get.height / 2.5,
+        child: Scaffold(
+          body: RawKeyboardListener(
+            focusNode: FocusNode(),
+            onKey: (value) {
+              if (value.isKeyPressed(LogicalKeyboardKey.delete)) {
+                LoadingDialog.delete(
+                  "Want to delete selected row",
+                  () {
+                    Get.back();
+                  },
+                  cancel: () {},
+                );
+              }
+            },
+            child: DataGridShowOnlyKeys(
+              mapData: documents.map((e) => e.toJson()).toList(),
+              onload: (loadGrid) {
+                viewDocsStateManger = loadGrid.stateManager;
+              },
+              onRowDoubleTap: (row) {
+                Get.find<ConnectorControl>().GET_METHOD_CALL_HEADER(
+                    api: ApiFactory.COMMON_DOCS_VIEW((documents[row.rowIdx].documentId).toString()),
+                    fun: (data) {
+                      if (data is Map && data.containsKey("addingDocument")) {
+                        ExportData()
+                            .exportFilefromByte(base64Decode(data["addingDocument"][0]["documentData"]), data["addingDocument"][0]["documentname"]);
+                      }
+                    });
+              },
+            ),
+          ),
         ),
       ),
       actions: {"Add Doc": () async {}, "View Doc": () {}, "Attach Email": () {}}
