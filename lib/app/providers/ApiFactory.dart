@@ -38,6 +38,13 @@ class ApiFactory {
   static String BASE_URL_COMMON = Const.getBaseCommonAPIUrl();
   static String BASE_URL_LOGIN = Const.getBaseLoginAPIUrl();
 
+  ////////////////////// DOCS /////////////////////////////
+
+  static String COMMON_DOCS_LOAD(String docKey) => "$BASE_URL_COMMON/api/CommonDoc/loadDocument?DocumentKey=$docKey";
+  static String COMMON_DOCS_VIEW(String docId) => "$BASE_URL_COMMON/api/CommonDoc/ViewDocument?DocId=$docId";
+  static String get COMMON_DOCS_ADD => "$BASE_URL_COMMON/api/CommonDoc/AddDocument";
+  static String COMMON_DOCS_DELETE(String docKey) => "$BASE_URL_COMMON/api/CommonDoc/DeleteDocument?DocumentKey=$docKey";
+
   ////////////////////// SEARCH ////////////////////////////
 
   static String SEARCH_SEND_NAME(
