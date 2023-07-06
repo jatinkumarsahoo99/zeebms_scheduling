@@ -1,0 +1,16 @@
+{
+  "app_login_url": "",
+  "api_login_url": "",
+  "app_common_url": "",
+  "api_common_url": "",
+  "app_admin_url": "",
+  "api_admin_url": "",
+  "app_programming_url": "",
+  "api_programming_url": "",
+  "app_scheduling_url": "",
+  "api_scheduling_url": "",
+  "app_client_id": "",
+  "app_tenant_id": "",
+  "app_insrtumentation_key": "",
+  "api_insrtumentation_key": ""
+}

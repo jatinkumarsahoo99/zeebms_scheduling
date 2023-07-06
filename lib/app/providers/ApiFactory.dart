@@ -783,8 +783,14 @@ class ApiFactory {
       "$BASE_URL/api/NewBookingActivityReport/cbolocation_Leave?LocationCode=$locationCode";
   static String NewBookingActivityReport_Getshowdeal = "$BASE_URL/api/NewBookingActivityReport/Getshowdeal";
   static String NewBookingActivityReport_GetShowEbooking = "$BASE_URL/api/NewBookingActivityReport/GetShowEbooking";
+  static String NewBookingActivityReport_CancelDisplayDetails = "$BASE_URL/api/NewBookingActivityReport/CancelDisplayDetails";
+  static String NewBookingActivityReport_GetShowECancel = "$BASE_URL/api/NewBookingActivityReport/GetShowECancel";
+  static String NewBookingActivityReport_RescheduleDisplay = "$BASE_URL/api/NewBookingActivityReport/RescheduleDisplay";
+  static String NewBookingActivityReport_ShowEReschedule = "$BASE_URL/api/NewBookingActivityReport/ShowEReschedule";
+
   static String NewBookingActivityReport_BtnShow = "$BASE_URL/api/NewBookingActivityReport/BtnShow";
   static String NewBookingActivityReport_Refresh = "$BASE_URL/api/NewBookingActivityReport/Refresh";
+
   /*static String RO_BOOKING_GetClientPDC =
       "$BASE_URL/api/ROBooking/GetClientPDC";*/
 

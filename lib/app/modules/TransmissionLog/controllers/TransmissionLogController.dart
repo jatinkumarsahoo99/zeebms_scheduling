@@ -604,6 +604,7 @@ class TransmissionLogController extends GetxController {
         row?.cells["som"]?.value);
     gridStateManager?.insertRows(insrow, [insertRowDta]);
     gridStateManagerCommercial?.removeCurrentRow();
+    colorGrid(false);
     // gridStateManager.firstDisplayedScrollingRowIndex = insrow;
   }
 
@@ -1029,7 +1030,7 @@ class TransmissionLogController extends GetxController {
   }
 
   void btnFastInsert_Add_Click() {
-    addEventToUndo();
+    // addEventToUndo();
     int row;
     // int eventdurat;
     blnMultipleGLs = false;

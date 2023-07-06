@@ -155,6 +155,7 @@ class AsrunImportAdRevenueView extends GetView<AsrunImportController> {
                 color: Colors.white,
                 child: (controller.asrunData != null)
                     ? DataGridShowOnlyKeys(
+                        exportFileName: "Asrun Import",
                         // onFocusChange: (value) {
                         //   // controllerX.gridStateManager!.setGridMode(PlutoGridMode.selectWithOneTap);
                         //   // controllerX.selectedPlutoGridMode = PlutoGridMode.selectWithOneTap;
@@ -320,6 +321,9 @@ class AsrunImportAdRevenueView extends GetView<AsrunImportController> {
       case "Save":
         controller.checkMissingAsrun();
         break;
+      case "SP Verify":
+        showVerifyDialog(controller.asrunData![controller.gridStateManager?.currentRowIdx ?? 0]);
+        break;
 
       case "View FPC":
         showFPCDialog(Get.context);
@@ -335,6 +339,10 @@ class AsrunImportAdRevenueView extends GetView<AsrunImportController> {
         break;
       case "Error":
         controller.checkError();
+        break;
+      case "Clear":
+        Get.delete<AsrunImportController>();
+        Get.find<HomeController>().clearPage1();
         break;
     }
   }
@@ -373,9 +381,10 @@ class AsrunImportAdRevenueView extends GetView<AsrunImportController> {
     return Get.defaultDialog(
         title: "Verify",
         content: Container(
-          height: Get.height / 4,
+          height: 150,
           width: Get.width / 2,
           child: Column(
+            crossAxisAlignment: CrossAxisAlignment.center,
             children: [
               DropDownField.formDropDownSearchAPI2(
                 GlobalKey(), Get.context!,
@@ -391,29 +400,39 @@ class AsrunImportAdRevenueView extends GetView<AsrunImportController> {
                 width: Get.width * 0.45,
                 // padding: const EdgeInsets.only()
               ),
-              Row(
-                children: [
-                  InputFields.formFieldNumberMask(
-                      isEnable: false, hintTxt: "FPC Time", controller: fpcTime, widthRatio: 0.09, isTime: true, paddingLeft: 0),
-                  InputFields.formFieldNumberMask(
-                      isEnable: false,
-                      hintTxt: "From",
-                      controller: TextEditingController(text: asrunData.fpctIme),
-                      widthRatio: 0.09,
-                      isTime: true,
-                      paddingLeft: 0),
-                  InputFields.formFieldNumberMask(
-                      isEnable: false,
-                      hintTxt: "To",
-                      controller: TextEditingController(text: asrunData.fpctIme),
-                      widthRatio: 0.09,
-                      isTime: true,
-                      paddingLeft: 0),
-                ],
+              SizedBox(
+                height: 10,
+              ),
+              Container(
+                width: Get.width * 0.45,
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    InputFields.formFieldNumberMask(
+                        isEnable: true, hintTxt: "FPC Time", controller: fpcTime, widthRatio: 0.09, isTime: true, paddingLeft: 0),
+                    InputFields.formFieldNumberMask(
+                        isEnable: false,
+                        hintTxt: "From",
+                        controller: TextEditingController(text: asrunData.fpctIme),
+                        widthRatio: 0.09,
+                        isTime: true,
+                        paddingLeft: 0),
+                    InputFields.formFieldNumberMask(
+                        isEnable: false,
+                        hintTxt: "To",
+                        controller: TextEditingController(text: asrunData.fpctIme),
+                        widthRatio: 0.09,
+                        isTime: true,
+                        paddingLeft: 0),
+                  ],
+                ),
               )
             ],
           ),
         ),
+        textConfirm: "Verify",
+        textCancel: "Cancel",
+        onCancel: () {},
         onConfirm: () {
           controller.manualUpdateFPCTime(selectedProgram?.value, selectedProgram?.key, fpcTime.text, asrunData);
         });
