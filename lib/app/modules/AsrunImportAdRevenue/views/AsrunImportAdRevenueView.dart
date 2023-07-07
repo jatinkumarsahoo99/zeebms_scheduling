@@ -210,7 +210,16 @@ class AsrunImportAdRevenueView extends GetView<AsrunImportController> {
                             return Colors.white;
                           }
                         },
-                        hideKeys: ["backColor", "foreColor"],
+                        hideCode: false,
+                        hideKeys: [
+                          "backColor",
+                          "foreColor",
+                          "vtr",
+                          "ch",
+                          "programTime",
+                          "scheduledate",
+                          "programCode"
+                        ],
                         // mode: PlutoGridMode.selectWithOneTap,
                         // colorCallback: (PlutoRowColorContext plutoContext) {
                         //   // return Color(controllerX.transmissionLogList![plutoContext.rowIdx].colorNo ?? Colors.white.value);
@@ -562,69 +571,85 @@ class AsrunImportAdRevenueView extends GetView<AsrunImportController> {
                     controller.asrunData?[fromIndex].bookingnumber =
                         to?.bookingnumber;
                     controller.gridStateManager?.changeCellValue(
-                        fromRow.cells["bookingnumber"]!, to?.bookingnumber);
+                        fromRow.cells["bookingnumber"]!, to?.bookingnumber,
+                        notify: true);
                     controller.asrunData?[fromIndex].scheduletime =
                         to?.scheduletime;
                     controller.gridStateManager?.changeCellValue(
-                        fromRow.cells["scheduletime"]!, to?.scheduletime);
+                        fromRow.cells["scheduletime"]!, to?.scheduletime,
+                        notify: true);
                     controller.asrunData?[fromIndex].scheduledProgram =
                         to?.scheduledProgram;
                     controller.gridStateManager?.changeCellValue(
                         fromRow.cells["scheduledProgram"]!,
-                        to?.scheduledProgram);
+                        to?.scheduledProgram,
+                        notify: true);
                     controller.asrunData?[fromIndex].rosBand = to?.rosBand;
                     controller.gridStateManager?.changeCellValue(
-                        fromRow.cells["rosBand"]!, to?.rosBand);
+                        fromRow.cells["rosBand"]!, to?.rosBand,
+                        notify: true);
                     controller.asrunData?[fromIndex].programTime =
                         to?.programTime;
                     controller.gridStateManager?.changeCellValue(
-                        fromRow.cells["programTime"]!, to?.programTime);
+                        fromRow.cells["programTime"]!, to?.programTime,
+                        notify: true);
                     controller.asrunData?[fromIndex].isMismatch =
                         to?.isMismatch;
                     controller.gridStateManager?.changeCellValue(
-                        fromRow.cells["isMismatch"]!, to?.isMismatch);
+                        fromRow.cells["isMismatch"]!, to?.isMismatch,
+                        notify: true);
                     controller.asrunData?[fromIndex].scheduledate =
                         to?.scheduledate;
                     controller.gridStateManager?.changeCellValue(
-                        fromRow.cells["scheduledate"]!, to?.scheduledate);
+                        fromRow.cells["scheduledate"]!, to?.scheduledate,
+                        notify: true);
                     controller.asrunData?[fromIndex].tapeDuration =
                         to?.tapeDuration;
                     controller.gridStateManager?.changeCellValue(
-                        fromRow.cells["tapeDuration"]!, to?.tapeDuration);
+                        fromRow.cells["tapeDuration"]!, to?.tapeDuration,
+                        notify: true);
 
                     /// TO DATA
                     controller.asrunData?[toIndex].bookingnumber =
                         from?.bookingnumber;
                     controller.gridStateManager?.changeCellValue(
-                        toRow.cells["bookingnumber"]!, from?.bookingnumber);
+                        toRow.cells["bookingnumber"]!, from?.bookingnumber,
+                        notify: true);
                     controller.asrunData?[toIndex].scheduletime =
                         from?.scheduletime;
                     controller.gridStateManager?.changeCellValue(
-                        toRow.cells["scheduletime"]!, from?.scheduletime);
+                        toRow.cells["scheduletime"]!, from?.scheduletime,
+                        notify: true);
                     controller.asrunData?[toIndex].scheduledProgram =
                         from?.scheduledProgram;
                     controller.gridStateManager?.changeCellValue(
                         toRow.cells["scheduledProgram"]!,
-                        from?.scheduledProgram);
+                        from?.scheduledProgram,
+                        notify: true);
                     controller.asrunData?[toIndex].rosBand = from?.rosBand;
                     controller.gridStateManager?.changeCellValue(
-                        toRow.cells["rosBand"]!, from?.rosBand);
+                        toRow.cells["rosBand"]!, from?.rosBand,
+                        notify: true);
                     controller.asrunData?[toIndex].programTime =
                         from?.programTime;
                     controller.gridStateManager?.changeCellValue(
-                        toRow.cells["programTime"]!, from?.programTime);
+                        toRow.cells["programTime"]!, from?.programTime,
+                        notify: true);
                     controller.asrunData?[toIndex].isMismatch =
                         from?.isMismatch;
                     controller.gridStateManager?.changeCellValue(
-                        toRow.cells["isMismatch"]!, from?.isMismatch);
+                        toRow.cells["isMismatch"]!, from?.isMismatch,
+                        notify: true);
                     controller.asrunData?[toIndex].scheduledate =
                         from?.scheduledate;
                     controller.gridStateManager?.changeCellValue(
-                        toRow.cells["scheduledate"]!, from?.scheduledate);
+                        toRow.cells["scheduledate"]!, from?.scheduledate,
+                        notify: true);
                     controller.asrunData?[toIndex].tapeDuration =
                         from?.tapeDuration;
                     controller.gridStateManager?.changeCellValue(
-                        toRow.cells["tapeDuration"]!, from?.tapeDuration);
+                        toRow.cells["tapeDuration"]!, from?.tapeDuration,
+                        notify: true);
                     //
                     // controller.update(["fpcData"]);
                   },
