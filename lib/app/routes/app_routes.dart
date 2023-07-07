@@ -35,6 +35,7 @@ abstract class Routes {
   static const COMMERCIAL_MASTER = _Paths.COMMERCIAL_MASTER;
   static const ASURN_IMPORT = _Paths.ASURN_IMPORT;
   static const R_O_IMPORT = _Paths.R_O_IMPORT;
+  static const COMMON_DOCS = _Paths.COMMON_DOCS;
 }
 
 abstract class RoutesList {
@@ -93,4 +94,5 @@ abstract class _Paths {
   static const COMMERCIAL_MASTER = '/frmCommercialMaster';
   static const ASURN_IMPORT = '/asurn-import';
   static const R_O_IMPORT = '/frmROImport';
+  static const COMMON_DOCS = '/common-docs';
 }

@@ -4,6 +4,8 @@ import '../modules/AsrunImportAdRevenue/bindings/asrun_import_binding.dart';
 import '../modules/AuditStatus/bindings/audit_status_binding.dart';
 import '../modules/CommercialMaster/bindings/commercial_master_binding.dart';
 import '../modules/CommercialMaster/views/commercial_master_view.dart';
+import '../modules/CommonDocs/bindings/common_docs_binding.dart';
+import '../modules/CommonDocs/views/common_docs_view.dart';
 import '../modules/EventSecondary/bindings/event_secondary_binding.dart';
 import '../modules/FillerMaster/bindings/filler_master_binding.dart';
 import '../modules/FinalAuditReportAfterTelecast/bindings/final_audit_report_after_telecast_binding.dart';
@@ -216,6 +218,11 @@ class AppPages {
       name: _Paths.R_O_IMPORT,
       page: () => AuthGuard1(childName: _Paths.R_O_IMPORT),
       binding: ROImportBinding(),
+    ),
+    GetPage(
+      name: _Paths.COMMON_DOCS,
+      page: () => const CommonDocsView(documentKey: ''),
+      binding: CommonDocsBinding(),
     ),
   ];
 }
