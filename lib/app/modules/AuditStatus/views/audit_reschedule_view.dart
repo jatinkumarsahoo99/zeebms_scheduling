@@ -76,19 +76,19 @@ class AuditReschdule extends StatelessWidget {
                           widthRation: 0.115,
                           title: "Ref Date",
                           onFocusChange: (value) {},
-                          mainTextController: TextEditingController(text: data.rescheduledate?.fromyMdTodMy())),
+                          mainTextController: TextEditingController(text: data.bookingEffectiveDate?.split("T")[0].fromyMdTodMy())),
                       InputFields.formField1(
                           hintTxt: "Booking No", width: 0.115, isEnable: false, controller: TextEditingController(text: data.bookingNumber)),
                     ]),
                   ),
-                  InputFields.formField1(hintTxt: "Deal No", width: 0.24, controller: TextEditingController(text: data.dealNo)),
+                  InputFields.formField1(hintTxt: "Deal No", isEnable: false, width: 0.24, controller: TextEditingController(text: data.dealNo)),
                   SizedBox(
                       width: Get.width * 0.24,
                       child: Row(mainAxisSize: MainAxisSize.max, mainAxisAlignment: MainAxisAlignment.start, children: [
                         InputFields.formField1(
                             isEnable: false,
                             width: 0.14,
-                            hintTxt: "Cancel No",
+                            hintTxt: "Reschedule No",
                             controller: TextEditingController(text: data.rescheduleMonth.toString())),
                         InputFields.formField1(
                             isEnable: false, width: 0.09, hintTxt: "", controller: TextEditingController(text: data.rescheduleNumber.toString())),
@@ -134,10 +134,10 @@ class AuditReschdule extends StatelessWidget {
                     bottom: BorderSide(color: Colors.grey[400]!),
                   )),
               child: Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                 children: [
                   SizedBox(
-                    width: Get.width * .37,
+                    width: Get.width * .38,
                     child: GetBuilder<AuditStatusController>(
                         init: controller,
                         id: "cancelData",
@@ -146,10 +146,20 @@ class AuditReschdule extends StatelessWidget {
                             child: DataGridShowOnlyKeys(
                                 onRowChecked: (rowcheckEvent) {},
                                 hideCode: false,
-                                exportFileName: "Audit Cancellation",
+                                exportFileName: "Audit Reschedule",
                                 hideKeys: ["channelcode", "locationcode"],
                                 rowCheckColor: Colors.white,
                                 onload: (loadEvent) {},
+                                colorCallback: (rowEvent) {
+                                  if (controller.auditStatusReschduleDisplay?.lstReshedule?[rowEvent.rowIdx].audited == null) {
+                                    return Color(0xFF96FF96);
+                                  } else if ((controller.auditStatusReschduleDisplay?.lstReshedule?[rowEvent.rowIdx].audited ?? 0) <
+                                      (controller.auditStatusReschduleDisplay?.lstReshedule?[rowEvent.rowIdx].totalspots ?? 0)) {
+                                    return Color(0xFFFF9696);
+                                  }
+
+                                  return Colors.white;
+                                },
                                 checkRow: true,
                                 checkRowKey: "auditStatus",
                                 hideCheckKeysValue: true,
@@ -159,7 +169,7 @@ class AuditReschdule extends StatelessWidget {
                         }),
                   ),
                   SizedBox(
-                    width: Get.width * .37,
+                    width: Get.width * .38,
                     child: GetBuilder<AuditStatusController>(
                         init: controller,
                         id: "cancelData",

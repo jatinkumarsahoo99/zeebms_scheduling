@@ -25,7 +25,7 @@ void main() async {
   setPathUrlStrategy();
 
 
-  String data = await rootBundle.loadString('application.json');
+  String data = await rootBundle.loadString('assets/AppConfig.json');
   print(">>Keyvault JSON DATA>>>"+data.toString());
 
   print("Aes dec>>>");

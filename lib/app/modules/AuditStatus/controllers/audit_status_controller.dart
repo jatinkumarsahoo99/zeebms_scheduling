@@ -10,6 +10,7 @@ import 'package:bms_scheduling/app/providers/ApiFactory.dart';
 import 'package:bms_scheduling/app/providers/extensions/string_extensions.dart';
 import 'package:bms_scheduling/widgets/DataGridShowOnly.dart';
 import 'package:bms_scheduling/widgets/DateTime/DateWithThreeTextField.dart';
+import 'package:bms_scheduling/widgets/FormButton.dart';
 import 'package:bms_scheduling/widgets/input_fields.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
@@ -186,7 +187,7 @@ class AuditStatusController extends GetxController {
               });
               await showReschduleDeals(bookingData[index]["reschedulemonth"], bookingData[index]["rescheduleNumber"]);
               Get.defaultDialog(
-                  title: "Audit Reschdules",
+                  title: "Audit Reschedules",
                   content: Container(
                     height: Get.height * .80,
                     width: Get.width * .80,
@@ -229,6 +230,12 @@ class AuditStatusController extends GetxController {
             Get.defaultDialog(
                 radius: 05,
                 title: "",
+                confirm: FormButtonWrapper(
+                  btnText: "Return",
+                  callback: () {
+                    Get.back();
+                  },
+                ),
                 content: Container(
                   width: Get.width * 0.74,
                   height: Get.height * 0.70,
@@ -343,7 +350,13 @@ class AuditStatusController extends GetxController {
           if (value is Map && value.containsKey("inFo_showdeal")) {
             Get.defaultDialog(
                 radius: 05,
-                title: "",
+                title: "Deal Details",
+                confirm: FormButtonWrapper(
+                  btnText: "Return",
+                  callback: () {
+                    Get.back();
+                  },
+                ),
                 content: Container(
                   width: Get.width * 0.60,
                   height: Get.height * 0.50,

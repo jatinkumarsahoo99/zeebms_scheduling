@@ -382,7 +382,7 @@ class SalesAuditNewView  extends StatelessWidget  {
                                                 load) {
                                                   controller.gridStateManagerRight = load.stateManager;
                                                   controller.gridStateManagerRight!.setCurrentCell(controller.gridStateManagerRight!.
-                                                  getRowByIdx(controller.selectedRightIndex)!.cells['telecastTime'],
+                                                  getRowByIdx(controller.selectedRightIndex)!.cells['exportTapeCode'],
                                                       controller.selectedRightIndex);
                                                   controller.gridStateManagerRight!.moveCurrentCellByRowIdx(controller.selectedRightIndex??0,
                                                       PlutoMoveDirection.down);
@@ -554,7 +554,7 @@ class SalesAuditNewView  extends StatelessWidget  {
                         .find<MainController>()
                         .permissionList!
                         .lastWhere((element) =>
-                    element.appFormName == "frmProgramMaster");
+                    element.appFormName == "TransmissionLog");
                     print("Log>> Permission>>" +
                         jsonEncode(formPermissions.toJson()));
                     if (controller1.buttons != null) {

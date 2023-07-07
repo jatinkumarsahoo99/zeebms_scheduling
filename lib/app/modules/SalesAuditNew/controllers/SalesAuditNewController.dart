@@ -2,18 +2,25 @@ import 'dart:async';
 import 'dart:convert';
 
 import 'package:bms_scheduling/app/data/DropDownValue.dart';
+import 'package:bms_scheduling/app/modules/RoCancellation/bindings/ro_cancellation_doc.dart';
+import 'package:bms_scheduling/widgets/DataGridShowOnly.dart';
 import 'package:bms_scheduling/widgets/LoadingDialog.dart';
 import 'package:bms_scheduling/widgets/PlutoGrid/pluto_grid.dart';
+import 'package:file_picker/file_picker.dart';
 import 'package:flutter/cupertino.dart';
+import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:get/get.dart';
 import 'package:intl/intl.dart';
 
+import '../../../../widgets/FormButton.dart';
 import '../../../../widgets/PlutoGrid/src/manager/pluto_grid_state_manager.dart';
 import '../../../../widgets/Snack.dart';
 import '../../../controller/ConnectorControl.dart';
 import '../../../controller/HomeController.dart';
 import '../../../controller/MainController.dart';
 import '../../../providers/ApiFactory.dart';
+import '../../../providers/ExportData.dart';
 import '../SalesAuditGetRetrieveModel.dart';
 
 class SalesAuditNewController extends GetxController {
@@ -70,7 +77,7 @@ class SalesAuditNewController extends GetxController {
         api: ApiFactory.SALESAUDIT_NEW_GETCHANNEL + code,
         fun: (Map map) {
           channelList.clear();
-          print(">>>>jks" + map.toString());
+          print(">>>>jks$map");
           if (map is Map &&
               map.containsKey("listchannels") &&
               map['listchannels'].length > 0) {
@@ -100,25 +107,30 @@ class SalesAuditNewController extends GetxController {
 
   filterSearchAndCancel(){
     if(salesAuditGetRetrieveModel != null){
-      listAsrunLog2.clear();
-      masterListAsrunLog2.clear();
-      if(showError.value == true && showCancel.value == true){
-        listAsrunLog2.addAll(salesAuditGetRetrieveModel!.gettables!.lstAsrunlog2 as Iterable<LstAsrunlog2>);
-        masterListAsrunLog2.addAll(listAsrunLog2);
-      }else if(showError.value == true){
-        listAsrunLog2.addAll(salesAuditGetRetrieveModel!.gettables!.lstAsrunlog2!.where((element) =>
-        element.bookingStatus.toString().toUpperCase() != "C").toList());
-        masterListAsrunLog2.addAll(listAsrunLog2);
-      }else if(showCancel.value == true){
-        listAsrunLog2.addAll(salesAuditGetRetrieveModel!.gettables!.lstAsrunlog2!.where((element) =>
-        element.bookingStatus.toString().toUpperCase() != "E").toList());
-        masterListAsrunLog2.addAll(listAsrunLog2);
-      }else{
-        listAsrunLog2.addAll(salesAuditGetRetrieveModel!.gettables!.lstAsrunlog2!.where((element) =>
-        element.bookingStatus.toString().toUpperCase() != "C" && element.bookingStatus.toString().toUpperCase() != "E").toList());
-        masterListAsrunLog2.addAll(listAsrunLog2);
+
+      if(salesAuditGetRetrieveModel!.gettables != null &&
+          salesAuditGetRetrieveModel!.gettables!.lstAsrunlog1 != null &&
+          salesAuditGetRetrieveModel!.gettables!.lstAsrunlog1!.isNotEmpty  ){
+        listAsrunLog2.clear();
+        masterListAsrunLog2.clear();
+        if(showError.value == true && showCancel.value == true){
+          listAsrunLog2.addAll(salesAuditGetRetrieveModel!.gettables!.lstAsrunlog2 as Iterable<LstAsrunlog2>);
+          masterListAsrunLog2.addAll(listAsrunLog2);
+        }else if(showError.value == true){
+          listAsrunLog2.addAll(salesAuditGetRetrieveModel!.gettables!.lstAsrunlog2!.where((element) =>
+          element.bookingStatus.toString().toUpperCase() != "C").toList());
+          masterListAsrunLog2.addAll(listAsrunLog2);
+        }else if(showCancel.value == true){
+          listAsrunLog2.addAll(salesAuditGetRetrieveModel!.gettables!.lstAsrunlog2!.where((element) =>
+          element.bookingStatus.toString().toUpperCase() != "E").toList());
+          masterListAsrunLog2.addAll(listAsrunLog2);
+        }else{
+          listAsrunLog2.addAll(salesAuditGetRetrieveModel!.gettables!.lstAsrunlog2!.where((element) =>
+          element.bookingStatus.toString().toUpperCase() != "C" && element.bookingStatus.toString().toUpperCase() != "E").toList());
+          masterListAsrunLog2.addAll(listAsrunLog2);
+        }
+        update(['leftOne']);
       }
-      update(['leftOne']);
     }else{
       listAsrunLog2.clear();
       masterListAsrunLog2.clear();
@@ -127,10 +139,10 @@ class SalesAuditNewController extends GetxController {
 
   }
   clearBtn(int leftIndex,int rightIndex){
-       print("leftIndex"+leftIndex.toString());
-       print("rightIndex"+rightIndex.toString());
-       print("leftTblFocus "+leftTblFocus.toString());
-       print("rightTblFocus "+rightTblFocus.toString());
+       print("leftIndex$leftIndex");
+       print("rightIndex$rightIndex");
+       print("leftTblFocus $leftTblFocus");
+       print("rightTblFocus $rightTblFocus");
        if(leftTblFocus){
          listAsrunLog2[leftIndex].telecastTime= "";
          update(['leftOne']);
@@ -192,7 +204,7 @@ class SalesAuditNewController extends GetxController {
           }else{
             listAsrunLog2[index].bookingStatus = listAsrunLog2[index].previousBookingStatus??"B";
           }
-          print("index"+index.toString());
+          print("index$index");
 
             update(['leftOne']);
 
@@ -264,7 +276,7 @@ class SalesAuditNewController extends GetxController {
       LoadingDialog.call();
       String date = Uri.encodeComponent((DateFormat("yyyy-MM-dd HH:mm").parse(
               (DateFormat("dd-MM-yyyy").parse(scheduledController.text)).toString())).toString());
-      print(">>>>" + date.toString());
+      print(">>>>$date");
 
       // ((Get.find<MainController>().user != null) ? Aes.encrypt(Get.find<MainController>().user?.personnelNo ?? "") : "")
 
@@ -273,7 +285,7 @@ class SalesAuditNewController extends GetxController {
               selectedLocation!.key ?? "", selectedChannel!.key ?? "", date),
           fun: (map) {
             Get.back();
-            print(">>>>>>>map" + jsonEncode(map).toString());
+            print(">>>>>>>map${jsonEncode(map)}");
             listAsrunLog2.clear();
             listAsrunLog1.clear();
             masterListAsrunLog2.clear();
@@ -342,13 +354,13 @@ class SalesAuditNewController extends GetxController {
       "lstasrun": masterListAsrunLog1.map((e) => e.toJson1()).toList()
     };
 
-    print(">>>>>>postData"+ jsonEncode(postData) .toString());
+    print(">>>>>>postData${jsonEncode(postData)}");
     Get.find<ConnectorControl>().POSTMETHOD(
         api: ApiFactory.SALESAUDIT_NEW_SAVEDATA,
         json: postData,
         fun: (map) {
           Get.back();
-          print(">>>>>map"+map.toString());
+          print(">>>>>map$map");
           if(map is Map && map.containsKey("postSalesAduit")){
             LoadingDialog.callDataSavedMessage((map['postSalesAduit']??""),
                 callback: (){
@@ -428,9 +440,9 @@ class SalesAuditNewController extends GetxController {
 
         ros = listAsrunLog2[j].dealTime.toString().split("-");
 
-        RosStart = ros[0] + ":00";
+        RosStart = "${ros[0]}:00";
 
-        RosEnd = ros[1] + ":00";
+        RosEnd = "${ros[1]}:00";
 
          RosStartParse = DateTime.parse("2023-01-01 ${RosStart}");
          RosEndParse = DateTime.parse("2023-01-01 ${RosEnd}");
@@ -490,9 +502,9 @@ class SalesAuditNewController extends GetxController {
 
         ros = listAsrunLog2[k].dealTime.toString().split("-");
 
-        RosStart = ros[0] + ":00";
+        RosStart = "${ros[0]}:00";
 
-        RosEnd = ros[1] + ":00";
+        RosEnd = "${ros[1]}:00";
 
          RosStartParse = DateTime.parse("2023-01-01 ${RosStart}");
          RosEndParse = DateTime.parse("2023-01-01 ${RosEnd}");
@@ -557,20 +569,20 @@ class SalesAuditNewController extends GetxController {
     gridStateManager?.setCurrentCell(gridStateManager?.rows[leftIndex].cells["no"],leftIndex) ;
     gridStateManagerRight?.setCurrentCell(gridStateManager?.rows[rightindex].cells["no"],rightindex) ;
 
-    print(">>>>>"+gridStateManagerRight!.currentRowIdx.toString());
-    print(">>>>>"+gridStateManager!.currentRowIdx.toString());
+    print(">>>>>${gridStateManagerRight!.currentRowIdx}");
+    print(">>>>>${gridStateManager!.currentRowIdx}");
 
   }
   void setNextRow1(String exportTapeCode) {
     // tblSpots - listAsrunLog2 - leftIndex
     // tblAsrun - listAsrunLog1 - rightindex
 
-    print("exportTapeCode"+exportTapeCode.toString());
+    print("exportTapeCode$exportTapeCode");
     for (int i=0;i<listAsrunLog2.length;i++) {
       // print(">>>>>>>>>>"+listAsrunLog2[i].exportTapeCode.toString()+exportTapeCode);
       if (listAsrunLog2[i].exportTapeCode == exportTapeCode &&
          ( ((listAsrunLog2[i].telecastTime ?? "") == "") || listAsrunLog2[i].telecastTime == null) ) {
-        print("searchIndex"+i.toString());
+        print("searchIndex$i");
         // tblSpots.rows[dr.index].selected = true;
         gridStateManager?.setCurrentCell(gridStateManager?.rows[i].cells["no"],i) ;
 
@@ -583,7 +595,7 @@ class SalesAuditNewController extends GetxController {
       if (listAsrunLog1[j].exportTapeCode == exportTapeCode &&
          ( ((listAsrunLog1[j].bookingNumber ?? "") == "") || listAsrunLog1[j].bookingNumber == null) ) {
         // tblAsrun.rows[dr1.index].selected = true;
-        print("searchIndex"+j.toString());
+        print("searchIndex$j");
         gridStateManagerRight?.setCurrentCell(gridStateManager?.rows[j].cells["no"],j) ;
         break;
       }
@@ -616,8 +628,8 @@ class SalesAuditNewController extends GetxController {
     TApeduration = (listAsrunLog1[rightindex].tapeDuration??"").toString();
     Telecasttime = listAsrunLog1[rightindex].telecastTime??"";
 
-    print(">>>>>>>>>"+listAsrunLog1[rightindex].bookingNumber.toString());
-    print(">>>>>>>>>"+listAsrunLog2[leftIndex].telecastTime.toString());
+    print(">>>>>>>>>${listAsrunLog1[rightindex].bookingNumber}");
+    print(">>>>>>>>>${listAsrunLog2[leftIndex].telecastTime}");
     if (listAsrunLog1[rightindex].bookingNumber != null && listAsrunLog1[rightindex].bookingNumber != "") {
       print("jks1");
       // SetNextRow(rightindex,leftIndex);
@@ -716,8 +728,8 @@ class SalesAuditNewController extends GetxController {
     TApeduration = (listAsrunLog1[rightindex].tapeDuration??"").toString();
     Telecasttime = listAsrunLog1[rightindex].telecastTime??"";
 
-    print(">>>>>>>>>"+listAsrunLog1[rightindex].bookingNumber.toString());
-    print(">>>>>>>>>"+listAsrunLog2[leftIndex].telecastTime.toString());
+    print(">>>>>>>>>${listAsrunLog1[rightindex].bookingNumber}");
+    print(">>>>>>>>>${listAsrunLog2[leftIndex].telecastTime}");
     if (listAsrunLog1[rightindex].bookingNumber != null && listAsrunLog1[rightindex].bookingNumber != "") {
       print("jks1");
       // SetNextRow(rightindex,leftIndex);
@@ -801,6 +813,7 @@ class SalesAuditNewController extends GetxController {
     // colorGrid();
     // setNextRow1(exporttapecode);
   }
+
   onDoubleTap(int leftIndex,int rightIndex){
     // masterListAsrunLog2.clear();
     // masterListAsrunLog1.clear();
@@ -841,10 +854,130 @@ class SalesAuditNewController extends GetxController {
 
   }
 
+  List<RoCancellationDocuments> documents = [];
+
+  docs() async {
+    String documentKey = "";
+    if(selectedLocation == null || selectedChannel == null){
+      documentKey = "";
+    }else{
+      documentKey = "SalesAudit " + (selectedLocation?.key??"") + (selectedChannel?.key??"") + '0' +DateFormat("yyyyMMdd").format( DateFormat("dd-MM-yyyy").parse(scheduledController.text)) ;
+    }
+    PlutoGridStateManager? viewDocsStateManger;
+    try {
+      LoadingDialog.call();
+      await Get.find<ConnectorControl>().GET_METHOD_CALL_HEADER(
+          api: ApiFactory.COMMON_DOCS_LOAD(documentKey),
+          fun: (data) {
+            if (data is Map && data.containsKey("info_GetAllDocument")) {
+              documents = [];
+              for (var doc in data["info_GetAllDocument"]) {
+                documents.add(RoCancellationDocuments.fromJson(doc));
+              }
+              Get.back();
+            }
+          });
+    } catch (e) {
+      Get.back();
+    }
+    Get.defaultDialog(
+        title: "Documents",
+        content: SizedBox(
+          width: Get.width / 2.5,
+          height: Get.height / 2.5,
+          child: Scaffold(
+            body: RawKeyboardListener(
+              focusNode: FocusNode(),
+              onKey: (value) {
+                if (value.isKeyPressed(LogicalKeyboardKey.delete)) {
+                  LoadingDialog.delete(
+                    "Want to delete selected row",
+                        () async {
+                      LoadingDialog.call();
+                      await Get.find<ConnectorControl>().DELETEMETHOD(
+                        api: ApiFactory.COMMON_DOCS_DELETE(documents[viewDocsStateManger!.currentRowIdx!].documentId.toString()),
+                        fun: (data) {
+                          Get.back();
+                        },
+                      );
+                      Get.back();
+                      docs();
+                    },
+                    cancel: () {},
+                  );
+                }
+              },
+              child: DataGridShowOnlyKeys(
+                hideCode: true,
+                hideKeys: ["documentId"],
+                dateFromat: "dd-MM-yyyy HH:mm",
+                mapData: documents.map((e) => e.toJson()).toList(),
+                onload: (loadGrid) {
+                  viewDocsStateManger = loadGrid.stateManager;
+                },
+                onRowDoubleTap: (row) {
+                  Get.find<ConnectorControl>().GET_METHOD_CALL_HEADER(
+                      api: ApiFactory.COMMON_DOCS_VIEW((documents[row.rowIdx].documentId).toString()),
+                      fun: (data) {
+                        if (data is Map && data.containsKey("addingDocument")) {
+                          ExportData()
+                              .exportFilefromByte(base64Decode(data["addingDocument"][0]["documentData"]), data["addingDocument"][0]["documentname"]);
+                        }
+                      });
+                },
+              ),
+            ),
+          ),
+        ),
+        actions: {"Add Doc": () async {}, "View Doc": () {},
+          "Attach Email": () {}}.entries.map((e) =>
+            FormButtonWrapper(
+          btnText: e.key,
+          callback: e.key == "Add Doc"
+              ? () async {
+            FilePickerResult? result = await FilePicker.platform.pickFiles(allowMultiple: false);
+
+            if (result != null && result.files.isNotEmpty) {
+              LoadingDialog.call();
+              await Get.find<ConnectorControl>().POSTMETHOD_FORMDATA_HEADER(
+                  api: ApiFactory.COMMON_DOCS_ADD,
+                  fun: (data) {
+                    if (data is Map && data.containsKey("addingDocument")) {
+                      for (var doc in data["addingDocument"]) {
+                        documents.add(RoCancellationDocuments.fromJson(doc));
+                      }
+                      Get.back();
+                      docs();
+                    }
+                  },
+                  json: {
+                    "documentKey": documentKey,
+                    "loggedUser": Get.find<MainController>().user?.logincode ?? "",
+                    "strFilePath": result.files.first.name,
+                    "bytes": base64.encode(List<int>.from(result.files.first.bytes ?? []))
+                  });
+              Get.back();
+            }
+          }
+              : e.key == "View Doc"
+              ? () {
+            Get.find<ConnectorControl>().GET_METHOD_CALL_HEADER(
+                api: ApiFactory.COMMON_DOCS_VIEW((documents[viewDocsStateManger!.currentCell!.row.sortIdx].documentId).toString()),
+                fun: (data) {
+                  if (data is Map && data.containsKey("addingDocument")) {
+                    ExportData().exportFilefromByte(
+                        base64Decode(data["addingDocument"][0]["documentData"]), data["addingDocument"][0]["documentname"]);
+                  }
+                });
+          }
+              : () {},
+        )).toList()
+    );
+  }
 
   @override
   void onInit() {
-    print(">>>>jks>>>>>" + Get.find<MainController>().user!.logincode .toString());
+    print(">>>>jks>>>>>${Get.find<MainController>().user!.logincode}");
     fetchPageLoadData();
     leftFocusNode.addListener(() {
       if(leftFocusNode.hasFocus){
@@ -863,6 +996,10 @@ class SalesAuditNewController extends GetxController {
     super.onInit();
   }
 
+
+
+
+
   @override
   void onReady() {
     super.onReady();
@@ -872,6 +1009,8 @@ class SalesAuditNewController extends GetxController {
       clearAll();
     }else if (str == "Save") {
       saveData();
+    }else if (str == "Docs") {
+      docs();
     }
   }
   @override
