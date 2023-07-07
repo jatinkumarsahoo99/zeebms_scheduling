@@ -146,13 +146,12 @@ class AsrunImportAdRevenueView extends GetView<AsrunImportController> {
                         ],
                       ),
                     ),
-                  InputFields.formFieldNumberMask(
-                      isEnable: false,
-                      hintTxt: "Start Time",
-                      controller: controllerX.startTime_,
-                      widthRatio: 0.09,
-                      isTime: true,
-                      paddingLeft: 0),
+                  InputFields.formField1(
+                    isEnable: false,
+                    hintTxt: "Start Time",
+                    controller: controllerX.startTime_,
+                    width: 0.09,
+                  ),
                 ],
               ),
             ),
@@ -204,15 +203,10 @@ class AsrunImportAdRevenueView extends GetView<AsrunImportController> {
                         // hideKeys: ["color", "modifed"],
                         showSrNo: true,
                         colorCallback: (colorContext) {
-                          if (controller.asrunData?[colorContext.rowIdx] !=
-                              null) {
-                            try {
-                              return Color(int.parse(
-                                  "0x${controller.asrunData?[colorContext.rowIdx].backColor}"));
-                            } catch (e) {
-                              return Colors.white;
-                            }
-                          } else {
+                          try {
+                            return Color(int.parse(
+                                "0x${colorContext.row.cells["backColor"]!.value}"));
+                          } catch (e) {
                             return Colors.white;
                           }
                         },
@@ -453,6 +447,8 @@ class AsrunImportAdRevenueView extends GetView<AsrunImportController> {
                               controller.fromSwap.value = controller.asrunData?[
                                   controller
                                       .gridStateManager!.currentRow!.sortIdx];
+                              controller.fromSwapIndex = controller
+                                  .gridStateManager!.currentRow!.sortIdx;
                             }
                           }
                         }),
@@ -510,7 +506,9 @@ class AsrunImportAdRevenueView extends GetView<AsrunImportController> {
                           } else {
                             controller.toSwap.value = controller.asrunData?[
                                 controller
-                                    .gridStateManager!.currentRow!.sortIdx!];
+                                    .gridStateManager!.currentRow!.sortIdx];
+                            controller.toSwapIndex = controller
+                                .gridStateManager!.currentRow!.sortIdx;
                           }
                         }
                       },
@@ -554,41 +552,81 @@ class AsrunImportAdRevenueView extends GetView<AsrunImportController> {
                     int? toIndex = controller.asrunData?.indexWhere((element) =>
                         controller.toSwap.value?.eventNumber ==
                         element.eventNumber);
+
                     var from = controller.fromSwap.value;
                     var to = controller.toSwap.value;
-                    controller.asrunData?[fromIndex!].bookingnumber =
+                    PlutoRow fromRow =
+                        controller.gridStateManager!.rows[fromIndex!];
+                    PlutoRow toRow =
+                        controller.gridStateManager!.rows[toIndex!];
+                    controller.asrunData?[fromIndex].bookingnumber =
                         to?.bookingnumber;
-                    controller.asrunData?[fromIndex!].scheduletime =
+                    controller.gridStateManager?.changeCellValue(
+                        fromRow.cells["bookingnumber"]!, to?.bookingnumber);
+                    controller.asrunData?[fromIndex].scheduletime =
                         to?.scheduletime;
-                    controller.asrunData?[fromIndex!].scheduledProgram =
+                    controller.gridStateManager?.changeCellValue(
+                        fromRow.cells["scheduletime"]!, to?.scheduletime);
+                    controller.asrunData?[fromIndex].scheduledProgram =
                         to?.scheduledProgram;
-                    controller.asrunData?[fromIndex!].rosBand = to?.rosBand;
-                    controller.asrunData?[fromIndex!].programTime =
+                    controller.gridStateManager?.changeCellValue(
+                        fromRow.cells["scheduledProgram"]!,
+                        to?.scheduledProgram);
+                    controller.asrunData?[fromIndex].rosBand = to?.rosBand;
+                    controller.gridStateManager?.changeCellValue(
+                        fromRow.cells["rosBand"]!, to?.rosBand);
+                    controller.asrunData?[fromIndex].programTime =
                         to?.programTime;
-                    controller.asrunData?[fromIndex!].isMismatch =
+                    controller.gridStateManager?.changeCellValue(
+                        fromRow.cells["programTime"]!, to?.programTime);
+                    controller.asrunData?[fromIndex].isMismatch =
                         to?.isMismatch;
-                    controller.asrunData?[fromIndex!].scheduledate =
+                    controller.gridStateManager?.changeCellValue(
+                        fromRow.cells["isMismatch"]!, to?.isMismatch);
+                    controller.asrunData?[fromIndex].scheduledate =
                         to?.scheduledate;
-                    controller.asrunData?[fromIndex!].tapeDuration =
+                    controller.gridStateManager?.changeCellValue(
+                        fromRow.cells["scheduledate"]!, to?.scheduledate);
+                    controller.asrunData?[fromIndex].tapeDuration =
                         to?.tapeDuration;
+                    controller.gridStateManager?.changeCellValue(
+                        fromRow.cells["tapeDuration"]!, to?.tapeDuration);
 
                     /// TO DATA
-                    controller.asrunData?[toIndex!].bookingnumber =
+                    controller.asrunData?[toIndex].bookingnumber =
                         from?.bookingnumber;
-                    controller.asrunData?[toIndex!].scheduletime =
+                    controller.gridStateManager?.changeCellValue(
+                        toRow.cells["bookingnumber"]!, from?.bookingnumber);
+                    controller.asrunData?[toIndex].scheduletime =
                         from?.scheduletime;
-                    controller.asrunData?[toIndex!].scheduledProgram =
+                    controller.gridStateManager?.changeCellValue(
+                        toRow.cells["scheduletime"]!, from?.scheduletime);
+                    controller.asrunData?[toIndex].scheduledProgram =
                         from?.scheduledProgram;
-                    controller.asrunData?[toIndex!].rosBand = from?.rosBand;
-                    controller.asrunData?[toIndex!].programTime =
+                    controller.gridStateManager?.changeCellValue(
+                        toRow.cells["scheduledProgram"]!,
+                        from?.scheduledProgram);
+                    controller.asrunData?[toIndex].rosBand = from?.rosBand;
+                    controller.gridStateManager?.changeCellValue(
+                        toRow.cells["rosBand"]!, from?.rosBand);
+                    controller.asrunData?[toIndex].programTime =
                         from?.programTime;
-                    controller.asrunData?[toIndex!].isMismatch =
+                    controller.gridStateManager?.changeCellValue(
+                        toRow.cells["programTime"]!, from?.programTime);
+                    controller.asrunData?[toIndex].isMismatch =
                         from?.isMismatch;
-                    controller.asrunData?[toIndex!].scheduledate =
+                    controller.gridStateManager?.changeCellValue(
+                        toRow.cells["isMismatch"]!, from?.isMismatch);
+                    controller.asrunData?[toIndex].scheduledate =
                         from?.scheduledate;
-                    controller.asrunData?[toIndex!].tapeDuration =
+                    controller.gridStateManager?.changeCellValue(
+                        toRow.cells["scheduledate"]!, from?.scheduledate);
+                    controller.asrunData?[toIndex].tapeDuration =
                         from?.tapeDuration;
-                    controller.update(["fpcData"]);
+                    controller.gridStateManager?.changeCellValue(
+                        toRow.cells["tapeDuration"]!, from?.tapeDuration);
+                    //
+                    // controller.update(["fpcData"]);
                   },
                   showIcon: false,
                 ),
@@ -699,16 +737,16 @@ class AsrunImportAdRevenueView extends GetView<AsrunImportController> {
                   InputFields.formFieldNumberMask(
                       isEnable: false,
                       hintTxt: "From",
-                      controller:
-                          TextEditingController(text: asrunData.fpctIme),
+                      controller: TextEditingController(
+                          text: asrunData.fpctIme ?? asrunData.telecasttime),
                       widthRatio: 0.12,
                       isTime: true,
                       paddingLeft: 0),
                   InputFields.formFieldNumberMask(
                       isEnable: false,
                       hintTxt: "To",
-                      controller:
-                          TextEditingController(text: asrunData.fpctIme),
+                      controller: TextEditingController(
+                          text: asrunData.fpctIme ?? asrunData.telecasttime),
                       widthRatio: 0.12,
                       isTime: true,
                       paddingLeft: 0),
@@ -721,7 +759,9 @@ class AsrunImportAdRevenueView extends GetView<AsrunImportController> {
       cancel: FormButtonWrapper(
         btnText: "Cancel",
         showIcon: false,
-        callback: () {},
+        callback: () {
+          Get.back();
+        },
       ),
       onCancel: () {},
       confirm: FormButtonWrapper(

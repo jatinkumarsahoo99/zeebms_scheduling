@@ -1,5 +1,6 @@
 import 'package:bms_scheduling/app/modules/AsrunImportAdRevenue/bindings/arun_data.dart';
 import 'package:bms_scheduling/app/modules/AsrunImportAdRevenue/bindings/asrun_fpc_data.dart';
+import 'package:bms_scheduling/app/providers/ExportData.dart';
 import 'package:bms_scheduling/app/providers/extensions/string_extensions.dart';
 import 'package:bms_scheduling/widgets/LoadingDialog.dart';
 import 'package:file_picker/file_picker.dart';
@@ -62,6 +63,8 @@ class AsrunImportController extends GetxController {
   var isInsertAfter = RxBool(false);
   var fromSwap = Rxn<AsRunData>();
   var toSwap = Rxn<AsRunData>();
+  int? fromSwapIndex;
+  int? toSwapIndex;
 
   TextEditingController selectedDate = TextEditingController();
   TextEditingController startTime_ = TextEditingController();
@@ -125,13 +128,13 @@ class AsrunImportController extends GetxController {
           if (map is Map && map.containsKey("asRunData")) {
             print("list found");
 
-            if (map['asRunData'] != null) {
+            if (map['asRunData']["lstAsrunData"] != null) {
               asrunData = <AsRunData>[];
-              map['asRunData'].forEach((v) {
+              map['asRunData']["lstAsrunData"].forEach((v) {
                 asrunData!.add(AsRunData.fromJson(v));
               });
             }
-
+            startTime_.text = map['asRunData']["startTime"];
             update(["fpcData"]);
             update(["transButtons"]);
           }
@@ -487,12 +490,21 @@ class AsrunImportController extends GetxController {
         },
         fun: (map) {
           if (map is Map && map.containsKey("asrunDetails")) {
+            Map asrundeatils = map["asrunDetails"];
+
             if (map["asrunDetails"]["isError"]) {
               LoadingDialog.callErrorMessage1(
                   msg: map["asrunDetails"]["errorMessage"]);
             } else {
               LoadingDialog.callDataSaved(
                   msg: map["asrunDetails"]["genericMessage"]);
+            }
+            if (asrundeatils["asrunSaveResponseGFK"] != null) {
+              if (asrundeatils["asrunSaveResponseGFK"]["isGFK"]) {
+                ExportData().exportFilefromBase64(
+                    asrundeatils["asrunSaveResponseGFK"]["fileBytes"],
+                    asrundeatils["asrunSaveResponseGFK"]["fileName"]);
+              }
             }
 
             // if (map['asRunData'] != null) {
