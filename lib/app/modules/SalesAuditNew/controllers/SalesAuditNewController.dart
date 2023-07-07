@@ -21,6 +21,8 @@ import '../../../controller/HomeController.dart';
 import '../../../controller/MainController.dart';
 import '../../../providers/ApiFactory.dart';
 import '../../../providers/ExportData.dart';
+import '../../CommonDocs/controllers/common_docs_controller.dart';
+import '../../CommonDocs/views/common_docs_view.dart';
 import '../SalesAuditGetRetrieveModel.dart';
 
 class SalesAuditNewController extends GetxController {
@@ -863,7 +865,9 @@ class SalesAuditNewController extends GetxController {
     }else{
       documentKey = "SalesAudit " + (selectedLocation?.key??"") + (selectedChannel?.key??"") + '0' +DateFormat("yyyyMMdd").format( DateFormat("dd-MM-yyyy").parse(scheduledController.text)) ;
     }
-    PlutoGridStateManager? viewDocsStateManger;
+
+
+   /* PlutoGridStateManager? viewDocsStateManger;
     try {
       LoadingDialog.call();
       await Get.find<ConnectorControl>().GET_METHOD_CALL_HEADER(
@@ -972,7 +976,14 @@ class SalesAuditNewController extends GetxController {
           }
               : () {},
         )).toList()
-    );
+    );*/
+
+    Get.defaultDialog(
+      title: "Documents",
+      content: CommonDocsView(documentKey: documentKey),
+    ).then((value) {
+      Get.delete<CommonDocsController>(tag: "commonDocs");
+    });
   }
 
   @override
