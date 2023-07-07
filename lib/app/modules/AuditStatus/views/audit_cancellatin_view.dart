@@ -1,6 +1,7 @@
 import 'package:bms_scheduling/app/data/DropDownValue.dart';
 import 'package:bms_scheduling/app/modules/AuditStatus/bindings/audit_status_cancel_deals.dart';
 import 'package:bms_scheduling/app/modules/AuditStatus/controllers/audit_status_controller.dart';
+import 'package:bms_scheduling/app/providers/extensions/string_extensions.dart';
 import 'package:bms_scheduling/widgets/DataGridShowOnly.dart';
 import 'package:bms_scheduling/widgets/DateTime/DateWithThreeTextField.dart';
 import 'package:bms_scheduling/widgets/FormButton.dart';
@@ -67,10 +68,7 @@ class AuditCanellation extends StatelessWidget {
                         ],
                       )),
                   InputFields.formField1(
-                      hintTxt: "Ref No",
-                      width: 0.24,
-                      isEnable: false,
-                      controller: TextEditingController(text: data.bookingReferenceNumber?.split("T")[0])),
+                      hintTxt: "Ref No", width: 0.24, isEnable: false, controller: TextEditingController(text: data.bookingReferenceNumber)),
                   Container(
                     width: Get.width * 0.24,
                     child: Row(mainAxisSize: MainAxisSize.max, mainAxisAlignment: MainAxisAlignment.spaceBetween, children: [
@@ -79,7 +77,8 @@ class AuditCanellation extends StatelessWidget {
                           isEnable: false,
                           title: "Ref Date",
                           onFocusChange: (value) {},
-                          mainTextController: TextEditingController(text: data.referenceDate)),
+                          mainTextController: TextEditingController(
+                              text: data.bookingEffectiveDate != null ? data.bookingEffectiveDate?.split("T")[0].fromyMdTodMy() : "")),
                       InputFields.formField1(
                           hintTxt: "Booking No", width: 0.115, isEnable: false, controller: TextEditingController(text: displayData.bookingNumber)),
                     ]),

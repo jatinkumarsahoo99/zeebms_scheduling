@@ -38,7 +38,7 @@ class AsrunImportController extends GetxController {
     {"name": "Amagi", "value": false},
   ]);
   RxMap checkboxesMap = RxMap({"FPC": false, "Mark Slot": false, "Don't Update Exposure": false, "GFK": false, "DailyFPC": false, "Amagi": false});
-  Widget? drgabbleDialog;
+  var drgabbleDialog = Rxn<Widget>();
 
   //  [
   //   {"name": "FPC", "value": false},
@@ -121,7 +121,7 @@ class AsrunImportController extends GetxController {
             }
 
             update(["fpcData"]);
-            Get.find<HomeController>().update(["transButtons"]);
+            update(["transButtons"]);
           }
         });
   }
@@ -188,15 +188,20 @@ class AsrunImportController extends GetxController {
               "FPCtime": asrunData?[gridStateManager!.currentRowIdx!].fpctIme,
               "ProgramCode": asrunData?[gridStateManager!.currentRowIdx!].programCode,
               "BookingNumber": asrunData?[gridStateManager!.currentRowIdx!].bookingnumber,
-              "BookingDetailcode": asrunData?[gridStateManager!.currentRowIdx!].bookingdetailcode,
+              "BookingDetailcode": (asrunData?[gridStateManager!.currentRowIdx!].bookingdetailcode ?? "").toString(),
               "CommercialCode": "",
               "ReconKey": ""
             }
           ]
         },
         fun: (map) {
-          if (map is Map && map.containsKey("progMismatch") && map["progMismatch"]["message"] != null) {
-            LoadingDialog.callInfoMessage(map["progMismatch"]["message"]);
+          if (map is Map && map.containsKey("asrunTempDetails") && map["asrunTempDetails"]["lstSaveTempDetailResponse"] != null) {
+            asrunData = <AsRunData>[];
+            map["asrunTempDetails"]["lstSaveTempDetailResponse"].forEach((v) {
+              asrunData!.add(AsRunData.fromJson(v));
+            });
+            update(["fpcData"]);
+            update(["transButtons"]);
           }
         });
   }
@@ -363,7 +368,7 @@ class AsrunImportController extends GetxController {
             }
           }
 
-          Get.find<HomeController>().update(["transButtons"]);
+          update(["transButtons"]);
         });
   }
 
