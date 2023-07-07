@@ -273,27 +273,21 @@ class AsrunImportController extends GetxController {
           "Channelcode": selectChannel?.key,
           "ObjProgList": [
             FPCProgramList.convertAsRunDataToFPCProgramList(
-                    asrunData![gridStateManager?.currentRowIdx ?? 0])
+                    asrunData![gridStateManager?.currentRow?.sortIdx ?? 0])
                 .toJson()
           ]
         },
         fun: (map) {
           if (map is Map && map.containsKey("asRunData")) {
             if (map is Map && map.containsKey("fpcProgramData")) {
-              gridStateManager?.changeCellValue(
-                  gridStateManager!.currentRow!.cells["programName"]!,
-                  map["fpcProgramData"][0]["programName"],
-                  force: true);
-              asrunData![gridStateManager!.currentRow!.sortIdx].fpctIme =
-                  map["fpcProgramData"][0]["fpcTime"];
-              asrunData![gridStateManager!.currentRow!.sortIdx].programCode =
-                  map["fpcProgramData"][0]["programCode"];
-              asrunData![gridStateManager!.currentRow!.sortIdx].programName =
-                  map["fpcProgramData"][0]["programName"];
-              gridStateManager?.changeCellValue(
-                  gridStateManager!.currentRow!.cells["fpctIme"]!,
-                  map["fpcProgramData"][0]["fpcTime"],
-                  force: true);
+              var currentCell = gridStateManager!.currentCell;
+              int index = gridStateManager!.currentRow!.sortIdx;
+              asrunData?[index].programName =
+                  viewFPCData?[selectedFPCindex!].programName;
+              asrunData?[index].programCode =
+                  viewFPCData?[selectedFPCindex!].programcode;
+              asrunData?[index].fpctIme =
+                  viewFPCData?[selectedFPCindex!].starttime;
 
               // if (map['asRunData'] != null) {
               //   asrunData = <AsRunData>[];
@@ -302,7 +296,9 @@ class AsrunImportController extends GetxController {
               //   });
               // }
 
-              // update(["fpcData"]);
+              update(["fpcData"]);
+              gridStateManager?.setCurrentCell(
+                  gridStateManager!.currentCell, index);
             }
 
             // if (map['asRunData'] != null) {
@@ -328,7 +324,7 @@ class AsrunImportController extends GetxController {
         json: {
           "programName": programName,
           "fpcTime": fpcTime,
-          "programCode": programCode,
+          "programCode": programName,
           "LocationCode": selectLocation?.key,
           "Channelcode": selectChannel?.key,
           "ObjProgList": [
@@ -338,16 +334,14 @@ class AsrunImportController extends GetxController {
         fun: (map) {
           if (map is Map && map.containsKey("fpcProgramData")) {
             int index = gridStateManager!.currentRow!.sortIdx;
-            asrunData?[index].programName =
-                map["fpcProgramData"][0]["programName"];
-            asrunData?[index].programName =
-                map["fpcProgramData"][0]["programCode"];
-            asrunData?[index].fpctIme = map["fpcProgramData"][0]["fpcTime"];
+            asrunData?[index].programName = programName;
+            asrunData?[index].programCode = programCode;
+            asrunData?[index].fpctIme = fpcTime;
             for (var i = 0; i < asrunData!.length; i++) {
               if ((asrunData?[i].fpctIme == null ||
                       asrunData?[i].fpctIme == "") &&
                   i < gridStateManager!.currentRow!.sortIdx) {
-                asrunData?[i].fpctIme = map["fpcProgramData"][0]["fpcTime"];
+                asrunData?[i].fpctIme = fpcTime;
               }
             }
 
