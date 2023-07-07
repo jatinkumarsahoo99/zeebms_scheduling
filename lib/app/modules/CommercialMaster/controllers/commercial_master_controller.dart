@@ -21,6 +21,8 @@ import '../../../controller/MainController.dart';
 import '../../../data/DropDownValue.dart';
 import '../../../providers/ApiFactory.dart';
 import '../../../providers/Utils.dart';
+import '../../CommonDocs/controllers/common_docs_controller.dart';
+import '../../CommonDocs/views/common_docs_view.dart';
 import '../../CommonSearch/views/common_search_view.dart';
 import '../CommercialTapeMasterData.dart';
 import '../CommercialTapeMasterPostData.dart';
@@ -435,7 +437,9 @@ class CommercialMasterController extends GetxController {
       documentKey = "CommercialMaster $commercialCode";
     }
 
-    PlutoGridStateManager? viewDocsStateManger;
+
+
+   /* PlutoGridStateManager? viewDocsStateManger;
     try {
       LoadingDialog.call();
       await Get.find<ConnectorControl>().GET_METHOD_CALL_HEADER(
@@ -544,7 +548,15 @@ class CommercialMasterController extends GetxController {
         }
             : () {},
       )).toList()
-    );
+    );*/
+
+    Get.defaultDialog(
+      title: "Documents",
+      content: CommonDocsView(documentKey: documentKey),
+    ).then((value) {
+      Get.delete<CommonDocsController>(tag: "commonDocs");
+    });
+
   }
 
   getSecType(String key) {

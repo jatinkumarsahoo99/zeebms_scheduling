@@ -89,6 +89,5 @@ class CommonDocsView extends GetView<CommonDocsController> {
         );
       },
     );
-    ;
   }
 }
