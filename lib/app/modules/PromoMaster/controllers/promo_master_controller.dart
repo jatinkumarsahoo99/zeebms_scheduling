@@ -3,6 +3,7 @@ import 'dart:convert';
 import 'package:bms_scheduling/app/controller/ConnectorControl.dart';
 import 'package:bms_scheduling/app/controller/MainController.dart';
 import 'package:bms_scheduling/app/data/DropDownValue.dart';
+import 'package:bms_scheduling/app/modules/CommonDocs/controllers/common_docs_controller.dart';
 import 'package:bms_scheduling/app/modules/LogAdditions/bindings/log_additions_binding.dart';
 // import 'package:bms_scheduling/app/data/DropDownValue.dart';
 import 'package:bms_scheduling/app/providers/ApiFactory.dart';
@@ -256,9 +257,12 @@ class PromoMasterController extends GetxController {
     }
 
     Get.defaultDialog(
-      title: "Common Docs",
+      title: "Documents",
       content: CommonDocsView(documentKey: documentKey),
-    );
+    ).then((value) {
+      Get.delete<CommonDocsController>(tag: "commonDocs");
+    });
+
     // PlutoGridStateManager? viewDocsStateManger;
     // try {
     //   LoadingDialog.call();

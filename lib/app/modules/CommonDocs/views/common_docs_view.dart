@@ -18,61 +18,77 @@ class CommonDocsView extends GetView<CommonDocsController> {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      body: SizedBox(
-        width: context.width * .7,
-        height: context.height * .5,
-        child: Scaffold(
-          body: FutureBuilder<bool>(
-            initialData: false,
-            future: controller.getInitailData(documentKey),
-            builder: (context, snapshot) {
-              if (snapshot.data!) {
-                return Column(
-                  mainAxisSize: MainAxisSize.min,
-                  children: [
-                    RawKeyboardListener(
-                      focusNode: FocusNode(),
-                      onKey: (value) {
-                        if (value.isKeyPressed(LogicalKeyboardKey.delete)) {
-                          LoadingDialog.delete(
-                            "Want to delete selected row",
-                            () => controller.handleOnDelete(documentKey),
-                            cancel: () {},
-                          );
-                        }
-                      },
-                      child: DataGridShowOnlyKeys(
-                        hideCode: true,
-                        hideKeys: const ["documentId"],
-                        dateFromat: "dd-MM-yyyy HH:mm",
-                        mode: PlutoGridMode.selectWithOneTap,
-                        mapData: controller.documents.map((e) => e.toJson()).toList(),
-                        onload: (loadGrid) {
-                          controller.viewDocsStateManger = loadGrid.stateManager;
-                        },
-                        onRowDoubleTap: controller.handleOnRowDoubleTap,
+    return GetBuilder(
+      init: Get.put(CommonDocsController(), tag: "commonDocs"),
+      builder: (controller) {
+        return SizedBox(
+          width: context.width * .8,
+          height: context.height * .5,
+          child: Scaffold(
+            body: FutureBuilder<bool>(
+              initialData: false,
+              future: controller.getInitailData(documentKey),
+              builder: (context, snapshot) {
+                if (snapshot.data!) {
+                  return Column(
+                    mainAxisSize: MainAxisSize.min,
+                    children: [
+                      Expanded(
+                        child: RawKeyboardListener(
+                          focusNode: FocusNode(),
+                          onKey: (value) {
+                            if (value.isKeyPressed(LogicalKeyboardKey.delete) && controller.documents.isNotEmpty) {
+                              LoadingDialog.delete(
+                                "Want to delete selected row",
+                                () => controller.handleOnDelete(documentKey),
+                                cancel: () {},
+                              );
+                            }
+                          },
+                          child: Obx(() {
+                            if (controller.documents.isEmpty) {
+                              return const Center(
+                                child: Text("No Data Found"),
+                              );
+                            }
+                            return DataGridShowOnlyKeys(
+                              hideCode: true,
+                              hideKeys: const ["documentId"],
+                              dateFromat: "dd-MM-yyyy HH:mm",
+                              mode: PlutoGridMode.selectWithOneTap,
+                              mapData: controller.documents.value.map((e) => e.toJson()).toList(),
+                              onload: (loadGrid) {
+                                controller.viewDocsStateManger = loadGrid.stateManager;
+                              },
+                              onRowDoubleTap: controller.handleOnRowDoubleTap,
+                            );
+                          }),
+                        ),
                       ),
-                    ),
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: [
-                        FormButton(btnText: "Add Docs", callback: () => controller.handleAddDocs(documentKey)),
-                        const SizedBox(width: 20),
-                        FormButton(btnText: "View Doc", callback: () => controller.handleViewDocs(documentKey)),
-                      ],
-                    ),
-                  ],
-                );
-              } else {
-                return const Center(
-                  child: CircularProgressIndicator(),
-                );
-              }
-            },
+                      const SizedBox(height: 5),
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                          FormButton(btnText: "Add Docs", callback: () => controller.handleAddDocs(documentKey)),
+                          const SizedBox(width: 20),
+                          FormButton(btnText: "View Doc", callback: () => controller.handleViewDocs(documentKey)),
+                          const SizedBox(width: 20),
+                          FormButton(btnText: "Close", callback: () => Get.back()),
+                        ],
+                      ),
+                    ],
+                  );
+                } else {
+                  return const Center(
+                    child: CircularProgressIndicator(),
+                  );
+                }
+              },
+            ),
           ),
-        ),
-      ),
+        );
+      },
     );
+    ;
   }
 }

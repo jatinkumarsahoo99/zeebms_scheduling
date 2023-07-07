@@ -14,10 +14,11 @@ import '../model/common_docs_model.dart';
 
 class CommonDocsController extends GetxController {
   PlutoGridStateManager? viewDocsStateManger;
-  List<CommonDocsModel> documents = <CommonDocsModel>[].obs;
+  var documents = <CommonDocsModel>[].obs;
   @override
   void onInit() {
     super.onInit();
+    documents.clear();
   }
 
   @override
@@ -35,7 +36,7 @@ class CommonDocsController extends GetxController {
         api: ApiFactory.COMMON_DOCS_LOAD(docKey),
         fun: (data) {
           if (data is Map && data.containsKey("info_GetAllDocument")) {
-            documents = [];
+            documents.clear();
             for (var doc in data["info_GetAllDocument"]) {
               documents.add(CommonDocsModel.fromJson(doc));
             }
@@ -45,8 +46,6 @@ class CommonDocsController extends GetxController {
         });
     return true;
   }
-
-  Future<void> delete(String docID, String docKey) async {}
 
   handleOnRowDoubleTap(PlutoGridOnRowDoubleTapEvent row) {
     LoadingDialog.call();
@@ -90,6 +89,7 @@ class CommonDocsController extends GetxController {
             for (var doc in data["addingDocument"]) {
               documents.add(CommonDocsModel.fromJson(doc));
             }
+
             Get.back();
           }
         },
