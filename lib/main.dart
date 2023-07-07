@@ -3,6 +3,7 @@ import 'dart:ui';
 
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:flutter_cache_manager/flutter_cache_manager.dart';
 import 'package:get/get.dart';
 import 'package:url_strategy/url_strategy.dart';
 
@@ -22,6 +23,8 @@ void main() async {
     // Logger.sendError(error: error,severity: Severity.warning,stackTrace: stack);
     return true;
   };
+
+  await DefaultCacheManager().emptyCache();
   setPathUrlStrategy();
 
   // String data = await rootBundle.loadString('assets/AppConfig.json');

@@ -30,6 +30,7 @@ dependencies:
   printing:
   csv:
   rxdart:
+  flutter_cache_manager:
 #  download:
 
   flutter: 
