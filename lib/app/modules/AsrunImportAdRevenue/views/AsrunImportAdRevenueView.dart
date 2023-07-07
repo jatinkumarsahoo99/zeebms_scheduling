@@ -54,7 +54,8 @@ class AsrunImportAdRevenueView extends GetView<AsrunImportController> {
                       controllerX.locations.value,
                       (value) {
                         controllerX.selectLocation = value;
-                        controllerX.getChannels(controllerX.selectLocation?.key ?? "");
+                        controllerX
+                            .getChannels(controllerX.selectLocation?.key ?? "");
                       },
                       "Location",
                       0.12,
@@ -124,12 +125,15 @@ class AsrunImportAdRevenueView extends GetView<AsrunImportController> {
                           Obx(() => Padding(
                                 padding: const EdgeInsets.only(top: 15.0),
                                 child: Checkbox(
-                                  value: controllerX.checkboxesMap.value[checkbox.key],
+                                  value: controllerX
+                                      .checkboxesMap.value[checkbox.key],
                                   onChanged: (val) {
-                                    controllerX.checkboxesMap.value[checkbox.key] = val;
+                                    controllerX.checkboxesMap
+                                        .value[checkbox.key] = val;
                                     controllerX.checkboxesMap.refresh();
                                   },
-                                  materialTapTargetSize: MaterialTapTargetSize.shrinkWrap,
+                                  materialTapTargetSize:
+                                      MaterialTapTargetSize.shrinkWrap,
                                 ),
                               )),
                           Padding(
@@ -143,7 +147,12 @@ class AsrunImportAdRevenueView extends GetView<AsrunImportController> {
                       ),
                     ),
                   InputFields.formFieldNumberMask(
-                      isEnable: false, hintTxt: "Start Time", controller: controllerX.startTime_, widthRatio: 0.09, isTime: true, paddingLeft: 0),
+                      isEnable: false,
+                      hintTxt: "Start Time",
+                      controller: controllerX.startTime_,
+                      widthRatio: 0.09,
+                      isTime: true,
+                      paddingLeft: 0),
                 ],
               ),
             ),
@@ -168,7 +177,8 @@ class AsrunImportAdRevenueView extends GetView<AsrunImportController> {
                         // },
                         onload: (loadevent) {
                           loadevent.stateManager.setSelecting(true);
-                          loadevent.stateManager.setSelectingMode(PlutoGridSelectingMode.row);
+                          loadevent.stateManager
+                              .setSelectingMode(PlutoGridSelectingMode.row);
 
                           controller.gridStateManager = loadevent.stateManager;
 
@@ -180,17 +190,25 @@ class AsrunImportAdRevenueView extends GetView<AsrunImportController> {
                         },
                         extraList: [
                           SecondaryShowDialogModel("Mark Error", () {
-                            controller.gridStateManager
-                                ?.changeCellValue(controller.gridStateManager!.currentRow!.cells["isMismatch"]!, "1", force: true);
-                            controller.asrunData![controller.gridStateManager!.currentRow!.sortIdx].isMismatch = "1";
+                            controller.gridStateManager?.changeCellValue(
+                                controller.gridStateManager!.currentRow!
+                                    .cells["isMismatch"]!,
+                                "1",
+                                force: true);
+                            controller
+                                .asrunData![controller
+                                    .gridStateManager!.currentRow!.sortIdx]
+                                .isMismatch = "1";
                           })
                         ],
                         // hideKeys: ["color", "modifed"],
                         showSrNo: true,
                         colorCallback: (colorContext) {
-                          if (controller.asrunData?[colorContext.rowIdx] != null) {
+                          if (controller.asrunData?[colorContext.rowIdx] !=
+                              null) {
                             try {
-                              return Color(int.parse("0x${controller.asrunData?[colorContext.rowIdx].backColor}"));
+                              return Color(int.parse(
+                                  "0x${controller.asrunData?[colorContext.rowIdx].backColor}"));
                             } catch (e) {
                               return Colors.white;
                             }
@@ -198,13 +216,15 @@ class AsrunImportAdRevenueView extends GetView<AsrunImportController> {
                             return Colors.white;
                           }
                         },
+                        hideKeys: ["backColor", "foreColor"],
                         // mode: PlutoGridMode.selectWithOneTap,
                         // colorCallback: (PlutoRowColorContext plutoContext) {
                         //   // return Color(controllerX.transmissionLogList![plutoContext.rowIdx].colorNo ?? Colors.white.value);
                         // },
                         onSelected: (PlutoGridOnSelectedEvent event) {
                           event.selectedRows?.forEach((element) {
-                            print("On Print select" + jsonEncode(element.toJson()));
+                            print("On Print select" +
+                                jsonEncode(element.toJson()));
                           });
                         },
                         // onRowsMoved: (PlutoGridOnRowsMovedEvent onRowMoved) {
@@ -225,7 +245,9 @@ class AsrunImportAdRevenueView extends GetView<AsrunImportController> {
                         //   controllerX.gridStateManager?.notifyListeners();
                         // },
                         // mode: controllerX.selectedPlutoGridMode,
-                        mapData: controllerX.asrunData!.map((e) => e.toJson()).toList())
+                        mapData: controllerX.asrunData!
+                            .map((e) => e.toJson())
+                            .toList())
                     : Container(
                         // height: Get.height * .33,
                         // width: Get.width,
@@ -253,7 +275,9 @@ class AsrunImportAdRevenueView extends GetView<AsrunImportController> {
                   return Card(
                       margin: EdgeInsets.fromLTRB(4, 4, 4, 0),
                       shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.only(topLeft: Radius.circular(10), topRight: Radius.circular(10)),
+                        borderRadius: BorderRadius.only(
+                            topLeft: Radius.circular(10),
+                            topRight: Radius.circular(10)),
                       ),
                       child: GetBuilder<AsrunImportController>(
                           init: controllerX,
@@ -269,7 +293,8 @@ class AsrunImportAdRevenueView extends GetView<AsrunImportController> {
                                 alignment: WrapAlignment.start,
                                 // pa
                                 children: [
-                                  for (var btn in btncontroller.asurunImportButtoons!)
+                                  for (var btn
+                                      in btncontroller.asurunImportButtoons!)
                                     FormButtonWrapper(
                                       btnText: btn["name"],
                                       isEnabled: buttonVisibilty(btn["name"]),
@@ -287,22 +312,40 @@ class AsrunImportAdRevenueView extends GetView<AsrunImportController> {
                                     child: Icon(Icons.arrow_upward),
                                     onTap: () {
                                       if (controller.selectedFPCindex == 0) {
-                                        controller.selectedFPCindex = controllerX.gridStateManager?.rows.length;
+                                        controller.selectedFPCindex =
+                                            controllerX
+                                                .gridStateManager?.rows.length;
                                       } else {
-                                        controller.selectedFPCindex = (controller.selectedFPCindex ?? 1) - 1;
+                                        controller.selectedFPCindex =
+                                            (controller.selectedFPCindex ?? 1) -
+                                                1;
                                       }
-                                      controller.filterMainGrid(controller.viewFPCData?[controller.selectedFPCindex ?? 0].starttime ?? "");
+                                      controller.filterMainGrid(controller
+                                              .viewFPCData?[
+                                                  controller.selectedFPCindex ??
+                                                      0]
+                                              .starttime ??
+                                          "");
                                     },
                                   ),
                                   InkWell(
                                     child: Icon(Icons.arrow_downward),
                                     onTap: () {
-                                      if (controllerX.gridStateManager?.rows.length == controller.selectedFPCindex) {
+                                      if (controllerX
+                                              .gridStateManager?.rows.length ==
+                                          controller.selectedFPCindex) {
                                         controller.selectedFPCindex = 0;
                                       } else {
-                                        controller.selectedFPCindex = (controller.selectedFPCindex ?? 0) + 1;
+                                        controller.selectedFPCindex =
+                                            (controller.selectedFPCindex ?? 0) +
+                                                1;
                                       }
-                                      controller.filterMainGrid(controller.viewFPCData?[controller.selectedFPCindex ?? 0].starttime ?? "");
+                                      controller.filterMainGrid(controller
+                                              .viewFPCData?[
+                                                  controller.selectedFPCindex ??
+                                                      0]
+                                              .starttime ??
+                                          "");
                                     },
                                   ),
                                 ],
@@ -345,7 +388,8 @@ class AsrunImportAdRevenueView extends GetView<AsrunImportController> {
         controller.checkMissingAsrun();
         break;
       case "SP Verify":
-        showVerifyDialog(controller.asrunData![controller.gridStateManager?.currentRowIdx ?? 0]);
+        showVerifyDialog(controller
+            .asrunData![controller.gridStateManager?.currentRow?.sortIdx ?? 0]);
         break;
 
       case "Swap":
@@ -394,28 +438,45 @@ class AsrunImportAdRevenueView extends GetView<AsrunImportController> {
                         btnText: "...",
                         showIcon: false,
                         callback: () {
+                          print(
+                              controller.gridStateManager!.currentRow!.sortIdx);
                           if (controller.gridStateManager?.currentRow != null) {
-                            if (controller.asrunData?[controller.gridStateManager!.currentRowIdx!].eventtype?.toLowerCase() != "c") {
-                              LoadingDialog.callInfoMessage("Only Commericial Events Are Allowed for Swap");
+                            if (controller
+                                    .asrunData?[controller
+                                        .gridStateManager!.currentRow!.sortIdx]
+                                    .eventtype
+                                    ?.toLowerCase() !=
+                                "c") {
+                              LoadingDialog.callInfoMessage(
+                                  "Only Commericial Events Are Allowed for Swap");
                             } else {
-                              controller.fromSwap.value = controller.asrunData?[controller.gridStateManager!.currentRowIdx!];
+                              controller.fromSwap.value = controller.asrunData?[
+                                  controller
+                                      .gridStateManager!.currentRow!.sortIdx];
                             }
                           }
                         }),
                     InputFields.formFieldNumberMask(
                         isEnable: false,
                         hintTxt: "",
-                        controller: TextEditingController(text: controller.fromSwap.value?.telecasttime),
+                        controller: TextEditingController(
+                            text: controller.fromSwap.value?.telecasttime),
                         widthRatio: 0.12,
                         isTime: true,
                         paddingLeft: 0),
                     InputFields.formField1(
-                        isEnable: false, width: 0.12, hintTxt: "", controller: TextEditingController(text: controller.fromSwap.value?.tapeId)),
+                        isEnable: false,
+                        width: 0.12,
+                        hintTxt: "",
+                        controller: TextEditingController(
+                            text: controller.fromSwap.value?.tapeId)),
                     InputFields.formField1(
                         isEnable: false,
                         width: 0.09,
                         hintTxt: "",
-                        controller: TextEditingController(text: controller.fromSwap.value?.eventNumber.toString()))
+                        controller: TextEditingController(
+                            text: controller.fromSwap.value?.eventNumber
+                                .toString()))
                   ],
                 )),
             SizedBox(
@@ -429,13 +490,27 @@ class AsrunImportAdRevenueView extends GetView<AsrunImportController> {
                       btnText: "...",
                       showIcon: false,
                       callback: () {
+                        print(controller.gridStateManager!.currentRow!.sortIdx);
                         if (controller.gridStateManager?.currentRow != null) {
-                          if (controller.asrunData?[controller.gridStateManager!.currentRowIdx!].eventtype?.toLowerCase() != "c") {
-                            LoadingDialog.callInfoMessage("Only Commericial Events Are Allowed for Swap");
-                          } else if (controller.asrunData?[controller.gridStateManager!.currentRowIdx!].tapeId != controller.fromSwap.value?.tapeId) {
-                            LoadingDialog.callInfoMessage("Only Matching Tapes are allowed for Swap");
+                          if (controller
+                                  .asrunData?[controller
+                                      .gridStateManager!.currentRow!.sortIdx]
+                                  .eventtype
+                                  ?.toLowerCase() !=
+                              "c") {
+                            LoadingDialog.callInfoMessage(
+                                "Only Commericial Events Are Allowed for Swap");
+                          } else if (controller
+                                  .asrunData?[controller
+                                      .gridStateManager!.currentRow!.sortIdx]
+                                  .tapeId !=
+                              controller.fromSwap.value?.tapeId) {
+                            LoadingDialog.callInfoMessage(
+                                "Only Matching Tapes are allowed for Swap");
                           } else {
-                            controller.toSwap.value = controller.asrunData?[controller.gridStateManager!.currentRowIdx!];
+                            controller.toSwap.value = controller.asrunData?[
+                                controller
+                                    .gridStateManager!.currentRow!.sortIdx!];
                           }
                         }
                       },
@@ -443,17 +518,24 @@ class AsrunImportAdRevenueView extends GetView<AsrunImportController> {
                     InputFields.formFieldNumberMask(
                         isEnable: false,
                         hintTxt: "",
-                        controller: TextEditingController(text: controller.toSwap.value?.telecasttime ?? ""),
+                        controller: TextEditingController(
+                            text: controller.toSwap.value?.telecasttime ?? ""),
                         widthRatio: 0.12,
                         isTime: true,
                         paddingLeft: 0),
                     InputFields.formField1(
-                        isEnable: false, width: 0.12, hintTxt: "", controller: TextEditingController(text: controller.toSwap.value?.tapeId ?? "")),
+                        isEnable: false,
+                        width: 0.12,
+                        hintTxt: "",
+                        controller: TextEditingController(
+                            text: controller.toSwap.value?.tapeId ?? "")),
                     InputFields.formField1(
                         isEnable: false,
                         width: 0.09,
                         hintTxt: "",
-                        controller: TextEditingController(text: (controller.toSwap.value?.eventNumber ?? "").toString()))
+                        controller: TextEditingController(
+                            text: (controller.toSwap.value?.eventNumber ?? "")
+                                .toString()))
                   ],
                 )),
             SizedBox(
@@ -465,28 +547,47 @@ class AsrunImportAdRevenueView extends GetView<AsrunImportController> {
                 FormButtonWrapper(
                   btnText: "Swap",
                   callback: () {
-                    int? fromIndex = controller.asrunData?.indexWhere((element) => controller.fromSwap.value?.eventNumber == element.eventNumber);
-                    int? toIndex = controller.asrunData?.indexWhere((element) => controller.toSwap.value?.eventNumber == element.eventNumber);
+                    int? fromIndex = controller.asrunData?.indexWhere(
+                        (element) =>
+                            controller.fromSwap.value?.eventNumber ==
+                            element.eventNumber);
+                    int? toIndex = controller.asrunData?.indexWhere((element) =>
+                        controller.toSwap.value?.eventNumber ==
+                        element.eventNumber);
                     var from = controller.fromSwap.value;
                     var to = controller.toSwap.value;
-                    controller.asrunData?[fromIndex!].bookingnumber = to?.bookingnumber;
-                    controller.asrunData?[fromIndex!].scheduletime = to?.scheduletime;
-                    controller.asrunData?[fromIndex!].scheduledProgram = to?.scheduledProgram;
+                    controller.asrunData?[fromIndex!].bookingnumber =
+                        to?.bookingnumber;
+                    controller.asrunData?[fromIndex!].scheduletime =
+                        to?.scheduletime;
+                    controller.asrunData?[fromIndex!].scheduledProgram =
+                        to?.scheduledProgram;
                     controller.asrunData?[fromIndex!].rosBand = to?.rosBand;
-                    controller.asrunData?[fromIndex!].programTime = to?.programTime;
-                    controller.asrunData?[fromIndex!].isMismatch = to?.isMismatch;
-                    controller.asrunData?[fromIndex!].scheduledate = to?.scheduledate;
-                    controller.asrunData?[fromIndex!].tapeDuration = to?.tapeDuration;
+                    controller.asrunData?[fromIndex!].programTime =
+                        to?.programTime;
+                    controller.asrunData?[fromIndex!].isMismatch =
+                        to?.isMismatch;
+                    controller.asrunData?[fromIndex!].scheduledate =
+                        to?.scheduledate;
+                    controller.asrunData?[fromIndex!].tapeDuration =
+                        to?.tapeDuration;
 
                     /// TO DATA
-                    controller.asrunData?[toIndex!].bookingnumber = from?.bookingnumber;
-                    controller.asrunData?[toIndex!].scheduletime = from?.scheduletime;
-                    controller.asrunData?[toIndex!].scheduledProgram = from?.scheduledProgram;
+                    controller.asrunData?[toIndex!].bookingnumber =
+                        from?.bookingnumber;
+                    controller.asrunData?[toIndex!].scheduletime =
+                        from?.scheduletime;
+                    controller.asrunData?[toIndex!].scheduledProgram =
+                        from?.scheduledProgram;
                     controller.asrunData?[toIndex!].rosBand = from?.rosBand;
-                    controller.asrunData?[toIndex!].programTime = from?.programTime;
-                    controller.asrunData?[toIndex!].isMismatch = from?.isMismatch;
-                    controller.asrunData?[toIndex!].scheduledate = from?.scheduledate;
-                    controller.asrunData?[toIndex!].tapeDuration = from?.tapeDuration;
+                    controller.asrunData?[toIndex!].programTime =
+                        from?.programTime;
+                    controller.asrunData?[toIndex!].isMismatch =
+                        from?.isMismatch;
+                    controller.asrunData?[toIndex!].scheduledate =
+                        from?.scheduledate;
+                    controller.asrunData?[toIndex!].tapeDuration =
+                        from?.tapeDuration;
                     controller.update(["fpcData"]);
                   },
                   showIcon: false,
@@ -515,27 +616,39 @@ class AsrunImportAdRevenueView extends GetView<AsrunImportController> {
   }
 
   paste({bool up = true}) {
-    if ((controller.gridStateManager?.currentSelectingRows ?? <PlutoRow>[]).isNotEmpty) {
+    if ((controller.gridStateManager?.currentSelectingRows ?? <PlutoRow>[])
+        .isNotEmpty) {
       print(controller.gridStateManager?.currentSelectingRows.length);
-      String fpcTime = (up ? controller.gridStateManager?.currentSelectingRows.last : controller.gridStateManager?.currentSelectingRows.first)
+      String fpcTime = (up
+              ? controller.gridStateManager?.currentSelectingRows.last
+              : controller.gridStateManager?.currentSelectingRows.first)
           ?.cells["fpctIme"]
           ?.value;
       String programCode = controller
-              .asrunData?[
-                  (up ? controller.gridStateManager?.currentSelectingRows.last : controller.gridStateManager?.currentSelectingRows.first)!.sortIdx]
+              .asrunData?[(up
+                      ? controller.gridStateManager?.currentSelectingRows.last
+                      : controller
+                          .gridStateManager?.currentSelectingRows.first)!
+                  .sortIdx]
               .programCode ??
           "";
 
-      String programName = (up ? controller.gridStateManager?.currentSelectingRows.last : controller.gridStateManager?.currentSelectingRows.first)
+      String programName = (up
+              ? controller.gridStateManager?.currentSelectingRows.last
+              : controller.gridStateManager?.currentSelectingRows.first)
           ?.cells["programName"]
           ?.value;
       print(fpcTime);
       print(programCode);
       print(programName);
-      for (var element in controller.gridStateManager?.currentSelectingRows ?? <PlutoRow>[]) {
-        controller.gridStateManager?.changeCellValue(element.cells["fpctIme"]!, fpcTime, force: true);
+      for (var element in controller.gridStateManager?.currentSelectingRows ??
+          <PlutoRow>[]) {
+        controller.gridStateManager
+            ?.changeCellValue(element.cells["fpctIme"]!, fpcTime, force: true);
         controller.asrunData?[element.sortIdx].fpctIme = fpcTime;
-        controller.gridStateManager?.changeCellValue(element.cells["programName"]!, programName, force: true);
+        controller.gridStateManager?.changeCellValue(
+            element.cells["programName"]!, programName,
+            force: true);
         controller.asrunData?[element.sortIdx].programName = programName;
         controller.asrunData?[element.sortIdx].programCode = programCode;
       }
@@ -543,7 +656,8 @@ class AsrunImportAdRevenueView extends GetView<AsrunImportController> {
   }
 
   showVerifyDialog(AsRunData asrunData) {
-    TextEditingController fpcTime = TextEditingController(text: asrunData.fpctIme);
+    TextEditingController fpcTime = TextEditingController(
+        text: asrunData.fpctIme ?? asrunData.telecasttime);
     DropDownValue? selectedProgram;
     return Get.defaultDialog(
       title: "Verify",
@@ -576,18 +690,25 @@ class AsrunImportAdRevenueView extends GetView<AsrunImportController> {
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
                   InputFields.formFieldNumberMask(
-                      isEnable: true, hintTxt: "FPC Time", controller: fpcTime, widthRatio: 0.12, isTime: true, paddingLeft: 0),
+                      isEnable: true,
+                      hintTxt: "FPC Time",
+                      controller: fpcTime,
+                      widthRatio: 0.12,
+                      isTime: true,
+                      paddingLeft: 0),
                   InputFields.formFieldNumberMask(
                       isEnable: false,
                       hintTxt: "From",
-                      controller: TextEditingController(text: asrunData.fpctIme),
+                      controller:
+                          TextEditingController(text: asrunData.fpctIme),
                       widthRatio: 0.12,
                       isTime: true,
                       paddingLeft: 0),
                   InputFields.formFieldNumberMask(
                       isEnable: false,
                       hintTxt: "To",
-                      controller: TextEditingController(text: asrunData.fpctIme),
+                      controller:
+                          TextEditingController(text: asrunData.fpctIme),
                       widthRatio: 0.12,
                       isTime: true,
                       paddingLeft: 0),
@@ -607,7 +728,8 @@ class AsrunImportAdRevenueView extends GetView<AsrunImportController> {
         btnText: "Verify",
         showIcon: false,
         callback: () {
-          controller.manualUpdateFPCTime(selectedProgram?.value, selectedProgram?.key, fpcTime.text, asrunData);
+          controller.manualUpdateFPCTime(selectedProgram?.value,
+              selectedProgram?.key, fpcTime.text, asrunData);
         },
       ),
     );
@@ -624,7 +746,8 @@ class AsrunImportAdRevenueView extends GetView<AsrunImportController> {
         height: Get.height * 0.80,
         width: Get.width / 2,
         child: DataGridShowOnlyKeys(
-          mapData: controllerX.viewFPCData?.map((e) => e.toJson()).toList() ?? [],
+          mapData:
+              controllerX.viewFPCData?.map((e) => e.toJson()).toList() ?? [],
           onload: (loadEvent) {
             controller.fpcGridStateManager = loadEvent.stateManager;
           },
@@ -633,8 +756,9 @@ class AsrunImportAdRevenueView extends GetView<AsrunImportController> {
           },
           mode: PlutoGridMode.selectWithOneTap,
           onRowDoubleTap: (rowEvent) {
-            controllerX.gridStateManager
-                ?.setFilter((element) => element.cells["fpctIme"]?.value.toString() == rowEvent.row.cells["starttime"]?.value.toString());
+            controllerX.gridStateManager?.setFilter((element) =>
+                element.cells["fpctIme"]?.value.toString() ==
+                rowEvent.row.cells["starttime"]?.value.toString());
           },
         ),
       ),
@@ -649,7 +773,9 @@ class AsrunImportAdRevenueView extends GetView<AsrunImportController> {
         btnText: "Filter",
         showIcon: false,
         callback: () {
-          controller.filterMainGrid(controller.viewFPCData?[controller.selectedFPCindex!].starttime ?? "");
+          controller.filterMainGrid(
+              controller.viewFPCData?[controller.selectedFPCindex!].starttime ??
+                  "");
         },
       ),
       radius: 10,
