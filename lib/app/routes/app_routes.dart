@@ -47,6 +47,7 @@ abstract class Routes {
   static const DATE_WISE_ERROR_SPOTS = _Paths.DATE_WISE_ERROR_SPOTS;
   static const DATE_WISE_FILLER_REPORT = _Paths.DATE_WISE_FILLER_REPORT;
   static const CREATIVE_TAG_ON = _Paths.CREATIVE_TAG_ON;
+  static const D_SERIES_SPECIFICATION = _Paths.D_SERIES_SPECIFICATION;
 }
 
 abstract class RoutesList {
@@ -112,6 +113,7 @@ abstract class _Paths {
   static const COMMERCIAL_MASTER = '/frmCommercialMaster';
   static const ASURN_IMPORT = '/asurn-import';
   static const R_O_IMPORT = '/frmROImport';
+  static const D_SERIES_SPECIFICATION = '/frmDSeriesSpecs';
   static const COMMON_DOCS = '/common-docs';
   static const BRAND_MASTER = '/frmBrandMaster';
   static const COMING_UP_MENU = '/frmComingUpMenuMaster';
