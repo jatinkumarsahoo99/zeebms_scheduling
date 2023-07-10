@@ -142,6 +142,8 @@ class CommercialMasterView extends StatelessWidget {
                                           width: 0.17,
                                           isEnable: controllerX.isEnable,
                                           autoFocus: true,
+
+
                                           focusNode: controllerX.tapeIdFocus
                                         ),
                                       ],
