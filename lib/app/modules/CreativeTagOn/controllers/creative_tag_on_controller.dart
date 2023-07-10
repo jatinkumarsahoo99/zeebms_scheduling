@@ -28,6 +28,9 @@ class CreativeTagOnController extends GetxController {
   void onClose() {
     super.onClose();
   }
+  formHandler(String string) {
+
+  }
 
   void increment() => count.value++;
 }
