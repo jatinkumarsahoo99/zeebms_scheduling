@@ -866,7 +866,6 @@ class SalesAuditNewController extends GetxController {
       documentKey = "SalesAudit " + (selectedLocation?.key??"") + (selectedChannel?.key??"") + '0' +DateFormat("yyyyMMdd").format( DateFormat("dd-MM-yyyy").parse(scheduledController.text)) ;
     }
 
-
    /* PlutoGridStateManager? viewDocsStateManger;
     try {
       LoadingDialog.call();

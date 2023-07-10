@@ -40,6 +40,13 @@ abstract class Routes {
   static const ASURN_IMPORT = _Paths.ASURN_IMPORT;
   static const R_O_IMPORT = _Paths.R_O_IMPORT;
   static const COMMON_DOCS = _Paths.COMMON_DOCS;
+  static const BRAND_MASTER = _Paths.BRAND_MASTER;
+  static const COMING_UP_MENU = _Paths.COMING_UP_MENU;
+  static const COMING_UP_NEXT_MENU = _Paths.COMING_UP_NEXT_MENU;
+  static const COMING_UP_TOMORROW_MENU = _Paths.COMING_UP_TOMORROW_MENU;
+  static const DATE_WISE_ERROR_SPOTS = _Paths.DATE_WISE_ERROR_SPOTS;
+  static const DATE_WISE_FILLER_REPORT = _Paths.DATE_WISE_FILLER_REPORT;
+  static const CREATIVE_TAG_ON = _Paths.CREATIVE_TAG_ON;
   static const D_SERIES_SPECIFICATION = _Paths.D_SERIES_SPECIFICATION;
 }
 
@@ -62,7 +69,12 @@ abstract class RoutesList {
     _Paths.IMPORT_DIGITEXT_RUN_ORDER,
     _Paths.COMMERCIAL_MASTER,
     _Paths.SALES_AUDIT_NOT_TELECAST_REPORT,
-    _Paths.SALES_AUDIT_NEW
+    _Paths.SALES_AUDIT_NEW,
+    _Paths.BRAND_MASTER,
+    _Paths.COMING_UP_MENU,
+    _Paths.COMING_UP_NEXT_MENU,
+    _Paths.DATE_WISE_ERROR_SPOTS,
+    _Paths.DATE_WISE_FILLER_REPORT,
   ];
 }
 
@@ -103,4 +115,11 @@ abstract class _Paths {
   static const R_O_IMPORT = '/frmROImport';
   static const D_SERIES_SPECIFICATION = '/frmDSeriesSpecs';
   static const COMMON_DOCS = '/common-docs';
+  static const BRAND_MASTER = '/frmBrandMaster';
+  static const COMING_UP_MENU = '/frmComingUpMenuMaster';
+  static const COMING_UP_NEXT_MENU = '/frmComingUpNextMaster';
+  static const COMING_UP_TOMORROW_MENU = '/frmComingUpTomorrowMaster';
+  static const DATE_WISE_ERROR_SPOTS = '/frmDateWiseErrorReport';
+  static const DATE_WISE_FILLER_REPORT = '/frmDateWiseFillerReport';
+  static const CREATIVE_TAG_ON = '/frmCreativeTagOnLink';
 }

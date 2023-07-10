@@ -2,12 +2,26 @@ import 'package:get/get.dart';
 
 import '../modules/AsrunImportAdRevenue/bindings/asrun_import_binding.dart';
 import '../modules/AuditStatus/bindings/audit_status_binding.dart';
+import '../modules/BrandMaster/bindings/brand_master_binding.dart';
+import '../modules/BrandMaster/views/brand_master_view.dart';
+import '../modules/ComingUpMenu/bindings/coming_up_menu_binding.dart';
+import '../modules/ComingUpMenu/views/coming_up_menu_view.dart';
+import '../modules/ComingUpNextMenu/bindings/coming_up_next_menu_binding.dart';
+import '../modules/ComingUpNextMenu/views/coming_up_next_menu_view.dart';
+import '../modules/ComingUpTomorrowMenu/bindings/coming_up_tomorrow_menu_binding.dart';
+import '../modules/ComingUpTomorrowMenu/views/coming_up_tomorrow_menu_view.dart';
 import '../modules/CommercialMaster/bindings/commercial_master_binding.dart';
 import '../modules/CommercialMaster/views/commercial_master_view.dart';
 import '../modules/CommonDocs/bindings/common_docs_binding.dart';
 import '../modules/CommonDocs/views/common_docs_view.dart';
 import '../modules/DSeriesSpecification/bindings/d_series_specification_binding.dart';
 import '../modules/DSeriesSpecification/views/DSeriesSpecificationView.dart';
+import '../modules/CreativeTagOn/bindings/creative_tag_on_binding.dart';
+import '../modules/CreativeTagOn/views/creative_tag_on_view.dart';
+import '../modules/DateWiseErrorSpots/bindings/date_wise_error_spots_binding.dart';
+import '../modules/DateWiseErrorSpots/views/date_wise_error_spots_view.dart';
+import '../modules/DateWiseFillerReport/bindings/date_wise_filler_report_binding.dart';
+import '../modules/DateWiseFillerReport/views/date_wise_filler_report_view.dart';
 import '../modules/EventSecondary/bindings/event_secondary_binding.dart';
 import '../modules/FillerMaster/bindings/filler_master_binding.dart';
 import '../modules/FinalAuditReportAfterTelecast/bindings/final_audit_report_after_telecast_binding.dart';
@@ -45,8 +59,8 @@ class AppPages {
   AppPages._();
   //https://app-scheduling-bms-dev.zeeconnect.in/frmCommercialMaster?loginCode=0iGe3vK5h2KGjfSKZTpmsQ%3D%3D&personalNo=xvmv9k3d1G7ierjaXRHiGA%3D%3D&formName=MgGRl5N4DW2tcWQscJpsp%2BIUElLFsJm5TsN5JpCXjHE%3D
   // static const INITIAL = Routes.ROS_DISTRIBUTION +
-  static const INITIAL = Routes.D_SERIES_SPECIFICATION +
-      "?personalNo=kW5Bkf17%2FS5YF7ML28FmVg%3D%3D&loginCode=1BWIoBKeDl7qDSAAhxvXsQ%3D%3D&formName=OI8ukDpPPVN0I2BEXu2h4nuFu%2BZm1ZRpvP8NL4XCXzQ%3D";
+  static const INITIAL = Routes.CREATIVE_TAG_ON +
+      "?personalNo=xvmv9k3d1G7ierjaXRHiGA%3D%3D&loginCode=0iGe3vK5h2KGjfSKZTpmsQ%3D%3D&formName=MgGRl5N4DW2tcWQscJpsp%2BIUElLFsJm5TsN5JpCXjHE%3D";
   static final routes = [
     GetPage(
       name: _Paths.HOME,
@@ -231,6 +245,41 @@ class AppPages {
       name: _Paths.COMMON_DOCS,
       page: () => const CommonDocsView(documentKey: ''),
       binding: CommonDocsBinding(),
+    ),
+    GetPage(
+      name: _Paths.BRAND_MASTER,
+      page: () => AuthGuard1(childName: _Paths.BRAND_MASTER),
+      binding: BrandMasterBinding(),
+    ),
+    GetPage(
+      name: _Paths.COMING_UP_MENU,
+      page: () => AuthGuard1(childName: _Paths.COMING_UP_MENU),
+      binding: ComingUpMenuBinding(),
+    ),
+    GetPage(
+      name: _Paths.COMING_UP_NEXT_MENU,
+      page: () => AuthGuard1(childName: _Paths.COMING_UP_NEXT_MENU),
+      binding: ComingUpNextMenuBinding(),
+    ),
+    GetPage(
+      name: _Paths.COMING_UP_TOMORROW_MENU,
+      page: () => AuthGuard1(childName: _Paths.COMING_UP_TOMORROW_MENU),
+      binding: ComingUpTomorrowMenuBinding(),
+    ),
+    GetPage(
+      name: _Paths.DATE_WISE_ERROR_SPOTS,
+      page: () => AuthGuard1(childName: _Paths.DATE_WISE_ERROR_SPOTS),
+      binding: DateWiseErrorSpotsBinding(),
+    ),
+    GetPage(
+      name: _Paths.DATE_WISE_FILLER_REPORT,
+      page: () => AuthGuard1(childName: _Paths.DATE_WISE_FILLER_REPORT),
+      binding: DateWiseFillerReportBinding(),
+    ),
+    GetPage(
+      name: _Paths.CREATIVE_TAG_ON,
+      page: () =>  AuthGuard1(childName: _Paths.CREATIVE_TAG_ON),
+      binding: CreativeTagOnBinding(),
     ),
   ];
 }
