@@ -24,7 +24,7 @@ class BrandMasterView extends StatelessWidget {
       body: Center(
         child: SizedBox(
           width: size.width * .72,
-          height: size.height * .8,
+          height: size.height * .84,
           child: Dialog(
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
