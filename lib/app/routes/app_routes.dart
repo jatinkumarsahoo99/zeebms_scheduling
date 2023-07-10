@@ -36,6 +36,8 @@ abstract class Routes {
   static const ASURN_IMPORT = _Paths.ASURN_IMPORT;
   static const R_O_IMPORT = _Paths.R_O_IMPORT;
   static const COMMON_DOCS = _Paths.COMMON_DOCS;
+  static const EXTRA_SPOTS_WITH_REMARK = _Paths.EXTRA_SPOTS_WITH_REMARK;
+  static const INVENTORY_STATUS_REPORT = _Paths.INVENTORY_STATUS_REPORT;
 }
 
 abstract class RoutesList {
@@ -95,4 +97,6 @@ abstract class _Paths {
   static const ASURN_IMPORT = '/asurn-import';
   static const R_O_IMPORT = '/frmROImport';
   static const COMMON_DOCS = '/common-docs';
+  static const EXTRA_SPOTS_WITH_REMARK = '/Frmextraspotswithremark';
+  static const INVENTORY_STATUS_REPORT = '/Frminventoryutilization';
 }

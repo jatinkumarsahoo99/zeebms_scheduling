@@ -7,11 +7,15 @@ import '../modules/CommercialMaster/views/commercial_master_view.dart';
 import '../modules/CommonDocs/bindings/common_docs_binding.dart';
 import '../modules/CommonDocs/views/common_docs_view.dart';
 import '../modules/EventSecondary/bindings/event_secondary_binding.dart';
+import '../modules/ExtraSpotsWithRemark/bindings/extra_spots_with_remark_binding.dart';
+import '../modules/ExtraSpotsWithRemark/views/extra_spots_with_remark_view.dart';
 import '../modules/FillerMaster/bindings/filler_master_binding.dart';
 import '../modules/FinalAuditReportAfterTelecast/bindings/final_audit_report_after_telecast_binding.dart';
 import '../modules/FinalAuditReportBeforeLog/bindings/final_audit_report_before_log_binding.dart';
 import '../modules/FpcMismatch/bindings/fpc_mismatch_binding.dart';
 import '../modules/ImportDigitextRunOrder/bindings/import_digitext_run_order_binding.dart';
+import '../modules/InventoryStatusReport/bindings/inventory_status_report_binding.dart';
+import '../modules/InventoryStatusReport/views/inventory_status_report_view.dart';
 import '../modules/LogAdditions/bindings/log_additions_binding.dart';
 import '../modules/MamWorkOrders/bindings/mam_work_orders_binding.dart';
 import '../modules/PromoMaster/bindings/promo_master_binding.dart';
@@ -43,7 +47,7 @@ class AppPages {
   AppPages._();
   //https://app-scheduling-bms-dev.zeeconnect.in/frmCommercialMaster?loginCode=0iGe3vK5h2KGjfSKZTpmsQ%3D%3D&personalNo=xvmv9k3d1G7ierjaXRHiGA%3D%3D&formName=MgGRl5N4DW2tcWQscJpsp%2BIUElLFsJm5TsN5JpCXjHE%3D
   // static const INITIAL = Routes.ROS_DISTRIBUTION +
-  static const INITIAL = Routes.SALES_AUDIT_NEW +
+  static const INITIAL = Routes.INVENTORY_STATUS_REPORT +
       "?personalNo=xvmv9k3d1G7ierjaXRHiGA%3D%3D&loginCode=0iGe3vK5h2KGjfSKZTpmsQ%3D%3D&formName=MgGRl5N4DW2tcWQscJpsp%2BIUElLFsJm5TsN5JpCXjHE%3D";
   static final routes = [
     GetPage(
@@ -223,6 +227,16 @@ class AppPages {
       name: _Paths.COMMON_DOCS,
       page: () => const CommonDocsView(documentKey: ''),
       binding: CommonDocsBinding(),
+    ),
+    GetPage(
+      name: _Paths.EXTRA_SPOTS_WITH_REMARK,
+      page: () => AuthGuard1(childName: _Paths.EXTRA_SPOTS_WITH_REMARK),
+      binding: ExtraSpotsWithRemarkBinding(),
+    ),
+    GetPage(
+      name: _Paths.INVENTORY_STATUS_REPORT,
+      page: () => const InventoryStatusReportView(),
+      binding: InventoryStatusReportBinding(),
     ),
   ];
 }
