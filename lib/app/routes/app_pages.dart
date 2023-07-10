@@ -6,6 +6,8 @@ import '../modules/CommercialMaster/bindings/commercial_master_binding.dart';
 import '../modules/CommercialMaster/views/commercial_master_view.dart';
 import '../modules/CommonDocs/bindings/common_docs_binding.dart';
 import '../modules/CommonDocs/views/common_docs_view.dart';
+import '../modules/DSeriesSpecification/bindings/d_series_specification_binding.dart';
+import '../modules/DSeriesSpecification/views/DSeriesSpecificationView.dart';
 import '../modules/EventSecondary/bindings/event_secondary_binding.dart';
 import '../modules/FillerMaster/bindings/filler_master_binding.dart';
 import '../modules/FinalAuditReportAfterTelecast/bindings/final_audit_report_after_telecast_binding.dart';
@@ -43,8 +45,8 @@ class AppPages {
   AppPages._();
   //https://app-scheduling-bms-dev.zeeconnect.in/frmCommercialMaster?loginCode=0iGe3vK5h2KGjfSKZTpmsQ%3D%3D&personalNo=xvmv9k3d1G7ierjaXRHiGA%3D%3D&formName=MgGRl5N4DW2tcWQscJpsp%2BIUElLFsJm5TsN5JpCXjHE%3D
   // static const INITIAL = Routes.ROS_DISTRIBUTION +
-  static const INITIAL = Routes.SALES_AUDIT_NEW +
-      "?personalNo=xvmv9k3d1G7ierjaXRHiGA%3D%3D&loginCode=0iGe3vK5h2KGjfSKZTpmsQ%3D%3D&formName=MgGRl5N4DW2tcWQscJpsp%2BIUElLFsJm5TsN5JpCXjHE%3D";
+  static const INITIAL = Routes.D_SERIES_SPECIFICATION +
+      "?personalNo=kW5Bkf17%2FS5YF7ML28FmVg%3D%3D&loginCode=1BWIoBKeDl7qDSAAhxvXsQ%3D%3D&formName=OI8ukDpPPVN0I2BEXu2h4nuFu%2BZm1ZRpvP8NL4XCXzQ%3D";
   static final routes = [
     GetPage(
       name: _Paths.HOME,
@@ -218,6 +220,12 @@ class AppPages {
       name: _Paths.R_O_IMPORT,
       page: () => AuthGuard1(childName: _Paths.R_O_IMPORT),
       binding: ROImportBinding(),
+    ),
+    GetPage(
+      name: _Paths.D_SERIES_SPECIFICATION,
+      // page: () => DSeriesSpecificationView(),
+      page: () => AuthGuard1(childName: _Paths.D_SERIES_SPECIFICATION),
+      // binding: DSeriesSpecificationBinding(),
     ),
     GetPage(
       name: _Paths.COMMON_DOCS,
