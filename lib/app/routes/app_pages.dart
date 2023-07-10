@@ -4,6 +4,8 @@ import '../modules/AsrunImportAdRevenue/bindings/asrun_import_binding.dart';
 import '../modules/AuditStatus/bindings/audit_status_binding.dart';
 import '../modules/CommercialMaster/bindings/commercial_master_binding.dart';
 import '../modules/CommercialMaster/views/commercial_master_view.dart';
+import '../modules/CommercialTimeUpdate/bindings/commercial_time_update_binding.dart';
+import '../modules/CommercialTimeUpdate/views/commercial_time_update_view.dart';
 import '../modules/CommonDocs/bindings/common_docs_binding.dart';
 import '../modules/CommonDocs/views/common_docs_view.dart';
 import '../modules/EventSecondary/bindings/event_secondary_binding.dart';
@@ -237,6 +239,11 @@ class AppPages {
       name: _Paths.INVENTORY_STATUS_REPORT,
       page: () => const InventoryStatusReportView(),
       binding: InventoryStatusReportBinding(),
+    ),
+    GetPage(
+      name: _Paths.COMMERCIAL_TIME_UPDATE,
+      page: () => const CommercialTimeUpdateView(),
+      binding: CommercialTimeUpdateBinding(),
     ),
   ];
 }
