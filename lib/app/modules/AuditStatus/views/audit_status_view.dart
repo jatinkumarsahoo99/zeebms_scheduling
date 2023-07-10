@@ -12,9 +12,8 @@ import 'package:get/get.dart';
 
 import '../controllers/audit_status_controller.dart';
 
-class AuditStatusView extends StatelessWidget {
-  AuditStatusView({Key? key}) : super(key: key);
-  AuditStatusController controller = Get.put(AuditStatusController());
+class AuditStatusView extends GetView<AuditStatusController> {
+  AuditStatusController controller = Get.put<AuditStatusController>(AuditStatusController());
 
   @override
   Widget build(BuildContext context) {
@@ -84,15 +83,19 @@ class AuditStatusView extends StatelessWidget {
                       : DataGridShowOnlyKeys(
                           mapData: gridcontroller.bookingData,
                           formatDate: false,
+                          exportFileName: "Audit Status",
                           colorCallback: (colorEvent) {
                             return gridcontroller.getColor(gridcontroller.bookingData[colorEvent.rowIdx]);
                           },
                           onRowDoubleTap: (event) {
-                            if (controller.currentType.value == "Cancellation") {
+                            if (controller.currentType.value == "Cancelation") {
                               controller.showECancel(event.rowIdx);
                             }
-                            if (controller.currentType.value == "Additions") {
+                            if (controller.currentType.value == "Addition") {
                               controller.showEbooking(event.rowIdx);
+                            }
+                            if (controller.currentType.value == "Reschedule") {
+                              controller.showEReschdule(event.rowIdx);
                             }
                           },
                         );
@@ -139,13 +142,21 @@ class AuditStatusView extends StatelessWidget {
 
                                       // isEnabled: btn['isDisabled'],
                                       callback: () {
-                                        btncontroller.clearPage1();
+                                        Get.delete<AuditStatusController>();
+                                        Get.find<HomeController>().clearPage1();
                                       },
                                     )
                                   : FormButtonWrapper(
                                       btnText: btn["name"],
+                                      isEnabled: btn["name"] != "Delete",
                                       // isEnabled: btn['isDisabled'],
-                                      callback: null,
+                                      callback: () {
+                                        btn["name"] == "Refesh"
+                                            ? controller.showBtnData()
+                                            : btn["name"] == "Delete"
+                                                ? null
+                                                : print(btn["name"]);
+                                      },
                                     ),
                       ],
                     ),

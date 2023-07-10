@@ -1,5 +1,6 @@
 import 'package:bms_scheduling/app/modules/AsrunImportAdRevenue/bindings/arun_data.dart';
 import 'package:bms_scheduling/app/modules/AsrunImportAdRevenue/bindings/asrun_fpc_data.dart';
+import 'package:bms_scheduling/app/providers/ExportData.dart';
 import 'package:bms_scheduling/app/providers/extensions/string_extensions.dart';
 import 'package:bms_scheduling/widgets/LoadingDialog.dart';
 import 'package:file_picker/file_picker.dart';
@@ -45,6 +46,7 @@ class AsrunImportController extends GetxController {
     "DailyFPC": false,
     "Amagi": false
   });
+  var drgabbleDialog = Rxn<Widget>();
 
   //  [
   //   {"name": "FPC", "value": false},
@@ -59,6 +61,11 @@ class AsrunImportController extends GetxController {
   var isStandby = RxBool(false);
   var isMy = RxBool(true);
   var isInsertAfter = RxBool(false);
+  var fromSwap = Rxn<AsRunData>();
+  var toSwap = Rxn<AsRunData>();
+  int? fromSwapIndex;
+  int? toSwapIndex;
+
   TextEditingController selectedDate = TextEditingController();
   TextEditingController startTime_ = TextEditingController();
 
@@ -121,15 +128,15 @@ class AsrunImportController extends GetxController {
           if (map is Map && map.containsKey("asRunData")) {
             print("list found");
 
-            if (map['asRunData'] != null) {
+            if (map['asRunData']["lstAsrunData"] != null) {
               asrunData = <AsRunData>[];
-              map['asRunData'].forEach((v) {
+              map['asRunData']["lstAsrunData"].forEach((v) {
                 asrunData!.add(AsRunData.fromJson(v));
               });
             }
-
+            startTime_.text = map['asRunData']["startTime"];
             update(["fpcData"]);
-            Get.find<HomeController>().update(["transButtons"]);
+            update(["transButtons"]);
           }
         });
   }
@@ -209,8 +216,10 @@ class AsrunImportController extends GetxController {
                   asrunData?[gridStateManager!.currentRowIdx!].programCode,
               "BookingNumber":
                   asrunData?[gridStateManager!.currentRowIdx!].bookingnumber,
-              "BookingDetailcode": asrunData?[gridStateManager!.currentRowIdx!]
-                  .bookingdetailcode,
+              "BookingDetailcode": (asrunData?[gridStateManager!.currentRowIdx!]
+                          .bookingdetailcode ??
+                      "")
+                  .toString(),
               "CommercialCode": "",
               "ReconKey": ""
             }
@@ -218,9 +227,14 @@ class AsrunImportController extends GetxController {
         },
         fun: (map) {
           if (map is Map &&
-              map.containsKey("progMismatch") &&
-              map["progMismatch"]["message"] != null) {
-            LoadingDialog.callInfoMessage(map["progMismatch"]["message"]);
+              map.containsKey("asrunTempDetails") &&
+              map["asrunTempDetails"]["lstSaveTempDetailResponse"] != null) {
+            asrunData = <AsRunData>[];
+            map["asrunTempDetails"]["lstSaveTempDetailResponse"].forEach((v) {
+              asrunData!.add(AsRunData.fromJson(v));
+            });
+            update(["fpcData"]);
+            update(["transButtons"]);
           }
         });
   }
@@ -262,27 +276,21 @@ class AsrunImportController extends GetxController {
           "Channelcode": selectChannel?.key,
           "ObjProgList": [
             FPCProgramList.convertAsRunDataToFPCProgramList(
-                    asrunData![gridStateManager?.currentRowIdx ?? 0])
+                    asrunData![gridStateManager?.currentRow?.sortIdx ?? 0])
                 .toJson()
           ]
         },
         fun: (map) {
           if (map is Map && map.containsKey("asRunData")) {
             if (map is Map && map.containsKey("fpcProgramData")) {
-              gridStateManager?.changeCellValue(
-                  gridStateManager!.currentRow!.cells["programName"]!,
-                  map["fpcProgramData"][0]["programName"],
-                  force: true);
-              asrunData![gridStateManager!.currentRow!.sortIdx].fpctIme =
-                  map["fpcProgramData"][0]["fpcTime"];
-              asrunData![gridStateManager!.currentRow!.sortIdx].programCode =
-                  map["fpcProgramData"][0]["programCode"];
-              asrunData![gridStateManager!.currentRow!.sortIdx].programName =
-                  map["fpcProgramData"][0]["programName"];
-              gridStateManager?.changeCellValue(
-                  gridStateManager!.currentRow!.cells["fpctIme"]!,
-                  map["fpcProgramData"][0]["fpcTime"],
-                  force: true);
+              var currentCell = gridStateManager!.currentCell;
+              int index = gridStateManager!.currentRow!.sortIdx;
+              asrunData?[index].programName =
+                  viewFPCData?[selectedFPCindex!].programName;
+              asrunData?[index].programCode =
+                  viewFPCData?[selectedFPCindex!].programcode;
+              asrunData?[index].fpctIme =
+                  viewFPCData?[selectedFPCindex!].starttime;
 
               // if (map['asRunData'] != null) {
               //   asrunData = <AsRunData>[];
@@ -291,7 +299,9 @@ class AsrunImportController extends GetxController {
               //   });
               // }
 
-              // update(["fpcData"]);
+              update(["fpcData"]);
+              gridStateManager?.setCurrentCell(
+                  gridStateManager!.currentCell, index);
             }
 
             // if (map['asRunData'] != null) {
@@ -306,13 +316,18 @@ class AsrunImportController extends GetxController {
         });
   }
 
-  manualUpdateFPCTime(programName, programCode, fpcTime, AsRunData asRunData) {
+  manualUpdateFPCTime(
+    programName,
+    programCode,
+    fpcTime,
+    AsRunData asRunData,
+  ) {
     Get.find<ConnectorControl>().POSTMETHOD(
         api: ApiFactory.AsrunImport_UpdateFPCTime,
         json: {
           "programName": programName,
           "fpcTime": fpcTime,
-          "programCode": programCode,
+          "programCode": programName,
           "LocationCode": selectLocation?.key,
           "Channelcode": selectChannel?.key,
           "ObjProgList": [
@@ -321,20 +336,32 @@ class AsrunImportController extends GetxController {
         },
         fun: (map) {
           if (map is Map && map.containsKey("fpcProgramData")) {
-            gridStateManager?.changeCellValue(
-                gridStateManager!.currentRow!.cells["programName"]!,
-                map["fpcProgramData"][0]["programName"],
-                force: true);
-            asrunData![gridStateManager!.currentRow!.sortIdx].fpctIme =
-                map["fpcProgramData"][0]["fpcTime"];
-            asrunData![gridStateManager!.currentRow!.sortIdx].programCode =
-                map["fpcProgramData"][0]["programCode"];
-            asrunData![gridStateManager!.currentRow!.sortIdx].programName =
-                map["fpcProgramData"][0]["programName"];
-            gridStateManager?.changeCellValue(
-                gridStateManager!.currentRow!.cells["fpctIme"]!,
-                map["fpcProgramData"][0]["fpcTime"],
-                force: true);
+            int index = gridStateManager!.currentRow!.sortIdx;
+            asrunData?[index].programName = programName;
+            asrunData?[index].programCode = programCode;
+            asrunData?[index].fpctIme = fpcTime;
+            for (var i = 0; i < asrunData!.length; i++) {
+              if ((asrunData?[i].fpctIme == null ||
+                      asrunData?[i].fpctIme == "") &&
+                  i < gridStateManager!.currentRow!.sortIdx) {
+                asrunData?[i].fpctIme = fpcTime;
+              }
+            }
+
+            // gridStateManager?.changeCellValue(
+            //     gridStateManager!.currentRow!.cells["programName"]!,
+            //     map["fpcProgramData"][0]["programName"],
+            //     force: true);
+            // asrunData![gridStateManager!.currentRow!.sortIdx].fpctIme =
+            //     map["fpcProgramData"][0]["fpcTime"] ?? "";
+            // asrunData![gridStateManager!.currentRow!.sortIdx].programCode =
+            //     map["fpcProgramData"][0]["programCode"] ?? "";
+            // asrunData![gridStateManager!.currentRow!.sortIdx].programName =
+            //     map["fpcProgramData"][0]["programName"] ?? "";
+            // gridStateManager?.changeCellValue(
+            //     gridStateManager!.currentRow!.cells["fpctIme"]!,
+            //     map["fpcProgramData"][0]["fpcTime"] ?? "",
+            //     force: true);
 
             // if (map['asRunData'] != null) {
             //   asrunData = <AsRunData>[];
@@ -343,7 +370,7 @@ class AsrunImportController extends GetxController {
             //   });
             // }
 
-            // update(["fpcData"]);
+            update(["fpcData"]);
           }
         });
   }
@@ -430,7 +457,7 @@ class AsrunImportController extends GetxController {
             }
           }
 
-          Get.find<HomeController>().update(["transButtons"]);
+          update(["transButtons"]);
         });
   }
 
@@ -463,12 +490,21 @@ class AsrunImportController extends GetxController {
         },
         fun: (map) {
           if (map is Map && map.containsKey("asrunDetails")) {
+            Map asrundeatils = map["asrunDetails"];
+
             if (map["asrunDetails"]["isError"]) {
               LoadingDialog.callErrorMessage1(
                   msg: map["asrunDetails"]["errorMessage"]);
             } else {
               LoadingDialog.callDataSaved(
                   msg: map["asrunDetails"]["genericMessage"]);
+            }
+            if (asrundeatils["asrunSaveResponseGFK"] != null) {
+              if (asrundeatils["asrunSaveResponseGFK"]["isGFK"]) {
+                ExportData().exportFilefromBase64(
+                    asrundeatils["asrunSaveResponseGFK"]["fileBytes"],
+                    asrundeatils["asrunSaveResponseGFK"]["fileName"]);
+              }
             }
 
             // if (map['asRunData'] != null) {

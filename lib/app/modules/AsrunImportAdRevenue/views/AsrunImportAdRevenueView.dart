@@ -4,6 +4,7 @@ import 'package:bms_scheduling/app/modules/AsrunImportAdRevenue/bindings/arun_da
 import 'package:bms_scheduling/app/providers/DataGridMenu.dart';
 import 'package:bms_scheduling/widgets/DataGridShowOnly.dart';
 import 'package:bms_scheduling/widgets/LoadingDialog.dart';
+import 'package:bms_scheduling/widgets/floating_dialog.dart';
 import 'package:flutter/material.dart';
 
 import 'package:get/get.dart';
@@ -30,6 +31,11 @@ class AsrunImportAdRevenueView extends GetView<AsrunImportController> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      floatingActionButton: Obx(() => controller.drgabbleDialog.value != null
+          ? DraggableFab(
+              child: controller.drgabbleDialog.value!,
+            )
+          : SizedBox()),
       backgroundColor: Colors.grey[50],
       body: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
@@ -140,13 +146,12 @@ class AsrunImportAdRevenueView extends GetView<AsrunImportController> {
                         ],
                       ),
                     ),
-                  InputFields.formFieldNumberMask(
-                      isEnable: false,
-                      hintTxt: "Start Time",
-                      controller: controllerX.startTime_,
-                      widthRatio: 0.09,
-                      isTime: true,
-                      paddingLeft: 0),
+                  InputFields.formField1(
+                    isEnable: false,
+                    hintTxt: "Start Time",
+                    controller: controllerX.startTime_,
+                    width: 0.09,
+                  ),
                 ],
               ),
             ),
@@ -164,6 +169,7 @@ class AsrunImportAdRevenueView extends GetView<AsrunImportController> {
                 color: Colors.white,
                 child: (controller.asrunData != null)
                     ? DataGridShowOnlyKeys(
+                        exportFileName: "Asrun Import",
                         // onFocusChange: (value) {
                         //   // controllerX.gridStateManager!.setGridMode(PlutoGridMode.selectWithOneTap);
                         //   // controllerX.selectedPlutoGridMode = PlutoGridMode.selectWithOneTap;
@@ -197,18 +203,23 @@ class AsrunImportAdRevenueView extends GetView<AsrunImportController> {
                         // hideKeys: ["color", "modifed"],
                         showSrNo: true,
                         colorCallback: (colorContext) {
-                          if (controller.asrunData?[colorContext.rowIdx] !=
-                              null) {
-                            try {
-                              return Color(int.parse(
-                                  "0x${controller.asrunData?[colorContext.rowIdx].backColor}"));
-                            } catch (e) {
-                              return Colors.white;
-                            }
-                          } else {
+                          try {
+                            return Color(int.parse(
+                                "0x${colorContext.row.cells["backColor"]!.value}"));
+                          } catch (e) {
                             return Colors.white;
                           }
                         },
+                        hideCode: false,
+                        hideKeys: [
+                          "backColor",
+                          "foreColor",
+                          "vtr",
+                          "ch",
+                          "programTime",
+                          "scheduledate",
+                          "programCode"
+                        ],
                         // mode: PlutoGridMode.selectWithOneTap,
                         // colorCallback: (PlutoRowColorContext plutoContext) {
                         //   // return Color(controllerX.transmissionLogList![plutoContext.rowIdx].colorNo ?? Colors.white.value);
@@ -256,7 +267,6 @@ class AsrunImportAdRevenueView extends GetView<AsrunImportController> {
           ),
           // Expanded(child: Container(),),
           GetBuilder<HomeController>(
-              id: "transButtons",
               init: Get.find<HomeController>(),
               builder: (btncontroller) {
                 /* PermissionModel formPermissions = Get.find<MainController>()
@@ -266,78 +276,85 @@ class AsrunImportAdRevenueView extends GetView<AsrunImportController> {
                 });*/
                 if (btncontroller.asurunImportButtoons != null) {
                   return Card(
-                    margin: EdgeInsets.fromLTRB(4, 4, 4, 0),
-                    shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.only(
-                          topLeft: Radius.circular(10),
-                          topRight: Radius.circular(10)),
-                    ),
-                    child: Container(
-                      width: Get.width,
-                      padding: const EdgeInsets.all(8.0),
-                      child: Wrap(
-                        // buttonHeight: 20,
-                        spacing: 10,
-                        // buttonHeight: 20,
-                        alignment: WrapAlignment.start,
-                        // pa
-                        children: [
-                          for (var btn in btncontroller.asurunImportButtoons!)
-                            FormButtonWrapper(
-                              btnText: btn["name"],
-                              isEnabled: btn["name"] == "Import"
-                                  ? (controllerX.asrunData ?? []).isEmpty
-                                      ? true
-                                      : false
-                                  : null,
-                              showIcon: false,
-                              // isEnabled: btn['isDisabled'],
-                              callback: /*btn["name"] != "Delete" &&
+                      margin: EdgeInsets.fromLTRB(4, 4, 4, 0),
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.only(
+                            topLeft: Radius.circular(10),
+                            topRight: Radius.circular(10)),
+                      ),
+                      child: GetBuilder<AsrunImportController>(
+                          init: controllerX,
+                          id: "transButtons",
+                          builder: (controller) {
+                            return Container(
+                              width: Get.width,
+                              padding: const EdgeInsets.all(8.0),
+                              child: Wrap(
+                                // buttonHeight: 20,
+                                spacing: 10,
+                                // buttonHeight: 20,
+                                alignment: WrapAlignment.start,
+                                // pa
+                                children: [
+                                  for (var btn
+                                      in btncontroller.asurunImportButtoons!)
+                                    FormButtonWrapper(
+                                      btnText: btn["name"],
+                                      isEnabled: buttonVisibilty(btn["name"]),
+                                      showIcon: false,
+                                      // isEnabled: btn['isDisabled'],
+                                      callback: /*btn["name"] != "Delete" &&
                                       Utils.btnAccessHandler2(btn['name'],
                                               controller, formPermissions) ==
                                           null
                                   ? null
                                   :*/
-                                  () => formHandler(btn['name']),
-                            ),
-                          InkWell(
-                            child: Icon(Icons.arrow_upward),
-                            onTap: () {
-                              if (controller.selectedFPCindex == 0) {
-                                controller.selectedFPCindex =
-                                    controllerX.gridStateManager?.rows.length;
-                              } else {
-                                controller.selectedFPCindex =
-                                    (controller.selectedFPCindex ?? 1) - 1;
-                              }
-                              controller.filterMainGrid(controller
-                                      .viewFPCData?[
-                                          controller.selectedFPCindex ?? 0]
-                                      .starttime ??
-                                  "");
-                            },
-                          ),
-                          InkWell(
-                            child: Icon(Icons.arrow_downward),
-                            onTap: () {
-                              if (controllerX.gridStateManager?.rows.length ==
-                                  controller.selectedFPCindex) {
-                                controller.selectedFPCindex = 0;
-                              } else {
-                                controller.selectedFPCindex =
-                                    (controller.selectedFPCindex ?? 0) + 1;
-                              }
-                              controller.filterMainGrid(controller
-                                      .viewFPCData?[
-                                          controller.selectedFPCindex ?? 0]
-                                      .starttime ??
-                                  "");
-                            },
-                          ),
-                        ],
-                      ),
-                    ),
-                  );
+                                          () => formHandler(btn['name']),
+                                    ),
+                                  InkWell(
+                                    child: Icon(Icons.arrow_upward),
+                                    onTap: () {
+                                      if (controller.selectedFPCindex == 0) {
+                                        controller.selectedFPCindex =
+                                            controllerX
+                                                .gridStateManager?.rows.length;
+                                      } else {
+                                        controller.selectedFPCindex =
+                                            (controller.selectedFPCindex ?? 1) -
+                                                1;
+                                      }
+                                      controller.filterMainGrid(controller
+                                              .viewFPCData?[
+                                                  controller.selectedFPCindex ??
+                                                      0]
+                                              .starttime ??
+                                          "");
+                                    },
+                                  ),
+                                  InkWell(
+                                    child: Icon(Icons.arrow_downward),
+                                    onTap: () {
+                                      if (controllerX
+                                              .gridStateManager?.rows.length ==
+                                          controller.selectedFPCindex) {
+                                        controller.selectedFPCindex = 0;
+                                      } else {
+                                        controller.selectedFPCindex =
+                                            (controller.selectedFPCindex ?? 0) +
+                                                1;
+                                      }
+                                      controller.filterMainGrid(controller
+                                              .viewFPCData?[
+                                                  controller.selectedFPCindex ??
+                                                      0]
+                                              .starttime ??
+                                          "");
+                                    },
+                                  ),
+                                ],
+                              ),
+                            );
+                          }));
                 } else {
                   return Container();
                 }
@@ -347,19 +364,40 @@ class AsrunImportAdRevenueView extends GetView<AsrunImportController> {
     );
   }
 
+  buttonVisibilty(btn) {
+    switch (btn) {
+      case "Import":
+        return (controllerX.asrunData ?? []).isEmpty ? true : false;
+
+      case "Commercials":
+      case "Error":
+      case "SP Verify":
+      case "Swap":
+      case "Paste Up":
+      case "Paste Down":
+        return (controllerX.asrunData ?? []).isEmpty ? false : true;
+
+      default:
+        return null;
+    }
+  }
+
   formHandler(btn) {
     switch (btn) {
       case "Commercials":
-        controller.updateFPCTime();
+        controller.saveTempDetails();
         break;
       case "Save":
         controller.checkMissingAsrun();
         break;
       case "SP Verify":
         showVerifyDialog(controller
-            .asrunData![controller.gridStateManager?.currentRowIdx ?? 0]);
+            .asrunData![controller.gridStateManager?.currentRow?.sortIdx ?? 0]);
         break;
 
+      case "Swap":
+        showSwap();
+        break;
       case "View FPC":
         showFPCDialog(Get.context);
         break;
@@ -375,7 +413,269 @@ class AsrunImportAdRevenueView extends GetView<AsrunImportController> {
       case "Error":
         controller.checkError();
         break;
+      case "Clear":
+        Get.delete<AsrunImportController>();
+        Get.find<HomeController>().clearPage1();
+        break;
     }
+  }
+
+  showSwap() {
+    controller.drgabbleDialog?.value = Card(
+      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(5)),
+      child: Container(
+        height: Get.height * .35,
+        width: Get.width * .40,
+        child: Column(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            Expanded(
+                child: Container(
+              decoration: BoxDecoration(border: Border.all(color: Colors.grey)),
+            )),
+            Obx(() => Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                  crossAxisAlignment: CrossAxisAlignment.end,
+                  children: [
+                    FormButtonWrapper(
+                        btnText: "...",
+                        showIcon: false,
+                        callback: () {
+                          print(
+                              controller.gridStateManager!.currentRow!.sortIdx);
+                          if (controller.gridStateManager?.currentRow != null) {
+                            if (controller
+                                    .asrunData?[controller
+                                        .gridStateManager!.currentRow!.sortIdx]
+                                    .eventtype
+                                    ?.toLowerCase() !=
+                                "c") {
+                              LoadingDialog.callInfoMessage(
+                                  "Only Commericial Events Are Allowed for Swap");
+                            } else {
+                              controller.fromSwap.value = controller.asrunData?[
+                                  controller
+                                      .gridStateManager!.currentRow!.sortIdx];
+                              controller.fromSwapIndex = controller
+                                  .gridStateManager!.currentRow!.sortIdx;
+                            }
+                          }
+                        }),
+                    InputFields.formFieldNumberMask(
+                        isEnable: false,
+                        hintTxt: "",
+                        controller: TextEditingController(
+                            text: controller.fromSwap.value?.telecasttime),
+                        widthRatio: 0.12,
+                        isTime: true,
+                        paddingLeft: 0),
+                    InputFields.formField1(
+                        isEnable: false,
+                        width: 0.12,
+                        hintTxt: "",
+                        controller: TextEditingController(
+                            text: controller.fromSwap.value?.tapeId)),
+                    InputFields.formField1(
+                        isEnable: false,
+                        width: 0.09,
+                        hintTxt: "",
+                        controller: TextEditingController(
+                            text: controller.fromSwap.value?.eventNumber
+                                .toString()))
+                  ],
+                )),
+            SizedBox(
+              height: 5,
+            ),
+            Obx(() => Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                  crossAxisAlignment: CrossAxisAlignment.end,
+                  children: [
+                    FormButtonWrapper(
+                      btnText: "...",
+                      showIcon: false,
+                      callback: () {
+                        print(controller.gridStateManager!.currentRow!.sortIdx);
+                        if (controller.gridStateManager?.currentRow != null) {
+                          if (controller
+                                  .asrunData?[controller
+                                      .gridStateManager!.currentRow!.sortIdx]
+                                  .eventtype
+                                  ?.toLowerCase() !=
+                              "c") {
+                            LoadingDialog.callInfoMessage(
+                                "Only Commericial Events Are Allowed for Swap");
+                          } else if (controller
+                                  .asrunData?[controller
+                                      .gridStateManager!.currentRow!.sortIdx]
+                                  .tapeId !=
+                              controller.fromSwap.value?.tapeId) {
+                            LoadingDialog.callInfoMessage(
+                                "Only Matching Tapes are allowed for Swap");
+                          } else {
+                            controller.toSwap.value = controller.asrunData?[
+                                controller
+                                    .gridStateManager!.currentRow!.sortIdx];
+                            controller.toSwapIndex = controller
+                                .gridStateManager!.currentRow!.sortIdx;
+                          }
+                        }
+                      },
+                    ),
+                    InputFields.formFieldNumberMask(
+                        isEnable: false,
+                        hintTxt: "",
+                        controller: TextEditingController(
+                            text: controller.toSwap.value?.telecasttime ?? ""),
+                        widthRatio: 0.12,
+                        isTime: true,
+                        paddingLeft: 0),
+                    InputFields.formField1(
+                        isEnable: false,
+                        width: 0.12,
+                        hintTxt: "",
+                        controller: TextEditingController(
+                            text: controller.toSwap.value?.tapeId ?? "")),
+                    InputFields.formField1(
+                        isEnable: false,
+                        width: 0.09,
+                        hintTxt: "",
+                        controller: TextEditingController(
+                            text: (controller.toSwap.value?.eventNumber ?? "")
+                                .toString()))
+                  ],
+                )),
+            SizedBox(
+              height: 5,
+            ),
+            Row(
+              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+              children: [
+                FormButtonWrapper(
+                  btnText: "Swap",
+                  callback: () {
+                    int? fromIndex = controller.asrunData?.indexWhere(
+                        (element) =>
+                            controller.fromSwap.value?.eventNumber ==
+                            element.eventNumber);
+                    int? toIndex = controller.asrunData?.indexWhere((element) =>
+                        controller.toSwap.value?.eventNumber ==
+                        element.eventNumber);
+
+                    var from = controller.fromSwap.value;
+                    var to = controller.toSwap.value;
+                    PlutoRow fromRow =
+                        controller.gridStateManager!.rows[fromIndex!];
+                    PlutoRow toRow =
+                        controller.gridStateManager!.rows[toIndex!];
+                    controller.asrunData?[fromIndex].bookingnumber =
+                        to?.bookingnumber;
+                    controller.gridStateManager?.changeCellValue(
+                        fromRow.cells["bookingnumber"]!, to?.bookingnumber,
+                        notify: true);
+                    controller.asrunData?[fromIndex].scheduletime =
+                        to?.scheduletime;
+                    controller.gridStateManager?.changeCellValue(
+                        fromRow.cells["scheduletime"]!, to?.scheduletime,
+                        notify: true);
+                    controller.asrunData?[fromIndex].scheduledProgram =
+                        to?.scheduledProgram;
+                    controller.gridStateManager?.changeCellValue(
+                        fromRow.cells["scheduledProgram"]!,
+                        to?.scheduledProgram,
+                        notify: true);
+                    controller.asrunData?[fromIndex].rosBand = to?.rosBand;
+                    controller.gridStateManager?.changeCellValue(
+                        fromRow.cells["rosBand"]!, to?.rosBand,
+                        notify: true);
+                    controller.asrunData?[fromIndex].programTime =
+                        to?.programTime;
+                    controller.gridStateManager?.changeCellValue(
+                        fromRow.cells["programTime"]!, to?.programTime,
+                        notify: true);
+                    controller.asrunData?[fromIndex].isMismatch =
+                        to?.isMismatch;
+                    controller.gridStateManager?.changeCellValue(
+                        fromRow.cells["isMismatch"]!, to?.isMismatch,
+                        notify: true);
+                    controller.asrunData?[fromIndex].scheduledate =
+                        to?.scheduledate;
+                    controller.gridStateManager?.changeCellValue(
+                        fromRow.cells["scheduledate"]!, to?.scheduledate,
+                        notify: true);
+                    controller.asrunData?[fromIndex].tapeDuration =
+                        to?.tapeDuration;
+                    controller.gridStateManager?.changeCellValue(
+                        fromRow.cells["tapeDuration"]!, to?.tapeDuration,
+                        notify: true);
+
+                    /// TO DATA
+                    controller.asrunData?[toIndex].bookingnumber =
+                        from?.bookingnumber;
+                    controller.gridStateManager?.changeCellValue(
+                        toRow.cells["bookingnumber"]!, from?.bookingnumber,
+                        notify: true);
+                    controller.asrunData?[toIndex].scheduletime =
+                        from?.scheduletime;
+                    controller.gridStateManager?.changeCellValue(
+                        toRow.cells["scheduletime"]!, from?.scheduletime,
+                        notify: true);
+                    controller.asrunData?[toIndex].scheduledProgram =
+                        from?.scheduledProgram;
+                    controller.gridStateManager?.changeCellValue(
+                        toRow.cells["scheduledProgram"]!,
+                        from?.scheduledProgram,
+                        notify: true);
+                    controller.asrunData?[toIndex].rosBand = from?.rosBand;
+                    controller.gridStateManager?.changeCellValue(
+                        toRow.cells["rosBand"]!, from?.rosBand,
+                        notify: true);
+                    controller.asrunData?[toIndex].programTime =
+                        from?.programTime;
+                    controller.gridStateManager?.changeCellValue(
+                        toRow.cells["programTime"]!, from?.programTime,
+                        notify: true);
+                    controller.asrunData?[toIndex].isMismatch =
+                        from?.isMismatch;
+                    controller.gridStateManager?.changeCellValue(
+                        toRow.cells["isMismatch"]!, from?.isMismatch,
+                        notify: true);
+                    controller.asrunData?[toIndex].scheduledate =
+                        from?.scheduledate;
+                    controller.gridStateManager?.changeCellValue(
+                        toRow.cells["scheduledate"]!, from?.scheduledate,
+                        notify: true);
+                    controller.asrunData?[toIndex].tapeDuration =
+                        from?.tapeDuration;
+                    controller.gridStateManager?.changeCellValue(
+                        toRow.cells["tapeDuration"]!, from?.tapeDuration,
+                        notify: true);
+                    //
+                    // controller.update(["fpcData"]);
+                  },
+                  showIcon: false,
+                ),
+                FormButtonWrapper(
+                  btnText: "Clear",
+                  callback: () {
+                    controller.fromSwap.value = null;
+                    controller.toSwap.value = null;
+                  },
+                  showIcon: false,
+                ),
+                FormButtonWrapper(
+                  btnText: "Close",
+                  showIcon: false,
+                  callback: () {
+                    controller.drgabbleDialog.value = null;
+                  },
+                ),
+              ],
+            )
+          ],
+        ),
+      ),
+    );
   }
 
   paste({bool up = true}) {
@@ -419,75 +719,85 @@ class AsrunImportAdRevenueView extends GetView<AsrunImportController> {
   }
 
   showVerifyDialog(AsRunData asrunData) {
-    TextEditingController fpcTime =
-        TextEditingController(text: asrunData.fpctIme);
+    TextEditingController fpcTime = TextEditingController(
+        text: asrunData.fpctIme ?? asrunData.telecasttime);
     DropDownValue? selectedProgram;
     return Get.defaultDialog(
-        title: "Verify",
-        content: Container(
-          height: 150,
-          width: Get.width / 2,
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.center,
-            children: [
-              DropDownField.formDropDownSearchAPI2(
-                GlobalKey(), Get.context!,
-                title: "Program",
-                url: ApiFactory.AsrunImport_GetAsrunProgramList,
-                parseKeyForKey: "programCode",
-                parseKeyForValue: "programName",
-                onchanged: (data) {
-                  selectedProgram = data;
-                },
-                selectedValue: selectedProgram,
+      title: "Verify",
+      content: Container(
+        height: 150,
+        width: Get.width / 2,
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.center,
+          children: [
+            DropDownField.formDropDownSearchAPI2(
+              GlobalKey(), Get.context!,
+              title: "Program",
+              url: ApiFactory.AsrunImport_GetAsrunProgramList,
+              parseKeyForKey: "programCode",
+              parseKeyForValue: "programName",
+              onchanged: (data) {
+                selectedProgram = data;
+              },
+              selectedValue: selectedProgram,
 
-                width: Get.width * 0.45,
-                // padding: const EdgeInsets.only()
+              width: Get.width * 0.45,
+              // padding: const EdgeInsets.only()
+            ),
+            SizedBox(
+              height: 10,
+            ),
+            Container(
+              width: Get.width * 0.45,
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  InputFields.formFieldNumberMask(
+                      isEnable: true,
+                      hintTxt: "FPC Time",
+                      controller: fpcTime,
+                      widthRatio: 0.12,
+                      isTime: true,
+                      paddingLeft: 0),
+                  InputFields.formFieldNumberMask(
+                      isEnable: false,
+                      hintTxt: "From",
+                      controller: TextEditingController(
+                          text: asrunData.fpctIme ?? asrunData.telecasttime),
+                      widthRatio: 0.12,
+                      isTime: true,
+                      paddingLeft: 0),
+                  InputFields.formFieldNumberMask(
+                      isEnable: false,
+                      hintTxt: "To",
+                      controller: TextEditingController(
+                          text: asrunData.fpctIme ?? asrunData.telecasttime),
+                      widthRatio: 0.12,
+                      isTime: true,
+                      paddingLeft: 0),
+                ],
               ),
-              SizedBox(
-                height: 10,
-              ),
-              Container(
-                width: Get.width * 0.45,
-                child: Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: [
-                    InputFields.formFieldNumberMask(
-                        isEnable: true,
-                        hintTxt: "FPC Time",
-                        controller: fpcTime,
-                        widthRatio: 0.09,
-                        isTime: true,
-                        paddingLeft: 0),
-                    InputFields.formFieldNumberMask(
-                        isEnable: false,
-                        hintTxt: "From",
-                        controller:
-                            TextEditingController(text: asrunData.fpctIme),
-                        widthRatio: 0.09,
-                        isTime: true,
-                        paddingLeft: 0),
-                    InputFields.formFieldNumberMask(
-                        isEnable: false,
-                        hintTxt: "To",
-                        controller:
-                            TextEditingController(text: asrunData.fpctIme),
-                        widthRatio: 0.09,
-                        isTime: true,
-                        paddingLeft: 0),
-                  ],
-                ),
-              )
-            ],
-          ),
+            )
+          ],
         ),
-        textConfirm: "Verify",
-        textCancel: "Cancel",
-        onCancel: () {},
-        onConfirm: () {
+      ),
+      cancel: FormButtonWrapper(
+        btnText: "Cancel",
+        showIcon: false,
+        callback: () {
+          Get.back();
+        },
+      ),
+      onCancel: () {},
+      confirm: FormButtonWrapper(
+        btnText: "Verify",
+        showIcon: false,
+        callback: () {
           controller.manualUpdateFPCTime(selectedProgram?.value,
               selectedProgram?.key, fpcTime.text, asrunData);
-        });
+        },
+      ),
+    );
   }
 
   showFPCDialog(context) {

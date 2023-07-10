@@ -1,10 +1,12 @@
 import 'package:bms_scheduling/app/data/DropDownValue.dart';
 import 'package:bms_scheduling/app/modules/AuditStatus/bindings/audit_status_cancel_deals.dart';
 import 'package:bms_scheduling/app/modules/AuditStatus/controllers/audit_status_controller.dart';
+import 'package:bms_scheduling/app/providers/extensions/string_extensions.dart';
 import 'package:bms_scheduling/widgets/DataGridShowOnly.dart';
 import 'package:bms_scheduling/widgets/DateTime/DateWithThreeTextField.dart';
 import 'package:bms_scheduling/widgets/FormButton.dart';
 import 'package:bms_scheduling/widgets/dropdown.dart';
+import 'package:bms_scheduling/widgets/floating_dialog.dart';
 import 'package:bms_scheduling/widgets/input_fields.dart';
 import 'package:flutter/material.dart';
 
@@ -15,11 +17,10 @@ import '../../../controller/HomeController.dart';
 import '../bindings/audi_status_eshowcancel.dart';
 
 class AuditCanellation extends StatelessWidget {
-  AuditCanellation({super.key, required this.cancelNumber, required this.cancelMonth});
+  AuditCanellation({super.key, required this.cancelNumber, required this.cancelMonth, required this.controller});
   final int cancelNumber;
   final int cancelMonth;
-
-  AuditStatusController controller = Get.find<AuditStatusController>();
+  final AuditStatusController controller;
 
   @override
   Widget build(BuildContext context) {
@@ -76,14 +77,15 @@ class AuditCanellation extends StatelessWidget {
                           isEnable: false,
                           title: "Ref Date",
                           onFocusChange: (value) {},
-                          mainTextController: TextEditingController(text: data.referenceDate)),
+                          mainTextController: TextEditingController(
+                              text: data.bookingEffectiveDate != null ? data.bookingEffectiveDate?.split("T")[0].fromyMdTodMy() : "")),
                       InputFields.formField1(
                           hintTxt: "Booking No", width: 0.115, isEnable: false, controller: TextEditingController(text: displayData.bookingNumber)),
                     ]),
                   ),
                   SizedBox(
                       width: Get.width * 0.24,
-                      child: Row(mainAxisSize: MainAxisSize.max, mainAxisAlignment: MainAxisAlignment.start, children: [
+                      child: Row(mainAxisSize: MainAxisSize.max, mainAxisAlignment: MainAxisAlignment.spaceBetween, children: [
                         InputFields.formField1(
                             isEnable: false, width: 0.09, hintTxt: "Cancel No", controller: TextEditingController(text: cancelMonth.toString())),
                         InputFields.formField1(
@@ -101,11 +103,11 @@ class AuditCanellation extends StatelessWidget {
                       width: 0.24, isEnable: false, hintTxt: "Payroute", controller: TextEditingController(text: data.payrouteName)),
                   DropDownField.formDropDown1WidthMap(controller.channels.value, (value) {
                     // controller.selectedChannel = value;
-                  }, "Brand", 0.24, isEnable: false, selected: DropDownValue(key: data.brandName, value: data.brandCode)),
+                  }, "Brand", 0.24, isEnable: false, selected: DropDownValue(key: data.brandCode, value: data.brandName)),
                   InputFields.formField1(
                       width: 0.24, isEnable: false, hintTxt: "Pay Mode", controller: TextEditingController(text: data.paymentModeCaption)),
                   InputFields.formField1(
-                      width: 0.24, isEnable: false, hintTxt: "Executive", controller: TextEditingController(text: data.executiveCode)),
+                      width: 0.24, isEnable: false, hintTxt: "Executive", controller: TextEditingController(text: data.personnelName)),
                   InputFields.formField1(
                       width: 0.24,
                       isEnable: false,
@@ -143,7 +145,6 @@ class AuditCanellation extends StatelessWidget {
                   id: "cancelData",
                   builder: (cancelDatactrl) {
                     return Container(
-                      width: Get.width * .70,
                       child: DataGridShowOnlyKeys(
                           onRowChecked: (rowcheckEvent) {},
                           hideCode: false,

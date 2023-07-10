@@ -1,12 +1,12 @@
-class RoCancellationDocuments {
+class CommonDocsModel {
   int? documentId;
   String? documentName;
   String? uploadedBy;
   String? upLoadedDate;
 
-  RoCancellationDocuments({this.documentId, this.documentName, this.uploadedBy, this.upLoadedDate});
+  CommonDocsModel({this.documentId, this.documentName, this.uploadedBy, this.upLoadedDate});
 
-  RoCancellationDocuments.fromJson(Map<String, dynamic> json) {
+  CommonDocsModel.fromJson(Map<String, dynamic> json) {
     documentId = json['documentId'];
     documentName = json['documentName'];
     uploadedBy = json['uploadedBy'];

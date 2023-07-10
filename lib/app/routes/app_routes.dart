@@ -39,6 +39,7 @@ abstract class Routes {
   static const COMMERCIAL_MASTER = _Paths.COMMERCIAL_MASTER;
   static const ASURN_IMPORT = _Paths.ASURN_IMPORT;
   static const R_O_IMPORT = _Paths.R_O_IMPORT;
+  static const COMMON_DOCS = _Paths.COMMON_DOCS;
   static const D_SERIES_SPECIFICATION = _Paths.D_SERIES_SPECIFICATION;
 }
 
@@ -51,6 +52,8 @@ abstract class RoutesList {
     _Paths.MAM_WORK_ORDERS,
     _Paths.RO_BOOKING,
     _Paths.FPC_MISMATCH,
+    _Paths.AUDIT_STATUS,
+    _Paths.ASRUN_IMPORT_AD_REVENUE,
     _Paths.COMMERCIAL,
     _Paths.SPOT_PRIORITY,
     _Paths.RO_CANCELLATION,
@@ -99,4 +102,5 @@ abstract class _Paths {
   static const ASURN_IMPORT = '/asurn-import';
   static const R_O_IMPORT = '/frmROImport';
   static const D_SERIES_SPECIFICATION = '/frmDSeriesSpecs';
+  static const COMMON_DOCS = '/common-docs';
 }

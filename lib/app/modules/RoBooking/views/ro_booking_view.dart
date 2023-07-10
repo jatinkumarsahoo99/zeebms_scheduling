@@ -12,6 +12,8 @@ import 'package:flutter/material.dart';
 
 import 'package:get/get.dart';
 
+import '../../CommonDocs/controllers/common_docs_controller.dart';
+import '../../CommonDocs/views/common_docs_view.dart';
 import '../controllers/ro_booking_controller.dart';
 import 'deal_view.dart';
 
@@ -496,29 +498,44 @@ class RoBookingView extends StatelessWidget {
                                     // pa
                                     children: [
                                       for (var btn in btncontroller.buttons!)
-                                        btn["name"] == "Save"
+                                        btn["name"] == "Docs"
                                             ? FormButtonWrapper(
                                                 btnText: btn["name"],
                                                 // isEnabled: btn['isDisabled'],
                                                 callback: () {
-                                                  controller.saveCheck();
+                                                  Get.defaultDialog(
+                                                    title: "Documents",
+                                                    content: CommonDocsView(
+                                                        documentKey:
+                                                            "RObooking${controller.selectedLocation!.key}${controller.selectedChannel!.key}${controller.bookingMonthCtrl.text}${controller.bookingNoCtrl.text}"),
+                                                  ).then((value) {
+                                                    Get.delete<CommonDocsController>(tag: "commonDocs");
+                                                  });
                                                 },
                                               )
-                                            : btn["name"] == "Clear"
+                                            : btn["name"] == "Save"
                                                 ? FormButtonWrapper(
                                                     btnText: btn["name"],
-
                                                     // isEnabled: btn['isDisabled'],
                                                     callback: () {
-                                                      Get.delete<RoBookingController>();
-                                                      Get.find<HomeController>().clearPage1();
+                                                      controller.saveCheck();
                                                     },
                                                   )
-                                                : FormButtonWrapper(
-                                                    btnText: btn["name"],
-                                                    // isEnabled: btn['isDisabled'],
-                                                    callback: null,
-                                                  ),
+                                                : btn["name"] == "Clear"
+                                                    ? FormButtonWrapper(
+                                                        btnText: btn["name"],
+
+                                                        // isEnabled: btn['isDisabled'],
+                                                        callback: () {
+                                                          Get.delete<RoBookingController>();
+                                                          Get.find<HomeController>().clearPage1();
+                                                        },
+                                                      )
+                                                    : FormButtonWrapper(
+                                                        btnText: btn["name"],
+                                                        // isEnabled: btn['isDisabled'],
+                                                        callback: null,
+                                                      ),
                                     ],
                                   ),
                                 ),

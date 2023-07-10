@@ -269,7 +269,8 @@ class ConnectorControl extends GetConnect {
         options: Options(headers: {
           "Authorization": "Bearer ${(Get.find<MainController>().user != null) ? Get.find<MainController>().user?.token ?? "" : ""}",
           "PersonnelNo": ((Get.find<MainController>().user != null) ? Aes.encrypt(Get.find<MainController>().user?.personnelNo ?? "") : ""),
-          "Userid": ((Get.find<MainController>().user != null) ? Aes.encrypt(Get.find<MainController>().user?.logincode ?? "") : "")
+          "Userid": ((Get.find<MainController>().user != null) ? Aes.encrypt(Get.find<MainController>().user?.logincode ?? "") : ""),
+          "FormName": ((Get.find<MainController>().formName != null) ? Get.find<MainController>().formName ?? "" : "")
         }, responseType: ResponseType.json),
         data: (json != null) ? jsonEncode(json) : null,
       );

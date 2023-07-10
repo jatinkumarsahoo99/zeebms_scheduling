@@ -1,6 +1,8 @@
 import 'package:bms_scheduling/app/data/DropDownValue.dart';
+import 'package:bms_scheduling/app/modules/AuditStatus/bindings/audi_status_show_reshdule.dart';
 import 'package:bms_scheduling/app/modules/AuditStatus/bindings/audit_status_cancel_deals.dart';
 import 'package:bms_scheduling/app/modules/AuditStatus/controllers/audit_status_controller.dart';
+import 'package:bms_scheduling/app/providers/extensions/string_extensions.dart';
 import 'package:bms_scheduling/widgets/DataGridShowOnly.dart';
 import 'package:bms_scheduling/widgets/DateTime/DateWithThreeTextField.dart';
 import 'package:bms_scheduling/widgets/FormButton.dart';
@@ -14,18 +16,17 @@ import 'package:bms_scheduling/widgets/PlutoGrid/pluto_grid.dart';
 import '../../../controller/HomeController.dart';
 import '../bindings/audi_status_eshowcancel.dart';
 
-class AuditSchedule extends StatelessWidget {
-  AuditSchedule({super.key, required this.cancelNumber, required this.cancelMonth});
-  final int cancelNumber;
-  final int cancelMonth;
-
-  AuditStatusController controller = Get.find<AuditStatusController>();
+class AuditReschdule extends StatelessWidget {
+  // AuditCanellation({super.key, required this.cancelNumber, required this.cancelMonth});
+  // final int cancelNumber;
+  // final int cancelMonth;
+  const AuditReschdule({super.key, required this.controller});
+  final AuditStatusController controller;
 
   @override
   Widget build(BuildContext context) {
-    AuditShowECancel data = controller.showECancelData!.first;
+    AuditStatusShowReschdule data = controller.showReschduleData!.first;
 
-    DisplayRes displayData = controller.auditStatusCancelDeals!.displayRes!.first;
     return Scaffold(
       backgroundColor: Colors.grey[50],
       body: Column(
@@ -46,10 +47,10 @@ class AuditSchedule extends StatelessWidget {
                   DropDownField.formDropDown1WidthMap(controller.locations.value, (value) {
                     // controller.selectedLocation = value;
                     // controller.getChannel(value.key);
-                  }, "Location", 0.24, isEnable: false, selected: DropDownValue(key: data.locationCode, value: data.locationName)),
+                  }, "Location", 0.24, isEnable: true, selected: DropDownValue(key: data.locationCode, value: data.locationName)),
                   DropDownField.formDropDown1WidthMap(controller.channels.value, (value) {
                     // controller.selectedChannel = value;
-                  }, "Channel", 0.24, isEnable: false, selected: DropDownValue(key: data.channelCode, value: data.channelName)),
+                  }, "Channel", 0.24, isEnable: true, selected: DropDownValue(key: data.channelCode, value: data.channelName)),
                   SizedBox(
                       width: Get.width * 0.24,
                       child: Row(
@@ -57,60 +58,50 @@ class AuditSchedule extends StatelessWidget {
                         mainAxisAlignment: MainAxisAlignment.spaceBetween,
                         children: [
                           DateWithThreeTextField(
-                              widthRation: 0.115, isEnable: false, title: "FPC Eff. Dt.", mainTextController: TextEditingController()),
+                              widthRation: 0.115,
+                              title: "FPC Eff. Dt.",
+                              mainTextController: TextEditingController(text: data.bookingEffectiveDate?.fromyMdTodMy())),
                           DateWithThreeTextField(
                               widthRation: 0.115,
-                              isEnable: false,
-                              title: "Book Dt.",
+                              title: "Resch Dt.",
                               onFocusChange: (value) {},
-                              mainTextController: TextEditingController()),
+                              mainTextController: TextEditingController(text: data.rescheduledate?.fromyMdTodMy())),
                         ],
                       )),
-                  InputFields.formField1(
-                      hintTxt: "Ref No", width: 0.24, isEnable: false, controller: TextEditingController(text: data.bookingReferenceNumber)),
+                  InputFields.formField1(hintTxt: "Ref No", width: 0.24, controller: TextEditingController(text: data.rescheduleReferenceNumber)),
                   Container(
                     width: Get.width * 0.24,
                     child: Row(mainAxisSize: MainAxisSize.max, mainAxisAlignment: MainAxisAlignment.spaceBetween, children: [
                       DateWithThreeTextField(
                           widthRation: 0.115,
-                          isEnable: false,
                           title: "Ref Date",
                           onFocusChange: (value) {},
-                          mainTextController: TextEditingController(text: data.referenceDate)),
+                          mainTextController: TextEditingController(text: data.bookingEffectiveDate?.split("T")[0].fromyMdTodMy())),
                       InputFields.formField1(
-                          hintTxt: "Booking No", width: 0.115, isEnable: false, controller: TextEditingController(text: displayData.bookingNumber)),
+                          hintTxt: "Booking No", width: 0.115, isEnable: false, controller: TextEditingController(text: data.bookingNumber)),
                     ]),
                   ),
+                  InputFields.formField1(hintTxt: "Deal No", isEnable: false, width: 0.24, controller: TextEditingController(text: data.dealNo)),
                   SizedBox(
                       width: Get.width * 0.24,
                       child: Row(mainAxisSize: MainAxisSize.max, mainAxisAlignment: MainAxisAlignment.start, children: [
                         InputFields.formField1(
-                            isEnable: false, width: 0.09, hintTxt: "Cancel No", controller: TextEditingController(text: cancelMonth.toString())),
+                            isEnable: false,
+                            width: 0.14,
+                            hintTxt: "Reschedule No",
+                            controller: TextEditingController(text: data.rescheduleMonth.toString())),
                         InputFields.formField1(
-                            isEnable: false, width: 0.05, hintTxt: "", controller: TextEditingController(text: cancelNumber.toString())),
-                        InputFields.formField1(isEnable: false, width: 0.09, hintTxt: "", controller: TextEditingController(text: data.zoneName)),
+                            isEnable: false, width: 0.09, hintTxt: "", controller: TextEditingController(text: data.rescheduleNumber.toString())),
                       ])),
                   DropDownField.formDropDown1WidthMap([], (value) {
                     // controller.selectedChannel = value;
                   }, "Client", 0.24, isEnable: false, selected: DropDownValue(key: data.clientCode, value: data.clientName)),
-                  InputFields.formField1(width: 0.24, isEnable: false, hintTxt: "Deal No", controller: TextEditingController(text: data.dealNo)),
                   DropDownField.formDropDown1WidthMap([], (value) {
                     // controller.selectedChannel = value;
                   }, "Agency", 0.24, isEnable: false, selected: DropDownValue(key: data.agencyCode, value: data.agencyName)),
-                  InputFields.formField1(
-                      width: 0.24, isEnable: false, hintTxt: "Payroute", controller: TextEditingController(text: data.payrouteName)),
-                  DropDownField.formDropDown1WidthMap(controller.channels.value, (value) {
+                  DropDownField.formDropDown1WidthMap([DropDownValue(key: data.brandCode, value: data.brandName)], (value) {
                     // controller.selectedChannel = value;
-                  }, "Brand", 0.24, isEnable: false, selected: DropDownValue(key: data.brandName, value: data.brandCode)),
-                  InputFields.formField1(
-                      width: 0.24, isEnable: false, hintTxt: "Pay Mode", controller: TextEditingController(text: data.paymentModeCaption)),
-                  InputFields.formField1(
-                      width: 0.24, isEnable: false, hintTxt: "Executive", controller: TextEditingController(text: data.executiveCode)),
-                  InputFields.formField1(
-                      width: 0.24,
-                      isEnable: false,
-                      hintTxt: "Spot Amt",
-                      controller: TextEditingController(text: (displayData.spotAmount ?? "").toString())),
+                  }, "Brand", 0.24, selected: DropDownValue(key: data.brandCode, value: data.brandName)),
                   InkWell(
                     onTap: () {},
                     child: Row(
@@ -118,13 +109,17 @@ class AuditSchedule extends StatelessWidget {
                       mainAxisSize: MainAxisSize.min,
                       children: [
                         Icon(Icons.check_box_outline_blank_outlined),
-                        Text("Select All "),
+                        Text("Select All"),
                       ],
                     ),
                   )
                 ],
               ),
             ),
+          ),
+          Row(
+            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+            children: [Text("Reschedule Details"), Text("Booking Details")],
           ),
           Expanded(
               child: Padding(
@@ -138,24 +133,65 @@ class AuditSchedule extends StatelessWidget {
                     top: BorderSide.none,
                     bottom: BorderSide(color: Colors.grey[400]!),
                   )),
-              child: GetBuilder<AuditStatusController>(
-                  init: controller,
-                  id: "cancelData",
-                  builder: (cancelDatactrl) {
-                    return Container(
-                      width: Get.width * .70,
-                      child: DataGridShowOnlyKeys(
-                          onRowChecked: (rowcheckEvent) {},
-                          hideCode: false,
-                          hideKeys: ["channelcode", "locationcode"],
-                          rowCheckColor: Colors.white,
-                          onload: (loadEvent) {},
-                          hideCheckKeysValue: true,
-                          actionIconKey: {"audited": Icons.check_box_rounded, "requested": Icons.check_box_rounded},
-                          actionIcon: Icons.check_box_outlined,
-                          mapData: controller.auditStatusCancelDeals?.displayRes?.map((e) => e.toJson()).toList() ?? []),
-                    );
-                  }),
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                children: [
+                  SizedBox(
+                    width: Get.width * .38,
+                    child: GetBuilder<AuditStatusController>(
+                        init: controller,
+                        id: "cancelData",
+                        builder: (cancelDatactrl) {
+                          return Container(
+                            child: DataGridShowOnlyKeys(
+                                onRowChecked: (rowcheckEvent) {},
+                                hideCode: false,
+                                exportFileName: "Audit Reschedule",
+                                hideKeys: ["channelcode", "locationcode"],
+                                rowCheckColor: Colors.white,
+                                onload: (loadEvent) {},
+                                colorCallback: (rowEvent) {
+                                  if (controller.auditStatusReschduleDisplay?.lstReshedule?[rowEvent.rowIdx].audited == null) {
+                                    return Color(0xFF96FF96);
+                                  } else if ((controller.auditStatusReschduleDisplay?.lstReshedule?[rowEvent.rowIdx].audited ?? 0) <
+                                      (controller.auditStatusReschduleDisplay?.lstReshedule?[rowEvent.rowIdx].totalspots ?? 0)) {
+                                    return Color(0xFFFF9696);
+                                  }
+
+                                  return Colors.white;
+                                },
+                                checkRow: true,
+                                checkRowKey: "auditStatus",
+                                hideCheckKeysValue: true,
+                                actionIcon: Icons.check_box_outlined,
+                                mapData: controller.auditStatusReschduleDisplay?.lstReshedule?.map((e) => e.toJson()).toList() ?? []),
+                          );
+                        }),
+                  ),
+                  SizedBox(
+                    width: Get.width * .38,
+                    child: GetBuilder<AuditStatusController>(
+                        init: controller,
+                        id: "cancelData",
+                        builder: (cancelDatactrl) {
+                          return Container(
+                            child: DataGridShowOnlyKeys(
+                                onRowChecked: (rowcheckEvent) {},
+                                hideCode: false,
+                                exportFileName: "Audit Cancellation",
+                                hideKeys: ["channelcode", "locationcode"],
+                                rowCheckColor: Colors.white,
+                                formatDate: false,
+                                onload: (loadEvent) {},
+                                hideCheckKeysValue: true,
+                                actionIconKey: {"audited": Icons.check_box_rounded, "requested": Icons.check_box_rounded},
+                                actionIcon: Icons.check_box_outlined,
+                                mapData: controller.auditStatusReschduleDisplay?.lstBooking?.map((e) => e.toJson()).toList() ?? []),
+                          );
+                        }),
+                  ),
+                ],
+              ),
             ),
           )),
           GetBuilder<HomeController>(

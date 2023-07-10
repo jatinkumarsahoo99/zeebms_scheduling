@@ -2,16 +2,27 @@ import 'dart:convert';
 import 'dart:developer';
 
 import 'package:bms_scheduling/app/controller/HomeController.dart';
+import 'package:bms_scheduling/app/modules/RoCancellation/bindings/ro_cancellation_doc.dart';
+import 'package:bms_scheduling/app/providers/ExportData.dart';
+import 'package:bms_scheduling/widgets/DataGridShowOnly.dart';
+import 'package:bms_scheduling/widgets/PlutoGrid/src/manager/pluto_grid_state_manager.dart';
+import 'package:file_picker/file_picker.dart';
 import 'package:flutter/cupertino.dart';
+import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:get/get.dart';
 import 'package:intl/intl.dart';
 
+import '../../../../widgets/FormButton.dart';
 import '../../../../widgets/LoadingDialog.dart';
 import '../../../../widgets/Snack.dart';
 import '../../../controller/ConnectorControl.dart';
+import '../../../controller/MainController.dart';
 import '../../../data/DropDownValue.dart';
 import '../../../providers/ApiFactory.dart';
 import '../../../providers/Utils.dart';
+import '../../CommonDocs/controllers/common_docs_controller.dart';
+import '../../CommonDocs/views/common_docs_view.dart';
 import '../../CommonSearch/views/common_search_view.dart';
 import '../CommercialTapeMasterData.dart';
 import '../CommercialTapeMasterPostData.dart';
@@ -416,6 +427,137 @@ class CommercialMasterController extends GetxController {
           }
         });
   }
+  List<RoCancellationDocuments> documents = [];
+
+  docs() async {
+    String documentKey = "";
+    if (commercialCode == "" || commercialCode == '0') {
+      documentKey = "";
+    } else {
+      documentKey = "CommercialMaster $commercialCode";
+    }
+
+
+
+   /* PlutoGridStateManager? viewDocsStateManger;
+    try {
+      LoadingDialog.call();
+      await Get.find<ConnectorControl>().GET_METHOD_CALL_HEADER(
+          api: ApiFactory.COMMON_DOCS_LOAD(documentKey),
+          fun: (data) {
+            if (data is Map && data.containsKey("info_GetAllDocument")) {
+              documents = [];
+              for (var doc in data["info_GetAllDocument"]) {
+                documents.add(RoCancellationDocuments.fromJson(doc));
+              }
+              Get.back();
+            }
+          });
+    } catch (e) {
+      Get.back();
+    }
+
+    Get.defaultDialog(
+      title: "Documents",
+      content: SizedBox(
+        width: Get.width / 2.5,
+        height: Get.height / 2.5,
+        child: Scaffold(
+          body: RawKeyboardListener(
+            focusNode: FocusNode(),
+            onKey: (value) {
+              if (value.isKeyPressed(LogicalKeyboardKey.delete)) {
+                LoadingDialog.delete(
+                  "Want to delete selected row",
+                      () async {
+                    LoadingDialog.call();
+                    await Get.find<ConnectorControl>().DELETEMETHOD(
+                      api: ApiFactory.COMMON_DOCS_DELETE(documents[viewDocsStateManger!.currentRowIdx!].documentId.toString()),
+                      fun: (data) {
+                        Get.back();
+                      },
+                    );
+                    Get.back();
+                    docs();
+                  },
+                  cancel: () {},
+                );
+              }
+            },
+            child: DataGridShowOnlyKeys(
+              hideCode: true,
+              hideKeys: ["documentId"],
+              dateFromat: "dd-MM-yyyy HH:mm",
+              mapData: documents.map((e) => e.toJson()).toList(),
+              onload: (loadGrid) {
+                viewDocsStateManger = loadGrid.stateManager;
+              },
+              onRowDoubleTap: (row) {
+                Get.find<ConnectorControl>().GET_METHOD_CALL_HEADER(
+                    api: ApiFactory.COMMON_DOCS_VIEW((documents[row.rowIdx].documentId).toString()),
+                    fun: (data) {
+                      if (data is Map && data.containsKey("addingDocument")) {
+                        ExportData()
+                            .exportFilefromByte(base64Decode(data["addingDocument"][0]["documentData"]), data["addingDocument"][0]["documentname"]);
+                      }
+                    });
+              },
+            ),
+          ),
+        ),
+      ),
+      actions: {"Add Doc": () async {}, "View Doc": () {}, "Attach Email": () {}}
+          .entries.map((e) => FormButtonWrapper(
+        btnText: e.key,
+        callback: e.key == "Add Doc"
+            ? () async {
+          FilePickerResult? result = await FilePicker.platform.pickFiles(allowMultiple: false);
+
+          if (result != null && result.files.isNotEmpty) {
+            LoadingDialog.call();
+            await Get.find<ConnectorControl>().POSTMETHOD_FORMDATA_HEADER(
+                api: ApiFactory.COMMON_DOCS_ADD,
+                fun: (data) {
+                  if (data is Map && data.containsKey("addingDocument")) {
+                    for (var doc in data["addingDocument"]) {
+                      documents.add(RoCancellationDocuments.fromJson(doc));
+                    }
+                    Get.back();
+                    docs();
+                  }
+                },
+                json: {
+                  "documentKey": documentKey,
+                  "loggedUser": Get.find<MainController>().user?.logincode ?? "",
+                  "strFilePath": result.files.first.name,
+                  "bytes": base64.encode(List<int>.from(result.files.first.bytes ?? []))
+                });
+            Get.back();
+          }
+        }
+            : e.key == "View Doc"
+            ? () {
+          Get.find<ConnectorControl>().GET_METHOD_CALL_HEADER(
+              api: ApiFactory.COMMON_DOCS_VIEW((documents[viewDocsStateManger!.currentCell!.row.sortIdx].documentId).toString()),
+              fun: (data) {
+                if (data is Map && data.containsKey("addingDocument")) {
+                  ExportData().exportFilefromByte(
+                      base64Decode(data["addingDocument"][0]["documentData"]), data["addingDocument"][0]["documentname"]);
+                }
+              });
+        }
+            : () {},
+      )).toList()
+    );*/
+
+    Get.defaultDialog(
+      title: "Documents",
+      content: CommonDocsView(documentKey: documentKey),
+    ).then((value) {
+      Get.delete<CommonDocsController>(tag: "commonDocs");
+    });
+
+  }
 
   getSecType(String key) {
     Get.find<ConnectorControl>().GETMETHODCALL(
@@ -815,6 +957,8 @@ class CommercialMasterController extends GetxController {
       saveData();
     }else if(string == "Search"){
       search();
+    }else if (string == "Docs") {
+      docs();
     }
   }
 }
