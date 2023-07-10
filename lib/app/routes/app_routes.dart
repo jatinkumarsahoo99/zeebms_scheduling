@@ -41,6 +41,8 @@ abstract class Routes {
   static const R_O_IMPORT = _Paths.R_O_IMPORT;
   static const COMMON_DOCS = _Paths.COMMON_DOCS;
   static const D_SERIES_SPECIFICATION = _Paths.D_SERIES_SPECIFICATION;
+  static const EUROPE_RUNNING_ORDER_STATUS = _Paths.EUROPE_RUNNING_ORDER_STATUS;
+  static const EUROPE_DROP_SPOTS = _Paths.EUROPE_DROP_SPOTS;
 }
 
 abstract class RoutesList {
@@ -103,4 +105,6 @@ abstract class _Paths {
   static const R_O_IMPORT = '/frmROImport';
   static const D_SERIES_SPECIFICATION = '/frmDSeriesSpecs';
   static const COMMON_DOCS = '/common-docs';
+  static const EUROPE_RUNNING_ORDER_STATUS = '/Robookingotherrevenues';
+  static const EUROPE_DROP_SPOTS = '/RorescheduleOtherrevune';
 }

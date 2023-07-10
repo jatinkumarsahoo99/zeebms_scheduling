@@ -24,6 +24,8 @@ import '../modules/AsrunImportAdRevenue/views/AsrunImportAdRevenueView.dart';
 import '../modules/AuditStatus/views/audit_status_view.dart';
 import '../modules/CommercialMaster/views/commercial_master_view.dart';
 import '../modules/DSeriesSpecification/views/DSeriesSpecificationView.dart';
+import '../modules/EuropeDropSpots/views/EuropeDropSpotsView.dart';
+import '../modules/EuropeRunningOrderStatus/views/EuropeRunningOrderStatusView.dart';
 import '../modules/LogAdditions/views/LogAdditionsView.dart';
 import '../modules/PromoMaster/views/promo_master_view.dart';
 import '../modules/ROImport/views/r_o_import_view.dart';
@@ -157,6 +159,12 @@ class AuthGuard1 extends StatelessWidget {
               break;
             case Routes.D_SERIES_SPECIFICATION:
               currentWidget = DSeriesSpecificationView();
+              break;
+            case Routes.EUROPE_RUNNING_ORDER_STATUS:
+              currentWidget = EuropeRunningOrderStatusView();
+              break;
+            case Routes.EUROPE_DROP_SPOTS:
+              currentWidget = EuropeDropSpotsView();
               break;
             default:
               currentWidget = const NoDataFoundPage();

@@ -8,6 +8,10 @@ import '../modules/CommonDocs/bindings/common_docs_binding.dart';
 import '../modules/CommonDocs/views/common_docs_view.dart';
 import '../modules/DSeriesSpecification/bindings/d_series_specification_binding.dart';
 import '../modules/DSeriesSpecification/views/DSeriesSpecificationView.dart';
+import '../modules/EuropeDropSpots/bindings/europe_drop_spots_binding.dart';
+import '../modules/EuropeDropSpots/views/EuropeDropSpotsView.dart';
+import '../modules/EuropeRunningOrderStatus/bindings/europe_running_order_status_binding.dart';
+import '../modules/EuropeRunningOrderStatus/views/EuropeRunningOrderStatusView.dart';
 import '../modules/EventSecondary/bindings/event_secondary_binding.dart';
 import '../modules/FillerMaster/bindings/filler_master_binding.dart';
 import '../modules/FinalAuditReportAfterTelecast/bindings/final_audit_report_after_telecast_binding.dart';
@@ -231,6 +235,18 @@ class AppPages {
       name: _Paths.COMMON_DOCS,
       page: () => const CommonDocsView(documentKey: ''),
       binding: CommonDocsBinding(),
+    ),
+    GetPage(
+      name: _Paths.EUROPE_RUNNING_ORDER_STATUS,
+      // page: () => EuropeRunningOrderStatusView(),
+      // binding: EuropeRunningOrderStatusBinding(),
+      page: () => AuthGuard1(childName: _Paths.EUROPE_RUNNING_ORDER_STATUS),
+    ),
+    GetPage(
+      name: _Paths.EUROPE_DROP_SPOTS,
+      page: () => AuthGuard1(childName: _Paths.EUROPE_DROP_SPOTS),
+      // page: () => EuropeDropSpotsView(),
+      // binding: EuropeDropSpotsBinding(),
     ),
   ];
 }
