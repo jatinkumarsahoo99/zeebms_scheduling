@@ -49,7 +49,7 @@ class AppPages {
   AppPages._();
   //https://app-scheduling-bms-dev.zeeconnect.in/frmCommercialMaster?loginCode=0iGe3vK5h2KGjfSKZTpmsQ%3D%3D&personalNo=xvmv9k3d1G7ierjaXRHiGA%3D%3D&formName=MgGRl5N4DW2tcWQscJpsp%2BIUElLFsJm5TsN5JpCXjHE%3D
   // static const INITIAL = Routes.ROS_DISTRIBUTION +
-  static const INITIAL = Routes.INVENTORY_STATUS_REPORT +
+  static const INITIAL = Routes.COMMERCIAL_TIME_UPDATE +
       "?personalNo=xvmv9k3d1G7ierjaXRHiGA%3D%3D&loginCode=0iGe3vK5h2KGjfSKZTpmsQ%3D%3D&formName=MgGRl5N4DW2tcWQscJpsp%2BIUElLFsJm5TsN5JpCXjHE%3D";
   static final routes = [
     GetPage(
@@ -237,12 +237,12 @@ class AppPages {
     ),
     GetPage(
       name: _Paths.INVENTORY_STATUS_REPORT,
-      page: () => const InventoryStatusReportView(),
+      page: () => AuthGuard1(childName: _Paths.INVENTORY_STATUS_REPORT),
       binding: InventoryStatusReportBinding(),
     ),
     GetPage(
       name: _Paths.COMMERCIAL_TIME_UPDATE,
-      page: () => const CommercialTimeUpdateView(),
+      page: () => AuthGuard1(childName: _Paths.COMMERCIAL_TIME_UPDATE),
       binding: CommercialTimeUpdateBinding(),
     ),
   ];
