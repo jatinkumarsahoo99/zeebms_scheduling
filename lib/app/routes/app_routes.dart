@@ -18,12 +18,16 @@ abstract class Routes {
   static const SPOT_PRIORITY = _Paths.SPOT_PRIORITY;
   static const RO_RESCHEDULE = _Paths.RO_RESCHEDULE;
   static const ROS_DISTRIBUTION = _Paths.ROS_DISTRIBUTION;
-  static const FINAL_AUDIT_REPORT_BEFORE_LOG = _Paths.FINAL_AUDIT_REPORT_BEFORE_LOG;
-  static const FINAL_AUDIT_REPORT_AFTER_TELECAST = _Paths.FINAL_AUDIT_REPORT_AFTER_TELECAST;
+  static const FINAL_AUDIT_REPORT_BEFORE_LOG =
+      _Paths.FINAL_AUDIT_REPORT_BEFORE_LOG;
+  static const FINAL_AUDIT_REPORT_AFTER_TELECAST =
+      _Paths.FINAL_AUDIT_REPORT_AFTER_TELECAST;
   static const AUDIT_STATUS = _Paths.AUDIT_STATUS;
   static const ASRUN_IMPORT_AD_REVENUE = _Paths.ASRUN_IMPORT_AD_REVENUE;
-  static const SALES_AUDIT_NOT_TELECAST_REPORT = _Paths.SALES_AUDIT_NOT_TELECAST_REPORT;
-  static const SALES_AUDIT_EXTRA_SPOTS_REPORT = _Paths.SALES_AUDIT_EXTRA_SPOTS_REPORT;
+  static const SALES_AUDIT_NOT_TELECAST_REPORT =
+      _Paths.SALES_AUDIT_NOT_TELECAST_REPORT;
+  static const SALES_AUDIT_EXTRA_SPOTS_REPORT =
+      _Paths.SALES_AUDIT_EXTRA_SPOTS_REPORT;
   static const SALES_AUDIT_NEW = _Paths.SALES_AUDIT_NEW;
   static const SLIDE_MASTER = _Paths.SLIDE_MASTER;
   static const STILL_MASTER = _Paths.STILL_MASTER;
@@ -36,6 +40,13 @@ abstract class Routes {
   static const ASURN_IMPORT = _Paths.ASURN_IMPORT;
   static const R_O_IMPORT = _Paths.R_O_IMPORT;
   static const COMMON_DOCS = _Paths.COMMON_DOCS;
+  static const MATERIAL_ID_SEARCH = _Paths.MATERIAL_ID_SEARCH;
+  static const PROMO_TYPE_MASTER = _Paths.PROMO_TYPE_MASTER;
+  static const LOG_CONVERT = _Paths.LOG_CONVERT;
+  static const SPONSER_TYPE_MASTER = _Paths.SPONSER_TYPE_MASTER;
+  static const SPOT_POSITION_TYPE_MASTER = _Paths.SPOT_POSITION_TYPE_MASTER;
+  static const SECONDARY_EVENT_TEMPLATE_MASTER =
+      _Paths.SECONDARY_EVENT_TEMPLATE_MASTER;
 }
 
 abstract class RoutesList {
@@ -78,11 +89,13 @@ abstract class _Paths {
   static const RO_RESCHEDULE = '/frmRoReschedule';
   static const ROS_DISTRIBUTION = '/FrmRosDistribution';
   static const FINAL_AUDIT_REPORT_BEFORE_LOG = '/frmFinalAuditReport';
-  static const FINAL_AUDIT_REPORT_AFTER_TELECAST = '/frmFinalAuditreportasrunlog';
+  static const FINAL_AUDIT_REPORT_AFTER_TELECAST =
+      '/frmFinalAuditreportasrunlog';
   static const AUDIT_STATUS = '/frmNewBookingActivityReport';
   static const ASRUN_IMPORT_AD_REVENUE = '/frmAsrunImport';
   static const SALES_AUDIT_NOT_TELECAST_REPORT = '/frmsalesauditnottelecast';
-  static const SALES_AUDIT_EXTRA_SPOTS_REPORT = '/frmsalesauditextraspotsreport';
+  static const SALES_AUDIT_EXTRA_SPOTS_REPORT =
+      '/frmsalesauditextraspotsreport';
   static const SALES_AUDIT_NEW = '/TransmissionLog';
   static const SLIDE_MASTER = '/frmSlideMaster';
   static const STILL_MASTER = '/frmStillMaster';
@@ -95,4 +108,11 @@ abstract class _Paths {
   static const ASURN_IMPORT = '/asurn-import';
   static const R_O_IMPORT = '/frmROImport';
   static const COMMON_DOCS = '/common-docs';
+  static const MATERIAL_ID_SEARCH = '/material-id-search';
+  static const PROMO_TYPE_MASTER = '/promo-type-master';
+  static const LOG_CONVERT = '/log-convert';
+  static const SPONSER_TYPE_MASTER = '/sponser-type-master';
+  static const SPOT_POSITION_TYPE_MASTER = '/spot-position-type-master';
+  static const SECONDARY_EVENT_TEMPLATE_MASTER =
+      '/secondary-event-template-master';
 }

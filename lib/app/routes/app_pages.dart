@@ -13,8 +13,12 @@ import '../modules/FinalAuditReportBeforeLog/bindings/final_audit_report_before_
 import '../modules/FpcMismatch/bindings/fpc_mismatch_binding.dart';
 import '../modules/ImportDigitextRunOrder/bindings/import_digitext_run_order_binding.dart';
 import '../modules/LogAdditions/bindings/log_additions_binding.dart';
+import '../modules/LogConvert/bindings/log_convert_binding.dart';
+import '../modules/LogConvert/views/log_convert_view.dart';
 import '../modules/MamWorkOrders/bindings/mam_work_orders_binding.dart';
 import '../modules/PromoMaster/bindings/promo_master_binding.dart';
+import '../modules/PromoTypeMaster/bindings/promo_type_master_binding.dart';
+import '../modules/PromoTypeMaster/views/promo_type_master_view.dart';
 import '../modules/ROImport/bindings/r_o_import_binding.dart';
 import '../modules/ROImport/views/r_o_import_view.dart';
 import '../modules/RoBooking/bindings/ro_booking_binding.dart';
@@ -25,7 +29,13 @@ import '../modules/SalesAuditExtraSpotsReport/bindings/sales_audit_extra_spots_r
 import '../modules/SalesAuditNew/bindings/sales_audit_new_binding.dart';
 import '../modules/SalesAuditNotTelecastReport/bindings/sales_audit_not_telecast_report_binding.dart';
 import '../modules/SecondaryEventMaster/bindings/secondary_event_master_binding.dart';
+import '../modules/SecondaryEventTemplateMaster/bindings/secondary_event_template_master_binding.dart';
+import '../modules/SecondaryEventTemplateMaster/views/secondary_event_template_master_view.dart';
 import '../modules/SlideMaster/bindings/slide_master_binding.dart';
+import '../modules/SponserTypeMaster/bindings/sponser_type_master_binding.dart';
+import '../modules/SponserTypeMaster/views/sponser_type_master_view.dart';
+import '../modules/SpotPositionTypeMaster/bindings/spot_position_type_master_binding.dart';
+import '../modules/SpotPositionTypeMaster/views/spot_position_type_master_view.dart';
 import '../modules/SpotPriority/bindings/spot_priority_binding.dart';
 import '../modules/StillMaster/bindings/still_master_binding.dart';
 import '../modules/TransmissionLog/bindings/transmission_log_binding.dart';
@@ -33,6 +43,8 @@ import '../modules/commercial/bindings/commercial_binding.dart';
 import '../modules/filler/bindings/filler_binding.dart';
 import '../modules/home/bindings/home_binding.dart';
 import '../modules/home/views/home_view.dart';
+import '../modules/material_id_search/bindings/material_id_search_binding.dart';
+import '../modules/material_id_search/views/material_id_search_view.dart';
 import '../modules/promos/bindings/promos_binding.dart';
 import '../modules/slide/bindings/slide_binding.dart';
 import '../providers/AuthGuard1.dart';
@@ -43,7 +55,7 @@ class AppPages {
   AppPages._();
   //https://app-scheduling-bms-dev.zeeconnect.in/frmCommercialMaster?loginCode=0iGe3vK5h2KGjfSKZTpmsQ%3D%3D&personalNo=xvmv9k3d1G7ierjaXRHiGA%3D%3D&formName=MgGRl5N4DW2tcWQscJpsp%2BIUElLFsJm5TsN5JpCXjHE%3D
   // static const INITIAL = Routes.ROS_DISTRIBUTION +
-  static const INITIAL = Routes.SALES_AUDIT_NEW +
+  static const INITIAL = Routes.SECONDARY_EVENT_TEMPLATE_MASTER +
       "?personalNo=xvmv9k3d1G7ierjaXRHiGA%3D%3D&loginCode=0iGe3vK5h2KGjfSKZTpmsQ%3D%3D&formName=MgGRl5N4DW2tcWQscJpsp%2BIUElLFsJm5TsN5JpCXjHE%3D";
   static final routes = [
     GetPage(
@@ -223,6 +235,36 @@ class AppPages {
       name: _Paths.COMMON_DOCS,
       page: () => const CommonDocsView(documentKey: ''),
       binding: CommonDocsBinding(),
+    ),
+    GetPage(
+      name: _Paths.MATERIAL_ID_SEARCH,
+      page: () => const MaterialIdSearchView(),
+      binding: MaterialIdSearchBinding(),
+    ),
+    GetPage(
+      name: _Paths.PROMO_TYPE_MASTER,
+      page: () => const PromoTypeMasterView(),
+      binding: PromoTypeMasterBinding(),
+    ),
+    GetPage(
+      name: _Paths.LOG_CONVERT,
+      page: () => const LogConvertView(),
+      binding: LogConvertBinding(),
+    ),
+    GetPage(
+      name: _Paths.SPONSER_TYPE_MASTER,
+      page: () => const SponserTypeMasterView(),
+      binding: SponserTypeMasterBinding(),
+    ),
+    GetPage(
+      name: _Paths.SPOT_POSITION_TYPE_MASTER,
+      page: () => const SpotPositionTypeMasterView(),
+      binding: SpotPositionTypeMasterBinding(),
+    ),
+    GetPage(
+      name: _Paths.SECONDARY_EVENT_TEMPLATE_MASTER,
+      page: () => const SecondaryEventTemplateMasterView(),
+      binding: SecondaryEventTemplateMasterBinding(),
     ),
   ];
 }

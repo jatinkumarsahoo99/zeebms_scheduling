@@ -88,6 +88,8 @@ class FormButton extends StatelessWidget {
       iconData = Icons.schedule_outlined;
     } else if (btnText.toLowerCase() == "actuals/default") {
       iconData = Icons.person;
+    } else if (btnText.toLowerCase() == "show") {
+      iconData = Icons.fact_check_sharp;
     } else if (btnText.toLowerCase() == "yes") {
       iconData = CupertinoIcons.check_mark_circled_solid;
     } else if (btnText.toLowerCase() == "no") {
