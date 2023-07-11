@@ -1,20 +1,17 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
+import '../../../../widgets/LoadingDialog.dart';
+import '../../../controller/ConnectorControl.dart';
 import '../../../data/DropDownValue.dart';
 import '../../../data/PermissionModel.dart';
+import '../../../providers/ApiFactory.dart';
 import '../../../providers/Utils.dart';
 import '../../../routes/app_pages.dart';
 
 class LanguageMasterController extends GetxController {
   List<PermissionModel>? formPermissions;
-  var fromDateTC = TextEditingController(), toDateTC = TextEditingController();
-
-  var dataTableList = [].obs;
-  var locationList = <DropDownValue>[].obs;
-  DropDownValue? selectedLocation, selectedChannel;
-  var locationFN = FocusNode();
-  var channelList = <DropDownValue>[].obs;
+  var textEditingTC = TextEditingController();
 
   @override
   void onInit() {
@@ -33,4 +30,10 @@ class LanguageMasterController extends GetxController {
   }
 
   formHandler(btn) {}
+
+  closeDialogIfOpen() {
+    if (Get.isDialogOpen ?? false) {
+      Get.back();
+    }
+  }
 }
