@@ -46,7 +46,10 @@ class DSeriesSpecificationView extends GetView<DSeriesSpecificationController> {
                     children: [
                       Obx(() => DropDownField.formDropDown1WidthMap(
                             controllerX.locationList.value,
-                            (data) {},
+                            (data) {
+                              controllerX.selectLocation=data;
+                              controllerX.getChannel(data.key);
+                            },
                             "Location",
                             controllerX.widthSize,
                             // isEnable: controllerX.isEnable.value,
@@ -57,10 +60,8 @@ class DSeriesSpecificationView extends GetView<DSeriesSpecificationController> {
                       Obx(() => DropDownField.formDropDown1WidthMap(
                             controllerX.channelList.value,
                             (data) {
-                              // controllerX.orgRepeatId = data.key;
-                              // controllerX.getEpisodeAndSegment();
-                              // controllerX.txtEditingControl[0].text = "AUTO";
-                              // controllerX.selectOrgValue.value = data;
+                              controllerX.selectChannel=data;
+                              controllerX.getChannelLeave();
                             },
                             "Channel",
                             controllerX.widthSize,
