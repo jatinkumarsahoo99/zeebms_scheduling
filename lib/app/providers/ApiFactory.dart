@@ -828,4 +828,16 @@ class ApiFactory {
   static String SponderTypeMasterGetRecord(sponserCode, sponserName) =>
       BASE_URL + "/api/SponsorTypeMaster/Get_RetrieveRecord?SponsorTypeName=$sponserName";
   static String SponderTypeMasterSaveRecord = BASE_URL + "/api/SponsorTypeMaster/Post_Save";
+  ////////////////////// SecondaryEventTemplateMaster ///////////////////////////////////
+
+  static String SecondaryEventTemplateMasterInitData = BASE_URL + "/api/SecondaryEventTemplateMaster/GetInitialisation";
+  static String SecondaryEventTemplateMasterGetChannel(
+    locCode,
+  ) =>
+      BASE_URL + "/api/SecondaryEventTemplateMaster/GetLocationSelect?LocationCode=$locCode";
+  static String SecondaryEventTemplateMasterProgSearch = BASE_URL + "/api/SecondaryEventTemplateMaster/GetSourceProgramSearch?TextSourceProgram=";
+  static String SecondaryEventTemplateMasterGetCopy(locCode, channelCode, progCode) =>
+      BASE_URL + "/api/SecondaryEventTemplateMaster/GetCopy?locationcode=$locCode&channelcode=$channelCode&ProgramCode=$progCode";
+  static String SecondaryEventTemplateMasterGetProgramPicker(locCode, channelCode) =>
+      BASE_URL + "/api/SecondaryEventTemplateMaster/GetProgramPicker?locationcode=$locCode&channelcode=$channelCode";
 }
