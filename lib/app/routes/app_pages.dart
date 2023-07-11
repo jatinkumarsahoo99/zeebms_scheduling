@@ -34,10 +34,14 @@ import '../modules/InventoryStatusReport/views/inventory_status_report_view.dart
 import '../modules/LanguageMaster/bindings/language_master_binding.dart';
 import '../modules/LanguageMaster/views/language_master_view.dart';
 import '../modules/LogAdditions/bindings/log_additions_binding.dart';
+import '../modules/LogConvert/bindings/log_convert_binding.dart';
+import '../modules/LogConvert/views/log_convert_view.dart';
 import '../modules/MamWorkOrders/bindings/mam_work_orders_binding.dart';
 import '../modules/ManageChannelInventory/bindings/manage_channel_inventory_binding.dart';
 import '../modules/ManageChannelInventory/views/manage_channel_inventory_view.dart';
 import '../modules/PromoMaster/bindings/promo_master_binding.dart';
+import '../modules/PromoTypeMaster/bindings/promo_type_master_binding.dart';
+import '../modules/PromoTypeMaster/views/promo_type_master_view.dart';
 import '../modules/ROImport/bindings/r_o_import_binding.dart';
 import '../modules/RoBooking/bindings/ro_booking_binding.dart';
 import '../modules/RoCancellation/bindings/ro_cancellation_binding.dart';
@@ -47,7 +51,13 @@ import '../modules/SalesAuditExtraSpotsReport/bindings/sales_audit_extra_spots_r
 import '../modules/SalesAuditNew/bindings/sales_audit_new_binding.dart';
 import '../modules/SalesAuditNotTelecastReport/bindings/sales_audit_not_telecast_report_binding.dart';
 import '../modules/SecondaryEventMaster/bindings/secondary_event_master_binding.dart';
+import '../modules/SecondaryEventTemplateMaster/bindings/secondary_event_template_master_binding.dart';
+import '../modules/SecondaryEventTemplateMaster/views/secondary_event_template_master_view.dart';
 import '../modules/SlideMaster/bindings/slide_master_binding.dart';
+import '../modules/SponserTypeMaster/bindings/sponser_type_master_binding.dart';
+import '../modules/SponserTypeMaster/views/sponser_type_master_view.dart';
+import '../modules/SpotPositionTypeMaster/bindings/spot_position_type_master_binding.dart';
+import '../modules/SpotPositionTypeMaster/views/spot_position_type_master_view.dart';
 import '../modules/SpotPriority/bindings/spot_priority_binding.dart';
 import '../modules/StillMaster/bindings/still_master_binding.dart';
 import '../modules/TransmissionLog/bindings/transmission_log_binding.dart';
@@ -55,6 +65,8 @@ import '../modules/commercial/bindings/commercial_binding.dart';
 import '../modules/filler/bindings/filler_binding.dart';
 import '../modules/home/bindings/home_binding.dart';
 import '../modules/home/views/home_view.dart';
+import '../modules/material_id_search/bindings/material_id_search_binding.dart';
+import '../modules/material_id_search/views/material_id_search_view.dart';
 import '../modules/promos/bindings/promos_binding.dart';
 import '../modules/slide/bindings/slide_binding.dart';
 import '../providers/AuthGuard1.dart';
@@ -318,5 +330,35 @@ class AppPages {
       // page: () => EuropeDropSpotsView(),
       // binding: EuropeDropSpotsBinding(),
     ),
+    GetPage(
+      name: _Paths.MATERIAL_ID_SEARCH,
+      page: () => AuthGuard1(childName: _Paths.MATERIAL_ID_SEARCH),
+      binding: MaterialIdSearchBinding(),
+    ),
+    GetPage(
+      name: _Paths.PROMO_TYPE_MASTER,
+      page: () => AuthGuard1(childName: _Paths.PROMO_TYPE_MASTER),
+      binding: PromoTypeMasterBinding(),
+    ),
+    GetPage(
+      name: _Paths.LOG_CONVERT,
+      page: () => AuthGuard1(childName: _Paths.LOG_CONVERT),
+      binding: LogConvertBinding(),
+    ),
+    GetPage(
+      name: _Paths.SPONSER_TYPE_MASTER,
+      page: () => AuthGuard1(childName: _Paths.SPONSER_TYPE_MASTER),
+      binding: SponserTypeMasterBinding(),
+    ),
+    GetPage(
+      name: _Paths.SPOT_POSITION_TYPE_MASTER,
+      page: () => AuthGuard1(childName: _Paths.SPOT_POSITION_TYPE_MASTER),
+      binding: SpotPositionTypeMasterBinding(),
+    ),
+    GetPage(
+      name: _Paths.SECONDARY_EVENT_TEMPLATE_MASTER,
+      page: () => AuthGuard1(childName: _Paths.SECONDARY_EVENT_TEMPLATE_MASTER),
+      binding: SecondaryEventTemplateMasterBinding(),
+    )
   ];
 }

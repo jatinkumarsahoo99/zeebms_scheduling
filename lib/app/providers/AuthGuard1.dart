@@ -5,16 +5,22 @@ import 'package:bms_scheduling/app/modules/FinalAuditReportAfterTelecast/views/f
 import 'package:bms_scheduling/app/modules/FinalAuditReportBeforeLog/views/final_audit_report_before_log_view.dart';
 import 'package:bms_scheduling/app/modules/FpcMismatch/views/FpcMismatchView.dart';
 import 'package:bms_scheduling/app/modules/ImportDigitextRunOrder/views/import_digitext_run_order_view.dart';
+import 'package:bms_scheduling/app/modules/LogConvert/views/log_convert_view.dart';
 import 'package:bms_scheduling/app/modules/MamWorkOrders/views/mam_work_orders_view.dart';
+import 'package:bms_scheduling/app/modules/PromoTypeMaster/views/promo_type_master_view.dart';
 import 'package:bms_scheduling/app/modules/RoBooking/views/ro_booking_view.dart';
 import 'package:bms_scheduling/app/modules/RoCancellation/views/ro_cancellation_view.dart';
 import 'package:bms_scheduling/app/modules/SecondaryEventMaster/views/secondary_event_master_view.dart';
+import 'package:bms_scheduling/app/modules/SecondaryEventTemplateMaster/views/secondary_event_template_master_view.dart';
+import 'package:bms_scheduling/app/modules/SponserTypeMaster/views/sponser_type_master_view.dart';
+import 'package:bms_scheduling/app/modules/SpotPositionTypeMaster/views/spot_position_type_master_view.dart';
 import 'package:bms_scheduling/app/modules/commercial/views/commercial_view.dart';
 import 'package:bms_scheduling/app/modules/filler/views/filler_view.dart';
 import 'package:bms_scheduling/app/modules/RoReschedule/views/ro_reschedule_view.dart';
 import 'package:bms_scheduling/app/modules/RosDistribution/views/ros_distribution_view.dart';
 import 'package:bms_scheduling/app/modules/SalesAuditExtraSpotsReport/views/sales_audit_extra_spots_report_view.dart';
 import 'package:bms_scheduling/app/modules/SalesAuditNotTelecastReport/views/SalesAuditNotTelecastReportView.dart';
+import 'package:bms_scheduling/app/modules/material_id_search/views/material_id_search_view.dart';
 import 'package:bms_scheduling/app/modules/promos/views/promos_view.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
@@ -80,8 +86,26 @@ class AuthGuard1 extends StatelessWidget {
             case Routes.R_O_IMPORT:
               currentWidget = const ROImportView();
               break;
+            case Routes.MATERIAL_ID_SEARCH:
+              currentWidget = MaterialIdSearchView();
+              break;
             case Routes.EVENT_SECONDARY:
               currentWidget = EventSecondaryView();
+              break;
+            case Routes.SPONSER_TYPE_MASTER:
+              currentWidget = SponserTypeMasterView();
+              break;
+            case Routes.SPOT_POSITION_TYPE_MASTER:
+              currentWidget = SpotPositionTypeMasterView();
+              break;
+            case Routes.SECONDARY_EVENT_TEMPLATE_MASTER:
+              currentWidget = SecondaryEventTemplateMasterView();
+              break;
+            case Routes.LOG_CONVERT:
+              currentWidget = LogConvertView();
+              break;
+            case Routes.PROMO_TYPE_MASTER:
+              currentWidget = PromoTypeMasterView();
               break;
             case Routes.SECONDARY_EVENT_MASTER:
               currentWidget = SecondaryEventMasterView();
