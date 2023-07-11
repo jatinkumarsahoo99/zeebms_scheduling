@@ -23,13 +23,21 @@ import '../modules/DateWiseErrorSpots/views/date_wise_error_spots_view.dart';
 import '../modules/DateWiseFillerReport/bindings/date_wise_filler_report_binding.dart';
 import '../modules/DateWiseFillerReport/views/date_wise_filler_report_view.dart';
 import '../modules/EventSecondary/bindings/event_secondary_binding.dart';
+import '../modules/ExtraSpotsWithRemark/bindings/extra_spots_with_remark_binding.dart';
+import '../modules/ExtraSpotsWithRemark/views/extra_spots_with_remark_view.dart';
 import '../modules/FillerMaster/bindings/filler_master_binding.dart';
 import '../modules/FinalAuditReportAfterTelecast/bindings/final_audit_report_after_telecast_binding.dart';
 import '../modules/FinalAuditReportBeforeLog/bindings/final_audit_report_before_log_binding.dart';
 import '../modules/FpcMismatch/bindings/fpc_mismatch_binding.dart';
 import '../modules/ImportDigitextRunOrder/bindings/import_digitext_run_order_binding.dart';
+import '../modules/InventoryStatusReport/bindings/inventory_status_report_binding.dart';
+import '../modules/InventoryStatusReport/views/inventory_status_report_view.dart';
+import '../modules/LanguageMaster/bindings/language_master_binding.dart';
+import '../modules/LanguageMaster/views/language_master_view.dart';
 import '../modules/LogAdditions/bindings/log_additions_binding.dart';
 import '../modules/MamWorkOrders/bindings/mam_work_orders_binding.dart';
+import '../modules/ManageChannelInventory/bindings/manage_channel_inventory_binding.dart';
+import '../modules/ManageChannelInventory/views/manage_channel_inventory_view.dart';
 import '../modules/PromoMaster/bindings/promo_master_binding.dart';
 import '../modules/ROImport/bindings/r_o_import_binding.dart';
 import '../modules/ROImport/views/r_o_import_view.dart';
@@ -59,7 +67,7 @@ class AppPages {
   AppPages._();
   //https://app-scheduling-bms-dev.zeeconnect.in/frmCommercialMaster?loginCode=0iGe3vK5h2KGjfSKZTpmsQ%3D%3D&personalNo=xvmv9k3d1G7ierjaXRHiGA%3D%3D&formName=MgGRl5N4DW2tcWQscJpsp%2BIUElLFsJm5TsN5JpCXjHE%3D
   // static const INITIAL = Routes.ROS_DISTRIBUTION +
-  static const INITIAL = Routes.BRAND_MASTER +
+  static const INITIAL = Routes.LANGUAGE_MASTER +
       "?personalNo=xvmv9k3d1G7ierjaXRHiGA%3D%3D&loginCode=0iGe3vK5h2KGjfSKZTpmsQ%3D%3D&formName=MgGRl5N4DW2tcWQscJpsp%2BIUElLFsJm5TsN5JpCXjHE%3D";
   static final routes = [
     GetPage(
@@ -226,7 +234,6 @@ class AppPages {
     ),
     GetPage(
       name: _Paths.COMMERCIAL_MASTER,
-      // page: () => const CommercialMasterView(),
       page: () => AuthGuard1(childName: _Paths.COMMERCIAL_MASTER),
       binding: CommercialMasterBinding(),
     ),
@@ -245,6 +252,26 @@ class AppPages {
       name: _Paths.COMMON_DOCS,
       page: () => const CommonDocsView(documentKey: ''),
       binding: CommonDocsBinding(),
+    ),
+    GetPage(
+      name: _Paths.EXTRA_SPOTS_WITH_REMARK,
+      page: () => AuthGuard1(childName: _Paths.EXTRA_SPOTS_WITH_REMARK),
+      binding: ExtraSpotsWithRemarkBinding(),
+    ),
+    GetPage(
+      name: _Paths.INVENTORY_STATUS_REPORT,
+      page: () => AuthGuard1(childName: _Paths.INVENTORY_STATUS_REPORT),
+      binding: InventoryStatusReportBinding(),
+    ),
+    GetPage(
+      name: _Paths.MANAGE_CHANNEL_INVENTORY,
+      page: () => AuthGuard1(childName: _Paths.MANAGE_CHANNEL_INVENTORY),
+      binding: ManageChannelInventoryBinding(),
+    ),
+    GetPage(
+      name: _Paths.LANGUAGE_MASTER,
+      page: () => AuthGuard1(childName: _Paths.LANGUAGE_MASTER),
+      binding: LanguageMasterBinding(),
     ),
     GetPage(
       name: _Paths.BRAND_MASTER,
@@ -278,7 +305,7 @@ class AppPages {
     ),
     GetPage(
       name: _Paths.CREATIVE_TAG_ON,
-      page: () =>  AuthGuard1(childName: _Paths.CREATIVE_TAG_ON),
+      page: () => AuthGuard1(childName: _Paths.CREATIVE_TAG_ON),
       binding: CreativeTagOnBinding(),
     ),
   ];
