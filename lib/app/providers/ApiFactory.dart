@@ -821,4 +821,18 @@ class ApiFactory {
   static String SALESAUDIT_NEW_SAVEDATA = BASE_URL + "/api/SalesAduitNew/PostSalesAduit";
   static String SALESAUDIT_NEW_GETRETRIEVE(String locationCode, String channelCode, String scheduleDate) =>
       BASE_URL + "/api/SalesAduitNew/GetRetrieve?Locationcode=$locationCode&channelcode=$channelCode&date=$scheduleDate";
+
+  //////////////////////////////////////////////////////////////////////////////
+
+  ////////////////////////DSeries Specification/////////////////////////
+  static String DSERIES_SPECIFICATION_LOAD = BASE_URL + "/api/DSeriesSpecification/GetDSeriesSpecsLoad";
+  static String DSERIES_SPECIFICATION_CHANNEL = BASE_URL + "/api/DSeriesSpecification/GetChannelList";
+  static String DSERIES_SPECIFICATION_CHANNEL_LEAVE = BASE_URL + "/api/DSeriesSpecification/GetChannelsLeave";
+  static String DSERIES_SPECIFICATION_SAVE = BASE_URL + "/api/DSeriesSpecification/postSave";
+  ////////////////////////DSeries Specification- END/////////////////////////
+
+  // ////////////////////Europe Commercial Import Status/////////////////////////
+  static String EUROPE_COMMERCIAL_GENERATE = BASE_URL + "/api/EuropeCommercialImportStatus/GetGenrate";
+  ////////////////////////Europe Commercial Import Status- END/////////////////////////
+
 }
