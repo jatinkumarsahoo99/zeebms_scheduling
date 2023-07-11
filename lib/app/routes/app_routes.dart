@@ -38,6 +38,12 @@ abstract class Routes {
   static const ASURN_IMPORT = _Paths.ASURN_IMPORT;
   static const R_O_IMPORT = _Paths.R_O_IMPORT;
   static const COMMON_DOCS = _Paths.COMMON_DOCS;
+  static const MATERIAL_ID_SEARCH = _Paths.MATERIAL_ID_SEARCH;
+  static const PROMO_TYPE_MASTER = _Paths.PROMO_TYPE_MASTER;
+  static const LOG_CONVERT = _Paths.LOG_CONVERT;
+  static const SPONSER_TYPE_MASTER = _Paths.SPONSER_TYPE_MASTER;
+  static const SPOT_POSITION_TYPE_MASTER = _Paths.SPOT_POSITION_TYPE_MASTER;
+  static const SECONDARY_EVENT_TEMPLATE_MASTER = _Paths.SECONDARY_EVENT_TEMPLATE_MASTER;
   static const EXTRA_SPOTS_WITH_REMARK = _Paths.EXTRA_SPOTS_WITH_REMARK;
   static const INVENTORY_STATUS_REPORT = _Paths.INVENTORY_STATUS_REPORT;
   static const MANAGE_CHANNEL_INVENTORY = _Paths.MANAGE_CHANNEL_INVENTORY;
@@ -117,6 +123,12 @@ abstract class _Paths {
   static const R_O_IMPORT = '/frmROImport';
   static const D_SERIES_SPECIFICATION = '/frmDSeriesSpecs';
   static const COMMON_DOCS = '/common-docs';
+  static const MATERIAL_ID_SEARCH = '/SearchTapeCode';
+  static const PROMO_TYPE_MASTER = '/frmPromoTypeMaster';
+  static const LOG_CONVERT = '/frmSPNLogConvert';
+  static const SPONSER_TYPE_MASTER = '/frmSponsorTypeMaster';
+  static const SPOT_POSITION_TYPE_MASTER = '/frmSpotPositionTypeMaster';
+  static const SECONDARY_EVENT_TEMPLATE_MASTER = '/frmSecondaryEventsTemplateMaster';
   static const EXTRA_SPOTS_WITH_REMARK = '/Frmextraspotswithremark';
   static const INVENTORY_STATUS_REPORT = '/Frminventoryutilization';
   static const MANAGE_CHANNEL_INVENTORY = '/frmCommercialTimeUpdate';
