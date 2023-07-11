@@ -17,12 +17,12 @@ class LanguageMasterView extends GetView<LanguageMasterController> {
     return Scaffold(
       body: Center(
         child: SizedBox(
-          width: context.width * .7,
+          width: context.width * .5,
           // height: context.height,
           child: Dialog(
             child: Column(
               mainAxisSize: MainAxisSize.min,
-              crossAxisAlignment: CrossAxisAlignment.start,
+              crossAxisAlignment: CrossAxisAlignment.center,
               children: [
                 AppBar(
                   title: const Text('Langauge Master'),
@@ -32,41 +32,42 @@ class LanguageMasterView extends GetView<LanguageMasterController> {
 
                 const SizedBox(height: 20),
                 InputFields.formField1(
-                  hintTxt: "Tape ID",
+                  hintTxt: "Langauge Name",
                   controller: controller.textEditingTC,
-                  width: 0.6,
+                  width: 0.4,
                   padLeft: 0,
                   autoFocus: true,
+                  focusNode: controller.langaugeFN,
+                  inputformatters: [
+                    UpperCaseTextFormatter(),
+                  ],
                 ),
                 const SizedBox(height: 20),
 
                 ///Common Buttons
-                Align(
-                  alignment: Alignment.topLeft,
-                  child: GetBuilder<HomeController>(
-                    id: "buttons",
-                    init: Get.find<HomeController>(),
-                    builder: (btncontroller) {
-                      if (btncontroller.buttons != null) {
-                        return Wrap(
-                          spacing: 5,
-                          runSpacing: 15,
-                          alignment: WrapAlignment.center,
-                          children: [
-                            for (var btn in btncontroller.buttons!) ...{
-                              FormButtonWrapper(
-                                btnText: btn["name"],
-                                callback: ((Utils.btnAccessHandler(btn['name'], controller.formPermissions!) == null))
-                                    ? null
-                                    : () => controller.formHandler(btn['name']),
-                              )
-                            },
-                          ],
-                        );
-                      }
-                      return Container();
-                    },
-                  ),
+                GetBuilder<HomeController>(
+                  id: "buttons",
+                  init: Get.find<HomeController>(),
+                  builder: (btncontroller) {
+                    if (btncontroller.buttons != null) {
+                      return Wrap(
+                        spacing: 5,
+                        runSpacing: 15,
+                        alignment: WrapAlignment.center,
+                        children: [
+                          for (var btn in btncontroller.buttons!) ...{
+                            FormButtonWrapper(
+                              btnText: btn["name"],
+                              callback: ((Utils.btnAccessHandler(btn['name'], controller.formPermissions!) == null))
+                                  ? null
+                                  : () => controller.formHandler(btn['name']),
+                            )
+                          },
+                        ],
+                      );
+                    }
+                    return Container();
+                  },
                 ),
                 const SizedBox(height: 20),
               ],
