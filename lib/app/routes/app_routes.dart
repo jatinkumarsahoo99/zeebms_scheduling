@@ -18,8 +18,10 @@ abstract class Routes {
   static const SPOT_PRIORITY = _Paths.SPOT_PRIORITY;
   static const RO_RESCHEDULE = _Paths.RO_RESCHEDULE;
   static const ROS_DISTRIBUTION = _Paths.ROS_DISTRIBUTION;
-  static const FINAL_AUDIT_REPORT_BEFORE_LOG = _Paths.FINAL_AUDIT_REPORT_BEFORE_LOG;
-  static const FINAL_AUDIT_REPORT_AFTER_TELECAST = _Paths.FINAL_AUDIT_REPORT_AFTER_TELECAST;
+  static const FINAL_AUDIT_REPORT_BEFORE_LOG =
+      _Paths.FINAL_AUDIT_REPORT_BEFORE_LOG;
+  static const FINAL_AUDIT_REPORT_AFTER_TELECAST =
+      _Paths.FINAL_AUDIT_REPORT_AFTER_TELECAST;
   static const AUDIT_STATUS = _Paths.AUDIT_STATUS;
   static const ASRUN_IMPORT_AD_REVENUE = _Paths.ASRUN_IMPORT_AD_REVENUE;
   static const SALES_AUDIT_NOT_TELECAST_REPORT = _Paths.SALES_AUDIT_NOT_TELECAST_REPORT;
@@ -48,6 +50,8 @@ abstract class Routes {
   static const DATE_WISE_FILLER_REPORT = _Paths.DATE_WISE_FILLER_REPORT;
   static const CREATIVE_TAG_ON = _Paths.CREATIVE_TAG_ON;
   static const D_SERIES_SPECIFICATION = _Paths.D_SERIES_SPECIFICATION;
+  static const EUROPE_RUNNING_ORDER_STATUS = _Paths.EUROPE_RUNNING_ORDER_STATUS;
+  static const EUROPE_DROP_SPOTS = _Paths.EUROPE_DROP_SPOTS;
 }
 
 abstract class RoutesList {
@@ -124,4 +128,6 @@ abstract class _Paths {
   static const DATE_WISE_ERROR_SPOTS = '/frmDateWiseErrorReport';
   static const DATE_WISE_FILLER_REPORT = '/frmDateWiseFillerReport';
   static const CREATIVE_TAG_ON = '/frmCreativeTagOnLink';
+  static const EUROPE_RUNNING_ORDER_STATUS = '/Robookingotherrevenues';
+  static const EUROPE_DROP_SPOTS = '/RorescheduleOtherrevune';
 }

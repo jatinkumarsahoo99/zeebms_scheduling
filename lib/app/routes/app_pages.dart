@@ -11,7 +11,6 @@ import '../modules/ComingUpNextMenu/views/coming_up_next_menu_view.dart';
 import '../modules/ComingUpTomorrowMenu/bindings/coming_up_tomorrow_menu_binding.dart';
 import '../modules/ComingUpTomorrowMenu/views/coming_up_tomorrow_menu_view.dart';
 import '../modules/CommercialMaster/bindings/commercial_master_binding.dart';
-import '../modules/CommercialMaster/views/commercial_master_view.dart';
 import '../modules/CommonDocs/bindings/common_docs_binding.dart';
 import '../modules/CommonDocs/views/common_docs_view.dart';
 import '../modules/DSeriesSpecification/bindings/d_series_specification_binding.dart';
@@ -40,7 +39,6 @@ import '../modules/ManageChannelInventory/bindings/manage_channel_inventory_bind
 import '../modules/ManageChannelInventory/views/manage_channel_inventory_view.dart';
 import '../modules/PromoMaster/bindings/promo_master_binding.dart';
 import '../modules/ROImport/bindings/r_o_import_binding.dart';
-import '../modules/ROImport/views/r_o_import_view.dart';
 import '../modules/RoBooking/bindings/ro_booking_binding.dart';
 import '../modules/RoCancellation/bindings/ro_cancellation_binding.dart';
 import '../modules/RoReschedule/bindings/ro_reschedule_binding.dart';
@@ -67,8 +65,8 @@ class AppPages {
   AppPages._();
   //https://app-scheduling-bms-dev.zeeconnect.in/frmCommercialMaster?loginCode=0iGe3vK5h2KGjfSKZTpmsQ%3D%3D&personalNo=xvmv9k3d1G7ierjaXRHiGA%3D%3D&formName=MgGRl5N4DW2tcWQscJpsp%2BIUElLFsJm5TsN5JpCXjHE%3D
   // static const INITIAL = Routes.ROS_DISTRIBUTION +
-  static const INITIAL = Routes.LANGUAGE_MASTER +
-      "?personalNo=xvmv9k3d1G7ierjaXRHiGA%3D%3D&loginCode=0iGe3vK5h2KGjfSKZTpmsQ%3D%3D&formName=MgGRl5N4DW2tcWQscJpsp%2BIUElLFsJm5TsN5JpCXjHE%3D";
+  static const INITIAL = Routes.D_SERIES_SPECIFICATION +
+      "?personalNo=kW5Bkf17%2FS5YF7ML28FmVg%3D%3D&loginCode=1BWIoBKeDl7qDSAAhxvXsQ%3D%3D&formName=OI8ukDpPPVN0I2BEXu2h4nuFu%2BZm1ZRpvP8NL4XCXzQ%3D";
   static final routes = [
     GetPage(
       name: _Paths.HOME,
@@ -307,6 +305,18 @@ class AppPages {
       name: _Paths.CREATIVE_TAG_ON,
       page: () => AuthGuard1(childName: _Paths.CREATIVE_TAG_ON),
       binding: CreativeTagOnBinding(),
+    ),
+    GetPage(
+      name: _Paths.EUROPE_RUNNING_ORDER_STATUS,
+      // page: () => EuropeRunningOrderStatusView(),
+      // binding: EuropeRunningOrderStatusBinding(),
+      page: () => AuthGuard1(childName: _Paths.EUROPE_RUNNING_ORDER_STATUS),
+    ),
+    GetPage(
+      name: _Paths.EUROPE_DROP_SPOTS,
+      page: () => AuthGuard1(childName: _Paths.EUROPE_DROP_SPOTS),
+      // page: () => EuropeDropSpotsView(),
+      // binding: EuropeDropSpotsBinding(),
     ),
   ];
 }

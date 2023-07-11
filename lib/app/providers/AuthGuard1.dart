@@ -35,6 +35,8 @@ import '../modules/DSeriesSpecification/views/DSeriesSpecificationView.dart';
 import '../modules/CreativeTagOn/views/creative_tag_on_view.dart';
 import '../modules/DateWiseErrorSpots/views/date_wise_error_spots_view.dart';
 import '../modules/DateWiseFillerReport/views/date_wise_filler_report_view.dart';
+import '../modules/EuropeCommercialImportStatus/views/EuropeCommercialImportStatusView.dart';
+import '../modules/EuropeDropSpots/views/EuropeDropSpotsView.dart';
 import '../modules/LogAdditions/views/LogAdditionsView.dart';
 import '../modules/PromoMaster/views/promo_master_view.dart';
 import '../modules/ROImport/views/r_o_import_view.dart';
@@ -43,7 +45,6 @@ import '../modules/SlideMaster/views/slide_master_view.dart';
 import '../modules/SpotPriority/views/SpotPriorityView.dart';
 import '../modules/StillMaster/views/still_master_view.dart';
 import '../modules/TransmissionLog/views/TransmissionLogView.dart';
-import '../modules/commercial/views/commercial_view.dart';
 import '../modules/home/views/home_view.dart';
 import '../modules/slide/views/slide_view.dart';
 import '../routes/app_pages.dart';
@@ -201,6 +202,12 @@ class AuthGuard1 extends StatelessWidget {
               break;
             case Routes.D_SERIES_SPECIFICATION:
               currentWidget = DSeriesSpecificationView();
+              break;
+            case Routes.EUROPE_RUNNING_ORDER_STATUS:
+              currentWidget = EuropeCommercialImportStatusView();
+              break;
+            case Routes.EUROPE_DROP_SPOTS:
+              currentWidget = EuropeDropSpotsView();
               break;
             default:
               currentWidget = const NoDataFoundPage();
