@@ -69,14 +69,21 @@ class LanguageMasterController extends GetxController {
               resp['languagemaster'] != null &&
               resp['languagemaster'].toString().contains("successfully.")) {
             LoadingDialog.callDataSaved(
-                msg: resp['languagemaster'].toString(),
-                callback: () {
-                  clearPage();
-                });
+              msg: resp['languagemaster'].toString(),
+              callback: () {
+                clearPage();
+              },
+            );
+          } else {
+            if (resp.toString().contains("languagemaster")) {
+              LoadingDialog.showErrorDialog(resp['languagemaster'].toString());
+            } else {
+              LoadingDialog.showErrorDialog(resp.toString());
+            }
           }
         },
         json: {
-          "languageCode": code ?? "0",
+          "languageCode": code ?? "",
           "languageName": textEditingTC.text,
         },
       );
