@@ -824,4 +824,8 @@ class ApiFactory {
 
   //////////////////////// SearchTapeCode //////////////////
   static String SearchTapeCode = BASE_URL + "/api/SearchTapeCode/GetbtnShowClick";
+  //////////////////////// Spot Type Master ///////////////
+  static String SponderTypeMasterGetRecord(sponserCode, sponserName) =>
+      BASE_URL + "/api/SponsorTypeMaster/Get_RetrieveRecord?SponsorTypeName=$sponserName";
+  static String SponderTypeMasterSaveRecord = BASE_URL + "/api/SponsorTypeMaster/Post_Save";
 }

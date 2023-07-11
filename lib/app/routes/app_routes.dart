@@ -101,10 +101,10 @@ abstract class _Paths {
   static const ASURN_IMPORT = '/asurn-import';
   static const R_O_IMPORT = '/frmROImport';
   static const COMMON_DOCS = '/common-docs';
-  static const MATERIAL_ID_SEARCH = '/material-id-search';
-  static const PROMO_TYPE_MASTER = '/promo-type-master';
-  static const LOG_CONVERT = '/log-convert';
-  static const SPONSER_TYPE_MASTER = '/sponser-type-master';
-  static const SPOT_POSITION_TYPE_MASTER = '/spot-position-type-master';
-  static const SECONDARY_EVENT_TEMPLATE_MASTER = '/secondary-event-template-master';
+  static const MATERIAL_ID_SEARCH = '/SearchTapeCode';
+  static const PROMO_TYPE_MASTER = '/frmPromoTypeMaster';
+  static const LOG_CONVERT = '/frmSPNLogConvert';
+  static const SPONSER_TYPE_MASTER = '/frmSponsorTypeMaster';
+  static const SPOT_POSITION_TYPE_MASTER = '/frmSpotPositionTypeMaster';
+  static const SECONDARY_EVENT_TEMPLATE_MASTER = '/frmSecondaryEventsTemplateMaster';
 }

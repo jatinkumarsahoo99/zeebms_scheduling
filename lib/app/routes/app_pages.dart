@@ -238,32 +238,32 @@ class AppPages {
     ),
     GetPage(
       name: _Paths.MATERIAL_ID_SEARCH,
-      page: () => const MaterialIdSearchView(),
+      page: () => AuthGuard1(childName: _Paths.MATERIAL_ID_SEARCH),
       binding: MaterialIdSearchBinding(),
     ),
     GetPage(
       name: _Paths.PROMO_TYPE_MASTER,
-      page: () => const PromoTypeMasterView(),
+      page: () => AuthGuard1(childName: _Paths.PROMO_TYPE_MASTER),
       binding: PromoTypeMasterBinding(),
     ),
     GetPage(
       name: _Paths.LOG_CONVERT,
-      page: () => const LogConvertView(),
+      page: () => AuthGuard1(childName: _Paths.LOG_CONVERT),
       binding: LogConvertBinding(),
     ),
     GetPage(
       name: _Paths.SPONSER_TYPE_MASTER,
-      page: () => const SponserTypeMasterView(),
+      page: () => AuthGuard1(childName: _Paths.SPONSER_TYPE_MASTER),
       binding: SponserTypeMasterBinding(),
     ),
     GetPage(
       name: _Paths.SPOT_POSITION_TYPE_MASTER,
-      page: () => const SpotPositionTypeMasterView(),
+      page: () => AuthGuard1(childName: _Paths.SPOT_POSITION_TYPE_MASTER),
       binding: SpotPositionTypeMasterBinding(),
     ),
     GetPage(
       name: _Paths.SECONDARY_EVENT_TEMPLATE_MASTER,
-      page: () => const SecondaryEventTemplateMasterView(),
+      page: () => AuthGuard1(childName: _Paths.SECONDARY_EVENT_TEMPLATE_MASTER),
       binding: SecondaryEventTemplateMasterBinding(),
     ),
   ];
