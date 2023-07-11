@@ -1,11 +1,24 @@
+import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
-class LanguageMasterController extends GetxController {
-  //TODO: Implement LanguageMasterController
+import '../../../data/DropDownValue.dart';
+import '../../../data/PermissionModel.dart';
+import '../../../providers/Utils.dart';
+import '../../../routes/app_pages.dart';
 
-  final count = 0.obs;
+class LanguageMasterController extends GetxController {
+  List<PermissionModel>? formPermissions;
+  var fromDateTC = TextEditingController(), toDateTC = TextEditingController();
+
+  var dataTableList = [].obs;
+  var locationList = <DropDownValue>[].obs;
+  DropDownValue? selectedLocation, selectedChannel;
+  var locationFN = FocusNode();
+  var channelList = <DropDownValue>[].obs;
+
   @override
   void onInit() {
+    formPermissions = Utils.fetchPermissions1(Routes.LANGUAGE_MASTER.replaceAll("/", ""));
     super.onInit();
   }
 
@@ -19,5 +32,5 @@ class LanguageMasterController extends GetxController {
     super.onClose();
   }
 
-  void increment() => count.value++;
+  formHandler(btn) {}
 }

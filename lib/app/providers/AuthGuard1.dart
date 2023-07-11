@@ -23,6 +23,7 @@ import '../../widgets/NoDataFoundPage.dart';
 import '../modules/AsrunImportAdRevenue/views/AsrunImportAdRevenueView.dart';
 import '../modules/AuditStatus/views/audit_status_view.dart';
 import '../modules/CommercialMaster/views/commercial_master_view.dart';
+import '../modules/LanguageMaster/views/language_master_view.dart';
 import '../modules/ManageChannelInventory/views/manage_channel_inventory_view.dart';
 import '../modules/ExtraSpotsWithRemark/views/extra_spots_with_remark_view.dart';
 import '../modules/InventoryStatusReport/views/inventory_status_report_view.dart';
@@ -165,6 +166,9 @@ class AuthGuard1 extends StatelessWidget {
               break;
             case Routes.MANAGE_CHANNEL_INVENTORY:
               currentWidget = const ManageChannelInvemtoryView();
+              break;
+            case Routes.LANGUAGE_MASTER:
+              currentWidget = const LanguageMasterView();
               break;
             default:
               currentWidget = const NoDataFoundPage();
