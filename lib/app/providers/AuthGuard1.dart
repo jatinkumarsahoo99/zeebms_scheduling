@@ -22,11 +22,19 @@ import '../../widgets/LoadingScreen.dart';
 import '../../widgets/NoDataFoundPage.dart';
 import '../modules/AsrunImportAdRevenue/views/AsrunImportAdRevenueView.dart';
 import '../modules/AuditStatus/views/audit_status_view.dart';
+import '../modules/BrandMaster/views/brand_master_view.dart';
+import '../modules/ComingUpMenu/views/coming_up_menu_view.dart';
+import '../modules/ComingUpNextMenu/views/coming_up_next_menu_view.dart';
+import '../modules/ComingUpTomorrowMenu/views/coming_up_tomorrow_menu_view.dart';
 import '../modules/CommercialMaster/views/commercial_master_view.dart';
 import '../modules/LanguageMaster/views/language_master_view.dart';
 import '../modules/ManageChannelInventory/views/manage_channel_inventory_view.dart';
 import '../modules/ExtraSpotsWithRemark/views/extra_spots_with_remark_view.dart';
 import '../modules/InventoryStatusReport/views/inventory_status_report_view.dart';
+import '../modules/DSeriesSpecification/views/DSeriesSpecificationView.dart';
+import '../modules/CreativeTagOn/views/creative_tag_on_view.dart';
+import '../modules/DateWiseErrorSpots/views/date_wise_error_spots_view.dart';
+import '../modules/DateWiseFillerReport/views/date_wise_filler_report_view.dart';
 import '../modules/LogAdditions/views/LogAdditionsView.dart';
 import '../modules/PromoMaster/views/promo_master_view.dart';
 import '../modules/ROImport/views/r_o_import_view.dart';
@@ -143,6 +151,27 @@ class AuthGuard1 extends StatelessWidget {
             case Routes.SALES_AUDIT_NEW:
               currentWidget = SalesAuditNewView();
               break;
+            case Routes.BRAND_MASTER:
+              currentWidget = BrandMasterView();
+              break;
+            case Routes.COMING_UP_MENU:
+              currentWidget = ComingUpMenuView();
+              break;
+            case Routes.COMING_UP_NEXT_MENU:
+              currentWidget = ComingUpNextMenuView();
+              break;
+            case Routes.COMING_UP_TOMORROW_MENU:
+              currentWidget = ComingUpTomorrowMenuView();
+              break;
+            case Routes.DATE_WISE_ERROR_SPOTS:
+              currentWidget = DateWiseErrorSpotsView();
+              break;
+            case Routes.DATE_WISE_FILLER_REPORT:
+              currentWidget = DateWiseFillerReportView();
+              break;
+            case Routes.CREATIVE_TAG_ON:
+              currentWidget = CreativeTagOnView();
+              break;
             case Routes.SLIDE_MASTER:
               currentWidget = SlideMasterView();
               break;
@@ -169,6 +198,9 @@ class AuthGuard1 extends StatelessWidget {
               break;
             case Routes.LANGUAGE_MASTER:
               currentWidget = const LanguageMasterView();
+              break;
+            case Routes.D_SERIES_SPECIFICATION:
+              currentWidget = DSeriesSpecificationView();
               break;
             default:
               currentWidget = const NoDataFoundPage();

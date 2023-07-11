@@ -2,10 +2,26 @@ import 'package:get/get.dart';
 
 import '../modules/AsrunImportAdRevenue/bindings/asrun_import_binding.dart';
 import '../modules/AuditStatus/bindings/audit_status_binding.dart';
+import '../modules/BrandMaster/bindings/brand_master_binding.dart';
+import '../modules/BrandMaster/views/brand_master_view.dart';
+import '../modules/ComingUpMenu/bindings/coming_up_menu_binding.dart';
+import '../modules/ComingUpMenu/views/coming_up_menu_view.dart';
+import '../modules/ComingUpNextMenu/bindings/coming_up_next_menu_binding.dart';
+import '../modules/ComingUpNextMenu/views/coming_up_next_menu_view.dart';
+import '../modules/ComingUpTomorrowMenu/bindings/coming_up_tomorrow_menu_binding.dart';
+import '../modules/ComingUpTomorrowMenu/views/coming_up_tomorrow_menu_view.dart';
 import '../modules/CommercialMaster/bindings/commercial_master_binding.dart';
 import '../modules/CommercialMaster/views/commercial_master_view.dart';
 import '../modules/CommonDocs/bindings/common_docs_binding.dart';
 import '../modules/CommonDocs/views/common_docs_view.dart';
+import '../modules/DSeriesSpecification/bindings/d_series_specification_binding.dart';
+import '../modules/DSeriesSpecification/views/DSeriesSpecificationView.dart';
+import '../modules/CreativeTagOn/bindings/creative_tag_on_binding.dart';
+import '../modules/CreativeTagOn/views/creative_tag_on_view.dart';
+import '../modules/DateWiseErrorSpots/bindings/date_wise_error_spots_binding.dart';
+import '../modules/DateWiseErrorSpots/views/date_wise_error_spots_view.dart';
+import '../modules/DateWiseFillerReport/bindings/date_wise_filler_report_binding.dart';
+import '../modules/DateWiseFillerReport/views/date_wise_filler_report_view.dart';
 import '../modules/EventSecondary/bindings/event_secondary_binding.dart';
 import '../modules/ExtraSpotsWithRemark/bindings/extra_spots_with_remark_binding.dart';
 import '../modules/ExtraSpotsWithRemark/views/extra_spots_with_remark_view.dart';
@@ -227,6 +243,12 @@ class AppPages {
       binding: ROImportBinding(),
     ),
     GetPage(
+      name: _Paths.D_SERIES_SPECIFICATION,
+      // page: () => DSeriesSpecificationView(),
+      page: () => AuthGuard1(childName: _Paths.D_SERIES_SPECIFICATION),
+      // binding: DSeriesSpecificationBinding(),
+    ),
+    GetPage(
       name: _Paths.COMMON_DOCS,
       page: () => const CommonDocsView(documentKey: ''),
       binding: CommonDocsBinding(),
@@ -250,6 +272,41 @@ class AppPages {
       name: _Paths.LANGUAGE_MASTER,
       page: () => AuthGuard1(childName: _Paths.LANGUAGE_MASTER),
       binding: LanguageMasterBinding(),
+    ),
+    GetPage(
+      name: _Paths.BRAND_MASTER,
+      page: () => AuthGuard1(childName: _Paths.BRAND_MASTER),
+      binding: BrandMasterBinding(),
+    ),
+    GetPage(
+      name: _Paths.COMING_UP_MENU,
+      page: () => AuthGuard1(childName: _Paths.COMING_UP_MENU),
+      binding: ComingUpMenuBinding(),
+    ),
+    GetPage(
+      name: _Paths.COMING_UP_NEXT_MENU,
+      page: () => AuthGuard1(childName: _Paths.COMING_UP_NEXT_MENU),
+      binding: ComingUpNextMenuBinding(),
+    ),
+    GetPage(
+      name: _Paths.COMING_UP_TOMORROW_MENU,
+      page: () => AuthGuard1(childName: _Paths.COMING_UP_TOMORROW_MENU),
+      binding: ComingUpTomorrowMenuBinding(),
+    ),
+    GetPage(
+      name: _Paths.DATE_WISE_ERROR_SPOTS,
+      page: () => AuthGuard1(childName: _Paths.DATE_WISE_ERROR_SPOTS),
+      binding: DateWiseErrorSpotsBinding(),
+    ),
+    GetPage(
+      name: _Paths.DATE_WISE_FILLER_REPORT,
+      page: () => AuthGuard1(childName: _Paths.DATE_WISE_FILLER_REPORT),
+      binding: DateWiseFillerReportBinding(),
+    ),
+    GetPage(
+      name: _Paths.CREATIVE_TAG_ON,
+      page: () => AuthGuard1(childName: _Paths.CREATIVE_TAG_ON),
+      binding: CreativeTagOnBinding(),
     ),
   ];
 }
