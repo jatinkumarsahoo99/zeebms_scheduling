@@ -826,8 +826,8 @@ class ApiFactory {
 
   ////////////////////////DSeries Specification/////////////////////////
   static String DSERIES_SPECIFICATION_LOAD = BASE_URL + "/api/DSeriesSpecification/GetDSeriesSpecsLoad";
-  static String DSERIES_SPECIFICATION_CHANNEL = BASE_URL + "/api/DSeriesSpecification/GetChannelList";
-  static String DSERIES_SPECIFICATION_CHANNEL_LEAVE = BASE_URL + "/api/DSeriesSpecification/GetChannelsLeave";
+  static String DSERIES_SPECIFICATION_CHANNEL(String locId) => BASE_URL + "/api/DSeriesSpecification/GetChannelList?LocationCode=$locId";
+  static String DSERIES_SPECIFICATION_CHANNEL_LEAVE(String locId,String chnlId) => BASE_URL + "/api/DSeriesSpecification/GetChannelsLeave?LocationCode=$locId&channelcode=$chnlId";
   static String DSERIES_SPECIFICATION_SAVE = BASE_URL + "/api/DSeriesSpecification/postSave";
   ////////////////////////DSeries Specification- END/////////////////////////
 
