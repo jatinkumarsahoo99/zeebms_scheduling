@@ -39,6 +39,7 @@ abstract class Routes {
   static const EXTRA_SPOTS_WITH_REMARK = _Paths.EXTRA_SPOTS_WITH_REMARK;
   static const INVENTORY_STATUS_REPORT = _Paths.INVENTORY_STATUS_REPORT;
   static const MANAGE_CHANNEL_INVENTORY = _Paths.MANAGE_CHANNEL_INVENTORY;
+  static const LANGUAGE_MASTER = _Paths.LANGUAGE_MASTER;
 }
 
 abstract class RoutesList {
@@ -101,4 +102,5 @@ abstract class _Paths {
   static const EXTRA_SPOTS_WITH_REMARK = '/Frmextraspotswithremark';
   static const INVENTORY_STATUS_REPORT = '/Frminventoryutilization';
   static const MANAGE_CHANNEL_INVENTORY = '/frmCommercialTimeUpdate';
+  static const LANGUAGE_MASTER = '/frmLanguageMaster';
 }

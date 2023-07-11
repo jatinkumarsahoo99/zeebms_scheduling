@@ -4,8 +4,6 @@ import '../modules/AsrunImportAdRevenue/bindings/asrun_import_binding.dart';
 import '../modules/AuditStatus/bindings/audit_status_binding.dart';
 import '../modules/CommercialMaster/bindings/commercial_master_binding.dart';
 import '../modules/CommercialMaster/views/commercial_master_view.dart';
-import '../modules/ManageChannelInventory/bindings/manage_channel_inventory_binding.dart';
-import '../modules/ManageChannelInventory/views/manage_channel_inventory_view.dart';
 import '../modules/CommonDocs/bindings/common_docs_binding.dart';
 import '../modules/CommonDocs/views/common_docs_view.dart';
 import '../modules/EventSecondary/bindings/event_secondary_binding.dart';
@@ -18,8 +16,12 @@ import '../modules/FpcMismatch/bindings/fpc_mismatch_binding.dart';
 import '../modules/ImportDigitextRunOrder/bindings/import_digitext_run_order_binding.dart';
 import '../modules/InventoryStatusReport/bindings/inventory_status_report_binding.dart';
 import '../modules/InventoryStatusReport/views/inventory_status_report_view.dart';
+import '../modules/LanguageMaster/bindings/language_master_binding.dart';
+import '../modules/LanguageMaster/views/language_master_view.dart';
 import '../modules/LogAdditions/bindings/log_additions_binding.dart';
 import '../modules/MamWorkOrders/bindings/mam_work_orders_binding.dart';
+import '../modules/ManageChannelInventory/bindings/manage_channel_inventory_binding.dart';
+import '../modules/ManageChannelInventory/views/manage_channel_inventory_view.dart';
 import '../modules/PromoMaster/bindings/promo_master_binding.dart';
 import '../modules/ROImport/bindings/r_o_import_binding.dart';
 import '../modules/ROImport/views/r_o_import_view.dart';
@@ -49,7 +51,7 @@ class AppPages {
   AppPages._();
   //https://app-scheduling-bms-dev.zeeconnect.in/frmCommercialMaster?loginCode=0iGe3vK5h2KGjfSKZTpmsQ%3D%3D&personalNo=xvmv9k3d1G7ierjaXRHiGA%3D%3D&formName=MgGRl5N4DW2tcWQscJpsp%2BIUElLFsJm5TsN5JpCXjHE%3D
   // static const INITIAL = Routes.ROS_DISTRIBUTION +
-  static const INITIAL = Routes.MANAGE_CHANNEL_INVENTORY +
+  static const INITIAL = Routes.LANGUAGE_MASTER +
       "?personalNo=xvmv9k3d1G7ierjaXRHiGA%3D%3D&loginCode=0iGe3vK5h2KGjfSKZTpmsQ%3D%3D&formName=MgGRl5N4DW2tcWQscJpsp%2BIUElLFsJm5TsN5JpCXjHE%3D";
   static final routes = [
     GetPage(
@@ -244,6 +246,11 @@ class AppPages {
       name: _Paths.MANAGE_CHANNEL_INVENTORY,
       page: () => AuthGuard1(childName: _Paths.MANAGE_CHANNEL_INVENTORY),
       binding: ManageChannelInventoryBinding(),
+    ),
+    GetPage(
+      name: _Paths.LANGUAGE_MASTER,
+      page: () => const LanguageMasterView(),
+      binding: LanguageMasterBinding(),
     ),
   ];
 }
