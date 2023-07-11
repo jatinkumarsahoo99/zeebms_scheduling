@@ -28,7 +28,21 @@ import '../../widgets/LoadingScreen.dart';
 import '../../widgets/NoDataFoundPage.dart';
 import '../modules/AsrunImportAdRevenue/views/AsrunImportAdRevenueView.dart';
 import '../modules/AuditStatus/views/audit_status_view.dart';
+import '../modules/BrandMaster/views/brand_master_view.dart';
+import '../modules/ComingUpMenu/views/coming_up_menu_view.dart';
+import '../modules/ComingUpNextMenu/views/coming_up_next_menu_view.dart';
+import '../modules/ComingUpTomorrowMenu/views/coming_up_tomorrow_menu_view.dart';
 import '../modules/CommercialMaster/views/commercial_master_view.dart';
+import '../modules/LanguageMaster/views/language_master_view.dart';
+import '../modules/ManageChannelInventory/views/manage_channel_inventory_view.dart';
+import '../modules/ExtraSpotsWithRemark/views/extra_spots_with_remark_view.dart';
+import '../modules/InventoryStatusReport/views/inventory_status_report_view.dart';
+import '../modules/DSeriesSpecification/views/DSeriesSpecificationView.dart';
+import '../modules/CreativeTagOn/views/creative_tag_on_view.dart';
+import '../modules/DateWiseErrorSpots/views/date_wise_error_spots_view.dart';
+import '../modules/DateWiseFillerReport/views/date_wise_filler_report_view.dart';
+import '../modules/EuropeCommercialImportStatus/views/EuropeCommercialImportStatusView.dart';
+import '../modules/EuropeDropSpots/views/EuropeDropSpotsView.dart';
 import '../modules/LogAdditions/views/LogAdditionsView.dart';
 import '../modules/PromoMaster/views/promo_master_view.dart';
 import '../modules/ROImport/views/r_o_import_view.dart';
@@ -37,7 +51,6 @@ import '../modules/SlideMaster/views/slide_master_view.dart';
 import '../modules/SpotPriority/views/SpotPriorityView.dart';
 import '../modules/StillMaster/views/still_master_view.dart';
 import '../modules/TransmissionLog/views/TransmissionLogView.dart';
-import '../modules/commercial/views/commercial_view.dart';
 import '../modules/home/views/home_view.dart';
 import '../modules/slide/views/slide_view.dart';
 import '../routes/app_pages.dart';
@@ -163,6 +176,27 @@ class AuthGuard1 extends StatelessWidget {
             case Routes.SALES_AUDIT_NEW:
               currentWidget = SalesAuditNewView();
               break;
+            case Routes.BRAND_MASTER:
+              currentWidget = BrandMasterView();
+              break;
+            case Routes.COMING_UP_MENU:
+              currentWidget = ComingUpMenuView();
+              break;
+            case Routes.COMING_UP_NEXT_MENU:
+              currentWidget = ComingUpNextMenuView();
+              break;
+            case Routes.COMING_UP_TOMORROW_MENU:
+              currentWidget = ComingUpTomorrowMenuView();
+              break;
+            case Routes.DATE_WISE_ERROR_SPOTS:
+              currentWidget = DateWiseErrorSpotsView();
+              break;
+            case Routes.DATE_WISE_FILLER_REPORT:
+              currentWidget = DateWiseFillerReportView();
+              break;
+            case Routes.CREATIVE_TAG_ON:
+              currentWidget = CreativeTagOnView();
+              break;
             case Routes.SLIDE_MASTER:
               currentWidget = SlideMasterView();
               break;
@@ -177,6 +211,27 @@ class AuthGuard1 extends StatelessWidget {
               break;
             case Routes.COMMERCIAL_MASTER:
               currentWidget = CommercialMasterView();
+              break;
+            case Routes.EXTRA_SPOTS_WITH_REMARK:
+              currentWidget = const ExtraSpotsWithRemarkView();
+              break;
+            case Routes.INVENTORY_STATUS_REPORT:
+              currentWidget = const InventoryStatusReportView();
+              break;
+            case Routes.MANAGE_CHANNEL_INVENTORY:
+              currentWidget = const ManageChannelInvemtoryView();
+              break;
+            case Routes.LANGUAGE_MASTER:
+              currentWidget = const LanguageMasterView();
+              break;
+            case Routes.D_SERIES_SPECIFICATION:
+              currentWidget = DSeriesSpecificationView();
+              break;
+            case Routes.EUROPE_RUNNING_ORDER_STATUS:
+              currentWidget = EuropeCommercialImportStatusView();
+              break;
+            case Routes.EUROPE_DROP_SPOTS:
+              currentWidget = EuropeDropSpotsView();
               break;
             default:
               currentWidget = const NoDataFoundPage();

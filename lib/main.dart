@@ -27,8 +27,10 @@ void main() async {
   await DefaultCacheManager().emptyCache();
   setPathUrlStrategy();
 
-  // String data = await rootBundle.loadString('assets/AppConfig.json');
-  // print(">>Keyvault JSON DATA>>>"+data.toString());
+  ///Don't comment it....Testing is going on
+  String data = await rootBundle.loadString('assets/AppConfig.json');
+  print(">>Keyvault JSON DATA>>>"+data.toString());
+  /////////////////////////
 
   print("Aes dec>>>");
   runApp(

@@ -2,25 +2,47 @@ import 'package:get/get.dart';
 
 import '../modules/AsrunImportAdRevenue/bindings/asrun_import_binding.dart';
 import '../modules/AuditStatus/bindings/audit_status_binding.dart';
+import '../modules/BrandMaster/bindings/brand_master_binding.dart';
+import '../modules/BrandMaster/views/brand_master_view.dart';
+import '../modules/ComingUpMenu/bindings/coming_up_menu_binding.dart';
+import '../modules/ComingUpMenu/views/coming_up_menu_view.dart';
+import '../modules/ComingUpNextMenu/bindings/coming_up_next_menu_binding.dart';
+import '../modules/ComingUpNextMenu/views/coming_up_next_menu_view.dart';
+import '../modules/ComingUpTomorrowMenu/bindings/coming_up_tomorrow_menu_binding.dart';
+import '../modules/ComingUpTomorrowMenu/views/coming_up_tomorrow_menu_view.dart';
 import '../modules/CommercialMaster/bindings/commercial_master_binding.dart';
-import '../modules/CommercialMaster/views/commercial_master_view.dart';
 import '../modules/CommonDocs/bindings/common_docs_binding.dart';
 import '../modules/CommonDocs/views/common_docs_view.dart';
+import '../modules/DSeriesSpecification/bindings/d_series_specification_binding.dart';
+import '../modules/DSeriesSpecification/views/DSeriesSpecificationView.dart';
+import '../modules/CreativeTagOn/bindings/creative_tag_on_binding.dart';
+import '../modules/CreativeTagOn/views/creative_tag_on_view.dart';
+import '../modules/DateWiseErrorSpots/bindings/date_wise_error_spots_binding.dart';
+import '../modules/DateWiseErrorSpots/views/date_wise_error_spots_view.dart';
+import '../modules/DateWiseFillerReport/bindings/date_wise_filler_report_binding.dart';
+import '../modules/DateWiseFillerReport/views/date_wise_filler_report_view.dart';
 import '../modules/EventSecondary/bindings/event_secondary_binding.dart';
+import '../modules/ExtraSpotsWithRemark/bindings/extra_spots_with_remark_binding.dart';
+import '../modules/ExtraSpotsWithRemark/views/extra_spots_with_remark_view.dart';
 import '../modules/FillerMaster/bindings/filler_master_binding.dart';
 import '../modules/FinalAuditReportAfterTelecast/bindings/final_audit_report_after_telecast_binding.dart';
 import '../modules/FinalAuditReportBeforeLog/bindings/final_audit_report_before_log_binding.dart';
 import '../modules/FpcMismatch/bindings/fpc_mismatch_binding.dart';
 import '../modules/ImportDigitextRunOrder/bindings/import_digitext_run_order_binding.dart';
+import '../modules/InventoryStatusReport/bindings/inventory_status_report_binding.dart';
+import '../modules/InventoryStatusReport/views/inventory_status_report_view.dart';
+import '../modules/LanguageMaster/bindings/language_master_binding.dart';
+import '../modules/LanguageMaster/views/language_master_view.dart';
 import '../modules/LogAdditions/bindings/log_additions_binding.dart';
 import '../modules/LogConvert/bindings/log_convert_binding.dart';
 import '../modules/LogConvert/views/log_convert_view.dart';
 import '../modules/MamWorkOrders/bindings/mam_work_orders_binding.dart';
+import '../modules/ManageChannelInventory/bindings/manage_channel_inventory_binding.dart';
+import '../modules/ManageChannelInventory/views/manage_channel_inventory_view.dart';
 import '../modules/PromoMaster/bindings/promo_master_binding.dart';
 import '../modules/PromoTypeMaster/bindings/promo_type_master_binding.dart';
 import '../modules/PromoTypeMaster/views/promo_type_master_view.dart';
 import '../modules/ROImport/bindings/r_o_import_binding.dart';
-import '../modules/ROImport/views/r_o_import_view.dart';
 import '../modules/RoBooking/bindings/ro_booking_binding.dart';
 import '../modules/RoCancellation/bindings/ro_cancellation_binding.dart';
 import '../modules/RoReschedule/bindings/ro_reschedule_binding.dart';
@@ -222,7 +244,6 @@ class AppPages {
     ),
     GetPage(
       name: _Paths.COMMERCIAL_MASTER,
-      // page: () => const CommercialMasterView(),
       page: () => AuthGuard1(childName: _Paths.COMMERCIAL_MASTER),
       binding: CommercialMasterBinding(),
     ),
@@ -232,9 +253,82 @@ class AppPages {
       binding: ROImportBinding(),
     ),
     GetPage(
+      name: _Paths.D_SERIES_SPECIFICATION,
+      // page: () => DSeriesSpecificationView(),
+      page: () => AuthGuard1(childName: _Paths.D_SERIES_SPECIFICATION),
+      // binding: DSeriesSpecificationBinding(),
+    ),
+    GetPage(
       name: _Paths.COMMON_DOCS,
       page: () => const CommonDocsView(documentKey: ''),
       binding: CommonDocsBinding(),
+    ),
+    GetPage(
+      name: _Paths.EXTRA_SPOTS_WITH_REMARK,
+      page: () => AuthGuard1(childName: _Paths.EXTRA_SPOTS_WITH_REMARK),
+      binding: ExtraSpotsWithRemarkBinding(),
+    ),
+    GetPage(
+      name: _Paths.INVENTORY_STATUS_REPORT,
+      page: () => AuthGuard1(childName: _Paths.INVENTORY_STATUS_REPORT),
+      binding: InventoryStatusReportBinding(),
+    ),
+    GetPage(
+      name: _Paths.MANAGE_CHANNEL_INVENTORY,
+      page: () => AuthGuard1(childName: _Paths.MANAGE_CHANNEL_INVENTORY),
+      binding: ManageChannelInventoryBinding(),
+    ),
+    GetPage(
+      name: _Paths.LANGUAGE_MASTER,
+      page: () => AuthGuard1(childName: _Paths.LANGUAGE_MASTER),
+      binding: LanguageMasterBinding(),
+    ),
+    GetPage(
+      name: _Paths.BRAND_MASTER,
+      page: () => AuthGuard1(childName: _Paths.BRAND_MASTER),
+      binding: BrandMasterBinding(),
+    ),
+    GetPage(
+      name: _Paths.COMING_UP_MENU,
+      page: () => AuthGuard1(childName: _Paths.COMING_UP_MENU),
+      binding: ComingUpMenuBinding(),
+    ),
+    GetPage(
+      name: _Paths.COMING_UP_NEXT_MENU,
+      page: () => AuthGuard1(childName: _Paths.COMING_UP_NEXT_MENU),
+      binding: ComingUpNextMenuBinding(),
+    ),
+    GetPage(
+      name: _Paths.COMING_UP_TOMORROW_MENU,
+      page: () => AuthGuard1(childName: _Paths.COMING_UP_TOMORROW_MENU),
+      binding: ComingUpTomorrowMenuBinding(),
+    ),
+    GetPage(
+      name: _Paths.DATE_WISE_ERROR_SPOTS,
+      page: () => AuthGuard1(childName: _Paths.DATE_WISE_ERROR_SPOTS),
+      binding: DateWiseErrorSpotsBinding(),
+    ),
+    GetPage(
+      name: _Paths.DATE_WISE_FILLER_REPORT,
+      page: () => AuthGuard1(childName: _Paths.DATE_WISE_FILLER_REPORT),
+      binding: DateWiseFillerReportBinding(),
+    ),
+    GetPage(
+      name: _Paths.CREATIVE_TAG_ON,
+      page: () => AuthGuard1(childName: _Paths.CREATIVE_TAG_ON),
+      binding: CreativeTagOnBinding(),
+    ),
+    GetPage(
+      name: _Paths.EUROPE_RUNNING_ORDER_STATUS,
+      // page: () => EuropeRunningOrderStatusView(),
+      // binding: EuropeRunningOrderStatusBinding(),
+      page: () => AuthGuard1(childName: _Paths.EUROPE_RUNNING_ORDER_STATUS),
+    ),
+    GetPage(
+      name: _Paths.EUROPE_DROP_SPOTS,
+      page: () => AuthGuard1(childName: _Paths.EUROPE_DROP_SPOTS),
+      // page: () => EuropeDropSpotsView(),
+      // binding: EuropeDropSpotsBinding(),
     ),
     GetPage(
       name: _Paths.MATERIAL_ID_SEARCH,
@@ -265,6 +359,6 @@ class AppPages {
       name: _Paths.SECONDARY_EVENT_TEMPLATE_MASTER,
       page: () => AuthGuard1(childName: _Paths.SECONDARY_EVENT_TEMPLATE_MASTER),
       binding: SecondaryEventTemplateMasterBinding(),
-    ),
+    )
   ];
 }

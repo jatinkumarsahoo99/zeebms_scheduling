@@ -820,8 +820,21 @@ class ApiFactory {
   static String SALESAUDIT_NEW_GETCHANNEL = BASE_URL + "/api/SalesAduitNew/GetChannels?LocationCode=";
   static String SALESAUDIT_NEW_SAVEDATA = BASE_URL + "/api/SalesAduitNew/PostSalesAduit";
   static String SALESAUDIT_NEW_GETRETRIEVE(String locationCode, String channelCode, String scheduleDate) =>
-      BASE_URL + "/api/SalesAduitNew/GetRetrieve?Locationcode=$locationCode&channelcode=$channelCode&date=scheduleDate";
+      BASE_URL + "/api/SalesAduitNew/GetRetrieve?Locationcode=$locationCode&channelcode=$channelCode&date=$scheduleDate";
 
+  //////////////////////////////////////////////////////////////////////////////
+
+  ////////////////////////DSeries Specification/////////////////////////
+  static String DSERIES_SPECIFICATION_LOAD = BASE_URL + "/api/DSeriesSpecification/GetDSeriesSpecsLoad";
+  static String DSERIES_SPECIFICATION_CHANNEL(String locId) => BASE_URL + "/api/DSeriesSpecification/GetChannelList?LocationCode=$locId";
+  static String DSERIES_SPECIFICATION_CHANNEL_LEAVE(String locId, String chnlId) =>
+      BASE_URL + "/api/DSeriesSpecification/GetChannelsLeave?LocationCode=$locId&channelcode=$chnlId";
+  static String DSERIES_SPECIFICATION_SAVE = BASE_URL + "/api/DSeriesSpecification/postSave";
+  ////////////////////////DSeries Specification- END/////////////////////////
+
+  // ////////////////////Europe Commercial Import Status/////////////////////////
+  static String EUROPE_COMMERCIAL_GENERATE = BASE_URL + "/api/EuropeCommercialImportStatus/GetGenrate";
+  ////////////////////////Europe Commercial Import Status- END/////////////////////////
   //////////////////////// SearchTapeCode //////////////////
   static String SearchTapeCode = BASE_URL + "/api/SearchTapeCode/GetbtnShowClick";
   //////////////////////// Spot Type Master ///////////////
