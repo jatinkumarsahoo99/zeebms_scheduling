@@ -820,5 +820,8 @@ class ApiFactory {
   static String SALESAUDIT_NEW_GETCHANNEL = BASE_URL + "/api/SalesAduitNew/GetChannels?LocationCode=";
   static String SALESAUDIT_NEW_SAVEDATA = BASE_URL + "/api/SalesAduitNew/PostSalesAduit";
   static String SALESAUDIT_NEW_GETRETRIEVE(String locationCode, String channelCode, String scheduleDate) =>
-      BASE_URL + "/api/SalesAduitNew/GetRetrieve?Locationcode=$locationCode&channelcode=$channelCode&date=$scheduleDate";
+      BASE_URL + "/api/SalesAduitNew/GetRetrieve?Locationcode=$locationCode&channelcode=$channelCode&date=scheduleDate";
+
+  //////////////////////// SearchTapeCode //////////////////
+  static String SearchTapeCode = BASE_URL + "/api/SearchTapeCode/GetbtnShowClick";
 }

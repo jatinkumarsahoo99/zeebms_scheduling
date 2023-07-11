@@ -24,32 +24,38 @@ class MaterialIdSearchView extends GetView<MaterialIdSearchController> {
               children: [
                 InputFields.formField1(
                   hintTxt: "Material ID",
-                  controller: TextEditingController(),
+                  controller: controller.tapeIdCode,
                   width: 0.12,
                 ),
                 InputFields.formField1(
                   hintTxt: "Program Name",
-                  controller: TextEditingController(),
+                  controller: controller.programName,
                   width: 0.24,
                 ),
                 InputFields.formField1(
                   hintTxt: "Eps Caption",
-                  controller: TextEditingController(),
+                  controller: controller.epsCaption,
                   width: 0.36,
                 ),
                 FormButtonWrapper(
                   btnText: "Show",
-                  callback: () {},
+                  callback: () {
+                    controller.getData();
+                  },
                 )
               ],
             ),
           ),
-          Expanded(
-            child: Container(
-              padding: const EdgeInsets.all(8.0),
-              child: DataGridShowOnlyKeys(mapData: []),
-            ),
-          )
+          GetBuilder<MaterialIdSearchController>(
+            id: "gridData",
+            builder: (controller) {
+            return Expanded(
+              child: Container(
+                padding: const EdgeInsets.all(8.0),
+                child: DataGridShowOnlyKeys(mapData: controller.data),
+              ),
+            );
+          })
         ],
       ),
     );
