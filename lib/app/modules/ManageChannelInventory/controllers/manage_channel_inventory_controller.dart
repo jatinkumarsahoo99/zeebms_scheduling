@@ -2,11 +2,12 @@ import 'package:bms_scheduling/app/data/PermissionModel.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
+import '../../../../widgets/dropdown.dart';
 import '../../../data/DropDownValue.dart';
 import '../../../providers/Utils.dart';
 import '../../../routes/app_pages.dart';
 
-class CommercialTimeUpdateController extends GetxController {
+class ManageChannelInvemtoryController extends GetxController {
   var effectiveDateTC = TextEditingController(), weekDaysTC = TextEditingController();
   var locationList = <DropDownValue>[].obs, channelList = <DropDownValue>[].obs;
   DropDownValue? selectedLocation, selectedChannel;
@@ -18,7 +19,7 @@ class CommercialTimeUpdateController extends GetxController {
 
   @override
   void onInit() {
-    formPermissions = Utils.fetchPermissions1(Routes.COMMERCIAL_TIME_UPDATE.replaceAll("/", ""));
+    formPermissions = Utils.fetchPermissions1(Routes.MANAGE_CHANNEL_INVENTORY.replaceAll("/", ""));
     super.onInit();
   }
 

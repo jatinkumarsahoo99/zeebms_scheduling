@@ -9,12 +9,13 @@ import '../../../../widgets/DateTime/DateWithThreeTextField.dart';
 import '../../../../widgets/FormButton.dart';
 import '../../../../widgets/dropdown.dart';
 import '../../../../widgets/gridFromMap.dart';
+import '../../../../widgets/radio_row.dart';
 import '../../../controller/HomeController.dart';
 import '../../../providers/Utils.dart';
-import '../controllers/commercial_time_update_controller.dart';
+import '../controllers/manage_channel_inventory_controller.dart';
 
-class CommercialTimeUpdateView extends GetView<CommercialTimeUpdateController> {
-  const CommercialTimeUpdateView({Key? key}) : super(key: key);
+class ManageChannelInvemtoryView extends GetView<ManageChannelInvemtoryController> {
+  const ManageChannelInvemtoryView({Key? key}) : super(key: key);
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -85,7 +86,7 @@ class CommercialTimeUpdateView extends GetView<CommercialTimeUpdateController> {
                 ),
               ),
 
-              ///bottom controlls
+              ///bottom controlls buttons
               Padding(
                 padding: const EdgeInsets.symmetric(vertical: 10),
                 child: Row(
@@ -107,7 +108,8 @@ class CommercialTimeUpdateView extends GetView<CommercialTimeUpdateController> {
                         controller.buttonsList.length,
                         (index) => Padding(
                           padding: const EdgeInsets.only(left: 10),
-                          child: FormButton(btnText: controller.buttonsList[index]),
+                          child: FormButton(
+                              btnText: controller.buttonsList[index], callback: () => handleBottonButtonsTap(controller.buttonsList[index], context)),
                         ),
                       ).toList(),
                     ),
@@ -149,20 +151,91 @@ class CommercialTimeUpdateView extends GetView<CommercialTimeUpdateController> {
     );
   }
 
-  showSpecialDialog() {
-    Get.defaultDialog(
-      title: "Special",
-      textCancel: "Save Spl",
-      textConfirm: "Done",
-      content: Column(
-        mainAxisSize: MainAxisSize.min,
-        children: [
-          DropDownField.formDropDownDisableWidth(null, "Location", .2, selected: "Asia"),
-          SizedBox(height: 10),
-          DropDownField.formDropDownDisableWidth(null, "Channel", .2, selected: "Zee TV"),
-          SizedBox(height: 10),
-        ],
-      ),
-    );
+  handleBottonButtonsTap(String btnName, BuildContext context) {
+    if (btnName == "Special") {
+      Get.defaultDialog(
+        title: "Special",
+        textCancel: "Save Spl",
+        textConfirm: "Done",
+        content: Column(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            DropDownField.formDropDownDisableWidth(null, "Location", .31, selected: "Asia"),
+            SizedBox(height: 2),
+            DropDownField.formDropDownDisableWidth(null, "Channel", .31, selected: "Zee TV"),
+            SizedBox(height: 5),
+            Row(
+              children: [
+                CheckBoxWidget1(title: "Sun"),
+                CheckBoxWidget1(title: "Mon"),
+                CheckBoxWidget1(title: "Tue"),
+                CheckBoxWidget1(title: "Wed"),
+                CheckBoxWidget1(title: "Thu"),
+                CheckBoxWidget1(title: "Fri"),
+                CheckBoxWidget1(title: "Sat"),
+              ],
+            ),
+            SizedBox(height: 5),
+            Row(
+              children: [
+                SizedBox(width: 10),
+                DateWithThreeTextField(
+                  title: "From Date",
+                  mainTextController: TextEditingController(),
+                  widthRation: 0.15,
+                ),
+                SizedBox(width: 20),
+                DateWithThreeTextField(
+                  title: "To Date",
+                  mainTextController: TextEditingController(),
+                  widthRation: 0.15,
+                ),
+              ],
+            ),
+            SizedBox(height: 5),
+            Row(
+              children: [
+                InputFields.formFieldNumberMask(
+                  hintTxt: "From Time",
+                  controller: TextEditingController(),
+                  widthRatio: .15,
+                ),
+                SizedBox(width: 10),
+                InputFields.formFieldNumberMask(
+                  hintTxt: "To Time",
+                  controller: TextEditingController(),
+                  widthRatio: .15,
+                ),
+              ],
+            ),
+            SizedBox(height: 5),
+            DropDownField.formDropDown1WidthMap(
+              [],
+              (p0) => null,
+              "Program",
+              .31,
+            ),
+            SizedBox(height: 5),
+            RadioRow(items: ["Default", "Add", "Fixed"], groupValue: "Add"),
+            SizedBox(height: 5),
+            Padding(
+              padding: const EdgeInsets.only(left: 20),
+              child: Align(
+                alignment: Alignment.topLeft,
+                child: SizedBox(
+                  width: context.width * .15,
+                  child: NumericStepButton(
+                    onChanged: (val) {},
+                    hint: "Common.Dur.Sec",
+                    isEnable: false,
+                    maxValue: 100000,
+                  ),
+                ),
+              ),
+            ),
+          ],
+        ),
+      );
+    }
   }
 }

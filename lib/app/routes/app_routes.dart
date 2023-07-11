@@ -38,7 +38,7 @@ abstract class Routes {
   static const COMMON_DOCS = _Paths.COMMON_DOCS;
   static const EXTRA_SPOTS_WITH_REMARK = _Paths.EXTRA_SPOTS_WITH_REMARK;
   static const INVENTORY_STATUS_REPORT = _Paths.INVENTORY_STATUS_REPORT;
-  static const COMMERCIAL_TIME_UPDATE = _Paths.COMMERCIAL_TIME_UPDATE;
+  static const MANAGE_CHANNEL_INVENTORY = _Paths.MANAGE_CHANNEL_INVENTORY;
 }
 
 abstract class RoutesList {
@@ -100,5 +100,5 @@ abstract class _Paths {
   static const COMMON_DOCS = '/common-docs';
   static const EXTRA_SPOTS_WITH_REMARK = '/Frmextraspotswithremark';
   static const INVENTORY_STATUS_REPORT = '/Frminventoryutilization';
-  static const COMMERCIAL_TIME_UPDATE = '/frmCommercialTimeUpdate';
+  static const MANAGE_CHANNEL_INVENTORY = '/frmCommercialTimeUpdate';
 }
