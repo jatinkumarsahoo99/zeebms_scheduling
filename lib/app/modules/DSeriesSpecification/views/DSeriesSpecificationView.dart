@@ -281,5 +281,11 @@ class DSeriesSpecificationView extends GetView<DSeriesSpecificationController> {
     );
   }
 
-  formHandler(btn) {}
+  formHandler(btn) {
+    switch(btn){
+      case "Save":
+        controllerX.save();
+        break;
+    }
+  }
 }
