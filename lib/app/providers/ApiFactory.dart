@@ -835,6 +835,16 @@ class ApiFactory {
   // ////////////////////Europe Commercial Import Status/////////////////////////
   static String EUROPE_COMMERCIAL_GENERATE = BASE_URL + "/api/EuropeCommercialImportStatus/GetGenrate";
   ////////////////////////Europe Commercial Import Status- END/////////////////////////
+  ///
+  ///
+  ///
+  ///
+  ///
+  ///
+  // ////////////////////LANGAUGE-MASTER-START/////////////////////////
+  static String LANGAUGE_MASTER_LANGAUGE_NAME_LEAVE = "$BASE_URL/api/LanguageMaster/GetRetrieveRecord";
+  static String LANGAUGE_MASTER_SAVE_RECORD = "$BASE_URL/api/LanguageMaster/PostValidateAndSaveRecord";
+  ////////////////////////LANGAUGE-MASTER-END/////////////////////////
   //////////////////////// SearchTapeCode //////////////////
   static String SearchTapeCode = BASE_URL + "/api/SearchTapeCode/GetbtnShowClick";
   //////////////////////// Spot Type Master ///////////////
