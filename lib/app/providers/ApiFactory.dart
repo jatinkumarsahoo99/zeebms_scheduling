@@ -845,9 +845,27 @@ class ApiFactory {
   static String LANGAUGE_MASTER_LANGAUGE_NAME_LEAVE = "$BASE_URL/api/LanguageMaster/GetRetrieveRecord";
   static String LANGAUGE_MASTER_SAVE_RECORD = "$BASE_URL/api/LanguageMaster/PostValidateAndSaveRecord";
   ////////////////////////LANGAUGE-MASTER-END/////////////////////////
+  ///
+  ///
+  ///
+  // ////////////////////INVENTORY-STATUS-REPORT/////////////////////////
+  static String INVENTORY_STATUS_REPORT_ON_LOAD = "$BASE_URL/api/InventoryStatusReport/GetInventoryutilizationLoad";
+  static String INVENTORY_STATUS_REPORT_GENERATE = "$BASE_URL/api/InventoryStatusReport/GetGenrate";
+  ////////////////////////INVENTORY-STATUS-REPORT/////////////////////////
+  ///
+  ///
+  ///
+  ///
+  ///
   //////////////////////// SearchTapeCode //////////////////
   static String SearchTapeCode = BASE_URL + "/api/SearchTapeCode/GetbtnShowClick";
   //////////////////////// Spot Type Master ///////////////
+  ///
+  ///
+  ///
+  ///
+  ///
+  ////////////////////// SecondaryEventTemplateMaster ///////////////////////////////////
   static String SponderTypeMasterGetRecord(sponserCode, sponserName) =>
       BASE_URL + "/api/SponsorTypeMaster/Get_RetrieveRecord?SponsorTypeName=$sponserName";
   static String SponderTypeMasterSaveRecord = BASE_URL + "/api/SponsorTypeMaster/Post_Save";
