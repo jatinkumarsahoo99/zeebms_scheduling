@@ -47,6 +47,7 @@ class SecondaryEventTemplateMasterView extends GetView<SecondaryEventTemplateMas
                       onchanged: (data) {
                         controller.selectedProgram.value = data;
                       },
+                      selectedValue: controller.selectedProgram.value,
 
                       width: Get.width * 0.36,
                       // padding: const EdgeInsets.only()
@@ -91,6 +92,7 @@ class SecondaryEventTemplateMasterView extends GetView<SecondaryEventTemplateMas
                     child: Card(
                       clipBehavior: Clip.hardEdge,
                       child: Container(
+                        padding: EdgeInsets.all(4),
                         child: DataGridShowOnlyKeys(mapData: []),
                       ),
                     ),

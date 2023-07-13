@@ -56,7 +56,8 @@ class SecondaryEventTemplateMasterController extends GetxController {
                     mapData: data["getprogram"],
                     hideCode: false,
                     onRowDoubleTap: (rowTap) {
-                      selectedProgram.value = DropDownValue(value: data["getprogram"]["programName"], key: data["getprogram"]["programCode"]);
+                      selectedProgram.value = DropDownValue(
+                          value: data["getprogram"][rowTap.rowIdx]["programName"], key: data["getprogram"][rowTap.rowIdx]["programCode"]);
                     },
                   )),
             );
