@@ -1593,8 +1593,7 @@ class InputFields {
   }) {
     // var data = 0.obs;
     fN ??= FocusNode();
-    final iconColor =
-    (isEnabled ?? true) ? Colors.deepPurpleAccent : Colors.grey;
+    final iconColor = (isEnabled ?? true) ? Colors.deepPurpleAccent : Colors.grey;
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
@@ -1619,27 +1618,22 @@ class InputFields {
                   /* controller.text =
                       "${(int.tryParse(controller.text) ?? 1) - 1}";*/
                   if (!isNegativeReq) {
-                    if (int.tryParse(controller.text) != 1 &&
-                        int.tryParse(controller.text) != 0) {
+                    if (int.tryParse(controller.text) != 1 && int.tryParse(controller.text) != 0) {
                       controller.text = "${(int.tryParse(controller.text) ?? 1) - 1}";
-                      if(onchanged != null){
+                      if (onchanged != null) {
                         onchanged(controller.text);
                       }
-
                     }
                   } else {
-                    controller.text =
-                    "${(int.tryParse(controller.text) ?? 1) - 1}";
-                    if(onchanged != null){
+                    controller.text = "${(int.tryParse(controller.text) ?? 1) - 1}";
+                    if (onchanged != null) {
                       onchanged(controller.text);
                     }
-
                   }
                 }
                 if (keyEvent.isKeyPressed(LogicalKeyboardKey.arrowUp)) {
-                  controller.text =
-                  "${(int.tryParse(controller.text) ?? 0) + 1}";
-                  if(onchanged != null){
+                  controller.text = "${(int.tryParse(controller.text) ?? 0) + 1}";
+                  if (onchanged != null) {
                     onchanged(controller.text);
                   }
                 }
@@ -1649,9 +1643,7 @@ class InputFields {
               absorbing: isEnabled ?? false,
               child: TextFormField(
                 focusNode: fN,
-                textCapitalization: capital
-                    ? TextCapitalization.characters
-                    : TextCapitalization.none,
+                textCapitalization: capital ? TextCapitalization.characters : TextCapitalization.none,
                 validator: validator,
                 autovalidateMode: AutovalidateMode.onUserInteraction,
                 onChanged: (onchanged != null) ? onchanged : null,
@@ -1659,16 +1651,14 @@ class InputFields {
                 keyboardType: TextInputType.datetime,
                 textAlign: TextAlign.left,
                 inputFormatters: [
-                  LengthLimitingTextInputFormatter(
-                      maxchar ?? SizeDefine.maxcharlimit),
+                  LengthLimitingTextInputFormatter(maxchar ?? SizeDefine.maxcharlimit),
                   FilteringTextInputFormatter.digitsOnly,
                 ],
                 enabled: isEnabled ?? true,
                 decoration: InputDecoration(
                   errorBorder: InputBorder.none,
                   contentPadding: const EdgeInsets.only(left: 10),
-                  labelStyle: TextStyle(
-                      fontSize: SizeDefine.labelSize, color: Colors.black),
+                  labelStyle: TextStyle(fontSize: SizeDefine.labelSize, color: Colors.black),
                   border: InputBorder.none,
                   enabledBorder: OutlineInputBorder(
                     borderSide: BorderSide(color: Colors.deepPurpleAccent),
@@ -1684,55 +1674,51 @@ class InputFields {
                   ),
                   suffixIcon: showbtn!
                       ? Row(
-                    mainAxisSize: MainAxisSize.min,
-                    mainAxisAlignment: MainAxisAlignment.start,
-                    children: [
-                      GestureDetector(
-                        // canRequestFocus: isEnabled ?? true,
-                        child: Icon(
-                          Icons.arrow_drop_up_sharp,
-                          size: 25,
-                          color: iconColor,
-                        ),
-                        onTap: () {
-                          if (isEnabled ?? true) {
-                            controller.text =
-                            "${(int.tryParse(controller.text) ?? 0) + 1}";
-                            onchanged!(controller.text);
-                          } else {
-                            print("Print tap");
-                          }
-                        },
-                      ),
-                      GestureDetector(
-                        // canRequestFocus: (isEnabled ?? true),
-                        child: Icon(
-                          Icons.arrow_drop_down_sharp,
-                          size: 25,
-                          color: iconColor,
-                        ),
-                        onTap: () {
-                          if (isEnabled ?? true) {
-                            if (!isNegativeReq) {
-                              print("Click on negative>>>" +
-                                  controller.text);
-                              if (controller.text != "0") {
-                                controller.text =
-                                "${(int.tryParse(controller.text) ?? 1) - 1}";
-                                onchanged!(controller.text);
-                              }
-                            } else {
-                              controller.text =
-                              "${(int.tryParse(controller.text) ?? 1) - 1}";
-                              onchanged!(controller.text);
-                            }
-                          } else {
-                            print("Print tap");
-                          }
-                        },
-                      ),
-                    ],
-                  )
+                          mainAxisSize: MainAxisSize.min,
+                          mainAxisAlignment: MainAxisAlignment.start,
+                          children: [
+                            GestureDetector(
+                              // canRequestFocus: isEnabled ?? true,
+                              child: Icon(
+                                Icons.arrow_drop_up_sharp,
+                                size: 25,
+                                color: iconColor,
+                              ),
+                              onTap: () {
+                                if (isEnabled ?? true) {
+                                  controller.text = "${(int.tryParse(controller.text) ?? 0) + 1}";
+                                  onchanged!(controller.text);
+                                } else {
+                                  print("Print tap");
+                                }
+                              },
+                            ),
+                            GestureDetector(
+                              // canRequestFocus: (isEnabled ?? true),
+                              child: Icon(
+                                Icons.arrow_drop_down_sharp,
+                                size: 25,
+                                color: iconColor,
+                              ),
+                              onTap: () {
+                                if (isEnabled ?? true) {
+                                  if (!isNegativeReq) {
+                                    print("Click on negative>>>" + controller.text);
+                                    if (controller.text != "0") {
+                                      controller.text = "${(int.tryParse(controller.text) ?? 1) - 1}";
+                                      onchanged!(controller.text);
+                                    }
+                                  } else {
+                                    controller.text = "${(int.tryParse(controller.text) ?? 1) - 1}";
+                                    onchanged!(controller.text);
+                                  }
+                                } else {
+                                  print("Print tap");
+                                }
+                              },
+                            ),
+                          ],
+                        )
                       : SizedBox(),
                 ),
                 controller: controller,

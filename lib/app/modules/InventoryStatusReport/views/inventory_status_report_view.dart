@@ -34,7 +34,7 @@ class InventoryStatusReportView extends GetView<InventoryStatusReportController>
                         children: [
                           Obx(() {
                             return DropDownField.formDropDown1WidthMap(
-                              controller.locationList.value,
+                              controller.onLoadModel.value?.info?.locations ?? [],
                               (v) => controller.selectedLocation = v,
                               "Location",
                               .16,
@@ -44,34 +44,48 @@ class InventoryStatusReportView extends GetView<InventoryStatusReportController>
                             );
                           }),
                           SizedBox(height: 10),
-                          CheckBoxWidget1(
-                            title: "Channel",
-                            value: true,
-                          ),
+                          Obx(() {
+                            return CheckBoxWidget1(
+                              title: "Channel",
+                              value: controller.channelAllSelected.value,
+                              onChanged: controller.hanldeChangedOnAllChannel,
+                            );
+                          }),
                           SizedBox(height: 10),
-                          Container(
-                            height: context.height * .3,
-                            decoration: BoxDecoration(
-                              border: Border.all(
-                                color: Colors.grey,
+                          Obx(() {
+                            return ExcludeFocus(
+                              excluding: true,
+                              child: Container(
+                                height: context.height * .3,
+                                decoration: BoxDecoration(
+                                  border: Border.all(
+                                    color: Colors.grey,
+                                  ),
+                                ),
+                                child: ListView.builder(
+                                  itemCount: (controller.onLoadModel.value?.info?.channels ?? []).length,
+                                  itemBuilder: (context, index) {
+                                    return CheckBoxWidget1(
+                                      title: controller.onLoadModel.value?.info?.channels?[index].downValue?.value ?? "",
+                                      value: controller.onLoadModel.value?.info?.channels?[index].isSelected ?? false,
+                                      onChanged: (val) {
+                                        controller.onLoadModel.value?.info?.channels?[index].isSelected = val;
+                                      },
+                                    );
+                                  },
+                                ),
                               ),
-                            ),
-                            child: ListView.builder(
-                              itemCount: controller.channelList.value.length,
-                              itemBuilder: (context, index) {
-                                return CheckBoxWidget1(
-                                  title: controller.channelList.value[index].channelName ?? "",
-                                  value: controller.channelList.value[index].ischecked ?? false,
-                                );
-                              },
-                            ),
-                          ),
+                            );
+                          }),
                           SizedBox(height: 10),
-                          RadioRow(
-                            items: ['Old Format', 'Detail (KAM-NON CAM)', 'Summary (KAM-NON KAM)'],
-                            groupValue: 'items1',
-                            isVertical: true,
-                          ),
+                          Obx(() {
+                            return RadioRow(
+                              items: ['Old Format', 'Detail (KAM-NON CAM)', 'Summary (KAM-NON KAM)'],
+                              groupValue: controller.selectedRadio.value,
+                              isVertical: true,
+                              onchange: (val) => controller.selectedRadio.value = val,
+                            );
+                          }),
                           SizedBox(height: 10),
                           DateWithThreeTextField(
                             title: "From Date",
@@ -87,7 +101,7 @@ class InventoryStatusReportView extends GetView<InventoryStatusReportController>
                           const Spacer(),
                           Row(
                             children: [
-                              Expanded(child: FormButton(btnText: "Clear")),
+                              Expanded(child: FormButton(btnText: "Clear", callback: controller.clearPage)),
                               SizedBox(width: 10),
                               Expanded(child: FormButton(btnText: "Exit")),
                             ],
@@ -95,7 +109,7 @@ class InventoryStatusReportView extends GetView<InventoryStatusReportController>
                           const SizedBox(height: 10),
                           SizedBox(
                             width: context.width * 0.17,
-                            child: FormButton(btnText: "Generate"),
+                            child: FormButton(btnText: "Generate", callback: controller.generateData),
                           ),
                           const SizedBox(height: 10),
                         ],
