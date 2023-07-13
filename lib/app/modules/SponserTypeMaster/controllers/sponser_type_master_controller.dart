@@ -56,7 +56,7 @@ class SponserTypeMasterController extends GetxController {
             LoadingDialog.callDataSaved(msg: data["sponsorType"]);
           }
           if (data is String) {
-            LoadingDialog.callErrorMessage1(msg: data["sponsorType"]);
+            LoadingDialog.callErrorMessage1(msg: data);
           }
         });
   }
