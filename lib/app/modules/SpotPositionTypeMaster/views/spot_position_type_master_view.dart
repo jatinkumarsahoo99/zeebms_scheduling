@@ -1,5 +1,6 @@
 import 'package:bms_scheduling/app/controller/HomeController.dart';
 import 'package:bms_scheduling/app/data/DropDownValue.dart';
+import 'package:bms_scheduling/app/modules/CommonSearch/views/common_search_view.dart';
 import 'package:bms_scheduling/widgets/FormButton.dart';
 import 'package:bms_scheduling/widgets/dropdown.dart';
 import 'package:bms_scheduling/widgets/input_fields.dart';
@@ -147,6 +148,20 @@ class SpotPositionTypeMasterView extends GetView<SpotPositionTypeMasterControlle
       case "Delete":
         null;
         break;
+      case "Clear":
+        Get.delete<SpotPositionTypeMasterController>();
+        Get.find<HomeController>().clearPage1();
+        break;
+      case "Search":
+        Get.to(SearchPage(
+          key: Key("Spot Position Type Master"),
+          screenName: "Spot Position Type Master",
+          appBarName: "Spot Position Type Master",
+          strViewName: "vTesting",
+          isAppBarReq: true,
+        ));
+        break;
+
       default:
     }
   }
