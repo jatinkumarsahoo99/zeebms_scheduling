@@ -319,10 +319,13 @@ class PlutoRow {
   Map<String, dynamic> toJsonIntConvert(
       {bool includeChildren = true,
       String childrenField = 'children',
-      List<String>? intConverterKeys}) {
+      List<String>? intConverterKeys,
+      List<String>? boolList}) {
     final json = cells.map((key, value) => MapEntry(
         key,
-        (intConverterKeys ?? []).contains(key)
+        (boolList ?? []).contains(key)?
+            value.value.toString()=="true":
+             (intConverterKeys ?? []).contains(key)
             ? int.tryParse(value.value.toString())
             : value.value.toString()));
 
