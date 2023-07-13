@@ -862,4 +862,13 @@ class ApiFactory {
   static String DATEWISEERROR_LOAD = BASE_URL + "/api/DatewiseErrorSpots/GetInit";
   static String DATEWISEERROR_GENERATE = BASE_URL + "/api/DatewiseErrorSpots/GetGenrateErrors";
 
+
+  //////////////////////////////////////////////// BRANDMASTER /////////////////////////
+
+  static String BRANDMASTER_GETCLIENT = BASE_URL + "/api/BrandMaster/GetClientSearch?TextSourceClient=";
+  static String BRANDMASTER_GETPRODUCT = BASE_URL + "/api/BrandMaster/GetProductSearch?TextSourceProduct=";
+  static String BRANDMASTER_GETBRAND = BASE_URL + "/api/BrandMaster/GetBrandMaster?BrandCode=";
+  static String BRANDMASTER_GETCLIENTDETAILS = BASE_URL + "/api/BrandMaster/GetClientDetails?clientname=";
+  static String BRANDMASTER_GETPRODUCTDETAILS = BASE_URL + "/api/BrandMaster/GetProduct?productcode=";
+
 }

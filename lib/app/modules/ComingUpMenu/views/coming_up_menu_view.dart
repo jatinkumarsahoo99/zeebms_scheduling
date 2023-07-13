@@ -52,6 +52,7 @@ class ComingUpMenuView extends StatelessWidget {
                         isEnable: controllerX.isEnable,
                         selected: controllerX.selectedLocation,
                         autoFocus: true,),
+
                       DropDownField.formDropDown1WidthMap(
                         controllerX.channelList.value,
                             (value) {

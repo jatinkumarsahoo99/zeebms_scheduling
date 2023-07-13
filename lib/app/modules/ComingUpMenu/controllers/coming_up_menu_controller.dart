@@ -70,9 +70,9 @@ class ComingUpMenuController extends GetxController {
         fun: (map) {
           if (map is List && map.isNotEmpty) {
             locationList.clear();
-            /*for (var e in map) {
+            for (var e in map) {
               locationList.add(DropDownValue.fromJsonDynamic(e, "locationCode", "locationName"));
-            }*/
+            }
           }else{
             locationList.clear();
           }
@@ -311,6 +311,7 @@ class ComingUpMenuController extends GetxController {
 
   @override
   void onInit() {
+    fetchPageLoadData();
     super.onInit();
   }
 
