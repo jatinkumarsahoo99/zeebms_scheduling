@@ -1,8 +1,12 @@
 import 'package:bms_scheduling/app/data/DropDownValue.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:intl/intl.dart';
 
+import '../../../../widgets/LoadingDialog.dart';
+import '../../../controller/ConnectorControl.dart';
 import '../../../data/PermissionModel.dart';
+import '../../../providers/ApiFactory.dart';
 import '../../../providers/Utils.dart';
 import '../../../routes/app_pages.dart';
 
@@ -23,6 +27,7 @@ class ExtraSpotsWithRemarkController extends GetxController {
   @override
   void onReady() {
     super.onReady();
+    getInitialData();
   }
 
   clearPage() {
@@ -36,12 +41,78 @@ class ExtraSpotsWithRemarkController extends GetxController {
     locationFN.requestFocus();
   }
 
-  @override
-  void onClose() {
-    super.onClose();
+  void handleGenerateButton() {
+    if (selectedLocation == null || selectedChannel == null) {
+      LoadingDialog.showErrorDialog("Please select Location,Channel.");
+    } else {
+      LoadingDialog.call();
+      Get.find<ConnectorControl>().GETMETHODCALL(
+        api: ApiFactory.EXTRA_SPOT_WITH_REVIEW_REPORT_GENERATE(
+          selectedLocation!.key,
+          selectedChannel!.key,
+          DateFormat("yyyy-MM-ddT00:00:00").format(DateFormat("dd-MM-yyyy").parse(fromDateTC.text)),
+          DateFormat("yyyy-MM-ddT00:00:00").format(DateFormat("dd-MM-yyyy").parse(toDateTC.text)),
+        ),
+        fun: (resp) {
+          closeDialogIfOpen();
+          if (resp != null && resp is Map<String, dynamic> && resp['extraSpotsReport'] != null) {
+            dataTableList.clear();
+            dataTableList.addAll((resp['extraSpotsReport']));
+          } else {
+            LoadingDialog.showErrorDialog(resp.toString());
+          }
+        },
+      );
+    }
   }
 
-  void handleGenerateButton() {}
+  formHandler(btn) {
+    if (btn == "Clear") {
+      clearPage();
+    }
+  }
 
-  formHandler(btn) {}
+  void getInitialData() {
+    LoadingDialog.call();
+    Get.find<ConnectorControl>().GETMETHODCALL(
+      api: ApiFactory.EXTRA_SPOT_WITH_REVIEW_ON_LOAD,
+      fun: (resp) {
+        closeDialogIfOpen();
+        if (resp != null && resp is Map<String, dynamic>) {
+          if (resp['location'] != null) {
+            locationList.clear();
+            locationList.addAll((resp['location'] as List<dynamic>)
+                .map((e) => DropDownValue(
+                      key: e['locationCode'].toString(),
+                      value: e['locationName'].toString(),
+                    ))
+                .toList());
+            if (locationList.isNotEmpty) {
+              selectedLocation = locationList.first;
+              locationList.refresh();
+            }
+            channelList.clear();
+            channelList.addAll((resp['channel'] as List<dynamic>)
+                .map((e) => DropDownValue(
+                      key: e['channelCode'].toString(),
+                      value: e['channelName'].toString(),
+                    ))
+                .toList());
+          }
+        } else {
+          LoadingDialog.showErrorDialog(resp.toString());
+        }
+      },
+      failed: (resp) {
+        closeDialogIfOpen();
+        LoadingDialog.showErrorDialog(resp.toString());
+      },
+    );
+  }
+
+  closeDialogIfOpen() {
+    if (Get.isDialogOpen ?? false) {
+      Get.back();
+    }
+  }
 }

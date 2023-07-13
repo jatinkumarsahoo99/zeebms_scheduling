@@ -39,7 +39,11 @@ class InventoryStatusReportController extends GetxController {
     super.onClose();
   }
 
-  formHandler(btn) {}
+  formHandler(btn) {
+    if (btn == "Clear") {
+      clearPage();
+    }
+  }
 
   hanldeChangedOnAllChannel(bool? val) {
     print(val);
@@ -64,6 +68,10 @@ class InventoryStatusReportController extends GetxController {
       },
     ).toList();
     onLoadModel.value?.info?.channels = tempChannelList ?? [];
+    fromDateTC.clear();
+    toDateTC.clear();
+    onLoadModel.refresh();
+    locationFN.requestFocus();
   }
 
   void getInitialData() {
@@ -114,7 +122,7 @@ class InventoryStatusReportController extends GetxController {
           "locationcode": selectedLocation?.key,
           "channelCode": "",
           "fromdate": DateFormat("yyyy-MM-dd").format(DateFormat("dd-MM-yyyy").parse(fromDateTC.text)),
-          "todate": DateFormat("yyyy-MM-dd").format(DateFormat("dd-MM-yyyy").parse(fromDateTC.text)),
+          "todate": DateFormat("yyyy-MM-dd").format(DateFormat("dd-MM-yyyy").parse(toDateTC.text)),
           "chk_rdoreport": selectedRadio.value == "Detail (KAM-NON CAM)",
           "chk_rdosummary": selectedRadio.value == "Summary (KAM-NON KAM)",
           "chk_rdooldformat": selectedRadio.value == "Old Format",

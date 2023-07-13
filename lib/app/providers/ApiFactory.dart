@@ -849,9 +849,18 @@ class ApiFactory {
   ///
   ///
   // ////////////////////INVENTORY-STATUS-REPORT/////////////////////////
-  static String INVENTORY_STATUS_REPORT_ON_LOAD = "$BASE_URL/api/InventoryStatusReport/GetInventoryutilizationLoad";
+  static String get INVENTORY_STATUS_REPORT_ON_LOAD => "$BASE_URL/api/InventoryStatusReport/GetInventoryutilizationLoad";
   static String INVENTORY_STATUS_REPORT_GENERATE = "$BASE_URL/api/InventoryStatusReport/GetGenrate";
   ////////////////////////INVENTORY-STATUS-REPORT/////////////////////////
+  ///
+  ///
+  ///
+  ///
+  // ////////////////////EXTRA-SPOT-WITH-REMARK/////////////////////////
+  static String get EXTRA_SPOT_WITH_REVIEW_ON_LOAD => "$BASE_URL/api/ExtraSpotsReport/ExtraspotswithremarkLoad";
+  static String EXTRA_SPOT_WITH_REVIEW_REPORT_GENERATE(String? location, String? channel, String fromDate, String toDate) =>
+      "$BASE_URL/api/ExtraSpotsReport/Getbtngenrate?locationcode=$location&channelcode=$channel&fdate=$fromDate&tdate=$toDate";
+  ////////////////////////EXTRA-SPOT-WITH-REMARK/////////////////////////
   ///
   ///
   ///
