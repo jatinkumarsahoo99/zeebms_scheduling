@@ -14,16 +14,17 @@ class MaterialIdSearchController extends GetxController {
     super.onInit();
   }
 
-  List<Map> data = [];
+  var data = RxList<Map>([]);
 
   getData() {
-    Get.find<ConnectorControl>().POSTMETHOD(
-        api: ApiFactory.SearchTapeCode,
-        json: {"exportTapeCode": tapeIdCode.text, "programName": programName.text, "epsCaption": epsCaption.text},
-        fun: (data) {
-          if (data is Map && (data.containsKey("SearchTapeCode") || data.containsKey("searchTapeCode"))) {
-            data = data["SearchTapeCode"] ?? data["searchTapeCode"];
-            update(["gridData"]);
+    Get.find<ConnectorControl>().GETMETHODCALL(
+        api: ApiFactory.SearchTapeCode(tapeIdCode.text, programName.text, epsCaption.text),
+        fun: (map) {
+          if (map is Map && (map.containsKey("searchTapeCode"))) {
+            for (var element in map["searchTapeCode"]) {
+              data.add(element);
+            }
+            data.refresh();
           }
         });
   }
