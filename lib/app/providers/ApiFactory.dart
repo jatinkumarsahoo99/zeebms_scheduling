@@ -822,6 +822,69 @@ class ApiFactory {
   static String SALESAUDIT_NEW_GETRETRIEVE(String locationCode, String channelCode, String scheduleDate) =>
       BASE_URL + "/api/SalesAduitNew/GetRetrieve?Locationcode=$locationCode&channelcode=$channelCode&date=$scheduleDate";
 
+  //////////////////////////////////////////////////////////////////////////////
+
+  ////////////////////////DSeries Specification/////////////////////////
+  static String DSERIES_SPECIFICATION_LOAD = BASE_URL + "/api/DSeriesSpecification/GetDSeriesSpecsLoad";
+  static String DSERIES_SPECIFICATION_CHANNEL(String locId) => BASE_URL + "/api/DSeriesSpecification/GetChannelList?LocationCode=$locId";
+  static String DSERIES_SPECIFICATION_CHANNEL_LEAVE(String locId, String chnlId) =>
+      BASE_URL + "/api/DSeriesSpecification/GetChannelsLeave?LocationCode=$locId&channelcode=$chnlId";
+  static String DSERIES_SPECIFICATION_SAVE = BASE_URL + "/api/DSeriesSpecification/postSave";
+  ////////////////////////DSeries Specification- END/////////////////////////
+
+  // ////////////////////Europe Commercial Import Status/////////////////////////
+  static String EUROPE_COMMERCIAL_GENERATE = BASE_URL + "/api/EuropeCommercialImportStatus/GetGenrate";
+  ////////////////////////Europe Commercial Import Status- END/////////////////////////
+  ///
+  ///
+  ///
+  ///
+  ///
+  ///
+  // ////////////////////LANGAUGE-MASTER-START/////////////////////////
+  static String LANGAUGE_MASTER_LANGAUGE_NAME_LEAVE = "$BASE_URL/api/LanguageMaster/GetRetrieveRecord";
+  static String LANGAUGE_MASTER_SAVE_RECORD = "$BASE_URL/api/LanguageMaster/PostValidateAndSaveRecord";
+  ////////////////////////LANGAUGE-MASTER-END/////////////////////////
+  ///
+  ///
+  ///
+  // ////////////////////INVENTORY-STATUS-REPORT/////////////////////////
+  static String INVENTORY_STATUS_REPORT_ON_LOAD = "$BASE_URL/api/InventoryStatusReport/GetInventoryutilizationLoad";
+  static String INVENTORY_STATUS_REPORT_GENERATE = "$BASE_URL/api/InventoryStatusReport/GetGenrate";
+  ////////////////////////INVENTORY-STATUS-REPORT/////////////////////////
+  ///
+  ///
+  ///
+  ///
+  ///
+  //////////////////////// SearchTapeCode //////////////////
+  static String SearchTapeCode(exportTapeCode, programName, epsCaption) =>
+      BASE_URL + "/api/SearchTapeCode/GetbtnShowClick?ExportTapeCode=$exportTapeCode&ProgramName=$programName&EpsCaption=$epsCaption";
+  //////////////////////// Spot Type Master ///////////////
+  ///
+  ///
+  ///
+  ///
+  ///
+  ////////////////////// SecondaryEventTemplateMaster ///////////////////////////////////
+  static String SponderTypeMasterGetRecord(sponserCode, sponserName) =>
+      BASE_URL + "/api/SponsorTypeMaster/Get_RetrieveRecord?SponsorTypeName=$sponserName";
+  static String SponderTypeMasterSaveRecord = BASE_URL + "/api/SponsorTypeMaster/Post_Save";
+  ////////////////////// SecondaryEventTemplateMaster ///////////////////////////////////
+
+  static String SecondaryEventTemplateMasterInitData = BASE_URL + "/api/SecondaryEventTemplateMaster/GetInitialisation";
+  static String SecondaryEventTemplateMasterGetChannel(
+    locCode,
+  ) =>
+      BASE_URL + "/api/SecondaryEventTemplateMaster/GetLocationSelect?LocationCode=$locCode";
+  static String SecondaryEventTemplateMasterProgSearch = BASE_URL + "/api/SecondaryEventTemplateMaster/GetSourceProgramSearch?TextSourceProgram=";
+  static String SecondaryEventTemplateMasterGetCopy(locCode, channelCode, progCode) =>
+      BASE_URL + "/api/SecondaryEventTemplateMaster/GetCopy?locationcode=$locCode&channelcode=$channelCode&ProgramCode=$progCode";
+  static String SecondaryEventTemplateMasterGetProgramPicker(locCode, channelCode) =>
+      BASE_URL + "/api/SecondaryEventTemplateMaster/GetProgramPicker?locationcode=$locCode&channelcode=$channelCode";
+  static String SecondaryEventTemplateMasterGetProgramLeave(locCode, channelCode, progCode) =>
+      BASE_URL + "/api/SecondaryEventTemplateMaster/GetProgramLeave?locationcode=$locCode&channelcode=$channelCode&ProgramCode=$progCode";
+
   //////////////////////////////// ComingUpNextMaster ///////////////////////////////////////
 
   static String COMINGUPNEXTMASTER_NEW_LOAD = BASE_URL + "/api/ComingUpNextMaster/GetLocationSelect";
