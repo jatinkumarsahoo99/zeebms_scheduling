@@ -1,12 +1,15 @@
 import 'dart:async';
+import 'dart:convert';
 import 'dart:ui';
 
+import 'package:bms_scheduling/app/controller/MainController.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_cache_manager/flutter_cache_manager.dart';
 import 'package:get/get.dart';
 import 'package:url_strategy/url_strategy.dart';
 
+import 'app/data/EnvironmentModel.dart';
 import 'app/providers/BinderData.dart';
 import 'app/providers/Logger.dart';
 import 'app/providers/theme.dart';
@@ -29,7 +32,7 @@ void main() async {
 
   ///Don't comment it....Testing is going on
   String data = await rootBundle.loadString('assets/AppConfig.json');
-  print(">>Keyvault JSON DATA>>>"+data.toString());
+  print(">>Keyvault JSON DATA>>>" + data.toString());
   /////////////////////////
 
   print("Aes dec>>>");
@@ -38,6 +41,11 @@ void main() async {
       title: "Zee BMS",
       initialBinding: BinderData(),
       initialRoute: AppPages.INITIAL,
+      onInit: () {
+        Get.find<MainController>().environmentModel =
+            EnvironmentModel.fromJson(jsonDecode(data));
+        print("Keyvault JSON DATA 1>>>" + jsonEncode(Get.find<MainController>().environmentModel?.toJson()));
+      },
       getPages: AppPages.routes,
       debugShowCheckedModeBanner: false,
       theme: primaryThemeData,

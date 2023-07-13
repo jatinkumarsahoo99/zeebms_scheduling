@@ -833,7 +833,7 @@ class ApiFactory {
   ////////////////////////DSeries Specification- END/////////////////////////
 
   // ////////////////////Europe Commercial Import Status/////////////////////////
-  static String EUROPE_COMMERCIAL_GENERATE = BASE_URL + "/api/EuropeCommercialImportStatus/GetGenrate";
+  static String EUROPE_COMMERCIAL_GENERATE(String date) => BASE_URL + "/api/EuropeCommercialImportStatus/GetGenrate?effectivedate=$date";
   ////////////////////////Europe Commercial Import Status- END/////////////////////////
   ///
   ///
