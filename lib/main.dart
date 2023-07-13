@@ -7,6 +7,7 @@ import 'package:flutter_cache_manager/flutter_cache_manager.dart';
 import 'package:get/get.dart';
 import 'package:url_strategy/url_strategy.dart';
 
+import 'app/providers/Aes.dart';
 import 'app/providers/BinderData.dart';
 import 'app/providers/Logger.dart';
 import 'app/providers/theme.dart';
@@ -19,6 +20,9 @@ void main() async {
     // Logger.sendError(error: details,stackTrace: details.stack,severity: Severity.critical);
   };
 
+  print(Aes.decrypt("kW5Bkf17/S5YF7ML28FmVg==")); // personal no.
+  print(Aes.decrypt("1BWIoBKeDl7qDSAAhxvXsQ==")); // User ID
+
   PlatformDispatcher.instance.onError = (error, stack) {
     // Logger.sendError(error: error,severity: Severity.warning,stackTrace: stack);
     return true;
@@ -29,7 +33,7 @@ void main() async {
 
   ///Don't comment it....Testing is going on
   String data = await rootBundle.loadString('assets/AppConfig.json');
-  print(">>Keyvault JSON DATA>>>"+data.toString());
+  print(">>Keyvault JSON DATA>>>" + data.toString());
   /////////////////////////
 
   print("Aes dec>>>");
