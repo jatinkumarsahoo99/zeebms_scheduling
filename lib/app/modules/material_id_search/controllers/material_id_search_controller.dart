@@ -21,6 +21,7 @@ class MaterialIdSearchController extends GetxController {
         api: ApiFactory.SearchTapeCode(tapeIdCode.text, programName.text, epsCaption.text),
         fun: (map) {
           if (map is Map && (map.containsKey("searchTapeCode"))) {
+            data.value = [];
             for (var element in map["searchTapeCode"]) {
               data.add(element);
             }

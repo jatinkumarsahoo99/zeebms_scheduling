@@ -867,9 +867,9 @@ class ApiFactory {
   ///
   ///
   ////////////////////// SecondaryEventTemplateMaster ///////////////////////////////////
-  static String SponderTypeMasterGetRecord(sponserCode, sponserName) =>
-      BASE_URL + "/api/SponsorTypeMaster/Get_RetrieveRecord?SponsorTypeName=$sponserName";
-  static String SponderTypeMasterSaveRecord = BASE_URL + "/api/SponsorTypeMaster/Post_Save";
+  static String SponserTypeMasterGetRecord(sponserCode, sponserName) =>
+      BASE_URL + "/api/SponsorTypeMaster/GetRetrieveRecord?SponsorTypeCode=$sponserCode&SponsorTypeName=$sponserName";
+  static String SponserTypeMasterSaveRecord = BASE_URL + "/api/SponsorTypeMaster/PostSave";
   ////////////////////// SecondaryEventTemplateMaster ///////////////////////////////////
 
   static String SecondaryEventTemplateMasterInitData = BASE_URL + "/api/SecondaryEventTemplateMaster/GetInitialisation";
