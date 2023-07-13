@@ -858,7 +858,8 @@ class ApiFactory {
   ///
   ///
   //////////////////////// SearchTapeCode //////////////////
-  static String SearchTapeCode = BASE_URL + "/api/SearchTapeCode/GetbtnShowClick";
+  static String SearchTapeCode(exportTapeCode, programName, epsCaption) =>
+      BASE_URL + "/api/SearchTapeCode/GetbtnShowClick?ExportTapeCode=$exportTapeCode&ProgramName=$programName&EpsCaption=$epsCaption";
   //////////////////////// Spot Type Master ///////////////
   ///
   ///
@@ -881,4 +882,6 @@ class ApiFactory {
       BASE_URL + "/api/SecondaryEventTemplateMaster/GetCopy?locationcode=$locCode&channelcode=$channelCode&ProgramCode=$progCode";
   static String SecondaryEventTemplateMasterGetProgramPicker(locCode, channelCode) =>
       BASE_URL + "/api/SecondaryEventTemplateMaster/GetProgramPicker?locationcode=$locCode&channelcode=$channelCode";
+  static String SecondaryEventTemplateMasterGetProgramLeave(locCode, channelCode, progCode) =>
+      BASE_URL + "/api/SecondaryEventTemplateMaster/GetProgramLeave?locationcode=$locCode&channelcode=$channelCode&ProgramCode=$progCode";
 }

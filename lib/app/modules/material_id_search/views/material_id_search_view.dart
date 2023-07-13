@@ -46,16 +46,12 @@ class MaterialIdSearchView extends GetView<MaterialIdSearchController> {
               ],
             ),
           ),
-          GetBuilder<MaterialIdSearchController>(
-            id: "gridData",
-            builder: (controller) {
-            return Expanded(
-              child: Container(
-                padding: const EdgeInsets.all(8.0),
-                child: DataGridShowOnlyKeys(mapData: controller.data),
-              ),
-            );
-          })
+          Obx(() => Expanded(
+                child: Container(
+                  padding: const EdgeInsets.all(8.0),
+                  child: DataGridShowOnlyKeys(mapData: controller.data.value),
+                ),
+              ))
         ],
       ),
     );

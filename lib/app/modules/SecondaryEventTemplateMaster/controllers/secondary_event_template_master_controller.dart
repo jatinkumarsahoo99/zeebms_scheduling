@@ -1,5 +1,6 @@
 import 'package:bms_scheduling/app/controller/ConnectorControl.dart';
 import 'package:bms_scheduling/app/data/DropDownValue.dart';
+import 'package:bms_scheduling/app/modules/SecondaryEventTemplateMaster/bindings/secondary_event_template_master_programs.dart';
 import 'package:bms_scheduling/app/providers/ApiFactory.dart';
 import 'package:bms_scheduling/widgets/DataGridShowOnly.dart';
 import 'package:flutter/material.dart';
@@ -11,6 +12,7 @@ class SecondaryEventTemplateMasterController extends GetxController {
 
   DropDownValue? selectedLocation, selectedChannel;
   var selectedProgram = Rxn<DropDownValue>();
+  List<SecondaryEventTemplateMasterProgram> gridPrograms = [];
   final count = 0.obs;
   @override
   void onInit() {
@@ -56,10 +58,24 @@ class SecondaryEventTemplateMasterController extends GetxController {
                     mapData: data["getprogram"],
                     hideCode: false,
                     onRowDoubleTap: (rowTap) {
-                      selectedProgram.value = DropDownValue(value: data["getprogram"]["programName"], key: data["getprogram"]["programCode"]);
+                      selectedProgram.value = DropDownValue(
+                          value: data["getprogram"][rowTap.rowIdx]["programName"], key: data["getprogram"][rowTap.rowIdx]["programCode"]);
                     },
                   )),
             );
+          }
+        });
+  }
+
+  getProgramLeave() {
+    Get.find<ConnectorControl>().GETMETHODCALL(
+        api: ApiFactory.SecondaryEventTemplateMasterGetProgramLeave(selectedLocation?.key, selectedChannel?.key, selectedProgram.value?.key),
+        fun: (data) {
+          if (data is Map && data.containsKey("getprogram")) {
+            for (var program in data["getprogram"]) {
+              gridPrograms.add(SecondaryEventTemplateMasterProgram.fromJson(program));
+            }
+            update(["gridData"]);
           }
         });
   }
