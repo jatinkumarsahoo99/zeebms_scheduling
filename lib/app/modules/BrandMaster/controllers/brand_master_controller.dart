@@ -9,6 +9,8 @@ class BrandMasterController extends GetxController {
   final count = 0.obs;
   var clientDetails = RxList<DropDownValue>();
   DropDownValue? selectedClientDetails;
+
+
   @override
   void onInit() {
     super.onInit();

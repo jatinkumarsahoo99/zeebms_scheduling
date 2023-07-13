@@ -821,4 +821,45 @@ class ApiFactory {
   static String SALESAUDIT_NEW_SAVEDATA = BASE_URL + "/api/SalesAduitNew/PostSalesAduit";
   static String SALESAUDIT_NEW_GETRETRIEVE(String locationCode, String channelCode, String scheduleDate) =>
       BASE_URL + "/api/SalesAduitNew/GetRetrieve?Locationcode=$locationCode&channelcode=$channelCode&date=$scheduleDate";
+
+  //////////////////////////////// ComingUpNextMaster ///////////////////////////////////////
+
+  static String COMINGUPNEXTMASTER_NEW_LOAD = BASE_URL + "/api/ComingUpNextMaster/GetLocationSelect";
+  static String COMINGUPNEXTMASTER_GET_CHANNEL = BASE_URL + "/api/ComingUpNextMaster/GetChannel?LocationCode=";
+  static String COMINGUPNEXTMASTER_GET_RETRIVE_RECORD = BASE_URL + "/api/ComingUpNextMaster/RetrieveRecord";
+  static String COMINGUPNEXTMASTER_SAVE = BASE_URL + "/api/ComingUpNextMaster/SaveComingUpNext";
+  static String COMINGUPNEXTMASTER_TAPEIDLEAVE = BASE_URL + "/api/ComingUpNextMaster/TapeIDLeave";
+  static String COMINGUPNEXTMASTER_SEGNOLEAVE = BASE_URL + "/api/ComingUpNextMaster/SegNoLeave";
+  static String COMINGUPNEXTMASTER_HOUSEIDLEAVE = BASE_URL + "/api/ComingUpNextMaster/HouseIDLeave";
+
+
+  //////////////////////////// ComingUpTomorrowMenu ////////////////////////////////
+
+  static String COMINGUPTOMORROWMASTER_LOAD = BASE_URL + "/api/ComingUpTomorrowMenu/ComingUpTomorrowOnload";
+  static String COMINGUPTOMORROWMASTER_GETCHANNEL_LIST = BASE_URL + "/api/ComingUpTomorrowMenu/GetChannelSelect?LocationCode=";
+  static String COMINGUPTOMORROWMASTER_RETRIVERECORD = BASE_URL + "/api/ComingUpTomorrowMenu/GetCTRetriveRecord";
+  static String COMINGUPTOMORROWMASTER_TAPEIDLEAVE = BASE_URL + "/api/ComingUpTomorrowMenu/TapeIDOnLeave";
+  static String COMINGUPTOMORROWMASTER_SEGNOLEAVE = BASE_URL + "/api/ComingUpTomorrowMenu/GetSegNoOnLeave";
+  static String COMINGUPTOMORROWMASTER_HOUSEIDLEAVE = BASE_URL + "/api/ComingUpTomorrowMenu/GetHouseIDOnLeave";
+  static String COMINGUPTOMORROWMASTER_SAVE = BASE_URL + "/api/ComingUpTomorrowMenu/SaveComingUpTomorrowData";
+  static String COMINGUPTOMORROWMASTER_PROGRAMTYPELOSTFOCUS = BASE_URL + "/api/ComingUpTomorrowMenu/GetcboProgramTypeLostFocus?ProgramTypeCode=";
+
+  ////////////////////////////// ComingUpMenuMaster ////////////////////////////////
+  static String COMINGUPMENUMASTER_LOAD = BASE_URL + "/api/ComingUpMenuMaster/LocationLoad";
+  static String COMINGUPMENUMASTER_CHANNELLIST = BASE_URL + "/api/ComingUpMenuMaster/ChannelLoad?LocationCode=";
+  static String COMINGUPMENUMASTER_GET_RETRIVERECORD = BASE_URL + "/api/ComingUpMenuMaster/RetriveRecord";
+  static String COMINGUPMENUMASTER_SAVE = BASE_URL + "/api/ComingUpMenuMaster/PostCoumingUpMenu";
+  static String COMINGUPMENUMASTER_TAPEIDLEAVE = BASE_URL + "/api/ComingUpMenuMaster/CUMMTapeIDLeave";
+  static String COMINGUPMENUMASTER_SEGLNOLEAVE = BASE_URL + "/api/ComingUpMenuMaster/CUMMSegNoLeave";
+  static String COMINGUPMENUMASTER_HOUSEIDLEAVE = BASE_URL + "/api/ComingUpMenuMaster/CUMMSegNoLeave";
+
+  ////////////////////////////////////////// DateWiseFillers ////////////////////////////
+
+  static String DATEWISEFILLER_LOAD = BASE_URL + "/api/DatewiseFillerReport/GetInit";
+  static String DATEWISEFILLER_GENERATE = BASE_URL + "/api/DatewiseFillerReport/GetGenrate";
+
+  /////////////////////////////////////// DateWiseErrorSpots ////////////////////////////
+  static String DATEWISEERROR_LOAD = BASE_URL + "/api/DatewiseErrorSpots/GetInit";
+  static String DATEWISEERROR_GENERATE = BASE_URL + "/api/DatewiseErrorSpots/GetGenrateErrors";
+
 }

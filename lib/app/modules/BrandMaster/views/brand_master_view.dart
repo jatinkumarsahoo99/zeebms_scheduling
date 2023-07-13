@@ -15,8 +15,8 @@ import '../controllers/brand_master_controller.dart';
 class BrandMasterView extends StatelessWidget {
    BrandMasterView({Key? key}) : super(key: key);
 
-   BrandMasterController controllerX =
-   Get.put<BrandMasterController>(BrandMasterController());
+   BrandMasterController controllerX = Get.put<BrandMasterController>(BrandMasterController());
+
   @override
   Widget build(BuildContext context) {
     var size = MediaQuery.of(context).size;

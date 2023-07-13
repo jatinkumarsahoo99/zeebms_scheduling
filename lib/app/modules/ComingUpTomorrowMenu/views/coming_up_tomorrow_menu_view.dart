@@ -45,20 +45,21 @@ class ComingUpTomorrowMenuView extends StatelessWidget {
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
                       DropDownField.formDropDown1WidthMap(
-                        [],
+                        controllerX.locationList.value,
                             (value) {
-
+                              controllerX.selectedLocation = value;
+                              controllerX.fetchListOfChannel(controllerX.selectedLocation?.key??"");
                         }, "Location", .26,
                         isEnable: controllerX.isEnable,
-                        // selected: controllerX.selectedClientDetails,
+                        selected: controllerX.selectedLocation,
                         autoFocus: true,),
                       DropDownField.formDropDown1WidthMap(
-                        [],
+                        controllerX.channelList.value,
                             (value) {
-
+                              controllerX.selectedChannel = value;
                         }, "Channel", .26,
                         isEnable: controllerX.isEnable,
-                        // selected: controllerX.selectedClientDetails,
+                        selected: controllerX.selectedChannel,
                         autoFocus: true,),
                     ],
                   ),
@@ -70,9 +71,10 @@ class ComingUpTomorrowMenuView extends StatelessWidget {
                     children: [
                       InputFields.formField1(
                         hintTxt: "Tape Id",
-                        controller: TextEditingController(),
+                        controller: controllerX.tapeIdController,
                         width: 0.1,
-                        // isEnable: controllerX.isEnable,
+                        focusNode: controllerX.tapeIdFocus,
+                        isEnable: controllerX.isEnable,
                         onchanged: (value) {
 
                         },
@@ -81,23 +83,26 @@ class ComingUpTomorrowMenuView extends StatelessWidget {
                       InputFields.numbers3(
                           hintTxt: "Seg No.",
                           padLeft: 0,
-                          controller: TextEditingController(),
-                          width:0.1
+                          controller: controllerX.segNoController,
+                          width:0.1,
+                          fN: controllerX.segNoFocus,
 
                       ),
                       InputFields.formField1(
                         hintTxt: "House Id",
-                        controller: TextEditingController(text: "AUTO"),
+                        controller: controllerX.houseIdController,
                         width: 0.1,
                         // isEnable: controllerX.isEnable,
+                        isEnable: controllerX.isEnable,
                         onchanged: (value) {
 
                         },
+                        focusNode: controllerX.houseIdFocus,
                         autoFocus: true,
                       ),
                       InputFields.formField1(
                         hintTxt: "Tx Caption",
-                        controller:TextEditingController(),
+                        controller:controllerX.txCaptionController,
                         width: 0.15,
                         capital: true,
                         autoFocus: true,
@@ -126,7 +131,7 @@ class ComingUpTomorrowMenuView extends StatelessWidget {
 
                         }, "Program", .26,
                         isEnable: controllerX.isEnable,
-                        // selected: controllerX.selectedClientDetails,
+                        selected: controllerX.selectedProgram,
                         autoFocus: true,),
                     ],
                   ),
@@ -140,29 +145,29 @@ class ComingUpTomorrowMenuView extends StatelessWidget {
                     children: [
                       InputFields.formFieldNumberMask(
                           hintTxt: "SOM",
-                          controller:   TextEditingController(),
+                          controller:   controllerX.somController,
                           widthRatio: 0.07,
                           isEnable: controllerX.isEnable,
                           onEditComplete: (val){
-
+                            controllerX.calculateDuration();
                           },
                           // isTime: true,
                           // isEnable: controller.isEnable.value,
                           paddingLeft: 0),
                       InputFields.formFieldNumberMask(
                           hintTxt: "EOM",
-                          controller:   TextEditingController(),
+                          controller: controllerX.eomController,
                           widthRatio: 0.07,
                           isEnable: controllerX.isEnable,
                           onEditComplete: (val){
-
+                            controllerX.calculateDuration();
                           },
                           // isTime: true,
                           // isEnable: controller.isEnable.value,
                           paddingLeft: 0),
                       TimeWithThreeTextField(
                         title: "Duration",
-                        mainTextController: TextEditingController(),
+                        mainTextController: controllerX.durationController.value,
                         widthRation: 0.07,
                         isTime: false,
                         isEnable: false,

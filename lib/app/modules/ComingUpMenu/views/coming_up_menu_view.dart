@@ -44,26 +44,28 @@ class ComingUpMenuView extends StatelessWidget {
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
                       DropDownField.formDropDown1WidthMap(
-                        [],
+                        controllerX.locationList.value,
                             (value) {
-
+                          controllerX.selectedLocation = value;
+                          controllerX.fetchListOfChannel(controllerX.selectedLocation?.key??"");
                         }, "Location", .21,
                         isEnable: controllerX.isEnable,
-                        // selected: controllerX.selectedClientDetails,
+                        selected: controllerX.selectedLocation,
                         autoFocus: true,),
                       DropDownField.formDropDown1WidthMap(
-                        [],
+                        controllerX.channelList.value,
                             (value) {
-
-                        }, "Channel", .21,
+                          controllerX.selectedChannel = value;
+                        }, "Channel", .26,
                         isEnable: controllerX.isEnable,
-                        // selected: controllerX.selectedClientDetails,
+                        selected: controllerX.selectedChannel,
                         autoFocus: true,),
                       InputFields.formField1(
                         hintTxt: "Tape Id",
-                        controller: TextEditingController(),
+                        controller: controllerX.tapeIdController,
                         width: 0.1,
-                        // isEnable: controllerX.isEnable,
+                        focusNode: controllerX.tapeIdFocus,
+                        isEnable: controllerX.isEnable,
                         onchanged: (value) {
 
                         },
@@ -80,23 +82,25 @@ class ComingUpMenuView extends StatelessWidget {
                       InputFields.numbers3(
                           hintTxt: "Seg No.",
                           padLeft: 0,
-                          controller: TextEditingController(),
-                          width:0.21
+                          controller: controllerX.segNoController,
+                          width:0.21,
+                          fN: controllerX.segNoFocus,
 
                       ),
                       InputFields.formField1(
                         hintTxt: "House Id",
-                        controller: TextEditingController(),
+                        controller: controllerX.houseIdController,
                         width: 0.1,
-                        // isEnable: controllerX.isEnable,
+                        isEnable: controllerX.isEnable,
                         onchanged: (value) {
 
                         },
+                        focusNode: controllerX.houseIdFocus,
                         autoFocus: true,
                       ),
                       InputFields.formField1(
                         hintTxt: "Tx Caption",
-                        controller:TextEditingController(),
+                        controller:controllerX.txCaptionController,
                         width: 0.21,
                         capital: true,
                         autoFocus: true,
@@ -114,7 +118,7 @@ class ComingUpMenuView extends StatelessWidget {
                     children: [
                       InputFields.formFieldNumberMask(
                           hintTxt: "Start Time",
-                          controller: TextEditingController(),
+                          controller: controllerX.startTimeController,
                           widthRatio: 0.21,
                           isEnable: controllerX.isEnable,
                           /*onEditComplete: (val){
@@ -125,7 +129,7 @@ class ComingUpMenuView extends StatelessWidget {
                           paddingLeft: 0),
                       InputFields.formFieldNumberMask(
                           hintTxt: "End Time",
-                          controller:   TextEditingController(),
+                          controller: controllerX.endTimeController,
                           widthRatio: 0.07,
                           isEnable: controllerX.isEnable,
                           onEditComplete: (val){
@@ -136,29 +140,29 @@ class ComingUpMenuView extends StatelessWidget {
                           paddingLeft: 0),
                       InputFields.formFieldNumberMask(
                           hintTxt: "SOM",
-                          controller:   TextEditingController(),
+                          controller:   controllerX.somController,
                           widthRatio: 0.07,
                           isEnable: controllerX.isEnable,
                           onEditComplete: (val){
-
+                            controllerX.calculateDuration();
                           },
                           // isTime: true,
                           // isEnable: controller.isEnable.value,
                           paddingLeft: 0),
                       InputFields.formFieldNumberMask(
                           hintTxt: "EOM",
-                          controller:   TextEditingController(),
+                          controller: controllerX.eomController,
                           widthRatio: 0.07,
                           isEnable: controllerX.isEnable,
                           onEditComplete: (val){
-
+                            controllerX.calculateDuration();
                           },
                           // isTime: true,
                           // isEnable: controller.isEnable.value,
                           paddingLeft: 0),
                       TimeWithThreeTextField(
                         title: "Duration",
-                        mainTextController: TextEditingController(),
+                        mainTextController: controllerX.durationController.value,
                         widthRation: 0.07,
                         isTime: false,
                         isEnable: false,
@@ -174,13 +178,13 @@ class ComingUpMenuView extends StatelessWidget {
                     children: [
                       DateWithThreeTextField(
                         title: "Menu Date",
-                        mainTextController: TextEditingController(),
+                        mainTextController: controllerX.menuDateController,
                         widthRation: .21,
                         isEnable: controllerX.isEnable,
                       ),
                       DateWithThreeTextField(
                         title: "Upto Date",
-                        mainTextController: TextEditingController(),
+                        mainTextController: controllerX.uptoDateController,
                         widthRation: .21,
                         isEnable: controllerX.isEnable,
                       ),
