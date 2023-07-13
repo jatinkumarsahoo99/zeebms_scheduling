@@ -316,6 +316,28 @@ class PlutoRow {
 
     return json;
   }
+  Map<String, dynamic> toJsonIntConvert(
+      {bool includeChildren = true,
+      String childrenField = 'children',
+      List<String>? intConverterKeys}) {
+    final json = cells.map((key, value) => MapEntry(
+        key,
+        (intConverterKeys ?? []).contains(key)
+            ? int.tryParse(value.value.toString())
+            : value.value.toString()));
+
+    if (!includeChildren || !type.isGroup) return json;
+
+    final List<Map<String, dynamic>> children = type.group.children
+        .map(
+          (e) => e.toJson(childrenField: childrenField),
+        )
+        .toList();
+
+    json[childrenField] = children;
+
+    return json;
+  }
 
   Map<String, dynamic> toTransmissionLogJson(
       {bool includeChildren = true,

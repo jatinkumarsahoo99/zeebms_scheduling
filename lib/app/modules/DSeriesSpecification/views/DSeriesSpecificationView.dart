@@ -286,6 +286,10 @@ class DSeriesSpecificationView extends GetView<DSeriesSpecificationController> {
       case "Save":
         controllerX.save();
         break;
+      case "Clear":
+        Get.find<HomeController>().clearPage1();
+        Get.delete<DSeriesSpecificationController>();
+        break;
     }
   }
 }

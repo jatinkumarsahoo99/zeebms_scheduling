@@ -138,10 +138,10 @@ class DSeriesSpecificationController extends GetxController {
       var postMap = {
         "locationCode": selectLocation?.key,
         "channelcode": selectChannel?.key,
-        "dseriesSpecs": stateManager?.rows.map((e) => e.toJson()).toList()
+        "dseriesSpecs": stateManager?.rows.map((e) => e.toJsonIntConvert(intConverterKeys: ["startPosition","endPosition"])).toList()
       };
       Get.find<ConnectorControl>().POSTMETHOD(
-          api: ApiFactory.TRANSMISSION_LOG_POST_PIVOT_LOG(),
+          api: ApiFactory.DSERIES_SPECIFICATION_SAVE,
           json: postMap,
           fun: (map) {
             Get.back();
