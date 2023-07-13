@@ -860,12 +860,13 @@ class ApiFactory {
   //////////////////////// SearchTapeCode //////////////////
   static String SearchTapeCode(exportTapeCode, programName, epsCaption) =>
       BASE_URL + "/api/SearchTapeCode/GetbtnShowClick?ExportTapeCode=$exportTapeCode&ProgramName=$programName&EpsCaption=$epsCaption";
-  //////////////////////// Spot Type Master ///////////////
-  ///
-  ///
-  ///
-  ///
-  ///
+  //////////////////////// Spot Position Type Master ///////////////
+
+  static String SpotPositionTypeInit = BASE_URL + "/api/SpotPositionType/GetTypeMasterLoad";
+  static String SpotPositionTypeGetRecord(sponserCode, sponserName) =>
+      BASE_URL + "/api/SpotPositionType/GetRetrieveRecord?SpotPositionTypeCode=$sponserCode&SpotPositionTypeName=$sponserName";
+  static String SpotPositionTypeSaveRecord = BASE_URL + "/api/SpotPositionType/PostSaveRecord";
+
   ////////////////////// SecondaryEventTemplateMaster ///////////////////////////////////
   static String SponserTypeMasterGetRecord(sponserCode, sponserName) =>
       BASE_URL + "/api/SponsorTypeMaster/GetRetrieveRecord?SponsorTypeCode=$sponserCode&SponsorTypeName=$sponserName";

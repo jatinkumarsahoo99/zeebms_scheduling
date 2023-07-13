@@ -36,21 +36,21 @@ class SponserTypeMasterView extends GetView<SponserTypeMasterController> {
                       spacing: Get.width * 0.01,
                       children: [
                         InputFields.formField1(
-                            hintTxt: "Sponser", controller: controller.sponserName, width: 0.36, focusNode: controller.sponserNameFocus),
+                            hintTxt: "Sponser", controller: controller.sponserName, width: 0.48, focusNode: controller.sponserNameFocus),
                         InputFields.formField1(
                           hintTxt: "Short Name",
                           controller: controller.shortName,
-                          width: 0.36,
+                          width: 0.48,
                         ),
                         InputFields.formField1(
                           hintTxt: "Premium",
                           controller: controller.premium,
-                          width: 0.175,
+                          width: 0.235,
                         ),
                         Obx(() => DropDownField.formDropDown1WidthMap([
                               DropDownValue(key: "M", value: "Multiple"),
                               DropDownValue(key: "S", value: "Single")
-                            ], (value) => {}, "Sponser Type", 0.175, selected: controller.selectedSponser.value)),
+                            ], (value) => {}, "Sponser Type", 0.235, selected: controller.selectedSponser.value)),
                       ],
                     ),
                     SizedBox(
