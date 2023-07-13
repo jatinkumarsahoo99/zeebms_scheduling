@@ -46,7 +46,9 @@ class SecondaryEventTemplateMasterView extends GetView<SecondaryEventTemplateMas
                       parseKeyForValue: "ProgramName",
                       onchanged: (data) {
                         controller.selectedProgram.value = data;
+                        controller.getProgramLeave();
                       },
+                      selectedValue: controller.selectedProgram.value,
 
                       width: Get.width * 0.36,
                       // padding: const EdgeInsets.only()
@@ -91,7 +93,12 @@ class SecondaryEventTemplateMasterView extends GetView<SecondaryEventTemplateMas
                     child: Card(
                       clipBehavior: Clip.hardEdge,
                       child: Container(
-                        child: DataGridShowOnlyKeys(mapData: []),
+                        padding: EdgeInsets.all(4),
+                        child: GetBuilder<SecondaryEventTemplateMasterController>(
+                            id: "gridData",
+                            builder: (controller) => DataGridShowOnlyKeys(
+                                  mapData: controller.gridPrograms.map((e) => e.toJson()).toList(),
+                                )),
                       ),
                     ),
                   ),
