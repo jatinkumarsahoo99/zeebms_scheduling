@@ -860,16 +860,17 @@ class ApiFactory {
   //////////////////////// SearchTapeCode //////////////////
   static String SearchTapeCode(exportTapeCode, programName, epsCaption) =>
       BASE_URL + "/api/SearchTapeCode/GetbtnShowClick?ExportTapeCode=$exportTapeCode&ProgramName=$programName&EpsCaption=$epsCaption";
-  //////////////////////// Spot Type Master ///////////////
-  ///
-  ///
-  ///
-  ///
-  ///
+  //////////////////////// Spot Position Type Master ///////////////
+
+  static String SpotPositionTypeInit = BASE_URL + "/api/SpotPositionType/GetTypeMasterLoad";
+  static String SpotPositionTypeGetRecord(sponserCode, sponserName) =>
+      BASE_URL + "/api/SpotPositionType/GetRetrieveRecord?SpotPositionTypeCode=$sponserCode&SpotPositionTypeName=$sponserName";
+  static String SpotPositionTypeSaveRecord = BASE_URL + "/api/SpotPositionType/PostSaveRecord";
+
   ////////////////////// SecondaryEventTemplateMaster ///////////////////////////////////
-  static String SponderTypeMasterGetRecord(sponserCode, sponserName) =>
-      BASE_URL + "/api/SponsorTypeMaster/Get_RetrieveRecord?SponsorTypeName=$sponserName";
-  static String SponderTypeMasterSaveRecord = BASE_URL + "/api/SponsorTypeMaster/Post_Save";
+  static String SponserTypeMasterGetRecord(sponserCode, sponserName) =>
+      BASE_URL + "/api/SponsorTypeMaster/GetRetrieveRecord?SponsorTypeCode=$sponserCode&SponsorTypeName=$sponserName";
+  static String SponserTypeMasterSaveRecord = BASE_URL + "/api/SponsorTypeMaster/PostSave";
   ////////////////////// SecondaryEventTemplateMaster ///////////////////////////////////
 
   static String SecondaryEventTemplateMasterInitData = BASE_URL + "/api/SecondaryEventTemplateMaster/GetInitialisation";
