@@ -199,8 +199,6 @@ class DSeriesSpecificationView extends GetView<DSeriesSpecificationController> {
                   print("Called this Update >>>listUpdate");
                   if (controller.dSeriesModel != null &&
                       ((controller.dSeriesModel?.search?.length ?? 0) > 0)) {
-                    print("Actual Defaults Not Empty");
-                    // final key = GlobalKey();
                     return Expanded(
                       child: Padding(
                         padding: const EdgeInsets.symmetric(horizontal: 10),
