@@ -110,9 +110,20 @@ class InventoryStatusReportController extends GetxController {
         api: ApiFactory.INVENTORY_STATUS_REPORT_GENERATE,
         fun: (resp) {
           closeDialogIfOpen();
-          if (resp != null && resp is Map<String, dynamic> && resp['generate'] != null && resp['generate']['lstsummary'] != null) {
-            dataTableList.clear();
-            dataTableList.addAll((resp['generate']['lstsummary']));
+          if (resp != null && resp is Map<String, dynamic> && resp['generate'] != null) {
+            if ((resp['generate']['lstdetails'] as List<dynamic>).isNotEmpty) {
+              dataTableList.clear();
+              dataTableList.addAll((resp['generate']['lstdetails']));
+            }
+            if ((resp['generate']['lstsummary'] as List<dynamic>).isNotEmpty) {
+              dataTableList.clear();
+              dataTableList.addAll((resp['generate']['lstsummary']));
+            }
+
+            if ((resp['generate']['lstold'] as List<dynamic>).isNotEmpty) {
+              dataTableList.clear();
+              dataTableList.addAll((resp['generate']['lstold']));
+            }
           } else {
             LoadingDialog.showErrorDialog(resp.toString());
           }
