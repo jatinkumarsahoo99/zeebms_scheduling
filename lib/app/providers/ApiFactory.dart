@@ -748,12 +748,12 @@ class ApiFactory {
   // static String PROMO_MASTER_SEGNO_LEAVE = "$BASE_URL/api/FillerMaster/SegNoLeave";
   // static String PROMO_MASTER_GET_EVENT = "$BASE_URL/api/FillerMaster/GetEvent?text=";
 
-  //////////////////////////////// PROMO-MASTER-API-END /////////////////////////////////
-  ///
-  ///
-  ///
-  ///
-  ///
+  //////////////////////////////// PROMO-TYPE-MASTER-API-END /////////////////////////////////
+
+  static String PROMO_TYPE_MASTER_GET_RECORD(promoName, promoCode) =>
+      "$BASE_URL/api/PromoTypeMaster/GetRetrieveRecord?PromoTypeCode=$promoCode&PromoTypeName=$promoName";
+  static String PROMO_TYPE_MASTER_SAVE = "$BASE_URL/api/PromoTypeMaster/PostValidateAndSaveRecord";
+
   //////////////////////////////// ASRUN IMPORT /////////////////////////////////
   static String AsrunImport_GetLoadLocation = "$BASE_URL/api/AsrunImport/GetLoadLocation";
   static String AsrunImport_GetLocationSelect(locationCode) => "$BASE_URL/api/AsrunImport/GetLocationSelect?Locationcode=$locationCode";
