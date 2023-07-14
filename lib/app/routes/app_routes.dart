@@ -83,6 +83,7 @@ abstract class RoutesList {
     _Paths.BRAND_MASTER,
     _Paths.COMING_UP_MENU,
     _Paths.COMING_UP_NEXT_MENU,
+    _Paths.COMING_UP_TOMORROW_MENU,
     _Paths.DATE_WISE_ERROR_SPOTS,
     _Paths.DATE_WISE_FILLER_REPORT,
   ];

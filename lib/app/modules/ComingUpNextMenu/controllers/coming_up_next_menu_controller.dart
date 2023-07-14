@@ -14,6 +14,7 @@ import '../../../controller/HomeController.dart';
 import '../../../controller/MainController.dart';
 import '../../../providers/ApiFactory.dart';
 import '../../../providers/Utils.dart';
+import '../../CommonSearch/views/common_search_view.dart';
 import '../CommingUpNextRetriveModel.dart';
 
 class ComingUpNextMenuController extends GetxController {
@@ -248,7 +249,7 @@ class ComingUpNextMenuController extends GetxController {
                 }
                 segNoController.text =(commingUpNextRetriveModel?.segmentNumber??0).toString();
                 houseIdController.text = commingUpNextRetriveModel?.houseID??"";
-                selectedProgram = DropDownValue(value:commingUpNextRetriveModel?.programCode??"" ,key:"program");
+                selectedProgram = DropDownValue(key:commingUpNextRetriveModel?.programCode??"" ,value:"program");
                 txCaptionController.text = commingUpNextRetriveModel?.exportTapeCaption??"";
                 strCode =commingUpNextRetriveModel?.cunCode??"";
                 somController.text =(commingUpNextRetriveModel?.som) ??"00:00:00:00";
@@ -521,6 +522,16 @@ class ComingUpNextMenuController extends GetxController {
           validateAndSaveRecord();
         }else if(string == "Clear"){
           clearAll();
+        }else if (string == "Search") {
+          Get.to(
+            SearchPage(
+              key: Key("Coming Up Tomorrow Master"),
+              screenName: "Coming Up Tomorrow Master",
+              appBarName: "Coming Up Tomorrow Master",
+              strViewName: "vTesting",
+              isAppBarReq: true,
+            ),
+          );
         }
   }
   void increment() => count.value++;

@@ -16,6 +16,7 @@ import '../../CommonDocs/controllers/common_docs_controller.dart';
 import '../../CommonDocs/views/common_docs_view.dart';
 import '../../CommonSearch/views/common_search_view.dart';
 import '../BrandMasterProductDetails.dart';
+import '../BrandMasterRetriveModel.dart';
 import '../ClientDetailsAndBrandModel.dart';
 
 
@@ -129,14 +130,15 @@ class BrandMasterController extends GetxController {
         });
   }
   String strcode = "";
-
+  BrandMasterRetriveModel? brandMasterRetriveModel;
   getRetriveData(String brandName,String? brandCode){
     Get.find<ConnectorControl>().GETMETHODCALL(
-        api: ApiFactory.BRANDMASTER_GETBRAND+(Uri.encodeComponent(brandCode??"''"))+"&BrandName="+ Uri.encodeComponent(brandName) ,
+        api: ApiFactory.BRANDMASTER_GETBRAND+Uri.encodeComponent(brandName),
         fun: (map) {
           isFocusNodeActive = false;
           // strcode
-           print(">>>>>"+map.toString());
+           print(">>>>>"+ jsonEncode(map).toString());
+           if()
         });
   }
 
