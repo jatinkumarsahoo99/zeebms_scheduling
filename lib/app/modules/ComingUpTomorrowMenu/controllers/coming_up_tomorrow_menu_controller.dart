@@ -247,7 +247,7 @@ class ComingUpTomorrowMenuController extends GetxController {
       "exportTapeCode": tapeId
     };
     print(">>>>"+data.toString());
-    Get.find<ConnectorControl>().GETMETHODWITHPARAM(
+    Get.find<ConnectorControl>().GET_METHOD_WITH_PARAM(
         api: ApiFactory.COMINGUPTOMORROWMASTER_RETRIVERECORD,
         json: data,
         fun: (map) {
@@ -317,7 +317,7 @@ class ComingUpTomorrowMenuController extends GetxController {
     String res = "";
     // print(">>>>>>>>>"+CheckExportTapeCode.toString());
     try{
-    await  Get.find<ConnectorControl>().GETMETHODWITHPARAM(
+    await  Get.find<ConnectorControl>().GET_METHOD_WITH_PARAM(
           api: api,
           json: data,
           fun: (map) {

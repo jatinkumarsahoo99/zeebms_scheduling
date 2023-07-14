@@ -291,7 +291,7 @@ class ComingUpNextMenuController extends GetxController {
       String res = "";
       print(">>>>>>>>>"+CheckExportTapeCode.toString());
       try{
-       await  Get.find<ConnectorControl>().GETMETHODWITHPARAM(
+       await  Get.find<ConnectorControl>().GET_METHOD_WITH_PARAM(
             api:api,
             json: data,
             fun: (map) {

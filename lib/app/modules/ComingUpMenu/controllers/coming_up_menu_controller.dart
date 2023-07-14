@@ -195,7 +195,7 @@ class ComingUpMenuController extends GetxController {
       "houseId": houseID
     };
     print(">>>>" + data.toString());
-    Get.find<ConnectorControl>().POSTMETHOD(
+    Get.find<ConnectorControl>().GET_METHOD_WITH_PARAM(
         api: ApiFactory.COMING_UP_MENU_MASTER_GET_RETRIVERECORD,
         json: data,
         fun: (map) {

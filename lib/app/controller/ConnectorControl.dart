@@ -261,7 +261,7 @@ class ConnectorControl extends GetConnect {
     }
   }
 
-  GETMETHODWITHPARAM({required String api, Map<String,dynamic>? json, required Function fun}) async {
+  GET_METHOD_WITH_PARAM({required String api, Map<String,dynamic>? json, required Function fun}) async {
     try {
       print("API NAME:>" + api);
       service.Response response = await dio.get(
