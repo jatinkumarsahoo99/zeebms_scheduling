@@ -1,3 +1,4 @@
+import 'package:bms_scheduling/app/data/DropDownValue.dart';
 import 'package:flutter/material.dart';
 
 import 'package:get/get.dart';
@@ -11,6 +12,7 @@ import '../../../../widgets/radio_row1.dart';
 import '../../../controller/HomeController.dart';
 import '../../../controller/MainController.dart';
 import '../../../data/PermissionModel.dart';
+import '../../../providers/ApiFactory.dart';
 import '../../../providers/Utils.dart';
 import '../controllers/coming_up_next_menu_controller.dart';
 
@@ -103,6 +105,7 @@ class ComingUpNextMenuView extends StatelessWidget {
                                   controller: controllerX.houseIdController,
                                   width: 0.1,
                                   isEnable: controllerX.isEnable,
+
                                   onchanged: (value) {
 
                                   },
@@ -116,7 +119,7 @@ class ComingUpNextMenuView extends StatelessWidget {
                             SizedBox(
                               height: 5,
                             ),
-                            Row(
+                            /*Row(
                               mainAxisAlignment: MainAxisAlignment.spaceBetween,
                               children: [
                                 InputFields.formField1(
@@ -125,6 +128,7 @@ class ComingUpNextMenuView extends StatelessWidget {
                                   width: 0.1,
                                   // isEnable: controllerX.isEnable,
                                   onchanged: (value) {
+                                    controllerX.fetchProgram(value);
 
                                   },
                                   autoFocus: true,
@@ -137,7 +141,27 @@ class ComingUpNextMenuView extends StatelessWidget {
                                   isEnable: controllerX.isEnable,
                                   selected: controllerX.selectedProgram,
                                   autoFocus: true,),
+
+
+
                               ],
+                            ),*/
+                            DropDownField
+                                .formDropDownSearchAPI2(
+                              GlobalKey(),
+                              context,
+                              width: context.width * 0.6,
+                              onchanged: (DropDownValue? val) {
+                                print(">>>" + val.toString());
+                                controllerX.selectedProgram = val;
+                              },
+                              title: 'Program',
+                              url:ApiFactory.COMINGUPNEXTMASTER_PROGRAMSEARCH,
+                              parseKeyForKey: "programcode",
+                              parseKeyForValue: 'programname',
+                              selectedValue: controllerX.selectedProgram,
+                              autoFocus: true,
+                              // maxLength: 1
                             ),
                             SizedBox(
                               height: 5,
@@ -180,15 +204,16 @@ class ComingUpNextMenuView extends StatelessWidget {
                                     // isTime: true,
                                     // isEnable: controller.isEnable.value,
                                     paddingLeft: 0),
-                                Obx(()=> TimeWithThreeTextField(
-                                  title: "Duration",
-                                  mainTextController: controllerX.durationController.value,
+                                 Obx(()=>InputFields.formFieldDisable(
+                                   /*title: "Duration",
+                                  mainTextController: controllerX.durationController,
                                   widthRation: 0.07,
                                   isTime: false,
-                                  isEnable: false,
-                                ),),
-
-
+                                  isEnable: false,*/
+                                   hintTxt: 'Duration',
+                                   value: controllerX.duration.value,
+                                   widthRatio:  0.07,
+                                 )) ,
                               ],
                             ),
 

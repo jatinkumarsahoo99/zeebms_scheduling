@@ -894,6 +894,7 @@ class ApiFactory {
   static String COMINGUPNEXTMASTER_TAPEIDLEAVE = BASE_URL + "/api/ComingUpNextMaster/TapeIDLeave";
   static String COMINGUPNEXTMASTER_SEGNOLEAVE = BASE_URL + "/api/ComingUpNextMaster/SegNoLeave";
   static String COMINGUPNEXTMASTER_HOUSEIDLEAVE = BASE_URL + "/api/ComingUpNextMaster/HouseIDLeave";
+  static String COMINGUPNEXTMASTER_PROGRAMSEARCH = BASE_URL + "/api/ComingUpNextMaster/GetSourceProgramSearch?TextProgramCompany=";
 
 
   //////////////////////////// ComingUpTomorrowMenu ////////////////////////////////
@@ -933,5 +934,6 @@ class ApiFactory {
   static String BRANDMASTER_GETBRAND = BASE_URL + "/api/BrandMaster/GetBrandMaster?BrandCode=";
   static String BRANDMASTER_GETCLIENTDETAILS = BASE_URL + "/api/BrandMaster/GetClientDetails?clientname=";
   static String BRANDMASTER_GETPRODUCTDETAILS = BASE_URL + "/api/BrandMaster/GetProduct?productcode=";
+  static String BRANDMASTER_SAVE = BASE_URL + "/api/BrandMaster/PostBrandAdd";
 
 }

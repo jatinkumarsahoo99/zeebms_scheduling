@@ -1,3 +1,4 @@
+import 'dart:convert';
 import 'dart:developer';
 
 import 'package:bms_scheduling/app/data/DropDownValue.dart';
@@ -13,6 +14,7 @@ import '../../../controller/HomeController.dart';
 import '../../../controller/MainController.dart';
 import '../../../providers/ApiFactory.dart';
 import '../../../providers/Utils.dart';
+import '../../ComingUpNextMenu/CommingUpNextRetriveModel.dart';
 
 class ComingUpTomorrowMenuController extends GetxController {
   //TODO: Implement ComingUpTomorrowMenuController
@@ -22,7 +24,7 @@ class ComingUpTomorrowMenuController extends GetxController {
   var clientDetails = RxList<DropDownValue>();
   DropDownValue? selectedClientDetails;
   var controllsEnabled = true.obs;
-  var selectedRadio = "".obs;
+  var selectedRadio =  "Dated".obs;
 
   FocusNode tapeIdFocus = FocusNode();
   FocusNode segNoFocus = FocusNode();
@@ -41,13 +43,16 @@ class ComingUpTomorrowMenuController extends GetxController {
   DropDownValue? selectedProgramType;
 
   TextEditingController tapeIdController = TextEditingController();
-  TextEditingController segNoController = TextEditingController();
+  TextEditingController segNoController = TextEditingController(text: "0");
   TextEditingController houseIdController = TextEditingController();
   TextEditingController programController = TextEditingController();
   TextEditingController txCaptionController = TextEditingController();
   TextEditingController somController = TextEditingController();
   TextEditingController eomController = TextEditingController();
-  Rx<TextEditingController> durationController = TextEditingController().obs;
+
+  TextEditingController durationController = TextEditingController();
+  RxString duration =RxString("00:00:00:00");
+
   TextEditingController uptoDateController = TextEditingController();
   num sec = 0;
   String strCode = "";
@@ -65,12 +70,12 @@ class ComingUpTomorrowMenuController extends GetxController {
     Utils.oldBMSConvertToSecondsValue(value: (somController.text));
     num secondEom =
     Utils.oldBMSConvertToSecondsValue(value: eomController.text);
-    durationController.value.text =
+    durationController.text =
         Utils.convertToTimeFromDouble(value: secondEom - secondSom);
+    duration.value =  Utils.convertToTimeFromDouble(value: secondEom - secondSom);
+    sec = Utils.oldBMSConvertToSecondsValue(value: durationController.text);
 
-    sec = Utils.oldBMSConvertToSecondsValue(value: durationController.value.text);
-
-    print(">>>>>>>>>" + durationController.value.text);
+    print(">>>>>>>>>" + durationController.text);
     print(">>>>>>>>>" + sec.toString());
   }
 
@@ -78,13 +83,25 @@ class ComingUpTomorrowMenuController extends GetxController {
     Get.find<ConnectorControl>().GETMETHODCALL(
         api: ApiFactory.COMINGUPTOMORROWMASTER_LOAD,
         fun: (map) {
-          if (map is List && map.isNotEmpty) {
-            locationList.clear();
-            /*for (var e in map) {
+          // print(">>>>>map"+jsonEncode(map) .toString());
+          if(map is Map){
+            if ( map.containsKey('lstLocation') && map['lstLocation'] != null
+                && map['lstLocation'].length > 0 ) {
+              locationList.clear();
+              map['lstLocation'].forEach((e){
+                locationList.add(DropDownValue.fromJsonDynamic(e, "locationCode", "locationName"));
+              });
+              /*for (var e in map) {
               locationList.add(DropDownValue.fromJsonDynamic(e, "locationCode", "locationName"));
             }*/
-          }else{
-            locationList.clear();
+            }
+            if(map.containsKey('lstProgramType') && map['lstProgramType'] != null
+                && map['lstProgramType'].length > 0){
+              programTypeList.clear();
+              map['lstProgramType'].forEach((e){
+                programTypeList.add(DropDownValue.fromJsonDynamic(e, "programTypecode", "programTypeName"));
+              });
+            }
           }
         });
   }
@@ -94,6 +111,7 @@ class ComingUpTomorrowMenuController extends GetxController {
         api: ApiFactory.COMINGUPTOMORROWMASTER_GETCHANNEL_LIST + code,
         fun: ( map) {
           channelList.clear();
+          print(">>>>>map"+jsonEncode(map) .toString());
           if(map is List && map.isNotEmpty){
             for (var e in map) {
               channelList.add(DropDownValue.fromJsonDynamic(
@@ -106,8 +124,42 @@ class ComingUpTomorrowMenuController extends GetxController {
         });
   }
 
+  fetchProgram(String code){
+    Get.find<ConnectorControl>().GETMETHODCALL(
+        api: ApiFactory.COMINGUPTOMORROWMASTER_PROGRAMTYPELOSTFOCUS + code,
+        fun: ( map) {
+          programList.clear();
+          print(">>>>>map"+jsonEncode(map) .toString());
+          if(map is List && map.isNotEmpty){
+            for (var e in map) {
+              programList.add(DropDownValue.fromJsonDynamic(
+                  e, "programCode", "programName"));
+            }
+          }else{
+            programList.clear();
+          }
+
+        });
+  }
+
+  bool contin = true ;
   validateAndSaveRecord(){
-    if(selectedLocation == null){
+    if(strCode != "" && contin){
+      // Record Already exist!
+      // Snack.callError("Record Already exist!\nDo you want to modify it?");
+      LoadingDialog.recordExists(
+          "Record Already exist!\nDo you want to modify it?",
+              (){
+            isEnable = true;
+            isListenerActive =false;
+            contin= false;
+            update(['top']);
+          },cancel: (){
+        contin= false;
+        Get.back();
+      });
+    }
+    else if(selectedLocation == null){
       Snack.callError("Please select Location Name.");
     }else if(selectedChannel == null){
       Snack.callError("Please select Channel Name.");
@@ -134,6 +186,7 @@ class ComingUpTomorrowMenuController extends GetxController {
     }else if(selectedRadio == null){
       Snack.callError("Please mark Dated.");
     }else{
+      LoadingDialog.call();
       Map<String,dynamic> postData = {
         "cunCode": strCode,
         "channelCode": selectedChannel?.key??"",
@@ -149,7 +202,7 @@ class ComingUpTomorrowMenuController extends GetxController {
         // "activeNonActive": "string",
         "dated": ((selectedRadio.value == "Dated")?"Y":"N"),
         // "killDate": "2023-07-11T15:06:29.531Z",
-        "killDate": DateFormat("yyyy-MM-ddTHH:mm:ss.SSSZ").format( DateFormat("dd-MM-yyyy").parse(uptoDateController.text)),
+        "killDate": DateFormat("yyyy-MM-ddTHH:mm:ss").format( DateFormat("dd-MM-yyyy").parse(uptoDateController.text)),
         "modifiedBy": Get.find<MainController>().user?.logincode??"",
         "locationCode": selectedLocation?.key??"",
         "eom": eomController.text
@@ -160,8 +213,18 @@ class ComingUpTomorrowMenuController extends GetxController {
           json: postData,
           fun: (map) {
             log(">>>>"+map.toString());
+            Get.back();
+            // log(">>>>"+map.toString());
             if(map != null){
-
+              if(strCode != ""){
+                clearAll();
+                Snack.callSuccess("Record is updated successfully.");
+              }else{
+                clearAll();
+                Snack.callSuccess("Record is inserted successfully.");
+              }
+            }else{
+              Snack.callError("Something went wrong");
             }
           });
 
@@ -175,20 +238,57 @@ class ComingUpTomorrowMenuController extends GetxController {
       retrieveRecord(tapeIdController.text.trim(), segNoController.text.trim());
     }
   }
+  CommingUpNextRetriveModel? commingUpNextRetriveModel;
   void retrieveRecord(String tapeId,String segNo){
     Map<String,dynamic> data = {
       "cutCode":strCode,
-      "segmentNumber": "1",
-      "exportTapeCode": "HCLP0045"
+      "segmentNumber": segNo,
+      "exportTapeCode": tapeId
     };
     print(">>>>"+data.toString());
-    Get.find<ConnectorControl>().POSTMETHOD(
+    Get.find<ConnectorControl>().GETMETHODWITHPARAM(
         api: ApiFactory.COMINGUPTOMORROWMASTER_RETRIVERECORD,
         json: data,
         fun: (map) {
-          log(">>>>"+map.toString());
-          if(map != null){
-
+          print(">>>>"+ jsonEncode(map) .toString());
+          if(map is List && map.length >0){
+            commingUpNextRetriveModel = CommingUpNextRetriveModel.fromJson(map[0]);
+            strCode = commingUpNextRetriveModel!.cunCode.toString();
+            durationController.text = commingUpNextRetriveModel?.slideDuration.toString()??"" ;
+            for (var element in channelList) {
+              if(element.key.toString().trim() ==
+                  commingUpNextRetriveModel!.channelCode.toString().trim()){
+                selectedChannel = DropDownValue(key:commingUpNextRetriveModel!.channelCode??"",
+                    value: element.value);
+                break;
+              }
+            }
+            for (var element in locationList) {
+              if(element.key.toString().trim() ==
+                  commingUpNextRetriveModel!.locationCode.toString().trim()){
+                selectedLocation = DropDownValue(key:commingUpNextRetriveModel!.locationCode??"",
+                    value: element.value);
+                break;
+              }
+            }
+            segNoController.text =(commingUpNextRetriveModel?.segmentNumber??0).toString();
+            houseIdController.text = commingUpNextRetriveModel?.houseID??"";
+            selectedProgram = DropDownValue(value:commingUpNextRetriveModel?.programCode??"" ,key:"program");
+            txCaptionController.text = commingUpNextRetriveModel?.exportTapeCaption??"";
+            strCode =commingUpNextRetriveModel?.cunCode??"";
+            somController.text =(commingUpNextRetriveModel?.som) ??"00:00:00:00";
+            eomController.text =(commingUpNextRetriveModel?.eom) ??"00:00:00:00";
+            // durationController.value.text =  Utils.convertToTimeFromDouble(value:num.parse((commingUpNextRetriveModel?.slideDuration??10).toString()));
+            uptoDateController.text = (DateFormat("dd-MM-yyyy").format
+              (DateFormat("yyyy-MM-ddTHH:mm:ss").parse(commingUpNextRetriveModel!.killDate!))).toString() ;
+            calculateDuration();
+            // durationController.refresh();
+            update(['top']);
+          }
+          else{
+            commingUpNextRetriveModel = null;
+            strCode="";
+            // update(['top']);
           }
         });
   }
@@ -205,7 +305,7 @@ class ComingUpTomorrowMenuController extends GetxController {
     return text;
   }
 
-  String CheckExportTapeCode(String tapeId,String segNo,String strCode,String houseId, String api){
+  Future<String> CheckExportTapeCode(String tapeId,String segNo,String strCode,String houseId, String api) async {
     Map<String,dynamic> data = {
       "exportTapeCode": tapeId,
       "segmentNumber": segNo,
@@ -213,31 +313,46 @@ class ComingUpTomorrowMenuController extends GetxController {
       "houseID": houseId,
       "eventType": ""
     };
+    String res = "";
+    // print(">>>>>>>>>"+CheckExportTapeCode.toString());
+    try{
+    await  Get.find<ConnectorControl>().GETMETHODWITHPARAM(
+          api: api,
+          json: data,
+          fun: (map) {
+            log(">>>>"+map.toString());
+            if(map is Map && map.containsKey('eventName') &&  map['eventName'] != null && map['eventName'] != "null" ){
+              res = map['eventName'];
+              return res;
+            }else{
+              return res;
+            }
+          });
+    }catch(e){
+      return res;
+    }
 
-    Get.find<ConnectorControl>().POSTMETHOD(
-        api: api,
-        json: data,
-        fun: (map) {
-          log(">>>>"+map.toString());
-          if(map != null){
-
-          }
-        });
-    return "";
+    return res;
   }
 
-  void txtTapeIDLeave(){
+  void txtTapeIDLeave() async  {
     if(tapeIdController.text != ""){
       tapeIdController.text = replaceInvalidChar(tapeIdController.text,upperCase: true);
       houseIdController.text = tapeIdController.text;
       checkRetrieve();
       if(tapeIdController.text != "" && (segNoController.text != "" && segNoController.text != "0") ){
-        String res = CheckExportTapeCode(tapeIdController.text,segNoController.text,strCode,"",
-            ApiFactory.COMINGUPTOMORROWMASTER_TAPEIDLEAVE);
+       /* String res = CheckExportTapeCode(tapeIdController.text,segNoController.text,strCode,"",
+            ApiFactory.COMINGUPTOMORROWMASTER_TAPEIDLEAVE);*/
+        String res ="";
+        await CheckExportTapeCode(tapeIdController.text,segNoController.text,strCode,"",
+        ApiFactory.COMINGUPTOMORROWMASTER_TAPEIDLEAVE).then((value) {
+          res=value;
+        });
+        isListenerActive = false;
         if(res != ""){
-          LoadingDialog.recordExists(
-              "Tape ID & Segment Number you entered is already used for "+res.toString(),
-                  (){
+          LoadingDialog.callInfoMessage(
+              "Tape ID & Segment Number you entered is already used for "+"COMING UP NEXT",
+                 callback:  (){
                 isEnable = true;
                 isListenerActive =false;
                 if(strCode != ""){
@@ -246,28 +361,32 @@ class ComingUpTomorrowMenuController extends GetxController {
                   tapeIdController.text ="";
                 }
                 // update(['updateLeft']);
-              },cancel: (){
-            Get.back();
-          });
+              });
         }
 
       }
     }
   }
 
-  void txtSegNoLeave(){
+  void txtSegNoLeave() async {
     if(segNoController.text == ""){
       segNoController.text = "0";
     }
     segNoController.text = replaceInvalidChar(segNoController.text,upperCase: true);
     checkRetrieve();
     if(tapeIdController.text != "" && (segNoController.text != "" && segNoController.text != "0")){
-      String res = CheckExportTapeCode(tapeIdController.text,segNoController.text,strCode,"",
-          ApiFactory.COMINGUPTOMORROWMASTER_SEGNOLEAVE);
+      /*String res = CheckExportTapeCode(tapeIdController.text,segNoController.text,strCode,"",
+          ApiFactory.COMINGUPTOMORROWMASTER_SEGNOLEAVE);*/
+      String res ="";
+      await CheckExportTapeCode(tapeIdController.text,segNoController.text,strCode,"",
+          ApiFactory.COMINGUPTOMORROWMASTER_SEGNOLEAVE).then((value) {
+        res=value;
+      });
+      isListenerActive = false;
       if(res != ""){
-        LoadingDialog.recordExists(
-            "Tape ID & Segment Number you entered is already used for "+res.toString(),
-                (){
+        LoadingDialog.callInfoMessage(
+            "Tape ID & Segment Number you entered is already used for "+"COMING UP NEXT",
+            callback:(){
               isEnable = true;
               isListenerActive =false;
               if(strCode != ""){
@@ -277,22 +396,30 @@ class ComingUpTomorrowMenuController extends GetxController {
                 segNoController.text ="";
               }
               // update(['updateLeft']);
-            },cancel: (){
-          Get.back();
-        });
+            });
       }
     }
   }
 
-  void txtHouseIDLeave(){
+  void txtHouseIDLeave() async {
     if(houseIdController.text != ""){
       houseIdController.text =  replaceInvalidChar(houseIdController.text,upperCase: true);
       if(houseIdController.text != ""){
-        String res = CheckExportTapeCode("","",strCode,houseIdController.text,ApiFactory.COMINGUPTOMORROWMASTER_HOUSEIDLEAVE);
+        /* String res =
+        CheckExportTapeCode("","",strCode,houseIdController.text,
+            ApiFactory.COMINGUPTOMORROWMASTER_HOUSEIDLEAVE);
+        */
+        String res ="";
+        await CheckExportTapeCode("","",strCode,houseIdController.text,
+        ApiFactory.COMINGUPTOMORROWMASTER_HOUSEIDLEAVE).then((value) {
+          res=value;
+        });
+        isListenerActive = false;
+
         if(res != ""){
-          LoadingDialog.recordExists(
-              "House ID you entered is already used for "+res.toString(),
-                  (){
+          LoadingDialog.callInfoMessage(
+              "House ID you entered is already used for "+"COMING UP NEXT",
+                 callback: (){
                 isEnable = true;
                 isListenerActive =false;
                 if(strCode != ""){
@@ -302,9 +429,7 @@ class ComingUpTomorrowMenuController extends GetxController {
                   houseIdController.text ="";
                 }
                 // update(['updateLeft']);
-              },cancel: (){
-            Get.back();
-          });
+              });
         }
       }
     }
@@ -317,9 +442,26 @@ class ComingUpTomorrowMenuController extends GetxController {
         isListenerActive = true;
       }
       if(!segNoFocus.hasFocus && isListenerActive){
-        checkRetrieve();
+        txtSegNoLeave();
       }
     });
+    houseIdFocus.addListener(() {
+      if(houseIdFocus.hasFocus){
+        isListenerActive = true;
+      }
+      if(!houseIdFocus.hasFocus && isListenerActive){
+        txtHouseIDLeave();
+      }
+    });
+    tapeIdFocus.addListener(() {
+      if(tapeIdFocus.hasFocus){
+        isListenerActive = true;
+      }
+      if(!tapeIdFocus.hasFocus && isListenerActive){
+        txtTapeIDLeave();
+      }
+    });
+    fetchPageLoadData();
     super.onInit();
   }
 
@@ -334,7 +476,11 @@ class ComingUpTomorrowMenuController extends GetxController {
   }
 
   formHandler(String string) {
-
+    if(string == "Save"){
+      validateAndSaveRecord();
+    }else if(string == "Clear"){
+      clearAll();
+    }
   }
   void increment() => count.value++;
 }

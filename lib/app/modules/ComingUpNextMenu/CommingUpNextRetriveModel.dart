@@ -1,5 +1,5 @@
 class CommingUpNextRetriveModel {
-  int? cunCode;
+  String? cunCode;
   String? channelCode;
   String? houseID;
   String? exportTapeCode;
@@ -37,7 +37,7 @@ class CommingUpNextRetriveModel {
         this.eom});
 
   CommingUpNextRetriveModel.fromJson(Map<String, dynamic> json) {
-    cunCode = json['cunCode'];
+    cunCode = json['cunCode'].toString();
     channelCode = json['channelCode'];
     houseID = json['houseID'];
     exportTapeCode = json['exportTapeCode'];
