@@ -12,8 +12,7 @@ import '../../../controller/HomeController.dart';
 import '../../../controller/MainController.dart';
 import '../../../providers/ApiFactory.dart';
 import '../../../providers/Utils.dart';
-
-
+import '../RetriveDataModel.dart';
 
 class ComingUpMenuController extends GetxController {
   //TODO: Implement ComingUpMenuController
@@ -59,18 +58,18 @@ class ComingUpMenuController extends GetxController {
   String strTapeID = "";
   bool isListenerActive = false;
 
+  RxString duration=RxString("00:00:00:00");
 
   @override
   void onInit() {
     fetchPageLoadData();
     tapeIdFocus.addListener(() {
-      if(!tapeIdFocus.hasFocus){
+      if (!tapeIdFocus.hasFocus) {
         txtTapeIDLeave();
       }
     });
     super.onInit();
   }
-
 
   clearAll() {
     Get.delete<ComingUpMenuController>();
@@ -82,11 +81,11 @@ class ComingUpMenuController extends GetxController {
         api: ApiFactory.COMING_UP_MENU_MASTER_LOAD,
         fun: (Map map) {
           // if (map is List && map.isNotEmpty) {
-            locationList.clear();
-            for (var e in map["location"]) {
-              locationList.add(DropDownValue.fromJsonDynamic(
-                  e, "locationCode", "locationName"));
-            }
+          locationList.clear();
+          for (var e in map["location"]) {
+            locationList.add(DropDownValue.fromJsonDynamic(
+                e, "locationCode", "locationName"));
+          }
           // } else {
           //   locationList.clear();
           // }
@@ -99,10 +98,10 @@ class ComingUpMenuController extends GetxController {
         fun: (map) {
           channelList.clear();
           // if (map is List && map.isNotEmpty) {
-            for (var e in map["channel"]) {
-              channelList.add(DropDownValue.fromJsonDynamic(
-                  e, "channelCode", "channelName"));
-            }
+          for (var e in map["channel"]) {
+            channelList.add(
+                DropDownValue.fromJsonDynamic(e, "channelCode", "channelName"));
+          }
           // } else {
           //   channelList.clear();
           // }
@@ -189,7 +188,7 @@ class ComingUpMenuController extends GetxController {
 
   void retrieveRecord(String tapeId, String segNo, String houseID) {
     Map<String, dynamic> data = {
-      "menuCode": strCode,
+      "menuCode": Null,
       "segmentNumber": segNo,
       "exportTapeCode": tapeId,
       "houseId": houseID
@@ -200,7 +199,19 @@ class ComingUpMenuController extends GetxController {
         json: data,
         fun: (map) {
           log(">>>>" + map.toString());
-          if (map != null) {}
+          if (map is Map &&
+              map.containsKey("retrive") &&
+              map["retrive"] != null) {
+            Map<String, dynamic> responseMap = map["retrive"][0];
+            RetriveDataModel retriveDataModel=RetriveDataModel.fromJson(responseMap);
+            txCaptionController.text=retriveDataModel.exportTapeCaption??"";
+            segNoController.text=retriveDataModel.segmentNumber.toString()??"";
+            somController.text=retriveDataModel.som.toString()??"";
+            eomController.text=retriveDataModel.eom.toString()??"";
+            startTimeController.text=retriveDataModel.menuStartTime.toString()??"";
+            endTimeController.text=retriveDataModel.menuEndTime.toString()??"";
+            duration.value=retriveDataModel.menuEndTime.toString()??"";
+          }
         });
   }
 
@@ -346,8 +357,5 @@ class ComingUpMenuController extends GetxController {
     }
   }
 
-
-
   formHandler(String string) {}
-
 }
