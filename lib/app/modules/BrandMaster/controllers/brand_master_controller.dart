@@ -131,7 +131,8 @@ class BrandMasterController extends GetxController {
   }
   String strcode = "";
   BrandMasterRetriveModel? brandMasterRetriveModel;
-  getRetriveData(String brandName,String? brandCode){
+  getRetriveData(String brandName){
+    isFocusNodeActive = false;
     Get.find<ConnectorControl>().GETMETHODCALL(
         api: ApiFactory.BRANDMASTER_GETBRAND+Uri.encodeComponent(brandName),
         fun: (map) {
@@ -143,16 +144,43 @@ class BrandMasterController extends GetxController {
              brandMasterRetriveModel = BrandMasterRetriveModel.fromJson(map as Map<String,dynamic>);
              strcode =  brandMasterRetriveModel?.getBrandList?[0].brandCode??"";
              selectedClient = DropDownValue(value:brandMasterRetriveModel?.getBrandList?[0].clientName ,
-                 key: brandMasterRetriveModel?.getBrandList?[0].clientName);
+                 key: brandMasterRetriveModel?.getBrandList?[0].clientCode);
              brandController.text = brandMasterRetriveModel?.getBrandList?[0].brandName??"" ;
-             // brandMasterProductDetails.text = brandMasterRetriveModel?.getBrandList?[0].brandShortName ;
+             brandShortNameController.text = brandMasterRetriveModel?.getBrandList?[0].brandShortName??"";
+             separationTimeController.text = (brandMasterRetriveModel?.getBrandList?[0].separationTime??"").toString();
+             selectedProduct = DropDownValue(value:"Product" ,
+                 key:brandMasterRetriveModel?.getBrandList?[0].productCode ) ;
+             productLevel1Controller.text = (brandMasterRetriveModel?.getBrandList?[0].ptName??"").toString() ;
+             productLevel2Controller.text = (brandMasterRetriveModel?.getBrandList?[0].level1Name ??"").toString();
+             productLevel3Controller.text = (brandMasterRetriveModel?.getBrandList?[0].level2Name ??"").toString();
+             productLevel4Controller.text = (brandMasterRetriveModel?.getBrandList?[0].level3Name ??"").toString();
+             update(['top']);
            }else{
-
-
+             strcode = "";
            }
 
         });
   }
+
+  String replaceInvalidChar(String text, {bool upperCase = false}) {
+    text = text.trim();
+    if (upperCase == false) {
+      text = text.toLowerCase();
+      text = text.split(' ').map((word) => word.isNotEmpty ? word[0].toUpperCase() + word.substring(1) : '').join(' ');
+    } else {
+      text = text.toUpperCase();
+    }
+    text = text.replaceAll("'", "`");
+    return text;
+  }
+
+  txtBrandNameLostFocus(){
+    brandController.text = replaceInvalidChar(brandController.text);
+    if(brandController.text != null && brandController.text != ""){
+      getRetriveData(brandController.text);
+    }
+  }
+
 
   docs() async {
     String documentKey = "";
@@ -292,8 +320,8 @@ class BrandMasterController extends GetxController {
       productLevel2Controller.text = clientDetailsAndBrandModel!.clientdtails?[index].level1Name ??"";
       productLevel3Controller.text = clientDetailsAndBrandModel!.clientdtails?[index].level2Name ??"";
       productLevel4Controller.text = clientDetailsAndBrandModel!.clientdtails?[index].level3Name ??"";
-      selectedProduct = DropDownValue(value:clientDetailsAndBrandModel!.clientdtails?[index].productName , key: "");
-      getRetriveData( brandController.text,null);
+      selectedProduct = DropDownValue(value:clientDetailsAndBrandModel!.clientdtails?[index].productName , key: "product");
+      getRetriveData( brandController.text);
       update(['top']);
     }
   }
@@ -312,7 +340,7 @@ class BrandMasterController extends GetxController {
     }else{
 
       Map<String,dynamic> postData = {
-        "brandCode": "",
+        "brandCode": strcode??"",
         "brandName": brandController.text??"",
         "brandShortName": brandShortNameController.text??"",
         "productCode": selectedProduct?.key??"",
@@ -320,16 +348,19 @@ class BrandMasterController extends GetxController {
         "modifiedBy": Get.find<MainController>().user?.logincode ?? "",
         "separationTime": separationTimeController.text
       };
-      // LoadingDialog.call();
+      LoadingDialog.call();
       print(">>>>"+postData.toString());
       Get.find<ConnectorControl>().POSTMETHOD(
           api: ApiFactory.BRANDMASTER_SAVE,
           json: postData,
           fun: (map) {
             Get.back();
-            print(">>>>"+map.toString());
-            if(map != null){
-              // clearAll();
+            print(">>>>"+jsonEncode(map).toString());
+            if(map is Map && map.containsKey("brandMater") && map['brandMater'] != null){
+              clearAll();
+              Snack.callSuccess(map['brandMater']??"");
+            }else{
+              Snack.callError("Something went wrong");
             }
           });
 
@@ -350,19 +381,19 @@ class BrandMasterController extends GetxController {
         fetchClient(clientController.text);
       }
     });
-    productFocus.addListener(() {
+   /* productFocus.addListener(() {
       if(productFocus.hasFocus){
         isFocusNodeActive = true;
       }
       if(!productFocus.hasFocus && isFocusNodeActive){
         fetchProduct(productController.text);
       }
-    });
+    });*/
     brandName.addListener(() {
       if(brandName.hasFocus){
         isFocusNodeActive = true;
       }if(!brandName.hasFocus && isFocusNodeActive){
-        getRetriveData(brandController.text, null);
+        txtBrandNameLostFocus();
       }
     });
 

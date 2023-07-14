@@ -76,7 +76,7 @@ class ComingUpTomorrowMenuView extends StatelessWidget {
                             InputFields.formField1(
                               hintTxt: "Tape Id",
                               controller: controllerX.tapeIdController,
-                              width: 0.1,
+                              width: 0.105,
                               focusNode: controllerX.tapeIdFocus,
                               isEnable: controllerX.isEnable,
                               onchanged: (value) {
@@ -88,14 +88,14 @@ class ComingUpTomorrowMenuView extends StatelessWidget {
                               hintTxt: "Seg No.",
                               padLeft: 0,
                               controller: controllerX.segNoController,
-                              width:0.1,
+                              width:0.105,
                               fN: controllerX.segNoFocus,
 
                             ),
                             InputFields.formField1(
                               hintTxt: "House Id",
                               controller: controllerX.houseIdController,
-                              width: 0.1,
+                              width: 0.105,
                               // isEnable: controllerX.isEnable,
                               isEnable: controllerX.isEnable,
                               onchanged: (value) {
@@ -107,7 +107,7 @@ class ComingUpTomorrowMenuView extends StatelessWidget {
                             InputFields.formField1(
                               hintTxt: "Tx Caption",
                               controller:controllerX.txCaptionController,
-                              width: 0.15,
+                              width: 0.105,
                               capital: true,
                               autoFocus: true,
                               isEnable: controllerX.isEnable,
