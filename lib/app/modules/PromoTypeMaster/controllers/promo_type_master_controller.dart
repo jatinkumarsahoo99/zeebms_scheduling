@@ -16,7 +16,9 @@ class PromoTypeMasterController extends GetxController {
   @override
   void onInit() {
     promoFocusNode.addListener(() {
-      if ((!promoFocusNode.hasFocus) && promTypeNameCtrl.text.isNotEmpty) {}
+      if ((!promoFocusNode.hasFocus) && promTypeNameCtrl.text.isNotEmpty) {
+        getData();
+      }
     });
     super.onInit();
   }
