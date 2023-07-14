@@ -2,6 +2,7 @@ import 'dart:convert';
 
 import 'package:bms_scheduling/app/providers/Utils.dart';
 import 'package:bms_scheduling/widgets/LoadingDialog.dart';
+import 'package:bms_scheduling/widgets/PlutoGrid/pluto_grid.dart';
 import 'package:get/get.dart';
 import 'package:flutter/material.dart';
 
@@ -51,9 +52,10 @@ class EuropeDropSpotsController extends GetxController {
 
   DropDownValue? selectFile;
   DropDownValue? selectFile1;
-
+  PlutoGridStateManager? stateManager;
 
   EuropeSpotModel? europeSpotModel;
+
   @override
   void onInit() {
     getInitial();
@@ -83,78 +85,73 @@ class EuropeDropSpotsController extends GetxController {
         });
   }
 
-  getChannel(key,int val) {
+  getChannel(key, int val) {
     Get.find<ConnectorControl>().GETMETHODCALL(
         api: ApiFactory.EUROPE_DROP_SPOTS_LOCATION(key),
         fun: (Map map) {
           print("Location dta>>>" + jsonEncode(map));
-          switch(val){
+          switch (val) {
             case 1:
               channelList.clear();
               map["europeDrop"].forEach((e) {
-                channelList.add(
-                    DropDownValue.fromJsonDynamic(e, "channelCode", "channelName"));
+                channelList.add(DropDownValue.fromJsonDynamic(
+                    e, "channelCode", "channelName"));
               });
               break;
             case 2:
               channelList1.clear();
               map["europeDrop"].forEach((e) {
-                channelList1.add(
-                    DropDownValue.fromJsonDynamic(e, "channelCode", "channelName"));
+                channelList1.add(DropDownValue.fromJsonDynamic(
+                    e, "channelCode", "channelName"));
               });
               break;
             case 3:
               channelList2.clear();
               map["europeDrop"].forEach((e) {
-                channelList2.add(
-                    DropDownValue.fromJsonDynamic(e, "channelCode", "channelName"));
+                channelList2.add(DropDownValue.fromJsonDynamic(
+                    e, "channelCode", "channelName"));
               });
               break;
           }
-
         });
   }
 
-
-  updateDetails(key) {
+  updateDetails(postMap) {
     LoadingDialog.call();
-    var postMap={
-      "bookingstatus": "string",
-      "modifiedBy": "string",
-      "locationcode": selectLocation?.key??"",
-      "channelcode": selectChannel?.key??"",
-      "bookingnumber": "string",
-      "bookingdetailcode": 0
-    };
     Get.find<ConnectorControl>().POSTMETHOD(
         api: ApiFactory.EUROPE_DROP_SPOTS_UPDATE_DETAILS(),
         json: postMap,
-        fun: (Map map) {
+        fun: (map) {
           Get.back();
-          print("Location dta>>>" + jsonEncode(map));
-          channelList.clear();
-          map["channels"].forEach((e) {
-            channelList.add(
-                DropDownValue.fromJsonDynamic(e, "channelCode", "channelName"));
-          });
+         if(map is Map && map.toString().contains("successfully")){
+           LoadingDialog.callDataSavedMessage(
+             "Updated Successfully",
+           );
+         }else{
+           LoadingDialog.callInfoMessage(map.toString());
+         }
         });
   }
 
   postRemoval() {
     LoadingDialog.call();
-    var postMap={
-      "locationcode": selectLocation_removeorder?.key??"",
-      "channelcode": selectChannel_removeorder?.key??"",
-      "filename": selectFile?.key??""
+    var postMap = {
+      "locationcode": selectLocation_removeorder?.key ?? "",
+      "channelcode": selectChannel_removeorder?.key ?? "",
+      "filename": selectFile?.key ?? ""
     };
     Get.find<ConnectorControl>().POSTMETHOD(
         api: ApiFactory.EUROPE_DROP_SPOTS_POST_REMOVE_FILE(),
         json: postMap,
         fun: (map) {
           Get.back();
-          if(map is Map && map.containsKey("remove") && map["remove"].toString().contains("successfully")){
-            LoadingDialog.callDataSavedMessage(map["remove"].toString(),);
-          }else{
+          if (map is Map &&
+              map.containsKey("remove") &&
+              map["remove"].toString().contains("successfully")) {
+            LoadingDialog.callDataSavedMessage(
+              map["remove"].toString(),
+            );
+          } else {
             LoadingDialog.callInfoMessage(map.toString());
           }
         });
@@ -162,12 +159,17 @@ class EuropeDropSpotsController extends GetxController {
 
   getRunDate1() {
     Get.find<ConnectorControl>().GETMETHODCALL(
-        api: ApiFactory.EUROPE_DROP_SPOTS_GETRUNDATE(selectLocation_removeorder?.key??"", selectChannel_removeorder?.key??"", Utils.dateFormatChange(selectedRemoveDate.text, "dd-MM-yyyy", "yyyy-MM-dd")+"T00:00:00"),
+        api: ApiFactory.EUROPE_DROP_SPOTS_GETRUNDATE(
+            selectLocation_removeorder?.key ?? "",
+            selectChannel_removeorder?.key ?? "",
+            Utils.dateFormatChange(
+                    selectedRemoveDate.text, "dd-MM-yyyy", "yyyy-MM-dd") +
+                "T00:00:00"),
         fun: (Map map) {
           fileList.clear();
           map["clientdtails"].forEach((e) {
-            fileList.add(
-                DropDownValue.fromJsonDynamic(e, "bookingReferenceNumber", "bookingReferenceNumber1"));
+            fileList.add(DropDownValue.fromJsonDynamic(
+                e, "bookingReferenceNumber", "bookingReferenceNumber1"));
           });
         });
   }
@@ -175,7 +177,8 @@ class EuropeDropSpotsController extends GetxController {
   getClientList() {
     // LoadingDialog.call();
     Get.find<ConnectorControl>().GETMETHODCALL(
-        api: ApiFactory.EUROPE_DROP_SPOTS_CHANNEL(selectLocation?.key??"", selectChannel?.key??""),
+        api: ApiFactory.EUROPE_DROP_SPOTS_CHANNEL(
+            selectLocation?.key ?? "", selectChannel?.key ?? ""),
         fun: (Map map) {
           // Get.back();
           // print("Location data>>>>" + jsonEncode(map));
@@ -189,7 +192,8 @@ class EuropeDropSpotsController extends GetxController {
 
   getAgentList() {
     Get.find<ConnectorControl>().GETMETHODCALL(
-        api: ApiFactory.EUROPE_DROP_SPOTS_CLIENT(selectLocation?.key??"", selectChannel?.key??"",selectClient?.key??""),
+        api: ApiFactory.EUROPE_DROP_SPOTS_CLIENT(selectLocation?.key ?? "",
+            selectChannel?.key ?? "", selectClient?.key ?? ""),
         fun: (Map map) {
           agentList.clear();
           map["clientdtails"].forEach((e) {
@@ -200,33 +204,40 @@ class EuropeDropSpotsController extends GetxController {
   }
 
   postGenerate() {
-    if(selectLocation==null){
+    if (selectLocation == null) {
       LoadingDialog.callInfoMessage("Select location");
-    }else if(selectChannel==null){
+    } else if (selectChannel == null) {
       LoadingDialog.callInfoMessage("Select channel");
-    }else if(selectClient==null){
+    } else if (selectClient == null) {
       LoadingDialog.callInfoMessage("Select client");
-    }else if(selectAgency==null){
+    } else if (selectAgency == null) {
       LoadingDialog.callInfoMessage("Select agency");
-    }else {
+    } else {
       LoadingDialog.call();
       var postMap = {
         "locationcode": selectLocation?.key ?? "",
         "channelcode": selectChannel?.key ?? "",
         "clientcode": selectClient?.key ?? "",
         "agencycode": selectAgency?.key ?? "",
-        "fromdate": Utils.dateFormatChange(selectedFrmDate.text, "dd-MM-yyyy", "yyyy-MM-dd")+"T00:00:00",
-        "todate": Utils.dateFormatChange(selectedToDate.text, "dd-MM-yyyy", "yyyy-MM-dd")+"T00:00:00"
+        "fromdate": Utils.dateFormatChange(
+                selectedFrmDate.text, "dd-MM-yyyy", "yyyy-MM-dd") +
+            "T00:00:00",
+        "todate": Utils.dateFormatChange(
+                selectedToDate.text, "dd-MM-yyyy", "yyyy-MM-dd") +
+            "T00:00:00"
       };
       Get.find<ConnectorControl>().POSTMETHOD(
           api: ApiFactory.EUROPE_DROP_SPOTS_GENERATE(),
           json: postMap,
           fun: (map) {
             Get.back();
-            if(map is Map && map.containsKey("generates") && map["generates"]!=null){
-              europeSpotModel=EuropeSpotModel.fromJson(map as Map<String,dynamic>);
+            if (map is Map &&
+                map.containsKey("generates") &&
+                map["generates"] != null) {
+              europeSpotModel =
+                  EuropeSpotModel.fromJson(map as Map<String, dynamic>);
               update(["listUpdate"]);
-            }else{
+            } else {
               LoadingDialog.callInfoMessage(map.toString());
             }
           });
@@ -235,22 +246,45 @@ class EuropeDropSpotsController extends GetxController {
 
   deleteCommercial() {
     LoadingDialog.call();
-    var postMap={
-      "locationcode": selectLocation?.key??"",
-      "channelcode": selectChannel?.key??"",
+    var postMap = {
+      "locationcode": selectLocation?.key ?? "",
+      "channelcode": selectChannel?.key ?? "",
       "bookingnumber": toNumber.text
     };
     Get.find<ConnectorControl>().POSTMETHOD(
         api: ApiFactory.EUROPE_DROP_SPOTS_DELETE(),
         json: postMap,
-        fun: (Map map) {
+        fun: (map) {
           Get.back();
-          print("Location dta>>>" + jsonEncode(map));
-          channelList.clear();
-          map["channels"].forEach((e) {
-            channelList.add(
-                DropDownValue.fromJsonDynamic(e, "channelCode", "channelName"));
-          });
+          if(map is Map && map.containsKey("update") && map["update"].toString().contains("successfully")){
+            LoadingDialog.callDataSavedMessage(map["update"]);
+          }else{
+            LoadingDialog.callInfoMessage(map.toString());
+          }
         });
+  }
+
+  void dropClick() {
+    if (stateManager == null) {
+      LoadingDialog.callInfoMessage("Table not available");
+    } else {
+      List<PlutoRow>? selectRows = stateManager?.checkedRows;
+      if ((selectRows?.length ?? 0) > 0) {
+        var postMap = {
+          "lstBookingDetailsReq": selectRows?.map((e) {
+            return {
+              "bookingnumber": e.cells["toNumber"]?.value,
+              "bookingdetailcode": int.tryParse(
+                  e.cells["bookingDetailCode"]?.value.toString() ?? "0"),
+            };
+          }).toList(),
+          "locationcode": selectLocation?.key ?? "",
+          "channelcode": selectChannel?.key ?? ""
+        };
+        updateDetails(postMap);
+      } else {
+        LoadingDialog.callInfoMessage("You have not selected anything");
+      }
+    }
   }
 }

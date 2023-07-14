@@ -14,10 +14,10 @@ import '../../../providers/Utils.dart';
 import '../controllers/coming_up_menu_controller.dart';
 
 class ComingUpMenuView extends StatelessWidget {
-   ComingUpMenuView({Key? key}) : super(key: key);
+  ComingUpMenuView({Key? key}) : super(key: key);
 
-   ComingUpMenuController controllerX =
-   Get.put<ComingUpMenuController>(ComingUpMenuController());
+  ComingUpMenuController controllerX =
+      Get.put<ComingUpMenuController>(ComingUpMenuController());
 
   @override
   Widget build(BuildContext context) {
@@ -43,24 +43,31 @@ class ComingUpMenuView extends StatelessWidget {
                   Row(
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
-                      DropDownField.formDropDown1WidthMap(
-                        controllerX.locationList.value,
+                      Obx(() => DropDownField.formDropDown1WidthMap(
+                            controllerX.locationList.value,
                             (value) {
-                          controllerX.selectedLocation = value;
-                          controllerX.fetchListOfChannel(controllerX.selectedLocation?.key??"");
-                        }, "Location", .21,
-                        isEnable: controllerX.isEnable,
-                        selected: controllerX.selectedLocation,
-                        autoFocus: true,),
-
-                      DropDownField.formDropDown1WidthMap(
-                        controllerX.channelList.value,
-                            (value) {
-                          controllerX.selectedChannel = value;
-                        }, "Channel", .26,
-                        isEnable: controllerX.isEnable,
-                        selected: controllerX.selectedChannel,
-                        autoFocus: true,),
+                              controllerX.selectedLocation = value;
+                              controllerX.fetchListOfChannel(
+                                  controllerX.selectedLocation?.key ?? "");
+                            },
+                            "Location",
+                            .21,
+                            isEnable: controllerX.isEnable,
+                            selected: controllerX.selectedLocation,
+                            autoFocus: true,
+                          )),
+                      Obx(() => DropDownField.formDropDown1WidthMap(
+                          controllerX.channelList.value,
+                          (value) {
+                            controllerX.selectedChannel = value;
+                          },
+                          "Channel",
+                          .26,
+                          isEnable: controllerX.isEnable,
+                          selected: controllerX.selectedChannel,
+                          autoFocus: true,
+                        ),
+                      ),
                       InputFields.formField1(
                         hintTxt: "Tape Id",
                         controller: controllerX.tapeIdController,
@@ -81,27 +88,24 @@ class ComingUpMenuView extends StatelessWidget {
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
                       InputFields.numbers3(
-                          hintTxt: "Seg No.",
-                          padLeft: 0,
-                          controller: controllerX.segNoController,
-                          width:0.21,
-                          fN: controllerX.segNoFocus,
-
+                        hintTxt: "Seg No.",
+                        padLeft: 0,
+                        controller: controllerX.segNoController,
+                        width: 0.21,
+                        fN: controllerX.segNoFocus,
                       ),
                       InputFields.formField1(
                         hintTxt: "House Id",
                         controller: controllerX.houseIdController,
                         width: 0.1,
                         isEnable: controllerX.isEnable,
-                        onchanged: (value) {
-
-                        },
+                        onchanged: (value) {},
                         focusNode: controllerX.houseIdFocus,
                         autoFocus: true,
                       ),
                       InputFields.formField1(
                         hintTxt: "Tx Caption",
-                        controller:controllerX.txCaptionController,
+                        controller: controllerX.txCaptionController,
                         width: 0.21,
                         capital: true,
                         autoFocus: true,
@@ -114,8 +118,7 @@ class ComingUpMenuView extends StatelessWidget {
                     height: 5,
                   ),
                   Row(
-                    mainAxisAlignment:
-                    MainAxisAlignment.spaceBetween,
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
                       InputFields.formFieldNumberMask(
                           hintTxt: "Start Time",
@@ -133,18 +136,16 @@ class ComingUpMenuView extends StatelessWidget {
                           controller: controllerX.endTimeController,
                           widthRatio: 0.07,
                           isEnable: controllerX.isEnable,
-                          onEditComplete: (val){
-
-                          },
+                          onEditComplete: (val) {},
                           // isTime: true,
                           // isEnable: controller.isEnable.value,
                           paddingLeft: 0),
                       InputFields.formFieldNumberMask(
                           hintTxt: "SOM",
-                          controller:   controllerX.somController,
+                          controller: controllerX.somController,
                           widthRatio: 0.07,
                           isEnable: controllerX.isEnable,
-                          onEditComplete: (val){
+                          onEditComplete: (val) {
                             controllerX.calculateDuration();
                           },
                           // isTime: true,
@@ -155,7 +156,7 @@ class ComingUpMenuView extends StatelessWidget {
                           controller: controllerX.eomController,
                           widthRatio: 0.07,
                           isEnable: controllerX.isEnable,
-                          onEditComplete: (val){
+                          onEditComplete: (val) {
                             controllerX.calculateDuration();
                           },
                           // isTime: true,
@@ -163,12 +164,12 @@ class ComingUpMenuView extends StatelessWidget {
                           paddingLeft: 0),
                       TimeWithThreeTextField(
                         title: "Duration",
-                        mainTextController: controllerX.durationController.value,
+                        mainTextController:
+                            controllerX.durationController.value,
                         widthRation: 0.07,
                         isTime: false,
                         isEnable: false,
                       ),
-
                     ],
                   ),
                   SizedBox(
@@ -190,13 +191,14 @@ class ComingUpMenuView extends StatelessWidget {
                         isEnable: controllerX.isEnable,
                       ),
                       Container(
-                        width: size.width*0.1,
+                        width: size.width * 0.1,
                       )
                     ],
                   ),
                   SizedBox(
                     height: 5,
                   ),
+
                   /// bottom common buttons
                   Align(
                     alignment: Alignment.topLeft,
@@ -204,10 +206,12 @@ class ComingUpMenuView extends StatelessWidget {
                         id: "buttons",
                         init: Get.find<HomeController>(),
                         builder: (controller) {
-                          PermissionModel formPermissions = Get.find<MainController>()
-                              .permissionList!
-                              .lastWhere((element) =>
-                          element.appFormName == "frmCommercialMaster");
+                          PermissionModel formPermissions =
+                              Get.find<MainController>()
+                                  .permissionList!
+                                  .lastWhere((element) =>
+                                      element.appFormName ==
+                                      "frmCommercialMaster");
                           if (controller.buttons != null) {
                             return ButtonBar(
                               alignment: MainAxisAlignment.start,
@@ -216,13 +220,15 @@ class ComingUpMenuView extends StatelessWidget {
                                 for (var btn in controller.buttons!)
                                   FormButtonWrapper(
                                     btnText: btn["name"],
-                                    callback: Utils.btnAccessHandler2(btn['name'],
-                                        controller, formPermissions) ==
-                                        null
+                                    callback: Utils.btnAccessHandler2(
+                                                btn['name'],
+                                                controller,
+                                                formPermissions) ==
+                                            null
                                         ? null
                                         : () => controllerX.formHandler(
-                                      btn['name'],
-                                    ),
+                                              btn['name'],
+                                            ),
                                   )
                               ],
                             );

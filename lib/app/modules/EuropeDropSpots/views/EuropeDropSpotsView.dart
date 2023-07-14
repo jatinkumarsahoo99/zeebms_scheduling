@@ -6,6 +6,7 @@ import 'package:get/get.dart';
 import '../../../../widgets/DateTime/DateWithThreeTextField.dart';
 import '../../../../widgets/FormButton.dart';
 import '../../../../widgets/LoadingScreen.dart';
+import '../../../../widgets/PlutoGrid/src/pluto_grid.dart';
 import '../../../../widgets/dropdown.dart';
 import '../../../../widgets/gridFromMap.dart';
 import '../../../../widgets/input_fields.dart';
@@ -177,6 +178,9 @@ class EuropeDropSpotsView extends GetView<EuropeDropSpotsController> {
                               ?.map((e) => e.toJson())
                               .toList())!,
                           widthRatio: (Get.width / 9) + 5,
+                          onload: (PlutoGridOnLoadedEvent event){
+                            controller.stateManager=event.stateManager;
+                          },
                           checkRowKey: "clientname",
                           hideKeys: ["selectItem"],
                           checkRow: true,
@@ -215,7 +219,7 @@ class EuropeDropSpotsView extends GetView<EuropeDropSpotsController> {
                       btnText: "Drop Spot",
                       callback: () {
 
-                        // controllerX.addTable();
+                        controller.dropClick();
                       },
                       showIcon: false,
                     ),
