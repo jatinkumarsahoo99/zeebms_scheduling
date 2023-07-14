@@ -94,7 +94,7 @@ class BrandMasterController extends GetxController {
   ClientDetailsAndBrandModel? clientDetailsAndBrandModel;
   fetchClientDetails(String client){
     Get.find<ConnectorControl>().GETMETHODCALL(
-        api: ApiFactory.BRANDMASTER_GETCLIENTDETAILS+client,
+        api: ApiFactory.BRANDMASTER_GETCLIENTDETAILS+Uri.encodeComponent(client),
         fun: (map) {
           print(">>>>>>map"+jsonEncode(map));
           isFocusNodeActive = false;
@@ -138,6 +138,18 @@ class BrandMasterController extends GetxController {
           isFocusNodeActive = false;
           // strcode
            print(">>>>>"+ jsonEncode(map).toString());
+           if(map is Map && map.containsKey("getBrandList") && map['getBrandList'] != null
+               && map['getBrandList'].length >0 ){
+             brandMasterRetriveModel = BrandMasterRetriveModel.fromJson(map as Map<String,dynamic>);
+             strcode =  brandMasterRetriveModel?.getBrandList?[0].brandCode??"";
+             selectedClient = DropDownValue(value:brandMasterRetriveModel?.getBrandList?[0].clientName ,
+                 key: brandMasterRetriveModel?.getBrandList?[0].clientName);
+             brandController.text = brandMasterRetriveModel?.getBrandList?[0].brandName??"" ;
+             // brandMasterProductDetails.text = brandMasterRetriveModel?.getBrandList?[0].brandShortName ;
+           }else{
+
+
+           }
 
         });
   }

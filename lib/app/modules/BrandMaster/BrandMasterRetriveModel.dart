@@ -29,6 +29,7 @@ class GetBrandList {
   String? clientName;
   String? clientCode;
   String? productCode;
+  String? Productname;
   int? ptCode;
   String? ptName;
   int? pl1;
@@ -53,7 +54,9 @@ class GetBrandList {
         this.pl2,
         this.level2Name,
         this.pl3,
-        this.level3Name});
+        this.level3Name,
+        this.Productname
+      });
 
   GetBrandList.fromJson(Map<String, dynamic> json) {
     brandCode = json['brandCode'];
@@ -71,6 +74,7 @@ class GetBrandList {
     level2Name = json['level2Name'];
     pl3 = json['pl3'];
     level3Name = json['level3Name'];
+    Productname = json['Productname']??"";
   }
 
   Map<String, dynamic> toJson() {
@@ -90,6 +94,7 @@ class GetBrandList {
     data['level2Name'] = this.level2Name;
     data['pl3'] = this.pl3;
     data['level3Name'] = this.level3Name;
+    data['Productname'] = this.Productname;
     return data;
   }
 }

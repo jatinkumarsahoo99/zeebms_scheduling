@@ -62,7 +62,7 @@ class ComingUpMenuView extends StatelessWidget {
                             controllerX.selectedChannel = value;
                           },
                           "Channel",
-                          .26,
+                          .21,
                           isEnable: controllerX.isEnable,
                           selected: controllerX.selectedChannel,
                           autoFocus: true,
@@ -134,7 +134,7 @@ class ComingUpMenuView extends StatelessWidget {
                       InputFields.formFieldNumberMask(
                           hintTxt: "End Time",
                           controller: controllerX.endTimeController,
-                          widthRatio: 0.07,
+                          widthRatio: 0.068,
                           isEnable: controllerX.isEnable,
                           onEditComplete: (val) {},
                           // isTime: true,
@@ -143,7 +143,7 @@ class ComingUpMenuView extends StatelessWidget {
                       InputFields.formFieldNumberMask(
                           hintTxt: "SOM",
                           controller: controllerX.somController,
-                          widthRatio: 0.07,
+                          widthRatio: 0.068,
                           isEnable: controllerX.isEnable,
                           onEditComplete: (val) {
                             controllerX.calculateDuration();
@@ -154,7 +154,7 @@ class ComingUpMenuView extends StatelessWidget {
                       InputFields.formFieldNumberMask(
                           hintTxt: "EOM",
                           controller: controllerX.eomController,
-                          widthRatio: 0.07,
+                          widthRatio: 0.068,
                           isEnable: controllerX.isEnable,
                           onEditComplete: (val) {
                             controllerX.calculateDuration();
@@ -166,7 +166,7 @@ class ComingUpMenuView extends StatelessWidget {
                         title: "Duration",
                         mainTextController:
                             controllerX.durationController.value,
-                        widthRation: 0.07,
+                        widthRation: 0.068,
                         isTime: false,
                         isEnable: false,
                       ),
