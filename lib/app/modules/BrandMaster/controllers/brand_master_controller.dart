@@ -138,7 +138,7 @@ class BrandMasterController extends GetxController {
           isFocusNodeActive = false;
           // strcode
            print(">>>>>"+ jsonEncode(map).toString());
-           if()
+
         });
   }
 
