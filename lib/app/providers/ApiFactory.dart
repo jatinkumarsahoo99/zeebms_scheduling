@@ -748,12 +748,12 @@ class ApiFactory {
   // static String PROMO_MASTER_SEGNO_LEAVE = "$BASE_URL/api/FillerMaster/SegNoLeave";
   // static String PROMO_MASTER_GET_EVENT = "$BASE_URL/api/FillerMaster/GetEvent?text=";
 
-  //////////////////////////////// PROMO-MASTER-API-END /////////////////////////////////
-  ///
-  ///
-  ///
-  ///
-  ///
+  //////////////////////////////// PROMO-TYPE-MASTER-API-END /////////////////////////////////
+
+  static String PROMO_TYPE_MASTER_GET_RECORD(promoName, promoCode) =>
+      "$BASE_URL/api/PromoTypeMaster/GetRetrieveRecord?PromoTypeCode=$promoCode&PromoTypeName=$promoName";
+  static String PROMO_TYPE_MASTER_SAVE = "$BASE_URL/api/PromoTypeMaster/PostValidateAndSaveRecord";
+
   //////////////////////////////// ASRUN IMPORT /////////////////////////////////
   static String AsrunImport_GetLoadLocation = "$BASE_URL/api/AsrunImport/GetLoadLocation";
   static String AsrunImport_GetLocationSelect(locationCode) => "$BASE_URL/api/AsrunImport/GetLocationSelect?Locationcode=$locationCode";
@@ -860,16 +860,17 @@ class ApiFactory {
   //////////////////////// SearchTapeCode //////////////////
   static String SearchTapeCode(exportTapeCode, programName, epsCaption) =>
       BASE_URL + "/api/SearchTapeCode/GetbtnShowClick?ExportTapeCode=$exportTapeCode&ProgramName=$programName&EpsCaption=$epsCaption";
-  //////////////////////// Spot Type Master ///////////////
-  ///
-  ///
-  ///
-  ///
-  ///
+  //////////////////////// Spot Position Type Master ///////////////
+
+  static String SpotPositionTypeInit = BASE_URL + "/api/SpotPositionType/GetTypeMasterLoad";
+  static String SpotPositionTypeGetRecord(sponserCode, sponserName) =>
+      BASE_URL + "/api/SpotPositionType/GetRetrieveRecord?SpotPositionTypeCode=$sponserCode&SpotPositionTypeName=$sponserName";
+  static String SpotPositionTypeSaveRecord = BASE_URL + "/api/SpotPositionType/PostSaveRecord";
+
   ////////////////////// SecondaryEventTemplateMaster ///////////////////////////////////
-  static String SponderTypeMasterGetRecord(sponserCode, sponserName) =>
-      BASE_URL + "/api/SponsorTypeMaster/Get_RetrieveRecord?SponsorTypeName=$sponserName";
-  static String SponderTypeMasterSaveRecord = BASE_URL + "/api/SponsorTypeMaster/Post_Save";
+  static String SponserTypeMasterGetRecord(sponserCode, sponserName) =>
+      BASE_URL + "/api/SponsorTypeMaster/GetRetrieveRecord?SponsorTypeCode=$sponserCode&SponsorTypeName=$sponserName";
+  static String SponserTypeMasterSaveRecord = BASE_URL + "/api/SponsorTypeMaster/PostSave";
   ////////////////////// SecondaryEventTemplateMaster ///////////////////////////////////
 
   static String SecondaryEventTemplateMasterInitData = BASE_URL + "/api/SecondaryEventTemplateMaster/GetInitialisation";

@@ -1,4 +1,5 @@
 import 'package:bms_scheduling/app/controller/HomeController.dart';
+import 'package:bms_scheduling/app/data/DropDownValue.dart';
 import 'package:bms_scheduling/widgets/FormButton.dart';
 import 'package:bms_scheduling/widgets/dropdown.dart';
 import 'package:bms_scheduling/widgets/input_fields.dart';
@@ -9,7 +10,7 @@ import 'package:get/get.dart';
 import '../controllers/sponser_type_master_controller.dart';
 
 class SponserTypeMasterView extends GetView<SponserTypeMasterController> {
-  const SponserTypeMasterView({Key? key}) : super(key: key);
+  SponserTypeMasterView({Key? key}) : super(key: key);
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -35,21 +36,21 @@ class SponserTypeMasterView extends GetView<SponserTypeMasterController> {
                       spacing: Get.width * 0.01,
                       children: [
                         InputFields.formField1(
-                          hintTxt: "Sponser",
-                          controller: TextEditingController(),
-                          width: 0.36,
-                        ),
+                            hintTxt: "Sponser", controller: controller.sponserName, width: 0.48, focusNode: controller.sponserNameFocus),
                         InputFields.formField1(
                           hintTxt: "Short Name",
-                          controller: TextEditingController(),
-                          width: 0.36,
+                          controller: controller.shortName,
+                          width: 0.48,
                         ),
                         InputFields.formField1(
                           hintTxt: "Premium",
-                          controller: TextEditingController(),
-                          width: 0.175,
+                          controller: controller.premium,
+                          width: 0.235,
                         ),
-                        DropDownField.formDropDown1WidthMap([], (value) => {}, "Sponser Type", 0.175),
+                        Obx(() => DropDownField.formDropDown1WidthMap([
+                              DropDownValue(key: "M", value: "Multiple"),
+                              DropDownValue(key: "S", value: "Single")
+                            ], (value) => {}, "Sponser Type", 0.235, selected: controller.selectedSponser.value)),
                       ],
                     ),
                     SizedBox(
@@ -83,41 +84,11 @@ class SponserTypeMasterView extends GetView<SponserTypeMasterController> {
                                       // pa
                                       children: [
                                         for (var btn in btncontroller.buttons!)
-                                          btn["name"] == "Docs"
-                                              ? FormButtonWrapper(
-                                                  btnText: btn["name"],
-                                                  // isEnabled: btn['isDisabled'],
-                                                  callback: () {
-                                                    // Get.defaultDialog(
-                                                    //   title: "Documents",
-                                                    //   content: CommonDocsView(
-                                                    //       documentKey:
-                                                    //           "RObooking${controller.selectedLocation!.key}${controller.selectedChannel!.key}${controller.bookingMonthCtrl.text}${controller.bookingNoCtrl.text}"),
-                                                    // ).then((value) {
-                                                    //   Get.delete<CommonDocsController>(tag: "commonDocs");
-                                                    // });
-                                                  },
-                                                )
-                                              : btn["name"] == "Save"
-                                                  ? FormButtonWrapper(
-                                                      btnText: btn["name"],
-                                                      // isEnabled: btn['isDisabled'],
-                                                      callback: () {
-                                                        // controller.saveCheck();
-                                                      },
-                                                    )
-                                                  : btn["name"] == "Clear"
-                                                      ? FormButtonWrapper(
-                                                          btnText: btn["name"],
-
-                                                          // isEnabled: btn['isDisabled'],
-                                                          callback: () {},
-                                                        )
-                                                      : FormButtonWrapper(
-                                                          btnText: btn["name"],
-                                                          // isEnabled: btn['isDisabled'],
-                                                          callback: null,
-                                                        ),
+                                          FormButtonWrapper(
+                                            btnText: btn["name"],
+                                            // isEnabled: btn['isDisabled'],
+                                            callback: () => btnhandler(btn["name"]),
+                                          )
                                       ],
                                     ),
                                   ),
@@ -125,5 +96,14 @@ class SponserTypeMasterView extends GetView<SponserTypeMasterController> {
                         })
                   ])))),
     );
+  }
+
+  btnhandler(btnName) {
+    switch (btnName) {
+      case "Save":
+        controller.saveData();
+        break;
+      default:
+    }
   }
 }
