@@ -56,7 +56,8 @@ class ComingUpMenuView extends StatelessWidget {
                             selected: controllerX.selectedLocation,
                             autoFocus: true,
                           )),
-                      Obx(() => DropDownField.formDropDown1WidthMap(
+                      Obx(
+                        () => DropDownField.formDropDown1WidthMap(
                           controllerX.channelList.value,
                           (value) {
                             controllerX.selectedChannel = value;
@@ -74,9 +75,7 @@ class ComingUpMenuView extends StatelessWidget {
                         width: 0.1,
                         focusNode: controllerX.tapeIdFocus,
                         isEnable: controllerX.isEnable,
-                        onchanged: (value) {
-
-                        },
+                        onchanged: (value) {},
                         autoFocus: true,
                       ),
                     ],
@@ -162,14 +161,19 @@ class ComingUpMenuView extends StatelessWidget {
                           // isTime: true,
                           // isEnable: controller.isEnable.value,
                           paddingLeft: 0),
-                      TimeWithThreeTextField(
+                      /*TimeWithThreeTextField(
                         title: "Duration",
                         mainTextController:
                             controllerX.durationController.value,
                         widthRation: 0.068,
                         isTime: false,
                         isEnable: false,
-                      ),
+                      ),*/
+                      Obx(() => InputFields.formFieldDisable(
+                            hintTxt: "Duration",
+                            value: controllerX.duration.value,
+                            widthRatio: 0.07,
+                          ))
                     ],
                   ),
                   SizedBox(
