@@ -42,8 +42,7 @@ void main() async {
       initialBinding: BinderData(),
       initialRoute: AppPages.INITIAL,
       onInit: () {
-        Get.find<MainController>().environmentModel =
-            EnvironmentModel.fromJson(jsonDecode(data));
+        Get.find<MainController>().environmentModel = EnvironmentModel.fromJson(jsonDecode(data));
         print("Keyvault JSON DATA 1>>>" + jsonEncode(Get.find<MainController>().environmentModel?.toJson()));
       },
       getPages: AppPages.routes,
