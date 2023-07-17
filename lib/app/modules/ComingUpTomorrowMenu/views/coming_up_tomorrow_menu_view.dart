@@ -240,7 +240,7 @@ class ComingUpTomorrowMenuView extends StatelessWidget {
                           PermissionModel formPermissions = Get.find<MainController>()
                               .permissionList!
                               .lastWhere((element) =>
-                          element.appFormName == "frmCommercialMaster");
+                          element.appFormName == "frmComingUpTomorrowMaster");
                           if (controller.buttons != null) {
                             return ButtonBar(
                               alignment: MainAxisAlignment.start,

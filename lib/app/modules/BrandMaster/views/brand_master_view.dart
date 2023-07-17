@@ -303,7 +303,7 @@ class BrandMasterView extends StatelessWidget {
                       PermissionModel formPermissions = Get.find<MainController>()
                           .permissionList!
                           .lastWhere((element) =>
-                      element.appFormName == "frmCommercialMaster");
+                      element.appFormName == "frmBrandMaster");
                       if (controller.buttons != null) {
                         return ButtonBar(
                           alignment: MainAxisAlignment.start,
