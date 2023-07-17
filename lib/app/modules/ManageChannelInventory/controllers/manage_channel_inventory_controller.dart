@@ -53,13 +53,13 @@ class ManageChannelInvemtoryController extends GetxController {
     else if (updateType.isEmpty) {
       LoadingDialog.showErrorDialog("Select Default or Add or Fixed for update.");
     } else {
-      int upType = 1;
+      int upType = 0;
       if (updateType == "Default") {
-        upType = 1;
+        upType = 0;
       } else if (updateType == "Add") {
-        upType = 2;
+        upType = 1;
       } else if (updateType == "Fixed") {
-        upType = 3;
+        upType = 2;
       }
       LoadingDialog.call();
       Get.find<ConnectorControl>().POSTMETHOD(
