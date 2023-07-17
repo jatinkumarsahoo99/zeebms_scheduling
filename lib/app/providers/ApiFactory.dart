@@ -953,5 +953,6 @@ class ApiFactory {
   static String BRANDMASTER_GETCLIENTDETAILS = BASE_URL + "/api/BrandMaster/GetClientDetails?clientname=";
   static String BRANDMASTER_GETPRODUCTDETAILS = BASE_URL + "/api/BrandMaster/GetProduct?productcode=";
   static String BRANDMASTER_SAVE = BASE_URL + "/api/BrandMaster/PostBrandAdd";
+  static String BRANDMASTER_ONLOAD = BASE_URL + "/api/BrandMaster/GetBrandonLoad";
 
 }

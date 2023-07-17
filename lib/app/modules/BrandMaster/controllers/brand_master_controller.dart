@@ -92,6 +92,31 @@ class BrandMasterController extends GetxController {
         });
   }
   ClientDetailsAndBrandModel? clientDetailsAndBrandModel;
+  List<DropDownValue> masterProductList = [];
+  fetchOnLoad(){
+    Get.find<ConnectorControl>().GETMETHODCALL(
+        api: ApiFactory.BRANDMASTER_ONLOAD,
+        fun: (map) {
+          // print(">>>>>>onload"+jsonEncode(map));
+          isFocusNodeActive = false;
+          if(map is Map && map.containsKey('getBrandOnLoadList') && map['getBrandOnLoadList'] != null){
+
+            if(map['getBrandOnLoadList'].containsKey('lstproduct')  &&
+                map['getBrandOnLoadList']['lstproduct'] != null && map['getBrandOnLoadList']['lstproduct'].length >0 ){
+              masterProductList.clear();
+              map['getBrandOnLoadList']['lstproduct'].forEach((e){
+              masterProductList.add(DropDownValue.fromJsonDynamic(e, "productcode", "productname"));
+              });
+
+            }
+
+          }
+
+
+        });
+  }
+
+
   fetchClientDetails(String client){
     Get.find<ConnectorControl>().GETMETHODCALL(
         api: ApiFactory.BRANDMASTER_GETCLIENTDETAILS+Uri.encodeComponent(client),
@@ -129,7 +154,7 @@ class BrandMasterController extends GetxController {
           }
         });
   }
-  String strcode = "";
+  String strcode = "0";
   BrandMasterRetriveModel? brandMasterRetriveModel;
   getRetriveData(String brandName){
     isFocusNodeActive = false;
@@ -142,21 +167,28 @@ class BrandMasterController extends GetxController {
            if(map is Map && map.containsKey("getBrandList") && map['getBrandList'] != null
                && map['getBrandList'].length >0 ){
              brandMasterRetriveModel = BrandMasterRetriveModel.fromJson(map as Map<String,dynamic>);
-             strcode =  brandMasterRetriveModel?.getBrandList?[0].brandCode??"";
+             strcode =  brandMasterRetriveModel?.getBrandList?[0].brandCode??"0";
              selectedClient = DropDownValue(value:brandMasterRetriveModel?.getBrandList?[0].clientName ,
                  key: brandMasterRetriveModel?.getBrandList?[0].clientCode);
              brandController.text = brandMasterRetriveModel?.getBrandList?[0].brandName??"" ;
              brandShortNameController.text = brandMasterRetriveModel?.getBrandList?[0].brandShortName??"";
              separationTimeController.text = (brandMasterRetriveModel?.getBrandList?[0].separationTime??"").toString();
-             selectedProduct = DropDownValue(value:"Product" ,
-                 key:brandMasterRetriveModel?.getBrandList?[0].productCode ) ;
+             for (var element in masterProductList) {
+               if(element.key.toString().trim() ==
+                   brandMasterRetriveModel?.getBrandList?[0].productCode.toString().trim()){
+                 selectedProduct = DropDownValue(value:element.value??"Product" ,
+                     key:brandMasterRetriveModel?.getBrandList?[0].productCode ) ;
+                 break;
+               }
+             }
+
              productLevel1Controller.text = (brandMasterRetriveModel?.getBrandList?[0].ptName??"").toString() ;
              productLevel2Controller.text = (brandMasterRetriveModel?.getBrandList?[0].level1Name ??"").toString();
              productLevel3Controller.text = (brandMasterRetriveModel?.getBrandList?[0].level2Name ??"").toString();
              productLevel4Controller.text = (brandMasterRetriveModel?.getBrandList?[0].level3Name ??"").toString();
              update(['top']);
            }else{
-             strcode = "";
+             strcode = "0";
            }
 
         });
@@ -340,7 +372,7 @@ class BrandMasterController extends GetxController {
     }else{
 
       Map<String,dynamic> postData = {
-        "brandCode": strcode??"",
+        "brandCode": strcode??"0",
         "brandName": brandController.text??"",
         "brandShortName": brandShortNameController.text??"",
         "productCode": selectedProduct?.key??"",
@@ -396,6 +428,8 @@ class BrandMasterController extends GetxController {
         txtBrandNameLostFocus();
       }
     });
+    fetchOnLoad();
+
 
     super.onInit();
   }
