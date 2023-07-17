@@ -57,7 +57,7 @@ class ComingUpNextMenuController extends GetxController {
 
   int strCode = 0;
   String strTapeID = "";
-  // String strSegmentNumber = "";
+  // String strS  egmentNumber = "";
   //HCLP0045
   bool isListenerActive = false;
 
@@ -184,13 +184,13 @@ class ComingUpNextMenuController extends GetxController {
           fun: (map) {
             Get.back();
             print(">>>>"+map.toString());
-            if(map != null){
+            if(map != null && map is String){
               if(strCode != ""){
                 clearAll();
-                Snack.callSuccess("Record is updated successfully.");
+                Snack.callSuccess(map??"Record is updated successfully.");
               }else{
                 clearAll();
-                Snack.callSuccess("Record is inserted successfully.");
+                Snack.callSuccess(map??"Record is inserted successfully.");
               }
 
             }else{
@@ -325,9 +325,6 @@ class ComingUpNextMenuController extends GetxController {
             ApiFactory.COMINGUPNEXTMASTER_TAPEIDLEAVE).then((value) {
            res = value;
         });
-
-
-
          print(">>>>>res"+res);
         isListenerActive= false;
         if(res != ""){
