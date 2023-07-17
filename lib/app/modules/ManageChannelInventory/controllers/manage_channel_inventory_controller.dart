@@ -148,6 +148,18 @@ class ManageChannelInvemtoryController extends GetxController {
         fun: (resp) {
           closeDialogIfOpen();
           LoadingDialog.callDataSaved(msg: resp.toString());
+          if (resp != null && resp is Map<String, dynamic> && resp['isError'] != null && !(resp['isError'] as bool)) {
+            LoadingDialog.callDataSaved(
+              msg: resp['genericMessage'].toString(),
+              callback: () {
+                Get.back();
+                closeDialogIfOpen();
+                handleGenerateButton();
+              },
+            );
+          } else {
+            LoadingDialog.showErrorDialog(resp.toString());
+          }
         },
         json: {
           "locationCode": selectedLocation?.key,
