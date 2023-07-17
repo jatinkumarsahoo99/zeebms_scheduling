@@ -4,7 +4,9 @@ import 'package:get/get.dart';
 
 import '../../../../widgets/DateTime/DateWithThreeTextField.dart';
 import '../../../../widgets/FormButton.dart';
+import '../../../../widgets/PlutoGrid/src/pluto_grid.dart';
 import '../../../../widgets/dropdown.dart';
+import '../../../../widgets/gridFromMap.dart';
 import '../../../controller/HomeController.dart';
 import '../../../controller/MainController.dart';
 import '../../../data/PermissionModel.dart';
@@ -31,7 +33,7 @@ class DateWiseErrorSpotsView extends StatelessWidget{
                 mainAxisSize: MainAxisSize.min,
                 children: [
                   AppBar(
-                    title: Text('Datewise Error Spots Report'),
+                    title: Text('Datewise Error Spots Report jks'),
                     centerTitle: true,
                     backgroundColor: Colors.deepPurple,
                   ),
@@ -41,31 +43,34 @@ class DateWiseErrorSpotsView extends StatelessWidget{
                   Row(
                     mainAxisAlignment: MainAxisAlignment.spaceAround,
                     children: [
-                      DropDownField.formDropDown1WidthMap(
-                        [],
+                      Obx(()=>DropDownField.formDropDown1WidthMap(
+                        controllerX.locationList.value??[],
                             (value) {
-
-                        }, "Location", .24,
+                          controllerX.selectedLocation = value;
+                        }, "Location", .21,
                         isEnable: controllerX.isEnable,
-                        // selected: controllerX.selectedClientDetails,
-                        autoFocus: true,),
-                      DropDownField.formDropDown1WidthMap(
-                        [],
+                        selected: controllerX.selectedLocation,
+                        dialogHeight: Get.height * .7,
+                        autoFocus: true,),)  ,
+                      Obx(()=>DropDownField.formDropDown1WidthMap(
+                        controllerX.channelList.value??[],
                             (value) {
-
-                        }, "Channel", .24,
+                          controllerX.selectedChannel = value;
+                        }, "Channel", .21,
                         isEnable: controllerX.isEnable,
-                        // selected: controllerX.selectedClientDetails,
-                        autoFocus: true,),
+                        selected: controllerX.selectedChannel,
+                        dialogHeight: Get.height * .7,
+                        autoFocus: true,),)  ,
+
                       DateWithThreeTextField(
                         title: "From Date",
-                        mainTextController: TextEditingController(),
+                        mainTextController: controllerX.fromDateController,
                         widthRation: .1,
                         isEnable: controllerX.isEnable,
                       ),
                       DateWithThreeTextField(
                         title: "To Date",
-                        mainTextController: TextEditingController(),
+                        mainTextController: controllerX.toDateController,
                         widthRation: .1,
                         isEnable: controllerX.isEnable,
                       ),
@@ -75,7 +80,7 @@ class DateWiseErrorSpotsView extends StatelessWidget{
                         child: FormButtonWrapper(
                           btnText: "Genrate",
                           callback: () {
-                            // controller.callGetRetrieve();
+                            controllerX.callGetRetrieve();
                           },
                           showIcon: false,
                         ),
@@ -89,6 +94,36 @@ class DateWiseErrorSpotsView extends StatelessWidget{
                       child: Container(
                         decoration: BoxDecoration(
                             border: Border.all(color: Colors.black)),
+                          child:  GetBuilder<DateWiseErrorSpotsController>(
+                            id: "grid",
+                            builder: (controllerX) {
+                              return Container(
+                                  decoration: BoxDecoration(
+                                      border: Border.all(color: Colors.black)),
+                                  child:
+                                  (controllerX.datewiseErrorSpotsModel != null)?
+                                  (controllerX.datewiseErrorSpotsModel!.datewiseErrorSpots != null &&
+                                      controllerX.datewiseErrorSpotsModel!.datewiseErrorSpots!.isNotEmpty
+                                  )?
+                                  DataGridFromMap(
+                                      hideCode: false,
+                                      formatDate: false,
+                                      focusNode: controllerX.gridFocus,
+                                      // checkRow: true,
+                                      // checkRowKey: "no",
+                                      mode: PlutoGridMode.selectWithOneTap,
+                                      onSelected: (PlutoGridOnSelectedEvent? val ){
+
+                                      },
+                                      onload: (PlutoGridOnLoadedEvent load) {
+
+                                      },
+                                      // colorCallback: (renderC) => Colors.red[200]!,
+                                      mapData:controllerX.datewiseErrorSpotsModel!.datewiseErrorSpots!.map((e) =>
+                                          e.toJson()).toList() ):Container():Container()
+                              );
+                            }
+                        ),
 
                       ),
                     ),

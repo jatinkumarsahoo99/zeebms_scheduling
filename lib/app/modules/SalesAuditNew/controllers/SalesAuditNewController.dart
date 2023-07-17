@@ -61,15 +61,17 @@ class SalesAuditNewController extends GetxController {
   fetchPageLoadData() {
     Get.find<ConnectorControl>().GETMETHODCALL(
         api: ApiFactory.SALESAUDIT_NEW_LOAD,
-        fun: (Map map) {
-          locationList.clear();
+        fun: ( map) {
           if (map is Map &&
               map.containsKey("listlocations") &&
               map['listlocations'].length > 0) {
+            locationList.clear();
             map['listlocations'].forEach((e) {
               locationList.add(DropDownValue.fromJsonDynamic(
                   e, "locationCode", "locationName"));
             });
+          }else{
+            locationList.clear();
           }
         });
   }

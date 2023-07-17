@@ -77,7 +77,7 @@ class AppPages {
   AppPages._();
   //https://app-scheduling-bms-dev.zeeconnect.in/frmCommercialMaster?loginCode=0iGe3vK5h2KGjfSKZTpmsQ%3D%3D&personalNo=xvmv9k3d1G7ierjaXRHiGA%3D%3D&formName=MgGRl5N4DW2tcWQscJpsp%2BIUElLFsJm5TsN5JpCXjHE%3D
   // static const INITIAL = Routes.ROS_DISTRIBUTION +
-  static const INITIAL = Routes.SECONDARY_EVENT_TEMPLATE_MASTER +
+  static const INITIAL = Routes.COMING_UP_TOMORROW_MENU +
       "?personalNo=kW5Bkf17%2FS5YF7ML28FmVg%3D%3D&loginCode=1BWIoBKeDl7qDSAAhxvXsQ%3D%3D&formName=OI8ukDpPPVN0I2BEXu2h4nuFu%2BZm1ZRpvP8NL4XCXzQ%3D";
   static final routes = [
     GetPage(

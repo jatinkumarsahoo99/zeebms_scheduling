@@ -28,7 +28,7 @@ class DSeriesSpecificationController extends GetxController {
 
   DropDownValue? selectLocation;
   DropDownValue? selectChannel;
-  Rxn<DropDownValue>? selectEvent=Rxn();
+  Rxn<DropDownValue>? selectEvent = Rxn();
   DSeriesModel? dSeriesModel;
 
   PlutoGridStateManager? stateManager;
@@ -47,10 +47,12 @@ class DSeriesSpecificationController extends GetxController {
           locationList.clear();
           eventList.clear();
           map["pageload"]["location"].forEach((e) {
-            locationList.add(DropDownValue.fromJsonDynamic(e,"locationCode","locationName"));
+            locationList.add(DropDownValue.fromJsonDynamic(
+                e, "locationCode", "locationName"));
           });
           map["pageload"]["eventmaster"].forEach((e) {
-            eventList.add(DropDownValue.fromJsonDynamic(e,"eventtype","eventname"));
+            eventList.add(
+                DropDownValue.fromJsonDynamic(e, "eventtype", "eventname"));
           });
         });
   }
@@ -124,20 +126,58 @@ class DSeriesSpecificationController extends GetxController {
     }
   }
 
+  void save() {
+    if (selectLocation == null) {
+      LoadingDialog.callInfoMessage("Please select location");
+    } else if (selectChannel == null) {
+      LoadingDialog.callInfoMessage("Please select location");
+    } else if (stateManager == null) {
+      LoadingDialog.callInfoMessage("Table not available");
+    } else {
+      LoadingDialog.call();
+      var postMap = {
+        "locationCode": selectLocation?.key,
+        "channelcode": selectChannel?.key,
+        "dseriesSpecs": stateManager?.rows.map((e) => e.toJsonIntConvert(intConverterKeys: ["startPosition","endPosition"],boolList:["isLastSegment"])).toList()
+      };
+      Get.find<ConnectorControl>().POSTMETHOD(
+          api: ApiFactory.DSERIES_SPECIFICATION_SAVE,
+          json: postMap,
+          fun: (map) {
+            Get.back();
+            if (map is Map && map.containsKey("save") && map["save"].toString().contains("successfully")) {
+              LoadingDialog.callDataSavedMessage("Data successfully");
+            }else{
+              LoadingDialog.callInfoMessage(map.toString());
+            }
+          });
+    }
+  }
+
   void onDoubleClick(PlutoGridOnSelectedEvent onClick) {
-    from_.text = stateManager?.rows[onClick.rowIdx ?? 0].cells["startPosition"]?.value;
-    to_.text = stateManager?.rows[onClick.rowIdx ?? 0].cells["endPosition"]?.value;
-    value_.text = stateManager?.rows[onClick.rowIdx ?? 0].cells["dataValue"]?.value;
-    desc_.text = stateManager?.rows[onClick.rowIdx ?? 0].cells["description"]?.value;
-    chckLastSegment.value = (stateManager?.rows[onClick.rowIdx ?? 0].cells["isLastSegment"]?.value=="true");
-    print("ROw Data index is>>>"+onClick.rowIdx.toString());
+    from_.text =
+        stateManager?.rows[onClick.rowIdx ?? 0].cells["startPosition"]?.value;
+    to_.text =
+        stateManager?.rows[onClick.rowIdx ?? 0].cells["endPosition"]?.value;
+    value_.text =
+        stateManager?.rows[onClick.rowIdx ?? 0].cells["dataValue"]?.value;
+    desc_.text =
+        stateManager?.rows[onClick.rowIdx ?? 0].cells["description"]?.value;
+    chckLastSegment.value = (stateManager
+            ?.rows[onClick.rowIdx ?? 0].cells["isLastSegment"]?.value ==
+        "true");
+    print("ROw Data index is>>>" + onClick.rowIdx.toString());
     DropDownValue? data;
     eventList.forEach((element) {
-      if(element.key.toString().trim().toLowerCase()==stateManager?.rows[onClick.rowIdx ?? 0].cells["eventType"]?.value.toString().trim().toLowerCase()){
-        data=element;
+      if (element.key.toString().trim().toLowerCase() ==
+          stateManager?.rows[onClick.rowIdx ?? 0].cells["eventType"]?.value
+              .toString()
+              .trim()
+              .toLowerCase()) {
+        data = element;
       }
     });
-    print("Dataa>>>"+jsonEncode(data?.toJson()));
+    print("Dataa>>>" + jsonEncode(data?.toJson()));
     // selectEvent?.value = DropDownValue(key: stateManager?.rows[onClick.rowIdx ?? 0].cells["eventType"]?.value, value: stateManager?.rows[onClick.rowIdx ?? 0].cells["eventType"]?.value);
     selectEvent?.value = data;
     update(["updateView"]);

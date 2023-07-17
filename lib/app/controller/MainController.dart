@@ -1,13 +1,9 @@
 import 'dart:convert';
 import 'dart:developer';
 import 'dart:html' as html;
-// import 'package:html/parser.dart' as html1;
-
 import 'package:flutter/foundation.dart';
 import 'package:get/get.dart';
-import 'package:shared_preferences/shared_preferences.dart';
-
-import '../../widgets/Snack.dart';
+import '../data/EnvironmentModel.dart';
 import '../data/PermissionModel.dart';
 import '../data/rowfilter.dart';
 import '../data/user.dart';
@@ -33,6 +29,7 @@ class MainController extends GetxController {
   List<PermissionModel>? permissionList = [];
   String formName = "";
   RxBool handShakingDone = RxBool(false);
+  EnvironmentModel? environmentModel;
 
   @override
   void onInit() {
@@ -53,6 +50,7 @@ class MainController extends GetxController {
         print("Not in error code 1");
       }
     });
+    print("My Data>>>>"+jsonEncode(environmentModel?.toJson()));
   }
 
 
