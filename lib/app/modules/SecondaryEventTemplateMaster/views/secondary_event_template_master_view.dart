@@ -1,5 +1,8 @@
 import 'package:bms_scheduling/app/controller/HomeController.dart';
+import 'package:bms_scheduling/app/modules/SecondaryEventTemplateMaster/bindings/secondary_event_template_master_programs.dart';
 import 'package:bms_scheduling/app/providers/ApiFactory.dart';
+import 'package:bms_scheduling/app/providers/SizeDefine.dart';
+import 'package:bms_scheduling/widgets/DataGridMultiCheckBox.dart';
 import 'package:bms_scheduling/widgets/DataGridShowOnly.dart';
 import 'package:bms_scheduling/widgets/FormButton.dart';
 import 'package:bms_scheduling/widgets/dropdown.dart';
@@ -22,66 +25,70 @@ class SecondaryEventTemplateMasterView extends GetView<SecondaryEventTemplateMas
             child: Container(
               width: Get.width,
               padding: const EdgeInsets.all(4.0),
-              child: Wrap(
-                crossAxisAlignment: WrapCrossAlignment.end,
-                spacing: Get.width * 0.01,
-                children: [
-                  Obx(
-                    () => DropDownField.formDropDown1WidthMap(controller.locations.value, (value) {
-                      controller.selectedLocation = value;
-                      controller.getChannel(value.key);
-                    }, "Location", 0.18, selected: controller.selectedLocation),
-                  ),
-                  Obx(
-                    () => DropDownField.formDropDown1WidthMap(controller.channels.value, (value) {
-                      controller.selectedChannel = value;
-                    }, "Channel", 0.18, selected: controller.selectedChannel),
-                  ),
-                  Obx(
-                    () => DropDownField.formDropDownSearchAPI2(
-                      GlobalKey(), Get.context!,
-                      title: "Program",
-                      url: ApiFactory.SecondaryEventTemplateMasterProgSearch,
-                      parseKeyForKey: "ProgramCode",
-                      parseKeyForValue: "ProgramName",
-                      onchanged: (data) {
-                        controller.selectedProgram.value = data;
-                        controller.getProgramLeave();
-                      },
-                      selectedValue: controller.selectedProgram.value,
-
-                      width: Get.width * 0.36,
-                      // padding: const EdgeInsets.only()
+              child: Obx(
+                () => Wrap(
+                  crossAxisAlignment: WrapCrossAlignment.end,
+                  spacing: Get.width * 0.01,
+                  children: [
+                    Obx(
+                      () => DropDownField.formDropDown1WidthMap(controller.locations.value, (value) {
+                        controller.selectedLocation = value;
+                        controller.getChannel(value.key);
+                      }, "Location", 0.18, isEnable: controller.enableFields.value, selected: controller.selectedLocation),
                     ),
-                  ),
-                  FormButtonWrapper(
-                    btnText: "...",
-                    callback: () {
-                      controller.getProgramPick();
-                      // Get.defaultDialog(
-                      //   title: "Documents",
-                      //   content: CommonDocsView(
-                      //       documentKey:
-                      //           "RObooking${controller.selectedLocation!.key}${controller.selectedChannel!.key}${controller.bookingMonthCtrl.text}${controller.bookingNoCtrl.text}"),
-                      // ).then((value) {
-                      //   Get.delete<CommonDocsController>(tag: "commonDocs");
-                      // });
-                    },
-                  ),
-                  FormButtonWrapper(
-                    btnText: "Copy From",
-                    callback: () {
-                      // Get.defaultDialog(
-                      //   title: "Documents",
-                      //   content: CommonDocsView(
-                      //       documentKey:
-                      //           "RObooking${controller.selectedLocation!.key}${controller.selectedChannel!.key}${controller.bookingMonthCtrl.text}${controller.bookingNoCtrl.text}"),
-                      // ).then((value) {
-                      //   Get.delete<CommonDocsController>(tag: "commonDocs");
-                      // });
-                    },
-                  ),
-                ],
+                    Obx(
+                      () => DropDownField.formDropDown1WidthMap(controller.channels.value, (value) {
+                        controller.selectedChannel = value;
+                      }, "Channel", 0.18, isEnable: controller.enableFields.value, selected: controller.selectedChannel),
+                    ),
+                    Obx(
+                      () => DropDownField.formDropDownSearchAPI2(
+                        GlobalKey(), Get.context!,
+                        title: "Program",
+                        isEnable: controller.enableFields.value,
+                        url: ApiFactory.SecondaryEventTemplateMasterProgSearch,
+                        parseKeyForKey: "ProgramCode",
+                        parseKeyForValue: "ProgramName",
+                        onchanged: (data) {
+                          controller.selectedProgram.value = data;
+                          controller.getProgramLeave();
+                        },
+                        selectedValue: controller.selectedProgram.value,
+
+                        width: Get.width * 0.36,
+                        // padding: const EdgeInsets.only()
+                      ),
+                    ),
+                    FormButtonWrapper(
+                      btnText: "...",
+                      isEnabled: controller.enableFields.value,
+                      callback: () {
+                        controller.getProgramPick();
+                        // Get.defaultDialog(
+                        //   title: "Documents",
+                        //   content: CommonDocsView(
+                        //       documentKey:
+                        //           "RObooking${controller.selectedLocation!.key}${controller.selectedChannel!.key}${controller.bookingMonthCtrl.text}${controller.bookingNoCtrl.text}"),
+                        // ).then((value) {
+                        //   Get.delete<CommonDocsController>(tag: "commonDocs");
+                        // });
+                      },
+                    ),
+                    FormButtonWrapper(
+                      btnText: "Copy From",
+                      callback: () {
+                        // Get.defaultDialog(
+                        //   title: "Documents",
+                        //   content: CommonDocsView(
+                        //       documentKey:
+                        //           "RObooking${controller.selectedLocation!.key}${controller.selectedChannel!.key}${controller.bookingMonthCtrl.text}${controller.bookingNoCtrl.text}"),
+                        // ).then((value) {
+                        //   Get.delete<CommonDocsController>(tag: "commonDocs");
+                        // });
+                      },
+                    ),
+                  ],
+                ),
               ),
             ),
           ),
@@ -96,8 +103,31 @@ class SecondaryEventTemplateMasterView extends GetView<SecondaryEventTemplateMas
                         padding: EdgeInsets.all(4),
                         child: GetBuilder<SecondaryEventTemplateMasterController>(
                             id: "gridData",
-                            builder: (controller) => DataGridShowOnlyKeys(
+                            builder: (controller) => DataGridMultiCheckBox(
                                   mapData: controller.gridPrograms.map((e) => e.toJson()).toList(),
+                                  checkBoxes: ["firstSegment", "lastSegment", "allSegments", "preEvent", "postEvent"],
+                                  onCheckBoxPress: (key, rowId) {
+                                    switch (key) {
+                                      case "firstSegment":
+                                        controller.gridPrograms[rowId].firstSegment = !(controller.gridPrograms[rowId].firstSegment ?? false);
+                                        break;
+                                      case "lastSegment":
+                                        controller.gridPrograms[rowId].lastSegment = !(controller.gridPrograms[rowId].lastSegment ?? false);
+                                        break;
+                                      case "allSegments":
+                                        controller.gridPrograms[rowId].allSegments = !(controller.gridPrograms[rowId].allSegments ?? false);
+                                        break;
+                                      case "preEvent":
+                                        controller.gridPrograms[rowId].preEvent = !(controller.gridPrograms[rowId].preEvent ?? false);
+                                        break;
+                                      case "postEvent":
+                                        controller.gridPrograms[rowId].postEvent = !(controller.gridPrograms[rowId].postEvent ?? false);
+                                        break;
+
+                                      default:
+                                    }
+                                    controller.update(["gridData"]);
+                                  },
                                 )),
                       ),
                     ),
@@ -115,24 +145,48 @@ class SecondaryEventTemplateMasterView extends GetView<SecondaryEventTemplateMas
                               crossAxisAlignment: WrapCrossAlignment.end,
                               runSpacing: 10,
                               children: [
-                                DropDownField.formDropDown1WidthMap([], (value) => {}, "Event", 0.175),
+                                Obx(
+                                  () => DropDownField.formDropDown1WidthMap(
+                                      controller.events.value, (value) => {controller.selectedEvent = value}, "Event", 0.175,
+                                      selected: controller.selectedEvent),
+                                ),
                                 InputFields.formField1(
                                   hintTxt: "TX Caption",
-                                  controller: TextEditingController(),
+                                  controller: controller.txCaption,
                                   width: 0.175,
                                 ),
                                 InputFields.formField1(
                                   hintTxt: "TX Id",
-                                  controller: TextEditingController(),
+                                  controller: controller.txID,
+                                  focusNode: controller.txIdFocusNode,
                                   width: 0.36,
                                 ),
                                 Row(
-                                  children: ["First Segment", "Last Segment", "All Segments", "Pre Event", "Post Event", "My"]
-                                      .map((e) => Row(
+                                  children: controller.checkBoxes.value.entries
+                                      .map((e) => Obx(() => Row(
                                             mainAxisSize: MainAxisSize.min,
-                                            children: [Icon(Icons.check_box_outlined), Text(e)],
-                                          ))
+                                            children: [
+                                              Checkbox(
+                                                  value: controller.checkBoxes[e.key],
+                                                  onChanged: (value) {
+                                                    controller.checkBoxes[e.key] = value ?? false;
+                                                    controller.checkBoxes.refresh();
+                                                  }),
+                                              Text(e.key, style: TextStyle(fontSize: SizeDefine.labelSize1 + 1))
+                                            ],
+                                          )))
                                       .toList(),
+                                ),
+                                Row(
+                                  mainAxisSize: MainAxisSize.min,
+                                  children: [
+                                    Obx(() => Checkbox(
+                                        value: controller.mine.value,
+                                        onChanged: (value) {
+                                          controller.mine.value = value ?? false;
+                                        })),
+                                    Text("My")
+                                  ],
                                 ),
                                 FormButtonWrapper(
                                   btnText: "Search",
@@ -150,14 +204,21 @@ class SecondaryEventTemplateMasterView extends GetView<SecondaryEventTemplateMas
                                 FormButtonWrapper(
                                   btnText: "Add",
                                   callback: () {
-                                    // Get.defaultDialog(
-                                    //   title: "Documents",
-                                    //   content: CommonDocsView(
-                                    //       documentKey:
-                                    //           "RObooking${controller.selectedLocation!.key}${controller.selectedChannel!.key}${controller.bookingMonthCtrl.text}${controller.bookingNoCtrl.text}"),
-                                    // ).then((value) {
-                                    //   Get.delete<CommonDocsController>(tag: "commonDocs");
-                                    // });
+                                    if (controller.searchGrid?.currentRowIdx != null) {
+                                      var checkboxes = controller.checkBoxes.value;
+
+                                      controller.gridPrograms.insert(
+                                          controller.programGrid?.currentRowIdx ?? controller.gridPrograms.length,
+                                          SecondaryEventTemplateMasterProgram.convertSecondaryEventTemplateProgramGridDataToMasterProgram(
+                                              controller.searchPrograms[controller.searchGrid!.currentRowIdx!],
+                                              checkboxes["First Segment"] ?? false,
+                                              checkboxes["Last Segment"] ?? false,
+                                              checkboxes["All Segments"] ?? false,
+                                              checkboxes["Pre Event"] ?? false,
+                                              checkboxes["Post Event"] ?? false));
+                                      controller.calculateRowNo();
+                                      controller.update(["gridData"]);
+                                    }
                                   },
                                 ),
                                 InputFields.formField1(
@@ -167,10 +228,38 @@ class SecondaryEventTemplateMasterView extends GetView<SecondaryEventTemplateMas
                                 ),
                               ],
                             ),
-                            Container(
-                                child: DataGridShowOnlyKeys(
-                              mapData: [],
-                            ))
+                            SizedBox(
+                              height: 5,
+                            ),
+                            Expanded(
+                              child: Container(
+                                  child: GetBuilder<SecondaryEventTemplateMasterController>(
+                                      id: "searchGrid",
+                                      init: controller,
+                                      builder: (searchcontroller) {
+                                        return DataGridShowOnlyKeys(
+                                          onload: (event) {
+                                            controller.searchGrid = event.stateManager;
+                                          },
+                                          extraList: [],
+                                          onRowDoubleTap: (rowDoubleTapEvent) {
+                                            var checkboxes = controller.checkBoxes.value;
+                                            searchcontroller.gridPrograms.insert(
+                                                controller.programGrid?.currentRowIdx ?? 0,
+                                                SecondaryEventTemplateMasterProgram.convertSecondaryEventTemplateProgramGridDataToMasterProgram(
+                                                    controller.searchPrograms[rowDoubleTapEvent.rowIdx],
+                                                    checkboxes["First Segment"] ?? false,
+                                                    checkboxes["Last Segment"] ?? false,
+                                                    checkboxes["All Segments"] ?? false,
+                                                    checkboxes["Pre Event"] ?? false,
+                                                    checkboxes["Post Event"] ?? false));
+                                            controller.calculateRowNo();
+                                            controller.update(["gridData"]);
+                                          },
+                                          mapData: searchcontroller.searchPrograms.map((e) => e.toJson()).toList(),
+                                        );
+                                      })),
+                            )
                           ],
                         ),
                       ),
@@ -210,16 +299,9 @@ class SecondaryEventTemplateMasterView extends GetView<SecondaryEventTemplateMas
                               for (var btn in btncontroller.buttons!)
                                 FormButtonWrapper(
                                   btnText: btn["name"],
-                                  // isEnabled: btn['isDisabled'],
+                                  isEnabled: btn['isDisabled'],
                                   callback: () {
-                                    // Get.defaultDialog(
-                                    //   title: "Documents",
-                                    //   content: CommonDocsView(
-                                    //       documentKey:
-                                    //           "RObooking${controller.selectedLocation!.key}${controller.selectedChannel!.key}${controller.bookingMonthCtrl.text}${controller.bookingNoCtrl.text}"),
-                                    // ).then((value) {
-                                    //   Get.delete<CommonDocsController>(tag: "commonDocs");
-                                    // });
+                                    btnHandler(btn["name"]);
                                   },
                                 ),
                             ],
@@ -230,5 +312,14 @@ class SecondaryEventTemplateMasterView extends GetView<SecondaryEventTemplateMas
         ],
       ),
     );
+  }
+
+  btnHandler(btnName) {
+    switch (btnName) {
+      case "Save":
+        controller.save();
+        break;
+      default:
+    }
   }
 }

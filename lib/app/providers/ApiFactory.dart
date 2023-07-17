@@ -885,23 +885,25 @@ class ApiFactory {
       BASE_URL + "/api/SecondaryEventTemplateMaster/GetProgramPicker?locationcode=$locCode&channelcode=$channelCode";
   static String SecondaryEventTemplateMasterGetProgramLeave(locCode, channelCode, progCode) =>
       BASE_URL + "/api/SecondaryEventTemplateMaster/GetProgramLeave?locationcode=$locCode&channelcode=$channelCode&ProgramCode=$progCode";
+  static String SecondaryEventTemplateMasterFastProgSearch = BASE_URL + "/api/SecondaryEventTemplateMaster/PostFastInsertsearch";
+  static String SecondaryEventTemplateMasterSave = BASE_URL + "/api/SecondaryEventTemplateMaster/PostSave";
 
   ///////////////////////////////////////////////////////////
 
   ///////////////////////Europe Drop Spots////////////////////
   static String EUROPE_DROP_SPOTS_INITIAL() => BASE_URL + "/api/EuropeDropSpots/GetInitial";
   static String EUROPE_DROP_SPOTS_UPDATE_DETAILS() => BASE_URL + "/api/EuropeDropSpots/Updatedtail";
-  static String EUROPE_DROP_SPOTS_GETRUNDATE(String loc,String chanl,String bookEffectDt) => BASE_URL + "/api/EuropeDropSpots/Getrundate?locationcode=$loc&channelcode=$chanl&BookingEffectiveDate=$bookEffectDt";
+  static String EUROPE_DROP_SPOTS_GETRUNDATE(String loc, String chanl, String bookEffectDt) =>
+      BASE_URL + "/api/EuropeDropSpots/Getrundate?locationcode=$loc&channelcode=$chanl&BookingEffectiveDate=$bookEffectDt";
   static String EUROPE_DROP_SPOTS_POST_REMOVE_FILE() => BASE_URL + "/api/EuropeDropSpots/PostRemovefile";
-  static String EUROPE_DROP_SPOTS_CHANNEL(String loc,String chnl) => BASE_URL + "/api/EuropeDropSpots/GetChannel?locationcode=$loc&channelcode=$chnl";
-  static String EUROPE_DROP_SPOTS_CLIENT(String loc,String chnl,String client) => BASE_URL + "/api/EuropeDropSpots/GetClient?locationcode=$loc&channelcode=$chnl&clientcode=$client";
+  static String EUROPE_DROP_SPOTS_CHANNEL(String loc, String chnl) =>
+      BASE_URL + "/api/EuropeDropSpots/GetChannel?locationcode=$loc&channelcode=$chnl";
+  static String EUROPE_DROP_SPOTS_CLIENT(String loc, String chnl, String client) =>
+      BASE_URL + "/api/EuropeDropSpots/GetClient?locationcode=$loc&channelcode=$chnl&clientcode=$client";
   static String EUROPE_DROP_SPOTS_GENERATE() => BASE_URL + "/api/EuropeDropSpots/Getgenerate";
   static String EUROPE_DROP_SPOTS_LOCATION(String loc) => BASE_URL + "/api/EuropeDropSpots/cbolocation?LocationCode=$loc";
   static String EUROPE_DROP_SPOTS_DELETE() => BASE_URL + "/api/EuropeDropSpots/Deletecommercial";
   //////////////////////////End Drop Spots/////////////////////////////////
-
-
-
 
   //////////////////////////////// ComingUpNextMaster ///////////////////////////////////////
 
@@ -913,7 +915,6 @@ class ApiFactory {
   static String COMINGUPNEXTMASTER_SEGNOLEAVE = BASE_URL + "/api/ComingUpNextMaster/SegNoLeave";
   static String COMINGUPNEXTMASTER_HOUSEIDLEAVE = BASE_URL + "/api/ComingUpNextMaster/HouseIDLeave";
   static String COMINGUPNEXTMASTER_PROGRAMSEARCH = BASE_URL + "/api/ComingUpNextMaster/GetSourceProgramSearch?TextProgramCompany=";
-
 
   //////////////////////////// ComingUpTomorrowMenu ////////////////////////////////
 
@@ -944,7 +945,6 @@ class ApiFactory {
   static String DATEWISEERROR_LOAD = BASE_URL + "/api/DatewiseErrorSpots/GetInit";
   static String DATEWISEERROR_GENERATE = BASE_URL + "/api/DatewiseErrorSpots/GetGenrateErrors";
 
-
   //////////////////////////////////////////////// BRANDMASTER /////////////////////////
 
   static String BRANDMASTER_GETCLIENT = BASE_URL + "/api/BrandMaster/GetClientSearch?TextSourceClient=";
@@ -954,5 +954,4 @@ class ApiFactory {
   static String BRANDMASTER_GETPRODUCTDETAILS = BASE_URL + "/api/BrandMaster/GetProduct?productcode=";
   static String BRANDMASTER_SAVE = BASE_URL + "/api/BrandMaster/PostBrandAdd";
   static String BRANDMASTER_ONLOAD = BASE_URL + "/api/BrandMaster/GetBrandonLoad";
-
 }
