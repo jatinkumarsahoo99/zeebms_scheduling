@@ -7,9 +7,11 @@ class NumericStepButton extends StatefulWidget {
   final int maxValue;
   final String? hint;
   final bool? isEnable;
+  int counter;
   final ValueChanged<int> onChanged;
 
-  const NumericStepButton({Key? key, this.isEnable, this.minValue = 1, this.maxValue = 100, required this.onChanged, this.hint}) : super(key: key);
+  NumericStepButton({Key? key, this.counter = 1, this.isEnable, this.minValue = 1, this.maxValue = 100, required this.onChanged, this.hint})
+      : super(key: key);
 
   @override
   State<NumericStepButton> createState() {
@@ -18,7 +20,6 @@ class NumericStepButton extends StatefulWidget {
 }
 
 class _NumericStepButtonState extends State<NumericStepButton> {
-  int counter = 1;
   TextEditingController txtCont = TextEditingController();
 
   @override
@@ -50,16 +51,16 @@ class _NumericStepButtonState extends State<NumericStepButton> {
                 onPressed: ((widget.isEnable ?? true))
                     ? () {
                         setState(() {
-                          if (counter > widget.minValue) {
-                            counter--;
+                          if (widget.counter > widget.minValue) {
+                            widget.counter--;
                           }
-                          widget.onChanged(counter);
+                          widget.onChanged(widget.counter);
                         });
                       }
                     : null,
               ),
               Text(
-                '$counter',
+                '${widget.counter}',
                 // controller: txtCont,
                 textAlign: TextAlign.center,
                 style: TextStyle(
@@ -79,11 +80,11 @@ class _NumericStepButtonState extends State<NumericStepButton> {
                 onPressed: ((widget.isEnable ?? true))
                     ? () {
                         setState(() {
-                          if (counter < widget.maxValue) {
-                            counter++;
+                          if (widget.counter < widget.maxValue) {
+                            widget.counter++;
                           }
-                          txtCont.text = counter.toString();
-                          widget.onChanged(counter);
+                          txtCont.text = widget.counter.toString();
+                          widget.onChanged(widget.counter);
                         });
                       }
                     : null,

@@ -52,31 +52,63 @@ class InventoryStatusReportView extends GetView<InventoryStatusReportController>
                             );
                           }),
                           SizedBox(height: 10),
-                          Obx(() {
-                            return ExcludeFocus(
-                              excluding: true,
-                              child: Container(
-                                height: context.height * .3,
-                                decoration: BoxDecoration(
-                                  border: Border.all(
-                                    color: Colors.grey,
-                                  ),
-                                ),
-                                child: ListView.builder(
-                                  itemCount: (controller.onLoadModel.value?.info?.channels ?? []).length,
-                                  itemBuilder: (context, index) {
-                                    return CheckBoxWidget1(
-                                      title: controller.onLoadModel.value?.info?.channels?[index].downValue?.value ?? "",
-                                      value: controller.onLoadModel.value?.info?.channels?[index].isSelected ?? false,
-                                      onChanged: (val) {
-                                        controller.onLoadModel.value?.info?.channels?[index].isSelected = val;
-                                      },
-                                    );
-                                  },
-                                ),
-                              ),
-                            );
-                          }),
+                          // Obx(() {
+                          //   return ExcludeFocus(
+                          //     excluding: true,
+                          //     child: Container(
+                          //       height: context.height * .3,
+                          //       decoration: BoxDecoration(
+                          //         border: Border.all(
+                          //           color: Colors.grey,
+                          //         ),
+                          //       ),
+                          //       child: ListView.builder(
+                          //         itemCount: (controller.onLoadModel.value?.info?.channels ?? []).length,
+                          //         itemBuilder: (context, index) {
+                          //           return CheckBoxWidget1(
+                          //             title: controller.onLoadModel.value?.info?.channels?[index].downValue?.value ?? "",
+                          //             value: controller.onLoadModel.value?.info?.channels?[index].isSelected ?? false,
+                          //             onChanged: (val) {
+                          //               controller.onLoadModel.value?.info?.channels?[index].isSelected = val;
+                          //             },
+                          //           );
+                          //         },
+                          //       ),
+                          //     ),
+                          //   );
+                          // }),
+                          Container(
+                            height: MediaQuery.of(context).size.height * .3,
+                            decoration: BoxDecoration(
+                              border: Border.all(color: Colors.deepPurpleAccent),
+                              borderRadius: BorderRadius.circular(0),
+                            ),
+                            // margin: EdgeInsets.only(top: 8),
+                            child: Obx(() {
+                              return ListView.builder(
+                                controller: ScrollController(),
+                                itemCount: (controller.onLoadModel.value?.info?.channels ?? []).length,
+                                itemBuilder: (context, int index) {
+                                  return Row(
+                                    children: [
+                                      Checkbox(
+                                        value: controller.onLoadModel.value?.info?.channels?[index].isSelected ?? false,
+                                        onChanged: (bool? value) {
+                                          controller.onLoadModel.value?.info?.channels?[index].isSelected = value;
+                                        },
+                                      ),
+                                      Expanded(
+                                        child: Text(
+                                          controller.onLoadModel.value?.info?.channels?[index].downValue?.value ?? "",
+                                          style: TextStyle(fontSize: 12),
+                                        ),
+                                      )
+                                    ],
+                                  );
+                                },
+                              );
+                            }),
+                          ),
                           SizedBox(height: 10),
                           Obx(() {
                             return RadioRow(
