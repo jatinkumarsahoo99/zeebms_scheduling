@@ -27,13 +27,19 @@ class LogConvertView extends GetView<LogConvertController> {
                   ),
                   SizedBox(height: 20),
                   Wrap(
+                    crossAxisAlignment: WrapCrossAlignment.end,
+                    runSpacing: 10,
+                    spacing: 5,
                     children: [
                       DropDownField.formDropDown1WidthMap([], (value) => {}, "Location", 0.24),
                       DropDownField.formDropDown1WidthMap([], (value) => {}, "Channel", 0.24),
                       DateWithThreeTextField(title: "FPC Eff. Dt.", widthRation: 0.12, mainTextController: TextEditingController()),
-                      FormButtonWrapper(btnText: "Import")
+                      FormButtonWrapper(btnText: "Import"),
                     ],
                   ),
+                  SizedBox(
+                    height: 10,
+                  )
                 ])))));
   }
 }

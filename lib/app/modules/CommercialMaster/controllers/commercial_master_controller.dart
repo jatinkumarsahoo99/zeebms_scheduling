@@ -229,7 +229,9 @@ class CommercialMasterController extends GetxController {
     print(">>>>>>>>>" + duration.value.text);
     print(">>>>>>>>>" + sec.toString());
   }
+
   bool contin = true;
+
   saveData() {
     if (captionController.text == "" || captionController.text == null) {
       Snack.callError("Please enter caption");

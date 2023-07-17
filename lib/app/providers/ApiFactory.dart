@@ -748,12 +748,12 @@ class ApiFactory {
   // static String PROMO_MASTER_SEGNO_LEAVE = "$BASE_URL/api/FillerMaster/SegNoLeave";
   // static String PROMO_MASTER_GET_EVENT = "$BASE_URL/api/FillerMaster/GetEvent?text=";
 
-  //////////////////////////////// PROMO-MASTER-API-END /////////////////////////////////
-  ///
-  ///
-  ///
-  ///
-  ///
+  //////////////////////////////// PROMO-TYPE-MASTER-API-END /////////////////////////////////
+
+  static String PROMO_TYPE_MASTER_GET_RECORD(promoName, promoCode) =>
+      "$BASE_URL/api/PromoTypeMaster/GetRetrieveRecord?PromoTypeCode=$promoCode&PromoTypeName=$promoName";
+  static String PROMO_TYPE_MASTER_SAVE = "$BASE_URL/api/PromoTypeMaster/PostValidateAndSaveRecord";
+
   //////////////////////////////// ASRUN IMPORT /////////////////////////////////
   static String AsrunImport_GetLoadLocation = "$BASE_URL/api/AsrunImport/GetLoadLocation";
   static String AsrunImport_GetLocationSelect(locationCode) => "$BASE_URL/api/AsrunImport/GetLocationSelect?Locationcode=$locationCode";
@@ -833,7 +833,7 @@ class ApiFactory {
   ////////////////////////DSeries Specification- END/////////////////////////
 
   // ////////////////////Europe Commercial Import Status/////////////////////////
-  static String EUROPE_COMMERCIAL_GENERATE = BASE_URL + "/api/EuropeCommercialImportStatus/GetGenrate";
+  static String EUROPE_COMMERCIAL_GENERATE(String date) => BASE_URL + "/api/EuropeCommercialImportStatus/GetGenrate?effectivedate=$date";
   ////////////////////////Europe Commercial Import Status- END/////////////////////////
   ///
   ///
@@ -884,16 +884,17 @@ class ApiFactory {
   //////////////////////// SearchTapeCode //////////////////
   static String SearchTapeCode(exportTapeCode, programName, epsCaption) =>
       BASE_URL + "/api/SearchTapeCode/GetbtnShowClick?ExportTapeCode=$exportTapeCode&ProgramName=$programName&EpsCaption=$epsCaption";
-  //////////////////////// Spot Type Master ///////////////
-  ///
-  ///
-  ///
-  ///
-  ///
+  //////////////////////// Spot Position Type Master ///////////////
+
+  static String SpotPositionTypeInit = BASE_URL + "/api/SpotPositionType/GetTypeMasterLoad";
+  static String SpotPositionTypeGetRecord(sponserCode, sponserName) =>
+      BASE_URL + "/api/SpotPositionType/GetRetrieveRecord?SpotPositionTypeCode=$sponserCode&SpotPositionTypeName=$sponserName";
+  static String SpotPositionTypeSaveRecord = BASE_URL + "/api/SpotPositionType/PostSaveRecord";
+
   ////////////////////// SecondaryEventTemplateMaster ///////////////////////////////////
-  static String SponderTypeMasterGetRecord(sponserCode, sponserName) =>
-      BASE_URL + "/api/SponsorTypeMaster/Get_RetrieveRecord?SponsorTypeName=$sponserName";
-  static String SponderTypeMasterSaveRecord = BASE_URL + "/api/SponsorTypeMaster/Post_Save";
+  static String SponserTypeMasterGetRecord(sponserCode, sponserName) =>
+      BASE_URL + "/api/SponsorTypeMaster/GetRetrieveRecord?SponsorTypeCode=$sponserCode&SponsorTypeName=$sponserName";
+  static String SponserTypeMasterSaveRecord = BASE_URL + "/api/SponsorTypeMaster/PostSave";
   ////////////////////// SecondaryEventTemplateMaster ///////////////////////////////////
 
   static String SecondaryEventTemplateMasterInitData = BASE_URL + "/api/SecondaryEventTemplateMaster/GetInitialisation";
@@ -908,4 +909,74 @@ class ApiFactory {
       BASE_URL + "/api/SecondaryEventTemplateMaster/GetProgramPicker?locationcode=$locCode&channelcode=$channelCode";
   static String SecondaryEventTemplateMasterGetProgramLeave(locCode, channelCode, progCode) =>
       BASE_URL + "/api/SecondaryEventTemplateMaster/GetProgramLeave?locationcode=$locCode&channelcode=$channelCode&ProgramCode=$progCode";
+
+  ///////////////////////////////////////////////////////////
+
+  ///////////////////////Europe Drop Spots////////////////////
+  static String EUROPE_DROP_SPOTS_INITIAL() => BASE_URL + "/api/EuropeDropSpots/GetInitial";
+  static String EUROPE_DROP_SPOTS_UPDATE_DETAILS() => BASE_URL + "/api/EuropeDropSpots/Updatedtail";
+  static String EUROPE_DROP_SPOTS_GETRUNDATE(String loc,String chanl,String bookEffectDt) => BASE_URL + "/api/EuropeDropSpots/Getrundate?locationcode=$loc&channelcode=$chanl&BookingEffectiveDate=$bookEffectDt";
+  static String EUROPE_DROP_SPOTS_POST_REMOVE_FILE() => BASE_URL + "/api/EuropeDropSpots/PostRemovefile";
+  static String EUROPE_DROP_SPOTS_CHANNEL(String loc,String chnl) => BASE_URL + "/api/EuropeDropSpots/GetChannel?locationcode=$loc&channelcode=$chnl";
+  static String EUROPE_DROP_SPOTS_CLIENT(String loc,String chnl,String client) => BASE_URL + "/api/EuropeDropSpots/GetClient?locationcode=$loc&channelcode=$chnl&clientcode=$client";
+  static String EUROPE_DROP_SPOTS_GENERATE() => BASE_URL + "/api/EuropeDropSpots/Getgenerate";
+  static String EUROPE_DROP_SPOTS_LOCATION(String loc) => BASE_URL + "/api/EuropeDropSpots/cbolocation?LocationCode=$loc";
+  static String EUROPE_DROP_SPOTS_DELETE() => BASE_URL + "/api/EuropeDropSpots/Deletecommercial";
+  //////////////////////////End Drop Spots/////////////////////////////////
+
+
+
+
+  //////////////////////////////// ComingUpNextMaster ///////////////////////////////////////
+
+  static String COMINGUPNEXTMASTER_NEW_LOAD = BASE_URL + "/api/ComingUpNextMaster/GetLocationSelect";
+  static String COMINGUPNEXTMASTER_GET_CHANNEL = BASE_URL + "/api/ComingUpNextMaster/GetChannel?LocationCode=";
+  static String COMINGUPNEXTMASTER_GET_RETRIVE_RECORD = BASE_URL + "/api/ComingUpNextMaster/RetrieveRecord";
+  static String COMINGUPNEXTMASTER_SAVE = BASE_URL + "/api/ComingUpNextMaster/SaveComingUpNext";
+  static String COMINGUPNEXTMASTER_TAPEIDLEAVE = BASE_URL + "/api/ComingUpNextMaster/TapeIDLeave";
+  static String COMINGUPNEXTMASTER_SEGNOLEAVE = BASE_URL + "/api/ComingUpNextMaster/SegNoLeave";
+  static String COMINGUPNEXTMASTER_HOUSEIDLEAVE = BASE_URL + "/api/ComingUpNextMaster/HouseIDLeave";
+  static String COMINGUPNEXTMASTER_PROGRAMSEARCH = BASE_URL + "/api/ComingUpNextMaster/GetSourceProgramSearch?TextProgramCompany=";
+
+
+  //////////////////////////// ComingUpTomorrowMenu ////////////////////////////////
+
+  static String COMINGUPTOMORROWMASTER_LOAD = BASE_URL + "/api/ComingUpTomorrowMenu/ComingUpTomorrowOnload";
+  static String COMINGUPTOMORROWMASTER_GETCHANNEL_LIST = BASE_URL + "/api/ComingUpTomorrowMenu/GetChannelSelect?LocationCode=";
+  static String COMINGUPTOMORROWMASTER_RETRIVERECORD = BASE_URL + "/api/ComingUpTomorrowMenu/GetCTRetriveRecord";
+  static String COMINGUPTOMORROWMASTER_TAPEIDLEAVE = BASE_URL + "/api/ComingUpTomorrowMenu/TapeIDOnLeave";
+  static String COMINGUPTOMORROWMASTER_SEGNOLEAVE = BASE_URL + "/api/ComingUpTomorrowMenu/GetSegNoOnLeave";
+  static String COMINGUPTOMORROWMASTER_HOUSEIDLEAVE = BASE_URL + "/api/ComingUpTomorrowMenu/GetHouseIDOnLeave";
+  static String COMINGUPTOMORROWMASTER_SAVE = BASE_URL + "/api/ComingUpTomorrowMenu/SaveComingUpTomorrowData";
+  static String COMINGUPTOMORROWMASTER_PROGRAMTYPELOSTFOCUS = BASE_URL + "/api/ComingUpTomorrowMenu/GetcboProgramTypeLostFocus?ProgramTypeCode=";
+
+  ////////////////////////////// ComingUpMenuMaster ////////////////////////////////
+  static String COMING_UP_MENU_MASTER_LOAD = BASE_URL + "/api/ComingUpMenuMaster/LocationLoad";
+  static String COMING_UP_MENU_MASTER_CHANNELLIST = BASE_URL + "/api/ComingUpMenuMaster/ChannelLoad?LocationCode=";
+  static String COMING_UP_MENU_MASTER_GET_RETRIVERECORD = BASE_URL + "/api/ComingUpMenuMaster/RetriveRecord";
+  static String COMING_UP_MENU_MASTER_SAVE = BASE_URL + "/api/ComingUpMenuMaster/PostCoumingUpMenu";
+  static String COMING_UP_MENU_MASTER_TAPEIDLEAVE = BASE_URL + "/api/ComingUpMenuMaster/CUMMTapeIDLeave";
+  static String COMING_UP_MENU_MASTER_SEGLNOLEAVE = BASE_URL + "/api/ComingUpMenuMaster/CUMMSegNoLeave";
+  static String COMING_UP_MENU_MASTER_HOUSEIDLEAVE = BASE_URL + "/api/ComingUpMenuMaster/CUMMHouseIDLeave";
+
+  ////////////////////////////////////////// DateWiseFillers ////////////////////////////
+
+  static String DATEWISEFILLER_LOAD = BASE_URL + "/api/DatewiseFillerReport/GetInit";
+  static String DATEWISEFILLER_GENERATE = BASE_URL + "/api/DatewiseFillerReport/GetGenrate";
+
+  /////////////////////////////////////// DateWiseErrorSpots ////////////////////////////
+  static String DATEWISEERROR_LOAD = BASE_URL + "/api/DatewiseErrorSpots/GetInit";
+  static String DATEWISEERROR_GENERATE = BASE_URL + "/api/DatewiseErrorSpots/GetGenrateErrors";
+
+
+  //////////////////////////////////////////////// BRANDMASTER /////////////////////////
+
+  static String BRANDMASTER_GETCLIENT = BASE_URL + "/api/BrandMaster/GetClientSearch?TextSourceClient=";
+  static String BRANDMASTER_GETPRODUCT = BASE_URL + "/api/BrandMaster/GetProductSearch?TextSourceProduct=";
+  static String BRANDMASTER_GETBRAND = BASE_URL + "/api/BrandMaster/RetriveRecords?BrandName=";
+  static String BRANDMASTER_GETCLIENTDETAILS = BASE_URL + "/api/BrandMaster/GetClientDetails?clientname=";
+  static String BRANDMASTER_GETPRODUCTDETAILS = BASE_URL + "/api/BrandMaster/GetProduct?productcode=";
+  static String BRANDMASTER_SAVE = BASE_URL + "/api/BrandMaster/PostBrandAdd";
+  static String BRANDMASTER_ONLOAD = BASE_URL + "/api/BrandMaster/GetBrandonLoad";
+
 }

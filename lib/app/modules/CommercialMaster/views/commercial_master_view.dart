@@ -83,8 +83,7 @@ class CommercialMasterView extends StatelessWidget {
                                             DropDownField.formDropDown1WidthMap(
                                               controllerX.language.value,
                                               (value) {
-                                                controllerX.selectedLanguage =
-                                                    value;
+                                                controllerX.selectedLanguage = value;
                                               },
                                               "Langauge",
                                               .17,
@@ -523,7 +522,8 @@ class CommercialMasterView extends StatelessWidget {
                                       children: [
                                         GetBuilder<CommercialMasterController>(
                                           builder: (controllerX) {
-                                            return DropDownField
+                                            return
+                                              DropDownField
                                                 .formDropDownSearchAPI2(
                                               GlobalKey(),
                                               context,

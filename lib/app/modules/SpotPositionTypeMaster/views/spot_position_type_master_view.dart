@@ -1,4 +1,6 @@
 import 'package:bms_scheduling/app/controller/HomeController.dart';
+import 'package:bms_scheduling/app/data/DropDownValue.dart';
+import 'package:bms_scheduling/app/modules/CommonSearch/views/common_search_view.dart';
 import 'package:bms_scheduling/widgets/FormButton.dart';
 import 'package:bms_scheduling/widgets/dropdown.dart';
 import 'package:bms_scheduling/widgets/input_fields.dart';
@@ -38,42 +40,57 @@ class SpotPositionTypeMasterView extends GetView<SpotPositionTypeMasterControlle
                       children: [
                         InputFields.formField1(
                           hintTxt: "Spot Type Pos. Name",
-                          controller: TextEditingController(),
+                          controller: controller.spotPostionName,
+                          focusNode: controller.positionNameFocus,
                           width: 0.36,
                         ),
                         InputFields.formField1(
                           hintTxt: "Spot Type Short Name",
-                          controller: TextEditingController(),
+                          controller: controller.spotShortName,
                           width: 0.175,
                         ),
                         InputFields.formField1(
                           hintTxt: "Log Position",
-                          controller: TextEditingController(),
+                          controller: controller.logPosition,
                           width: 0.175,
                         ),
-                        DropDownField.formDropDown1WidthMap([], (value) => {}, "Spot In Log", 0.175),
-                        InputFields.formField1(
-                          hintTxt: "Program Name",
-                          controller: TextEditingController(),
-                          width: 0.175,
-                        ),
+                        Obx(() => DropDownField.formDropDown1WidthMap(controller.spots.value, (value) => {}, "Spot In Log", 0.175,
+                            selected: controller.selectedSpotInLog.value)),
                         InputFields.formField1(
                           hintTxt: "Spot Position Premium ",
-                          controller: TextEditingController(),
+                          controller: controller.positionPremium,
                           width: 0.175,
                         ),
                         SizedBox(
                           width: Get.width * 0.175,
                           child: Row(
                             mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                            children: [Text("Break No Applicable"), Icon(Icons.check_box_outlined)],
+                            children: [
+                              Text("Break No Applicable"),
+                              Obx(
+                                () => InkWell(
+                                  onTap: () {
+                                    controller.breakNo.value = !controller.breakNo.value;
+                                  },
+                                  child: controller.breakNo.value ? Icon(Icons.check_box_outlined) : Icon(Icons.check_box_outline_blank_rounded),
+                                ),
+                              )
+                            ],
                           ),
                         ),
                         SizedBox(
                           width: Get.width * 0.175,
                           child: Row(
                             mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                            children: [Text("Position No Applicable"), Icon(Icons.check_box_outlined)],
+                            children: [
+                              Text("Position No Applicable"),
+                              Obx(() => InkWell(
+                                    onTap: () {
+                                      controller.positionNo.value = !controller.positionNo.value;
+                                    },
+                                    child: controller.positionNo.value ? Icon(Icons.check_box_outlined) : Icon(Icons.check_box_outline_blank_rounded),
+                                  ))
+                            ],
                           ),
                         ),
                       ],
@@ -109,41 +126,11 @@ class SpotPositionTypeMasterView extends GetView<SpotPositionTypeMasterControlle
                                       // pa
                                       children: [
                                         for (var btn in btncontroller.buttons!)
-                                          btn["name"] == "Docs"
-                                              ? FormButtonWrapper(
-                                                  btnText: btn["name"],
-                                                  // isEnabled: btn['isDisabled'],
-                                                  callback: () {
-                                                    // Get.defaultDialog(
-                                                    //   title: "Documents",
-                                                    //   content: CommonDocsView(
-                                                    //       documentKey:
-                                                    //           "RObooking${controller.selectedLocation!.key}${controller.selectedChannel!.key}${controller.bookingMonthCtrl.text}${controller.bookingNoCtrl.text}"),
-                                                    // ).then((value) {
-                                                    //   Get.delete<CommonDocsController>(tag: "commonDocs");
-                                                    // });
-                                                  },
-                                                )
-                                              : btn["name"] == "Save"
-                                                  ? FormButtonWrapper(
-                                                      btnText: btn["name"],
-                                                      // isEnabled: btn['isDisabled'],
-                                                      callback: () {
-                                                        // controller.saveCheck();
-                                                      },
-                                                    )
-                                                  : btn["name"] == "Clear"
-                                                      ? FormButtonWrapper(
-                                                          btnText: btn["name"],
-
-                                                          // isEnabled: btn['isDisabled'],
-                                                          callback: () {},
-                                                        )
-                                                      : FormButtonWrapper(
-                                                          btnText: btn["name"],
-                                                          // isEnabled: btn['isDisabled'],
-                                                          callback: null,
-                                                        ),
+                                          FormButtonWrapper(
+                                            btnText: btn["name"],
+                                            // isEnabled: btn['isDisabled'],
+                                            callback: () => btnhandler(btn["name"]),
+                                          )
                                       ],
                                     ),
                                   ),
@@ -151,5 +138,31 @@ class SpotPositionTypeMasterView extends GetView<SpotPositionTypeMasterControlle
                         })
                   ])))),
     );
+  }
+
+  btnhandler(btnName) {
+    switch (btnName) {
+      case "Save":
+        controller.saveData();
+        break;
+      case "Delete":
+        null;
+        break;
+      case "Clear":
+        Get.delete<SpotPositionTypeMasterController>();
+        Get.find<HomeController>().clearPage1();
+        break;
+      case "Search":
+        Get.to(SearchPage(
+          key: Key("Spot Position Type Master"),
+          screenName: "Spot Position Type Master",
+          appBarName: "Spot Position Type Master",
+          strViewName: "vTesting",
+          isAppBarReq: true,
+        ));
+        break;
+
+      default:
+    }
   }
 }

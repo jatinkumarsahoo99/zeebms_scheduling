@@ -29,35 +29,53 @@ class PromoTypeMasterView extends GetView<PromoTypeMasterController> {
                       SizedBox(height: 20),
                       InputFields.formField1(
                         hintTxt: "Program Name",
-                        controller: TextEditingController(),
-                        width: 0.24,
+                        controller: controller.promTypeNameCtrl,
+                        focusNode: controller.promoFocusNode,
+                        width: 0.48,
                       ),
                       SizedBox(height: 20),
-                      Row(
-                        mainAxisSize: MainAxisSize.min,
-                        crossAxisAlignment: CrossAxisAlignment.end,
-                        children: [
-                          ...[
-                            "Trai Promo",
-                            "Channel Specfic",
-                          ]
-                              .map((e) => Row(
-                                    mainAxisSize: MainAxisSize.min,
-                                    children: [
-                                      Text(
-                                        e,
-                                        style: TextStyle(fontSize: SizeDefine.labelSize1 + 1),
-                                      ),
-                                      Checkbox(value: false, onChanged: (value) {})
-                                    ],
-                                  ))
-                              .toList(),
-                          InputFields.formField1(
-                            hintTxt: "SAP Category",
-                            controller: TextEditingController(),
-                            width: 0.09,
-                          ),
-                        ],
+                      SizedBox(
+                        width: Get.width * 0.48,
+                        child: Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                          mainAxisSize: MainAxisSize.min,
+                          crossAxisAlignment: CrossAxisAlignment.end,
+                          children: [
+                            Row(
+                              mainAxisSize: MainAxisSize.min,
+                              children: [
+                                Text(
+                                  "Trai Promo",
+                                  style: TextStyle(fontSize: SizeDefine.labelSize1 + 1),
+                                ),
+                                Obx(() => Checkbox(
+                                    value: controller.trailPromo.value,
+                                    onChanged: (value) {
+                                      controller.trailPromo.value = value!;
+                                    }))
+                              ],
+                            ),
+                            Row(
+                              mainAxisSize: MainAxisSize.min,
+                              children: [
+                                Text(
+                                  "Channel Specfic",
+                                  style: TextStyle(fontSize: SizeDefine.labelSize1 + 1),
+                                ),
+                                Obx(() => Checkbox(
+                                    value: controller.channelSpec.value,
+                                    onChanged: (value) {
+                                      controller.channelSpec.value = value!;
+                                    }))
+                              ],
+                            ),
+                            InputFields.formField1(
+                              hintTxt: "SAP Category",
+                              controller: controller.sapCategory,
+                              width: 0.09,
+                            ),
+                          ],
+                        ),
                       ),
                       SizedBox(height: 20),
                       GetBuilder<HomeController>(
@@ -88,46 +106,32 @@ class PromoTypeMasterView extends GetView<PromoTypeMasterController> {
                                         // pa
                                         children: [
                                           for (var btn in btncontroller.buttons!)
-                                            btn["name"] == "Docs"
-                                                ? FormButtonWrapper(
-                                                    btnText: btn["name"],
-                                                    // isEnabled: btn['isDisabled'],
-                                                    callback: () {
-                                                      // Get.defaultDialog(
-                                                      //   title: "Documents",
-                                                      //   content: CommonDocsView(
-                                                      //       documentKey:
-                                                      //           "RObooking${controller.selectedLocation!.key}${controller.selectedChannel!.key}${controller.bookingMonthCtrl.text}${controller.bookingNoCtrl.text}"),
-                                                      // ).then((value) {
-                                                      //   Get.delete<CommonDocsController>(tag: "commonDocs");
-                                                      // });
-                                                    },
-                                                  )
-                                                : btn["name"] == "Save"
-                                                    ? FormButtonWrapper(
-                                                        btnText: btn["name"],
-                                                        // isEnabled: btn['isDisabled'],
-                                                        callback: () {
-                                                          // controller.saveCheck();
-                                                        },
-                                                      )
-                                                    : btn["name"] == "Clear"
-                                                        ? FormButtonWrapper(
-                                                            btnText: btn["name"],
-
-                                                            // isEnabled: btn['isDisabled'],
-                                                            callback: () {},
-                                                          )
-                                                        : FormButtonWrapper(
-                                                            btnText: btn["name"],
-                                                            // isEnabled: btn['isDisabled'],
-                                                            callback: null,
-                                                          ),
+                                            FormButtonWrapper(
+                                              btnText: btn["name"],
+                                              // isEnabled: btn['isDisabled'],
+                                              callback: () => btnHandler(btn["name"]),
+                                            )
                                         ],
                                       ),
                                     ),
                                   );
                           })
                     ])))));
+  }
+
+  btnHandler(btnName) {
+    switch (btnName) {
+      case "Delete":
+        null;
+        break;
+      case "Clear":
+        Get.delete<PromoTypeMasterController>();
+        Get.find<HomeController>().clearPage1();
+        break;
+      case "Save":
+        controller.saveData();
+        break;
+      default:
+    }
   }
 }
