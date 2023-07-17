@@ -885,4 +885,7 @@ class ApiFactory {
       BASE_URL + "/api/SecondaryEventTemplateMaster/GetProgramPicker?locationcode=$locCode&channelcode=$channelCode";
   static String SecondaryEventTemplateMasterGetProgramLeave(locCode, channelCode, progCode) =>
       BASE_URL + "/api/SecondaryEventTemplateMaster/GetProgramLeave?locationcode=$locCode&channelcode=$channelCode&ProgramCode=$progCode";
+  static String SecondaryEventTemplateMasterFastProgSearch = BASE_URL + "/api/SecondaryEventTemplateMaster/PostFastInsertsearch";
+  static String SecondaryEventTemplateMasterSave= BASE_URL + "/api/SecondaryEventTemplateMaster/PostSave";
+
 }
