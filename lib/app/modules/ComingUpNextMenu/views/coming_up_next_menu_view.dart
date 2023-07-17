@@ -105,14 +105,13 @@ class ComingUpNextMenuView extends StatelessWidget {
                                   controller: controllerX.houseIdController,
                                   width: 0.1,
                                   isEnable: controllerX.isEnable,
-
                                   onchanged: (value) {
 
                                   },
                                     focusNode: controllerX.houseIdFocus
                                 ),
                                 Container(
-                                  width: size.width*0.104,
+                                  width: size.width*0.1,
                                 )
                               ],
                             ),
