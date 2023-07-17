@@ -4,10 +4,10 @@ import 'package:get/get.dart';
 
 import '../../../../widgets/DateTime/DateWithThreeTextField.dart';
 import '../../../../widgets/FormButton.dart';
+import '../../../../widgets/gridFromMap.dart';
 import '../controllers/EuropeCommercialImportStatusController.dart';
 
-class EuropeCommercialImportStatusView
-    extends GetView<EuropeCommercialImportStatusController> {
+class EuropeCommercialImportStatusView extends GetView<EuropeCommercialImportStatusController> {
   EuropeCommercialImportStatusController controllerX = Get.put(EuropeCommercialImportStatusController());
 
   @override
@@ -58,7 +58,7 @@ class EuropeCommercialImportStatusView
                         child: FormButton(
                           btnText: "Generate",
                           callback: () {
-                            // controllerX.calculateSegDur();
+                            controllerX.getGenerate();
                             // controllerX.addTable();
                           },
                           showIcon: false,
@@ -96,98 +96,29 @@ class EuropeCommercialImportStatusView
                 init: controllerX,
                 // init: CreateBreakPatternController(),
                 builder: (controller) {
-                  print("Called this Update >>>listUpdate");
-                  // if (controller.actualDefaults != null &&
-                  //     (controller.actualDefaults!.isNotEmpty)) {
-                  //   print("Actual Defaults Not Empty");
-                  //   // final key = GlobalKey();
-                  //   return Expanded(
-                  //     child: Padding(
-                  //       padding: const EdgeInsets.symmetric(horizontal: 10),
-                  //       child: DataGridFromMap(
-                  //         onFocusChange: (f) {
-                  //           if (f) {
-                  //             controllerX.gridcanFocus =
-                  //                 PlutoGridMode.selectWithOneTap;
-                  //           }
-                  //         },
-                  //         mapData: (controller.actualDefaults
-                  //             ?.map((e) => e.toJson1())
-                  //             .toList())!,
-                  //         widthRatio: (Get.width / 9) + 5,
-                  //         actionOnPress: (index) {
-                  //           print("Tapping $index");
-                  //           // LoadingDialog.modify(
-                  //           //   title,
-                  //           //   confirm,
-                  //           //   cancel,
-                  //           // );
-                  //           // Loadi
-                  //           LoadingDialog.delete(
-                  //               "Do you want to remove this row?", () {
-                  //             // Get.find<TechnicalCheckController>().tcMasterModel1?.faultDetails?.removeAt(index);
-                  //             // notifyListeners();
-                  //             controller.actualDefaults?.removeAt(index);
-                  //             controllerX.totalCalc();
-                  //             controller.update(["listUpdate"]);
-                  //           });
-                  //
-                  //           //     /*controller.stateManager!.updateRowData(controllerX.actualDefaults
-                  //           // ?.map((e) => e.toJson1())
-                  //           // .toList());*/
-                  //
-                  //           // controller.stateManager!.updateRowData(controllerX
-                  //           //     .actualDefaults
-                  //           //     ?.map((e) => e.toJson1())
-                  //           //     .toList());
-                  //         },
-                  //         onRowDoubleTap: (event) {
-                  //           var data = controller.actualDefaults![event.rowIdx];
-                  //           controllerX.wholeCap.value =
-                  //               data.segmentCaption ?? ""; //caption
-                  //           controllerX.tcIn_.text = data.som!;
-                  //           controllerX.segCtr.text = data.segNo!;
-                  //           controllerX.segsNo.value = int.parse(data.segNo!);
-                  //           controllerX.partNo.value =
-                  //               int.parse(data.partnumber!);
-                  //           controllerX.partCtr.text =
-                  //               (data.partnumber ?? "").toString();
-                  //           controllerX.tcOut_.text = data.eom!; //out
-                  //           controllerX.durationVal.value =
-                  //               data.segdur ?? ""; //duration
-                  //         },
-                  //         onSelected: (event) {
-                  //           var data =
-                  //               controller.actualDefaults![event.rowIdx ?? 0];
-                  //           controllerX.segsNo.value = int.parse(data.segNo!);
-                  //           controllerX.segCtr.text = data.segNo!;
-                  //           controllerX.partNo.value =
-                  //               int.parse(data.partnumber!);
-                  //           controllerX.partCtr.text =
-                  //               (data.partnumber ?? "").toString();
-                  //           controllerX.wholeCap.value =
-                  //               data.segmentCaption ?? ""; //caption
-                  //           controllerX.tcIn_.text = data.som!; //in
-                  //           controllerX.tcOut_.text = data.eom!; //out
-                  //           controllerX.durationVal.value =
-                  //               data.segdur ?? ""; //duration
-                  //         },
-                  //         showSrNo: true,
-                  //         onload: (val) {
-                  //           // print("onload Called ");
-                  //           controller.stateManager = val.stateManager;
-                  //           // print(controller.stateManager!.rows.length);
-                  //           val.stateManager.setColumnSizeConfig(
-                  //               PlutoGridColumnSizeConfig(
-                  //                   autoSizeMode: PlutoAutoSizeMode.scale));
-                  //         },
-                  //         actionIcon: Icons.delete_forever_rounded,
-                  //         actionIconKey: "Action",
-                  //         // mode: controllerX.gridcanFocus,
-                  //       ),
-                  //     ),
-                  //   );
-                  // } else {
+                  if (controller.listData != null &&
+                      (controller.listData!.isNotEmpty)) {
+                    return Expanded(
+                      child: Padding(
+                        padding: const EdgeInsets.symmetric(horizontal: 10),
+                        child: DataGridFromMap(
+                          mapData: (controller.listData!),
+                          widthRatio: (Get.width / 9) + 5,
+
+                          onRowDoubleTap: (event) {
+
+                          },
+                          onSelected: (event) {
+
+                          },
+                          showSrNo: true,
+                          onload: (val) {
+
+                          },
+                        ),
+                      ),
+                    );
+                  } else {
                   return Expanded(
                     child: Card(
                       clipBehavior: Clip.hardEdge,
@@ -204,7 +135,7 @@ class EuropeCommercialImportStatusView
                       ),
                     ),
                   );
-                  // }
+                  }
                 }),
             // Divider(),
 

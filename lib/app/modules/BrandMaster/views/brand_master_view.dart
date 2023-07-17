@@ -1,3 +1,4 @@
+import 'package:bms_scheduling/app/data/DropDownValue.dart';
 import 'package:bms_scheduling/widgets/dropdown.dart';
 import 'package:flutter/material.dart';
 
@@ -5,25 +6,30 @@ import 'package:get/get.dart';
 
 
 import '../../../../widgets/FormButton.dart';
+import '../../../../widgets/PlutoGrid/src/helper/pluto_move_direction.dart';
+import '../../../../widgets/PlutoGrid/src/pluto_grid.dart';
+import '../../../../widgets/gridFromMap.dart';
 import '../../../../widgets/input_fields.dart';
 import '../../../controller/HomeController.dart';
 import '../../../controller/MainController.dart';
 import '../../../data/PermissionModel.dart';
+import '../../../providers/Aes.dart';
+import '../../../providers/ApiFactory.dart';
 import '../../../providers/Utils.dart';
 import '../controllers/brand_master_controller.dart';
 
 class BrandMasterView extends StatelessWidget {
    BrandMasterView({Key? key}) : super(key: key);
 
-   BrandMasterController controllerX =
-   Get.put<BrandMasterController>(BrandMasterController());
+   BrandMasterController controllerX = Get.put<BrandMasterController>(BrandMasterController());
+
   @override
   Widget build(BuildContext context) {
     var size = MediaQuery.of(context).size;
     return Scaffold(
       body: Center(
         child: SizedBox(
-          width: size.width * .72,
+          width: size.width * .82,
           height: size.height * .84,
           child: Dialog(
             child: Column(
@@ -40,175 +46,249 @@ class BrandMasterView extends StatelessWidget {
                   child: Row(
                     mainAxisAlignment: MainAxisAlignment.spaceAround,
                     children: [
-                      Expanded(
-                        flex:11,
-                        child: Padding(
-                          padding: const EdgeInsets.all(8.0),
-                          child: ListView(
-                            children: [
-                              Row(
-                                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                                children: [
-                                  InputFields.formField1(
-                                    hintTxt: "Client",
-                                    controller: TextEditingController(),
-                                    width: 0.1,
-                                    // isEnable: controllerX.isEnable,
-                                    onchanged: (value) {
-
+                      FocusTraversalGroup(
+                        policy:OrderedTraversalPolicy(),
+                        child: Expanded(
+                          flex:9,
+                          child: Padding(
+                            padding: const EdgeInsets.all(8.0),
+                            child: GetBuilder<BrandMasterController>(
+                              id: "top",
+                              builder: (controllerX) {
+                                return ListView(
+                                  children: [
+                                    DropDownField
+                                        .formDropDownSearchAPI2(
+                                    GlobalKey(),
+                                    context,
+                                    width: context.width * 0.35,
+                                    onchanged: (DropDownValue? val) {
+                                    print(">>>" + val.toString());
+                                    controllerX.selectedClient = val;
+                                    controllerX.fetchClientDetails((val?.value ??"")??"");
                                     },
+                                    title: 'Client',
+                                    url:ApiFactory.BRANDMASTER_GETCLIENT,
+                                    parseKeyForKey: "ClientCode",
+                                    parseKeyForValue: 'ClientName',
+                                    selectedValue: controllerX.selectedClient,
                                     autoFocus: true,
-                                  ),
-
-                                  DropDownField.formDropDown1WidthMap(
-                                         [],
-                                              (value) {
-
-                                          }, "Client", .2,
-                                          isEnable: controllerX.isEnable,
-                                          // selected: controllerX.selectedClientDetails,
-                                          autoFocus: true,),
-                                ],
-                              ),
-                              InputFields.formField1(
-                                hintTxt: "Brand Name",
-                                controller: TextEditingController(),
-                                width: 0.36,
-                                // isEnable: controllerX.isEnable,
-                                onchanged: (value) {
-
-                                },
-                                autoFocus: true,
-                              ),
-                              Row(
-                                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                                children: [
-                                  InputFields.formField1(
-                                    hintTxt: "Brand Short Name",
-                                    controller: TextEditingController(),
-                                    width: 0.2,
-                                    // isEnable: controllerX.isEnable,
-                                    onchanged: (value) {
-
-                                    },
-                                    autoFocus: true,
-                                  ),
-                                  SizedBox(
-                                    // width: Get.width * .17,
-                                      child: InputFields.numbers3(
-                                        hintTxt: "Separation Time",
-                                        padLeft: 0,
-                                        onchanged: (val) {},
-                                        controller:TextEditingController(),
-                                        isNegativeReq: false,
-                                        width: 0.1,
-                                        fN: FocusNode(),
-                                        // isEnabled: true,
-                                      )
-
-                                  ),
-                                ],
-                              ),
-                              Row(
-                                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                                children: [
-                                  InputFields.formField1(
-                                    hintTxt: "Product",
-                                    controller: TextEditingController(),
-                                    width: 0.1,
-                                    // isEnable: controllerX.isEnable,
-                                    onchanged: (value) {
-
-                                    },
-                                    autoFocus: true,
-                                  ),
-                                  DropDownField.formDropDown1WidthMap(
-                                    [],
-                                        (value) {
-
-                                    }, "Product", .2,
-                                    isEnable: controllerX.isEnable,
-                                    // selected: controllerX.selectedClientDetails,
-                                    autoFocus: true,),
-                                  InkWell(
-                                    onTap: (){
-
-                                    },
-                                    child: InputFields.formField1(
-                                      hintTxt: "",
-                                      controller: TextEditingController(text: "..."),
-                                      width: 0.022,
+                                    // maxLength: 1
+                                    ),
+                                    InputFields.formField1(
+                                      hintTxt: "Brand Name",
+                                      controller: controllerX.brandController,
+                                      width: 0.36,
+                                      // autoFocus: true,
+                                      focusNode: controllerX.brandName,
                                       // isEnable: controllerX.isEnable,
                                       onchanged: (value) {
 
                                       },
-                                      autoFocus: true,
-                                      isEnable: false
+                                      // autoFocus: true,
                                     ),
-                                  ),
-                                 /* Container(
-                                    width: size.width*0.02,
-                                    height:  size.width*0.02,
-                                    // margin: EdgeInsets.only(left: 10),
-                                    decoration: BoxDecoration(
-                                        border: Border.all(color: Colors.deepPurple)),
-                                    child: Text("..."),
-                                  )*/
-                                ],
-                              ),
-                              InputFields.formField1(
-                                hintTxt: "Product Level 1",
-                                controller: TextEditingController(),
-                                width: 0.36,
-                                // isEnable: controllerX.isEnable,
-                                onchanged: (value) {
+                                    Row(
+                                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                      children: [
+                                        InputFields.formField1(
+                                          hintTxt: "Brand Short Name",
+                                          controller: controllerX.brandShortNameController,
+                                          width: 0.2,
+                                          // autoFocus: true,
+                                          // isEnable: controllerX.isEnable,
+                                          onchanged: (value) {
 
-                                },
-                                autoFocus: true,
-                              ),
-                              InputFields.formField1(
-                                hintTxt: "Product Level 2",
-                                controller: TextEditingController(),
-                                width: 0.36,
-                                // isEnable: controllerX.isEnable,
-                                onchanged: (value) {
+                                          },
+                                          // autoFocus: true,
+                                        ),
+                                        SizedBox(
+                                          // width: Get.width * .17,
+                                            child: InputFields.numbers3(
+                                              hintTxt: "Separation Time",
+                                              padLeft: 0,
+                                              onchanged: (val) {},
+                                              controller:controllerX.separationTimeController,
+                                              isNegativeReq: false,
+                                              width: 0.1,
+                                              fN: FocusNode(),
+                                              // isEnabled: true,
+                                            )
 
-                                },
-                                autoFocus: true,
-                              ),
-                              InputFields.formField1(
-                                hintTxt: "Product Level 3",
-                                controller: TextEditingController(),
-                                width: 0.36,
-                                // isEnable: controllerX.isEnable,
-                                onchanged: (value) {
+                                        ),
+                                      ],
+                                    ),
+                                    Row(
+                                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                      children: [
+                                        /*InputFields.formField1(
+                                          hintTxt: "Product",
+                                          controller:controllerX.productController,
+                                          width: 0.1,
+                                          // autoFocus: true,
+                                          focusNode: controllerX.productFocus,
+                                          // isEnable: controllerX.isEnable,
+                                          onchanged: (value) {
+                                            // controllerX.fetchProduct(value);
+                                          },
+                                          // autoFocus: true,
+                                        ),
+                                      Obx(()=>DropDownField.formDropDown1WidthMap(
+                                        controllerX.productList.value,
+                                            (value) {
+                                              controllerX.selectedProduct = value;
+                                              controllerX.getProductDetails(value.key??"");
 
-                                },
-                                autoFocus: true,
-                              ),
-                              InputFields.formField1(
-                                hintTxt: "Product Level 4",
-                                controller: TextEditingController(),
-                                width: 0.36,
-                                // isEnable: controllerX.isEnable,
-                                onchanged: (value) {
+                                        }, "Product", .2,
+                                        // autoFocus: true,
+                                        isEnable: controllerX.isEnable,
+                                        selected: controllerX.selectedProduct,
+                                        // autoFocus: true,
+                                      )),*/
+                                        DropDownField
+                                            .formDropDownSearchAPI2(
+                                          GlobalKey(),
+                                          context,
+                                          width: context.width * 0.3,
+                                          onchanged: (DropDownValue? val) {
+                                            print(">>>" + val.toString());
+                                            controllerX.selectedProduct = val;
+                                            controllerX.getProductDetails(val?.key??"");
+                                            // controllerX.fetchClientDetails((val?.value ??"")??"");
+                                          },
+                                          title: 'Product',
+                                          url:ApiFactory.BRANDMASTER_GETPRODUCT,
+                                          parseKeyForKey: "productcode",
+                                          parseKeyForValue: 'Productname',
+                                          selectedValue: controllerX.selectedProduct,
+                                          autoFocus: true,
+                                          // maxLength: 1
+                                        ),
+                                        InkWell(
+                                          onTap: (){
 
-                                },
-                                autoFocus: true,
-                              ),
+                                          },
+                                          child: InputFields.formField1(
+                                            hintTxt: "",
+                                            controller: TextEditingController(text: "..."),
+                                            width: 0.022,
+                                            // isEnable: controllerX.isEnable,
+                                            onchanged: (value) {
 
-                            ],
+                                            },
+                                            // autoFocus: true,
+                                            isEnable: false
+                                          ),
+                                        ),
+                                       /* Container(
+                                          width: size.width*0.02,
+                                          height:  size.width*0.02,
+                                          // margin: EdgeInsets.only(left: 10),
+                                          decoration: BoxDecoration(
+                                              border: Border.all(color: Colors.deepPurple)),
+                                          child: Text("..."),
+                                        )*/
+                                      ],
+                                    ),
+                                    InputFields.formField1(
+                                      hintTxt: "Product Level 1",
+                                      // autoFocus: true,
+                                      controller: controllerX.productLevel1Controller,
+                                      width: 0.36,
+                                      // isEnable: controllerX.isEnable,
+                                      onchanged: (value) {
+
+                                      },
+                                      // autoFocus: true,
+                                    ),
+                                    InputFields.formField1(
+                                      hintTxt: "Product Level 2",
+                                      // autoFocus: true,
+                                      controller: controllerX.productLevel2Controller,
+                                      width: 0.36,
+                                      // isEnable: controllerX.isEnable,
+                                      onchanged: (value) {
+
+                                      },
+                                      // autoFocus: true,
+                                    ),
+                                    InputFields.formField1(
+                                      hintTxt: "Product Level 3",
+                                      // autoFocus: true,
+                                      controller:  controllerX.productLevel3Controller,
+                                      width: 0.36,
+                                      // isEnable: controllerX.isEnable,
+                                      onchanged: (value) {
+
+                                      },
+                                      // autoFocus: true,
+                                    ),
+                                    InputFields.formField1(
+                                      hintTxt: "Product Level 4",
+                                      // autoFocus: true,
+                                      controller: controllerX.productLevel4Controller,
+                                      width: 0.36,
+                                      // isEnable: controllerX.isEnable,
+                                      onchanged: (value) {
+
+                                      },
+                                      // autoFocus: true,
+                                    ),
+
+                                  ],
+                                );
+                              }
+                            ),
                           ),
                         ),
                       ),
                       Expanded(
-                        flex: 9,
+                        flex: 11,
                         child: Padding(
                           padding: const EdgeInsets.all(8.0),
                           child: Container(
                               decoration: BoxDecoration(
                                   border: Border.all(color: Colors.black)),
+                                  child: GetBuilder<BrandMasterController>(
+                                      id: "grid",
+                                      builder: (controllerX) {
+                                        return Container(
+                                            decoration: BoxDecoration(
+                                                border: Border.all(color: Colors.black)),
+                                            child:
+                                            (controllerX.clientDetailsAndBrandModel != null)?
+                                            (controllerX.clientDetailsAndBrandModel!.clientdtails != null &&
+                                                controllerX.clientDetailsAndBrandModel!.clientdtails!.isNotEmpty
+                                            )?
+                                            DataGridFromMap(
+                                                hideCode: false,
+                                                formatDate: false,
+                                                focusNode: controllerX.gridFocus,
+                                                onRowDoubleTap: (PlutoGridOnRowDoubleTapEvent val){
+                                                  controllerX.fetchDataFromGrid(val.rowIdx);
+                                                  controllerX.selectedIndex = val.rowIdx;
+                                                  controllerX.gridStateManager!.setCurrentCell(controllerX.gridStateManager!.getRowByIdx(controllerX.selectedIndex)!.cells['brandName'],
+                                                      controllerX.selectedIndex);
+                                                  controllerX.gridStateManager!.moveCurrentCellByRowIdx(controllerX.selectedIndex??0, PlutoMoveDirection.down);
+                                                },
+                                                // checkRow: true,
+                                                // checkRowKey: "no",
+                                                mode: PlutoGridMode.selectWithOneTap,
+                                                onSelected: (PlutoGridOnSelectedEvent? val ){
+                                                    controllerX.selectedIndex = val?.rowIdx;
+                                                },
 
+                                                onload: (PlutoGridOnLoadedEvent load) {
+                                                  controllerX.gridStateManager = load.stateManager;
+                                                  controllerX.gridStateManager!.setCurrentCell(controllerX.gridStateManager!.getRowByIdx(controllerX.selectedIndex)!.cells['brandName'],
+                                                      controllerX.selectedIndex);
+                                                  controllerX.gridStateManager!.moveCurrentCellByRowIdx(controllerX.selectedIndex??0, PlutoMoveDirection.down);
+                                                },
+                                                // colorCallback: (renderC) => Colors.red[200]!,
+                                                mapData:controllerX.clientDetailsAndBrandModel!.clientdtails!.map((e) =>
+                                                    e.toJson()).toList() ):Container():Container()
+                                        );
+                                      }
+                                  ),
                           ),
                         ),
                       )

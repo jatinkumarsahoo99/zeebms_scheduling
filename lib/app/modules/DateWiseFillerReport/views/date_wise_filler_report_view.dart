@@ -4,14 +4,16 @@ import 'package:get/get.dart';
 
 import '../../../../widgets/DateTime/DateWithThreeTextField.dart';
 import '../../../../widgets/FormButton.dart';
+import '../../../../widgets/PlutoGrid/src/pluto_grid.dart';
 import '../../../../widgets/dropdown.dart';
+import '../../../../widgets/gridFromMap.dart';
 import '../../../controller/HomeController.dart';
 import '../../../controller/MainController.dart';
 import '../../../data/PermissionModel.dart';
 import '../../../providers/Utils.dart';
 import '../controllers/date_wise_filler_report_controller.dart';
 
-class DateWiseFillerReportView extends GetView<DateWiseFillerReportController> {
+class DateWiseFillerReportView extends StatelessWidget {
    DateWiseFillerReportView({Key? key}) : super(key: key);
 
    DateWiseFillerReportController controllerX =
@@ -41,27 +43,31 @@ class DateWiseFillerReportView extends GetView<DateWiseFillerReportController> {
                   Row(
                     mainAxisAlignment: MainAxisAlignment.spaceAround,
                     children: [
-                      DropDownField.formDropDown1WidthMap(
-                        [],
+                    Obx(()=>DropDownField.formDropDown1WidthMap(
+                     controllerX.locationList.value??[],
+                          (value) {
+                            controllerX.selectedLocation = value;
+                      }, "Location", .31,
+                      isEnable: controllerX.isEnable,
+                      selected: controllerX.selectedLocation,
+                      dialogHeight: Get.height * .7,
+                      autoFocus: true,),)  ,
+                      Obx(()=>DropDownField.formDropDown1WidthMap(
+                        controllerX.channelList.value??[],
                             (value) {
-
-                        }, "Location", .24,
-                        isEnable: controllerX.isEnable,
-                        // selected: controllerX.selectedClientDetails,
-                        autoFocus: true,),
-                      DropDownField.formDropDown1WidthMap(
-                        [],
-                            (value) {
-
+                          controllerX.selectedChannel = value;
                         }, "Channel", .31,
                         isEnable: controllerX.isEnable,
-                        // selected: controllerX.selectedClientDetails,
-                        autoFocus: true,),
+                        selected: controllerX.selectedChannel,
+                        dialogHeight: Get.height * .7,
+                        autoFocus: true,),)  ,
+
                       DateWithThreeTextField(
                         title: "Date",
-                        mainTextController: TextEditingController(),
+                        mainTextController: controllerX.dateController,
                         widthRation: .1,
                         isEnable: controllerX.isEnable,
+                        // intailDate: DateTime.now(),
                       ),
                       Padding(
                         padding: const EdgeInsets.only(
@@ -69,7 +75,7 @@ class DateWiseFillerReportView extends GetView<DateWiseFillerReportController> {
                         child: FormButtonWrapper(
                           btnText: "Genrate",
                           callback: () {
-                            // controller.callGetRetrieve();
+                            controllerX.callGetRetrieve();
                           },
                           showIcon: false,
                         ),
@@ -80,10 +86,36 @@ class DateWiseFillerReportView extends GetView<DateWiseFillerReportController> {
                     flex: 9,
                     child: Padding(
                       padding: const EdgeInsets.all(8.0),
-                      child: Container(
-                        decoration: BoxDecoration(
-                            border: Border.all(color: Colors.black)),
+                      child: GetBuilder<DateWiseFillerReportController>(
+                        id: "grid",
+                        builder: (controllerX) {
+                          return Container(
+                            decoration: BoxDecoration(
+                                border: Border.all(color: Colors.black)),
+                            child:
+                            (controllerX.dateWiseFillerModel != null)?
+                            (controllerX.dateWiseFillerModel!.datewiseErrorSpots != null &&
+                                controllerX.dateWiseFillerModel!.datewiseErrorSpots!.isNotEmpty
+                            )?
+                            DataGridFromMap(
+                                  hideCode: false,
+                                  formatDate: false,
+                                  focusNode: controllerX.gridFocus,
+                                  // checkRow: true,
+                                  // checkRowKey: "no",
+                                  mode: PlutoGridMode.selectWithOneTap,
+                                  onSelected: (PlutoGridOnSelectedEvent? val ){
 
+                                  },
+
+                                  onload: (PlutoGridOnLoadedEvent load) {
+
+                                  },
+                                  // colorCallback: (renderC) => Colors.red[200]!,
+                                  mapData:controllerX.dateWiseFillerModel!.datewiseErrorSpots!.map((e) =>
+                                      e.toJson()).toList() ):Container():Container()
+                          );
+                        }
                       ),
                     ),
                   ),
