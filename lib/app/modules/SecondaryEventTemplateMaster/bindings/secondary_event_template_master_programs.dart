@@ -1,3 +1,5 @@
+import 'package:bms_scheduling/app/modules/SecondaryEventTemplateMaster/bindings/secondary_event_template_program_grid.dart';
+
 class SecondaryEventTemplateMasterProgram {
   bool? firstSegment;
   bool? lastSegment;
@@ -45,6 +47,28 @@ class SecondaryEventTemplateMasterProgram {
     rowNumber = json['rowNumber'];
     eventCode = json['eventCode'];
     offSet = json['offSet'];
+  }
+  SecondaryEventTemplateMasterProgram.convertSecondaryEventTemplateProgramGridDataToMasterProgram(
+      SecondaryEventTemplateProgramGridData programGridData,
+      bool _firstSegment,
+      bool _lastSegment,
+      bool _allSegments,
+      bool _preEvent,
+      bool _postEvent) {
+    firstSegment = _firstSegment;
+    lastSegment = _lastSegment;
+    allSegments = _allSegments;
+    preEvent = _preEvent;
+    postEvent = _postEvent;
+    eventType = programGridData.eventtype;
+    exportTapeCaption = programGridData.caption;
+    exportTapeCode = programGridData.txId;
+    segmentNumber = programGridData.segmentNumber;
+    tapeDuration = programGridData.duration;
+    som = programGridData.som;
+    rowNumber = null;
+    eventCode = programGridData.eventCode;
+    offSet = null;
   }
 
   Map<String, dynamic> toJson() {
