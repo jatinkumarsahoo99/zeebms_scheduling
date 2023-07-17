@@ -20,9 +20,6 @@ void main() async {
     // Logger.sendError(error: details,stackTrace: details.stack,severity: Severity.critical);
   };
 
-  print(Aes.decrypt("kW5Bkf17/S5YF7ML28FmVg==")); // personal no.
-  print(Aes.decrypt("1BWIoBKeDl7qDSAAhxvXsQ==")); // User ID
-
   PlatformDispatcher.instance.onError = (error, stack) {
     // Logger.sendError(error: error,severity: Severity.warning,stackTrace: stack);
     return true;
