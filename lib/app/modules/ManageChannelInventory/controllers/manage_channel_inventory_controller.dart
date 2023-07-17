@@ -82,14 +82,14 @@ class ManageChannelInvemtoryController extends GetxController {
         },
         json: {
           "updateType": upType,
-          "locationcode": selectedLocation?.key,
-          "channelcode": selectedChannel?.key,
+          "locationcode": selectedLocation?.key ?? "",
+          "channelcode": selectedChannel?.key ?? "",
           "duration": tempCount,
           "fromDate": DateFormat("yyyy-MM-dd").format(DateFormat("dd-MM-yyyy").parse(fromDate)),
           "toDate": DateFormat("yyyy-MM-dd").format(DateFormat("dd-MM-yyyy").parse(toDate)),
           "fromTime": fromTime,
           "toTime": toTime,
-          "programCode": selectedProgram?.key,
+          "programCode": selectedProgram?.key ?? "",
           "sun": weekdays[1] ? 1 : 0,
           "mon": weekdays[2] ? 1 : 0,
           "tue": weekdays[3] ? 1 : 0,
@@ -124,7 +124,9 @@ class ManageChannelInvemtoryController extends GetxController {
   }
 
   handleOnDefaultClick() {
-    if (dataTableList.isNotEmpty) {
+    if (count.value <= 0) {
+      LoadingDialog.showErrorDialog("Enter commercial duration.");
+    } else if (dataTableList.isNotEmpty) {
       for (var i = 0; i < dataTableList.length; i++) {
         if (dataTableList[i].episodeDuration != null) {
           dataTableList[i].commDuration = (dataTableList[i].episodeDuration ?? 0) * count.value / 30;
@@ -138,7 +140,7 @@ class ManageChannelInvemtoryController extends GetxController {
     if (selectedLocation == null || selectedChannel == null) {
       LoadingDialog.showErrorDialog("Please select Location,Channel.");
     } else if (dataTableList.isEmpty) {
-      LoadingDialog.showErrorDialog("Empty data can't be saved");
+      LoadingDialog.showErrorDialog("No changes to save");
     } else {
       LoadingDialog.call();
       Get.find<ConnectorControl>().POSTMETHOD(
@@ -170,7 +172,7 @@ class ManageChannelInvemtoryController extends GetxController {
     channelList.refresh();
     locationFN.requestFocus();
     programs.clear();
-    count.value = 1;
+    count.value = 0;
   }
 
   handleOnChangedLocation(DropDownValue? val) {
@@ -231,7 +233,7 @@ class ManageChannelInvemtoryController extends GetxController {
 
   void handleGenerateButton() {
     if (selectedLocation == null || selectedChannel == null) {
-      LoadingDialog.showErrorDialog("Please select Location,Channel.");
+      LoadingDialog.showErrorDialog("select location and channel first.");
     } else {
       LoadingDialog.call();
       Get.find<ConnectorControl>().GETMETHODCALL(
