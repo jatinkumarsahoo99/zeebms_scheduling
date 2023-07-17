@@ -21,9 +21,9 @@ class ManageChannelInvemtoryController extends GetxController {
   var dataTableList = <ManageChannelInventory>[].obs;
   var count = 0.obs;
   var bottomControllsEnable = true.obs;
-  // var toDateFN = FocusNode();
   var buttonsList = ["Default", "Save Today", "Save All Days", "Special"];
   var programs = <DropDownValue>[].obs;
+  bool madeChanges = false;
 
   @override
   void onInit() {
@@ -127,6 +127,7 @@ class ManageChannelInvemtoryController extends GetxController {
     if (count.value <= 0) {
       LoadingDialog.showErrorDialog("Enter commercial duration.");
     } else if (dataTableList.isNotEmpty) {
+      madeChanges = true;
       for (var i = 0; i < dataTableList.length; i++) {
         if (dataTableList[i].episodeDuration != null) {
           dataTableList[i].commDuration = (dataTableList[i].episodeDuration ?? 0) * count.value / 30;
@@ -139,7 +140,7 @@ class ManageChannelInvemtoryController extends GetxController {
   void saveTodayAndAllData(bool fromSaveToday) {
     if (selectedLocation == null || selectedChannel == null) {
       LoadingDialog.showErrorDialog("Please select Location,Channel.");
-    } else if (dataTableList.isEmpty) {
+    } else if (!madeChanges) {
       LoadingDialog.showErrorDialog("No changes to save");
     } else {
       LoadingDialog.call();
@@ -147,7 +148,7 @@ class ManageChannelInvemtoryController extends GetxController {
         api: ApiFactory.MANAGE_CHANNEL_INV_SAVE_TODAY_ALL_DATA,
         fun: (resp) {
           closeDialogIfOpen();
-          LoadingDialog.callDataSaved(msg: resp.toString());
+          // LoadingDialog.callDataSaved(msg: resp.toString());
           if (resp != null && resp is Map<String, dynamic> && resp['isError'] != null && !(resp['isError'] as bool)) {
             LoadingDialog.callDataSaved(
               msg: resp['genericMessage'].toString(),
@@ -185,6 +186,7 @@ class ManageChannelInvemtoryController extends GetxController {
     locationFN.requestFocus();
     programs.clear();
     count.value = 0;
+    madeChanges = false;
   }
 
   handleOnChangedLocation(DropDownValue? val) {
@@ -253,6 +255,7 @@ class ManageChannelInvemtoryController extends GetxController {
               DateFormat("yyyy-MM-dd").format(DateFormat("dd-MM-yyyy").parse(effectiveDateTC.text))),
           fun: (resp) {
             closeDialogIfOpen();
+            madeChanges = false;
             if (resp != null && resp is List<dynamic>) {
               dataTableList.clear();
               dataTableList.addAll((resp).map((e) => ManageChannelInventory.fromJson(e)).toList());
