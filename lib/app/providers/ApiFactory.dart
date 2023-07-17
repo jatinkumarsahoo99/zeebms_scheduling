@@ -933,7 +933,7 @@ class ApiFactory {
   static String COMING_UP_MENU_MASTER_SAVE = BASE_URL + "/api/ComingUpMenuMaster/PostCoumingUpMenu";
   static String COMING_UP_MENU_MASTER_TAPEIDLEAVE = BASE_URL + "/api/ComingUpMenuMaster/CUMMTapeIDLeave";
   static String COMING_UP_MENU_MASTER_SEGLNOLEAVE = BASE_URL + "/api/ComingUpMenuMaster/CUMMSegNoLeave";
-  static String COMING_UP_MENU_MASTER_HOUSEIDLEAVE = BASE_URL + "/api/ComingUpMenuMaster/CUMMSegNoLeave";
+  static String COMING_UP_MENU_MASTER_HOUSEIDLEAVE = BASE_URL + "/api/ComingUpMenuMaster/CUMMHouseIDLeave";
 
   ////////////////////////////////////////// DateWiseFillers ////////////////////////////
 

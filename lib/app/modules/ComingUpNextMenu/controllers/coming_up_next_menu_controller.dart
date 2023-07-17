@@ -291,14 +291,15 @@ class ComingUpNextMenuController extends GetxController {
         "houseID": houseId
       };
       String res = "";
-      print(">>>>>>>>>"+CheckExportTapeCode.toString());
+      // print(">>>>>>>>>"+CheckExportTapeCode.toString());
       try{
        await  Get.find<ConnectorControl>().GET_METHOD_WITH_PARAM(
             api:api,
             json: data,
             fun: (map) {
               log(">>>>"+map.toString());
-              if(map is Map && map.containsKey('eventName') &&  map['eventName'] != null && map['eventName'] != "null" ){
+              if(map is Map && map.containsKey('eventName') &&
+                  map['eventName'] != null && map['eventName'] != "null" ){
                    res = map['eventName'];
                    return res;
               }else{
@@ -322,12 +323,16 @@ class ComingUpNextMenuController extends GetxController {
         String res ="";
          await CheckExportTapeCode(tapeIdController.text,segNoController.text,strCode.toString(),"",
             ApiFactory.COMINGUPNEXTMASTER_TAPEIDLEAVE).then((value) {
-           res=value;
+           res = value;
         });
+
+
+
          print(">>>>>res"+res);
         isListenerActive= false;
         if(res != ""){
-          LoadingDialog.callInfoMessage("Tape ID & Segment Number you entered is already used for "+"coming up next",
+          LoadingDialog.callInfoMessage(
+            res??"Tape ID & Segment Number you entered is already used for "+"coming up next",
               callback:(){
                 isEnable = true;
                 isListenerActive =false;
@@ -385,7 +390,7 @@ class ComingUpNextMenuController extends GetxController {
       if(res != ""){
 
         LoadingDialog.callInfoMessage(
-          "Tape ID & Segment Number you entered is already used for "+"coming up next",
+          res??"Tape ID & Segment Number you entered is already used for "+"coming up next",
           callback:  (){
             isEnable = true;
             isListenerActive =false;
@@ -439,7 +444,7 @@ class ComingUpNextMenuController extends GetxController {
         if(res != ""){
 
           LoadingDialog.callInfoMessage(
-            "House ID you entered is already used for "+"coming up next",
+            res??"House ID you entered is already used for "+"coming up next",
             callback: (){
               isEnable = true;
               isListenerActive =false;
