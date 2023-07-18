@@ -299,7 +299,7 @@ class SecondaryEventTemplateMasterView extends GetView<SecondaryEventTemplateMas
                               for (var btn in btncontroller.buttons!)
                                 FormButtonWrapper(
                                   btnText: btn["name"],
-                                  isEnabled: btn['isDisabled'],
+                                  // isEnabled: btn['isDisabled'],
                                   callback: () {
                                     btnHandler(btn["name"]);
                                   },
