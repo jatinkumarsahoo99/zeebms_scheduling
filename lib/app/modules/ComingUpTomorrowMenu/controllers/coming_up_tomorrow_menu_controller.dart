@@ -216,13 +216,13 @@ class ComingUpTomorrowMenuController extends GetxController {
             log(">>>>"+map.toString());
             Get.back();
             log(">>>>strCode"+strCode.toString());
-            if(map != null){
+            if(map != null && map is String){
               if(strCode != ""){
                 clearAll();
-                Snack.callSuccess("Record is updated successfully.");
+                Snack.callSuccess(map??"Record is updated successfully.");
               }else{
                 clearAll();
-                Snack.callSuccess("Record is inserted successfully.");
+                Snack.callSuccess(map??"Record is inserted successfully.");
               }
             }else{
               Snack.callError("Something went wrong");

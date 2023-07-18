@@ -849,9 +849,33 @@ class ApiFactory {
   ///
   ///
   // ////////////////////INVENTORY-STATUS-REPORT/////////////////////////
-  static String INVENTORY_STATUS_REPORT_ON_LOAD = "$BASE_URL/api/InventoryStatusReport/GetInventoryutilizationLoad";
+  static String get INVENTORY_STATUS_REPORT_ON_LOAD => "$BASE_URL/api/InventoryStatusReport/GetInventoryutilizationLoad";
   static String INVENTORY_STATUS_REPORT_GENERATE = "$BASE_URL/api/InventoryStatusReport/GetGenrate";
   ////////////////////////INVENTORY-STATUS-REPORT/////////////////////////
+  ///
+  ///
+  ///
+  ///
+  ///
+  // ////////////////////MANAGE-CHANNEL-INVENTORY/////////////////////////
+  static String get MANAGE_CHANNEL_INV_ON_LOAD => "$BASE_URL/api/ManageChannelInventory/GetLocation";
+  static String get MANAGE_CHANNEL_INV_SAVE_TODAY_ALL_DATA => "$BASE_URL/api/ManageChannelInventory/SaveTodayAndAllData";
+  static String get MANAGE_CHANNEL_INV_PROGRAM_SEARCH => "$BASE_URL/api/ManageChannelInventory/ProgramSearch";
+  static String get MANAGE_CHANNEL_INV_SAVE_SPECIAL => "$BASE_URL/api/ManageChannelInventory/SaveSpecial";
+  static String MANAGE_CHANNEL_INV_LEAVE_LOCATION(String locationCode, String loginCode) =>
+      "$BASE_URL/api/ManageChannelInventory/GetChannel?LocationCode=$locationCode&LoginCode=$loginCode";
+  static String MANAGE_CHANNEL_INV_DISPLAY_DATA(String locationCode, String channelCode, String date) =>
+      "$BASE_URL/api/ManageChannelInventory/Display?LocationCode=$locationCode&ChannelCode=$channelCode&EffectiveDate=$date";
+  ////////////////////////MANAGE-CHANNEL-INVENTORY/////////////////////////
+  ///
+  ///
+  ///
+  ///
+  // ////////////////////EXTRA-SPOT-WITH-REMARK/////////////////////////
+  static String get EXTRA_SPOT_WITH_REVIEW_ON_LOAD => "$BASE_URL/api/ExtraSpotsReport/ExtraspotswithremarkLoad";
+  static String EXTRA_SPOT_WITH_REVIEW_REPORT_GENERATE(String? location, String? channel, String fromDate, String toDate) =>
+      "$BASE_URL/api/ExtraSpotsReport/Getbtngenrate?locationcode=$location&channelcode=$channel&fdate=$fromDate&tdate=$toDate";
+  ////////////////////////EXTRA-SPOT-WITH-REMARK/////////////////////////
   ///
   ///
   ///

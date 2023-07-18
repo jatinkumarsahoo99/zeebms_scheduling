@@ -1,12 +1,16 @@
+import 'package:bms_scheduling/app/controller/ConnectorControl.dart';
+import 'package:bms_scheduling/app/providers/ApiFactory.dart';
 import 'package:bms_scheduling/widgets/NumericStepButton.dart';
 import 'package:bms_scheduling/widgets/input_fields.dart';
 import 'package:flutter/material.dart';
 
 import 'package:get/get.dart';
+import 'package:intl/intl.dart';
 
 import '../../../../widgets/CheckBoxWidget.dart';
 import '../../../../widgets/DateTime/DateWithThreeTextField.dart';
 import '../../../../widgets/FormButton.dart';
+import '../../../../widgets/LoadingDialog.dart';
 import '../../../../widgets/dropdown.dart';
 import '../../../../widgets/gridFromMap.dart';
 import '../../../../widgets/radio_row.dart';
@@ -33,12 +37,13 @@ class ManageChannelInvemtoryView extends GetView<ManageChannelInvemtoryControlle
                   Obx(() {
                     return DropDownField.formDropDown1WidthMap(
                       controller.locationList.value,
-                      (v) => controller.selectedLocation = v,
+                      controller.handleOnChangedLocation,
                       "Location",
                       .2,
                       autoFocus: true,
                       selected: controller.selectedLocation,
                       inkWellFocusNode: controller.locationFN,
+                      isEnable: controller.bottomControllsEnable.value,
                     );
                   }),
                   const SizedBox(width: 10),
@@ -49,18 +54,26 @@ class ManageChannelInvemtoryView extends GetView<ManageChannelInvemtoryControlle
                       "Channel",
                       .2,
                       selected: controller.selectedChannel,
+                      isEnable: controller.bottomControllsEnable.value,
                     );
                   }),
                   const SizedBox(width: 10),
-                  DateWithThreeTextField(
-                    title: "Effective Date",
-                    mainTextController: controller.effectiveDateTC,
-                    widthRation: 0.15,
-                  ),
+                  Obx(() {
+                    return DateWithThreeTextField(
+                      title: "Effective Date",
+                      mainTextController: controller.effectiveDateTC,
+                      widthRation: 0.15,
+                      onFocusChange: (date) {
+                        controller.weekDaysTC.text = DateFormat('EEEE').format(DateFormat("dd-MM-yyyy").parse(date));
+                      },
+                      isEnable: controller.bottomControllsEnable.value,
+                    );
+                  }),
                   const SizedBox(width: 10),
                   InputFields.formField1(
                     hintTxt: "Weekday",
                     controller: controller.weekDaysTC,
+                    isEnable: false,
                   ),
                   const SizedBox(width: 10),
                   FormButton(btnText: "Display", callback: controller.handleGenerateButton)
@@ -80,7 +93,9 @@ class ManageChannelInvemtoryView extends GetView<ManageChannelInvemtoryControlle
                               ),
                             )
                           : null,
-                      child: controller.dataTableList.value.isEmpty ? null : DataGridFromMap(mapData: controller.dataTableList.value),
+                      child: controller.dataTableList.value.isEmpty
+                          ? null
+                          : DataGridFromMap(mapData: controller.dataTableList.value.map((e) => e.toJson()).toList()),
                     );
                   },
                 ),
@@ -95,24 +110,34 @@ class ManageChannelInvemtoryView extends GetView<ManageChannelInvemtoryControlle
                   children: [
                     SizedBox(
                       width: context.width * .17,
-                      child: NumericStepButton(
-                        onChanged: (val) {},
-                        hint: "Common.Dur.Sec For 30 Mins Prog.",
-                        isEnable: false,
-                        maxValue: 100000,
-                      ),
+                      child: Obx(() {
+                        return NumericStepButton(
+                          counter: controller.count.value,
+                          onChanged: (val) {
+                            controller.count.value = val;
+                          },
+                          hint: "Common.Dur.Sec For 30 Mins Prog.",
+                          isEnable: controller.bottomControllsEnable.value,
+                        );
+                      }),
                     ),
                     // const SizedBox(width: 10),
-                    Row(
-                      children: List.generate(
-                        controller.buttonsList.length,
-                        (index) => Padding(
-                          padding: const EdgeInsets.only(left: 10),
-                          child: FormButton(
-                              btnText: controller.buttonsList[index], callback: () => handleBottonButtonsTap(controller.buttonsList[index], context)),
-                        ),
-                      ).toList(),
-                    ),
+                    Obx(() {
+                      return Row(
+                        children: List.generate(
+                          controller.buttonsList.length,
+                          (index) => Padding(
+                            padding: const EdgeInsets.only(left: 10),
+                            child: FormButton(
+                              btnText: controller.buttonsList[index],
+                              callback: controller.bottomControllsEnable.value
+                                  ? () => handleBottonButtonsTap(controller.buttonsList[index], context)
+                                  : null,
+                            ),
+                          ),
+                        ).toList(),
+                      );
+                    }),
                   ],
                 ),
               ),
@@ -153,89 +178,154 @@ class ManageChannelInvemtoryView extends GetView<ManageChannelInvemtoryControlle
 
   handleBottonButtonsTap(String btnName, BuildContext context) {
     if (btnName == "Special") {
-      Get.defaultDialog(
-        title: "Special",
-        textCancel: "Save Spl",
-        textConfirm: "Done",
-        content: Column(
-          mainAxisSize: MainAxisSize.min,
-          children: [
-            DropDownField.formDropDownDisableWidth(null, "Location", .31, selected: "Asia"),
-            SizedBox(height: 2),
-            DropDownField.formDropDownDisableWidth(null, "Channel", .31, selected: "Zee TV"),
-            SizedBox(height: 5),
-            Row(
-              children: [
-                CheckBoxWidget1(title: "Sun"),
-                CheckBoxWidget1(title: "Mon"),
-                CheckBoxWidget1(title: "Tue"),
-                CheckBoxWidget1(title: "Wed"),
-                CheckBoxWidget1(title: "Thu"),
-                CheckBoxWidget1(title: "Fri"),
-                CheckBoxWidget1(title: "Sat"),
-              ],
-            ),
-            SizedBox(height: 5),
-            Row(
-              children: [
-                SizedBox(width: 10),
-                DateWithThreeTextField(
-                  title: "From Date",
-                  mainTextController: TextEditingController(),
-                  widthRation: 0.15,
-                ),
-                SizedBox(width: 20),
-                DateWithThreeTextField(
-                  title: "To Date",
-                  mainTextController: TextEditingController(),
-                  widthRation: 0.15,
-                ),
-              ],
-            ),
-            SizedBox(height: 5),
-            Row(
-              children: [
-                InputFields.formFieldNumberMask(
-                  hintTxt: "From Time",
-                  controller: TextEditingController(),
-                  widthRatio: .15,
-                ),
-                SizedBox(width: 10),
-                InputFields.formFieldNumberMask(
-                  hintTxt: "To Time",
-                  controller: TextEditingController(),
-                  widthRatio: .15,
-                ),
-              ],
-            ),
-            SizedBox(height: 5),
-            DropDownField.formDropDown1WidthMap(
-              [],
-              (p0) => null,
-              "Program",
-              .31,
-            ),
-            SizedBox(height: 5),
-            RadioRow(items: ["Default", "Add", "Fixed"], groupValue: "Add"),
-            SizedBox(height: 5),
-            Padding(
-              padding: const EdgeInsets.only(left: 20),
-              child: Align(
-                alignment: Alignment.topLeft,
-                child: SizedBox(
-                  width: context.width * .15,
-                  child: NumericStepButton(
-                    onChanged: (val) {},
-                    hint: "Common.Dur.Sec",
-                    isEnable: false,
-                    maxValue: 100000,
+      if (controller.selectedLocation == null || controller.selectedChannel == null) {
+        LoadingDialog.showErrorDialog("Please select Location,Channel.");
+      } else {
+        controller.bottomControllsEnable.value = false;
+        var fromDateCtr = TextEditingController(),
+            toDateCtr = TextEditingController(),
+            fromTimeCtr = TextEditingController(),
+            toTimeCtr = TextEditingController();
+        var selectedRadio = "".obs;
+        var selectedWeekDays = List.generate(8, (index) => false).toList();
+        var counter = 0;
+        controller.selectedProgram = null;
+        controller.programs.clear();
+        Get.defaultDialog(
+          title: "Special",
+          content: Column(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              DropDownField.formDropDownDisableWidth(null, "Location", .31, selected: controller.selectedLocation?.value ?? ""),
+              const SizedBox(height: 2),
+              DropDownField.formDropDownDisableWidth(null, "Channel", .31, selected: controller.selectedChannel?.value ?? ""),
+              const SizedBox(height: 5),
+              Row(
+                children: [
+                  CheckBoxWidget1(title: "Sun", value: selectedWeekDays[1], onChanged: (a) => selectedWeekDays[1] = a ?? false),
+                  CheckBoxWidget1(title: "Mon", value: selectedWeekDays[2], onChanged: (a) => selectedWeekDays[2] = a ?? false),
+                  CheckBoxWidget1(title: "Tue", value: selectedWeekDays[3], onChanged: (a) => selectedWeekDays[3] = a ?? false),
+                  CheckBoxWidget1(title: "Wed", value: selectedWeekDays[4], onChanged: (a) => selectedWeekDays[4] = a ?? false),
+                  CheckBoxWidget1(title: "Thu", value: selectedWeekDays[5], onChanged: (a) => selectedWeekDays[5] = a ?? false),
+                  CheckBoxWidget1(title: "Fri", value: selectedWeekDays[6], onChanged: (a) => selectedWeekDays[6] = a ?? false),
+                  CheckBoxWidget1(title: "Sat", value: selectedWeekDays[7], onChanged: (a) => selectedWeekDays[7] = a ?? false),
+                ],
+              ),
+              const SizedBox(height: 5),
+              Row(
+                children: [
+                  const SizedBox(width: 10),
+                  DateWithThreeTextField(
+                    title: "From Date",
+                    mainTextController: fromDateCtr,
+                    widthRation: 0.15,
+                    backDated: DateTime.now(),
+                  ),
+                  const SizedBox(width: 20),
+                  DateWithThreeTextField(
+                    title: "To Date",
+                    mainTextController: toDateCtr,
+                    widthRation: 0.15,
+                    backDated: DateTime.now(),
+                    onFocusChange: (date) {
+                      String weekDays = "";
+                      for (var i = 0; i < selectedWeekDays.length; i++) {
+                        if (selectedWeekDays[i]) {
+                          weekDays = weekDays.isEmpty ? "$i" : "$weekDays,$i";
+                        }
+                      }
+                      weekDays = weekDays.isEmpty ? "0" : "0,$weekDays";
+                      controller.getPrograms(fromDateCtr.text, toDateCtr.text, weekDays);
+                    },
+                  ),
+                ],
+              ),
+              const SizedBox(height: 5),
+              Row(
+                children: [
+                  InputFields.formFieldNumberMask(
+                    hintTxt: "From Time",
+                    controller: fromTimeCtr,
+                    widthRatio: .15,
+                    isTime: true,
+                  ),
+                  const SizedBox(width: 10),
+                  InputFields.formFieldNumberMask(
+                    hintTxt: "To Time",
+                    controller: toTimeCtr,
+                    widthRatio: .15,
+                    isTime: true,
+                  ),
+                ],
+              ),
+              const SizedBox(height: 5),
+              Obx(
+                () {
+                  return DropDownField.formDropDown1WidthMap(
+                    controller.programs.value,
+                    (v) => controller.selectedProgram = v,
+                    "Program",
+                    .31,
+                  );
+                },
+              ),
+              const SizedBox(height: 5),
+              Obx(() {
+                return RadioRow(
+                  items: const ["Default", "Add", "Fixed"],
+                  groupValue: selectedRadio.value,
+                  onchange: (val) => selectedRadio.value = val,
+                );
+              }),
+              const SizedBox(height: 5),
+              Padding(
+                padding: const EdgeInsets.only(left: 20),
+                child: Align(
+                  alignment: Alignment.topLeft,
+                  child: SizedBox(
+                    width: context.width * .15,
+                    child: NumericStepButton(
+                      onChanged: (val) => counter = val,
+                      hint: "Common.Dur.Sec",
+                      counter: counter,
+                      minValue: 0,
+                    ),
                   ),
                 ),
               ),
-            ),
-          ],
-        ),
-      );
+            ],
+          ),
+          cancel: FormButton(
+              btnText: "Save Spl",
+              callback: () {
+                controller.saveSpecial(
+                  fromDateCtr.text,
+                  toDateCtr.text,
+                  fromTimeCtr.text,
+                  toTimeCtr.text,
+                  selectedWeekDays,
+                  selectedRadio.value,
+                  counter,
+                );
+              }),
+          confirm: FormButton(
+            btnText: "Done",
+            callback: () {
+              Get.back();
+            },
+          ),
+        ).then((value) {
+          controller.bottomControllsEnable.value = true;
+        }).whenComplete(() {
+          controller.bottomControllsEnable.value = true;
+        });
+      }
+    } else if (btnName == "Default") {
+      controller.handleOnDefaultClick();
+    } else if (btnName == "Save Today") {
+      controller.saveTodayAndAllData(true);
+    } else if (btnName == "Save All Days") {
+      controller.saveTodayAndAllData(false);
     }
   }
 }

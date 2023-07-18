@@ -12,6 +12,7 @@ import '../../../controller/HomeController.dart';
 import '../../../controller/MainController.dart';
 import '../../../providers/ApiFactory.dart';
 import '../../../providers/Utils.dart';
+import '../../CommonSearch/views/common_search_view.dart';
 import '../RetriveDataModel.dart';
 
 class ComingUpMenuController extends GetxController {
@@ -140,6 +141,7 @@ class ComingUpMenuController extends GetxController {
         Utils.oldBMSConvertToSecondsValue(value: eomController.text);
     durationController.value.text =
         Utils.convertToTimeFromDouble(value: secondEom - secondSom);
+    duration.value =  Utils.convertToTimeFromDouble(value: secondEom - secondSom);
 
     sec =
         Utils.oldBMSConvertToSecondsValue(value: durationController.value.text);
@@ -147,9 +149,24 @@ class ComingUpMenuController extends GetxController {
     print(">>>>>>>>>" + durationController.value.text);
     print(">>>>>>>>>" + sec.toString());
   }
-
+  bool contin = true;
   validateAndSaveRecord() {
-    if (selectedLocation == null) {
+    if(strCode != 0 && contin){
+      // Record Already exist!
+      // Snack.callError("Record Already exist!\nDo you want to modify it?");
+      LoadingDialog.recordExists(
+          "Record Already exist!\nDo you want to modify it?",
+              (){
+            isEnable = true;
+            isListenerActive =false;
+            contin= false;
+            update(['top']);
+          },cancel: (){
+        contin= false;
+        Get.back();
+      });
+    }
+    else if (selectedLocation == null) {
       Snack.callError("Please select Location Name.");
     } else if (selectedChannel == null) {
       Snack.callError("Please select Channel Name.");
@@ -183,24 +200,40 @@ class ComingUpMenuController extends GetxController {
         "exportTapeCode": tapeIdController.text,
         "segmentNumber": segNoController.text,
         "houseId": houseIdController.text,
-        "menuDate": menuDateController.text,
-        "menuDuration": sec,
+        "menuDate":  DateFormat("yyyy-MM-ddTHH:mm:ss")
+            .format(DateFormat("dd-MM-yyyy").parse(menuDateController.text)),
+        "menuDuration": duration.value,
         "som": somController.text,
         "menuStartTime": startTimeController.text,
         "menuEndTime": endTimeController.text,
         "dated": "Y",
-        "killDate": DateFormat("yyyy-MM-ddTHH:mm:ss.SSSZ")
+        "killDate": DateFormat("yyyy-MM-ddTHH:mm:ss")
             .format(DateFormat("dd-MM-yyyy").parse(uptoDateController.text)),
         "modifiedBy": Get.find<MainController>().user?.logincode ?? "",
         "eom": eomController.text
       };
-      log(">>>>>>>>>>" + postData.toString());
+      print(">>>>>>>>>>" + postData.toString());
+      LoadingDialog.call();
       Get.find<ConnectorControl>().POSTMETHOD(
           api: ApiFactory.COMING_UP_MENU_MASTER_SAVE,
           json: postData,
           fun: (map) {
-            log(">>>>" + map.toString());
-            if (map != null) {}
+            Get.back();
+            // log(">>>>" + map.toString());
+            print(">>>>"+map.toString());
+            if(map is Map && map.containsKey("save") && map['save'] != null ){
+              if(strCode != ""){
+                clearAll();
+                Snack.callSuccess(map['save']??"Record is updated successfully.");
+              }else{
+                clearAll();
+                Snack.callSuccess(map['save']??"Record is inserted successfully.");
+              }
+            }else if(map is Map){
+              Snack.callError("Something went wrong");
+            }else{
+              Snack.callError("Something went wrong");
+            }
           });
     }
   }
@@ -226,7 +259,7 @@ class ComingUpMenuController extends GetxController {
           print(">>>>" + map.toString());
           if (map is Map &&
               map.containsKey("retrive") &&
-              map["retrive"] != null) {
+              map["retrive"] != null && map['retrive'].length >0) {
             Map<String, dynamic> responseMap = map["retrive"][0];
             RetriveDataModel retriveDataModel =
                 RetriveDataModel.fromJson(responseMap);
@@ -239,7 +272,13 @@ class ComingUpMenuController extends GetxController {
                 retriveDataModel.menuStartTime.toString() ?? "";
             endTimeController.text =
                 retriveDataModel.menuEndTime.toString() ?? "";
-            duration.value = retriveDataModel.menuDuration.toString() ?? "";
+
+
+
+            duration.value = retriveDataModel.menuDuration.toString() ?? "00:00:00:00";
+            durationController.value.text = retriveDataModel.menuDuration.toString() ?? "00:00:00:00" ;
+            calculateDuration();
+
             strCode = retriveDataModel.menuCode ?? "";
 
             menuDateController.text = (DateFormat("dd-MM-yyyy").format(
@@ -266,6 +305,8 @@ class ComingUpMenuController extends GetxController {
                 break;
               }
             }
+            selectedChannel = DropDownValue(
+                value: "Channel", key: retriveDataModel.channelCode);
             for (var e in channelList) {
               if (e.key.toString() ==
                   retriveDataModel.channelCode.toString().trim()) {
@@ -382,7 +423,7 @@ class ComingUpMenuController extends GetxController {
             .then((value) {
           res = value;
         });
-
+        isListenerActive= false;
         if (res != "") {
           LoadingDialog.callInfoMessage(
               res??"Tape ID & Segment Number you entered is already used for ",
@@ -423,7 +464,7 @@ class ComingUpMenuController extends GetxController {
           .then((value) {
         res = value;
       });
-
+      isListenerActive= false;
       if (res != "") {
         LoadingDialog.callInfoMessage(
             res??"Tape ID & Segment Number you entered is already used for ",
@@ -462,6 +503,7 @@ class ComingUpMenuController extends GetxController {
           res = value;
         });
         print(">>>>res" + res);
+        isListenerActive= false;
         if (res != "") {
           LoadingDialog.callInfoMessage(
               res ?? "House ID you entered is already used for ",callback:  () {
@@ -481,5 +523,21 @@ class ComingUpMenuController extends GetxController {
     }
   }
 
-  formHandler(String string) {}
+  formHandler(String string) {
+    if(string == "Save"){
+      validateAndSaveRecord();
+    }else if(string == "Clear"){
+      clearAll();
+    }else if (string == "Search") {
+      Get.to(
+        SearchPage(
+          key: Key("Coming Up Menu Master"),
+          screenName: "Coming Up Meu Master",
+          appBarName: "Coming Up Menu Master",
+          strViewName: "BMS_view_ComingUpMenu",
+          isAppBarReq: true,
+        ),
+      );
+    }
+  }
 }
