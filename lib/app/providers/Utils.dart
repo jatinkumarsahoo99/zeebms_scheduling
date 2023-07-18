@@ -628,9 +628,9 @@ class Utils {
   static launchEmailSubmission() async {
     final Uri emailLaunchUri = Uri(
       scheme: 'mailto',
-      path: 'smith@example.com',
+      path: 'app.support@zee.com',
       query: encodeQueryParameters(<String, String>{
-        'subject': 'Example Subject & Symbols are allowed!',
+        'subject': '',
       }),
     );
 
