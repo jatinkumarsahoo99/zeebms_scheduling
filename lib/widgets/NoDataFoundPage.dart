@@ -1,6 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'dart:js' as js;
+import 'dart:html' as html;
+import '../app/providers/ApiFactory.dart';
+import '../app/providers/Utils.dart';
 
 class NoDataFoundPage extends StatelessWidget {
   const NoDataFoundPage({Key? key}) : super(key: key);
@@ -22,7 +25,7 @@ class NoDataFoundPage extends StatelessWidget {
               height: size.width * 0.3,
               width: size.width * 0.4,
             ),
-            Padding(
+            /*Padding(
               padding: const EdgeInsets.all(18.0),
               child: Text(
                 "This is wrong route",
@@ -38,10 +41,69 @@ class NoDataFoundPage extends StatelessWidget {
               elevation: 10,
               color: Colors.deepPurple,
               padding: EdgeInsets.symmetric(horizontal: 35, vertical: 20),
-            )
+            )*/
+            RichText(
+              textAlign: TextAlign.center,
+              text: TextSpan(
+                text:
+                'You do not have required permission to view this page. Please ',
+                // style: Theme.of(context).textTheme.bodyLarge,
+                style: TextStyle(fontSize: 18),
+                children: <InlineSpan>[
+                  WidgetSpan(
+                    alignment: PlaceholderAlignment.baseline,
+                    baseline: TextBaseline.alphabetic,
+                    child: LinkButton(
+                        urlLabel: "click here to login ",
+                        context: context,
+                        function: () {
+                          // js.context.callMethod('fromFlutter', ['Flutter is calling upon JavaScript!']);
+                          html.window.open(ApiFactory.LOGIN_URL, "_self");
+                        }),
+                  ),
+                  TextSpan(
+                    text: 'or ',
+                  ),
+                  WidgetSpan(
+                    alignment: PlaceholderAlignment.baseline,
+                    baseline: TextBaseline.alphabetic,
+                    child: LinkButton(
+                        urlLabel: "contact administrator",
+                        context: context,
+                        function: () async {
+                          await Utils.launchEmailSubmission();
+                        }),
+                  ),
+                ],
+              ),
+            ),
           ],
         ),
       ),
+    );
+  }
+
+  Widget LinkButton({context, urlLabel, Function? function}) {
+    return TextButton(
+      style: TextButton.styleFrom(
+        // padding: EdgeInsets.zero,
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(0),
+          ),
+          tapTargetSize: MaterialTapTargetSize.shrinkWrap,
+          visualDensity: VisualDensity.compact,
+          minimumSize: const Size(0, 0),
+          textStyle: TextStyle(fontSize: 18),
+          padding:EdgeInsets.only(top: 5)
+        // textStyle: Theme.of(context).textTheme.bodyLarge,
+      ),
+      onPressed: () {
+        if (function != null) {
+          function();
+        }
+        // _launchUrl(url);
+      },
+      child: Text(urlLabel),
     );
   }
 }
