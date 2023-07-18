@@ -193,6 +193,8 @@ class MainController extends GetxController {
               // Snack.callError("Sorry we could not proceed your request forward due to not available of your userID");
               // fun(false);
             });
+      }else{
+        loginVal.value = 2;
       }
     } else {
       loginVal.value = 2;

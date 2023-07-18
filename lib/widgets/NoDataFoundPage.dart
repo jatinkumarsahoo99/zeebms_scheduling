@@ -46,7 +46,7 @@ class NoDataFoundPage extends StatelessWidget {
               textAlign: TextAlign.center,
               text: TextSpan(
                 text:
-                'You do not have required permission to view this page. Please ',
+                'You are not authorized to access this page. Please ',
                 // style: Theme.of(context).textTheme.bodyLarge,
                 style: TextStyle(fontSize: 18),
                 children: <InlineSpan>[
@@ -54,7 +54,7 @@ class NoDataFoundPage extends StatelessWidget {
                     alignment: PlaceholderAlignment.baseline,
                     baseline: TextBaseline.alphabetic,
                     child: LinkButton(
-                        urlLabel: "click here to login ",
+                        urlLabel: "click here",
                         context: context,
                         function: () {
                           // js.context.callMethod('fromFlutter', ['Flutter is calling upon JavaScript!']);
@@ -62,7 +62,7 @@ class NoDataFoundPage extends StatelessWidget {
                         }),
                   ),
                   TextSpan(
-                    text: 'or contact administrator at app.support@zee.com',
+                    text: ' to login',
                   ),
 
                 ],
