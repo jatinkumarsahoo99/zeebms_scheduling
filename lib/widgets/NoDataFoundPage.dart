@@ -62,18 +62,9 @@ class NoDataFoundPage extends StatelessWidget {
                         }),
                   ),
                   TextSpan(
-                    text: 'or ',
+                    text: 'or contact administrator at app.support@zee.com',
                   ),
-                  WidgetSpan(
-                    alignment: PlaceholderAlignment.baseline,
-                    baseline: TextBaseline.alphabetic,
-                    child: LinkButton(
-                        urlLabel: "contact administrator",
-                        context: context,
-                        function: () async {
-                          await Utils.launchEmailSubmission();
-                        }),
-                  ),
+
                 ],
               ),
             ),
