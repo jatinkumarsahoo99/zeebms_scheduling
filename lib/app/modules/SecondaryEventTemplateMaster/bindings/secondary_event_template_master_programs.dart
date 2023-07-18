@@ -72,21 +72,21 @@ class SecondaryEventTemplateMasterProgram {
   }
 
   Map<String, dynamic> toJson() {
-    final Map<String, dynamic> data = new Map<String, dynamic>();
-    data['firstSegment'] = this.firstSegment;
-    data['lastSegment'] = this.lastSegment;
-    data['allSegments'] = this.allSegments;
-    data['preEvent'] = this.preEvent;
-    data['postEvent'] = this.postEvent;
-    data['eventType'] = this.eventType;
-    data['exportTapeCaption'] = this.exportTapeCaption;
-    data['exportTapeCode'] = this.exportTapeCode;
-    data['segmentNumber'] = this.segmentNumber;
-    data['tapeDuration'] = this.tapeDuration;
-    data['som'] = this.som;
-    data['rowNumber'] = this.rowNumber;
-    data['eventCode'] = this.eventCode;
-    data['offSet'] = this.offSet;
+    final Map<String, dynamic> data = <String, dynamic>{};
+    data['firstSegment'] = firstSegment;
+    data['lastSegment'] = lastSegment;
+    data['allSegments'] = allSegments;
+    data['preEvent'] = preEvent;
+    data['postEvent'] = postEvent;
+    data['eventType'] = eventType;
+    data['exportTapeCaption'] = exportTapeCaption;
+    data['exportTapeCode'] = exportTapeCode;
+    data['segmentNumber'] = segmentNumber ?? 0;
+    data['tapeDuration'] = tapeDuration;
+    data['som'] = som;
+    data['rowNumber'] = rowNumber;
+    data['eventCode'] = eventCode;
+    data['offSet'] = offSet ?? 0;
     return data;
   }
 }
