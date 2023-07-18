@@ -55,9 +55,9 @@ class ComingUpNextMenuController extends GetxController {
   TextEditingController durationController = TextEditingController();
   RxString duration =RxString("00:00:00:00");
 
-  String strCode = "";
+  int strCode = 0;
   String strTapeID = "";
-  // String strSegmentNumber = "";
+  // String strS  egmentNumber = "";
   //HCLP0045
   bool isListenerActive = false;
 
@@ -116,7 +116,7 @@ class ComingUpNextMenuController extends GetxController {
   }
   bool contin = true;
   validateAndSaveRecord(){
-    if(strCode != "" && contin){
+    if(strCode != 0 && contin){
       // Record Already exist!
       // Snack.callError("Record Already exist!\nDo you want to modify it?");
       LoadingDialog.recordExists(
@@ -183,14 +183,14 @@ class ComingUpNextMenuController extends GetxController {
           json: postData,
           fun: (map) {
             Get.back();
-            log(">>>>"+map.toString());
-            if(map != null){
+            print(">>>>"+map.toString());
+            if(map != null && map is String){
               if(strCode != ""){
                 clearAll();
-                Snack.callSuccess("Record is updated successfully.");
+                Snack.callSuccess(map??"Record is updated successfully.");
               }else{
                 clearAll();
-                Snack.callSuccess("Record is inserted successfully.");
+                Snack.callSuccess(map??"Record is inserted successfully.");
               }
 
             }else{
@@ -215,7 +215,7 @@ class ComingUpNextMenuController extends GetxController {
   void checkRetrieve() {
     if (segNoController.text.trim() != "" &&
         tapeIdController.text.trim() != "") {
-        strCode = "";
+        strCode = 0;
       retrieveRecord(tapeIdController.text.trim(), segNoController.text.trim());
     }
   }
@@ -229,7 +229,8 @@ class ComingUpNextMenuController extends GetxController {
               print(">>>>"+ jsonEncode(map) .toString());
               if(map is List && map.length >0){
                 commingUpNextRetriveModel = CommingUpNextRetriveModel.fromJson(map[0]);
-                strCode = commingUpNextRetriveModel!.cunCode.toString();
+                strCode = int.parse((commingUpNextRetriveModel!.cunCode != null &&
+                    commingUpNextRetriveModel!.cunCode != "")?commingUpNextRetriveModel!.cunCode.toString():"0") ;
                 durationController.text = commingUpNextRetriveModel?.slideDuration.toString()??"" ;
                 for (var element in channelList) {
                   if(element.key.toString().trim() ==
@@ -251,7 +252,8 @@ class ComingUpNextMenuController extends GetxController {
                 houseIdController.text = commingUpNextRetriveModel?.houseID??"";
                 selectedProgram = DropDownValue(key:commingUpNextRetriveModel?.programCode??"" ,value:"program");
                 txCaptionController.text = commingUpNextRetriveModel?.exportTapeCaption??"";
-                strCode =commingUpNextRetriveModel?.cunCode??"";
+                strCode = int.parse(( commingUpNextRetriveModel?.cunCode != null &&
+                    commingUpNextRetriveModel?.cunCode != "")? commingUpNextRetriveModel!.cunCode.toString():"0");
                 somController.text =(commingUpNextRetriveModel?.som) ??"00:00:00:00";
                 eomController.text =(commingUpNextRetriveModel?.eom) ??"00:00:00:00";
                 // durationController.value.text =  Utils.convertToTimeFromDouble(value:num.parse((commingUpNextRetriveModel?.slideDuration??10).toString()));
@@ -263,7 +265,7 @@ class ComingUpNextMenuController extends GetxController {
               }
               else{
                 commingUpNextRetriveModel = null;
-                strCode="";
+                strCode=0;
                 // update(['top']);
               }
         });
@@ -289,14 +291,15 @@ class ComingUpNextMenuController extends GetxController {
         "houseID": houseId
       };
       String res = "";
-      print(">>>>>>>>>"+CheckExportTapeCode.toString());
+      // print(">>>>>>>>>"+CheckExportTapeCode.toString());
       try{
        await  Get.find<ConnectorControl>().GET_METHOD_WITH_PARAM(
             api:api,
             json: data,
             fun: (map) {
               log(">>>>"+map.toString());
-              if(map is Map && map.containsKey('eventName') &&  map['eventName'] != null && map['eventName'] != "null" ){
+              if(map is Map && map.containsKey('eventName') &&
+                  map['eventName'] != null && map['eventName'] != "null" ){
                    res = map['eventName'];
                    return res;
               }else{
@@ -318,14 +321,15 @@ class ComingUpNextMenuController extends GetxController {
         checkRetrieve();
       if(tapeIdController.text != "" && (segNoController.text != "" && segNoController.text != "0") ){
         String res ="";
-         await CheckExportTapeCode(tapeIdController.text,segNoController.text,strCode,"",
+         await CheckExportTapeCode(tapeIdController.text,segNoController.text,strCode.toString(),"",
             ApiFactory.COMINGUPNEXTMASTER_TAPEIDLEAVE).then((value) {
-           res=value;
+           res = value;
         });
          print(">>>>>res"+res);
         isListenerActive= false;
         if(res != ""){
-          LoadingDialog.callInfoMessage("Tape ID & Segment Number you entered is already used for "+"coming up next",
+          LoadingDialog.callInfoMessage(
+            res??"Tape ID & Segment Number you entered is already used for "+"coming up next",
               callback:(){
                 isEnable = true;
                 isListenerActive =false;
@@ -374,7 +378,7 @@ class ComingUpNextMenuController extends GetxController {
       /*String res = await CheckExportTapeCode(tapeIdController.text,segNoController.text,strCode,"",
           ApiFactory.COMINGUPNEXTMASTER_SEGNOLEAVE);*/
       String res ="";
-      await  CheckExportTapeCode(tapeIdController.text,segNoController.text,strCode,"",
+      await  CheckExportTapeCode(tapeIdController.text,segNoController.text,strCode.toString(),"",
           ApiFactory.COMINGUPNEXTMASTER_SEGNOLEAVE).then((value) {
         res=value;
       });
@@ -383,7 +387,7 @@ class ComingUpNextMenuController extends GetxController {
       if(res != ""){
 
         LoadingDialog.callInfoMessage(
-          "Tape ID & Segment Number you entered is already used for "+"coming up next",
+          res??"Tape ID & Segment Number you entered is already used for "+"coming up next",
           callback:  (){
             isEnable = true;
             isListenerActive =false;
@@ -428,7 +432,7 @@ class ComingUpNextMenuController extends GetxController {
          /* String res = await CheckExportTapeCode("","",strCode,houseIdController.text,
             ApiFactory.COMINGUPNEXTMASTER_HOUSEIDLEAVE);*/
           String res ="";
-          await CheckExportTapeCode("","",strCode,houseIdController.text,
+          await CheckExportTapeCode("","",strCode.toString(),houseIdController.text,
               ApiFactory.COMINGUPNEXTMASTER_HOUSEIDLEAVE).then((value) {
             res=value;
           });
@@ -437,7 +441,7 @@ class ComingUpNextMenuController extends GetxController {
         if(res != ""){
 
           LoadingDialog.callInfoMessage(
-            "House ID you entered is already used for "+"coming up next",
+            res??"House ID you entered is already used for "+"coming up next",
             callback: (){
               isEnable = true;
               isListenerActive =false;

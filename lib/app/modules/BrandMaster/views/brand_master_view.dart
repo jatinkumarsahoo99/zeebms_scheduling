@@ -29,7 +29,7 @@ class BrandMasterView extends StatelessWidget {
     return Scaffold(
       body: Center(
         child: SizedBox(
-          width: size.width * .72,
+          width: size.width * .82,
           height: size.height * .84,
           child: Dialog(
             child: Column(
@@ -49,7 +49,7 @@ class BrandMasterView extends StatelessWidget {
                       FocusTraversalGroup(
                         policy:OrderedTraversalPolicy(),
                         child: Expanded(
-                          flex:11,
+                          flex:9,
                           child: Padding(
                             padding: const EdgeInsets.all(8.0),
                             child: GetBuilder<BrandMasterController>(
@@ -242,7 +242,7 @@ class BrandMasterView extends StatelessWidget {
                         ),
                       ),
                       Expanded(
-                        flex: 9,
+                        flex: 11,
                         child: Padding(
                           padding: const EdgeInsets.all(8.0),
                           child: Container(
@@ -303,7 +303,7 @@ class BrandMasterView extends StatelessWidget {
                       PermissionModel formPermissions = Get.find<MainController>()
                           .permissionList!
                           .lastWhere((element) =>
-                      element.appFormName == "frmCommercialMaster");
+                      element.appFormName == "frmBrandMaster");
                       if (controller.buttons != null) {
                         return ButtonBar(
                           alignment: MainAxisAlignment.start,

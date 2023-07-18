@@ -44,7 +44,7 @@ class ComingUpTomorrowMenuController extends GetxController {
   DropDownValue? selectedProgramType;
 
   TextEditingController tapeIdController = TextEditingController();
-  TextEditingController segNoController = TextEditingController(text: "0");
+  TextEditingController segNoController = TextEditingController(text: "1");
   TextEditingController houseIdController = TextEditingController();
   TextEditingController programController = TextEditingController();
   TextEditingController txCaptionController = TextEditingController();
@@ -145,7 +145,7 @@ class ComingUpTomorrowMenuController extends GetxController {
 
   bool contin = true ;
   validateAndSaveRecord(){
-    if(strCode != "" && contin){
+    if(strCode != "0" && contin && strCode != ""){
       // Record Already exist!
       // Snack.callError("Record Already exist!\nDo you want to modify it?");
       LoadingDialog.recordExists(
@@ -216,13 +216,13 @@ class ComingUpTomorrowMenuController extends GetxController {
             log(">>>>"+map.toString());
             Get.back();
             log(">>>>strCode"+strCode.toString());
-            if(map != null){
+            if(map != null && map is String){
               if(strCode != ""){
                 clearAll();
-                Snack.callSuccess("Record is updated successfully.");
+                Snack.callSuccess(map??"Record is updated successfully.");
               }else{
                 clearAll();
-                Snack.callSuccess("Record is inserted successfully.");
+                Snack.callSuccess(map??"Record is inserted successfully.");
               }
             }else{
               Snack.callError("Something went wrong");
@@ -322,7 +322,8 @@ class ComingUpTomorrowMenuController extends GetxController {
           json: data,
           fun: (map) {
             log(">>>>"+map.toString());
-            if(map is Map && map.containsKey('eventName') &&  map['eventName'] != null && map['eventName'] != "null" ){
+            if(map is Map && map.containsKey('eventName') &&  map['eventName'] != null &&
+                map['eventName'] != "null" ){
               res = map['eventName'];
               return res;
             }else{
@@ -352,7 +353,7 @@ class ComingUpTomorrowMenuController extends GetxController {
         isListenerActive = false;
         if(res != ""){
           LoadingDialog.callInfoMessage(
-              "Tape ID & Segment Number you entered is already used for "+"COMING UP NEXT",
+              res??"Tape ID & Segment Number you entered is already used for "+"COMING UP NEXT",
                  callback:  (){
                 isEnable = true;
                 isListenerActive =false;
@@ -386,7 +387,7 @@ class ComingUpTomorrowMenuController extends GetxController {
       isListenerActive = false;
       if(res != ""){
         LoadingDialog.callInfoMessage(
-            "Tape ID & Segment Number you entered is already used for "+"COMING UP NEXT",
+            res??"Tape ID & Segment Number you entered is already used for "+"COMING UP NEXT",
             callback:(){
               isEnable = true;
               isListenerActive =false;
@@ -419,7 +420,7 @@ class ComingUpTomorrowMenuController extends GetxController {
 
         if(res != ""){
           LoadingDialog.callInfoMessage(
-              "House ID you entered is already used for "+"COMING UP NEXT",
+              res??"House ID you entered is already used for "+"COMING UP NEXT",
                  callback: (){
                 isEnable = true;
                 isListenerActive =false;
