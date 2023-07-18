@@ -5,6 +5,7 @@ import 'package:get/get.dart';
 import 'package:intl/intl.dart';
 
 import '../../../../widgets/LoadingDialog.dart';
+import '../../../../widgets/PlutoGrid/src/manager/pluto_grid_state_manager.dart';
 import '../../../controller/ConnectorControl.dart';
 import '../../../data/DropDownValue.dart';
 import '../../../providers/ApiFactory.dart';
@@ -13,13 +14,18 @@ import '../../../routes/app_pages.dart';
 import '../model/manage_channel_inventory_model.dart';
 
 class ManageChannelInvemtoryController extends GetxController {
-  var effectiveDateTC = TextEditingController(), weekDaysTC = TextEditingController();
+  var effectiveDateTC = TextEditingController(),
+      weekDaysTC = TextEditingController(),
+      dialogCounter = TextEditingController(text: "0"),
+      counterTC = TextEditingController(text: "0");
   var locationList = <DropDownValue>[].obs, channelList = <DropDownValue>[].obs;
   DropDownValue? selectedLocation, selectedChannel, selectedProgram;
   var locationFN = FocusNode();
   List<PermissionModel>? formPermissions;
+  PlutoGridStateManager? stateManager;
+  int lastSelectedIdx = 0;
   var dataTableList = <ManageChannelInventory>[].obs;
-  var count = 0.obs;
+  // var count = 0.obs;
   var bottomControllsEnable = true.obs;
   var buttonsList = ["Default", "Save Today", "Save All Days", "Special"];
   var programs = <DropDownValue>[].obs;
@@ -37,14 +43,14 @@ class ManageChannelInvemtoryController extends GetxController {
     getOnLoadData();
   }
 
-  saveSpecial(String fromDate, String toDate, String fromTime, String toTime, List<bool> weekdays, String updateType, int tempCount) {
+  saveSpecial(String fromDate, String toDate, String fromTime, String toTime, List<bool> weekdays, String updateType) {
     if (fromDate == toDate) {
       LoadingDialog.showErrorDialog("Special to Date cannot be less than Special From Date.");
     }
     //  else if ((Utils.convertToSecond(value: toTime) - Utils.convertToSecond(value: fromTime)) <= 0) {
     //   LoadingDialog.showErrorDialog("Please enter Duration.");
     // }
-    else if (tempCount <= 0) {
+    else if ((num.tryParse(dialogCounter.text) ?? 0) <= 0) {
       LoadingDialog.showErrorDialog("Please enter Duration.");
     }
     // else if (selectedProgram == null) {
@@ -84,7 +90,7 @@ class ManageChannelInvemtoryController extends GetxController {
           "updateType": upType,
           "locationcode": selectedLocation?.key ?? "",
           "channelcode": selectedChannel?.key ?? "",
-          "duration": tempCount,
+          "duration": (num.tryParse(dialogCounter.text) ?? 0),
           "fromDate": DateFormat("yyyy-MM-dd").format(DateFormat("dd-MM-yyyy").parse(fromDate)),
           "toDate": DateFormat("yyyy-MM-dd").format(DateFormat("dd-MM-yyyy").parse(toDate)),
           "fromTime": fromTime,
@@ -124,13 +130,13 @@ class ManageChannelInvemtoryController extends GetxController {
   }
 
   handleOnDefaultClick() {
-    if (count.value <= 0) {
+    if ((num.tryParse(counterTC.text) ?? 0) <= 0) {
       LoadingDialog.showErrorDialog("Enter commercial duration.");
     } else if (dataTableList.isNotEmpty) {
       madeChanges = true;
       for (var i = 0; i < dataTableList.length; i++) {
         if (dataTableList[i].episodeDuration != null) {
-          dataTableList[i].commDuration = (dataTableList[i].episodeDuration ?? 0) * count.value / 30;
+          dataTableList[i].commDuration = (dataTableList[i].episodeDuration ?? 0) * (num.tryParse(counterTC.text) ?? 0) / 30;
         }
       }
       dataTableList.refresh();
@@ -175,6 +181,8 @@ class ManageChannelInvemtoryController extends GetxController {
   }
 
   clearPage() {
+    lastSelectedIdx = 0;
+    stateManager = null;
     selectedProgram = null;
     dataTableList.clear();
     effectiveDateTC.clear();
@@ -185,7 +193,9 @@ class ManageChannelInvemtoryController extends GetxController {
     channelList.refresh();
     locationFN.requestFocus();
     programs.clear();
-    count.value = 0;
+    // count.value = 0;
+    dialogCounter.text = "0";
+    counterTC.text = "0";
     madeChanges = false;
   }
 
