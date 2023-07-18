@@ -2,19 +2,21 @@ import 'package:bms_scheduling/app/controller/HomeController.dart';
 import 'package:bms_scheduling/app/modules/SecondaryEventTemplateMaster/bindings/secondary_event_template_master_programs.dart';
 import 'package:bms_scheduling/app/providers/ApiFactory.dart';
 import 'package:bms_scheduling/app/providers/SizeDefine.dart';
+import 'package:bms_scheduling/app/providers/Utils.dart';
 import 'package:bms_scheduling/widgets/DataGridMultiCheckBox.dart';
 import 'package:bms_scheduling/widgets/DataGridShowOnly.dart';
 import 'package:bms_scheduling/widgets/FormButton.dart';
 import 'package:bms_scheduling/widgets/dropdown.dart';
 import 'package:bms_scheduling/widgets/input_fields.dart';
 import 'package:flutter/material.dart';
-
+import 'package:bms_scheduling/app/providers/DataGridMenu.dart';
 import 'package:get/get.dart';
 
 import '../controllers/secondary_event_template_master_controller.dart';
 
 class SecondaryEventTemplateMasterView extends GetView<SecondaryEventTemplateMasterController> {
   const SecondaryEventTemplateMasterView({Key? key}) : super(key: key);
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -104,6 +106,35 @@ class SecondaryEventTemplateMasterView extends GetView<SecondaryEventTemplateMas
                         child: GetBuilder<SecondaryEventTemplateMasterController>(
                             id: "gridData",
                             builder: (controller) => DataGridMultiCheckBox(
+                                  extraList: [
+                                    SecondaryShowDialogModel("Delete", () {
+                                      if (controller.programGrid?.currentRowIdx != null) {
+                                        controller.gridPrograms.removeAt(controller.programGrid!.currentRowIdx!);
+                                        controller.calculateRowNo();
+                                        controller.update(["gridData"]);
+                                      }
+                                    }),
+                                    SecondaryShowDialogModel("Copy", () {
+                                      if (controller.programGrid?.currentRowIdx != null) {
+                                        controller.copiedProgram = controller.gridPrograms[controller.programGrid!.currentRowIdx!];
+                                      }
+                                    }),
+                                    SecondaryShowDialogModel("Cut", () {
+                                      if (controller.programGrid?.currentRowIdx != null) {
+                                        controller.copiedProgram = controller.gridPrograms[controller.programGrid!.currentRowIdx!];
+                                      }
+                                    }),
+                                    SecondaryShowDialogModel("Paste", () {
+                                      if (controller.programGrid?.currentRowIdx != null && controller.copiedProgram != null) {
+                                        controller.gridPrograms.insert(controller.programGrid!.currentRowIdx!, controller.copiedProgram!);
+                                        controller.calculateRowNo();
+                                        controller.update(["gridData"]);
+                                      }
+                                    })
+                                  ],
+                                  onload: (event) {
+                                    controller.programGrid = event.stateManager;
+                                  },
                                   mapData: controller.gridPrograms.map((e) => e.toJson()).toList(),
                                   checkBoxes: ["firstSegment", "lastSegment", "allSegments", "preEvent", "postEvent"],
                                   onCheckBoxPress: (key, rowId) {
@@ -241,7 +272,6 @@ class SecondaryEventTemplateMasterView extends GetView<SecondaryEventTemplateMas
                                           onload: (event) {
                                             controller.searchGrid = event.stateManager;
                                           },
-                                          extraList: [],
                                           onRowDoubleTap: (rowDoubleTapEvent) {
                                             var checkboxes = controller.checkBoxes.value;
                                             searchcontroller.gridPrograms.insert(
@@ -299,9 +329,11 @@ class SecondaryEventTemplateMasterView extends GetView<SecondaryEventTemplateMas
                               for (var btn in btncontroller.buttons!)
                                 FormButtonWrapper(
                                   btnText: btn["name"],
-                                  isEnabled: btn['isDisabled'],
+                                  // isEnabled: btn['isDisabled'],
                                   callback: () {
-                                    btnHandler(btn["name"]);
+                                    ((Utils.btnAccessHandler(btn['name'], controller.formPermissions!) == null))
+                                        ? null
+                                        : () => btnHandler(btn['name']);
                                   },
                                 ),
                             ],

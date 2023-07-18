@@ -1,3 +1,4 @@
+import 'package:flutter/foundation.dart';
 import 'package:get/get.dart';
 
 import '../modules/AsrunImportAdRevenue/bindings/asrun_import_binding.dart';
@@ -55,9 +56,8 @@ import '../modules/SecondaryEventTemplateMaster/bindings/secondary_event_templat
 import '../modules/SecondaryEventTemplateMaster/views/secondary_event_template_master_view.dart';
 import '../modules/SlideMaster/bindings/slide_master_binding.dart';
 import '../modules/SponserTypeMaster/bindings/sponser_type_master_binding.dart';
-import '../modules/SponserTypeMaster/views/sponser_type_master_view.dart';
 import '../modules/SpotPositionTypeMaster/bindings/spot_position_type_master_binding.dart';
-import '../modules/SpotPositionTypeMaster/views/spot_position_type_master_view.dart';
+
 import '../modules/SpotPriority/bindings/spot_priority_binding.dart';
 import '../modules/StillMaster/bindings/still_master_binding.dart';
 import '../modules/TransmissionLog/bindings/transmission_log_binding.dart';
@@ -66,7 +66,7 @@ import '../modules/filler/bindings/filler_binding.dart';
 import '../modules/home/bindings/home_binding.dart';
 import '../modules/home/views/home_view.dart';
 import '../modules/material_id_search/bindings/material_id_search_binding.dart';
-import '../modules/material_id_search/views/material_id_search_view.dart';
+
 import '../modules/promos/bindings/promos_binding.dart';
 import '../modules/slide/bindings/slide_binding.dart';
 import '../providers/AuthGuard1.dart';
@@ -75,15 +75,17 @@ part 'app_routes.dart';
 
 class AppPages {
   AppPages._();
+
   //https://app-scheduling-bms-dev.zeeconnect.in/frmCommercialMaster?loginCode=0iGe3vK5h2KGjfSKZTpmsQ%3D%3D&personalNo=xvmv9k3d1G7ierjaXRHiGA%3D%3D&formName=MgGRl5N4DW2tcWQscJpsp%2BIUElLFsJm5TsN5JpCXjHE%3D
   // static const INITIAL = Routes.ROS_DISTRIBUTION +
-  static const INITIAL = Routes.MANAGE_CHANNEL_INVENTORY +
+  static const INITIAL = kReleaseMode?Routes.HOME:Routes.SECONDARY_EVENT_TEMPLATE_MASTER +
       "?personalNo=kW5Bkf17%2FS5YF7ML28FmVg%3D%3D&loginCode=1BWIoBKeDl7qDSAAhxvXsQ%3D%3D&formName=OI8ukDpPPVN0I2BEXu2h4nuFu%2BZm1ZRpvP8NL4XCXzQ%3D";
+
   static final routes = [
     GetPage(
       name: _Paths.HOME,
-      page: () => HomeView(),
-      binding: HomeBinding(),
+      page: () => AuthGuard1(childName: _Paths.HOME),
+      // binding: HomeBinding(),
     ),
     GetPage(
       name: _Paths.SLIDE,
