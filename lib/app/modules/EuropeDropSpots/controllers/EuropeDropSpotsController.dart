@@ -125,7 +125,7 @@ class EuropeDropSpotsController extends GetxController {
           Get.back();
          if(map is Map && map.toString().contains("successfully")){
            LoadingDialog.callDataSavedMessage(
-             "Updated Successfully",
+             "Spots Dropped Successfully",
            );
          }else{
            LoadingDialog.callInfoMessage(map.toString());

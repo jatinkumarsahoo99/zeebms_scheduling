@@ -7,6 +7,7 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:get/get_core/src/get_main.dart';
 import 'package:intl/intl.dart';
+import 'package:url_launcher/url_launcher.dart';
 import '../../widgets/TableTextStyle.dart';
 import '../controller/HomeController.dart';
 import '../controller/MainController.dart';
@@ -615,5 +616,24 @@ class Utils {
       data = "Sunday";
     }
     return data;
+  }
+
+  static String? encodeQueryParameters(Map<String, String> params) {
+    return params.entries
+        .map((MapEntry<String, String> e) =>
+    '${Uri.encodeComponent(e.key)}=${Uri.encodeComponent(e.value)}')
+        .join('&');
+  }
+
+  static launchEmailSubmission() async {
+    final Uri emailLaunchUri = Uri(
+      scheme: 'mailto',
+      path: 'smith@example.com',
+      query: encodeQueryParameters(<String, String>{
+        'subject': 'Example Subject & Symbols are allowed!',
+      }),
+    );
+
+    launchUrl(emailLaunchUri);
   }
 }
