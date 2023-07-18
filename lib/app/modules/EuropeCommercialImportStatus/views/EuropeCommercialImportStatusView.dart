@@ -32,7 +32,7 @@ class EuropeCommercialImportStatusView extends GetView<EuropeCommercialImportSta
                     spacing: 5,
                     children: [
                      DateWithThreeTextField(
-                          title: "Schedule Date",
+                          title: "Effective Date",
                           splitType: "-",
                           widthRation: 0.12,
                           // isEnable: controller.isEnable.value,
