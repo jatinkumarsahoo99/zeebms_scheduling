@@ -282,6 +282,9 @@ class DataGridFromMap extends StatelessWidget {
             enableEditingMode: editKeys != null && editKeys!.contains(key),
             enableDropToResize: true,
             enableContextMenu: false,
+            minWidth: (witdthSpecificColumn != null && witdthSpecificColumn!.keys.toList().firstWhereOrNull((element) => element == key) != null)
+                ? witdthSpecificColumn![key]!
+                : PlutoGridSettings.minColumnWidth,
             width: (witdthSpecificColumn != null && witdthSpecificColumn!.keys.toList().firstWhereOrNull((element) => element == key) != null)
                 ? witdthSpecificColumn![key]!
                 : Utils.getColumnSize(key: key, value: mapData[0][key]),
