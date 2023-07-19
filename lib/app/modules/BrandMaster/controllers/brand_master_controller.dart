@@ -138,7 +138,7 @@ class BrandMasterController extends GetxController {
   BrandMasterProductDetails? brandMasterProductDetails;
   getProductDetails(String productCode){
     Get.find<ConnectorControl>().GETMETHODCALL(
-        api: ApiFactory.BRANDMASTER_GETCLIENTDETAILS+productCode,
+        api: ApiFactory.BRANDMASTER_GETPRODUCTDETAILS+productCode,
         fun: (map) {
           print(">>>>>>map"+jsonEncode(map));
           if(map is Map && map.containsKey('getproduct') &&
