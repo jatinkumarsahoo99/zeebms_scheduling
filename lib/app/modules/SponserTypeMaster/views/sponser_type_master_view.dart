@@ -9,8 +9,10 @@ import 'package:get/get.dart';
 
 import '../controllers/sponser_type_master_controller.dart';
 
-class SponserTypeMasterView extends GetView<SponserTypeMasterController> {
+class SponserTypeMasterView extends StatelessWidget {
   SponserTypeMasterView({Key? key}) : super(key: key);
+  final controller =
+      Get.put<SponserTypeMasterController>(SponserTypeMasterController());
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -115,6 +117,11 @@ class SponserTypeMasterView extends GetView<SponserTypeMasterController> {
     switch (btnName) {
       case "Save":
         controller.saveData();
+        break;
+      case "Clear":
+        Get.delete<SponserTypeMasterController>();
+        Get.find<HomeController>().clearPage1();
+        break;
         break;
       default:
     }

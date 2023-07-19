@@ -10,11 +10,10 @@ import 'package:get/get.dart';
 
 import '../controllers/spot_position_type_master_controller.dart';
 
-class SpotPositionTypeMasterView
-    extends GetView<SpotPositionTypeMasterController> {
-  SpotPositionTypeMasterController controller =
-      SpotPositionTypeMasterController();
+class SpotPositionTypeMasterView extends StatelessWidget {
   SpotPositionTypeMasterView({Key? key}) : super(key: key);
+  final controller = Get.put<SpotPositionTypeMasterController>(
+      SpotPositionTypeMasterController());
   @override
   Widget build(BuildContext context) {
     return Scaffold(
