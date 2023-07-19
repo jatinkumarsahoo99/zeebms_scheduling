@@ -11,12 +11,13 @@ import 'package:get/get.dart';
 import '../controllers/spot_position_type_master_controller.dart';
 
 class SpotPositionTypeMasterView extends GetView<SpotPositionTypeMasterController> {
-  const SpotPositionTypeMasterView({Key? key}) : super(key: key);
+  SpotPositionTypeMasterController controller = SpotPositionTypeMasterController();
+  SpotPositionTypeMasterView({Key? key}) : super(key: key);
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text('SponserTypeMasterView'),
+        title: const Text('Spot Position Type Master'),
         centerTitle: true,
       ),
       body: Center(
@@ -49,14 +50,14 @@ class SpotPositionTypeMasterView extends GetView<SpotPositionTypeMasterControlle
                           controller: controller.spotShortName,
                           width: 0.175,
                         ),
-                        InputFields.formField1(
+                        InputFields.numbers(
                           hintTxt: "Log Position",
                           controller: controller.logPosition,
                           width: 0.175,
                         ),
                         Obx(() => DropDownField.formDropDown1WidthMap(controller.spots.value, (value) => {}, "Spot In Log", 0.175,
                             selected: controller.selectedSpotInLog.value)),
-                        InputFields.formField1(
+                        InputFields.numbers(
                           hintTxt: "Spot Position Premium ",
                           controller: controller.positionPremium,
                           width: 0.175,
