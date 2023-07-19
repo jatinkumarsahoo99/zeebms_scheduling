@@ -16,6 +16,7 @@ import '../../../data/PermissionModel.dart';
 import '../../../providers/Aes.dart';
 import '../../../providers/ApiFactory.dart';
 import '../../../providers/Utils.dart';
+import '../../CommonSearch/views/common_search_view.dart';
 import '../controllers/brand_master_controller.dart';
 
 class BrandMasterView extends StatelessWidget {
@@ -165,7 +166,15 @@ class BrandMasterView extends StatelessWidget {
                                         ),
                                         InkWell(
                                           onTap: (){
-
+                                            Get.to(
+                                              SearchPage(
+                                                key: Key("Product Levels - Search"),
+                                                screenName: "Product Levels - Search",
+                                                appBarName: "Product Levels - Search",
+                                                strViewName: "Productlevels",
+                                                isAppBarReq: true,
+                                              ),
+                                            );
                                           },
                                           child: InputFields.formField1(
                                             hintTxt: "",
