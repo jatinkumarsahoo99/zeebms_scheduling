@@ -33,7 +33,7 @@ class DateWiseErrorSpotsView extends StatelessWidget{
                 mainAxisSize: MainAxisSize.min,
                 children: [
                   AppBar(
-                    title: Text('Datewise Error Spots Report jks'),
+                    title: Text('Datewise Error Spots Report'),
                     centerTitle: true,
                     backgroundColor: Colors.deepPurple,
                   ),
