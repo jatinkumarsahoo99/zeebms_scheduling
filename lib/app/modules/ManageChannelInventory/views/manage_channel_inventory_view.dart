@@ -70,6 +70,7 @@ class ManageChannelInvemtoryView extends GetView<ManageChannelInvemtoryControlle
                         controller.weekDaysTC.text = DateFormat('EEEE').format(DateFormat("dd-MM-yyyy").parse(date));
                       },
                       isEnable: controller.bottomControllsEnable.value,
+                      startDate: DateTime.now(),
                     );
                   }),
                   const SizedBox(width: 10),
