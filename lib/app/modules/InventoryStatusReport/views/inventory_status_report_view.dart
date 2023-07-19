@@ -5,6 +5,8 @@ import 'package:get/get.dart';
 
 import '../../../../widgets/DateTime/DateWithThreeTextField.dart';
 import '../../../../widgets/FormButton.dart';
+import '../../../../widgets/PlutoGrid/src/manager/pluto_grid_state_manager.dart';
+import '../../../../widgets/PlutoGrid/src/pluto_grid.dart';
 import '../../../../widgets/dropdown.dart';
 import '../../../../widgets/gridFromMap.dart';
 import '../../../../widgets/radio_row.dart';
@@ -91,12 +93,15 @@ class InventoryStatusReportView extends GetView<InventoryStatusReportController>
                                 itemBuilder: (context, int index) {
                                   return Row(
                                     children: [
-                                      Checkbox(
-                                        value: controller.onLoadModel.value?.info?.channels?[index].isSelected ?? false,
-                                        onChanged: (bool? value) {
-                                          controller.onLoadModel.value?.info?.channels?[index].isSelected = value;
-                                        },
-                                      ),
+                                      StatefulBuilder(builder: (context, reCreate) {
+                                        return Checkbox(
+                                          value: controller.onLoadModel.value?.info?.channels?[index].isSelected ?? false,
+                                          onChanged: (bool? value) {
+                                            controller.onLoadModel.value?.info?.channels?[index].isSelected = value ?? false;
+                                            reCreate(() {});
+                                          },
+                                        );
+                                      }),
                                       Expanded(
                                         child: Text(
                                           controller.onLoadModel.value?.info?.channels?[index].downValue?.value ?? "",
@@ -160,7 +165,25 @@ class InventoryStatusReportView extends GetView<InventoryStatusReportController>
                                     ),
                                   )
                                 : null,
-                            child: controller.dataTableList.isEmpty ? null : DataGridFromMap(mapData: controller.dataTableList.value),
+                            child: controller.dataTableList.isEmpty
+                                ? null
+                                : DataGridFromMap(
+                                    mapData: controller.dataTableList.value,
+                                    mode: PlutoGridMode.selectWithOneTap,
+                                    // colorCallback: (row) => (row.row.cells.containsValue(controller.stateManager?.currentCell))
+                                    //     ? Colors.deepPurple.shade200
+                                    //     : Colors.white,
+                                    // onload: (event) {
+                                    //   controller.stateManager = event.stateManager;
+                                    //   event.stateManager.setSelectingMode(PlutoGridSelectingMode.row);
+                                    //   event.stateManager.setSelecting(true);
+                                    // },
+                                    witdthSpecificColumn: {
+                                      "programtype": 130,
+                                      "programname": 200,
+                                      "rmsProgram": 200,
+                                    },
+                                  ),
                           );
                         },
                       ),
