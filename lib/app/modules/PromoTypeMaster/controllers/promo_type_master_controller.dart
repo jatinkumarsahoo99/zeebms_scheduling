@@ -8,7 +8,8 @@ import 'package:get/get.dart';
 class PromoTypeMasterController extends GetxController {
   //TODO: Implement PromoTypeMasterController
 
-  TextEditingController promTypeNameCtrl = TextEditingController(), sapCategory = TextEditingController();
+  TextEditingController promTypeNameCtrl = TextEditingController(),
+      sapCategory = TextEditingController();
   FocusNode promoFocusNode = FocusNode();
   var trailPromo = RxBool(false);
   var channelSpec = RxBool(false);
@@ -17,6 +18,7 @@ class PromoTypeMasterController extends GetxController {
   void onInit() {
     promoFocusNode.addListener(() {
       if ((!promoFocusNode.hasFocus) && promTypeNameCtrl.text.isNotEmpty) {
+        promTypeNameCtrl.text = promTypeNameCtrl.text.toUpperCase();
         getData();
       }
     });
@@ -27,7 +29,9 @@ class PromoTypeMasterController extends GetxController {
     Get.find<ConnectorControl>().GETMETHODCALL(
         api: ApiFactory.PROMO_TYPE_MASTER_GET_RECORD(promTypeNameCtrl.text, ""),
         fun: (data) {
-          if (data is Map && data.containsKey("promomaster") && (data["promomaster"] as List).isNotEmpty) {
+          if (data is Map &&
+              data.containsKey("promomaster") &&
+              (data["promomaster"] as List).isNotEmpty) {
             promTypeNameCtrl.text = data["promomaster"][0]["promoTypeName"];
             sapCategory.text = data["promomaster"][0]["sapCategory"];
             // spotPostionName.text = data["retrieveRecord"][0]["spotPositionTypeName"];
@@ -35,7 +39,10 @@ class PromoTypeMasterController extends GetxController {
             // positionPremium.text = data["retrieveRecord"][0]["spotPositionPremium"].toString();
             // logPosition.text = data["retrieveRecord"][0]["spotPositionInLog"].toString();
 
-            if (data["promomaster"][0]["channelSpecific"].toString().toLowerCase() == "y") {
+            if (data["promomaster"][0]["channelSpecific"]
+                    .toString()
+                    .toLowerCase() ==
+                "y") {
               channelSpec.value = true;
             } else {
               channelSpec.value = false;
@@ -65,7 +72,7 @@ class PromoTypeMasterController extends GetxController {
     Get.find<ConnectorControl>().POSTMETHOD(
         api: ApiFactory.PROMO_TYPE_MASTER_SAVE,
         json: {
-          "promoTypeCode": programTypeCode,
+          "promoTypeCode": programTypeCode ?? "",
           "promoTypeName": promTypeNameCtrl.text,
           "modifiedBy": Get.find<MainController>().user?.logincode,
           "channelSpecific": channelSpec.value ? "Y" : "N",
