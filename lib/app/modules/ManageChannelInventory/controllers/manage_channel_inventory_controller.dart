@@ -149,6 +149,7 @@ class ManageChannelInvemtoryController extends GetxController {
     } else if (!madeChanges) {
       LoadingDialog.showErrorDialog("No changes to save");
     } else {
+      stateManager!.setCurrentCell(stateManager!.getRowByIdx(lastSelectedIdx)?.cells['telecastDate'], lastSelectedIdx);
       LoadingDialog.call();
       Get.find<ConnectorControl>().POSTMETHOD(
         api: ApiFactory.MANAGE_CHANNEL_INV_SAVE_TODAY_ALL_DATA,

@@ -16,6 +16,7 @@ import '../../../../widgets/PlutoGrid/src/manager/pluto_grid_state_manager.dart'
 import '../../../../widgets/PlutoGrid/src/pluto_grid.dart';
 import '../../../../widgets/dropdown.dart';
 import '../../../../widgets/gridFromMap.dart';
+import '../../../../widgets/gridFromMap1.dart';
 import '../../../../widgets/radio_row.dart';
 import '../../../controller/HomeController.dart';
 import '../../../providers/Utils.dart';
@@ -110,6 +111,9 @@ class ManageChannelInvemtoryView extends GetView<ManageChannelInvemtoryControlle
                                 } else {
                                   controller.dataTableList.refresh();
                                 }
+                              },
+                              witdthSpecificColumn: {
+                                "commDuration": 200,
                               },
                               mode: PlutoGridMode.normal,
                               colorCallback: (row) =>
