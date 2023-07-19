@@ -1,4 +1,8 @@
+import 'dart:math';
+
 import 'package:bms_scheduling/app/controller/HomeController.dart';
+import 'package:bms_scheduling/app/modules/CommonSearch/views/common_search_view.dart';
+import 'package:bms_scheduling/app/modules/SecondaryEventTemplateMaster/bindings/secondary_event_template_master_color.dart';
 import 'package:bms_scheduling/app/modules/SecondaryEventTemplateMaster/bindings/secondary_event_template_master_programs.dart';
 import 'package:bms_scheduling/app/providers/ApiFactory.dart';
 import 'package:bms_scheduling/app/providers/SizeDefine.dart';
@@ -14,9 +18,10 @@ import 'package:get/get.dart';
 
 import '../controllers/secondary_event_template_master_controller.dart';
 
-class SecondaryEventTemplateMasterView extends GetView<SecondaryEventTemplateMasterController> {
-  const SecondaryEventTemplateMasterView({Key? key}) : super(key: key);
-
+class SecondaryEventTemplateMasterView extends StatelessWidget {
+  SecondaryEventTemplateMasterView({Key? key}) : super(key: key);
+  final controller = Get.put<SecondaryEventTemplateMasterController>(
+      SecondaryEventTemplateMasterController());
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -33,15 +38,21 @@ class SecondaryEventTemplateMasterView extends GetView<SecondaryEventTemplateMas
                   spacing: Get.width * 0.01,
                   children: [
                     Obx(
-                      () => DropDownField.formDropDown1WidthMap(controller.locations.value, (value) {
+                      () => DropDownField.formDropDown1WidthMap(
+                          controller.locations.value, (value) {
                         controller.selectedLocation = value;
                         controller.getChannel(value.key);
-                      }, "Location", 0.18, isEnable: controller.enableFields.value, selected: controller.selectedLocation),
+                      }, "Location", 0.18,
+                          isEnable: controller.enableFields.value,
+                          selected: controller.selectedLocation),
                     ),
                     Obx(
-                      () => DropDownField.formDropDown1WidthMap(controller.channels.value, (value) {
+                      () => DropDownField.formDropDown1WidthMap(
+                          controller.channels.value, (value) {
                         controller.selectedChannel = value;
-                      }, "Channel", 0.18, isEnable: controller.enableFields.value, selected: controller.selectedChannel),
+                      }, "Channel", 0.18,
+                          isEnable: controller.enableFields.value,
+                          selected: controller.selectedChannel),
                     ),
                     Obx(
                       () => DropDownField.formDropDownSearchAPI2(
@@ -103,30 +114,49 @@ class SecondaryEventTemplateMasterView extends GetView<SecondaryEventTemplateMas
                       clipBehavior: Clip.hardEdge,
                       child: Container(
                         padding: EdgeInsets.all(4),
-                        child: GetBuilder<SecondaryEventTemplateMasterController>(
+                        child: GetBuilder<
+                                SecondaryEventTemplateMasterController>(
                             id: "gridData",
                             builder: (controller) => DataGridMultiCheckBox(
                                   extraList: [
                                     SecondaryShowDialogModel("Delete", () {
-                                      if (controller.programGrid?.currentRowIdx != null) {
-                                        controller.gridPrograms.removeAt(controller.programGrid!.currentRowIdx!);
+                                      if (controller
+                                              .programGrid?.currentRowIdx !=
+                                          null) {
+                                        controller.gridPrograms.removeAt(
+                                            controller
+                                                .programGrid!.currentRowIdx!);
                                         controller.calculateRowNo();
                                         controller.update(["gridData"]);
                                       }
                                     }),
                                     SecondaryShowDialogModel("Copy", () {
-                                      if (controller.programGrid?.currentRowIdx != null) {
-                                        controller.copiedProgram = controller.gridPrograms[controller.programGrid!.currentRowIdx!];
+                                      if (controller
+                                              .programGrid?.currentRowIdx !=
+                                          null) {
+                                        controller.copiedProgram =
+                                            controller.gridPrograms[controller
+                                                .programGrid!.currentRowIdx!];
                                       }
                                     }),
                                     SecondaryShowDialogModel("Cut", () {
-                                      if (controller.programGrid?.currentRowIdx != null) {
-                                        controller.copiedProgram = controller.gridPrograms[controller.programGrid!.currentRowIdx!];
+                                      if (controller
+                                              .programGrid?.currentRowIdx !=
+                                          null) {
+                                        controller.copiedProgram =
+                                            controller.gridPrograms[controller
+                                                .programGrid!.currentRowIdx!];
                                       }
                                     }),
                                     SecondaryShowDialogModel("Paste", () {
-                                      if (controller.programGrid?.currentRowIdx != null && controller.copiedProgram != null) {
-                                        controller.gridPrograms.insert(controller.programGrid!.currentRowIdx!, controller.copiedProgram!);
+                                      if (controller
+                                                  .programGrid?.currentRowIdx !=
+                                              null &&
+                                          controller.copiedProgram != null) {
+                                        controller.gridPrograms.insert(
+                                            controller
+                                                .programGrid!.currentRowIdx!,
+                                            controller.copiedProgram!);
                                         controller.calculateRowNo();
                                         controller.update(["gridData"]);
                                       }
@@ -135,24 +165,74 @@ class SecondaryEventTemplateMasterView extends GetView<SecondaryEventTemplateMas
                                   onload: (event) {
                                     controller.programGrid = event.stateManager;
                                   },
-                                  mapData: controller.gridPrograms.map((e) => e.toJson()).toList(),
-                                  checkBoxes: ["firstSegment", "lastSegment", "allSegments", "preEvent", "postEvent"],
+                                  mapData: controller.gridPrograms
+                                      .map((e) => e.toJson())
+                                      .toList(),
+                                  checkBoxes: [
+                                    "firstSegment",
+                                    "lastSegment",
+                                    "allSegments",
+                                    "preEvent",
+                                    "postEvent"
+                                  ],
+                                  colorCallback: (event) {
+                                    SecondaryTemplateEventColors? _color =
+                                        controller.colors.firstWhereOrNull(
+                                            (element) =>
+                                                element.eventType
+                                                    ?.toLowerCase()
+                                                    .trim() ==
+                                                controller
+                                                    .gridPrograms[
+                                                        event.row.sortIdx]
+                                                    .eventType
+                                                    ?.toLowerCase()
+                                                    .trim());
+                                    if (controller
+                                                .gridPrograms[event.row.sortIdx]
+                                                .eventType !=
+                                            null &&
+                                        _color != null) {
+                                      return Color(
+                                          int.parse("0x${_color.backColor}"));
+                                    }
+                                    return Colors.white;
+                                  },
                                   onCheckBoxPress: (key, rowId) {
                                     switch (key) {
                                       case "firstSegment":
-                                        controller.gridPrograms[rowId].firstSegment = !(controller.gridPrograms[rowId].firstSegment ?? false);
+                                        controller.gridPrograms[rowId]
+                                            .firstSegment = !(controller
+                                                .gridPrograms[rowId]
+                                                .firstSegment ??
+                                            false);
                                         break;
                                       case "lastSegment":
-                                        controller.gridPrograms[rowId].lastSegment = !(controller.gridPrograms[rowId].lastSegment ?? false);
+                                        controller.gridPrograms[rowId]
+                                            .lastSegment = !(controller
+                                                .gridPrograms[rowId]
+                                                .lastSegment ??
+                                            false);
                                         break;
                                       case "allSegments":
-                                        controller.gridPrograms[rowId].allSegments = !(controller.gridPrograms[rowId].allSegments ?? false);
+                                        controller.gridPrograms[rowId]
+                                            .allSegments = !(controller
+                                                .gridPrograms[rowId]
+                                                .allSegments ??
+                                            false);
                                         break;
                                       case "preEvent":
-                                        controller.gridPrograms[rowId].preEvent = !(controller.gridPrograms[rowId].preEvent ?? false);
+                                        controller.gridPrograms[rowId]
+                                            .preEvent = !(controller
+                                                .gridPrograms[rowId].preEvent ??
+                                            false);
                                         break;
                                       case "postEvent":
-                                        controller.gridPrograms[rowId].postEvent = !(controller.gridPrograms[rowId].postEvent ?? false);
+                                        controller.gridPrograms[rowId]
+                                            .postEvent = !(controller
+                                                .gridPrograms[rowId]
+                                                .postEvent ??
+                                            false);
                                         break;
 
                                       default:
@@ -178,7 +258,11 @@ class SecondaryEventTemplateMasterView extends GetView<SecondaryEventTemplateMas
                               children: [
                                 Obx(
                                   () => DropDownField.formDropDown1WidthMap(
-                                      controller.events.value, (value) => {controller.selectedEvent = value}, "Event", 0.175,
+                                      controller.events.value,
+                                      (value) =>
+                                          {controller.selectedEvent = value},
+                                      "Event",
+                                      0.175,
                                       selected: controller.selectedEvent),
                                 ),
                                 InputFields.formField1(
@@ -198,12 +282,20 @@ class SecondaryEventTemplateMasterView extends GetView<SecondaryEventTemplateMas
                                             mainAxisSize: MainAxisSize.min,
                                             children: [
                                               Checkbox(
-                                                  value: controller.checkBoxes[e.key],
+                                                  value: controller
+                                                      .checkBoxes[e.key],
                                                   onChanged: (value) {
-                                                    controller.checkBoxes[e.key] = value ?? false;
-                                                    controller.checkBoxes.refresh();
+                                                    controller
+                                                            .checkBoxes[e.key] =
+                                                        value ?? false;
+                                                    controller.checkBoxes
+                                                        .refresh();
                                                   }),
-                                              Text(e.key, style: TextStyle(fontSize: SizeDefine.labelSize1 + 1))
+                                              Text(e.key,
+                                                  style: TextStyle(
+                                                      fontSize: SizeDefine
+                                                              .labelSize1 +
+                                                          1))
                                             ],
                                           )))
                                       .toList(),
@@ -214,7 +306,8 @@ class SecondaryEventTemplateMasterView extends GetView<SecondaryEventTemplateMas
                                     Obx(() => Checkbox(
                                         value: controller.mine.value,
                                         onChanged: (value) {
-                                          controller.mine.value = value ?? false;
+                                          controller.mine.value =
+                                              value ?? false;
                                         })),
                                     Text("My")
                                   ],
@@ -236,18 +329,30 @@ class SecondaryEventTemplateMasterView extends GetView<SecondaryEventTemplateMas
                                 FormButtonWrapper(
                                   btnText: "Add",
                                   callback: () {
-                                    if (controller.searchGrid?.currentRowIdx != null) {
-                                      var checkboxes = controller.checkBoxes.value;
+                                    if (controller.searchGrid?.currentRowIdx !=
+                                        null) {
+                                      var checkboxes =
+                                          controller.checkBoxes.value;
 
                                       controller.gridPrograms.insert(
-                                          controller.programGrid?.currentRowIdx ?? controller.gridPrograms.length,
-                                          SecondaryEventTemplateMasterProgram.convertSecondaryEventTemplateProgramGridDataToMasterProgram(
-                                              controller.searchPrograms[controller.searchGrid!.currentRowIdx!],
-                                              checkboxes["First Segment"] ?? false,
-                                              checkboxes["Last Segment"] ?? false,
-                                              checkboxes["All Segments"] ?? false,
-                                              checkboxes["Pre Event"] ?? false,
-                                              checkboxes["Post Event"] ?? false));
+                                          controller
+                                                  .programGrid?.currentRowIdx ??
+                                              controller.gridPrograms.length,
+                                          SecondaryEventTemplateMasterProgram
+                                              .convertSecondaryEventTemplateProgramGridDataToMasterProgram(
+                                                  controller.searchPrograms[
+                                                      controller.searchGrid!
+                                                          .currentRowIdx!],
+                                                  checkboxes["First Segment"] ??
+                                                      false,
+                                                  checkboxes["Last Segment"] ??
+                                                      false,
+                                                  checkboxes["All Segments"] ??
+                                                      false,
+                                                  checkboxes["Pre Event"] ??
+                                                      false,
+                                                  checkboxes["Post Event"] ??
+                                                      false));
                                       controller.calculateRowNo();
                                       controller.update(["gridData"]);
                                     }
@@ -256,7 +361,8 @@ class SecondaryEventTemplateMasterView extends GetView<SecondaryEventTemplateMas
                                 InputFields.formField1(
                                   hintTxt: "TX Id",
                                   isEnable: false,
-                                  controller: TextEditingController(text: "00:00:00:00"),
+                                  controller: TextEditingController(
+                                      text: "00:00:00:00"),
                                 ),
                               ],
                             ),
@@ -265,29 +371,50 @@ class SecondaryEventTemplateMasterView extends GetView<SecondaryEventTemplateMas
                             ),
                             Expanded(
                               child: Container(
-                                  child: GetBuilder<SecondaryEventTemplateMasterController>(
+                                  child: GetBuilder<
+                                          SecondaryEventTemplateMasterController>(
                                       id: "searchGrid",
                                       init: controller,
                                       builder: (searchcontroller) {
                                         return DataGridShowOnlyKeys(
                                           onload: (event) {
-                                            controller.searchGrid = event.stateManager;
+                                            controller.searchGrid =
+                                                event.stateManager;
                                           },
                                           onRowDoubleTap: (rowDoubleTapEvent) {
-                                            var checkboxes = controller.checkBoxes.value;
+                                            var checkboxes =
+                                                controller.checkBoxes.value;
                                             searchcontroller.gridPrograms.insert(
-                                                controller.programGrid?.currentRowIdx ?? 0,
-                                                SecondaryEventTemplateMasterProgram.convertSecondaryEventTemplateProgramGridDataToMasterProgram(
-                                                    controller.searchPrograms[rowDoubleTapEvent.rowIdx],
-                                                    checkboxes["First Segment"] ?? false,
-                                                    checkboxes["Last Segment"] ?? false,
-                                                    checkboxes["All Segments"] ?? false,
-                                                    checkboxes["Pre Event"] ?? false,
-                                                    checkboxes["Post Event"] ?? false));
+                                                controller.programGrid?.currentRowIdx ??
+                                                    0,
+                                                SecondaryEventTemplateMasterProgram
+                                                    .convertSecondaryEventTemplateProgramGridDataToMasterProgram(
+                                                        controller
+                                                                .searchPrograms[
+                                                            rowDoubleTapEvent
+                                                                .rowIdx],
+                                                        checkboxes[
+                                                                "First Segment"] ??
+                                                            false,
+                                                        checkboxes[
+                                                                "Last Segment"] ??
+                                                            false,
+                                                        checkboxes[
+                                                                "All Segments"] ??
+                                                            false,
+                                                        checkboxes[
+                                                                "Pre Event"] ??
+                                                            false,
+                                                        checkboxes[
+                                                                "Post Event"] ??
+                                                            false));
                                             controller.calculateRowNo();
                                             controller.update(["gridData"]);
                                           },
-                                          mapData: searchcontroller.searchPrograms.map((e) => e.toJson()).toList(),
+                                          mapData: searchcontroller
+                                              .searchPrograms
+                                              .map((e) => e.toJson())
+                                              .toList(),
                                         );
                                       })),
                             )
@@ -315,7 +442,9 @@ class SecondaryEventTemplateMasterView extends GetView<SecondaryEventTemplateMas
                     : Card(
                         margin: EdgeInsets.fromLTRB(4, 4, 4, 0),
                         shape: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.only(topLeft: Radius.circular(10), topRight: Radius.circular(10)),
+                          borderRadius: BorderRadius.only(
+                              topLeft: Radius.circular(10),
+                              topRight: Radius.circular(10)),
                         ),
                         child: Container(
                           width: Get.width,
@@ -332,9 +461,7 @@ class SecondaryEventTemplateMasterView extends GetView<SecondaryEventTemplateMas
                                   btnText: btn["name"],
                                   // isEnabled: btn['isDisabled'],
                                   callback: () {
-                                    ((Utils.btnAccessHandler(btn['name'], controller.formPermissions!) == null))
-                                        ? null
-                                        : () => btnHandler(btn['name']);
+                                    btnHandler(btn['name']);
                                   },
                                 ),
                             ],
@@ -351,6 +478,21 @@ class SecondaryEventTemplateMasterView extends GetView<SecondaryEventTemplateMas
     switch (btnName) {
       case "Save":
         controller.save();
+        break;
+      case "Clear":
+        Get.delete<SecondaryEventTemplateMasterController>();
+        Get.find<HomeController>().clearPage1();
+        break;
+      case "Search":
+        Get.to(
+          SearchPage(
+            key: Key("Secondary Event Template Master"),
+            screenName: "Secondary Event Template Master",
+            appBarName: "Secondary Event Template Master",
+            strViewName: "vTesting",
+            isAppBarReq: true,
+          ),
+        );
         break;
       default:
     }
