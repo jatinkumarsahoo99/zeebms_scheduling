@@ -16,6 +16,7 @@ import '../app/providers/Utils.dart';
 import '../app/styles/theme.dart';
 
 class DataGridFromMap extends StatelessWidget {
+  final Map<String, double>? witdthSpecificColumn;
   DataGridFromMap({
     Key? key,
     required this.mapData,
@@ -48,9 +49,11 @@ class DataGridFromMap extends StatelessWidget {
     this.exportFileName,
     this.focusNode,
     this.previousWidgetFN,
+    this.witdthSpecificColumn,
   }) : super(key: key);
   final List mapData;
   bool enableSort;
+
   final bool? showSrNo;
   final bool? hideCode;
   final PlutoGridMode? mode;
@@ -279,7 +282,9 @@ class DataGridFromMap extends StatelessWidget {
             enableEditingMode: editKeys != null && editKeys!.contains(key),
             enableDropToResize: true,
             enableContextMenu: false,
-            width: Utils.getColumnSize(key: key, value: mapData[0][key]),
+            width: (witdthSpecificColumn != null && witdthSpecificColumn!.keys.toList().firstWhereOrNull((element) => element == key) != null)
+                ? witdthSpecificColumn![key]!
+                : Utils.getColumnSize(key: key, value: mapData[0][key]),
             enableAutoEditing: false,
             hide: showonly == null
                 ? (hideKeys != null && hideKeys!.contains(key)) ||
