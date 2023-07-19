@@ -222,6 +222,7 @@ class SecondaryEventTemplateMasterView extends GetView<SecondaryEventTemplateMas
                                 FormButtonWrapper(
                                   btnText: "Search",
                                   callback: () {
+                                    controller.postFastSearch();
                                     // Get.defaultDialog(
                                     //   title: "Documents",
                                     //   content: CommonDocsView(
