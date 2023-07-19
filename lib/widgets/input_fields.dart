@@ -1388,7 +1388,9 @@ class InputFields {
                               onTap: () {
                                 if (isEnabled ?? true) {
                                   controller.text = "${(int.tryParse(controller.text) ?? 0) + 1}";
-                                  onchanged!(controller.text);
+                                  if (onchanged != null) {
+                                    onchanged(controller.text);
+                                  }
                                 } else {
                                   print("Print tap");
                                 }
@@ -1613,7 +1615,7 @@ class InputFields {
           child: RawKeyboardListener(
             focusNode: FocusNode(skipTraversal: true),
             onKey: (RawKeyEvent keyEvent) {
-              if (showbtn!) {
+              if (showbtn) {
                 if (keyEvent.isKeyPressed(LogicalKeyboardKey.arrowDown)) {
                   /* controller.text =
                       "${(int.tryParse(controller.text) ?? 1) - 1}";*/

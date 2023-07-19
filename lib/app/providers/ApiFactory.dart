@@ -32,6 +32,7 @@ class ApiFactory {
 
   static String WEB_URL = Const.getWebAdminUrl();
   static String WEB_URL_COMMON = Const.getWebCommonUrl();
+  static String LOGIN_URL = Const.getWebLoginUrl();
 
   static String BASE_URL = Const.getBaseSchedulingAPIUrl();
 

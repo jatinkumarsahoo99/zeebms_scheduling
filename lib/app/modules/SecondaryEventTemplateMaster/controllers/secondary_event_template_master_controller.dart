@@ -1,9 +1,12 @@
 import 'package:bms_scheduling/app/controller/ConnectorControl.dart';
 import 'package:bms_scheduling/app/controller/MainController.dart';
 import 'package:bms_scheduling/app/data/DropDownValue.dart';
+import 'package:bms_scheduling/app/data/PermissionModel.dart';
 import 'package:bms_scheduling/app/modules/SecondaryEventTemplateMaster/bindings/secondary_event_template_master_programs.dart';
 import 'package:bms_scheduling/app/modules/SecondaryEventTemplateMaster/bindings/secondary_event_template_program_grid.dart';
 import 'package:bms_scheduling/app/providers/ApiFactory.dart';
+import 'package:bms_scheduling/app/providers/Utils.dart';
+import 'package:bms_scheduling/app/routes/app_pages.dart';
 import 'package:bms_scheduling/widgets/DataGridShowOnly.dart';
 import 'package:bms_scheduling/widgets/LoadingDialog.dart';
 import 'package:bms_scheduling/widgets/PlutoGrid/pluto_grid.dart';
@@ -22,14 +25,19 @@ class SecondaryEventTemplateMasterController extends GetxController {
   FocusNode txIdFocusNode = FocusNode();
   RxBool enableFields = RxBool(true);
   List<SecondaryEventTemplateMasterProgram> gridPrograms = [];
+  SecondaryEventTemplateMasterProgram? copiedProgram;
+
   List<SecondaryEventTemplateProgramGridData> searchPrograms = [];
   TextEditingController txCaption = TextEditingController(), txID = TextEditingController();
   PlutoGridStateManager? programGrid;
   PlutoGridStateManager? searchGrid;
+  List<PermissionModel>? formPermissions;
 
   @override
   void onInit() {
+    formPermissions = Utils.fetchPermissions1(Routes.SECONDARY_EVENT_TEMPLATE_MASTER.replaceAll("/", ""));
     getInitData();
+
     txIdFocusNode.addListener(() {
       if (!txIdFocusNode.hasFocus) {
         if (txID.text.isEmpty) {
@@ -41,6 +49,8 @@ class SecondaryEventTemplateMasterController extends GetxController {
         }
       }
     });
+    
+
     super.onInit();
   }
 
