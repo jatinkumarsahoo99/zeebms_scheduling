@@ -56,12 +56,9 @@ part 'app_routes.dart';
 class AppPages {
   AppPages._();
 
-  //https://app-scheduling-bms-dev.zeeconnect.in/frmCommercialMaster?loginCode=0iGe3vK5h2KGjfSKZTpmsQ%3D%3D&personalNo=xvmv9k3d1G7ierjaXRHiGA%3D%3D&formName=MgGRl5N4DW2tcWQscJpsp%2BIUElLFsJm5TsN5JpCXjHE%3D
-  // static const INITIAL = Routes.ROS_DISTRIBUTION +
-  static const INITIAL = kReleaseMode
-      ? Routes.HOME
-      : Routes.INVENTORY_STATUS_REPORT +
-          "?personalNo=kW5Bkf17%2FS5YF7ML28FmVg%3D%3D&loginCode=1BWIoBKeDl7qDSAAhxvXsQ%3D%3D&formName=OI8ukDpPPVN0I2BEXu2h4nuFu%2BZm1ZRpvP8NL4XCXzQ%3D";
+
+  static const INITIAL = kReleaseMode?Routes.HOME:Routes.D_SERIES_SPECIFICATION +
+      "?personalNo=kW5Bkf17%2FS5YF7ML28FmVg%3D%3D&loginCode=1BWIoBKeDl7qDSAAhxvXsQ%3D%3D&formName=OI8ukDpPPVN0I2BEXu2h4nuFu%2BZm1ZRpvP8NL4XCXzQ%3D";
 
   static final routes = [
     GetPage(
