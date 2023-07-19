@@ -2,6 +2,7 @@ import 'package:bms_scheduling/app/controller/ConnectorControl.dart';
 import 'package:bms_scheduling/app/controller/MainController.dart';
 import 'package:bms_scheduling/app/data/DropDownValue.dart';
 import 'package:bms_scheduling/app/data/PermissionModel.dart';
+import 'package:bms_scheduling/app/modules/SecondaryEventTemplateMaster/bindings/secondary_event_template_master_color.dart';
 import 'package:bms_scheduling/app/modules/SecondaryEventTemplateMaster/bindings/secondary_event_template_master_programs.dart';
 import 'package:bms_scheduling/app/modules/SecondaryEventTemplateMaster/bindings/secondary_event_template_program_grid.dart';
 import 'package:bms_scheduling/app/providers/ApiFactory.dart';
@@ -17,6 +18,7 @@ class SecondaryEventTemplateMasterController extends GetxController {
   RxList<DropDownValue> locations = RxList<DropDownValue>();
   RxList<DropDownValue> channels = RxList<DropDownValue>();
   RxList<DropDownValue> events = RxList<DropDownValue>();
+  List<SecondaryTemplateEventColors> colors = [];
 
   DropDownValue? selectedLocation, selectedChannel;
   var selectedProgram = Rxn<DropDownValue>();
@@ -28,14 +30,16 @@ class SecondaryEventTemplateMasterController extends GetxController {
   SecondaryEventTemplateMasterProgram? copiedProgram;
 
   List<SecondaryEventTemplateProgramGridData> searchPrograms = [];
-  TextEditingController txCaption = TextEditingController(), txID = TextEditingController();
+  TextEditingController txCaption = TextEditingController(),
+      txID = TextEditingController();
   PlutoGridStateManager? programGrid;
   PlutoGridStateManager? searchGrid;
   List<PermissionModel>? formPermissions;
 
   @override
   void onInit() {
-    formPermissions = Utils.fetchPermissions1(Routes.SECONDARY_EVENT_TEMPLATE_MASTER.replaceAll("/", ""));
+    formPermissions = Utils.fetchPermissions1(
+        Routes.SECONDARY_EVENT_TEMPLATE_MASTER.replaceAll("/", ""));
     getInitData();
 
     txIdFocusNode.addListener(() {
@@ -49,7 +53,6 @@ class SecondaryEventTemplateMasterController extends GetxController {
         }
       }
     });
-    
 
     super.onInit();
   }
@@ -60,18 +63,31 @@ class SecondaryEventTemplateMasterController extends GetxController {
     }
   }
 
-  var checkBoxes = RxMap({"First Segment": false, "Last Segment": false, "All Segments": false, "Pre Event": false, "Post Event": false});
+  var checkBoxes = RxMap({
+    "First Segment": false,
+    "Last Segment": false,
+    "All Segments": false,
+    "Pre Event": false,
+    "Post Event": false
+  });
 
   getInitData() {
     Get.find<ConnectorControl>().GETMETHODCALL(
         api: ApiFactory.SecondaryEventTemplateMasterInitData,
         fun: (data) {
           if (data is Map && data.containsKey("pageload")) {
+            locations.value = [];
             for (var e in data["pageload"]["lstlocation"]) {
-              locations.add(DropDownValue(key: e["locationCode"], value: e["locationName"]));
+              locations.add(DropDownValue(
+                  key: e["locationCode"], value: e["locationName"]));
             }
+            events.value = [];
             for (var e in data["pageload"]["lstEventType"]) {
               events.add(DropDownValue(key: e, value: e));
+            }
+            colors = [];
+            for (var e in data["pageload"]["lstLoadColours"]) {
+              colors.add(SecondaryTemplateEventColors.fromJson(e));
             }
           }
         });
@@ -83,7 +99,8 @@ class SecondaryEventTemplateMasterController extends GetxController {
         fun: (data) {
           if (data is Map && data.containsKey("channel")) {
             for (var e in data["channel"]) {
-              channels.add(DropDownValue(key: e["channelCode"], value: e["channelName"]));
+              channels.add(DropDownValue(
+                  key: e["channelCode"], value: e["channelName"]));
             }
           }
         });
@@ -91,7 +108,8 @@ class SecondaryEventTemplateMasterController extends GetxController {
 
   getProgramPick() {
     Get.find<ConnectorControl>().GETMETHODCALL(
-        api: ApiFactory.SecondaryEventTemplateMasterGetProgramPicker(selectedLocation?.key, selectedChannel?.key),
+        api: ApiFactory.SecondaryEventTemplateMasterGetProgramPicker(
+            selectedLocation?.key, selectedChannel?.key),
         fun: (data) {
           if (data is Map && data.containsKey("getprogram")) {
             Get.defaultDialog(
@@ -104,7 +122,10 @@ class SecondaryEventTemplateMasterController extends GetxController {
                     hideCode: false,
                     onRowDoubleTap: (rowTap) {
                       selectedProgram.value = DropDownValue(
-                          value: data["getprogram"][rowTap.rowIdx]["programName"], key: data["getprogram"][rowTap.rowIdx]["programCode"]);
+                          value: data["getprogram"][rowTap.rowIdx]
+                              ["programName"],
+                          key: data["getprogram"][rowTap.rowIdx]
+                              ["programCode"]);
                     },
                   )),
             );
@@ -114,11 +135,16 @@ class SecondaryEventTemplateMasterController extends GetxController {
 
   getProgramLeave() {
     Get.find<ConnectorControl>().GETMETHODCALL(
-        api: ApiFactory.SecondaryEventTemplateMasterGetProgramLeave(selectedLocation?.key, selectedChannel?.key, selectedProgram.value?.key),
+        api: ApiFactory.SecondaryEventTemplateMasterGetProgramLeave(
+            selectedLocation?.key,
+            selectedChannel?.key,
+            selectedProgram.value?.key),
         fun: (data) {
           if (data is Map && data.containsKey("getprogram")) {
+            gridPrograms = [];
             for (var program in data["getprogram"]) {
-              gridPrograms.add(SecondaryEventTemplateMasterProgram.fromJson(program));
+              gridPrograms
+                  .add(SecondaryEventTemplateMasterProgram.fromJson(program));
             }
             update(["gridData"]);
           }
@@ -138,8 +164,10 @@ class SecondaryEventTemplateMasterController extends GetxController {
         },
         fun: (data) {
           if (data is Map && data.containsKey("insertSearch")) {
+            searchPrograms = [];
             for (var element in data["insertSearch"]) {
-              searchPrograms.add(SecondaryEventTemplateProgramGridData.fromJson(element));
+              searchPrograms
+                  .add(SecondaryEventTemplateProgramGridData.fromJson(element));
             }
             update(["searchGrid"]);
           }
