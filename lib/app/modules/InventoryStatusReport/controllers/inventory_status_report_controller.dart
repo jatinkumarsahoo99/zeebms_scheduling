@@ -1,6 +1,7 @@
 import 'package:bms_scheduling/app/controller/ConnectorControl.dart';
 import 'package:bms_scheduling/app/providers/ApiFactory.dart';
 import 'package:bms_scheduling/widgets/LoadingDialog.dart';
+import 'package:bms_scheduling/widgets/PlutoGrid/src/manager/pluto_grid_state_manager.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:intl/intl.dart';
@@ -21,6 +22,8 @@ class InventoryStatusReportController extends GetxController {
   var locationFN = FocusNode();
   var selectedRadio = "".obs;
   Rxn<InventoryStatusReportLoadModel?> onLoadModel = Rxn<InventoryStatusReportLoadModel?>();
+
+  PlutoGridStateManager? stateManager;
 
   @override
   void onInit() {
