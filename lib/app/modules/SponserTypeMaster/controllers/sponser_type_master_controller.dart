@@ -9,13 +9,16 @@ import 'package:get/get.dart';
 class SponserTypeMasterController extends GetxController {
   //TODO: Implement SponserTypeMasterController
   FocusNode sponserNameFocus = FocusNode();
-  TextEditingController sponserName = TextEditingController(), shortName = TextEditingController(), premium = TextEditingController();
+  TextEditingController sponserName = TextEditingController(),
+      shortName = TextEditingController(),
+      premium = TextEditingController(text: "0");
   var selectedSponser = Rxn<DropDownValue>();
   String? sponsorTypeCode;
   @override
   void onInit() {
     sponserNameFocus.addListener(() {
       if ((!sponserNameFocus.hasFocus) && sponserName.text.isNotEmpty) {
+        sponserName.text = sponserName.text.toUpperCase();
         getData();
       }
     });
@@ -26,13 +29,22 @@ class SponserTypeMasterController extends GetxController {
     Get.find<ConnectorControl>().GETMETHODCALL(
         api: ApiFactory.SponserTypeMasterGetRecord("", sponserName.text),
         fun: (data) {
-          if (data is Map && data.containsKey("sponsorType") && (data["sponsorType"] as List).isNotEmpty) {
+          if (data is Map &&
+              data.containsKey("sponsorType") &&
+              (data["sponsorType"] as List).isNotEmpty) {
             shortName.text = data["sponsorType"][0]["sponsorTypeShortName"];
             premium.text = data["sponsorType"][0]["sponsorPremium"].toString();
-            if (data["sponsorType"][0]["sponsorType"].toString().toLowerCase() == "m") {
-              selectedSponser.value = DropDownValue(key: "M", value: "Multiple");
+            if (data["sponsorType"][0]["sponsorType"]
+                    .toString()
+                    .toLowerCase() ==
+                "m") {
+              selectedSponser.value =
+                  DropDownValue(key: "M", value: "Multiple");
             }
-            if (data["sponsorType"][0]["sponsorType"].toString().toLowerCase() == "s") {
+            if (data["sponsorType"][0]["sponsorType"]
+                    .toString()
+                    .toLowerCase() ==
+                "s") {
               selectedSponser.value = DropDownValue(key: "S", value: "Single");
             }
             sponsorTypeCode = data["sponsorType"][0]["sponsorTypeCode"];

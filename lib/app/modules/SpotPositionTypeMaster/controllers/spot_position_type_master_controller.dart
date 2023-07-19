@@ -11,8 +11,8 @@ class SpotPositionTypeMasterController extends GetxController {
 
   TextEditingController spotPostionName = TextEditingController(),
       spotShortName = TextEditingController(),
-      logPosition = TextEditingController(),
-      positionPremium = TextEditingController();
+      logPosition = TextEditingController(text: "0"),
+      positionPremium = TextEditingController(text: "0");
   var selectedSpotInLog = Rxn<DropDownValue>();
   var breakNo = RxBool(false);
   var spots = RxList<DropDownValue>();
@@ -25,6 +25,7 @@ class SpotPositionTypeMasterController extends GetxController {
     getInitData();
     positionNameFocus.addListener(() {
       if ((!positionNameFocus.hasFocus) && spotPostionName.text.isNotEmpty) {
+        spotPostionName.text = spotPostionName.text.toUpperCase();
         getData();
       }
     });
@@ -37,7 +38,8 @@ class SpotPositionTypeMasterController extends GetxController {
         fun: (data) {
           if (data is Map && data.containsKey("setSpotPriority")) {
             for (var element in data["setSpotPriority"]) {
-              spots.add(DropDownValue(key: element["lookupCode"], value: element["lookupName"]));
+              spots.add(DropDownValue(
+                  key: element["lookupCode"], value: element["lookupName"]));
             }
           }
         });
@@ -47,24 +49,39 @@ class SpotPositionTypeMasterController extends GetxController {
     Get.find<ConnectorControl>().GETMETHODCALL(
         api: ApiFactory.SpotPositionTypeGetRecord("", spotPostionName.text),
         fun: (data) {
-          if (data is Map && data.containsKey("retrieveRecord") && (data["retrieveRecord"] as List).isNotEmpty) {
-            spotPostionName.text = data["retrieveRecord"][0]["spotPositionTypeName"];
-            spotShortName.text = data["retrieveRecord"][0]["spotPositionShortName"].toString();
-            positionPremium.text = data["retrieveRecord"][0]["spotPositionPremium"].toString();
-            logPosition.text = data["retrieveRecord"][0]["spotPositionInLog"].toString();
+          if (data is Map &&
+              data.containsKey("retrieveRecord") &&
+              (data["retrieveRecord"] as List).isNotEmpty) {
+            spotPostionName.text =
+                data["retrieveRecord"][0]["spotPositionTypeName"];
+            spotShortName.text =
+                data["retrieveRecord"][0]["spotPositionShortName"].toString();
+            positionPremium.text =
+                data["retrieveRecord"][0]["spotPositionPremium"].toString();
+            logPosition.text =
+                data["retrieveRecord"][0]["spotPositionInLog"].toString();
 
-            if (data["retrieveRecord"][0]["positionApplies"].toString().toLowerCase() == "y") {
+            if (data["retrieveRecord"][0]["positionApplies"]
+                    .toString()
+                    .toLowerCase() ==
+                "y") {
               positionNo.value = true;
             } else {
               positionNo.value = false;
             }
-            if (data["retrieveRecord"][0]["breakNumberApplies"].toString().toLowerCase() == "y") {
+            if (data["retrieveRecord"][0]["breakNumberApplies"]
+                    .toString()
+                    .toLowerCase() ==
+                "y") {
               breakNo.value = true;
             } else {
               breakNo.value = false;
             }
-            selectedSpotInLog.value = spots
-                .firstWhereOrNull((element) => element.key?.toLowerCase() == data["retrieveRecord"][0]["spotComesInLog"].toString().toLowerCase());
+            selectedSpotInLog.value = spots.firstWhereOrNull((element) =>
+                element.key?.toLowerCase() ==
+                data["retrieveRecord"][0]["spotComesInLog"]
+                    .toString()
+                    .toLowerCase());
             // if (data["sponsorType"][0]["spotComesInLog"].toString().toLowerCase() == "s") {
             //   selectedSpotInLog.value = DropDownValue(key: "S", value: "Single");
             // }
@@ -74,7 +91,8 @@ class SpotPositionTypeMasterController extends GetxController {
             // if (data["sponsorType"][0]["sponsorType"].toString().toLowerCase() == "s") {
             //   selectedSponser.value = DropDownValue(key: "S", value: "Single");
             // }
-            spotPositionTypeCode = data["retrieveRecord"][0]["spotPositionTypeCode"];
+            spotPositionTypeCode =
+                data["retrieveRecord"][0]["spotPositionTypeCode"];
           }
         });
   }
