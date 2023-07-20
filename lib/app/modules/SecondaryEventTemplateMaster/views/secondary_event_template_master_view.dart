@@ -10,6 +10,7 @@ import 'package:bms_scheduling/app/providers/Utils.dart';
 import 'package:bms_scheduling/widgets/DataGridMultiCheckBox.dart';
 import 'package:bms_scheduling/widgets/DataGridShowOnly.dart';
 import 'package:bms_scheduling/widgets/FormButton.dart';
+import 'package:bms_scheduling/widgets/LoadingDialog.dart';
 import 'package:bms_scheduling/widgets/dropdown.dart';
 import 'package:bms_scheduling/widgets/input_fields.dart';
 import 'package:flutter/material.dart';
@@ -315,7 +316,18 @@ class SecondaryEventTemplateMasterView extends StatelessWidget {
                                 FormButtonWrapper(
                                   btnText: "Search",
                                   callback: () {
-                                    controller.postFastSearch();
+                                    if (controller.txID.text.isEmpty) {
+                                      LoadingDialog.modify(
+                                          "Do you want to search all events?",
+                                          () {
+                                        controller.postFastSearch();
+                                      }, () {},
+                                          deleteTitle: "YES",
+                                          cancelTitle: "NO");
+                                    } else {
+                                      controller.postFastSearch();
+                                    }
+
                                     // Get.defaultDialog(
                                     //   title: "Documents",
                                     //   content: CommonDocsView(
