@@ -3,6 +3,7 @@ import 'package:bms_scheduling/app/providers/ApiFactory.dart';
 import 'package:bms_scheduling/widgets/NumericStepButton.dart';
 import 'package:bms_scheduling/widgets/input_fields.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 
 import 'package:get/get.dart';
 import 'package:intl/intl.dart';
@@ -11,8 +12,11 @@ import '../../../../widgets/CheckBoxWidget.dart';
 import '../../../../widgets/DateTime/DateWithThreeTextField.dart';
 import '../../../../widgets/FormButton.dart';
 import '../../../../widgets/LoadingDialog.dart';
+import '../../../../widgets/PlutoGrid/src/manager/pluto_grid_state_manager.dart';
+import '../../../../widgets/PlutoGrid/src/pluto_grid.dart';
 import '../../../../widgets/dropdown.dart';
 import '../../../../widgets/gridFromMap.dart';
+import '../../../../widgets/gridFromMap1.dart';
 import '../../../../widgets/radio_row.dart';
 import '../../../controller/HomeController.dart';
 import '../../../providers/Utils.dart';
@@ -67,6 +71,7 @@ class ManageChannelInvemtoryView extends GetView<ManageChannelInvemtoryControlle
                         controller.weekDaysTC.text = DateFormat('EEEE').format(DateFormat("dd-MM-yyyy").parse(date));
                       },
                       isEnable: controller.bottomControllsEnable.value,
+                      startDate: DateTime.now(),
                     );
                   }),
                   const SizedBox(width: 10),
@@ -95,7 +100,32 @@ class ManageChannelInvemtoryView extends GetView<ManageChannelInvemtoryControlle
                           : null,
                       child: controller.dataTableList.value.isEmpty
                           ? null
-                          : DataGridFromMap(mapData: controller.dataTableList.value.map((e) => e.toJson()).toList()),
+                          : DataGridFromMap(
+                              mapData: controller.dataTableList.value.map((e) => e.toJson()).toList(),
+                              editKeys: ["commDuration"],
+                              onEdit: (row) {
+                                controller.lastSelectedIdx = row.rowIdx;
+                                if (RegExp(r'^[0-9]+$').hasMatch(row.value)) {
+                                  controller.dataTableList[row.rowIdx].commDuration = num.tryParse(row.value.toString());
+                                  controller.madeChanges = true;
+                                } else {
+                                  controller.dataTableList.refresh();
+                                }
+                              },
+                              witdthSpecificColumn: {
+                                "commDuration": 200,
+                              },
+                              mode: PlutoGridMode.normal,
+                              colorCallback: (row) =>
+                                  (row.row.cells.containsValue(controller.stateManager?.currentCell)) ? Colors.deepPurple.shade200 : Colors.white,
+                              onload: (event) {
+                                controller.stateManager = event.stateManager;
+                                event.stateManager.setSelectingMode(PlutoGridSelectingMode.row);
+                                event.stateManager.setSelecting(true);
+                                event.stateManager.setCurrentCell(
+                                    event.stateManager.getRowByIdx(controller.lastSelectedIdx)?.cells['commDuration'], controller.lastSelectedIdx);
+                              },
+                            ),
                     );
                   },
                 ),
@@ -108,19 +138,29 @@ class ManageChannelInvemtoryView extends GetView<ManageChannelInvemtoryControlle
                   crossAxisAlignment: CrossAxisAlignment.end,
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
-                    SizedBox(
-                      width: context.width * .17,
-                      child: Obx(() {
-                        return NumericStepButton(
-                          counter: controller.count.value,
-                          onChanged: (val) {
-                            controller.count.value = val;
-                          },
-                          hint: "Common.Dur.Sec For 30 Mins Prog.",
-                          isEnable: controller.bottomControllsEnable.value,
-                        );
-                      }),
+                    InputFields.numbers(
+                      hintTxt: "Common.Dur.Sec For 30 Mins Prog.",
+                      inputformatters: [
+                        FilteringTextInputFormatter.allow(RegExp(r'[0-9]')),
+                      ],
+                      controller: controller.counterTC,
+                      padLeft: 5,
+                      isNegativeReq: false,
+                      width: .17,
                     ),
+                    // SizedBox(
+                    //   width: context.width * .17,
+                    //   child: Obx(() {
+                    //     return NumericStepButton(
+                    //       counter: controller.count.value,
+                    //       onChanged: (val) {
+                    //         controller.count.value = val;
+                    //       },
+                    //       hint: "Common.Dur.Sec For 30 Mins Prog.",
+                    //       isEnable: controller.bottomControllsEnable.value,
+                    //     );
+                    //   }),
+                    // ),
                     // const SizedBox(width: 10),
                     Obx(() {
                       return Row(
@@ -188,7 +228,7 @@ class ManageChannelInvemtoryView extends GetView<ManageChannelInvemtoryControlle
             toTimeCtr = TextEditingController();
         var selectedRadio = "".obs;
         var selectedWeekDays = List.generate(8, (index) => false).toList();
-        var counter = 0;
+        // var counter = 0;
         controller.selectedProgram = null;
         controller.programs.clear();
         Get.defaultDialog(
@@ -220,6 +260,7 @@ class ManageChannelInvemtoryView extends GetView<ManageChannelInvemtoryControlle
                     mainTextController: fromDateCtr,
                     widthRation: 0.15,
                     backDated: DateTime.now(),
+                    startDate: DateTime.now(),
                   ),
                   const SizedBox(width: 20),
                   DateWithThreeTextField(
@@ -227,6 +268,7 @@ class ManageChannelInvemtoryView extends GetView<ManageChannelInvemtoryControlle
                     mainTextController: toDateCtr,
                     widthRation: 0.15,
                     backDated: DateTime.now(),
+                    startDate: DateTime.now(),
                     onFocusChange: (date) {
                       String weekDays = "";
                       for (var i = 0; i < selectedWeekDays.length; i++) {
@@ -278,21 +320,31 @@ class ManageChannelInvemtoryView extends GetView<ManageChannelInvemtoryControlle
                 );
               }),
               const SizedBox(height: 5),
-              Padding(
-                padding: const EdgeInsets.only(left: 20),
-                child: Align(
-                  alignment: Alignment.topLeft,
-                  child: SizedBox(
-                    width: context.width * .15,
-                    child: NumericStepButton(
-                      onChanged: (val) => counter = val,
-                      hint: "Common.Dur.Sec",
-                      counter: counter,
-                      minValue: 0,
-                    ),
-                  ),
-                ),
+              InputFields.numbers(
+                hintTxt: "Common.Dur.Sec",
+                inputformatters: [
+                  FilteringTextInputFormatter.allow(RegExp(r'[0-9]')),
+                ],
+                controller: controller.dialogCounter,
+                padLeft: 5,
+                isNegativeReq: false,
+                width: .15,
               ),
+              // Padding(
+              //   padding: const EdgeInsets.only(left: 20),
+              //   child: Align(
+              //     alignment: Alignment.topLeft,
+              //     child: SizedBox(
+              //       width: context.width * .15,
+              //       child: NumericStepButton(
+              //         onChanged: (val) => counter = val,
+              //         hint: "Common.Dur.Sec",
+              //         counter: counter,
+              //         minValue: 0,
+              //       ),
+              //     ),
+              //   ),
+              // ),
             ],
           ),
           cancel: FormButton(
@@ -305,7 +357,6 @@ class ManageChannelInvemtoryView extends GetView<ManageChannelInvemtoryControlle
                   toTimeCtr.text,
                   selectedWeekDays,
                   selectedRadio.value,
-                  counter,
                 );
               }),
           confirm: FormButton(

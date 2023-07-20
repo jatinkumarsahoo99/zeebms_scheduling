@@ -154,7 +154,7 @@ abstract class _Paths {
   static const COMING_UP_NEXT_MENU = '/frmComingUpNextMaster';
   static const COMING_UP_TOMORROW_MENU = '/frmComingUpTomorrowMaster';
   static const DATE_WISE_ERROR_SPOTS = '/frmDateWiseErrorReport';
-  static const DATE_WISE_FILLER_REPORT = '/frmDateWiseFillerReport';
+  static const DATE_WISE_FILLER_REPORT = '/frmDatewiseFillerReport';
   static const CREATIVE_TAG_ON = '/frmCreativeTagOnLink';
   static const EUROPE_RUNNING_ORDER_STATUS = '/Robookingotherrevenues';
   static const EUROPE_DROP_SPOTS = '/RorescheduleOtherrevune';
