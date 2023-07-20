@@ -87,7 +87,12 @@ abstract class RoutesList {
     _Paths.D_SERIES_SPECIFICATION,
     _Paths.EUROPE_RUNNING_ORDER_STATUS,
     _Paths.EUROPE_DROP_SPOTS,
-
+    _Paths.PROMO_TYPE_MASTER,
+    _Paths.SECONDARY_EVENT_TEMPLATE_MASTER,
+    _Paths.SPOT_POSITION_TYPE_MASTER,
+    _Paths.SPONSER_TYPE_MASTER,
+    _Paths.LOG_CONVERT,
+    _Paths.MATERIAL_ID_SEARCH
   ];
 }
 
