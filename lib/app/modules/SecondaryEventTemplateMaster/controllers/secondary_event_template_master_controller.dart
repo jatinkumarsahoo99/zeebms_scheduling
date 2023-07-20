@@ -152,26 +152,32 @@ class SecondaryEventTemplateMasterController extends GetxController {
   }
 
   postFastSearch() {
-    Get.find<ConnectorControl>().POSTMETHOD(
-        api: ApiFactory.SecondaryEventTemplateMasterFastProgSearch,
-        json: {
-          "locationcode": selectedLocation?.key,
-          "channelcode": selectedChannel?.key,
-          "mine": mine.value,
-          "eventType": selectedEvent?.key,
-          "txID": txID.text,
-          "caption": txCaption.text
-        },
-        fun: (data) {
-          if (data is Map && data.containsKey("insertSearch")) {
-            searchPrograms = [];
-            for (var element in data["insertSearch"]) {
-              searchPrograms
-                  .add(SecondaryEventTemplateProgramGridData.fromJson(element));
+    LoadingDialog.call();
+    try {
+      Get.find<ConnectorControl>().POSTMETHOD(
+          api: ApiFactory.SecondaryEventTemplateMasterFastProgSearch,
+          json: {
+            "locationcode": selectedLocation?.key,
+            "channelcode": selectedChannel?.key,
+            "mine": mine.value,
+            "eventType": selectedEvent?.key,
+            "txID": txID.text,
+            "caption": txCaption.text
+          },
+          fun: (data) {
+            if (data is Map && data.containsKey("insertSearch")) {
+              searchPrograms = [];
+              for (var element in data["insertSearch"]) {
+                searchPrograms.add(
+                    SecondaryEventTemplateProgramGridData.fromJson(element));
+              }
+              update(["searchGrid"]);
             }
-            update(["searchGrid"]);
-          }
-        });
+          });
+    } catch (e) {
+      printError(info: "Failed to search");
+    }
+    Get.back();
   }
 
   save() {

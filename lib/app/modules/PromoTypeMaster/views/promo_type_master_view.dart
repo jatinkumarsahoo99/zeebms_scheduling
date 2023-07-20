@@ -1,4 +1,5 @@
 import 'package:bms_scheduling/app/controller/HomeController.dart';
+import 'package:bms_scheduling/app/modules/CommonSearch/views/common_search_view.dart';
 import 'package:bms_scheduling/app/providers/Const.dart';
 import 'package:bms_scheduling/app/providers/SizeDefine.dart';
 import 'package:bms_scheduling/widgets/FormButton.dart';
@@ -141,6 +142,15 @@ class PromoTypeMasterView extends StatelessWidget {
         break;
       case "Save":
         controller.saveData();
+        break;
+      case "Search":
+        Get.to(SearchPage(
+          key: Key("Promo Type Master"),
+          screenName: "Promo Type Master",
+          appBarName: "Promo Type Master",
+          strViewName: "vTesting",
+          isAppBarReq: true,
+        ));
         break;
       default:
     }
