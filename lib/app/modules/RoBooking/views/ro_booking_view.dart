@@ -545,4 +545,48 @@ class RoBookingView extends StatelessWidget {
               ));
         });
   }
+
+  btnHanlder(btn) {
+    switch (btn["name"]) {
+      case "Docs":
+        return FormButtonWrapper(
+          btnText: btn["name"],
+          // isEnabled: btn['isDisabled'],
+          callback: () {
+            Get.defaultDialog(
+              title: "Documents",
+              content: CommonDocsView(
+                documentKey:
+                    "RObooking${controller.selectedLocation!.key}${controller.selectedChannel!.key}${controller.bookingMonthCtrl.text}${controller.bookingNoCtrl.text}",
+              ),
+            ).then((value) {
+              Get.delete<CommonDocsController>(tag: "commonDocs");
+            });
+          },
+        );
+      case "Save":
+        return FormButtonWrapper(
+          btnText: btn["name"],
+          // isEnabled: btn['isDisabled'],
+          callback: () {
+            controller.saveCheck();
+          },
+        );
+      case "Clear":
+        return FormButtonWrapper(
+          btnText: btn["name"],
+          // isEnabled: btn['isDisabled'],
+          callback: () {
+            Get.delete<RoBookingController>();
+            Get.find<HomeController>().clearPage1();
+          },
+        );
+      default:
+        return FormButtonWrapper(
+          btnText: btn["name"],
+          // isEnabled: btn['isDisabled'],
+          callback: null,
+        );
+    }
+  }
 }
