@@ -35,39 +35,32 @@ class HomeController extends GetxController {
   }
 
   getTransmissionLog() async {
-    String value =
-        await rootBundle.loadString('assets/json/transmission_buttons.json');
+    String value = await rootBundle.loadString('assets/json/transmission_buttons.json');
     tranmissionButtons = json.decode(value)["transmissionLog"];
     asurunImportButtoons = json.decode(value)["assrunImport"];
     update(["transButtons"]);
   }
 
   clearPage1() {
-    String extractName = (html.window.location.href.split("?")[0])
-        .split(ApiFactory.SPLIT_CLEAR_PAGE)[1];
-    print("Extract name>>>>" + extractName);
-    var uri = Uri.dataFromString(
-        html.window.location.href); //converts string to a uri
-    Map<String, String> params = uri.queryParameters;
-    print("Params are>>>>" + params.toString());
-    if (RoutesList.listRoutes.contains("/" + extractName)) {
-      if (extractName == "frmDailyFPC") {
-        html.window.location.reload();
-      } else {
-        String personalNo =
-            Aes.encrypt(Get.find<MainController>().user?.personnelNo ?? "") ??
-                "";
-        String loginCode =
-            (Aes.encrypt(Get.find<MainController>().user?.logincode ?? "") ??
-                "");
-        String formName =
-            (Aes.encrypt(Get.find<MainController>().formName) ?? "");
-        Get.offAndToNamed("/" + extractName, parameters: {
-          "loginCode": loginCode,
-          "personalNo": personalNo,
-          "formName": formName
-        });
+    try {
+      print(html.window.location.href);
+      String extractName = (html.window.location.href.split("?")[0]).split(ApiFactory.SPLIT_CLEAR_PAGE)[1];
+      print("Extract name>>>>" + extractName);
+      var uri = Uri.dataFromString(html.window.location.href); //converts string to a uri
+      Map<String, String> params = uri.queryParameters;
+      print("Params are>>>>" + params.toString());
+      if (RoutesList.listRoutes.contains("/" + extractName)) {
+        if (extractName == "frmDailyFPC") {
+          html.window.location.reload();
+        } else {
+          String personalNo = Aes.encrypt(Get.find<MainController>().user?.personnelNo ?? "") ?? "";
+          String loginCode = (Aes.encrypt(Get.find<MainController>().user?.logincode ?? "") ?? "");
+          String formName = (Aes.encrypt(Get.find<MainController>().formName) ?? "");
+          Get.offAndToNamed("/" + extractName, parameters: {"loginCode": loginCode, "personalNo": personalNo, "formName": formName});
+        }
       }
+    } catch (e) {
+      print(e.toString());
     }
   }
 }
