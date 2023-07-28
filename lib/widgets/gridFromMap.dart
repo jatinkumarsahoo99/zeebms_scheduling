@@ -141,10 +141,12 @@ class DataGridFromMap extends StatelessWidget {
                             exportFileName: exportFileName, onPressedClick: onContextMenuClick, plutoContext: rendererContext);
                       }
                     },
-                    child: Text(
-                      (rendererContext.cell.value ?? "").toString(),
-                      style: TextStyle(
-                        fontSize: SizeDefine.columnTitleFontSize,
+                    child: Expanded(
+                      child: Text(
+                        (rendererContext.cell.value ?? "").toString(),
+                        style: TextStyle(
+                          fontSize: SizeDefine.columnTitleFontSize,
+                        ),
                       ),
                     ),
                   );
@@ -202,10 +204,12 @@ class DataGridFromMap extends StatelessWidget {
                             exportFileName: exportFileName, onPressedClick: onContextMenuClick, plutoContext: rendererContext);
                       }
                     },
-                    child: Text(
-                      rendererContext.cell.value.toString(),
-                      style: TextStyle(
-                        fontSize: SizeDefine.columnTitleFontSize,
+                    child: Expanded(
+                      child: Text(
+                        rendererContext.cell.value.toString(),
+                        style: TextStyle(
+                          fontSize: SizeDefine.columnTitleFontSize,
+                        ),
                       ),
                     ),
                   );
@@ -249,12 +253,14 @@ class DataGridFromMap extends StatelessWidget {
                     onSecondaryTapDown: (detail) {
                       DataGridMenu().showGridMenu(rendererContext.stateManager, detail, context);
                     },
-                    child: Text(
-                      rendererContext.cell.value.toString(),
-                      style: TextStyle(
-                          fontSize: SizeDefine.columnTitleFontSize,
-                          fontWeight:
-                              rendererContext.row.cells["modifed"]?.value.toString().toLowerCase() == "y" ? FontWeight.bold : FontWeight.normal),
+                    child: Expanded(
+                      child: Text(
+                        rendererContext.cell.value.toString(),
+                        style: TextStyle(
+                            fontSize: SizeDefine.columnTitleFontSize,
+                            fontWeight:
+                                rendererContext.row.cells["modifed"]?.value.toString().toLowerCase() == "y" ? FontWeight.bold : FontWeight.normal),
+                      ),
                     ),
                   ),
                 );
@@ -268,10 +274,12 @@ class DataGridFromMap extends StatelessWidget {
                           exportFileName: exportFileName, onPressedClick: onContextMenuClick, plutoContext: rendererContext);
                     }
                   },
-                  child: Text(
-                    rendererContext.cell.value.toString(),
-                    style: TextStyle(
-                      fontSize: SizeDefine.columnTitleFontSize,
+                  child: Expanded(
+                    child: Text(
+                      rendererContext.cell.value.toString(),
+                      style: TextStyle(
+                        fontSize: SizeDefine.columnTitleFontSize,
+                      ),
                     ),
                   ),
                 );

@@ -137,6 +137,7 @@ class TransmissionLogController extends GetxController {
   RxnString selectExportType = RxnString("Excel");
 
   ExportFPCTimeModel? exportFPCTime;
+  RxString lastSavedLoggedUser=RxString("");
 
   @override
   void onInit() {
@@ -1278,6 +1279,7 @@ class TransmissionLogController extends GetxController {
         json: sendData,
         fun: (Map<String, dynamic> map) {
           Get.back();
+          Get.back();
           transmissionLog = TransmissionLogModel.fromJson(map);
           if (transmissionLog != null &&
               transmissionLog?.loadSavedLogOutput != null &&
@@ -1698,6 +1700,7 @@ class TransmissionLogController extends GetxController {
                   "";
               isEnable.value = false;
               isFetch.value = true;
+              lastSavedLoggedUser.value=" Last Saved Log: "+(transmissionLog?.loadSavedLogOutput?.logSavedBy??"");
               update(["transmissionList"]);
             } else {
               LoadingDialog.callInfoMessage("No Data Found");
@@ -1887,6 +1890,8 @@ class TransmissionLogController extends GetxController {
                   isFetch.value = true;
                   update(["transmissionList"]);
                   // colorGrid(false);
+                }else{
+                  LoadingDialog.callInfoMessage(map.toString());
                 }
               });
         });
@@ -2395,7 +2400,7 @@ class TransmissionLogController extends GetxController {
           fun();
         }
       } else {
-        LoadingDialog.callInfoMessage("We couldn't copy this row");
+        LoadingDialog.callInfoMessage("We couldn't cut this row");
       }
     } else {
       lastSelectOption = "copy";
