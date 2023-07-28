@@ -15,7 +15,7 @@ class DealView extends GetView<RoBookingController> {
   Widget build(BuildContext context) {
     return GetBuilder<RoBookingController>(
         id: "dealGrid",
-        init: controller,
+        init: Get.find<RoBookingController>(),
         builder: (gridcontroller) => Column(
               mainAxisSize: MainAxisSize.max,
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
