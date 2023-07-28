@@ -17,7 +17,7 @@ class ProgramView extends GetView<RoBookingController> {
   @override
   Widget build(BuildContext context) {
     return GetBuilder<RoBookingController>(
-        init: controller,
+        init: Get.find<RoBookingController>(),
         id: "programView",
         builder: (controller) {
           return Row(
