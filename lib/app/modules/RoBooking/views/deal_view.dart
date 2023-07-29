@@ -27,11 +27,11 @@ class DealView extends GetView<RoBookingController> {
                       child: DateWithThreeTextField(
                         title: "Deal Start",
                         mainTextController: controller.dealFromCtrl,
-                        isEnable: controller.dealNoLeaveData == null,
+                        isEnable: false,
                       ),
                     ),
                     DateWithThreeTextField(
-                        isEnable: controller.dealNoLeaveData == null,
+                        isEnable: false,
                         title: "Deal End",
                         mainTextController: controller.dealToCtrl),
                   ],
