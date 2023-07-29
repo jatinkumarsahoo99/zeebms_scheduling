@@ -141,12 +141,10 @@ class DataGridFromMap extends StatelessWidget {
                             exportFileName: exportFileName, onPressedClick: onContextMenuClick, plutoContext: rendererContext);
                       }
                     },
-                    child: Expanded(
-                      child: Text(
-                        (rendererContext.cell.value ?? "").toString(),
-                        style: TextStyle(
-                          fontSize: SizeDefine.columnTitleFontSize,
-                        ),
+                    child: Text(
+                      (rendererContext.cell.value ?? "").toString(),
+                      style: TextStyle(
+                        fontSize: SizeDefine.columnTitleFontSize,
                       ),
                     ),
                   );
@@ -204,12 +202,10 @@ class DataGridFromMap extends StatelessWidget {
                             exportFileName: exportFileName, onPressedClick: onContextMenuClick, plutoContext: rendererContext);
                       }
                     },
-                    child: Expanded(
-                      child: Text(
-                        rendererContext.cell.value.toString(),
-                        style: TextStyle(
-                          fontSize: SizeDefine.columnTitleFontSize,
-                        ),
+                    child: Text(
+                      rendererContext.cell.value.toString(),
+                      style: TextStyle(
+                        fontSize: SizeDefine.columnTitleFontSize,
                       ),
                     ),
                   );
@@ -241,26 +237,28 @@ class DataGridFromMap extends StatelessWidget {
                     isColorRed = true;
                   }
                 }
-                return Container(
-                  height: 25,
-                  padding: EdgeInsets.only(
-                    left: 6,
-                  ),
-                  alignment: Alignment.centerLeft,
-                  color: isColorRed ? Colors.red : null,
-                  // color: (key == "epsNo" || key == "tapeid" || key == "status") ? ColorData.cellColor(rendererContext.row.cells[key]?.value, key) : null,
-                  child: GestureDetector(
-                    onSecondaryTapDown: (detail) {
-                      DataGridMenu().showGridMenu(rendererContext.stateManager, detail, context);
-                    },
-                    child: Expanded(
-                      child: Text(
-                        rendererContext.cell.value.toString(),
-                        style: TextStyle(
-                            fontSize: SizeDefine.columnTitleFontSize,
-                            fontWeight:
-                                rendererContext.row.cells["modifed"]?.value.toString().toLowerCase() == "y" ? FontWeight.bold : FontWeight.normal),
-                      ),
+                return GestureDetector(
+                  onSecondaryTapDown: (detail) {
+                    DataGridMenu().showGridMenu(rendererContext.stateManager, detail, context);
+                  },
+                  child: Container(
+                    height: 25,
+                    padding: EdgeInsets.only(
+                      left: 6,
+                    ),
+                    decoration: BoxDecoration(
+                      border: Border.all(color: Colors.transparent,width: 0.01),
+                      borderRadius: BorderRadius.circular(1),
+                      color: isColorRed ? Colors.red : null,
+                    ),
+                    alignment: Alignment.centerLeft,
+                    // color: (key == "epsNo" || key == "tapeid" || key == "status") ? ColorData.cellColor(rendererContext.row.cells[key]?.value, key) : null,
+                    child: Text(
+                      rendererContext.cell.value.toString(),
+                      style: TextStyle(
+                          fontSize: SizeDefine.columnTitleFontSize,
+                          fontWeight:
+                              rendererContext.row.cells["modifed"]?.value.toString().toLowerCase() == "y" ? FontWeight.bold : FontWeight.normal),
                     ),
                   ),
                 );
@@ -274,12 +272,10 @@ class DataGridFromMap extends StatelessWidget {
                           exportFileName: exportFileName, onPressedClick: onContextMenuClick, plutoContext: rendererContext);
                     }
                   },
-                  child: Expanded(
-                    child: Text(
-                      rendererContext.cell.value.toString(),
-                      style: TextStyle(
-                        fontSize: SizeDefine.columnTitleFontSize,
-                      ),
+                  child: Text(
+                    rendererContext.cell.value.toString(),
+                    style: TextStyle(
+                      fontSize: SizeDefine.columnTitleFontSize,
                     ),
                   ),
                 );

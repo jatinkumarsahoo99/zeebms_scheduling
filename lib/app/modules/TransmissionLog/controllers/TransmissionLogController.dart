@@ -145,6 +145,10 @@ class TransmissionLogController extends GetxController {
     getLocations();
     startTime_focus.addListener(() {
       if(!startTime_focus.hasFocus){
+        if(gridStateManager!=null){
+          gridStateManager?.setCurrentCell(gridStateManager?.firstCell, 0);
+          gridStateManager?.setKeepFocus(true);
+        }
         colorGrid(false);
       }
     });
@@ -320,7 +324,7 @@ class TransmissionLogController extends GetxController {
   }
 
   void getBtnClick_TS({Function? fun}) {
-    // LoadingDialog.call();
+    LoadingDialog.call();
     var postMap = {
       "locationCode": selectLocation?.key ?? "",
       "channelCode": selectChannel?.key ?? "",
@@ -333,7 +337,7 @@ class TransmissionLogController extends GetxController {
         api: ApiFactory.TRANSMISSION_LOG_POST_TS(),
         json: postMap,
         fun: (map) {
-          // Get.back();
+          Get.back();
           // print("jsonData"+map.toString());
           if (map is Map &&
               map.containsKey("restscalc") &&
@@ -343,6 +347,9 @@ class TransmissionLogController extends GetxController {
             // tsModel = TsModel.fromJson(map as Map<String, dynamic>);
             tsListData = map["restscalc"]["lstOutPutTblTs"];
             getInitTsCall();
+            if(fun!=null) {
+              fun();
+            }
             // update(['tsList']);
           } else {
             Snack.callError(map.toString());
@@ -2851,9 +2858,9 @@ class TransmissionLogController extends GetxController {
       print("Data clicked clear");
       if (data != null) {
         if (data) {
-          // Get.delete<TransmissionLogController>();
-          // Get.find<HomeController>().clearPage1();
-          html.window.location.reload();
+          Get.delete<TransmissionLogController>();
+          Get.find<HomeController>().clearPage1();
+          // html.window.location.reload();
         } else {
           return;
         }
@@ -2861,9 +2868,9 @@ class TransmissionLogController extends GetxController {
         return;
       }
     } else {
-      // Get.delete<TransmissionLogController>();
-      // Get.find<HomeController>().clearPage1();
-      html.window.location.reload();
+      Get.delete<TransmissionLogController>();
+      Get.find<HomeController>().clearPage1();
+      // html.window.location.reload();
     }
   }
 
