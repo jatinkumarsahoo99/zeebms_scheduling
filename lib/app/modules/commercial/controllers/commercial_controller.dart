@@ -30,6 +30,7 @@ class CommercialController extends GetxController {
   String? pDailyFPCSelected;
   DropDownValue? selectedChannel;
   DropDownValue? selectedLocation;
+  FocusNode insertAfterFN = FocusNode();
 
   var selectedIndex = RxInt(0);
   RxBool isEnable = RxBool(true);
@@ -214,6 +215,10 @@ class CommercialController extends GetxController {
 
             updateTab();
             Get.back();
+
+            Future.delayed(Duration(seconds: 1)).then((value) {
+              insertAfterFN.requestFocus();
+            });
           },
           failed: (val) {
             Snack.callError(val.toString());

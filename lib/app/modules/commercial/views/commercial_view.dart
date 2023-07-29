@@ -115,6 +115,7 @@ class CommercialView extends GetView<CommercialController> {
                                           title: "Insert After",
                                           value: controller.insertAfter.value,
                                           onChanged: (a) => controller.insertAfter.value = a ?? false,
+                                          fn: controller.insertAfterFN,
                                         );
                                       }),
                                       CheckBoxWidget1(
@@ -519,10 +520,10 @@ class CommercialView extends GetView<CommercialController> {
                   child: DataGridFromMap(
                     onload: (sm) {
                       controller.fpcMisMatchSM = sm.stateManager;
-                      // controller.fpcMisMatchSM?.setCurrentCell(
-                      //     controller.fpcMisMatchSM?.getRowByIdx(controller.mainSelectedIndex)?.cells['eventType'], controller.mainSelectedIndex ?? 0);
-                      // controller.fpcMisMatchSM?.moveCurrentCellByRowIdx(controller.mainSelectedIndex ?? 0, PlutoMoveDirection.down);
-                      // sm.stateManager.setSelectingMode(PlutoGridSelectingMode.row);
+                      controller.fpcMisMatchSM?.setCurrentCell(
+                          controller.fpcMisMatchSM?.getRowByIdx(controller.mainSelectedIndex)?.cells['eventType'], controller.mainSelectedIndex ?? 0);
+                      controller.fpcMisMatchSM?.moveCurrentCellByRowIdx(controller.mainSelectedIndex ?? 0, PlutoMoveDirection.down);
+                      sm.stateManager.setSelectingMode(PlutoGridSelectingMode.row);
                       // sm.stateManager.setSelecting(true);
                     },
                     mapData: (controller.showCommercialDetailsList?.map((e) => e.toJson()).toList())!,
@@ -622,11 +623,11 @@ class CommercialView extends GetView<CommercialController> {
                     onload: (sm) {
                       controller.markedAsErrorSM = sm.stateManager;
                       sm.stateManager.setSelectingMode(PlutoGridSelectingMode.row);
-                      sm.stateManager.setSelecting(true);
-                      // controller.markedAsErrorSM?.setCurrentCell(
-                      //     controller.markedAsErrorSM?.getRowByIdx(controller.mainSelectedIndex)?.cells['eventType'],
-                      //     controller.mainSelectedIndex ?? 0);
-                      // controller.markedAsErrorSM?.moveCurrentCellByRowIdx(controller.mainSelectedIndex ?? 0, PlutoMoveDirection.down);
+                      // sm.stateManager.setSelecting(true);
+                      controller.markedAsErrorSM?.setCurrentCell(
+                          controller.markedAsErrorSM?.getRowByIdx(controller.mainSelectedIndex)?.cells['eventType'],
+                          controller.mainSelectedIndex ?? 0);
+                      controller.markedAsErrorSM?.moveCurrentCellByRowIdx(controller.mainSelectedIndex ?? 0, PlutoMoveDirection.down);
                     },
                     onSelected: (plutoGrid) {
                       controller.mainSelectedIndex = plutoGrid.rowIdx!;
