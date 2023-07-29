@@ -358,11 +358,11 @@ class CommercialMasterController extends GetxController {
 
               } else {
                 // Get.back();
-                Snack.callError("Something went wrong");
+                Snack.callError(map??"Something went wrong");
               }
             } else {
               // Get.back();
-              Snack.callError("Something went wrong");
+              Snack.callError(map??"Something went wrong");
             }
           });
     }

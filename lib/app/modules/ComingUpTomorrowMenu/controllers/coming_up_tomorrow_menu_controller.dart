@@ -225,7 +225,7 @@ class ComingUpTomorrowMenuController extends GetxController {
                 Snack.callSuccess(map??"Record is inserted successfully.");
               }
             }else{
-              Snack.callError("Something went wrong");
+              Snack.callError(map??"Something went wrong");
             }
           });
 

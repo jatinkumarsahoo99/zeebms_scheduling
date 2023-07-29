@@ -231,9 +231,9 @@ class ComingUpMenuController extends GetxController {
                 Snack.callSuccess(map['save']??"Record is inserted successfully.");
               }
             }else if(map is Map){
-              Snack.callError("Something went wrong");
+              Snack.callError(map??"Something went wrong");
             }else{
-              Snack.callError("Something went wrong");
+              Snack.callError(map??"Something went wrong");
             }
           });
     }
