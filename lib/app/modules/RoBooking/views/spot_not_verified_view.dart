@@ -19,53 +19,57 @@ class SpotNotVerifiedView extends GetView<RoBookingController> {
   TextEditingController effectdateController = TextEditingController();
   @override
   Widget build(BuildContext context) {
-    return Column(
-      children: [
-        Row(
-          crossAxisAlignment: CrossAxisAlignment.end,
-          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-          children: [
-            DropDownField.formDropDown1WidthMap(
-                controller.roBookingInitData!.lstLocation!.map((e) => DropDownValue(key: e.locationCode, value: e.locationName)).toList(),
-                (value) => {selectedLocation = value},
-                "Location",
-                0.24),
-            DropDownField.formDropDown1WidthMap(controller.channels.value, (value) => {selectedChannel = value}, "Channel", 0.24),
-            DateWithThreeTextField(title: "FPC Eff. Dt.", widthRation: 0.12, mainTextController: effectdateController),
-            FormButtonWrapper(
-              btnText: "Spot Not Verified",
-              iconDataM: Icons.cancel_presentation_outlined,
-              callback: () {
-                controller.getSpotNotVerified(
-                    selectedLocation?.key ?? "",
-                    selectedChannel?.key ?? "",
-                    effectdateController.text.split("-")[2] + effectdateController.text.split("-")[1],
-                    Get.find<MainController>().user?.logincode ?? "");
-                // controller.getSpotsNotVerified(
-                //     selectedLocation!.key, selectedChannel!.key, effectdateController.text.split("-")[2] + effectdateController.text.split("-")[1]);
-              },
-            ),
-            SizedBox(width: 5)
-          ],
-        ),
-        SizedBox(
-          height: 5,
-        ),
-        Expanded(
-            child: Container(
-          child: Obx(() => controller.spotsNotVerified.value.isNotEmpty
-              ? DataGridShowOnlyKeys(
-                  mapData: controller.spotsNotVerified.value.map((e) => e.toJson()).toList(),
-                  formatDate: false,
-                  onRowDoubleTap: (rowEvent) {
-                    controller.spotnotverifiedclick(rowEvent.rowIdx);
-                  },
-                )
-              : Container(
-                  decoration: BoxDecoration(border: Border.all(width: 1.0, color: Colors.grey)),
-                )),
-        ))
-      ],
-    );
+    return GetBuilder(
+        init: Get.find<RoBookingController>(),
+        builder: (context) {
+          return Column(
+            children: [
+              Row(
+                crossAxisAlignment: CrossAxisAlignment.end,
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  DropDownField.formDropDown1WidthMap(
+                      controller.roBookingInitData!.lstLocation!.map((e) => DropDownValue(key: e.locationCode, value: e.locationName)).toList(),
+                      (value) => {selectedLocation = value},
+                      "Location",
+                      0.24),
+                  DropDownField.formDropDown1WidthMap(controller.channels.value, (value) => {selectedChannel = value}, "Channel", 0.24),
+                  DateWithThreeTextField(title: "FPC Eff. Dt.", widthRation: 0.12, mainTextController: effectdateController),
+                  FormButtonWrapper(
+                    btnText: "Spot Not Verified",
+                    iconDataM: Icons.cancel_presentation_outlined,
+                    callback: () {
+                      controller.getSpotNotVerified(
+                          selectedLocation?.key ?? "",
+                          selectedChannel?.key ?? "",
+                          effectdateController.text.split("-")[2] + effectdateController.text.split("-")[1],
+                          Get.find<MainController>().user?.logincode ?? "");
+                      // controller.getSpotsNotVerified(
+                      //     selectedLocation!.key, selectedChannel!.key, effectdateController.text.split("-")[2] + effectdateController.text.split("-")[1]);
+                    },
+                  ),
+                  SizedBox(width: 5)
+                ],
+              ),
+              SizedBox(
+                height: 5,
+              ),
+              Expanded(
+                  child: Container(
+                child: Obx(() => controller.spotsNotVerified.value.isNotEmpty
+                    ? DataGridShowOnlyKeys(
+                        mapData: controller.spotsNotVerified.value.map((e) => e.toJson()).toList(),
+                        formatDate: false,
+                        onRowDoubleTap: (rowEvent) {
+                          controller.spotnotverifiedclick(rowEvent.rowIdx);
+                        },
+                      )
+                    : Container(
+                        decoration: BoxDecoration(border: Border.all(width: 1.0, color: Colors.grey)),
+                      )),
+              ))
+            ],
+          );
+        });
   }
 }
