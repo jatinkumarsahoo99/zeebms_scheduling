@@ -208,7 +208,7 @@ class FillerView extends GetView<FillerController> {
                       formatDate: false,
                       showSecondaryDialog: false,
                       mapData: (controller.fillerDailyFpcList.value.map((e) => e.toJson()).toList()),
-                      showonly: ["fpcTime", "endTime", "programName", "epsNo", "tapeID", "episodeCaption"],
+                      showonly: ["fpcTime", "endTime", "programName", "epsNo", "tape id", "episodeCaption"],
                       widthRatio: (Get.width * 0.2) / 2 + 7,
                       mode: PlutoGridMode.selectWithOneTap,
                       onload: (event) {
@@ -222,8 +222,9 @@ class FillerView extends GetView<FillerController> {
                             controller.gridStateManager?.getRowByIdx(controller.topLastSelectedIdx)?.cells['fpcTime'],
                             controller.bottomLastSelectedIdx);
                         controller.topLastSelectedIdx = plutoGrid.rowIdx;
-                        controller.totalFiller.clear();
-                        controller.totalFillerDur.text = "00:00:00:00";
+                        // controller.totalFiller.clear();
+                        controller.totalFillerDur.clear();
+                        // controller.totalFillerDur.text = "00:00:00:00";
                         controller.fetchSegmentDetails(controller.fillerDailyFpcList[plutoGrid.rowIdx]);
                       },
                       // onSelected: (plutoGrid) {},
@@ -256,6 +257,7 @@ class FillerView extends GetView<FillerController> {
                             onchanged: (data) => controller.getFillerValuesByFillerCode(data),
                             selectedValue: controller.selectCaption.value,
                             width: w * 0.45,
+                            dialogHeight: 250,
                             // padding: const EdgeInsets.only()
                           ),
                         ),
@@ -296,7 +298,7 @@ class FillerView extends GetView<FillerController> {
                     ),
                     SizedBox(height: 5),
                     Row(
-                      crossAxisAlignment: CrossAxisAlignment.start,
+                      crossAxisAlignment: CrossAxisAlignment.end,
                       mainAxisAlignment: MainAxisAlignment.start,
                       children: [
                         /// TOTAL FILLER
@@ -321,6 +323,8 @@ class FillerView extends GetView<FillerController> {
 
                         /// INSERT AFTER
                         Row(
+                          crossAxisAlignment: CrossAxisAlignment.center,
+                          mainAxisAlignment: MainAxisAlignment.center,
                           children: [
                             Radio(
                               value: 0,
@@ -340,6 +344,11 @@ class FillerView extends GetView<FillerController> {
                             callback: controller.handleAddTap,
                           ),
                         ),
+                        const SizedBox(width: 10),
+                        Text(
+                          "Press right click on filler to remove",
+                          style: TextStyle(color: Colors.red),
+                        ),
                       ],
                     ),
                     SizedBox(height: 10),
@@ -350,7 +359,7 @@ class FillerView extends GetView<FillerController> {
                           replacement: Container(decoration: BoxDecoration(border: Border.all(color: Colors.grey))),
                           child: DataGridFromMap3(
                             mapData: (controller.fillerSegmentList.map((e) => e.toJson()).toList()),
-                            widthRatio: (Get.width * 0.2) / 2 + 7,
+                            // widthRatio: (Get.width * 0.2) / 2 + 7,
                             formatDate: false,
                             secondaryExtraDialogList: [
                               SecondaryShowDialogModel(
@@ -379,7 +388,7 @@ class FillerView extends GetView<FillerController> {
                               controller.selectedSegment = controller.fillerSegmentList[plutoGrid.rowIdx!];
                             },
                             mode: PlutoGridMode.selectWithOneTap,
-                            showonly: ["segNo", "seq", "brkNo", "ponumber", "tapeID", "segmentCaption", "som", "segDur"],
+                            showonly: ["segNo", "seq", "brkNo", "ponumber", "tape id", "segmentCaption", "som", "segDur"],
                           ),
                         );
                       }),

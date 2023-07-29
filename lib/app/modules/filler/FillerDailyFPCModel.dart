@@ -71,7 +71,7 @@ class FillerDailyFPCModel {
     data['endTime'] = this.endTime;
     data['programName'] = this.programName;
     data['epsNo'] = this.epsNo;
-    data['tapeID'] = this.tapeID;
+    data['tape id'] = this.tapeID;
     data['oriRep'] = this.oriRep;
     data['wbs'] = this.wbs;
     data['caption'] = this.caption;

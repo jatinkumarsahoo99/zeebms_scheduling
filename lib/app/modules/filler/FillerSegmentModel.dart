@@ -60,7 +60,7 @@ class FillerSegmentModel {
       data['ponumber'] = ponumber ?? "";
       data['brktype'] = brktype;
       data['fillerCode'] = fillerCode;
-      data['tapeID'] = tapeID;
+      data['tape id'] = tapeID;
       data['allowMove'] = allowMove;
       data['segmentCaption'] = segmentCaption;
       data['som'] = som;
