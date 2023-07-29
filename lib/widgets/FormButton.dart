@@ -49,6 +49,43 @@ class FormButtonWrapper extends StatelessWidget {
     );
   }
 }
+class FormButtonWrapper1 extends StatelessWidget {
+  final String btnText;
+  final VoidCallback? callback;
+  final double? height;
+  final bool? isEnabled;
+  final IconData? iconDataM;
+  final FocusNode? focusNode;
+  final bool showIcon;
+  final double? width;
+
+  FormButtonWrapper1({
+    required this.btnText,
+    this.callback,
+    this.focusNode,
+    this.width,
+    this.height = 25,
+    this.isEnabled,
+    this.iconDataM,
+    this.showIcon = true,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    return SizedBox(
+      height: height,
+      width: width,
+      child: FormButton2(
+        focusNode: focusNode,
+        btnText: btnText,
+        callback: callback,
+        isEnabled: isEnabled,
+        iconDataM: iconDataM,
+        showIcon: showIcon,
+      ),
+    );
+  }
+}
 
 class FormButton extends StatelessWidget {
   final String btnText;
@@ -166,6 +203,179 @@ class FormButton extends StatelessWidget {
           : null,
       icon: showIcon ? Icon(iconData, size: 16) : Container(),
       label: Text(btnText.trim(),
+          style: TextStyle(
+            fontSize: SizeDefine.fontSizeButton,
+          ),
+          textAlign: TextAlign.center),
+    );
+
+    // if (iconData == null) {
+    //   return ElevatedButton(
+    //     onPressed: (isEnabled ?? true)
+    //         ? (btnText == "Exit")
+    //             ? () {
+    //                 LoadingDialog.callExitForm(() {
+    //                   Get.find<HomeController>()
+    //                       .updateDarwerSelection(0, "0", "0");
+    //                   Get.find<HomeController>()
+    //                     ..selectChild1.value = null;
+    //                   callback!();
+    //                 });
+    //               }
+    //             : callback
+    //         : null,
+    //     // icon: ,
+    //     child: Text(
+    //       btnText,
+    //       style: TextStyle(fontSize: SizeDefine.fontSizeButton),
+    //     ),
+    //     style: ElevatedButton.styleFrom(
+    //       foregroundColor: Colors.white,
+    //       backgroundColor: Colors.deepPurple,
+    //     ),
+    //   );
+    // } else {
+    //   return IconButton(
+    //     onPressed: (isEnabled ?? true)
+    //         ? (btnText == "Exit")
+    //             ? () {
+    //                 LoadingDialog.callExitForm(() {
+    //                   Get.find<HomeController>()
+    //                       .updateDarwerSelection(0, "0", "0");
+    //                   Get.find<HomeController>()
+    //                     ..selectChild1.value = null;
+    //                   callback!();
+    //                 });
+    //               }
+    //             : callback
+    //         : null,
+    //     icon: Icon(iconData),
+    //     color: (isEnabled ?? true) ? Colors.deepPurpleAccent : Colors.grey,
+    //     tooltip: btnText,
+    //     disabledColor: Colors.grey,
+    //   );
+    // }
+  }
+}
+class FormButton2 extends StatelessWidget {
+  final String btnText;
+  final VoidCallback? callback;
+  final bool? isEnabled;
+  final FocusNode? focusNode;
+  final IconData? iconDataM;
+  final bool showIcon;
+
+  const FormButton2({Key? key, required this.btnText, this.callback, this.isEnabled, this.focusNode, this.showIcon = true, this.iconDataM})
+      : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    var iconData;
+    if (btnText.toLowerCase() == "save") {
+      iconData = Icons.save;
+    } else if (btnText.toLowerCase() == "delete" || btnText.toLowerCase() == "delete variance") {
+      iconData = Icons.delete;
+    } else if (btnText.toLowerCase() == "verify") {
+      iconData = Icons.verified_rounded;
+    } else if (btnText.toLowerCase() == "refresh") {
+      iconData = Icons.refresh;
+    } else if (btnText.toLowerCase() == "clear") {
+      iconData = Icons.cleaning_services_outlined;
+    } else if (btnText.toLowerCase() == "exit") {
+      iconData = Icons.exit_to_app;
+    } else if (btnText.toLowerCase() == "search") {
+      iconData = Icons.search;
+    } else if (btnText.toLowerCase() == "docs") {
+      iconData = Icons.folder;
+    } else if (btnText.toLowerCase() == "add" || btnText.toLowerCase() == "add default segment" || btnText.toLowerCase() == "add variance") {
+      iconData = Icons.add;
+    } else if (btnText.toLowerCase() == "next") {
+      iconData = Icons.next_plan;
+    } else if (btnText.toLowerCase() == "schedule") {
+      iconData = Icons.schedule_outlined;
+    } else if (btnText.toLowerCase() == "actuals/default") {
+      iconData = Icons.person;
+    } else if (btnText.toLowerCase() == "show") {
+      iconData = Icons.fact_check_sharp;
+    } else if (btnText.toLowerCase() == "yes") {
+      iconData = CupertinoIcons.check_mark_circled_solid;
+    } else if (btnText.toLowerCase() == "no") {
+      iconData = CupertinoIcons.clear_circled_solid;
+    } else if (btnText.toLowerCase() == "map") {
+      iconData = CupertinoIcons.arrow_right_arrow_left_circle;
+    } else if (btnText.toLowerCase() == "summary") {
+      iconData = Icons.plagiarism_outlined;
+    } else if (btnText.toLowerCase() == "segment") {
+      iconData = Icons.segment;
+    } else if (btnText.toLowerCase() == "breakfile") {
+      iconData = Icons.insert_page_break;
+    } else if (btnText.toLowerCase() == "adjust dur") {
+      iconData = Icons.adjust;
+    } else if (btnText.toLowerCase() == "auto adjust") {
+      iconData = Icons.commit;
+    } else if (btnText.toLowerCase() == "show details") {
+      iconData = Icons.description_sharp;
+    } else if (btnText.toLowerCase() == "default") {
+      iconData = CupertinoIcons.settings;
+    } else if (btnText.toLowerCase() == "view day") {
+      iconData = CupertinoIcons.brightness;
+    } else if (btnText.toLowerCase() == "generate") {
+      iconData = Icons.settings_suggest;
+    } else if (btnText.toLowerCase() == "execute") {
+      iconData = Icons.start;
+    } else if (btnText.toLowerCase() == "ok" || btnText.toLowerCase() == "done") {
+      iconData = Icons.done;
+    } else if (btnText.toLowerCase() == "show programs") {
+      iconData = Icons.remove_red_eye;
+    } else if (btnText.toLowerCase() == "cancel") {
+      iconData = Icons.cancel;
+    } else if (btnText.toLowerCase() == "undo") {
+      iconData = Icons.undo;
+    } else if (btnText.toLowerCase() == "validate") {
+      iconData = Icons.verified_user_rounded;
+    } else if (btnText.toLowerCase() == "fc") {
+      iconData = Icons.color_lens_outlined;
+    } else if (btnText.toLowerCase() == "up") {
+      iconData = Icons.arrow_upward_rounded;
+    } else if (btnText.toLowerCase() == "down") {
+      iconData = Icons.arrow_downward_rounded;
+    } else if (btnText.toLowerCase() == "bc") {
+      iconData = Icons.color_lens;
+    } else if (btnText.toLowerCase() == "copy segments/annotation") {
+      iconData = Icons.copy;
+    } else {
+      iconData = Icons.error;
+    }
+    if (iconDataM != null) {
+      iconData = iconDataM;
+    }
+
+    return ElevatedButton(
+      focusNode: focusNode,
+      style: ButtonStyle(
+          overlayColor: MaterialStateProperty.all(
+            Colors.deepPurple[900],
+          ),
+          padding: MaterialStateProperty.all(
+            EdgeInsets.symmetric(horizontal: 10,)
+          ),
+          alignment: Alignment.center),
+      onPressed: (isEnabled ?? true)
+          ? (btnText == "Exit")
+              ? () {
+                  LoadingDialog.callExitForm(() {
+                    if (html.window.location.href.contains("loginCode")) {
+                      Utils.callJSToExit(param: "exit|${Utils.getFormName()}");
+                      callback!();
+                    } else {
+                      Get.back();
+                    }
+                  });
+                }
+              : callback
+          : null,
+      // icon: showIcon ? Icon(iconData, size: 16) : Container(),
+      child: Text(btnText.trim(),
           style: TextStyle(
             fontSize: SizeDefine.fontSizeButton,
           ),

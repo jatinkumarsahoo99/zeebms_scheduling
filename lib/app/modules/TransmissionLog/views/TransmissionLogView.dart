@@ -88,7 +88,7 @@ class TransmissionLogView extends StatelessWidget {
                               isEnable: controller.isEnable.value,
                               selected: controller.selectLocation,
                               autoFocus: true,
-                              dialogWidth: 330,
+                              // dialogWidth: 330,
                               dialogHeight: Get.height * .7,
                             ),
                           ),
@@ -106,7 +106,7 @@ class TransmissionLogView extends StatelessWidget {
                               isEnable: controller.isEnable.value,
                               selected: controller.selectChannel,
                               autoFocus: true,
-                              dialogWidth: 330,
+                              // dialogWidth: 330,
                               dialogHeight: Get.height * .7,
                             ),
                           ),
@@ -197,7 +197,7 @@ class TransmissionLogView extends StatelessWidget {
                               isEnable: false,
                               paddingLeft: 0),
                           SizedBox(
-                            width: Get.width * 0.1,
+                            width: Get.width * 0.073,
                             child: Row(
                               children: [
                                 SizedBox(width: 5),
@@ -225,6 +225,17 @@ class TransmissionLogView extends StatelessWidget {
                               ],
                             ),
                           ),
+                          Obx(() => Padding(
+                                padding: const EdgeInsets.only(
+                                  top: 15.0,
+                                ),
+                                child: Text(
+                                  controller.lastSavedLoggedUser.value ?? "",
+                                  style: TextStyle(
+                                      fontSize: SizeDefine.labelSize1,
+                                      fontWeight: FontWeight.w600),
+                                ),
+                              ))
                         ],
                       ),
                     ),
@@ -356,7 +367,9 @@ class TransmissionLogView extends StatelessWidget {
                                 int index, renderContext) {
                               switch (itemType) {
                                 case DataGridMenuItem.delete:
-                                  LoadingDialog.recordExists("Want to delete selected record?\nEvent type: ${renderContext.row.cells["eventType"]?.value??""}\nDuration: ${renderContext.row.cells["tapeduration"]?.value??""}\nExportTapeCode: ${renderContext.row.cells["exportTapeCode"]?.value??""}\nExportTapeCaption: ${renderContext.row.cells["exportTapeCaption"]?.value??""}", (){
+                                  LoadingDialog.recordExists(
+                                      "Want to delete selected record?\nEvent type: ${renderContext.row.cells["eventType"]?.value ?? ""}\nDuration: ${renderContext.row.cells["tapeduration"]?.value ?? ""}\nExportTapeCode: ${renderContext.row.cells["exportTapeCode"]?.value ?? ""}\nExportTapeCaption: ${renderContext.row.cells["exportTapeCaption"]?.value ?? ""}",
+                                      () {
                                     controller.addEventToUndo();
                                     controller.gridStateManager
                                         ?.removeCurrentRow();
@@ -524,7 +537,7 @@ class TransmissionLogView extends StatelessWidget {
                           // pa
                           children: [
                             for (var btn in controller.tranmissionButtons!)
-                              FormButtonWrapper(
+                              FormButtonWrapper1(
                                 btnText: btn["name"],
                                 showIcon: false,
                                 // isEnabled: btn['isDisabled'],
@@ -550,7 +563,7 @@ class TransmissionLogView extends StatelessWidget {
                               icon: Icon(Icons.arrow_downward),
                               padding: EdgeInsets.symmetric(horizontal: 8.0),
                             ),
-                            FormButtonWrapper(
+                            FormButtonWrapper1(
                               btnText: "Aa",
                               showIcon: false,
                               // isEnabled: btn['isDisabled'],
@@ -562,7 +575,7 @@ class TransmissionLogView extends StatelessWidget {
                                     :*/
                                   () => formHandler("Aa"),
                             ),
-                            FormButtonWrapper(
+                            FormButtonWrapper1(
                               btnText: "CL",
                               showIcon: false,
                               isEnabled: true,
@@ -635,7 +648,10 @@ class TransmissionLogView extends StatelessWidget {
 
         break;
       case "TS":
-        showTransmissionSummaryDialog(Get.context);
+        controller.getBtnClick_TS(fun:(){
+          showTransmissionSummaryDialog(Get.context);
+        });
+
         break;
       case "Verify":
         controller.getBtnVerifyClick(fun: () {
@@ -660,25 +676,31 @@ class TransmissionLogView extends StatelessWidget {
         showCopyLogDialog(Get.context);
         break;
       case "Auto":
-        LoadingDialog.recordExists(
-            "Do you want to add promos?",
-            () {
-              controller.isAutoClick.value = true;
-              controller.callAuto(true);
-            },
-            deleteTitle: "Yes",
-            deleteCancel: "No",
-            cancel: () {
-              controller.isAutoClick.value = true;
-              controller.callAuto(false);
-            });
+        if (controller.selectLocation == null) {
+          LoadingDialog.callInfoMessage("Please select location");
+        } else if (controller.selectChannel == null) {
+          LoadingDialog.callInfoMessage("Please select channel");
+        } else {
+          LoadingDialog.recordExists(
+              "Do you want to add promos?",
+              () {
+                controller.isAutoClick.value = true;
+                controller.callAuto(true);
+              },
+              deleteTitle: "Yes",
+              deleteCancel: "No",
+              cancel: () {
+                controller.isAutoClick.value = true;
+                controller.callAuto(false);
+              });
+        }
 
         break;
     }
   }
 
   showTransmissionSummaryDialog(context) {
-    controller.getBtnClick_TS();
+
     return Get.defaultDialog(
       barrierDismissible: false,
       title: "Transmission Summary",
@@ -687,7 +709,7 @@ class TransmissionLogView extends StatelessWidget {
       contentPadding: const EdgeInsets.symmetric(horizontal: 10, vertical: 5),
       content: SingleChildScrollView(
         child: SizedBox(
-          height: Get.height * 0.6,
+          height: Get.height * 0.7,
           child: SingleChildScrollView(
             child: SizedBox(
               width: Get.width * 0.8,
@@ -732,7 +754,7 @@ class TransmissionLogView extends StatelessWidget {
                         return SizedBox(
                           // width: 500,
                           width: Get.width * 0.85,
-                          height: 370,
+                          height: Get.height * 0.6,
                           child: (controller.tsListData != null &&
                                   (controller.tsListData?.length ?? 0) > 0)
                               ? DataGridFromMap(
@@ -813,7 +835,7 @@ class TransmissionLogView extends StatelessWidget {
                         // isEnable: controller.isEnable.value,
                         selected: controller.selectTimeForCommercial,
                         autoFocus: true,
-                        dialogWidth: 330,
+                        // dialogWidth: 330,
                         dialogHeight: Get.height * .7,
                       ),
                       Padding(
@@ -858,7 +880,10 @@ class TransmissionLogView extends StatelessWidget {
                                   onload: (PlutoGridOnLoadedEvent load) {
                                     controller.gridStateManagerCommercial =
                                         load.stateManager;
-                                    controller.gridStateManager?.setCurrentCell(controller.gridStateManager?.rows[0].cells["no"], 0);
+                                    controller.gridStateManager?.setCurrentCell(
+                                        controller.gridStateManager?.rows[0]
+                                            .cells["no"],
+                                        0);
                                   },
                                   onRowDoubleTap:
                                       (PlutoGridOnRowDoubleTapEvent? event) {
@@ -903,6 +928,7 @@ class TransmissionLogView extends StatelessWidget {
     controller.txReplaceEvent_.text = "";
     controller.fromReplaceInsert_.text = "00:00:00:00";
     controller.toReplaceInsert_.text = "00:00:00:00";
+    controller.isMy.value = false;
 
     return Get.defaultDialog(
       barrierDismissible: false,
@@ -912,10 +938,10 @@ class TransmissionLogView extends StatelessWidget {
       contentPadding: const EdgeInsets.symmetric(horizontal: 10, vertical: 5),
       content: SingleChildScrollView(
         child: SizedBox(
-          height: Get.height * 0.7,
+          height: Get.height * 0.75,
           child: SingleChildScrollView(
             child: SizedBox(
-              width: Get.width * 0.8,
+              width: Get.width * 0.85,
               // height: Get.he,
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
@@ -936,7 +962,7 @@ class TransmissionLogView extends StatelessWidget {
                           // isEnable: controller.isEnable.value,
                           // selected: controller.selectLocation,
                           autoFocus: true,
-                          dialogWidth: 330,
+                          // dialogWidth: 330,
                           dialogHeight: Get.height * .7,
                         ),
                       ),
@@ -993,7 +1019,7 @@ class TransmissionLogView extends StatelessWidget {
                       ),
                       Padding(
                         padding: const EdgeInsets.only(top: 15.0, left: 10),
-                        child: FormButtonWrapper(
+                        child: FormButtonWrapper1(
                           btnText: "Search",
                           showIcon: false,
                           callback: () {
@@ -1007,7 +1033,7 @@ class TransmissionLogView extends StatelessWidget {
                       ),
                       Padding(
                         padding: const EdgeInsets.only(top: 15.0, left: 10),
-                        child: FormButtonWrapper(
+                        child: FormButtonWrapper1(
                           btnText: "Add",
                           showIcon: false,
                           callback: () {
@@ -1065,7 +1091,7 @@ class TransmissionLogView extends StatelessWidget {
                         return SizedBox(
                           // width: 500,
                           width: Get.width * 0.8,
-                          height: Get.height * 0.5,
+                          height: Get.height * 0.47,
                           child: (controller.inserSearchModel != null &&
                                   controller.inserSearchModel
                                           ?.lstListMyEventData !=
@@ -1213,7 +1239,7 @@ class TransmissionLogView extends StatelessWidget {
                           controller.fromReplaceIndexInsert_.text = controller.gridStateManager?.currentRowIdx.toString()??"";
                         },
                       ),*/
-                      Padding(
+                      /*Padding(
                         padding: const EdgeInsets.only(top: 15.0, right: 5),
                         child: ElevatedButton(
                           style: ButtonStyle(
@@ -1240,6 +1266,25 @@ class TransmissionLogView extends StatelessWidget {
                               ),
                               textAlign: TextAlign.center),
                         ),
+                      ),*/
+                      Padding(
+                        padding: const EdgeInsets.only(top: 15.0, right: 5),
+                        child: FormButtonWrapper1(
+                          btnText: "",
+                          showIcon: false,
+                          callback: () {
+                            controller.fromReplaceInsert_.text = controller
+                                    .gridStateManager
+                                    ?.currentRow
+                                    ?.cells["transmissionTime"]
+                                    ?.value ??
+                                "";
+                            controller.fromReplaceIndexInsert_.text = controller
+                                    .gridStateManager?.currentRowIdx
+                                    .toString() ??
+                                "";
+                          },
+                        ),
                       ),
                       InputFields.formFieldNumberMask(
                           hintTxt: "To",
@@ -1248,13 +1293,15 @@ class TransmissionLogView extends StatelessWidget {
                           isTime: true,
                           isEnable: false,
                           paddingLeft: 0),
-                      Padding(
+                      /* Padding(
                         padding:
                             const EdgeInsets.only(top: 15.0, right: 5, left: 5),
                         child: ElevatedButton(
                           style: ButtonStyle(
                               overlayColor: MaterialStateProperty.all(
                                 Colors.deepPurple[900],
+                              ),padding: MaterialStateProperty.all(
+                                EdgeInsets.symmetric(horizontal: 5,vertical: 5)
                               ),
                               alignment: Alignment.center),
                           onPressed: () {
@@ -1276,10 +1323,30 @@ class TransmissionLogView extends StatelessWidget {
                               ),
                               textAlign: TextAlign.center),
                         ),
+                      ),*/
+                      Padding(
+                        padding:
+                            const EdgeInsets.only(top: 15.0, right: 5, left: 5),
+                        child: FormButtonWrapper1(
+                          btnText: "",
+                          showIcon: false,
+                          callback: () {
+                            controller.toReplaceInsert_.text = controller
+                                    .gridStateManager
+                                    ?.currentRow
+                                    ?.cells["transmissionTime"]
+                                    ?.value ??
+                                "";
+                            controller.toReplaceIndexInsert_.text = controller
+                                    .gridStateManager?.currentRowIdx
+                                    .toString() ??
+                                "";
+                          },
+                        ),
                       ),
                       Padding(
                         padding: const EdgeInsets.only(left: 10, top: 15),
-                        child: FormButtonWrapper(
+                        child: FormButtonWrapper1(
                           btnText: "Get Event",
                           showIcon: false,
                           callback: () {
@@ -1289,7 +1356,7 @@ class TransmissionLogView extends StatelessWidget {
                       ),
                       Padding(
                         padding: const EdgeInsets.only(left: 10, top: 15),
-                        child: FormButtonWrapper(
+                        child: FormButtonWrapper1(
                           btnText: "Replace",
                           showIcon: false,
                           callback: () {
@@ -1412,7 +1479,7 @@ class TransmissionLogView extends StatelessWidget {
                           // isEnable: controller.isEnable.value,
                           selected: controller.selectTapeSegmentDialog,
                           autoFocus: true,
-                          dialogWidth: 330,
+                          // dialogWidth: 330,
                           dialogHeight: Get.height * .7,
                         ),
                       ),
@@ -1494,7 +1561,7 @@ class TransmissionLogView extends StatelessWidget {
       contentPadding: const EdgeInsets.symmetric(horizontal: 10, vertical: 5),
       content: SingleChildScrollView(
         child: SizedBox(
-          height: Get.height * 0.3,
+          height: Get.height * 0.37,
           child: SingleChildScrollView(
             child: SizedBox(
               width: Get.width * 0.2,
@@ -1687,7 +1754,7 @@ class TransmissionLogView extends StatelessWidget {
                           selected: controller.selectExportFpcFrom,
                           autoFocus: true,
                           // dialogWidth: 330,
-                          dialogHeight: Get.height * .7,
+                          dialogHeight: Get.height * .4,
                         ),
 
                         /// channel
@@ -1704,7 +1771,7 @@ class TransmissionLogView extends StatelessWidget {
                           selected: controller.selectExportFpcTo,
                           autoFocus: true,
                           // dialogWidth: 330,
-                          dialogHeight: Get.height * .7,
+                          dialogHeight: Get.height * .4,
                         ),
                       ],
                     ),
@@ -1896,8 +1963,8 @@ class TransmissionLogView extends StatelessWidget {
                       // isEnable: controller.isEnable.value,
                       selected: controller.selectLocationCopyLog,
                       autoFocus: true,
-                      dialogWidth: 330,
-                      dialogHeight: Get.height * .7,
+                      // dialogWidth: 330,
+                      dialogHeight: Get.height * .4,
                     ),
                   ),
 
@@ -1914,8 +1981,8 @@ class TransmissionLogView extends StatelessWidget {
                       // isEnable: controller.isEnable.value,
                       selected: controller.selectChannelCopyLog,
                       autoFocus: true,
-                      dialogWidth: 330,
-                      dialogHeight: Get.height * .7,
+                      // dialogWidth: 330,
+                      dialogHeight: Get.height * .4,
                     ),
                   ),
                   SizedBox(

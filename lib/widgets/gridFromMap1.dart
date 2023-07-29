@@ -179,17 +179,21 @@ class DataGridFromMap1 extends StatelessWidget {
                 }
               } else {
                 // print("Data is>>>"+(rendererContext.row.cells["color"]?.value.toString()??""));
-                return Container(
-                  height: 25,
-                  padding: EdgeInsets.only(
-                    left: 6,
-                  ),
-                  alignment: Alignment.centerLeft,
-                  // color: (key == "epsNo" || key == "tapeid" || key == "status") ? ColorData.cellColor(rendererContext.row.cells[key]?.value, key) : null,
-                  child: GestureDetector(
-                    onSecondaryTapDown: (detail) {
-                      DataGridMenu().showGridMenu(rendererContext.stateManager, detail, context);
-                    },
+                return GestureDetector(
+                  onSecondaryTapDown: (detail) {
+                    DataGridMenu().showGridMenu(rendererContext.stateManager, detail, context);
+                  },
+                  child: Container(
+                    height: 25,
+                    padding: EdgeInsets.only(
+                      left: 6,
+                    ),
+                    decoration: BoxDecoration(
+                      border: Border.all(color: Colors.transparent,width: 0.01),
+                      borderRadius: BorderRadius.circular(1),
+                    ),
+                    alignment: Alignment.centerLeft,
+                    // color: (key == "epsNo" || key == "tapeid" || key == "status") ? ColorData.cellColor(rendererContext.row.cells[key]?.value, key) : null,
                     child: Text(
                       rendererContext.cell.value.toString(),
                       style: TextStyle(
