@@ -264,7 +264,7 @@ class LstTapeDetails {
     languageName = json['languageName'];
     eventtypecode = json['eventtypecode'];
     accountName = json['accountName'];
-    subRevenueTypeCode = json['subRevenueTypeCode'];
+    subRevenueTypeCode = json['subRevenueTypeCode'].toString();
     subRevenueTypeName = json['subRevenueTypeName'];
     killDate = json['killDate'];
     campaignStartDate = json['campaignStartDate'];

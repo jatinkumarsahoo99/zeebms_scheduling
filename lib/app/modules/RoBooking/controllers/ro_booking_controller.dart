@@ -49,6 +49,8 @@ class RoBookingController extends GetxController {
       totDurCtrl = TextEditingController(),
       totAmtCtrl = TextEditingController(),
       tapeIDCtrl = TextEditingController(),
+      dealFromCtrl = TextEditingController(),
+      dealToCtrl = TextEditingController(),
       zoneCtrl = TextEditingController(),
       gstNoCtrl = TextEditingController(),
       maxspendCtrl = TextEditingController();
@@ -214,9 +216,6 @@ class RoBookingController extends GetxController {
             }
             agencies.value = _agencies;
             selectedAgnecy = agencies.value.first;
-            update(["init"]);
-
-            clientFocus.requestFocus();
           }
         });
   }
@@ -851,6 +850,7 @@ class RoBookingController extends GetxController {
                 key: bookingNoLeaveData!.lstDealNumber!.first.dealNumber,
                 value: bookingNoLeaveData!.lstDealNumber!.first.dealNumber);
             update(["init"]);
+
             refNoCtrl.text = bookingNoLeaveData!.bookingReferenceNumber ?? "";
             bookingNoTrailCtrl.text = bookingNoLeaveData!.zone ?? "";
             dealTypeCtrl.text = bookingNoLeaveData!.dealType ?? "";
@@ -861,6 +861,12 @@ class RoBookingController extends GetxController {
             totAmtCtrl.text = bookingNoLeaveData!.totalAmount ?? "";
             zoneCtrl.text = bookingNoLeaveData!.zonename ?? "";
             maxspendCtrl.text = bookingNoLeaveData!.maxSpend ?? "";
+            dealToCtrl.text = DateFormat("dd-MM-yyyy").format(
+                DateFormat("MM/dd/yyyy").parse(
+                    bookingNoLeaveData?.dealtoDate?.split(" ")[0] ?? ""));
+            dealFromCtrl.text = DateFormat("dd-MM-yyyy").format(
+                DateFormat("MM/dd/yyyy").parse(
+                    bookingNoLeaveData?.dealFromDate?.split(" ")[0] ?? ""));
 
             update(["dealGrid"]);
           }

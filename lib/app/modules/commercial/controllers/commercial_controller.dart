@@ -30,6 +30,7 @@ class CommercialController extends GetxController {
   String? pDailyFPCSelected;
   DropDownValue? selectedChannel;
   DropDownValue? selectedLocation;
+  FocusNode insertAfterFN = FocusNode();
 
   var selectedIndex = RxInt(0);
   RxBool isEnable = RxBool(true);
@@ -65,7 +66,7 @@ class CommercialController extends GetxController {
   PlutoGridStateManager? gridStateManager;
   // PlutoGridStateManager? locChanStateManager;
   // PlutoGridStateManager? bmsReportStateManager;
-  PlutoGridMode selectedTabPlutoGridMode = PlutoGridMode.select;
+  // PlutoGridMode selectedTabPlutoGridMode = PlutoGridMode.select;
   PlutoGridMode selectedProgramPlutoGridMode = PlutoGridMode.selectWithOneTap;
   late PlutoGridStateManager conflictReportStateManager;
 
@@ -160,11 +161,9 @@ class CommercialController extends GetxController {
   fetchSchedulingDetails() {
     // print("Selected Channel is : ${selectedChannel?.key ?? ""}");
     if (selectedLocation == null) {
-      Snack.callError("Please select location");
+      Snack.callError("Please select Location");
     } else if (selectedChannel == null) {
-      Snack.callError("Please select location");
-    } else if (selectedDate == null) {
-      Snack.callError("Please select date");
+      Snack.callError("Please select Channel");
     } else {
       LoadingDialog.call();
       selectedDate = df1.parse(date_.text);
@@ -216,6 +215,10 @@ class CommercialController extends GetxController {
 
             updateTab();
             Get.back();
+
+            Future.delayed(Duration(seconds: 1)).then((value) {
+              insertAfterFN.requestFocus();
+            });
           },
           failed: (val) {
             Snack.callError(val.toString());
@@ -507,7 +510,6 @@ class CommercialController extends GetxController {
     // return mainCommercialShowDetailsList;
   }
 
-  /// Not Completed
   saveSchedulingData() {
     if (selectedLocation == null) {
       Snack.callError("Please select location");
@@ -516,6 +518,7 @@ class CommercialController extends GetxController {
     } else if (mainCommercialShowDetailsList?.where((o) => o.bStatus.toString() == 'F').toList().isNotEmpty ?? true) {
       LoadingDialog.showErrorDialog("Please clear all mismatch spots.");
     } else {
+      LoadingDialog.call();
       selectedDate = df1.parse(date_.text);
       try {
         var jsonRequest = {
@@ -524,14 +527,16 @@ class CommercialController extends GetxController {
           "scheduleDate": df1.format(selectedDate!),
           "lstCommercialShuffling": mainCommercialShowDetailsList?.map((e) => e.toJson()).toList(),
         };
-        print("requestedToSaveData >>>" + jsonEncode(jsonRequest));
+
         Get.find<ConnectorControl>().POSTMETHOD(
             api: ApiFactory.SAVE_COMMERCIAL_DETAILS,
             fun: (dynamic data) {
-              print("Json response is>>>" + jsonEncode(data));
-
-              print("saveSchedulingData Called");
-              update(["fillerShowOnTabTable"]);
+              Get.back();
+              if (data != null && data is Map<String, dynamic> && data['csSaveOutput'] != null) {
+                LoadingDialog.callDataSaved(msg: data['csSaveOutput'].toString());
+              } else {
+                LoadingDialog.showErrorDialog(data.toString());
+              }
             },
             json: jsonRequest);
       } catch (e) {
@@ -541,16 +546,7 @@ class CommercialController extends GetxController {
   }
 
   Color colorSort(String eventType) {
-    // int? size = colorList?.length;
     Color color = Colors.white;
-    // for (int i = 0; i <= size! - 1; i++) {
-    //   if (colorList![i]['eventType'] == eventType) {
-    //     color= Color(int.parse('0x${colorList![i]['backColor']}'));
-    //     print(colorList![i]['backColor']);
-    //   }else{
-    //     color = Colors.white;
-    //   }
-    // }
 
     switch (eventType) {
       case "A ":

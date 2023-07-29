@@ -340,7 +340,6 @@ class AppPages {
     GetPage(
       name: _Paths.SECONDARY_EVENT_TEMPLATE_MASTER,
       page: () => AuthGuard1(childName: _Paths.SECONDARY_EVENT_TEMPLATE_MASTER),
-      binding: SecondaryEventTemplateMasterBinding(),
     )
   ];
 }

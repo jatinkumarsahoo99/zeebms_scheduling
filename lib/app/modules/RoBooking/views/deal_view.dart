@@ -15,7 +15,7 @@ class DealView extends GetView<RoBookingController> {
   Widget build(BuildContext context) {
     return GetBuilder<RoBookingController>(
         id: "dealGrid",
-        init: controller,
+        init: Get.find<RoBookingController>(),
         builder: (gridcontroller) => Column(
               mainAxisSize: MainAxisSize.max,
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -26,23 +26,14 @@ class DealView extends GetView<RoBookingController> {
                       padding: const EdgeInsets.fromLTRB(0.0, 0, 8, 0),
                       child: DateWithThreeTextField(
                         title: "Deal Start",
-                        mainTextController: TextEditingController(
-                          text: gridcontroller.dealNoLeaveData?.dealFromDate != null
-                              ? DateFormat("dd-MM-yyyy")
-                                  .format(DateFormat("MM/dd/yyyy hh:mm:ss").parse(gridcontroller.dealNoLeaveData!.dealFromDate!))
-                              : null,
-                        ),
+                        mainTextController: controller.dealFromCtrl,
                         isEnable: controller.dealNoLeaveData == null,
                       ),
                     ),
                     DateWithThreeTextField(
                         isEnable: controller.dealNoLeaveData == null,
                         title: "Deal End",
-                        mainTextController: TextEditingController(
-                            text: gridcontroller.dealNoLeaveData?.dealFromDate != null
-                                ? DateFormat("dd-MM-yyyy")
-                                    .format(DateFormat("MM/dd/yyyy hh:mm:ss").parse(gridcontroller.dealNoLeaveData!.dealtoDate!))
-                                : null)),
+                        mainTextController: controller.dealToCtrl),
                   ],
                 ),
                 SizedBox(
@@ -50,37 +41,64 @@ class DealView extends GetView<RoBookingController> {
                 ),
                 Expanded(
                   child: Container(
-                      child: gridcontroller.bookingNoLeaveData != null &&
-                              gridcontroller.bookingNoLeaveData!.lstdgvDealDetails != null &&
-                              gridcontroller.bookingNoLeaveData!.lstdgvDealDetails!.isNotEmpty
-                          ? DataGridShowOnlyKeys(
-                              mapData: gridcontroller.bookingNoLeaveData!.lstdgvDealDetails!.map((e) => e.toJson()).toList(),
-                              onload: (load) {
-                                gridcontroller.dealViewGrid = load.stateManager;
-                              },
-                              onRowDoubleTap: (value) {
-                                gridcontroller.dealdoubleclick(
-                                    gridcontroller.dealViewGrid!.columns.indexWhere((element) => element.field == value.cell.column.field),
-                                    value.rowIdx);
-                              },
-                            )
-                          : (gridcontroller.dealNoLeaveData != null &&
-                                  gridcontroller.dealNoLeaveData!.lstdgvDealDetails != null &&
-                                  gridcontroller.dealNoLeaveData!.lstdgvDealDetails!.isNotEmpty
+                      child:
+                          gridcontroller
+                                          .bookingNoLeaveData !=
+                                      null &&
+                                  gridcontroller.bookingNoLeaveData!
+                                          .lstdgvDealDetails !=
+                                      null &&
+                                  gridcontroller.bookingNoLeaveData!
+                                      .lstdgvDealDetails!.isNotEmpty
                               ? DataGridShowOnlyKeys(
-                                  mapData: gridcontroller.dealNoLeaveData!.lstdgvDealDetails!.map((e) => e.toJson()).toList(),
+                                  mapData: gridcontroller
+                                      .bookingNoLeaveData!.lstdgvDealDetails!
+                                      .map((e) => e.toJson())
+                                      .toList(),
                                   onload: (load) {
-                                    gridcontroller.dealViewGrid = load.stateManager;
+                                    gridcontroller.dealViewGrid =
+                                        load.stateManager;
                                   },
                                   onRowDoubleTap: (value) {
                                     gridcontroller.dealdoubleclick(
-                                        gridcontroller.dealViewGrid!.columns.indexWhere((element) => element.field == value.cell.column.field),
+                                        gridcontroller.dealViewGrid!.columns
+                                            .indexWhere((element) =>
+                                                element.field ==
+                                                value.cell.column.field),
                                         value.rowIdx);
                                   },
                                 )
-                              : Container(
-                                  decoration: BoxDecoration(border: Border.all(width: 1.0, color: Colors.grey)),
-                                ))),
+                              : (gridcontroller
+                                              .dealNoLeaveData !=
+                                          null &&
+                                      gridcontroller.dealNoLeaveData!
+                                              .lstdgvDealDetails !=
+                                          null &&
+                                      gridcontroller.dealNoLeaveData!
+                                          .lstdgvDealDetails!.isNotEmpty
+                                  ? DataGridShowOnlyKeys(
+                                      mapData: gridcontroller
+                                          .dealNoLeaveData!.lstdgvDealDetails!
+                                          .map((e) => e.toJson())
+                                          .toList(),
+                                      onload: (load) {
+                                        gridcontroller.dealViewGrid =
+                                            load.stateManager;
+                                      },
+                                      onRowDoubleTap: (value) {
+                                        gridcontroller.dealdoubleclick(
+                                            gridcontroller.dealViewGrid!.columns
+                                                .indexWhere((element) =>
+                                                    element.field ==
+                                                    value.cell.column.field),
+                                            value.rowIdx);
+                                      },
+                                    )
+                                  : Container(
+                                      decoration: BoxDecoration(
+                                          border: Border.all(
+                                              width: 1.0, color: Colors.grey)),
+                                    ))),
                 )
               ],
             ));
