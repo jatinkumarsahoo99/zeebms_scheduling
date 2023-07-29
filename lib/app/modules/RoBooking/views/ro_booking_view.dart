@@ -338,12 +338,12 @@ class RoBookingView extends StatelessWidget {
                                               fun: (apidata) {
                                                 if (apidata is Map &&
                                                     apidata.containsKey(
-                                                        "searchTapeId") &&
-                                                    apidata["searchTapeId"]
+                                                        "info_SearchTapeId") &&
+                                                    apidata["info_SearchTapeId"]
                                                         is Map) {
-                                                  data.value =
-                                                      apidata["searchTapeId"]
-                                                          ["lstSearchTapeId"];
+                                                  data.value = apidata[
+                                                          "info_SearchTapeId"]
+                                                      ["lstSearchTapeId"];
                                                 }
                                               },
                                             );
@@ -426,21 +426,25 @@ class RoBookingView extends StatelessWidget {
                                   runSpacing: 5.0,
                                   spacing: Get.width * .01,
                                   children: [
-                                    DropDownField.formDropDown1WidthMap(
-                                        (controller.roBookingInitData
-                                                ?.lstExecutives
-                                                ?.map((e) => DropDownValue(
-                                                    key: e.personnelCode,
-                                                    value: e.personnelName))
-                                                .toList()) ??
-                                            [],
-                                        (value) => {},
-                                        "Executive",
-                                        0.23,
-                                        isEnable:
-                                            controller.bookingNoLeaveData ==
-                                                null,
-                                        selected: controller.selectedExecutive),
+                                    FocusTraversalOrder(
+                                      order: NumericFocusOrder(11),
+                                      child: DropDownField.formDropDown1WidthMap(
+                                          (controller.roBookingInitData
+                                                  ?.lstExecutives
+                                                  ?.map((e) => DropDownValue(
+                                                      key: e.personnelCode,
+                                                      value: e.personnelName))
+                                                  .toList()) ??
+                                              [],
+                                          (value) => {},
+                                          "Executive",
+                                          0.23,
+                                          isEnable:
+                                              controller.bookingNoLeaveData ==
+                                                  null,
+                                          selected:
+                                              controller.selectedExecutive),
+                                    ),
                                     InputFields.formField1(
                                       hintTxt: "Tot Spots",
                                       controller: controller.totSpotCtrl,
