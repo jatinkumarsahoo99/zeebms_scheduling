@@ -2595,6 +2595,9 @@ class DropDownField {
                                                   tempList.add(items[i]);
                                                 }
                                               }
+                                            } else {
+                                              tempList.clear();
+                                              tempList.addAll(items);
                                             }
                                           }),
                                           inputFormatters: [
