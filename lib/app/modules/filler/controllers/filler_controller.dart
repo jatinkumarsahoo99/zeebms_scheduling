@@ -22,7 +22,7 @@ import '../FillerSegmentModel.dart';
 class FillerController extends GetxController {
   var locations = <DropDownValue>[].obs;
   var channels = <DropDownValue>[].obs;
-  var locationFN = FocusNode();
+  var locationFN = FocusNode(), fillerCaptionFN = FocusNode();
 
   var fillerDailyFpcList = <FillerDailyFPCModel>[].obs;
   var fillerSegmentList = <FillerSegmentModel>[].obs;
@@ -203,6 +203,7 @@ class FillerController extends GetxController {
           fun: (data) {
             Get.back();
             if (data is List) {
+              selectedChannel = null;
               channels.value = data.map((e) => DropDownValue(key: e["channelCode"], value: e["channelName"])).toList();
             } else {
               LoadingDialog.callErrorMessage1(msg: "Failed To Load Initial Data");
@@ -261,18 +262,24 @@ class FillerController extends GetxController {
     }
   }
 
-  getFillerValuesByFillerCode(DropDownValue fillerCode) {
+  getFillerValuesByFillerCode(DropDownValue f) {
     try {
-      selectCaption.value = fillerCode;
+      LoadingDialog.call();
+      selectCaption.value = f;
       Get.find<ConnectorControl>().GETMETHODCALL(
-          api: ApiFactory.FILLER_VALUES_BY_FILLER_CODE(fillerCode.key),
-          fun: (data) {
-            // print('>> Fillers Value : ${data}');
-            tempMap = data;
-            tapeId_.text = data['exportTapeCode'];
-            segNo_.text = data['segmentNumber'];
-            segDur_.text = data['fillerDuration'];
+        api: ApiFactory.FILLER_VALUES_BY_FILLER_CODE(f.key),
+        fun: (data) {
+          Get.back();
+          tempMap = data;
+          tapeId_.text = data['exportTapeCode'];
+          segNo_.text = data['segmentNumber'];
+          segDur_.text = data['fillerDuration'];
+          fillerCaptionFN.nextFocus();
+          Future.delayed(Duration(milliseconds: 50)).then((value) {
+            fillerCaptionFN.requestFocus();
           });
+        },
+      );
     } catch (e) {
       LoadingDialog.callErrorMessage1(msg: "Failed To Load Initial Data");
     }
@@ -281,18 +288,20 @@ class FillerController extends GetxController {
   getFillerValuesByTapeCode(tapeCode) {
     try {
       Get.find<ConnectorControl>().GETMETHODCALL(
-          api: ApiFactory.FILLER_VALUES_BY_TAPE_CODE(tapeCode),
-          fun: (dynamic data) {
-            print('>>> Data from Tape Code : $data');
+        api: ApiFactory.FILLER_VALUES_BY_TAPE_CODE(tapeCode),
+        fun: (dynamic data) {
+          print('>>> Data from Tape Code : $data');
 
-            /// Need to show date in Filler caption, filler dropdown,tape idseg dur,total dur
-            fillerCode = data['fillerCode'];
+          /// Need to show date in Filler caption, filler dropdown,tape idseg dur,total dur
+          fillerCode = data['fillerCode'];
+          selectCaption.value = DropDownValue(key: data['fillerCode'].toString(), value: data['fillerCaption'].toString());
 
-            ///selectCaption.value = data['fillerCaption'];
-            tapeId_.text = data['exportTapeCode'];
-            segNo_.text = data['segmentNumber'];
-            segDur_.text = data['fillerDuration'];
-          });
+          ///selectCaption.value = data['fillerCaption'];
+          tapeId_.text = data['exportTapeCode'];
+          segNo_.text = data['segmentNumber'];
+          segDur_.text = data['fillerDuration'];
+        },
+      );
     } catch (e) {
       LoadingDialog.callErrorMessage1(msg: "Failed To Load Initial Data");
     }
@@ -430,35 +439,35 @@ class FillerController extends GetxController {
       Snack.callError("Please select Channel");
     } else if (selectCaption.value == null || selectCaption.value?.key == null || tempMap.isEmpty) {
       LoadingDialog.showErrorDialog("Please select caption");
-      return;
-    }
-    try {
-      var tempMode = FillerSegmentModel(
-        segNo: null,
-        seq: null,
-        ponumber: null,
-        brkNo: (fillerSegmentList[bottomLastSelectedIdx].segNo == null)
-            ? fillerSegmentList[bottomLastSelectedIdx].brkNo
-            : fillerSegmentList[bottomLastSelectedIdx].segNo,
-        brktype: "A",
-        fillerCode: tempMap['fillerCode'],
-        allowMove: "1",
-        segmentCaption: selectCaption.value?.value,
-        segDur: segDur_.text,
-        tapeID: tapeId_.text,
-        som: Utils.convertToTimeFromDouble(
-            value: ((Utils.convertToSecond(value: fillerSegmentList[bottomLastSelectedIdx].som ?? "")) +
-                (Utils.convertToSecond(value: fillerSegmentList[bottomLastSelectedIdx].segDur ?? "")))),
-      );
-      bottomLastSelectedIdx = bottomLastSelectedIdx + 1;
-      fillerSegmentList.insert(bottomLastSelectedIdx, tempMode);
-      fillerSegmentList.refresh();
-      totalFiller.text = ((num.tryParse(totalFiller.text) ?? 0) + 1).toString();
-      calculateFillerAndTotalFiller();
-      clearBottonControlls();
-      bottomSM?.setCurrentCell(bottomSM?.getRowByIdx(bottomLastSelectedIdx)?.cells['segNo'], bottomLastSelectedIdx);
-    } catch (e) {
-      LoadingDialog.showErrorDialog(e.toString());
+    } else {
+      try {
+        var tempMode = FillerSegmentModel(
+          segNo: null,
+          seq: null,
+          ponumber: null,
+          brkNo: (fillerSegmentList[bottomLastSelectedIdx].segNo == null)
+              ? fillerSegmentList[bottomLastSelectedIdx].brkNo
+              : fillerSegmentList[bottomLastSelectedIdx].segNo,
+          brktype: "A",
+          fillerCode: tempMap['fillerCode'],
+          allowMove: "1",
+          segmentCaption: selectCaption.value?.value,
+          segDur: segDur_.text,
+          tapeID: tapeId_.text,
+          som: Utils.convertToTimeFromDouble(
+              value: ((Utils.convertToSecond(value: fillerSegmentList[bottomLastSelectedIdx].som ?? "")) +
+                  (Utils.convertToSecond(value: fillerSegmentList[bottomLastSelectedIdx].segDur ?? "")))),
+        );
+        bottomLastSelectedIdx = bottomLastSelectedIdx + 1;
+        fillerSegmentList.insert(bottomLastSelectedIdx, tempMode);
+        fillerSegmentList.refresh();
+        totalFiller.text = ((num.tryParse(totalFiller.text) ?? 0) + 1).toString();
+        calculateFillerAndTotalFiller();
+        clearBottonControlls();
+        bottomSM?.setCurrentCell(bottomSM?.getRowByIdx(bottomLastSelectedIdx)?.cells['segNo'], bottomLastSelectedIdx);
+      } catch (e) {
+        LoadingDialog.showErrorDialog(e.toString());
+      }
     }
   }
 

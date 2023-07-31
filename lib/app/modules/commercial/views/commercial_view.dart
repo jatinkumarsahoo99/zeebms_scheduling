@@ -82,6 +82,7 @@ class CommercialView extends GetView<CommercialController> {
                                   title: "From Date",
                                   mainTextController: controller.date_,
                                   widthRation: controller.widthSize,
+                                  startDate: DateTime.now(),
                                 ),
                                 const SizedBox(
                                   width: 20,

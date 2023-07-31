@@ -132,6 +132,7 @@ class FillerView extends GetView<FillerController> {
                                           // controller.fetchFPCDetails();
                                         },
                                         mainTextController: controller.fillerFromDate_,
+                                        endDate: DateTime.now(),
                                       ),
                                     ),
                                     const SizedBox(width: 15),
@@ -141,6 +142,7 @@ class FillerView extends GetView<FillerController> {
                                         splitType: "-",
                                         widthRation: 0.15,
                                         isEnable: controller.isEnable.value,
+                                        startDate: DateTime.now(),
                                         onFocusChange: (data) {
                                           // print('Selected Date $data');
                                           // controller.fetchFPCDetails();
@@ -249,7 +251,8 @@ class FillerView extends GetView<FillerController> {
                       children: [
                         Obx(
                           () => DropDownField.formDropDownSearchAPI2(
-                            GlobalKey(), context,
+                            GlobalKey(),
+                            context,
                             title: "Filler Caption",
                             url: ApiFactory.FILLER_CAPTION,
                             parseKeyForKey: "fillerCode",
@@ -258,7 +261,7 @@ class FillerView extends GetView<FillerController> {
                             selectedValue: controller.selectCaption.value,
                             width: w * 0.45,
                             dialogHeight: 250,
-                            // padding: const EdgeInsets.only()
+                            inkwellFocus: controller.fillerCaptionFN,
                           ),
                         ),
 
@@ -270,7 +273,11 @@ class FillerView extends GetView<FillerController> {
                           controller: controller.tapeId_,
                           isEnable: true,
                           onChange: (value) {
-                            controller.getFillerValuesByTapeCode(value.toString());
+                            if (value.toString().isEmpty) {
+                              controller.clearBottonControlls();
+                            } else {
+                              controller.getFillerValuesByTapeCode(value.toString());
+                            }
                           },
                           maxLen: 10,
                         ),
