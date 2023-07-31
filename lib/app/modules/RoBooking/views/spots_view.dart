@@ -2,6 +2,7 @@
 import 'package:bms_scheduling/app/controller/ConnectorControl.dart';
 import 'package:bms_scheduling/app/modules/RoBooking/controllers/ro_booking_controller.dart';
 import 'package:bms_scheduling/app/modules/RoBooking/views/dummydata.dart';
+import 'package:bms_scheduling/app/providers/SizeDefine.dart';
 import 'package:bms_scheduling/app/providers/extensions/string_extensions.dart';
 import 'package:bms_scheduling/widgets/DataGridShowOnly.dart';
 import 'package:bms_scheduling/widgets/DateTime/DateWithThreeTextField.dart';
@@ -144,7 +145,10 @@ class SpotsView extends GetView<RoBookingController> {
                                             hintTxt: "Agency", width: 0.18, controller: TextEditingController(text: data["agencyName"])),
                                         InputFields.formField1(
                                             hintTxt: "Activity Period", width: 0.18, controller: TextEditingController(text: data["activityPeriod"])),
-                                        Text("[YYYYMM]")
+                                        Text(
+                                          "[YYYYMM]",
+                                          style: TextStyle(fontSize: SizeDefine.labelSize1),
+                                        )
                                       ],
                                     ),
                                     Divider(
