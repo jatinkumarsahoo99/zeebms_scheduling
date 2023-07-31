@@ -1,6 +1,5 @@
 import 'dart:developer';
 import 'dart:math';
-import 'package:bms_scheduling/app/modules/TransmissionLog/ColorDataModel.dart';
 import 'package:bms_scheduling/app/modules/TransmissionLog/controllers/TransmissionLogController.dart';
 import 'package:bms_scheduling/app/providers/extensions/string_extensions.dart';
 import 'package:flutter/material.dart';
@@ -466,8 +465,9 @@ class DataGridFromMapTransmissionLog extends StatelessWidget {
         onFocusChange: onFocusChange,
         child: PlutoGrid(
             // mode: mode ?? PlutoGridMode.normal,
-            mode: PlutoGridMode.multiSelect,
+            mode: PlutoGridMode.normal,
             configuration: plutoGridConfigurationTransmisionLog(focusNode: _focusNode),
+            // configuration: const PlutoGridConfiguration(),
             rowColorCallback: colorCallback,
             onLoaded: onload,
             columns: segColumn,

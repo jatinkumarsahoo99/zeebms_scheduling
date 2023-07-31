@@ -680,6 +680,7 @@ class ApiFactory {
   static String RO_BOOKING_SearchTapeIdLeave(exportCode) => "$BASE_URL/api/ROBooking/SearchTapeId?ExportTapeCode=$exportCode";
 
   static String RO_BOOKING_cboTapeIdLeave = "$BASE_URL/api/ROBooking/cboTapeIdLeave";
+  static String RO_BOOKING_SaveClientPdc = "$BASE_URL/api/ROBooking/SaveClientPdc";
   static String RO_BOOKING_cboTapeIdFocusLost = "$BASE_URL/api/ROBooking/GetTapeIdLostFocus";
   static String RO_BOOKING_AddSpot = "$BASE_URL/api/ROBooking/OnAddSpots";
   static String RO_BOOKING_OnSaveData = "$BASE_URL/api/ROBooking/OnSaveData";

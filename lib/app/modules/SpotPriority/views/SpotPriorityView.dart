@@ -7,7 +7,11 @@ import '../../../../widgets/Snack.dart';
 import '../../../../widgets/dropdown.dart';
 import '../../../../widgets/gridFromMap.dart';
 import '../../../controller/HomeController.dart';
+import '../../../controller/MainController.dart';
+import '../../../data/PermissionModel.dart';
 import '../../../providers/DataGridMenu.dart';
+import '../../../providers/Utils.dart';
+import '../../../routes/app_pages.dart';
 import '../controllers/SpotPriorityController.dart';
 
 class SpotPriorityView extends GetView<SpotPriorityController> {
@@ -232,11 +236,11 @@ class SpotPriorityView extends GetView<SpotPriorityController> {
                 id: "buttons",
                 init: Get.find<HomeController>(),
                 builder: (controller) {
-                  /* PermissionModel formPermissions = Get.find<MainController>()
+                   PermissionModel formPermissions = Get.find<MainController>()
                       .permissionList!
                       .lastWhere((element) {
-                    return element.appFormName == "frmSegmentsDetails";
-                  });*/
+                    return element.appFormName == Routes.SPOT_PRIORITY.replaceAll("/", "");
+                  });
                   if (controller.tranmissionButtons != null) {
                     return SizedBox(
                       height: 40,
@@ -250,14 +254,11 @@ class SpotPriorityView extends GetView<SpotPriorityController> {
                             FormButtonWrapper(
                               btnText: btn["name"],
                               showIcon: false,
-                              // isEnabled: btn['isDisabled'],
-                              callback: /*btn["name"] != "Delete" &&
-                                      Utils.btnAccessHandler2(btn['name'],
+                              callback: Utils.btnAccessHandler2(btn['name'],
                                               controller, formPermissions) ==
                                           null
                                   ? null
-                                  :*/
-                                  () => formHandler(btn['name']),
+                                  : () => formHandler(btn['name']),
                             ),
                         ],
                       ),

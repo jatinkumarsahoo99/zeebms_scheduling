@@ -46,7 +46,7 @@ class Const {
 
 
 
-
+/*
   static String getInstrumentKey() {
     switch (ApiFactory.Enviroment.toLowerCase()) {
       case "prod":
@@ -187,9 +187,9 @@ class Const {
       default:
         return "https://app-scheduling-bms-dev.zeeconnect.in";
     }
-  }
+  }*/
 
-  /*static String getInstrumentKey() {
+  static String getInstrumentKey() {
     if(!kDebugMode){
       return Get.find<MainController>().environmentModel?.appInsrtumentationKey??"";
     }
@@ -363,5 +363,5 @@ class Const {
       default:
         return "https://app-scheduling-bms-dev.zeeconnect.in";
     }
-  }*/
+  }
 }
