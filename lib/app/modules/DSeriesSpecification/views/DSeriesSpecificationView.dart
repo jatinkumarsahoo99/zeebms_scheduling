@@ -259,8 +259,7 @@ class DSeriesSpecificationView extends GetView<DSeriesSpecificationController> {
                           FormButtonWrapper(
                             btnText: btn["name"],
                             // isEnabled: btn['isDisabled'],
-                            callback: btn["name"] != "Delete" &&
-                                    Utils.btnAccessHandler2(btn['name'],
+                            callback: Utils.btnAccessHandler2(btn['name'],
                                             controller, formPermissions) ==
                                         null
                                 ? null

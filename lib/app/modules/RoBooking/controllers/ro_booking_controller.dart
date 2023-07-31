@@ -59,6 +59,7 @@ class RoBookingController extends GetxController {
       mgtoDateCtrl = TextEditingController();
   PlutoGridStateManager? dealViewGrid;
   PlutoGridStateManager? programViewGrid;
+  PlutoGridStateManager? spotViewGrid;
   RoBookingAgencyLeaveData? agencyLeaveData;
   RxnString currentTab = RxnString();
   RoBookingInitData? roBookingInitData;
@@ -556,6 +557,9 @@ class RoBookingController extends GetxController {
             payModeCtrl.text = dealNoLeaveData?.payMode ?? "";
             dealTypeCtrl.text = dealNoLeaveData?.dealType ?? "";
             maxspendCtrl.text = dealNoLeaveData?.maxSpend ?? 0.toString();
+            selectedBrand = DropDownValue(
+                key: dealNoLeaveData?.lstBrand?.first.brandcode ?? "",
+                value: dealNoLeaveData?.lstBrand?.first.brandname ?? "");
             update(["init", "dealGrid"]);
           }
         });
