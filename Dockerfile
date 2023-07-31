@@ -50,6 +50,7 @@ COPY --from=build-env /app/build/web /app/public-flutter
 COPY ./server/app.js /app/app.js
 COPY ./server/package.json /app/package.json
 COPY startup.sh /app/
+RUN chmod 777 startup.sh
 RUN npm install
 ENV NODE_ENV production
 ENV ENVIRONMENT production
