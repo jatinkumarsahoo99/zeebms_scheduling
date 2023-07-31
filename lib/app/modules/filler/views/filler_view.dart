@@ -212,7 +212,7 @@ class FillerView extends GetView<FillerController> {
                       mapData: (controller.fillerDailyFpcList.value.map((e) => e.toJson()).toList()),
                       showonly: ["fpcTime", "endTime", "programName", "epsNo", "tape id", "episodeCaption"],
                       widthRatio: (Get.width * 0.2) / 2 + 7,
-                      mode: PlutoGridMode.selectWithOneTap,
+                      mode: PlutoGridMode.normal,
                       onload: (event) {
                         controller.gridStateManager = event.stateManager;
                         event.stateManager.setCurrentCell(

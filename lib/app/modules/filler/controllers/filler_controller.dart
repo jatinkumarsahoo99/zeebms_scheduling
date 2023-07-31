@@ -356,6 +356,7 @@ class FillerController extends GetxController {
           fun: (dynamic list) {
             Get.back();
             if (list != null && list['dailyFPC'] is List<dynamic>) {
+              topLastSelectedIdx = 0;
               fillerDailyFpcList.clear();
               fillerDailyFpcList.addAll((list['dailyFPC'] as List<dynamic>).map((e) => FillerDailyFPCModel.fromJson(e)).toList());
             }
@@ -398,6 +399,7 @@ class FillerController extends GetxController {
           Get.back();
           fillerSegmentList.clear();
           if (list != null && list is List<dynamic>) {
+            bottomLastSelectedIdx = 0;
             fillerSegmentList.addAll(list.map((e) => FillerSegmentModel.fromJson(e)).toList());
           }
           calculateFillerAndTotalFiller();
