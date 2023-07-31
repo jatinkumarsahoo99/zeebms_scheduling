@@ -54,5 +54,5 @@ RUN npm install
 ENV NODE_ENV production
 ENV ENVIRONMENT production
 EXPOSE 3000
-#CMD ./app/startup.sh && pm2-docker app.js
-CMD pm2-docker app.js
+CMD ./app/startup.sh && pm2-docker app.js
+#CMD pm2-docker app.js
