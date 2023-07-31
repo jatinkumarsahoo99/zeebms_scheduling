@@ -1,4 +1,3 @@
-import 'package:bms_scheduling/app/controller/HomeController.dart';
 import 'package:bms_scheduling/app/controller/MainController.dart';
 import 'package:bms_scheduling/app/data/DropDownValue.dart';
 import 'package:bms_scheduling/widgets/PlutoGrid/src/manager/pluto_grid_state_manager.dart';
@@ -27,6 +26,8 @@ class SlideController extends GetxController {
   }
 
   clearPage() {
+    telecastedateTC.clear();
+    importDateTc.clear();
     selectedLocation = null;
     selectedChannel = null;
     dataTableList.clear();
@@ -125,7 +126,7 @@ class SlideController extends GetxController {
         closeDialog();
         if (resp != null && resp is Map<String, dynamic> && resp['postsave'] != null && resp['postsave'].toString().contains("Records are updated")) {
           LoadingDialog.callDataSaved(
-              msg: resp.toString(),
+              msg: resp['postsave'].toString(),
               callback: () {
                 clearPage();
               });
