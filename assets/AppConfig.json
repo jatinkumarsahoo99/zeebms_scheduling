@@ -1,6 +1,8 @@
 {
   "app-login-url": "",
   "api-login-url": "",
+  "app-salesco-url": "",
+  "api-salesco-url": "",
   "app-common-url": "",
   "api-common-url": "",
   "app-admin-url": "",
