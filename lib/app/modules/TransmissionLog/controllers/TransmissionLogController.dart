@@ -138,6 +138,7 @@ class TransmissionLogController extends GetxController {
 
   ExportFPCTimeModel? exportFPCTime;
   RxString lastSavedLoggedUser=RxString("");
+  bool isBackDated=false;
 
   @override
   void onInit() {
@@ -788,8 +789,8 @@ class TransmissionLogController extends GetxController {
             selectLocation?.key ?? "",
             selectChannel?.key ?? "",
             selectedDate.text,
-            selectLocation?.value ?? "",
             selectChannel?.value ?? "",
+            selectLocation?.value ?? "",
             gridStateManager?.currentRowIdx ?? 0,
             "00:00",
             isDone!,

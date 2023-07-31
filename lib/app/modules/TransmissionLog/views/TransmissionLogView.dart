@@ -14,10 +14,14 @@ import '../../../../widgets/gridFromMapTransmissionLog.dart';
 import '../../../../widgets/input_fields.dart';
 import '../../../../widgets/radio_column.dart';
 import '../../../controller/HomeController.dart';
+import '../../../controller/MainController.dart';
 import '../../../data/DropDownValue.dart';
+import '../../../data/PermissionModel.dart';
 import '../../../providers/ApiFactory.dart';
 import '../../../providers/DataGridMenu.dart';
 import '../../../providers/SizeDefine.dart';
+import '../../../providers/Utils.dart';
+import '../../../routes/app_pages.dart';
 import '../ColorDataModel.dart';
 import '../CommercialModel.dart';
 import '../controllers/TransmissionLogController.dart';
@@ -152,18 +156,21 @@ class TransmissionLogView extends StatelessWidget {
                               widthRation: 0.12,
                               isEnable: controller.isEnable.value,
                               onFocusChange: (data) {
-                                // controller.selectedDate.text =
-                                //     DateFormat('dd/MM/yyyy').format(
-                                //         DateFormat("dd-MM-yyyy").parse(data));
-                                // DateFormat("dd-MM-yyyy").parse(data);
+                                DateTime date = DateFormat("dd-MM-yyyy").parse(data);
+                                print("Focus date is>>>" + date.toString());
+                                bool valDate = date.isBefore(DateTime.now());
+                                bool isSameDate = DateUtils.isSameDay(date, DateTime.now());
+                                print("Is back date>>>" + valDate.toString());
+                                print("Is same date>>>" + isSameDate.toString());
+                                if(isSameDate) {
+                                  controller.isBackDated = false;
+                                }else if(valDate) {
+                                  controller.isBackDated = valDate;
+                                }else{
+                                  controller.isBackDated = false;
+                                }
+                                Get.find<HomeController>().update(["transButtons"]);
                                 print("Called when focus changed");
-                                /*controller.getDailyFPCDetailsList(
-                                  controller.selectedLocationId.text,
-                                  controller.selectedChannelId.text,
-                                  controller.convertToAPIDateType(),
-                                );*/
-
-                                // controller.isTableDisplayed.value = true;
                               },
                               mainTextController: controller.selectedDate,
                             ),
@@ -260,12 +267,12 @@ class TransmissionLogView extends StatelessWidget {
                             (controller.transmissionLog?.loadSavedLogOutput
                                 ?.lstTransmissionLog?.isNotEmpty)!)
                         ? DataGridFromMapTransmissionLog(
-                            onFocusChange: (value) {
+                            /*onFocusChange: (value) {
                               controller.gridStateManager!
                                   .setGridMode(PlutoGridMode.selectWithOneTap);
                               controller.selectedPlutoGridMode =
                                   PlutoGridMode.selectWithOneTap;
-                            },
+                            },*/
                             hideCode: false,
                             colorCallback: (PlutoRowColorContext colorData) {
                               PlutoRow currentRow =
@@ -322,6 +329,11 @@ class TransmissionLogView extends StatelessWidget {
                             onload: (loadevent) {
                               controller.gridStateManager =
                                   loadevent.stateManager;
+                              loadevent.stateManager
+                                  .setGridMode(PlutoGridMode.normal);
+                              loadevent.stateManager.setSelecting(true);
+                              loadevent.stateManager
+                                  .setSelectingMode(PlutoGridSelectingMode.row);
                               if (controller.isFetch.value) {
                                 controller.isFetch.value = false;
                                 controller.colorGrid(false);
@@ -522,16 +534,22 @@ class TransmissionLogView extends StatelessWidget {
                   id: "transButtons",
                   init: Get.find<HomeController>(),
                   builder: (controller) {
-                    /* PermissionModel formPermissions = Get.find<MainController>()
+                    PermissionModel formPermissions = Get.find<MainController>()
                         .permissionList!
                         .lastWhere((element) {
-                      return element.appFormName == "frmSegmentsDetails";
-                    });*/
+                      return element.appFormName ==
+                          Routes.TRANSMISSION_LOG.replaceAll("/", "");
+                    });
+                    if (formPermissions == null) {
+                      return Container();
+                    } else {
+                      print("Transmission Log...." +
+                          jsonEncode(formPermissions.toJson()));
+                    }
                     if (controller.tranmissionButtons != null) {
                       return SizedBox(
                         height: 40,
                         child: ButtonBar(
-                          // buttonHeight: 20,
                           alignment: MainAxisAlignment.start,
                           mainAxisSize: MainAxisSize.min,
                           // pa
@@ -540,14 +558,15 @@ class TransmissionLogView extends StatelessWidget {
                               FormButtonWrapper1(
                                 btnText: btn["name"],
                                 showIcon: false,
-                                // isEnabled: btn['isDisabled'],
-                                callback: /*btn["name"] != "Delete" &&
-                                        Utils.btnAccessHandler2(btn['name'],
+                                callback: (Get.find<TransmissionLogController>()
+                                            .isBackDated &&
+                                        btn['name'] == "Save")
+                                    ? null
+                                    : Utils.btnAccessHandler2(btn['name'],
                                                 controller, formPermissions) ==
                                             null
-                                    ? null
-                                    :*/
-                                    () => formHandler(btn['name']),
+                                        ? null
+                                        : () => formHandler(btn['name']),
                               ),
                             IconButton(
                               onPressed: () {
@@ -648,7 +667,7 @@ class TransmissionLogView extends StatelessWidget {
 
         break;
       case "TS":
-        controller.getBtnClick_TS(fun:(){
+        controller.getBtnClick_TS(fun: () {
           showTransmissionSummaryDialog(Get.context);
         });
 
@@ -700,7 +719,6 @@ class TransmissionLogView extends StatelessWidget {
   }
 
   showTransmissionSummaryDialog(context) {
-
     return Get.defaultDialog(
       barrierDismissible: false,
       title: "Transmission Summary",
