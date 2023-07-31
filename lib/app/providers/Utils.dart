@@ -465,10 +465,10 @@ class Utils {
   }
 
   static btnAccessHandler2(btn, HomeController controller, PermissionModel formPermissions) {
-    print('Here= ================?????');
-    print('permission ===> ${jsonEncode(formPermissions)}');
+    // print('Here= ================?????');
+    // print('permission ===> ${jsonEncode(formPermissions)}');
     //default btns
-    List permittedBtns = ['Refresh', 'Clear', 'Exit', 'Docs'];
+    List permittedBtns = ['Refresh', 'Clear', 'Exit', 'Docs',"Auto","Commercials","Insert","Updated","Segments","Change","Export","Next Time","Undo","TS","Verify","Load"];
     if (formPermissions.delete!) {
       permittedBtns.add('Delete');
     }
