@@ -15,6 +15,7 @@ import 'package:intl/intl.dart';
 
 import '../../../../widgets/CheckBoxWidget.dart';
 import '../../../../widgets/DateTime/DateWithThreeTextField.dart';
+import '../../../../widgets/PlutoGrid/src/helper/pluto_move_direction.dart';
 import '../../../../widgets/PlutoGrid/src/manager/pluto_grid_state_manager.dart';
 import '../../../../widgets/PlutoGrid/src/pluto_grid.dart';
 import '../../../../widgets/dropdown.dart';
@@ -89,27 +90,25 @@ class RosDistributionController extends GetxController {
 
   handleOnChangedInROSSpots() {
     var rosSpotsValue = (checkBoxes.value[1]['value'] as bool);
+    showDataModel.value = ROSDistuibutionShowModel.fromJson(tempShowDataModel.toJson());
     if (rosSpotsValue) {
       /// display only ros
       showDataModel.value.infoShowBucketList?.lstROSSpots?.removeWhere(
         (element) => ((element.sponsorTypeName?.toLowerCase() != "ros")),
       );
       showDataModel.refresh();
-    } else {
-      showDataModel.value = ROSDistuibutionShowModel.fromJson(tempShowDataModel.toJson());
     }
   }
 
   handleOnChangedInSpotBuys() {
     var showSpotsValue = (checkBoxes.value[2]['value'] as bool);
+    showDataModel.value = ROSDistuibutionShowModel.fromJson(tempShowDataModel.toJson());
     if (showSpotsValue) {
       /// display only spot boys
       showDataModel.value.infoShowBucketList?.lstROSSpots?.removeWhere(
-        (element) => ((element.sponsorTypeName?.toLowerCase() != "spot boys")),
+        (element) => ((element.sponsorTypeName?.toLowerCase() != "spot buys")),
       );
       showDataModel.refresh();
-    } else {
-      showDataModel.value = ROSDistuibutionShowModel.fromJson(tempShowDataModel.toJson());
     }
   }
 
@@ -214,7 +213,7 @@ class RosDistributionController extends GetxController {
                         decoration: reportList.isEmpty ? BoxDecoration(border: Border.all(color: Colors.grey)) : null,
                         child: reportList.isEmpty
                             ? null
-                            : DataGridShowOnlyKeys(
+                            : DataGridFromMap(
                                 mapData: reportList.value,
                                 onSelected: (row) {
                                   showDataModel.value.infoShowBucketList?.lstROSSpots?.clear();
@@ -684,11 +683,13 @@ class RosDistributionController extends GetxController {
                                     : null,
                                 child: (tempModel.value.infoGetFpcCellDoubleClick?.lstFPC?.isEmpty ?? true)
                                     ? null
-                                    : DataGridShowOnlyKeys(
+                                    : DataGridFromMap(
                                         mapData: (tempModel.value.infoGetFpcCellDoubleClick?.lstFPC)?.map((e) => e.toJson()).toList() ?? [],
                                         formatDate: false,
                                         widthRatio: 220,
-                                        hideCode: false,
+                                        exportFileName: "ROS Distribution",
+                                        showonly: ['fpcTime', 'programName', 'commercialCap', 'groupCode', 'bookedDuration'],
+                                        // hideCode: false,
                                         colorCallback: (row) => (row.row.cells.containsValue(tempSM1st?.currentCell))
                                             ? Colors.deepPurple.shade200
                                             : getRowColorForFPC(tempModel.value.infoGetFpcCellDoubleClick?.lstFPC?[row.rowIdx].backColor ?? ""),
@@ -741,7 +742,8 @@ class RosDistributionController extends GetxController {
                                                 (tempModel.value.infoGetFpcCellDoubleClick?.lstFPC?[0].bookedDuration ?? 0).toString();
                                           }
                                           sm.stateManager
-                                              .setCurrentCell(sm.stateManager.getRowByIdx(lastSelectedIdx)?.cells['rowNo'], lastSelectedIdx);
+                                              .setCurrentCell(sm.stateManager.getRowByIdx(lastSelectedIdx)?.cells['fpcTime'], lastSelectedIdx);
+                                          sm.stateManager.moveCurrentCellByRowIdx(lastSelectedIdx, PlutoMoveDirection.down);
                                         },
                                         mode: PlutoGridMode.normal,
                                       ),
@@ -766,6 +768,7 @@ class RosDistributionController extends GetxController {
                                       child: (tempModel.value.infoGetFpcCellDoubleClick?.lstAllocatedSpots?.isEmpty ?? true)
                                           ? null
                                           : DataGridShowOnlyKeys(
+                                              exportFileName: "ROS Distribution",
                                               mapData:
                                                   (tempModel.value.infoGetFpcCellDoubleClick?.lstAllocatedSpots)?.map((e) => e.toJson()).toList() ??
                                                       [],
@@ -903,21 +906,22 @@ class RosDistributionController extends GetxController {
     } else {
       LoadingDialog.call();
       Get.find<ConnectorControl>().POSTMETHOD(
-          api: ApiFactory.RO_DISTRIBUTION_GET_ALLOCATION_DATA,
-          fun: (resp) {
-            closeDialogIfOpen();
-            if (resp != null && resp is Map<String, dynamic> && resp['info_tblROSSpots'] != null) {
-            } else {
-              LoadingDialog.showErrorDialog(resp.toString());
-            }
-          },
-          json: {
-            "rowIndex": mainGridIdx,
-            "lstROSSpots": showDataModel.value.infoShowBucketList?.lstROSSpots?.map((e) => e.toJson()).toList(),
-            "loggedUser": Get.find<MainController>().user?.logincode,
-            "allocPercentVisiable": false,
-            "allocPercentValue": "100",
-          });
+        api: ApiFactory.RO_DISTRIBUTION_GET_ALLOCATION_DATA,
+        fun: (resp) {
+          closeDialogIfOpen();
+          if (resp != null && resp is Map<String, dynamic> && resp['info_tblROSSpots'] != null) {
+          } else {
+            LoadingDialog.showErrorDialog(resp.toString());
+          }
+        },
+        json: {
+          "rowIndex": mainGridIdx,
+          "lstROSSpots": showDataModel.value.infoShowBucketList?.lstROSSpots?.map((e) => e.toJson()).toList(),
+          "loggedUser": Get.find<MainController>().user?.logincode,
+          "allocPercentVisiable": false,
+          "allocPercentValue": "100",
+        },
+      );
     }
   }
 
