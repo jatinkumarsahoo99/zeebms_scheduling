@@ -97,7 +97,7 @@ class RoBookingController extends GetxController {
 
   RoBookingSaveCheckTapeId? savecheckData;
   bool showGstPopUp = true;
-
+  int editMode = 0;
   DropDownValue? selectedGST;
   RxList<SpotsNotVerified> spotsNotVerified = RxList<SpotsNotVerified>([]);
   var channels = RxList<DropDownValue>();
@@ -448,6 +448,7 @@ class RoBookingController extends GetxController {
         },
         fun: (response) {
           if (response is Map && response.containsKey("info_SetVerify")) {
+            spotsNotVerifiedClickData = null;
             if (response["info_SetVerify"]["message"] != null) {
               if (response["info_SetVerify"]["message"].toString().toLowerCase().contains("verification status updated")) {
                 LoadingDialog.callDataSaved(msg: response["info_SetVerify"]["message"]);
@@ -455,6 +456,7 @@ class RoBookingController extends GetxController {
                 LoadingDialog.callErrorMessage1(msg: response["info_SetVerify"]["message"]);
               }
             }
+
             if (response["info_SetVerify"]['info_SpotsNotVerified'] != null) {
               spotsNotVerified.value = <SpotsNotVerified>[];
               response["info_SetVerify"]['info_SpotsNotVerified'].forEach((v) {
@@ -552,7 +554,7 @@ class RoBookingController extends GetxController {
           "dealNo": selectedDeal?.key,
           "pdcNumber": selectedPdc?.key ?? "",
           "loggedUser": Get.find<MainController>().user?.logincode,
-          "intEditMode": bookingNoLeaveData?.intEditMode ?? 1,
+          "intEditMode": bookingNoLeaveData?.intEditMode ?? editMode,
           "gstPlants": agencyLeaveData?.gstPlants ?? bookingNoLeaveData?.gstPlants ?? selectedGST?.key,
           "gstRegN": agencyLeaveData?.gstRegNo ?? bookingNoLeaveData?.gstRegNo ?? gstNoCtrl.text,
           "secondaryEvents": selectedSecEvent?.key ?? bookingNoLeaveData?.secondaryEventId,
@@ -568,8 +570,12 @@ class RoBookingController extends GetxController {
         },
         fun: (response) {
           if (response is Map && response.containsKey("info_OnSave")) {
+            editMode = 1;
+
             for (var msg in response["info_OnSave"]["message"]) {
-              LoadingDialog.callDataSavedMessage(msg);
+              LoadingDialog.callDataSavedMessage(msg, barrierDismissible: false, callback: () {
+                onBookingNoLeave(bookingNumber: response["info_OnSave"]["bookingNumber"]);
+              });
             }
           } else if (response is String) {
             LoadingDialog.callErrorMessage1(msg: response);
@@ -760,14 +766,14 @@ class RoBookingController extends GetxController {
     }
   }
 
-  onBookingNoLeave() {
+  onBookingNoLeave({String? bookingNumber}) {
     Get.find<ConnectorControl>().POSTMETHOD(
         api: ApiFactory.RO_BOOKING_BOOKING_NO_LEAVE,
         json: {
           "locationcode": selectedLocation!.key,
           "channelcode": selectedChannel!.key,
           "bookingMonth": bookingMonthCtrl.text,
-          "bookingnumber": bookingNoCtrl.text,
+          "bookingnumber": bookingNumber ?? bookingNoCtrl.text,
           "formname": "frmROBooking"
         },
         fun: (value) {

@@ -7,6 +7,7 @@ import 'package:bms_scheduling/app/providers/extensions/string_extensions.dart';
 import 'package:bms_scheduling/widgets/DataGridShowOnly.dart';
 import 'package:bms_scheduling/widgets/DateTime/DateWithThreeTextField.dart';
 import 'package:bms_scheduling/widgets/FormButton.dart';
+import 'package:bms_scheduling/widgets/LoadingDialog.dart';
 
 import 'package:bms_scheduling/widgets/dropdown.dart';
 import 'package:bms_scheduling/widgets/input_fields.dart';
@@ -138,15 +139,30 @@ class SpotsView extends GetView<RoBookingController> {
                                       runSpacing: 05,
                                       children: [
                                         InputFields.formField1(
-                                            hintTxt: "Location", width: 0.18, controller: TextEditingController(text: data["locationName"])),
+                                            isEnable: false,
+                                            hintTxt: "Location",
+                                            width: 0.18,
+                                            controller: TextEditingController(text: data["locationName"])),
                                         InputFields.formField1(
-                                            hintTxt: "Channel", width: 0.18, controller: TextEditingController(text: data["channelName"])),
+                                            isEnable: false,
+                                            hintTxt: "Channel",
+                                            width: 0.18,
+                                            controller: TextEditingController(text: data["channelName"])),
                                         InputFields.formField1(
-                                            hintTxt: "Client", width: 0.18, controller: TextEditingController(text: data["clientName"])),
+                                            isEnable: false,
+                                            hintTxt: "Client",
+                                            width: 0.18,
+                                            controller: TextEditingController(text: data["clientName"])),
                                         InputFields.formField1(
-                                            hintTxt: "Agency", width: 0.18, controller: TextEditingController(text: data["agencyName"])),
+                                            isEnable: false,
+                                            hintTxt: "Agency",
+                                            width: 0.18,
+                                            controller: TextEditingController(text: data["agencyName"])),
                                         InputFields.formField1(
-                                            hintTxt: "Activity Period", width: 0.18, controller: TextEditingController(text: data["activityPeriod"])),
+                                            isEnable: false,
+                                            hintTxt: "Activity Period",
+                                            width: 0.18,
+                                            controller: TextEditingController(text: data["activityPeriod"])),
                                         Text(
                                           "[YYYYMM]",
                                           style: TextStyle(fontSize: SizeDefine.labelSize1),
@@ -181,20 +197,24 @@ class SpotsView extends GetView<RoBookingController> {
                                         FormButtonWrapper(
                                           btnText: "Add",
                                           callback: () {
-                                            listdata.add(
-                                              {
-                                                "chqNo": chequeNoCtrl.text,
-                                                "chqDate": chqDateCtrl.text.fromdMyToyMd(),
-                                                "chqAmount": double.parse(chequeAmtCtrl.text),
-                                                "bankName": bankCtrl.text,
-                                                "chequeReceivedBy": chequeRecByCtrl.text,
-                                                "chequeReceivedOn": chequeRecOnCtrl.text.fromdMyToyMd(),
-                                                "remarks": remarkCtrl.text,
-                                                "chequeId": null,
-                                                "rowNo": listdata.length + 1
-                                              },
-                                            );
-                                            listdata.refresh();
+                                            var listMap = {
+                                              "chqNo": chequeNoCtrl.text,
+                                              "chqDate": chqDateCtrl.text.fromdMyToyMd(),
+                                              "chqAmount": double.parse(chequeAmtCtrl.text),
+                                              "bankName": bankCtrl.text,
+                                              "chequeReceivedBy": chequeRecByCtrl.text,
+                                              "chequeReceivedOn": chequeRecOnCtrl.text.fromdMyToyMd(),
+                                              "remarks": remarkCtrl.text,
+                                              "chequeId": null,
+                                              "rowNo": listdata.length + 1
+                                            };
+                                            if (listdata.contains(listMap)) {
+                                              LoadingDialog.callErrorMessage1(msg: "Duplicate Cheque. cannot add");
+                                             
+                                            } else {
+                                              listdata.add(listMap);
+                                              listdata.refresh();
+                                            }
                                           },
                                         )
                                       ],
@@ -227,7 +247,8 @@ class SpotsView extends GetView<RoBookingController> {
                                             chequeRecByCtrl.text = "";
                                             chequeRecOnCtrl.text = "";
                                             remarkCtrl.text = "";
-                                            listdata.value = [];
+                                            listdata.clear();
+                                            listdata.refresh();
                                           },
                                         ),
                                       ],
