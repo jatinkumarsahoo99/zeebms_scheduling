@@ -1044,14 +1044,17 @@ class TransmissionLogController extends GetxController {
 
   void btnFastInsert_Add_Click() {
     // addEventToUndo();
-    LoadingDialog.call();
     try {
       int row;
       // int eventdurat;
       blnMultipleGLs = false;
-      print("Selected is>>" +
-          (tblFastInsert?.checkedRows.length.toString() ?? ""));
-      for (var dr in (tblFastInsert?.checkedRows)!) {
+      int? noOfRows=tblFastInsert?.currentSelectingRows.length??0;
+      print("Selected is>>" + (tblFastInsert?.currentSelectingRows.length.toString() ?? ""));
+      if(noOfRows<=0){
+        LoadingDialog.callInfoMessage("Nothing is selected");
+        return;
+      }
+      for (var dr in (tblFastInsert?.currentSelectingRows)!) {
         String FPCTime;
         if (gridStateManager?.currentRowIdx == 0) {
           FPCTime = gridStateManager?.rows[gridStateManager?.currentRowIdx ?? 0]
@@ -1158,6 +1161,127 @@ class TransmissionLogController extends GetxController {
         // ColorGrid();
         blnMultipleGLs = true;
       }
+    } catch (e) {
+      print("Error found in btnFastInsert_Add_Click()" + e.toString());
+      Get.back();
+    }
+  }
+
+  void btnFastInsert_Add_Click1(int rowIdx) {
+    // addEventToUndo();
+    try {
+      int row;
+      // int eventdurat;
+      blnMultipleGLs = false;
+      print("Selected is>>" +
+          (tblFastInsert?.currentSelectingRows.length.toString() ?? ""));
+      // for (var dr in (tblFastInsert?.currentSelectingRows)!) {
+      PlutoRow dr = (tblFastInsert?.rows[rowIdx])!;
+      String FPCTime;
+      if (gridStateManager?.currentRowIdx == 0) {
+        FPCTime = gridStateManager?.rows[gridStateManager?.currentRowIdx ?? 0]
+            .cells["fpCtime"]?.value;
+      } else {
+        FPCTime = gridStateManager
+            ?.rows[(gridStateManager?.currentRowIdx ?? 0) - 1]
+            .cells["fpCtime"]
+            ?.value;
+      }
+
+      if (dr.cells["eventtype"]?.value.toString().trim().toLowerCase() ==
+          "gl") {
+        FPCTime = gridStateManager?.rows[gridStateManager?.currentRowIdx ?? 0]
+            .cells["fpCtime"]?.value;
+      }
+
+      if (dr.cells["eventtype"]?.value.toString().trim() == "GL") {
+        if (["p", "s", "f", "gl"].contains(gridStateManager
+            ?.currentRow?.cells["eventType"]?.value
+            .toString()
+            .trim()
+            .toLowerCase())) {
+          row = (gridStateManager?.currentRowIdx ?? 0) + 1;
+
+          if ((gridStateManager?.rows.length ?? 0) > row) {
+            while (gridStateManager?.rows[row].cells["eventType"]?.value
+                    .toString()
+                    .trim()
+                    .toLowerCase() ==
+                "gl") {
+              if (row < (gridStateManager?.rows.length ?? 0)) {
+                row = row + 1;
+              }
+            }
+            gridStateManager?.setCurrentCell(
+                gridStateManager?.rows[row].cells[1], row);
+          }
+        } else {
+          // MsgBox("Unable to add Secondary Events here!", vbExclamation, strAlertMessageTitle);
+          // Get.back();
+          LoadingDialog.callInfoMessage("Unable to add Secondary Events here!");
+          return;
+        }
+      }
+
+      if (isInsertAfter.value) {
+        FPCTime = gridStateManager?.rows[gridStateManager?.currentRowIdx ?? 0]
+            .cells["fpCtime"]?.value;
+      }
+
+      setInsertRowFastInsert(
+          FPCTime,
+          dr.cells["eventtype"]?.value,
+          dr.cells["txCaption"]?.value,
+          dr.cells["txId"]?.value,
+          Utils.convertToTimeFromDouble(
+              value: num.tryParse(dr.cells["duration"]?.value) ?? 0),
+          dr.cells["som"]?.value,
+          dr.cells["promoTypeCode"]?.value,
+          dr.cells["segmentNumber"]?.value.toString() ?? "");
+
+      // Adding Tags for promos
+      // GoTo hell
+      if (dr.cells["eventtype"]?.value.toString().trim().toLowerCase() ==
+          "pr") {
+        if ((inserSearchModel?.lstListMyEventData?.lstFastInsertTags
+                    ?.where((x) => x.crTapeID == dr.cells["txId"]?.value)
+                    .toList()
+                    .length ??
+                0) >
+            0) {
+          List<LstFastInsertTags>? filterList = inserSearchModel
+              ?.lstListMyEventData?.lstFastInsertTags
+              ?.where((x) => x.crTapeID == dr.cells["txId"]?.value)
+              .toList();
+          if ((filterList?.length ?? 0) == 1) {
+            row = gridStateManager?.currentRowIdx ?? 0 + 1;
+            gridStateManager?.setCurrentCell(
+                gridStateManager?.rows[row].cells[0], row);
+            setInsertRowFastInsert(
+                FPCTime,
+                dr.cells["eventtype"]?.value,
+                filterList![0].exportTapeCaption.toString(),
+                filterList![0].tagTapeid.toString(),
+                Utils.convertToTimeFromDouble(
+                    value: num.tryParse(
+                        filterList[0].promoDuration.toString() ?? "0")!),
+                filterList![0].som!,
+                filterList![0].promoTypeCode ?? "",
+                filterList![0].segmentNumber.toString());
+            // UnSelectAllRows(gridStateManager ?);
+            // gridStateManager?.rows[row - 1].selected = true;
+            // gridStateManager?.currentCell = gridStateManager?.selectedRows[0].cells[1];
+            gridStateManager?.setCurrentCell(
+                gridStateManager?.currentRow?.cells[1],
+                gridStateManager?.currentRowIdx);
+          }
+        }
+      }
+
+      // hell:
+      // ColorGrid();
+      blnMultipleGLs = true;
+      // }
     } catch (e) {
       print("Error found in btnFastInsert_Add_Click()" + e.toString());
       Get.back();
