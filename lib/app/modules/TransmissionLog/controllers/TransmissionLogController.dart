@@ -129,7 +129,7 @@ class TransmissionLogController extends GetxController {
 
   // PlutoRow? cutRow;
   PlutoRow? copyRow;
-  String? lastSelectOption;
+  String? lastSelectCutCopyOption;
   CommercialModel? commercailModel;
 
   List<int> intCurrentRowIndex = List<int>.filled(4, 0);
@@ -139,6 +139,7 @@ class TransmissionLogController extends GetxController {
   ExportFPCTimeModel? exportFPCTime;
   RxString lastSavedLoggedUser = RxString("");
   bool isBackDated = false;
+  List<PlutoRow> listCutCopy=[];
 
   @override
   void onInit() {
@@ -1628,6 +1629,126 @@ class TransmissionLogController extends GetxController {
       // MsgBox(errorLog(ex.message, BMS.globals.loggedUser, this), MsgBoxStyle.critical, strAlertMessageTitle);
     }
   }
+  void btnUp_Click1() {
+    List<int> intSelectedRows = [];
+    int? intSelectedRow;
+    int intMoveUpDown = 0;
+
+    try {
+      for (int i = (gridStateManager?.currentSelectingRows.length??0); i > 0; i--) {
+        PlutoRow dr = (gridStateManager?.currentSelectingRows[i-1])!;
+        if(intSelectedRow==null) {
+          intSelectedRow =
+              int.tryParse(dr.cells["rownumber"]?.value.toString() ?? "0");
+        }
+        intSelectedRows.add(int.tryParse(dr.cells["rownumber"]?.value.toString()??"0")??0);
+        intMoveUpDown = int.tryParse(dr.cells["rownumber"]?.value.toString()??"0")??0;
+        intSelectedRow = i + 1;
+      }
+
+      intMoveUpDown = intMoveUpDown - 1;
+
+      cutCopy1(
+          isCut: true,
+          fun: () {
+            paste2(rowIndex: intMoveUpDown, fun: () {
+              colorGrid(false);
+            });
+          });
+
+
+      intSelectedRows.sort();
+      intSelectedRows = intSelectedRows.reversed.toList();
+
+      // Select the rows in the new order
+      for (int i = (intSelectedRows.length-1); i >=0; i--) {
+        PlutoRow dr = (gridStateManager?.rows[intSelectedRows[i]])!;
+        gridStateManager?.toggleSelectingRow(dr.sortIdx-1);
+      }
+    // gridStateManager?.setCurrentSelectingRowsByRange(intSelectedRows.first, intSelectedRows.last);
+
+      // Set the cursor back to the default
+      // ... You can use Flutter's `Cursor` class to handle this.
+
+    } catch (ex) {
+
+    }
+  }
+
+  void paste2({int rowIndex = 0,Function? fun}) {
+    if (listCutCopy.length == 0) return;
+
+    int intFirstRow;
+    int intFirstRowdisplayIndex;
+    List<PlutoRow> dt = (gridStateManager?.rows)!;
+
+    if (rowIndex > 0) {
+      intCurrentRowIndex[0] = rowIndex;
+    } else {
+      intCurrentRowIndex[0] = gridStateManager?.currentRow?.sortIdx??0;
+    }
+
+    intCurrentRowIndex[1] = int.tryParse(gridStateManager?.rows[intCurrentRowIndex[0]].cells["rownumber"]?.value??"0")??0;
+    intCurrentRowIndex[2] = int.tryParse(gridStateManager?.rows[intCurrentRowIndex[0]].cells["rownumber"]?.value??"0")??0;
+    // intCurrentRowIndex[3] = gridStateManager.firstDisplayedScrollingRowIndex;
+
+    if (lastSelectCutCopyOption != "") {
+      if (lastSelectCutCopyOption == "cut") {
+        if (listCutCopy.any((row) => (int.tryParse(row.cells["rownumber"]?.value??"0")??0) == intCurrentRowIndex[2])) {
+          return;
+        }
+      }
+
+      String strFPCTime;
+      if (intCurrentRowIndex[0] > 1) {
+        strFPCTime = gridStateManager?.rows[intCurrentRowIndex[0] - 1].cells["fpCtime"]?.value;
+      } else {
+        strFPCTime = gridStateManager?.rows[0].cells["fpCtime"]?.value;
+      }
+
+      if (lastSelectCutCopyOption == "cut") {
+        for (PlutoRow dr in listCutCopy) {
+          int intRowNumber = int.tryParse(dr.cells["rownumber"]?.value??"0")??0;
+          PlutoRow? query = dt.firstWhereOrNull((row) => (int.tryParse(row.cells["rownumber"]?.value)!) == intRowNumber);
+          if (query != null) {
+            gridStateManager?.removeRows([query]);
+          }
+        }
+      }
+
+      for (PlutoRow ddr in listCutCopy) {
+        PlutoRow dr = ddr;
+        dr.cells["fpCtime"]?.value=strFPCTime;
+
+        if (lastSelectCutCopyOption == "cut") {
+          if ((int.tryParse(dr.cells["rownumber"]?.value??"")??0) < intCurrentRowIndex[0]) {
+            intFirstRowdisplayIndex = intCurrentRowIndex[0] - listCutCopy.length;
+            gridStateManager?.insertRows(intFirstRowdisplayIndex, [dr]);
+            intCurrentRowIndex[1] = intFirstRowdisplayIndex;
+          } else {
+            intFirstRowdisplayIndex = intCurrentRowIndex[0];
+            gridStateManager?.insertRows(intFirstRowdisplayIndex, [dr]);
+            // dt.rows.insert(intFirstRowdisplayIndex, dr);
+          }
+        } else {
+          intFirstRowdisplayIndex = intCurrentRowIndex[0];
+          gridStateManager?.insertRows(intFirstRowdisplayIndex, [dr]);
+          // dt.rows.insert(intFirstRowdisplayIndex, dr);
+        }
+      }
+      if(fun!=null){
+        fun();
+      }
+      // dt.acceptChanges();
+
+      if (lastSelectCutCopyOption == "cut") {
+        listCutCopy.clear();
+        lastSelectCutCopyOption = "";
+      }
+    } else {
+      print("There is nothing to paste!");
+    }
+  }
 
   btnDown_Click() {
     addEventToUndo();
@@ -2527,8 +2648,9 @@ class TransmissionLogController extends GetxController {
   }
 
   cutCopy({required bool isCut, required PlutoRow? row, Function? fun}) {
+    print("Its cutCopy() method");
     if (isCut) {
-      lastSelectOption = "cut";
+      lastSelectCutCopyOption = "cut";
       // var strAllowedEvent = "PR,PC,F,I,A,W,VP,GL,C,CL";
       List<String> strAllowedEvent = [
         "PR",
@@ -2554,7 +2676,7 @@ class TransmissionLogController extends GetxController {
         LoadingDialog.callInfoMessage("We couldn't cut this row");
       }
     } else {
-      lastSelectOption = "copy";
+      lastSelectCutCopyOption = "copy";
       List<String> strAllowedEvent = [
         "PR",
         "PC",
@@ -2582,10 +2704,78 @@ class TransmissionLogController extends GetxController {
     }
   }
 
+  cutCopy1({required bool isCut, Function? fun}) {
+    print("Its cutCopy1() method");
+    listCutCopy=[];
+    if (isCut) {
+      lastSelectCutCopyOption = "cut";
+      // var strAllowedEvent = "PR,PC,F,I,A,W,VP,GL,C,CL";
+      List<String> strAllowedEvent = [
+        "PR",
+        "PC",
+        "F",
+        "I",
+        "A",
+        "W",
+        "VP",
+        "GL",
+        "C",
+        "CL"
+      ];
+      print("Total length of selecting row is>>>"+(gridStateManager?.currentSelectingRows?.length.toString()??""));
+      gridStateManager?.currentSelectingRows.forEach((element) {
+        if (strAllowedEvent.contains(
+            element?.cells["eventType"]?.value.toString().trim().toUpperCase() ??
+                "")) {
+          listCutCopy.add(element);
+        }
+      });
+
+      print("Cut length is>>"+listCutCopy.length.toString());
+      if (listCutCopy.length>0) {
+        print("Cutt");
+        // copyRow = row;
+        if (fun != null) {
+          fun();
+        }
+      } else {
+        LoadingDialog.callInfoMessage("We couldn't cut this row");
+      }
+    } else {
+      lastSelectCutCopyOption = "copy";
+      List<String> strAllowedEvent = [
+        "PR",
+        "PC",
+        "F",
+        "I",
+        "A",
+        "W",
+        "VP",
+        "GL"
+      ];
+      gridStateManager?.currentSelectingRows.forEach((element) {
+        if (strAllowedEvent.contains(
+            element.cells["eventType"]?.value.toString().trim().toUpperCase() ??
+                "")) {
+          listCutCopy.add(element);
+        }
+      });
+      if (listCutCopy.length>0) {
+        print("Cutt");
+        // copyRow = row;
+        if (fun != null) {
+          fun();
+        }
+      } else {
+        LoadingDialog.callInfoMessage("We couldn't cut this row");
+      }
+    }
+  }
+
   paste(index, {Function? fun}) {
-    if (lastSelectOption != null && copyRow != null) {
+    if (lastSelectCutCopyOption != null && copyRow != null) {
       addEventToUndo();
-      switch (lastSelectOption) {
+      switch (lastSelectCutCopyOption) {
         case "cut":
           gridStateManager?.removeRows([copyRow!]);
           gridStateManager?.insertRows(index, [copyRow!]);
@@ -2597,6 +2787,37 @@ class TransmissionLogController extends GetxController {
           break;
         case "copy":
           gridStateManager?.insertRows(index, [copyRow!]);
+          gridStateManager?.notifyListeners();
+          if (fun != null) {
+            fun();
+          }
+          break;
+      }
+      gridStateManager?.setCurrentCell(
+          gridStateManager?.rows[index].cells["no"], index);
+      // gridStateManager?.setcurre(gridStateManager?.currentCell, index);
+      print(" Now focus row is>>>>" +
+          (gridStateManager?.currentRowIdx?.toString() ?? "0"));
+    } else {
+      LoadingDialog.callInfoMessage("Nothing is selected");
+    }
+  }
+
+  paste1(index, {Function? fun}) {
+    if (lastSelectCutCopyOption != null && listCutCopy != null && listCutCopy.length>0) {
+      addEventToUndo();
+      switch (lastSelectCutCopyOption) {
+        case "cut":
+          gridStateManager?.removeRows(listCutCopy);
+          gridStateManager?.insertRows(index, listCutCopy);
+          listCutCopy = [];
+          gridStateManager?.notifyListeners();
+          if (fun != null) {
+            fun();
+          }
+          break;
+        case "copy":
+          gridStateManager?.insertRows(index, listCutCopy);
           gridStateManager?.notifyListeners();
           if (fun != null) {
             fun();

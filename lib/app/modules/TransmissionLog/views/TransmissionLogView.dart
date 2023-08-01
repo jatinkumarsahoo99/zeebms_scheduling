@@ -570,7 +570,7 @@ class TransmissionLogView extends StatelessWidget {
                               ),
                             IconButton(
                               onPressed: () {
-                                this.controller.btnUp_Click();
+                                this.controller.btnUp_Click1();
                               },
                               icon: Icon(Icons.arrow_upward),
                               padding: EdgeInsets.symmetric(horizontal: 8.0),
