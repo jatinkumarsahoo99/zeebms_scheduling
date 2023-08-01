@@ -55,7 +55,9 @@ class SpotsView extends GetView<RoBookingController> {
                         [],
                     (value) => {},
                     "PDC",
-                    0.12),
+                    0.12,
+                    showMenuInbottom: false,
+                    dialogHeight: 20),
                 InputFields.formField1(
                     hintTxt: "Amt",
                     isEnable: false,
@@ -217,7 +219,16 @@ class SpotsView extends GetView<RoBookingController> {
                                         ),
                                         FormButtonWrapper(
                                           btnText: "Clear",
-                                          callback: () {},
+                                          callback: () {
+                                            chequeNoCtrl.text = "";
+                                            chqDateCtrl.text = "";
+                                            chequeAmtCtrl.text = "";
+                                            bankCtrl.text = "";
+                                            chequeRecByCtrl.text = "";
+                                            chequeRecOnCtrl.text = "";
+                                            remarkCtrl.text = "";
+                                            listdata.value = [];
+                                          },
                                         ),
                                       ],
                                     )

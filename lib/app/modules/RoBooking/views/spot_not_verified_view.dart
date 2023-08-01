@@ -32,8 +32,10 @@ class SpotNotVerifiedView extends GetView<RoBookingController> {
                       controller.roBookingInitData!.lstLocation!.map((e) => DropDownValue(key: e.locationCode, value: e.locationName)).toList(),
                       (value) => {selectedLocation = value},
                       "Location",
-                      0.24),
-                  DropDownField.formDropDown1WidthMap(controller.channels.value, (value) => {selectedChannel = value}, "Channel", 0.24),
+                      0.24,
+                      dialogHeight: Get.height / 3),
+                  DropDownField.formDropDown1WidthMap(
+                      controller.channels.value, dialogHeight: Get.height / 3, (value) => {selectedChannel = value}, "Channel", 0.24),
                   DateWithThreeTextField(title: "FPC Eff. Dt.", widthRation: 0.12, mainTextController: effectdateController),
                   FormButtonWrapper(
                     btnText: "Spot Not Verified",
