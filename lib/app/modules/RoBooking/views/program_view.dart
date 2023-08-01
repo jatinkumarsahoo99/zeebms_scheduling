@@ -62,6 +62,7 @@ class ProgramView extends GetView<RoBookingController> {
                       (value) => {},
                       "Seg",
                       0.03,
+                      selected: controller.selectedSeg,
                       dialogWidth: Get.width * 0.12,
                     ),
                     InputFields.formField1(

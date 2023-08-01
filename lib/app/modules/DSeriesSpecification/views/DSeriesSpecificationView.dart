@@ -14,6 +14,7 @@ import '../../../controller/MainController.dart';
 import '../../../data/PermissionModel.dart';
 import '../../../providers/SizeDefine.dart';
 import '../../../providers/Utils.dart';
+import '../../../routes/app_pages.dart';
 import '../controllers/DSeriesSpecificationController.dart';
 
 class DSeriesSpecificationView extends GetView<DSeriesSpecificationController> {
@@ -248,7 +249,7 @@ class DSeriesSpecificationView extends GetView<DSeriesSpecificationController> {
                   PermissionModel formPermissions = Get.find<MainController>()
                       .permissionList!
                       .lastWhere((element) {
-                    return element.appFormName == "frmDSeriesSpecs";
+                    return element.appFormName == Routes.D_SERIES_SPECIFICATION.replaceAll("/", "");
                   });
                   if (controller.buttons != null) {
                     return ButtonBar(
@@ -258,9 +259,7 @@ class DSeriesSpecificationView extends GetView<DSeriesSpecificationController> {
                         for (var btn in controller.buttons!)
                           FormButtonWrapper(
                             btnText: btn["name"],
-                            // isEnabled: btn['isDisabled'],
-                            callback: btn["name"] != "Delete" &&
-                                    Utils.btnAccessHandler2(btn['name'],
+                            callback: Utils.btnAccessHandler2(btn['name'],
                                             controller, formPermissions) ==
                                         null
                                 ? null

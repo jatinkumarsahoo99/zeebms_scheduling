@@ -416,8 +416,8 @@ class ApiFactory {
           String locId, String chnlId, String txtDt, bool standBy, bool addSecondaryEvent, bool chkPartialLog, String fromTime, String toTime) =>
       "$BASE_URL/api/Transmissionlog/GetWriteDSeriesLog?locationcode=$locId&channelcode=$chnlId&txtDate=$txtDt&chkStandBy=$standBy&AddSecondaryEvent=$addSecondaryEvent&chkPartialLog=$chkPartialLog&FromTime=$fromTime&ToTime=$toTime";
   static String TRANSMISSION_LOG_WRITE_LST(
-          String locId, String chnlId, String txtDt, bool standBy, bool chkPartialLog, String fromTime, String toTime) =>
-      "$BASE_URL/api/Transmissionlog/GetWriteLst?locationcode=$locId&channelcode=$chnlId&telecastdate=$txtDt&standbyLog=$standBy&chkPartialLog=$chkPartialLog&FromTime=$fromTime&ToTime=$toTime";
+          String locId, String chnlId, String txtDt, bool standBy, bool chkPartialLog, String fromTime, String toTime, String fileName) =>
+      "$BASE_URL/api/Transmissionlog/GetWriteLst?locationcode=$locId&channelcode=$chnlId&telecastdate=$txtDt&standbyLog=$standBy&chkPartialLog=$chkPartialLog&FromTime=$fromTime&ToTime=$toTime&FileName=$fileName";
   static String TRANSMISSION_LOG_WRITE_LST_NOIDA(String locId, String chnlId, String txtDt, bool standBy, bool addSecondaryEvent, bool chkPartialLog,
           String fromTime, String toTime, String fileName) =>
       "$BASE_URL/api/Transmissionlog/GetWriteLst?locationcode=$locId&channelcode=$chnlId&telecastdate=$txtDt&standbyLog=$standBy&chkPartialLog=$chkPartialLog&FromTime=$fromTime&ToTime=$toTime&AddSecondaryEvents=$addSecondaryEvent&Noida=true&fileName=$fileName";
@@ -446,8 +446,10 @@ class ApiFactory {
     String locId,
     String chnlId,
     String txtDt,
+    String fileName,
+    String channelName,
   ) =>
-      "$BASE_URL/api/Transmissionlog/GetWriteCommercialReplacement?locationcode=$locId&channelcode=$chnlId&txtDate=$txtDt";
+      "$BASE_URL/api/Transmissionlog/GetWriteCommercialReplacement?locationcode=$locId&channelcode=$chnlId&txtDate=$txtDt&FileName=$fileName&ChannelName=$channelName";
   static String TRANSMISSION_LOG_WRITE_VZRT(
     String locId,
     String chnlId,
@@ -680,6 +682,7 @@ class ApiFactory {
   static String RO_BOOKING_SearchTapeIdLeave(exportCode) => "$BASE_URL/api/ROBooking/SearchTapeId?ExportTapeCode=$exportCode";
 
   static String RO_BOOKING_cboTapeIdLeave = "$BASE_URL/api/ROBooking/cboTapeIdLeave";
+  static String RO_BOOKING_SaveClientPdc = "$BASE_URL/api/ROBooking/SaveClientPdc";
   static String RO_BOOKING_cboTapeIdFocusLost = "$BASE_URL/api/ROBooking/GetTapeIdLostFocus";
   static String RO_BOOKING_AddSpot = "$BASE_URL/api/ROBooking/OnAddSpots";
   static String RO_BOOKING_OnSaveData = "$BASE_URL/api/ROBooking/OnSaveData";

@@ -4,7 +4,7 @@ part of 'app_pages.dart';
 abstract class Routes {
   Routes._();
   static const HOME = _Paths.HOME;
-  static List<String> listRoutes = [];
+  // static List<String> listRoutes = [];
   static const TRANSMISSION_LOG = _Paths.TRANSMISSION_LOG;
   static const LOG_ADDITIONS = _Paths.LOG_ADDITIONS;
   static const MAM_WORK_ORDERS = _Paths.MAM_WORK_ORDERS;

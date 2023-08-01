@@ -1,6 +1,5 @@
 import 'dart:developer';
 import 'dart:math';
-import 'package:bms_scheduling/app/modules/TransmissionLog/ColorDataModel.dart';
 import 'package:bms_scheduling/app/modules/TransmissionLog/controllers/TransmissionLogController.dart';
 import 'package:bms_scheduling/app/providers/extensions/string_extensions.dart';
 import 'package:flutter/material.dart';
@@ -106,7 +105,7 @@ class DataGridFromMapTransmissionLog extends StatelessWidget {
             );
           }),
           enableAutoEditing: false,
-          enableRowDrag: true,
+          // enableRowDrag: true,
           hide: hideCode! &&
               key.toString().toLowerCase() != "hourcode" &&
               key.toString().toLowerCase().contains("code"),
@@ -373,34 +372,42 @@ class DataGridFromMapTransmissionLog extends StatelessWidget {
               }
 
               //print("Final Index is>> "+rendererContext.rowIdx.toString()+" ////"+isBold.toString());
-              return Container(
-                height: 25,
-                padding: EdgeInsets.only(
-                  left: 6,
-                ),
-                alignment: Alignment.centerLeft,
-                // color: (key == "epsNo" || key == "tapeid" || key == "status") ? ColorData.cellColor(rendererContext.row.cells[key]?.value, key) : null,
-                child: GestureDetector(
+              return GestureDetector(
                   onSecondaryTapDown: (detail) {
-                    if (onContextMenuClick == null) {
-                      DataGridMenu().showGridMenu(
-                          rendererContext.stateManager, detail, context,
-                          exportFileName: exportFileName);
-                    } else {
-                      DataGridMenu().showGridCustomTransmissionLog(
-                          rendererContext.stateManager, detail, context,
-                          exportFileName: exportFileName,
-                          onPressedClick: onContextMenuClick,
-                          plutoContext: rendererContext);
-                    }
-                  },
+                if (onContextMenuClick == null) {
+                  DataGridMenu().showGridMenu(
+                      rendererContext.stateManager, detail, context,
+                      exportFileName: exportFileName);
+                } else {
+                  DataGridMenu().showGridCustomTransmissionLog(
+                      rendererContext.stateManager, detail, context,
+                      exportFileName: exportFileName,
+                      onPressedClick: onContextMenuClick,
+                      plutoContext: rendererContext);
+                }
+              },
+                child: Container(
+                  // height: 25,
+                  height: 20,
+                  // width: Utils.getColumnSize1(key: key, value: mapData[0][key]),
+                  padding: EdgeInsets.only(
+                    left: 6,
+                  ),
+                  decoration: BoxDecoration(
+                    border: Border.all(color: Colors.transparent,width: 0.01),
+                    borderRadius: BorderRadius.circular(1),
+                  ),
+                  alignment: Alignment.centerLeft,
+                  // color: (key == "epsNo" || key == "tapeid" || key == "status") ? ColorData.cellColor(rendererContext.row.cells[key]?.value, key) : null,
                   child: Text(
                     rendererContext.cell.value.toString(),
+                    maxLines: 1,
+                    overflow: TextOverflow.ellipsis,
                     style: TextStyle(
                         fontSize: SizeDefine.columnTitleFontSize,
                         // color: isBold?Colors.white:Colors.black,
                         fontWeight:
-                            isBold ? FontWeight.w800 : FontWeight.normal),
+                            isBold ? FontWeight.w800 : FontWeight.normal,),
                   ),
                 ),
               );
@@ -457,8 +464,10 @@ class DataGridFromMapTransmissionLog extends StatelessWidget {
         focusNode: _focusNode,
         onFocusChange: onFocusChange,
         child: PlutoGrid(
-            mode: mode ?? PlutoGridMode.normal,
-            configuration: plutoGridConfiguration(focusNode: _focusNode),
+            // mode: mode ?? PlutoGridMode.normal,
+            mode: PlutoGridMode.normal,
+            configuration: plutoGridConfigurationTransmisionLog(focusNode: _focusNode),
+            // configuration: const PlutoGridConfiguration(),
             rowColorCallback: colorCallback,
             onLoaded: onload,
             columns: segColumn,
@@ -466,6 +475,9 @@ class DataGridFromMapTransmissionLog extends StatelessWidget {
             onRowsMoved: onRowsMoved,
             onChanged: onChanged,
             onSelected: onSelected,
+            onRowSecondaryTap: (PlutoGridOnRowSecondaryTapEvent row){
+
+            },
             /*createFooter: (stateManager) {
               return PlutoLazyPagination(
                 // Determine the first page.
