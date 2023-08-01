@@ -59,6 +59,8 @@ class RoBookingController extends GetxController {
   PlutoGridStateManager? dealViewGrid;
   PlutoGridStateManager? programViewGrid;
   PlutoGridStateManager? spotViewGrid;
+  PlutoGridStateManager? spotVerifyGrid;
+
   RoBookingAgencyLeaveData? agencyLeaveData;
   RxnString currentTab = RxnString();
   RoBookingInitData? roBookingInitData;
@@ -483,6 +485,7 @@ class RoBookingController extends GetxController {
             selectedSeg = DropDownValue(key: bookingTapeLeaveData?.cboSegNo, value: bookingTapeLeaveData?.cboSegNo);
             update(["init"]);
             update(["programView"]);
+            tapeIddropdownFocus.requestFocus();
           }
         });
   }
@@ -550,8 +553,8 @@ class RoBookingController extends GetxController {
           "pdcNumber": selectedPdc?.key ?? "",
           "loggedUser": Get.find<MainController>().user?.logincode,
           "intEditMode": bookingNoLeaveData?.intEditMode ?? 1,
-          "gstPlants": selectedGST?.key ?? bookingNoLeaveData?.gstPlants,
-          "gstRegN": bookingNoLeaveData?.gstPlants ?? gstNoCtrl.text,
+          "gstPlants": agencyLeaveData?.gstPlants ?? bookingNoLeaveData?.gstPlants ?? selectedGST?.key,
+          "gstRegN": agencyLeaveData?.gstRegNo ?? bookingNoLeaveData?.gstRegNo ?? gstNoCtrl.text,
           "secondaryEvents": selectedSecEvent?.key ?? bookingNoLeaveData?.secondaryEventId,
           "triggerAt": selectedTriggerAt?.key ?? bookingNoLeaveData?.triggerId,
           "previousBookedAmount": dealNoLeaveData?.previousBookedAmount ?? bookingNoLeaveData?.previousBookedAmount,
@@ -713,7 +716,7 @@ class RoBookingController extends GetxController {
 
   getDisplay() {
     if (selectedLocation == null && selectedChannel == null) {
-      LoadingDialog.callErrorMessage1(msg: "Location and channelis must to select.");
+      LoadingDialog.callErrorMessage1(msg: "Location and channelis must to select.", callback: () {});
     } else {
       Get.find<ConnectorControl>().POSTMETHOD(
           api: ApiFactory.RO_BOOKING_GET_DISPLAY,
@@ -774,6 +777,7 @@ class RoBookingController extends GetxController {
                 key: bookingNoLeaveData!.lstClientAgency!.first.clientcode, value: bookingNoLeaveData!.lstClientAgency!.first.clientname);
             selectedAgnecy =
                 DropDownValue(key: bookingNoLeaveData!.lstAgency!.first.agencycode, value: bookingNoLeaveData!.lstAgency!.first.agencyname);
+            selectedBrand = DropDownValue(key: bookingNoLeaveData!.lstBrand!.first.brandcode, value: bookingNoLeaveData!.lstBrand!.first.brandname);
             selectedDeal =
                 DropDownValue(key: bookingNoLeaveData!.lstDealNumber!.first.dealNumber, value: bookingNoLeaveData!.lstDealNumber!.first.dealNumber);
             update(["init"]);
@@ -878,7 +882,7 @@ class RoBookingController extends GetxController {
         api: ApiFactory.RO_BOOKING_cboTapeIdFocusLost,
         json: {
           "brandCode": bookingNoLeaveData?.brandcode ?? selectedBrand?.key,
-          "strAccountCode": dealDblClickData?.strAccountCode,
+          "strAccountCode": bookingNoLeaveData?.accountCode ?? dealDblClickData?.strAccountCode,
           "locationCode": selectedLocation?.key ?? "",
           "channelCode": selectedChannel?.key,
           "intSubRevenueTypeCode": "0",
