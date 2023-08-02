@@ -104,7 +104,8 @@ class RosDistributionView extends GetView<RosDistributionController> {
                           controller.mainGSM = event.stateManager;
                           event.stateManager.setSelectingMode(PlutoGridSelectingMode.row);
                           event.stateManager.setSelecting(true);
-                          event.stateManager.setCurrentCell(event.stateManager.firstCell, controller.mainGridIdx);
+                          event.stateManager
+                              .setCurrentCell(event.stateManager.getRowByIdx(controller.mainGridIdx)!.cells['allocatedSpot'], controller.mainGridIdx);
                           event.stateManager.moveCurrentCellByRowIdx(controller.mainGridIdx, PlutoMoveDirection.down);
                         },
                         exportFileName: "ROS Distribution",
@@ -113,11 +114,13 @@ class RosDistributionView extends GetView<RosDistributionController> {
                             (row.row.cells.containsValue(controller.mainGSM?.currentCell)) ? Colors.deepPurple.shade200 : Colors.white,
                         hideKeys: ['rid'],
                         widthRatio: 220,
-                        hideCode: true,
+                        hideCode: false,
+
                         onSelected: (row) => controller.mainGridIdx = row.rowIdx ?? 0,
                         // mode: PlutoGridMode.selectWithOneTap,
                         onRowDoubleTap: (row) {
                           controller.mainGridIdx = row.rowIdx;
+                          controller.handleAllocationTap();
                         },
                       ),
               );

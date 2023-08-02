@@ -130,6 +130,7 @@ class RosDistributionController extends GetxController {
             closeDialogIfOpen();
             if (resp != null && resp is Map<String, dynamic> && resp['info_ShowBucketList'] != null) {
               enableControllos.value = false;
+              mainGridIdx = 0;
               showDataModel.value = ROSDistuibutionShowModel.fromJson(resp);
               showDataModel.value.infoShowBucketList?.controlEnableTrue?.forEach((element) {
                 topButtons.value = topButtons.value.map((e) {
@@ -215,22 +216,23 @@ class RosDistributionController extends GetxController {
                             ? null
                             : DataGridFromMap(
                                 mapData: reportList.value,
-                                onSelected: (row) {
+                                onSelected: (row) {},
+                                onRowDoubleTap: (row) {
                                   showDataModel.value.infoShowBucketList?.lstROSSpots?.clear();
                                   showDataModel.value.infoShowBucketList?.lstROSSpots
                                       ?.addAll(tempShowDataModel.infoShowBucketList?.lstROSSpots?.toList() ?? []);
                                   if (selectedReportTab.value == "Zone Wise" || selectedReportTab.value == "Client Pivot") {
                                     showDataModel.value.infoShowBucketList?.lstROSSpots?.removeWhere((element) =>
-                                        element.clientName.toString().trim() != reportList.value[row.rowIdx ?? 0]['ClientName'].toString().trim());
+                                        element.clientName.toString().trim() != reportList.value[row.rowIdx]['ClientName'].toString().trim());
                                     Get.back();
                                   } else if (selectedReportTab.value != "Client & Brand Wise" || selectedReportTab.value != "Brand Pivot") {
                                     showDataModel.value.infoShowBucketList?.lstROSSpots?.removeWhere((element) =>
-                                        element.clientName.toString().trim() != reportList.value[row.rowIdx ?? 0]['ClientName'].toString().trim() &&
-                                        element.brandname.toString().trim() != reportList.value[row.rowIdx ?? 0]['BrandName'].toString().trim());
+                                        element.clientName.toString().trim() != reportList.value[row.rowIdx]['ClientName'].toString().trim() &&
+                                        element.brandname.toString().trim() != reportList.value[row.rowIdx]['BrandName'].toString().trim());
                                     Get.back();
                                   } else if (selectedReportTab.value == "Zone Wise") {
                                     showDataModel.value.infoShowBucketList?.lstROSSpots?.removeWhere((element) =>
-                                        element.allocatedSpot.toString().trim() != reportList.value[row.rowIdx ?? 0]['zonename'].toString().trim());
+                                        element.allocatedSpot.toString().trim() != reportList.value[row.rowIdx]['zonename'].toString().trim());
                                   } else if (selectedReportTab.value == "Zone & Time") {
                                     showDataModel.value.infoShowBucketList?.lstROSSpots
                                         ?.removeWhere((element) => element.allocatedSpot.toString().trim() != "");
@@ -864,8 +866,24 @@ class RosDistributionController extends GetxController {
       return;
     } else {
       if (topButtons[5]['name'] == "Service") {
+        // if (mainGSM != null) {
+        //   var rrr = mainGSM?.columns[2];
+        //   if (rrr != null) {
+        //     mainGSM?.sortAscending(rrr);
+        //   }
+        //   var valuation = mainGSM?.columns[17];
+        //   if (valuation != null) {
+        //     mainGSM?.sortDescending(valuation);
+        //   }
+        // }
         topButtons[5]['name'] = "Revenue";
       } else {
+        // if (mainGSM != null) {
+        //   var valuation = mainGSM?.columns[17];
+        //   if (valuation != null) {
+        //     mainGSM?.sortDescending(valuation);
+        //   }
+        // }
         topButtons[5]['name'] = "Service";
       }
       update(['headRowBtn']);
@@ -912,13 +930,15 @@ class RosDistributionController extends GetxController {
         for (var i = 0; i < (showDataModel.value.infoShowBucketList?.lstROSSpots?.length ?? 0); i++) {
           if ((mainGSM?.currentSelectingRows.any((element) => element.sortIdx == i) ?? false) &&
               ((showDataModel.value.infoShowBucketList?.lstROSSpots?[i].allocatedSpot?.isEmpty) ?? false)) {
+            showDataModel.value.infoShowBucketList?.lstROSSpots?[i].rid = i;
             list.add(showDataModel.value.infoShowBucketList?.lstROSSpots?[i].toJson());
-            mainGridIdx = i;
+            // mainGridIdx = i;
           }
         }
       } else {
         if (showDataModel.value.infoShowBucketList?.lstROSSpots?[mainGSM!.currentRowIdx!].allocatedSpot?.isEmpty ?? false) {
           mainGridIdx = mainGSM!.currentRowIdx!;
+          showDataModel.value.infoShowBucketList?.lstROSSpots?[mainGridIdx].rid = mainGridIdx;
           list.add(showDataModel.value.infoShowBucketList?.lstROSSpots?[mainGridIdx].toJson());
         }
       }
@@ -932,11 +952,17 @@ class RosDistributionController extends GetxController {
           closeDialogIfOpen();
           if (resp != null && resp is Map<String, dynamic> && resp['info_tblROSSpots'] != null && resp['info_tblROSSpots'] is List<dynamic>) {
             for (var element in (resp['info_tblROSSpots'] as List<dynamic>)) {
-              mainGridIdx = int.tryParse(element['Rid']) ?? 0;
-              showDataModel.value.infoShowBucketList?.lstROSSpots?[mainGridIdx].allocatedSpot = element['AllocatedSpot'];
+              mainGridIdx = int.tryParse(element['Rid']) ?? -1;
+              if (mainGridIdx != -1) {
+                showDataModel.value.infoShowBucketList?.lstROSSpots?[mainGridIdx].allocatedSpot = element['AllocatedSpot'];
+              }
             }
             showDataModel.refresh();
-            LoadingDialog.callDataSaved(msg: "Allocation done.");
+            if ((resp['info_tblROSSpots'] as List<dynamic>).isNotEmpty) {
+              LoadingDialog.callDataSaved(msg: "Allocation done.");
+            } else {
+              LoadingDialog.showErrorDialog("Allocation failed");
+            }
           } else {
             LoadingDialog.showErrorDialog(resp.toString());
           }
@@ -1046,10 +1072,12 @@ class RosDistributionController extends GetxController {
   }
 
   clearAllPage() {
+    mainGSM = null;
     mainGridIdx = 0;
     selectedLocation = null;
     selectedChannel = null;
-    date.text = "${DateTime.now().day}-${DateTime.now().month}-${DateTime.now().year}";
+    date.clear();
+    // date.text = "${DateTime.now().day}-${DateTime.now().month}-${DateTime.now().year}";
     location.refresh();
     channel.refresh();
     enableControllos.value = true;
