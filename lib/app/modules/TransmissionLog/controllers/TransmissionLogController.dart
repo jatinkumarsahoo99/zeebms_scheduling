@@ -1659,12 +1659,73 @@ class TransmissionLogController extends GetxController {
 
       intSelectedRows.sort();
       intSelectedRows = intSelectedRows.reversed.toList();
-
+      // Future.delayed(Duration(seconds: 7), () {
       // Select the rows in the new order
       for (int i = (intSelectedRows.length-1); i >=0; i--) {
+        print("Grid Focus index is >>>"+i.toString());
+        print("Grid Focus index in intSelectedRows is >>>"+intSelectedRows[i].toString());
         PlutoRow dr = (gridStateManager?.rows[intSelectedRows[i]])!;
-        gridStateManager?.toggleSelectingRow(dr.sortIdx-1);
+        gridStateManager?.toggleSelectingRow(intSelectedRows[i]-1);
       }
+      // });
+    // gridStateManager?.setCurrentSelectingRowsByRange(intSelectedRows.first, intSelectedRows.last);
+
+      // Set the cursor back to the default
+      // ... You can use Flutter's `Cursor` class to handle this.
+
+    } catch (ex) {
+
+    }
+  }
+
+  void btnDown_Click1() {
+    List<int> intSelectedRows = [];
+    int? intSelectedRow=0;
+    int intMoveUpDown = 0;
+    int numRows = gridStateManager?.currentSelectingRows.length??0;
+    intSelectedRows=List.generate(numRows, (index) => index);
+    try {
+      for (int i = (gridStateManager?.currentSelectingRows.length??0); i > 0; i--) {
+        PlutoRow dr = (gridStateManager?.currentSelectingRows[i-1])!;
+        intSelectedRows[intSelectedRow!]=(int.tryParse(dr.cells["rownumber"]?.value.toString()??"0")??0);
+        if(intMoveUpDown==0) {
+          intMoveUpDown =
+              int.tryParse(dr.cells["rownumber"]?.value.toString() ?? "0") ?? 0;
+        }
+        intSelectedRow++;
+      }
+
+      intMoveUpDown = intMoveUpDown + 2;
+
+      cutCopy1(
+          isCut: true,
+          fun: () {
+            paste2(rowIndex: intMoveUpDown, fun: () {
+              colorGrid(false);
+            });
+          });
+
+      intSelectedRows.sort();
+      intSelectedRows = intSelectedRows.reversed.toList();
+
+      // Select the rows in the new order
+      // Future.delayed(Duration(seconds: 7), () {
+        for (int i = (intSelectedRows.length-2); i >=0; i--) {
+          print("Grid Focus index is >>>"+i.toString());
+          print("Grid Focus index in intSelectedRows is >>>"+intSelectedRows[i].toString());
+          // PlutoRow dr = (gridStateManager?.rows[intSelectedRows[i]])!;
+          gridStateManager?.toggleSelectingRow(intSelectedRows[i]);
+        }
+        print("Grid Focus index in intSelectedRows is >>>"+(intMoveUpDown-1).toString());
+        // print("Grid Un-Focus index is >>>"+intMoveUpDown.toString());
+        gridStateManager?.toggleSelectingRow(intMoveUpDown-1);
+        if(gridStateManager?.isSelectedRow(gridStateManager?.refRows[intMoveUpDown].key!)??false){
+          gridStateManager?.toggleSelectingRow(intMoveUpDown);
+        }
+        // gridStateManager?.toggleSelectingRow(intMoveUpDown);
+
+      // });
+      // gridStateManager?.
     // gridStateManager?.setCurrentSelectingRowsByRange(intSelectedRows.first, intSelectedRows.last);
 
       // Set the cursor back to the default
@@ -1699,6 +1760,7 @@ class TransmissionLogController extends GetxController {
         }
       }
 
+      addEventToUndo();
       String strFPCTime;
       if (intCurrentRowIndex[0] > 1) {
         strFPCTime = gridStateManager?.rows[intCurrentRowIndex[0] - 1].cells["fpCtime"]?.value;
@@ -2432,7 +2494,7 @@ class TransmissionLogController extends GetxController {
     return 0;
   }
 
-  void colorGrid(bool dontSavefile) {
+  void colorGrid(bool dontSavefile, {Function? fun}) {
     print("Called once" + dontSavefile.toString());
     try {
       if ((gridStateManager?.rows.length == 0)) {
@@ -2730,7 +2792,7 @@ class TransmissionLogController extends GetxController {
           listCutCopy.add(element);
         }
       });
-
+      listCutCopy=listCutCopy.reversed.toList();
       print("Cut length is>>"+listCutCopy.length.toString());
       if (listCutCopy.length>0) {
         print("Cutt");
@@ -2803,36 +2865,7 @@ class TransmissionLogController extends GetxController {
     }
   }
 
-  paste1(index, {Function? fun}) {
-    if (lastSelectCutCopyOption != null && listCutCopy != null && listCutCopy.length>0) {
-      addEventToUndo();
-      switch (lastSelectCutCopyOption) {
-        case "cut":
-          gridStateManager?.removeRows(listCutCopy);
-          gridStateManager?.insertRows(index, listCutCopy);
-          listCutCopy = [];
-          gridStateManager?.notifyListeners();
-          if (fun != null) {
-            fun();
-          }
-          break;
-        case "copy":
-          gridStateManager?.insertRows(index, listCutCopy);
-          gridStateManager?.notifyListeners();
-          if (fun != null) {
-            fun();
-          }
-          break;
-      }
-      gridStateManager?.setCurrentCell(
-          gridStateManager?.rows[index].cells["no"], index);
-      // gridStateManager?.setcurre(gridStateManager?.currentCell, index);
-      print(" Now focus row is>>>>" +
-          (gridStateManager?.currentRowIdx?.toString() ?? "0"));
-    } else {
-      LoadingDialog.callInfoMessage("Nothing is selected");
-    }
-  }
+
 
   dataGridRowFilter({required String matchValue, required String filterKey}) {
     // gridStateManager.(column: column)

@@ -331,7 +331,7 @@ class TransmissionLogView extends StatelessWidget {
                                   loadevent.stateManager;
                               loadevent.stateManager
                                   .setGridMode(PlutoGridMode.normal);
-                              loadevent.stateManager.setSelecting(true);
+                              // loadevent.stateManager.setSelecting(true);
                               loadevent.stateManager
                                   .setSelectingMode(PlutoGridSelectingMode.row);
                               if (controller.isFetch.value) {
@@ -577,7 +577,7 @@ class TransmissionLogView extends StatelessWidget {
                             ),
                             IconButton(
                               onPressed: () {
-                                this.controller.btnDown_Click();
+                                this.controller.btnDown_Click1();
                               },
                               icon: Icon(Icons.arrow_downward),
                               padding: EdgeInsets.symmetric(horizontal: 8.0),
