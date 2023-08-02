@@ -903,23 +903,50 @@ class RosDistributionController extends GetxController {
   Future<void> handleAllocationTap() async {
     if (selectedLocation == null || selectedChannel == null || (showDataModel.value.infoShowBucketList?.lstROSSpots?.isEmpty ?? true)) {
       return;
+    } else if (mainGSM?.currentRowIdx == null) {
+      LoadingDialog.showErrorDialog("Please select row");
     } else {
+      var list = [];
+
+      if (mainGSM?.currentSelectingRows.isNotEmpty ?? false) {
+        for (var i = 0; i < (showDataModel.value.infoShowBucketList?.lstROSSpots?.length ?? 0); i++) {
+          if ((mainGSM?.currentSelectingRows.any((element) => element.sortIdx == i) ?? false) &&
+              ((showDataModel.value.infoShowBucketList?.lstROSSpots?[i].allocatedSpot?.isEmpty) ?? false)) {
+            list.add(showDataModel.value.infoShowBucketList?.lstROSSpots?[i].toJson());
+            mainGridIdx = i;
+          }
+        }
+      } else {
+        if (showDataModel.value.infoShowBucketList?.lstROSSpots?[mainGSM!.currentRowIdx!].allocatedSpot?.isEmpty ?? false) {
+          mainGridIdx = mainGSM!.currentRowIdx!;
+          list.add(showDataModel.value.infoShowBucketList?.lstROSSpots?[mainGridIdx].toJson());
+        }
+      }
+      if (list.isEmpty) {
+        return;
+      }
       LoadingDialog.call();
       Get.find<ConnectorControl>().POSTMETHOD(
         api: ApiFactory.RO_DISTRIBUTION_GET_ALLOCATION_DATA,
         fun: (resp) {
           closeDialogIfOpen();
-          if (resp != null && resp is Map<String, dynamic> && resp['info_tblROSSpots'] != null) {
+          if (resp != null && resp is Map<String, dynamic> && resp['info_tblROSSpots'] != null && resp['info_tblROSSpots'] is List<dynamic>) {
+            for (var element in (resp['info_tblROSSpots'] as List<dynamic>)) {
+              mainGridIdx = int.tryParse(element['Rid']) ?? 0;
+              showDataModel.value.infoShowBucketList?.lstROSSpots?[mainGridIdx].allocatedSpot = element['AllocatedSpot'];
+            }
+            showDataModel.refresh();
+            LoadingDialog.callDataSaved(msg: "Allocation done.");
           } else {
             LoadingDialog.showErrorDialog(resp.toString());
           }
         },
         json: {
-          "rowIndex": mainGridIdx,
-          "lstROSSpots": showDataModel.value.infoShowBucketList?.lstROSSpots?.map((e) => e.toJson()).toList(),
-          "loggedUser": Get.find<MainController>().user?.logincode,
+          // "rowIndex": mainGridIdx,
           "allocPercentVisiable": false,
-          "allocPercentValue": "100",
+          "allocationLst": list,
+          // "loggedUser": Get.find<MainController>().user?.logincode,
+          // "allocPercentValue": "100",
         },
       );
     }

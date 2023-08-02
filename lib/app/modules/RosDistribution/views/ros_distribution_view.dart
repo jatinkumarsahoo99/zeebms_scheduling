@@ -5,6 +5,7 @@ import 'package:url_launcher/url_launcher.dart';
 
 import '../../../../widgets/DateTime/DateWithThreeTextField.dart';
 import '../../../../widgets/FormButton.dart';
+import '../../../../widgets/PlutoGrid/src/helper/pluto_move_direction.dart';
 import '../../../../widgets/PlutoGrid/src/manager/pluto_grid_state_manager.dart';
 import '../../../../widgets/PlutoGrid/src/pluto_grid.dart';
 import '../../../../widgets/dropdown.dart';
@@ -103,7 +104,8 @@ class RosDistributionView extends GetView<RosDistributionController> {
                           controller.mainGSM = event.stateManager;
                           event.stateManager.setSelectingMode(PlutoGridSelectingMode.row);
                           event.stateManager.setSelecting(true);
-                          event.stateManager.setCurrentCell(event.stateManager.firstCell, 0);
+                          event.stateManager.setCurrentCell(event.stateManager.firstCell, controller.mainGridIdx);
+                          event.stateManager.moveCurrentCellByRowIdx(controller.mainGridIdx, PlutoMoveDirection.down);
                         },
                         exportFileName: "ROS Distribution",
                         enableSort: true,
