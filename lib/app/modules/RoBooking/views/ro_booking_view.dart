@@ -473,7 +473,6 @@ class RoBookingView extends StatelessWidget {
                     )
                   ],
                 ),
-                SizedBox(height: 10),
                 Obx(
                   () => CupertinoSlidingSegmentedControl(
                       groupValue: controller.currentTab.value,
@@ -491,7 +490,6 @@ class RoBookingView extends StatelessWidget {
                         controller.pagecontroller.jumpToPage(controller.tabs.entries.map((e) => e.key).toList().indexOf(value));
                       }),
                 ),
-                SizedBox(height: 5),
                 Expanded(
                   child: SizedBox(
                     child: GetBuilder<RoBookingController>(

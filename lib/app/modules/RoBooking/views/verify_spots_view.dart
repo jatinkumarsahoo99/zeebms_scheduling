@@ -27,6 +27,9 @@ class VerifySpotsView extends GetView<RoBookingController> {
                   onEdit: (editEvent) {
                     controller.spotsNotVerifiedClickData?.lstdgvVerifySpot?[editEvent.rowIdx]["spotsEntered"] = editEvent.value;
                   },
+                  onload: (loadEvent) {
+                    controller.spotVerifyGrid = loadEvent.stateManager;
+                  },
                   formatDate: false,
                 ),
               )),
@@ -37,6 +40,7 @@ class VerifySpotsView extends GetView<RoBookingController> {
                 btnText: "Set Verify",
                 iconDataM: Icons.domain_verification_rounded,
                 callback: () {
+                  controller.spotVerifyGrid?.gridFocusNode.unfocus();
                   controller.setVerify();
                 },
               ),
