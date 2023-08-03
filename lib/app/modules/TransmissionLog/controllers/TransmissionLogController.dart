@@ -887,7 +887,7 @@ class TransmissionLogController extends GetxController {
             ),
             fun: (map) {
               Get.back();
-              ExportData().exportFilefromBase64(map, fileName);
+              ExportData().exportFilefromBase64OtherFormat(map, fileName);
             });
         break;
       case "ADC -lst":

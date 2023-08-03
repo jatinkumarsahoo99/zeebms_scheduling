@@ -96,13 +96,29 @@ class DataGridFromMapTransmissionLog extends StatelessWidget {
                       plutoContext: rendererContext);
                 }
               },
-              child: Text(
-                (rendererContext.rowIdx + 1).toString(),
-                style: TextStyle(
-                  fontSize: SizeDefine.columnTitleFontSize,
+              child: Container(
+                // height: 25,
+                height: 20,
+                // width: Utils.getColumnSize1(key: key, value: mapData[0][key]),
+                padding: EdgeInsets.only(
+                  left: 6,
                 ),
-              ),
-            );
+                decoration: BoxDecoration(
+                  border: Border.all(color: Colors.transparent,width: 0.01),
+                  borderRadius: BorderRadius.circular(1),
+                  // color: Colors.white
+                ),
+                alignment: Alignment.centerLeft,
+                // color: (key == "epsNo" || key == "tapeid" || key == "status") ? ColorData.cellColor(rendererContext.row.cells[key]?.value, key) : null,
+                child: Text(
+                  (rendererContext.rowIdx + 1).toString(),
+                  maxLines: 1,
+                  overflow: TextOverflow.ellipsis,
+                  style: TextStyle(
+                    fontSize: SizeDefine.columnTitleFontSize,
+                ),
+              )
+            ));
           }),
           enableAutoEditing: false,
           // enableRowDrag: true,
@@ -417,7 +433,8 @@ class DataGridFromMapTransmissionLog extends StatelessWidget {
             enableEditingMode: false,
             enableDropToResize: true,
             enableContextMenu: false,
-            minWidth: Utils.getColumnSize1(key: key, value: mapData[0][key]),
+            width: Utils.getRowWidth(key: key, value: mapData[0][key]),
+            minWidth: Utils.getRowMinWidth(key: key, value: mapData[0][key]),
             enableAutoEditing: false,
             hide: showonly == null
                 ? (hideKeys != null && hideKeys!.contains(key)) ||
@@ -475,9 +492,6 @@ class DataGridFromMapTransmissionLog extends StatelessWidget {
             onRowsMoved: onRowsMoved,
             onChanged: onChanged,
             onSelected: onSelected,
-            onRowSecondaryTap: (PlutoGridOnRowSecondaryTapEvent row){
-
-            },
             /*createFooter: (stateManager) {
               return PlutoLazyPagination(
                 // Determine the first page.
