@@ -444,7 +444,7 @@ class _DateWithThreeTextFieldState extends State<DateWithThreeTextField> {
       textCtr[1].text = getMonthsFromIndex(now.month);
       textCtr[2].text = now.year.toString();
       if (originalDate.isEmpty) {
-        originalDate = "${now.day}-${now.month}-${now.year}";
+        originalDate = "${now.day < 10 ? "0${now.day}" : now.day.toString()}-${now.month}-${now.year}";
       }
     }
   }

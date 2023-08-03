@@ -88,7 +88,9 @@ class CommercialController extends GetxController {
   }
 
   var locationFN = FocusNode();
+  int lastSelectedIdxSchd = 0;
   void clear() {
+    lastSelectedIdxSchd = 0;
     changeFpcTaped = false;
     exportTapeCodeSelected = null;
     pDailyFPCSelected = null;
@@ -186,7 +188,8 @@ class CommercialController extends GetxController {
             autoShuffle = map['auto'];
 
             // print("Json response is>>>" + jsonEncode(list));
-
+            lastSelectedIdxSchd = 0;
+            selectedDDIndex = 0;
             commercialProgramList?.clear();
             list['showDetails']["lstDailyFPC"].forEach((element) {
               commercialProgramList?.add(CommercialProgramModel.fromJson(element));
@@ -197,20 +200,20 @@ class CommercialController extends GetxController {
             list['showDetails']['lstCommercialShuffling'].asMap().forEach((index, element) {
               mainCommercialShowDetailsList?.add(CommercialShowOnTabModel.fromJson(element, index));
             });
-            showCommercialDetailsList?.value = mainCommercialShowDetailsList!.where((o) => o.bStatus.toString() == 'B').toList();
+            // showCommercialDetailsList?.value = mainCommercialShowDetailsList!.where((o) => o.bStatus.toString() == 'B').toList();
+            showTabList();
+            // var cList = mainCommercialShowDetailsList!.where((o) => o.eventType.toString() == 'C' && o.bStatus.toString() == 'B').toList();
+            // commercialSpots.value = cList.length.toString();
+            // print("commercialSpots value is : ${commercialSpots.value}");
 
-            var cList = mainCommercialShowDetailsList!.where((o) => o.eventType.toString() == 'C' && o.bStatus.toString() == 'B').toList();
-            commercialSpots.value = cList.length.toString();
-            print("commercialSpots value is : ${commercialSpots.value}");
-
-            double intTotalDuration = 0;
-            for (int i = 0; i <= cList.length - 1; i++) {
-              if ((cList[i].eventType?.trim()) == "C") {
-                intTotalDuration = intTotalDuration + Utils.oldBMSConvertToSecondsValue(value: cList[i].duration!);
-              }
-            }
-            commercialDuration.value = Utils.convertToTimeFromDouble(value: intTotalDuration);
-            print("commercialDuration value is : ${commercialDuration.value}");
+            // double intTotalDuration = 0;
+            // for (int i = 0; i <= cList.length - 1; i++) {
+            //   if ((cList[i].eventType?.trim()) == "C") {
+            //     intTotalDuration = intTotalDuration + Utils.oldBMSConvertToSecondsValue(value: cList[i].duration!);
+            //   }
+            // }
+            // commercialDuration.value = Utils.convertToTimeFromDouble(value: intTotalDuration);
+            // print("commercialDuration value is : ${commercialDuration.value}");
 
             // commercialSpots.value =
             //     list['showDetails']['bindGridOutPut']['commercialSpots'] ?? "";
@@ -262,14 +265,28 @@ class CommercialController extends GetxController {
         showCommercialDetailsList?.value = mainCommercialShowDetailsList!.where((o) => o.bStatus.toString() == 'E').toList();
       } else {
         /// SCHEDULING
-        showCommercialDetailsList?.value = mainCommercialShowDetailsList!.where((o) => o.bStatus.toString() == 'B').toList();
+        // showCommercialDetailsList?.value = mainCommercialShowDetailsList!.where((o) => o.bStatus.toString() == 'B').toList();
+        String? isItrated;
+        showCommercialDetailsList?.value = [];
+        for (var i = 0; i < (mainCommercialShowDetailsList?.length ?? 0); i++) {
+          if (mainCommercialShowDetailsList?[i].bStatus == "B") {
+            var temp = mainCommercialShowDetailsList![i];
+            if (isItrated == null || isItrated != temp.fpcTime2) {
+              isItrated = temp.fpcTime2;
+            } else {
+              temp.fpcTime2 = "";
+              temp.canChangeFpc = true;
+            }
+            showCommercialDetailsList!.add(temp);
+          }
+        }
         calculateSpotAndDuration();
       }
     } else {
       showSelectedProgramList();
     }
     changeFpcTaped = false;
-    showCommercialDetailsList?.refresh();
+    // showCommercialDetailsList?.refresh();
     updateTab();
     // return showCommercialDetailsList?.value;
   }
@@ -288,7 +305,7 @@ class CommercialController extends GetxController {
     // commercialDuration.refresh();
   }
 
-  Future<dynamic> showSelectedProgramList() async {
+  Future<void> showSelectedProgramList() async {
     if (selectedIndex.value == 1) {
       /// FPC MISMATCH
       showCommercialDetailsList?.value =
@@ -299,14 +316,28 @@ class CommercialController extends GetxController {
           mainCommercialShowDetailsList!.where((o) => o.fpcTime.toString() == programFpcTimeSelected && o.bStatus.toString() == 'E').toList();
     } else {
       /// SCHEDULING
-      showCommercialDetailsList?.value =
-          mainCommercialShowDetailsList!.where((o) => o.fpcTime.toString() == programFpcTimeSelected && o.bStatus.toString() == 'B').toList();
+      // showCommercialDetailsList?.value =
+      //     mainCommercialShowDetailsList!.where((o) => o.fpcTime.toString() == programFpcTimeSelected && o.bStatus.toString() == 'B').toList();
+      String? isItrated;
+      showCommercialDetailsList?.value = [];
+      for (var i = 0; i < (mainCommercialShowDetailsList?.length ?? 0); i++) {
+        if (mainCommercialShowDetailsList?[i].bStatus == "B") {
+          var temp = mainCommercialShowDetailsList![i];
+          if (isItrated == null || isItrated != temp.fpcTime2) {
+            isItrated = temp.fpcTime2;
+          } else {
+            temp.fpcTime2 = "";
+            temp.canChangeFpc = true;
+          }
+          showCommercialDetailsList!.add(temp);
+        }
+      }
     }
     showCommercialDetailsList?.refresh();
-    print(programFpcTimeSelected.toString());
+    // print(programFpcTimeSelected.toString());
     updateTab();
     calculateSpotAndDuration();
-    return showCommercialDetailsList?.value;
+    // return showCommercialDetailsList?.value;
   }
 
   PlutoGridStateManager? fpcMisMatchSM;
