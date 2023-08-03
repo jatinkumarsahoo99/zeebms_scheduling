@@ -1635,6 +1635,9 @@ class TransmissionLogController extends GetxController {
     int intMoveUpDown = 0;
 
     try {
+      if((gridStateManager?.currentSelectingRows.length??0)==0){
+        gridStateManager?.toggleSelectingRow(gridStateManager?.currentRowIdx);
+      }
       for (int i = (gridStateManager?.currentSelectingRows.length??0); i > 0; i--) {
         PlutoRow dr = (gridStateManager?.currentSelectingRows[i-1])!;
         if(intSelectedRow==null) {
@@ -1685,6 +1688,9 @@ class TransmissionLogController extends GetxController {
     int numRows = gridStateManager?.currentSelectingRows.length??0;
     intSelectedRows=List.generate(numRows, (index) => index);
     try {
+      if((gridStateManager?.currentSelectingRows.length??0)==0){
+        gridStateManager?.toggleSelectingRow(gridStateManager?.currentRowIdx);
+      }
       for (int i = (gridStateManager?.currentSelectingRows.length??0); i > 0; i--) {
         PlutoRow dr = (gridStateManager?.currentSelectingRows[i-1])!;
         intSelectedRows[intSelectedRow!]=(int.tryParse(dr.cells["rownumber"]?.value.toString()??"0")??0);
