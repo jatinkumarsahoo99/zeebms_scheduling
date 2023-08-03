@@ -259,7 +259,6 @@ class ManageChannelInvemtoryView extends GetView<ManageChannelInvemtoryControlle
                     title: "From Date",
                     mainTextController: fromDateCtr,
                     widthRation: 0.15,
-                    backDated: DateTime.now(),
                     startDate: DateTime.now(),
                   ),
                   const SizedBox(width: 20),
@@ -267,7 +266,6 @@ class ManageChannelInvemtoryView extends GetView<ManageChannelInvemtoryControlle
                     title: "To Date",
                     mainTextController: toDateCtr,
                     widthRation: 0.15,
-                    backDated: DateTime.now(),
                     startDate: DateTime.now(),
                     onFocusChange: (date) {
                       String weekDays = "";

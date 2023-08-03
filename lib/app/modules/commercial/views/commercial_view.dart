@@ -82,7 +82,7 @@ class CommercialView extends GetView<CommercialController> {
                                   title: "From Date",
                                   mainTextController: controller.date_,
                                   widthRation: controller.widthSize,
-                                  startDate: DateTime.now(),
+                                  // startDate: DateTime.now(),
                                 ),
                                 const SizedBox(
                                   width: 20,
@@ -93,6 +93,7 @@ class CommercialView extends GetView<CommercialController> {
                                     btnText: "Show Details",
                                     callback: () {
                                       controller.selectedIndex.value = 0;
+
                                       controller.fetchSchedulingDetails();
                                     },
                                   ),
@@ -393,98 +394,122 @@ class CommercialView extends GetView<CommercialController> {
             if (controller.showCommercialDetailsList != null && (controller.showCommercialDetailsList?.isNotEmpty)!) {
               return Expanded(
                 child: DataGridFromMap1(
-                    onload: (event) {
-                      controller.gridStateManager = event.stateManager;
-                      event.stateManager.setSelectingMode(PlutoGridSelectingMode.row);
-                      controller.gridStateManager?.setCurrentCell(
-                          event.stateManager.getRowByIdx(controller.selectedDDIndex)?.cells['eventType'], controller.selectedDDIndex ?? 0);
-                      controller.gridStateManager?.moveCurrentCellByRowIdx(controller.selectedDDIndex ?? 0, PlutoMoveDirection.down);
-                    },
-                    showSrNo: true,
-                    showonly: const [
-                      "fpcTime",
-                      "breakNumber",
-                      "eventType",
-                      "exportTapeCode",
-                      "segmentCaption",
-                      "client",
-                      "brand",
-                      "duration",
-                      "product",
-                      "bookingNumber",
-                      "bookingDetailcode",
-                      "rostimeBand",
-                      "randid",
-                      "programName",
-                      "rownumber",
-                      "bStatus",
-                      "pDailyFPC",
-                      "pProgramMaster"
-                    ],
-                    colorCallback: (PlutoRowColorContext plutoContext) {
-                      try {
-                        if ((plutoContext.row.cells.containsValue(controller.sm?.currentCell))) {
-                          return Colors.deepPurple.shade200;
-                        } else {
-                          return controller.colorSort(controller.showCommercialDetailsList![plutoContext.rowIdx].eventType.toString());
-                        }
-                      } catch (e) {
-                        return Colors.white;
+                  onload: (event) {
+                    controller.gridStateManager = event.stateManager;
+                    event.stateManager.setSelectingMode(PlutoGridSelectingMode.row);
+                    controller.gridStateManager?.setCurrentCell(
+                        event.stateManager.getRowByIdx(controller.selectedDDIndex)?.cells['eventType'], controller.selectedDDIndex ?? 0);
+                    controller.gridStateManager?.moveCurrentCellByRowIdx(controller.selectedDDIndex ?? 0, PlutoMoveDirection.down);
+                  },
+                  showSrNo: true,
+                  hideKeys: ["fpcTime"],
+                  showonly: const [
+                    "fpcTime ",
+                    "breakNumber",
+                    "eventType",
+                    "exportTapeCode",
+                    "segmentCaption",
+                    "client",
+                    "brand",
+                    "duration",
+                    "product",
+                    "bookingNumber",
+                    "bookingDetailcode",
+                    "rostimeBand",
+                    "randid",
+                    "programName",
+                    "rownumber",
+                    "bStatus",
+                    "pDailyFPC",
+                    "pProgramMaster"
+                  ],
+                  colorCallback: (PlutoRowColorContext plutoContext) {
+                    try {
+                      if ((plutoContext.row.cells.containsValue(controller.sm?.currentCell))) {
+                        return Colors.deepPurple.shade200;
+                      } else {
+                        return controller.colorSort(controller.showCommercialDetailsList![plutoContext.rowIdx].eventType.toString());
                       }
-                    },
-                    onRowDoubleTap: (event) {
-                      controller.selectedDDIndex = event.rowIdx;
-                      print("onRowDoubleTap");
-                    },
-                    onSelected: (PlutoGridOnSelectedEvent event) {
-                      // E
-                      controller.selectedDDIndex = event.rowIdx;
-                      controller.selectedShowOnTab = controller.showCommercialDetailsList![event.rowIdx!];
-                      print("onSelected");
-                    },
-                    onRowsMoved: (PlutoGridOnRowsMovedEvent onRowMoved) {
-                      controller.selectedDDIndex = onRowMoved.idx;
-                      // controller.gridStateManager?.notifyListeners();
+                    } catch (e) {
+                      return Colors.white;
+                    }
+                  },
+                  onRowDoubleTap: (event) {
+                    controller.selectedDDIndex = event.rowIdx;
+                    print("onRowDoubleTap");
+                  },
+                  onSelected: (PlutoGridOnSelectedEvent event) {
+                    // E
+                    // if (controller.lastSelectedIdxSchd != (controller.selectedDDIndex ?? 0)) {
+                    //   controller.lastSelectedIdxSchd = controller.selectedDDIndex ?? 0;
+                    // }
+                    if (controller.showCommercialDetailsList![controller.lastSelectedIdxSchd].canChangeFpc) {
+                      controller.gridStateManager!.changeCellValue(
+                        controller.gridStateManager!.getRowByIdx(controller.lastSelectedIdxSchd)!.cells['fpcTime ']!,
+                        "",
+                        callOnChangedEvent: false,
+                        force: true,
+                        notify: true,
+                      );
+                    }
+                    controller.selectedDDIndex = event.rowIdx;
+                    controller.selectedShowOnTab = controller.showCommercialDetailsList![event.rowIdx!];
+                    if (event.rowIdx != null && (controller.showCommercialDetailsList![event.rowIdx!].canChangeFpc)) {
+                      controller.lastSelectedIdxSchd = event.rowIdx ?? 0;
+                      controller.gridStateManager!.changeCellValue(
+                        controller.gridStateManager!.getRowByIdx(event.rowIdx!)!.cells['fpcTime ']!,
+                        controller.showCommercialDetailsList![event.rowIdx!].fpcTime,
+                        callOnChangedEvent: false,
+                        force: true,
+                        notify: true,
+                      );
+                    }
 
-                      try {
-                        if (controller.gridStateManager?.rows[onRowMoved.idx].cells['eventType']?.value.toString().trim() == "S") {
-                          LoadingDialog.showErrorDialog("You cannot move selected segment");
-                        } else {
-                          int? rownumber =
-                              int.tryParse(controller.gridStateManager?.rows[onRowMoved.idx].cells['rownumber']?.value.toString() ?? "0");
-                          int? moveRowNumber = controller.showCommercialDetailsList?[onRowMoved.idx].rownumber;
+                    //
+                  },
+                  onRowsMoved: (PlutoGridOnRowsMovedEvent onRowMoved) {
+                    controller.selectedDDIndex = onRowMoved.idx;
+                    // controller.gridStateManager?.notifyListeners();
 
-                          int? oldIdx, newIdx;
-                          for (var i = 0; i < (controller.mainCommercialShowDetailsList?.length ?? 0); i++) {
-                            if (controller.mainCommercialShowDetailsList?[i].rownumber == rownumber) {
-                              oldIdx = i;
-                            }
-                            if (controller.mainCommercialShowDetailsList?[i].rownumber == moveRowNumber) {
-                              newIdx = i;
-                            }
+                    try {
+                      if (controller.gridStateManager?.rows[onRowMoved.idx].cells['eventType']?.value.toString().trim() == "S") {
+                        LoadingDialog.showErrorDialog("You cannot move selected segment");
+                      } else {
+                        int? rownumber = int.tryParse(controller.gridStateManager?.rows[onRowMoved.idx].cells['rownumber']?.value.toString() ?? "0");
+                        int? moveRowNumber = controller.showCommercialDetailsList?[onRowMoved.idx].rownumber;
+
+                        int? oldIdx, newIdx;
+                        for (var i = 0; i < (controller.mainCommercialShowDetailsList?.length ?? 0); i++) {
+                          if (controller.mainCommercialShowDetailsList?[i].rownumber == rownumber) {
+                            oldIdx = i;
                           }
-                          if (oldIdx != null && newIdx != null) {
-                            var removedObject = controller.mainCommercialShowDetailsList?.removeAt(oldIdx);
-                            if (removedObject != null) {
-                              controller.mainCommercialShowDetailsList?.insert(newIdx, removedObject);
-                            }
-                          }
-
-                          for (var i = 0; i < (controller.mainCommercialShowDetailsList?.length ?? 0); i++) {
-                            controller.mainCommercialShowDetailsList?[i].rownumber = i;
+                          if (controller.mainCommercialShowDetailsList?[i].rownumber == moveRowNumber) {
+                            newIdx = i;
                           }
                         }
-                        if (controller.canshowFilterList) {
-                          controller.showSelectedProgramList();
-                        } else {
-                          controller.showTabList();
+                        if (oldIdx != null && newIdx != null) {
+                          var removedObject = controller.mainCommercialShowDetailsList?.removeAt(oldIdx);
+                          if (removedObject != null) {
+                            controller.mainCommercialShowDetailsList?.insert(newIdx, removedObject);
+                          }
                         }
-                      } catch (e) {
-                        LoadingDialog.showErrorDialog(e.toString());
+
+                        for (var i = 0; i < (controller.mainCommercialShowDetailsList?.length ?? 0); i++) {
+                          controller.mainCommercialShowDetailsList?[i].rownumber = i;
+                        }
                       }
-                    },
-                    mode: PlutoGridMode.selectWithOneTap,
-                    mapData: controller.showCommercialDetailsList!.value.map((e) => e.toJson()).toList()),
+                      if (controller.canshowFilterList) {
+                        controller.showSelectedProgramList();
+                      } else {
+                        controller.showTabList();
+                      }
+                    } catch (e) {
+                      LoadingDialog.showErrorDialog(e.toString());
+                    }
+                  },
+                  mode: PlutoGridMode.selectWithOneTap,
+                  mapData: controller.showCommercialDetailsList!.value.map((e) => e.toJson(fromSave: false)).toList(),
+                ),
               );
             } else {
               return Expanded(

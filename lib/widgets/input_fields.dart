@@ -535,6 +535,7 @@ class InputFields {
     FocusNode? focus,
     Function? onChange,
     bool autoFocus = false,
+    bool titleinBlack = false,
   }) {
     // var data = 0.obs;
     return Column(
@@ -542,7 +543,7 @@ class InputFields {
       children: [
         Padding(
           padding: EdgeInsets.only(left: paddingLeft ?? 10),
-          child: LabelText.style(hint: hintTxt, txtColor: (isEnable ?? true) ? Colors.black : Colors.grey),
+          child: LabelText.style(hint: hintTxt, txtColor: (isEnable ?? true) || titleinBlack ? Colors.black : Colors.grey),
         ),
         Container(
           // padding: const EdgeInsets.only(

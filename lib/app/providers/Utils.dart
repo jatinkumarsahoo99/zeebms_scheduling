@@ -375,7 +375,7 @@ class Utils {
       } else if (key.toLowerCase().contains("segment") || key.toLowerCase().contains("client")) {
         return 220;
       } else if (key.toLowerCase().contains("name") || key.toLowerCase().contains("program")) {
-        return 280;
+        return 300;
       } else if (value is num || (value is String && num.tryParse(value) != null)) {
         return 45;
       } else if (key.toLowerCase().contains("date")) {
@@ -468,7 +468,24 @@ class Utils {
     // print('Here= ================?????');
     // print('permission ===> ${jsonEncode(formPermissions)}');
     //default btns
-    List permittedBtns = ['Refresh', 'Clear', 'Exit', 'Docs',"Auto","Commercials","Insert","Updated","Segments","Change","Export","Next Time","Undo","TS","Verify","Load"];
+    List permittedBtns = [
+      'Refresh',
+      'Clear',
+      'Exit',
+      'Docs',
+      "Auto",
+      "Commercials",
+      "Insert",
+      "Updated",
+      "Segments",
+      "Change",
+      "Export",
+      "Next Time",
+      "Undo",
+      "TS",
+      "Verify",
+      "Load"
+    ];
     if (formPermissions.delete!) {
       permittedBtns.add('Delete');
     }
@@ -617,6 +634,4 @@ class Utils {
     }
     return data;
   }
-
-
 }

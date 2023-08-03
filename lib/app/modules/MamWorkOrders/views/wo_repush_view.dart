@@ -29,6 +29,21 @@ class WoRepushView extends GetView {
                       mapData: controller.rePushModel.value.programResponse?.lstResendWorkOrders?.map((e) => e.toJson()).toList() ?? [],
                       checkBoxColumnKey: ['resend'],
                       enableColumnDoubleTap: ['resend'],
+                      actionIconKey: ['resend'],
+                      actionOnPress: (position, isSpaceCalled) {
+                        if (isSpaceCalled) {
+                          controller.woRepushSM!.changeCellValue(
+                            controller.woRepushSM!.getRowByIdx(position.rowIdx)!.cells['resend']!,
+                            (!(controller.rePushModel.value.programResponse?.lstResendWorkOrders?[position.rowIdx!].resend ?? false)).toString(),
+                            callOnChangedEvent: true,
+                            force: true,
+                            notify: true,
+                          );
+                        }
+                      },
+                      onload: (sm) {
+                        controller.woRepushSM = sm.stateManager;
+                      },
                       onEdit: controller.handleOnChangedInDTInWORePush,
                       checkBoxStrComparison: "true",
                       uncheckCheckBoxStr: "false",
