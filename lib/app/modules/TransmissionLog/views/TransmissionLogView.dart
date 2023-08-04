@@ -156,7 +156,7 @@ class TransmissionLogView extends StatelessWidget {
                               widthRation: 0.12,
                               isEnable: controller.isEnable.value,
                               onFocusChange: (data) {
-                                DateTime date = DateFormat("dd-MM-yyyy").parse(data);
+                               /* DateTime date = DateFormat("dd-MM-yyyy").parse(data);
                                 print("Focus date is>>>" + date.toString());
                                 bool valDate = date.isBefore(DateTime.now());
                                 bool isSameDate = DateUtils.isSameDay(date, DateTime.now());
@@ -170,7 +170,7 @@ class TransmissionLogView extends StatelessWidget {
                                   controller.isBackDated = false;
                                 }
                                 Get.find<HomeController>().update(["transButtons"]);
-                                print("Called when focus changed");
+                                print("Called when focus changed");*/
                               },
                               mainTextController: controller.selectedDate,
                             ),

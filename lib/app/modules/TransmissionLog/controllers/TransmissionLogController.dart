@@ -3384,7 +3384,8 @@ class TransmissionLogController extends GetxController {
     // print("Length is>> "+(rosTimeBandList?.length??0).toString());
     if ((rosTimeBandList?.length ?? 0) > 0) {
       // var _dt = dt.AsEnumerable().where((x) => x.Field<String>('rostimeband').trim() != '').toList().copyToDataTable();
-      for (PlutoRow dr in rosTimeBandList!) {
+      for (int i=0;i<(rosTimeBandList?.length??0);i++) {
+        PlutoRow dr = rosTimeBandList![i];
         RosTimeBand = dr.cells['rosTimeBand']?.value ?? "";
         Telecasttime = Utils.oldBMSConvertToSecondsValue(
                 value: (dr.cells['transmissionTime']?.value
@@ -3421,7 +3422,9 @@ class TransmissionLogController extends GetxController {
                 int.tryParse(dr.cells['rownumber']?.value ?? "")!);
             LoadingDialog.callInfoMessage(
                 "Ros spot outside contracted timeband!\nUnable to proceed with save");
+
             completer.complete(false);
+            break;
             // return false;
           } else {
             // tblLog.FirstDisplayedScrollingRowIndex = dr['rownumber'] - 10;
@@ -3437,6 +3440,7 @@ class TransmissionLogController extends GetxController {
                 print("checkRosTransmissionTime(300)>>>>" +
                     dr.sortIdx.toString());
                 completer.complete(false);
+                break;
                 // return false;
               }
             } else {}
