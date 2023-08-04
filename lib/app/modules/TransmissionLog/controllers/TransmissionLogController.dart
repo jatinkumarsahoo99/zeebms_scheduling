@@ -936,7 +936,7 @@ class TransmissionLogController extends GetxController {
                 fileName),
             fun: (map) {
               Get.back();
-              ExportData().exportFilefromBase64(map, fileName);
+              ExportData().exportFilefromBase64OtherFormat(map, fileName);
             });
         break;
       case "Commercial Replace":
@@ -1051,8 +1051,9 @@ class TransmissionLogController extends GetxController {
       blnMultipleGLs = false;
       int? noOfRows=tblFastInsert?.currentSelectingRows.length??0;
       print("Selected is>>" + (tblFastInsert?.currentSelectingRows.length.toString() ?? ""));
-      if(noOfRows<=0){
+      if(noOfRows==0){
         LoadingDialog.callInfoMessage("Nothing is selected");
+        Get.back();
         return;
       }
       for (var dr in (tblFastInsert?.currentSelectingRows)!) {
@@ -1374,7 +1375,6 @@ class TransmissionLogController extends GetxController {
     // dt.acceptChanges();
     colorGrid(false);
     // gridStateManager?.firstDisplayedScrollingRowIndex = intCurrentRowIndex[3];
-
     /* if (EventType == "GL" && blnMultipleGLs) {
       gridStateManager?.rows[intRowIndex - 1].selected = true;
     } else {
@@ -1382,8 +1382,9 @@ class TransmissionLogController extends GetxController {
     }*/
 
     // gridStateManager?.currentCell = gridStateManager?.rows[intRowIndex].cells[1];
-    gridStateManager?.setCurrentCell(
-        gridStateManager?.rows[intRowIndex + 1].cells[1], intRowIndex + 1);
+    // gridStateManager?.setCurrentCell(gridStateManager?.rows[intRowIndex + 1].cells[1], intRowIndex + 1);
+    gridStateManager?.setCurrentCell(gridStateManager?.rows[intRowIndex + 1].cells[1], intRowIndex + 1);
+    Get.back();
   }
 
   void btnReplace_GetEvent_Click() {
@@ -3263,9 +3264,9 @@ class TransmissionLogController extends GetxController {
       print("Data clicked clear");
       if (data != null) {
         if (data) {
-          Get.delete<TransmissionLogController>();
-          Get.find<HomeController>().clearPage1();
-          // html.window.location.reload();
+          // Get.delete<TransmissionLogController>();
+          // Get.find<HomeController>().clearPage1();
+          html.window.location.reload();
         } else {
           return;
         }
@@ -3273,9 +3274,9 @@ class TransmissionLogController extends GetxController {
         return;
       }
     } else {
-      Get.delete<TransmissionLogController>();
-      Get.find<HomeController>().clearPage1();
-      // html.window.location.reload();
+      // Get.delete<TransmissionLogController>();
+      // Get.find<HomeController>().clearPage1();
+      html.window.location.reload();
     }
   }
 
@@ -3383,7 +3384,8 @@ class TransmissionLogController extends GetxController {
     // print("Length is>> "+(rosTimeBandList?.length??0).toString());
     if ((rosTimeBandList?.length ?? 0) > 0) {
       // var _dt = dt.AsEnumerable().where((x) => x.Field<String>('rostimeband').trim() != '').toList().copyToDataTable();
-      for (PlutoRow dr in rosTimeBandList!) {
+      for (int i=0;i<(rosTimeBandList?.length??0);i++) {
+        PlutoRow dr = rosTimeBandList![i];
         RosTimeBand = dr.cells['rosTimeBand']?.value ?? "";
         Telecasttime = Utils.oldBMSConvertToSecondsValue(
                 value: (dr.cells['transmissionTime']?.value
@@ -3420,7 +3422,9 @@ class TransmissionLogController extends GetxController {
                 int.tryParse(dr.cells['rownumber']?.value ?? "")!);
             LoadingDialog.callInfoMessage(
                 "Ros spot outside contracted timeband!\nUnable to proceed with save");
+
             completer.complete(false);
+            break;
             // return false;
           } else {
             // tblLog.FirstDisplayedScrollingRowIndex = dr['rownumber'] - 10;
@@ -3436,6 +3440,7 @@ class TransmissionLogController extends GetxController {
                 print("checkRosTransmissionTime(300)>>>>" +
                     dr.sortIdx.toString());
                 completer.complete(false);
+                break;
                 // return false;
               }
             } else {}

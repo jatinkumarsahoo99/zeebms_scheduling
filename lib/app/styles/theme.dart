@@ -109,14 +109,14 @@ PlutoGridConfiguration plutoGridConfigurationTransmisionLog({
             LogicalKeySet(LogicalKeyboardKey.enter): CustomEnterKeyAction(actionOnPress: actionOnPress, actionKey: actionKey),
           },
         ),
-        columnSize: PlutoGridColumnSizeConfig(
-          resizeMode: PlutoResizeMode.normal,
-          autoSizeMode: autoScale ? PlutoAutoSizeMode.scale : PlutoAutoSizeMode.none,
-        ),
+        // columnSize: PlutoGridColumnSizeConfig(
+        //   resizeMode: PlutoResizeMode.normal,
+        //   autoSizeMode: autoScale ? PlutoAutoSizeMode.scale : PlutoAutoSizeMode.none,
+        // ),
         style: PlutoGridStyleConfig(
             rowHeight: 20,
             columnHeight: 25,
-            defaultCellPadding: const EdgeInsets.all(2),
+            defaultCellPadding: const EdgeInsets.all(0),
             enableCellBorderHorizontal: true,
             gridBorderColor: Colors.deepPurpleAccent,
             activatedBorderColor: Colors.deepPurple,
