@@ -1061,7 +1061,11 @@ class TransmissionLogView extends StatelessWidget {
                           showIcon: false,
                           callback: () {
                             // LoadingDialog.call();
-                            controller.btnFastInsert_Add_Click();
+                            // controller.btnFastInsert_Add_Click();
+                            LoadingDialog.call();
+                            Future.delayed(Duration(seconds: 2),() {
+                              controller.btnFastInsert_Add_Click();
+                            });
                           },
                         ),
                       ),
@@ -1137,12 +1141,14 @@ class TransmissionLogView extends StatelessWidget {
                                   formatDate: false,
                                   // checkRow: true,
                                   showSrNo: false,
-                                  mode: PlutoGridMode.multiSelect,
+                                  mode: PlutoGridMode.normal,
                                   // checkRowKey: "eventtype",
                                   onload: (PlutoGridOnLoadedEvent load) {
                                     controller.tblFastInsert =
                                         load.stateManager;
                                     load.stateManager.setSelectingMode(PlutoGridSelectingMode.row);
+                                    load.stateManager.setSelecting(true);
+                                    load.stateManager.toggleSelectingRow(0);
                                   },
                                   // colorCallback: (renderC) => Colors.red[200]!,
                                   onRowDoubleTap:
@@ -1152,8 +1158,11 @@ class TransmissionLogView extends StatelessWidget {
                                         ?.setRowChecked(tap.row, true);*/
                                     // controller.tblFastInsert
                                     //     ?.setCurrentCell(tap.cell, tap.rowIdx);
-                                    // LoadingDialog.call();
-                                    controller.btnFastInsert_Add_Click1(tap.rowIdx);
+                                    LoadingDialog.call();
+                                    Future.delayed(Duration(seconds: 2),() {
+                                      controller.btnFastInsert_Add_Click1(tap.rowIdx);
+                                    });
+
                                   },
                                   mapData: (controller.inserSearchModel
                                       ?.lstListMyEventData?.lstListMyEventClips!

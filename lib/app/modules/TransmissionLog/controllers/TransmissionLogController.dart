@@ -1051,8 +1051,9 @@ class TransmissionLogController extends GetxController {
       blnMultipleGLs = false;
       int? noOfRows=tblFastInsert?.currentSelectingRows.length??0;
       print("Selected is>>" + (tblFastInsert?.currentSelectingRows.length.toString() ?? ""));
-      if(noOfRows<=0){
+      if(noOfRows==0){
         LoadingDialog.callInfoMessage("Nothing is selected");
+        Get.back();
         return;
       }
       for (var dr in (tblFastInsert?.currentSelectingRows)!) {
@@ -1374,7 +1375,6 @@ class TransmissionLogController extends GetxController {
     // dt.acceptChanges();
     colorGrid(false);
     // gridStateManager?.firstDisplayedScrollingRowIndex = intCurrentRowIndex[3];
-
     /* if (EventType == "GL" && blnMultipleGLs) {
       gridStateManager?.rows[intRowIndex - 1].selected = true;
     } else {
@@ -1382,8 +1382,9 @@ class TransmissionLogController extends GetxController {
     }*/
 
     // gridStateManager?.currentCell = gridStateManager?.rows[intRowIndex].cells[1];
-    gridStateManager?.setCurrentCell(
-        gridStateManager?.rows[intRowIndex + 1].cells[1], intRowIndex + 1);
+    // gridStateManager?.setCurrentCell(gridStateManager?.rows[intRowIndex + 1].cells[1], intRowIndex + 1);
+    gridStateManager?.setCurrentCell(gridStateManager?.rows[intRowIndex + 1].cells[1], intRowIndex + 1);
+    Get.back();
   }
 
   void btnReplace_GetEvent_Click() {

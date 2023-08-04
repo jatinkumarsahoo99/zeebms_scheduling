@@ -442,8 +442,8 @@ class Utils {
       if (key == "no" || key == "Sr No") {
         return 30;
       }
-      if (key == "tapeduration") {
-        return 30;
+      else if (key == "tapeduration") {
+        return 80;
       } else if (key.toLowerCase().contains("locationname")) {
         return 80;
       } else if (key.toLowerCase().contains("time") ||
@@ -470,7 +470,7 @@ class Utils {
       if (key == "no" || key == "Sr No") {
         return 30;
       } else if (key == "tapeduration") {
-        return 45;
+        return 5;
       } else if (key.toLowerCase().contains("locationname")) {
         return 80;
       } else if (key.toLowerCase().contains("time") ||
@@ -497,7 +497,7 @@ class Utils {
       if (key == "no" || key == "Sr No") {
         return 30;
       } else if (key == "tapeduration") {
-        return 10;
+        return 90;
       } else if (key.toLowerCase().contains("locationname")) {
         return 80;
       } else if (key.toLowerCase().contains("time") ||
