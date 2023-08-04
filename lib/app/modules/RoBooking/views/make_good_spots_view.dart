@@ -25,6 +25,9 @@ class MakeGoodSpotsView extends GetView<RoBookingController> {
                   ),
                   Spacer(),
                   DateWithThreeTextField(title: "From Date", widthRation: 0.09, mainTextController: controller.mgfromDateCtrl),
+                  SizedBox(
+                    width: 5,
+                  ),
                   DateWithThreeTextField(title: "to Date", widthRation: 0.09, mainTextController: controller.mgtoDateCtrl),
                   Spacer(),
                 ],

@@ -65,6 +65,7 @@ class MamWorkOrdersController extends GetxController {
   var rePushJsonTC = "".obs;
   var rePushModel = REPushModel().obs;
   bool canEnableRePush = false;
+  PlutoGridStateManager? woRepushSM;
   // WO RE-PUSH varaibles end
   ///
   ///
@@ -160,8 +161,8 @@ class MamWorkOrdersController extends GetxController {
           "toEpisodeNo": num.tryParse(woHToEpi.text),
           "originalRepeatCode": woHSelectedTelecastType?.key,
           "chkTelDtWOHistory": woHtelDate.value,
-          "telecastFromDate": DateFormat("yyyy-MM-ddT00:00:00").format(DateFormat("dd-MM-yyyy").parse(woHTelDTFrom.text)),
-          "telecastToDate": DateFormat("yyyy-MM-ddT00:00:00").format(DateFormat("dd-MM-yyyy").parse(woHTelDTTo.text)),
+          "telecastFromDate": DateFormat("yyyy-MM-dd").format(DateFormat("dd-MM-yyyy").parse(woHTelDTFrom.text)),
+          "telecastToDate": DateFormat("yyyy-MM-dd").format(DateFormat("dd-MM-yyyy").parse(woHTelDTTo.text)),
         },
       );
     }
@@ -274,8 +275,8 @@ class MamWorkOrdersController extends GetxController {
           "toEpisodeNo": num.tryParse(cWOToEpiTC.text),
           "originalRepeatCode": cWOSelectedWOTTelecasteType?.key,
           "chkIncludeTelDt": cWOtelDate.value,
-          "telecastFromDate": DateFormat('yyyy-MM-ddT00:00:00').format(DateFormat("dd-MM-yyyy").parse(cwoTelDTFrom.text)),
-          "telecastToDate": DateFormat('yyyy-MM-ddT00:00:00').format(DateFormat("dd-MM-yyyy").parse(cwoTelDTTo.text)),
+          "telecastFromDate": DateFormat('yyyy-MM-dd').format(DateFormat("dd-MM-yyyy").parse(cwoTelDTFrom.text)),
+          "telecastToDate": DateFormat('yyyy-MM-dd').format(DateFormat("dd-MM-yyyy").parse(cwoTelDTTo.text)),
         },
       );
     }
@@ -587,8 +588,8 @@ class MamWorkOrdersController extends GetxController {
               "txId": nonFPCTxID.text.trim(),
               "fromEpisodeNumber": num.tryParse(nonFPCFromEpi.text.trim()),
               "toEpisodeNumber": num.tryParse(nonFPCToEpi.text.trim()),
-              "telecastDate": "${nonFPCTelDate.text}T00:00:00", // dd-MM-yyyy
-              "telecastTime": "2023-01-11T${nonFPCTelTime.text}", // 00:00:00
+              "telecastDate": DateFormat("yyyy-MM-dd").format(DateFormat('dd-MM-yyyy').parse(nonFPCTelDate.text)), // dd-MM-yyyy
+              "telecastTime": nonFPCTelTime.text, // 00:00:00
               "workflowId": nonFPCSelectedWorkOrderType?.key,
               "LocationName": nonFPCSelectedLoc?.value,
               "ChannelName": nonFPCSelectedChannel?.value,
@@ -851,9 +852,9 @@ class MamWorkOrdersController extends GetxController {
     await clearWORepushPage();
     await clearWOAsperDailyFPCPage();
     await clearReleaseWONonFPCPage();
-    selectedTab.value = "Release WO Non FPC";
     onloadData.refresh();
-    pageController.animateToPage(0, duration: const Duration(milliseconds: 200), curve: Curves.linear);
+    // selectedTab.value = "Release WO Non FPC";
+    // pageController.animateToPage(0, duration: const Duration(milliseconds: 200), curve: Curves.linear);
     nonFPCWOTypeFN.requestFocus();
   }
 

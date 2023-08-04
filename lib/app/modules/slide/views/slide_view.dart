@@ -1,4 +1,3 @@
-import 'package:bms_scheduling/widgets/gridFromMap1.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
@@ -62,14 +61,14 @@ class SlideView extends GetView<SlideController> {
                     mainTextController: controller.telecastedateTC,
                   ),
                   DateWithThreeTextField(
-                    title: "Import",
+                    title: "Import Date",
                     widthRation: 0.12,
                     mainTextController: controller.importDateTc,
                   ),
                   Padding(
                     padding: const EdgeInsets.only(top: 17.0),
                     child: FormButton(
-                      btnText: "Import Excel",
+                      btnText: "Import",
                       callback: () {},
                     ),
                   ),

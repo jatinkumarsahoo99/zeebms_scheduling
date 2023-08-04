@@ -19,6 +19,18 @@ spec:
       - name: bms-scheduling-deployment-new
         image: zeelakscontainer.azurecr.io/bms-web-scheduling:image_version
         imagePullPolicy: Always
+        volumeMounts:
+        - name: bms-secrets-store-vol
+          mountPath: "/mnt/secrets-store"
+          readOnly: true
+      volumes:
+      - name: bms-secrets-store-vol
+        csi:
+          driver: secrets-store.csi.k8s.io
+          readOnly: true
+          volumeAttributes:
+            secretProviderClass: "bms-kvbmsdev-web"
+        
 
 ---
 apiVersion: v1

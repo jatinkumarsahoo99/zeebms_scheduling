@@ -84,7 +84,8 @@ class MamWorkOrdersView extends GetView<MamWorkOrdersController> {
                           for (var btn in btncontroller.buttons!)
                             FormButtonWrapper(
                               btnText: btn["name"],
-                              callback: btn["name"] == "Save" ? null : () => controller.formHandler(btn['name'].toString()),
+                              callback:
+                                  (btn["name"] == "Delete" || btn["name"] == "Save") ? null : () => controller.formHandler(btn['name'].toString()),
                             ),
                         ],
                       ),

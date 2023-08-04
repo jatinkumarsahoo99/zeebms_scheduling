@@ -1,5 +1,6 @@
 class CommercialShowOnTabModel {
-  String? fpcTime;
+  String? fpcTime, fpcTime2;
+  bool canChangeFpc = false;
   int? breakNumber;
   String? eventType;
   String? exportTapeCode;
@@ -42,6 +43,7 @@ class CommercialShowOnTabModel {
 
   CommercialShowOnTabModel.fromJson(Map<String, dynamic> json, int index) {
     fpcTime = json['fpCtime'];
+    fpcTime2 = json['fpCtime'];
     breakNumber = json['breakNumber'];
     bookingDetailcode = json['bookingDetailcode'];
     randid = json['randid'];
@@ -63,30 +65,52 @@ class CommercialShowOnTabModel {
     backColor = json['backColor'];
   }
 
-  Map<String, dynamic> toJson() {
+  Map<String, dynamic> toJson({bool fromSave = true}) {
     final Map<String, dynamic> data = <String, dynamic>{};
-    data['fpcTime'] = this.fpcTime;
-    data['breakNumber'] = this.breakNumber;
-    data['bookingDetailcode'] = this.bookingDetailcode;
-    data['randid'] = this.randid;
-    data['rownumber'] = this.rownumber;
-    data['eventType'] = this.eventType;
-    data['exportTapeCode'] = this.exportTapeCode;
-    data['segmentCaption'] = this.segmentCaption;
-    data['client'] = this.client;
-    data['brand'] = this.brand;
-    data['duration'] = this.duration;
-    data['product'] = this.product;
-    data['bookingNumber'] = this.bookingNumber;
-    data['rostimeBand'] = this.rostimeBand;
-    data['programName'] = this.programName;
-    data['bStatus'] = this.bStatus;
-    data['pDailyFPC'] = this.pDailyFPC;
-    data['pProgramMaster'] = this.pProgramMaster;
-    data['foreColor'] = this.foreColor;
-    data['backColor'] = this.backColor;
-
+    if (fromSave) {
+      data['fpcTime'] = this.fpcTime;
+      data['breakNumber'] = this.breakNumber;
+      data['bookingDetailcode'] = this.bookingDetailcode;
+      data['randid'] = this.randid;
+      data['rownumber'] = this.rownumber;
+      data['eventType'] = this.eventType;
+      data['exportTapeCode'] = this.exportTapeCode;
+      data['segmentCaption'] = this.segmentCaption;
+      data['client'] = this.client;
+      data['brand'] = this.brand;
+      data['duration'] = this.duration;
+      data['product'] = this.product;
+      data['bookingNumber'] = this.bookingNumber;
+      data['rostimeBand'] = this.rostimeBand;
+      data['programName'] = this.programName;
+      data['bStatus'] = this.bStatus;
+      data['pDailyFPC'] = this.pDailyFPC;
+      data['pProgramMaster'] = this.pProgramMaster;
+      data['foreColor'] = this.foreColor;
+      data['backColor'] = this.backColor;
+    } else {
+      data['fpcTime'] = this.fpcTime;
+      data['fpcTime '] = this.fpcTime2;
+      data['breakNumber'] = this.breakNumber;
+      data['bookingDetailcode'] = this.bookingDetailcode;
+      data['randid'] = this.randid;
+      data['rownumber'] = this.rownumber;
+      data['eventType'] = this.eventType;
+      data['exportTapeCode'] = this.exportTapeCode;
+      data['segmentCaption'] = this.segmentCaption;
+      data['client'] = this.client;
+      data['brand'] = this.brand;
+      data['duration'] = this.duration;
+      data['product'] = this.product;
+      data['bookingNumber'] = this.bookingNumber;
+      data['rostimeBand'] = this.rostimeBand;
+      data['programName'] = this.programName;
+      data['bStatus'] = this.bStatus;
+      data['pDailyFPC'] = this.pDailyFPC;
+      data['pProgramMaster'] = this.pProgramMaster;
+      data['foreColor'] = this.foreColor;
+      data['backColor'] = this.backColor;
+    }
     return data;
   }
-
 }

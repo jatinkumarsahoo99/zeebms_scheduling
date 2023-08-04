@@ -178,9 +178,10 @@ class LoadingDialog {
     );
   }
 
-  static callDataSavedMessage(String value, {Function()? callback}) {
+  static callDataSavedMessage(String value, {Function()? callback, bool barrierDismissible = true}) {
     Get.defaultDialog(
       title: "",
+      barrierDismissible: barrierDismissible,
       titleStyle: TextStyle(fontSize: 1),
       content: Column(
         mainAxisAlignment: MainAxisAlignment.center,
