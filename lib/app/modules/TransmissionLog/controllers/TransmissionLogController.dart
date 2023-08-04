@@ -904,7 +904,7 @@ class TransmissionLogController extends GetxController {
                 fileName),
             fun: (map) {
               Get.back();
-              ExportData().exportFilefromBase64(map, fileName);
+              ExportData().exportFilefromBase64OtherFormat(map, fileName);
             });
         break;
       case "Grass Valley":
