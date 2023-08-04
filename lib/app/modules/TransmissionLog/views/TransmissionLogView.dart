@@ -331,7 +331,7 @@ class TransmissionLogView extends StatelessWidget {
                                   loadevent.stateManager;
                               loadevent.stateManager
                                   .setGridMode(PlutoGridMode.normal);
-                              loadevent.stateManager.setSelecting(true);
+                              // loadevent.stateManager.setSelecting(true);
                               loadevent.stateManager
                                   .setSelectingMode(PlutoGridSelectingMode.row);
                               if (controller.isFetch.value) {
@@ -570,14 +570,14 @@ class TransmissionLogView extends StatelessWidget {
                               ),
                             IconButton(
                               onPressed: () {
-                                this.controller.btnUp_Click();
+                                this.controller.btnUp_Click1();
                               },
                               icon: Icon(Icons.arrow_upward),
                               padding: EdgeInsets.symmetric(horizontal: 8.0),
                             ),
                             IconButton(
                               onPressed: () {
-                                this.controller.btnDown_Click();
+                                this.controller.btnDown_Click1();
                               },
                               icon: Icon(Icons.arrow_downward),
                               padding: EdgeInsets.symmetric(horizontal: 8.0),
@@ -1041,11 +1041,16 @@ class TransmissionLogView extends StatelessWidget {
                           btnText: "Search",
                           showIcon: false,
                           callback: () {
-                            controller.getBtnInsertSearchClick(
-                                isMine: controller.isMy.value,
-                                eventType: controller.selectEvent?.value ?? "",
-                                txId: controller.txId_.text,
-                                txCaption: controller.txCaption_.text);
+                            if(controller.selectEvent==null){
+                              LoadingDialog.showErrorDialog("Please select event");
+                            }else {
+                              controller.getBtnInsertSearchClick(
+                                  isMine: controller.isMy.value,
+                                  eventType: controller.selectEvent?.value ??
+                                      "",
+                                  txId: controller.txId_.text,
+                                  txCaption: controller.txCaption_.text);
+                            }
                           },
                         ),
                       ),
@@ -1055,6 +1060,7 @@ class TransmissionLogView extends StatelessWidget {
                           btnText: "Add",
                           showIcon: false,
                           callback: () {
+                            // LoadingDialog.call();
                             controller.btnFastInsert_Add_Click();
                           },
                         ),
@@ -1129,20 +1135,25 @@ class TransmissionLogView extends StatelessWidget {
                               ? DataGridFromMap(
                                   hideCode: false,
                                   formatDate: false,
-                                  checkRow: true,
+                                  // checkRow: true,
                                   showSrNo: false,
-                                  checkRowKey: "eventtype",
+                                  mode: PlutoGridMode.multiSelect,
+                                  // checkRowKey: "eventtype",
                                   onload: (PlutoGridOnLoadedEvent load) {
                                     controller.tblFastInsert =
                                         load.stateManager;
+                                    load.stateManager.setSelectingMode(PlutoGridSelectingMode.row);
                                   },
                                   // colorCallback: (renderC) => Colors.red[200]!,
                                   onRowDoubleTap:
                                       (PlutoGridOnRowDoubleTapEvent tap) {
                                     // controller.tblFastInsert?.unCheckedRows;
-                                    controller.tblFastInsert
-                                        ?.setRowChecked(tap.row, true);
-                                    controller.btnFastInsert_Add_Click();
+                                   /* controller.tblFastInsert
+                                        ?.setRowChecked(tap.row, true);*/
+                                    // controller.tblFastInsert
+                                    //     ?.setCurrentCell(tap.cell, tap.rowIdx);
+                                    // LoadingDialog.call();
+                                    controller.btnFastInsert_Add_Click1(tap.rowIdx);
                                   },
                                   mapData: (controller.inserSearchModel
                                       ?.lstListMyEventData?.lstListMyEventClips!
