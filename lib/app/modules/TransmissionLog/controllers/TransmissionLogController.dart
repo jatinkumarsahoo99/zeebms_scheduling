@@ -936,7 +936,7 @@ class TransmissionLogController extends GetxController {
                 fileName),
             fun: (map) {
               Get.back();
-              ExportData().exportFilefromBase64(map, fileName);
+              ExportData().exportFilefromBase64OtherFormat(map, fileName);
             });
         break;
       case "Commercial Replace":
@@ -3264,9 +3264,9 @@ class TransmissionLogController extends GetxController {
       print("Data clicked clear");
       if (data != null) {
         if (data) {
-          Get.delete<TransmissionLogController>();
-          Get.find<HomeController>().clearPage1();
-          // html.window.location.reload();
+          // Get.delete<TransmissionLogController>();
+          // Get.find<HomeController>().clearPage1();
+          html.window.location.reload();
         } else {
           return;
         }
@@ -3274,9 +3274,9 @@ class TransmissionLogController extends GetxController {
         return;
       }
     } else {
-      Get.delete<TransmissionLogController>();
-      Get.find<HomeController>().clearPage1();
-      // html.window.location.reload();
+      // Get.delete<TransmissionLogController>();
+      // Get.find<HomeController>().clearPage1();
+      html.window.location.reload();
     }
   }
 
