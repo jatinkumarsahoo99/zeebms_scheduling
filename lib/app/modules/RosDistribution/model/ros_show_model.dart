@@ -149,6 +149,7 @@ class LstROSSpots {
 
   Map<String, dynamic> toJson() {
     final Map<String, dynamic> data = <String, dynamic>{};
+    data['allocatedSpot'] = allocatedSpot;
     data['rid'] = rid;
     data['rrr'] = rrr;
     data['locationcode'] = locationcode;
@@ -173,7 +174,7 @@ class LstROSSpots {
     data['dealNumber'] = dealNumber;
     data['spotPriority'] = spotPriority;
     data['dealTypeName'] = dealTypeName;
-    data['allocatedSpot'] = allocatedSpot;
+
     data['groupcode'] = groupcode;
     return data;
   }

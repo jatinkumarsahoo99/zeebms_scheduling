@@ -77,8 +77,9 @@ class DataGridFromMapTransmissionLog extends StatelessWidget {
           enableEditingMode: false,
           enableDropToResize: false,
           enableContextMenu: false,
-          // width: 250,
-          minWidth: 50,
+          width: 40,
+          // backgroundColor: Colors.white,
+          minWidth: 40,
           renderer: ((rendererContext) {
             // print("On rendererContext called");
 
@@ -96,13 +97,29 @@ class DataGridFromMapTransmissionLog extends StatelessWidget {
                       plutoContext: rendererContext);
                 }
               },
-              child: Text(
-                (rendererContext.rowIdx + 1).toString(),
-                style: TextStyle(
-                  fontSize: SizeDefine.columnTitleFontSize,
+              child: Container(
+                // height: 25,
+                height: 20,
+                // width: Utils.getColumnSize1(key: key, value: mapData[0][key]),
+                padding: EdgeInsets.only(
+                  left: 6,
                 ),
-              ),
-            );
+                decoration: BoxDecoration(
+                  border: Border.all(color: Colors.transparent,width: 0.01),
+                  borderRadius: BorderRadius.circular(1),
+                  // color: Colors.white
+                ),
+                alignment: Alignment.centerLeft,
+                // color: (key == "epsNo" || key == "tapeid" || key == "status") ? ColorData.cellColor(rendererContext.row.cells[key]?.value, key) : null,
+                child: Text(
+                  (rendererContext.rowIdx + 1).toString(),
+                  maxLines: 1,
+                  overflow: TextOverflow.ellipsis,
+                  style: TextStyle(
+                    fontSize: SizeDefine.columnTitleFontSize,
+                ),
+              )
+            ));
           }),
           enableAutoEditing: false,
           // enableRowDrag: true,
@@ -113,94 +130,7 @@ class DataGridFromMapTransmissionLog extends StatelessWidget {
           field: "no",
           type: PlutoColumnType.text()));
     }
-    if (showonly != null && showonly!.isNotEmpty) {
-      for (var key in showonly!) {
-        if ((mapData[0] as Map).containsKey(key)) {
-          segColumn.add(PlutoColumn(
-              title: key == "fpcCaption"
-                  ? "FPC Caption"
-                  : key.toString().pascalCaseToNormal(),
-              enableRowChecked: false,
-              readOnly: true,
-              renderer: ((rendererContext) {
-                // print("On rendererContext called");
-                if (actionIconKey != null) {
-                  if (key == actionIconKey) {
-                    return InkWell(
-                      child: Icon(
-                        actionIcon,
-                        size: 19,
-                      ),
-                      onTap: () {
-                        actionOnPress!(rendererContext.rowIdx);
-                      },
-                    );
-                  } else {
-                    return GestureDetector(
-                      onSecondaryTapDown: (detail) {
-                        if (onContextMenuClick == null) {
-                          DataGridMenu().showGridMenu(
-                              rendererContext.stateManager, detail, context,
-                              exportFileName: exportFileName);
-                        } else {
-                          DataGridMenu().showGridCustomTransmissionLog(
-                              rendererContext.stateManager, detail, context,
-                              exportFileName: exportFileName,
-                              onPressedClick: onContextMenuClick,
-                              plutoContext: rendererContext);
-                        }
-                      },
-                      child: Text(
-                        rendererContext.cell.value.toString(),
-                        style: TextStyle(
-                          fontSize: SizeDefine.columnTitleFontSize,
-                        ),
-                      ),
-                    );
-                  }
-                } else {
-                  return GestureDetector(
-                    onSecondaryTapDown: (detail) {
-                      if (onContextMenuClick == null) {
-                        DataGridMenu().showGridMenu(
-                            rendererContext.stateManager, detail, context,
-                            exportFileName: exportFileName);
-                      } else {
-                        DataGridMenu().showGridCustomTransmissionLog(
-                            rendererContext.stateManager, detail, context,
-                            exportFileName: exportFileName,
-                            onPressedClick: onContextMenuClick,
-                            plutoContext: rendererContext);
-                      }
-                    },
-                    child: Text(
-                      rendererContext.cell.value.toString(),
-                      style: TextStyle(
-                        fontSize: SizeDefine.columnTitleFontSize,
-                      ),
-                    ),
-                  );
-                }
-              }),
-              enableSorting: enableSort,
-              enableRowDrag: key=="transmissionTime"?true:false,
-              enableEditingMode: false,
-              enableDropToResize: true,
-              enableContextMenu: false,
-              width: Utils.getColumnSize1(key: key, value: mapData[0][key]),
-              enableAutoEditing: false,
-              hide: showonly == null
-                  ? (hideKeys != null && hideKeys!.contains(key)) ||
-                      hideCode! &&
-                          key.toString().toLowerCase() != "hourcode" &&
-                          key.toString().toLowerCase().contains("code")
-                  : !showonly!.contains(key),
-              enableColumnDrag: false,
-              field: key,
-              type: PlutoColumnType.text()));
-        }
-      }
-    } else {
+
       for (var key in mapData[0].keys) {
         segColumn.add(PlutoColumn(
             cellPadding: EdgeInsets.zero,
@@ -417,7 +347,8 @@ class DataGridFromMapTransmissionLog extends StatelessWidget {
             enableEditingMode: false,
             enableDropToResize: true,
             enableContextMenu: false,
-            minWidth: Utils.getColumnSize1(key: key, value: mapData[0][key]),
+            width: Utils.getRowWidth(key: key, value: mapData[0][key]),
+            minWidth: 5,
             enableAutoEditing: false,
             hide: showonly == null
                 ? (hideKeys != null && hideKeys!.contains(key)) ||
@@ -429,7 +360,6 @@ class DataGridFromMapTransmissionLog extends StatelessWidget {
             field: key,
             type: PlutoColumnType.text()));
       }
-    }
 
     for (var i = 0; i < mapData.length; i++) {
       Map row = mapData[i];
@@ -475,9 +405,6 @@ class DataGridFromMapTransmissionLog extends StatelessWidget {
             onRowsMoved: onRowsMoved,
             onChanged: onChanged,
             onSelected: onSelected,
-            onRowSecondaryTap: (PlutoGridOnRowSecondaryTapEvent row){
-
-            },
             /*createFooter: (stateManager) {
               return PlutoLazyPagination(
                 // Determine the first page.

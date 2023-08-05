@@ -93,6 +93,18 @@ class DataGridFromMap extends StatelessWidget {
     if (showSrNo!) {
       segColumn.add(PlutoColumn(
           title: "No.",
+          // titleSpan: TextSpan(
+          //   text: "No.",
+          //   recognizer: DoubleTapGestureRecognizer()
+          //     ..onDoubleTap = () {
+          //       if (onContextMenuClick == null) {
+          //         DataGridMenu().showGridMenu(rendererContext.stateManager, detail, context, exportFileName: exportFileName);
+          //       } else {
+          //         DataGridMenu().showGridCustomMenu(rendererContext.stateManager, detail, context,
+          //             exportFileName: exportFileName, onPressedClick: onContextMenuClick, plutoContext: rendererContext);
+          //       }
+          //     },
+          // ),
           enableRowChecked: false,
           readOnly: true,
           enableSorting: enableSort,
@@ -104,6 +116,26 @@ class DataGridFromMap extends StatelessWidget {
           hide: hideCode! && key.toString().toLowerCase() != "hourcode" && key.toString().toLowerCase().contains("code"),
           enableColumnDrag: false,
           field: "no",
+          renderer: (rendererContext) {
+            return GestureDetector(
+              onSecondaryTapDown: (detail) {
+                if (onContextMenuClick == null) {
+                  DataGridMenu().showGridMenu(rendererContext.stateManager, detail, context, exportFileName: exportFileName);
+                } else {
+                  DataGridMenu().showGridCustomMenu(rendererContext.stateManager, detail, context,
+                      exportFileName: exportFileName, onPressedClick: onContextMenuClick, plutoContext: rendererContext);
+                }
+              },
+              child: Text(
+                (rendererContext.cell.value ?? "").toString(),
+                style: TextStyle(
+                  fontSize: SizeDefine.columnTitleFontSize,
+                ),
+                maxLines: 1,
+                overflow: TextOverflow.ellipsis,
+              ),
+            );
+          },
           type: PlutoColumnType.text()));
     }
     if (showonly != null && showonly!.isNotEmpty) {
@@ -146,6 +178,8 @@ class DataGridFromMap extends StatelessWidget {
                       style: TextStyle(
                         fontSize: SizeDefine.columnTitleFontSize,
                       ),
+                      maxLines: 1,
+                      overflow: TextOverflow.ellipsis,
                     ),
                   );
                 }
@@ -206,7 +240,10 @@ class DataGridFromMap extends StatelessWidget {
                       rendererContext.cell.value.toString(),
                       style: TextStyle(
                         fontSize: SizeDefine.columnTitleFontSize,
+                        overflow: TextOverflow.ellipsis,
                       ),
+                      maxLines: 1,
+                      overflow: TextOverflow.ellipsis,
                     ),
                   );
                 }
@@ -247,7 +284,7 @@ class DataGridFromMap extends StatelessWidget {
                       left: 6,
                     ),
                     decoration: BoxDecoration(
-                      border: Border.all(color: Colors.transparent,width: 0.01),
+                      border: Border.all(color: Colors.transparent, width: 0.01),
                       borderRadius: BorderRadius.circular(1),
                       color: isColorRed ? Colors.red : null,
                     ),
@@ -255,6 +292,8 @@ class DataGridFromMap extends StatelessWidget {
                     // color: (key == "epsNo" || key == "tapeid" || key == "status") ? ColorData.cellColor(rendererContext.row.cells[key]?.value, key) : null,
                     child: Text(
                       rendererContext.cell.value.toString(),
+                      maxLines: 1,
+                      overflow: TextOverflow.ellipsis,
                       style: TextStyle(
                           fontSize: SizeDefine.columnTitleFontSize,
                           fontWeight:
@@ -277,6 +316,8 @@ class DataGridFromMap extends StatelessWidget {
                     style: TextStyle(
                       fontSize: SizeDefine.columnTitleFontSize,
                     ),
+                    maxLines: 1,
+                    overflow: TextOverflow.ellipsis,
                   ),
                 );
               }
@@ -288,7 +329,7 @@ class DataGridFromMap extends StatelessWidget {
             enableContextMenu: false,
             minWidth: (witdthSpecificColumn != null && witdthSpecificColumn!.keys.toList().firstWhereOrNull((element) => element == key) != null)
                 ? witdthSpecificColumn![key]!
-                : PlutoGridSettings.minColumnWidth,
+                : Utils.getColumnSize(key: key, value: mapData[0][key]),
             width: (witdthSpecificColumn != null && witdthSpecificColumn!.keys.toList().firstWhereOrNull((element) => element == key) != null)
                 ? witdthSpecificColumn![key]!
                 : Utils.getColumnSize(key: key, value: mapData[0][key]),

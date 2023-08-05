@@ -1,6 +1,7 @@
 import 'dart:convert';
 
 import 'package:excel/excel.dart';
+import 'package:file_saver/file_saver.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_file_saver/flutter_file_saver.dart';
 import 'package:get/get.dart';
@@ -60,6 +61,17 @@ class ExportData {
         return value;
       });
     } catch (e) {
+      Snack.callError("Failed To Save File");
+    }
+  }
+  exportFilefromBase64OtherFormat(String data, String fileName) async {
+    try {
+      await FileSaver.instance.saveFile(name: fileName.split(".")[0], ext: fileName.split(".")[1], mimeType: MimeType.other,bytes: base64.decode(data)).then((value) {
+        LoadingDialog.callInfoMessage("Exported Successfully");
+        return value;
+      });
+    } catch (e) {
+      print("File export error is>>>"+e.toString());
       Snack.callError("Failed To Save File");
     }
   }
