@@ -2559,15 +2559,13 @@ class DropDownField {
                                 ]);
                           } else {
                             var tempList = RxList<DropDownValue>([]);
-                            if (selected == null) {
-                              tempList.addAll(items);
-                            } else {
-                              for (var i = 0; i < items.length; i++) {
-                                if (items[i].value!.toLowerCase().contains((selected?.value ?? "").toLowerCase())) {
-                                  tempList.add(items[i]);
-                                }
-                              }
+                            // if (selected == null) {
+                            //   tempList.addAll(items);
+                            // } else {
+                            for (var i = 0; i < items.length; i++) {
+                              tempList.add(items[i]);
                             }
+                            // }
                             showMenu(
                               context: context,
                               useRootNavigator: true,

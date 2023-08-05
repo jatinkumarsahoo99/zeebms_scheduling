@@ -34,7 +34,7 @@ class SpotsView extends GetView<RoBookingController> {
                   mapData: controller.addSpotData?.lstSpots?.map((e) => e.toJson()).toList() ??
                       controller.bookingNoLeaveData?.lstSpots?.map((e) => e.toJson()).toList() ??
                       [],
-                  formatDate: false)
+                  formatDate: true)
               : Container(
                   decoration: BoxDecoration(border: Border.all(width: 1.0, color: Colors.grey)),
                 ),
@@ -210,7 +210,6 @@ class SpotsView extends GetView<RoBookingController> {
                                             };
                                             if (listdata.contains(listMap)) {
                                               LoadingDialog.callErrorMessage1(msg: "Duplicate Cheque. cannot add");
-                                             
                                             } else {
                                               listdata.add(listMap);
                                               listdata.refresh();

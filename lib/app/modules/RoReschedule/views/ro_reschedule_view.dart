@@ -1,5 +1,10 @@
 import 'package:bms_scheduling/app/controller/HomeController.dart';
+import 'package:bms_scheduling/app/controller/MainController.dart';
 import 'package:bms_scheduling/app/data/DropDownValue.dart';
+import 'package:bms_scheduling/app/data/PermissionModel.dart';
+import 'package:bms_scheduling/app/modules/CommonDocs/controllers/common_docs_controller.dart';
+import 'package:bms_scheduling/app/modules/CommonDocs/views/common_docs_view.dart';
+import 'package:bms_scheduling/app/providers/Utils.dart';
 import 'package:bms_scheduling/widgets/DataGridShowOnly.dart';
 import 'package:bms_scheduling/widgets/DateTime/DateWithThreeTextField.dart';
 import 'package:bms_scheduling/widgets/FormButton.dart';
@@ -78,14 +83,6 @@ class RoRescheduleView extends StatelessWidget {
                               width: 0.24),
                         ),
                         Obx(
-                          () => InputFields.formField1(
-                              hintTxt: "Client", isEnable: controller.enableFields.value, controller: controller.clientCtrl, width: 0.24),
-                        ),
-                        Obx(
-                          () => InputFields.formField1(
-                              hintTxt: "Agency", isEnable: controller.enableFields.value, controller: controller.agencyCtrl, width: 0.24),
-                        ),
-                        Obx(
                           () => DateWithThreeTextField(
                               title: "Eff Date.",
                               isEnable: controller.enableFields.value,
@@ -97,6 +94,14 @@ class RoRescheduleView extends StatelessWidget {
                         ),
                         Obx(
                           () => InputFields.formField1(
+                              hintTxt: "Client", isEnable: controller.enableFields.value, controller: controller.clientCtrl, width: 0.24),
+                        ),
+                        Obx(
+                          () => InputFields.formField1(
+                              hintTxt: "Agency", isEnable: controller.enableFields.value, controller: controller.agencyCtrl, width: 0.24),
+                        ),
+                        Obx(
+                          () => InputFields.formField1(
                               hintTxt: "Reference",
                               maxLen: 100,
                               isEnable: controller.enableFields.value,
@@ -104,15 +109,15 @@ class RoRescheduleView extends StatelessWidget {
                               width: 0.24),
                         ),
                         Obx(
-                          () => InputFields.formField1(
-                              hintTxt: "Brand", isEnable: controller.enableFields.value, controller: controller.branCtrl, width: 0.24),
-                        ),
-                        Obx(
                           () => DateWithThreeTextField(
                               title: "Ref Date.",
                               isEnable: controller.enableFields.value,
                               widthRation: 0.24,
                               mainTextController: controller.refDateCtrl),
+                        ),
+                        Obx(
+                          () => InputFields.formField1(
+                              hintTxt: "Brand", isEnable: controller.enableFields.value, controller: controller.branCtrl, width: 0.24),
                         ),
                         Obx(
                           () => InputFields.formField1(
@@ -137,20 +142,19 @@ class RoRescheduleView extends StatelessWidget {
                           () => InputFields.formField1(
                               hintTxt: "Zone", isEnable: controller.enableFields.value, controller: controller.zoneCtrl, width: 0.24),
                         ),
-                        Obx(() => Container(
-                              width: Get.width * 0.24,
-                              child: Row(
-                                children: [
-                                  InputFields.formField1(
-                                      hintTxt: "Re-Sch No.",
-                                      isEnable: controller.enableFields.value,
-                                      controller: controller.bookingMonthCtrl,
-                                      width: 0.06),
-                                  InputFields.formField1(
-                                      hintTxt: "", focusNode: controller.reScheduleFocus, controller: controller.reSchedNoCtrl, width: 0.18),
-                                ],
+                        Container(
+                          width: Get.width * 0.24,
+                          child: Row(
+                            children: [
+                              InputFields.formField1(hintTxt: "Re-Sch No.", isEnable: false, controller: controller.bookingMonthCtrl, width: 0.06),
+                              SizedBox(
+                                width: Get.width * 0.01,
                               ),
-                            ))
+                              InputFields.formField1(
+                                  hintTxt: "", focusNode: controller.reScheduleFocus, controller: controller.reSchedNoCtrl, width: 0.17),
+                            ],
+                          ),
+                        )
                       ],
                     ),
                   ),
@@ -342,6 +346,9 @@ class RoRescheduleView extends StatelessWidget {
                       .lastWhere((element) {
                     return element.appFormName == "frmSegmentsDetails";
                   });*/
+                      PermissionModel formPermissions = Get.find<MainController>().permissionList!.lastWhere((element) {
+                        return element.appFormName == "frmROBooking";
+                      });
 
                       return Card(
                         margin: EdgeInsets.fromLTRB(4, 4, 4, 0),
@@ -359,44 +366,13 @@ class RoRescheduleView extends StatelessWidget {
                             // pa
                             children: [
                               for (var btn in btncontroller.buttons!)
-                                btn["name"] == "Save"
-                                    ? FormButtonWrapper(
-                                        btnText: btn["name"],
-
-                                        // isEnabled: btn['isDisabled'],
-                                        callback: () {
-                                          controller.save();
-                                        },
-                                      )
-                                    : btn["name"] == "Clear"
-                                        ? FormButtonWrapper(
-                                            btnText: btn["name"],
-
-                                            // isEnabled: btn['isDisabled'],
-                                            callback: () {
-                                              Get.delete<RoRescheduleController>();
-                                              Get.find<HomeController>().clearPage1();
-                                            },
-                                          )
-                                        : btn["name"] == "Docs"
-                                            ? FormButtonWrapper(
-                                                btnText: btn["name"],
-                                                callback: () {
-                                                  controller.docs();
-                                                },
-                                              )
-                                            : btn["name"] == "Refresh"
-                                                ? FormButtonWrapper(
-                                                    btnText: btn["name"],
-                                                    callback: () {
-                                                      print("Refresh");
-                                                    },
-                                                  )
-                                                : FormButtonWrapper(
-                                                    btnText: btn["name"],
-                                                    // isEnabled: btn['isDisabled'],
-                                                    callback: null,
-                                                  ),
+                                FormButtonWrapper(
+                                  btnText: btn["name"],
+                                  // isEnabled: btn['isDisabled'],
+                                  callback: Utils.btnAccessHandler2(btn['name'], btncontroller, formPermissions) == null
+                                      ? null
+                                      : () => btnHandler(btn['name']),
+                                ),
                             ],
                           ),
                         ),
@@ -408,5 +384,32 @@ class RoRescheduleView extends StatelessWidget {
         },
       ),
     );
+  }
+
+  btnHandler(name) {
+    switch (name) {
+      case "Save":
+        controller.save();
+        break;
+      case "Clear":
+        Get.delete<RoRescheduleController>();
+        Get.find<HomeController>().clearPage1();
+        break;
+      case "Docs":
+        Get.defaultDialog(
+          title: "Documents",
+          content: CommonDocsView(
+            documentKey:
+                "ROReschedule ${controller.selectedLocation!.key}${controller.selectedChannel!.key}${controller.bookingMonthCtrl.text}${controller.reSchedNoCtrl.text}",
+          ),
+        ).then((value) {
+          Get.delete<CommonDocsController>(tag: "commonDocs");
+        });
+        break;
+      case "Refresh":
+        controller.save();
+        break;
+      default:
+    }
   }
 }
