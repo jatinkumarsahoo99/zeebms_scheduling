@@ -63,6 +63,7 @@ class FillerView extends GetView<FillerController> {
                       isEnable: controller.isEnable.value,
                       onFocusChange: (data) => controller.fetchFPCDetails(),
                       mainTextController: controller.date_,
+                      endDate: DateTime.now(),
                     ),
                   ),
                   const SizedBox(width: 20),
@@ -132,6 +133,7 @@ class FillerView extends GetView<FillerController> {
                                           // controller.fetchFPCDetails();
                                         },
                                         mainTextController: controller.fillerFromDate_,
+                                        endDate: DateTime.now(),
                                       ),
                                     ),
                                     const SizedBox(width: 15),
@@ -141,6 +143,7 @@ class FillerView extends GetView<FillerController> {
                                         splitType: "-",
                                         widthRation: 0.15,
                                         isEnable: controller.isEnable.value,
+                                        startDate: DateTime.now(),
                                         onFocusChange: (data) {
                                           // print('Selected Date $data');
                                           // controller.fetchFPCDetails();
@@ -208,9 +211,9 @@ class FillerView extends GetView<FillerController> {
                       formatDate: false,
                       showSecondaryDialog: false,
                       mapData: (controller.fillerDailyFpcList.value.map((e) => e.toJson()).toList()),
-                      showonly: ["fpcTime", "endTime", "programName", "epsNo", "tapeID", "episodeCaption"],
+                      showonly: ["fpcTime", "endTime", "programName", "epsNo", "tape id", "episodeCaption"],
                       widthRatio: (Get.width * 0.2) / 2 + 7,
-                      mode: PlutoGridMode.selectWithOneTap,
+                      mode: PlutoGridMode.normal,
                       onload: (event) {
                         controller.gridStateManager = event.stateManager;
                         event.stateManager.setCurrentCell(
@@ -222,8 +225,9 @@ class FillerView extends GetView<FillerController> {
                             controller.gridStateManager?.getRowByIdx(controller.topLastSelectedIdx)?.cells['fpcTime'],
                             controller.bottomLastSelectedIdx);
                         controller.topLastSelectedIdx = plutoGrid.rowIdx;
-                        controller.totalFiller.clear();
-                        controller.totalFillerDur.text = "00:00:00:00";
+                        // controller.totalFiller.clear();
+                        controller.totalFillerDur.clear();
+                        // controller.totalFillerDur.text = "00:00:00:00";
                         controller.fetchSegmentDetails(controller.fillerDailyFpcList[plutoGrid.rowIdx]);
                       },
                       // onSelected: (plutoGrid) {},
@@ -235,159 +239,203 @@ class FillerView extends GetView<FillerController> {
               ),
             ),
             SizedBox(height: 10),
+            Padding(
+              padding: const EdgeInsets.only(left: 10),
+              child: Text("Filler Schedule"),
+            ),
             Expanded(
               flex: 2,
               child: Padding(
                 padding: const EdgeInsets.symmetric(horizontal: 10),
-                child: Column(
-                  mainAxisSize: MainAxisSize.max,
-                  mainAxisAlignment: MainAxisAlignment.start,
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Row(
-                      children: [
-                        Obx(
-                          () => DropDownField.formDropDownSearchAPI2(
-                            GlobalKey(), context,
-                            title: "Filler Caption",
-                            url: ApiFactory.FILLER_CAPTION,
-                            parseKeyForKey: "fillerCode",
-                            parseKeyForValue: "fillerCaption",
-                            onchanged: (data) => controller.getFillerValuesByFillerCode(data),
-                            selectedValue: controller.selectCaption.value,
-                            width: w * 0.45,
-                            // padding: const EdgeInsets.only()
-                          ),
-                        ),
-
-                        /// TAPE ID eg: PCHF24572
-                        InputFields.formField1Width(
-                          widthRatio: 0.12,
-                          paddingLeft: 5,
-                          hintTxt: "Tape ID",
-                          controller: controller.tapeId_,
-                          isEnable: true,
-                          onChange: (value) {
-                            controller.getFillerValuesByTapeCode(value.toString());
-                          },
-                          maxLen: 10,
-                        ),
-
-                        /// SEG NO
-                        InputFields.formField1Width(
-                          widthRatio: 0.10,
-                          paddingLeft: 5,
-                          hintTxt: "Seg No",
-                          controller: controller.segNo_,
-                          isEnable: false,
-                          maxLen: 10,
-                        ),
-
-                        /// SEG DUR
-                        InputFields.formField1Width(
-                          widthRatio: 0.10,
-                          paddingLeft: 5,
-                          hintTxt: "Seg Dur",
-                          controller: controller.segDur_,
-                          isEnable: false,
-                          maxLen: 10,
-                        ),
-                      ],
+                child: DecoratedBox(
+                  decoration: BoxDecoration(
+                    border: Border.all(
+                      color: Colors.grey,
                     ),
-                    SizedBox(height: 5),
-                    Row(
-                      crossAxisAlignment: CrossAxisAlignment.start,
+                  ),
+                  child: Padding(
+                    padding: const EdgeInsets.all(5.0),
+                    child: Column(
+                      mainAxisSize: MainAxisSize.max,
                       mainAxisAlignment: MainAxisAlignment.start,
+                      crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
-                        /// TOTAL FILLER
-                        InputFields.formField1Width(
-                          widthRatio: 0.12,
-                          hintTxt: "Total Filler",
-                          controller: controller.totalFiller,
-                          maxLen: 10,
-                          paddingLeft: 0,
-                          isEnable: false,
-                        ),
-
-                        /// TOTAL FILLER DUR
-                        InputFields.formField1Width(
-                          widthRatio: 0.12,
-                          paddingLeft: 5,
-                          hintTxt: "Total Filler Dur",
-                          controller: controller.totalFillerDur,
-                          isEnable: false,
-                          maxLen: 10,
-                        ),
-
-                        /// INSERT AFTER
                         Row(
                           children: [
-                            Radio(
-                              value: 0,
-                              groupValue: controller.selectedAfter,
-                              onChanged: (int? value) {},
+                            Obx(
+                              () => DropDownField.formDropDownSearchAPI2(
+                                GlobalKey(),
+                                context,
+                                title: "Filler Caption",
+                                url: ApiFactory.FILLER_CAPTION,
+                                parseKeyForKey: "fillerCode",
+                                parseKeyForValue: "fillerCaption",
+                                onchanged: (data) => controller.getFillerValuesByFillerCode(data),
+                                selectedValue: controller.selectCaption.value,
+                                width: w * 0.45,
+                                dialogHeight: 250,
+                                inkwellFocus: controller.fillerCaptionFN,
+                              ),
                             ),
-                            Text('Insert After')
+
+                            /// TAPE ID eg: PCHF24572
+                            InputFields.formField1Width(
+                              widthRatio: 0.12,
+                              paddingLeft: 5,
+                              hintTxt: "Tape ID",
+                              controller: controller.tapeId_,
+                              isEnable: true,
+                              onChange: (value) {
+                                if (value.toString().isEmpty) {
+                                  controller.clearBottonControlls();
+                                } else {
+                                  controller.getFillerValuesByTapeCode(value.toString());
+                                }
+                              },
+                              maxLen: 10,
+                            ),
+
+                            /// SEG NO
+                            InputFields.formField1Width(
+                              widthRatio: 0.10,
+                              paddingLeft: 5,
+                              hintTxt: "Seg No",
+                              controller: controller.segNo_,
+                              isEnable: false,
+                              maxLen: 10,
+                            ),
+
+                            /// SEG DUR
+                            InputFields.formField1Width(
+                              widthRatio: 0.10,
+                              paddingLeft: 5,
+                              hintTxt: "Seg Dur",
+                              controller: controller.segDur_,
+                              isEnable: false,
+                              maxLen: 10,
+                            ),
                           ],
                         ),
-                        const SizedBox(width: 10),
+                        SizedBox(height: 5),
+                        Row(
+                          crossAxisAlignment: CrossAxisAlignment.end,
+                          mainAxisAlignment: MainAxisAlignment.start,
+                          children: [
+                            /// TOTAL FILLER
+                            InputFields.formField1Width(
+                              widthRatio: 0.12,
+                              hintTxt: "Total Filler",
+                              controller: controller.totalFiller,
+                              maxLen: 10,
+                              paddingLeft: 0,
+                              isEnable: false,
+                              titleinBlack: true,
+                            ),
 
-                        /// ADD BUTTON
-                        Padding(
-                          padding: const EdgeInsets.only(top: 15.0),
-                          child: FormButton(
-                            btnText: "Add",
-                            callback: controller.handleAddTap,
-                          ),
-                        ),
-                      ],
-                    ),
-                    SizedBox(height: 10),
-                    Expanded(
-                      child: Obx(() {
-                        return Visibility(
-                          visible: ((controller.fillerSegmentList.value.isNotEmpty)),
-                          replacement: Container(decoration: BoxDecoration(border: Border.all(color: Colors.grey))),
-                          child: DataGridFromMap3(
-                            mapData: (controller.fillerSegmentList.map((e) => e.toJson()).toList()),
-                            widthRatio: (Get.width * 0.2) / 2 + 7,
-                            formatDate: false,
-                            secondaryExtraDialogList: [
-                              SecondaryShowDialogModel(
-                                "Delete",
-                                () {
-                                  if (controller.fillerSegmentList[controller.bottomLastSelectedIdx].allowMove == "1") {
+                            /// TOTAL FILLER DUR
+                            InputFields.formField1Width(
+                              widthRatio: 0.12,
+                              paddingLeft: 5,
+                              hintTxt: "Total Filler Dur",
+                              controller: controller.totalFillerDur,
+                              isEnable: false,
+                              maxLen: 10,
+                              titleinBlack: true,
+                            ),
+
+                            /// INSERT AFTER
+                            Row(
+                              crossAxisAlignment: CrossAxisAlignment.center,
+                              mainAxisAlignment: MainAxisAlignment.center,
+                              children: [
+                                Radio(
+                                  value: 0,
+                                  groupValue: controller.selectedAfter,
+                                  onChanged: (int? value) {},
+                                ),
+                                Text('Insert After')
+                              ],
+                            ),
+                            const SizedBox(width: 10),
+
+                            /// ADD BUTTON
+                            Padding(
+                              padding: const EdgeInsets.only(top: 15.0),
+                              child: FormButton(
+                                btnText: "Add",
+                                callback: controller.handleAddTap,
+                              ),
+                            ),
+                            const SizedBox(width: 10),
+                            Padding(
+                              padding: const EdgeInsets.only(top: 15.0),
+                              child: FormButton(
+                                btnText: "Delete",
+                                callback: () {
+                                  if (controller.fillerSegmentList.isNotEmpty &&
+                                      controller.fillerSegmentList[controller.bottomLastSelectedIdx].allowMove == "1") {
                                     controller.fillerSegmentList.removeAt(controller.bottomLastSelectedIdx);
                                   }
-                                  // controller.fillerSegmentList.removeAt(controller.bottomLastSelectedIdx);
                                 },
-                              )
-                            ],
-                            onload: (event) {
-                              controller.bottomSM = event.stateManager;
-                              event.stateManager.setCurrentCell(
-                                  event.stateManager.getRowByIdx(controller.bottomLastSelectedIdx)?.cells['segNo'], controller.bottomLastSelectedIdx);
-                            },
-                            colorCallback: (row) =>
-                                (controller.fillerSegmentList[row.rowIdx].allowMove == "1" || controller.fillerSegmentList[row.rowIdx].ponumber == 1)
+                              ),
+                            ),
+                            const SizedBox(width: 10),
+                            Text(
+                              "Press right click on filler to remove",
+                              style: TextStyle(color: Colors.red),
+                            ),
+                          ],
+                        ),
+                        SizedBox(height: 10),
+                        Expanded(
+                          child: Obx(() {
+                            return Visibility(
+                              visible: ((controller.fillerSegmentList.value.isNotEmpty)),
+                              replacement: Container(decoration: BoxDecoration(border: Border.all(color: Colors.grey))),
+                              child: DataGridFromMap3(
+                                mapData: (controller.fillerSegmentList.map((e) => e.toJson()).toList()),
+                                // widthRatio: (Get.width * 0.2) / 2 + 7,
+                                formatDate: false,
+                                secondaryExtraDialogList: [
+                                  SecondaryShowDialogModel(
+                                    "Delete",
+                                    () {
+                                      if (controller.fillerSegmentList[controller.bottomLastSelectedIdx].allowMove == "1") {
+                                        controller.fillerSegmentList.removeAt(controller.bottomLastSelectedIdx);
+                                      }
+                                      // controller.fillerSegmentList.removeAt(controller.bottomLastSelectedIdx);
+                                    },
+                                  )
+                                ],
+                                onload: (event) {
+                                  controller.bottomSM = event.stateManager;
+                                  event.stateManager.setCurrentCell(event.stateManager.getRowByIdx(controller.bottomLastSelectedIdx)?.cells['segNo'],
+                                      controller.bottomLastSelectedIdx);
+                                },
+                                colorCallback: (row) => (controller.fillerSegmentList[row.rowIdx].allowMove == "1" ||
+                                        controller.fillerSegmentList[row.rowIdx].ponumber == 1)
                                     ? Colors.red
                                     : (row.row.cells.containsValue(controller.bottomSM?.currentCell))
                                         ? Colors.deepPurple.shade200
                                         : Colors.white,
-                            onSelected: (plutoGrid) {
-                              controller.bottomLastSelectedIdx = plutoGrid.rowIdx ?? 0;
-                              controller.selectedSegment = controller.fillerSegmentList[plutoGrid.rowIdx!];
-                            },
-                            mode: PlutoGridMode.selectWithOneTap,
-                            showonly: ["segNo", "seq", "brkNo", "ponumber", "tapeID", "segmentCaption", "som", "segDur"],
-                          ),
-                        );
-                      }),
-                    )
-                  ],
+                                onSelected: (plutoGrid) {
+                                  controller.bottomLastSelectedIdx = plutoGrid.rowIdx ?? 0;
+                                  controller.selectedSegment = controller.fillerSegmentList[plutoGrid.rowIdx!];
+                                },
+                                mode: PlutoGridMode.selectWithOneTap,
+                                showonly: ["segNo", "seq", "brkNo", "ponumber", "tape id", "segmentCaption", "som", "segDur"],
+                              ),
+                            );
+                          }),
+                        )
+                      ],
+                    ),
+                  ),
                 ),
               ),
             ),
+
+            /// common buttons
             Padding(
               padding: const EdgeInsets.all(10.0),
               child: GetBuilder<HomeController>(

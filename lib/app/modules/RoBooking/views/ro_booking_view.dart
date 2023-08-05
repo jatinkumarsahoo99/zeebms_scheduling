@@ -63,9 +63,7 @@ class RoBookingView extends StatelessWidget {
                                   order: NumericFocusOrder(1),
                                   child: DropDownField.formDropDown1WidthMap(
                                     controller.roBookingInitData!.lstLocation!
-                                        .map((e) => DropDownValue(
-                                            key: e.locationCode,
-                                            value: e.locationName))
+                                        .map((e) => DropDownValue(key: e.locationCode, value: e.locationName))
                                         .toList(),
                                     (value) {
                                       controller.selectedLocation = value;
@@ -74,8 +72,7 @@ class RoBookingView extends StatelessWidget {
                                     "Location",
                                     0.11,
                                     selected: controller.selectedLocation,
-                                    isEnable:
-                                        controller.bookingNoLeaveData == null,
+                                    isEnable: controller.bookingNoLeaveData == null,
                                   ),
                                 ),
                                 FocusTraversalOrder(
@@ -89,8 +86,7 @@ class RoBookingView extends StatelessWidget {
                                       "Channel",
                                       0.23,
                                       selected: controller.selectedChannel,
-                                      isEnable:
-                                          controller.bookingNoLeaveData == null,
+                                      isEnable: controller.bookingNoLeaveData == null,
                                     ),
                                   ),
                                 ),
@@ -98,11 +94,9 @@ class RoBookingView extends StatelessWidget {
                                   order: NumericFocusOrder(3),
                                   child: DateWithThreeTextField(
                                     title: "FPC Eff. Dt.",
-                                    isEnable:
-                                        controller.bookingNoLeaveData == null,
+                                    isEnable: controller.bookingNoLeaveData == null,
                                     widthRation: 0.11,
-                                    mainTextController:
-                                        controller.fpcEffectiveDateCtrl,
+                                    mainTextController: controller.fpcEffectiveDateCtrl,
                                     onFocusChange: (date) {
                                       controller.effDtLeave();
                                     },
@@ -114,8 +108,7 @@ class RoBookingView extends StatelessWidget {
                                     title: "Booking Date",
                                     widthRation: 0.11,
                                     mainTextController: controller.bookDateCtrl,
-                                    isEnable:
-                                        controller.bookingNoLeaveData == null,
+                                    isEnable: controller.bookingNoLeaveData == null,
                                   ),
                                 ),
                                 FocusTraversalOrder(
@@ -125,8 +118,7 @@ class RoBookingView extends StatelessWidget {
                                     hintTxt: "Ref No",
                                     controller: controller.refNoCtrl,
                                     width: 0.11,
-                                    isEnable:
-                                        controller.bookingNoLeaveData == null,
+                                    isEnable: controller.bookingNoLeaveData == null,
                                   ),
                                 ),
                                 FocusTraversalOrder(
@@ -134,21 +126,15 @@ class RoBookingView extends StatelessWidget {
                                   child: DateWithThreeTextField(
                                     title: "",
                                     widthRation: 0.11,
-                                    mainTextController:
-                                        controller.fpcEffectiveDateCtrl,
-                                    isEnable:
-                                        controller.bookingNoLeaveData == null,
+                                    mainTextController: controller.fpcEffectiveDateCtrl,
+                                    isEnable: controller.bookingNoLeaveData == null,
                                   ),
                                 ),
                                 InputFields.formField1(
                                   hintTxt: "Rev Type",
                                   width: 0.11,
                                   controller: TextEditingController(
-                                      text: controller.bookingNoLeaveData
-                                              ?.revenueType ??
-                                          controller.dealNoLeaveData
-                                              ?.strRevenueTypeCode ??
-                                          ""),
+                                      text: controller.bookingNoLeaveData?.revenueType ?? controller.dealNoLeaveData?.strRevenueTypeCode ?? ""),
                                   isEnable: false,
                                 ),
                                 // DropDownField.formDropDown1WidthMap(
@@ -174,8 +160,7 @@ class RoBookingView extends StatelessWidget {
                                   width: Get.width * 0.23,
                                   child: Row(
                                     mainAxisSize: MainAxisSize.min,
-                                    mainAxisAlignment:
-                                        MainAxisAlignment.spaceBetween,
+                                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
                                     children: [
                                       InputFields.formField1(
                                         hintTxt: "Booking No",
@@ -186,17 +171,11 @@ class RoBookingView extends StatelessWidget {
                                       FocusTraversalOrder(
                                         order: NumericFocusOrder(5),
                                         child: InputFields.formField1(
-                                            hintTxt: "",
-                                            controller:
-                                                controller.bookingNoCtrl,
-                                            focusNode:
-                                                controller.bookingNoFocus,
-                                            width: 0.06),
+                                            hintTxt: "", controller: controller.bookingNoCtrl, focusNode: controller.bookingNoFocus, width: 0.06),
                                       ),
                                       InputFields.formField1(
                                         hintTxt: "",
-                                        controller:
-                                            controller.bookingNoTrailCtrl,
+                                        controller: controller.bookingNoTrailCtrl,
                                         width: 0.075,
                                         isEnable: false,
                                       ),
@@ -208,11 +187,8 @@ class RoBookingView extends StatelessWidget {
                                   child: Obx(
                                     () => DropDownField.formDropDown1WidthMap(
                                       controller.bookingNoLeaveData != null
-                                          ? controller.bookingNoLeaveData
-                                                  ?.lstClientAgency
-                                                  ?.map((e) => DropDownValue(
-                                                      value: e.clientname,
-                                                      key: e.clientcode))
+                                          ? controller.bookingNoLeaveData?.lstClientAgency
+                                                  ?.map((e) => DropDownValue(value: e.clientname, key: e.clientcode))
                                                   .toList() ??
                                               []
                                           : controller.clients.value,
@@ -223,14 +199,12 @@ class RoBookingView extends StatelessWidget {
                                       0.23,
                                       onFocusChange: (value) {
                                         if (controller.selectedClient != null) {
-                                          controller.clientLeave(
-                                              controller.selectedClient?.key);
+                                          controller.clientLeave(controller.selectedClient?.key);
                                         }
                                       },
                                       inkWellFocusNode: controller.clientFocus,
                                       selected: controller.selectedClient,
-                                      isEnable:
-                                          controller.bookingNoLeaveData == null,
+                                      isEnable: controller.bookingNoLeaveData == null,
                                     ),
                                   ),
                                 ),
@@ -249,21 +223,14 @@ class RoBookingView extends StatelessWidget {
                                     controller.dealNoLeave();
                                   }, "Deal No", 0.11,
                                       inkWellFocusNode: controller.dealNoFocus,
-                                      isEnable:
-                                          controller.bookingNoLeaveData == null,
+                                      isEnable: controller.bookingNoLeaveData == null,
                                       selected: controller.selectedDeal),
                                 ),
                                 InputFields.formField1(
                                   hintTxt: "Deal Type",
-                                  isEnable:
-                                      controller.bookingNoLeaveData == null &&
-                                          controller.agencyLeaveData == null,
+                                  isEnable: controller.bookingNoLeaveData == null && controller.agencyLeaveData == null,
                                   controller: TextEditingController(
-                                      text: controller
-                                              .bookingNoLeaveData?.dealType ??
-                                          controller
-                                              .dealNoLeaveData?.dealType ??
-                                          ""),
+                                      text: controller.bookingNoLeaveData?.dealType ?? controller.dealNoLeaveData?.dealType ?? ""),
                                   onchanged: (value) {},
                                   width: 0.11,
                                 ),
@@ -271,24 +238,15 @@ class RoBookingView extends StatelessWidget {
                                   order: NumericFocusOrder(8),
                                   child: Obx(
                                     () => DropDownField.formDropDown1WidthMap(
-                                        controller.agencies.value,
-                                        (value) =>
-                                            {controller.agencyLeave(value.key)},
-                                        "Agency",
-                                        0.23,
-                                        isEnable:
-                                            controller.bookingNoLeaveData ==
-                                                null,
-                                        inkWellFocusNode:
-                                            controller.agencyFocus,
+                                        controller.agencies.value, (value) => {controller.agencyLeave(value.key)}, "Agency", 0.23,
+                                        isEnable: controller.bookingNoLeaveData == null,
+                                        inkWellFocusNode: controller.agencyFocus,
                                         selected: controller.selectedAgnecy),
                                   ),
                                 ),
                                 InputFields.formField1(
                                   hintTxt: "Pay route",
-                                  isEnable:
-                                      controller.bookingNoLeaveData == null &&
-                                          controller.agencyLeaveData == null,
+                                  isEnable: controller.bookingNoLeaveData == null && controller.agencyLeaveData == null,
                                   controller: controller.payrouteCtrl,
                                   onchanged: (value) {},
                                   width: 0.11,
@@ -298,9 +256,7 @@ class RoBookingView extends StatelessWidget {
                                   order: NumericFocusOrder(10),
                                   child: DropDownField.formDropDown1WidthMap(
                                       controller.dealNoLeaveData?.lstBrand
-                                              ?.map((e) => DropDownValue(
-                                                  key: e.brandcode,
-                                                  value: e.brandname))
+                                              ?.map((e) => DropDownValue(key: e.brandcode, value: e.brandname))
                                               .toList() ??
                                           [],
                                       (value) => {
@@ -312,8 +268,7 @@ class RoBookingView extends StatelessWidget {
                                       "Brand",
                                       0.23,
                                       inkWellFocusNode: controller.brandFocus,
-                                      isEnable:
-                                          controller.bookingNoLeaveData == null,
+                                      isEnable: controller.bookingNoLeaveData == null,
                                       selected: controller.selectedBrand),
                                 ),
                                 SizedBox(
@@ -324,26 +279,17 @@ class RoBookingView extends StatelessWidget {
                                       callback: () {
                                         var data = Rxn<List>();
                                         FocusNode tapeIdFocus = FocusNode();
-                                        TextEditingController tapeIdCtrl =
-                                            TextEditingController();
+                                        TextEditingController tapeIdCtrl = TextEditingController();
 
                                         tapeIdFocus.addListener(() {
-                                          if (!tapeIdFocus.hasFocus &&
-                                              tapeIdCtrl.text.isNotEmpty) {
-                                            Get.find<ConnectorControl>()
-                                                .GETMETHODCALL(
-                                              api: ApiFactory
-                                                  .RO_BOOKING_BOOKING_SEARCH_TAPE_ID(
-                                                      tapeIdCtrl.text),
+                                          if (!tapeIdFocus.hasFocus && tapeIdCtrl.text.isNotEmpty) {
+                                            Get.find<ConnectorControl>().GETMETHODCALL(
+                                              api: ApiFactory.RO_BOOKING_BOOKING_SEARCH_TAPE_ID(tapeIdCtrl.text),
                                               fun: (apidata) {
                                                 if (apidata is Map &&
-                                                    apidata.containsKey(
-                                                        "info_SearchTapeId") &&
-                                                    apidata["info_SearchTapeId"]
-                                                        is Map) {
-                                                  data.value = apidata[
-                                                          "info_SearchTapeId"]
-                                                      ["lstSearchTapeId"];
+                                                    apidata.containsKey("info_SearchTapeId") &&
+                                                    apidata["info_SearchTapeId"] is Map) {
+                                                  data.value = apidata["info_SearchTapeId"]["lstSearchTapeId"];
                                                 }
                                               },
                                             );
@@ -358,11 +304,8 @@ class RoBookingView extends StatelessWidget {
                                             child: Column(
                                               children: [
                                                 Row(
-                                                  mainAxisAlignment:
-                                                      MainAxisAlignment
-                                                          .spaceBetween,
-                                                  crossAxisAlignment:
-                                                      CrossAxisAlignment.end,
+                                                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                                  crossAxisAlignment: CrossAxisAlignment.end,
                                                   children: [
                                                     SizedBox(),
                                                     InputFields.formField1(
@@ -372,8 +315,7 @@ class RoBookingView extends StatelessWidget {
                                                       width: 0.11,
                                                     ),
                                                     FormButtonWrapper(
-                                                      btnText:
-                                                          "Back To Booking",
+                                                      btnText: "Back To Booking",
                                                       callback: () {
                                                         Get.back();
                                                       },
@@ -382,20 +324,13 @@ class RoBookingView extends StatelessWidget {
                                                 ),
                                                 Container(
                                                     height: Get.height * 0.30,
-                                                    padding:
-                                                        EdgeInsets.only(top: 4),
-                                                    child: Obx(() => data
-                                                                .value ==
-                                                            null
+                                                    padding: EdgeInsets.only(top: 4),
+                                                    child: Obx(() => data.value == null
                                                         ? Container(
-                                                            decoration: BoxDecoration(
-                                                                border: Border.all(
-                                                                    color: Colors
-                                                                        .grey)),
+                                                            decoration: BoxDecoration(border: Border.all(color: Colors.grey)),
                                                           )
                                                         : DataGridShowOnlyKeys(
-                                                            mapData:
-                                                                data.value!,
+                                                            mapData: data.value!,
                                                             formatDate: false,
                                                           )))
                                               ],
@@ -407,9 +342,7 @@ class RoBookingView extends StatelessWidget {
 
                                 InputFields.formField1(
                                   hintTxt: "Pay Mode",
-                                  isEnable:
-                                      controller.bookingNoLeaveData == null &&
-                                          controller.agencyLeaveData == null,
+                                  isEnable: controller.bookingNoLeaveData == null && controller.agencyLeaveData == null,
                                   controller: controller.payModeCtrl,
                                   onchanged: (value) {},
                                   width: 0.11,
@@ -429,61 +362,45 @@ class RoBookingView extends StatelessWidget {
                                     FocusTraversalOrder(
                                       order: NumericFocusOrder(11),
                                       child: DropDownField.formDropDown1WidthMap(
-                                          (controller.roBookingInitData
-                                                  ?.lstExecutives
-                                                  ?.map((e) => DropDownValue(
-                                                      key: e.personnelCode,
-                                                      value: e.personnelName))
+                                          (controller.roBookingInitData?.lstExecutives
+                                                  ?.map((e) => DropDownValue(key: e.personnelCode, value: e.personnelName))
                                                   .toList()) ??
                                               [],
                                           (value) => {},
                                           "Executive",
                                           0.23,
-                                          isEnable:
-                                              controller.bookingNoLeaveData ==
-                                                  null,
-                                          selected:
-                                              controller.selectedExecutive),
+                                          isEnable: controller.bookingNoLeaveData == null,
+                                          selected: controller.selectedExecutive),
                                     ),
                                     InputFields.formField1(
                                       hintTxt: "Tot Spots",
                                       controller: controller.totSpotCtrl,
                                       width: 0.11,
-                                      isEnable: controller.bookingNoLeaveData ==
-                                              null &&
-                                          controller.agencyLeaveData == null,
+                                      isEnable: controller.bookingNoLeaveData == null && controller.agencyLeaveData == null,
                                     ),
                                     InputFields.formField1(
                                       hintTxt: "Tot Dur",
                                       controller: controller.totDurCtrl,
                                       width: 0.11,
-                                      isEnable: controller.bookingNoLeaveData ==
-                                              null &&
-                                          controller.agencyLeaveData == null,
+                                      isEnable: controller.bookingNoLeaveData == null && controller.agencyLeaveData == null,
                                     ),
                                     InputFields.formField1(
                                       hintTxt: "Tot Amt",
                                       controller: controller.totAmtCtrl,
                                       width: 0.11,
-                                      isEnable: controller.bookingNoLeaveData ==
-                                              null &&
-                                          controller.agencyLeaveData == null,
+                                      isEnable: controller.bookingNoLeaveData == null && controller.agencyLeaveData == null,
                                     ),
                                     InputFields.formField1(
                                       hintTxt: "Zone",
                                       controller: controller.zoneCtrl,
                                       width: 0.11,
-                                      isEnable: controller.bookingNoLeaveData ==
-                                              null &&
-                                          controller.agencyLeaveData == null,
+                                      isEnable: controller.bookingNoLeaveData == null && controller.agencyLeaveData == null,
                                     ),
                                     InputFields.formField1(
                                       hintTxt: "Max Spend",
                                       controller: controller.maxspendCtrl,
                                       width: 0.11,
-                                      isEnable: controller.bookingNoLeaveData ==
-                                              null &&
-                                          controller.agencyLeaveData == null,
+                                      isEnable: controller.bookingNoLeaveData == null && controller.agencyLeaveData == null,
                                     ),
                                   ],
                                 )
@@ -506,57 +423,47 @@ class RoBookingView extends StatelessWidget {
                                   isEnable: false,
                                   hintTxt: "Prev. V Amt",
                                   controller: TextEditingController(
-                                      text: controller.bookingNoLeaveData
-                                              ?.previousValAmount ??
-                                          controller.dealNoLeaveData
-                                              ?.previousValAmount ??
-                                          ""),
+                                      text: controller.bookingNoLeaveData?.previousValAmount ?? controller.dealNoLeaveData?.previousValAmount ?? ""),
                                   width: 0.06),
                               InputFields.formField1(
                                   isEnable: false,
                                   hintTxt: "Prev. B Amt",
                                   controller: TextEditingController(
-                                      text: controller.bookingNoLeaveData
-                                              ?.previousValAmount ??
-                                          controller.dealNoLeaveData
-                                              ?.previousBookedAmount ??
-                                          ""),
+                                      text:
+                                          controller.bookingNoLeaveData?.previousValAmount ?? controller.dealNoLeaveData?.previousBookedAmount ?? ""),
                                   width: 0.06),
                               InputFields.formField1(
                                   isEnable: false,
                                   hintTxt: "",
                                   controller: TextEditingController(
-                                      text: controller.bookingNoLeaveData
-                                              ?.payroutecode ??
-                                          controller
-                                              .agencyLeaveData?.payRouteCode ??
-                                          ""),
+                                      text: controller.bookingNoLeaveData?.payroutecode ?? controller.agencyLeaveData?.payRouteCode ?? ""),
                                   width: 0.06),
                               DropDownField.formDropDown1WidthMap(
                                 controller.roBookingInitData?.lstsecondaryevents
-                                        ?.map((e) => DropDownValue(
-                                            key: (e.secondaryeventid ?? "")
-                                                .toString(),
-                                            value: e.secondaryevent))
+                                        ?.map((e) => DropDownValue(key: (e.secondaryeventid ?? "").toString(), value: e.secondaryevent))
                                         .toList() ??
                                     [],
                                 (value) {},
                                 "Sec Event",
                                 0.12,
                                 isEnable: controller.bookingNoLeaveData == null,
+                                selected: DropDownValue(
+                                  key: controller.bookingNoLeaveData?.secondaryEventId ?? "",
+                                  value: controller.bookingNoLeaveData?.secondaryEvent ?? "",
+                                ),
                               ),
                               DropDownField.formDropDown1WidthMap(
-                                controller.roBookingInitData
-                                        ?.lstSecondaryEventTrigger
-                                        ?.map((e) => DropDownValue(
-                                            key: (e.secondaryeventid ?? "")
-                                                .toString(),
-                                            value: e.secondaryevent))
+                                controller.roBookingInitData?.lstSecondaryEventTrigger
+                                        ?.map((e) => DropDownValue(key: (e.secondaryeventid ?? "").toString(), value: e.secondaryevent))
                                         .toList() ??
                                     [],
                                 (value) => {},
                                 "Trigger At",
                                 0.12,
+                                selected: DropDownValue(
+                                  key: controller.bookingNoLeaveData?.triggerId ?? "",
+                                  value: controller.bookingNoLeaveData?.triggerCaption ?? "",
+                                ),
                                 isEnable: controller.bookingNoLeaveData == null,
                               ),
                             ],
@@ -566,7 +473,6 @@ class RoBookingView extends StatelessWidget {
                     )
                   ],
                 ),
-                SizedBox(height: 10),
                 Obx(
                   () => CupertinoSlidingSegmentedControl(
                       groupValue: controller.currentTab.value,
@@ -581,33 +487,26 @@ class RoBookingView extends StatelessWidget {
                           ))),
                       onValueChanged: (value) {
                         controller.currentTab.value = value;
-                        controller.pagecontroller.jumpToPage(controller
-                            .tabs.entries
-                            .map((e) => e.key)
-                            .toList()
-                            .indexOf(value));
+                        controller.pagecontroller.jumpToPage(controller.tabs.entries.map((e) => e.key).toList().indexOf(value));
                       }),
                 ),
-                SizedBox(height: 5),
                 Expanded(
                   child: SizedBox(
                     child: GetBuilder<RoBookingController>(
                       init: controller,
                       id: "pageView",
-                      builder: (controller) =>
-                          controller.currentTab.value == null
-                              ? Container()
-                              : Padding(
-                                  padding: const EdgeInsets.all(8.0),
-                                  child: PageView.builder(
-                                      itemCount: controller.tabs.length,
-                                      physics: NeverScrollableScrollPhysics(),
-                                      controller: controller.pagecontroller,
-                                      itemBuilder: (context, val) {
-                                        return controller.tabs[
-                                            controller.tabs.keys.toList()[val]];
-                                      }),
-                                ),
+                      builder: (controller) => controller.currentTab.value == null
+                          ? Container()
+                          : Padding(
+                              padding: const EdgeInsets.all(8.0),
+                              child: PageView.builder(
+                                  itemCount: controller.tabs.length,
+                                  physics: NeverScrollableScrollPhysics(),
+                                  controller: controller.pagecontroller,
+                                  itemBuilder: (context, val) {
+                                    return controller.tabs[controller.tabs.keys.toList()[val]];
+                                  }),
+                            ),
                     ),
                   ),
                 ),
@@ -615,9 +514,7 @@ class RoBookingView extends StatelessWidget {
                   id: "buttons",
                   init: Get.find<HomeController>(),
                   builder: (btncontroller) {
-                    PermissionModel formPermissions = Get.find<MainController>()
-                        .permissionList!
-                        .lastWhere((element) {
+                    PermissionModel formPermissions = Get.find<MainController>().permissionList!.lastWhere((element) {
                       return element.appFormName == "frmROBooking";
                     });
                     return btncontroller.buttons == null
@@ -625,9 +522,7 @@ class RoBookingView extends StatelessWidget {
                         : Card(
                             margin: EdgeInsets.fromLTRB(4, 4, 4, 0),
                             shape: RoundedRectangleBorder(
-                              borderRadius: BorderRadius.only(
-                                  topLeft: Radius.circular(10),
-                                  topRight: Radius.circular(10)),
+                              borderRadius: BorderRadius.only(topLeft: Radius.circular(10), topRight: Radius.circular(10)),
                             ),
                             child: Container(
                               width: Get.width,
@@ -643,11 +538,7 @@ class RoBookingView extends StatelessWidget {
                                     FormButtonWrapper(
                                       btnText: btn["name"],
                                       // isEnabled: btn['isDisabled'],
-                                      callback: Utils.btnAccessHandler2(
-                                                  btn['name'],
-                                                  btncontroller,
-                                                  formPermissions) ==
-                                              null
+                                      callback: Utils.btnAccessHandler2(btn['name'], btncontroller, formPermissions) == null
                                           ? null
                                           : () => btnHanlder(controller, btn),
                                     ),
@@ -682,12 +573,8 @@ class RoBookingView extends StatelessWidget {
         controller.saveCheck();
         break;
       case "Search":
-        Get.to(SearchPage(
-            screenName: "Ro Booking",
-            isAppBarReq: true,
-            isPopup: true,
-            appBarName: "Ro Booking",
-            strViewName: "BMS_view_BookingDetail"));
+        Get.to(
+            SearchPage(screenName: "Ro Booking", isAppBarReq: true, isPopup: true, appBarName: "Ro Booking", strViewName: "BMS_view_BookingDetail"));
         break;
       case "Clear":
         Get.delete<RoBookingController>();

@@ -2469,6 +2469,7 @@ class DropDownField {
     String hint,
     double widthRatio, {
     double? height,
+    bool showMenuInbottom = true,
     double? paddingBottom,
     DropDownValue? selected,
     bool? isEnable,
@@ -2535,7 +2536,7 @@ class DropDownField {
                           final RenderBox renderBox = widgetKey!.currentContext?.findRenderObject() as RenderBox;
                           final offset = renderBox.localToGlobal(Offset.zero);
                           final left = offset.dx;
-                          final top = offset.dy + renderBox.size.height;
+                          final top = (offset.dy + renderBox.size.height);
                           final right = left + renderBox.size.width;
                           final width = renderBox.size.width;
                           if ((items == null || items.isEmpty)) {
@@ -2558,7 +2559,13 @@ class DropDownField {
                                 ]);
                           } else {
                             var tempList = RxList<DropDownValue>([]);
-                            tempList.addAll(items);
+                            // if (selected == null) {
+                            //   tempList.addAll(items);
+                            // } else {
+                            for (var i = 0; i < items.length; i++) {
+                              tempList.add(items[i]);
+                            }
+                            // }
                             showMenu(
                               context: context,
                               useRootNavigator: true,
@@ -2583,6 +2590,7 @@ class DropDownField {
                                             isCollapsed: true,
                                             hintText: "Search",
                                           ),
+                                          controller: TextEditingController(text: selected?.value ?? ""),
                                           autofocus: true,
                                           style: TextStyle(
                                             fontSize: SizeDefine.fontSizeInputField,
@@ -2595,6 +2603,10 @@ class DropDownField {
                                                   tempList.add(items[i]);
                                                 }
                                               }
+                                            } else {
+                                              tempList.clear();
+                                              tempList.addAll(items);
+                                              tempList.refresh();
                                             }
                                           }),
                                           inputFormatters: [
