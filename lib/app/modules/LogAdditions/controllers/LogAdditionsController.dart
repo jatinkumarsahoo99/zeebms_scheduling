@@ -25,7 +25,7 @@ class LogAdditionsController extends GetxController {
 
   //input controllers
   DropDownValue? selectLocation;
-  DropDownValue? selectChannel;
+  Rxn<DropDownValue> selectChannel=Rxn<DropDownValue>(null);
   DropDownValue? selectAdditions;
   PlutoGridStateManager? gridStateManager;
 
@@ -79,7 +79,7 @@ class LogAdditionsController extends GetxController {
       Get.find<ConnectorControl>().GETMETHODCALL(
           api: ApiFactory.LOG_ADDITION_SHOW_DETAILS(
               selectLocation!,
-              selectChannel!,
+              selectChannel.value!,
               selectedDate.text,
               verifyType.value == "Primary" ? true : false,
               isStandby.value,
@@ -118,7 +118,7 @@ class LogAdditionsController extends GetxController {
       Get.find<ConnectorControl>().GETMETHODCALL(
           api: ApiFactory.LOG_ADDITION_PREVIOUS_ADDITION(
             selectLocation?.value ?? "",
-            selectChannel?.value ?? "",
+            selectChannel?.value?.value ?? "",
             selectedDate.text,
             selectAdditions?.key ?? "",
           ),
@@ -158,7 +158,7 @@ class LogAdditionsController extends GetxController {
       Get.find<ConnectorControl>().GETMETHODCALL(
           api: ApiFactory.LOG_ADDITION_GET_ADDITIONS(
             selectLocation!,
-            selectChannel!,
+            selectChannel.value!,
             selectedDate.text,
           ),
           fun: (Map<String, dynamic> map) {
@@ -200,7 +200,7 @@ class LogAdditionsController extends GetxController {
       "remarks": remarks.text,
       "locationcode": selectLocation?.key ?? "",
       "locationName": selectLocation?.value ?? "",
-      "channelcode": selectChannel?.key ?? "",
+      "channelcode": selectChannel?.value?.key ?? "",
       "channelName": selectChannel?.value ?? "",
       "telecastDate": selectedDate.text,
       "chkIgnore": isIgnoreSpot.value,

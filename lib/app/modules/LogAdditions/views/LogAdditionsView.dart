@@ -47,6 +47,7 @@ class LogAdditionsView extends GetView<LogAdditionsController> {
                             controllerX.locations.value,
                             (value) {
                               controllerX.selectLocation = value;
+                              controllerX.selectChannel.value=null;
                               controllerX.getChannels(
                                   controllerX.selectLocation?.key ?? "");
                             },
@@ -65,12 +66,12 @@ class LogAdditionsView extends GetView<LogAdditionsController> {
                           () => DropDownField.formDropDown1WidthMap(
                             controllerX.channels.value,
                             (value) {
-                              controllerX.selectChannel = value;
+                              controllerX.selectChannel.value = value;
                             },
                             "Channel",
                             0.12,
                             isEnable: controllerX.isEnable.value,
-                            selected: controllerX.selectChannel,
+                            selected: controllerX.selectChannel.value,
                             autoFocus: true,
                             dialogWidth: 330,
                             dialogHeight: Get.height * .7,
