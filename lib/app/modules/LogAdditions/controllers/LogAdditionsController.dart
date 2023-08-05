@@ -148,11 +148,11 @@ class LogAdditionsController extends GetxController {
 
   getAdditionList() {
     if (selectLocation == null) {
-      Snack.callError("Please select location");
+      // Snack.callError("Please select location");
     } else if (selectChannel == null) {
-      Snack.callError("Please select channel");
+      // Snack.callError("Please select channel");
     } else if (selectedDate.text == "") {
-      Snack.callError("Please select date");
+      // Snack.callError("Please select date");
     } else {
       print("Channel is>>>" + jsonEncode(selectChannel?.toJson()));
       Get.find<ConnectorControl>().GETMETHODCALL(
