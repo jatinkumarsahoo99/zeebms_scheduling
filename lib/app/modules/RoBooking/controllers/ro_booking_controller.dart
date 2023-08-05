@@ -93,6 +93,7 @@ class RoBookingController extends GetxController {
   String? dealProgramCode;
   String? dealStartTime;
   String? dealTelecastDate;
+  var bookingsummaryDefault = RxBool(false);
 
   RoBookingSaveCheckTapeId? savecheckData;
 
@@ -526,6 +527,7 @@ class RoBookingController extends GetxController {
                 value: bookingTapeLeaveData?.cboSegNo);
             update(["init"]);
             update(["programView"]);
+            tapeIddropdownFocus.requestFocus();
           }
         });
   }

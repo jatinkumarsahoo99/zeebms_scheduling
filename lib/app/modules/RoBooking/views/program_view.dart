@@ -23,215 +23,223 @@ class ProgramView extends GetView<RoBookingController> {
           return Row(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              Container(
-                width: Get.width * 0.40,
-                child: Wrap(
-                  crossAxisAlignment: WrapCrossAlignment.end,
-                  spacing: 05,
-                  runSpacing: 05,
-                  children: [
-                    InputFields.formField1(
-                        // showTitle: false,
-                        hintTxt: "Tape ID",
-                        focusNode: controller.tapeIdFocus,
-                        controller: controller.tapeIDCtrl,
-                        width: 0.06 + (5 / Get.width)),
-                    Obx(
-                      () => DropDownField.formDropDown1WidthMap(
-                          controller.tapeIds.value
-                              .map((e) => DropDownValue(
-                                  key: e["exporttapecode"],
-                                  value: e["commercialcaption"]))
-                              .toList(),
-                          (value) => {
-                                controller.selectedTapeID = value,
-                                controller.tapIdLeave(value.key),
-                              },
-                          "",
-                          0.18 - (5 / Get.width),
-                          selected: controller.selectedTapeID,
-                          dialogWidth: Get.width * 0.24),
-                    ),
-                    // DropDownField.formDropDownSearchAPI2(GlobalKey(), context,
-                    //     width: Get.width * 0.12, title: "Tape Id", url: "url", onchanged: (value) {}),
-                    DropDownField.formDropDown1WidthMap(
-                      [
-                        DropDownValue(
-                            key: (1).toString(), value: (1).toString())
-                      ],
-                      (value) => {},
-                      "Seg",
-                      0.03,
-                      selected: controller.selectedSeg,
-                      dialogWidth: Get.width * 0.12,
-                    ),
-                    InputFields.formField1(
-                        // showTitle: false,
-                        hintTxt: "Duration",
-                        isEnable: false,
-                        controller: TextEditingController(
-                            text: (controller.bookingTapeLeaveData?.duration ??
-                                    "")
-                                .toString()),
-                        width: 0.09 - (5 / Get.width)),
-                    InputFields.formField1(
-                        // showTitle: false,
-                        hintTxt: "Caption",
-                        isEnable: false,
-                        controller: TextEditingController(
-                            text:
-                                (controller.bookingTapeLeaveData?.caption ?? "")
-                                    .toString()),
-                        width: 0.12),
-                    InputFields.formField1(
-                        // showTitle: false,
-                        hintTxt: "Agency Id",
-                        isEnable: false,
-                        controller: TextEditingController(
-                            text: (controller.bookingTapeLeaveData?.agencyId ??
-                                    "")
-                                .toString()),
-                        width: 0.12),
-                    InputFields.formField1(
-                        // showTitle: false,
-                        hintTxt: "Lanaguge",
-                        isEnable: false,
-                        controller: TextEditingController(
-                            text: (controller.bookingTapeLeaveData?.language ??
-                                    "")
-                                .toString()),
-                        width: 0.12),
-                    InputFields.formField1(
-                        // showTitle: false,
-                        hintTxt: "Rev Type",
-                        isEnable: false,
-                        controller: TextEditingController(
-                            text:
-                                (controller.bookingTapeLeaveData?.tapeRevenue ??
-                                        "")
-                                    .toString()),
-                        width: 0.12),
-                    InputFields.formField1(
-                        // showTitle: false,
-                        hintTxt: "Sub Rev",
-                        isEnable: false,
-                        controller: TextEditingController(
-                            text: (controller
-                                        .bookingTapeLeaveData?.tapeSubRevenue ??
-                                    "")
-                                .toString()),
-                        width: 0.12),
-                    InputFields.formField1(
-                        // showTitle: false,
-                        hintTxt: "Camp Peroid",
-                        isEnable: false,
-                        controller: TextEditingController(
-                            text: controller.bookingTapeLeaveData?.campStartDate
-                                ?.split(" ")[0]),
-                        width: 0.12),
-                    InputFields.formField1(
-                        // showTitle: false,
-                        hintTxt: "",
-                        isEnable: false,
-                        controller: TextEditingController(
-                            text: controller.bookingTapeLeaveData?.campEndDate
-                                ?.split(" ")[0]),
-                        width: 0.12),
-                    DateWithThreeTextField(
-                        isEnable: false,
-                        widthRation: 0.12,
-                        title: "Kill Date",
-                        mainTextController: TextEditingController(
-                            text:
-                                controller.bookingTapeLeaveData?.dtpKillDate !=
-                                        null
-                                    ? DateFormat("dd-MM-yyyy").format(
-                                        DateFormat("MM/dd/yyyy hh:mm:ss").parse(
-                                            controller.bookingTapeLeaveData!
-                                                .dtpKillDate!))
-                                    : null)),
-                    DropDownField.formDropDown1WidthMap(
-                        controller.roBookingInitData?.lstspotpositiontype
-                                ?.map((e) => DropDownValue(
-                                    key: (e.spotPositionTypeCode ?? "")
-                                        .toString(),
-                                    value: e.spotPositionTypeName))
-                                .toList() ??
-                            [],
+              FocusTraversalGroup(
+                policy: ReadingOrderTraversalPolicy(),
+                child: Container(
+                  width: Get.width * 0.40,
+                  child: Wrap(
+                    crossAxisAlignment: WrapCrossAlignment.end,
+                    spacing: 05,
+                    runSpacing: 05,
+                    children: [
+                      InputFields.formField1(
+                          // showTitle: false,
+                          hintTxt: "Tape ID",
+                          focusNode: controller.tapeIdFocus,
+                          controller: controller.tapeIDCtrl,
+                          width: 0.06 + (5 / Get.width)),
+                      Obx(
+                        () => DropDownField.formDropDown1WidthMap(
+                            controller.tapeIds.value
+                                .map((e) => DropDownValue(
+                                    key: e["exporttapecode"],
+                                    value: e["commercialcaption"]))
+                                .toList(),
+                            (value) => {
+                                  controller.selectedTapeID = value,
+                                  controller.tapIdLeave(value.key),
+                                },
+                            "",
+                            0.18 - (5 / Get.width),
+                            selected: controller.selectedTapeID,
+                            inkWellFocusNode: controller.tapeIddropdownFocus,
+                            dialogWidth: Get.width * 0.24),
+                      ),
+                      // DropDownField.formDropDownSearchAPI2(GlobalKey(), context,
+                      //     width: Get.width * 0.12, title: "Tape Id", url: "url", onchanged: (value) {}),
+                      DropDownField.formDropDown1WidthMap(
+                        [
+                          DropDownValue(
+                              key: (1).toString(), value: (1).toString())
+                        ],
                         (value) => {},
-                        "Pre-Mid",
-                        0.12,
-                        selected: controller.selectedPremid,
-                        isEnable: true),
-                    DropDownField.formDropDown1WidthMap(
-                        controller.roBookingInitData?.lstPosition
-                                ?.map((e) => DropDownValue(
-                                    key: (e.positioncode ?? "").toString(),
-                                    value: e.column1))
-                                .toList() ??
-                            [],
-                        (value) => {},
-                        "Position",
-                        0.12,
-                        selected: controller.selectedPosition,
-                        isEnable: true),
-                    DropDownField.formDropDown1WidthMap(
-                        List.generate(
-                            10,
-                            (index) => DropDownValue(
-                                key: (index + 1).toString(),
-                                value: (index + 1).toString())),
-                        (value) => {},
-                        "Break",
-                        0.12,
-                        selected: controller.selectedBreak,
-                        isEnable: true),
-                    FormButtonWrapper(
-                      btnText: "Seg",
-                      iconDataM: Icons.segment_rounded,
-                      callback: () {
-                        controller.getSegment(
-                            controller.programViewGrid?.currentRowIdx);
-                      },
-                    ),
-                    InputFields.formField1(
-                        // showTitle: false,
-                        hintTxt: "Rate",
-                        isEnable: false,
-                        controller: TextEditingController(
-                            text: controller.dealDblClickData?.rate ?? ""),
-                        width: 0.12),
-                    InputFields.formField1(
-                        // showTitle: false,
-                        hintTxt: "Total",
-                        isEnable: false,
-                        controller: TextEditingController(
-                            text: controller.bookingTapeLeaveData?.total ??
-                                controller.dealDblClickData?.total ??
-                                ""),
-                        width: 0.12),
-                    FormButtonWrapper(
-                      btnText: "Add Spots",
-                      iconDataM: Icons.addchart_rounded,
-                      callback: () {
-                        controller.addSpot();
-                      },
-                    ),
-                    FormButtonWrapper(
-                      btnText: "Deal",
-                      iconDataM: Icons.arrow_back_ios_new_rounded,
-                      callback: () {
-                        controller.pagecontroller.jumpToPage(0);
-                        controller.currentTab.value = "Deal";
-                      },
-                    ),
+                        "Seg",
+                        0.03,
+                        selected: controller.selectedSeg,
+                        dialogWidth: Get.width * 0.12,
+                      ),
+                      InputFields.formField1(
+                          // showTitle: false,
+                          hintTxt: "Duration",
+                          isEnable: false,
+                          controller: TextEditingController(
+                              text:
+                                  (controller.bookingTapeLeaveData?.duration ??
+                                          "")
+                                      .toString()),
+                          width: 0.09 - (5 / Get.width)),
+                      InputFields.formField1(
+                          // showTitle: false,
+                          hintTxt: "Caption",
+                          isEnable: false,
+                          controller: TextEditingController(
+                              text: (controller.bookingTapeLeaveData?.caption ??
+                                      "")
+                                  .toString()),
+                          width: 0.12),
+                      InputFields.formField1(
+                          // showTitle: false,
+                          hintTxt: "Agency Id",
+                          isEnable: false,
+                          controller: TextEditingController(
+                              text:
+                                  (controller.bookingTapeLeaveData?.agencyId ??
+                                          "")
+                                      .toString()),
+                          width: 0.12),
+                      InputFields.formField1(
+                          // showTitle: false,
+                          hintTxt: "Lanaguge",
+                          isEnable: false,
+                          controller: TextEditingController(
+                              text:
+                                  (controller.bookingTapeLeaveData?.language ??
+                                          "")
+                                      .toString()),
+                          width: 0.12),
+                      InputFields.formField1(
+                          // showTitle: false,
+                          hintTxt: "Rev Type",
+                          isEnable: false,
+                          controller: TextEditingController(
+                              text: (controller
+                                          .bookingTapeLeaveData?.tapeRevenue ??
+                                      "")
+                                  .toString()),
+                          width: 0.12),
+                      InputFields.formField1(
+                          // showTitle: false,
+                          hintTxt: "Sub Rev",
+                          isEnable: false,
+                          controller: TextEditingController(
+                              text: (controller.bookingTapeLeaveData
+                                          ?.tapeSubRevenue ??
+                                      "")
+                                  .toString()),
+                          width: 0.12),
+                      InputFields.formField1(
+                          // showTitle: false,
+                          hintTxt: "Camp Peroid",
+                          isEnable: false,
+                          controller: TextEditingController(
+                              text: controller
+                                  .bookingTapeLeaveData?.campStartDate
+                                  ?.split(" ")[0]),
+                          width: 0.12),
+                      InputFields.formField1(
+                          // showTitle: false,
+                          hintTxt: "",
+                          isEnable: false,
+                          controller: TextEditingController(
+                              text: controller.bookingTapeLeaveData?.campEndDate
+                                  ?.split(" ")[0]),
+                          width: 0.12),
+                      DateWithThreeTextField(
+                          isEnable: false,
+                          widthRation: 0.12,
+                          title: "Kill Date",
+                          mainTextController: TextEditingController(
+                              text: controller
+                                          .bookingTapeLeaveData?.dtpKillDate !=
+                                      null
+                                  ? DateFormat("dd-MM-yyyy").format(
+                                      DateFormat("MM/dd/yyyy hh:mm:ss").parse(
+                                          controller.bookingTapeLeaveData!
+                                              .dtpKillDate!))
+                                  : null)),
+                      DropDownField.formDropDown1WidthMap(
+                          controller.roBookingInitData?.lstspotpositiontype
+                                  ?.map((e) => DropDownValue(
+                                      key: (e.spotPositionTypeCode ?? "")
+                                          .toString(),
+                                      value: e.spotPositionTypeName))
+                                  .toList() ??
+                              [],
+                          (value) => {},
+                          "Pre-Mid",
+                          0.12,
+                          selected: controller.selectedPremid,
+                          isEnable: true),
+                      DropDownField.formDropDown1WidthMap(
+                          controller.roBookingInitData?.lstPosition
+                                  ?.map((e) => DropDownValue(
+                                      key: (e.positioncode ?? "").toString(),
+                                      value: e.column1))
+                                  .toList() ??
+                              [],
+                          (value) => {},
+                          "Position",
+                          0.12,
+                          selected: controller.selectedPosition,
+                          isEnable: true),
+                      DropDownField.formDropDown1WidthMap(
+                          List.generate(
+                              10,
+                              (index) => DropDownValue(
+                                  key: (index + 1).toString(),
+                                  value: (index + 1).toString())),
+                          (value) => {},
+                          "Break",
+                          0.12,
+                          selected: controller.selectedBreak,
+                          isEnable: true),
+                      FormButtonWrapper(
+                        btnText: "Seg",
+                        iconDataM: Icons.segment_rounded,
+                        callback: () {
+                          controller.getSegment(
+                              controller.programViewGrid?.currentRowIdx);
+                        },
+                      ),
+                      InputFields.formField1(
+                          // showTitle: false,
+                          hintTxt: "Rate",
+                          isEnable: false,
+                          controller: TextEditingController(
+                              text: controller.dealDblClickData?.rate ?? ""),
+                          width: 0.12),
+                      InputFields.formField1(
+                          // showTitle: false,
+                          hintTxt: "Total",
+                          isEnable: false,
+                          controller: TextEditingController(
+                              text: controller.bookingTapeLeaveData?.total ??
+                                  controller.dealDblClickData?.total ??
+                                  ""),
+                          width: 0.12),
+                      FormButtonWrapper(
+                        btnText: "Add Spots",
+                        iconDataM: Icons.addchart_rounded,
+                        callback: () {
+                          controller.addSpot();
+                        },
+                      ),
+                      FormButtonWrapper(
+                        btnText: "Deal",
+                        iconDataM: Icons.arrow_back_ios_new_rounded,
+                        callback: () {
+                          controller.pagecontroller.jumpToPage(0);
+                          controller.currentTab.value = "Deal";
+                        },
+                      ),
 
-                    // Row(
-                    //   mainAxisSize: MainAxisSize.min,
-                    //   crossAxisAlignment: CrossAxisAlignment.end,
-                    //   children: [],
-                    // )
-                  ],
+                      // Row(
+                      //   mainAxisSize: MainAxisSize.min,
+                      //   crossAxisAlignment: CrossAxisAlignment.end,
+                      //   children: [],
+                      // )
+                    ],
+                  ),
                 ),
               ),
               Container(
