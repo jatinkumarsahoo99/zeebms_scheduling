@@ -8,6 +8,7 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:bms_scheduling/widgets/PlutoGrid/pluto_grid.dart';
 
+import '../../../../widgets/gridFromMap.dart';
 import '../../../controller/HomeController.dart';
 import '../controllers/ro_cancellation_controller.dart';
 
@@ -37,14 +38,19 @@ class RoCancellationView extends StatelessWidget {
                 children: [
                   Obx(
                     () => DropDownField.formDropDown1WidthMap(
-                        controller.locations.value, (value) {
-                      controller.selectedLocation = value;
-                      controller.getChannel(value.key);
-                    }, "Location", 0.24),
+                      controller.locations.value,
+                      (value) {
+                        controller.selectedLocation = value;
+                        controller.getChannel(value.key);
+                      },
+                      "Location",
+                      0.24,
+                      autoFocus: true,
+                      inkWellFocusNode: controller.locFN,
+                    ),
                   ),
                   Obx(
-                    () => DropDownField.formDropDown1WidthMap(
-                        controller.channels.value, (value) {
+                    () => DropDownField.formDropDown1WidthMap(controller.channels.value, (value) {
                       controller.selectedChannel = value;
                     }, "Channel", 0.24),
                   ),
@@ -67,81 +73,65 @@ class RoCancellationView extends StatelessWidget {
                                 isEnable: controller.enableEffDate.value,
                                 title: "Eff. Date",
                                 onFocusChange: (value) {
-                                  controller.cancelMonthctrl.text =
-                                      value.split("-")[2] + value.split("-")[1];
+                                  controller.cancelMonthctrl.text = value.split("-")[2] + value.split("-")[1];
                                   controller.enableCancelMonth.value = false;
                                 },
                                 mainTextController: controller.effDatectrl),
                           )
                         ],
                       )),
+                  InputFields.formField1(hintTxt: "Reference", width: 0.24, controller: controller.refNumberctrl),
                   InputFields.formField1(
-                      hintTxt: "Reference",
-                      width: 0.24,
-                      controller: controller.refNumberctrl),
-                  InputFields.formField1(
-                      hintTxt: "Booking No",
-                      width: 0.24,
-                      focusNode: controller.bookingNumberFocus,
-                      controller: controller.bookingNumberctrl),
+                      hintTxt: "Booking No", width: 0.24, focusNode: controller.bookingNumberFocus, controller: controller.bookingNumberctrl),
                   SizedBox(
                       width: Get.width * 0.45,
-                      child: Row(
-                          mainAxisSize: MainAxisSize.max,
-                          mainAxisAlignment: MainAxisAlignment.start,
-                          children: [
-                            Obx(
-                              () => InputFields.formField1(
-                                  isEnable: controller.enableCancelMonth.value,
-                                  width: 0.18,
-                                  hintTxt: "Cancel No",
-                                  controller: controller.cancelMonthctrl),
-                            ),
-                            Obx(
-                              () => InputFields.formField1(
-                                  isEnable: controller.enableCancelNumber.value,
-                                  width: 0.27,
-                                  focusNode: controller.cancelNumberFocus,
-                                  hintTxt: "",
-                                  controller: controller.cancelNumberctrl),
-                            )
-                          ])),
+                      child: Row(mainAxisSize: MainAxisSize.max, mainAxisAlignment: MainAxisAlignment.start, children: [
+                        InputFields.formField1(
+                          isEnable: false,
+                          width: 0.18,
+                          hintTxt: "Cancel No",
+                          controller: controller.cancelMonthctrl,
+                        ),
+                        Obx(
+                          () => InputFields.formField1(
+                              isEnable: controller.enableCancelNumber.value,
+                              width: 0.27,
+                              focusNode: controller.cancelNumberFocus,
+                              hintTxt: "",
+                              controller: controller.cancelNumberctrl),
+                        )
+                      ])),
                   Obx(
                     () => InputFields.formField1(
-                        width: 0.24,
-                        isEnable: controller.enableBrandClientAgent.value,
-                        hintTxt: "Client",
-                        controller: controller.clientctrl),
+                        width: 0.24, isEnable: controller.enableBrandClientAgent.value, hintTxt: "Client", controller: controller.clientctrl),
                   ),
                   Obx(
                     () => InputFields.formField1(
-                        width: 0.24,
-                        isEnable: controller.enableBrandClientAgent.value,
-                        hintTxt: "Agency",
-                        controller: controller.agencyctrl),
+                        width: 0.24, isEnable: controller.enableBrandClientAgent.value, hintTxt: "Agency", controller: controller.agencyctrl),
                   ),
                   Obx(
                     () => InputFields.formField1(
-                        width: 0.24,
-                        isEnable: controller.enableBrandClientAgent.value,
-                        hintTxt: "Brand",
-                        controller: controller.brandctrl),
+                        width: 0.24, isEnable: controller.enableBrandClientAgent.value, hintTxt: "Brand", controller: controller.brandctrl),
                   ),
                   Obx(() => InkWell(
                         onTap: () {
-                          controller.selectAll.value =
-                              !controller.selectAll.value;
-                          controller.roCancellationGridManager!
-                              .toggleAllRowChecked(controller.selectAll.value);
+                          if (controller.roCancellationGridManager != null &&
+                              controller.roCancellationData?.cancellationData?.lstBookingNoStatusData != null) {
+                            controller.selectAll.value = !controller.selectAll.value;
+                            for (var i = 0; i < (controller.roCancellationData!.cancellationData!.lstBookingNoStatusData!.length); i++) {
+                              controller.roCancellationData!.cancellationData!.lstBookingNoStatusData?[i].requested = controller.selectAll.value;
+                              controller.roCancellationGridManager!.changeCellValue(
+                                  controller.roCancellationGridManager!.getRowByIdx(i)!.cells['requested']!, controller.selectAll.value.toString());
+                            }
+                            // controller.roCancellationGridManager!.toggleAllRowChecked(controller.selectAll.value);
+                          }
                         },
                         focusNode: controller.selectAllFocus,
                         child: Row(
                           crossAxisAlignment: CrossAxisAlignment.center,
                           mainAxisSize: MainAxisSize.min,
                           children: [
-                            Icon(controller.selectAll.value
-                                ? Icons.check_box_outlined
-                                : Icons.check_box_outline_blank_outlined),
+                            Icon(controller.selectAll.value ? Icons.check_box_outlined : Icons.check_box_outline_blank_outlined),
                             Text("Select All Spots"),
                           ],
                         ),
@@ -165,14 +155,10 @@ class RoCancellationView extends StatelessWidget {
               child: Row(
                 mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                 children: [
-                  Obx(() => Text(
-                      "Total Spots: ${controller.intTotalCount.value ?? "--"}")),
-                  Obx(() => Text(
-                      "Total Duration: ${controller.intTotalDuration.value ?? "--"}")),
-                  Obx(() => Text(
-                      "Total Amount: ${controller.intTotalAmount.value ?? "--"}")),
-                  Obx(() => Text(
-                      "Total Val. Amount: ${controller.intTotalValuationAmount.value ?? "--"}")),
+                  Obx(() => Text("Total Spots: ${controller.intTotalCount.value ?? "--"}")),
+                  Obx(() => Text("Total Duration: ${controller.intTotalDuration.value ?? "--"}")),
+                  Obx(() => Text("Total Amount: ${controller.intTotalAmount.value ?? "--"}")),
+                  Obx(() => Text("Total Val. Amount: ${controller.intTotalValuationAmount.value ?? "--"}")),
                 ],
               ),
             ),
@@ -196,59 +182,75 @@ class RoCancellationView extends StatelessWidget {
                       id: "cancelData",
                       builder: (cancelDatactrl) {
                         if (cancelDatactrl.roCancellationData == null ||
-                            cancelDatactrl
-                                    .roCancellationData!.cancellationData ==
-                                null ||
-                            cancelDatactrl.roCancellationData!.cancellationData!
-                                    .lstBookingNoStatusData ==
-                                null ||
-                            cancelDatactrl.roCancellationData!.cancellationData!
-                                .lstBookingNoStatusData!.isEmpty) {
+                            cancelDatactrl.roCancellationData!.cancellationData == null ||
+                            cancelDatactrl.roCancellationData!.cancellationData!.lstBookingNoStatusData == null ||
+                            cancelDatactrl.roCancellationData!.cancellationData!.lstBookingNoStatusData!.isEmpty) {
                           return Container(
                             width: Get.width * .9,
-                            decoration: BoxDecoration(
-                                border: Border.all(color: Colors.grey[300]!)),
+                            decoration: BoxDecoration(border: Border.all(color: Colors.grey[300]!)),
                           );
                         } else {
                           return Container(
                             width: Get.width * .9,
-                            child: DataGridShowOnlyKeys(
-                                onRowChecked: (rowcheckEvent) {
-                                  controller
-                                      .roCancellationData!
-                                      .cancellationData!
-                                      .lstBookingNoStatusData![
-                                          rowcheckEvent.rowIdx!]
-                                      .requested = rowcheckEvent.isChecked;
-                                  rowcheckEvent.row!.cells["requested"]!.value =
-                                      "${rowcheckEvent.isChecked}";
-                                },
-                                hideCode: false,
-                                hideKeys: ["channelcode", "locationcode"],
-                                rowCheckColor: Colors.white,
-                                checkRow: true,
-                                onload: (loadEvent) {
-                                  controller.roCancellationGridManager =
-                                      loadEvent.stateManager;
-                                  for (var i = 0;
-                                      i < loadEvent.stateManager.rows.length;
-                                      i++) {
-                                    PlutoRow row =
-                                        loadEvent.stateManager.rows[i];
-                                    if (row.cells["requested"]!.value == true ||
-                                        row.cells["requested"]!.value ==
-                                            "true") {
-                                      loadEvent.stateManager
-                                          .setRowChecked(row, true);
-                                    }
-                                  }
-                                },
-                                hideCheckKeysValue: true,
-                                checkRowKey: "requested",
-                                mapData: cancelDatactrl.roCancellationData!
-                                    .cancellationData!.lstBookingNoStatusData!
-                                    .map((e) => e.toJson(fromSave: false))
-                                    .toList()),
+                            child: DataGridFromMap3(
+                              checkBoxColumnKey: ['requested'],
+                              // actionIconKey: ['requested'],
+
+                              // onRowChecked: (rowcheckEvent) {
+                              //   controller
+                              //       .roCancellationData!
+                              //       .cancellationData!
+                              //       .lstBookingNoStatusData![
+                              //           rowcheckEvent.rowIdx!]
+                              //       .requested = rowcheckEvent.isChecked;
+                              //   rowcheckEvent.row!.cells["requested"]!.value =
+                              //       "${rowcheckEvent.isChecked}";
+                              // },
+                              // hideCode: false,
+                              // hideKeys: ["channelcode", "locationcode"],
+                              // rowCheckColor: Colors.white,
+                              // checkRow: true,
+                              checkBoxStrComparison: "true",
+                              uncheckCheckBoxStr: "false",
+
+                              onload: (loadEvent) {
+                                controller.roCancellationGridManager = loadEvent.stateManager;
+                                // for (var i = 0;
+                                //     i < loadEvent.stateManager.rows.length;
+                                //     i++) {
+                                //   PlutoRow row =
+                                //       loadEvent.stateManager.rows[i];
+                                //   if (row.cells["requested"]!.value == true ||
+                                //       row.cells["requested"]!.value ==
+                                //           "true") {
+                                //     loadEvent.stateManager
+                                //         .setRowChecked(row, true);
+                                //   }
+                                // }
+                              },
+                              // hideCheckKeysValue: true,
+                              // checkRowKey: "requested",
+                              // actionOnPress: (position, isSpaceCalled) {},
+                              onEdit: (event) {
+                                if (!(event.value == "true")) {
+                                  controller.roCancellationGridManager!.changeCellValue(
+                                    controller.roCancellationGridManager!.getRowByIdx(event.rowIdx)!.cells['requested']!,
+                                    'true',
+                                    callOnChangedEvent: false,
+                                    force: true,
+                                    notify: true,
+                                  );
+                                } else {
+                                  cancelDatactrl.roCancellationData!.cancellationData!.lstBookingNoStatusData![event.rowIdx].requested =
+                                      event.value == "true";
+                                  print(cancelDatactrl.roCancellationData!.cancellationData!.lstBookingNoStatusData![event.rowIdx].requested);
+                                }
+                              },
+
+                              mapData: cancelDatactrl.roCancellationData!.cancellationData!.lstBookingNoStatusData!
+                                  .map((e) => e.toJson(fromSave: false))
+                                  .toList(),
+                            ),
                           );
                         }
                       }),

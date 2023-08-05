@@ -203,7 +203,7 @@ class LstBookingNoStatusData {
       data['agencyname'] = agencyname;
       data['valuationAmount'] = valuationAmount;
     } else {
-      data['requested'] = requested;
+      data['requested'] = (requested ?? false).toString();
       data['programName'] = programName;
       data['scheduleDate'] = scheduleDate;
       data['scheduleTime'] = scheduleTime;

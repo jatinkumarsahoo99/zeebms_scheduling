@@ -1,5 +1,6 @@
 import 'dart:convert';
 
+import 'package:bms_scheduling/app/controller/MainController.dart';
 import 'package:bms_scheduling/app/modules/RoCancellation/bindings/ro_cancellation_data.dart';
 import 'package:bms_scheduling/app/modules/RoCancellation/bindings/ro_cancellation_doc.dart';
 import 'package:bms_scheduling/app/providers/ApiFactory.dart';
@@ -28,6 +29,7 @@ class RoCancellationController extends GetxController {
   RxList<DropDownValue> channels = <DropDownValue>[].obs;
   TextEditingController cancelDatectrl = TextEditingController();
   DropDownValue? selectedLocation;
+  FocusNode locFN = FocusNode();
   DropDownValue? selectedChannel;
   TextEditingController effDatectrl = TextEditingController();
   TextEditingController refNumberctrl = TextEditingController();
@@ -233,8 +235,9 @@ class RoCancellationController extends GetxController {
   docs() async {
     Get.defaultDialog(
       title: "Documents",
-      content:
-          CommonDocsView(documentKey: "ROCancellation${selectedLocation!.key}${selectedChannel!.key}${cancelMonthctrl.text}${cancelNumberctrl.text}"),
+      content: CommonDocsView(
+        documentKey: "ROCancellation${selectedLocation!.key}${selectedChannel!.key}${cancelMonthctrl.text}${cancelNumberctrl.text}",
+      ),
     ).then((value) {
       Get.delete<CommonDocsController>(tag: "commonDocs");
     });
@@ -363,35 +366,42 @@ class RoCancellationController extends GetxController {
   }
 
   save() {
-    print("RO SAVE CALLED>>>");
-    LoadingDialog.call();
-    Get.find<ConnectorControl>().POSTMETHOD(
-        api: ApiFactory.RO_CANCELLATION_SAVE,
-        json: {
-          "locationCode": selectedLocation!.key,
-          "channelCode": selectedChannel!.key,
-          "cancelMonth": int.tryParse(cancelMonthctrl.text) ?? 0,
-          "cancelNumber": int.tryParse(cancelNumberctrl.text) ?? 0,
-          "cancelDate": DateFormat("yyyy-MM-dd").format(DateFormat("dd-MM-yyyy").parse(cancelDatectrl.text)),
-          "referenceNumber": refNumberctrl.text,
-          "bookingnumber": bookingNumberctrl.text,
-          "modifiedBy": "string",
-          "lstdgvList": roCancellationData!.cancellationData!.lstBookingNoStatusData!.map((e) => e.toJson()).toList()
-        },
-        fun: (data) {
-          Get.back();
-          if (data is String) {
-            LoadingDialog.callErrorMessage1(msg: data);
-          } else if (data is Map && data.containsKey("saveInfo")) {
-            if (data["saveInfo"]["message"] == "Records saved successfully") {
-              LoadingDialog.callDataSaved(msg: data["saveInfo"]["message"]);
-            } else {
-              LoadingDialog.callInfoMessage(data["saveInfo"]["message"]);
+    if (selectedLocation == null) {
+      LoadingDialog.showErrorDialog("Please select Location.");
+    } else if (selectedChannel == null) {
+      LoadingDialog.showErrorDialog("Please select Channel.");
+    } else if (refNumberctrl.text.isEmpty || bookingNumberctrl.text.isEmpty) {
+      LoadingDialog.showErrorDialog("Please enter Reference number and Booking No.");
+    } else if (roCancellationData?.cancellationData?.lstBookingNoStatusData?.isEmpty ?? true) {
+      LoadingDialog.showErrorDialog("Please load data.");
+    } else {
+      LoadingDialog.call();
+      Get.find<ConnectorControl>().POSTMETHOD(
+          api: ApiFactory.RO_CANCELLATION_SAVE,
+          json: {
+            "locationCode": selectedLocation!.key,
+            "channelCode": selectedChannel!.key,
+            "cancelMonth": int.tryParse(cancelMonthctrl.text) ?? 0,
+            "cancelNumber": int.tryParse(cancelNumberctrl.text) ?? 0,
+            "cancelDate": DateFormat("yyyy-MM-dd").format(DateFormat("dd-MM-yyyy").parse(cancelDatectrl.text)),
+            "referenceNumber": refNumberctrl.text,
+            "bookingnumber": bookingNumberctrl.text,
+            "modifiedBy": Get.find<MainController>().user?.logincode,
+            "lstdgvList": roCancellationData!.cancellationData!.lstBookingNoStatusData!.map((e) => e.toJson()).toList()
+          },
+          fun: (data) {
+            Get.back();
+            if (data is String) {
+              LoadingDialog.callErrorMessage1(msg: data);
+            } else if (data is Map && data.containsKey("saveInfo")) {
+              if (data["saveInfo"]["message"] == "Records saved successfully") {
+                LoadingDialog.callDataSaved(msg: data["saveInfo"]["message"]);
+              } else {
+                LoadingDialog.callInfoMessage(data["saveInfo"]["message"]);
+              }
             }
-          }
-        });
-
-    print("ON BOOKING NUMBER LEAVE END>>>");
+          });
+    }
   }
 
   importfile() {
