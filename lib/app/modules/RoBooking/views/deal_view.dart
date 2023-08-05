@@ -58,8 +58,15 @@ class DealView extends GetView<RoBookingController> {
                                   onload: (load) {
                                     gridcontroller.dealViewGrid =
                                         load.stateManager;
+                                    // if (controller.currentGridCell != null) {
+                                    //   load.stateManager.setCurrentCell(
+                                    //       controller.currentGridCell,
+                                    //       controller
+                                    //           .currentGridCell?.row.sortIdx);
+                                    // }
                                   },
                                   onRowDoubleTap: (value) {
+                                    controller.currentGridCell = value.cell;
                                     gridcontroller.dealdoubleclick(
                                         gridcontroller.dealViewGrid!.columns
                                             .indexWhere((element) =>
