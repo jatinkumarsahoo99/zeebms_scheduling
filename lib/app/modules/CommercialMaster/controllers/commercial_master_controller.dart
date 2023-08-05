@@ -355,14 +355,13 @@ class CommercialMasterController extends GetxController {
                 LoadingDialog.callDataSavedMessage("Record Saved Successfully",callback: (){
                   clearAll();
                 });
-
               } else {
                 // Get.back();
-                Snack.callError(map??"Something went wrong");
+                Snack.callError((map??"Something went wrong").toString());
               }
             } else {
               // Get.back();
-              Snack.callError(map??"Something went wrong");
+              Snack.callError((map??"Something went wrong").toString());
             }
           });
     }

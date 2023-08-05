@@ -392,7 +392,7 @@ class BrandMasterController extends GetxController {
               clearAll();
               Snack.callSuccess(map['brandMater']??"");
             }else{
-              Snack.callError(map??"Something went wrong");
+              Snack.callError((map??"Something went wrong").toString());
             }
           });
 
