@@ -93,7 +93,7 @@ class CancellationData {
 }
 
 class LstBookingNoStatusData {
-  bool? requested;
+  bool? requested, requested1;
   String? programName;
   String? scheduleDate;
   String? scheduleTime;
@@ -147,7 +147,8 @@ class LstBookingNoStatusData {
       this.valuationAmount});
 
   LstBookingNoStatusData.fromJson(Map<String, dynamic> json) {
-    requested = json['requested'];
+    requested = json['requested'] ?? false;
+    requested1 = json['requested'] ?? false;
     programName = json['programName'];
     scheduleDate = json['scheduleDate'];
     scheduleTime = json['scheduleTime'];

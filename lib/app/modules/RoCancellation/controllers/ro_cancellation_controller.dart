@@ -17,12 +17,12 @@ import 'package:bms_scheduling/widgets/PlutoGrid/pluto_grid.dart';
 import 'package:dio/dio.dart' as dio;
 
 import '../../../controller/ConnectorControl.dart';
+import '../../../controller/HomeController.dart';
 import '../../../data/DropDownValue.dart';
 import '../../CommonDocs/controllers/common_docs_controller.dart';
 import '../../CommonDocs/views/common_docs_view.dart';
 
 class RoCancellationController extends GetxController {
-  //TODO: Implement RoCancellationController
   PlatformFile? importedFile;
   DateFormat df2 = DateFormat("yyyy-MM-dd");
   RxList<DropDownValue> locations = <DropDownValue>[].obs;
@@ -60,9 +60,11 @@ class RoCancellationController extends GetxController {
   var enableBrandClientAgent = RxBool(true);
   var selectAll = RxBool(false);
   bool cancelFetchData = false;
+  double widthratio = .22;
 
   @override
-  void onInit() {
+  void onReady() {
+    super.onReady();
     getLocation();
     bookingNumberFocus.addListener(() {
       if (!bookingNumberFocus.hasFocus) {
@@ -78,15 +80,27 @@ class RoCancellationController extends GetxController {
         }
       }
     });
-    super.onInit();
+  }
+
+  formHandler(String btnName) {
+    if (btnName == "Save") {
+      save();
+    } else if (btnName == "Clear") {
+      Get.delete<RoCancellationController>();
+      Get.find<HomeController>().clearPage1();
+    } else if (btnName == "Docs") {
+      docs();
+    }
   }
 
   getLocation() {
+    LoadingDialog.call();
     locations.value = [];
     try {
       Get.find<ConnectorControl>().GETMETHODCALL(
           api: ApiFactory.RO_CANCELLATION_LOCATION,
           fun: (data) {
+            Get.back();
             if ((data as Map).containsKey("lstLocation") && data["lstLocation"] is List) {
               for (var e in data["lstLocation"]) {
                 locations.add(DropDownValue(key: e["locationCode"], value: e["locationName"]));
@@ -102,11 +116,13 @@ class RoCancellationController extends GetxController {
   }
 
   getChannel(locationCode) {
+    LoadingDialog.call();
     channels.value = [];
     try {
       Get.find<ConnectorControl>().GETMETHODCALL(
           api: ApiFactory.RO_CANCELLATION_CHANNNEL(locationCode),
           fun: (data) {
+            Get.back();
             if ((data as Map).containsKey("lstChannel") && data["lstChannel"] is List) {
               for (var e in data["lstChannel"]) {
                 channels.add(DropDownValue(key: e["channelcode"], value: e["channelName"]));
@@ -126,7 +142,9 @@ class RoCancellationController extends GetxController {
   }
 
   onBookingNoLeave(bookingNo) {
-    print("ON BOOKING NUMBER LEAVE CALLED>>>");
+    // print("ON BOOKING NUMBER LEAVE CALLED>>>");
+    LoadingDialog.call();
+
     try {
       Get.find<ConnectorControl>().POSTMETHOD(
           api: ApiFactory.RO_CANCELLATION_BOOKINGNO_LEAVE,
@@ -138,6 +156,7 @@ class RoCancellationController extends GetxController {
             "cancelNumber": 0
           },
           fun: (data) {
+            Get.back();
             try {
               roCancellationData = RoCancellationData.fromJson(data);
               if (roCancellationData != null && roCancellationData!.cancellationData != null) {
@@ -155,7 +174,8 @@ class RoCancellationController extends GetxController {
   }
 
   onCancelNoLeave() {
-    print("ON BOOKING NUMBER LEAVE CALLED>>>");
+    // print("ON BOOKING NUMBER LEAVE CALLED>>>");
+    LoadingDialog.call();
     try {
       Get.find<ConnectorControl>().POSTMETHOD(
           api: ApiFactory.RO_CANCELLATION_CANCEL_LEAVE,
@@ -167,6 +187,7 @@ class RoCancellationController extends GetxController {
             "cancelNumber": cancelNumberctrl.text
           },
           fun: (data) {
+            Get.back();
             if (data is Map) {
               parseCancelLeaveData(data["showCancelData"]);
             }
@@ -236,102 +257,11 @@ class RoCancellationController extends GetxController {
     Get.defaultDialog(
       title: "Documents",
       content: CommonDocsView(
-        documentKey: "ROCancellation${selectedLocation!.key}${selectedChannel!.key}${cancelMonthctrl.text}${cancelNumberctrl.text}",
+        documentKey: "ROCancellation${selectedLocation?.key ?? ''}${selectedChannel?.key ?? ''}${cancelMonthctrl.text}${cancelNumberctrl.text}",
       ),
     ).then((value) {
       Get.delete<CommonDocsController>(tag: "commonDocs");
     });
-    // PlutoGridStateManager? viewDocsStateManger;
-    // try {
-    //   LoadingDialog.call();
-    //   await Get.find<ConnectorControl>().GETMETHODCALL(
-    //       api: ApiFactory.RO_CANCELLATION_LOAD_DOC(
-    //           "ROCancellation ${selectedLocation!.key}${selectedChannel!.key}${cancelMonthctrl.text}${cancelNumberctrl.text}"),
-    //       fun: (data) {
-    //         if (data is Map && data.containsKey("info_GetAllDocument")) {
-    //           documents = [];
-    //           for (var doc in data["info_GetAllDocument"]) {
-    //             documents.add(RoCancellationDocuments.fromJson(doc));
-    //           }
-    //           Get.back();
-    //         }
-    //       });
-    // } catch (e) {
-    //   Get.back();
-    // }
-
-    // Get.defaultDialog(
-    //     title: "Documents",
-    //     content: Container(
-    //       width: Get.width / 2.5,
-    //       height: Get.height / 2.5,
-    //       child: DataGridShowOnlyKeys(
-    //         mapData: documents.map((e) => e.toJson()).toList(),
-    //         onload: (loadGrid) {
-    //           viewDocsStateManger = loadGrid.stateManager;
-    //         },
-    //       ),
-    //     ),
-    //     actions: {
-    //       "Add Doc": () async {},
-    //       "View Doc": () {},
-    //       "Attach Email": () {}
-    //     }
-    //         .entries
-    //         .map((e) => FormButtonWrapper(
-    //               btnText: e.key,
-    //               callback: e.key == "Add Doc"
-    //                   ? () async {
-    //                       FilePickerResult? result =
-    //                           await FilePicker.platform.pickFiles();
-
-    //                       if (result != null && result.files.single != null) {
-    //                         LoadingDialog.call();
-    //                         await Get.find<ConnectorControl>().POSTMETHOD(
-    //                             api: ApiFactory.RO_CANCELLATION_ADD_DOC,
-    //                             fun: (data) {
-    //                               if (data is Map &&
-    //                                   data.containsKey("addingDocument")) {
-    //                                 for (var doc in data["addingDocument"]) {
-    //                                   documents.add(
-    //                                       RoCancellationDocuments.fromJson(
-    //                                           doc));
-    //                                 }
-    //                                 Get.back();
-    //                                 docs();
-    //                               }
-    //                             },
-    //                             json: {
-    //                               "documentKey":
-    //                                   "ROCancellation ${selectedLocation!.key}${selectedChannel!.key}${cancelMonthctrl.text}${cancelNumberctrl.text}",
-    //                               "strFilePath": result.files.first.name,
-    //                               "bytes": base64.encode(List<int>.from(
-    //                                   result.files.first.bytes ?? []))
-    //                             });
-    //                         Get.back();
-    //                       }
-    //                     }
-    //                   : e.key == "View Doc"
-    //                       ? () {
-    //                           Get.find<ConnectorControl>().GETMETHODCALL(
-    //                               api: ApiFactory.RO_CANCELLATION_VIEW_DOC(
-    //                                   documents[viewDocsStateManger!
-    //                                           .currentCell!.row.sortIdx]
-    //                                       .documentId),
-    //                               fun: (data) {
-    //                                 if (data is Map &&
-    //                                     data.containsKey("addingDocument")) {
-    //                                   ExportData().exportFilefromByte(
-    //                                       base64Decode(data["addingDocument"][0]
-    //                                           ["documentData"]),
-    //                                       data["addingDocument"][0]
-    //                                           ["documentname"]);
-    //                                 }
-    //                               });
-    //                         }
-    //                       : () {},
-    //             ))
-    //         .toList());
   }
 
   calculate() {
@@ -443,15 +373,5 @@ class RoCancellationController extends GetxController {
     } else {
       // User canceled the pic5ker
     }
-  }
-
-  @override
-  void onReady() {
-    super.onReady();
-  }
-
-  @override
-  void onClose() {
-    super.onClose();
   }
 }
