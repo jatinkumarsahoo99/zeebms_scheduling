@@ -60,10 +60,6 @@ PlutoGridConfiguration plutoGridConfiguration({
             LogicalKeySet(LogicalKeyboardKey.enter): CustomEnterKeyAction(actionOnPress: actionOnPress, actionKey: actionKey),
           },
         ),
-        columnSize: PlutoGridColumnSizeConfig(
-          resizeMode: PlutoResizeMode.normal,
-          autoSizeMode: autoScale ? PlutoAutoSizeMode.scale : PlutoAutoSizeMode.none,
-        ),
         style: PlutoGridStyleConfig(
             rowHeight: 35,
             columnHeight: 30,
@@ -86,7 +82,6 @@ PlutoGridConfiguration plutoGridConfiguration({
         enterKeyAction: PlutoGridEnterKeyAction.none,
         tabKeyAction: PlutoGridTabKeyAction.moveToNextOnEdge,
         scrollbar: const PlutoGridScrollbarConfig(draggableScrollbar: true, isAlwaysShown: true, hoverWidth: 15));
-
 
 PlutoGridConfiguration plutoGridConfigurationTransmisionLog({
   Function? actionOnPress,

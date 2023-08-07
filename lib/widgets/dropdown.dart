@@ -2590,7 +2590,7 @@ class DropDownField {
                                             isCollapsed: true,
                                             hintText: "Search",
                                           ),
-                                          controller: TextEditingController(text: selected?.value ?? ""),
+                                          controller: TextEditingController(),
                                           autofocus: true,
                                           style: TextStyle(
                                             fontSize: SizeDefine.fontSizeInputField,

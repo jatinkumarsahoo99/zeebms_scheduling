@@ -408,7 +408,7 @@ class RoRescheduleController extends GetxController {
     Get.find<ConnectorControl>().POSTMETHOD(
         api: ApiFactory.RO_RESCHEDULE_MODIFY,
         json: {
-          "exportTapeCode": modifySelectedTapeCode!.key!,
+          "exportTapeCode": modifySelectedTapeCode!.value!,
           "segmentNumber": roRescheduleOnLeaveData!.lstDgvRO![plutoGridStateManager!.currentCell!.row.sortIdx].segmentNumber.toString(),
           "lstTable": roRescheduleOnLeaveData!.lstTable!.map((e) => e.toJson()).toList(),
           "lstUpdateTable": roRescheduleOnLeaveData!.lstUpdateTable!.map((e) => e.toJson()).toList(),

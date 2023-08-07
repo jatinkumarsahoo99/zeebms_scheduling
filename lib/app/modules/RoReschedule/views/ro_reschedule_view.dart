@@ -204,7 +204,7 @@ class RoRescheduleView extends StatelessWidget {
                                 } else {
                                   return DataGridShowOnlyKeys(
                                     mode: PlutoGridMode.selectWithOneTap,
-                                    hideKeys: [],
+                                    hideKeys: const [],
                                     colorCallback: (p0) {
                                       if (controller.roRescheduleOnLeaveData!.lstDgvRO![p0.rowIdx].colorName!.isNotEmpty) {
                                         return controller.roRescheduleOnLeaveData!.lstDgvRO![p0.rowIdx].colorName!.toLowerCase() == "rosybrown"
@@ -213,6 +213,24 @@ class RoRescheduleView extends StatelessWidget {
                                       }
                                       return Colors.white;
                                     },
+                                    showonly: const [
+                                      "programName",
+                                      "scheduleDate",
+                                      "scheduleTime",
+                                      "exportTapeCode",
+                                      "commercialCaption",
+                                      "tapeDuration",
+                                      "spotAmount",
+                                      "bookingDetailCode",
+                                      "recordnumber",
+                                      "segmentNumber",
+                                      "breaknumber",
+                                      "spotPositionTypeName",
+                                      "positionName",
+                                      "bookingstatus",
+                                      "campaignStartDate",
+                                      "campaignEndDate"
+                                    ],
                                     onSelected: (p0) {
                                       controller.closeModify();
                                     },
@@ -267,6 +285,7 @@ class RoRescheduleView extends StatelessWidget {
                                 } else {
                                   return DataGridShowOnlyKeys(
                                     mapData: gridController.roRescheduleOnLeaveData!.lstdgvUpdated!.map((e) => e.toJson()).toList(),
+                                    showonly: ["programName","scheduleDate","scheduleTime","exportTapeCode","commercialCaption","tapeDuration","spotAmount","bookingDetailCode","recordnumber","segmentNumber","breaknumber","spotPositionTypeName","positionName"],
                                     extraList: [
                                       SecondaryShowDialogModel("Delete", () {
                                         if (controller.updatedplutoGridStateManager?.currentCell != null) {
@@ -347,10 +366,9 @@ class RoRescheduleView extends StatelessWidget {
                                   children: [
                                     DropDownField.formDropDown1WidthMap(
                                         (controller.roRescheduleOnLeaveData?.lstcmbTapeID ?? [])
-                                            .map((e) => DropDownValue(key: e.exporttapecode, value: e.exporttapecode))
+                                            .map((e) => DropDownValue(key: e.commercialCaption, value: e.exporttapecode))
                                             .toList(), (data) {
-                                      // controller.selectedLocation = data;
-                                      // controller.getChannel(data.key);
+                                      controller.chnageTapeIdCap.text = data.key!;
                                     }, "Tape ID", 0.12, selected: controller.modifySelectedTapeCode),
                                     InputFields.formField1(hintTxt: "Seg", isEnable: false, controller: controller.changeTapeIdSeg, width: 0.06),
                                     InputFields.formField1(hintTxt: "Dur", isEnable: false, controller: controller.changeTapeIdDur, width: 0.06),
