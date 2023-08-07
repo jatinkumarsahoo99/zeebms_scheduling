@@ -238,16 +238,8 @@ class SpotsView extends GetView<RoBookingController> {
                                       children: [
                                         FormButtonWrapper(
                                           btnText: "Save",
-                                          callback: () {
-                                            controller.savePDC(listdata.value);
-                                          },
-                                        ),
-                                        SizedBox(
-                                          width: 5,
-                                        ),
-                                        FormButtonWrapper(
-                                          btnText: "Clear",
-                                          callback: () {
+                                          callback: () async {
+                                            await controller.savePDC(listdata.value);
                                             chequeNoCtrl.text = "";
                                             chqDateCtrl.text = "";
                                             chequeAmtCtrl.text = "";
@@ -258,6 +250,13 @@ class SpotsView extends GetView<RoBookingController> {
                                             listdata.clear();
                                             listdata.refresh();
                                           },
+                                        ),
+                                        SizedBox(
+                                          width: 5,
+                                        ),
+                                        FormButtonWrapper(
+                                          btnText: "Clear",
+                                          callback: () {},
                                         ),
                                       ],
                                     )
