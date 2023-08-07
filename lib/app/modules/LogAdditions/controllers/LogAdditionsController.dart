@@ -184,7 +184,9 @@ class LogAdditionsController extends GetxController {
       if (selectAdditions?.value != "All") {
         LoadingDialog.recordExists("Do you want to update the remarks?", () {
           postData();
-        }, deleteCancel: "No", deleteTitle: "Yes");
+        }, deleteCancel: "No", deleteTitle: "Yes",cancel: (){
+          postData();
+        });
       } else {
         postData();
       }
@@ -200,8 +202,8 @@ class LogAdditionsController extends GetxController {
       "remarks": remarks.text,
       "locationcode": selectLocation?.key ?? "",
       "locationName": selectLocation?.value ?? "",
-      "channelcode": selectChannel?.value?.key ?? "",
-      "channelName": selectChannel?.value ?? "",
+      "channelcode": selectChannel.value?.key ?? "",
+      "channelName": selectChannel.value ?? "",
       "telecastDate": selectedDate.text,
       "chkIgnore": isIgnoreSpot.value,
       "chkStandby": isStandby
