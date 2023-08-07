@@ -16,6 +16,7 @@ import 'package:url_launcher/url_launcher.dart' as urlL;
 class CommonDocsController extends GetxController {
   PlutoGridStateManager? viewDocsStateManger;
   var documents = <CommonDocsModel>[].obs;
+
   @override
   void onInit() {
     super.onInit();

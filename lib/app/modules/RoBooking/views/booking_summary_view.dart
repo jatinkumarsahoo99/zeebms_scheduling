@@ -18,7 +18,19 @@ class BookingSummaryView extends GetView<RoBookingController> {
                 children: [
                   Text("Summary"),
                   Row(
-                    children: [Icon(Icons.check_box_outline_blank_outlined), Text("Default")],
+                    children: [
+                      Obx(
+                        () => InkWell(
+                            onTap: () {
+                              controller.bookingsummaryDefault.value =
+                                  !controller.bookingsummaryDefault.value;
+                            },
+                            child: Icon(controller.bookingsummaryDefault.value
+                                ? Icons.check_box_outlined
+                                : Icons.check_box_outline_blank_outlined)),
+                      ),
+                      Text("Default")
+                    ],
                   )
                 ],
               ),
@@ -27,10 +39,14 @@ class BookingSummaryView extends GetView<RoBookingController> {
               ),
               Expanded(
                   child: Container(
-                decoration: BoxDecoration(border: Border.all(width: 1.0, color: Colors.grey)),
+                decoration: BoxDecoration(
+                    border: Border.all(width: 1.0, color: Colors.grey)),
                 child: DataGridShowOnlyKeys(
-                  mapData: controller.savecheckData?.lstdgvbookingSummary?.map((e) => e.toJson()).toList() ?? [],
-                  formatDate: false,
+                  mapData: controller.savecheckData?.lstdgvbookingSummary
+                          ?.map((e) => e.toJson())
+                          .toList() ??
+                      [],
+                  formatDate: true,
                 ),
               ))
             ],

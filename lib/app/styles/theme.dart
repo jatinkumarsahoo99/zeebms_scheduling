@@ -60,10 +60,6 @@ PlutoGridConfiguration plutoGridConfiguration({
             LogicalKeySet(LogicalKeyboardKey.enter): CustomEnterKeyAction(actionOnPress: actionOnPress, actionKey: actionKey),
           },
         ),
-        columnSize: PlutoGridColumnSizeConfig(
-          resizeMode: PlutoResizeMode.normal,
-          autoSizeMode: autoScale ? PlutoAutoSizeMode.scale : PlutoAutoSizeMode.none,
-        ),
         style: PlutoGridStyleConfig(
             rowHeight: 35,
             columnHeight: 30,
@@ -87,7 +83,6 @@ PlutoGridConfiguration plutoGridConfiguration({
         tabKeyAction: PlutoGridTabKeyAction.moveToNextOnEdge,
         scrollbar: const PlutoGridScrollbarConfig(draggableScrollbar: true, isAlwaysShown: true, hoverWidth: 15));
 
-
 PlutoGridConfiguration plutoGridConfigurationTransmisionLog({
   Function? actionOnPress,
   String? actionKey,
@@ -109,14 +104,14 @@ PlutoGridConfiguration plutoGridConfigurationTransmisionLog({
             LogicalKeySet(LogicalKeyboardKey.enter): CustomEnterKeyAction(actionOnPress: actionOnPress, actionKey: actionKey),
           },
         ),
-        columnSize: PlutoGridColumnSizeConfig(
-          resizeMode: PlutoResizeMode.normal,
-          autoSizeMode: autoScale ? PlutoAutoSizeMode.scale : PlutoAutoSizeMode.none,
-        ),
+        // columnSize: PlutoGridColumnSizeConfig(
+        //   resizeMode: PlutoResizeMode.normal,
+        //   autoSizeMode: autoScale ? PlutoAutoSizeMode.scale : PlutoAutoSizeMode.none,
+        // ),
         style: PlutoGridStyleConfig(
             rowHeight: 20,
             columnHeight: 25,
-            defaultCellPadding: const EdgeInsets.all(2),
+            defaultCellPadding: const EdgeInsets.all(0),
             enableCellBorderHorizontal: true,
             gridBorderColor: Colors.deepPurpleAccent,
             activatedBorderColor: Colors.deepPurple,

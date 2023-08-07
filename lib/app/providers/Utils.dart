@@ -375,11 +375,11 @@ class Utils {
       } else if (key.toLowerCase().contains("segment") || key.toLowerCase().contains("client")) {
         return 220;
       } else if (key.toLowerCase().contains("name") || key.toLowerCase().contains("program")) {
-        return 300;
+        return 280;
       } else if (value is num || (value is String && num.tryParse(value) != null)) {
         return 45;
       } else if (key.toLowerCase().contains("date")) {
-        return 45;
+        return 80;
       }
     } catch (e) {
       print("problem in setting width $e");
@@ -394,6 +394,57 @@ class Utils {
     try {
       if (key == "no" || key == "Sr No") {
         return 30;
+      }
+      else if (key == "tapeduration") {
+        return 80;
+      } else if (key.toLowerCase().contains("locationname")) {
+        return 80;
+      } else if (key.toLowerCase().contains("time") || key.toLowerCase().contains("program")) {
+        return 120;
+      } else if (value is num || (value is String && num.tryParse(value) != null)) {
+        return 45;
+      } else if (key.toLowerCase().contains("date")) {
+        return 100;
+      }
+    } catch (e) {
+      print("problem in setting width $e");
+    }
+
+    return 120;
+  }
+
+  static double getRowMinWidth({required String key, dynamic value, double? widthRatio = 120}) {
+    value ??= "";
+
+    try {
+      if (key == "no" || key == "Sr No") {
+        return 30;
+      } else if (key == "tapeduration") {
+        return 5;
+      } else if (key.toLowerCase().contains("locationname")) {
+        return 80;
+      } else if (key.toLowerCase().contains("time") || key.toLowerCase().contains("program")) {
+        return 120;
+      } else if (value is num || (value is String && num.tryParse(value) != null)) {
+        return 45;
+      } else if (key.toLowerCase().contains("date")) {
+        return 100;
+      }
+    } catch (e) {
+      print("problem in setting width $e");
+    }
+
+    return 120;
+  }
+
+  static double getRowWidth({required String key, dynamic value, double? widthRatio = 120}) {
+    value ??= "";
+
+    try {
+      if (key == "no" || key == "Sr No") {
+        return 30;
+      } else if (key == "tapeduration") {
+        return 90;
       } else if (key.toLowerCase().contains("locationname")) {
         return 80;
       } else if (key.toLowerCase().contains("time") || key.toLowerCase().contains("program")) {

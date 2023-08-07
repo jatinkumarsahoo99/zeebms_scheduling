@@ -197,11 +197,7 @@ class RoBookingView extends StatelessWidget {
                                       },
                                       "Client",
                                       0.23,
-                                      onFocusChange: (value) {
-                                        if (controller.selectedClient != null) {
-                                          controller.clientLeave(controller.selectedClient?.key);
-                                        }
-                                      },
+                                      onFocusChange: (value) {},
                                       inkWellFocusNode: controller.clientFocus,
                                       selected: controller.selectedClient,
                                       isEnable: controller.bookingNoLeaveData == null,
@@ -237,8 +233,7 @@ class RoBookingView extends StatelessWidget {
                                 FocusTraversalOrder(
                                   order: NumericFocusOrder(8),
                                   child: Obx(
-                                    () => DropDownField.formDropDown1WidthMap(
-                                        controller.agencies.value, (value) => {controller.agencyLeave(value.key)}, "Agency", 0.23,
+                                    () => DropDownField.formDropDown1WidthMap(controller.agencies.value, (value) => {}, "Agency", 0.23,
                                         isEnable: controller.bookingNoLeaveData == null,
                                         inkWellFocusNode: controller.agencyFocus,
                                         selected: controller.selectedAgnecy),
@@ -476,6 +471,7 @@ class RoBookingView extends StatelessWidget {
                 Obx(
                   () => CupertinoSlidingSegmentedControl(
                       groupValue: controller.currentTab.value,
+                      padding: EdgeInsets.all(1),
                       children: controller.tabs.map((key, value) => MapEntry(
                           key,
                           Padding(

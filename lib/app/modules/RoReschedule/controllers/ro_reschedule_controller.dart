@@ -61,6 +61,7 @@ class RoRescheduleController extends GetxController {
       changeTapeIdDur = TextEditingController(),
       chnageTapeIdCap = TextEditingController();
   PlutoGridStateManager? plutoGridStateManager;
+  PlutoGridStateManager? updatedplutoGridStateManager;
   @override
   void onInit() {
     loadinitData().then((value) {
@@ -334,6 +335,20 @@ class RoRescheduleController extends GetxController {
                           onload: (load) {
                             addSpotGridManager = load.stateManager;
                           },
+                          editKeys: ["bookedSpots"],
+                          onEdit: (editEvent) {
+                            for (var i = 0; i < viewDoubleClickData.lstDetTable!.length; i++) {
+                              viewDoubleClickData.lstDetTable![i].bookedSpots = 0;
+                            }
+                            viewDoubleClickData.lstDetTable![editEvent.rowIdx].bookedSpots = int.tryParse(editEvent.value) ?? 0;
+
+                            for (var element in addSpotGridManager!.rows) {
+                              addSpotGridManager!
+                                  .changeCellValue(element.cells["bookedSpots"]!, "0", force: true, notify: false, callOnChangedEvent: false);
+                            }
+                            addSpotGridManager!.changeCellValue(editEvent.row.cells["bookedSpots"]!, int.tryParse(editEvent.value) ?? "0",
+                                callOnChangedEvent: false, force: true);
+                          },
                           onRowDoubleTap: (rowdblclick) {
                             addSpotGridManager!.setCurrentCell(rowdblclick.cell, rowdblclick.rowIdx);
 
@@ -346,7 +361,7 @@ class RoRescheduleController extends GetxController {
                               addSpotGridManager!
                                   .changeCellValue(element.cells["bookedSpots"]!, "0", force: true, notify: false, callOnChangedEvent: false);
                             }
-                            addSpotGridManager!.changeCellValue(rowdblclick.row.cells["bookedSpots"]!, "1", force: true);
+                            addSpotGridManager!.changeCellValue(rowdblclick.row.cells["bookedSpots"]!, "1", callOnChangedEvent: false, force: true);
                           },
                           mapData: viewDoubleClickData.lstDetTable!.map((e) => e.toJson()).toList(),
                           formatDate: true,
@@ -393,7 +408,7 @@ class RoRescheduleController extends GetxController {
     Get.find<ConnectorControl>().POSTMETHOD(
         api: ApiFactory.RO_RESCHEDULE_MODIFY,
         json: {
-          "exportTapeCode": modifySelectedTapeCode!.key!,
+          "exportTapeCode": modifySelectedTapeCode!.value!,
           "segmentNumber": roRescheduleOnLeaveData!.lstDgvRO![plutoGridStateManager!.currentCell!.row.sortIdx].segmentNumber.toString(),
           "lstTable": roRescheduleOnLeaveData!.lstTable!.map((e) => e.toJson()).toList(),
           "lstUpdateTable": roRescheduleOnLeaveData!.lstUpdateTable!.map((e) => e.toJson()).toList(),
@@ -476,12 +491,13 @@ class RoRescheduleController extends GetxController {
               }
               print("Parsing lstdgvUpdated");
 
-              // if (data["info_AddSpots"] is Map &&
-              //     data["info_AddSpots"].containsKey("lstdgvUpdated") &&
-              //     (data["info_AddSpots"]["lstdgvUpdated"] is List)) {
-              //   roRescheduleOnLeaveData!.lstdgvUpdated = (data["info_Modify"]["lstdgvUpdated"] as List).map((e) => LstdgvUpdated.fromJson(e)).toList();
-              // }
-              update(["dgvGrid"]);
+              if (data["info_AddSpots"] is Map &&
+                  data["info_AddSpots"].containsKey("lstdgvUpdated") &&
+                  (data["info_AddSpots"]["lstdgvUpdated"] is List)) {
+                roRescheduleOnLeaveData!.lstdgvUpdated =
+                    (data["info_AddSpots"]["lstdgvUpdated"] as List).map((e) => LstdgvUpdated.fromJson(e)).toList();
+              }
+              update(["dgvGrid", "updatedgvGrid"]);
               Get.back();
             }
 
