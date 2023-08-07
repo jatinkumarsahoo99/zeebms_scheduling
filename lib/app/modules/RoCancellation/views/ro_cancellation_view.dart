@@ -42,12 +42,14 @@ class RoCancellationView extends GetView<RoCancellationController> {
                         controller.locations.value,
                         (value) {
                           controller.selectedLocation = value;
+                          controller.selectedChannel = null;
                           controller.getChannel(value.key);
                         },
                         "Location",
                         controller.widthratio,
                         autoFocus: true,
                         inkWellFocusNode: controller.locFN,
+                        selected: controller.selectedLocation,
                       ),
                     ),
                     Obx(
@@ -58,6 +60,7 @@ class RoCancellationView extends GetView<RoCancellationController> {
                         },
                         "Channel",
                         controller.widthratio,
+                        selected: controller.selectedChannel,
                       ),
                     ),
                     Obx(
@@ -257,9 +260,15 @@ class RoCancellationView extends GetView<RoCancellationController> {
               id: "buttons",
               init: Get.find<HomeController>(),
               builder: (btncontroller) {
-                PermissionModel formPermissions = Get.find<MainController>().permissionList!.lastWhere((element) {
-                  return element.appFormName == Routes.RO_CANCELLATION.replaceAll("/", "");
-                });
+                PermissionModel? formPermissions;
+                try {
+                  formPermissions = Get.find<MainController>().permissionList?.lastWhere((element) {
+                    return element.appFormName == Routes.RO_CANCELLATION.replaceAll("/", "");
+                  });
+                } catch (e) {
+                  print(e.toString());
+                }
+
                 return SizedBox(
                   height: 40,
                   child: ButtonBar(
@@ -269,7 +278,7 @@ class RoCancellationView extends GetView<RoCancellationController> {
                       for (var btn in btncontroller.buttons!)
                         FormButtonWrapper(
                           btnText: btn["name"],
-                          callback: Utils.btnAccessHandler2(btn['name'], btncontroller, formPermissions) == null
+                          callback: (formPermissions != null && Utils.btnAccessHandler2(btn['name'], btncontroller, formPermissions!) == null)
                               ? null
                               : () => controller.formHandler(btn['name']),
                         ),

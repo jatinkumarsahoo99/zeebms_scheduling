@@ -212,7 +212,7 @@ class LstBookingNoStatusData {
       data['tapeID'] = tapeID;
       data['tapeDuration'] = tapeDuration;
       data['spotAmount'] = spotAmount;
-      data['cancelNumber'] = cancelNumber;
+      data['cancelNumber'] = cancelNumber ?? '';
       data['bookingDetailCode'] = bookingDetailCode;
       data['dealno'] = dealno;
       data['recordnumber'] = recordnumber;

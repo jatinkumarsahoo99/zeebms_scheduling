@@ -501,6 +501,7 @@ class DataGridFromMap3 extends StatelessWidget {
     if (showSrNo!) {
       segColumn.add(PlutoColumn(
           title: "No.",
+          minWidth: 0,
           enableRowChecked: false,
           readOnly: true,
           enableSorting: enableSort,
@@ -518,6 +519,7 @@ class DataGridFromMap3 extends StatelessWidget {
     /// addidng columns
     for (var key in mapData[0].keys) {
       segColumn.add(PlutoColumn(
+          minWidth: 0,
           titlePadding: const EdgeInsets.only(),
           sort: sort,
           titleSpan: enableColumnDoubleTap != null && enableColumnDoubleTap!.isNotEmpty && enableColumnDoubleTap!.contains(key)
