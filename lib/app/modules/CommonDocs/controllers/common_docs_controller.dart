@@ -15,6 +15,7 @@ import '../model/common_docs_model.dart';
 class CommonDocsController extends GetxController {
   PlutoGridStateManager? viewDocsStateManger;
   var documents = <CommonDocsModel>[].obs;
+
   @override
   void onInit() {
     super.onInit();
@@ -78,7 +79,9 @@ class CommonDocsController extends GetxController {
   }
 
   Future<void> handleAddDocs(String? documentKey) async {
-    FilePickerResult? result = await FilePicker.platform.pickFiles(allowMultiple: false);
+    FilePickerResult? result = await FilePicker.platform.pickFiles(
+      allowMultiple: false,
+    );
     if (result != null && result.files.isNotEmpty) {
       LoadingDialog.call();
       await Get.find<ConnectorControl>().POSTMETHOD_FORMDATA_HEADER(
