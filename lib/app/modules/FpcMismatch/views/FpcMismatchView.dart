@@ -41,8 +41,6 @@ class FpcMismatchView extends GetView<FpcMismatchController> {
   FpcMismatchController controllerX = Get.put(FpcMismatchController());
   final GlobalKey rebuildKey = GlobalKey();
 
-
-
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -123,7 +121,7 @@ class FpcMismatchView extends GetView<FpcMismatchController> {
                       ),
                       DateWithThreeTextField(
                         title: "As On Date",
-                        startDate: DateTime.now(),
+                        // startDate: DateTime.now(),
                         //Note: Data Availble on 1 OCT 2012
                         // startDate: DateTime.now().subtract(Duration(days: 5000)),
                         endDate: DateTime.now().add(Duration(days: 1825)),
@@ -140,6 +138,7 @@ class FpcMismatchView extends GetView<FpcMismatchController> {
                             FormButton(
                               btnText: "Display Mismatch",
                               callback: () {
+                                controllerX.hideKeysAllowed.value = false;
                                 controllerX.fetchMismatch();
                                 controllerX.fetchProgram();
                               },
@@ -150,6 +149,7 @@ class FpcMismatchView extends GetView<FpcMismatchController> {
                             FormButton(
                               btnText: "Display Error",
                               callback: () {
+                                controllerX.hideKeysAllowed.value = true;
                                 controllerX.fetchMismatchError();
                                 controllerX.fetchProgram();
                               },
@@ -160,6 +160,7 @@ class FpcMismatchView extends GetView<FpcMismatchController> {
                             FormButton(
                               btnText: "Display All",
                               callback: () {
+                                controllerX.hideKeysAllowed.value = true;
                                 controllerX.fetchMismatchAll();
                                 controllerX.fetchProgram();
                               },
@@ -260,11 +261,15 @@ class FpcMismatchView extends GetView<FpcMismatchController> {
               // height: 400,
               flex: 5,
               child: DataGridFromMap(
-                showSrNo: false,
+                showSrNo: true,
                 mapData:
                     (controllerX.dataList?.map((e) => e.toJson1()).toList())!,
                 widthRatio: 90,
                 checkRow: true,
+                hideKeys: controllerX.hideKeysAllowed.value
+                    ? ["fpcType", "fpcProgram", "fpcTime"]
+                    : [],
+                hideCode: false,
                 checkRowKey: "select",
                 onload: (load) {
                   controllerX.stateManager = load.stateManager;
@@ -330,6 +335,7 @@ class FpcMismatchView extends GetView<FpcMismatchController> {
               // height: 400,
               flex: 2,
               child: DataGridFromMap(
+                showSrNo: true,
                 mapData: (controllerX.programList
                     ?.map((e) => e.toJson1())
                     .toList())!,

@@ -125,7 +125,7 @@ class SpotPriorityView extends GetView<SpotPriorityController> {
                             selected: controllerX.selectPriority,
                             autoFocus: true,
                             dialogWidth: 200,
-                            dialogHeight: Get.height * .3,
+                            dialogHeight: Get.height * .6,
                           ),
                         ),
 

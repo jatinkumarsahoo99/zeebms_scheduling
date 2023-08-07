@@ -154,7 +154,7 @@ class LogAdditionsController extends GetxController {
     } else if (selectedDate.text == "") {
       // Snack.callError("Please select date");
     } else {
-      print("Channel is>>>" + jsonEncode(selectChannel?.toJson()));
+      print("Channel is>>>" + jsonEncode(selectChannel.toJson()));
       Get.find<ConnectorControl>().GETMETHODCALL(
           api: ApiFactory.LOG_ADDITION_GET_ADDITIONS(
             selectLocation!,
@@ -181,7 +181,7 @@ class LogAdditionsController extends GetxController {
     } else if (selectAdditions == null) {
       Snack.callError("Please select addition");
     } else {
-      if (selectAdditions?.value != "All") {
+      if (selectAdditions?.value != "All" && selectAdditions?.value != "New") {
         LoadingDialog.recordExists("Do you want to update the remarks?", () {
           postData();
         }, deleteCancel: "No", deleteTitle: "Yes",cancel: (){
