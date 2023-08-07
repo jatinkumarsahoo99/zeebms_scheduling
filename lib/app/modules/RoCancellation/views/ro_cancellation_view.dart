@@ -80,7 +80,7 @@ class RoCancellationView extends GetView<RoCancellationController> {
                       ),
                     ),
                     InputFields.formField1(
-                      hintTxt: "Reference",
+                      hintTxt: "Reference", //23082001w
                       width: controller.widthratio,
                       controller: controller.refNumberctrl,
                     ),
@@ -144,7 +144,12 @@ class RoCancellationView extends GetView<RoCancellationController> {
                               for (var i = 0; i < (controller.roCancellationData!.cancellationData!.lstBookingNoStatusData!.length); i++) {
                                 controller.roCancellationData!.cancellationData!.lstBookingNoStatusData?[i].requested = controller.selectAll.value;
                                 controller.roCancellationGridManager!.changeCellValue(
-                                    controller.roCancellationGridManager!.getRowByIdx(i)!.cells['requested']!, controller.selectAll.value.toString());
+                                  controller.roCancellationGridManager!.getRowByIdx(i)!.cells['requested']!,
+                                  controller.selectAll.value.toString(),
+                                  callOnChangedEvent: false,
+                                  force: true,
+                                  notify: true,
+                                );
                               }
                             }
                           },
@@ -235,7 +240,7 @@ class RoCancellationView extends GetView<RoCancellationController> {
                             cancelDatactrl.roCancellationData!.cancellationData!.lstBookingNoStatusData![event.rowIdx].requested =
                                 event.value == "true";
                           }
-                          debugPrint(cancelDatactrl.roCancellationData!.cancellationData!.lstBookingNoStatusData![event.rowIdx].requested.toString());
+                          // debugPrint(cancelDatactrl.roCancellationData!.cancellationData!.lstBookingNoStatusData![event.rowIdx].requested.toString());
                         },
                         mapData: cancelDatactrl.roCancellationData!.cancellationData!.lstBookingNoStatusData!
                             .map((e) => e.toJson(fromSave: false))

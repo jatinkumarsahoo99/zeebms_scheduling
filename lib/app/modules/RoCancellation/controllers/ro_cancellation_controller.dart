@@ -67,17 +67,13 @@ class RoCancellationController extends GetxController {
     super.onReady();
     getLocation();
     bookingNumberFocus.addListener(() {
-      if (!bookingNumberFocus.hasFocus) {
-        if (bookingNumberctrl.text != "" && !cancelFetchData) {
-          onBookingNoLeave(bookingNumberctrl.text);
-        }
+      if (!bookingNumberFocus.hasFocus && bookingNumberctrl.text != "" && !cancelFetchData) {
+        onBookingNoLeave(bookingNumberctrl.text);
       }
     });
     cancelNumberFocus.addListener(() {
-      if (!cancelNumberFocus.hasFocus) {
-        if (cancelNumberctrl.text != "" && !cancelFetchData) {
-          onCancelNoLeave();
-        }
+      if (!cancelNumberFocus.hasFocus && (cancelNumberctrl.text.isNotEmpty && !cancelFetchData)) {
+        onCancelNoLeave();
       }
     });
   }
@@ -180,8 +176,8 @@ class RoCancellationController extends GetxController {
       Get.find<ConnectorControl>().POSTMETHOD(
           api: ApiFactory.RO_CANCELLATION_CANCEL_LEAVE,
           json: {
-            "locationCode": selectedLocation!.key,
-            "channelCode": selectedChannel!.key,
+            "locationCode": selectedLocation?.key ?? '',
+            "channelCode": selectedChannel?.key ?? '',
             "bookingNo": bookingNumberctrl.text,
             "cancelMonth": cancelMonthctrl.text,
             "cancelNumber": cancelNumberctrl.text
@@ -201,6 +197,7 @@ class RoCancellationController extends GetxController {
             // }
           });
     } catch (e) {
+      Get.back();
       LoadingDialog.callErrorMessage1(msg: "Failed To Load  Data");
     }
 
@@ -208,31 +205,40 @@ class RoCancellationController extends GetxController {
   }
 
   parseCancelLeaveData(Map data) {
-    FocusScope.of(Get.context!).requestFocus(selectAllFocus);
-    selectAllFocus.requestFocus();
-    cancelFetchData = true;
-    bookingNumberctrl.text = data["bookingnumber"];
-    clientctrl.text = data["clientName"];
-    brandctrl.text = data["brandName"];
-    agencyctrl.text = data["agencyName"];
-    enableBrandClientAgent.value = false;
-    enableEffDate.value = false;
-    enableCancelNumber.value = false;
-    FocusScope.of(Get.context!).requestFocus(selectAllFocus);
-    selectAllFocus.requestFocus();
+    try {
+      FocusScope.of(Get.context!).requestFocus(selectAllFocus);
+      selectAllFocus.requestFocus();
+      cancelFetchData = true;
+      bookingNumberctrl.text = data["bookingnumber"] ?? "";
+      clientctrl.text = data["clientName"] ?? "";
+      brandctrl.text = data["brandName"] ?? "";
+      agencyctrl.text = data["agencyName"] ?? "";
+      if (data['bookingEffectiveDate'] != null) {
+        effDatectrl.text = DateFormat('dd-MM-yyyy').format(DateFormat('yyyy-MM-ddThh:mm:ss').parse(data['bookingEffectiveDate']));
+      }
+      FocusScope.of(Get.context!).requestFocus(selectAllFocus);
+      selectAllFocus.requestFocus();
 
-    cancelFetchData = false;
-    List<LstBookingNoStatusData> lstBookingNoStatusData = [];
-    for (var element in data["lstBookingNoStatusData"]) {
-      lstBookingNoStatusData.add(LstBookingNoStatusData.fromJson(element));
-    }
-    roCancellationData = RoCancellationData(
+      cancelFetchData = false;
+      List<LstBookingNoStatusData> lstBookingNoStatusData = [];
+      for (var element in data["lstBookingNoStatusData"] ?? []) {
+        lstBookingNoStatusData.add(LstBookingNoStatusData.fromJson(element));
+      }
+      roCancellationData = RoCancellationData(
         cancellationData: CancellationData(
-            agencyName: data["agencyName"],
-            brandName: data["brandName"],
-            clientName: data["clientName"],
-            lstBookingNoStatusData: lstBookingNoStatusData));
-    update(["cancelData"]);
+          agencyName: data["agencyName"] ?? '',
+          brandName: data["brandName"] ?? '',
+          clientName: data["clientName"] ?? '',
+          lstBookingNoStatusData: lstBookingNoStatusData,
+        ),
+      );
+      enableBrandClientAgent.value = false;
+      enableEffDate.value = false;
+      enableCancelNumber.value = false;
+      update(["cancelData"]);
+    } catch (e) {
+      print(e.toString());
+    }
   }
 
   parseCancellationData() {
