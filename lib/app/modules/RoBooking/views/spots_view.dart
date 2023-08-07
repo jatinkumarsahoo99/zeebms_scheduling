@@ -58,7 +58,7 @@ class SpotsView extends GetView<RoBookingController> {
                     "PDC",
                     0.12,
                     showMenuInbottom: false,
-                    dialogHeight: 40),
+                    dialogHeight: 80),
                 InputFields.formField1(
                     hintTxt: "Amt",
                     isEnable: false,
