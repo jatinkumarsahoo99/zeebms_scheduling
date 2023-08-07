@@ -647,6 +647,13 @@ class DataGridMenu {
                                 ElevatedButton.icon(
                                     label: Text(""),
                                     onPressed: () {
+                                      for (var element in stateManager
+                                          .rows) {
+                                        stateManager
+                                            .setRowChecked(
+                                            element, false,
+                                            notify: false);
+                                      }
                                       Navigator.pop(context);
                                     },
                                     icon: Icon(Icons.clear_outlined)),
