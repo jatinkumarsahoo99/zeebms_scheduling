@@ -2539,6 +2539,7 @@ class DropDownField {
                           final top = (offset.dy + renderBox.size.height);
                           final right = left + renderBox.size.width;
                           final width = renderBox.size.width;
+
                           if ((items == null || items.isEmpty)) {
                             showMenu(
                                 context: context,
@@ -2558,13 +2559,16 @@ class DropDownField {
                                   ))
                                 ]);
                           } else {
-                            var tempList = RxList<DropDownValue>([]);
+                            var tempList = <DropDownValue>[].obs;
+                            tempList.addAll(items);
                             // if (selected == null) {
                             //   tempList.addAll(items);
                             // } else {
-                            for (var i = 0; i < items.length; i++) {
-                              tempList.add(items[i]);
-                            }
+                            //   for (var i = 0; i < items.length; i++) {
+                            //     if (items[i].value!.toLowerCase().contains((selected?.value ?? "").toLowerCase())) {
+                            //       tempList.add(items[i]);
+                            //     }
+                            //   }
                             // }
                             showMenu(
                               context: context,
@@ -2590,7 +2594,7 @@ class DropDownField {
                                             isCollapsed: true,
                                             hintText: "Search",
                                           ),
-                                          controller: TextEditingController(),
+                                          // controller: TextEditingController(text: selected?.value ?? ""),
                                           autofocus: true,
                                           style: TextStyle(
                                             fontSize: SizeDefine.fontSizeInputField,
