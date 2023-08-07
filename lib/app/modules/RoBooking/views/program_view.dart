@@ -204,6 +204,7 @@ class ProgramView extends GetView<RoBookingController> {
                         mapData: controller.bookingTapeLeaveData?.lstdgvProgram?.map((e) => e.toJson()).toList() ??
                             controller.dealDblClickData?.lstProgram?.map((e) => e.toJson()).toList() ??
                             [],
+                        editKeys: ["bookedSpots"],
                         onEdit: (editChnage) {
                           if (controller.bookingTapeLeaveData != null) {
                             controller.bookingTapeLeaveData?.lstdgvProgram?[editChnage.rowIdx].bookedSpots = int.tryParse(editChnage.value) ?? 0;
