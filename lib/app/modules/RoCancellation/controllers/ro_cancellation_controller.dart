@@ -330,7 +330,7 @@ class RoCancellationController extends GetxController {
             if (data is String) {
               LoadingDialog.callErrorMessage1(msg: data);
             } else if (data is Map && data.containsKey("saveInfo")) {
-              if (data["saveInfo"]["message"] == "Records saved successfully") {
+              if (data["saveInfo"]["message"].toString().contains("Records saved successfully")) {
                 LoadingDialog.callDataSaved(msg: data["saveInfo"]["message"]);
               } else {
                 LoadingDialog.callInfoMessage(data["saveInfo"]["message"]);
