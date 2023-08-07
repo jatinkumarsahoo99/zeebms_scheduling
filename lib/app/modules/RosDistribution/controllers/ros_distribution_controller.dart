@@ -369,6 +369,15 @@ class RosDistributionController extends GetxController {
                 padding: const EdgeInsets.all(20.0),
                 child: Column(
                   children: [
+                    Align(
+                      alignment: Alignment.topRight,
+                      child: IconButton(
+                        onPressed: () {
+                          Get.back();
+                        },
+                        icon: Icon(Icons.close),
+                      ),
+                    ),
                     Wrap(
                       crossAxisAlignment: WrapCrossAlignment.end,
                       spacing: 15,
