@@ -204,6 +204,13 @@ class ProgramView extends GetView<RoBookingController> {
                         mapData: controller.bookingTapeLeaveData?.lstdgvProgram?.map((e) => e.toJson()).toList() ??
                             controller.dealDblClickData?.lstProgram?.map((e) => e.toJson()).toList() ??
                             [],
+                        onEdit: (editChnage) {
+                          if (controller.bookingTapeLeaveData != null) {
+                            controller.bookingTapeLeaveData?.lstdgvProgram?[editChnage.rowIdx].bookedSpots = int.tryParse(editChnage.value) ?? 0;
+                          } else if (controller.dealDblClickData?.lstProgram != null) {
+                            controller.dealDblClickData?.lstProgram?[editChnage.rowIdx].bookedSpots = int.tryParse(editChnage.value) ?? 0;
+                          }
+                        },
                         onRowDoubleTap: (dblclick) {
                           controller.dealProgramCode = controller.bookingTapeLeaveData?.lstdgvProgram?[dblclick.rowIdx].programcode ??
                               controller.dealDblClickData?.lstProgram?[dblclick.rowIdx].programcode;
@@ -213,12 +220,15 @@ class ProgramView extends GetView<RoBookingController> {
                               controller.dealDblClickData?.lstProgram?[dblclick.rowIdx].telecastdate;
                           if (controller.bookingTapeLeaveData?.lstdgvProgram != null &&
                               (controller.bookingTapeLeaveData?.lstdgvProgram ?? []).isNotEmpty) {
-                            controller.bookingTapeLeaveData?.lstdgvProgram?[dblclick.rowIdx].bookedSpots = 1;
+                            controller.bookingTapeLeaveData?.lstdgvProgram?[dblclick.rowIdx].bookedSpots =
+                                (controller.bookingTapeLeaveData?.lstdgvProgram?[dblclick.rowIdx].bookedSpots ?? 0) + 1;
                           } else {
-                            controller.dealDblClickData?.lstProgram?[dblclick.rowIdx].bookedSpots = 1;
+                            controller.dealDblClickData?.lstProgram?[dblclick.rowIdx].bookedSpots =
+                                (controller.dealDblClickData?.lstProgram?[dblclick.rowIdx].bookedSpots ?? 0) + 1;
                           }
-                          controller.programViewGrid
-                              ?.changeCellValue(dblclick.row.cells["bookedSpots"]!, dblclick.cell.value is int ? 1 : "1", force: true, notify: true);
+                          controller.programViewGrid?.changeCellValue(dblclick.row.cells["bookedSpots"]!,
+                              dblclick.cell.value is int ? dblclick.cell.value + 1 : "${(int.tryParse(dblclick.cell.value) ?? 0) + 1}",
+                              callOnChangedEvent: false, force: true, notify: true);
                         },
                         onload: (load) {
                           controller.programViewGrid = load.stateManager;
