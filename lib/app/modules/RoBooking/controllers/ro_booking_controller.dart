@@ -751,7 +751,7 @@ class RoBookingController extends GetxController {
 
   getDisplay() {
     if (selectedLocation == null && selectedChannel == null) {
-      LoadingDialog.callErrorMessage1(msg: "Location and channelis must to select.", callback: () {});
+      LoadingDialog.callErrorMessage1(msg: "Location and channel is must to select.", callback: () {});
     } else {
       Get.find<ConnectorControl>().POSTMETHOD(
           api: ApiFactory.RO_BOOKING_GET_DISPLAY,
@@ -948,8 +948,8 @@ class RoBookingController extends GetxController {
         });
   }
 
-  savePDC(list) {
-    Get.find<ConnectorControl>().POSTMETHOD(
+  savePDC(list) async {
+    await Get.find<ConnectorControl>().POSTMETHOD(
         api: ApiFactory.RO_BOOKING_SaveClientPdc,
         json: {
           "clientCode": selectedClient?.key ?? "",
@@ -958,7 +958,13 @@ class RoBookingController extends GetxController {
           "agencyCode": selectedAgnecy?.key ?? "",
           "lstClientPDC": list
         },
-        fun: (value) {});
+        fun: (value) {
+          if (value is Map && value.containsKey("info_SaveClientPDCForm")) {
+            LoadingDialog.callDataSaved(msg: value["info_SaveClientPDCForm"]["message"]);
+          } else {
+            LoadingDialog.callErrorMessage1(msg: value);
+          }
+        });
   }
 
   saveCheck() {
