@@ -26,23 +26,17 @@ class SpotsView extends GetView<RoBookingController> {
       children: [
         Expanded(
             child: Container(
-          child: controller.bookingNoLeaveData != null ||
-                  controller.addSpotData != null
+          child: controller.bookingNoLeaveData != null || controller.addSpotData != null
               ? DataGridShowOnlyKeys(
                   onload: (loadEvent) {
                     controller.spotViewGrid = loadEvent.stateManager;
                   },
-                  mapData: controller.addSpotData?.lstSpots
-                          ?.map((e) => e.toJson())
-                          .toList() ??
-                      controller.bookingNoLeaveData?.lstSpots
-                          ?.map((e) => e.toJson())
-                          .toList() ??
+                  mapData: controller.addSpotData?.lstSpots?.map((e) => e.toJson()).toList() ??
+                      controller.bookingNoLeaveData?.lstSpots?.map((e) => e.toJson()).toList() ??
                       [],
                   formatDate: true)
               : Container(
-                  decoration: BoxDecoration(
-                      border: Border.all(width: 1.0, color: Colors.grey)),
+                  decoration: BoxDecoration(border: Border.all(width: 1.0, color: Colors.grey)),
                 ),
         )),
         SizedBox(
@@ -57,52 +51,35 @@ class SpotsView extends GetView<RoBookingController> {
               children: [
                 DropDownField.formDropDown1WidthMap(
                     controller.agencyLeaveData?.lstPdcList
-                            ?.map((e) => DropDownValue(
-                                key: e.chequeId.toString(),
-                                value: e.chequeNo.toString()))
+                            ?.map((e) => DropDownValue(key: e.chequeId.toString(), value: e.chequeNo.toString()))
                             .toList() ??
                         [],
                     (value) => {},
                     "PDC",
                     0.12,
                     showMenuInbottom: false,
-                    dialogHeight: 20),
+                    dialogHeight: 40),
                 InputFields.formField1(
                     hintTxt: "Amt",
                     isEnable: false,
                     controller: TextEditingController(
-                        text: (controller
-                                    .agencyLeaveData?.lstPdcList?.isNotEmpty ??
-                                false)
-                            ? (controller.agencyLeaveData?.lstPdcList?.first
-                                        .chequeAmount ??
-                                    "")
-                                .toString()
+                        text: (controller.agencyLeaveData?.lstPdcList?.isNotEmpty ?? false)
+                            ? (controller.agencyLeaveData?.lstPdcList?.first.chequeAmount ?? "").toString()
                             : "")),
                 InputFields.formField1(
                     hintTxt: "Bank",
                     width: 0.24,
                     isEnable: false,
                     controller: TextEditingController(
-                        text: (controller
-                                    .agencyLeaveData?.lstPdcList?.isNotEmpty ??
-                                false)
-                            ? (controller.agencyLeaveData?.lstPdcList?.first
-                                        .bankName ??
-                                    "")
-                                .toString()
+                        text: (controller.agencyLeaveData?.lstPdcList?.isNotEmpty ?? false)
+                            ? (controller.agencyLeaveData?.lstPdcList?.first.bankName ?? "").toString()
                             : "")),
                 InputFields.formField1(
                     hintTxt: "Bal Amt",
                     isEnable: false,
                     controller: TextEditingController(
-                        text: (controller
-                                    .agencyLeaveData?.lstPdcList?.isNotEmpty ??
-                                false)
-                            ? (controller.agencyLeaveData?.lstPdcList?.first
-                                        .chequeAmount ??
-                                    "")
-                                .toString()
+                        text: (controller.agencyLeaveData?.lstPdcList?.isNotEmpty ?? false)
+                            ? (controller.agencyLeaveData?.lstPdcList?.first.chequeAmount ?? "").toString()
                             : "")),
               ],
             ),
@@ -122,15 +99,12 @@ class SpotsView extends GetView<RoBookingController> {
                   btnText: "Del Spot Row",
                   callback: () {
                     if (controller.spotViewGrid?.currentCell != null) {
-                      if (controller.addSpotData != null &&
-                          controller.addSpotData?.lstSpots != null) {
-                        controller.addSpotData?.lstSpots
-                            ?.removeAt(controller.spotViewGrid!.currentRowIdx!);
-                      } else if (controller.bookingNoLeaveData != null &&
-                          controller.bookingNoLeaveData?.lstSpots != null) {
-                        controller.bookingNoLeaveData?.lstSpots
-                            ?.removeAt(controller.spotViewGrid!.currentRowIdx!);
+                      if (controller.addSpotData != null && controller.addSpotData?.lstSpots != null) {
+                        controller.addSpotData?.lstSpots?.removeAt(controller.spotViewGrid!.currentRowIdx!);
+                      } else if (controller.bookingNoLeaveData != null && controller.bookingNoLeaveData?.lstSpots != null) {
+                        controller.bookingNoLeaveData?.lstSpots?.removeAt(controller.spotViewGrid!.currentRowIdx!);
                       }
+                      controller.spotViewGrid?.removeRows([controller.spotViewGrid!.currentRow!]);
                     }
                   },
                 ),
@@ -149,12 +123,10 @@ class SpotsView extends GetView<RoBookingController> {
                         },
                         fun: (value) {
                           Map data = {};
-                          if (value is Map &&
-                              value.containsKey("info_OnLoadClientPDC")) {
+                          if (value is Map && value.containsKey("info_OnLoadClientPDC")) {
                             data = value["info_OnLoadClientPDC"];
                           }
-                          TextEditingController chequeNoCtrl =
-                                  TextEditingController(),
+                          TextEditingController chequeNoCtrl = TextEditingController(),
                               chqDateCtrl = TextEditingController(),
                               chequeAmtCtrl = TextEditingController(),
                               bankCtrl = TextEditingController(),
@@ -171,8 +143,7 @@ class SpotsView extends GetView<RoBookingController> {
                                 child: Column(
                                   children: [
                                     Wrap(
-                                      crossAxisAlignment:
-                                          WrapCrossAlignment.end,
+                                      crossAxisAlignment: WrapCrossAlignment.end,
                                       spacing: Get.width * 0.01,
                                       runSpacing: 05,
                                       children: [
@@ -180,36 +151,30 @@ class SpotsView extends GetView<RoBookingController> {
                                             isEnable: false,
                                             hintTxt: "Location",
                                             width: 0.18,
-                                            controller: TextEditingController(
-                                                text: data["locationName"])),
+                                            controller: TextEditingController(text: data["locationName"])),
                                         InputFields.formField1(
                                             isEnable: false,
                                             hintTxt: "Channel",
                                             width: 0.18,
-                                            controller: TextEditingController(
-                                                text: data["channelName"])),
+                                            controller: TextEditingController(text: data["channelName"])),
                                         InputFields.formField1(
                                             isEnable: false,
                                             hintTxt: "Client",
                                             width: 0.18,
-                                            controller: TextEditingController(
-                                                text: data["clientName"])),
+                                            controller: TextEditingController(text: data["clientName"])),
                                         InputFields.formField1(
                                             isEnable: false,
                                             hintTxt: "Agency",
                                             width: 0.18,
-                                            controller: TextEditingController(
-                                                text: data["agencyName"])),
+                                            controller: TextEditingController(text: data["agencyName"])),
                                         InputFields.formField1(
                                             isEnable: false,
                                             hintTxt: "Activity Period",
                                             width: 0.18,
-                                            controller: TextEditingController(
-                                                text: data["activityPeriod"])),
+                                            controller: TextEditingController(text: data["activityPeriod"])),
                                         Text(
                                           "[YYYYMM]",
-                                          style: TextStyle(
-                                              fontSize: SizeDefine.labelSize1),
+                                          style: TextStyle(fontSize: SizeDefine.labelSize1),
                                         )
                                       ],
                                     ),
@@ -219,68 +184,41 @@ class SpotsView extends GetView<RoBookingController> {
                                     Wrap(
                                       spacing: Get.width * 0.01,
                                       runSpacing: 05,
-                                      crossAxisAlignment:
-                                          WrapCrossAlignment.end,
+                                      crossAxisAlignment: WrapCrossAlignment.end,
                                       children: [
-                                        InputFields.formField1(
-                                            hintTxt: "Cheque No",
-                                            width: 0.083,
-                                            controller: chequeNoCtrl),
+                                        InputFields.formField1(hintTxt: "Cheque No", width: 0.083, controller: chequeNoCtrl),
                                         DateWithThreeTextField(
                                           title: "Chq Dt",
                                           widthRation: 0.084,
                                           mainTextController: chqDateCtrl,
-                                          isEnable:
-                                              controller.bookingNoLeaveData ==
-                                                  null,
+                                          isEnable: controller.bookingNoLeaveData == null,
                                         ),
-                                        InputFields.numbers(
-                                            hintTxt: "Chq Amt",
-                                            width: 0.083,
-                                            controller: chequeAmtCtrl),
-                                        InputFields.formField1(
-                                            hintTxt: "Bank",
-                                            width: 0.27,
-                                            controller: bankCtrl),
-                                        InputFields.formField1(
-                                            hintTxt: "Chq Recd By",
-                                            width: 0.27,
-                                            controller: chequeRecByCtrl),
+                                        InputFields.numbers(hintTxt: "Chq Amt", width: 0.083, controller: chequeAmtCtrl),
+                                        InputFields.formField1(hintTxt: "Bank", width: 0.27, controller: bankCtrl),
+                                        InputFields.formField1(hintTxt: "Chq Recd By", width: 0.27, controller: chequeRecByCtrl),
                                         DateWithThreeTextField(
                                           title: "Recd On",
                                           widthRation: 0.27,
                                           mainTextController: chequeRecOnCtrl,
-                                          isEnable:
-                                              controller.bookingNoLeaveData ==
-                                                  null,
+                                          isEnable: controller.bookingNoLeaveData == null,
                                         ),
-                                        InputFields.formField1(
-                                            hintTxt: "Remarks",
-                                            width: 0.27,
-                                            controller: remarkCtrl),
+                                        InputFields.formField1(hintTxt: "Remarks", width: 0.27, controller: remarkCtrl),
                                         FormButtonWrapper(
                                           btnText: "Add",
                                           callback: () {
                                             var listMap = {
                                               "chqNo": chequeNoCtrl.text,
-                                              "chqDate": chqDateCtrl.text
-                                                  .fromdMyToyMd(),
-                                              "chqAmount": double.parse(
-                                                  chequeAmtCtrl.text),
+                                              "chqDate": chqDateCtrl.text.fromdMyToyMd(),
+                                              "chqAmount": double.parse(chequeAmtCtrl.text),
                                               "bankName": bankCtrl.text,
-                                              "chequeReceivedBy":
-                                                  chequeRecByCtrl.text,
-                                              "chequeReceivedOn":
-                                                  chequeRecOnCtrl.text
-                                                      .fromdMyToyMd(),
+                                              "chequeReceivedBy": chequeRecByCtrl.text,
+                                              "chequeReceivedOn": chequeRecOnCtrl.text.fromdMyToyMd(),
                                               "remarks": remarkCtrl.text,
                                               "chequeId": null,
                                               "rowNo": listdata.length + 1
                                             };
                                             if (listdata.contains(listMap)) {
-                                              LoadingDialog.callErrorMessage1(
-                                                  msg:
-                                                      "Duplicate Cheque. cannot add");
+                                              LoadingDialog.callErrorMessage1(msg: "Duplicate Cheque. cannot add");
                                             } else {
                                               listdata.add(listMap);
                                               listdata.refresh();
@@ -293,14 +231,10 @@ class SpotsView extends GetView<RoBookingController> {
                                       height: 5,
                                     ),
                                     Expanded(
-                                      child: Container(
-                                          color: Colors.grey[100],
-                                          child: Obx(() => DataGridShowOnlyKeys(
-                                              mapData: listdata.value))),
+                                      child: Container(color: Colors.grey[100], child: Obx(() => DataGridShowOnlyKeys(mapData: listdata.value))),
                                     ),
                                     Row(
-                                      mainAxisAlignment:
-                                          MainAxisAlignment.center,
+                                      mainAxisAlignment: MainAxisAlignment.center,
                                       children: [
                                         FormButtonWrapper(
                                           btnText: "Save",

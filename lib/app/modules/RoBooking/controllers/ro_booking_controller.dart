@@ -547,6 +547,8 @@ class RoBookingController extends GetxController {
             maxspendCtrl.text = dealNoLeaveData?.maxSpend ?? 0.toString();
             selectedBrand =
                 DropDownValue(key: dealNoLeaveData?.lstBrand?.first.brandcode ?? "", value: dealNoLeaveData?.lstBrand?.first.brandname ?? "");
+            dealToCtrl.text = DateFormat("dd-MM-yyyy").format(DateFormat("MM/dd/yyyy").parse(dealNoLeaveData?.dealtoDate?.split(" ")[0] ?? ""));
+            dealFromCtrl.text = DateFormat("dd-MM-yyyy").format(DateFormat("MM/dd/yyyy").parse(dealNoLeaveData?.dealFromDate?.split(" ")[0] ?? ""));
             update(["init", "dealGrid"]);
           }
         });
