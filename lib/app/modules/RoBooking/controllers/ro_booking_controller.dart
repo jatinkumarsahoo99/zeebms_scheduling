@@ -786,7 +786,7 @@ class RoBookingController extends GetxController {
   }
 
   pickFile() async {
-    FilePickerResult? result = await FilePicker.platform.pickFiles(allowedExtensions: ["xlsx", "xlsm", "xls", "xlsb", "xltx"]);
+    FilePickerResult? result = await FilePicker.platform.pickFiles(allowedExtensions: ["xlsx", "xlsm", "xls", "xlsb", "xltx"], type: FileType.custom);
 
     if (result != null && result.files.single != null) {
       importMark(result.files.first);
