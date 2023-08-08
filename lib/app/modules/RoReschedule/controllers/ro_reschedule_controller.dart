@@ -452,7 +452,10 @@ class RoRescheduleController extends GetxController {
   addSpot(RORescheduleDGviewDoubleClickData data) {
     var json = {
       "breakNo": roRescheduleOnLeaveData!.lstDgvRO![plutoGridStateManager!.currentCell!.row.sortIdx].breaknumber.toString(),
-      "midPre": data.preMid,
+      "midPre": reschedulngInitData?.lstspotPositionTypeMasters
+              ?.firstWhere((element) => element.spotPositionTypeName == data.preMid)
+              .spotPositionTypeCode ??
+          "",
       "positionCode": roRescheduleOnLeaveData!.lstDgvRO![plutoGridStateManager!.currentCell!.row.sortIdx].positionCode,
       "chkTapeID": changeTapeId.value,
       "exportTapeCode_OriTapeID": data.oriTapeID,

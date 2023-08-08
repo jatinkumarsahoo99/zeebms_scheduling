@@ -369,7 +369,7 @@ class Utils {
     // print(key);
     try {
       if (key == "no" || key == "Sr No") {
-        return 45;
+        return 50;
       } else if (key.toLowerCase().contains("locationname")) {
         return 80;
       } else if (key.toLowerCase().contains("segment") || key.toLowerCase().contains("client")) {
@@ -377,7 +377,7 @@ class Utils {
       } else if (key.toLowerCase().contains("name") || key.toLowerCase().contains("program")) {
         return 280;
       } else if (value is num || (value is String && num.tryParse(value) != null)) {
-        return 45;
+        return 50;
       } else if (key.toLowerCase().contains("date")) {
         return 80;
       }
@@ -393,7 +393,7 @@ class Utils {
 
     try {
       if (key == "no" || key == "Sr No") {
-        return 30;
+        return 50;
       }
       if (key == "tapeduration") {
         return 30;
@@ -402,7 +402,7 @@ class Utils {
       } else if (key.toLowerCase().contains("time") || key.toLowerCase().contains("program")) {
         return 120;
       } else if (value is num || (value is String && num.tryParse(value) != null)) {
-        return 45;
+        return 50;
       } else if (key.toLowerCase().contains("date")) {
         return 100;
       }
