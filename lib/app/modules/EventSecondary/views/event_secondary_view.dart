@@ -112,6 +112,7 @@ class EventSecondaryView extends GetView<EventSecondaryController> {
                                   child: controller.left1stDT.value.isEmpty
                                       ? null
                                       : DataGridFromMap(
+                                        canShowFilter:false,
                                           mapData: controller.left1stDT.value
                                               .map((e) => e.toJson())
                                               .toList(),
@@ -200,6 +201,7 @@ class EventSecondaryView extends GetView<EventSecondaryController> {
                                               }
                                             },
                                             child: DataGridFromMap(
+                                              canShowFilter:false,
                                               mapData: controller
                                                   .left2ndDT.value
                                                   .map((e) => e.toJson())
@@ -362,6 +364,7 @@ class EventSecondaryView extends GetView<EventSecondaryController> {
                                   child: controller.right3rdDT.value.isEmpty
                                       ? null
                                       : DataGridFromMap(
+                                        canShowFilter:false,
                                           mapData: controller.right3rdDT.value,
                                           onRowDoubleTap: (row) => controller
                                               .handleDoubleTapInRightTable(
