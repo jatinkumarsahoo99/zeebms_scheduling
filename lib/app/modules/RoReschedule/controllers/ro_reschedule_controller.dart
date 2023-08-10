@@ -408,7 +408,7 @@ class RoRescheduleController extends GetxController {
     Get.find<ConnectorControl>().POSTMETHOD(
         api: ApiFactory.RO_RESCHEDULE_MODIFY,
         json: {
-          "exportTapeCode": modifySelectedTapeCode!.key!,
+          "exportTapeCode": modifySelectedTapeCode!.value!,
           "segmentNumber": roRescheduleOnLeaveData!.lstDgvRO![plutoGridStateManager!.currentCell!.row.sortIdx].segmentNumber.toString(),
           "lstTable": roRescheduleOnLeaveData!.lstTable!.map((e) => e.toJson()).toList(),
           "lstUpdateTable": roRescheduleOnLeaveData!.lstUpdateTable!.map((e) => e.toJson()).toList(),
@@ -452,7 +452,10 @@ class RoRescheduleController extends GetxController {
   addSpot(RORescheduleDGviewDoubleClickData data) {
     var json = {
       "breakNo": roRescheduleOnLeaveData!.lstDgvRO![plutoGridStateManager!.currentCell!.row.sortIdx].breaknumber.toString(),
-      "midPre": data.preMid,
+      "midPre": reschedulngInitData?.lstspotPositionTypeMasters
+              ?.firstWhere((element) => element.spotPositionTypeName == data.preMid)
+              .spotPositionTypeCode ??
+          "",
       "positionCode": roRescheduleOnLeaveData!.lstDgvRO![plutoGridStateManager!.currentCell!.row.sortIdx].positionCode,
       "chkTapeID": changeTapeId.value,
       "exportTapeCode_OriTapeID": data.oriTapeID,
@@ -598,9 +601,6 @@ class RoRescheduleController extends GetxController {
     for (var element in roRescheduleOnLeaveData!.lstdgvUpdated!) {
       element.scheduleTime = DateFormat("yyyy-MM-ddTHH:mm:ss").format(DateFormat("HH:mm:ss").parse(element.scheduleTime!));
       var map = element.toJson();
-      map["recordnumber"] = element.recordnumber.toString();
-      map["segmentNumber"] = element.segmentNumber.toString();
-      map["audited"] = element.audited.toString();
       lstdgvUpdated.add(map);
     }
     Get.find<ConnectorControl>().POSTMETHOD(
@@ -609,7 +609,7 @@ class RoRescheduleController extends GetxController {
           "locationCode": selectedLocation!.key!,
           "channelCode": selectedChannel!.key!,
           "rescheduleMonth": bookingMonthCtrl.text,
-          "rescheduleNumber": reSchedNoCtrl.text,
+          "rescheduleNumber": int.tryParse("reSchedNoCtrl.text") ?? 0,
           "rescheduleDate": DateFormat("yyyy-MM-dd").format(DateFormat("dd-MM-yyyy").parse(refDateCtrl.text)),
           "bookingEffectiveDate": DateFormat("yyyy-MM-dd").format(DateFormat("dd-MM-yyyy").parse(effDateCtrl.text)),
           "rescheduleReferenceNumber": referenceCtrl.text,
@@ -625,8 +625,10 @@ class RoRescheduleController extends GetxController {
           "edit": 0,
           "LstdgvUpdated": lstdgvUpdated
         },
-        fun: (data) {
-          print(data);
+        fun: (rawdata) {
+          if (rawdata is Map && rawdata.containsKey("info_Save")) {
+            LoadingDialog.callDataSaved(msg: rawdata["info_Save"]["strMessage"]);
+          }
         });
   }
 }

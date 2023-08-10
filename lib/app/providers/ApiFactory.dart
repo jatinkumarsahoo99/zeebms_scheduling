@@ -960,10 +960,10 @@ class ApiFactory {
   static String COMING_UP_MENU_MASTER_LOAD = BASE_URL + "/api/ComingUpMenuMaster/LocationLoad";
   static String COMING_UP_MENU_MASTER_CHANNELLIST = BASE_URL + "/api/ComingUpMenuMaster/ChannelLoad?LocationCode=";
   static String COMING_UP_MENU_MASTER_GET_RETRIVERECORD = BASE_URL + "/api/ComingUpMenuMaster/RetriveRecord";
-  static String COMING_UP_MENU_MASTER_SAVE = BASE_URL + "/api/ComingUpMenuMaster/PostCoumingUpMenu";
-  static String COMING_UP_MENU_MASTER_TAPEIDLEAVE = BASE_URL + "/api/ComingUpMenuMaster/CUMMTapeIDLeave";
-  static String COMING_UP_MENU_MASTER_SEGLNOLEAVE = BASE_URL + "/api/ComingUpMenuMaster/CUMMSegNoLeave";
-  static String COMING_UP_MENU_MASTER_HOUSEIDLEAVE = BASE_URL + "/api/ComingUpMenuMaster/CUMMHouseIDLeave";
+  static String COMING_UP_MENU_MASTER_SAVE = BASE_URL + "/api/ComingUpMenuMaster/PostComingUpMenu";
+  static String COMING_UP_MENU_MASTER_TAPEIDLEAVE = BASE_URL + "/api/ComingUpMenuMaster/GetTapeIDLeave";
+  static String COMING_UP_MENU_MASTER_SEGLNOLEAVE = BASE_URL + "/api/ComingUpMenuMaster/GetSegNoLeave";
+  static String COMING_UP_MENU_MASTER_HOUSEIDLEAVE = BASE_URL + "/api/ComingUpMenuMaster/GetHouseIDLeave";
 
   ////////////////////////////////////////// DateWiseFillers ////////////////////////////
 

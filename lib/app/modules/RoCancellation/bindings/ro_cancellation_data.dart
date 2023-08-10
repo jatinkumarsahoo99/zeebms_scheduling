@@ -93,7 +93,7 @@ class CancellationData {
 }
 
 class LstBookingNoStatusData {
-  bool? requested;
+  bool? requested, requested1;
   String? programName;
   String? scheduleDate;
   String? scheduleTime;
@@ -147,7 +147,8 @@ class LstBookingNoStatusData {
       this.valuationAmount});
 
   LstBookingNoStatusData.fromJson(Map<String, dynamic> json) {
-    requested = json['requested'];
+    requested = json['requested'] ?? false;
+    requested1 = json['requested'] ?? false;
     programName = json['programName'];
     scheduleDate = json['scheduleDate'];
     scheduleTime = json['scheduleTime'];
@@ -203,7 +204,7 @@ class LstBookingNoStatusData {
       data['agencyname'] = agencyname;
       data['valuationAmount'] = valuationAmount;
     } else {
-      data['requested'] = requested;
+      data['requested'] = (requested ?? false).toString();
       data['programName'] = programName;
       data['scheduleDate'] = scheduleDate;
       data['scheduleTime'] = scheduleTime;
@@ -211,7 +212,7 @@ class LstBookingNoStatusData {
       data['tapeID'] = tapeID;
       data['tapeDuration'] = tapeDuration;
       data['spotAmount'] = spotAmount;
-      data['cancelNumber'] = cancelNumber;
+      data['cancelNumber'] = cancelNumber ?? '';
       data['bookingDetailCode'] = bookingDetailCode;
       data['dealno'] = dealno;
       data['recordnumber'] = recordnumber;

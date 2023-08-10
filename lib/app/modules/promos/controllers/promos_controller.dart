@@ -16,21 +16,21 @@ import '../../../providers/Utils.dart';
 import '../promo_model.dart';
 import 'package:dio/dio.dart' as dio;
 
-class PromosController extends GetxController {
+class SchedulePromoController extends GetxController {
   var locations = <DropDownValue>[].obs;
   var channels = <DropDownValue>[].obs;
   RxBool controllsEnabled = true.obs;
   var locationFN = FocusNode();
   var myEnabled = true.obs;
   DropDownValue? selectLocation, selectChannel;
-  var left1stDT = <DailyFPC>[].obs, left2ndDT = <PromoScheduled>[].obs, right3rdDT = [].obs;
+  var dailyFpc = <DailyFPC>[].obs, promoScheduled = <PromoScheduled>[].obs, searchPromos = [].obs;
   var fromdateTC = TextEditingController();
   var timeBand = "00:00:00:00".obs, programName = "PrgName".obs;
-  PlutoGridStateManager? left1stSM, left2ndSM, rightSM;
-  var left2ndGridSelectedIdx = 0, left1stGridSelectedIdx = 0, rightGridSelectedIdx = 0;
+  PlutoGridStateManager? fpcStateManager, scheduledPromoStateManager, searchedPromoStateManager;
+  var schedulePromoSelectedIdx = 0, fpcSelectedIdx = 0, searchPromoSelectedIdx = 0;
   var rightCount = "00:00:00:00".obs;
   // var mainData = {};
-  PromoModel? mainModel;
+  PromoModel? promoData;
   var availableTC = TextEditingController(),
       scheduledTC = TextEditingController(),
       countTC = TextEditingController(),
@@ -39,13 +39,13 @@ class PromosController extends GetxController {
 
   clearPage() {
     // mainData = {};
-    left1stSM = null;
-    mainModel = null;
-    left2ndSM = null;
-    rightSM = null;
-    left2ndGridSelectedIdx = 0;
-    left1stGridSelectedIdx = 0;
-    rightGridSelectedIdx = 0;
+    fpcStateManager = null;
+    promoData = null;
+    scheduledPromoStateManager = null;
+    searchedPromoStateManager = null;
+    schedulePromoSelectedIdx = 0;
+    fpcSelectedIdx = 0;
+    searchPromoSelectedIdx = 0;
     selectLocation = null;
     selectChannel = null;
     locations.refresh();
@@ -59,10 +59,10 @@ class PromosController extends GetxController {
     scheduledTC.clear();
     countTC.clear();
     promoIDTC.clear();
-    left1stDT.clear();
-    left2ndDT.clear();
+    dailyFpc.clear();
+    promoScheduled.clear();
     promoCaptionTC.clear();
-    right3rdDT.clear();
+    searchPromos.clear();
     locationFN.requestFocus();
   }
 
@@ -70,14 +70,6 @@ class PromosController extends GetxController {
   void onReady() {
     super.onReady();
     getLocation();
-  }
-
-  formHandler(btnName) async {
-    if (btnName == "Clear") {
-      clearPage();
-    } else if (btnName == "Save") {
-      saveData();
-    }
   }
 
   void getChannel(DropDownValue? val) {
@@ -139,20 +131,20 @@ class PromosController extends GetxController {
       fun: (resp) {
         closeDialog();
         if (resp != null && resp is Map<String, dynamic>) {
-          mainModel = PromoModel.fromJson(resp);
-          if (mainModel?.promoScheduled != null) {
-            for (var i = 0; i < (mainModel?.promoScheduled?.length ?? 0); i++) {
-              mainModel?.promoScheduled?[i].rowNo = i;
+          promoData = PromoModel.fromJson(resp);
+          if (promoData?.promoScheduled != null) {
+            for (var i = 0; i < (promoData?.promoScheduled?.length ?? 0); i++) {
+              promoData?.promoScheduled?[i].rowNo = i;
             }
           }
-          left1stDT.clear();
-          left1stDT.addAll(mainModel?.dailyFPC ?? []);
-          if (left1stDT.isEmpty) {
+          dailyFpc.clear();
+          dailyFpc.addAll(promoData?.dailyFPC ?? []);
+          if (dailyFpc.isEmpty) {
             LoadingDialog.showErrorDialog("Daily FPC not present.");
           } else {
             controllsEnabled.value = false;
-            if (mainModel?.dailyFPC?.isNotEmpty ?? false) {
-              availableTC.text = Utils.convertToTimeFromDouble(value: mainModel?.dailyFPC?[0].promoCap ?? 0);
+            if (promoData?.dailyFPC?.isNotEmpty ?? false) {
+              availableTC.text = Utils.convertToTimeFromDouble(value: promoData?.dailyFPC?[0].promoCap ?? 0);
             } else {
               availableTC.text = "00:00:00:00";
             }
@@ -170,59 +162,59 @@ class PromosController extends GetxController {
   }
 
   handleDoubleTapInLeft1stTable(int index) {
-    left1stGridSelectedIdx = index;
-    left2ndGridSelectedIdx = 0;
-    timeBand.value = left1stDT[index].startTime ?? "00:00:00:00";
-    programName.value = left1stDT[index].programName ?? "";
-    if (mainModel?.dailyFPC?.isNotEmpty ?? false) {
-      availableTC.text = Utils.convertToTimeFromDouble(value: mainModel?.dailyFPC?[0].promoCap ?? 0);
+    fpcSelectedIdx = index;
+    schedulePromoSelectedIdx = 0;
+    timeBand.value = dailyFpc[index].startTime ?? "00:00:00:00";
+    programName.value = dailyFpc[index].programName ?? "";
+    if (promoData?.dailyFPC?.isNotEmpty ?? false) {
+      availableTC.text = Utils.convertToTimeFromDouble(value: promoData?.dailyFPC?[0].promoCap ?? 0);
     } else {
       availableTC.text = "00:00:00:00";
     }
     scheduledTC.text = "00:00:00:00";
-    left1stSM?.setCurrentCell(left1stSM?.getRowByIdx(index)?.cells['startTime'], index);
-    left2ndDT.clear();
-    if (mainModel?.promoScheduled != null) {
-      left2ndDT.value = mainModel?.promoScheduled?.where((element) => timeBand.value == element.telecastTime).toList() ?? [];
-      countTC.text = left2ndDT.length.toString();
+    fpcStateManager?.setCurrentCell(fpcStateManager?.getRowByIdx(index)?.cells['startTime'], index);
+    promoScheduled.clear();
+    if (promoData?.promoScheduled != null) {
+      promoScheduled.value = promoData?.promoScheduled?.where((element) => timeBand.value == element.telecastTime).toList() ?? [];
+      countTC.text = promoScheduled.length.toString();
     }
   }
 
   handleDoubleTapInRightTable(int index) {
-    if (left2ndDT.isEmpty) {
+    if (promoScheduled.isEmpty) {
       LoadingDialog.showErrorDialog("ProgramSegaments can't be empty");
     } else {
-      rightGridSelectedIdx = index;
-      rightSM?.setCurrentCell(rightSM?.getRowByIdx(index)?.cells['caption'], index);
-      var tempRightModel = right3rdDT[index];
+      searchPromoSelectedIdx = index;
+      searchedPromoStateManager?.setCurrentCell(searchedPromoStateManager?.getRowByIdx(index)?.cells['caption'], index);
+      var tempRightModel = searchPromos[index];
       var insertModel = PromoScheduled(
         promoPolicyName: "MANUAL",
         promoCaption: tempRightModel['caption'],
-        priority: left2ndDT[left2ndGridSelectedIdx].priority,
+        priority: promoScheduled[schedulePromoSelectedIdx].priority,
         promoDuration: rightCount.value,
         houseId: tempRightModel['txId'],
-        programName: left1stDT[left1stGridSelectedIdx].programName,
-        telecastTime: left1stDT[left1stGridSelectedIdx].startTime,
-        programCode: left1stDT[left1stGridSelectedIdx].programCode,
+        programName: dailyFpc[fpcSelectedIdx].programName,
+        telecastTime: dailyFpc[fpcSelectedIdx].startTime,
+        programCode: dailyFpc[fpcSelectedIdx].programCode,
         promoCode: tempRightModel["eventCode"],
-        promoSchedulingCode: left2ndDT[left2ndGridSelectedIdx].promoSchedulingCode,
+        promoSchedulingCode: promoScheduled[schedulePromoSelectedIdx].promoSchedulingCode,
       );
 
-      if (mainModel?.promoScheduled != null && left2ndDT[left2ndGridSelectedIdx].rowNo != null) {
-        mainModel?.promoScheduled?.insert(left2ndDT[left2ndGridSelectedIdx].rowNo! + 1, insertModel);
-        for (var i = 0; i < (mainModel?.promoScheduled?.length ?? 0); i++) {
-          mainModel?.promoScheduled?[i].rowNo = i;
+      if (promoData?.promoScheduled != null && promoScheduled[schedulePromoSelectedIdx].rowNo != null) {
+        promoData?.promoScheduled?.insert(promoScheduled[schedulePromoSelectedIdx].rowNo! + 1, insertModel);
+        for (var i = 0; i < (promoData?.promoScheduled?.length ?? 0); i++) {
+          promoData?.promoScheduled?[i].rowNo = i;
         }
       }
-      left2ndDT.insert(left2ndGridSelectedIdx + 1, insertModel);
-      left2ndGridSelectedIdx = left2ndGridSelectedIdx + 1;
-      left2ndDT.refresh();
+      promoScheduled.insert(schedulePromoSelectedIdx + 1, insertModel);
+      schedulePromoSelectedIdx = schedulePromoSelectedIdx + 1;
+      promoScheduled.refresh();
       scheduledTC.text = Utils.convertToTimeFromDouble(value: (Utils.convertToSecond(value: scheduledTC.text)) + (tempRightModel['duration'] ?? 0));
       if ((Utils.convertToSecond(value: scheduledTC.text)) + (tempRightModel['duration'] ?? 0) > Utils.convertToSecond(value: "00:16:49:00")) {
-        left1stDT[left1stGridSelectedIdx].exceed = true;
-        left1stDT.refresh();
+        dailyFpc[fpcSelectedIdx].exceed = true;
+        dailyFpc.refresh();
       }
-      countTC.text = left2ndDT.length.toString();
+      countTC.text = promoScheduled.length.toString();
     }
   }
 
@@ -248,7 +240,7 @@ class PromosController extends GetxController {
   }
 
   void handleAddTap() {
-    handleDoubleTapInRightTable(rightGridSelectedIdx);
+    handleDoubleTapInRightTable(searchPromoSelectedIdx);
   }
 
   void handleSearchTap() {
@@ -262,8 +254,8 @@ class PromosController extends GetxController {
       fun: (resp) {
         closeDialog();
         if (resp != null && resp is List<dynamic>) {
-          right3rdDT.clear();
-          right3rdDT.addAll(resp);
+          searchPromos.clear();
+          searchPromos.addAll(resp);
         } else {
           LoadingDialog.showErrorDialog(resp.toString());
         }
@@ -280,9 +272,9 @@ class PromosController extends GetxController {
   }
 
   handleOnSelectRightTable(int index) {
-    rightGridSelectedIdx = index;
-    if (right3rdDT[index]['duration'] != null && index != -1) {
-      rightCount.value = Utils.convertToTimeFromDouble(value: right3rdDT[index]['duration']);
+    searchPromoSelectedIdx = index;
+    if (searchPromos[index]['duration'] != null && index != -1) {
+      rightCount.value = Utils.convertToTimeFromDouble(value: searchPromos[index]['duration']);
     }
   }
 
@@ -291,7 +283,7 @@ class PromosController extends GetxController {
       LoadingDialog.showErrorDialog("Please select Location and Channel.");
       return;
     }
-    if (mainModel?.promoScheduled == null || (mainModel?.promoScheduled?.isEmpty ?? true)) {
+    if (promoData?.promoScheduled == null || (promoData?.promoScheduled?.isEmpty ?? true)) {
       LoadingDialog.showErrorDialog("Nothing to save. Please schedule promos");
       return;
     }
@@ -315,7 +307,7 @@ class PromosController extends GetxController {
         "channelCode": selectChannel?.key,
         "telecastDate": DateFormat("dd-MMM-yyyy").format(DateFormat("dd-MM-yyyy").parse(fromdateTC.text)),
         "modifiedBy": Get.find<MainController>().user?.logincode,
-        "promoSchSaveDetails": mainModel?.promoScheduled?.map((e) => e.toJson(fromSave: true)).toList(),
+        "promoSchSaveDetails": promoData?.promoScheduled?.map((e) => e.toJson(fromSave: true)).toList(),
       },
     );
   }
@@ -331,9 +323,9 @@ class PromosController extends GetxController {
           closeDialog();
           if (resp != null && resp is List<dynamic>) {
             if (resp.isNotEmpty) {
-              mainModel?.promoScheduled = [];
-              mainModel?.promoScheduled?.addAll(resp.map((e) => PromoScheduled.fromJson(e)).toList());
-              handleDoubleTapInLeft1stTable(left1stGridSelectedIdx);
+              promoData?.promoScheduled = [];
+              promoData?.promoScheduled?.addAll(resp.map((e) => PromoScheduled.fromJson(e)).toList());
+              handleDoubleTapInLeft1stTable(fpcSelectedIdx);
             }
           } else {
             LoadingDialog.showErrorDialog(resp.toString());

@@ -58,7 +58,7 @@ class SpotsView extends GetView<RoBookingController> {
                     "PDC",
                     0.12,
                     showMenuInbottom: false,
-                    dialogHeight: 40),
+                    dialogHeight: 80),
                 InputFields.formField1(
                     hintTxt: "Amt",
                     isEnable: false,
@@ -238,16 +238,8 @@ class SpotsView extends GetView<RoBookingController> {
                                       children: [
                                         FormButtonWrapper(
                                           btnText: "Save",
-                                          callback: () {
-                                            controller.savePDC(listdata.value);
-                                          },
-                                        ),
-                                        SizedBox(
-                                          width: 5,
-                                        ),
-                                        FormButtonWrapper(
-                                          btnText: "Clear",
-                                          callback: () {
+                                          callback: () async {
+                                            await controller.savePDC(listdata.value);
                                             chequeNoCtrl.text = "";
                                             chqDateCtrl.text = "";
                                             chequeAmtCtrl.text = "";
@@ -258,6 +250,13 @@ class SpotsView extends GetView<RoBookingController> {
                                             listdata.clear();
                                             listdata.refresh();
                                           },
+                                        ),
+                                        SizedBox(
+                                          width: 5,
+                                        ),
+                                        FormButtonWrapper(
+                                          btnText: "Clear",
+                                          callback: () {},
                                         ),
                                       ],
                                     )

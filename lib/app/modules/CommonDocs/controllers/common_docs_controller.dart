@@ -11,6 +11,7 @@ import '../../../controller/MainController.dart';
 import '../../../providers/ApiFactory.dart';
 import '../../../providers/ExportData.dart';
 import '../model/common_docs_model.dart';
+import 'package:url_launcher/url_launcher.dart' as urlL;
 
 class CommonDocsController extends GetxController {
   PlutoGridStateManager? viewDocsStateManger;
@@ -20,16 +21,6 @@ class CommonDocsController extends GetxController {
   void onInit() {
     super.onInit();
     documents.clear();
-  }
-
-  @override
-  void onReady() {
-    super.onReady();
-  }
-
-  @override
-  void onClose() {
-    super.onClose();
   }
 
   Future<bool> getInitailData(String docKey) async {
@@ -79,9 +70,7 @@ class CommonDocsController extends GetxController {
   }
 
   Future<void> handleAddDocs(String? documentKey) async {
-    FilePickerResult? result = await FilePicker.platform.pickFiles(
-      allowMultiple: false,
-    );
+    FilePickerResult? result = await FilePicker.platform.pickFiles(allowMultiple: false, allowedExtensions: ['xlsx'], type: FileType.custom);
     if (result != null && result.files.isNotEmpty) {
       LoadingDialog.call();
       await Get.find<ConnectorControl>().POSTMETHOD_FORMDATA_HEADER(
@@ -110,10 +99,16 @@ class CommonDocsController extends GetxController {
     LoadingDialog.call();
     Get.find<ConnectorControl>().GET_METHOD_CALL_HEADER(
       api: ApiFactory.COMMON_DOCS_VIEW(documents[viewDocsStateManger?.currentRowIdx ?? 0].documentId.toString()),
-      fun: (data) {
+      fun: (data) async {
         Get.back();
+
         if (data is Map && data.containsKey("addingDocument")) {
-          ExportData().exportFilefromByte(base64Decode(data["addingDocument"][0]["documentData"]), data["addingDocument"][0]["documentname"]);
+          var path = await ExportData()
+              .exportFilefromByte(base64Decode(data["addingDocument"][0]["documentData"]), data["addingDocument"][0]["documentname"]);
+
+          if (await urlL.canLaunchUrl(Uri.parse(path))) {
+            urlL.launchUrl(path);
+          }
         }
       },
       failed: () {

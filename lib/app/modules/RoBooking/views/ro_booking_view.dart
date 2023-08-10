@@ -471,6 +471,7 @@ class RoBookingView extends StatelessWidget {
                 Obx(
                   () => CupertinoSlidingSegmentedControl(
                       groupValue: controller.currentTab.value,
+                      padding: EdgeInsets.all(1),
                       children: controller.tabs.map((key, value) => MapEntry(
                           key,
                           Padding(

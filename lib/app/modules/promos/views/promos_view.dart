@@ -1,5 +1,11 @@
+import 'package:bms_scheduling/app/modules/RoBooking/controllers/ro_booking_controller.dart';
+import 'package:bms_scheduling/app/providers/Utils.dart';
+import 'package:bms_scheduling/app/routes/app_pages.dart';
+import 'package:bms_scheduling/widgets/DataGridShowOnly.dart';
+import 'package:bms_scheduling/widgets/LoadingDialog.dart';
 import 'package:bms_scheduling/widgets/PlutoGrid/pluto_grid.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:get/get.dart';
 
 import '../../../../widgets/CheckBoxWidget.dart';
@@ -9,13 +15,16 @@ import '../../../../widgets/dropdown.dart';
 import '../../../../widgets/gridFromMap.dart';
 import '../../../../widgets/input_fields.dart';
 import '../../../controller/HomeController.dart';
+import '../../../controller/MainController.dart';
+import '../../../data/PermissionModel.dart';
 import '../controllers/promos_controller.dart';
 
-class PromosView extends GetView<PromosController> {
-  PromosView({Key? key}) : super(key: key);
+class SchedulePromoView extends StatelessWidget {
+  SchedulePromoView({Key? key}) : super(key: key);
 
   late PlutoGridStateManager stateManager;
   var formName = 'Scheduling Promo';
+  final controller = Get.put<SchedulePromoController>(SchedulePromoController());
 
   void handleOnRowChecked(PlutoGridOnRowCheckedEvent event) {}
   //PromosController controller = Get.put(PromosController());
@@ -26,8 +35,8 @@ class PromosView extends GetView<PromosController> {
     final w = MediaQuery.of(context).size.width;
     final h = MediaQuery.of(context).size.height;
 
-    return GetBuilder<PromosController>(
-        init: PromosController(),
+    return GetBuilder<SchedulePromoController>(
+        init: controller,
         id: "initData",
         builder: (controller) {
           return Scaffold(
@@ -92,7 +101,13 @@ class PromosView extends GetView<PromosController> {
                                           padding: const EdgeInsets.only(left: 10, top: 17.0),
                                           child: FormButton(
                                             btnText: "Show Details",
-                                            callback: controller.showDetails,
+                                            callback: () {
+                                              if (controller.selectLocation != null && controller.selectChannel != null) {
+                                                controller.showDetails();
+                                              } else {
+                                                LoadingDialog.showErrorDialog("");
+                                              }
+                                            },
                                           ),
                                         ),
                                         const SizedBox(width: 10),
@@ -101,7 +116,7 @@ class PromosView extends GetView<PromosController> {
                                           child: Obx(() {
                                             return FormButton(
                                               btnText: "Import",
-                                              isEnabled: controller.left1stDT.value.isNotEmpty,
+                                              isEnabled: controller.dailyFpc.value.isNotEmpty,
                                               callback: controller.handleImportTap,
                                             );
                                           }),
@@ -119,27 +134,27 @@ class PromosView extends GetView<PromosController> {
                                   Expanded(
                                     child: Obx(() {
                                       return Container(
-                                        decoration: controller.left1stDT.value.isEmpty ? BoxDecoration(border: Border.all(color: Colors.grey)) : null,
-                                        child: controller.left1stDT.value.isEmpty
+                                        decoration: controller.dailyFpc.value.isEmpty ? BoxDecoration(border: Border.all(color: Colors.grey)) : null,
+                                        child: controller.dailyFpc.value.isEmpty
                                             ? null
-                                            : DataGridFromMap(
-                                                mapData: controller.left1stDT.value.map((e) => e.toJson()).toList(),
+                                            : DataGridShowOnlyKeys(
+                                                mapData: controller.dailyFpc.value.map((e) => e.toJson()).toList(),
                                                 onRowDoubleTap: (row) => controller.handleDoubleTapInLeft1stTable(row.rowIdx),
                                                 onload: (event) {
-                                                  controller.left1stSM = event.stateManager;
+                                                  controller.fpcStateManager = event.stateManager;
                                                   event.stateManager.setSelectingMode(PlutoGridSelectingMode.row);
                                                   event.stateManager.setSelecting(true);
                                                   event.stateManager.setCurrentCell(
-                                                      event.stateManager.getRowByIdx(controller.left1stGridSelectedIdx)?.cells['startTime'],
-                                                      controller.left1stGridSelectedIdx);
+                                                      event.stateManager.getRowByIdx(controller.fpcSelectedIdx)?.cells['startTime'],
+                                                      controller.fpcSelectedIdx);
                                                 },
-                                                colorCallback: (row) => controller.left1stDT[row.rowIdx].exceed
+                                                colorCallback: (row) => controller.dailyFpc[row.rowIdx].exceed
                                                     ? Colors.red
-                                                    : ((row.row.cells.containsValue(controller.left1stSM?.currentCell))
+                                                    : ((row.row.cells.containsValue(controller.fpcStateManager?.currentCell))
                                                         ? Colors.deepPurple.shade200
                                                         : Colors.white),
                                                 mode: PlutoGridMode.selectWithOneTap,
-                                                onSelected: (row) => controller.left1stGridSelectedIdx = row.rowIdx ?? 0,
+                                                onSelected: (row) => controller.fpcSelectedIdx = row.rowIdx ?? 0,
                                               ),
                                       );
                                     }),
@@ -148,28 +163,40 @@ class PromosView extends GetView<PromosController> {
                                   Expanded(
                                     child: Obx(() {
                                       return Container(
-                                        decoration: controller.left2ndDT.value.isEmpty ? BoxDecoration(border: Border.all(color: Colors.grey)) : null,
-                                        child: controller.left2ndDT.value.isEmpty
+                                        decoration:
+                                            controller.promoScheduled.value.isEmpty ? BoxDecoration(border: Border.all(color: Colors.grey)) : null,
+                                        child: controller.promoScheduled.value.isEmpty
                                             ? null
-                                            : DataGridFromMap(
-                                                mapData: controller.left2ndDT.value.map((e) => e.toJson()).toList(),
+                                            : DataGridShowOnlyKeys(
+                                                mapData: controller.promoScheduled.value.map((e) => e.toJson()).toList(),
                                                 mode: PlutoGridMode.selectWithOneTap,
-                                                colorCallback: (row) => (row.row.cells.containsValue(controller.left2ndSM?.currentCell))
-                                                    ? Colors.deepPurple.shade200
-                                                    : Colors.white,
+                                                colorCallback: (row) =>
+                                                    (row.row.cells.containsValue(controller.scheduledPromoStateManager?.currentCell))
+                                                        ? Colors.deepPurple.shade200
+                                                        : Colors.white,
                                                 onload: (event) {
-                                                  controller.left2ndSM = event.stateManager;
+                                                  controller.scheduledPromoStateManager = event.stateManager;
+                                                  controller.scheduledPromoStateManager!.gridFocusNode.onKeyEvent = (node, event) {
+                                                    // print("Key Pressed");
+                                                    if (event is RawKeyDownEvent && event.physicalKey == PhysicalKeyboardKey.delete) {
+                                                      print("Delete Pressed");
+                                                      if (controller.scheduledPromoStateManager?.currentCell != null) {
+                                                        controller.promoScheduled.removeAt(controller.scheduledPromoStateManager!.currentRowIdx!);
+                                                      }
+                                                    }
+                                                    return KeyEventResult.skipRemainingHandlers;
+                                                  };
                                                   event.stateManager.setSelectingMode(PlutoGridSelectingMode.row);
                                                   event.stateManager.setSelecting(true);
                                                   event.stateManager.setCurrentCell(
-                                                      event.stateManager.getRowByIdx(controller.left2ndGridSelectedIdx)?.cells['promoPolicyName'],
-                                                      controller.left2ndGridSelectedIdx);
+                                                      event.stateManager.getRowByIdx(controller.schedulePromoSelectedIdx)?.cells['promoPolicyName'],
+                                                      controller.schedulePromoSelectedIdx);
                                                   // event.stateManager.moveCurrentCell(PlutoMoveDirection.down, force: true, notify: true);
                                                   event.stateManager.moveCurrentCellByRowIdx(
-                                                      controller.left2ndGridSelectedIdx, PlutoMoveDirection.down,
+                                                      controller.schedulePromoSelectedIdx, PlutoMoveDirection.down,
                                                       notify: true);
                                                 },
-                                                onSelected: (row) => controller.left2ndGridSelectedIdx = row.rowIdx ?? 0,
+                                                onSelected: (row) => controller.schedulePromoSelectedIdx = row.rowIdx ?? 0,
                                               ),
                                       );
                                     }),
@@ -197,6 +224,7 @@ class PromosView extends GetView<PromosController> {
                                           widthRatio: 0.09,
                                           paddingLeft: 5,
                                           hintTxt: "Available",
+                                          disabledTextColor: Colors.black87,
                                           controller: controller.availableTC,
                                           maxLen: 10,
                                           isEnable: false,
@@ -206,6 +234,7 @@ class PromosView extends GetView<PromosController> {
                                         padding: const EdgeInsets.only(top: 5.0),
                                         child: InputFields.formField1Width(
                                           widthRatio: 0.09,
+                                          disabledTextColor: Colors.black87,
                                           paddingLeft: 5,
                                           hintTxt: "Scheduled",
                                           controller: controller.scheduledTC,
@@ -219,6 +248,7 @@ class PromosView extends GetView<PromosController> {
                                           widthRatio: 0.09,
                                           paddingLeft: 5,
                                           hintTxt: "Count",
+                                          disabledTextColor: Colors.black87,
                                           controller: controller.countTC,
                                           maxLen: 10,
                                           isEnable: false,
@@ -316,7 +346,7 @@ class PromosView extends GetView<PromosController> {
                                         padding: const EdgeInsets.only(left: 10, bottom: 5.0, top: 5.0),
                                         child: FormButton(
                                           btnText: "Auto Add",
-                                          callback: controller.handleAutoAddTap,
+                                          callback: () {},
                                         ),
                                       ),
                                     ],
@@ -325,21 +355,22 @@ class PromosView extends GetView<PromosController> {
                                     child: Obx(() {
                                       return Container(
                                         decoration:
-                                            controller.right3rdDT.value.isEmpty ? BoxDecoration(border: Border.all(color: Colors.grey)) : null,
-                                        child: controller.right3rdDT.value.isEmpty
+                                            controller.searchPromos.value.isEmpty ? BoxDecoration(border: Border.all(color: Colors.grey)) : null,
+                                        child: controller.searchPromos.value.isEmpty
                                             ? null
-                                            : DataGridFromMap(
-                                                mapData: controller.right3rdDT.value,
+                                            : DataGridShowOnlyKeys(
+                                                mapData: controller.searchPromos.value,
                                                 onRowDoubleTap: (row) => controller.handleDoubleTapInRightTable(row.rowIdx),
                                                 onload: (event) {
-                                                  controller.rightSM = event.stateManager;
+                                                  controller.searchedPromoStateManager = event.stateManager;
                                                   event.stateManager.setSelectingMode(PlutoGridSelectingMode.row);
                                                   event.stateManager.setSelecting(true);
                                                   // event.stateManager.setCurrentCell(event.stateManager.firstCell, 0);
                                                 },
-                                                colorCallback: (row) => (row.row.cells.containsValue(controller.rightSM?.currentCell))
-                                                    ? Colors.deepPurple.shade200
-                                                    : Colors.white,
+                                                colorCallback: (row) =>
+                                                    (row.row.cells.containsValue(controller.searchedPromoStateManager?.currentCell))
+                                                        ? Colors.deepPurple.shade200
+                                                        : Colors.white,
                                                 mode: PlutoGridMode.selectWithOneTap,
                                                 onSelected: (row) => controller.handleOnSelectRightTable(row.rowIdx ?? -1),
                                               ),
@@ -357,6 +388,9 @@ class PromosView extends GetView<PromosController> {
                         id: "buttons",
                         init: Get.find<HomeController>(),
                         builder: (btcontroller) {
+                          PermissionModel formPermissions = Get.find<MainController>().permissionList!.lastWhere((element) {
+                            return element.appFormName == Routes.SCHEDULE_PROMO.replaceAll("/", "");
+                          });
                           if (btcontroller.buttons != null) {
                             return Container(
                               decoration: const BoxDecoration(
@@ -370,9 +404,11 @@ class PromosView extends GetView<PromosController> {
                                     //if (Utils.btnAccessHandler(btn['name'], controller.formPermissions!) != null)
                                     FormButtonWrapper(
                                       btnText: btn["name"],
-                                      callback: () => controller.formHandler(
-                                        btn['name'],
-                                      ),
+                                      callback: Utils.btnAccessHandler2(btn['name'], btcontroller, formPermissions) == null
+                                          ? null
+                                          : () => formHandler(
+                                                btn['name'],
+                                              ),
                                     )
                                 ],
                               ),
@@ -386,5 +422,14 @@ class PromosView extends GetView<PromosController> {
             ),
           );
         });
+  }
+
+  formHandler(btnName) async {
+    if (btnName == "Clear") {
+      Get.delete<RoBookingController>();
+      Get.find<HomeController>().clearPage1();
+    } else if (btnName == "Save") {
+      controller.saveData();
+    }
   }
 }
