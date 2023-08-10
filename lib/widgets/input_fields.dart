@@ -533,6 +533,7 @@ class InputFields {
     bool? isEnable,
     int? maxLen,
     FocusNode? focus,
+    Color? disabledTextColor = Colors.grey,
     Function? onChange,
     bool autoFocus = false,
     bool titleinBlack = false,
@@ -543,7 +544,7 @@ class InputFields {
       children: [
         Padding(
           padding: EdgeInsets.only(left: paddingLeft ?? 10),
-          child: LabelText.style(hint: hintTxt, txtColor: (isEnable ?? true) || titleinBlack ? Colors.black : Colors.grey),
+          child: LabelText.style(hint: hintTxt, txtColor: (isEnable ?? true) || titleinBlack ? Colors.black : disabledTextColor),
         ),
         Container(
           // padding: const EdgeInsets.only(
