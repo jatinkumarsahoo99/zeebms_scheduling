@@ -203,7 +203,7 @@ class LogAdditionsController extends GetxController {
       "locationcode": selectLocation?.key ?? "",
       "locationName": selectLocation?.value ?? "",
       "channelcode": selectChannel.value?.key ?? "",
-      "channelName": selectChannel.value ?? "",
+      "channelName": selectChannel.value?.value ?? "",
       "telecastDate": selectedDate.text,
       "chkIgnore": isIgnoreSpot.value,
       "chkStandby": isStandby
