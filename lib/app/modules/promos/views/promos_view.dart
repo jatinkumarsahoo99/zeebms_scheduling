@@ -3,6 +3,7 @@ import 'package:bms_scheduling/app/providers/Utils.dart';
 import 'package:bms_scheduling/app/routes/app_pages.dart';
 import 'package:bms_scheduling/widgets/PlutoGrid/pluto_grid.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:get/get.dart';
 
 import '../../../../widgets/CheckBoxWidget.dart';
@@ -16,8 +17,8 @@ import '../../../controller/MainController.dart';
 import '../../../data/PermissionModel.dart';
 import '../controllers/promos_controller.dart';
 
-class PromosView extends StatelessWidget {
-  PromosView({Key? key}) : super(key: key);
+class SchedulePromoView extends StatelessWidget {
+  SchedulePromoView({Key? key}) : super(key: key);
 
   late PlutoGridStateManager stateManager;
   var formName = 'Scheduling Promo';
@@ -159,6 +160,14 @@ class PromosView extends StatelessWidget {
                                         child: controller.promoScheduled.value.isEmpty
                                             ? null
                                             : DataGridFromMap(
+                                                focusNode: FocusNode(onKey: (focusNOde, keyEvent) {
+                                                  if (keyEvent.isKeyPressed(LogicalKeyboardKey.delete)) {
+                                                    if (controller.scheduledPromoStateManager?.currentCell != null) {
+                                                      controller.promoScheduled.removeAt(controller.scheduledPromoStateManager!.currentRowIdx!);
+                                                    }
+                                                  }
+                                                  return KeyEventResult.ignored;
+                                                }),
                                                 mapData: controller.promoScheduled.value.map((e) => e.toJson()).toList(),
                                                 mode: PlutoGridMode.selectWithOneTap,
                                                 colorCallback: (row) =>
@@ -407,9 +416,10 @@ class PromosView extends StatelessWidget {
 
   formHandler(btnName) async {
     if (btnName == "Clear") {
-    } else if (btnName == "Save") {
       Get.delete<RoBookingController>();
       Get.find<HomeController>().clearPage1();
+    } else if (btnName == "Save") {
+      controller.saveData();
     }
   }
 }
