@@ -134,7 +134,7 @@ class AuthGuard1 extends StatelessWidget {
             case Routes.FILLER:
               currentWidget = FillerView();
               break;
-            case Routes.PROMOS:
+            case Routes.SCHEDULE_PROMO:
               currentWidget = PromosView();
               break;
             case Routes.COMMERCIAL:
@@ -237,8 +237,7 @@ class AuthGuard1 extends StatelessWidget {
               currentWidget = const NoDataFoundPage();
           }
           // currentWidget = child;
-        }
-        else if (controller.loginVal.value == 2) {
+        } else if (controller.loginVal.value == 2) {
           currentWidget = const NoDataFoundPage();
         } else {
           currentWidget = const LoadingScreen();
