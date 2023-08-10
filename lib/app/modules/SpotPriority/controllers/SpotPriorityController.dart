@@ -23,7 +23,7 @@ class SpotPriorityController extends GetxController {
 
   //input controllers
   DropDownValue? selectLocation;
-  DropDownValue? selectChannel;
+  Rxn<DropDownValue> selectChannel=Rxn<DropDownValue>();
   DropDownValue? selectPriority;
   PlutoGridStateManager? gridStateManager;
 
@@ -76,7 +76,7 @@ class SpotPriorityController extends GetxController {
       LoadingDialog.call();
       Get.find<ConnectorControl>().GETMETHODCALL(
           api: ApiFactory.SPOT_PRIORITY_SHOW_DETAILS(selectLocation?.key ?? "",
-              selectChannel?.key ?? "", frmDate.text, toDate.text),
+              selectChannel?.value?.key ?? "", frmDate.text, toDate.text),
           fun: (Map<String, dynamic> map) {
             Get.back();
             if (map.containsKey("showDetails")) {
@@ -92,7 +92,7 @@ class SpotPriorityController extends GetxController {
   saveSpotPriority() {
     if (selectLocation == null) {
       Snack.callError("Please select location");
-    } else if (selectChannel == null) {
+    } else if (selectChannel.value == null) {
       Snack.callError("Please select channel");
     } else if (spotPriorityModel == null) {
       Snack.callError("There is no data to save");
@@ -102,7 +102,7 @@ class SpotPriorityController extends GetxController {
       });
       var mapData = {
         "locationcode": selectLocation?.key ?? "",
-        "channelcode": selectChannel?.key ?? "",
+        "channelcode": selectChannel?.value?.key ?? "",
         "fromDate": frmDate.text,
         "toDate": toDate.text,
         "spotprioritys": filterList?.map((e) {

@@ -38,6 +38,7 @@ class FpcMismatchController extends GetxController {
   PlutoGridStateManager? stateManager;
 
   SelectButton? selectButton;
+  RxBool hideKeysAllowed=RxBool(false);
 
   @override
   void onInit() {
