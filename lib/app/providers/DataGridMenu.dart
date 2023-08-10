@@ -1,4 +1,5 @@
 import 'dart:convert';
+import 'dart:isolate';
 
 // import 'package:bms_programming/app/controller/MainController.dart';
 // import 'package:bms_programming/app/providers/extensions/datagrid.dart';
@@ -54,11 +55,13 @@ class DataGridMenu {
       for (var filter in _filters) {
         if (filter.operator == "equal") {
           _filterRows =
-              _filterRows.where((element) => element.cells[filter.field]!
+              _filterRows.where((element) =>
+              element.cells[filter.field]!
                   .value == filter.value).toList();
         } else {
           _filterRows =
-              _filterRows.where((element) => element.cells[filter.field]!
+              _filterRows.where((element) =>
+              element.cells[filter.field]!
                   .value != filter.value).toList();
         }
       }
@@ -132,22 +135,23 @@ class DataGridMenu {
           ),
           actions: [
             ElevatedButton.icon(
-                onPressed: () {
-                  Get.back();
-                },
-                icon: Icon(Icons.clear_rounded),
-                label: Text("Cancel")),
+              onPressed: () {
+                Get.back();
+              },
+              icon: Icon(Icons.clear_rounded),
+              label: Text("Cancel"),),
             ElevatedButton.icon(
-                onPressed: () {
-                  stateManager.setFilter(
-                          (element) =>
-                          _selectedValues.any((value) => value ==
-                              element.cells[stateManager.currentCell!.column
-                                  .field]!.value.toString()));
-                  Get.back();
-                },
-                icon: Icon(Icons.done),
-                label: Text("Filter")),
+              onPressed: () {
+                stateManager.setFilter(
+                        (element) =>
+                        _selectedValues.any((value) =>
+                        value ==
+                            element.cells[stateManager.currentCell!.column
+                                .field]!.value.toString()));
+                Get.back();
+              },
+              icon: Icon(Icons.done),
+              label: Text("Done"),),
           ]);
     }
 
@@ -337,14 +341,22 @@ class DataGridMenu {
 
         break;
       case DataGridMenuItem.print:
-        pluto_grid_export
+        Get.find<ConnectorControl>().POSTMETHOD_FORMDATAWITHTYPE(
+          api: ApiFactory.CONVERT_TO_PDF,
+          fun: (value) {
+            ExportData().printFromGridData1((exportFileName ?? 'export${DateTime.now().toString()}') +
+                    ".pdf",value);
+          },
+          json: stateManager.toJson(),
+        );
+        /*pluto_grid_export
             .PlutoGridDefaultPdfExport plutoGridPdfExport = pluto_grid_export
             .PlutoGridDefaultPdfExport(
           title: exportFileName ?? "ExportedData${DateTime.now().toString()}",
           creator: "BMS_Flutter",
           format: pluto_grid_export.PdfPageFormat.a4.landscape,
         );
-        ExportData().printFromGridData(plutoGridPdfExport, stateManager);
+        ExportData().printFromGridData(plutoGridPdfExport, stateManager);*/
 
         break;
       case DataGridMenuItem.exportToCSv:
@@ -357,10 +369,7 @@ class DataGridMenu {
           // See https://stackoverflow.com/a/155176
             '\u{FEFF}$exportCSV');
 
-        FlutterFileSaver()
-            .writeFileAsBytes(
-          fileName: (exportFileName ?? 'export${DateTime.now().toString()}') +
-              '.csv',
+        FlutterFileSaver().writeFileAsBytes(fileName: (exportFileName ?? 'export${DateTime.now().toString()}') + '.csv',
           bytes: exported,
         )
             .then((value) => Snack.callSuccess("File save to $value"));
@@ -413,8 +422,9 @@ class DataGridMenu {
                                 ),
                                 const SizedBox(width: 5),
                                 DropDownField.formDropDown1WidthMap(
-                                  stateManager.columns.map((e) => DropDownValue(
-                                      key: e.field, value: e.title))
+                                  stateManager.columns.map((e) =>
+                                      DropDownValue(
+                                          key: e.field, value: e.title))
                                       .toList(),
                                       (value) {
                                     _selectedColumn = value.key!;
@@ -466,9 +476,10 @@ class DataGridMenu {
                                         _almost.value = !_almost.value;
                                       },
                                       child: Obx(
-                                            () => Icon(_almost.value ? Icons
-                                            .check_box_outlined : Icons
-                                            .check_box_outline_blank_rounded),
+                                            () =>
+                                            Icon(_almost.value ? Icons
+                                                .check_box_outlined : Icons
+                                                .check_box_outline_blank_rounded),
                                       )),
                                   Text("Almost"),
                                 ],
@@ -486,9 +497,10 @@ class DataGridMenu {
                                         _fromstart.value = !_fromstart.value;
                                       },
                                       child: Obx(
-                                            () => Icon(_fromstart.value ? Icons
-                                            .check_box_outlined : Icons
-                                            .check_box_outline_blank_rounded),
+                                            () =>
+                                            Icon(_fromstart.value ? Icons
+                                                .check_box_outlined : Icons
+                                                .check_box_outline_blank_rounded),
                                       )),
                                   Text("From Start")
                                 ],
@@ -720,6 +732,30 @@ class DataGridMenu {
           .filters1[stateManager.hashCode.toString()] = RxList([]);
     }
 
+    void printStatement(List list) {
+      try {
+        list[1].setShowLoading(true);
+        ExportData().printFromGridData(list[0], list[1]);
+      } catch (e) {
+        list[1].setShowLoading(false);
+      }
+    }
+    void printStatement1() async {
+      try {
+        stateManager.setShowLoading(true);
+        pluto_grid_export
+            .PlutoGridDefaultPdfExport plutoGridPdfExport = pluto_grid_export
+            .PlutoGridDefaultPdfExport(
+          title: exportFileName ?? "ExportedData${DateTime.now().toString()}",
+          creator: "BMS_Flutter",
+          format: pluto_grid_export.PdfPageFormat.a4.landscape,
+        );
+        await ExportData().printFromGridData(plutoGridPdfExport, stateManager);
+      } catch (e) {
+        stateManager.setShowLoading(false);
+      }
+    }
+
     checkStateManagerIsNew() async {
       print("Hashcode======================> ${stateManager.hashCode}");
       if (Get
@@ -739,11 +775,13 @@ class DataGridMenu {
       for (var filter in _filters) {
         if (filter.operator == "equal") {
           _filterRows =
-              _filterRows.where((element) => element.cells[filter.field]!
+              _filterRows.where((element) =>
+              element.cells[filter.field]!
                   .value == filter.value).toList();
         } else {
           _filterRows =
-              _filterRows.where((element) => element.cells[filter.field]!
+              _filterRows.where((element) =>
+              element.cells[filter.field]!
                   .value != filter.value).toList();
         }
       }
@@ -826,7 +864,8 @@ class DataGridMenu {
                 onPressed: () {
                   stateManager.setFilter(
                           (element) =>
-                          _selectedValues.any((value) => value ==
+                          _selectedValues.any((value) =>
+                          value ==
                               element.cells[stateManager.currentCell!.column
                                   .field]!.value.toString()));
                   Get.back();
@@ -906,12 +945,12 @@ class DataGridMenu {
             enabled: true,
             child: Text('Remove All Filters', style: TextStyle(fontSize: 13)),
           ),
-          const PopupMenuItem<DataGridMenuItem>(
+          /*const PopupMenuItem<DataGridMenuItem>(
             value: DataGridMenuItem.export,
             height: 36,
             enabled: true,
             child: Text('Export To Excel', style: TextStyle(fontSize: 13)),
-          ),
+          ),*/
           const PopupMenuItem<DataGridMenuItem>(
             value: DataGridMenuItem.print,
             height: 36,
@@ -1023,15 +1062,48 @@ class DataGridMenu {
 
         break;
       case DataGridMenuItem.print:
-        pluto_grid_export
-            .PlutoGridDefaultPdfExport plutoGridPdfExport = pluto_grid_export
-            .PlutoGridDefaultPdfExport(
-          title: exportFileName ?? "ExportedData${DateTime.now().toString()}",
-          creator: "BMS_Flutter",
-          format: pluto_grid_export.PdfPageFormat.a4.landscape,
-        );
-        ExportData().printFromGridData(plutoGridPdfExport, stateManager);
+      // pluto_grid_export.PlutoGridDefaultPdfExport plutoGridPdfExport = pluto_grid_export.PlutoGridDefaultPdfExport(
+      //   title: exportFileName ?? "ExportedData${DateTime.now().toString()}",
+      //   creator: "BMS_Flutter",
+      //   format: pluto_grid_export.PdfPageFormat.a4.landscape,
+      // );
+      // IsolatedWorker().run(printStatement, [plutoGridPdfExport,stateManager]);
+      // final receivePort = ReceivePort();
+      // here we are passing method name and sendPort instance from ReceivePort as listener
+      // await Isolate.spawn(printStatement, [plutoGridPdfExport,stateManager]);
 
+      //It will listen for isolate function to finish
+      // receivePort.listen((sum) {
+      //   print(sum);
+      // });
+      try {
+          stateManager.setShowLoading(true);
+          pluto_grid_export
+              .PlutoGridDefaultPdfExport plutoGridPdfExport = pluto_grid_export
+              .PlutoGridDefaultPdfExport(
+            title: exportFileName ?? "ExportedData${DateTime.now().toString()}",
+            creator: "BMS_Flutter",
+            format: pluto_grid_export.PdfPageFormat.a4.landscape,
+          );
+          ExportData().printFromGridData(plutoGridPdfExport, stateManager);
+        }catch(e){
+          stateManager.setShowLoading(false);
+        }
+
+      stateManager.setShowLoading(true);
+        Get.find<ConnectorControl>().POSTMETHOD_FORMDATAWITHTYPE(
+          api: ApiFactory.CONVERT_TO_PDF,
+          fun: (value) {
+            stateManager.setShowLoading(false);
+            ExportData().printFromGridData1((exportFileName ?? 'export${DateTime.now().toString()}') +
+                ".pdf",base64.decode(value));
+          },
+          json: stateManager.toJson(),
+          failed: (){
+            stateManager.setShowLoading(false);
+          }
+        );
+        // printStatement1();
         break;
       case DataGridMenuItem.exportToCSv:
         String title = "csv_export";
@@ -1167,9 +1239,10 @@ class DataGridMenu {
                                   _almost.value = !_almost.value;
                                 },
                                 child: Obx(
-                                      () => Icon(_almost.value ? Icons
-                                      .check_box_outlined : Icons
-                                      .check_box_outline_blank_rounded),
+                                      () =>
+                                      Icon(_almost.value ? Icons
+                                          .check_box_outlined : Icons
+                                          .check_box_outline_blank_rounded),
                                 )),
                             Text("Almost"),
                           ],
@@ -1185,9 +1258,10 @@ class DataGridMenu {
                                   _fromstart.value = !_fromstart.value;
                                 },
                                 child: Obx(
-                                      () => Icon(_fromstart.value ? Icons
-                                      .check_box_outlined : Icons
-                                      .check_box_outline_blank_rounded),
+                                      () =>
+                                      Icon(_fromstart.value ? Icons
+                                          .check_box_outlined : Icons
+                                          .check_box_outline_blank_rounded),
                                 )),
                             Text("From Start")
                           ],
@@ -1424,11 +1498,13 @@ class DataGridMenu {
       for (var filter in _filters) {
         if (filter.operator == "equal") {
           _filterRows =
-              _filterRows.where((element) => element.cells[filter.field]!
+              _filterRows.where((element) =>
+              element.cells[filter.field]!
                   .value == filter.value).toList();
         } else {
           _filterRows =
-              _filterRows.where((element) => element.cells[filter.field]!
+              _filterRows.where((element) =>
+              element.cells[filter.field]!
                   .value != filter.value).toList();
         }
       }
@@ -1511,7 +1587,8 @@ class DataGridMenu {
                 onPressed: () {
                   stateManager.setFilter(
                           (element) =>
-                          _selectedValues.any((value) => value ==
+                          _selectedValues.any((value) =>
+                          value ==
                               element.cells[stateManager.currentCell!.column
                                   .field]!.value.toString()));
                   Get.back();
@@ -1907,9 +1984,10 @@ class DataGridMenu {
                                   _almost.value = !_almost.value;
                                 },
                                 child: Obx(
-                                      () => Icon(_almost.value ? Icons
-                                      .check_box_outlined : Icons
-                                      .check_box_outline_blank_rounded),
+                                      () =>
+                                      Icon(_almost.value ? Icons
+                                          .check_box_outlined : Icons
+                                          .check_box_outline_blank_rounded),
                                 )),
                             Text("Almost"),
                           ],
@@ -1925,9 +2003,10 @@ class DataGridMenu {
                                   _fromstart.value = !_fromstart.value;
                                 },
                                 child: Obx(
-                                      () => Icon(_fromstart.value ? Icons
-                                      .check_box_outlined : Icons
-                                      .check_box_outline_blank_rounded),
+                                      () =>
+                                      Icon(_fromstart.value ? Icons
+                                          .check_box_outlined : Icons
+                                          .check_box_outline_blank_rounded),
                                 )),
                             Text("From Start")
                           ],

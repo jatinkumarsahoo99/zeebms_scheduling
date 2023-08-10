@@ -121,7 +121,7 @@ class FpcMismatchView extends GetView<FpcMismatchController> {
                       ),
                       DateWithThreeTextField(
                         title: "As On Date",
-                        // startDate: DateTime.now(),
+                        startDate: DateTime.now(),
                         //Note: Data Availble on 1 OCT 2012
                         // startDate: DateTime.now().subtract(Duration(days: 5000)),
                         endDate: DateTime.now().add(Duration(days: 1825)),
@@ -165,6 +165,28 @@ class FpcMismatchView extends GetView<FpcMismatchController> {
                                 controllerX.fetchProgram();
                               },
                             ),
+                            const SizedBox(
+                              width: 10,
+                            ),
+                            FormButton(
+                              btnText: "  Make Error  ",
+                              callback: () {
+                                controllerX.saveMarkError();
+                                // controllerX.fetchMismatch();
+                                // controllerX.fetchProgram();
+                              },
+                            ),
+                            const SizedBox(
+                              width: 10,
+                            ),
+                            FormButton(
+                              btnText: "  Undo Error  ",
+                              callback: () {
+                                controllerX.saveUndoMarkError();
+                                // controllerX.fetchMismatchError();
+                                // controllerX.fetchProgram();
+                              },
+                            ),
                           ],
                         ),
                       ),
@@ -187,7 +209,7 @@ class FpcMismatchView extends GetView<FpcMismatchController> {
                 ],
               ),
             ),
-            Padding(
+            /*Padding(
               padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 8),
               child: Row(
                 children: [
@@ -212,7 +234,7 @@ class FpcMismatchView extends GetView<FpcMismatchController> {
                   ),
                 ],
               ),
-            ),
+            ),*/
             GetBuilder<HomeController>(
                 id: "buttons",
                 init: Get.find<HomeController>(),
@@ -285,12 +307,25 @@ class FpcMismatchView extends GetView<FpcMismatchController> {
                     });
                   }
                 },
-                /* colorCallback: (PlutoRowColorContext plutoContext) {
+                colorCallback: (PlutoRowColorContext plutoContext) {
+                  switch (controllerX.selectButton) {
+                    case SelectButton.DisplayError:
+                      return Colors.red;
+                      break;
+                    case SelectButton.DisplayAll:
+                      return Colors.white;
+                      break;
+                    case SelectButton.DisplayMismatch:
+                      return Colors.yellow;
+                      break;
+                    default:
+                      return Colors.white;
+                  }
                   return (controllerX
                           .dataList![plutoContext.rowIdx].selectItem)!
                       ? Colors.grey
                       : Colors.white;
-                },*/
+                },
                 mode: PlutoGridMode.selectWithOneTap,
                 formatDate: false,
                 /*onSelected: (PlutoGridOnSelectedEvent plutoEvnt) {

@@ -32,6 +32,8 @@ dependencies:
   rxdart:
   flutter_cache_manager:
   file_saver:
+#  isolated_worker: ^0.1.1
+
 #  download:
 
   flutter: 

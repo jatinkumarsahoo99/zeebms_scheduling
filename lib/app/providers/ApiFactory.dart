@@ -149,6 +149,7 @@ class ApiFactory {
 */
 ///////////////////////XML Download API////////////////////////
   static String EXPORT_TO_XML = "$BASE_URL_COMMON/api/Common/ConvertTableToXml";
+  static String CONVERT_TO_PDF = "$BASE_URL_COMMON/api/Common/ConvertTableToPDF";
   static String OPERATIONAL_FPC_PROGRAM_SEARCH = "$BASE_URL/api/DailyFPCReport/ProgramSearch?SearchText=";
   static String MOVIE_PLANNER_GET_LOCATIONS = BASE_URL + "/api/MoviePlanner/GetSchedulerLoadLocation";
 
