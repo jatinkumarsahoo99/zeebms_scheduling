@@ -601,7 +601,6 @@ class RoRescheduleController extends GetxController {
     for (var element in roRescheduleOnLeaveData!.lstdgvUpdated!) {
       element.scheduleTime = DateFormat("yyyy-MM-ddTHH:mm:ss").format(DateFormat("HH:mm:ss").parse(element.scheduleTime!));
       var map = element.toJson();
-
       lstdgvUpdated.add(map);
     }
     Get.find<ConnectorControl>().POSTMETHOD(
@@ -626,8 +625,10 @@ class RoRescheduleController extends GetxController {
           "edit": 0,
           "LstdgvUpdated": lstdgvUpdated
         },
-        fun: (data) {
-          print(data);
+        fun: (rawdata) {
+          if (rawdata is Map && rawdata.containsKey("info_Save")) {
+            LoadingDialog.callDataSaved(msg: rawdata["info_Save"]["strMessage"]);
+          }
         });
   }
 }
