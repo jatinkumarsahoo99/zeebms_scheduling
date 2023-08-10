@@ -457,11 +457,13 @@ class RoBookingView extends StatelessWidget {
                                 0.12,
                                 selected: DropDownValue(
                                   key: controller.bookingNoLeaveData?.triggerId ?? "",
-                                  value: controller.roBookingInitData?.lstSecondaryEventTrigger
-                                          ?.firstWhere(
-                                              (element) => element.secondaryeventid.toString() == controller.bookingNoLeaveData?.triggerId.toString())
-                                          .secondaryevent ??
-                                      "",
+                                  value: controller.bookingNoLeaveData != null
+                                      ? controller.roBookingInitData?.lstSecondaryEventTrigger
+                                              ?.firstWhereOrNull((element) =>
+                                                  element.secondaryeventid.toString() == controller.bookingNoLeaveData?.triggerId.toString())
+                                              ?.secondaryevent ??
+                                          ""
+                                      : "",
                                 ),
                                 isEnable: controller.bookingNoLeaveData == null,
                               ),
