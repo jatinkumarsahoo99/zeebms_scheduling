@@ -818,8 +818,8 @@ class RoBookingController extends GetxController {
             selectedExecutive = DropDownValue(
                 key: bookingNoLeaveData!.executiveCode,
                 value: roBookingInitData?.lstExecutives
-                        ?.firstWhere((element) => element.personnelCode == bookingNoLeaveData!.executiveCode)
-                        .personnelName ??
+                        ?.firstWhereOrNull((element) => element.personnelCode == bookingNoLeaveData!.executiveCode)
+                        ?.personnelName ??
                     "");
             update(["init"]);
 
