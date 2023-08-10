@@ -210,13 +210,15 @@ class SchedulePromoController extends GetxController {
       schedulePromoSelectedIdx = schedulePromoSelectedIdx + 1;
       promoScheduled.refresh();
       scheduledTC.text = Utils.convertToTimeFromDouble(value: (Utils.convertToSecond(value: scheduledTC.text)) + (tempRightModel['duration'] ?? 0));
-      if ((Utils.convertToSecond(value: scheduledTC.text)) + (tempRightModel['duration'] ?? 0) > Utils.convertToSecond(value: "00:16:49:00")) {
+      if ((Utils.convertToSecond(value: scheduledTC.text)) + (tempRightModel['duration'] ?? 0) > Utils.convertToSecond(value: availableTC.text)) {
         dailyFpc[fpcSelectedIdx].exceed = true;
         dailyFpc.refresh();
       }
       countTC.text = promoScheduled.length.toString();
     }
   }
+
+  calcaulateExceed() {}
 
   void handleDelete() {
     if (selectLocation == null && selectChannel == null) {
