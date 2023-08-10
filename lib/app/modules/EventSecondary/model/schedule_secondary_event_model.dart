@@ -109,7 +109,7 @@ class SegementsResponse {
       data['telecastTime'] = telecastTime;
       data['eventCode'] = eventCode;
       data['eventSchedulingCode'] = eventSchedulingCode;
-      data['rowNo'] = rowNo;
+      // data['rowNo'] = rowNo;
     }
     return data;
   }

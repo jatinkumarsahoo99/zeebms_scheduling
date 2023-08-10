@@ -111,7 +111,7 @@ class DataGridFromMap extends StatelessWidget {
           enableRowDrag: false,
           enableDropToResize: true,
           enableContextMenu: false,
-          width: 25,
+          width: 40,
           enableAutoEditing: false,
           hide: hideCode! && key.toString().toLowerCase() != "hourcode" && key.toString().toLowerCase().contains("code"),
           enableColumnDrag: false,
