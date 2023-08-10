@@ -286,6 +286,7 @@ class DataGridShowOnlyKeys extends StatelessWidget {
               mode: mode ?? PlutoGridMode.normal,
               configuration: plutoGridConfiguration(
                 focusNode: focusNode!,
+                rowHeight: 25,
                 autoScale: columnAutoResize,
                 actionOnPress: actionOnPress,
                 checkColor: rowCheckColor,

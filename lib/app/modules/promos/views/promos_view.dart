@@ -1,6 +1,8 @@
 import 'package:bms_scheduling/app/modules/RoBooking/controllers/ro_booking_controller.dart';
 import 'package:bms_scheduling/app/providers/Utils.dart';
 import 'package:bms_scheduling/app/routes/app_pages.dart';
+import 'package:bms_scheduling/widgets/DataGridShowOnly.dart';
+import 'package:bms_scheduling/widgets/LoadingDialog.dart';
 import 'package:bms_scheduling/widgets/PlutoGrid/pluto_grid.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -99,7 +101,13 @@ class SchedulePromoView extends StatelessWidget {
                                           padding: const EdgeInsets.only(left: 10, top: 17.0),
                                           child: FormButton(
                                             btnText: "Show Details",
-                                            callback: controller.showDetails,
+                                            callback: () {
+                                              if (controller.selectLocation != null && controller.selectChannel != null) {
+                                                controller.showDetails();
+                                              } else {
+                                                LoadingDialog.showErrorDialog("");
+                                              }
+                                            },
                                           ),
                                         ),
                                         const SizedBox(width: 10),
@@ -129,7 +137,7 @@ class SchedulePromoView extends StatelessWidget {
                                         decoration: controller.dailyFpc.value.isEmpty ? BoxDecoration(border: Border.all(color: Colors.grey)) : null,
                                         child: controller.dailyFpc.value.isEmpty
                                             ? null
-                                            : DataGridFromMap(
+                                            : DataGridShowOnlyKeys(
                                                 mapData: controller.dailyFpc.value.map((e) => e.toJson()).toList(),
                                                 onRowDoubleTap: (row) => controller.handleDoubleTapInLeft1stTable(row.rowIdx),
                                                 onload: (event) {
@@ -159,15 +167,7 @@ class SchedulePromoView extends StatelessWidget {
                                             controller.promoScheduled.value.isEmpty ? BoxDecoration(border: Border.all(color: Colors.grey)) : null,
                                         child: controller.promoScheduled.value.isEmpty
                                             ? null
-                                            : DataGridFromMap(
-                                                focusNode: FocusNode(onKey: (focusNOde, keyEvent) {
-                                                  if (keyEvent.isKeyPressed(LogicalKeyboardKey.delete)) {
-                                                    if (controller.scheduledPromoStateManager?.currentCell != null) {
-                                                      controller.promoScheduled.removeAt(controller.scheduledPromoStateManager!.currentRowIdx!);
-                                                    }
-                                                  }
-                                                  return KeyEventResult.ignored;
-                                                }),
+                                            : DataGridShowOnlyKeys(
                                                 mapData: controller.promoScheduled.value.map((e) => e.toJson()).toList(),
                                                 mode: PlutoGridMode.selectWithOneTap,
                                                 colorCallback: (row) =>
@@ -176,6 +176,16 @@ class SchedulePromoView extends StatelessWidget {
                                                         : Colors.white,
                                                 onload: (event) {
                                                   controller.scheduledPromoStateManager = event.stateManager;
+                                                  controller.scheduledPromoStateManager!.gridFocusNode.onKeyEvent = (node, event) {
+                                                    // print("Key Pressed");
+                                                    if (event is RawKeyDownEvent && event.physicalKey == PhysicalKeyboardKey.delete) {
+                                                      print("Delete Pressed");
+                                                      if (controller.scheduledPromoStateManager?.currentCell != null) {
+                                                        controller.promoScheduled.removeAt(controller.scheduledPromoStateManager!.currentRowIdx!);
+                                                      }
+                                                    }
+                                                    return KeyEventResult.skipRemainingHandlers;
+                                                  };
                                                   event.stateManager.setSelectingMode(PlutoGridSelectingMode.row);
                                                   event.stateManager.setSelecting(true);
                                                   event.stateManager.setCurrentCell(
@@ -336,7 +346,7 @@ class SchedulePromoView extends StatelessWidget {
                                         padding: const EdgeInsets.only(left: 10, bottom: 5.0, top: 5.0),
                                         child: FormButton(
                                           btnText: "Auto Add",
-                                          callback: controller.handleAutoAddTap,
+                                          callback: () {},
                                         ),
                                       ),
                                     ],
@@ -348,7 +358,7 @@ class SchedulePromoView extends StatelessWidget {
                                             controller.searchPromos.value.isEmpty ? BoxDecoration(border: Border.all(color: Colors.grey)) : null,
                                         child: controller.searchPromos.value.isEmpty
                                             ? null
-                                            : DataGridFromMap(
+                                            : DataGridShowOnlyKeys(
                                                 mapData: controller.searchPromos.value,
                                                 onRowDoubleTap: (row) => controller.handleDoubleTapInRightTable(row.rowIdx),
                                                 onload: (event) {

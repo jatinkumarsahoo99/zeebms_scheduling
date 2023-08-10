@@ -42,6 +42,7 @@ ThemeData primaryThemeData = ThemeData(
 PlutoGridConfiguration plutoGridConfiguration({
   Function? actionOnPress,
   String? actionKey,
+  double rowHeight = 35,
   bool autoScale = true,
   Color? checkColor = const Color(0xFFD1C4E9),
   required FocusNode focusNode,
@@ -61,7 +62,7 @@ PlutoGridConfiguration plutoGridConfiguration({
           },
         ),
         style: PlutoGridStyleConfig(
-            rowHeight: 35,
+            rowHeight: rowHeight,
             columnHeight: 30,
             defaultCellPadding: const EdgeInsets.all(2),
             enableCellBorderHorizontal: true,
