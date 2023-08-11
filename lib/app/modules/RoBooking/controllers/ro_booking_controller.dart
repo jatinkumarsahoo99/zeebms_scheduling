@@ -27,8 +27,10 @@ import 'package:bms_scheduling/widgets/LoadingDialog.dart';
 import 'package:bms_scheduling/widgets/PlutoGrid/pluto_grid.dart';
 import 'package:bms_scheduling/widgets/dropdown.dart';
 import 'package:bms_scheduling/widgets/input_fields.dart';
+import 'package:bms_scheduling/widgets/keepalive.dart';
 import 'package:file_picker/file_picker.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:get/get.dart';
 import 'package:intl/intl.dart';
 
@@ -94,10 +96,12 @@ class RoBookingController extends GetxController {
   String? dealProgramCode;
   String? dealStartTime;
   String? dealTelecastDate;
+  var bookingsummaryDefault = RxBool(false);
 
   RoBookingSaveCheckTapeId? savecheckData;
   bool showGstPopUp = true;
   int editMode = 0;
+  PlutoCell? currentGridCell;
   DropDownValue? selectedGST;
   RxList<SpotsNotVerified> spotsNotVerified = RxList<SpotsNotVerified>([]);
   var channels = RxList<DropDownValue>();
@@ -128,6 +132,30 @@ class RoBookingController extends GetxController {
   final count = 0.obs;
   @override
   void onInit() {
+    clientFocus = FocusNode(
+      onKeyEvent: (node, event) {
+        if (event.logicalKey == LogicalKeyboardKey.tab) {
+          if (selectedClient != null) {
+            clientLeave(selectedClient?.key);
+            return KeyEventResult.ignored;
+          }
+        }
+
+        return KeyEventResult.ignored;
+      },
+    );
+    agencyFocus = FocusNode(
+      onKeyEvent: (node, event) {
+        if (event.logicalKey == LogicalKeyboardKey.tab) {
+          if (selectedAgnecy != null) {
+            agencyLeave(selectedAgnecy?.key);
+            return KeyEventResult.ignored;
+          }
+        }
+
+        return KeyEventResult.ignored;
+      },
+    );
     Get.find<ConnectorControl>().GETMETHODCALL(
         api: ApiFactory.RO_BOOKING_INIT,
         fun: (data) {
@@ -322,7 +350,7 @@ class RoBookingController extends GetxController {
                 key: agencyLeaveData?.excutiveDetails?.first.personnelCode ?? "", value: agencyLeaveData?.excutiveDetails?.first.personnelname);
             update(["init"]);
             gstNoCtrl.text = agencyLeaveData?.gstRegNo ?? "";
-            agencyFocus.requestFocus();
+            // agencyFocus.requestFocus();
             if (showGstPopUp) {
               showGstPopUp = false;
               Get.defaultDialog(
@@ -332,7 +360,6 @@ class RoBookingController extends GetxController {
                     btnText: "Done",
                     callback: () {
                       Get.back();
-                      agencyFocus.requestFocus();
                     },
                   ),
                   content: SizedBox(
@@ -520,6 +547,8 @@ class RoBookingController extends GetxController {
             maxspendCtrl.text = dealNoLeaveData?.maxSpend ?? 0.toString();
             selectedBrand =
                 DropDownValue(key: dealNoLeaveData?.lstBrand?.first.brandcode ?? "", value: dealNoLeaveData?.lstBrand?.first.brandname ?? "");
+            dealToCtrl.text = DateFormat("dd-MM-yyyy").format(DateFormat("MM/dd/yyyy").parse(dealNoLeaveData?.dealtoDate?.split(" ")[0] ?? ""));
+            dealFromCtrl.text = DateFormat("dd-MM-yyyy").format(DateFormat("MM/dd/yyyy").parse(dealNoLeaveData?.dealFromDate?.split(" ")[0] ?? ""));
             update(["init", "dealGrid"]);
           }
         });
@@ -722,7 +751,7 @@ class RoBookingController extends GetxController {
 
   getDisplay() {
     if (selectedLocation == null && selectedChannel == null) {
-      LoadingDialog.callErrorMessage1(msg: "Location and channelis must to select.", callback: () {});
+      LoadingDialog.callErrorMessage1(msg: "Location and channel is must to select.", callback: () {});
     } else {
       Get.find<ConnectorControl>().POSTMETHOD(
           api: ApiFactory.RO_BOOKING_GET_DISPLAY,
@@ -757,7 +786,7 @@ class RoBookingController extends GetxController {
   }
 
   pickFile() async {
-    FilePickerResult? result = await FilePicker.platform.pickFiles(allowedExtensions: ["xlsx", "xlsm", "xls", "xlsb", "xltx"]);
+    FilePickerResult? result = await FilePicker.platform.pickFiles(allowedExtensions: ["xlsx", "xlsm", "xls", "xlsb", "xltx"], type: FileType.custom);
 
     if (result != null && result.files.single != null) {
       importMark(result.files.first);
@@ -786,6 +815,12 @@ class RoBookingController extends GetxController {
             selectedBrand = DropDownValue(key: bookingNoLeaveData!.lstBrand!.first.brandcode, value: bookingNoLeaveData!.lstBrand!.first.brandname);
             selectedDeal =
                 DropDownValue(key: bookingNoLeaveData!.lstDealNumber!.first.dealNumber, value: bookingNoLeaveData!.lstDealNumber!.first.dealNumber);
+            selectedExecutive = DropDownValue(
+                key: bookingNoLeaveData!.executiveCode,
+                value: roBookingInitData?.lstExecutives
+                        ?.firstWhereOrNull((element) => element.personnelCode == bookingNoLeaveData!.executiveCode)
+                        ?.personnelName ??
+                    "");
             update(["init"]);
 
             refNoCtrl.text = bookingNoLeaveData!.bookingReferenceNumber ?? "";
@@ -919,8 +954,8 @@ class RoBookingController extends GetxController {
         });
   }
 
-  savePDC(list) {
-    Get.find<ConnectorControl>().POSTMETHOD(
+  savePDC(list) async {
+    await Get.find<ConnectorControl>().POSTMETHOD(
         api: ApiFactory.RO_BOOKING_SaveClientPdc,
         json: {
           "clientCode": selectedClient?.key ?? "",
@@ -929,14 +964,20 @@ class RoBookingController extends GetxController {
           "agencyCode": selectedAgnecy?.key ?? "",
           "lstClientPDC": list
         },
-        fun: (value) {});
+        fun: (value) {
+          if (value is Map && value.containsKey("info_SaveClientPDCForm")) {
+            LoadingDialog.callDataSaved(msg: value["info_SaveClientPDCForm"]["message"]);
+          } else {
+            LoadingDialog.callErrorMessage1(msg: value);
+          }
+        });
   }
 
   saveCheck() {
     Get.find<ConnectorControl>().POSTMETHOD(
         api: ApiFactory.RO_BOOKING_OnSave_Check,
         json: {
-          "chkSummaryType": true,
+          "chkSummaryType": false,
           "lstdgvSpots":
               addSpotData?.lstSpots?.map((e) => e.toJson()).toList() ?? bookingNoLeaveData?.lstSpots?.map((e) => e.toJson()).toList() ?? [],
           "brandName": selectedBrand?.key

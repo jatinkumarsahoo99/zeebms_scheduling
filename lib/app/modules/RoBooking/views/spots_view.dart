@@ -34,7 +34,7 @@ class SpotsView extends GetView<RoBookingController> {
                   mapData: controller.addSpotData?.lstSpots?.map((e) => e.toJson()).toList() ??
                       controller.bookingNoLeaveData?.lstSpots?.map((e) => e.toJson()).toList() ??
                       [],
-                  formatDate: false)
+                  formatDate: true)
               : Container(
                   decoration: BoxDecoration(border: Border.all(width: 1.0, color: Colors.grey)),
                 ),
@@ -58,7 +58,7 @@ class SpotsView extends GetView<RoBookingController> {
                     "PDC",
                     0.12,
                     showMenuInbottom: false,
-                    dialogHeight: 20),
+                    dialogHeight: 80),
                 InputFields.formField1(
                     hintTxt: "Amt",
                     isEnable: false,
@@ -97,7 +97,16 @@ class SpotsView extends GetView<RoBookingController> {
                 FormButtonWrapper(
                   iconDataM: Icons.delete_outline_rounded,
                   btnText: "Del Spot Row",
-                  callback: () {},
+                  callback: () {
+                    if (controller.spotViewGrid?.currentCell != null) {
+                      if (controller.addSpotData != null && controller.addSpotData?.lstSpots != null) {
+                        controller.addSpotData?.lstSpots?.removeAt(controller.spotViewGrid!.currentRowIdx!);
+                      } else if (controller.bookingNoLeaveData != null && controller.bookingNoLeaveData?.lstSpots != null) {
+                        controller.bookingNoLeaveData?.lstSpots?.removeAt(controller.spotViewGrid!.currentRowIdx!);
+                      }
+                      controller.spotViewGrid?.removeRows([controller.spotViewGrid!.currentRow!]);
+                    }
+                  },
                 ),
                 FormButtonWrapper(
                   btnText: "PDC Cheques",
@@ -210,7 +219,6 @@ class SpotsView extends GetView<RoBookingController> {
                                             };
                                             if (listdata.contains(listMap)) {
                                               LoadingDialog.callErrorMessage1(msg: "Duplicate Cheque. cannot add");
-                                             
                                             } else {
                                               listdata.add(listMap);
                                               listdata.refresh();
@@ -230,16 +238,8 @@ class SpotsView extends GetView<RoBookingController> {
                                       children: [
                                         FormButtonWrapper(
                                           btnText: "Save",
-                                          callback: () {
-                                            controller.savePDC(listdata.value);
-                                          },
-                                        ),
-                                        SizedBox(
-                                          width: 5,
-                                        ),
-                                        FormButtonWrapper(
-                                          btnText: "Clear",
-                                          callback: () {
+                                          callback: () async {
+                                            await controller.savePDC(listdata.value);
                                             chequeNoCtrl.text = "";
                                             chqDateCtrl.text = "";
                                             chequeAmtCtrl.text = "";
@@ -250,6 +250,13 @@ class SpotsView extends GetView<RoBookingController> {
                                             listdata.clear();
                                             listdata.refresh();
                                           },
+                                        ),
+                                        SizedBox(
+                                          width: 5,
+                                        ),
+                                        FormButtonWrapper(
+                                          btnText: "Clear",
+                                          callback: () {},
                                         ),
                                       ],
                                     )

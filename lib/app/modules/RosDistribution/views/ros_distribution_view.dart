@@ -149,7 +149,7 @@ class RosDistributionView extends GetView<RosDistributionController> {
                         spacing: 10,
                         // pa
                         children: [
-                          for (var btn in btncontroller.buttons!) ...{
+                          for (var btn in (btncontroller.buttons??[])) ...{
                             FormButtonWrapper(
                               btnText: btn["name"],
                               callback: ((Utils.btnAccessHandler(btn['name'], controller.formPermissions!) == null))

@@ -10,7 +10,11 @@ import '../../../../widgets/gridFromMap.dart';
 import '../../../../widgets/gridFromMap1.dart';
 import '../../../../widgets/input_fields.dart';
 import '../../../controller/HomeController.dart';
+import '../../../controller/MainController.dart';
+import '../../../data/PermissionModel.dart';
 import '../../../providers/SizeDefine.dart';
+import '../../../providers/Utils.dart';
+import '../../../routes/app_pages.dart';
 import '../../CommonSearch/views/common_search_view.dart';
 import '../controllers/LogAdditionsController.dart';
 
@@ -47,6 +51,7 @@ class LogAdditionsView extends GetView<LogAdditionsController> {
                             controllerX.locations.value,
                             (value) {
                               controllerX.selectLocation = value;
+                              controllerX.selectChannel.value = null;
                               controllerX.getChannels(
                                   controllerX.selectLocation?.key ?? "");
                             },
@@ -65,13 +70,13 @@ class LogAdditionsView extends GetView<LogAdditionsController> {
                           () => DropDownField.formDropDown1WidthMap(
                             controllerX.channels.value,
                             (value) {
-                              controllerX.selectChannel = value;
+                              controllerX.selectChannel.value = value;
                             },
                             "Channel",
                             0.12,
                             isEnable: controllerX.isEnable.value,
-                            selected: controllerX.selectChannel,
-                            autoFocus: true,
+                            selected: controllerX.selectChannel.value,
+                            autoFocus: false,
                             dialogWidth: 330,
                             dialogHeight: Get.height * .7,
                           ),
@@ -185,12 +190,12 @@ class LogAdditionsView extends GetView<LogAdditionsController> {
                           () => DropDownField.formDropDown1WidthMap(
                             controllerX.additions.value,
                             (value) {
-                              controllerX.selectAdditions = value;
+                              controllerX.selectAdditions.value = value;
                             },
                             "Additions",
                             0.12,
                             // isEnable: controllerX.isEnable.value,
-                            selected: controllerX.selectAdditions,
+                            selected: controllerX.selectAdditions.value,
                             autoFocus: true,
                             dialogWidth: 200,
                             dialogHeight: Get.height * .3,
@@ -220,7 +225,8 @@ class LogAdditionsView extends GetView<LogAdditionsController> {
                         Obx(
                           () => Padding(
                             padding: const EdgeInsets.only(top: 15.0),
-                            child: Text(controllerX.additionCount.value ?? "--"),
+                            child:
+                                Text(controllerX.additionCount.value ?? "--"),
                           ),
                         ),
                         SizedBox(
@@ -268,7 +274,9 @@ class LogAdditionsView extends GetView<LogAdditionsController> {
                                 .setGridMode(PlutoGridMode.selectWithOneTap);
                             controllerX.selectedPlutoGridMode =
                                 PlutoGridMode.selectWithOneTap;
+                            // controllerX.getSetting();
                           },
+                          witdthSpecificColumn: {"duration": 70},
                           onload: (loadevent) {
                             controllerX.gridStateManager =
                                 loadevent.stateManager;
@@ -299,11 +307,12 @@ class LogAdditionsView extends GetView<LogAdditionsController> {
                 id: "buttons",
                 init: Get.find<HomeController>(),
                 builder: (controller) {
-                  /* PermissionModel formPermissions = Get.find<MainController>()
+                  PermissionModel formPermissions = Get.find<MainController>()
                       .permissionList!
                       .lastWhere((element) {
-                    return element.appFormName == "frmSegmentsDetails";
-                  });*/
+                    return element.appFormName ==
+                        Routes.LOG_ADDITIONS.replaceAll("/", "");
+                  });
                   if (controller.tranmissionButtons != null) {
                     return SizedBox(
                       height: 40,
@@ -318,13 +327,11 @@ class LogAdditionsView extends GetView<LogAdditionsController> {
                               btnText: btn["name"],
                               showIcon: false,
                               // isEnabled: btn['isDisabled'],
-                              callback: /*btn["name"] != "Delete" &&
-                                      Utils.btnAccessHandler2(btn['name'],
+                              callback: Utils.btnAccessHandler2(btn['name'],
                                               controller, formPermissions) ==
                                           null
                                   ? null
-                                  :*/
-                                  () => formHandler(btn['name']),
+                                  : () => formHandler(btn['name']),
                             ),
                         ],
                       ),
@@ -343,6 +350,7 @@ class LogAdditionsView extends GetView<LogAdditionsController> {
   formHandler(String btn) {
     switch (btn.toLowerCase()) {
       case "save":
+        // controller.getAdditionCheckList();
         controllerX.saveAddition();
         break;
       case "clear":

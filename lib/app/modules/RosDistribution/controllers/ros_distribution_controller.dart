@@ -369,6 +369,15 @@ class RosDistributionController extends GetxController {
                 padding: const EdgeInsets.all(20.0),
                 child: Column(
                   children: [
+                    Align(
+                      alignment: Alignment.topRight,
+                      child: IconButton(
+                        onPressed: () {
+                          Get.back();
+                        },
+                        icon: Icon(Icons.close),
+                      ),
+                    ),
                     Wrap(
                       crossAxisAlignment: WrapCrossAlignment.end,
                       spacing: 15,
@@ -391,13 +400,6 @@ class RosDistributionController extends GetxController {
                             widthRatio: .25,
                           );
                         }),
-                        // Obx(() {
-                        //   return InputFields.formFieldDisable(
-                        //     hintTxt: "Alloc %",
-                        //     value: tempAlloc.value,
-                        //     widthRatio: .07,
-                        //   );
-                        // }),
                         FormButton(
                           btnText: "Reload",
                           callback: () {
@@ -549,36 +551,6 @@ class RosDistributionController extends GetxController {
                             widthRatio: .12,
                           );
                         }),
-                        // Obx(() {
-                        //   return CheckBoxWidget1(
-                        //     title: "Move Spot buys",
-                        //     value: moveSpotbuys.value,
-                        //     onChanged: (val) {
-                        //       moveSpotbuys.value = val ?? false;
-                        //       Get.find<ConnectorControl>().POSTMETHOD(
-                        //         api: ApiFactory.RO_DISTRIBUTION_GET_MOVE_SPOT_FILTER_FPC_DATA,
-                        //         fun: (resp) {
-                        //           closeDialogIfOpen();
-                        //           if (resp != null && resp is Map<String, dynamic> && resp['info_GetFpcCellDoubleClick'] != null) {
-                        //             // tempModel.value = cellModel.ROSCellClickDataModel.fromJson(resp);
-                        //             // canRender = true;
-                        //           } else {
-                        //             LoadingDialog.showErrorDialog(resp.toString());
-                        //             // tempModel.refresh();
-                        //           }
-                        //         },
-                        //         json: {
-                        //           "chkIncludeROS": includeROS.value,
-                        //           "chkOpenDeal": includeOpenDeal.value,
-                        //           "lstUnallocatedSpots":
-                        //               tempModel.value.infoGetFpcCellDoubleClick?.lstUnallocatedSpots?.map((e) => e.toJson()).toList() ?? [],
-                        //           "lstAllocatedSpots":
-                        //               tempModel.value.infoGetFpcCellDoubleClick?.lstAllocatedSpots?.map((e) => e.toJson()).toList() ?? [],
-                        //         },
-                        //       );
-                        //     },
-                        //   );
-                        // }),
                         Obx(() {
                           return CheckBoxWidget1(
                             title: "Include ROS?",
@@ -726,8 +698,8 @@ class RosDistributionController extends GetxController {
                                                 "fromDate": DateFormat("yyyy-MM-ddT00:00:00").format(DateFormat("dd-MM-yyyy").parse(date.text)),
                                                 "allowMoveSpotbuys": moveSpotbuys.value,
                                                 "chkMoveSpotBuys": checkBoxes.value[2]['value'],
-                                                "chkIncludeROS": checkBoxes.value[1]['value'],
-                                                "chkOpenDeal": checkBoxes.value[0]['value'],
+                                                "chkIncludeROS": includeROS.value,
+                                                "chkOpenDeal": includeOpenDeal.value,
                                               },
                                             );
                                           }

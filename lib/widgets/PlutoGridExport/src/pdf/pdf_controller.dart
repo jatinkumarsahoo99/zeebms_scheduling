@@ -21,6 +21,7 @@ abstract class PdfController {
         header: (context) => getHeader(context),
         footer: (context) => getFooter(context),
         build: (Context context) => exportInternal(context),
+        maxPages: 1000
       ),
     );
     return doc.save();

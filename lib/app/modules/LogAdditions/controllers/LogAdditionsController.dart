@@ -25,8 +25,10 @@ class LogAdditionsController extends GetxController {
 
   //input controllers
   DropDownValue? selectLocation;
-  DropDownValue? selectChannel;
-  DropDownValue? selectAdditions;
+  Rxn<DropDownValue> selectChannel = Rxn<DropDownValue>(null);
+  Rxn<DropDownValue> selectAdditions = Rxn<DropDownValue>(null);
+
+  // DropDownValue? selectAdditions;
   PlutoGridStateManager? gridStateManager;
 
   TextEditingController selectedDate = TextEditingController();
@@ -39,6 +41,8 @@ class LogAdditionsController extends GetxController {
 
   LogAdditionModel? logAdditionModel;
   PlutoGridMode selectedPlutoGridMode = PlutoGridMode.normal;
+
+  // RxString logAddionName = RxString("Addition");
 
   @override
   void onInit() {
@@ -79,7 +83,7 @@ class LogAdditionsController extends GetxController {
       Get.find<ConnectorControl>().GETMETHODCALL(
           api: ApiFactory.LOG_ADDITION_SHOW_DETAILS(
               selectLocation!,
-              selectChannel!,
+              selectChannel.value!,
               selectedDate.text,
               verifyType.value == "Primary" ? true : false,
               isStandby.value,
@@ -102,6 +106,8 @@ class LogAdditionsController extends GetxController {
               isEnable.value = false;
               update(["transmissionList"]);
             } else {
+              logAdditionModel = null;
+              update(["transmissionList"]);
               Snack.callError("No Data Found");
             }
           });
@@ -118,17 +124,17 @@ class LogAdditionsController extends GetxController {
       Get.find<ConnectorControl>().GETMETHODCALL(
           api: ApiFactory.LOG_ADDITION_PREVIOUS_ADDITION(
             selectLocation?.value ?? "",
-            selectChannel?.value ?? "",
+            selectChannel?.value?.value ?? "",
             selectedDate.text,
-            selectAdditions?.key ?? "",
+            selectAdditions?.value?.key ?? "",
           ),
           fun: (Map<String, dynamic> map) {
-            Navigator.pop(Get.context!);
+            Get.back();
 
-            print(">>>getShowPreviousAddition()>>>" + jsonEncode(map));
+            // print(">>>getShowPreviousAddition()>>>" + jsonEncode(map));
             logAdditionModel = LogAdditionModel.fromJson(map);
-            print(">>>getShowPreviousAddition() Model>>>" +
-                jsonEncode(logAdditionModel?.toJson()));
+            /*print(">>>getShowPreviousAddition() Model>>>" +
+                jsonEncode(logAdditionModel?.toJson()));*/
             if (logAdditionModel != null &&
                 logAdditionModel?.displayPreviousAdditon != null &&
                 logAdditionModel?.displayPreviousAdditon?.previousAdditons !=
@@ -140,6 +146,8 @@ class LogAdditionsController extends GetxController {
               isEnable.value = false;
               update(["transmissionList"]);
             } else {
+              logAdditionModel = null;
+              update(["transmissionList"]);
               Snack.callError("No Data Found");
             }
           });
@@ -148,17 +156,17 @@ class LogAdditionsController extends GetxController {
 
   getAdditionList() {
     if (selectLocation == null) {
-      Snack.callError("Please select location");
+      // Snack.callError("Please select location");
     } else if (selectChannel == null) {
-      Snack.callError("Please select channel");
+      // Snack.callError("Please select channel");
     } else if (selectedDate.text == "") {
-      Snack.callError("Please select date");
+      // Snack.callError("Please select date");
     } else {
-      print("Channel is>>>" + jsonEncode(selectChannel?.toJson()));
+      print("Channel is>>>" + jsonEncode(selectChannel.toJson()));
       Get.find<ConnectorControl>().GETMETHODCALL(
           api: ApiFactory.LOG_ADDITION_GET_ADDITIONS(
             selectLocation!,
-            selectChannel!,
+            selectChannel.value!,
             selectedDate.text,
           ),
           fun: (Map<String, dynamic> map) {
@@ -174,17 +182,25 @@ class LogAdditionsController extends GetxController {
   saveAddition() {
     if (selectLocation == null) {
       Snack.callError("Please select location");
-    } else if (selectChannel == null) {
+    } else if (selectChannel.value == null) {
       Snack.callError("Please select channel");
     } else if (selectedDate.text == "") {
       Snack.callError("Please select date");
-    } else if (selectAdditions == null) {
+    } else if (selectAdditions.value == null) {
       Snack.callError("Please select addition");
     } else {
-      if (selectAdditions?.value != "All") {
-        LoadingDialog.recordExists("Do you want to update the remarks?", () {
-          postData();
-        }, deleteCancel: "No", deleteTitle: "Yes");
+      if (selectAdditions.value?.value != "All" &&
+          selectAdditions.value?.value != "New") {
+        LoadingDialog.recordExists(
+            "Do you want to update the remarks?",
+            () {
+              postData();
+            },
+            deleteCancel: "No",
+            deleteTitle: "Yes",
+            cancel: () {
+              postData();
+            });
       } else {
         postData();
       }
@@ -194,14 +210,14 @@ class LogAdditionsController extends GetxController {
   postData() {
     LoadingDialog.call();
     var mapData = {
-      "additionNameselectedVal": selectAdditions?.key ?? "",
-      "additionNameselected": selectAdditions?.value ?? "",
+      "additionNameselectedVal": selectAdditions?.value?.key ?? "",
+      "additionNameselected": selectAdditions?.value?.value ?? "",
       "optPrimary": verifyType.value == "Primary" ? true : false,
       "remarks": remarks.text,
       "locationcode": selectLocation?.key ?? "",
       "locationName": selectLocation?.value ?? "",
-      "channelcode": selectChannel?.key ?? "",
-      "channelName": selectChannel?.value ?? "",
+      "channelcode": selectChannel.value?.key ?? "",
+      "channelName": selectChannel.value?.value ?? "",
       "telecastDate": selectedDate.text,
       "chkIgnore": isIgnoreSpot.value,
       "chkStandby": isStandby
@@ -215,18 +231,32 @@ class LogAdditionsController extends GetxController {
         json: mapData,
         fun: (map) {
           Navigator.pop(Get.context!);
-
           if (map is Map &&
               map.containsKey("postAdditionsoutput") &&
               map["postAdditionsoutput"] != null &&
               map["postAdditionsoutput"].containsKey("success") &&
               map["postAdditionsoutput"]["success"] == "success") {
+            // logAddionName.value = logAddionName.value + map["postAdditionsoutput"]["additionselected"];
+            // getAdditionListCheck("Addition"+map["postAdditionsoutput"]["additionselected"]);
+            if (map["postAdditionsoutput"]["lstAddition"] != null) {
+              additions.value.clear();
+              map["postAdditionsoutput"]["lstAddition"].forEach((v) {
+                additions.value
+                    .add(DropDownValue.fromJsonDynamic(v, "value", "name"));
+                if ("Addition" +
+                        map["postAdditionsoutput"]["additionselected"] ==
+                    v["name"].toString().trim()) {
+                  selectAdditions.value =
+                      DropDownValue.fromJsonDynamic(v, "value", "name");
+                }
+              });
+            }
             LoadingDialog.callDataSaved(callback: () {
               ExportData().exportExcelFromJsonList(
                   (logAdditionModel?.displayPreviousAdditon?.previousAdditons
                       ?.map((e) => e.toJson1())
                       .toList())!,
-                  "${selectLocation?.value ?? ""} ${selectChannel?.value ?? ""} ${DateFormat('yyyy-MM-dd').format(DateFormat("dd-MM-yyyy").parse(selectedDate.text))} ${selectAdditions?.value ?? ""}.xlsx",
+                  "${selectLocation?.value ?? ""} ${selectChannel?.value?.value ?? ""} ${DateFormat('yyyy-MM-dd').format(DateFormat("dd-MM-yyyy").parse(selectedDate.text))} ${"Addition" + map["postAdditionsoutput"]["additionselected"]}.xlsx",
                   callBack: () {});
             });
           } else {
@@ -241,15 +271,21 @@ class LogAdditionsController extends GetxController {
     } else if (selectChannel == null) {
       Snack.callError("Please select channel");
     } else {
-      if (selectAdditions == null) {
+      if (selectAdditions.value == null) {
         getShowDetails();
       } else {
-        if (selectAdditions?.key != "0") {
+        if (selectAdditions?.value?.key != "0") {
           getShowPreviousAddition();
         } else {
           getShowDetails();
         }
       }
+    }
+  }
+
+  getSetting(){
+    for (var value in (gridStateManager?.columns)!) {
+      print("Width value>>>"+value.width.toString()+" key is>>>"+value.title);
     }
   }
 }

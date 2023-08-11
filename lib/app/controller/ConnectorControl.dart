@@ -523,7 +523,8 @@ class ConnectorControl extends GetConnect {
       {required String api,
       required dynamic json,
       int? timeout = 36000,
-      required Function fun}) async {
+      required Function fun,
+      Function? failed}) async {
     try {
       service.Response response = await dio.post(api,
           data: json,
@@ -552,6 +553,9 @@ class ConnectorControl extends GetConnect {
           // print("RESPONSE CALL>>>>" + JsonEncoder().convert(response.data).toString());
           fun(response.data);
         } catch (e) {
+          if(failed!=null){
+            failed();
+          }
           print("Message is: " + e.toString());
         }
       } else if (response.statusCode == 417) {
@@ -561,16 +565,10 @@ class ConnectorControl extends GetConnect {
         fun(failedMap);
       }
     } on DioError catch (e) {
-      /*if (e.response?.statusCode == 401 &&
-          (e.response?.headers.map.containsKey("www-authenticate"))! &&
-          e.response?.headers.map["www-authenticate"]?.length == 2 &&
-          (e.response?.headers.map["www-authenticate"]![0]
-              .contains("invalid_token"))! &&
-          (e.response?.headers.map["www-authenticate"]![1]
-              .contains("The token expired at"))!) {*/
+      if(failed!=null){
+        failed();
+      }
       if (e.response?.statusCode == 401) {
-        //Snack.callError("Token Expired. We are regenerating new token",
-//            widthRatio: 0.5);
         updateToken(() {
           POSTMETHOD_FORMDATAWITHTYPE(
               api: api, json: json, fun: fun, timeout: timeout);

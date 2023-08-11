@@ -61,6 +61,7 @@ class RoRescheduleController extends GetxController {
       changeTapeIdDur = TextEditingController(),
       chnageTapeIdCap = TextEditingController();
   PlutoGridStateManager? plutoGridStateManager;
+  PlutoGridStateManager? updatedplutoGridStateManager;
   @override
   void onInit() {
     loadinitData().then((value) {
@@ -334,6 +335,20 @@ class RoRescheduleController extends GetxController {
                           onload: (load) {
                             addSpotGridManager = load.stateManager;
                           },
+                          editKeys: ["bookedSpots"],
+                          onEdit: (editEvent) {
+                            for (var i = 0; i < viewDoubleClickData.lstDetTable!.length; i++) {
+                              viewDoubleClickData.lstDetTable![i].bookedSpots = 0;
+                            }
+                            viewDoubleClickData.lstDetTable![editEvent.rowIdx].bookedSpots = int.tryParse(editEvent.value) ?? 0;
+
+                            for (var element in addSpotGridManager!.rows) {
+                              addSpotGridManager!
+                                  .changeCellValue(element.cells["bookedSpots"]!, "0", force: true, notify: false, callOnChangedEvent: false);
+                            }
+                            addSpotGridManager!.changeCellValue(editEvent.row.cells["bookedSpots"]!, int.tryParse(editEvent.value) ?? "0",
+                                callOnChangedEvent: false, force: true);
+                          },
                           onRowDoubleTap: (rowdblclick) {
                             addSpotGridManager!.setCurrentCell(rowdblclick.cell, rowdblclick.rowIdx);
 
@@ -346,7 +361,7 @@ class RoRescheduleController extends GetxController {
                               addSpotGridManager!
                                   .changeCellValue(element.cells["bookedSpots"]!, "0", force: true, notify: false, callOnChangedEvent: false);
                             }
-                            addSpotGridManager!.changeCellValue(rowdblclick.row.cells["bookedSpots"]!, "1", force: true);
+                            addSpotGridManager!.changeCellValue(rowdblclick.row.cells["bookedSpots"]!, "1", callOnChangedEvent: false, force: true);
                           },
                           mapData: viewDoubleClickData.lstDetTable!.map((e) => e.toJson()).toList(),
                           formatDate: true,
@@ -393,7 +408,7 @@ class RoRescheduleController extends GetxController {
     Get.find<ConnectorControl>().POSTMETHOD(
         api: ApiFactory.RO_RESCHEDULE_MODIFY,
         json: {
-          "exportTapeCode": modifySelectedTapeCode!.key!,
+          "exportTapeCode": modifySelectedTapeCode!.value!,
           "segmentNumber": roRescheduleOnLeaveData!.lstDgvRO![plutoGridStateManager!.currentCell!.row.sortIdx].segmentNumber.toString(),
           "lstTable": roRescheduleOnLeaveData!.lstTable!.map((e) => e.toJson()).toList(),
           "lstUpdateTable": roRescheduleOnLeaveData!.lstUpdateTable!.map((e) => e.toJson()).toList(),
@@ -437,7 +452,10 @@ class RoRescheduleController extends GetxController {
   addSpot(RORescheduleDGviewDoubleClickData data) {
     var json = {
       "breakNo": roRescheduleOnLeaveData!.lstDgvRO![plutoGridStateManager!.currentCell!.row.sortIdx].breaknumber.toString(),
-      "midPre": data.preMid,
+      "midPre": reschedulngInitData?.lstspotPositionTypeMasters
+              ?.firstWhere((element) => element.spotPositionTypeName == data.preMid)
+              .spotPositionTypeCode ??
+          "",
       "positionCode": roRescheduleOnLeaveData!.lstDgvRO![plutoGridStateManager!.currentCell!.row.sortIdx].positionCode,
       "chkTapeID": changeTapeId.value,
       "exportTapeCode_OriTapeID": data.oriTapeID,
@@ -476,12 +494,13 @@ class RoRescheduleController extends GetxController {
               }
               print("Parsing lstdgvUpdated");
 
-              // if (data["info_AddSpots"] is Map &&
-              //     data["info_AddSpots"].containsKey("lstdgvUpdated") &&
-              //     (data["info_AddSpots"]["lstdgvUpdated"] is List)) {
-              //   roRescheduleOnLeaveData!.lstdgvUpdated = (data["info_Modify"]["lstdgvUpdated"] as List).map((e) => LstdgvUpdated.fromJson(e)).toList();
-              // }
-              update(["dgvGrid"]);
+              if (data["info_AddSpots"] is Map &&
+                  data["info_AddSpots"].containsKey("lstdgvUpdated") &&
+                  (data["info_AddSpots"]["lstdgvUpdated"] is List)) {
+                roRescheduleOnLeaveData!.lstdgvUpdated =
+                    (data["info_AddSpots"]["lstdgvUpdated"] as List).map((e) => LstdgvUpdated.fromJson(e)).toList();
+              }
+              update(["dgvGrid", "updatedgvGrid"]);
               Get.back();
             }
 
@@ -582,9 +601,6 @@ class RoRescheduleController extends GetxController {
     for (var element in roRescheduleOnLeaveData!.lstdgvUpdated!) {
       element.scheduleTime = DateFormat("yyyy-MM-ddTHH:mm:ss").format(DateFormat("HH:mm:ss").parse(element.scheduleTime!));
       var map = element.toJson();
-      map["recordnumber"] = element.recordnumber.toString();
-      map["segmentNumber"] = element.segmentNumber.toString();
-      map["audited"] = element.audited.toString();
       lstdgvUpdated.add(map);
     }
     Get.find<ConnectorControl>().POSTMETHOD(
@@ -593,7 +609,7 @@ class RoRescheduleController extends GetxController {
           "locationCode": selectedLocation!.key!,
           "channelCode": selectedChannel!.key!,
           "rescheduleMonth": bookingMonthCtrl.text,
-          "rescheduleNumber": reSchedNoCtrl.text,
+          "rescheduleNumber": int.tryParse("reSchedNoCtrl.text") ?? 0,
           "rescheduleDate": DateFormat("yyyy-MM-dd").format(DateFormat("dd-MM-yyyy").parse(refDateCtrl.text)),
           "bookingEffectiveDate": DateFormat("yyyy-MM-dd").format(DateFormat("dd-MM-yyyy").parse(effDateCtrl.text)),
           "rescheduleReferenceNumber": referenceCtrl.text,
@@ -609,8 +625,10 @@ class RoRescheduleController extends GetxController {
           "edit": 0,
           "LstdgvUpdated": lstdgvUpdated
         },
-        fun: (data) {
-          print(data);
+        fun: (rawdata) {
+          if (rawdata is Map && rawdata.containsKey("info_Save")) {
+            LoadingDialog.callDataSaved(msg: rawdata["info_Save"]["strMessage"]);
+          }
         });
   }
 }

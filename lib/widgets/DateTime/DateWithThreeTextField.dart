@@ -171,8 +171,7 @@ class _DateWithThreeTextFieldState extends State<DateWithThreeTextField> {
                             onChanged: (value) {
                               int no = int.tryParse(value) ?? 00;
                               int selectedMonth = getMonthINTFromMonthStr(textCtr[1].text);
-                              print(selectedMonth - 1);
-                              print(maxDays[selectedMonth - 1]);
+                             
                               if (no > maxDays[selectedMonth - 1] || value == "00") {
                                 textCtr[0].text = "01";
                                 cursorAtLast(0);

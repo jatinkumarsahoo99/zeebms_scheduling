@@ -95,6 +95,7 @@ class DataGridShowOnlyKeys extends StatelessWidget {
             enableRowDrag: false,
             enableDropToResize: true,
             enableContextMenu: false,
+            minWidth: 0,
             width: 25,
             enableAutoEditing: false,
             hide: hideCode! && key.toString().toLowerCase() != "hourcode" && key.toString().toLowerCase().contains("code"),
@@ -163,6 +164,7 @@ class DataGridShowOnlyKeys extends StatelessWidget {
                 enableEditingMode: editKeys != null && editKeys!.contains(key),
                 enableDropToResize: true,
                 enableContextMenu: false,
+                minWidth: 0,
                 width: (keysWidths != null && keysWidths!.containsKey(key))
                     ? keysWidths![key]!
                     : Utils.getColumnSize(key: key, value: mapData[0][key].toString(), widthRatio: widthRatio),
@@ -239,6 +241,7 @@ class DataGridShowOnlyKeys extends StatelessWidget {
               enableContextMenu: false,
               width: (keysWidths != null && keysWidths!.containsKey(key)) ? keysWidths![key]! : Utils.getColumnSize(key: key, value: mapData[0][key]),
               enableAutoEditing: false,
+              minWidth: 0,
               hide: showonly == null
                   ? (hideKeys != null && hideKeys!.contains(key)) ||
                       hideCode! && key.toString().toLowerCase() != "hourcode" && key.toString().toLowerCase().contains("code")
@@ -283,6 +286,7 @@ class DataGridShowOnlyKeys extends StatelessWidget {
               mode: mode ?? PlutoGridMode.normal,
               configuration: plutoGridConfiguration(
                 focusNode: focusNode!,
+                rowHeight: 25,
                 autoScale: columnAutoResize,
                 actionOnPress: actionOnPress,
                 checkColor: rowCheckColor,
