@@ -64,23 +64,26 @@ class SecondaryEventMasterView extends GetView<SecondaryEventMasterController> {
                     crossAxisAlignment: CrossAxisAlignment.end,
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
-                      Obx(() {
-                        return RadioRow(
-                          items: ['Bug', 'Aston'],
-                          groupValue: controller.selectedRadio.value,
-                          disabledRadios: !(controller.controllsEnabled.value)
-                              ? ['Bug', 'Aston']
-                              : null,
-                          onchange: (va) => controller.selectedRadio.value = va,
-                        );
-                      }),
+                      Obx(
+                        () {
+                          return RadioRow(
+                            items: ['Bug', 'Aston'],
+                            groupValue: controller.selectedRadio.value,
+                            disabledRadios: !(controller.controllsEnabled.value)
+                                ? ['Bug', 'Aston']
+                                : null,
+                            onchange: (va) =>
+                                controller.selectedRadio.value = va,
+                          );
+                        },
+                      ),
                       Obx(
                         () {
                           return InputFields.formField1(
                             hintTxt: "Tx No",
                             controller: controller.txNoTC,
                             width: 0.23,
-                            isEnable: controller.controllsEnabled.value,
+                            readOnly: !controller.controllsEnabled.value,
                             focusNode: controller.txNOFN,
                           );
                         },
@@ -114,11 +117,13 @@ class SecondaryEventMasterView extends GetView<SecondaryEventMasterController> {
                         title: "Start Date",
                         mainTextController: controller.startDateTC,
                         widthRation: .23,
+                        endDate: DateTime.now(),
                       ),
                       DateWithThreeTextField(
                         title: "End Date",
                         mainTextController: controller.endDateTC,
                         widthRation: .23,
+                        startDate: DateTime.now(),
                       )
                     ],
                   ),
@@ -130,7 +135,7 @@ class SecondaryEventMasterView extends GetView<SecondaryEventMasterController> {
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
                       SizedBox(
-                         width: size.width * .23,
+                        width: size.width * .23,
                         child: Row(
                           mainAxisAlignment: MainAxisAlignment.spaceBetween,
                           children: [
@@ -165,7 +170,7 @@ class SecondaryEventMasterView extends GetView<SecondaryEventMasterController> {
 
                 /// bottom common buttons
                 SizedBox(
-                  width: size.width*.47,
+                  width: size.width * .47,
                   child: Align(
                     alignment: Alignment.topCenter,
                     child: GetBuilder<HomeController>(
