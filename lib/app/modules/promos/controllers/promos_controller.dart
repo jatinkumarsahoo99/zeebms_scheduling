@@ -125,43 +125,43 @@ class SchedulePromoController extends GetxController {
   void showDetails() {
     if (selectLocation == null && selectChannel == null) {
       LoadingDialog.showErrorDialog("Please select Location and Channel.");
-      return;
-    }
-    LoadingDialog.call();
-    Get.find<ConnectorControl>().GETMETHODCALL(
-      api: ApiFactory.PROMOS_SHOW_DETAILS(selectLocation?.key ?? "", selectChannel?.key ?? "",
-          DateFormat("yyyy-MM-ddT00:00:00").format(DateFormat("dd-MM-yyyy").parse(fromdateTC.text))),
-      fun: (resp) {
-        closeDialog();
-        if (resp != null && resp is Map<String, dynamic>) {
-          promoData = PromoModel.fromJson(resp);
-          if (promoData?.promoScheduled != null) {
-            for (var i = 0; i < (promoData?.promoScheduled?.length ?? 0); i++) {
-              promoData?.promoScheduled?[i].rowNo = i;
+    } else {
+      LoadingDialog.call();
+      Get.find<ConnectorControl>().GETMETHODCALL(
+        api: ApiFactory.PROMOS_SHOW_DETAILS(selectLocation?.key ?? "", selectChannel?.key ?? "",
+            DateFormat("yyyy-MM-ddT00:00:00").format(DateFormat("dd-MM-yyyy").parse(fromdateTC.text))),
+        fun: (resp) {
+          closeDialog();
+          if (resp != null && resp is Map<String, dynamic>) {
+            promoData = PromoModel.fromJson(resp);
+            if (promoData?.promoScheduled != null) {
+              for (var i = 0; i < (promoData?.promoScheduled?.length ?? 0); i++) {
+                promoData?.promoScheduled?[i].rowNo = i;
+              }
             }
-          }
-          dailyFpc.clear();
-          dailyFpc.addAll(promoData?.dailyFPC ?? []);
-          if (dailyFpc.isEmpty) {
-            LoadingDialog.showErrorDialog("Daily FPC not present.");
-          } else {
-            controllsEnabled.value = false;
-            if (promoData?.dailyFPC?.isNotEmpty ?? false) {
-              availableTC.text = Utils.convertToTimeFromDouble(value: promoData?.dailyFPC?[0].promoCap ?? 0);
+            dailyFpc.clear();
+            dailyFpc.addAll(promoData?.dailyFPC ?? []);
+            if (dailyFpc.isEmpty) {
+              LoadingDialog.showErrorDialog("Daily FPC not present.");
             } else {
-              availableTC.text = "00:00:00:00";
+              controllsEnabled.value = false;
+              if (promoData?.dailyFPC?.isNotEmpty ?? false) {
+                availableTC.text = Utils.convertToTimeFromDouble(value: promoData?.dailyFPC?[0].promoCap ?? 0);
+              } else {
+                availableTC.text = "00:00:00:00";
+              }
+              scheduledTC.text = "";
             }
-            scheduledTC.text = "";
+          } else {
+            LoadingDialog.showErrorDialog(resp.toString());
           }
-        } else {
+        },
+        failed: (resp) {
+          closeDialog();
           LoadingDialog.showErrorDialog(resp.toString());
-        }
-      },
-      failed: (resp) {
-        closeDialog();
-        LoadingDialog.showErrorDialog(resp.toString());
-      },
-    );
+        },
+      );
+    }
   }
 
   handleDoubleTapInLeft1stTable(int index, String col) {
@@ -185,18 +185,18 @@ class SchedulePromoController extends GetxController {
     calcaulateExceed(index);
   }
 
-  handleDoubleTapInRightTable(int index) {
+  handleDoubleTapInRightTable(int index, String col) {
     if (promoScheduled.isEmpty) {
       LoadingDialog.showErrorDialog("ProgramSegaments can't be empty");
     } else {
       searchPromoSelectedIdx = index;
-      searchedPromoStateManager?.setCurrentCell(searchedPromoStateManager?.getRowByIdx(index)?.cells['caption'], index);
-      var tempRightModel = searchPromos[index];
+      searchedPromoStateManager?.setCurrentCell(searchedPromoStateManager?.getRowByIdx(searchPromoSelectedIdx)?.cells[col], searchPromoSelectedIdx);
+      var tempRightModel = searchPromos[searchPromoSelectedIdx];
       var insertModel = PromoScheduled(
         promoPolicyName: "MANUAL",
         promoCaption: tempRightModel['caption'],
         priority: promoScheduled[schedulePromoSelectedIdx].priority,
-        promoDuration: rightCount.value,
+        promoDuration: Utils.convertToTimeFromDouble(value: tempRightModel['duration']),
         houseId: tempRightModel['txId'],
         programName: dailyFpc[fpcSelectedIdx].programName,
         telecastTime: dailyFpc[fpcSelectedIdx].startTime,
@@ -257,7 +257,7 @@ class SchedulePromoController extends GetxController {
   }
 
   void handleAddTap() {
-    handleDoubleTapInRightTable(searchPromoSelectedIdx);
+    handleDoubleTapInRightTable(searchPromoSelectedIdx, searchPromoSelectedCol);
   }
 
   void handleSearchTap() {
@@ -288,8 +288,9 @@ class SchedulePromoController extends GetxController {
     );
   }
 
-  handleOnSelectRightTable(int index) {
+  handleOnSelectRightTable(int index, String col) {
     searchPromoSelectedIdx = index;
+    searchPromoSelectedCol = col;
     if (searchPromos[index]['duration'] != null && index != -1) {
       rightCount.value = Utils.convertToTimeFromDouble(value: searchPromos[index]['duration']);
     }
