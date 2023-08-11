@@ -150,8 +150,12 @@ class SchedulePromoView extends StatelessWidget {
                                                         controller.fpcSelectedIdx);
                                                   }
                                                 },
+                                                mode: PlutoGridMode.selectWithOneTap,
                                                 colorCallback: (row) => controller.dailyFpc[row.rowIdx].exceed ? Colors.red : Colors.white,
-                                                onSelected: (row) => controller.fpcSelectedIdx = row.rowIdx ?? 0,
+                                                onSelected: (row) => {
+                                                  controller.fpcSelectedIdx = row.rowIdx ?? 0,
+                                                  controller.fpcSelectedCol = row.cell?.column.field ?? ""
+                                                },
                                               ),
                                       );
                                     }),
