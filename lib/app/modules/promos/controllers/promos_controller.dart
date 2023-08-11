@@ -196,7 +196,7 @@ class SchedulePromoController extends GetxController {
         promoPolicyName: "MANUAL",
         promoCaption: tempRightModel['caption'],
         priority: promoScheduled[schedulePromoSelectedIdx].priority,
-        promoDuration: rightCount.value,
+        promoDuration: Utils.convertToTimeFromDouble(value: tempRightModel['caption']),
         houseId: tempRightModel['txId'],
         programName: dailyFpc[fpcSelectedIdx].programName,
         telecastTime: dailyFpc[fpcSelectedIdx].startTime,
