@@ -179,35 +179,6 @@ class LogAdditionsController extends GetxController {
     }
   }
 
-  getAdditionCheckList() {
-    /* if (selectLocation == null) {
-      // Snack.callError("Please select location");
-    } else if (selectChannel == null) {
-      // Snack.callError("Please select channel");
-    } else if (selectedDate.text == "") {
-      // Snack.callError("Please select date");
-    } else {*/
-    // print("Channel is>>>" + jsonEncode(selectChannel.toJson()));
-    Get.find<ConnectorControl>().GETMETHODCALL(
-        api: ApiFactory.LOG_ADDITION_GET_ADDITIONS(
-          selectLocation!,
-          selectChannel.value!,
-          selectedDate.text,
-        ),
-        fun: (Map<String, dynamic> map) {
-          additions.value.clear();
-          map["displayPreviousAdditon"].forEach((v) {
-            additions.value
-                .add(DropDownValue.fromJsonDynamic(v, "value", "name"));
-            if ("Addition 1" == v["name"].toString().trim()) {
-              selectAdditions.value =
-                  DropDownValue.fromJsonDynamic(v, "value", "name");
-            }
-          });
-        });
-    // }
-  }
-
   saveAddition() {
     if (selectLocation == null) {
       Snack.callError("Please select location");
@@ -218,8 +189,8 @@ class LogAdditionsController extends GetxController {
     } else if (selectAdditions.value == null) {
       Snack.callError("Please select addition");
     } else {
-      if (selectAdditions?.value?.value != "All" &&
-          selectAdditions?.value?.value != "New") {
+      if (selectAdditions.value?.value != "All" &&
+          selectAdditions.value?.value != "New") {
         LoadingDialog.recordExists(
             "Do you want to update the remarks?",
             () {
@@ -309,6 +280,12 @@ class LogAdditionsController extends GetxController {
           getShowDetails();
         }
       }
+    }
+  }
+
+  getSetting(){
+    for (var value in (gridStateManager?.columns)!) {
+      print("Width value>>>"+value.width.toString()+" key is>>>"+value.title);
     }
   }
 }
