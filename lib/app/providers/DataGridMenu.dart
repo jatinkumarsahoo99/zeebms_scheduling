@@ -341,13 +341,18 @@ class DataGridMenu {
 
         break;
       case DataGridMenuItem.print:
+        stateManager.setShowLoading(true);
         Get.find<ConnectorControl>().POSTMETHOD_FORMDATAWITHTYPE(
           api: ApiFactory.CONVERT_TO_PDF,
           fun: (value) {
+            stateManager.setShowLoading(false);
             ExportData().printFromGridData1((exportFileName ?? 'export${DateTime.now().toString()}') +
                     ".pdf",value);
           },
           json: stateManager.toJson(),
+          failed: (){
+            stateManager.setShowLoading(false);
+          }
         );
         /*pluto_grid_export
             .PlutoGridDefaultPdfExport plutoGridPdfExport = pluto_grid_export
@@ -1062,21 +1067,7 @@ class DataGridMenu {
 
         break;
       case DataGridMenuItem.print:
-      // pluto_grid_export.PlutoGridDefaultPdfExport plutoGridPdfExport = pluto_grid_export.PlutoGridDefaultPdfExport(
-      //   title: exportFileName ?? "ExportedData${DateTime.now().toString()}",
-      //   creator: "BMS_Flutter",
-      //   format: pluto_grid_export.PdfPageFormat.a4.landscape,
-      // );
-      // IsolatedWorker().run(printStatement, [plutoGridPdfExport,stateManager]);
-      // final receivePort = ReceivePort();
-      // here we are passing method name and sendPort instance from ReceivePort as listener
-      // await Isolate.spawn(printStatement, [plutoGridPdfExport,stateManager]);
-
-      //It will listen for isolate function to finish
-      // receivePort.listen((sum) {
-      //   print(sum);
-      // });
-      try {
+      /*try {
           stateManager.setShowLoading(true);
           pluto_grid_export
               .PlutoGridDefaultPdfExport plutoGridPdfExport = pluto_grid_export
@@ -1088,7 +1079,7 @@ class DataGridMenu {
           ExportData().printFromGridData(plutoGridPdfExport, stateManager);
         }catch(e){
           stateManager.setShowLoading(false);
-        }
+        }*/
 
       stateManager.setShowLoading(true);
         Get.find<ConnectorControl>().POSTMETHOD_FORMDATAWITHTYPE(
@@ -1840,15 +1831,27 @@ class DataGridMenu {
 
         break;
       case DataGridMenuItem.print:
-        pluto_grid_export
+        /*pluto_grid_export
             .PlutoGridDefaultPdfExport plutoGridPdfExport = pluto_grid_export
             .PlutoGridDefaultPdfExport(
           title: exportFileName ?? "ExportedData${DateTime.now().toString()}",
           creator: "BMS_Flutter",
           format: pluto_grid_export.PdfPageFormat.a4.landscape,
         );
-        ExportData().printFromGridData(plutoGridPdfExport, stateManager);
-
+        ExportData().printFromGridData(plutoGridPdfExport, stateManager);*/
+        stateManager.setShowLoading(true);
+        Get.find<ConnectorControl>().POSTMETHOD_FORMDATAWITHTYPE(
+            api: ApiFactory.CONVERT_TO_PDF,
+            fun: (value) {
+              stateManager.setShowLoading(false);
+              ExportData().printFromGridData1((exportFileName ?? 'export${DateTime.now().toString()}') +
+                  ".pdf",base64.decode(value));
+            },
+            json: stateManager.toJson(),
+            failed: (){
+              stateManager.setShowLoading(false);
+            }
+        );
         break;
       case DataGridMenuItem.exportToCSv:
         String title = "csv_export";

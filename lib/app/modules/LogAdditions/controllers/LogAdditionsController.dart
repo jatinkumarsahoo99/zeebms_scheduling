@@ -189,8 +189,8 @@ class LogAdditionsController extends GetxController {
     } else if (selectAdditions.value == null) {
       Snack.callError("Please select addition");
     } else {
-      if (selectAdditions?.value?.value != "All" &&
-          selectAdditions?.value?.value != "New") {
+      if (selectAdditions.value?.value != "All" &&
+          selectAdditions.value?.value != "New") {
         LoadingDialog.recordExists(
             "Do you want to update the remarks?",
             () {
@@ -280,6 +280,12 @@ class LogAdditionsController extends GetxController {
           getShowDetails();
         }
       }
+    }
+  }
+
+  getSetting(){
+    for (var value in (gridStateManager?.columns)!) {
+      print("Width value>>>"+value.width.toString()+" key is>>>"+value.title);
     }
   }
 }
