@@ -361,19 +361,26 @@ class SchedulePromoView extends StatelessWidget {
                                             ? null
                                             : DataGridShowOnlyKeys(
                                                 mapData: controller.searchPromos.value,
-                                                onRowDoubleTap: (row) => controller.handleDoubleTapInRightTable(row.rowIdx),
+                                                onRowDoubleTap: (row) => controller.handleDoubleTapInRightTable(row.rowIdx, row.cell.column.field),
                                                 onload: (event) {
                                                   controller.searchedPromoStateManager = event.stateManager;
-                                                  event.stateManager.setSelectingMode(PlutoGridSelectingMode.row);
+                                                  event.stateManager.setSelectingMode(PlutoGridSelectingMode.cell);
                                                   event.stateManager.setSelecting(true);
-                                                  // event.stateManager.setCurrentCell(event.stateManager.firstCell, 0);
+                                                  if (controller.searchPromoSelectedCol.isNotEmpty) {
+                                                    controller.searchedPromoStateManager?.setCurrentCell(
+                                                        controller.searchedPromoStateManager
+                                                            ?.getRowByIdx(controller.searchPromoSelectedIdx)
+                                                            ?.cells[controller.schedulePromoSelectedCol],
+                                                        controller.searchPromoSelectedIdx);
+                                                  }
                                                 },
                                                 colorCallback: (row) =>
                                                     (row.row.cells.containsValue(controller.searchedPromoStateManager?.currentCell))
                                                         ? Colors.deepPurple.shade200
                                                         : Colors.white,
                                                 mode: PlutoGridMode.selectWithOneTap,
-                                                onSelected: (row) => controller.handleOnSelectRightTable(row.rowIdx ?? -1),
+                                                onSelected: (row) =>
+                                                    controller.handleOnSelectRightTable(row.rowIdx ?? 0, row.cell?.column.field ?? "caption"),
                                               ),
                                       );
                                     }),
