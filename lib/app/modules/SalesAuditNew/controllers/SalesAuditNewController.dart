@@ -46,7 +46,7 @@ class SalesAuditNewController extends GetxController {
 
   DropDownValue? selectedLocation;
   DropDownValue? selectedChannel;
-  PlutoGridStateManager? gridStateManager;
+  PlutoGridStateManager? gridStateManagerLeft;
   PlutoGridStateManager? gridStateManagerRight;
   SalesAuditGetRetrieveModel? salesAuditGetRetrieveModel = null;
   List<LstAsrunlog1> listAsrunLog1 = [];
@@ -57,11 +57,15 @@ class SalesAuditNewController extends GetxController {
   List<LstAsrunlog2> masterListAsrunLog2 = [];
   bool leftTblFocus = false;
   bool rightTblFocus = false;
+  FocusNode locationNode = FocusNode();
+  FocusNode channelNode = FocusNode();
 
   fetchPageLoadData() {
+    LoadingDialog.call();
     Get.find<ConnectorControl>().GETMETHODCALL(
         api: ApiFactory.SALESAUDIT_NEW_LOAD,
-        fun: ( map) {
+        fun: (map) {
+          closeDialogIfOpen();
           if (map is Map &&
               map.containsKey("listlocations") &&
               map['listlocations'].length > 0) {
@@ -70,16 +74,18 @@ class SalesAuditNewController extends GetxController {
               locationList.add(DropDownValue.fromJsonDynamic(
                   e, "locationCode", "locationName"));
             });
-          }else{
+          } else {
             locationList.clear();
           }
         });
   }
 
   fetchListOfChannel(String code) {
+    LoadingDialog.call();
     Get.find<ConnectorControl>().GETMETHODCALL(
         api: ApiFactory.SALESAUDIT_NEW_GETCHANNEL + code,
         fun: (Map map) {
+          closeDialogIfOpen();
           channelList.clear();
           print(">>>>jks$map");
           if (map is Map &&
@@ -97,7 +103,7 @@ class SalesAuditNewController extends GetxController {
     Completer<bool> completer = Completer<bool>();
     LoadingDialog.recordExists(
       text,
-          () {
+      () {
         completer.complete(true);
         // return true;
       },
@@ -109,164 +115,235 @@ class SalesAuditNewController extends GetxController {
     return completer.future;
   }
 
-  filterSearchAndCancel(){
-    if(salesAuditGetRetrieveModel != null){
-
-      if(salesAuditGetRetrieveModel!.gettables != null &&
-          salesAuditGetRetrieveModel!.gettables!.lstAsrunlog1 != null &&
-          salesAuditGetRetrieveModel!.gettables!.lstAsrunlog1!.isNotEmpty  ){
-        listAsrunLog2.clear();
-        masterListAsrunLog2.clear();
-        if(showError.value == true && showCancel.value == true){
-          listAsrunLog2.addAll(salesAuditGetRetrieveModel!.gettables!.lstAsrunlog2 as Iterable<LstAsrunlog2>);
-          masterListAsrunLog2.addAll(listAsrunLog2);
-        }else if(showError.value == true){
-          listAsrunLog2.addAll(salesAuditGetRetrieveModel!.gettables!.lstAsrunlog2!.where((element) =>
-          element.bookingStatus.toString().toUpperCase() != "C").toList());
-          masterListAsrunLog2.addAll(listAsrunLog2);
-        }else if(showCancel.value == true){
-          listAsrunLog2.addAll(salesAuditGetRetrieveModel!.gettables!.lstAsrunlog2!.where((element) =>
-          element.bookingStatus.toString().toUpperCase() != "E").toList());
-          masterListAsrunLog2.addAll(listAsrunLog2);
-        }else{
-          listAsrunLog2.addAll(salesAuditGetRetrieveModel!.gettables!.lstAsrunlog2!.where((element) =>
-          element.bookingStatus.toString().toUpperCase() != "C" && element.bookingStatus.toString().toUpperCase() != "E").toList());
-          masterListAsrunLog2.addAll(listAsrunLog2);
-        }
-        update(['leftOne']);
+  filterSearchAndCancel() {
+    if (gridStateManagerLeft != null) {
+      if (showError.value == true && showCancel.value == true) {
+        gridStateManagerLeft?.setFilter((element) => true);
+        gridStateManagerLeft?.notifyListeners();
+      } else if (showError.value == true) {
+        gridStateManagerLeft?.setFilter((element) => true);
+        gridStateManagerLeft?.setFilter((e) =>
+            e.cells['bookingStatus']?.value.toString().trim().toLowerCase() !=
+            "c");
+        gridStateManagerLeft?.notifyListeners();
+      } else if (showCancel.value == true) {
+        gridStateManagerLeft?.setFilter((element) => true);
+        gridStateManagerLeft?.setFilter((e) =>
+            e.cells['bookingStatus']?.value.toString().trim().toLowerCase() !=
+            "e");
+        gridStateManagerLeft?.notifyListeners();
+      } else {
+        gridStateManagerLeft?.setFilter((element) => true);
+        gridStateManagerLeft?.setFilter((e) => (e.cells['bookingStatus']?.value
+                    .toString()
+                    .trim()
+                    .toLowerCase() !=
+                "e" &&
+            e.cells['bookingStatus']?.value.toString().trim().toLowerCase() !=
+                "c"));
+        gridStateManagerLeft?.notifyListeners();
       }
-    }else{
-      listAsrunLog2.clear();
-      masterListAsrunLog2.clear();
-      update(['leftOne']);
     }
+  }
 
-  }
-  clearBtn(int leftIndex,int rightIndex){
-       print("leftIndex$leftIndex");
-       print("rightIndex$rightIndex");
-       print("leftTblFocus $leftTblFocus");
-       print("rightTblFocus $rightTblFocus");
-       if(leftTblFocus){
-         listAsrunLog2[leftIndex].telecastTime= "";
-         update(['leftOne']);
-       }
-       if(rightTblFocus){
-         listAsrunLog1[rightIndex].bookingNumber="";
-         update(['rightOne']);
-       }
-  }
   void btnMapClear_Click() {
-    // tblSpots - listAsrunLog2 - leftIndex
-    // tblAsrun - listAsrunLog1 - rightindex
-    int spots = gridStateManager?.currentRowIdx??0;
-    int asrun = gridStateManagerRight?.currentRowIdx??0;
-    // String exportTapeCode = tblSpots.rows[spots].cells["Exporttapecode"].value;
-    String exportTapeCode = listAsrunLog2[spots].exportTapeCode??"";
+    // tblSpots - listAsrunLog2 - leftIndex - gridStateManagerLeft
+    // tblAsrun - listAsrunLog1 - rightindex - gridStateManagerRight
 
-    if (listAsrunLog2[spots].exportTapeCode == listAsrunLog1[asrun].exportTapeCode) {
-      listAsrunLog1[asrun].bookingNumber = null;
-      listAsrunLog1[asrun].bookingDetailCode = 0;
-     /* tblSpots.rows[spots].cells["Telecasttime"].value = null;
-      tblSpots.rows[spots].cells["ProgramCode"].value = "";
-      tblSpots.rows[spots].cells["RowNumber"].value = null;*/
+    if (((gridStateManagerLeft?.rows.length ?? 0) < 1) ||
+        ((gridStateManagerRight?.rows.length ?? 0) < 1)) {
+      return;
+    } else if (gridStateManagerLeft
+            ?.rows[gridStateManagerLeft?.currentRowIdx ?? 0]
+            .cells['exportTapeCode']
+            ?.value
+            .toString()
+            .trim() ==
+        gridStateManagerRight?.rows[gridStateManagerRight?.currentRowIdx ?? 0]
+            .cells['exportTapeCode']?.value
+            .toString()
+            .trim()) {
+      gridStateManagerLeft?.rows[gridStateManagerLeft?.currentRowIdx ?? 0]
+          .cells['telecastTime']?.value = "";
+      gridStateManagerLeft?.rows[gridStateManagerLeft?.currentRowIdx ?? 0]
+          .cells['programCode']?.value = "";
+      gridStateManagerLeft?.rows[gridStateManagerLeft?.currentRowIdx ?? 0]
+          .cells['rowNumber']?.value = "";
 
-      listAsrunLog2[spots].telecastTime = null;
-      listAsrunLog2[spots].programCode = "";
-      listAsrunLog2[spots].rowNumber = null;
-      update(['leftOne','rightOne']);
-      // tblSpots.rows[spots].selected = true;
+      gridStateManagerRight?.rows[gridStateManagerRight?.currentRowIdx ?? 0]
+          .cells['bookingNumber']?.value = "";
+      gridStateManagerRight?.rows[gridStateManagerRight?.currentRowIdx ?? 0]
+          .cells['bookingDetailCode']?.value = 0;
+      gridStateManagerLeft?.notifyListeners();
+      gridStateManagerRight?.notifyListeners();
     } else {
-      LoadingDialog.recordExists("The Tapes Dont Match!\nDo you still want to clear telecast info?",
-              (){
-                /*tblSpots.rows[spots].cells["Telecasttime"].value = "";
-                tblSpots.rows[spots].cells["ProgramCode"].value = "";
-                tblSpots.rows[spots].cells["RowNumber"].value = null;
-                tblSpots.rows[spots].selected = true;*/
-                listAsrunLog2[spots].telecastTime = "";
-                listAsrunLog2[spots].programCode = "";
-                listAsrunLog2[spots].rowNumber = null;
-                update(['leftOne']);
-              },
-          cancel: (){
-            Get.back();
-          });
-
-
+      LoadingDialog.recordExists(
+          "The Tapes Dont Match!\nDo you still want to clear telecast info?",
+          () {
+        gridStateManagerLeft?.rows[gridStateManagerLeft?.currentRowIdx ?? 0]
+            .cells['telecastTime']?.value = "";
+        gridStateManagerLeft?.rows[gridStateManagerLeft?.currentRowIdx ?? 0]
+            .cells['programCode']?.value = "";
+        gridStateManagerLeft?.rows[gridStateManagerLeft?.currentRowIdx ?? 0]
+            .cells['rowNumber']?.value = "";
+        gridStateManagerLeft?.notifyListeners();
+      }, cancel: () {
+        Get.back();
+      });
     }
   }
 
+  markError(int index) {
+    // tblSpots - listAsrunLog2 - leftIndex - gridStateManagerLeft
+    // tblAsrun - listAsrunLog1 - rightindex - gridStateManagerRight
 
-  markError(int index){
-      for(int i=0;i<listAsrunLog2.length;i++){
-        if(i == index){
-          if(listAsrunLog2[index].bookingStatus  != "E"){
-            listAsrunLog2[index].previousBookingStatus =  listAsrunLog2[index].bookingStatus;
-            listAsrunLog2[index].bookingStatus = "E";
-            listAsrunLog2[index].programCode = null;
-            listAsrunLog2[index].rowNumber = null;
-          }else{
-            listAsrunLog2[index].bookingStatus = listAsrunLog2[index].previousBookingStatus??"B";
-          }
-          print("index$index");
-
-            update(['leftOne']);
-
-           /* Timer(Duration(seconds: 5),() {
-              gridStateManager?.setCurrentCell(gridStateManager?.rows[index].cells["no"], index) ;
-            },);*/
-
-          break;
-        }else{
-          continue;
-        }
+    if (gridStateManagerLeft?.rows[gridStateManagerLeft?.currentRowIdx ?? 0]
+            .cells['bookingStatus']?.value
+            .toString()
+            .trim()
+            .toLowerCase() ==
+        "e") {
+      LoadingDialog.recordExists("Do you want to clear Error making?", () {
+        gridStateManagerLeft?.rows[gridStateManagerLeft?.currentRowIdx ?? 0]
+                .cells['bookingStatus']?.value =
+            gridStateManagerLeft?.rows[gridStateManagerLeft?.currentRowIdx ?? 0]
+                .cells['previousBookingStatus']?.value;
+        gridStateManagerLeft?.rows[gridStateManagerLeft?.currentRowIdx ?? 0]
+            .cells['bookingStatus']?.value = "B";
+        gridStateManagerLeft?.notifyListeners();
+      }, cancel: () {
+        Get.back();
+      });
+    } else {
+      if (gridStateManagerLeft?.rows[gridStateManagerLeft?.currentRowIdx ?? 0]
+                  .cells['telecastTime']?.value !=
+              null &&
+          gridStateManagerLeft?.rows[gridStateManagerLeft?.currentRowIdx ?? 0]
+                  .cells['telecastTime']?.value
+                  .toString()
+                  .trim() !=
+              "" &&
+          gridStateManagerLeft?.rows[gridStateManagerLeft?.currentRowIdx ?? 0]
+                  .cells['telecastTime']?.value !=
+              "null") {
+        LoadingDialog.showErrorDialog(
+            "Telecast Spot!\nUnable To mark as error!");
+      } else {
+        LoadingDialog.recordExists("Do you want to mark as Error?", () {
+          gridStateManagerLeft?.rows[gridStateManagerLeft?.currentRowIdx ?? 0]
+                  .cells['previousBookingStatus']?.value =
+              gridStateManagerLeft
+                  ?.rows[gridStateManagerLeft?.currentRowIdx ?? 0]
+                  .cells['bookingStatus']
+                  ?.value;
+          gridStateManagerLeft?.rows[gridStateManagerLeft?.currentRowIdx ?? 0]
+              .cells['bookingStatus']?.value = "E";
+          gridStateManagerLeft?.rows[gridStateManagerLeft?.currentRowIdx ?? 0]
+              .cells['programCode']?.value = "";
+          gridStateManagerLeft?.rows[gridStateManagerLeft?.currentRowIdx ?? 0]
+              .cells['rowNumber']?.value = "";
+          gridStateManagerLeft?.notifyListeners();
+        }, cancel: () {
+          Get.back();
+        });
       }
+    }
   }
-  allBToE(){
-    for(int i=0;i<listAsrunLog2.length;i++){
-      if(listAsrunLog2[i].telecastTime == "" ||
-          listAsrunLog2[i].telecastTime == null ||
-          listAsrunLog2[i].telecastTime == "null" ){
-          if(listAsrunLog2[i].bookingStatus == "B" ){
-            listAsrunLog2[i].bookingStatus = "E";
-          }else{
-            continue;
-          }
-          update(['leftOne']);
-      }else{
+
+  allBToE() {
+    // tblSpots - listAsrunLog2 - leftIndex - gridStateManagerLeft
+    // tblAsrun - listAsrunLog1 - rightindex - gridStateManagerRight
+    for (int i = 0; i < (gridStateManagerLeft?.rows.length ?? 0); i++) {
+      if (gridStateManagerLeft?.rows[i].cells['bookingStatus']?.value
+              .toString()
+              .trim()
+              .toLowerCase() ==
+          "e") {
+        continue;
+      } else if ((gridStateManagerLeft?.rows[i].cells['bookingStatus']?.value
+                      .toString()
+                      .trim()
+                      .toLowerCase() ==
+                  "b" ||
+              gridStateManagerLeft?.rows[i].cells['bookingStatus']?.value
+                      .toString()
+                      .trim()
+                      .toLowerCase() ==
+                  "r") &&
+          (gridStateManagerLeft?.rows[i].cells['telecastTime']?.value == null ||
+              gridStateManagerLeft?.rows[i].cells['telecastTime']?.value
+                      .toString()
+                      .trim() ==
+                  "")) {
+        gridStateManagerLeft?.rows[i].cells['previousBookingStatus']?.value =
+            gridStateManagerLeft?.rows[i].cells['bookingStatus']?.value;
+        gridStateManagerLeft?.rows[i].cells['bookingStatus']?.value = "E";
+        gridStateManagerLeft?.rows[i].cells['programCode']?.value = "";
+        gridStateManagerLeft?.rows[i].cells['rowNumber']?.value = "";
+        gridStateManagerLeft?.rows[i].cells['telecastTime']?.value = "";
+        gridStateManagerLeft?.rows[i].cells['remarks']?.value =
+            "Not telecast Sales Audit";
+        continue;
+      } else {
         continue;
       }
     }
   }
 
-  unCancel(int index){
-    for(int i=0;i<listAsrunLog2.length;i++){
-      if(i == index){
-        if(listAsrunLog2[index].telecastTime != null &&
+  unCancel(int index) {
+    for (int i = 0; i < listAsrunLog2.length; i++) {
+      if (i == index) {
+        if (listAsrunLog2[index].telecastTime != null &&
             listAsrunLog2[index].telecastTime != "" &&
-            listAsrunLog2[index].telecastTime != "null"
-        ){
+            listAsrunLog2[index].telecastTime != "null") {
           listAsrunLog2[index].bookingStatus = "C";
           update(['leftOne']);
         }
         break;
-      }else{
+      } else {
         continue;
       }
     }
   }
 
-
-
-  showAll(){
-    listAsrunLog2.clear();
-    listAsrunLog1.clear();
-    listAsrunLog2.addAll(masterListAsrunLog2);
-    listAsrunLog1.addAll(masterListAsrunLog1);
-    update(['leftOne']);
-    update(['rightOne']);
+  showAll() {
+    if (gridStateManagerLeft != null) {
+      if (showError.value == true && showCancel.value == true) {
+        gridStateManagerLeft?.setFilter((element) => true);
+        gridStateManagerRight?.setFilter((element) => true);
+        gridStateManagerLeft?.notifyListeners();
+        gridStateManagerRight?.notifyListeners();
+      } else if (showError.value == true) {
+        gridStateManagerLeft?.setFilter((element) => true);
+        gridStateManagerLeft?.setFilter((e) =>
+            e.cells['bookingStatus']?.value.toString().trim().toLowerCase() !=
+            "c");
+        gridStateManagerRight?.setFilter((element) => true);
+        gridStateManagerLeft?.notifyListeners();
+        gridStateManagerRight?.notifyListeners();
+      } else if (showCancel.value == true) {
+        gridStateManagerLeft?.setFilter((element) => true);
+        gridStateManagerLeft?.setFilter((e) =>
+            e.cells['bookingStatus']?.value.toString().trim().toLowerCase() !=
+            "e");
+        gridStateManagerRight?.setFilter((element) => true);
+        gridStateManagerLeft?.notifyListeners();
+        gridStateManagerRight?.notifyListeners();
+      } else {
+        gridStateManagerLeft?.setFilter((element) => true);
+        gridStateManagerLeft?.setFilter((e) => (e.cells['bookingStatus']?.value
+                    .toString()
+                    .trim()
+                    .toLowerCase() !=
+                "e" &&
+            e.cells['bookingStatus']?.value.toString().trim().toLowerCase() !=
+                "c"));
+        gridStateManagerRight?.setFilter((element) => true);
+        gridStateManagerLeft?.notifyListeners();
+        gridStateManagerRight?.notifyListeners();
+      }
+    }
   }
-
 
   callGetRetrieve() {
     if (selectedLocation == null) {
@@ -279,7 +356,9 @@ class SalesAuditNewController extends GetxController {
     } else {
       LoadingDialog.call();
       String date = Uri.encodeComponent((DateFormat("yyyy-MM-dd HH:mm").parse(
-              (DateFormat("dd-MM-yyyy").parse(scheduledController.text)).toString())).toString());
+              (DateFormat("dd-MM-yyyy").parse(scheduledController.text))
+                  .toString()))
+          .toString());
       print(">>>>$date");
 
       // ((Get.find<MainController>().user != null) ? Aes.encrypt(Get.find<MainController>().user?.personnelNo ?? "") : "")
@@ -287,50 +366,40 @@ class SalesAuditNewController extends GetxController {
       Get.find<ConnectorControl>().GETMETHODCALL(
           api: ApiFactory.SALESAUDIT_NEW_GETRETRIEVE(
               selectedLocation!.key ?? "", selectedChannel!.key ?? "", date),
-          fun: (map) {
+          fun: (map) async {
             Get.back();
             print(">>>>>>>map${jsonEncode(map)}");
             listAsrunLog2.clear();
             listAsrunLog1.clear();
             masterListAsrunLog2.clear();
             masterListAsrunLog1.clear();
-            if (map is Map && map.containsKey('gettables') && map['gettables'] != null) {
+            if (map is Map &&
+                map.containsKey('gettables') &&
+                map['gettables'] != null) {
               // lstAsrunLog1.clear();
               // lstAsrunLog2.clear();
-              salesAuditGetRetrieveModel = SalesAuditGetRetrieveModel.fromJson(map as Map<String,dynamic>);
+              salesAuditGetRetrieveModel = SalesAuditGetRetrieveModel.fromJson(
+                  map as Map<String, dynamic>);
               // masterListAsrunLog2.addAll(listAsrunLog2);
               // masterListAsrunLog1.addAll(listAsrunLog1);
 
-              if(map['gettables']['lstAsrunlog1'] != null &&
-                  map['gettables']['lstAsrunlog1'] != "null" && map['gettables']['lstAsrunlog1'].length >0){
-                listAsrunLog1.addAll(salesAuditGetRetrieveModel!.gettables!.lstAsrunlog1 as Iterable<LstAsrunlog1>);
+              if (map['gettables']['lstAsrunlog1'] != null &&
+                  map['gettables']['lstAsrunlog1'] != "null" &&
+                  map['gettables']['lstAsrunlog1'].length > 0) {
+                listAsrunLog1.addAll(salesAuditGetRetrieveModel!
+                    .gettables!.lstAsrunlog1 as Iterable<LstAsrunlog1>);
                 masterListAsrunLog1.addAll(listAsrunLog1);
                 update(['rightOne']);
               }
-              if(map['gettables']['lstAsrunlog2'] != null &&
-                  map['gettables']['lstAsrunlog2'] != "null" && map['gettables']['lstAsrunlog2'].length >0){
-
-                if(showError.value == true && showCancel.value == true){
-                  listAsrunLog2.addAll(salesAuditGetRetrieveModel!.gettables!.lstAsrunlog2 as Iterable<LstAsrunlog2>);
-                  masterListAsrunLog2.addAll(listAsrunLog2);
-                }else if(showError.value == true){
-                  listAsrunLog2.addAll(salesAuditGetRetrieveModel!.gettables!.lstAsrunlog2!.where((element) =>
-                  element.bookingStatus.toString().toUpperCase() != "C").toList());
-                  masterListAsrunLog2.addAll(listAsrunLog2);
-                }else if(showCancel.value == true){
-                  listAsrunLog2.addAll(salesAuditGetRetrieveModel!.gettables!.lstAsrunlog2!.where((element) =>
-                  element.bookingStatus.toString().toUpperCase() != "E").toList());
-                  masterListAsrunLog2.addAll(listAsrunLog2);
-                }else{
-                  listAsrunLog2.addAll(salesAuditGetRetrieveModel!.gettables!.lstAsrunlog2!.where((element) =>
-                  element.bookingStatus.toString().toUpperCase() != "C" && element.bookingStatus.toString().toUpperCase() != "E").toList());
-                  masterListAsrunLog2.addAll(listAsrunLog2);
-                }
-                update(['leftOne']);
+              if (map['gettables']['lstAsrunlog2'] != null &&
+                  map['gettables']['lstAsrunlog2'] != "null" &&
+                  map['gettables']['lstAsrunlog2'].length > 0) {
+                listAsrunLog2.addAll(salesAuditGetRetrieveModel!
+                    .gettables!.lstAsrunlog2 as Iterable<LstAsrunlog2>);
+                masterListAsrunLog2.addAll(listAsrunLog2);
+                update(['leftOne', 'text']);
               }
-              update(['text']);
-            }
-            else {
+            } else {
               salesAuditGetRetrieveModel = null;
               listAsrunLog2.clear();
               listAsrunLog1.clear();
@@ -343,19 +412,20 @@ class SalesAuditNewController extends GetxController {
   }
 
   saveData() {
-    // tblSpots - listAsrunLog2 - leftIndex
-    // tblAsrun - listAsrunLog1 - rightindex
-    // masterListAsrunLog2.clear();
-    // masterListAsrunLog1.clear();
+    // tblSpots - listAsrunLog2 - leftIndex - gridStateManagerLeft
+    // tblAsrun - listAsrunLog1 - rightindex - gridStateManagerRight
 
     LoadingDialog.call();
     Map<String, dynamic> postData = {
-      "locationcode":  selectedLocation!.key,
+      "locationcode": selectedLocation!.key,
       "channelcode": selectedChannel!.key,
-      "loggedUsercode":Get.find<MainController>().user?.logincode??"",
-      "date": DateFormat("yyyy-MM-ddTHH:mm:ss").format( DateFormat("dd-MM-yyyy").parse(scheduledController.text)),
-      "lstspots":masterListAsrunLog2.map((e) => e.toJson1()).toList(),
-      "lstasrun": masterListAsrunLog1.map((e) => e.toJson1()).toList()
+      "loggedUsercode": Get.find<MainController>().user?.logincode ?? "",
+      "date": DateFormat("yyyy-MM-ddTHH:mm:ss")
+          .format(DateFormat("dd-MM-yyyy").parse(scheduledController.text)),
+      // "lstspots": masterListAsrunLog2.map((e) => e.toJson1()).toList(),
+      "lstspots": getDataFromGrid(gridStateManagerLeft!),
+      // "lstasrun": masterListAsrunLog1.map((e) => e.toJson1()).toList(),
+      "lstasrun": getDataFromGrid(gridStateManagerRight!),
     };
 
     print(">>>>>>postData${jsonEncode(postData)}");
@@ -365,17 +435,31 @@ class SalesAuditNewController extends GetxController {
         fun: (map) {
           Get.back();
           print(">>>>>map$map");
-          if(map is Map && map.containsKey("postSalesAduit")){
-            LoadingDialog.callDataSavedMessage((map['postSalesAduit']??""),
-                callback: (){
+          if (map is Map && map.containsKey("postSalesAduit")) {
+            LoadingDialog.callDataSavedMessage((map['postSalesAduit'] ?? ""),
+                callback: () {
               // clearAll();
-                  Get.back();
+              Get.back();
             });
-          }else{
+          } else {
             Snack.callError("Something went wrong\nPlease try After Sometime");
           }
-
         });
+  }
+
+  List<Map<String, dynamic>> getDataFromGrid(
+      PlutoGridStateManager statemanager) {
+    List<Map<String, dynamic>> mapList = [];
+
+    for (var row in statemanager.rows) {
+      Map<String, dynamic> rowMap = {};
+      for (var key in row.cells.keys) {
+        rowMap[key] = row.cells[key]?.value ?? "";
+      }
+      mapList.add(rowMap);
+    }
+
+    return mapList;
   }
 
   clearAll() {
@@ -383,492 +467,616 @@ class SalesAuditNewController extends GetxController {
     Get.find<HomeController>().clearPage1();
   }
 
-  void Domatch(int rightIndex) {
-
-    String Exporttapecode, FPCtime, TApeduration, BookingNumber, BookingDetailcode, TelecastTime;
+  void doMatch(int rightIndex) {
+    String Exporttapecode,
+        FPCtime,
+        TApeduration,
+        BookingNumber,
+        BookingDetailcode,
+        TelecastTime;
 
     List<String> ros;
 
-    String ? RosStart, RosEnd, MidRosStart, MidRosEnd;
+    String? RosStart, RosEnd, MidRosStart, MidRosEnd;
 
     bool IsRos;
-    DateTime ?RosStartParse ;
-    DateTime ?RosEndParse ;
+    DateTime? RosStartParse;
+    DateTime? RosEndParse;
 
+    // tblSpots - listAsrunLog2 - leftIndex - gridStateManagerLeft
+    // tblAsrun - listAsrunLog1 - rightindex - gridStateManagerRight
 
-    Exporttapecode = listAsrunLog1[rightIndex].exportTapeCode??"";
+    Exporttapecode = gridStateManagerRight
+            ?.rows[gridStateManagerRight?.currentRowIdx ?? 0]
+            .cells['exportTapeCode']
+            ?.value ??
+        "";
 
-    FPCtime = listAsrunLog1[rightIndex].fpctime!;
+    FPCtime = gridStateManagerRight
+            ?.rows[gridStateManagerRight?.currentRowIdx ?? 0]
+            .cells['fpctime']
+            ?.value ??
+        "";
 
-    TApeduration = listAsrunLog1[rightIndex].tapeDuration.toString();
+    TApeduration = gridStateManagerRight
+            ?.rows[gridStateManagerRight?.currentRowIdx ?? 0]
+            .cells['tapeDuration']
+            ?.value ??
+        "";
 
-    TelecastTime = listAsrunLog1[rightIndex].telecastTime??"";
+    TelecastTime = gridStateManagerRight
+            ?.rows[gridStateManagerRight?.currentRowIdx ?? 0]
+            .cells['telecastTime']
+            ?.value ??
+        "";
 
+    BookingNumber = gridStateManagerRight
+            ?.rows[gridStateManagerRight?.currentRowIdx ?? 0]
+            .cells['bookingNumber']
+            ?.value ??
+        "";
 
-    BookingNumber = listAsrunLog1[rightIndex].bookingNumber??"";
+    BookingDetailcode = gridStateManagerRight
+            ?.rows[gridStateManagerRight?.currentRowIdx ?? 0]
+            .cells['bookingDetailCode']
+            ?.value ??
+        "";
 
-    BookingDetailcode = listAsrunLog1[rightIndex].bookingDetailCode.toString();
-
-    // tblSpots - listAsrunLog2 - leftIndex
-    // tblAsrun - listAsrunLog1 - rightindex
+    // tblSpots - listAsrunLog2 - leftIndex - gridStateManagerLeft
+    // tblAsrun - listAsrunLog1 - rightindex - gridStateManagerRight
     if (BookingNumber != "" && BookingNumber != null) {
       // leftIndex
-      for (int i=0;i<listAsrunLog2.length;i++) {
-
-        if (listAsrunLog2[i].bookingNumber == BookingNumber &&
-            listAsrunLog2[i].bookingDetailCode == BookingDetailcode) {
-
+      for (int i = 0; i < (gridStateManagerLeft?.rows.length ?? 0); i++) {
+        if (((gridStateManagerLeft?.rows[i].cells['bookingNumber']?.value ??
+                    "") ==
+                BookingNumber) &&
+            ((gridStateManagerLeft?.rows[i].cells['bookingDetailCode']?.value ??
+                    "") ==
+                BookingDetailcode)) {
           // gridStateManager?.setGridMode(PlutoGridMode.select) ;
-
-          gridStateManager?.setCurrentCell(gridStateManager?.rows[i].cells["no"], i) ;
-          // gridStateManagerRight?.rows[Dr.sortIdx].Selected = true;
-
-          // gridStateManagerRight.FirstDisplayedScrollingRowIndex = Dr.Index;
-
-          // Dr.Selected = true;
-
+          gridStateManagerLeft?.setCurrentCell(
+              gridStateManagerLeft?.rows[i].cells["bookingDetailCode"], i);
+          gridStateManagerLeft?.notifyListeners();
           return;
-
         }
-
       }
-
     }
-
-
-    for (int j=0;j<listAsrunLog2.length;j++) {
-
-      if (listAsrunLog2[j].dealTime != "") {
-
+    // tblSpots - listAsrunLog2 - leftIndex - gridStateManagerLeft
+    // tblAsrun - listAsrunLog1 - rightindex - gridStateManagerRight
+    for (int j = 0; j < (gridStateManagerLeft?.rows.length??0); j++) {
+      if ((gridStateManagerLeft?.rows[j].cells['dealTime']?.value??"").toString().trim()  != "") {
         IsRos = true;
 
-        ros = listAsrunLog2[j].dealTime.toString().split("-");
+        ros = (gridStateManagerLeft?.rows[j].cells['dealTime']?.value??"").toString().split("-");
 
         RosStart = "${ros[0]}:00";
 
         RosEnd = "${ros[1]}:00";
 
-         RosStartParse = DateTime.parse("2023-01-01 ${RosStart}");
-         RosEndParse = DateTime.parse("2023-01-01 ${RosEnd}");
-
+        RosStartParse = DateTime.parse("2023-01-01 ${RosStart}");
+        RosEndParse = DateTime.parse("2023-01-01 ${RosEnd}");
 
         if (RosStartParse.compareTo(RosEndParse) > 0) {
-
           MidRosEnd = "23:59:59";
 
           MidRosStart = "00:00:00";
-
         } else {
-
           MidRosEnd = RosEnd;
 
           MidRosStart = RosEnd;
-
         }
-
-      }
-      else {
-
+      } else {
         IsRos = false;
-
       }
       // Non ROs check
+      // tblSpots - listAsrunLog2 - leftIndex - gridStateManagerLeft
+      // tblAsrun - listAsrunLog1 - rightindex - gridStateManagerRight
 
-      if (listAsrunLog2[j].telecastTime.toString() == "" &&
-          listAsrunLog2[j].exportTapeCode == Exporttapecode &&
-          listAsrunLog2[j].tapeDuration == TApeduration &&
-          DateTime.parse("2023-01-01 ${listAsrunLog2[j].scheduleTime}").
-          difference(DateTime.parse("2023-01-01 $FPCtime")).inMinutes.abs() <= 4 && !IsRos) {
-
-        // tblSpots.SelectionMode = DataGridViewSelectionMode.FullRowSelect;
-        //
-        // tblSpots.Rows[Dr.Index].Selected = true;
-        //
-        // tblSpots.FirstDisplayedScrollingRowIndex = Dr.Index;
-        //
-        // Dr.Selected = true;
-        //
-        // if (ControlDwn) btnMap_Click(null, null);
-        btnMap_Click(rightIndex,j);
-
+      if ((gridStateManagerLeft?.rows[j].cells['telecastTime']?.value??"").toString().trim() == "" &&
+        (  ( gridStateManagerLeft?.rows[j].cells['exportTapeCode']?.value??"").toString().trim() == Exporttapecode.toString().trim()) &&
+          (gridStateManagerLeft?.rows[j].cells['tapeDuration']?.value??"").toString().trim() == TApeduration.toString().trim() &&
+          DateTime.parse("2023-01-01 ${gridStateManagerLeft?.rows[j].cells['scheduleTime']?.value??""}")
+                  .difference(DateTime.parse("2023-01-01 $FPCtime"))
+                  .inMinutes
+                  .abs() <=
+              4 &&
+          !IsRos) {
+        gridStateManagerLeft?.setCurrentCell( gridStateManagerLeft?.rows[j].cells["exportTapeCode"], j) ;
+        gridStateManagerLeft?.notifyListeners();
+        btnMapClick(gridStateManagerRight?.currentRowIdx??0, gridStateManagerLeft?.currentRowIdx??0);
         return;
-
       }
-
     }
 
-
-    for (int k=0;k<listAsrunLog2.length;k++) {
-
-      if (listAsrunLog2[k].dealTime != "") {
-
+    for (int k = 0; k < (gridStateManagerLeft?.rows.length??0); k++) {
+      if ( (gridStateManagerLeft?.rows[k].cells['dealTime']?.value ?? "" ).toString().trim() != "") {
         IsRos = true;
 
-        ros = listAsrunLog2[k].dealTime.toString().split("-");
+        ros = (gridStateManagerLeft?.rows[k].cells['dealTime']?.value ?? "" ).toString().split("-");
 
         RosStart = "${ros[0]}:00";
 
         RosEnd = "${ros[1]}:00";
 
-         RosStartParse = DateTime.parse("2023-01-01 ${RosStart}");
-         RosEndParse = DateTime.parse("2023-01-01 ${RosEnd}");
+        RosStartParse = DateTime.parse("2023-01-01 ${RosStart}");
+        RosEndParse = DateTime.parse("2023-01-01 ${RosEnd}");
 
         if (RosStartParse.compareTo(RosEndParse) > 0) {
-
           MidRosEnd = "23:59:59";
 
           MidRosStart = "00:00:00";
-
         } else {
-
           MidRosEnd = RosEnd;
 
           MidRosStart = RosEnd;
-
         }
-
       }
       else {
-
         IsRos = false;
-
       }
       // DateTime.parse("2023-01-01 ${TelecastTime}")
 
-      if (listAsrunLog2[k].telecastTime.toString() == "" &&
-          listAsrunLog2[k].exportTapeCode == Exporttapecode &&
-          listAsrunLog2[k].tapeDuration == TApeduration && IsRos) {
-
-        if (( DateTime.parse("2023-01-01 ${TelecastTime}").compareTo(RosStartParse!) > 0
-            && DateTime.parse("2023-01-01 ${TelecastTime}").compareTo(DateTime.parse("2023-01-01 ${MidRosEnd}")) < 0) ||
-            (DateTime.parse("2023-01-01 ${TelecastTime}").compareTo(DateTime.parse("2023-01-01 ${MidRosStart}")) > 0
-                && DateTime.parse("2023-01-01 ${TelecastTime}").compareTo(DateTime.parse("2023-01-01 ${MidRosEnd}")) < 0)) {
-
-          //tblSpots.SelectionMode = DataGridViewSelectionMode.FullRowSelect;
-
-          // tblSpots.Rows[Dr.Index].Selected = true;
-          //
-          // tblSpots.FirstDisplayedScrollingRowIndex = Dr.Index;
-          //
-          // Dr.Selected = true;
-          //
-          // //tblSpots
-          //
-          // if (ControlDwn) btnMap_Click(null, null);
-          btnMap_Click(rightIndex,k);
-
+      if ((gridStateManagerLeft?.rows[k].cells['telecastTime']?.value ?? "" ).toString().trim() == "" &&
+          (gridStateManagerLeft?.rows[k].cells['exportTapeCode']?.value ?? "").toString().trim() == Exporttapecode.toString().trim() &&
+         (gridStateManagerLeft?.rows[k].cells['tapeDuration']?.value ?? "" ).toString().trim() == TApeduration.toString().trim() && IsRos) {
+        if ((DateTime.parse("2023-01-01 ${TelecastTime}")
+                        .compareTo(RosStartParse!) >
+                    0 &&
+                DateTime.parse("2023-01-01 ${TelecastTime}")
+                        .compareTo(DateTime.parse("2023-01-01 ${MidRosEnd}")) <
+                    0) ||
+            (DateTime.parse("2023-01-01 ${TelecastTime}").compareTo(
+                        DateTime.parse("2023-01-01 ${MidRosStart}")) >
+                    0 &&
+                DateTime.parse("2023-01-01 ${TelecastTime}")
+                        .compareTo(DateTime.parse("2023-01-01 ${MidRosEnd}")) <
+                    0)) {
+          gridStateManagerLeft?.setCurrentCell( gridStateManagerLeft?.rows[k].cells["exportTapeCode"], k) ;
+          gridStateManagerLeft?.notifyListeners();
+          btnMapClick(gridStateManagerRight?.currentRowIdx??0, gridStateManagerLeft?.currentRowIdx??0);
           return;
-
         }
-
       }
-
     }
-
   }
 
-  SetNextRow(int rightindex,int leftIndex){
-    rightindex= rightindex + 1;
-    leftIndex= leftIndex + 1;
-    gridStateManager?.setCurrentCell(gridStateManager?.rows[leftIndex].cells["no"],leftIndex) ;
-    gridStateManagerRight?.setCurrentCell(gridStateManager?.rows[rightindex].cells["no"],rightindex) ;
-
-    print(">>>>>${gridStateManagerRight!.currentRowIdx}");
-    print(">>>>>${gridStateManager!.currentRowIdx}");
-
-  }
   void setNextRow1(String exportTapeCode) {
-    // tblSpots - listAsrunLog2 - leftIndex
-    // tblAsrun - listAsrunLog1 - rightindex
+    // tblSpots - listAsrunLog2 - leftIndex -gridStateManager
+    // tblAsrun - listAsrunLog1 - rightindex - gridStateManagerRight
 
-    print("exportTapeCode$exportTapeCode");
-    for (int i=0;i<listAsrunLog2.length;i++) {
+    print("exportTapeCode${gridStateManagerLeft?.rows.length}");
+    for (int i = 0; i < (gridStateManagerLeft?.rows.length ?? 0); i++) {
       // print(">>>>>>>>>>"+listAsrunLog2[i].exportTapeCode.toString()+exportTapeCode);
-      if (listAsrunLog2[i].exportTapeCode == exportTapeCode &&
-         ( ((listAsrunLog2[i].telecastTime ?? "") == "") || listAsrunLog2[i].telecastTime == null) ) {
+      if (gridStateManagerLeft?.rows[i].cells['exportTapeCode']?.value
+                  .toString()
+                  .trim() ==
+              exportTapeCode &&
+          (gridStateManagerLeft?.rows[i].cells['telecastTime']?.value == null ||
+              ((gridStateManagerLeft?.rows[i].cells['telecastTime']?.value
+                      .toString()
+                      .trim()) ==
+                  ""))) {
         print("searchIndex$i");
         // tblSpots.rows[dr.index].selected = true;
-        gridStateManager?.setCurrentCell(gridStateManager?.rows[i].cells["no"],i) ;
-
+        gridStateManagerLeft?.setCurrentCell(
+            gridStateManagerLeft?.rows[i].cells["exportTapeCode"], i);
+        print(">>>>" + (gridStateManagerLeft?.currentRowIdx).toString());
+        gridStateManagerLeft?.notifyListeners();
         break;
       }
     }
 
-    for (int j=0;j<listAsrunLog1.length;j++) {
+    for (int j = 0; j < (gridStateManagerRight?.rows.length ?? 0); j++) {
       // print(">>>>>>>>>>"+listAsrunLog1[j].exportTapeCode.toString()+exportTapeCode);
-      if (listAsrunLog1[j].exportTapeCode == exportTapeCode &&
-         ( ((listAsrunLog1[j].bookingNumber ?? "") == "") || listAsrunLog1[j].bookingNumber == null) ) {
+      if (gridStateManagerRight?.rows[j].cells['exportTapeCode']?.value
+                  .toString()
+                  .trim() ==
+              exportTapeCode &&
+          (gridStateManagerRight?.rows[j].cells['bookingNumber']?.value ==
+                  null ||
+              (gridStateManagerRight?.rows[j].cells['bookingNumber']?.value
+                      .toString()
+                      .trim() ==
+                  ""))) {
         // tblAsrun.rows[dr1.index].selected = true;
         print("searchIndex$j");
-        gridStateManagerRight?.setCurrentCell(gridStateManager?.rows[j].cells["no"],j) ;
+        gridStateManagerRight?.setCurrentCell(
+            gridStateManagerRight?.rows[j].cells["bookingNumber"], j);
+        print(">>>>" + (gridStateManagerRight?.currentRowIdx).toString());
+        gridStateManagerRight?.notifyListeners();
         break;
       }
     }
   }
-  void btnAuto_Click() {
-    for (int i=0;i<listAsrunLog1.length;i++) {
-      // ControlDwn = true;
-      // gridStateManagerRight.rows[dr.Index].Cells[1].Selected = true;
-      // Domatch(dr.Index);
-      // ControlDwn = false;
-      Domatch(i);
+
+  void btnAutoClick() {
+    // tblSpots - listAsrunLog2 - leftIndex -gridStateManagerLeft
+    // tblAsrun - listAsrunLog1 - rightindex - gridStateManagerRight
+    for (int i = 0; i < (gridStateManagerRight?.rows.length??0); i++) {
+      gridStateManagerRight?.setCurrentCell(gridStateManagerRight?.rows[i].cells["telecastTime"], i) ;
+      gridStateManagerRight?.notifyListeners();
+      doMatch(i);
     }
-       // colorGrid();
+    // colorGrid();
   }
 
+  closeDialogIfOpen() {
+    if (Get.isDialogOpen ?? false) {
+      Get.back();
+    }
+  }
 
-
-  void btnMap_Click(int rightindex,int leftIndex) {
+  void btnMapClick(int rightindex, int leftIndex) {
     String exporttapecode, FPCtime, TApeduration, Telecasttime;
     bool Matched = false;
     String programCode, rowNumber;
     print("jks3");
     // tblAsrun.CurrentRow.Selected = true;
     // right table
-    exporttapecode = listAsrunLog1[rightindex].exportTapeCode??"";
-    programCode = listAsrunLog1[rightindex].programCode??"";
-    rowNumber = (listAsrunLog1[rightindex].rownumber ??"").toString();
-    FPCtime = listAsrunLog1[rightindex].fpctime??"";
-    TApeduration = (listAsrunLog1[rightindex].tapeDuration??"").toString();
-    Telecasttime = listAsrunLog1[rightindex].telecastTime??"";
 
-    print(">>>>>>>>>${listAsrunLog1[rightindex].bookingNumber}");
-    print(">>>>>>>>>${listAsrunLog2[leftIndex].telecastTime}");
-    if (listAsrunLog1[rightindex].bookingNumber != null && listAsrunLog1[rightindex].bookingNumber != "") {
+    // tblSpots - listAsrunLog2 - leftIndex -gridStateManagerLeft
+    // tblAsrun - listAsrunLog1 - rightindex - gridStateManagerRight
+
+    exporttapecode = gridStateManagerRight
+            ?.rows[rightindex].cells['exportTapeCode']?.value ??
+        "";
+    programCode =
+        gridStateManagerRight?.rows[rightindex].cells['programCode']?.value ??
+            "";
+    rowNumber =
+        gridStateManagerRight?.rows[rightindex].cells['rownumber']?.value ?? "";
+    FPCtime =
+        gridStateManagerRight?.rows[rightindex].cells['fpctime']?.value ?? "";
+    TApeduration =
+        gridStateManagerRight?.rows[rightindex].cells['tapeDuration']?.value ??
+            "";
+    Telecasttime =
+        gridStateManagerRight?.rows[rightindex].cells['telecastTime']?.value ??
+            "";
+
+    if (gridStateManagerRight?.rows[rightindex].cells['bookingNumber']?.value !=
+            null &&
+        gridStateManagerRight?.rows[rightindex].cells['bookingNumber']?.value !=
+            "") {
       print("jks1");
       // SetNextRow(rightindex,leftIndex);
       setNextRow1(exporttapecode);
+
       return;
     }
-    if (listAsrunLog2[leftIndex].telecastTime != null && listAsrunLog2[leftIndex].telecastTime != "") {
+    if (gridStateManagerLeft?.rows[leftIndex].cells['telecastTime']?.value !=
+            null &&
+        gridStateManagerLeft?.rows[leftIndex].cells['telecastTime']?.value !=
+            "") {
       print("jks2");
       // SetNextRow(rightindex,leftIndex);
+
       setNextRow1(exporttapecode);
       return;
     }
-   // tblSpots - listAsrunLog2 - leftIndex
-   // tblAsrun - listAsrunLog1 - rightindex
+    // tblSpots - listAsrunLog2 - leftIndex -gridStateManagerLeft
+    // tblAsrun - listAsrunLog1 - rightindex - gridStateManagerRight
 
-    if (exporttapecode.trim() == listAsrunLog2[leftIndex].exportTapeCode.toString().trim() &&
-        TApeduration == listAsrunLog2[leftIndex].tapeDuration.toString() &&
-        listAsrunLog2[leftIndex].dealTime != "") {
+    if (exporttapecode.trim() ==
+            gridStateManagerLeft?.rows[leftIndex].cells['exportTapeCode']?.value
+                .toString()
+                .trim() &&
+        TApeduration.toString().trim() ==
+            gridStateManagerLeft?.rows[leftIndex].cells['tapeDuration']?.value
+                .toString()
+                .trim() &&
+        gridStateManagerLeft?.rows[leftIndex].cells['dealTime']?.value !=
+            null &&
+        gridStateManagerLeft?.rows[leftIndex].cells['dealTime']?.value != "") {
+      print(">>>>>>>>>>>>inside if one");
+      gridStateManagerLeft?.rows[leftIndex].cells['telecastTime']?.value =
+          Telecasttime;
+      gridStateManagerLeft?.rows[leftIndex].cells['programCode']?.value =
+          programCode;
+      gridStateManagerLeft?.rows[leftIndex].cells['rowNumber']?.value =
+          int.parse(rowNumber);
 
-      listAsrunLog2[leftIndex].telecastTime = Telecasttime;
-      listAsrunLog2[leftIndex].programCode = programCode;
-      listAsrunLog2[leftIndex].rowNumber = int.parse(rowNumber);
-
-      listAsrunLog1[rightindex].bookingNumber = listAsrunLog2[leftIndex].bookingNumber;
-      listAsrunLog1[rightindex].bookingDetailCode = listAsrunLog2[leftIndex].bookingDetailCode;
-      listAsrunLog1[rightindex].remark = listAsrunLog2[leftIndex].bookingNumber??"" + "-" +
-          (listAsrunLog2[leftIndex].bookingDetailCode??"").toString();
-
-     /* tblAsrun.SelectedRows[0]["BookingDetailCode"] = tblSpots.SelectedRows[0]["BookingDetailCode"];
-      tblAsrun.SelectedRows[0]["remark"] = tblSpots.SelectedRows[0]["Bookingnumber"] + "-" +
-          tblSpots.SelectedRows[0]["BookingDetailCode"];*/
+      gridStateManagerRight?.rows[rightindex].cells['bookingNumber']?.value =
+          gridStateManagerLeft?.rows[leftIndex].cells['bookingNumber']?.value;
+      gridStateManagerRight
+              ?.rows[rightindex].cells['bookingDetailCode']?.value =
+          gridStateManagerLeft
+              ?.rows[leftIndex].cells['bookingDetailCode']?.value;
+      gridStateManagerRight?.rows[rightindex].cells['remark']?.value =
+       (   gridStateManagerLeft?.rows[leftIndex].cells['bookingNumber']?.value ??
+              "") +
+                  "-" +
+                  (gridStateManagerLeft?.rows[leftIndex]
+                              .cells['bookingDetailCode']?.value ??
+                          "")
+                      .toString();
+      gridStateManagerLeft?.notifyListeners();
+      gridStateManagerRight?.notifyListeners();
       Matched = true;
-      update(['leftOne','rightOne']);
+      // update(['leftOne','rightOne']);
     }
+    // tblSpots - listAsrunLog2 - leftIndex -gridStateManagerLeft
+    // tblAsrun - listAsrunLog1 - rightindex - gridStateManagerRight
 
-    if (exporttapecode.trim() == listAsrunLog2[leftIndex].exportTapeCode.toString().trim() &&
-        TApeduration == listAsrunLog2[leftIndex].tapeDuration.toString() &&
-        listAsrunLog2[leftIndex].dealTime == "" &&
-        listAsrunLog2[leftIndex].scheduleTime == FPCtime &&
+    if (exporttapecode.trim() ==
+            gridStateManagerLeft?.rows[leftIndex].cells['exportTapeCode']?.value
+                .toString()
+                .trim() &&
+        TApeduration.toString().trim() ==
+            gridStateManagerLeft?.rows[leftIndex].cells['tapeDuration']?.value
+                .toString()
+                .trim() &&
+        (gridStateManagerLeft?.rows[leftIndex].cells['dealTime']?.value !=
+                null ||
+            gridStateManagerLeft?.rows[leftIndex].cells['dealTime']?.value !=
+                "") &&
+        gridStateManagerLeft?.rows[leftIndex].cells['scheduleTime']?.value ==
+            FPCtime &&
         !Matched) {
-      listAsrunLog2[leftIndex].telecastTime = Telecasttime;
-      listAsrunLog2[leftIndex].programCode = programCode;
-      listAsrunLog2[leftIndex].rowNumber = int.parse(rowNumber);
+      print(">>>>>>>>>>>>inside if two");
+      gridStateManagerLeft?.rows[leftIndex].cells['telecastTime']?.value =
+          Telecasttime;
+      gridStateManagerLeft?.rows[leftIndex].cells['programCode']?.value =
+          programCode;
+      gridStateManagerLeft?.rows[leftIndex].cells['rowNumber']?.value =
+          int.parse(rowNumber);
 
-      listAsrunLog1[rightindex].bookingNumber = listAsrunLog2[leftIndex].bookingNumber;
-      listAsrunLog1[rightindex].bookingDetailCode = listAsrunLog2[leftIndex].bookingDetailCode;
-      listAsrunLog1[rightindex].remark =  listAsrunLog2[leftIndex].bookingNumber??"" + "-" +
-          (listAsrunLog2[leftIndex].bookingDetailCode??"").toString();
-
-     /* tblAsrun.SelectedRows[0]["BookingDetailCode"] = tblSpots.SelectedRows[0]["BookingDetailCode"];
-      tblAsrun.SelectedRows[0]["remark"] = tblSpots.SelectedRows[0]["Bookingnumber"] + "-"
-          + tblSpots.SelectedRows[0]["BookingDetailCode"];*/
+      gridStateManagerRight?.rows[rightindex].cells['bookingNumber']?.value =
+          gridStateManagerLeft?.rows[leftIndex].cells['bookingNumber']?.value;
+      gridStateManagerRight
+              ?.rows[rightindex].cells['bookingDetailCode']?.value =
+          gridStateManagerLeft
+              ?.rows[leftIndex].cells['bookingDetailCode']?.value;
+      gridStateManagerRight?.rows[rightindex].cells['remark']?.value =
+         ( gridStateManagerLeft?.rows[leftIndex].cells['bookingNumber']?.value ??
+              "") +
+                  "-" +
+                  (gridStateManagerLeft?.rows[leftIndex]
+                              .cells['bookingDetailCode']?.value ??
+                          "")
+                      .toString();
+      gridStateManagerLeft?.notifyListeners();
+      gridStateManagerRight?.notifyListeners();
 
       Matched = true;
-      update(['leftOne','rightOne']);
     }
 
-    if (!Matched && exporttapecode.trim() == listAsrunLog2[leftIndex].exportTapeCode.toString().trim()) {
+    // tblSpots - listAsrunLog2 - leftIndex -gridStateManagerLeft
+    // tblAsrun - listAsrunLog1 - rightindex - gridStateManagerRight
+    if (!Matched &&
+        exporttapecode.trim() ==
+            gridStateManagerLeft?.rows[leftIndex].cells['exportTapeCode']?.value
+                .toString()
+                .trim()) {
+      print(">>>>>>>>>>>>inside if three");
       LoadingDialog.recordExists(
           "Only the Tapeid Matches!\nDo you want to force match these spots?",
-              (){
-                listAsrunLog2[leftIndex].telecastTime = Telecasttime;
-                listAsrunLog2[leftIndex].programCode = programCode;
-                listAsrunLog2[leftIndex].rowNumber = int.parse(rowNumber) ;
-                listAsrunLog1[rightindex].bookingNumber = listAsrunLog2[leftIndex].bookingNumber;
-                listAsrunLog1[rightindex].bookingDetailCode = listAsrunLog2[leftIndex].bookingDetailCode;
-                /*listAsrunLog1[rightindex].remark = listAsrunLog2[leftIndex].bookingDetailCode;
-                tblAsrun.SelectedRows[0]["BookingDetailCode"] = tblSpots.SelectedRows[0]["BookingDetailCode"];*/
-                listAsrunLog1[rightindex].remark = listAsrunLog2[leftIndex].bookingNumber??"" + "-" +
-                    (listAsrunLog2[leftIndex].bookingDetailCode??"").toString();
-                update(['leftOne','rightOne']);
-              },
-          cancel: (){
-            Get.back();
-          });
+          () {
+        gridStateManagerLeft?.rows[leftIndex].cells['telecastTime']?.value =
+            Telecasttime;
+        gridStateManagerLeft?.rows[leftIndex].cells['programCode']?.value =
+            programCode;
+        gridStateManagerLeft?.rows[leftIndex].cells['rowNumber']?.value =
+            int.parse(rowNumber);
+
+        gridStateManagerRight?.rows[rightindex].cells['bookingNumber']?.value =
+            gridStateManagerLeft?.rows[leftIndex].cells['bookingNumber']?.value;
+        gridStateManagerRight
+                ?.rows[rightindex].cells['bookingDetailCode']?.value =
+            gridStateManagerLeft
+                ?.rows[leftIndex].cells['bookingDetailCode']?.value;
+        gridStateManagerRight?.rows[rightindex].cells['remark']?.value =
+            (gridStateManagerLeft
+                    ?.rows[leftIndex].cells['bookingNumber']?.value ??
+                "") +
+                    "-" +
+                    (gridStateManagerLeft?.rows[leftIndex]
+                                .cells['bookingDetailCode']?.value ??
+                            "")
+                        .toString();
+        gridStateManagerLeft?.notifyListeners();
+        gridStateManagerRight?.notifyListeners();
+      }, cancel: () {
+        Get.back();
+      });
     }
-
-
-
-    // SetNextRow(rightindex,leftIndex);
-    // colorGrid();
     setNextRow1(exporttapecode);
   }
 
-  void btnMap_Click1(int rightindex,int leftIndex) {
-    String exporttapecode, FPCtime, TApeduration, Telecasttime;
-    bool Matched = false;
-    String programCode, rowNumber;
-    print("jks3");
-    // tblAsrun.CurrentRow.Selected = true;
-    // right table
-    exporttapecode = listAsrunLog1[rightindex].exportTapeCode??"";
-    programCode = listAsrunLog1[rightindex].programCode??"";
-    rowNumber = (listAsrunLog1[rightindex].rownumber ??"").toString();
-    FPCtime = listAsrunLog1[rightindex].fpctime??"";
-    TApeduration = (listAsrunLog1[rightindex].tapeDuration??"").toString();
-    Telecasttime = listAsrunLog1[rightindex].telecastTime??"";
-
-    print(">>>>>>>>>${listAsrunLog1[rightindex].bookingNumber}");
-    print(">>>>>>>>>${listAsrunLog2[leftIndex].telecastTime}");
-    if (listAsrunLog1[rightindex].bookingNumber != null && listAsrunLog1[rightindex].bookingNumber != "") {
-      print("jks1");
-      // SetNextRow(rightindex,leftIndex);
-      // setNextRow1(exporttapecode);
-      return;
-    }
-    if (listAsrunLog2[leftIndex].telecastTime != null && listAsrunLog2[leftIndex].telecastTime != "") {
-      print("jks2");
-      // SetNextRow(rightindex,leftIndex);
-      // setNextRow1(exporttapecode);
-      return;
-    }
-    // tblSpots - listAsrunLog2 - leftIndex
-    // tblAsrun - listAsrunLog1 - rightindex
-
-    if (exporttapecode.trim() == listAsrunLog2[leftIndex].exportTapeCode.toString().trim() &&
-        TApeduration == listAsrunLog2[leftIndex].tapeDuration.toString() &&
-        listAsrunLog2[leftIndex].dealTime != "") {
-
-      listAsrunLog2[leftIndex].telecastTime = Telecasttime;
-      listAsrunLog2[leftIndex].programCode = programCode;
-      listAsrunLog2[leftIndex].rowNumber = int.parse(rowNumber);
-
-      listAsrunLog1[rightindex].bookingNumber = listAsrunLog2[leftIndex].bookingNumber;
-      listAsrunLog1[rightindex].bookingDetailCode = listAsrunLog2[leftIndex].bookingDetailCode;
-      listAsrunLog1[rightindex].remark = listAsrunLog2[leftIndex].bookingNumber??"" + "-" +
-          (listAsrunLog2[leftIndex].bookingDetailCode??"").toString();
-
-      /* tblAsrun.SelectedRows[0]["BookingDetailCode"] = tblSpots.SelectedRows[0]["BookingDetailCode"];
-      tblAsrun.SelectedRows[0]["remark"] = tblSpots.SelectedRows[0]["Bookingnumber"] + "-" +
-          tblSpots.SelectedRows[0]["BookingDetailCode"];*/
-      Matched = true;
-      update(['leftOne','rightOne']);
-    }
-
-    if (exporttapecode.trim() == listAsrunLog2[leftIndex].exportTapeCode.toString().trim() &&
-        TApeduration == listAsrunLog2[leftIndex].tapeDuration.toString() &&
-        listAsrunLog2[leftIndex].dealTime == "" &&
-        listAsrunLog2[leftIndex].scheduleTime == FPCtime &&
-        !Matched) {
-      listAsrunLog2[leftIndex].telecastTime = Telecasttime;
-      listAsrunLog2[leftIndex].programCode = programCode;
-      listAsrunLog2[leftIndex].rowNumber = int.parse(rowNumber);
-
-      listAsrunLog1[rightindex].bookingNumber = listAsrunLog2[leftIndex].bookingNumber;
-      listAsrunLog1[rightindex].bookingDetailCode = listAsrunLog2[leftIndex].bookingDetailCode;
-      listAsrunLog1[rightindex].remark =  listAsrunLog2[leftIndex].bookingNumber??"" + "-" +
-          (listAsrunLog2[leftIndex].bookingDetailCode??"").toString();
-
-      /* tblAsrun.SelectedRows[0]["BookingDetailCode"] = tblSpots.SelectedRows[0]["BookingDetailCode"];
-      tblAsrun.SelectedRows[0]["remark"] = tblSpots.SelectedRows[0]["Bookingnumber"] + "-"
-          + tblSpots.SelectedRows[0]["BookingDetailCode"];*/
-
-      Matched = true;
-      update(['leftOne','rightOne']);
-    }
-
-    if (!Matched && exporttapecode.trim() == listAsrunLog2[leftIndex].exportTapeCode.toString().trim()) {
-      LoadingDialog.recordExists(
-          "Only the Tapeid Matches!\nDo you want to force match these spots?",
-              (){
-            listAsrunLog2[leftIndex].telecastTime = Telecasttime;
-            listAsrunLog2[leftIndex].programCode = programCode;
-            listAsrunLog2[leftIndex].rowNumber = int.parse(rowNumber) ;
-            listAsrunLog1[rightindex].bookingNumber = listAsrunLog2[leftIndex].bookingNumber;
-            listAsrunLog1[rightindex].bookingDetailCode = listAsrunLog2[leftIndex].bookingDetailCode;
-            /*listAsrunLog1[rightindex].remark = listAsrunLog2[leftIndex].bookingDetailCode;
-                tblAsrun.SelectedRows[0]["BookingDetailCode"] = tblSpots.SelectedRows[0]["BookingDetailCode"];*/
-            listAsrunLog1[rightindex].remark = listAsrunLog2[leftIndex].bookingNumber??"" + "-" +
-                (listAsrunLog2[leftIndex].bookingDetailCode??"").toString();
-            update(['leftOne','rightOne']);
-          },
-          cancel: (){
-            Get.back();
-          });
-    }
 
 
+  tapeBtn(int leftIndex, int rightIndex) {
+    // tblSpots - listAsrunLog2 - leftIndex -gridStateManagerLeft
+    // tblAsrun - listAsrunLog1 - rightindex - gridStateManagerRight
+    String exportTapeCode = gridStateManagerRight
+            ?.rows[gridStateManagerRight?.currentRowIdx ?? 0]
+            .cells['exportTapeCode']
+            ?.value ??
+        "";
 
-    // SetNextRow(rightindex,leftIndex);
-    // colorGrid();
-    // setNextRow1(exporttapecode);
-  }
+    if (gridStateManagerLeft != null) {
+      if (showError.value == true && showCancel.value == true) {
+        gridStateManagerLeft?.setFilter((element) => true);
+        gridStateManagerRight?.setFilter((element) => true);
 
-  onDoubleTap(int leftIndex,int rightIndex){
-    // masterListAsrunLog2.clear();
-    // masterListAsrunLog1.clear();
-    // masterListAsrunLog2.addAll(listAsrunLog2);
-    // masterListAsrunLog1.addAll(listAsrunLog1);
-    listAsrunLog2.clear();
-    listAsrunLog1.clear();
-    for(int i=0;i<masterListAsrunLog2.length;i++){
-      if(masterListAsrunLog2[leftIndex].exportTapeCode == masterListAsrunLog2[i].exportTapeCode){
-        listAsrunLog2.add(masterListAsrunLog2[i]);
+        gridStateManagerLeft?.setFilter((e) =>
+            (e.cells['exportTapeCode']?.value.toString().trim() ==
+                exportTapeCode.toString().trim()));
+
+        gridStateManagerRight?.setFilter((e) =>
+            (e.cells['exportTapeCode']?.value.toString().trim() ==
+                exportTapeCode.toString().trim()));
+
+        gridStateManagerLeft?.notifyListeners();
+        gridStateManagerRight?.notifyListeners();
+      } else if (showError.value == true) {
+        gridStateManagerLeft?.setFilter((element) => true);
+        gridStateManagerRight?.setFilter((element) => true);
+
+        gridStateManagerLeft?.setFilter((e) =>
+            (e.cells['bookingStatus']?.value.toString().trim().toLowerCase() !=
+                    "c" &&
+                (e.cells['exportTapeCode']?.value.toString().trim() ==
+                    exportTapeCode.toString().trim())));
+        gridStateManagerRight?.setFilter((e) =>
+            (e.cells['exportTapeCode']?.value.toString().trim() ==
+                exportTapeCode.toString().trim()));
+
+        gridStateManagerLeft?.notifyListeners();
+        gridStateManagerRight?.notifyListeners();
+      } else if (showCancel.value == true) {
+        gridStateManagerLeft?.setFilter((element) => true);
+        gridStateManagerRight?.setFilter((element) => true);
+        gridStateManagerLeft?.setFilter((e) =>
+            (e.cells['bookingStatus']?.value.toString().trim().toLowerCase() !=
+                    "e" &&
+                (e.cells['exportTapeCode']?.value.toString().trim() ==
+                    exportTapeCode.toString().trim())));
+
+        gridStateManagerRight?.setFilter((e) =>
+            (e.cells['exportTapeCode']?.value.toString().trim() ==
+                exportTapeCode.toString().trim()));
+        gridStateManagerLeft?.notifyListeners();
+        gridStateManagerRight?.notifyListeners();
+      } else {
+        gridStateManagerLeft?.setFilter((element) => true);
+        gridStateManagerRight?.setFilter((element) => true);
+        gridStateManagerLeft?.setFilter((e) =>
+            ((e.cells['bookingStatus']?.value.toString().trim().toLowerCase() !=
+                        "e" &&
+                    e.cells['bookingStatus']?.value
+                            .toString()
+                            .trim()
+                            .toLowerCase() !=
+                        "c") &&
+                (e.cells['exportTapeCode']?.value.toString().trim() ==
+                    exportTapeCode.toString().trim())));
+
+        gridStateManagerRight?.setFilter((e) =>
+            (e.cells['exportTapeCode']?.value.toString().trim() ==
+                exportTapeCode.toString().trim()));
+        gridStateManagerLeft?.notifyListeners();
+        gridStateManagerRight?.notifyListeners();
       }
     }
-    for(int i=0;i<masterListAsrunLog1.length;i++){
-      if(masterListAsrunLog1[rightIndex].exportTapeCode == masterListAsrunLog1[i].exportTapeCode){
-        listAsrunLog1.add(masterListAsrunLog1[i]);
-      }
-    }
-    update(['leftOne']);
-    update(['rightOne']);
   }
+
   List<LstAsrunlog1> masterUnMatchListAsrunLog1 = [];
   List<LstAsrunlog2> masterUnMatchListAsrunLog2 = [];
-  void unMatchBtn(){
-    listAsrunLog2.clear();
-    listAsrunLog1.clear();
-    for(int i=0;i<masterListAsrunLog2.length;i++){
-      if( masterListAsrunLog2[i].telecastTime == "" ||  masterListAsrunLog2[i].telecastTime == null){
-        listAsrunLog2.add(masterListAsrunLog2[i]);
-      }
-    }
-    for(int i=0;i<masterListAsrunLog1.length;i++){
-      if( masterListAsrunLog1[i].bookingNumber == "" || masterListAsrunLog1[i].bookingNumber == null){
-        listAsrunLog1.add(masterListAsrunLog1[i]);
-      }
-    }
-    update(['leftOne']);
-    update(['rightOne']);
 
+  void unMatchBtn() {
+    if (gridStateManagerLeft != null) {
+      if (showError.value == true && showCancel.value == true) {
+        gridStateManagerLeft?.setFilter((element) => true);
+        gridStateManagerRight?.setFilter((element) => true);
+
+        gridStateManagerLeft?.setFilter((e) =>
+            (e.cells['telecastTime']?.value == null ||
+                e.cells['telecastTime']?.value
+                        .toString()
+                        .trim()
+                        .toLowerCase() ==
+                    ""));
+        gridStateManagerRight?.setFilter((e) =>
+            (e.cells['bookingNumber']?.value == null ||
+                e.cells['bookingNumber']?.value
+                        .toString()
+                        .trim()
+                        .toLowerCase() ==
+                    ""));
+        gridStateManagerLeft?.notifyListeners();
+        gridStateManagerRight?.notifyListeners();
+      } else if (showError.value == true) {
+        gridStateManagerLeft?.setFilter((element) => true);
+        gridStateManagerRight?.setFilter((element) => true);
+        gridStateManagerLeft?.setFilter((e) =>
+            (e.cells['bookingStatus']?.value.toString().trim().toLowerCase() !=
+                    "c" &&
+                (e.cells['telecastTime']?.value == null ||
+                    e.cells['telecastTime']?.value
+                            .toString()
+                            .trim()
+                            .toLowerCase() ==
+                        "")));
+        gridStateManagerRight?.setFilter((e) =>
+            (e.cells['bookingNumber']?.value == null ||
+                e.cells['bookingNumber']?.value
+                        .toString()
+                        .trim()
+                        .toLowerCase() ==
+                    ""));
+        gridStateManagerLeft?.notifyListeners();
+        gridStateManagerRight?.notifyListeners();
+      } else if (showCancel.value == true) {
+        gridStateManagerLeft?.setFilter((element) => true);
+        gridStateManagerRight?.setFilter((element) => true);
+        gridStateManagerLeft?.setFilter((e) =>
+            (e.cells['bookingStatus']?.value.toString().trim().toLowerCase() !=
+                    "e" &&
+                (e.cells['telecastTime']?.value == null ||
+                    e.cells['telecastTime']?.value
+                            .toString()
+                            .trim()
+                            .toLowerCase() ==
+                        "")));
+
+        gridStateManagerRight?.setFilter((e) =>
+            (e.cells['bookingNumber']?.value == null ||
+                e.cells['bookingNumber']?.value
+                        .toString()
+                        .trim()
+                        .toLowerCase() ==
+                    ""));
+        gridStateManagerLeft?.notifyListeners();
+        gridStateManagerRight?.notifyListeners();
+      } else {
+        gridStateManagerLeft?.setFilter((element) => true);
+        gridStateManagerRight?.setFilter((element) => true);
+        gridStateManagerLeft?.setFilter((e) =>
+            ((e.cells['bookingStatus']?.value.toString().trim().toLowerCase() !=
+                        "e" &&
+                    e.cells['bookingStatus']?.value
+                            .toString()
+                            .trim()
+                            .toLowerCase() !=
+                        "c") &&
+                (e.cells['telecastTime']?.value == null ||
+                    e.cells['telecastTime']?.value
+                            .toString()
+                            .trim()
+                            .toLowerCase() ==
+                        "")));
+
+        gridStateManagerRight?.setFilter((e) =>
+            (e.cells['bookingNumber']?.value == null ||
+                e.cells['bookingNumber']?.value
+                        .toString()
+                        .trim()
+                        .toLowerCase() ==
+                    ""));
+        gridStateManagerLeft?.notifyListeners();
+        gridStateManagerRight?.notifyListeners();
+      }
+    }
+    // gridStateManagerRight?.rows.map((e) => e.toJson());
   }
 
   List<RoCancellationDocuments> documents = [];
 
   docs() async {
     String documentKey = "";
-    if(selectedLocation == null || selectedChannel == null){
+    if (selectedLocation == null || selectedChannel == null) {
       documentKey = "";
-    }else{
-      documentKey = "SalesAudit " + (selectedLocation?.key??"") + (selectedChannel?.key??"") + '0' +DateFormat("yyyyMMdd").format( DateFormat("dd-MM-yyyy").parse(scheduledController.text)) ;
+    } else {
+      documentKey = "SalesAudit " +
+          (selectedLocation?.key ?? "") +
+          (selectedChannel?.key ?? "") +
+          '0' +
+          DateFormat("yyyyMMdd")
+              .format(DateFormat("dd-MM-yyyy").parse(scheduledController.text));
     }
 
-   /* PlutoGridStateManager? viewDocsStateManger;
+    /* PlutoGridStateManager? viewDocsStateManger;
     try {
       LoadingDialog.call();
       await Get.find<ConnectorControl>().GET_METHOD_CALL_HEADER(
@@ -989,42 +1197,39 @@ class SalesAuditNewController extends GetxController {
 
   @override
   void onInit() {
-    print(">>>>jks>>>>>${Get.find<MainController>().user!.logincode}");
-    fetchPageLoadData();
     leftFocusNode.addListener(() {
-      if(leftFocusNode.hasFocus){
+      if (leftFocusNode.hasFocus) {
         leftTblFocus = true;
-      }else{
+      } else {
         leftTblFocus = false;
       }
     });
     rightFocusNode.addListener(() {
-      if(rightFocusNode.hasFocus){
+      if (rightFocusNode.hasFocus) {
         rightTblFocus = true;
-      }else{
+      } else {
         rightTblFocus = false;
       }
     });
     super.onInit();
   }
 
-
-
-
-
   @override
   void onReady() {
+    fetchPageLoadData();
     super.onReady();
   }
-  formHandler(String str){
+
+  formHandler(String str) {
     if (str == "Clear") {
       clearAll();
-    }else if (str == "Save") {
+    } else if (str == "Save") {
       saveData();
-    }else if (str == "Docs") {
+    } else if (str == "Docs") {
       docs();
     }
   }
+
   @override
   void onClose() {}
   void increment() => count.value++;
