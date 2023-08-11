@@ -274,7 +274,7 @@ class LogAdditionsView extends GetView<LogAdditionsController> {
                                 .setGridMode(PlutoGridMode.selectWithOneTap);
                             controllerX.selectedPlutoGridMode =
                                 PlutoGridMode.selectWithOneTap;
-                            controllerX.getSetting();
+                            // controllerX.getSetting();
                           },
                           witdthSpecificColumn: {"duration": 70},
                           onload: (loadevent) {

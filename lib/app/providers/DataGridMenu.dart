@@ -346,8 +346,8 @@ class DataGridMenu {
           api: ApiFactory.CONVERT_TO_PDF,
           fun: (value) {
             stateManager.setShowLoading(false);
-            ExportData().printFromGridData1((exportFileName ?? 'export${DateTime.now().toString()}') +
-                    ".pdf",value);
+            ExportData().printFromGridData1((exportFileName ?? 'export${DateTime.now().toString()}') + ".pdf",value);
+            // ExportData().printFromGridData1((exportFileName ?? 'export${DateTime.now().toString()}') + ".pdf",base64.decode(value));
           },
           json: stateManager.toJson(),
           failed: (){
@@ -1086,8 +1086,8 @@ class DataGridMenu {
           api: ApiFactory.CONVERT_TO_PDF,
           fun: (value) {
             stateManager.setShowLoading(false);
-            ExportData().printFromGridData1((exportFileName ?? 'export${DateTime.now().toString()}') +
-                ".pdf",base64.decode(value));
+            // ExportData().printFromGridData1((exportFileName ?? 'export${DateTime.now().toString()}') + ".pdf",base64.decode(value));
+            ExportData().printFromGridData1((exportFileName ?? 'export${DateTime.now().toString()}') + ".pdf",value);
           },
           json: stateManager.toJson(),
           failed: (){
@@ -1844,8 +1844,8 @@ class DataGridMenu {
             api: ApiFactory.CONVERT_TO_PDF,
             fun: (value) {
               stateManager.setShowLoading(false);
-              ExportData().printFromGridData1((exportFileName ?? 'export${DateTime.now().toString()}') +
-                  ".pdf",base64.decode(value));
+              // ExportData().printFromGridData1((exportFileName ?? 'export${DateTime.now().toString()}') + ".pdf",base64.decode(value));
+              ExportData().printFromGridData1((exportFileName ?? 'export${DateTime.now().toString()}') + ".pdf",value);
             },
             json: stateManager.toJson(),
             failed: (){
