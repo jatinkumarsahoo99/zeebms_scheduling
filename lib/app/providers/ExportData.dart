@@ -29,7 +29,7 @@ class ExportData {
       var value = excel.encode()!;
       String time = DateTime.now().toString();
       // var fileBytes = excel.save(fileName: "$screenName-$time.xlsx");
-      var fileBytes = excel.save(fileName: screenName);
+      var fileBytes = excel.save(fileName: "$screenName.xlsx");
       if (callBack != null) {
         callBack();
       }
