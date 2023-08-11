@@ -161,6 +161,8 @@ class SchedulePromoController extends GetxController {
     );
   }
 
+  calculateError() {}
+
   handleDoubleTapInLeft1stTable(int index) {
     fpcSelectedIdx = index;
     schedulePromoSelectedIdx = 0;
@@ -210,15 +212,27 @@ class SchedulePromoController extends GetxController {
       schedulePromoSelectedIdx = schedulePromoSelectedIdx + 1;
       promoScheduled.refresh();
       scheduledTC.text = Utils.convertToTimeFromDouble(value: (Utils.convertToSecond(value: scheduledTC.text)) + (tempRightModel['duration'] ?? 0));
-      if ((Utils.convertToSecond(value: scheduledTC.text)) + (tempRightModel['duration'] ?? 0) > Utils.convertToSecond(value: availableTC.text)) {
-        dailyFpc[fpcSelectedIdx].exceed = true;
-        dailyFpc.refresh();
-      }
+      calcaulateExceed();
       countTC.text = promoScheduled.length.toString();
     }
   }
 
-  calcaulateExceed() {}
+  calcaulateExceed() {
+    for (var index = 0; index < dailyFpc.length; index++) {
+      timeBand.value = dailyFpc[index].startTime ?? "00:00:00:00";
+      programName.value = dailyFpc[index].programName ?? "";
+
+      List<PromoScheduled>? promos = promoScheduled.where((element) => timeBand.value == element.telecastTime).toList() ?? [];
+      int _totalPromoTime = 0;
+      for (var promo in promos) {
+        _totalPromoTime = _totalPromoTime + Utils.convertToSecond(value: promo.promoDuration ?? "00:00:00:00");
+      }
+      if (_totalPromoTime > (promoData?.dailyFPC?[index].promoCap ?? 0)) {
+        dailyFpc[index].exceed = true;
+      }
+    }
+    dailyFpc.refresh();
+  }
 
   void handleDelete() {
     if (selectLocation == null && selectChannel == null) {
