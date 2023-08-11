@@ -185,13 +185,13 @@ class SchedulePromoController extends GetxController {
     calcaulateExceed(index);
   }
 
-  handleDoubleTapInRightTable(int index) {
+  handleDoubleTapInRightTable(int index, String col) {
     if (promoScheduled.isEmpty) {
       LoadingDialog.showErrorDialog("ProgramSegaments can't be empty");
     } else {
       searchPromoSelectedIdx = index;
-      searchedPromoStateManager?.setCurrentCell(searchedPromoStateManager?.getRowByIdx(index)?.cells['caption'], index);
-      var tempRightModel = searchPromos[index];
+      searchedPromoStateManager?.setCurrentCell(searchedPromoStateManager?.getRowByIdx(searchPromoSelectedIdx)?.cells[col], searchPromoSelectedIdx);
+      var tempRightModel = searchPromos[searchPromoSelectedIdx];
       var insertModel = PromoScheduled(
         promoPolicyName: "MANUAL",
         promoCaption: tempRightModel['caption'],
@@ -257,7 +257,7 @@ class SchedulePromoController extends GetxController {
   }
 
   void handleAddTap() {
-    handleDoubleTapInRightTable(searchPromoSelectedIdx);
+    handleDoubleTapInRightTable(searchPromoSelectedIdx, searchPromoSelectedCol);
   }
 
   void handleSearchTap() {
@@ -288,8 +288,9 @@ class SchedulePromoController extends GetxController {
     );
   }
 
-  handleOnSelectRightTable(int index) {
+  handleOnSelectRightTable(int index, String col) {
     searchPromoSelectedIdx = index;
+    searchPromoSelectedCol = col;
     if (searchPromos[index]['duration'] != null && index != -1) {
       rightCount.value = Utils.convertToTimeFromDouble(value: searchPromos[index]['duration']);
     }
