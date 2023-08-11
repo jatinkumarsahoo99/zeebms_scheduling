@@ -139,22 +139,23 @@ class SchedulePromoView extends StatelessWidget {
                                             ? null
                                             : DataGridShowOnlyKeys(
                                                 mapData: controller.dailyFpc.value.map((e) => e.toJson()).toList(),
-                                                onRowDoubleTap: (row) => controller.handleDoubleTapInLeft1stTable(row.rowIdx),
+                                                onRowDoubleTap: (row) => controller.handleDoubleTapInLeft1stTable(row.rowIdx, row.cell.column.field),
                                                 onload: (event) {
                                                   controller.fpcStateManager = event.stateManager;
-                                                  event.stateManager.setSelectingMode(PlutoGridSelectingMode.row);
+                                                  event.stateManager.setSelectingMode(PlutoGridSelectingMode.cell);
                                                   event.stateManager.setSelecting(true);
-                                                  event.stateManager.setCurrentCell(
-                                                      event.stateManager.getRowByIdx(controller.fpcSelectedIdx)?.cells['startTime'],
-                                                      controller.fpcSelectedIdx);
+                                                  if (controller.fpcSelectedCol.isNotEmpty) {
+                                                    event.stateManager.setCurrentCell(
+                                                        event.stateManager.getRowByIdx(controller.fpcSelectedIdx)?.cells[controller.fpcSelectedCol],
+                                                        controller.fpcSelectedIdx);
+                                                  }
                                                 },
-                                                colorCallback: (row) => controller.dailyFpc[row.rowIdx].exceed
-                                                    ? Colors.red
-                                                    : ((row.row.cells.containsValue(controller.fpcStateManager?.currentCell))
-                                                        ? Colors.deepPurple.shade200
-                                                        : Colors.white),
                                                 mode: PlutoGridMode.selectWithOneTap,
-                                                onSelected: (row) => controller.fpcSelectedIdx = row.rowIdx ?? 0,
+                                                colorCallback: (row) => controller.dailyFpc[row.rowIdx].exceed ? Colors.red : Colors.white,
+                                                onSelected: (row) => {
+                                                  controller.fpcSelectedIdx = row.rowIdx ?? 0,
+                                                  controller.fpcSelectedCol = row.cell?.column.field ?? ""
+                                                },
                                               ),
                                       );
                                     }),

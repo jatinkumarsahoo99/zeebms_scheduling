@@ -815,6 +815,12 @@ class RoBookingController extends GetxController {
             selectedBrand = DropDownValue(key: bookingNoLeaveData!.lstBrand!.first.brandcode, value: bookingNoLeaveData!.lstBrand!.first.brandname);
             selectedDeal =
                 DropDownValue(key: bookingNoLeaveData!.lstDealNumber!.first.dealNumber, value: bookingNoLeaveData!.lstDealNumber!.first.dealNumber);
+            selectedExecutive = DropDownValue(
+                key: bookingNoLeaveData!.executiveCode,
+                value: roBookingInitData?.lstExecutives
+                        ?.firstWhereOrNull((element) => element.personnelCode == bookingNoLeaveData!.executiveCode)
+                        ?.personnelName ??
+                    "");
             update(["init"]);
 
             refNoCtrl.text = bookingNoLeaveData!.bookingReferenceNumber ?? "";

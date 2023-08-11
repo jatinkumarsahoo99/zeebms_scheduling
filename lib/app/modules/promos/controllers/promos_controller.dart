@@ -22,12 +22,14 @@ class SchedulePromoController extends GetxController {
   RxBool controllsEnabled = true.obs;
   var locationFN = FocusNode();
   var myEnabled = true.obs;
+
   DropDownValue? selectLocation, selectChannel;
   var dailyFpc = <DailyFPC>[].obs, promoScheduled = <PromoScheduled>[].obs, searchPromos = [].obs;
   var fromdateTC = TextEditingController();
   var timeBand = "00:00:00:00".obs, programName = "PrgName".obs;
   PlutoGridStateManager? fpcStateManager, scheduledPromoStateManager, searchedPromoStateManager;
   var schedulePromoSelectedIdx = 0, fpcSelectedIdx = 0, searchPromoSelectedIdx = 0;
+  var schedulePromoSelectedCol = "", fpcSelectedCol = "", searchPromoSelectedCol = "";
   var rightCount = "00:00:00:00".obs;
   // var mainData = {};
   PromoModel? promoData;
@@ -44,6 +46,7 @@ class SchedulePromoController extends GetxController {
     scheduledPromoStateManager = null;
     searchedPromoStateManager = null;
     schedulePromoSelectedIdx = 0;
+    fromdateTC.text = "";
     fpcSelectedIdx = 0;
     searchPromoSelectedIdx = 0;
     selectLocation = null;
@@ -161,8 +164,9 @@ class SchedulePromoController extends GetxController {
     );
   }
 
-  handleDoubleTapInLeft1stTable(int index) {
+  handleDoubleTapInLeft1stTable(int index, String col) {
     fpcSelectedIdx = index;
+    fpcSelectedCol = col;
     schedulePromoSelectedIdx = 0;
     timeBand.value = dailyFpc[index].startTime ?? "00:00:00:00";
     programName.value = dailyFpc[index].programName ?? "";
@@ -172,12 +176,13 @@ class SchedulePromoController extends GetxController {
       availableTC.text = "00:00:00:00";
     }
     scheduledTC.text = "00:00:00:00";
-    fpcStateManager?.setCurrentCell(fpcStateManager?.getRowByIdx(index)?.cells['startTime'], index);
+    fpcStateManager?.setCurrentCell(fpcStateManager?.getRowByIdx(index)?.cells[col], index);
     promoScheduled.clear();
     if (promoData?.promoScheduled != null) {
       promoScheduled.value = promoData?.promoScheduled?.where((element) => timeBand.value == element.telecastTime).toList() ?? [];
       countTC.text = promoScheduled.length.toString();
     }
+    calcaulateExceed(index);
   }
 
   handleDoubleTapInRightTable(int index) {
@@ -210,12 +215,24 @@ class SchedulePromoController extends GetxController {
       schedulePromoSelectedIdx = schedulePromoSelectedIdx + 1;
       promoScheduled.refresh();
       scheduledTC.text = Utils.convertToTimeFromDouble(value: (Utils.convertToSecond(value: scheduledTC.text)) + (tempRightModel['duration'] ?? 0));
-      if ((Utils.convertToSecond(value: scheduledTC.text)) + (tempRightModel['duration'] ?? 0) > Utils.convertToSecond(value: "00:16:49:00")) {
-        dailyFpc[fpcSelectedIdx].exceed = true;
-        dailyFpc.refresh();
-      }
+      calcaulateExceed(fpcSelectedIdx);
       countTC.text = promoScheduled.length.toString();
     }
+  }
+
+  calcaulateExceed(index) {
+    timeBand.value = dailyFpc[index].startTime ?? "00:00:00:00";
+    programName.value = dailyFpc[index].programName ?? "";
+
+    List<PromoScheduled>? promos = promoData?.promoScheduled?.where((element) => timeBand.value == element.telecastTime).toList() ?? [];
+    int _totalPromoTime = 0;
+    for (var promo in promos) {
+      _totalPromoTime = _totalPromoTime + Utils.convertToSecond(value: promo.promoDuration ?? "00:00:00:00");
+    }
+    if (_totalPromoTime > (promoData?.dailyFPC?[index].promoCap ?? 0)) {
+      dailyFpc[index].exceed = true;
+    }
+    dailyFpc.refresh();
   }
 
   void handleDelete() {
@@ -312,34 +329,34 @@ class SchedulePromoController extends GetxController {
     );
   }
 
-  void handleAutoAddTap() {
-    if (selectLocation == null && selectChannel == null) {
-      LoadingDialog.showErrorDialog("Please select Location and Channel.");
-    } else {
-      LoadingDialog.call();
-      Get.find<ConnectorControl>().POSTMETHOD(
-        api: ApiFactory.PROMOS_SAVE_AUTO_PROMO,
-        fun: (resp) {
-          closeDialog();
-          if (resp != null && resp is List<dynamic>) {
-            if (resp.isNotEmpty) {
-              promoData?.promoScheduled = [];
-              promoData?.promoScheduled?.addAll(resp.map((e) => PromoScheduled.fromJson(e)).toList());
-              handleDoubleTapInLeft1stTable(fpcSelectedIdx);
-            }
-          } else {
-            LoadingDialog.showErrorDialog(resp.toString());
-          }
-        },
-        json: {
-          "locationCode": selectLocation?.key,
-          "channelCode": selectChannel?.key,
-          "telecastDate": DateFormat("yyyy-MM-dd").format(DateFormat("dd-MM-yyyy").parse(fromdateTC.text)),
-          "txId": promoIDTC.text,
-        },
-      );
-    }
-  } // not in use
+  // void handleAutoAddTap() {
+  //   if (selectLocation == null && selectChannel == null) {
+  //     LoadingDialog.showErrorDialog("Please select Location and Channel.");
+  //   } else {
+  //     LoadingDialog.call();
+  //     Get.find<ConnectorControl>().POSTMETHOD(
+  //       api: ApiFactory.PROMOS_SAVE_AUTO_PROMO,
+  //       fun: (resp) {
+  //         closeDialog();
+  //         if (resp != null && resp is List<dynamic>) {
+  //           if (resp.isNotEmpty) {
+  //             promoData?.promoScheduled = [];
+  //             promoData?.promoScheduled?.addAll(resp.map((e) => PromoScheduled.fromJson(e)).toList());
+  //             handleDoubleTapInLeft1stTable(fpcSelectedIdx);
+  //           }
+  //         } else {
+  //           LoadingDialog.showErrorDialog(resp.toString());
+  //         }
+  //       },
+  //       json: {
+  //         "locationCode": selectLocation?.key,
+  //         "channelCode": selectChannel?.key,
+  //         "telecastDate": DateFormat("yyyy-MM-dd").format(DateFormat("dd-MM-yyyy").parse(fromdateTC.text)),
+  //         "txId": promoIDTC.text,
+  //       },
+  //     );
+  //   }
+  // } // not in use
 
   Future<void> handleImportTap() async {
     FilePickerResult? result = await FilePicker.platform.pickFiles();
