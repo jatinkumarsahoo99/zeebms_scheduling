@@ -20,6 +20,7 @@ class FinalAuditReportAfterTelecastView extends GetView<FinalAuditReportAfterTel
     return Scaffold(
       backgroundColor: ColorData.scaffoldBg,
       body: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           Card(
             child: Container(
@@ -28,7 +29,6 @@ class FinalAuditReportAfterTelecastView extends GetView<FinalAuditReportAfterTel
               child: Wrap(
                 crossAxisAlignment: WrapCrossAlignment.end,
                 spacing: 10,
-                // buttonHeight: 20,
                 alignment: WrapAlignment.start,
                 children: [
                   Obx(() {
@@ -85,92 +85,37 @@ class FinalAuditReportAfterTelecastView extends GetView<FinalAuditReportAfterTel
                       ? null
                       : DataGridShowOnlyKeys(
                           mapData: controller.dataTBList.value,
-                          formatDate: false,
+                          formatDate: true,
                           exportFileName: "Final Audit Report (After Telecast)",
                         ),
                 );
               },
             ),
           ),
-          // GetBuilder<HomeController>(
-          //     id: "buttons",
-          //     init: Get.find<HomeController>(),
-          //     builder: (btncontroller) {
-          //       if (btncontroller.buttons == null) {
-          //         return Container();
-          //       }
-          //       return Card(
-          //         margin: EdgeInsets.fromLTRB(4, 4, 4, 0),
-          //         shape: RoundedRectangleBorder(
-          //           borderRadius: BorderRadius.only(topLeft: Radius.circular(10), topRight: Radius.circular(10)),
-          //         ),
-          //         child: Container(
-          //           width: Get.width,
-          //           padding: const EdgeInsets.all(8.0),
-          //           child: Wrap(
-          //             spacing: 10,
-          //             // buttonHeight: 20,
-          //             alignment: WrapAlignment.start,
-          //             // mainAxisSize: MainAxisSize.max,
-          //             // pa
-          //             children: [
-          //               for (var btn in btncontroller.buttons!)
-          //                 btn["name"] == "Save"
-          //                     ? FormButtonWrapper(
-          //                         btnText: btn["name"],
-
-          //                         // isEnabled: btn['isDisabled'],
-          //                         callback: () {},
-          //                       )
-          //                     : btn["name"] == "Clear"
-          //                         ? FormButtonWrapper(
-          //                             btnText: btn["name"],
-
-          //                             // isEnabled: btn['isDisabled'],
-          //                             callback: controller.clearPage,
-          //                           )
-          //                         : FormButtonWrapper(
-          //                             btnText: btn["name"],
-          //                             // isEnabled: btn['isDisabled'],
-          //                             callback: null,
-          //                           ),
-          //             ],
-          //           ),
-          //         ),
-          //       );
-          //     }),
           /// bottom common buttons
-          Align(
-            alignment: Alignment.topLeft,
+          Padding(
+            padding: const EdgeInsets.only(left: 4,top: 10,bottom: 10),
             child: GetBuilder<HomeController>(
                 id: "buttons",
                 init: Get.find<HomeController>(),
                 builder: (btncontroller) {
                   if (btncontroller.buttons != null) {
-                    return SizedBox(
-                      height: 40,
-                      child: Wrap(
-                        spacing: 5,
-                        runSpacing: 15,
-                        alignment: WrapAlignment.center,
-                        // alignment: MainAxisAlignment.start,
-                        // mainAxisSize: MainAxisSize.min,
-                        children: [
-                          for (var btn in btncontroller.buttons!) ...{
-                            FormButtonWrapper(
-                              btnText: btn["name"],
-                              callback: ((Utils.btnAccessHandler(btn['name'], controller.formPermissions!) == null))
-                                  ? null
-                                  : () => controller.formHandler(btn['name']),
-                            )
-                          },
-                          // for (var btn in btncontroller.buttons!)
-                          //   FormButtonWrapper(
-                          //     btnText: btn["name"],
-                          //     callback: () => controller.formHandler(btn['name'].toString()),
-                          //   ),
-                        ],
-                      ),
+                    return Wrap(
+                      spacing: 5,
+                      runSpacing: 15,
+                      alignment: WrapAlignment.center,
+                      // alignment: MainAxisAlignment.start,
+                      // mainAxisSize: MainAxisSize.min,
+                      children: [
+                        for (var btn in btncontroller.buttons!) ...{
+                          FormButtonWrapper(
+                            btnText: btn["name"],
+                            callback: ((Utils.btnAccessHandler(btn['name'], controller.formPermissions!) == null))
+                                ? null
+                                : () => controller.formHandler(btn['name']),
+                          )
+                        },
+                      ],
                     );
                   }
                   return Container();
