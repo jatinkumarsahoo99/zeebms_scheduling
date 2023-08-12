@@ -1,3 +1,4 @@
+import 'dart:async';
 import 'dart:developer';
 
 import 'package:bms_scheduling/app/data/DropDownValue.dart';
@@ -230,9 +231,9 @@ class ComingUpMenuController extends GetxController {
                 Snack.callSuccess(map['save']??"Record is inserted successfully.");
               }
             }else if(map is Map){
-              Snack.callError("Something went wrong");
+              Snack.callError((map??"Something went wrong").toString());
             }else{
-              Snack.callError("Something went wrong");
+              Snack.callError((map??"Something went wrong").toString());
             }
           });
     }
@@ -337,6 +338,8 @@ class ComingUpMenuController extends GetxController {
 
   Future<String> CheckExportTapeCode(String tapeId, String segNo,
       String strCode, String houseId, String api) async {
+
+    Completer<String> completer=Completer<String>();
     Map<String, dynamic> data = {
       "exportTapeCode": tapeId,
       "segmentNumber": segNo,
@@ -358,10 +361,12 @@ class ComingUpMenuController extends GetxController {
                   map['houseid']['eventName'] != null &&
                   map['houseid']['eventName'] != null) {
                 res = map['houseid']['eventName'];
-                return res;
+                // return res;
+                completer.complete(res);
               } else {
                 res = "";
-                return res;
+                completer.complete(res);
+                // return res;
               }
             }
             else if (map is Map &&
@@ -371,10 +376,12 @@ class ComingUpMenuController extends GetxController {
                   map['segnoleave']['eventName'] != null &&
                   map['segnoleave']['eventName'] != null) {
                 res = map['segnoleave']['eventName'];
-                return res;
+                // return res;
+                completer.complete(res);
               } else {
                 res = "";
-                return res;
+                completer.complete(res);
+                // return res;
               }
             }
             else if (map is Map &&
@@ -384,22 +391,26 @@ class ComingUpMenuController extends GetxController {
                   map['tapeid']['eventName'] != null &&
                   map['tapeid']['eventName'] != null) {
                 res = map['tapeid']['eventName'];
-                return res;
+                // return res;
+                completer.complete(res);
               } else {
                 res = "";
-                return res;
+                // return res;
+                completer.complete(res);
               }
             }
 
             else {
-              return res;
+              completer.complete(res);
+              // return res;
             }
           });
     } catch (e) {
-      return res;
+      completer.complete(res);
+      // return res;
     }
-
-    return res;
+    return completer.future;
+    // return res;
   }
 
   Future<void> txtTapeIDLeave() async {
@@ -423,6 +434,7 @@ class ComingUpMenuController extends GetxController {
             .then((value) {
           res = value;
         });
+        print("res>>>>>>>>>"+res.toString());
         isListenerActive= false;
         if (res != "") {
           LoadingDialog.callInfoMessage(
@@ -496,12 +508,8 @@ class ComingUpMenuController extends GetxController {
             houseIdController.text,
             ApiFactory.COMING_UP_MENU_MASTER_HOUSEIDLEAVE) as String;*/
 
-        String res = "";
-        await CheckExportTapeCode("", "", strCode, houseIdController.text,
-                ApiFactory.COMING_UP_MENU_MASTER_HOUSEIDLEAVE)
-            .then((value) {
-          res = value;
-        });
+        String res=await CheckExportTapeCode("", "", strCode, houseIdController.text,
+                ApiFactory.COMING_UP_MENU_MASTER_HOUSEIDLEAVE);
         print(">>>>res" + res);
         isListenerActive= false;
         if (res != "") {

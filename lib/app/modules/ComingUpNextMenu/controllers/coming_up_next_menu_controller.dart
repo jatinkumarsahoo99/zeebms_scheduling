@@ -194,7 +194,7 @@ class ComingUpNextMenuController extends GetxController {
               }
 
             }else{
-              Snack.callError("Something went wrong");
+              Snack.callError((map??"Something went wrong").toString());
             }
           });
     }

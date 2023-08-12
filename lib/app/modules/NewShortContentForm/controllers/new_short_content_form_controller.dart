@@ -135,12 +135,10 @@ class NewShortContentFormController extends GetxController {
         api: ApiFactory.NEW_SHORT_CONTENT_HOUSEID_LEAVE(
             houseId.text, txCaption.text, caption.text),
         fun: (rawdata) {
-          if (rawdata is Map && rawdata.containsKey("onLeaveTypeCategory")) {
-            categeroies.value = [];
-            for (var category in rawdata["onLeaveTypeCategory"]) {
-              categeroies.add(DropDownValue(
-                  key: category["typeName"], value: category["typeName"]));
-            }
+          if (rawdata is Map &&
+              rawdata.containsKey("houseIDLeave") &&
+              rawdata["houseIDLeave"]["message"] != null) {
+            LoadingDialog.callInfoMessage(rawdata["houseIDLeave"]["message"]);
           }
         });
   }
