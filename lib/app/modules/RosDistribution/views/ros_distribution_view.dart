@@ -120,6 +120,8 @@ class RosDistributionView extends GetView<RosDistributionController> {
                         // mode: PlutoGridMode.selectWithOneTap,
                         onRowDoubleTap: (row) {
                           controller.mainGridIdx = row.rowIdx;
+                          controller.mainGSM
+                              ?.setCurrentCell(controller.mainGSM?.getRowByIdx(controller.mainGridIdx)!.cells['allocatedSpot'], controller.mainGridIdx);
                           controller.handleAllocationTap();
                         },
                       ),

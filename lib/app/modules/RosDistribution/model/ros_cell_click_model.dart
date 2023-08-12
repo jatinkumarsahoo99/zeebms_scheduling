@@ -3,13 +3,16 @@ class ROSCellClickDataModel {
 
   ROSCellClickDataModel({this.infoGetFpcCellDoubleClick});
 
-  ROSCellClickDataModel.copyWith({InfoGetFpcCellDoubleClick? infoGetFpcCellDoubleClick}) {
-    this.infoGetFpcCellDoubleClick = infoGetFpcCellDoubleClick ?? this.infoGetFpcCellDoubleClick;
+  ROSCellClickDataModel.copyWith(
+      {InfoGetFpcCellDoubleClick? infoGetFpcCellDoubleClick}) {
+    this.infoGetFpcCellDoubleClick =
+        infoGetFpcCellDoubleClick ?? this.infoGetFpcCellDoubleClick;
   }
 
   ROSCellClickDataModel.fromJson(Map<String, dynamic> json) {
-    infoGetFpcCellDoubleClick =
-        json['info_GetFpcCellDoubleClick'] != null ? InfoGetFpcCellDoubleClick.fromJson(json['info_GetFpcCellDoubleClick']) : null;
+    infoGetFpcCellDoubleClick = json['info_GetFpcCellDoubleClick'] != null
+        ? InfoGetFpcCellDoubleClick.fromJson(json['info_GetFpcCellDoubleClick'])
+        : null;
   }
 
   Map<String, dynamic> toJson() {
@@ -31,6 +34,7 @@ class InfoGetFpcCellDoubleClick {
   String? programname;
   String? fpctime;
   List<LstFPC>? lstFPC;
+  List<LstUnallocatedSpots>? lstAllUnallocatedSpots;
   List<LstAllocatedSpots>? lstAllocatedSpots;
   List<LstUnallocatedSpots>? lstUnallocatedSpots;
   List<String>? tblAllocatedSpotsVisiableFalse;
@@ -60,30 +64,42 @@ class InfoGetFpcCellDoubleClick {
     balanceDuration = json['balanceDuration'];
     programname = json['programname'];
     fpctime = json['fpctime'];
-    if (json['lstFPC'] != null) {
-      lstFPC = <LstFPC>[];
-      json['lstFPC'].forEach((v) {
-        lstFPC!.add(LstFPC.fromJson(v));
-      });
-    }
-    if (json['lstAllocatedSpots'] != null) {
-      lstAllocatedSpots = <LstAllocatedSpots>[];
-      json['lstAllocatedSpots'].forEach((v) {
-        lstAllocatedSpots!.add(LstAllocatedSpots.fromJson(v));
-      });
-    }
-    if (json['lstUnallocatedSpots'] != null) {
-      lstUnallocatedSpots = <LstUnallocatedSpots>[];
-      json['lstUnallocatedSpots'].forEach((v) {
-        lstUnallocatedSpots!.add(LstUnallocatedSpots.fromJson(v));
-      });
-    }
-    if (json['info_GetAllocateFPC'] != null) {
-      tblAllocatedSpotsVisiableFalse = json['info_GetAllocateFPC'].cast<String>();
-    }
+    try {
+      if (json['lstFPC'] != null) {
+        lstFPC = <LstFPC>[];
+        json['lstFPC'].forEach((v) {
+          lstFPC!.add(LstFPC.fromJson(v));
+        });
+      }
+      if (json['lstAllUnallocatedSpots'] != null) {
+        lstAllUnallocatedSpots = <LstUnallocatedSpots>[];
+        json['lstAllUnallocatedSpots'].forEach((v) {
+          lstAllUnallocatedSpots!.add(LstUnallocatedSpots.fromJson(v));
+        });
+      }
+      if (json['lstAllocatedSpots'] != null) {
+        lstAllocatedSpots = <LstAllocatedSpots>[];
+        json['lstAllocatedSpots'].forEach((v) {
+          lstAllocatedSpots!.add(LstAllocatedSpots.fromJson(v));
+        });
+      }
+      if (json['lstUnallocatedSpots'] != null) {
+        lstUnallocatedSpots = <LstUnallocatedSpots>[];
+        json['lstUnallocatedSpots'].forEach((v) {
+          lstUnallocatedSpots!.add(LstUnallocatedSpots.fromJson(v));
+        });
+      }
+      if (json['info_GetAllocateFPC'] != null) {
+        tblAllocatedSpotsVisiableFalse =
+            json['info_GetAllocateFPC'].cast<String>();
+      }
 
-    if (json['tblUnallocatedSpots_Visiable_False'] != null) {
-      tblUnallocatedSpotsVisiableFalse = json['tblUnallocatedSpots_Visiable_False'].cast<String>();
+      if (json['tblUnallocatedSpots_Visiable_False'] != null) {
+        tblUnallocatedSpotsVisiableFalse =
+            json['tblUnallocatedSpots_Visiable_False'].cast<String>();
+      }
+    } catch (e) {
+      print(e.toString());
     }
   }
 
@@ -101,13 +117,16 @@ class InfoGetFpcCellDoubleClick {
       data['lstFPC'] = lstFPC!.map((v) => v.toJson()).toList();
     }
     if (lstAllocatedSpots != null) {
-      data['lstAllocatedSpots'] = lstAllocatedSpots!.map((v) => v.toJson()).toList();
+      data['lstAllocatedSpots'] =
+          lstAllocatedSpots!.map((v) => v.toJson()).toList();
     }
     if (lstUnallocatedSpots != null) {
-      data['lstUnallocatedSpots'] = lstUnallocatedSpots!.map((v) => v.toJson()).toList();
+      data['lstUnallocatedSpots'] =
+          lstUnallocatedSpots!.map((v) => v.toJson()).toList();
     }
     data['tblAllocatedSpots_Visiable_False'] = tblAllocatedSpotsVisiableFalse;
-    data['tblUnallocatedSpots_Visiable_False'] = tblUnallocatedSpotsVisiableFalse;
+    data['tblUnallocatedSpots_Visiable_False'] =
+        tblUnallocatedSpotsVisiableFalse;
     return data;
   }
 }
@@ -232,7 +251,7 @@ class LstAllocatedSpots {
   int? tapeduration;
   String? scheduletime;
   int? rate;
-  int? valuationrate;
+  num? valuationrate;
   String? sponsorTypeCode;
   int? dealBand;
   String? commercialCode;
@@ -363,7 +382,7 @@ class LstUnallocatedSpots {
   String? starttime;
   String? endtime;
   int? rate;
-  int? valuationrate;
+  num? valuationrate;
   String? sponsorTypeCode;
   int? dealBand;
   String? commercialCode;
