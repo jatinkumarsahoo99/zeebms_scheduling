@@ -75,6 +75,10 @@ class AppPages {
       binding: SlideBinding(),
     ),
     GetPage(
+      name: _Paths.NEW_SHORT_CONTENT_FORM,
+      page: () => AuthGuard1(childName: _Paths.NEW_SHORT_CONTENT_FORM),
+    ),
+    GetPage(
       name: _Paths.TRANSMISSION_LOG,
       page: () => AuthGuard1(childName: _Paths.TRANSMISSION_LOG),
       binding: TransmissionLogBinding(),
