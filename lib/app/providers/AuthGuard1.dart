@@ -44,6 +44,7 @@ import '../modules/DateWiseFillerReport/views/date_wise_filler_report_view.dart'
 import '../modules/EuropeCommercialImportStatus/views/EuropeCommercialImportStatusView.dart';
 import '../modules/EuropeDropSpots/views/EuropeDropSpotsView.dart';
 import '../modules/LogAdditions/views/LogAdditionsView.dart';
+import '../modules/NewShortContentForm/views/new_short_content_form_view.dart';
 import '../modules/PromoMaster/views/promo_master_view.dart';
 import '../modules/ROImport/views/r_o_import_view.dart';
 import '../modules/SalesAuditNew/views/SalesAuditNewView.dart';
@@ -103,6 +104,9 @@ class AuthGuard1 extends StatelessWidget {
               break;
             case Routes.LOG_CONVERT:
               currentWidget = LogConvertView();
+              break;
+            case Routes.NEW_SHORT_CONTENT_FORM:
+              currentWidget = NewShortContentFormView();
               break;
             case Routes.PROMO_TYPE_MASTER:
               currentWidget = PromoTypeMasterView();

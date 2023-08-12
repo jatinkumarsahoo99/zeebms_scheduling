@@ -58,7 +58,7 @@ class AppPages {
 
   static const INITIAL = kReleaseMode
       ? Routes.HOME
-      : Routes.SCHEDULE_PROMO +
+      : Routes.NEW_SHORT_CONTENT_FORM +
           "?personalNo=hWlrtkk6LCUUIRgmutvmzg%3D%3D&loginCode=gsS2oEkuYKzI9aXanDqobQ%3D%3D&formName=ZdPOC%2BHl3hRJzHSclM%2B5m3sWVw1wpLPmNEvejYUOFLU%3D";
 
   static final routes = [
@@ -71,6 +71,10 @@ class AppPages {
       name: _Paths.SLIDE,
       page: () => AuthGuard1(childName: _Paths.SLIDE),
       binding: SlideBinding(),
+    ),
+    GetPage(
+      name: _Paths.NEW_SHORT_CONTENT_FORM,
+      page: () => AuthGuard1(childName: _Paths.NEW_SHORT_CONTENT_FORM),
     ),
     GetPage(
       name: _Paths.TRANSMISSION_LOG,
