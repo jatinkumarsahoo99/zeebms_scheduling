@@ -47,11 +47,16 @@ class SpotPriorityView extends GetView<SpotPriorityController> {
                             controllerX.locations.value,
                             (value) {
                               controllerX.selectLocation = value;
+                              controllerX.selectChannel.value = null;
                               controllerX.getChannels(
                                   controllerX.selectLocation?.key ?? "");
+                              // controllerX.getChannels(controllerX.selectLocation?.key ?? "");
                             },
                             "Location",
                             0.12,
+                            // onFocusChange: (value){
+                            //   controllerX.getChannels(controllerX.selectLocation?.key ?? "");
+                            // },
                             isEnable: controllerX.isEnable.value,
                             selected: controllerX.selectLocation,
                             autoFocus: true,
@@ -65,13 +70,13 @@ class SpotPriorityView extends GetView<SpotPriorityController> {
                           () => DropDownField.formDropDown1WidthMap(
                             controllerX.channels.value,
                             (value) {
-                              controllerX.selectChannel = value;
+                              controllerX.selectChannel.value = value;
                             },
                             "Channel",
                             0.12,
                             isEnable: controllerX.isEnable.value,
-                            selected: controllerX.selectChannel,
-                            autoFocus: true,
+                            selected: controllerX.selectChannel.value,
+                            autoFocus: false,
                             dialogWidth: 330,
                             dialogHeight: Get.height * .7,
                           ),
@@ -114,7 +119,7 @@ class SpotPriorityView extends GetView<SpotPriorityController> {
 
                         /// channel
                         Obx(
-                          () => DropDownField.formDropDown1WidthMap(
+                          () => DropDownField.formDropDownWidthMapArrowUpDown(
                             controllerX.priorityList.value,
                             (value) {
                               controllerX.selectPriority = value;
@@ -125,7 +130,7 @@ class SpotPriorityView extends GetView<SpotPriorityController> {
                             selected: controllerX.selectPriority,
                             autoFocus: true,
                             dialogWidth: 200,
-                            dialogHeight: Get.height * .3,
+                            dialogHeight: Get.height * .6,
                           ),
                         ),
 
@@ -150,17 +155,19 @@ class SpotPriorityView extends GetView<SpotPriorityController> {
                           (controllerX.spotPriorityModel?.lstbookingdetail
                               ?.isNotEmpty)!)
                       ? DataGridFromMap(
-                          onFocusChange: (value) {
-                            controllerX.gridStateManager!
-                                .setGridMode(PlutoGridMode.selectWithOneTap);
-                            controllerX.selectedPlutoGridMode =
-                                PlutoGridMode.selectWithOneTap;
-                          },
                           onload: (loadevent) {
                             controllerX.gridStateManager =
                                 loadevent.stateManager;
+                            loadevent.stateManager.setSelecting(true);
+                            loadevent.stateManager
+                                .setGridMode(PlutoGridMode.normal);
+                            // loadevent.stateManager.setSelecting(true);
+                            loadevent.stateManager
+                                .setSelectingMode(PlutoGridSelectingMode.row);
                           },
                           hideCode: false,
+                          exportFileName:
+                              Get.find<MainController>().formName ?? "",
                           onContextMenuClick:
                               (DataGridMenuItem? valData, int rowIdx) {
                             switch (valData) {
@@ -168,27 +175,65 @@ class SpotPriorityView extends GetView<SpotPriorityController> {
                                 if (controllerX.selectPriority == null) {
                                   Snack.callError("Please select priority");
                                 } else {
-                                  controllerX.gridStateManager?.rows[rowIdx]
-                                          .cells["priorityname"]?.value =
-                                      controllerX.selectPriority?.value ?? "";
-                                  controllerX.gridStateManager?.rows[rowIdx]
-                                          .cells["priorityCode"]?.value =
-                                      int.tryParse(
-                                          controllerX.selectPriority?.key ??
-                                              "0");
-                                  controllerX
-                                          .spotPriorityModel
-                                          ?.lstbookingdetail![rowIdx]
-                                          .priorityname =
-                                      controllerX.selectPriority?.value ?? "";
-                                  controllerX
-                                      .spotPriorityModel
-                                      ?.lstbookingdetail![rowIdx]
-                                      .priorityCode = int.tryParse(controllerX
-                                          .selectPriority?.key ??
-                                      "0");
-                                  controllerX.gridStateManager
-                                      ?.notifyListeners();
+                                  print("Length current row is>>>" +
+                                      (controllerX.gridStateManager
+                                              ?.currentSelectingRows.length
+                                              .toString() ??
+                                          ""));
+                                  if ((controllerX.gridStateManager
+                                              ?.currentSelectingRows.length ??
+                                          0) ==
+                                      0) {
+                                    controllerX.gridStateManager?.rows[rowIdx]
+                                            .cells["priorityname"]?.value =
+                                        controllerX.selectPriority?.value ?? "";
+                                    controllerX.gridStateManager?.rows[rowIdx]
+                                            .cells["priorityCode"]?.value =
+                                        int.tryParse(
+                                            controllerX.selectPriority?.key ??
+                                                "0");
+                                    controllerX
+                                            .spotPriorityModel
+                                            ?.lstbookingdetail![rowIdx]
+                                            .priorityname =
+                                        controllerX.selectPriority?.value ?? "";
+                                    controllerX
+                                        .spotPriorityModel
+                                        ?.lstbookingdetail![rowIdx]
+                                        .priorityCode = int.tryParse(controllerX
+                                            .selectPriority?.key ??
+                                        "0");
+                                    controllerX.gridStateManager
+                                        ?.notifyListeners();
+                                  } else {
+                                    for (PlutoRow dr in (controllerX
+                                        .gridStateManager
+                                        ?.currentSelectingRows)!) {
+                                      dr.cells["priorityname"]?.value =
+                                          controllerX.selectPriority?.value ??
+                                              "";
+
+                                      dr.cells["priorityCode"]?.value =
+                                          int.tryParse(
+                                              controllerX.selectPriority?.key ??
+                                                  "0");
+                                      controllerX
+                                              .spotPriorityModel
+                                              ?.lstbookingdetail![dr.sortIdx]
+                                              .priorityname =
+                                          controllerX.selectPriority?.value ??
+                                              "";
+                                      controllerX
+                                              .spotPriorityModel
+                                              ?.lstbookingdetail![dr.sortIdx]
+                                              .priorityCode =
+                                          int.tryParse(
+                                              controllerX.selectPriority?.key ??
+                                                  "0");
+                                    }
+                                    controllerX.gridStateManager
+                                        ?.notifyListeners();
+                                  }
                                 }
                                 break;
                               case DataGridMenuItem.clearPriority:
@@ -236,10 +281,11 @@ class SpotPriorityView extends GetView<SpotPriorityController> {
                 id: "buttons",
                 init: Get.find<HomeController>(),
                 builder: (controller) {
-                   PermissionModel formPermissions = Get.find<MainController>()
+                  PermissionModel formPermissions = Get.find<MainController>()
                       .permissionList!
                       .lastWhere((element) {
-                    return element.appFormName == Routes.SPOT_PRIORITY.replaceAll("/", "");
+                    return element.appFormName ==
+                        Routes.SPOT_PRIORITY.replaceAll("/", "");
                   });
                   if (controller.tranmissionButtons != null) {
                     return SizedBox(
@@ -255,8 +301,8 @@ class SpotPriorityView extends GetView<SpotPriorityController> {
                               btnText: btn["name"],
                               showIcon: false,
                               callback: Utils.btnAccessHandler2(btn['name'],
-                                              controller, formPermissions) ==
-                                          null
+                                          controller, formPermissions) ==
+                                      null
                                   ? null
                                   : () => formHandler(btn['name']),
                             ),

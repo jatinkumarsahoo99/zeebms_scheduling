@@ -29,7 +29,7 @@ class ExportData {
       var value = excel.encode()!;
       String time = DateTime.now().toString();
       // var fileBytes = excel.save(fileName: "$screenName-$time.xlsx");
-      var fileBytes = excel.save(fileName: screenName);
+      var fileBytes = excel.save(fileName: "$screenName.xlsx");
       if (callBack != null) {
         callBack();
       }
@@ -103,7 +103,21 @@ class ExportData {
           // Update format onLayout
           plutoGridPdfExport.format = format;
           return plutoGridPdfExport.export(stateManager);
-        });
+        }).then((value) {
+      stateManager.setShowLoading(false);
+    });
+  }
+
+  printFromGridData1(fileName,Uint8List data) async {
+    await Printing.layoutPdf(
+        format: PdfPageFormat.a4.landscape,
+        name: fileName,
+        onLayout: (PdfPageFormat format) async {
+          // Update format onLayout
+          return data;
+        }).then((value) {
+      // stateManager.setShowLoading(false);
+    });
   }
 
   exportPdfFromGridData(pluto_grid_export.PlutoGridDefaultPdfExport plutoGridPdfExport, stateManager) async {

@@ -29,38 +29,10 @@ class SalesAuditNewView  extends StatelessWidget  {
 
         focusNode: new FocusNode(),
         onKey: (RawKeyEvent raw) {
-          // print("RAw is.>>>" + raw.toString());
+          print("RAw is.>>>" + raw.toString());
           switch (raw.logicalKey.keyLabel) {
             case "F5":
-              if(controller.listAsrunLog2[controller.gridStateManager!.currentRowIdx??0].bookingStatus != "E"){
-                if(controller.listAsrunLog2[controller.gridStateManager!.currentRowIdx??0].telecastTime == null ||
-                    controller.listAsrunLog2[controller.gridStateManager!.currentRowIdx??0].telecastTime == "" ||
-                    controller.listAsrunLog2[controller.gridStateManager!.currentRowIdx??0].telecastTime == "null" ){
-
-                  LoadingDialog.recordExists(
-                      "Do you want to mark as Error?",
-                          (){
-                        controller.markError(controller.gridStateManager!.currentRowIdx??0);
-                      },
-                      cancel: (){
-                        Get.back();
-                      });
-
-                }
-                else{
-                  Snack.callError("Telecast Spot!\nUnable To mark as error!");
-                }
-              }
-              else{
-                LoadingDialog.recordExists(
-                    "Do you want to clear Error making?",
-                        (){
-                      controller.markError(controller.gridStateManager!.currentRowIdx??0);
-                    },
-                    cancel: (){
-                      Get.back();
-                    });
-              }
+              controller.markError(controller.gridStateManagerLeft?.currentRowIdx??0);
               break;
           }
         },
@@ -102,11 +74,12 @@ class SalesAuditNewView  extends StatelessWidget  {
                                       },
                                       "Location",
                                        0.12,
+                                      inkWellFocusNode: controller.locationNode,
                                       // isEnable: controller.isEnable.value,
                                       // selected: controller.selectLocation,
                                       autoFocus: true,
                                       dialogWidth: 330,
-                                      dialogHeight: Get.height * .7,
+                                      dialogHeight: Get.height * .35,
                                     ),
                                   ),
 
@@ -121,11 +94,12 @@ class SalesAuditNewView  extends StatelessWidget  {
                                       },
                                       "Channel",
                                       0.12,
+                                      inkWellFocusNode: controller.channelNode,
                                       // isEnable: controller.isEnable.value,
                                       // selected: controller.selectChannel,
                                       autoFocus: true,
                                       dialogWidth: 330,
-                                      dialogHeight: Get.height * .7,
+                                      dialogHeight: Get.height * .45,
                                     ),
                                   ),
 
@@ -278,15 +252,16 @@ class SalesAuditNewView  extends StatelessWidget  {
                                         DataGridFromMap(
                                             hideCode: false,
                                             formatDate: false,
+                                            exportFileName: "Sales Audit New",
                                             focusNode: controller.leftFocusNode,
                                             onRowDoubleTap: (PlutoGridOnRowDoubleTapEvent? val){
                                                   print(">>>>>>>>"+val!.rowIdx .toString());
-                                                  controller.onDoubleTap(val.rowIdx,controller.gridStateManagerRight!.currentRowIdx??0);
+                                                  controller.tapeBtn(val.rowIdx,controller.gridStateManagerRight!.currentRowIdx??0);
 
                                                },
                                             colorCallback: (PlutoRowColorContext colorData){
                                               Color color = Colors.white;
-                                              if(controller.gridStateManager?.currentRowIdx == colorData.rowIdx){
+                                              if(controller.gridStateManagerLeft?.currentRowIdx == colorData.rowIdx){
                                                 color = Color(0xFFD1C4E9);
                                               }
                                               else if(colorData.row.cells['telecastTime']!.value != "" &&
@@ -312,17 +287,28 @@ class SalesAuditNewView  extends StatelessWidget  {
                                                  controller.selectedIndex = val.rowIdx;
                                                  // controller.gridStateManagerRight?.setCurrentCell(controller.gridStateManagerRight?.rows[2].cells["no"], 2) ;
                                              },
-
+                                            hideKeys: ['locationcode','channelcode',
+                                              'recordnumber','telecastProgram','rowNumber','remarks1',
+                                              'programCode','previousBookingStatus','scheduleProgramCode'],
                                             onload:
                                                 (PlutoGridOnLoadedEvent load) {
-                                              controller.gridStateManager = load.stateManager;
-                                              controller.gridStateManager!.setCurrentCell(controller.gridStateManager!.getRowByIdx(controller.selectedIndex)!.cells['exportTapeCode'],
-                                                  controller.selectedIndex);
-                                              controller.gridStateManager!.moveCurrentCellByRowIdx(controller.selectedIndex??0, PlutoMoveDirection.down);
-                                              // controller.selectedIndex = controller.gridStateManager?.currentRowIdx ;
 
-                                              /*controller.tblFastInsert =
-                                                                load.stateManager;*/
+                                              if(controller.showError.value == true && controller.showCancel.value != true){
+                                                load.stateManager.setFilter((e)=>e.cells['bookingStatus']?.value.toString().trim().toLowerCase() != "c");
+                                              }else if(controller.showError.value != true && controller.showCancel.value == true){
+                                                load.stateManager.setFilter((e)=>e.cells['bookingStatus']?.value.toString().trim().toLowerCase() != "e");
+                                              }else if(controller.showError.value != true && controller.showCancel.value != true){
+                                                load.stateManager.setFilter((e)=>( e.cells['bookingStatus']?.value.toString().trim().toLowerCase() != "e" &&
+                                                    e.cells['bookingStatus']?.value.toString().trim().toLowerCase() != "c" ));
+                                              }else{
+                                                load.stateManager.setFilter((element) => true);
+                                              }
+                                              controller.gridStateManagerLeft = load.stateManager;
+                                              controller.gridStateManagerLeft!.setCurrentCell(controller.gridStateManagerLeft!.
+                                              getRowByIdx(controller.selectedIndex)!.cells['exportTapeCode'],
+                                                  controller.selectedIndex);
+                                              controller.gridStateManagerLeft!.moveCurrentCellByRowIdx(controller.selectedIndex??0, PlutoMoveDirection.down);
+                                              load.stateManager.notifyListeners();
                                             },
                                             // colorCallback: (renderC) => Colors.red[200]!,
                                             mapData:controller.listAsrunLog2.map((e) =>
@@ -348,9 +334,10 @@ class SalesAuditNewView  extends StatelessWidget  {
                                                 hideCode: false,
                                                 formatDate: false,
                                                 focusNode: controller.rightFocusNode,
+                                                exportFileName: "Sales Audit New",
                                                 onRowDoubleTap: (PlutoGridOnRowDoubleTapEvent? val){
                                                   print(">>>>>>>>"+val!.row.toString());
-                                                  controller.onDoubleTap(controller.gridStateManager!.currentRowIdx??0,val.rowIdx);
+                                                  controller.tapeBtn(controller.gridStateManagerLeft!.currentRowIdx??0,val.rowIdx);
                                                 },
                                                 colorCallback: (PlutoRowColorContext colorData){
                                                   Color color = Colors.white;
@@ -410,47 +397,16 @@ class SalesAuditNewView  extends StatelessWidget  {
                               showIcon: false,
                               // isEnabled: btn['isDisabled'],
                               callback: (){
-                                // controller.unCancel(controller.selectedIndex!);
-                                // controller.gridStateManager?.setCurrentCell(controller.gridStateManager?.rows[2].cells["no"], 2,notify: true) ;
-                                // print(">>>>>>count>> "+controller.gridStateManager!.rows.length.toString());
-                                // print(">>>>>>count>> "+controller.gridStateManager!.rows[2].cells[0].toString());
-                                // controller.gridStateManager?.notifyListeners();
+                                // controller.gridStateManagerLeft?.setFilter((element) => true);
+                                // controller.gridStateManagerLeft?.notifyListeners();
                               },
                             ),
                             FormButtonWrapper(
-                              btnText: "Error",
+                              btnText: "Error (F5)",
                               showIcon: false,
                               // isEnabled: btn['isDisabled'],
                               callback: (){
-                                if(controller.listAsrunLog2[controller.gridStateManager!.currentRowIdx??0].bookingStatus != "E"){
-                                  if(controller.listAsrunLog2[controller.gridStateManager!.currentRowIdx??0].telecastTime == null ||
-                                      controller.listAsrunLog2[controller.gridStateManager!.currentRowIdx??0].telecastTime == "" ||
-                                      controller.listAsrunLog2[controller.gridStateManager!.currentRowIdx??0].telecastTime == "null" ){
-
-                                    LoadingDialog.recordExists(
-                                        "Do you want to mark as Error?",
-                                            (){
-                                          controller.markError(controller.gridStateManager!.currentRowIdx??0);
-                                        },
-                                        cancel: (){
-                                          Get.back();
-                                        });
-
-                                  }
-                                  else{
-                                    Snack.callError("Telecast Spot!\nUnable To mark as error!");
-                                  }
-                                }
-                                else{
-                                  LoadingDialog.recordExists(
-                                      "Do you want to clear Error making?",
-                                          (){
-                                        controller.markError(controller.gridStateManager!.currentRowIdx??0);
-                                      },
-                                      cancel: (){
-                                        Get.back();
-                                      });
-                                }
+                                controller.markError(controller.gridStateManagerLeft?.currentRowIdx??0);
                               },
                             ),
                             FormButtonWrapper(
@@ -458,9 +414,7 @@ class SalesAuditNewView  extends StatelessWidget  {
                               showIcon: false,
                               // isEnabled: btn['isDisabled'],
                               callback: (){
-                                controller.btnAuto_Click();
-                                // print("singlr click"+controller.selectedIndex.toString());
-                                // print("singlr click"+ controller.gridStateManager!.currentRowIdx.toString());
+                                controller.btnAutoClick();
                               },
                             ),
                             FormButtonWrapper(
@@ -476,7 +430,7 @@ class SalesAuditNewView  extends StatelessWidget  {
                               showIcon: false,
                               // isEnabled: btn['isDisabled'],
                               callback: (){
-                                controller.onDoubleTap(controller.gridStateManager!.currentRowIdx??0,
+                                controller.tapeBtn(controller.gridStateManagerLeft!.currentRowIdx??0,
                                     controller.gridStateManagerRight!.currentRowIdx??0);
                               },
                             ),
@@ -493,7 +447,7 @@ class SalesAuditNewView  extends StatelessWidget  {
                               showIcon: false,
                               // isEnabled: btn['isDisabled'],
                               callback: (){
-                                controller.btnMap_Click(controller.gridStateManagerRight!.currentRowIdx??0,controller.gridStateManager!.currentRowIdx??0);
+                                controller.btnMapClick(controller.gridStateManagerRight!.currentRowIdx??0,controller.gridStateManagerLeft!.currentRowIdx??0);
                               },
                             ),
                             FormButtonWrapper(
@@ -501,17 +455,15 @@ class SalesAuditNewView  extends StatelessWidget  {
                               showIcon: false,
                               // isEnabled: btn['isDisabled'],
                               callback: (){
-                               for(int i=0;i<controller.listAsrunLog2.length;i++){
-                                 if(i == controller.gridStateManager!.currentRowIdx! ){
-                                   controller.listAsrunLog2[i].telecastTime =
-                                       controller.listAsrunLog2[i].scheduleTime;
-                                   controller.listAsrunLog2[i].programCode =  controller.listAsrunLog2[i].scheduleProgramCode;
-                                   controller.listAsrunLog2[i].rowNumber = 0;
-
-                                   controller.update(['leftOne']);
-                                   break;
-                                 }
-                               }
+                               controller.gridStateManagerLeft?.rows[controller.gridStateManagerLeft?.
+                               currentRowIdx??0].cells['telecastTime']?.value = controller.gridStateManagerLeft?.rows[controller.gridStateManagerLeft?.
+                               currentRowIdx??0].cells['scheduleTime']?.value;
+                               controller.gridStateManagerLeft?.rows[controller.gridStateManagerLeft?.
+                               currentRowIdx??0].cells['programCode']?.value =  controller.gridStateManagerLeft?.rows[controller.gridStateManagerLeft?.
+                               currentRowIdx??0].cells['scheduleProgramCode']?.value;
+                               controller.gridStateManagerLeft?.rows[controller.gridStateManagerLeft?.
+                               currentRowIdx??0].cells['rowNumber']?.value = 0;
+                               controller.gridStateManagerLeft?.notifyListeners();
                               },
                             ),
                             FormButtonWrapper(
@@ -524,7 +476,7 @@ class SalesAuditNewView  extends StatelessWidget  {
                               },
                             ),
                             FormButtonWrapper(
-                              btnText: "B2E",
+                              btnText: "B 2 E",
                               showIcon: false,
                               // isEnabled: btn['isDisabled'],
                               callback: (){
@@ -534,8 +486,6 @@ class SalesAuditNewView  extends StatelessWidget  {
                                 },cancel: (){
                                   Get.back();
                                 });
-
-
                               },
                             ),
                           ],

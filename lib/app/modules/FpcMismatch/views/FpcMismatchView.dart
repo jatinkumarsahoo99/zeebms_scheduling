@@ -41,8 +41,6 @@ class FpcMismatchView extends GetView<FpcMismatchController> {
   FpcMismatchController controllerX = Get.put(FpcMismatchController());
   final GlobalKey rebuildKey = GlobalKey();
 
-
-
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -140,6 +138,7 @@ class FpcMismatchView extends GetView<FpcMismatchController> {
                             FormButton(
                               btnText: "Display Mismatch",
                               callback: () {
+                                controllerX.hideKeysAllowed.value = false;
                                 controllerX.fetchMismatch();
                                 controllerX.fetchProgram();
                               },
@@ -150,6 +149,7 @@ class FpcMismatchView extends GetView<FpcMismatchController> {
                             FormButton(
                               btnText: "Display Error",
                               callback: () {
+                                controllerX.hideKeysAllowed.value = true;
                                 controllerX.fetchMismatchError();
                                 controllerX.fetchProgram();
                               },
@@ -160,8 +160,31 @@ class FpcMismatchView extends GetView<FpcMismatchController> {
                             FormButton(
                               btnText: "Display All",
                               callback: () {
+                                controllerX.hideKeysAllowed.value = true;
                                 controllerX.fetchMismatchAll();
                                 controllerX.fetchProgram();
+                              },
+                            ),
+                            const SizedBox(
+                              width: 10,
+                            ),
+                            FormButton(
+                              btnText: "  Make Error  ",
+                              callback: () {
+                                controllerX.saveMarkError();
+                                // controllerX.fetchMismatch();
+                                // controllerX.fetchProgram();
+                              },
+                            ),
+                            const SizedBox(
+                              width: 10,
+                            ),
+                            FormButton(
+                              btnText: "  Undo Error  ",
+                              callback: () {
+                                controllerX.saveUndoMarkError();
+                                // controllerX.fetchMismatchError();
+                                // controllerX.fetchProgram();
                               },
                             ),
                           ],
@@ -186,7 +209,7 @@ class FpcMismatchView extends GetView<FpcMismatchController> {
                 ],
               ),
             ),
-            Padding(
+            /*Padding(
               padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 8),
               child: Row(
                 children: [
@@ -211,7 +234,7 @@ class FpcMismatchView extends GetView<FpcMismatchController> {
                   ),
                 ],
               ),
-            ),
+            ),*/
             GetBuilder<HomeController>(
                 id: "buttons",
                 init: Get.find<HomeController>(),
@@ -260,11 +283,15 @@ class FpcMismatchView extends GetView<FpcMismatchController> {
               // height: 400,
               flex: 5,
               child: DataGridFromMap(
-                showSrNo: false,
+                showSrNo: true,
                 mapData:
                     (controllerX.dataList?.map((e) => e.toJson1()).toList())!,
                 widthRatio: 90,
                 checkRow: true,
+                hideKeys: controllerX.hideKeysAllowed.value
+                    ? ["fpcType", "fpcProgram", "fpcTime"]
+                    : [],
+                hideCode: false,
                 checkRowKey: "select",
                 onload: (load) {
                   controllerX.stateManager = load.stateManager;
@@ -280,12 +307,25 @@ class FpcMismatchView extends GetView<FpcMismatchController> {
                     });
                   }
                 },
-                /* colorCallback: (PlutoRowColorContext plutoContext) {
+                colorCallback: (PlutoRowColorContext plutoContext) {
+                  switch (controllerX.selectButton) {
+                    case SelectButton.DisplayError:
+                      return Colors.red;
+                      break;
+                    case SelectButton.DisplayAll:
+                      return Colors.white;
+                      break;
+                    case SelectButton.DisplayMismatch:
+                      return Colors.yellow;
+                      break;
+                    default:
+                      return Colors.white;
+                  }
                   return (controllerX
                           .dataList![plutoContext.rowIdx].selectItem)!
                       ? Colors.grey
                       : Colors.white;
-                },*/
+                },
                 mode: PlutoGridMode.selectWithOneTap,
                 formatDate: false,
                 /*onSelected: (PlutoGridOnSelectedEvent plutoEvnt) {
@@ -330,6 +370,7 @@ class FpcMismatchView extends GetView<FpcMismatchController> {
               // height: 400,
               flex: 2,
               child: DataGridFromMap(
+                showSrNo: true,
                 mapData: (controllerX.programList
                     ?.map((e) => e.toJson1())
                     .toList())!,

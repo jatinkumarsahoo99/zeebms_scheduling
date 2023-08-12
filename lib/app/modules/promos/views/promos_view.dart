@@ -1,8 +1,11 @@
 import 'package:bms_scheduling/app/modules/RoBooking/controllers/ro_booking_controller.dart';
 import 'package:bms_scheduling/app/providers/Utils.dart';
 import 'package:bms_scheduling/app/routes/app_pages.dart';
+import 'package:bms_scheduling/widgets/DataGridShowOnly.dart';
+import 'package:bms_scheduling/widgets/LoadingDialog.dart';
 import 'package:bms_scheduling/widgets/PlutoGrid/pluto_grid.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:get/get.dart';
 
 import '../../../../widgets/CheckBoxWidget.dart';
@@ -16,8 +19,8 @@ import '../../../controller/MainController.dart';
 import '../../../data/PermissionModel.dart';
 import '../controllers/promos_controller.dart';
 
-class PromosView extends StatelessWidget {
-  PromosView({Key? key}) : super(key: key);
+class SchedulePromoView extends StatelessWidget {
+  SchedulePromoView({Key? key}) : super(key: key);
 
   late PlutoGridStateManager stateManager;
   var formName = 'Scheduling Promo';
@@ -98,7 +101,13 @@ class PromosView extends StatelessWidget {
                                           padding: const EdgeInsets.only(left: 10, top: 17.0),
                                           child: FormButton(
                                             btnText: "Show Details",
-                                            callback: controller.showDetails,
+                                            callback: () {
+                                              if (controller.selectLocation != null && controller.selectChannel != null) {
+                                                controller.showDetails();
+                                              } else {
+                                                LoadingDialog.showErrorDialog("");
+                                              }
+                                            },
                                           ),
                                         ),
                                         const SizedBox(width: 10),
@@ -128,24 +137,25 @@ class PromosView extends StatelessWidget {
                                         decoration: controller.dailyFpc.value.isEmpty ? BoxDecoration(border: Border.all(color: Colors.grey)) : null,
                                         child: controller.dailyFpc.value.isEmpty
                                             ? null
-                                            : DataGridFromMap(
+                                            : DataGridShowOnlyKeys(
                                                 mapData: controller.dailyFpc.value.map((e) => e.toJson()).toList(),
-                                                onRowDoubleTap: (row) => controller.handleDoubleTapInLeft1stTable(row.rowIdx),
+                                                onRowDoubleTap: (row) => controller.handleDoubleTapInLeft1stTable(row.rowIdx, row.cell.column.field),
                                                 onload: (event) {
                                                   controller.fpcStateManager = event.stateManager;
-                                                  event.stateManager.setSelectingMode(PlutoGridSelectingMode.row);
+                                                  event.stateManager.setSelectingMode(PlutoGridSelectingMode.cell);
                                                   event.stateManager.setSelecting(true);
-                                                  event.stateManager.setCurrentCell(
-                                                      event.stateManager.getRowByIdx(controller.fpcSelectedIdx)?.cells['startTime'],
-                                                      controller.fpcSelectedIdx);
+                                                  if (controller.fpcSelectedCol.isNotEmpty) {
+                                                    event.stateManager.setCurrentCell(
+                                                        event.stateManager.getRowByIdx(controller.fpcSelectedIdx)?.cells[controller.fpcSelectedCol],
+                                                        controller.fpcSelectedIdx);
+                                                  }
                                                 },
-                                                colorCallback: (row) => controller.dailyFpc[row.rowIdx].exceed
-                                                    ? Colors.red
-                                                    : ((row.row.cells.containsValue(controller.fpcStateManager?.currentCell))
-                                                        ? Colors.deepPurple.shade200
-                                                        : Colors.white),
                                                 mode: PlutoGridMode.selectWithOneTap,
-                                                onSelected: (row) => controller.fpcSelectedIdx = row.rowIdx ?? 0,
+                                                colorCallback: (row) => controller.dailyFpc[row.rowIdx].exceed ? Colors.red : Colors.white,
+                                                onSelected: (row) => {
+                                                  controller.fpcSelectedIdx = row.rowIdx ?? 0,
+                                                  controller.fpcSelectedCol = row.cell?.column.field ?? ""
+                                                },
                                               ),
                                       );
                                     }),
@@ -158,7 +168,7 @@ class PromosView extends StatelessWidget {
                                             controller.promoScheduled.value.isEmpty ? BoxDecoration(border: Border.all(color: Colors.grey)) : null,
                                         child: controller.promoScheduled.value.isEmpty
                                             ? null
-                                            : DataGridFromMap(
+                                            : DataGridShowOnlyKeys(
                                                 mapData: controller.promoScheduled.value.map((e) => e.toJson()).toList(),
                                                 mode: PlutoGridMode.selectWithOneTap,
                                                 colorCallback: (row) =>
@@ -167,6 +177,16 @@ class PromosView extends StatelessWidget {
                                                         : Colors.white,
                                                 onload: (event) {
                                                   controller.scheduledPromoStateManager = event.stateManager;
+                                                  controller.scheduledPromoStateManager!.gridFocusNode.onKeyEvent = (node, event) {
+                                                    // print("Key Pressed");
+                                                    if (event is RawKeyDownEvent && event.physicalKey == PhysicalKeyboardKey.delete) {
+                                                      print("Delete Pressed");
+                                                      if (controller.scheduledPromoStateManager?.currentCell != null) {
+                                                        controller.promoScheduled.removeAt(controller.scheduledPromoStateManager!.currentRowIdx!);
+                                                      }
+                                                    }
+                                                    return KeyEventResult.skipRemainingHandlers;
+                                                  };
                                                   event.stateManager.setSelectingMode(PlutoGridSelectingMode.row);
                                                   event.stateManager.setSelecting(true);
                                                   event.stateManager.setCurrentCell(
@@ -327,7 +347,7 @@ class PromosView extends StatelessWidget {
                                         padding: const EdgeInsets.only(left: 10, bottom: 5.0, top: 5.0),
                                         child: FormButton(
                                           btnText: "Auto Add",
-                                          callback: controller.handleAutoAddTap,
+                                          callback: () {},
                                         ),
                                       ),
                                     ],
@@ -339,21 +359,28 @@ class PromosView extends StatelessWidget {
                                             controller.searchPromos.value.isEmpty ? BoxDecoration(border: Border.all(color: Colors.grey)) : null,
                                         child: controller.searchPromos.value.isEmpty
                                             ? null
-                                            : DataGridFromMap(
+                                            : DataGridShowOnlyKeys(
                                                 mapData: controller.searchPromos.value,
-                                                onRowDoubleTap: (row) => controller.handleDoubleTapInRightTable(row.rowIdx),
+                                                onRowDoubleTap: (row) => controller.handleDoubleTapInRightTable(row.rowIdx, row.cell.column.field),
                                                 onload: (event) {
                                                   controller.searchedPromoStateManager = event.stateManager;
-                                                  event.stateManager.setSelectingMode(PlutoGridSelectingMode.row);
+                                                  event.stateManager.setSelectingMode(PlutoGridSelectingMode.cell);
                                                   event.stateManager.setSelecting(true);
-                                                  // event.stateManager.setCurrentCell(event.stateManager.firstCell, 0);
+                                                  if (controller.searchPromoSelectedCol.isNotEmpty) {
+                                                    controller.searchedPromoStateManager?.setCurrentCell(
+                                                        controller.searchedPromoStateManager
+                                                            ?.getRowByIdx(controller.searchPromoSelectedIdx)
+                                                            ?.cells[controller.schedulePromoSelectedCol],
+                                                        controller.searchPromoSelectedIdx);
+                                                  }
                                                 },
                                                 colorCallback: (row) =>
                                                     (row.row.cells.containsValue(controller.searchedPromoStateManager?.currentCell))
                                                         ? Colors.deepPurple.shade200
                                                         : Colors.white,
                                                 mode: PlutoGridMode.selectWithOneTap,
-                                                onSelected: (row) => controller.handleOnSelectRightTable(row.rowIdx ?? -1),
+                                                onSelected: (row) =>
+                                                    controller.handleOnSelectRightTable(row.rowIdx ?? 0, row.cell?.column.field ?? "caption"),
                                               ),
                                       );
                                     }),
@@ -407,9 +434,10 @@ class PromosView extends StatelessWidget {
 
   formHandler(btnName) async {
     if (btnName == "Clear") {
-    } else if (btnName == "Save") {
       Get.delete<RoBookingController>();
       Get.find<HomeController>().clearPage1();
+    } else if (btnName == "Save") {
+      controller.saveData();
     }
   }
 }

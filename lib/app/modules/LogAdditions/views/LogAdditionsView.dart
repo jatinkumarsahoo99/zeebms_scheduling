@@ -76,7 +76,7 @@ class LogAdditionsView extends GetView<LogAdditionsController> {
                             0.12,
                             isEnable: controllerX.isEnable.value,
                             selected: controllerX.selectChannel.value,
-                            autoFocus: true,
+                            autoFocus: false,
                             dialogWidth: 330,
                             dialogHeight: Get.height * .7,
                           ),
@@ -190,12 +190,12 @@ class LogAdditionsView extends GetView<LogAdditionsController> {
                           () => DropDownField.formDropDown1WidthMap(
                             controllerX.additions.value,
                             (value) {
-                              controllerX.selectAdditions = value;
+                              controllerX.selectAdditions.value = value;
                             },
                             "Additions",
                             0.12,
                             // isEnable: controllerX.isEnable.value,
-                            selected: controllerX.selectAdditions,
+                            selected: controllerX.selectAdditions.value,
                             autoFocus: true,
                             dialogWidth: 200,
                             dialogHeight: Get.height * .3,
@@ -274,6 +274,7 @@ class LogAdditionsView extends GetView<LogAdditionsController> {
                                 .setGridMode(PlutoGridMode.selectWithOneTap);
                             controllerX.selectedPlutoGridMode =
                                 PlutoGridMode.selectWithOneTap;
+                            // controllerX.getSetting();
                           },
                           witdthSpecificColumn: {"duration": 70},
                           onload: (loadevent) {
@@ -349,6 +350,7 @@ class LogAdditionsView extends GetView<LogAdditionsController> {
   formHandler(String btn) {
     switch (btn.toLowerCase()) {
       case "save":
+        // controller.getAdditionCheckList();
         controllerX.saveAddition();
         break;
       case "clear":

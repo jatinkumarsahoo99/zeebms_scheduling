@@ -11,7 +11,7 @@ abstract class Routes {
   static const COMMERCIAL = _Paths.COMMERCIAL;
   static const RO_BOOKING = _Paths.RO_BOOKING;
   static const FILLER = _Paths.FILLER;
-  static const SCHEDULE_PROMO = _Paths.PROMOS;
+  static const SCHEDULE_PROMO = _Paths.SCHEDULE_PROMO;
   static const IMPORT_DIGITEXT_RUN_ORDER = _Paths.IMPORT_DIGITEXT_RUN_ORDER;
   static const FPC_MISMATCH = _Paths.FPC_MISMATCH;
   static const RO_CANCELLATION = _Paths.RO_CANCELLATION;
@@ -79,6 +79,7 @@ abstract class RoutesList {
     _Paths.SALES_AUDIT_NOT_TELECAST_REPORT,
     _Paths.SALES_AUDIT_NEW,
     _Paths.BRAND_MASTER,
+    _Paths.SCHEDULE_PROMO,
     _Paths.COMING_UP_MENU,
     _Paths.COMING_UP_NEXT_MENU,
     _Paths.COMING_UP_TOMORROW_MENU,
@@ -108,7 +109,7 @@ abstract class _Paths {
   static const COMMERCIAL = '/frmCommercialScheduling';
   static const RO_CANCELLATION = '/frmROCancellation';
   static const FILLER = '/frmFillerScheduling';
-  static const PROMOS = '/frmPromoScheduling';
+  static const SCHEDULE_PROMO = '/frmPromoScheduling';
   static const SPOT_PRIORITY = '/frmSpotPriority';
   static const RO_RESCHEDULE = '/frmRoReschedule';
   static const ROS_DISTRIBUTION = '/FrmRosDistribution';

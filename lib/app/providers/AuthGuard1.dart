@@ -135,7 +135,7 @@ class AuthGuard1 extends StatelessWidget {
               currentWidget = FillerView();
               break;
             case Routes.SCHEDULE_PROMO:
-              currentWidget = PromosView();
+              currentWidget = SchedulePromoView();
               break;
             case Routes.COMMERCIAL:
               currentWidget = CommercialView();

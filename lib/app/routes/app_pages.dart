@@ -115,9 +115,8 @@ class AppPages {
       binding: FillerBinding(),
     ),
     GetPage(
-      name: _Paths.PROMOS,
-      page: () => AuthGuard1(childName: _Paths.PROMOS),
-      binding: PromosBinding(),
+      name: _Paths.SCHEDULE_PROMO,
+      page: () => AuthGuard1(childName: _Paths.SCHEDULE_PROMO),
     ),
     GetPage(
       name: _Paths.IMPORT_DIGITEXT_RUN_ORDER,

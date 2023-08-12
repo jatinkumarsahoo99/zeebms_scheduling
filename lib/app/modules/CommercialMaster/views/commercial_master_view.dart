@@ -113,8 +113,7 @@ class CommercialMasterView extends StatelessWidget {
                                                 "Revenue Type", .17,
                                                 autoFocus: true,
                                                 isEnable: controllerX.isEnable,
-                                                selected: controllerX
-                                                    .selectedRevenueType
+                                                selected: controllerX.selectedRevenueType
                                                 // selected: DropDownValue(key: "0",value: "jks"),
                                                 )),
                                         Obx(() =>
