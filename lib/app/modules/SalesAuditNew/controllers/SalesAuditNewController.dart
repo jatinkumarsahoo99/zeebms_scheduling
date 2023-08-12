@@ -389,7 +389,6 @@ class SalesAuditNewController extends GetxController {
                 listAsrunLog1.addAll(salesAuditGetRetrieveModel!
                     .gettables!.lstAsrunlog1 as Iterable<LstAsrunlog1>);
                 masterListAsrunLog1.addAll(listAsrunLog1);
-                update(['rightOne']);
               }
               if (map['gettables']['lstAsrunlog2'] != null &&
                   map['gettables']['lstAsrunlog2'] != "null" &&
@@ -397,8 +396,8 @@ class SalesAuditNewController extends GetxController {
                 listAsrunLog2.addAll(salesAuditGetRetrieveModel!
                     .gettables!.lstAsrunlog2 as Iterable<LstAsrunlog2>);
                 masterListAsrunLog2.addAll(listAsrunLog2);
-                update(['leftOne', 'text']);
               }
+              update(['leftOne', 'text','rightOne']);
             } else {
               salesAuditGetRetrieveModel = null;
               listAsrunLog2.clear();
@@ -450,6 +449,8 @@ class SalesAuditNewController extends GetxController {
 
   List<Map<String, dynamic>> getDataFromGrid(
       PlutoGridStateManager statemanager) {
+    statemanager.setFilter((element) => true);
+    statemanager.notifyListeners();
     List<Map<String, dynamic>> mapList = [];
 
     for (var row in statemanager.rows) {
@@ -472,8 +473,9 @@ class SalesAuditNewController extends GetxController {
   }
   List<Map<String, dynamic>> getDataFromGrid1(
       PlutoGridStateManager statemanager) {
+    statemanager.setFilter((element) => true);
+    statemanager.notifyListeners();
     List<Map<String, dynamic>> mapList = [];
-
     for (var row in statemanager.rows) {
       Map<String, dynamic> rowMap = {};
       for (var key in row.cells.keys) {
@@ -551,11 +553,11 @@ class SalesAuditNewController extends GetxController {
             ?.value ??
         "";
 
-    BookingDetailcode = gridStateManagerRight
+    BookingDetailcode = (gridStateManagerRight
             ?.rows[gridStateManagerRight?.currentRowIdx ?? 0]
             .cells['bookingDetailCode']
             ?.value ??
-        "";
+        "").toString();
 
     // tblSpots - listAsrunLog2 - leftIndex - gridStateManagerLeft
     // tblAsrun - listAsrunLog1 - rightindex - gridStateManagerRight
@@ -566,8 +568,8 @@ class SalesAuditNewController extends GetxController {
                     "") ==
                 BookingNumber) &&
             ((gridStateManagerLeft?.rows[i].cells['bookingDetailCode']?.value ??
-                    "") ==
-                BookingDetailcode)) {
+                    "").toString().trim() ==
+                BookingDetailcode.toString().trim())) {
           // gridStateManager?.setGridMode(PlutoGridMode.select) ;
           gridStateManagerLeft?.setCurrentCell(
               gridStateManagerLeft?.rows[i].cells["bookingDetailCode"], i);
