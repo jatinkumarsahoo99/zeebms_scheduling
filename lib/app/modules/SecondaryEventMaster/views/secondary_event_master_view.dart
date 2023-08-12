@@ -45,7 +45,7 @@ class SecondaryEventMasterView extends GetView<SecondaryEventMasterController> {
                         inkWellFocusNode: controller.locFN,
                       );
                     }),
-                    SizedBox(width: 20),
+                    SizedBox(width: size.width * .01),
                     Obx(() {
                       return DropDownField.formDropDown1WidthMap(
                         controller.channelList.value,
@@ -57,30 +57,33 @@ class SecondaryEventMasterView extends GetView<SecondaryEventMasterController> {
                     }),
                   ],
                 ),
-                Padding(
-                  padding: const EdgeInsets.symmetric(vertical: 4),
+                SizedBox(height: 8),
+                SizedBox(
+                  width: size.width * .47,
                   child: Row(
-                    mainAxisAlignment: MainAxisAlignment.center,
+                    crossAxisAlignment: CrossAxisAlignment.end,
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
-                      SizedBox(
-                        width: context.width * .23,
-                        child: Obx(() {
+                      Obx(
+                        () {
                           return RadioRow(
                             items: ['Bug', 'Aston'],
                             groupValue: controller.selectedRadio.value,
-                            disabledRadios: !(controller.controllsEnabled.value) ? ['Bug', 'Aston'] : null,
-                            onchange: (va) => controller.selectedRadio.value = va,
+                            disabledRadios: !(controller.controllsEnabled.value)
+                                ? ['Bug', 'Aston']
+                                : null,
+                            onchange: (va) =>
+                                controller.selectedRadio.value = va,
                           );
-                        }),
+                        },
                       ),
-                      SizedBox(width: 20),
                       Obx(
                         () {
                           return InputFields.formField1(
                             hintTxt: "Tx No",
                             controller: controller.txNoTC,
-                            width: 0.225,
-                            isEnable: controller.controllsEnabled.value,
+                            width: 0.23,
+                            readOnly: !controller.controllsEnabled.value,
                             focusNode: controller.txNOFN,
                           );
                         },
@@ -88,79 +91,94 @@ class SecondaryEventMasterView extends GetView<SecondaryEventMasterController> {
                     ],
                   ),
                 ),
+                SizedBox(height: 8),
                 InputFields.formField1(
                   hintTxt: "Event Name",
                   controller: controller.eventNameTC,
                   focusNode: controller.eventNameFN,
-                  width: 0.475,
+                  width: 0.47,
+                  padLeft: 0,
                 ),
-                SizedBox(height: 4),
+                SizedBox(height: 8),
                 InputFields.formField1(
                   hintTxt: "TX Caption",
                   controller: controller.txCaptionTC,
-                  width: 0.475,
+                  width: 0.47,
+                  padLeft: 0,
                 ),
+                SizedBox(height: 8),
 
-                Padding(
-                  padding: const EdgeInsets.symmetric(vertical: 4),
+                SizedBox(
+                  width: size.width * .47,
                   child: Row(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: [
-                      InputFields.formFieldNumberMask(
-                        hintTxt: "SOM",
-                        controller: controller.somTC,
-                        widthRatio: .15,
-                      ),
-                      SizedBox(width: 16),
-                      InputFields.formFieldNumberMask(
-                        hintTxt: "EOM",
-                        controller: controller.eomTC,
-                        widthRatio: .15,
-                        textFieldFN: controller.eomFN,
-                      ),
-                      SizedBox(width: 16),
-                      Obx(() {
-                        return InputFields.formFieldDisable(
-                          hintTxt: "Duration",
-                          value: controller.duration.value,
-                          widthRatio: .15,
-                        );
-                      }),
-                    ],
-                  ),
-                ),
-                Padding(
-                  padding: const EdgeInsets.symmetric(vertical: 4),
-                  child: Row(
-                    mainAxisAlignment: MainAxisAlignment.center,
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
                       DateWithThreeTextField(
                         title: "Start Date",
                         mainTextController: controller.startDateTC,
-                        widthRation: .230,
+                        widthRation: .23,
+                        endDate: DateTime.now(),
                       ),
-                      SizedBox(width: 20),
                       DateWithThreeTextField(
                         title: "End Date",
                         mainTextController: controller.endDateTC,
-                        widthRation: .230,
+                        widthRation: .23,
+                        startDate: DateTime.now(),
                       )
+                    ],
+                  ),
+                ),
+                SizedBox(height: 8),
+                SizedBox(
+                  width: size.width * .47,
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      SizedBox(
+                        width: size.width * .23,
+                        child: Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                          children: [
+                            InputFields.formFieldNumberMask(
+                              hintTxt: "SOM",
+                              controller: controller.somTC,
+                              widthRatio: .11,
+                              paddingLeft: 0,
+                            ),
+                            InputFields.formFieldNumberMask(
+                              hintTxt: "EOM",
+                              controller: controller.eomTC,
+                              widthRatio: .11,
+                              textFieldFN: controller.eomFN,
+                              paddingLeft: 0,
+                            ),
+                          ],
+                        ),
+                      ),
+                      Obx(() {
+                        return InputFields.formFieldDisable(
+                          hintTxt: "Duration",
+                          value: controller.duration.value,
+                          widthRatio: .23,
+                          leftPad: 0,
+                        );
+                      }),
                     ],
                   ),
                 ),
                 SizedBox(height: 20),
 
                 /// bottom common buttons
-                Align(
-                  alignment: Alignment.topCenter,
-                  child: GetBuilder<HomeController>(
-                      id: "buttons",
-                      init: Get.find<HomeController>(),
-                      builder: (btncontroller) {
-                        if (btncontroller.buttons != null) {
-                          return SizedBox(
-                            height: 40,
-                            child: Wrap(
+                SizedBox(
+                  width: size.width * .47,
+                  child: Align(
+                    alignment: Alignment.topCenter,
+                    child: GetBuilder<HomeController>(
+                        id: "buttons",
+                        init: Get.find<HomeController>(),
+                        builder: (btncontroller) {
+                          if (btncontroller.buttons != null) {
+                            return Wrap(
                               spacing: 5,
                               runSpacing: 15,
                               alignment: WrapAlignment.center,
@@ -170,9 +188,13 @@ class SecondaryEventMasterView extends GetView<SecondaryEventMasterController> {
                                 for (var btn in btncontroller.buttons!) ...{
                                   FormButtonWrapper(
                                     btnText: btn["name"],
-                                    callback: ((Utils.btnAccessHandler(btn['name'], controller.formPermissions!) == null))
+                                    callback: ((Utils.btnAccessHandler(
+                                                btn['name'],
+                                                controller.formPermissions!) ==
+                                            null))
                                         ? null
-                                        : () => controller.formHandler(btn['name']),
+                                        : () =>
+                                            controller.formHandler(btn['name']),
                                   )
                                 },
                                 // for (var btn in btncontroller.buttons!)
@@ -181,11 +203,11 @@ class SecondaryEventMasterView extends GetView<SecondaryEventMasterController> {
                                 //     callback: () => controller.formHandler(btn['name'].toString()),
                                 //   ),
                               ],
-                            ),
-                          );
-                        }
-                        return Container();
-                      }),
+                            );
+                          }
+                          return Container();
+                        }),
+                  ),
                 ),
                 SizedBox(height: 20),
               ],

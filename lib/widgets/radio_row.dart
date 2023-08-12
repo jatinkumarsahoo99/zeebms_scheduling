@@ -32,30 +32,69 @@ class _RadioRowState extends State<RadioRow> {
   }
 
   buildRadio() {
-    return widget.items
-        .map(
-          (e) => Padding(
-            padding: const EdgeInsets.only(left: 5),
-            child: Row(
-              children: [
-                Radio<String>(
-                    value: e,
-                    groupValue: widget.groupValue,
-                    onChanged: widget.disabledRadios?.contains(e) ?? false
-                        ? null
-                        : (value) {
-                            widget.onchange!(value);
-                          }),
-                Text(
-                  e,
-                  style: TextStyle(
-                    color: widget.disabledRadios?.contains(e) ?? false ? Colors.grey : Colors.black,
+    return List.generate(
+        widget.items.length,
+        (index) => Padding(
+              padding: EdgeInsets.only(left: index == 0 ? 0 : 5),
+              child: Row(
+                children: [
+                  Radio<String>(
+                      value: widget.items[index],
+                      groupValue: widget.groupValue,
+                      materialTapTargetSize: MaterialTapTargetSize.shrinkWrap,
+                      visualDensity:
+                          const VisualDensity(horizontal: -4, vertical: -4),
+                      onChanged: widget.disabledRadios
+                                  ?.contains(widget.items[index]) ??
+                              false
+                          ? null
+                          : (value) {
+                              widget.onchange!(value);
+                            }),
+                  Text(
+                    widget.items[index],
+                    style: TextStyle(
+                      color: widget.disabledRadios
+                                  ?.contains(widget.items[index]) ??
+                              false
+                          ? Colors.grey
+                          : Colors.black,
+                    ),
                   ),
-                ),
-              ],
-            ),
-          ),
-        )
-        .toList();
+                ],
+              ),
+            )).toList();
+    // return widget.items
+    //     .map(
+    //       (e) {
+    //         if(givePadding){
+    //           givePadding = true;
+    //         }
+    //         return Padding(
+    //         padding: EdgeInsets.only(left: givePadding? 0:5),
+    //         child: Row(
+    //           children: [
+    //             Radio<String>(
+    //                 value: e,
+    //                 groupValue: widget.groupValue,
+    //                  materialTapTargetSize: MaterialTapTargetSize.shrinkWrap,
+    //                  visualDensity: const VisualDensity(horizontal: -4, vertical: -4),
+    //                 onChanged: widget.disabledRadios?.contains(e) ?? false
+    //                     ? null
+    //                     : (value) {
+    //                         widget.onchange!(value);
+    //                       }),
+    //             Text(
+    //               e,
+    //               style: TextStyle(
+    //                 color: widget.disabledRadios?.contains(e) ?? false ? Colors.grey : Colors.black,
+    //               ),
+    //             ),
+    //           ],
+    //         ),
+    //       );
+    //       },
+    //     )
+    //     .toList();
   }
 }

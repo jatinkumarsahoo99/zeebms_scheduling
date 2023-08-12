@@ -184,6 +184,7 @@ class InputFields {
     bool autoFocus = false,
     bool showTitle = true,
     int maxLines = 1,
+    bool readOnly = false,
     double? height,
     void Function(String)? onFieldSubmitted,
     String? prefixText,
@@ -204,7 +205,7 @@ class InputFields {
         if (showTitle) ...{
           LabelText.style(
             hint: hintTxt,
-            txtColor: (isEnable ?? true) ? Colors.black : Colors.grey,
+            txtColor: ((isEnable ?? true)) ? Colors.black : Colors.grey,
           ),
         },
         Container(
@@ -240,10 +241,11 @@ class InputFields {
                 : inputformatters,
             controller: controller,
             style: TextStyle(fontSize: 12, color: (isEnable ?? true) ? Colors.black : Colors.grey),
+            readOnly: readOnly,
             decoration: InputDecoration(
                 enabled: isEnable ?? true,
                 // prefixText: prefixText,
-
+                
                 prefixIcon: prefixText != null
                     ? SizedBox(
                         child: Center(
