@@ -423,7 +423,7 @@ class SalesAuditNewController extends GetxController {
       "date": DateFormat("yyyy-MM-ddTHH:mm:ss")
           .format(DateFormat("dd-MM-yyyy").parse(scheduledController.text)),
       // "lstspots": masterListAsrunLog2.map((e) => e.toJson1()).toList(),
-      "lstspots": getDataFromGrid(gridStateManagerLeft!),
+      "lstspots": getDataFromGrid1(gridStateManagerLeft!),
       // "lstasrun": masterListAsrunLog1.map((e) => e.toJson1()).toList(),
       "lstasrun": getDataFromGrid(gridStateManagerRight!),
     };
@@ -444,7 +444,8 @@ class SalesAuditNewController extends GetxController {
           } else {
             Snack.callError("Something went wrong\nPlease try After Sometime");
           }
-        });
+        },
+        );
   }
 
   List<Map<String, dynamic>> getDataFromGrid(
@@ -454,11 +455,45 @@ class SalesAuditNewController extends GetxController {
     for (var row in statemanager.rows) {
       Map<String, dynamic> rowMap = {};
       for (var key in row.cells.keys) {
-        rowMap[key] = row.cells[key]?.value ?? "";
+        if(key.toString().trim() == "telecastTime"){
+          if(row.cells[key]?.value != null && (row.cells[key]?.value??"").toString().trim() != ""){
+            rowMap[key] = DateFormat("yyyy-MM-ddT").format(DateTime.now()) + (row.cells[key]?.value ?? "");
+          }else{
+            rowMap[key] = DateFormat("yyyy-MM-dd").format(DateTime.now()) + (row.cells[key]?.value ?? "");
+          }
+        }else{
+          rowMap[key] = row.cells[key]?.value ?? "";
+        }
+
       }
       mapList.add(rowMap);
     }
+    return mapList;
+  }
+  List<Map<String, dynamic>> getDataFromGrid1(
+      PlutoGridStateManager statemanager) {
+    List<Map<String, dynamic>> mapList = [];
 
+    for (var row in statemanager.rows) {
+      Map<String, dynamic> rowMap = {};
+      for (var key in row.cells.keys) {
+        if(key.toString().trim() == "rowNumber"){
+          // rowMap[key] = DateFormat("yyyy-MM-dd").format(DateTime.now()) + (row.cells[key]?.value ?? "");
+          continue;
+        }else if(key.toString().trim() == "telecastTime"){
+          if(row.cells[key]?.value != null && (row.cells[key]?.value??"").toString().trim() != ""){
+            rowMap[key] = DateFormat("yyyy-MM-ddT").format(DateTime.now()) + (row.cells[key]?.value ?? "");
+          }else{
+            rowMap[key] = DateFormat("yyyy-MM-dd").format(DateTime.now()) + (row.cells[key]?.value ?? "");
+          }
+        }
+        else{
+          rowMap[key] = row.cells[key]?.value ?? "";
+        }
+
+      }
+      mapList.add(rowMap);
+    }
     return mapList;
   }
 
