@@ -147,7 +147,7 @@ class AuditReschdule extends StatelessWidget {
                                 onRowChecked: (rowcheckEvent) {},
                                 hideCode: false,
                                 exportFileName: "Audit Reschedule",
-                                hideKeys: ["channelcode", "locationcode"],
+                                hideKeys: ["channelcode", "locationcode", "dealRowNumber"],
                                 rowCheckColor: Colors.white,
                                 onload: (loadEvent) {},
                                 colorCallback: (rowEvent) {
@@ -179,7 +179,7 @@ class AuditReschdule extends StatelessWidget {
                                 onRowChecked: (rowcheckEvent) {},
                                 hideCode: false,
                                 exportFileName: "Audit Cancellation",
-                                hideKeys: ["channelcode", "locationcode"],
+                                hideKeys: ["channelcode", "locationcode", "dealRowNumber"],
                                 rowCheckColor: Colors.white,
                                 formatDate: false,
                                 onload: (loadEvent) {},
