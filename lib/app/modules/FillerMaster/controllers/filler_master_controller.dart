@@ -45,6 +45,7 @@ class FillerMasterController extends GetxController {
   String fillerCode = "";
   var channelList = <DropDownValue>[].obs;
   int rightTableSelectedIdx = -1;
+  double componentWidthRatio = .17;
 
   var startDateCtr = TextEditingController(),
       endDateCtr = TextEditingController(),
