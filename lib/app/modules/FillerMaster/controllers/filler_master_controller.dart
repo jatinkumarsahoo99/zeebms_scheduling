@@ -173,6 +173,7 @@ class FillerMasterController extends GetxController {
     fillerNameFN.addListener(() async {
       if (!fillerNameFN.hasFocus) {
         if (fillerNameCtr.text.isNotEmpty) {
+          txCaptionCtr.text = fillerNameCtr.text;
           await retrievRecord(text: fillerNameCtr.text.trim());
           closeDialogIfOpen();
         }
@@ -597,7 +598,7 @@ class FillerMasterController extends GetxController {
               resp is Map<String, dynamic> &&
               resp['saveRecord'] != null &&
               resp['saveRecord']['strMessage'] != null &&
-              resp['saveRecord']['strMessage'].toString().contains("Record is updated successfully.")) {
+              resp['saveRecord']['strMessage'].toString().contains("successfully")) {
             LoadingDialog.callDataSaved(msg: resp['saveRecord']['strMessage'].toString());
           } else {
             LoadingDialog.showErrorDialog(resp.toString());
