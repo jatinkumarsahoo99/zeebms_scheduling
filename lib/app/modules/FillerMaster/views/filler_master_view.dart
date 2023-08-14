@@ -36,293 +36,327 @@ class FillerMasterView extends GetView<FillerMasterController> {
                           FocusTraversalGroup(
                             policy: OrderedTraversalPolicy(),
                             child: Expanded(
-                              flex: 12,
+                              flex: 10,
                               child: Container(
-                                decoration: BoxDecoration(border: Border.all(color: Colors.grey)),
-                                padding: EdgeInsets.all(16),
+                                decoration: BoxDecoration(
+                                    border: Border.all(color: Colors.grey)),
                                 child: ListView(
                                   children: [
-                                    Row(
-                                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                    const SizedBox(height: 16),
+                                    Wrap(
+                                      alignment: WrapAlignment.center,
+                                      spacing: 10,
+                                      runSpacing: 10,
                                       children: [
                                         DropDownField.formDropDown1WidthMap(
-                                          controller.onloadModel?.fillerMasterOnload?.lstLocation ?? [],
+                                          controller
+                                                  .onloadModel
+                                                  ?.fillerMasterOnload
+                                                  ?.lstLocation ??
+                                              [],
                                           controller.locationOnChanged,
                                           "Location",
-                                          .17,
+                                          controller.componentWidthRatio,
                                           autoFocus: true,
-                                          selected: controller.selectedDropDowns[0],
-                                          inkWellFocusNode: controller.locationFN,
+                                          selected:
+                                              controller.selectedDropDowns[0],
+                                          inkWellFocusNode:
+                                              controller.locationFN,
                                         ),
-                                        // SizedBox(width: 20),
                                         Obx(() {
-                                          return DropDownField.formDropDown1WidthMap(
+                                          return DropDownField
+                                              .formDropDown1WidthMap(
                                             controller.channelList.value,
-                                            (a) => controller.selectedDropDowns[19] = a,
+                                            (a) => controller
+                                                .selectedDropDowns[19] = a,
                                             "Channel",
-                                            .17,
-                                            selected: controller.selectedDropDowns[19],
+                                            controller.componentWidthRatio,
+                                            selected: controller
+                                                .selectedDropDowns[19],
                                           );
                                         }),
-                                        // SizedBox(width: 20),
-                                        DropDownField.formDropDown1WidthMap(
-                                          controller.onloadModel?.fillerMasterOnload?.lstMovieGrade ?? [],
-                                          (v) => controller.selectedDropDowns[15] = v,
-                                          "Movie Grade",
-                                          .17,
-                                          selected: controller.selectedDropDowns[15],
-                                        ),
-                                      ],
-                                    ),
-                                    SizedBox(height: 14),
-                                    Row(
-                                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                                      children: [
                                         DropDownField.formDropDownSearchAPI2(
                                           GlobalKey(),
                                           context,
-                                          width: context.width * 0.17,
-                                          onchanged: (v) => controller.selectedDropDowns[2] = v,
+                                          width: context.width *
+                                              controller.componentWidthRatio,
+                                          onchanged: (v) => controller
+                                              .selectedDropDowns[2] = v,
                                           title: 'Banner',
-                                          selectedValue: controller.selectedDropDowns[2],
-                                          url: ApiFactory.FILLER_MASTER_BANNER_SEARCH,
+                                          selectedValue:
+                                              controller.selectedDropDowns[2],
+                                          url: ApiFactory
+                                              .FILLER_MASTER_BANNER_SEARCH,
                                           parseKeyForKey: "BannerCode",
                                           parseKeyForValue: "BannerName",
                                         ),
-                                        // SizedBox(width: 20),
                                         InputFields.formField1(
                                           hintTxt: "Filler Name",
                                           controller: controller.fillerNameCtr,
-                                          width: 0.17,
+                                          width: controller.componentWidthRatio,
                                           focusNode: controller.fillerNameFN,
                                           maxLen: 40,
+                                          padLeft: 0,
                                         ),
-                                        // SizedBox(width: 20),
                                         InputFields.formField1(
                                           hintTxt: "TX Caption",
                                           controller: controller.txCaptionCtr,
-                                          width: 0.17,
+                                          width:
+                                              (controller.componentWidthRatio +
+                                                      0.0035) *
+                                                  2,
                                           prefixText: "F/",
                                           maxLen: 40,
+                                          padLeft: 0,
                                         ),
-                                      ],
-                                    ),
-                                    SizedBox(height: 14),
-                                    Row(
-                                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                                      children: [
+
                                         InputFields.formField1(
                                           hintTxt: "Tape ID",
                                           controller: controller.tapeIDCtr,
-                                          width: 0.17,
+                                          width: controller.componentWidthRatio,
                                           focusNode: controller.tapeIDFN,
                                           maxLen: 10,
+                                          padLeft: 0,
                                         ),
                                         // SizedBox(width: 20),
                                         InputFields.formField1(
                                           hintTxt: "Seg No",
                                           controller: controller.segNoCtrLeft,
-                                          width: 0.17,
+                                          width: controller.componentWidthRatio,
                                           focusNode: controller.segNoFN,
                                           maxLen: 5,
+                                          padLeft: 0,
                                           inputformatters: [
-                                            FilteringTextInputFormatter.digitsOnly,
+                                            FilteringTextInputFormatter
+                                                .digitsOnly,
                                           ],
                                         ),
                                         // SizedBox(width: 20),
                                         InputFields.formField1(
                                           hintTxt: "TX No",
                                           controller: controller.txNoCtr,
-                                          width: 0.17,
+                                          width: controller.componentWidthRatio,
+                                          padLeft: 0,
                                         ),
-                                      ],
-                                    ),
-                                    SizedBox(height: 14),
-
-                                    Row(
-                                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                                      children: [
                                         InputFields.formFieldNumberMask(
                                           controller: controller.somCtr,
                                           hintTxt: 'SOM',
-                                          widthRatio: .17,
+                                          widthRatio:
+                                              controller.componentWidthRatio,
                                           paddingLeft: 0,
                                         ),
                                         InputFields.formFieldNumberMask(
                                           controller: controller.eomCtr,
                                           hintTxt: 'EOM',
-                                          widthRatio: .17,
+                                          widthRatio:
+                                              controller.componentWidthRatio,
                                           paddingLeft: 0,
                                           textFieldFN: controller.eomFN,
                                         ),
                                         InputFields.formField1(
                                           controller: controller.durationCtr,
                                           hintTxt: 'Duration',
-                                          width: .17,
+                                          width: controller.componentWidthRatio,
                                           isEnable: false,
+                                          padLeft: 0,
                                         ),
-                                      ],
-                                    ),
-                                    SizedBox(height: 14),
-                                    Row(
-                                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                                      children: [
                                         DropDownField.formDropDown1WidthMap(
-                                          controller.onloadModel?.fillerMasterOnload?.lstTapetypemaster ?? [],
-                                          (v) => controller.selectedDropDowns[3] = v,
+                                          controller
+                                                  .onloadModel
+                                                  ?.fillerMasterOnload
+                                                  ?.lstTapetypemaster ??
+                                              [],
+                                          (v) => controller
+                                              .selectedDropDowns[3] = v,
                                           "Tape Type",
-                                          .17,
-                                          selected: controller.selectedDropDowns[3],
+                                          controller.componentWidthRatio,
+                                          selected:
+                                              controller.selectedDropDowns[3],
                                         ),
-                                        // SizedBox(width: 20),
                                         DropDownField.formDropDown1WidthMap(
-                                          controller.onloadModel?.fillerMasterOnload?.lstfillertypemaster ?? [],
-                                          (v) => controller.selectedDropDowns[4] = v,
+                                          controller
+                                                  .onloadModel
+                                                  ?.fillerMasterOnload
+                                                  ?.lstfillertypemaster ??
+                                              [],
+                                          (v) => controller
+                                              .selectedDropDowns[4] = v,
                                           "Type",
-                                          .17,
-                                          selected: controller.selectedDropDowns[4],
+                                          controller.componentWidthRatio,
+                                          selected:
+                                              controller.selectedDropDowns[4],
                                         ),
                                         // SizedBox(width: 20),
                                         DropDownField.formDropDown1WidthMap(
-                                          controller.onloadModel?.fillerMasterOnload?.lstCensorshipMaster ?? [],
-                                          (v) => controller.selectedDropDowns[5] = v,
+                                          controller
+                                                  .onloadModel
+                                                  ?.fillerMasterOnload
+                                                  ?.lstCensorshipMaster ??
+                                              [],
+                                          (v) => controller
+                                              .selectedDropDowns[5] = v,
                                           "Censhorship",
-                                          .17,
-                                          selected: controller.selectedDropDowns[5],
+                                          controller.componentWidthRatio,
+                                          selected:
+                                              controller.selectedDropDowns[5],
                                         ),
-                                      ],
-                                    ),
-                                    SizedBox(height: 14),
-                                    Row(
-                                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                                      children: [
                                         DropDownField.formDropDown1WidthMap(
-                                          controller.onloadModel?.fillerMasterOnload?.lstLanguagemaster ?? [],
-                                          (v) => controller.selectedDropDowns[6] = v,
+                                          controller
+                                                  .onloadModel
+                                                  ?.fillerMasterOnload
+                                                  ?.lstLanguagemaster ??
+                                              [],
+                                          (v) => controller
+                                              .selectedDropDowns[6] = v,
                                           "Langauge",
-                                          .17,
-                                          selected: controller.selectedDropDowns[6],
+                                          controller.componentWidthRatio,
+                                          selected:
+                                              controller.selectedDropDowns[6],
                                         ),
                                         DropDownField.formDropDown1WidthMap(
-                                          controller.onloadModel?.fillerMasterOnload?.lstproduction ?? [],
-                                          (v) => controller.selectedDropDowns[7] = v,
+                                          controller
+                                                  .onloadModel
+                                                  ?.fillerMasterOnload
+                                                  ?.lstproduction ??
+                                              [],
+                                          (v) => controller
+                                              .selectedDropDowns[7] = v,
                                           "Production",
-                                          .17,
-                                          selected: controller.selectedDropDowns[7],
+                                          controller.componentWidthRatio,
+                                          selected:
+                                              controller.selectedDropDowns[7],
                                         ),
                                         InputFields.formField1(
                                           hintTxt: "Seg ID",
                                           controller: controller.segIDCtr,
                                           width: 0.17,
                                         ),
-                                      ],
-                                    ),
-                                    SizedBox(height: 14),
-                                    Row(
-                                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                                      children: [
                                         DropDownField.formDropDown1WidthMap(
-                                          controller.onloadModel?.fillerMasterOnload?.lstcolor ?? [],
-                                          (v) => controller.selectedDropDowns[8] = v,
+                                          controller
+                                                  .onloadModel
+                                                  ?.fillerMasterOnload
+                                                  ?.lstcolor ??
+                                              [],
+                                          (v) => controller
+                                              .selectedDropDowns[8] = v,
                                           "Color",
-                                          .17,
-                                          selected: controller.selectedDropDowns[8],
+                                          controller.componentWidthRatio,
+                                          selected:
+                                              controller.selectedDropDowns[8],
                                         ),
                                         DropDownField.formDropDown1WidthMap(
-                                          controller.onloadModel?.fillerMasterOnload?.lstRegion ?? [],
-                                          (v) => controller.selectedDropDowns[9] = v,
+                                          controller
+                                                  .onloadModel
+                                                  ?.fillerMasterOnload
+                                                  ?.lstRegion ??
+                                              [],
+                                          (v) => controller
+                                              .selectedDropDowns[9] = v,
                                           "Region",
-                                          .17,
-                                          selected: controller.selectedDropDowns[9],
+                                          controller.componentWidthRatio,
+                                          selected:
+                                              controller.selectedDropDowns[9],
                                         ),
                                         DropDownField.formDropDown1WidthMap(
-                                          controller.onloadModel?.fillerMasterOnload?.lstEnegry ?? [],
-                                          (v) => controller.selectedDropDowns[10] = v,
+                                          controller
+                                                  .onloadModel
+                                                  ?.fillerMasterOnload
+                                                  ?.lstEnegry ??
+                                              [],
+                                          (v) => controller
+                                              .selectedDropDowns[10] = v,
                                           "Energy",
-                                          .17,
-                                          selected: controller.selectedDropDowns[10],
+                                          controller.componentWidthRatio,
+                                          selected:
+                                              controller.selectedDropDowns[10],
                                         ),
-                                      ],
-                                    ),
-                                    SizedBox(height: 14),
-                                    Row(
-                                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                                      children: [
                                         DropDownField.formDropDown1WidthMap(
-                                          controller.onloadModel?.fillerMasterOnload?.lstEra ?? [],
-                                          (v) => controller.selectedDropDowns[11] = v,
+                                          controller
+                                                  .onloadModel
+                                                  ?.fillerMasterOnload
+                                                  ?.lstEra ??
+                                              [],
+                                          (v) => controller
+                                              .selectedDropDowns[11] = v,
                                           "Era",
-                                          .17,
-                                          selected: controller.selectedDropDowns[11],
+                                          controller.componentWidthRatio,
+                                          selected:
+                                              controller.selectedDropDowns[11],
                                         ),
                                         DropDownField.formDropDown1WidthMap(
-                                          controller.onloadModel?.fillerMasterOnload?.lstSongGrade ?? [],
-                                          (v) => controller.selectedDropDowns[12] = v,
+                                          controller
+                                                  .onloadModel
+                                                  ?.fillerMasterOnload
+                                                  ?.lstSongGrade ??
+                                              [],
+                                          (v) => controller
+                                              .selectedDropDowns[12] = v,
                                           "Song Grade",
-                                          .17,
-                                          selected: controller.selectedDropDowns[12],
+                                          controller.componentWidthRatio,
+                                          selected:
+                                              controller.selectedDropDowns[12],
                                         ),
                                         DropDownField.formDropDown1WidthMap(
-                                          controller.onloadModel?.fillerMasterOnload?.lstMood ?? [],
-                                          (v) => controller.selectedDropDowns[13] = v,
+                                          controller
+                                                  .onloadModel
+                                                  ?.fillerMasterOnload
+                                                  ?.lstMood ??
+                                              [],
+                                          (v) => controller
+                                              .selectedDropDowns[13] = v,
                                           "Mood",
-                                          .17,
-                                          selected: controller.selectedDropDowns[13],
+                                          controller.componentWidthRatio,
+                                          selected:
+                                              controller.selectedDropDowns[13],
                                         ),
-                                      ],
-                                    ),
-                                    SizedBox(height: 14),
-                                    Row(
-                                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                                      children: [
                                         DropDownField.formDropDown1WidthMap(
-                                          controller.onloadModel?.fillerMasterOnload?.lstTempo ?? [],
-                                          (v) => controller.selectedDropDowns[14] = v,
+                                          controller
+                                                  .onloadModel
+                                                  ?.fillerMasterOnload
+                                                  ?.lstTempo ??
+                                              [],
+                                          (v) => controller
+                                              .selectedDropDowns[14] = v,
                                           "Tempo",
-                                          .17,
-                                          selected: controller.selectedDropDowns[14],
+                                          controller.componentWidthRatio,
+                                          selected:
+                                              controller.selectedDropDowns[14],
                                         ),
                                         InputFields.formField1(
                                           hintTxt: "Movie Name",
                                           controller: controller.movieNameCtr,
-                                          width: 0.17,
+                                          width: controller.componentWidthRatio,
                                           maxLen: 80,
+                                          padLeft: 0,
                                         ),
                                         InputFields.formField1(
                                           hintTxt: "Release Year",
                                           controller: controller.releaseYearCtr,
                                           width: 0.17,
                                           maxLen: 80,
+                                          padLeft: 0,
                                         ),
+                                        DropDownField.formDropDown1WidthMap(
+                                          controller
+                                                  .onloadModel
+                                                  ?.fillerMasterOnload
+                                                  ?.lstMovieGrade ??
+                                              [],
+                                          (v) => controller
+                                              .selectedDropDowns[15] = v,
+                                          "Movie Grade",
+                                          controller.componentWidthRatio,
+                                          selected:
+                                              controller.selectedDropDowns[15],
+                                        ),
+                                        SizedBox(
+                                            width: context.width *
+                                                controller.componentWidthRatio),
+                                        SizedBox(
+                                            width: context.width *
+                                                controller.componentWidthRatio),
                                       ],
                                     ),
-                                    SizedBox(height: 14),
-                                    Row(
-                                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                                      children: [
-                                        InputFields.formField1(
-                                          hintTxt: "Singer",
-                                          controller: controller.singerCtr,
-                                          width: 0.17,
-                                          maxLen: 80,
-                                        ),
-                                        // SizedBox(width: 20),
-                                        InputFields.formField1(
-                                          hintTxt: "Music Director",
-                                          controller: controller.musicDirectorCtr,
-                                          width: 0.17,
-                                          maxLen: 80,
-                                        ),
-                                        // SizedBox(width: 20),
-                                        InputFields.formField1(
-                                          hintTxt: "Music Company",
-                                          controller: controller.musicCompanyCtr,
-                                          width: 0.17,
-                                          maxLen: 80,
-                                        ),
-                                      ],
-                                    ),
-                                    // SizedBox(height: 4),
                                   ],
                                 ),
                               ),
@@ -340,93 +374,141 @@ class FillerMasterView extends GetView<FillerMasterController> {
                                   Expanded(
                                     child: Container(
                                       width: double.infinity,
-                                      decoration: BoxDecoration(border: Border.all(color: Colors.grey)),
+                                      decoration: BoxDecoration(
+                                          border:
+                                              Border.all(color: Colors.grey)),
                                       padding: const EdgeInsets.all(16.0),
                                       child: Column(
                                         children: [
                                           Row(
-                                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                            mainAxisAlignment:
+                                                MainAxisAlignment.spaceBetween,
                                             children: [
-                                              DropDownField.formDropDown1WidthMap(
-                                                controller.onloadModel?.fillerMasterOnload?.lsttapesource ?? [],
-                                                (v) => controller.selectedDropDowns[16] = v,
+                                              DropDownField
+                                                  .formDropDown1WidthMap(
+                                                controller
+                                                        .onloadModel
+                                                        ?.fillerMasterOnload
+                                                        ?.lsttapesource ??
+                                                    [],
+                                                (v) => controller
+                                                    .selectedDropDowns[16] = v,
                                                 "Source",
-                                                .17,
-                                                selected: controller.selectedDropDowns[16],
+                                                controller.componentWidthRatio +
+                                                    .01,
+                                                selected: controller
+                                                    .selectedDropDowns[16],
                                               ),
-                                              DropDownField.formDropDown1WidthMap(
-                                                controller.onloadModel?.fillerMasterOnload?.lstProducerTape ?? [],
-                                                (v) => controller.selectedDropDowns[17] = v,
+                                              DropDownField
+                                                  .formDropDown1WidthMap(
+                                                controller
+                                                        .onloadModel
+                                                        ?.fillerMasterOnload
+                                                        ?.lstProducerTape ??
+                                                    [],
+                                                (v) => controller
+                                                    .selectedDropDowns[17] = v,
                                                 "ID No",
-                                                .17,
-                                                selected: controller.selectedDropDowns[17],
+                                                controller.componentWidthRatio +
+                                                    .01,
+                                                selected: controller
+                                                    .selectedDropDowns[17],
                                               ),
                                             ],
                                           ),
-                                          SizedBox(height: 14),
+                                          SizedBox(height: 10),
                                           Row(
-                                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                            mainAxisAlignment:
+                                                MainAxisAlignment.spaceBetween,
                                             children: [
                                               DateWithThreeTextField(
                                                 title: "Start Date",
-                                                mainTextController: controller.startDateCtr,
-                                                widthRation: .17,
+                                                mainTextController:
+                                                    controller.startDateCtr,
+                                                widthRation: controller
+                                                        .componentWidthRatio +
+                                                    .01,
                                               ),
                                               DateWithThreeTextField(
                                                 title: "End Date",
-                                                mainTextController: controller.endDateCtr,
-                                                widthRation: .17,
+                                                mainTextController:
+                                                    controller.endDateCtr,
+                                                widthRation: controller
+                                                        .componentWidthRatio +
+                                                    .01,
                                               ),
                                             ],
                                           ),
-                                          SizedBox(height: 14),
+                                          SizedBox(height: 10),
                                           Expanded(
                                             child: Column(
-                                              crossAxisAlignment: CrossAxisAlignment.start,
+                                              crossAxisAlignment:
+                                                  CrossAxisAlignment.start,
                                               children: [
                                                 Text(
                                                   "Synopsis",
                                                   style: TextStyle(
-                                                    fontSize: SizeDefine.labelSize1,
+                                                    fontSize:
+                                                        SizeDefine.labelSize1,
                                                     color: Colors.black,
                                                     fontWeight: FontWeight.w500,
                                                   ),
                                                 ),
-                                                const SizedBox(height: 5),
+                                                const SizedBox(height: 2),
                                                 Expanded(
                                                   child: TextFormField(
                                                     expands: true,
                                                     minLines: null,
                                                     maxLines: null,
-                                                    controller: controller.synopsisCtr,
-                                                    textAlignVertical: TextAlignVertical.top,
-                                                    keyboardType: TextInputType.multiline,
+                                                    controller:
+                                                        controller.synopsisCtr,
+                                                    textAlignVertical:
+                                                        TextAlignVertical.top,
+                                                    keyboardType:
+                                                        TextInputType.multiline,
                                                     decoration: InputDecoration(
                                                       filled: true,
                                                       fillColor: Colors.white,
-                                                      contentPadding: EdgeInsets.all(10),
-                                                      border: OutlineInputBorder(
-                                                        borderRadius: BorderRadius.circular(0),
+                                                      contentPadding:
+                                                          EdgeInsets.all(10),
+                                                      border:
+                                                          OutlineInputBorder(
+                                                        borderRadius:
+                                                            BorderRadius
+                                                                .circular(0),
                                                         borderSide: BorderSide(
-                                                          color: Colors.deepPurpleAccent,
+                                                          color: Colors
+                                                              .deepPurpleAccent,
                                                         ),
                                                       ),
-                                                      enabledBorder: OutlineInputBorder(
-                                                        borderRadius: BorderRadius.circular(0),
+                                                      enabledBorder:
+                                                          OutlineInputBorder(
+                                                        borderRadius:
+                                                            BorderRadius
+                                                                .circular(0),
                                                         borderSide: BorderSide(
-                                                          color: Colors.deepPurpleAccent,
+                                                          color: Colors
+                                                              .deepPurpleAccent,
                                                         ),
                                                       ),
-                                                      focusedBorder: OutlineInputBorder(
-                                                        borderRadius: BorderRadius.circular(0),
+                                                      focusedBorder:
+                                                          OutlineInputBorder(
+                                                        borderRadius:
+                                                            BorderRadius
+                                                                .circular(0),
                                                         borderSide: BorderSide(
-                                                          color: Colors.deepPurpleAccent,
+                                                          color: Colors
+                                                              .deepPurpleAccent,
                                                         ),
                                                       ),
-                                                      errorBorder: OutlineInputBorder(
-                                                        borderRadius: BorderRadius.circular(0),
+                                                      errorBorder:
+                                                          OutlineInputBorder(
+                                                        borderRadius:
+                                                            BorderRadius
+                                                                .circular(0),
                                                         borderSide: BorderSide(
-                                                          color: Colors.deepPurpleAccent,
+                                                          color: Colors
+                                                              .deepPurpleAccent,
                                                         ),
                                                       ),
                                                     ),
@@ -435,29 +517,39 @@ class FillerMasterView extends GetView<FillerMasterController> {
                                               ],
                                             ),
                                           ),
-                                          SizedBox(height: 14),
+                                          SizedBox(height: 5),
                                         ],
                                       ),
                                     ),
                                   ),
-                                  SizedBox(height: 14),
+                                  SizedBox(height: 10),
                                   Text("Annotation"),
-                                  SizedBox(height: 5),
+                                  SizedBox(height: 2),
                                   Expanded(
                                     child: Container(
                                       width: double.infinity,
-                                      decoration: BoxDecoration(border: Border.all(color: Colors.grey)),
+                                      decoration: BoxDecoration(
+                                          border:
+                                              Border.all(color: Colors.grey)),
                                       padding: const EdgeInsets.all(16.0),
                                       child: Column(
+                                        crossAxisAlignment:
+                                            CrossAxisAlignment.start,
                                         children: [
                                           DropDownField.formDropDownSearchAPI2(
                                             GlobalKey(),
                                             context,
-                                            width: context.width * 0.37,
-                                            onchanged: (v) => controller.selectedDropDowns[18] = v,
+                                            width: context.width *
+                                                ((controller.componentWidthRatio +
+                                                        .035) *
+                                                    2),
+                                            onchanged: (v) => controller
+                                                .selectedDropDowns[18] = v,
                                             title: 'Event',
-                                            selectedValue: controller.selectedDropDowns[18],
-                                            url: ApiFactory.FILLER_MASTER_GET_EVENT,
+                                            selectedValue: controller
+                                                .selectedDropDowns[18],
+                                            url: ApiFactory
+                                                .FILLER_MASTER_GET_EVENT,
                                             customInData: "onLeaveEvent",
                                             parseKeyForKey: "eventid",
                                             parseKeyForValue: "eventname",
@@ -465,77 +557,124 @@ class FillerMasterView extends GetView<FillerMasterController> {
                                           ),
                                           SizedBox(height: 14),
                                           Row(
-                                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                                            crossAxisAlignment: CrossAxisAlignment.end,
+                                            // mainAxisAlignment:
+                                            //     MainAxisAlignment.spaceBetween,
+                                            crossAxisAlignment:
+                                                CrossAxisAlignment.end,
                                             children: [
                                               InputFields.formFieldNumberMask(
                                                 controller: controller.tcInCtr,
                                                 hintTxt: 'TC In',
-                                                widthRatio: .11,
+                                                widthRatio: controller
+                                                        .componentWidthRatio -
+                                                    .05,
                                                 paddingLeft: 0,
                                                 // textFieldFN: controller.eomFN,
                                               ),
+                                              Spacer(),
                                               InputFields.formFieldNumberMask(
                                                 controller: controller.tcOutCtr,
                                                 hintTxt: 'TC Out',
-                                                widthRatio: .11,
+                                                widthRatio: controller
+                                                        .componentWidthRatio -
+                                                    .05,
                                                 paddingLeft: 0,
                                                 // textFieldFN: controller.eomFN,
                                               ),
-                                              FormButton(btnText: "Add", callback: controller.handleAddTap),
+                                              Spacer(flex: 2),
+                                              FormButton(
+                                                  btnText: "Add",
+                                                  callback:
+                                                      controller.handleAddTap),
                                             ],
                                           ),
-                                          SizedBox(height: 14),
+                                          SizedBox(height: 10),
                                           Expanded(
                                             child: Obx(() {
                                               return Container(
-                                                decoration: controller.rightDataTable.value.isEmpty
+                                                decoration: controller
+                                                        .rightDataTable
+                                                        .value
+                                                        .isEmpty
                                                     ? BoxDecoration(
                                                         border: Border.all(
                                                         color: Colors.grey,
                                                       ))
                                                     : null,
-                                                child: controller.rightDataTable.value.isEmpty
+                                                child: controller.rightDataTable
+                                                        .value.isEmpty
                                                     ? null
                                                     : RawKeyboardListener(
                                                         onKey: (value) {
-                                                          if (value.isKeyPressed(LogicalKeyboardKey.delete) && controller.rightDataTable.isNotEmpty) {
-                                                            controller.rightDataTable.removeAt(controller.rightTableSelectedIdx);
-                                                            controller.rightTableSelectedIdx = 0;
+                                                          if (value.isKeyPressed(
+                                                                  LogicalKeyboardKey
+                                                                      .delete) &&
+                                                              controller
+                                                                  .rightDataTable
+                                                                  .isNotEmpty) {
+                                                            controller
+                                                                .rightDataTable
+                                                                .removeAt(controller
+                                                                    .rightTableSelectedIdx);
+                                                            controller
+                                                                .rightTableSelectedIdx = 0;
                                                           }
                                                         },
-                                                        focusNode: controller.rightTableFN,
+                                                        focusNode: controller
+                                                            .rightTableFN,
                                                         child: DataGridFromMap(
-                                                          mapData: controller.rightDataTable.value.map((e) => e.toJson()).toList(),
+                                                          mapData: controller
+                                                              .rightDataTable
+                                                              .value
+                                                              .map((e) =>
+                                                                  e.toJson())
+                                                              .toList(),
                                                           // focusNode: controller.rightTableFN,
-                                                          mode: PlutoGridMode.selectWithOneTap,
-                                                          onSelected: (selected) => controller.rightTableSelectedIdx = selected.rowIdx ?? -1,
+                                                          mode: PlutoGridMode
+                                                              .selectWithOneTap,
+                                                          onSelected: (selected) =>
+                                                              controller
+                                                                      .rightTableSelectedIdx =
+                                                                  selected.rowIdx ??
+                                                                      -1,
                                                         ),
                                                       ),
                                               );
                                             }),
                                           ),
-                                          SizedBox(height: 14),
+                                          SizedBox(height: 10),
                                           Row(
-                                            crossAxisAlignment: CrossAxisAlignment.end,
+                                            crossAxisAlignment:
+                                                CrossAxisAlignment.end,
                                             children: [
                                               InputFields.formField1(
                                                 hintTxt: "Copy",
                                                 controller: controller.copyCtr,
-                                                width: 0.11,
+                                                width: controller
+                                                        .componentWidthRatio -
+                                                    .05,
                                                 maxLen: 99999,
+                                                padLeft: 0,
                                               ),
-                                              Spacer(),
+                                              Spacer(flex: 1),
                                               InputFields.formField1(
                                                 hintTxt: "Seg No",
-                                                controller: controller.segNoCtrRight,
-                                                width: 0.11,
+                                                padLeft: 0,
+                                                controller:
+                                                    controller.segNoCtrRight,
+                                                width: controller
+                                                        .componentWidthRatio -
+                                                    .05,
                                                 inputformatters: [
-                                                  FilteringTextInputFormatter.digitsOnly,
+                                                  FilteringTextInputFormatter
+                                                      .digitsOnly,
                                                 ],
                                               ),
-                                              SizedBox(width: 20),
-                                              FormButton(btnText: "Copy", callback: controller.handleCopyTap),
+                                              Spacer(flex: 2),
+                                              FormButton(
+                                                  btnText: "Copy",
+                                                  callback:
+                                                      controller.handleCopyTap),
                                             ],
                                           ),
                                         ],
@@ -568,7 +707,9 @@ class FillerMasterView extends GetView<FillerMasterController> {
                           for (var btn in btncontroller.buttons!) ...{
                             FormButtonWrapper(
                               btnText: btn["name"],
-                              callback: ((Utils.btnAccessHandler(btn['name'], controller.formPermissions!) == null))
+                              callback: ((Utils.btnAccessHandler(btn['name'],
+                                          controller.formPermissions!) ==
+                                      null))
                                   ? null
                                   : () => controller.formHandler(btn['name']),
                             )
