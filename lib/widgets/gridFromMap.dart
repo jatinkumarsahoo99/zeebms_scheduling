@@ -389,7 +389,7 @@ class DataGridFromMap extends StatelessWidget {
             rowColorCallback: colorCallback,
             onLoaded: (load) {
               load.stateManager
-                  .setColumnSizeConfig(PlutoGridColumnSizeConfig(autoSizeMode: PlutoAutoSizeMode.none, resizeMode: PlutoResizeMode.normal));
+                  .setColumnSizeConfig(PlutoGridColumnSizeConfig(autoSizeMode:  columnAutoResize?PlutoAutoSizeMode.none:PlutoAutoSizeMode.scale , resizeMode: PlutoResizeMode.normal));
               load.stateManager.setKeepFocus(false);
               if (onload != null) {
                 onload!(load);

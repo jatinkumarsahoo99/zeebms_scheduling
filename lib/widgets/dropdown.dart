@@ -1305,6 +1305,8 @@ class DropDownField {
     bool startFromLeft = true,
     int maxLength = 40,
     int miniumSearchLength = 2,
+    void Function()? suffixCallBack,
+    IconData suffixIconData = Icons.article,
   }) {
     final textColor = isEnable ? Colors.black : Colors.grey;
     final iconLineColor = isEnable ? Colors.deepPurpleAccent : Colors.grey;
@@ -1527,9 +1529,20 @@ class DropDownField {
                           ),
                         ),
                       )),
-                      Icon(
-                        Icons.arrow_drop_down,
-                        color: iconLineColor,
+                      
+                      Visibility(
+                        visible: suffixCallBack==null,
+                        replacement: GestureDetector(
+                          onTap: suffixCallBack,
+                          child: Icon(
+                            suffixIconData,
+                            color: iconLineColor,
+                          ),
+                        ),
+                        child: Icon(
+                          Icons.arrow_drop_down,
+                          color: iconLineColor,
+                        ),
                       )
                     ],
                   ),

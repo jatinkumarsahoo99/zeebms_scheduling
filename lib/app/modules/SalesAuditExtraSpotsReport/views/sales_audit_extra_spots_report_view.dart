@@ -10,7 +10,8 @@ import '../../../controller/HomeController.dart';
 import '../../../providers/Utils.dart';
 import '../controllers/sales_audit_extra_spots_report_controller.dart';
 
-class SalesAuditExtraSpotsReportView extends GetView<SalesAuditExtraSpotsReportController> {
+class SalesAuditExtraSpotsReportView
+    extends GetView<SalesAuditExtraSpotsReportController> {
   const SalesAuditExtraSpotsReportView({super.key});
 
   @override
@@ -22,76 +23,71 @@ class SalesAuditExtraSpotsReportView extends GetView<SalesAuditExtraSpotsReportC
         child: Padding(
           padding: const EdgeInsets.all(8),
           child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
             children: [
+              Wrap(
+                spacing: 10,
+                runSpacing: 10,
+                crossAxisAlignment: WrapCrossAlignment.end,
+                children: [
+                  Obx(() {
+                    return DropDownField.formDropDown1WidthMap(
+                      controller.locationList.value,
+                      controller.handleOnChangedLocation,
+                      "Location",
+                      .15,
+                      autoFocus: true,
+                      selected: controller.selectedLocation,
+                      inkWellFocusNode: controller.locationFn,
+                    );
+                  }),
+                  SizedBox(height: 20),
+                  Obx(() {
+                    return DropDownField.formDropDown1WidthMap(
+                      controller.channelList.value,
+                      (v) => controller.selectedChannel = v,
+                      "Channel",
+                      .15,
+                      selected: controller.selectedChannel,
+                    );
+                  }),
+                  SizedBox(height: 20),
+                  DateWithThreeTextField(
+                    title: "From Date",
+                    mainTextController: controller.fromDateIDCtr,
+                    widthRation: .15,
+                    endDate: DateTime.now(),
+                  ),
+                  DateWithThreeTextField(
+                    title: "To Date",
+                    mainTextController: controller.toDateCtr,
+                    widthRation: .15,
+                    startDate: DateTime.now(),
+                  ),
+                  FormButton(
+                    btnText: "Generate",
+                    callback: controller.generateData,
+                  )
+                ],
+              ),
+              const SizedBox(height: 10),
+
               Expanded(
-                child: Row(
-                  children: [
-                    Expanded(
-                        child: Column(
-                      // crossAxisAlignment: CrossAxisAlignment.center,
-                      // mainAxisAlignment: MainAxisAlignment.start,
-                      children: [
-                        Obx(() {
-                          return DropDownField.formDropDown1WidthMap(
-                            controller.locationList.value,
-                            controller.handleOnChangedLocation,
-                            "Location",
-                            .23,
-                            autoFocus: true,
-                            selected: controller.selectedLocation,
-                            inkWellFocusNode: controller.locationFn,
+                child: Obx(
+                  () {
+                    return controller.dataTBList.value.isEmpty
+                        ? Container(
+                            decoration: BoxDecoration(
+                                border: Border.all(color: Colors.grey)),
+                          )
+                        : DataGridFromMap(
+                            mapData: controller.dataTBList.value,
+                            formatDate: true,
+                            columnAutoResize: false,
+                            
+                            exportFileName: "Sales Audit (Extra Spots Report)",
                           );
-                        }),
-                        SizedBox(height: 20),
-                        Obx(() {
-                          return DropDownField.formDropDown1WidthMap(
-                            controller.channelList.value,
-                            (v) => controller.selectedChannel = v,
-                            "Channel",
-                            .23,
-                            selected: controller.selectedChannel,
-                          );
-                        }),
-                        SizedBox(height: 20),
-                        DateWithThreeTextField(
-                          title: "From Date",
-                          mainTextController: controller.fromDateIDCtr,
-                          widthRation: .225,
-                        ),
-                        SizedBox(height: 20),
-                        DateWithThreeTextField(
-                          title: "To Date",
-                          mainTextController: controller.toDateCtr,
-                          widthRation: .225,
-                        ),
-                        SizedBox(height: 30),
-                        SizedBox(
-                          width: context.width * .225,
-                          child: FormButton(
-                            btnText: "Generate",
-                            callback: controller.generateData,
-                          ),
-                        )
-                      ],
-                    )),
-                    SizedBox(width: 10),
-                    Expanded(
-                      flex: 3,
-                      child: Obx(
-                        () {
-                          return controller.dataTBList.value.isEmpty
-                              ? Container(
-                                  decoration: BoxDecoration(border: Border.all(color: Colors.grey)),
-                                )
-                              : DataGridFromMap(
-                                  mapData: controller.dataTBList.value,
-                                  formatDate: false,
-                                  exportFileName: "Sales Audit (Extra Spots Report)",
-                                );
-                        },
-                      ),
-                    ),
-                  ],
+                  },
                 ),
               ),
               const SizedBox(height: 10),
@@ -111,7 +107,9 @@ class SalesAuditExtraSpotsReportView extends GetView<SalesAuditExtraSpotsReportC
                             for (var btn in btncontroller.buttons!) ...{
                               FormButtonWrapper(
                                 btnText: btn["name"],
-                                callback: ((Utils.btnAccessHandler(btn['name'], controller.formPermissions!) == null))
+                                callback: ((Utils.btnAccessHandler(btn['name'],
+                                            controller.formPermissions!) ==
+                                        null))
                                     ? null
                                     : () => controller.formHandler(btn['name']),
                               )
