@@ -253,7 +253,6 @@ class SalesAuditNewView  extends StatelessWidget  {
                                             hideCode: false,
                                             formatDate: false,
                                             exportFileName: "Sales Audit New",
-                                            focusNode: controller.leftFocusNode,
                                             onRowDoubleTap: (PlutoGridOnRowDoubleTapEvent? val){
                                                   print(">>>>>>>>"+val!.rowIdx .toString());
                                                   controller.tapeBtn(val.rowIdx,controller.gridStateManagerRight!.currentRowIdx??0);
@@ -280,7 +279,7 @@ class SalesAuditNewView  extends StatelessWidget  {
 
                                             // checkRow: true,
                                             // checkRowKey: "no",
-                                            mode: PlutoGridMode.selectWithOneTap,
+                                            mode: PlutoGridMode.normal,
                                             onSelected: (PlutoGridOnSelectedEvent? val ){
                                                  // print("singlr click"+val!.row!.toJson().toString());
                                                  print("singlr click"+val!.rowIdx.toString());

@@ -205,7 +205,8 @@ class DataGridFromMap extends StatelessWidget {
               type: PlutoColumnType.text()));
         }
       }
-    } else {
+    }
+    else {
       for (var key in mapData[0].keys) {
         segColumn.add(PlutoColumn(
             titlePadding: EdgeInsets.only(),
