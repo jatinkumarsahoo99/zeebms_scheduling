@@ -70,7 +70,7 @@ class CommercialMasterController extends GetxController {
   // TextEditingController tapeIdNewController = TextEditingController();
 
   TextEditingController segController = TextEditingController();
-  TextEditingController txNoController = TextEditingController();
+  TextEditingController txNoController = TextEditingController(text: "AUTO");
   TextEditingController agencyIdController = TextEditingController();
   TextEditingController productNameController = TextEditingController();
   TextEditingController agencyNameController = TextEditingController();
@@ -80,7 +80,7 @@ class CommercialMasterController extends GetxController {
   TextEditingController dispatchDateController = TextEditingController();
 
   Rx<TextEditingController> duration = TextEditingController().obs;
-  Rx<TextEditingController> tapeIdController = TextEditingController().obs;
+  Rx<TextEditingController> tapeIdController = TextEditingController(text: "AUTO").obs;
 
   List<Annotations> eventList = [];
   String? commercialCode = '0';
@@ -91,6 +91,15 @@ class CommercialMasterController extends GetxController {
   FocusNode clockIdFocus = FocusNode();
   FocusNode txNoFocus = FocusNode();
   FocusNode segNoFocus = FocusNode();
+  FocusNode languageFocus = FocusNode();
+  FocusNode revenueFocus = FocusNode();
+  FocusNode secTypeFocus = FocusNode();
+  FocusNode tapeTypeFocus = FocusNode();
+  FocusNode censhorShipFocus = FocusNode();
+  FocusNode clientFocus = FocusNode();
+  FocusNode brandFocus = FocusNode();
+  FocusNode agencyFocus = FocusNode();
+  FocusNode eventFocus = FocusNode();
 
   // bool segEnable = true;
   bool isListenerActive = false;
@@ -118,13 +127,12 @@ class CommercialMasterController extends GetxController {
     });
     tapeIdFocus.addListener(() {
       if (isListenerActive && !tapeIdFocus.hasFocus) {
-        if (segController.text == null || segController.text == "") {
-          // validateTxNo(tapeIdController.value.text + "-" + "1" , "", "");
+
+        if(tapeIdController.value.text != null && tapeIdController.value.text != ""){
+          fetchCommercialTapeMasterData("",tapeIdController.value.text,int.parse((segController.text)??"0"),"");
           validateTxNo("" ,tapeIdController.value.text,segController.text);
-        } else {
-          // validateTxNo(tapeIdController.value.text + "-" + segController.text, "", "");
-          validateTxNo("",tapeIdController.value.text,segController.text);
         }
+        isListenerActive = false;
       }
       if(tapeIdFocus.hasFocus){
         isListenerActive=true;
@@ -138,7 +146,7 @@ class CommercialMasterController extends GetxController {
       }
     });
     clockIdFocus.addListener(() {
-      if (isListenerActive && !clockIdFocus.hasFocus) {
+      if (isListenerActive && !(clockIdFocus.hasFocus)) {
         if(clockIdController.text != "" && clockIdController.text != null){
           fetchCommercialTapeMasterData(
               "",
@@ -152,7 +160,7 @@ class CommercialMasterController extends GetxController {
       }
     });
     segNoFocus.addListener(() {
-      if (isListenerActive && !segNoFocus.hasFocus) {
+      if (isListenerActive && (segNoFocus.hasFocus == false)) {
         print("listener call");
         validateTxNo1("",tapeIdController.value.text, segController.text);
       }
@@ -231,6 +239,11 @@ class CommercialMasterController extends GetxController {
   }
 
   bool contin = true;
+  closeDialogIfOpen() {
+    if (Get.isDialogOpen ?? false) {
+      Get.back();
+    }
+  }
 
   saveData() {
     if (captionController.text == "" || captionController.text == null) {
@@ -275,8 +288,7 @@ class CommercialMasterController extends GetxController {
     }
      else if (selectedBrandType == null) {
       Snack.callError("Please select brand");
-    } else if (agencyIdController.text == null ||
-        agencyIdController.text == "") {
+    } else if (selectedAgencyDetails == null) {
       Snack.callError("Please select Agency.");
     }else if((commercialCode != "0" && commercialCode != "") && contin ){
 
@@ -317,10 +329,10 @@ class CommercialMasterController extends GetxController {
           new CommercialTapeMasterPostData(
               commercialCaption: captionController.text,
               exportTapeCaption: txCaptionController.text,
-              agencyCode: selectedAgencyDetails!.key,
+              agencyCode: selectedAgencyDetails?.key??"",
               agencytapeid: agencyIdController.text,
-              brandCode: selectedBrandType!.key,
-              censorshipCode: selectedCensorShipType!.key,
+              brandCode: selectedBrandType?.key??"",
+              censorshipCode: selectedCensorShipType?.key??"",
               clockid: clockIdController.text,
               commercialCode: commercialCode ?? "0",
               eom: eomController.text,
@@ -332,13 +344,13 @@ class CommercialMasterController extends GetxController {
                   DateFormat("dd-MM-yyyy").parse(dispatchDateController.text)),
               killDate: DateFormat('M/d/yyyy hh:mm:ss a').format(
                   DateFormat("dd-MM-yyyy").parse(endDateController.text)),
-              eventsubtype: selectedSecType!.key ?? "",
-              eventtypecode: selectedRevenueType!.key ?? "",
+              eventsubtype: selectedSecType?.key ?? "",
+              eventtypecode: selectedRevenueType?.key ?? "",
               houseID: txNoController.text,
               segmentNumber: segController.text,
-              languagecode: selectedLanguage!.key,
+              languagecode: selectedLanguage?.key??"",
               exportTapeCode: tapeIdController.value.text,
-              tapeTypeCode: selectedTapeType!.key ?? "",
+              tapeTypeCode: selectedTapeType?.key ?? "",
               annotations: eventList,
               recievedOn:
                   DateFormat('M/d/yyyy hh:mm:ss a').format(DateTime.now()));
@@ -639,6 +651,7 @@ class CommercialMasterController extends GetxController {
   }
 
   validateTxNo(String houseId,String exportTapeCode,String segNumber) {
+    isListenerActive =false;
     Map<String, dynamic> postData = {
       "exportTapeCode": exportTapeCode ?? "",
       "segmentNumber": segNumber ?? "",
@@ -663,12 +676,10 @@ class CommercialMasterController extends GetxController {
                 txNoController.text =
                     tapeIdController.value.text + "-" + segController.text;
                 isListenerActive =false;
-                update(['updateLeft']);
               } else {
                 txNoController.text =
                     tapeIdController.value.text + "-" + segController.text;
                 isListenerActive =false;
-                update(['updateLeft']);
               }
             }
           } else {
@@ -677,13 +688,14 @@ class CommercialMasterController extends GetxController {
         });
   }
   validateTxNo1(String houseId,String exportTapeCode,String segNumber) {
+
     Map<String, dynamic> postData = {
       "exportTapeCode": exportTapeCode ?? "",
       "segmentNumber": segNumber ?? "",
       "commercialCode": commercialCode ?? "0",
       "houseid": houseId ?? ""
     };
-    // isListenerActive =true;
+    isListenerActive =false;
     print(">>>>"+postData.toString());
     Get.find<ConnectorControl>().POSTMETHOD(
         api: ApiFactory.COMMERCIAL_MASTER_VALIDATE_TXNO,
@@ -709,7 +721,6 @@ class CommercialMasterController extends GetxController {
                     int.parse((segController.text != null && segController.text != "")
                         ? segController.text
                         : "0"), "");
-                update(['updateLeft']);
               } else {
                 txNoController.text =
                     tapeIdController.value.text + "-" + segController.text;
@@ -721,7 +732,6 @@ class CommercialMasterController extends GetxController {
                     int.parse((segController.text != null && segController.text != "")
                         ? segController.text
                         : "0"), "");
-                update(['updateLeft']);
               }
             }
           }
@@ -761,6 +771,7 @@ class CommercialMasterController extends GetxController {
   fetchCommercialTapeMasterData(
       String caption, String tapeCode, int segNumber, String clockId) {
     LoadingDialog.call();
+    isListenerActive =false;
     // isListenerActive = true;
     Map<String, dynamic> postData = {
       "commercialCode": "0",

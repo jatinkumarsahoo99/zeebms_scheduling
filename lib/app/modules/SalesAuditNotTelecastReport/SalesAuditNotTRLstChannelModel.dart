@@ -18,108 +18,25 @@ class SalesAuditNotTRLstChannelModel {
   }
 }
 
-class Lsterror {
-  String? channel;
-  String? location;
-  String? tOnumber;
-  double? bookingdetailcode;
-  String? client;
-  String? agency;
-  String? brand;
-  String? schDate;
-  String? schTime;
-  String? sendtolog;
-  String? program;
-  String? tapeID;
-  double? dur;
-  double? amount;
-  String? bKstatus;
-  String? isRos;
-  String? remark;
-  String? reveuve;
 
-  Lsterror(
-      {this.channel,
-        this.location,
-        this.tOnumber,
-        this.bookingdetailcode,
-        this.client,
-        this.agency,
-        this.brand,
-        this.schDate,
-        this.schTime,
-        this.sendtolog,
-        this.program,
-        this.tapeID,
-        this.dur,
-        this.amount,
-        this.bKstatus,
-        this.isRos,
-        this.remark,
-        this.reveuve});
-
-  Lsterror.fromJson(Map<String, dynamic> json) {
-    channel = json['channel'];
-    location = json['location'];
-    tOnumber = json['tOnumber'];
-    bookingdetailcode = json['bookingdetailcode'];
-    client = json['client'];
-    agency = json['agency'];
-    brand = json['brand'];
-    schDate = json['schDate'];
-    schTime = json['schTime'];
-    sendtolog = json['sendtolog'];
-    program = json['program'];
-    tapeID = json['tapeID'];
-    dur = json['dur'];
-    amount = json['amount'];
-    bKstatus = json['bKstatus'];
-    isRos = json['isRos'];
-    remark = json['remark'];
-    reveuve = json['reveuve'];
-  }
-
-  Map<String, dynamic> toJson() {
-    final Map<String, dynamic> data = new Map<String, dynamic>();
-    data['channel'] = this.channel;
-    data['location'] = this.location;
-    data['tOnumber'] = this.tOnumber;
-    data['bookingdetailcode'] = this.bookingdetailcode;
-    data['client'] = this.client;
-    data['agency'] = this.agency;
-    data['brand'] = this.brand;
-    data['schDate'] = this.schDate;
-    data['schTime'] = this.schTime;
-    data['sendtolog'] = this.sendtolog;
-    data['program'] = this.program;
-    data['tapeID'] = this.tapeID;
-    data['dur'] = this.dur;
-    data['amount'] = this.amount;
-    data['bKstatus'] = this.bKstatus;
-    data['isRos'] = this.isRos;
-    data['remark'] = this.remark;
-    data['reveuve'] = this.reveuve;
-    return data;
-  }
-}
 
 class Generate {
-  List<Lstnottel>? lstnottel;
-  List<Lstnottel>? lsterror;
+  List<LstnottelModel>? lstnottel;
+  List<LsterrorModel>? lsterror;
 
   Generate({this.lstnottel, this.lsterror});
 
   Generate.fromJson(Map<String, dynamic> json) {
     if (json['lstnottel'] != null) {
-      lstnottel = <Lstnottel>[];
+      lstnottel = <LstnottelModel>[];
       json['lstnottel'].forEach((v) {
-        lstnottel!.add(new Lstnottel.fromJson(v));
+        lstnottel!.add(new LstnottelModel.fromJson(v));
       });
     }
     if (json['lsterror'] != null) {
-      lsterror = <Lstnottel>[];
+      lsterror = <LsterrorModel>[];
       json['lsterror'].forEach((v) {
-        lsterror!.add(new Lstnottel.fromJson(v));
+        lsterror!.add(new LsterrorModel.fromJson(v));
       });
     }
   }
@@ -136,11 +53,14 @@ class Generate {
   }
 }
 
-class Lstnottel {
+
+
+
+class LstnottelModel {
   String? channel;
   String? location;
   String? tOnumber;
-  double? bookingdetailcode;
+  String? bookingdetailcode;
   String? client;
   String? agency;
   String? brand;
@@ -149,14 +69,14 @@ class Lstnottel {
   String? sendtolog;
   String? program;
   String? tapeID;
-  double? dur;
-  double? amount;
+  String? dur;
+  String? amount;
   String? bKstatus;
   String? isRos;
   String? remark;
   String? reveuve;
 
-  Lstnottel(
+  LstnottelModel(
       {this.channel,
         this.location,
         this.tOnumber,
@@ -176,11 +96,11 @@ class Lstnottel {
         this.remark,
         this.reveuve});
 
-  Lstnottel.fromJson(Map<String, dynamic> json) {
+  LstnottelModel.fromJson(Map<String, dynamic> json) {
     channel = json['channel'];
     location = json['location'];
     tOnumber = json['tOnumber'];
-    bookingdetailcode = json['bookingdetailcode'];
+    bookingdetailcode = (json['bookingdetailcode']??"").toString();
     client = json['client'];
     agency = json['agency'];
     brand = json['brand'];
@@ -189,8 +109,8 @@ class Lstnottel {
     sendtolog = json['sendtolog'];
     program = json['program'];
     tapeID = json['tapeID'];
-    dur = json['dur'];
-    amount = json['amount'];
+    dur = (json['dur']??"").toString();
+    amount = (json['amount']??"").toString();
     bKstatus = json['bKstatus'];
     isRos = json['isRos'];
     remark = json['remark'];
@@ -217,6 +137,99 @@ class Lstnottel {
     data['isRos'] = this.isRos;
     data['remark'] = this.remark;
     data['reveuve'] = this.reveuve;
+    return data;
+  }
+}
+
+class LsterrorModel {
+  String? channel;
+  String? location;
+  String? tOnumber;
+  String? bookingDetailCode;
+  String? client;
+  String? agency;
+  String? brand;
+  String? schDate;
+  String? schTime;
+  String? sendtolog;
+  String? program;
+  String? tapeID;
+  String? dur;
+  String? amount;
+  String? bKstatus;
+  String? ros;
+  String? remark;
+  String? revenue;
+  String? valuationAmount;
+  String? timeBand;
+
+  LsterrorModel(
+      {this.channel,
+        this.location,
+        this.tOnumber,
+        this.bookingDetailCode,
+        this.client,
+        this.agency,
+        this.brand,
+        this.schDate,
+        this.schTime,
+        this.sendtolog,
+        this.program,
+        this.tapeID,
+        this.dur,
+        this.amount,
+        this.bKstatus,
+        this.ros,
+        this.remark,
+        this.revenue,
+        this.valuationAmount,
+        this.timeBand});
+
+  LsterrorModel.fromJson(Map<String, dynamic> json) {
+    channel = json['channel'];
+    location = json['location'];
+    tOnumber = json['tOnumber'];
+    bookingDetailCode = (json['bookingDetailCode']??"").toString();
+    client = json['client'];
+    agency = json['agency'];
+    brand = json['brand'];
+    schDate = json['schDate'];
+    schTime = json['schTime'];
+    sendtolog = json['sendtolog'];
+    program = json['program'];
+    tapeID = json['tapeID'];
+    dur = (json['dur']??"").toString();
+    amount =( json['amount']??"").toString();
+    bKstatus = json['bKstatus'];
+    ros = json['ros'];
+    remark = json['remark'];
+    revenue = json['revenue'];
+    valuationAmount = (json['valuationAmount']??"").toString();
+    timeBand = json['timeBand'];
+  }
+
+  Map<String, dynamic> toJson() {
+    final Map<String, dynamic> data = new Map<String, dynamic>();
+    data['channel'] = this.channel;
+    data['location'] = this.location;
+    data['tOnumber'] = this.tOnumber;
+    data['bookingDetailCode'] = this.bookingDetailCode;
+    data['client'] = this.client;
+    data['agency'] = this.agency;
+    data['brand'] = this.brand;
+    data['schDate'] = this.schDate;
+    data['schTime'] = this.schTime;
+    data['sendtolog'] = this.sendtolog;
+    data['program'] = this.program;
+    data['tapeID'] = this.tapeID;
+    data['dur'] = this.dur;
+    data['amount'] = this.amount;
+    data['bKstatus'] = this.bKstatus;
+    data['ros'] = this.ros;
+    data['remark'] = this.remark;
+    data['revenue'] = this.revenue;
+    data['valuationAmount'] = this.valuationAmount;
+    data['timeBand'] = this.timeBand;
     return data;
   }
 }
