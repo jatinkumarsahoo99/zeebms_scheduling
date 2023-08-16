@@ -462,6 +462,9 @@ class CommercialMasterView extends StatelessWidget {
                                               autoFocus: false,
                                               selected: controllerX
                                                   .selectedBrandType)),
+
+
+
                                           InputFields.formField1(
                                             hintTxt: "Product Name",
                                             controller: controllerX
