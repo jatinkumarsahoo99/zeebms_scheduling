@@ -181,7 +181,7 @@ class CommercialMasterView extends StatelessWidget {
                                                   controller: controllerX
                                                       .tapeIdController.value,
                                                   width: 0.17,
-                                                  isEnable: controllerX.isEnable,
+                                                  isEnable: controllerX.isEnableSelective,
                                                   autoFocus: false,
                                                   focusNode: controllerX.tapeIdFocus,
                                                 ),
@@ -257,7 +257,7 @@ class CommercialMasterView extends StatelessWidget {
                                                   controller:
                                                   controllerX.txNoController,
                                                   width: 0.17,
-                                                  isEnable: controllerX.isEnable,
+                                                  isEnable: controllerX.isEnableSelective,
                                                   autoFocus: false,
                                                   focusNode: controllerX.txNoFocus,
                                                   onchanged: (val) {
@@ -433,6 +433,7 @@ class CommercialMasterView extends StatelessWidget {
                                                         value;
                                                     controllerX.getAgencyBrandType(
                                                         value.key ?? "");
+                                                    controllerX.clientController.text = value.value??"" ;
                                                   }, "Client", .365,
                                                   isEnable: controllerX.isEnable,
                                                   autoFocus: false,
@@ -471,7 +472,7 @@ class CommercialMasterView extends StatelessWidget {
                                                 .productNameController,
                                             width: 0.365,
                                             autoFocus: false,
-                                            isEnable: controllerX.isEnable,
+                                            isEnable: false,
                                           ),
 
 
@@ -551,6 +552,8 @@ class CommercialMasterView extends StatelessWidget {
                                                   controllerX
                                                       .selectedAgencyDetails =
                                                       value;
+                                                  controllerX
+                                                      .agencyNameController.text = value.value??"";
                                                 }, "Agency", .365,
                                                     inkWellFocusNode: controllerX.agencyFocus,
                                                     isEnable:
@@ -665,7 +668,7 @@ class CommercialMasterView extends StatelessWidget {
                                               parseKeyForValue: 'eventname',
                                               selectedValue:
                                                   controllerX.selectedEvent,
-                                              autoFocus: false,
+                                              autoFocus: true,
                                               // maxLength: 1
                                             );
                                           },

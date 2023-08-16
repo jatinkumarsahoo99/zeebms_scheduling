@@ -156,23 +156,30 @@ class CommercialTapeMasterData {
 }
 
 class LstAnnotation {
-  String? tcIn;
-  String? tcOut;
-  String? eventName;
+  String? rowno;
+  String? eventId;
+  String? eventname;
+  String? tCin;
+  String? tCout;
 
-  LstAnnotation({this.tcIn, this.tcOut, this.eventName});
+  LstAnnotation(
+      {this.rowno, this.eventId, this.eventname, this.tCin, this.tCout});
 
   LstAnnotation.fromJson(Map<String, dynamic> json) {
-    tcIn = json['tcIn'];
-    tcOut = json['tcOut'];
-    eventName = json['eventName'];
+    rowno = (json['rowno']??"").toString();
+    eventId = (json['eventId']??"").toString();
+    eventname = json['eventname'];
+    tCin = json['tCin'];
+    tCout = json['tCout'];
   }
 
   Map<String, dynamic> toJson() {
     final Map<String, dynamic> data = new Map<String, dynamic>();
-    data['tcIn'] = this.tcIn;
-    data['tcOut'] = this.tcOut;
-    data['eventName'] = this.eventName;
+    data['rowno'] = this.rowno;
+    data['eventId'] = this.eventId;
+    data['eventname'] = this.eventname;
+    data['tCin'] = this.tCin;
+    data['tCout'] = this.tCout;
     return data;
   }
 }
