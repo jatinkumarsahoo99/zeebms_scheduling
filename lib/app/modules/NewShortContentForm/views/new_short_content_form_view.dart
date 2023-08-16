@@ -13,8 +13,7 @@ import '../controllers/new_short_content_form_controller.dart';
 
 class NewShortContentFormView extends StatelessWidget {
   NewShortContentFormView({Key? key}) : super(key: key);
-  final controller =
-      Get.put<NewShortContentFormController>(NewShortContentFormController());
+  final controller = Get.put<NewShortContentFormController>(NewShortContentFormController());
   @override
   Widget build(BuildContext context) {
     return Center(
@@ -42,46 +41,29 @@ class NewShortContentFormView extends StatelessWidget {
                       controller.locations.value,
                       (value) {
                         controller.getChannel(value.key);
-                        controller.selectedLocation = value;
+                        controller.selectedLocation.value = value;
                       },
                       "Location",
                       .24,
+                      selected: controller.selectedLocation.value,
                       autoFocus: true,
                     ),
                   ),
                   Obx(
-                    () => DropDownField.formDropDown1WidthMap(
-                      controller.channels.value,
-                      (value) {
-                        controller.selectedChannel = value;
-                      },
-                      "Channel",
-                      .24,
-                      autoFocus: true,
-                    ),
+                    () => DropDownField.formDropDown1WidthMap(controller.channels.value, (value) {
+                      controller.selectedChannel.value = value;
+                    }, "Channel", .24, autoFocus: true, selected: controller.selectedChannel.value),
                   ),
                   Obx(
-                    () => DropDownField.formDropDown1WidthMap(
-                      controller.types.value,
-                      (value) {
-                        controller.selectedType = value;
-                        controller.typeleave(value.key);
-                      },
-                      "Type",
-                      .24,
-                      autoFocus: true,
-                    ),
+                    () => DropDownField.formDropDown1WidthMap(controller.types.value, (value) {
+                      controller.selectedType.value = value;
+                      controller.typeleave(value.key);
+                    }, "Type", .24, autoFocus: true, selected: controller.selectedType.value),
                   ),
                   Obx(
-                    () => DropDownField.formDropDown1WidthMap(
-                      controller.categeroies.value,
-                      (value) {
-                        controller.selectedCategory = value;
-                      },
-                      "Category",
-                      .24,
-                      autoFocus: true,
-                    ),
+                    () => DropDownField.formDropDown1WidthMap(controller.categeroies.value, (value) {
+                      controller.selectedCategory.value = value;
+                    }, "Category", .24, autoFocus: true, selected: controller.selectedCategory.value),
                   ),
                   InputFields.formField1(
                     hintTxt: "Caption",
@@ -97,11 +79,11 @@ class NewShortContentFormView extends StatelessWidget {
                     () => DropDownField.formDropDown1WidthMap(
                       controller.tapes.value,
                       (value) {
-                        controller.selectedTape = value;
+                        controller.selectedTape.value = value;
                       },
                       "Tape",
                       .155,
-                      selected: controller.selectedTape,
+                      selected: controller.selectedTape.value,
                       autoFocus: true,
                     ),
                   ),
@@ -109,11 +91,11 @@ class NewShortContentFormView extends StatelessWidget {
                     () => DropDownField.formDropDown1WidthMap(
                       controller.orgRepeats.value,
                       (value) {
-                        controller.selectedOrgRep = value;
+                        controller.selectedOrgRep.value = value;
                       },
                       "Org / Repeat",
                       .155,
-                      selected: controller.selectedOrgRep,
+                      selected: controller.selectedOrgRep.value,
                       autoFocus: true,
                     ),
                   ),
@@ -128,42 +110,30 @@ class NewShortContentFormView extends StatelessWidget {
                     focusNode: controller.houseFocusNode,
                     width: 0.155,
                   ),
-                  DropDownField.formDropDownSearchAPI2(
-                    GlobalKey(),
-                    context,
-                    title: "Program",
-                    parseKeyForKey: "ProgramCode",
-                    parseKeyForValue: "ProgramName",
-                    url: ApiFactory.NEW_SHORT_CONTENT_Program_Search,
-                    onchanged: (value) {
-                      controller.selectedProgram = value;
-                    },
-                    selectedValue: controller.selectedProgram,
-                    width: Get.width * 0.325,
+                  Obx(
+                    () => DropDownField.formDropDownSearchAPI2(
+                      GlobalKey(),
+                      context,
+                      title: "Program",
+                      parseKeyForKey: "ProgramCode",
+                      parseKeyForValue: "ProgramName",
+                      url: ApiFactory.NEW_SHORT_CONTENT_Program_Search,
+                      onchanged: (value) {
+                        controller.selectedProgram.value = value;
+                      },
+                      selectedValue: controller.selectedProgram.value,
+                      width: Get.width * 0.325,
+                    ),
                   ),
                   // InputFields.formField1(
                   //   hintTxt: "Program",
                   //   controller: TextEditingController(),
                   //   width: 0.325,
                   // ),
+                  InputFields.formFieldNumberMask(hintTxt: "SOM", widthRatio: .155, controller: controller.som, paddingLeft: 0, isTime: true),
+                  InputFields.formFieldNumberMask(hintTxt: "EOM", widthRatio: .155, controller: controller.eom, isTime: true, paddingLeft: 0),
                   InputFields.formFieldNumberMask(
-                      hintTxt: "SOM",
-                      widthRatio: .155,
-                      controller: controller.som,
-                      paddingLeft: 0,
-                      isTime: true),
-                  InputFields.formFieldNumberMask(
-                      hintTxt: "EOM",
-                      widthRatio: .155,
-                      controller: controller.eom,
-                      isTime: true,
-                      paddingLeft: 0),
-                  InputFields.formFieldNumberMask(
-                      hintTxt: "Duration",
-                      widthRatio: .16,
-                      isTime: true,
-                      controller: controller.duration,
-                      paddingLeft: 0),
+                      hintTxt: "Duration", widthRatio: .16, isTime: true, controller: controller.duration, paddingLeft: 0),
                   DateWithThreeTextField(
                     title: "Start Date",
                     mainTextController: controller.startData,
