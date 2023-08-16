@@ -1037,6 +1037,8 @@ class ApiFactory {
       "$BASE_URL/api/PromoTypeMaster/GetRetrieveRecord?PromoTypeCode=$promoCode&PromoTypeName=$promoName";
   static String PROMO_TYPE_MASTER_SAVE =
       "$BASE_URL/api/PromoTypeMaster/PostValidateAndSaveRecord";
+  static String get PROMO_TYPE_MASTER_GET_CATEGORY =>
+      "$BASE_URL/api/PromoTypeMaster/GetPromoCategory";
 
   //////////////////////////////// ASRUN IMPORT /////////////////////////////////
   static String AsrunImport_GetLoadLocation =

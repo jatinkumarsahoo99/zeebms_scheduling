@@ -3,11 +3,13 @@ import 'package:bms_scheduling/app/modules/CommonSearch/views/common_search_view
 import 'package:bms_scheduling/app/providers/Const.dart';
 import 'package:bms_scheduling/app/providers/SizeDefine.dart';
 import 'package:bms_scheduling/widgets/FormButton.dart';
+import 'package:bms_scheduling/widgets/dropdown.dart';
 import 'package:bms_scheduling/widgets/input_fields.dart';
 import 'package:flutter/material.dart';
 
 import 'package:get/get.dart';
 
+import '../../../../widgets/CheckBoxWidget.dart';
 import '../controllers/promo_type_master_controller.dart';
 
 class PromoTypeMasterView extends StatelessWidget {
@@ -33,8 +35,40 @@ class PromoTypeMasterView extends StatelessWidget {
                             backgroundColor: Colors.deepPurple,
                           ),
                           SizedBox(height: 20),
+                          SizedBox(
+                            width: context.width * .48,
+                            child: Row(
+                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                              crossAxisAlignment: CrossAxisAlignment.end,
+                              children: [
+                                Obx(() {
+                                  return DropDownField.formDropDown1WidthMap(
+                                    controller.promoCategories.value,
+                                    (val) {
+                                      controller.selectedCategory = val;
+                                    },
+                                    'Promo Category Name',
+                                    .35,
+                                    autoFocus: true,
+                                    inkWellFocusNode: controller.categoryFN,
+                                  );
+                                }),
+                                Obx(() {
+                                    return CheckBoxWidget1(
+                                      title: "Is Active",
+                                      value: controller.isActive.value,
+                                      onChanged: (val) {
+                                        controller.isActive.value = val??false;
+                                      },
+                                    );
+                                  }
+                                ),
+                              ],
+                            ),
+                          ),
+                          SizedBox(height: 20),
                           InputFields.formField1(
-                            hintTxt: "Program Name",
+                            hintTxt: "Promo Type Name",
                             controller: controller.promTypeNameCtrl,
                             focusNode: controller.promoFocusNode,
                             width: 0.48,
