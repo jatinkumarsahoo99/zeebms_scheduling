@@ -72,7 +72,7 @@ class CommercialMasterView extends StatelessWidget {
                                           isEnable: controllerX.isEnable,
                                         ),
                                         SizedBox(
-                                          width: MediaQuery.of(context).size.width*0.371,
+                                          width: MediaQuery.of(context).size.width*0.365,
                                           child: Row(
                                             mainAxisAlignment:
                                             MainAxisAlignment.spaceBetween,
@@ -83,7 +83,7 @@ class CommercialMasterView extends StatelessWidget {
                                                 controllerX.txCaptionController,
                                                 width: 0.17,
                                                 capital: true,
-                                                autoFocus: true,
+                                                autoFocus: false,
                                                 isEnable: controllerX.isEnable,
                                                 prefixText: "C/",
                                               ),
@@ -96,7 +96,7 @@ class CommercialMasterView extends StatelessWidget {
                                                       },
                                                       "Langauge",
                                                       .17,
-                                                      autoFocus: true,
+                                                      autoFocus: false,
                                                       isEnable: controllerX.isEnable,
                                                       selected:
                                                       controllerX.selectedLanguage,
@@ -125,7 +125,7 @@ class CommercialMasterView extends StatelessWidget {
                                                       ?.key ??
                                                   "");
                                             }, "Revenue Type", .17,
-                                                autoFocus: true,
+                                                autoFocus: false,
                                                 isEnable: controllerX.isEnable,
                                                 selected: controllerX
                                                     .selectedRevenueType,
@@ -134,7 +134,7 @@ class CommercialMasterView extends StatelessWidget {
                                                 )),
 
                                         SizedBox(
-                                          width: MediaQuery.of(context).size.width*0.371,
+                                          width: MediaQuery.of(context).size.width*0.365,
                                           child: Row(
                                             mainAxisAlignment:
                                             MainAxisAlignment.spaceBetween,
@@ -154,7 +154,7 @@ class CommercialMasterView extends StatelessWidget {
                                                       .17,
                                                       selected:
                                                       controllerX.selectedSecType,
-                                                      autoFocus: true,
+                                                      autoFocus: false,
                                                       inkWellFocusNode: controllerX.secTypeFocus
                                                   )),
                                               RawKeyboardListener(
@@ -182,7 +182,7 @@ class CommercialMasterView extends StatelessWidget {
                                                       .tapeIdController.value,
                                                   width: 0.17,
                                                   isEnable: controllerX.isEnable,
-                                                  autoFocus: true,
+                                                  autoFocus: false,
                                                   focusNode: controllerX.tapeIdFocus,
                                                 ),
                                               )
@@ -247,7 +247,7 @@ class CommercialMasterView extends StatelessWidget {
                                         )),
 
                                         SizedBox(
-                                          width: MediaQuery.of(context).size.width*0.371,
+                                          width: MediaQuery.of(context).size.width*0.365,
                                           child: Row(
                                             mainAxisAlignment:
                                             MainAxisAlignment.spaceBetween,
@@ -258,7 +258,7 @@ class CommercialMasterView extends StatelessWidget {
                                                   controllerX.txNoController,
                                                   width: 0.17,
                                                   isEnable: controllerX.isEnable,
-                                                  autoFocus: true,
+                                                  autoFocus: false,
                                                   focusNode: controllerX.txNoFocus,
                                                   onchanged: (val) {
                                                     controllerX.validateTxNo(
@@ -270,7 +270,7 @@ class CommercialMasterView extends StatelessWidget {
                                                 controllerX.agencyIdController,
                                                 width: 0.17,
                                                 isEnable: controllerX.isEnable,
-                                                autoFocus: true,
+                                                autoFocus: false,
                                               ),
                                             ],
                                           ),
@@ -293,11 +293,11 @@ class CommercialMasterView extends StatelessWidget {
                                             }, "Tape Type", .17,
                                                 inkWellFocusNode: controllerX.tapeTypeFocus,
                                                 isEnable: controllerX.isEnable,
-                                                autoFocus: true,
+                                                autoFocus: false,
                                                 selected: controllerX
                                                     .selectedTapeType)),
                                         SizedBox(
-                                          width: MediaQuery.of(context).size.width*0.371,
+                                          width: MediaQuery.of(context).size.width*0.365,
                                           child: Obx(() =>
                                               DropDownField.formDropDown1WidthMap(
                                                   controllerX.censorShipType
@@ -305,9 +305,9 @@ class CommercialMasterView extends StatelessWidget {
                                                 controllerX
                                                     .selectedCensorShipType =
                                                     value;
-                                              }, "Censhorship", .371,
+                                              }, "Censhorship", .365,
                                                   isEnable: controllerX.isEnable,
-                                                  autoFocus: true,
+                                                  autoFocus: false,
                                                   inkWellFocusNode: controllerX.censhorShipFocus,
                                                   selected: controllerX
                                                       .selectedCensorShipType)),
@@ -346,7 +346,7 @@ class CommercialMasterView extends StatelessWidget {
 
 
                                         SizedBox(
-                                          width: MediaQuery.of(context).size.width*0.371,
+                                          width: MediaQuery.of(context).size.width*0.365,
                                           child: Row(
                                             mainAxisAlignment:
                                             MainAxisAlignment.spaceBetween,
@@ -423,7 +423,7 @@ class CommercialMasterView extends StatelessWidget {
                                         url: ApiFactory.COMMERCIAL_MASTER_GETAGENCYBRAND,
                                       ),*/
                                         SizedBox(
-                                          width: MediaQuery.of(context).size.width*0.371,
+                                          width: MediaQuery.of(context).size.width*0.365,
                                           child:    Obx(() =>
                                               DropDownField.formDropDown1WidthMap(
                                                   controllerX.clientDetails.value,
@@ -433,9 +433,9 @@ class CommercialMasterView extends StatelessWidget {
                                                         value;
                                                     controllerX.getAgencyBrandType(
                                                         value.key ?? "");
-                                                  }, "Client", .371,
+                                                  }, "Client", .365,
                                                   isEnable: controllerX.isEnable,
-                                                  autoFocus: true,
+                                                  autoFocus: false,
                                                   inkWellFocusNode: controllerX.clientFocus,
                                                   selected: controllerX
                                                       .selectedClientDetails)),
@@ -449,27 +449,29 @@ class CommercialMasterView extends StatelessWidget {
                                             MainAxisAlignment.spaceBetween,
                                         children: [
                                           Obx(() => DropDownField
-                                                  .formDropDown1WidthMap(
-                                                      controllerX.brandType
-                                                          .value, (value) {
-                                                controllerX.selectedBrandType =
-                                                    value;
-                                                controllerX.getLevelDetails(
-                                                    value.key ?? "");
-                                              }, "Brand", .371,
-                                                      isEnable:
-                                                          controllerX.isEnable,
-                                                      autoFocus: true,
-                                                      selected: controllerX
-                                                          .selectedBrandType)),
+                                              .formDropDown1WidthMap(
+                                              controllerX.brandType
+                                                  .value, (value) {
+                                            controllerX.selectedBrandType =
+                                                value;
+                                            controllerX.getLevelDetails(
+                                                value.key ?? "");
+                                          }, "Brand", .17,
+                                              isEnable:
+                                              controllerX.isEnable,
+                                              autoFocus: false,
+                                              selected: controllerX
+                                                  .selectedBrandType)),
                                           InputFields.formField1(
                                             hintTxt: "Product Name",
                                             controller: controllerX
                                                 .productNameController,
-                                            width: 0.17,
-                                            autoFocus: true,
+                                            width: 0.365,
+                                            autoFocus: false,
                                             isEnable: controllerX.isEnable,
                                           ),
+
+
                                         ]),
                                     SizedBox(height: 4),
                                     GetBuilder<CommercialMasterController>(
@@ -479,42 +481,42 @@ class CommercialMasterView extends StatelessWidget {
                                             mainAxisAlignment:
                                                 MainAxisAlignment.spaceBetween,
                                             children: [
-
+                                              InputFields.formField1(
+                                                hintTxt: "Level 1",
+                                                controller: controllerX
+                                                    .level1Controller,
+                                                width: 0.17,
+                                                autoFocus: false,
+                                                isEnable: false,
+                                              ),
 
                                               SizedBox(
-                                                width: MediaQuery.of(context).size.width*0.371,
+                                                width: MediaQuery.of(context).size.width*0.365,
                                                 child: Row(
                                                   mainAxisAlignment:
                                                   MainAxisAlignment.spaceBetween,
                                                   children: [
                                                     InputFields.formField1(
-                                                      hintTxt: "Level 1",
-                                                      controller: controllerX
-                                                          .level1Controller,
-                                                      width: 0.17,
-                                                      autoFocus: true,
-                                                      isEnable: false,
-                                                    ),
-                                                    InputFields.formField1(
                                                       hintTxt: "Level 2",
                                                       controller: controllerX
                                                           .level2Controller,
                                                       width: 0.17,
-                                                      autoFocus: true,
+                                                      autoFocus: false,
+                                                      isEnable: false,
+                                                    ),
+                                                    InputFields.formField1(
+                                                      hintTxt: "Level 3",
+                                                      controller: controllerX
+                                                          .level3Controller,
+                                                      width: 0.17,
+                                                      autoFocus: false,
                                                       isEnable: false,
                                                     ),
 
                                                   ],
                                                 ),
                                               ),
-                                              InputFields.formField1(
-                                                hintTxt: "Level 3",
-                                                controller: controllerX
-                                                    .level3Controller,
-                                                width: 0.17,
-                                                autoFocus: true,
-                                                isEnable: false,
-                                              ),
+
 
                                             ],
                                           );
@@ -534,11 +536,11 @@ class CommercialMasterView extends StatelessWidget {
                                               controllerX.getAgencyDetails(val);
                                               // controllerX.isListenerActive = true;
                                             },
-                                            autoFocus: true,
+                                            autoFocus: false,
                                           ),
 
                                           SizedBox(
-                                            width: MediaQuery.of(context).size.width*0.371,
+                                            width: MediaQuery.of(context).size.width*0.365,
                                             child:   Obx(() =>
                                                 DropDownField.formDropDown1WidthMap(
                                                     controllerX.agencyDetails
@@ -546,11 +548,11 @@ class CommercialMasterView extends StatelessWidget {
                                                   controllerX
                                                       .selectedAgencyDetails =
                                                       value;
-                                                }, "Agency", .371,
+                                                }, "Agency", .365,
                                                     inkWellFocusNode: controllerX.agencyFocus,
                                                     isEnable:
                                                     controllerX.isEnable,
-                                                    autoFocus: true,
+                                                    autoFocus: false,
                                                     selected: controllerX
                                                         .selectedAgencyDetails)),
                                           ),
@@ -582,7 +584,7 @@ class CommercialMasterView extends StatelessWidget {
 
 
                                         SizedBox(
-                                          width: MediaQuery.of(context).size.width*0.371,
+                                          width: MediaQuery.of(context).size.width*0.365,
                                           child: Row(
                                             mainAxisAlignment:
                                             MainAxisAlignment.spaceBetween,
@@ -660,7 +662,7 @@ class CommercialMasterView extends StatelessWidget {
                                               parseKeyForValue: 'eventname',
                                               selectedValue:
                                                   controllerX.selectedEvent,
-                                              autoFocus: true,
+                                              autoFocus: false,
                                               // maxLength: 1
                                             );
                                           },
