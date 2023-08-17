@@ -264,7 +264,7 @@ class SchedulePromoController extends GetxController {
   }
 
   void handleSearchTap() {
-    if (selectLocation == null && selectChannel == null) {
+    if (selectLocation == null || selectChannel == null) {
       LoadingDialog.showErrorDialog("Please select Location and Channel.");
       return;
     }
@@ -300,7 +300,7 @@ class SchedulePromoController extends GetxController {
   }
 
   void saveData() {
-    if (selectLocation == null && selectChannel == null) {
+    if (selectLocation == null || selectChannel == null) {
       LoadingDialog.showErrorDialog("Please select Location and Channel.");
       return;
     } else if (promoData?.promoScheduled == null || (promoData?.promoScheduled?.isEmpty ?? true)) {
