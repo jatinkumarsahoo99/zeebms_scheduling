@@ -123,7 +123,7 @@ class SchedulePromoController extends GetxController {
   }
 
   void showDetails() {
-    if (selectLocation == null && selectChannel == null) {
+    if (selectLocation == null || selectChannel == null) {
       LoadingDialog.showErrorDialog("Please select Location and Channel.");
     } else {
       LoadingDialog.call();
@@ -238,7 +238,7 @@ class SchedulePromoController extends GetxController {
   }
 
   void handleDelete() {
-    if (selectLocation == null && selectChannel == null) {
+    if (selectLocation == null || selectChannel == null) {
       LoadingDialog.showErrorDialog("Please select Location and Channel.");
       return;
     } else {

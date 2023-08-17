@@ -191,6 +191,7 @@ class SchedulePromoView extends StatelessWidget {
                                                             element.telecastTime?.toLowerCase() == promo.telecastTime?.toLowerCase() &&
                                                             element.rowNo == promo.rowNo);
                                                         controller.promoScheduled.removeAt(controller.scheduledPromoStateManager!.currentRowIdx!);
+                                                        controller.calcaulateExceed(controller.scheduledPromoStateManager!.currentRowIdx!);
                                                       }
                                                     }
                                                     return KeyEventResult.skipRemainingHandlers;
