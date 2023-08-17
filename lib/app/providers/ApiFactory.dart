@@ -1016,6 +1016,8 @@ class ApiFactory {
       "$BASE_URL/api/PromoMaster/GetSourceProgramSearch?TextSourceProgram=";
   static String get PROMO_MASTER_GET_PROGRAM_PICKER =>
       "$BASE_URL/api/PromoMaster/GetProgramPicker";
+  static String PROMO_MASTER_GET_PROMO_TYPE(String code) =>
+      "$BASE_URL/api/PromoMaster/GetPromoType?PromoCategoryCode=$code";
   static String get PROMO_MASTER_EVENT_SEARCH =>
       "$BASE_URL/api/PromoMaster/GetEvent?text=";
   static String get PROMO_MASTER_RETRIVE_RECORDS =>
