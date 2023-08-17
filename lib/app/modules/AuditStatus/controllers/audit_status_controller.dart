@@ -363,7 +363,7 @@ class AuditStatusController extends GetxController {
                 content: Container(
                   width: Get.width * 0.60,
                   height: Get.height * 0.50,
-                  child: DataGridShowOnlyKeys(mapData: value["inFo_showdeal"]["lstshowdeal"]),
+                  child: DataGridShowOnlyKeys(hideCode: false, mapData: value["inFo_showdeal"]["lstshowdeal"]),
                 ));
           }
         });
