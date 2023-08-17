@@ -370,6 +370,9 @@ class ApiFactory {
   static String get MAM_WORK_ORDER_NON_FPC_BMS_SEARCH =>
       "$BASE_URL/api/MAMWorkOrder/OnLoadBMSProgram?Search=";
 
+  static String get MAM_WORK_ORDER_NON_FPC_GETTXID =>
+      "$BASE_URL/api/MAMWorkOrder/GetTxId";
+
   static String get MAM_WORK_ORDER_NON_FPC_RMS_SEARCH =>
       "$BASE_URL/api/MAMWorkOrder/OnLoadcboProgram?Search=";
 
