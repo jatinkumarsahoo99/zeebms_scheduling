@@ -18,6 +18,7 @@ import '../../../../widgets/input_fields.dart';
 import '../../../controller/HomeController.dart';
 import '../../../controller/MainController.dart';
 import '../../../data/PermissionModel.dart';
+import '../../CommonSearch/views/common_search_view.dart';
 import '../controllers/promos_controller.dart';
 
 class SchedulePromoView extends StatelessWidget {
@@ -439,6 +440,13 @@ class SchedulePromoView extends StatelessWidget {
       Get.find<HomeController>().clearPage1();
     } else if (btnName == "Save") {
       controller.saveData();
+    } else if (btnName == "Search") {
+      Get.to(SearchPage(
+          key: Key("Promo Scheduling"),
+          screenName: "Promo Scheduling",
+          appBarName: "Promo Scheduling",
+          strViewName: "Bms_view_promoscheduling",
+          isAppBarReq: true));
     }
   }
 }

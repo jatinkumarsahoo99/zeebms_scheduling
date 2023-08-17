@@ -232,6 +232,8 @@ class SchedulePromoController extends GetxController {
     if (_totalPromoTime > (promoData?.dailyFPC?[index].promoCap ?? 0)) {
       dailyFpc[index].exceed = true;
     }
+
+    scheduledTC.text = Utils.getDurationSecond(second: _totalPromoTime);
     dailyFpc.refresh();
   }
 
@@ -239,21 +241,22 @@ class SchedulePromoController extends GetxController {
     if (selectLocation == null && selectChannel == null) {
       LoadingDialog.showErrorDialog("Please select Location and Channel.");
       return;
+    } else {
+      LoadingDialog.delete("Want to delete promo scheduling for selected date?", () {
+        LoadingDialog.call();
+        Get.find<ConnectorControl>().POSTMETHOD(
+          api: ApiFactory.PROMOS_DELETE(selectLocation?.key ?? "", selectChannel?.key ?? "",
+              DateFormat("yyyy-MM-ddT00:00:00").format(DateFormat("dd-MM-yyyy").parse(fromdateTC.text))),
+          fun: (resp) {
+            closeDialog();
+            if (resp != null) {
+            } else {
+              LoadingDialog.showErrorDialog(resp.toString());
+            }
+          },
+        );
+      });
     }
-    LoadingDialog.delete("Want to delete promo scheduling for selected date?", () {
-      LoadingDialog.call();
-      Get.find<ConnectorControl>().DELETEMETHOD(
-        api: ApiFactory.PROMOS_DELETE(selectLocation?.key ?? "", selectChannel?.key ?? "",
-            DateFormat("yyyy-MM-ddT00:00:00").format(DateFormat("dd-MM-yyyy").parse(fromdateTC.text))),
-        fun: (resp) {
-          closeDialog();
-          if (resp != null) {
-          } else {
-            LoadingDialog.showErrorDialog(resp.toString());
-          }
-        },
-      );
-    });
   }
 
   void handleAddTap() {
@@ -300,35 +303,33 @@ class SchedulePromoController extends GetxController {
     if (selectLocation == null && selectChannel == null) {
       LoadingDialog.showErrorDialog("Please select Location and Channel.");
       return;
-    }
-   else if (promoData?.promoScheduled == null || (promoData?.promoScheduled?.isEmpty ?? true)) {
+    } else if (promoData?.promoScheduled == null || (promoData?.promoScheduled?.isEmpty ?? true)) {
       LoadingDialog.showErrorDialog("Nothing to save. Please schedule promos");
       return;
-    }
-    else{
+    } else {
       LoadingDialog.call();
-    Get.find<ConnectorControl>().POSTMETHOD(
-      api: ApiFactory.PROMOS_SAVE,
-      fun: (resp) {
-        closeDialog();
-        if (resp != null && resp.toString().contains("Record saved successfully.")) {
-          LoadingDialog.callDataSaved(
-              msg: resp.toString(),
-              callback: () {
-                clearPage();
-              });
-        } else {
-          LoadingDialog.showErrorDialog(resp.toString());
-        }
-      },
-      json: {
-        "locationCode": selectLocation?.key,
-        "channelCode": selectChannel?.key,
-        "telecastDate": DateFormat("dd-MMM-yyyy").format(DateFormat("dd-MM-yyyy").parse(fromdateTC.text)),
-        "modifiedBy": Get.find<MainController>().user?.logincode,
-        "promoSchSaveDetails": promoData?.promoScheduled?.map((e) => e.toJson(fromSave: true)).toList(),
-      },
-    );
+      Get.find<ConnectorControl>().POSTMETHOD(
+        api: ApiFactory.PROMOS_SAVE,
+        fun: (resp) {
+          closeDialog();
+          if (resp != null && resp.toString().contains("Record saved successfully.")) {
+            LoadingDialog.callDataSaved(
+                msg: resp.toString(),
+                callback: () {
+                  clearPage();
+                });
+          } else {
+            LoadingDialog.showErrorDialog(resp.toString());
+          }
+        },
+        json: {
+          "locationCode": selectLocation?.key,
+          "channelCode": selectChannel?.key,
+          "telecastDate": DateFormat("dd-MMM-yyyy").format(DateFormat("dd-MM-yyyy").parse(fromdateTC.text)),
+          "modifiedBy": Get.find<MainController>().user?.logincode,
+          "promoSchSaveDetails": promoData?.promoScheduled?.map((e) => e.toJson(fromSave: true)).toList(),
+        },
+      );
     }
   }
 
