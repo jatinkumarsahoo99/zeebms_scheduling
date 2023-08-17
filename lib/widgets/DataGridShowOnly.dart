@@ -34,6 +34,7 @@ class DataGridShowOnlyKeys extends StatelessWidget {
     this.checkRowKey = "selected",
     this.onRowDoubleTap,
     this.formatDate = true,
+    this.dateFormatKeys,
     this.dateFromat = "dd-MM-yyyy",
     this.onFocusChange,
     this.checkRow,
@@ -56,6 +57,7 @@ class DataGridShowOnlyKeys extends StatelessWidget {
   final String? dateFromat;
   final String? exportFileName;
   final List<String>? showonly;
+  final List<String>? dateFormatKeys;
   final Function(PlutoGridOnRowDoubleTapEvent)? onRowDoubleTap;
   final Function(PlutoGridOnChangedEvent)? onEdit;
   final Function(bool)? onFocusChange;
@@ -270,7 +272,7 @@ class DataGridShowOnlyKeys extends StatelessWidget {
             cells[element.key] = PlutoCell(
               value: element.key == "selected" || element.value == null
                   ? ""
-                  : element.key.toString().toLowerCase().contains("date") && formatDate!
+                  : element.key.toString().toLowerCase().contains("date") && (dateFormatKeys ?? []).contains(element.key) && formatDate!
                       ? DateFormat(dateFromat).format(DateTime.parse(element.value.toString().replaceAll("T", " ")))
                       : element.value.toString(),
             );
