@@ -301,11 +301,12 @@ class SchedulePromoController extends GetxController {
       LoadingDialog.showErrorDialog("Please select Location and Channel.");
       return;
     }
-    if (promoData?.promoScheduled == null || (promoData?.promoScheduled?.isEmpty ?? true)) {
+   else if (promoData?.promoScheduled == null || (promoData?.promoScheduled?.isEmpty ?? true)) {
       LoadingDialog.showErrorDialog("Nothing to save. Please schedule promos");
       return;
     }
-    LoadingDialog.call();
+    else{
+      LoadingDialog.call();
     Get.find<ConnectorControl>().POSTMETHOD(
       api: ApiFactory.PROMOS_SAVE,
       fun: (resp) {
@@ -328,6 +329,7 @@ class SchedulePromoController extends GetxController {
         "promoSchSaveDetails": promoData?.promoScheduled?.map((e) => e.toJson(fromSave: true)).toList(),
       },
     );
+    }
   }
 
   // void handleAutoAddTap() {
