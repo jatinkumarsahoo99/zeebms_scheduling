@@ -756,7 +756,6 @@ class CommercialMasterController extends GetxController {
                 eventList.add(Annotations(tcIn: element.tCin,tcOut: element.tCout,eventName: element.eventname));
               });
             }
-
             isEnable = true;
             isEnableSelective = false;
             isListenerActive = false;
@@ -764,7 +763,6 @@ class CommercialMasterController extends GetxController {
             update(['updateLeft','eventTable']);
           } else {
             isListenerActive = false;
-            commercialCode = "0";
           }
         });
   }
