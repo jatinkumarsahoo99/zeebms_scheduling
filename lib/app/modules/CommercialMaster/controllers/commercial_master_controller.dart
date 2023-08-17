@@ -638,11 +638,12 @@ class CommercialMasterController extends GetxController {
         api: ApiFactory.COMMERCIAL_MASTER_GET_COMMERCIALTAPEMASTER,
         json: postData,
         fun: (map) {
-          Get.back();
+          closeDialogIfOpen();
           log("map>>> " + map.toString());
           if (map is List && map.isNotEmpty) {
             commercialTapeMasterData =
                 CommercialTapeMasterData.fromJson(map[0]);
+            eventList.clear();
             print(">>>>" + commercialTapeMasterData!.toJson().toString());
             // selectedLanguage =  ;
             /*selectedLanguage = language
@@ -751,7 +752,6 @@ class CommercialMasterController extends GetxController {
             // eventList
             if(commercialTapeMasterData?.lstAnnotation != null &&
                 (commercialTapeMasterData?.lstAnnotation?.length??0) >0){
-              eventList.clear();
               commercialTapeMasterData?.lstAnnotation?.forEach((element) {
                 eventList.add(Annotations(tcIn: element.tCin,tcOut: element.tCout,eventName: element.eventname));
               });

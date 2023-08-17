@@ -78,17 +78,29 @@ class SalesAuditNotTelecastReportController extends GetxController {
 
   @override
   void onInit() {
-    fetchAllLoaderData();
+
     super.onInit();
+  }
+  @override
+  void onReady() {
+    fetchAllLoaderData();
+    super.onReady();
+  }
+
+  closeDialogIfOpen() {
+    if (Get.isDialogOpen ?? false) {
+      Get.back();
+    }
   }
 
   fetchAllLoaderData() {
-    // LoadingDialog.call();
+    LoadingDialog.call();
     Get.find<ConnectorControl>().GETMETHODCALL(
         api: ApiFactory.SALESAUDIT_NOT_TELECASTLOAD,
         // "https://jsonkeeper.com/b/D537"
         fun: (Map map) {
           // Get.back();
+          closeDialogIfOpen();
           // log(">>>>>>"+map.toString());
           if(map is Map && map.containsKey('pageload')){
             locations.clear();

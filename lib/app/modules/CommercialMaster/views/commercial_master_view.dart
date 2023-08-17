@@ -609,6 +609,7 @@ class CommercialMasterView extends StatelessWidget {
                                                 controllerX.clockIdController,
                                                 width: 0.17,
                                                 isEnable: controllerX.isEnable,
+                                                autoFocus: false
                                                 /*  onchanged: (val){
                                             controllerX.fetchCommercialTapeMasterData(
                                                 "",
@@ -630,159 +631,156 @@ class CommercialMasterView extends StatelessWidget {
                           );
                         }),
                     SizedBox(width: 14),
-                    FocusTraversalGroup(
-                      policy: OrderedTraversalPolicy(),
-                      child: Expanded(
-                        flex: 8,
-                        child: GetBuilder<CommercialMasterController>(
-                          builder: (controllerX) {
-                            return Column(
-                              crossAxisAlignment: CrossAxisAlignment.start,
-                              mainAxisSize: MainAxisSize.max,
-                              children: [
-                                Text("Annotation Details"),
-                                SizedBox(height: 5),
-                                Expanded(
-                                  child: Container(
-                                    width: double.infinity,
-                                    decoration: BoxDecoration(
-                                        border: Border.all(color: Colors.grey)),
-                                    padding: const EdgeInsets.all(16.0),
-                                    child: Column(
-                                      children: [
-                                        GetBuilder<CommercialMasterController>(
-                                          builder: (controllerX) {
-                                            return DropDownField
-                                                .formDropDownSearchAPI2(
-                                              GlobalKey(),
-                                              context,
-                                              width: context.width * 0.37,
-                                              onchanged: (DropDownValue? val) {
-                                                print(">>>" + val.toString());
-                                                controllerX.selectedEvent = val;
-                                              },
-                                              title: 'Event',
-                                              url: ApiFactory
-                                                  .COMMERCIAL_MASTER_GETLEVENT,
-                                              parseKeyForKey: "eventid",
-                                              parseKeyForValue: 'eventname',
-                                              selectedValue:
-                                                  controllerX.selectedEvent,
-                                              autoFocus: true,
-                                              // maxLength: 1
-                                            );
-                                          },
-                                          id: "event",
-                                        ),
-                                        SizedBox(height: 14),
-                                        Row(
-                                          mainAxisAlignment:
-                                              MainAxisAlignment.spaceBetween,
-                                          crossAxisAlignment:
-                                              CrossAxisAlignment.end,
-                                          children: [
-                                            /*   TimeWithThreeTextField(
-                                              title: "TC In",
-                                              mainTextController:
-                                                  controllerX.tcInController,
-                                              widthRation: 0.11,
-                                              isTime: false,
-                                            ),*/
-                                            InputFields.formFieldNumberMask(
-                                                hintTxt: "TC In",
-                                                controller:
-                                                    controllerX.tcInController,
-                                                widthRatio: 0.11,
-                                                isEnable: controllerX.isEnable,
-                                                // isTime: true,
-                                                // isEnable: controller.isEnable.value,
-                                                paddingLeft: 0),
-                                            InputFields.formFieldNumberMask(
-                                                hintTxt: "TC Out",
-                                                controller:
-                                                    controllerX.tcOutController,
-                                                widthRatio: 0.11,
-                                                // isTime: true,
-                                                // isEnable: controller.isEnable.value,
-                                                paddingLeft: 0),
-                                            /*   TimeWithThreeTextField(
-                                              title: "TC Out",
-                                              mainTextController:
-                                                  controllerX.tcOutController,
-                                              widthRation: 0.11,
-                                              isTime: false,
-                                            ),*/
-                                          ],
-                                        ),
-                                        SizedBox(height: 14),
-                                        Row(
-                                          children: [
-                                            FormButton(
-                                                btnText: "Add",
-                                                callback: () {
-                                                  controllerX.addEvent();
-                                                }),
-                                            Spacer(),
-                                            Text(
-                                              'Press "DEL" to delete Annotation Detail',
-                                              style: TextStyle(
-                                                color: Colors.deepPurple,
-                                                fontSize: 12,
-                                              ),
-                                            ),
-                                          ],
-                                        ),
-                                        SizedBox(height: 14),
-                                        Expanded(
-                                          child: Container(
-                                            decoration: BoxDecoration(
-                                              border: Border.all(
-                                                color: Colors.grey,
-                                              ),
-                                            ),
-                                            child: (controllerX
-                                                    .eventList.isNotEmpty)
-                                                ? DataGridFromMap(
-                                                    hideCode: false,
-                                                    formatDate: false,
-                                                    checkRow: true,
-                                                    checkRowKey: "no",
-                                                    onload:
-                                                        (PlutoGridOnLoadedEvent
-                                                            load) {
-                                                      /*controller.tblFastInsert =
-                                                          load.stateManager;*/
-                                                    },
-                                                    // colorCallback: (renderC) => Colors.red[200]!,
-                                                    mapData: (controllerX
-                                                            .eventList
-                                                            .map((e) =>
-                                                                e.toJson()))
-                                                        .toList())
-                                                : Container(),
-                                          ),
-                                        ),
-                                        SizedBox(height: 14),
-                                        Align(
-                                          alignment: Alignment.topRight,
-                                          child: FormButton(
-                                            btnText: "Print Bar Code",
-                                            callback: () {
-                                              Snack.callError(
-                                                  "Still Under Development");
+                    Expanded(
+                      flex: 8,
+                      child: GetBuilder<CommercialMasterController>(
+                        builder: (controllerX) {
+                          return Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            mainAxisSize: MainAxisSize.max,
+                            children: [
+                              Text("Annotation Details"),
+                              SizedBox(height: 5),
+                              Expanded(
+                                child: Container(
+                                  width: double.infinity,
+                                  decoration: BoxDecoration(
+                                      border: Border.all(color: Colors.grey)),
+                                  padding: const EdgeInsets.all(16.0),
+                                  child: Column(
+                                    children: [
+                                      GetBuilder<CommercialMasterController>(
+                                        builder: (controllerX) {
+                                          return DropDownField
+                                              .formDropDownSearchAPI2(
+                                            GlobalKey(),
+                                            context,
+                                            width: context.width * 0.37,
+                                            onchanged: (DropDownValue? val) {
+                                              print(">>>" + val.toString());
+                                              controllerX.selectedEvent = val;
                                             },
+                                            title: 'Event',
+                                            url: ApiFactory
+                                                .COMMERCIAL_MASTER_GETLEVENT,
+                                            parseKeyForKey: "eventid",
+                                            parseKeyForValue: 'eventname',
+                                            selectedValue:
+                                                controllerX.selectedEvent,
+                                            autoFocus: false,
+                                            // maxLength: 1
+                                          );
+                                        },
+                                        id: "event",
+                                      ),
+                                      SizedBox(height: 14),
+                                      Row(
+                                        mainAxisAlignment:
+                                            MainAxisAlignment.spaceBetween,
+                                        crossAxisAlignment:
+                                            CrossAxisAlignment.end,
+                                        children: [
+                                          /*   TimeWithThreeTextField(
+                                            title: "TC In",
+                                            mainTextController:
+                                                controllerX.tcInController,
+                                            widthRation: 0.11,
+                                            isTime: false,
+                                          ),*/
+                                          InputFields.formFieldNumberMask(
+                                              hintTxt: "TC In",
+                                              controller:
+                                                  controllerX.tcInController,
+                                              widthRatio: 0.11,
+                                              isEnable: controllerX.isEnable,
+                                              // isTime: true,
+                                              // isEnable: controller.isEnable.value,
+                                              paddingLeft: 0),
+                                          InputFields.formFieldNumberMask(
+                                              hintTxt: "TC Out",
+                                              controller:
+                                                  controllerX.tcOutController,
+                                              widthRatio: 0.11,
+                                              // isTime: true,
+                                              // isEnable: controller.isEnable.value,
+                                              paddingLeft: 0),
+                                          /*   TimeWithThreeTextField(
+                                            title: "TC Out",
+                                            mainTextController:
+                                                controllerX.tcOutController,
+                                            widthRation: 0.11,
+                                            isTime: false,
+                                          ),*/
+                                        ],
+                                      ),
+                                      SizedBox(height: 14),
+                                      Row(
+                                        children: [
+                                          FormButton(
+                                              btnText: "Add",
+                                              callback: () {
+                                                controllerX.addEvent();
+                                              }),
+                                          Spacer(),
+                                          Text(
+                                            'Press "DEL" to delete Annotation Detail',
+                                            style: TextStyle(
+                                              color: Colors.deepPurple,
+                                              fontSize: 12,
+                                            ),
                                           ),
+                                        ],
+                                      ),
+                                      SizedBox(height: 14),
+                                      Expanded(
+                                        child: Container(
+                                          decoration: BoxDecoration(
+                                            border: Border.all(
+                                              color: Colors.grey,
+                                            ),
+                                          ),
+                                          child: (controllerX
+                                                  .eventList.isNotEmpty)
+                                              ? DataGridFromMap(
+                                                  hideCode: false,
+                                                  formatDate: false,
+                                                  checkRow: true,
+                                                  checkRowKey: "no",
+                                                  onload:
+                                                      (PlutoGridOnLoadedEvent
+                                                          load) {
+                                                    /*controller.tblFastInsert =
+                                                        load.stateManager;*/
+                                                  },
+                                                  // colorCallback: (renderC) => Colors.red[200]!,
+                                                  mapData: (controllerX
+                                                          .eventList
+                                                          .map((e) =>
+                                                              e.toJson()))
+                                                      .toList())
+                                              : Container(),
                                         ),
-                                      ],
-                                    ),
+                                      ),
+                                      SizedBox(height: 14),
+                                      Align(
+                                        alignment: Alignment.topRight,
+                                        child: FormButton(
+                                          btnText: "Print Bar Code",
+                                          callback: () {
+                                            Snack.callError(
+                                                "Still Under Development");
+                                          },
+                                        ),
+                                      ),
+                                    ],
                                   ),
-                                )
-                              ],
-                            );
-                          },
-                          init: controllerX,
-                          id: "eventTable",
-                        ),
+                                ),
+                              )
+                            ],
+                          );
+                        },
+                        init: controllerX,
+                        id: "eventTable",
                       ),
                     ),
                   ],
