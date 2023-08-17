@@ -55,6 +55,7 @@ class PromoMasterController extends GetxController {
   var segHash = 1.obs;
   int rightTableSelectedIdx = -1;
   List<RoCancellationDocuments> documents = [];
+  double componentWidthRatio = .17;
 
   var startDateCtr = TextEditingController(),
       endDateCtr = TextEditingController(),
@@ -192,7 +193,7 @@ class PromoMasterController extends GetxController {
             resp is Map<String, dynamic> &&
             resp['saveRecords'] != null &&
             resp['saveRecords']['strMessage'] != null &&
-            resp['saveRecords']['strMessage'].toString().contains("Record is updated successfully.")) {
+            resp['saveRecords']['strMessage'].toString().contains("successfully")) {
           LoadingDialog.callDataSaved(msg: resp['saveRecords']['strMessage'].toString());
         } else {
           LoadingDialog.showErrorDialog(resp.toString());

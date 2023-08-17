@@ -59,7 +59,8 @@ class SalesAuditNotTelecastReportController extends GetxController {
   ChannelListModel? channelListModel;
   bool chk_radnottel = false;
   bool chk_raderror = false;
-  SalesAuditNotTRLstChannelModel? salesAuditNotTRLstChannelModel;
+  FocusNode locationNode =FocusNode();
+  SalesAuditNotTRLstChannelModel? salesAuditNotTRLstChannelModel = SalesAuditNotTRLstChannelModel(generate:Generate(lsterror: [],lstnottel: []) );
    getType(String name){
     if(name == 'Not telecasted'){
       chk_raderror=false;
@@ -77,18 +78,29 @@ class SalesAuditNotTelecastReportController extends GetxController {
 
   @override
   void onInit() {
-    fetchAllLoaderData();
+
     super.onInit();
   }
-  List<Lstnottel>? listData = [];
+  @override
+  void onReady() {
+    fetchAllLoaderData();
+    super.onReady();
+  }
+
+  closeDialogIfOpen() {
+    if (Get.isDialogOpen ?? false) {
+      Get.back();
+    }
+  }
 
   fetchAllLoaderData() {
-    // LoadingDialog.call();
+    LoadingDialog.call();
     Get.find<ConnectorControl>().GETMETHODCALL(
         api: ApiFactory.SALESAUDIT_NOT_TELECASTLOAD,
         // "https://jsonkeeper.com/b/D537"
         fun: (Map map) {
           // Get.back();
+          closeDialogIfOpen();
           // log(">>>>>>"+map.toString());
           if(map is Map && map.containsKey('pageload')){
             locations.clear();
@@ -129,6 +141,11 @@ class SalesAuditNotTelecastReportController extends GetxController {
     List<ChannelListModel> channelListFilter=[];
     channelListFilter = channelList.where((element) =>
     element.ischecked == true).toList();
+
+
+
+
+
     if(selectLocation == null){
       Snack.callError("Please select location");
     }else if(channelListFilter.isEmpty){
@@ -140,6 +157,15 @@ class SalesAuditNotTelecastReportController extends GetxController {
     }else if(chk_radnottel == false && chk_raderror == false){
       Snack.callError("Please select not telecasted or Error Sports");
     }else{
+      DateTime fromDateNew = DateFormat("dd-MM-yyyy").parse(frmDate.text);
+      DateTime toDateNew = DateFormat("dd-MM-yyyy").parse(toDate.text);
+      if(fromDateNew.isAfter(toDateNew)){
+        LoadingDialog.showErrorDialog("Please select from date correctly");
+      }else{
+
+      }
+
+
       LoadingDialog.call();
       Map<String,dynamic> postData = {
         "lstChannelList": channelListFilter.map((e) => e.toJson1()).toList(),
@@ -158,20 +184,16 @@ class SalesAuditNotTelecastReportController extends GetxController {
           json: postData,
           fun: (Map<String,dynamic> map) {
             Get.back();
-            print("map>>>"+ jsonEncode(map).toString());
+
             if(map is Map && map.containsKey('generate')){
-              listData!.clear();
               salesAuditNotTRLstChannelModel = SalesAuditNotTRLstChannelModel.fromJson(map) ;
-              if(chk_radnottel){
-                listData!.addAll(salesAuditNotTRLstChannelModel!.generate!.lstnottel as Iterable<Lstnottel>);
-              }else{
-                listData!.addAll(salesAuditNotTRLstChannelModel!.generate!.lsterror as Iterable<Lstnottel>);
-              }
+
               update(['listUpdate']);
             }else{
-              listData!.clear();
+              salesAuditNotTRLstChannelModel = SalesAuditNotTRLstChannelModel(generate:Generate(lsterror: [],lstnottel: []) );
               update(['listUpdate']);
             }
+            print("map>>>"+ jsonEncode(salesAuditNotTRLstChannelModel?.toJson()).toString());
           });
     }
 

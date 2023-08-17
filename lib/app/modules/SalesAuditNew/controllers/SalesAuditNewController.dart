@@ -283,11 +283,14 @@ class SalesAuditNewController extends GetxController {
         gridStateManagerLeft?.rows[i].cells['telecastTime']?.value = "";
         gridStateManagerLeft?.rows[i].cells['remarks']?.value =
             "Not telecast Sales Audit";
+
         continue;
       } else {
         continue;
       }
     }
+    filterSearchAndCancel();
+    // gridStateManagerLeft?.notifyListeners();
   }
 
   unCancel(int index) {
@@ -416,8 +419,8 @@ class SalesAuditNewController extends GetxController {
 
     LoadingDialog.call();
     Map<String, dynamic> postData = {
-      "locationcode": selectedLocation!.key,
-      "channelcode": selectedChannel!.key,
+      "locationcode": selectedLocation?.key??"",
+      "channelcode": selectedChannel?.key??"",
       "loggedUsercode": Get.find<MainController>().user?.logincode ?? "",
       "date": DateFormat("yyyy-MM-ddTHH:mm:ss")
           .format(DateFormat("dd-MM-yyyy").parse(scheduledController.text)),
@@ -441,9 +444,10 @@ class SalesAuditNewController extends GetxController {
               Get.back();
             });
           } else {
-            Snack.callError("Something went wrong\nPlease try After Sometime");
+            Snack.callError((map??"").toString());
           }
         },
+
         );
   }
 

@@ -93,9 +93,10 @@ class SalesAuditNotTelecastReportView
                                           0.22,
                                           isEnable: controllerX.isEnable.value,
                                           selected: controllerX.selectLocation,
+                                              inkWellFocusNode: controllerX.locationNode,
                                           autoFocus: true,
                                           dialogWidth: 330,
-                                          dialogHeight: Get.height * .7,
+                                          dialogHeight: Get.height * .35,
                                         ),
                                       ),
                                       Padding(
@@ -313,19 +314,61 @@ class SalesAuditNotTelecastReportView
         id: "listUpdate",
         // init: CreateBreakPatternController(),
         builder: (controller) {
-          if (controllerX.listData!.isNotEmpty ) {
-            return Expanded(
-              flex: 10,
-              // height: 400,
-              child: DataGridFromMap(
-                showSrNo: false,
-                mapData: (controllerX.listData
-                    ?.map((e) => e.toJson())
-                    .toList())!,
-                // mapData: (controllerX.dataList)!,
-                widthRatio: Get.width / 9 - 1,
-              ),
-            );
+          if (controllerX.chk_radnottel ) {
+            if((controllerX.salesAuditNotTRLstChannelModel?.generate?.lstnottel?.length??0)>0){
+              return Expanded(
+                flex: 10,
+                // height: 400,
+                child: DataGridFromMap(
+                  showSrNo: true,
+                  exportFileName: "Sales Audit NotTelecast Report",
+                  formatDate: false,
+                  mapData: (controllerX.salesAuditNotTRLstChannelModel?.generate?.lstnottel
+                      ?.map((e) => e.toJson())
+                      .toList())!,
+                  // mapData: (controllerX.dataList)!,
+                  widthRatio: Get.width / 9 - 1,
+                  hideCode: false,
+                ),
+              );
+            }else{
+              return Expanded(
+                flex: 10,
+                child: Container(
+                  // height: Get.height - (2 * kToolbarHeight),
+                  decoration:
+                  BoxDecoration(border: Border.all(color: Colors.grey)),
+                ),
+              );
+            }
+
+          }else if(controllerX.chk_raderror){
+            if((controllerX.salesAuditNotTRLstChannelModel?.generate?.lsterror?.length??0)>0){
+              return Expanded(
+                flex: 10,
+                // height: 400,
+                child: DataGridFromMap(
+                  showSrNo: true,
+                  exportFileName: "Sales Audit NotTelecast Report",
+                  formatDate: false,
+                  mapData: (controllerX.salesAuditNotTRLstChannelModel?.generate?.lsterror
+                      ?.map((e) => e.toJson())
+                      .toList())!,
+                  // mapData: (controllerX.dataList)!,
+                  widthRatio: Get.width / 9 - 1,
+                  hideCode: false,
+                ),
+              );
+            }else{
+              return Expanded(
+                flex: 10,
+                child: Container(
+                  // height: Get.height - (2 * kToolbarHeight),
+                  decoration:
+                  BoxDecoration(border: Border.all(color: Colors.grey)),
+                ),
+              );
+            }
           }
           else {
             // return _dataTable2();
