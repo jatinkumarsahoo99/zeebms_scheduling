@@ -376,8 +376,10 @@ class DataGridMenu {
 
         FlutterFileSaver().writeFileAsBytes(fileName: (exportFileName ?? 'export${DateTime.now().toString()}') + '.csv',
           bytes: exported,
-        )
-            .then((value) => Snack.callSuccess("File save to $value"));
+        ).catchError((error) {
+          // This code will be executed if there is an error while saving the file.
+          Snack.callError("Error saving file: $error");
+        });
         // await FileSaver.instance.saveFile("$title.csv", exported, ".csv");
         break;
       case DataGridMenuItem.exportToXml:

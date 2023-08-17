@@ -320,7 +320,7 @@ class SalesAuditNotTelecastReportView
                 flex: 10,
                 // height: 400,
                 child: DataGridFromMap(
-                  showSrNo: true,
+                  showSrNo: false,
                   exportFileName: "Sales Audit NotTelecast Report",
                   formatDate: false,
                   mapData: (controllerX.salesAuditNotTRLstChannelModel?.generate?.lstnottel
