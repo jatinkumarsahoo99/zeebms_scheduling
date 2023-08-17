@@ -152,6 +152,8 @@ class DataGridShowOnlyKeys extends StatelessWidget {
                       },
                       child: Text(
                         (rendererContext.cell.value ?? "").toString(),
+                        maxLines: 1,
+                        overflow: TextOverflow.ellipsis,
                         style: TextStyle(
                           fontSize: SizeDefine.columnTitleFontSize,
                         ),
@@ -211,6 +213,8 @@ class DataGridShowOnlyKeys extends StatelessWidget {
                       },
                       child: Text(
                         (checkRow == true && key == checkRowKey && hideCheckKeysValue) ? "" : rendererContext.cell.value.toString(),
+                        maxLines: 1,
+                        overflow: TextOverflow.ellipsis,
                         style: TextStyle(
                           fontSize: SizeDefine.columnTitleFontSize,
                         ),
@@ -227,6 +231,8 @@ class DataGridShowOnlyKeys extends StatelessWidget {
                     },
                     child: Text(
                       (checkRow == true && key == checkRowKey && hideCheckKeysValue) ? "" : rendererContext.cell.value.toString(),
+                      maxLines: 1,
+                      overflow: TextOverflow.ellipsis,
                       style: TextStyle(
                         fontSize: SizeDefine.columnTitleFontSize,
                       ),
