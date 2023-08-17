@@ -79,27 +79,29 @@ class AuditStatusController extends GetxController {
   List bookingData = [];
 
   showBtnData() {
-    Get.find<ConnectorControl>().POSTMETHOD(
-        api: ApiFactory.NewBookingActivityReport_BtnShow,
-        json: {
-          "locationCode": selectLocation?.key,
-          "channelCode": selectChannel?.key,
-          "date": dateController.text.fromdMyToyMd(),
-          "loggedUser": Get.find<MainController>().user?.logincode,
-          "type": gettypeName(currentType.value)
-        },
-        fun: (map) {
-          if (map is Map && map.containsKey("inFo_Show")) {
-            if (map["inFo_Show"]["lstAdditions"] != null) {
-              bookingData = map["inFo_Show"]["lstAdditions"];
-            } else if (map["inFo_Show"]["lstReSchedule"] != null) {
-              bookingData = map["inFo_Show"]["lstReSchedule"];
-            } else if (map["inFo_Show"]["lstCancellation"] != null) {
-              bookingData = map["inFo_Show"]["lstCancellation"];
+    if ((currentType.value ?? "").isNotEmpty) {
+      Get.find<ConnectorControl>().POSTMETHOD(
+          api: ApiFactory.NewBookingActivityReport_BtnShow,
+          json: {
+            "locationCode": selectLocation?.key,
+            "channelCode": selectChannel?.key,
+            "date": dateController.text.fromdMyToyMd(),
+            "loggedUser": Get.find<MainController>().user?.logincode,
+            "type": gettypeName(currentType.value)
+          },
+          fun: (map) {
+            if (map is Map && map.containsKey("inFo_Show")) {
+              if (map["inFo_Show"]["lstAdditions"] != null) {
+                bookingData = map["inFo_Show"]["lstAdditions"];
+              } else if (map["inFo_Show"]["lstReSchedule"] != null) {
+                bookingData = map["inFo_Show"]["lstReSchedule"];
+              } else if (map["inFo_Show"]["lstCancellation"] != null) {
+                bookingData = map["inFo_Show"]["lstCancellation"];
+              }
             }
-          }
-          update(["gridView"]);
-        });
+            update(["gridView"]);
+          });
+    }
   }
 
   Color getColor(Map<String, dynamic> dr) {
@@ -329,6 +331,7 @@ class AuditStatusController extends GetxController {
                           child: Container(
                         width: Get.width * 0.73,
                         child: DataGridShowOnlyKeys(
+                          hideCode: false,
                           mapData: showEbookingData?.lstShowEbook?.map((e) => e.toJson()).toList() ?? [],
                           onRowDoubleTap: (event) {
                             showDeals(showEbookingData?.lstShowEbook?[event.rowIdx].dealno);
