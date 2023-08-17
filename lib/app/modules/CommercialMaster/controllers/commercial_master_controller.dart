@@ -87,6 +87,7 @@ class CommercialMasterController extends GetxController {
   String? commercialCode = '0';
 
   bool isEnable = true;
+  bool isEnableSelective = true;
   FocusNode captionFocus = FocusNode();
   FocusNode tapeIdFocus = FocusNode();
   FocusNode clockIdFocus = FocusNode();
@@ -257,10 +258,10 @@ class CommercialMasterController extends GetxController {
     } else if (somController.text == "00:00:00:00" ||
         somController.text == "") {
       Snack.callError("Please enter SOM.");
-    } else if (eomController.text == "00:00:00:00" ||
+    } /*else if (eomController.text == "00:00:00:00" ||
         eomController.text == "") {
       Snack.callError("Please enter EOM.");
-    } else if (duration.value.text == "00:00:00:00" ||
+    }*/ else if (duration.value.text == "00:00:00:00" ||
         duration.value.text == "") {
       Snack.callError("Please enter duration.");
     } else if (selectedBrandType == null) {
@@ -271,6 +272,7 @@ class CommercialMasterController extends GetxController {
 
       LoadingDialog.recordExists("Do you want to modify it?", () {
         isEnable = true;
+        isEnableSelective = true;
         isListenerActive = false;
         contin = false;
         update(['updateLeft']);
@@ -636,11 +638,12 @@ class CommercialMasterController extends GetxController {
         api: ApiFactory.COMMERCIAL_MASTER_GET_COMMERCIALTAPEMASTER,
         json: postData,
         fun: (map) {
-          Get.back();
+          closeDialogIfOpen();
           log("map>>> " + map.toString());
           if (map is List && map.isNotEmpty) {
             commercialTapeMasterData =
                 CommercialTapeMasterData.fromJson(map[0]);
+            eventList.clear();
             print(">>>>" + commercialTapeMasterData!.toJson().toString());
             // selectedLanguage =  ;
             /*selectedLanguage = language
@@ -746,11 +749,19 @@ class CommercialMasterController extends GetxController {
                 df.parse(commercialTapeMasterData!.despatchDate.toString()));
             commercialCode = commercialTapeMasterData!.commercialCode ?? "0";
             print(">>>>jks " + endDateController.text);
+            // eventList
+            if(commercialTapeMasterData?.lstAnnotation != null &&
+                (commercialTapeMasterData?.lstAnnotation?.length??0) >0){
+              commercialTapeMasterData?.lstAnnotation?.forEach((element) {
+                eventList.add(Annotations(tcIn: element.tCin,tcOut: element.tCout,eventName: element.eventname));
+              });
+            }
 
-            isEnable = false;
+            isEnable = true;
+            isEnableSelective = false;
             isListenerActive = false;
 
-            update(['updateLeft']);
+            update(['updateLeft','eventTable']);
           } else {
             isListenerActive = false;
             commercialCode = "0";
