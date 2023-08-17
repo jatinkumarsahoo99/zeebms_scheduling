@@ -33,7 +33,9 @@ class PromoTypeMasterController extends GetxController {
     Get.find<ConnectorControl>().GETMETHODCALL(
         api: ApiFactory.PROMO_TYPE_MASTER_GET_RECORD(promTypeNameCtrl.text, ""),
         fun: (data) {
-          if (data!=null && data['promomaster']!=null && (data['promomaster'] as List<dynamic>).isNotEmpty) {
+          if (data != null &&
+              data['promomaster'] != null &&
+              (data['promomaster'] as List<dynamic>).isNotEmpty) {
             print(data["promomaster"][0]["promoTypeCode"]);
             if (data["promomaster"][0]["promoTypeCode"] != null) {
               programTypeCode = data["promomaster"][0]["promoTypeCode"];
@@ -57,7 +59,7 @@ class PromoTypeMasterController extends GetxController {
         });
   }
 
-  saveData() {
+  void validateSaveRecord() {
     if (selectedCategory == null) {
       LoadingDialog.showErrorDialog("Please select promo category name.");
     } else if (promTypeNameCtrl.text.trim().isEmpty) {
@@ -65,28 +67,53 @@ class PromoTypeMasterController extends GetxController {
     } else if (sapCategory.text.trim().isEmpty) {
       LoadingDialog.showErrorDialog("Please enter SAP category.");
     } else {
-      Get.find<ConnectorControl>().POSTMETHOD(
-        api: ApiFactory.PROMO_TYPE_MASTER_SAVE,
-        json: {
-          "promoTypeCode": programTypeCode ?? "",
-          "promoTypeName": promTypeNameCtrl.text,
-          "modifiedBy": Get.find<MainController>().user?.logincode,
-          "channelSpecific": channelSpec.value ? "Y" : "N",
-          "istraiPromo": trailPromo.value ? 1 : 0,
-          "sapCategory": sapCategory.text,
-          "CategoryCode": selectedCategory?.key ?? "",
-          "IsActive": isActive.value,
+      LoadingDialog.call();
+      Get.find<ConnectorControl>().GETMETHODCALL(
+        api: ApiFactory.PROMO_TYPE_MASTER_VALIDATE_SAVE_RECORD(
+            programTypeCode ?? ""),
+        fun: (resp) {
+          Get.back();
+          if (resp != null && resp['result'].toString().contains('Record')) {
+            LoadingDialog.recordExists(
+              resp['result'].toString(),
+              () {
+                saveData();
+              },
+            );
+          } else {
+            LoadingDialog.showErrorDialog(resp.toString());
+          }
         },
-        fun: (data) {
-          if (data is Map && data.containsKey("promomaster")) {
-            LoadingDialog.callDataSaved(msg: data["promomaster"]);
-          }
-          if (data is String) {
-            LoadingDialog.callErrorMessage1(msg: data);
-          }
+        failed: (resp) {
+          Get.back();
         },
       );
     }
+  }
+
+  saveData() {
+    LoadingDialog.call();
+    Get.find<ConnectorControl>().POSTMETHOD(
+      api: ApiFactory.PROMO_TYPE_MASTER_SAVE,
+      json: {
+        "promoTypeCode": programTypeCode ?? "",
+        "promoTypeName": promTypeNameCtrl.text,
+        "modifiedBy": Get.find<MainController>().user?.logincode,
+        "channelSpecific": channelSpec.value ? "Y" : "N",
+        "istraiPromo": trailPromo.value ? 1 : 0,
+        "sapCategory": sapCategory.text,
+        "CategoryCode": selectedCategory?.key ?? "",
+        "IsActive": isActive.value,
+      },
+      fun: (data) {
+        Get.back();
+        if (data is Map && data.containsKey("promomaster")) {
+          LoadingDialog.callDataSaved(msg: data["promomaster"]);
+        } else if (data is String) {
+          LoadingDialog.callErrorMessage1(msg: data);
+        }
+      },
+    );
   }
 
   @override

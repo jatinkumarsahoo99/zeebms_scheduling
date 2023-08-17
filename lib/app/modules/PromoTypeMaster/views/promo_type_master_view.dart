@@ -175,7 +175,7 @@ class PromoTypeMasterView extends StatelessWidget {
         Get.find<HomeController>().clearPage1();
         break;
       case "Save":
-        controller.saveData();
+        controller.validateSaveRecord();
         break;
       case "Search":
         Get.to(SearchPage(
