@@ -764,7 +764,6 @@ class CommercialMasterController extends GetxController {
             update(['updateLeft','eventTable']);
           } else {
             isListenerActive = false;
-            commercialCode = "0";
           }
         });
   }
