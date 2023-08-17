@@ -1,4 +1,5 @@
 import 'package:bms_scheduling/app/modules/RoBooking/controllers/ro_booking_controller.dart';
+import 'package:bms_scheduling/app/modules/promos/promo_model.dart';
 import 'package:bms_scheduling/app/providers/Utils.dart';
 import 'package:bms_scheduling/app/routes/app_pages.dart';
 import 'package:bms_scheduling/widgets/DataGridShowOnly.dart';
@@ -178,8 +179,8 @@ class SchedulePromoView extends StatelessWidget {
                                                 onload: (event) {
                                                   controller.scheduledPromoStateManager = event.stateManager;
                                                   controller.scheduledPromoStateManager!.gridFocusNode.onKeyEvent = (node, event) {
-                                                    // print("Key Pressed");
-                                                    if (event is RawKeyDownEvent && event.physicalKey == PhysicalKeyboardKey.delete) {
+                                                    print("Key Pressed");
+                                                    if (event is KeyDownEvent && event.logicalKey == LogicalKeyboardKey.delete) {
                                                       print("Delete Pressed");
                                                       if (controller.scheduledPromoStateManager?.currentCell != null) {
                                                         controller.promoScheduled.removeAt(controller.scheduledPromoStateManager!.currentRowIdx!);
@@ -434,7 +435,7 @@ class SchedulePromoView extends StatelessWidget {
 
   formHandler(btnName) async {
     if (btnName == "Clear") {
-      Get.delete<RoBookingController>();
+      Get.delete<SchedulePromoController>();
       Get.find<HomeController>().clearPage1();
     } else if (btnName == "Save") {
       controller.saveData();
