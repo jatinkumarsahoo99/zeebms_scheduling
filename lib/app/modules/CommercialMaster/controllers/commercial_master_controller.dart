@@ -324,11 +324,17 @@ class CommercialMasterController extends GetxController {
           Get.back();
           print("map>>>>>" + map.toString());
           if (map is Map && map.containsKey("isError")) {
+
             if (map['isError'] == false) {
-              LoadingDialog.callDataSavedMessage("Record Saved Successfully",
+              LoadingDialog.callDataSavedMessage(map['genericMessage']??"Record Saved Successfully",
                   callback: () {
-                    clearAll();
+                    // clearAll();
                   });
+              if(map.containsKey('saveModel') && map['saveModel'] != null && map['saveModel'].length >0){
+                txNoController.text = map['saveModel'][0]['houseid'];
+                tapeIdController.value.text = map['saveModel'][0]['exportTapecode'] ;
+                commercialCode = map['saveModel'][0]['commercialCode'] ;
+              }
             } else {
               // Get.back();
               Snack.callError((map ?? "Something went wrong").toString());
@@ -761,7 +767,8 @@ class CommercialMasterController extends GetxController {
             isListenerActive = false;
 
             update(['updateLeft','eventTable']);
-          } else {
+          }
+          else {
             isListenerActive = false;
           }
         });
