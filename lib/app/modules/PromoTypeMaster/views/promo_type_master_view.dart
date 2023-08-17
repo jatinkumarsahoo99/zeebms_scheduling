@@ -102,7 +102,7 @@ class PromoTypeMasterView extends StatelessWidget {
                   builder: (btncontroller) {
                     return Wrap(
                       spacing: 5,
-                      runSpacing: 10,
+                      runSpacing: 5,
                       runAlignment: WrapAlignment.center,
                       alignment: WrapAlignment.center,
                       children: [
