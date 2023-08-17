@@ -107,7 +107,7 @@ class SchedulePromoView extends StatelessWidget {
                                               if (controller.selectLocation != null && controller.selectChannel != null) {
                                                 controller.showDetails();
                                               } else {
-                                                LoadingDialog.showErrorDialog("");
+                                                LoadingDialog.showErrorDialog("Please select Location and Channel.");
                                               }
                                             },
                                           ),
