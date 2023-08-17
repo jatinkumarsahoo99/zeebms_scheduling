@@ -139,7 +139,8 @@ class LstAsrunlog2 {
     programCode = json['programCode'];
     reSchTape = json['reSchTape'];
     reSchCaption = json['reSchCaption'];
-    reSchDate = json['reSchDate'];
+    // reSchDate = json['reSchDate'];
+    reSchDate = "";
     previousBookingStatus = json['previousBookingStatus'];
   }
 
