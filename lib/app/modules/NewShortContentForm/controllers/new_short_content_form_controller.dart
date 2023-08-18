@@ -1,4 +1,5 @@
 import 'package:bms_scheduling/app/controller/ConnectorControl.dart';
+import 'package:bms_scheduling/app/providers/Utils.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:intl/intl.dart';
@@ -153,108 +154,108 @@ class NewShortContentFormController extends GetxController {
             houseId.text,
             segment.text),
         fun: (rawdata) {
-          if (rawdata is Map) {
-            Map data = rawdata[0];
-            switch (selectedType.value?.key) {
-              //       {
-              //     "stillCode": null,
-              //     "stillCaption": null,
-              //     "programCode": null,
-              //     "programName": null,
-              //     "programTypeCode": null,
-              //     "exportTapeCaption": "ZEETV ID YEH 10",
-              //     "exportTapeCode": "533190",
-              //     "segmentNumber": 5,
-              //     "stillDuration": null,
-              //     "houseId": "Z6667",
-              //     "som": "10:00:00:00",
-              //     "tapeTypeCode": "ZABET00003",
-              //     "dated": "Y",
-              //     "killDate": "2005-03-01T00:00:00",
-              //     "modifiedBy": "BIN0000161",
-              //     "locationcode": "ZAZEE00001",
-              //     "channelcode": "ZAZEE00001",
-              //     "eom": null,
-              //     "stillType": 1,
-              //     "slideCode": 1033,
-              //     "slideCaption": "ZEETV ID YEH HAI ZTV 10",
-              //     "segmentNumber_SL": null,
-              //     "slideType": "W ",
-              //     "exportTapeDuration": 10,
-              //     "vignetteCode": null,
-              //     "vignetteCaption": null,
-              //     "vignetteDuration": null,
-              //     "exportTapeCode_VG": null,
-              //     "originalRepeatCode": null,
-              //     "segmentNumber_VG": null,
-              //     "startDate": null,
-              //     "remarks": null,
-              //     "billflag": null,
-              //     "companycode": ""
-              // },
+          Map data = rawdata[0];
+          switch (selectedType.value?.key) {
+            //       {
+            //     "stillCode": null,
+            //     "stillCaption": null,
+            //     "programCode": null,
+            //     "programName": null,
+            //     "programTypeCode": null,
+            //     "exportTapeCaption": "ZEETV ID YEH 10",
+            //     "exportTapeCode": "533190",
+            //     "segmentNumber": 5,
+            //     "stillDuration": null,
+            //     "houseId": "Z6667",
+            //     "som": "10:00:00:00",
+            //     "tapeTypeCode": "ZABET00003",
+            //     "dated": "Y",
+            //     "killDate": "2005-03-01T00:00:00",
+            //     "modifiedBy": "BIN0000161",
+            //     "locationcode": "ZAZEE00001",
+            //     "channelcode": "ZAZEE00001",
+            //     "eom": null,
+            //     "stillType": 1,
+            //     "slideCode": 1033,
+            //     "slideCaption": "ZEETV ID YEH HAI ZTV 10",
+            //     "segmentNumber_SL": null,
+            //     "slideType": "W ",
+            //     "exportTapeDuration": 10,
+            //     "vignetteCode": null,
+            //     "vignetteCaption": null,
+            //     "vignetteDuration": null,
+            //     "exportTapeCode_VG": null,
+            //     "originalRepeatCode": null,
+            //     "segmentNumber_VG": null,
+            //     "startDate": null,
+            //     "remarks": null,
+            //     "billflag": null,
+            //     "companycode": ""
+            // },
 
-              // formCode: "ZASTI00001"formName: "Still Master"
-              case "ZASTI00001":
-                typeCode = data["StillCode"];
-                selectedTape.value = categeroies.firstWhereOrNull((element) =>
-                    element.key?.toLowerCase() ==
-                    (data["TapeTypeCode"] ?? "").toString().toLowerCase());
-                caption.text = data["StillCaption"] ?? "";
-                txCaption.text = data["ExportTapeCode"] ?? "";
-                selectedCategory.value = categeroies.firstWhereOrNull(
-                    (element) =>
-                        element.key?.toLowerCase() ==
-                        selectedCategory.value?.key?.toLowerCase());
-                selectedProgram.value = DropDownValue(
-                  key: data["ProgramCode"] ?? "",
-                  value: data["ProgramName"] ?? "",
-                );
-                som.text = data["SOM"];
-                eom.text = data["EOM"];
-                break;
-              //  "formCode": "ZASLI00045", "formName": "Slide Master"
-              case "ZASLI00045":
-                typeCode = data["SlideCode"];
-                selectedTape.value = categeroies.firstWhereOrNull((element) =>
-                    element.key?.toLowerCase() ==
-                    (data["TapeTypeCode"] ?? "").toString().toLowerCase());
-                caption.text = data["SlideCaption"] ?? "";
-                txCaption.text = data["ExportTapeCaption"] ?? "";
-                selectedCategory.value = categeroies.firstWhereOrNull(
-                    (element) =>
-                        element.key?.toLowerCase() ==
-                        data["StillType"].toLowerCase());
-                selectedProgram.value = DropDownValue(
-                  key: data["ProgramCode"] ?? "",
-                  value: data["ProgramName"] ?? "",
-                );
-                som.text = data["SOM"];
-                eom.text = data["EOM"];
+            // formCode: "ZASTI00001"formName: "Still Master"
+            case "ZASTI00001":
+              typeCode = data["StillCode"];
+              selectedTape.value = categeroies.firstWhereOrNull((element) =>
+                  element.key?.toLowerCase() ==
+                  (data["TapeTypeCode"] ?? "").toString().toLowerCase());
+              caption.text = data["StillCaption"] ?? "";
+              txCaption.text = data["ExportTapeCode"] ?? "";
+              selectedCategory.value = categeroies.firstWhereOrNull((element) =>
+                  element.key?.toLowerCase() ==
+                  (data["SlideType"] ?? "").toString().toLowerCase());
 
-                break;
-              // "formCode": "ZADAT00117", "formName": "Vignette Master"
-              case "ZADAT00117":
-                typeCode = data["VignetteCode"];
-                caption.text = data["VignetteCaption"] ?? "";
-                txCaption.text = data["ExportTapeCode_VG"] ?? "";
-                selectedCategory.value = categeroies.firstWhereOrNull(
-                    (element) =>
-                        element.key?.toLowerCase() ==
-                        (data["SlideType"] ?? "").toLowerCase());
-                selectedOrgRep.value = orgRepeats.firstWhereOrNull((element) =>
-                    element.key?.toLowerCase() ==
-                    (data["OriginalRepeatCode"] ?? "").toLowerCase());
-                selectedProgram.value = DropDownValue(
-                  key: data["ProgramCode"] ?? "",
-                  value: data["ProgramName"] ?? "",
-                );
-                som.text = data["SOM"];
-                eom.text = data["EOM"];
+              som.text = data["SOM"];
+              eom.text = data["EOM"];
+              duration.text = Utils.getDurationSecond(
+                  second: int.tryParse(data["ExportTapeDuration"]) ?? 0);
+              break;
+            //  "formCode": "ZASLI00045", "formName": "Slide Master"
+            case "ZASLI00045":
+              typeCode = data["SlideCode"];
 
-                break;
+              selectedTape.value = categeroies.firstWhereOrNull((element) =>
+                  element.key?.toLowerCase() ==
+                  (data["TapeTypeCode"] ?? "").toString().toLowerCase());
 
-              default:
-            }
+              caption.text = data["SlideCaption"] ?? "";
+
+              txCaption.text = data["ExportTapeCaption"] ?? "";
+
+              selectedCategory.value = categeroies.firstWhereOrNull((element) =>
+                  element.key?.toLowerCase() ==
+                  data["StillType"].toString().toLowerCase());
+              selectedProgram.value = DropDownValue(
+                key: data["ProgramCode"] ?? "",
+                value: data["ProgramName"] ?? "",
+              );
+
+              som.text = data["SOM"];
+
+              eom.text = data["EOM"];
+
+              break;
+            // "formCode": "ZADAT00117", "formName": "Vignette Master"
+            case "ZADAT00117":
+              typeCode = data["VignetteCode"];
+              caption.text = data["VignetteCaption"] ?? "";
+              txCaption.text = data["ExportTapeCode_VG"] ?? "";
+              selectedCategory.value = categeroies.firstWhereOrNull((element) =>
+                  element.key?.toLowerCase() ==
+                  (data["SlideType"] ?? "").toLowerCase());
+              selectedOrgRep.value = orgRepeats.firstWhereOrNull((element) =>
+                  element.key?.toLowerCase() ==
+                  (data["OriginalRepeatCode"] ?? "").toString().toLowerCase());
+              selectedProgram.value = DropDownValue(
+                key: data["ProgramCode"] ?? "",
+                value: data["ProgramName"] ?? "",
+              );
+              som.text = data["SOM"];
+              eom.text = data["EOM"];
+
+              break;
+
+            default:
           }
         });
   }

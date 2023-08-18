@@ -1529,9 +1529,8 @@ class DropDownField {
                           ),
                         ),
                       )),
-                      
                       Visibility(
-                        visible: suffixCallBack==null,
+                        visible: suffixCallBack == null,
                         replacement: GestureDetector(
                           onTap: suffixCallBack,
                           child: Icon(
@@ -2732,8 +2731,7 @@ class DropDownField {
                                               isCollapsed: true,
                                               hintText: "Search",
                                               counterText: ""),
-                                          controller: TextEditingController(
-                                              text: selected?.value ?? ""),
+                                          controller: TextEditingController(),
                                           autofocus: true,
                                           style: TextStyle(
                                             fontSize:
@@ -3040,11 +3038,11 @@ class DropDownField {
     final iconLineColor = (isEnable) ? Colors.deepPurpleAccent : Colors.grey;
     inkWellFocusNode ??= FocusNode();
     FocusNode keyboard = FocusNode();
-    keyboard.skipTraversal=true;
+    keyboard.skipTraversal = true;
     // keyboard.descendantsAreTraversable
     keyboard.addListener(() {
-      if(!keyboard.hasFocus){
-        if(onFocusChange!=null) {
+      if (!keyboard.hasFocus) {
+        if (onFocusChange != null) {
           onFocusChange(keyboard.hasFocus);
         }
       }
@@ -3087,7 +3085,8 @@ class DropDownField {
                 onKey: (RawKeyEvent keyEvent) {
                   if (keyEvent.isKeyPressed(LogicalKeyboardKey.arrowUp)) {
                     if (items != null && ((items.length ?? 0) > 0)) {
-                      if (currentIndex.value != null && currentIndex.value != 0) {
+                      if (currentIndex.value != null &&
+                          currentIndex.value != 0) {
                         currentIndex.value = currentIndex.value! - 1;
                         selected = items[currentIndex.value!];
                         re(() {});
@@ -3332,7 +3331,6 @@ class DropDownField {
         }),
       ],
     );
-
   }
 
   static Widget formDropDownDisableWidth(

@@ -158,7 +158,7 @@ class AsrunImportController extends GetxController {
               });
               for (var i = 0; i < (viewFPCData ?? []).length; i++) {
                 if (asrunData?.any((element) =>
-                        element.telecasttime == viewFPCData?[i].starttime) ??
+                        element.fpctIme == viewFPCData?[i].starttime) ??
                     false) {
                   viewFPCData?[i].present = 1;
                 }
