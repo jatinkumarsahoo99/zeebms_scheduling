@@ -797,13 +797,13 @@ class AsrunImportAdRevenueView extends StatelessWidget {
   }
 
   showFPCDialog(context) {
-    controller.drgabbleDialog.value = Stack(
-      alignment: Alignment.topRight,
-      children: [
-        Container(
-          height: Get.height * 0.65,
-          width: Get.width / 2,
-          child: Card(
+    controller.drgabbleDialog.value = Card(
+      child: Stack(
+        alignment: Alignment.topRight,
+        children: [
+          Container(
+            height: Get.height * 0.65,
+            width: Get.width / 2,
             child: Column(
               mainAxisAlignment: MainAxisAlignment.center,
               crossAxisAlignment: CrossAxisAlignment.center,
@@ -862,13 +862,13 @@ class AsrunImportAdRevenueView extends StatelessWidget {
               ],
             ),
           ),
-        ),
-        IconButton(
-            onPressed: () {
-              controller.drgabbleDialog.value = null;
-            },
-            icon: Icon(Icons.close))
-      ],
+          IconButton(
+              onPressed: () {
+                controller.drgabbleDialog.value = null;
+              },
+              icon: Icon(Icons.close))
+        ],
+      ),
     );
   }
 }
