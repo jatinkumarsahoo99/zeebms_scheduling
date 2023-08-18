@@ -119,9 +119,9 @@ class AsrunImportController extends GetxController {
         });
   }
 
-  loadAsrunData() {
+  loadAsrunData() async {
     isEnable.value = false;
-    Get.find<ConnectorControl>().POSTMETHOD(
+    await Get.find<ConnectorControl>().POSTMETHOD(
         api: ApiFactory.AsrunImport_LoadRunData(selectLocation?.key,
             selectChannel?.key, selectedDate.text.fromdMyToyMd()),
         json: {},
@@ -142,8 +142,8 @@ class AsrunImportController extends GetxController {
         });
   }
 
-  loadviewFPCData() {
-    Get.find<ConnectorControl>().POSTMETHOD(
+  loadviewFPCData() async {
+    await Get.find<ConnectorControl>().POSTMETHOD(
         api: ApiFactory.AsrunImport_LoadFPCData(selectLocation?.key,
             selectChannel?.key, selectedDate.text.fromdMyToyMd()),
         json: {},
