@@ -357,6 +357,7 @@ class SalesAuditNewView  extends StatelessWidget  {
                                                 // checkRow: true,
                                                 // checkRowKey: "no",
                                                 mode: PlutoGridMode.selectWithOneTap,
+                                                hideKeys: ['programCode'],
                                                 onSelected: (PlutoGridOnSelectedEvent? val ){
                                                   // print("singlr click"+val!.row!.toJson().toString());
                                                   print("singlr click"+val!.rowIdx.toString());

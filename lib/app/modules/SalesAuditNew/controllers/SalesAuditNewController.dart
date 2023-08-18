@@ -153,7 +153,8 @@ class SalesAuditNewController extends GetxController {
     if (((gridStateManagerLeft?.rows.length ?? 0) < 1) ||
         ((gridStateManagerRight?.rows.length ?? 0) < 1)) {
       return;
-    } else if (gridStateManagerLeft
+    }
+    else if (gridStateManagerLeft
             ?.rows[gridStateManagerLeft?.currentRowIdx ?? 0]
             .cells['exportTapeCode']
             ?.value
