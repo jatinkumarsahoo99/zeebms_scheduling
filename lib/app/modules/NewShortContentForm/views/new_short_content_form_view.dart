@@ -34,7 +34,7 @@ class NewShortContentFormView extends StatelessWidget {
               ),
               Wrap(
                 crossAxisAlignment: WrapCrossAlignment.end,
-                runSpacing: 5,
+                runSpacing: 10,
                 spacing: Get.width * 0.01,
                 children: [
                   Obx(
@@ -260,10 +260,7 @@ class NewShortContentFormView extends StatelessWidget {
   btnHandler(name) async {
     switch (name) {
       case "Save":
-        if (await controller.save()) {
-          Get.delete<NewShortContentFormController>();
-          Get.find<HomeController>().clearPage1();
-        }
+        await controller.save();
 
         break;
       case "Search":
