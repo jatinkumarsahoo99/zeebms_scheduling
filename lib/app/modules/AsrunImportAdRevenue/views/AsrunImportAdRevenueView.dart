@@ -417,7 +417,7 @@ class AsrunImportAdRevenueView extends StatelessWidget {
   }
 
   showSwap() {
-    controller.drgabbleDialog?.value = Card(
+    controller.drgabbleDialog.value = Card(
       shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(5)),
       child: Container(
         height: Get.height * .35,
@@ -812,9 +812,10 @@ class AsrunImportAdRevenueView extends StatelessWidget {
                 Expanded(
                   child: Container(
                     child: DataGridShowOnlyKeys(
-                      mapData:
-                          controller.viewFPCData?.map((e) => e.toJson()).toList() ??
-                              [],
+                      mapData: controller.viewFPCData
+                              ?.map((e) => e.toJson())
+                              .toList() ??
+                          [],
                       onload: (loadEvent) {
                         controller.fpcGridStateManager = loadEvent.stateManager;
                       },
@@ -855,16 +856,18 @@ class AsrunImportAdRevenueView extends StatelessWidget {
                                 .starttime ??
                             "");
                       },
-                  
+                    ),
                   ],
                 )
               ],
             ),
           ),
         ),
-        IconButton(onPressed: (){
-controller.drgabbleDialog.value = null;
-        }, icon: Icon(Icons.close))
+        IconButton(
+            onPressed: () {
+              controller.drgabbleDialog.value = null;
+            },
+            icon: Icon(Icons.close))
       ],
     );
   }
