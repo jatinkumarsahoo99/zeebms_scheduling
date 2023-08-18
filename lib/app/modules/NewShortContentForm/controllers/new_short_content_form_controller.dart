@@ -17,7 +17,14 @@ class NewShortContentFormController extends GetxController {
   var tapes = RxList<DropDownValue>([]);
   var orgRepeats = RxList<DropDownValue>([]);
 
-  FocusNode houseFocusNode = FocusNode();
+  FocusNode houseFocusNode = FocusNode(),
+      locationFocusNode = FocusNode(),
+      channelFocusNode = FocusNode(),
+      typeFocusNode = FocusNode(),
+      categoryFocusNode = FocusNode(),
+      programFocusNode = FocusNode(),
+      tapeFocusNode = FocusNode(),
+      orgFocusNode = FocusNode();
   String? typeCode;
 
   Rxn<DropDownValue> selectedLocation = Rxn<DropDownValue>();
@@ -203,12 +210,24 @@ class NewShortContentFormController extends GetxController {
               txCaption.text = data["ExportTapeCode"] ?? "";
               selectedCategory.value = categeroies.firstWhereOrNull((element) =>
                   element.key?.toLowerCase() ==
-                  (data["SlideType"] ?? "").toString().toLowerCase());
+                  (data["StillType"] ?? "").toString().toLowerCase());
 
               som.text = data["SOM"];
               eom.text = data["EOM"];
               duration.text = Utils.getDurationSecond(
-                  second: int.tryParse(data["ExportTapeDuration"]) ?? 0);
+                  second: int.tryParse(data["ExportTapeDuration"]
+                          .toString()
+                          .split(".")[0]) ??
+                      0);
+              selectedProgram.value = DropDownValue(
+                key: data["ProgramCode"] ?? "",
+                value: data["ProgramName"] ?? "",
+              );
+              remark.text = data["remark"];
+              endDate.text = DateFormat("dd-MM-yyy").format(
+                  DateFormat("dd/MM/yyyy hh:mm:ss").parse(data["KillDate"]));
+              toBeBilled.value = data["billflag"] == "0";
+
               break;
             //  "formCode": "ZASLI00045", "formName": "Slide Master"
             case "ZASLI00045":
@@ -224,25 +243,32 @@ class NewShortContentFormController extends GetxController {
 
               selectedCategory.value = categeroies.firstWhereOrNull((element) =>
                   element.key?.toLowerCase() ==
-                  data["StillType"].toString().toLowerCase());
-              selectedProgram.value = DropDownValue(
-                key: data["ProgramCode"] ?? "",
-                value: data["ProgramName"] ?? "",
-              );
+                  data["SlideType"].toString().toLowerCase());
 
               som.text = data["SOM"];
 
-              eom.text = data["EOM"];
+              eom.text = data["EOM"] ?? "00:00:00:00";
+              duration.text = Utils.getDurationSecond(
+                  second: int.tryParse(data["ExportTapeDuration"]
+                          .toString()
+                          .split(".")[0]) ??
+                      0);
+              remark.text = data["remark"];
+              startData.text = DateFormat("dd-MM-yyy").format(
+                  DateFormat("dd/MM/yyyy hh:mm:ss").parse(data["ModifiedOn"]));
+              endDate.text = DateFormat("dd-MM-yyy").format(
+                  DateFormat("dd/MM/yyyy hh:mm:ss").parse(data["KillDate"]));
+              toBeBilled.value = data["billflag"] == "0";
 
               break;
             // "formCode": "ZADAT00117", "formName": "Vignette Master"
             case "ZADAT00117":
               typeCode = data["VignetteCode"];
               caption.text = data["VignetteCaption"] ?? "";
-              txCaption.text = data["ExportTapeCode_VG"] ?? "";
-              selectedCategory.value = categeroies.firstWhereOrNull((element) =>
-                  element.key?.toLowerCase() ==
-                  (data["SlideType"] ?? "").toLowerCase());
+              txCaption.text = data["ExportTapeCode"] ?? "";
+              // selectedCategory.value = categeroies.firstWhereOrNull((element) =>
+              //     element.key?.toLowerCase() ==
+              //     (data["SlideType"] ?? "").toLowerCase());
               selectedOrgRep.value = orgRepeats.firstWhereOrNull((element) =>
                   element.key?.toLowerCase() ==
                   (data["OriginalRepeatCode"] ?? "").toString().toLowerCase());
@@ -252,6 +278,16 @@ class NewShortContentFormController extends GetxController {
               );
               som.text = data["SOM"];
               eom.text = data["EOM"];
+              duration.text = Utils.getDurationSecond(
+                  second: int.tryParse(
+                          data["VignetteDuration"].toString().split(".")[0]) ??
+                      0);
+              remark.text = data["remarks"];
+              startData.text = DateFormat("dd-MM-yyy").format(
+                  DateFormat("dd/MM/yyyy hh:mm:ss").parse(data["StartDate"]));
+              endDate.text = DateFormat("dd-MM-yyy").format(
+                  DateFormat("dd/MM/yyyy hh:mm:ss").parse(data["KillDate"]));
+              toBeBilled.value = data["billflag"] == "0";
 
               break;
 
