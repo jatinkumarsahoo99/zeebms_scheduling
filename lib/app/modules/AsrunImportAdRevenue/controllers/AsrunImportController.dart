@@ -67,7 +67,7 @@ class AsrunImportController extends GetxController {
   int? toSwapIndex;
 
   TextEditingController selectedDate = TextEditingController();
-  TextEditingController startTime_ = TextEditingController();
+  TextEditingController startTime_ = TextEditingController(text: "00:00:00");
 
   List<AsrunImportModel>? transmissionLogList = List.generate(
       100,
@@ -155,6 +155,13 @@ class AsrunImportController extends GetxController {
               map['fpcData'].forEach((v) {
                 viewFPCData!.add(AsrunFPCData.fromJson(v));
               });
+              for (var i = 0; i < (viewFPCData ?? []).length; i++) {
+                if (asrunData?.any((element) =>
+                        element.telecasttime == viewFPCData?[i].starttime) ??
+                    false) {
+                  viewFPCData?[i].present = 1;
+                }
+              }
             }
 
             update(["fpcData"]);

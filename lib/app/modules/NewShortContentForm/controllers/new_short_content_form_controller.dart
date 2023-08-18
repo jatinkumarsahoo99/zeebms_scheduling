@@ -47,11 +47,14 @@ class NewShortContentFormController extends GetxController {
 
             locations.value = [];
             for (var location in data["lstLocation"]) {
-              locations.add(DropDownValue(key: location["locationCode"], value: location["locationName"]));
+              locations.add(DropDownValue(
+                  key: location["locationCode"],
+                  value: location["locationName"]));
             }
             types.value = [];
             for (var revenue in data["lstFormType"]) {
-              types.add(DropDownValue(key: revenue["formCode"], value: revenue["formName"]));
+              types.add(DropDownValue(
+                  key: revenue["formCode"], value: revenue["formName"]));
             }
           }
         });
@@ -64,7 +67,8 @@ class NewShortContentFormController extends GetxController {
           if (rawdata is Map && rawdata.containsKey("onLeaveLocation")) {
             channels.value = [];
             for (var channel in rawdata["onLeaveLocation"]) {
-              channels.add(DropDownValue(key: channel["channelCode"], value: channel["channelName"]));
+              channels.add(DropDownValue(
+                  key: channel["channelCode"], value: channel["channelName"]));
             }
           }
         });
@@ -78,7 +82,9 @@ class NewShortContentFormController extends GetxController {
             if (rawdata is Map && rawdata.containsKey("infoStillType")) {
               tapes.value = [];
               for (var category in rawdata["infoStillType"]) {
-                tapes.add(DropDownValue(key: category["tapetypecode"], value: category["tapeTypeName"]));
+                tapes.add(DropDownValue(
+                    key: category["tapetypecode"],
+                    value: category["tapeTypeName"]));
               }
             }
           });
@@ -90,7 +96,9 @@ class NewShortContentFormController extends GetxController {
             if (rawdata is Map && rawdata.containsKey("infoSlideTypes")) {
               tapes.value = [];
               for (var category in rawdata["infoSlideTypes"]) {
-                tapes.add(DropDownValue(key: category["tapetypecode"], value: category["tapeTypeName"]));
+                tapes.add(DropDownValue(
+                    key: category["tapetypecode"],
+                    value: category["tapeTypeName"]));
               }
             }
           });
@@ -102,7 +110,9 @@ class NewShortContentFormController extends GetxController {
             if (rawdata is Map && rawdata.containsKey("infoVignetteType")) {
               orgRepeats.value = [];
               for (var category in rawdata["infoVignetteType"]) {
-                orgRepeats.add(DropDownValue(key: category["originalRepeatCode"], value: category["originalRepeatName"]));
+                orgRepeats.add(DropDownValue(
+                    key: category["originalRepeatCode"],
+                    value: category["originalRepeatName"]));
               }
             }
           });
@@ -114,7 +124,8 @@ class NewShortContentFormController extends GetxController {
           if (rawdata is Map && rawdata.containsKey("onLeaveTypeCategory")) {
             categeroies.value = [];
             for (var category in rawdata["onLeaveTypeCategory"]) {
-              categeroies.add(DropDownValue(key: category["typeId"], value: category["typeName"]));
+              categeroies.add(DropDownValue(
+                  key: category["typeId"], value: category["typeName"]));
             }
           }
         });
@@ -122,9 +133,12 @@ class NewShortContentFormController extends GetxController {
 
   houseleave() {
     Get.find<ConnectorControl>().GETMETHODCALL(
-        api: ApiFactory.NEW_SHORT_CONTENT_HOUSEID_LEAVE(houseId.text, txCaption.text, caption.text),
+        api: ApiFactory.NEW_SHORT_CONTENT_HOUSEID_LEAVE(
+            houseId.text, txCaption.text, caption.text),
         fun: (rawdata) {
-          if (rawdata is Map && rawdata.containsKey("houseIDLeave") && rawdata["houseIDLeave"]["message"] != null) {
+          if (rawdata is Map &&
+              rawdata.containsKey("houseIDLeave") &&
+              rawdata["houseIDLeave"]["message"] != null) {
             LoadingDialog.callInfoMessage(rawdata["houseIDLeave"]["message"]);
           }
         });
@@ -133,7 +147,11 @@ class NewShortContentFormController extends GetxController {
   retriveRecord() {
     Get.find<ConnectorControl>().GETMETHODCALL(
         api: ApiFactory.NEW_SHORT_CONTENT_RETRIEVE(
-            selectedLocation.value?.key, selectedChannel.value?.key, selectedType.value?.key, houseId.text, segment.text),
+            selectedLocation.value?.key,
+            selectedChannel.value?.key,
+            selectedType.value?.key,
+            houseId.text,
+            segment.text),
         fun: (rawdata) {
           if (rawdata is Map && rawdata.containsKey("infoRetrivedRecords")) {
             Map data = rawdata["infoRetrivedRecords"][0];
@@ -177,51 +195,61 @@ class NewShortContentFormController extends GetxController {
 
               // formCode: "ZASTI00001"formName: "Still Master"
               case "ZASTI00001":
-                typeCode = data["stillCode"];
-                selectedTape.value =
-                    categeroies.firstWhereOrNull((element) => element.key?.toLowerCase() == (data["tapeTypeCode"] ?? "").toString().toLowerCase());
-                caption.text = data["stillCaption"] ?? "";
-                txCaption.text = data["exportTapeCode"] ?? "";
-                selectedCategory.value =
-                    categeroies.firstWhereOrNull((element) => element.key?.toLowerCase() == selectedCategory.value?.key?.toLowerCase());
+                typeCode = data["StillCode"];
+                selectedTape.value = categeroies.firstWhereOrNull((element) =>
+                    element.key?.toLowerCase() ==
+                    (data["TapeTypeCode"] ?? "").toString().toLowerCase());
+                caption.text = data["StillCaption"] ?? "";
+                txCaption.text = data["ExportTapeCode"] ?? "";
+                selectedCategory.value = categeroies.firstWhereOrNull(
+                    (element) =>
+                        element.key?.toLowerCase() ==
+                        selectedCategory.value?.key?.toLowerCase());
                 selectedProgram.value = DropDownValue(
-                  key: data["programCode"] ?? "",
-                  value: data["programName"] ?? "",
+                  key: data["ProgramCode"] ?? "",
+                  value: data["ProgramName"] ?? "",
                 );
-                som.text = data["som"];
-                eom.text = data["eom"];
+                som.text = data["SOM"];
+                eom.text = data["EOM"];
                 break;
               //  "formCode": "ZASLI00045", "formName": "Slide Master"
               case "ZASLI00045":
-                typeCode = data["slideCode"];
-                selectedTape.value =
-                    categeroies.firstWhereOrNull((element) => element.key?.toLowerCase() == (data["tapeTypeCode"] ?? "").toString().toLowerCase());
-                caption.text = data["slideCaption"] ?? "";
-                txCaption.text = data["exportTapeCaption"] ?? "";
-                selectedCategory.value = categeroies.firstWhereOrNull((element) => element.key?.toLowerCase() == data["stillType"].toLowerCase());
+                typeCode = data["SlideCode"];
+                selectedTape.value = categeroies.firstWhereOrNull((element) =>
+                    element.key?.toLowerCase() ==
+                    (data["TapeTypeCode"] ?? "").toString().toLowerCase());
+                caption.text = data["SlideCode"] ?? "";
+                txCaption.text = data["ExportTapeCaption"] ?? "";
+                selectedCategory.value = categeroies.firstWhereOrNull(
+                    (element) =>
+                        element.key?.toLowerCase() ==
+                        data["StillType"].toLowerCase());
                 selectedProgram.value = DropDownValue(
-                  key: data["programCode"] ?? "",
-                  value: data["programName"] ?? "",
+                  key: data["ProgramCode"] ?? "",
+                  value: data["ProgramName"] ?? "",
                 );
-                som.text = data["som"];
-                eom.text = data["eom"];
+                som.text = data["SOM"];
+                eom.text = data["EOM"];
 
                 break;
               // "formCode": "ZADAT00117", "formName": "Vignette Master"
               case "ZADAT00117":
-                typeCode = data["vignetteCode"];
-                caption.text = data["vignetteCaption"] ?? "";
-                txCaption.text = data["exportTapeCode_VG"] ?? "";
-                selectedCategory.value =
-                    categeroies.firstWhereOrNull((element) => element.key?.toLowerCase() == (data["slideType"] ?? "").toLowerCase());
-                selectedOrgRep.value =
-                    orgRepeats.firstWhereOrNull((element) => element.key?.toLowerCase() == (data["originalRepeatCode"] ?? "").toLowerCase());
+                typeCode = data["VignetteCode"];
+                caption.text = data["VignetteCaption"] ?? "";
+                txCaption.text = data["ExportTapeCode_VG"] ?? "";
+                selectedCategory.value = categeroies.firstWhereOrNull(
+                    (element) =>
+                        element.key?.toLowerCase() ==
+                        (data["SlideType"] ?? "").toLowerCase());
+                selectedOrgRep.value = orgRepeats.firstWhereOrNull((element) =>
+                    element.key?.toLowerCase() ==
+                    (data["OriginalRepeatCode"] ?? "").toLowerCase());
                 selectedProgram.value = DropDownValue(
-                  key: data["programCode"] ?? "",
-                  value: data["programName"] ?? "",
+                  key: data["ProgramCode"] ?? "",
+                  value: data["ProgramName"] ?? "",
                 );
-                som.text = data["som"];
-                eom.text = data["eom"];
+                som.text = data["SOM"];
+                eom.text = data["EOM"];
 
                 break;
 
@@ -234,7 +262,11 @@ class NewShortContentFormController extends GetxController {
   save() async {
     var body = {};
     List _durations = duration.text.split(":");
-    num intDuration = Duration(hours: int.parse(_durations[0]), minutes: int.parse(_durations[1]), seconds: int.parse(_durations[2])).inSeconds;
+    num intDuration = Duration(
+            hours: int.parse(_durations[0]),
+            minutes: int.parse(_durations[1]),
+            seconds: int.parse(_durations[2]))
+        .inSeconds;
     // formCode: "ZASTI00001"formName: "Still Master"
     if (selectedType.value?.key == "ZASTI00001") {
       body = {
@@ -249,11 +281,17 @@ class NewShortContentFormController extends GetxController {
         "houseId": houseId.text, // Common in (still/Slide/vignetee)
         "som": som.text, // Common in (still/Slide/vignetee)
         "tapeTypeCode": selectedTape.value?.key, // Common in (still/Slide)
-        "dated": DateFormat("yyyy-MM-dd").format(DateFormat("dd-MM-yyyy").parse(startData.text)), // Common in (still/Slide)
-        "killDate": DateFormat("yyyy-MM-dd").format(DateFormat("dd-MM-yyyy").parse(endDate.text)), // Common in (still/Slide/vignetee)
-        "modifiedBy": Get.find<MainController>().user?.logincode, // Common in (still/Slide)
-        "locationcode": selectedLocation.value?.key, // Common in (still/Slide/Vignette)
-        "channelcode": selectedChannel.value?.key, // Common in (still/Slide/vignetteCaption)
+        "dated": DateFormat("yyyy-MM-dd").format(DateFormat("dd-MM-yyyy")
+            .parse(startData.text)), // Common in (still/Slide)
+        "killDate": DateFormat("yyyy-MM-dd").format(DateFormat("dd-MM-yyyy")
+            .parse(endDate.text)), // Common in (still/Slide/vignetee)
+        "modifiedBy": Get.find<MainController>()
+            .user
+            ?.logincode, // Common in (still/Slide)
+        "locationcode":
+            selectedLocation.value?.key, // Common in (still/Slide/Vignette)
+        "channelcode": selectedChannel
+            .value?.key, // Common in (still/Slide/vignetteCaption)
         "eom": eom.text, // Common in (still/Slide/vignetee)
         "stillType": selectedCategory.value?.key,
       };
@@ -270,11 +308,17 @@ class NewShortContentFormController extends GetxController {
         "houseId": houseId.text, // Common in (still/Slide/vignetee)
         "som": som.text, // Common in (still/Slide/vignetee)
         "tapeTypeCode": selectedTape.value?.key, // Common in (still/Slide)
-        "dated": DateFormat("yyyy-MM-dd").format(DateFormat("dd-MM-yyyy").parse(startData.text)), // Common in (still/Slide)
-        "killDate": DateFormat("yyyy-MM-dd").format(DateFormat("dd-MM-yyyy").parse(endDate.text)), // Common in (still/Slide/vignetee)
-        "modifiedBy": Get.find<MainController>().user?.logincode, // Common in (still/Slide)
-        "locationcode": selectedLocation.value?.key, // Common in (still/Slide/Vignette)
-        "channelcode": selectedChannel.value?.key, // Common in (still/Slide/vignetteCaption)
+        "dated": DateFormat("yyyy-MM-dd").format(DateFormat("dd-MM-yyyy")
+            .parse(startData.text)), // Common in (still/Slide)
+        "killDate": DateFormat("yyyy-MM-dd").format(DateFormat("dd-MM-yyyy")
+            .parse(endDate.text)), // Common in (still/Slide/vignetee)
+        "modifiedBy": Get.find<MainController>()
+            .user
+            ?.logincode, // Common in (still/Slide)
+        "locationcode":
+            selectedLocation.value?.key, // Common in (still/Slide/Vignette)
+        "channelcode": selectedChannel
+            .value?.key, // Common in (still/Slide/vignetteCaption)
         "eom": eom.text, // Common in (still/Slide/vignetee)
         "exportTapeCaption": txCaption.text, // Common in (still/Slide)
         "exportTapeCode": houseId.text,
@@ -290,15 +334,19 @@ class NewShortContentFormController extends GetxController {
         "exportTapeCode_VG": txCaption.text,
         "originalRepeatCode": selectedOrgRep.value?.key,
         "segmentNumber_VG": segment.text,
-        "startDate": DateFormat("yyyy-MM-dd").format(DateFormat("dd-MM-yyyy").parse(startData.text)),
+        "startDate": DateFormat("yyyy-MM-dd")
+            .format(DateFormat("dd-MM-yyyy").parse(startData.text)),
         "remarks": remark.text,
         "billflag": toBeBilled.value ? 1 : 0,
         "companycode": "",
         "exportTapeDuration": intDuration, //Common in (Slide/Vignette)
-        "locationcode": selectedLocation.value?.key, // Common in (still/Slide/Vignette)
-        "channelcode": selectedChannel.value?.key, // Common in (still/Slide/vignetteCaption)
+        "locationcode":
+            selectedLocation.value?.key, // Common in (still/Slide/Vignette)
+        "channelcode": selectedChannel
+            .value?.key, // Common in (still/Slide/vignetteCaption)
         "eom": eom.text, // Common in (still/Slide/vignetee)
-        "killDate": DateFormat("yyyy-MM-dd").format(DateFormat("dd-MM-yyyy").parse(endDate.text)), // Common in (still/Slide/vignetee)
+        "killDate": DateFormat("yyyy-MM-dd").format(DateFormat("dd-MM-yyyy")
+            .parse(endDate.text)), // Common in (still/Slide/vignetee)
         "houseId": houseId.text, // Common in (still/Slide/vignetee)
         "som": som.text, // Common in (still/Slide/vignetee)
         "programCode": selectedProgram.value?.key,
@@ -312,8 +360,11 @@ class NewShortContentFormController extends GetxController {
         fun: (rawdata) {
           Get.back();
           try {
-            if (rawdata is Map && rawdata.containsKey("onSaveShortCode") && rawdata["onSaveShortCode"]["result"] != null) {
-              LoadingDialog.callDataSaved(msg: rawdata["onSaveShortCode"]["result"]["message"]);
+            if (rawdata is Map &&
+                rawdata.containsKey("onSaveShortCode") &&
+                rawdata["onSaveShortCode"]["result"] != null) {
+              LoadingDialog.callDataSaved(
+                  msg: rawdata["onSaveShortCode"]["result"]["message"]);
               return true;
             } else {
               LoadingDialog.callErrorMessage1(msg: "Save Failed");

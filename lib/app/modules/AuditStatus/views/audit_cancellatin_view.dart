@@ -1,6 +1,7 @@
 import 'package:bms_scheduling/app/data/DropDownValue.dart';
 import 'package:bms_scheduling/app/modules/AuditStatus/bindings/audit_status_cancel_deals.dart';
 import 'package:bms_scheduling/app/modules/AuditStatus/controllers/audit_status_controller.dart';
+import 'package:bms_scheduling/app/providers/SizeDefine.dart';
 import 'package:bms_scheduling/app/providers/extensions/string_extensions.dart';
 import 'package:bms_scheduling/widgets/DataGridShowOnly.dart';
 import 'package:bms_scheduling/widgets/DateTime/DateWithThreeTextField.dart';
@@ -197,8 +198,16 @@ class AuditCanellation extends StatelessWidget {
                       crossAxisAlignment: CrossAxisAlignment.center,
                       mainAxisSize: MainAxisSize.min,
                       children: [
-                        Icon(Icons.check_box_outline_blank_outlined),
-                        Text("Select All"),
+                        Icon(
+                          Icons.check_box_outline_blank_outlined,
+                          color: Colors.grey,
+                        ),
+                        Text(
+                          "Select All",
+                          style: TextStyle(
+                              color: Colors.grey,
+                              fontSize: SizeDefine.labelSize1),
+                        ),
                       ],
                     ),
                   )
