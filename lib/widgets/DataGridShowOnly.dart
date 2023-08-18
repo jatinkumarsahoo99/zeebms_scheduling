@@ -301,12 +301,14 @@ class DataGridShowOnlyKeys extends StatelessWidget {
             cells[element.key] = PlutoCell(
               value: element.key == "selected" || element.value == null
                   ? ""
-                  : (element.key.toString().toLowerCase().contains("date") ||
-                              (dateFormatKeys ?? []).contains(element.key)) &&
-                          formatDate!
-                      ? DateFormat(dateFromat).format(DateTime.parse(
+                  : element.key == "auditedon"
+                      ? DateFormat.yMd().add_jm().format(DateTime.parse(
                           element.value.toString().replaceAll("T", " ")))
-                      : element.value.toString(),
+                      : element.key.toString().toLowerCase().contains("date") &&
+                              formatDate!
+                          ? DateFormat(dateFromat).format(DateTime.parse(
+                              element.value.toString().replaceAll("T", " ")))
+                          : element.value.toString(),
             );
           }
           segRows.add(PlutoRow(cells: cells, sortIdx: i));
