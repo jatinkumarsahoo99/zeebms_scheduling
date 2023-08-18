@@ -854,6 +854,16 @@ class AsrunImportAdRevenueView extends StatelessWidget {
                       "");
                 },
               ),
+              SizedBox(
+                width: 10,
+              ),
+              FormButtonWrapper(
+                btnText: "Filter",
+                showIcon: false,
+                callback: () {
+                  controller.drgabbleDialog.value = null;
+                },
+              ),
             ],
           )
         ],
