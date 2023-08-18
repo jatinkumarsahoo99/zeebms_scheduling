@@ -797,26 +797,66 @@ class AsrunImportAdRevenueView extends StatelessWidget {
   }
 
   showFPCDialog(context) {
-    controller.drgabbleDialog.value = SizedBox(
-      height: Get.height * 0.65,
-      width: Get.width / 2,
-      child: DataGridShowOnlyKeys(
-        key: const Key("FPC Dialog"),
-        mapData: controller.viewFPCData?.map((e) => e.toJson()).toList() ?? [],
-        onload: (loadEvent) {
-          controller.fpcGridStateManager = loadEvent.stateManager;
-        },
-        onSelected: (selectEvent) {
-          controller.selectedFPCindex = selectEvent.rowIdx;
-        },
-        hideCode: false,
-        hideKeys: ["programcode"],
-        mode: PlutoGridMode.selectWithOneTap,
-        onRowDoubleTap: (rowEvent) {
-          controller.gridStateManager?.setFilter((element) =>
-              element.cells["fpctIme"]?.value.toString() ==
-              rowEvent.row.cells["starttime"]?.value.toString());
-        },
+    controller.drgabbleDialog.value = Card(
+      child: Column(
+        mainAxisAlignment: MainAxisAlignment.center,
+        crossAxisAlignment: CrossAxisAlignment.center,
+        mainAxisSize: MainAxisSize.min,
+        children: [
+          Container(
+            height: Get.height * 0.65,
+            width: Get.width / 2,
+            child: KeepAlive(
+              keepAlive: true,
+              child: DataGridShowOnlyKeys(
+                key: GlobalKey(),
+                mapData:
+                    controller.viewFPCData?.map((e) => e.toJson()).toList() ??
+                        [],
+                onload: (loadEvent) {
+                  controller.fpcGridStateManager = loadEvent.stateManager;
+                },
+                onSelected: (selectEvent) {
+                  controller.selectedFPCindex = selectEvent.rowIdx;
+                },
+                hideCode: false,
+                hideKeys: ["programcode"],
+                mode: PlutoGridMode.selectWithOneTap,
+                onRowDoubleTap: (rowEvent) {
+                  controller.gridStateManager?.setFilter((element) =>
+                      element.cells["fpctIme"]?.value.toString() ==
+                      rowEvent.row.cells["starttime"]?.value.toString());
+                },
+              ),
+            ),
+          ),
+          Row(
+            mainAxisSize: MainAxisSize.min,
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              FormButtonWrapper(
+                btnText: "Verify",
+                showIcon: false,
+                callback: () {
+                  controller.updateFPCTime();
+                },
+              ),
+              SizedBox(
+                width: 10,
+              ),
+              FormButtonWrapper(
+                btnText: "Filter",
+                showIcon: false,
+                callback: () {
+                  controller.filterMainGrid(controller
+                          .viewFPCData?[controller.selectedFPCindex!]
+                          .starttime ??
+                      "");
+                },
+              ),
+            ],
+          )
+        ],
       ),
     );
   }
