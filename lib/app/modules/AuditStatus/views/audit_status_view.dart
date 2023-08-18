@@ -96,7 +96,8 @@ class AuditStatusView extends GetView<AuditStatusController> {
                           exportFileName: "Audit Status",
                           colorCallback: (colorEvent) {
                             return gridcontroller.getColor(
-                                gridcontroller.bookingData[colorEvent.rowIdx]);
+                                gridcontroller.bookingData[colorEvent.rowIdx],
+                                colorEvent.rowIdx);
                           },
                           onRowDoubleTap: (event) {
                             if (controller.currentType.value == "Cancelation") {
