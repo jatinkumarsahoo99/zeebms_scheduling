@@ -153,7 +153,7 @@ class NewShortContentFormController extends GetxController {
             houseId.text,
             segment.text),
         fun: (rawdata) {
-          if (rawdata is Map && rawdata.containsKey("infoRetrivedRecords")) {
+          if (rawdata is Map) {
             Map data = rawdata[0];
             switch (selectedType.value?.key) {
               //       {

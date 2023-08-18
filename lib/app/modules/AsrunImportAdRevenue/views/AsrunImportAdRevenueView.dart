@@ -797,75 +797,75 @@ class AsrunImportAdRevenueView extends StatelessWidget {
   }
 
   showFPCDialog(context) {
-    controller.drgabbleDialog.value = Container(
-      height: Get.height * 0.65,
-      width: Get.width / 2,
-      child: Card(
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          crossAxisAlignment: CrossAxisAlignment.center,
-          mainAxisSize: MainAxisSize.min,
-          children: [
-            Expanded(
-              child: Container(
-                child: DataGridShowOnlyKeys(
-                  mapData:
-                      controller.viewFPCData?.map((e) => e.toJson()).toList() ??
-                          [],
-                  onload: (loadEvent) {
-                    controller.fpcGridStateManager = loadEvent.stateManager;
-                  },
-                  onSelected: (selectEvent) {
-                    controller.selectedFPCindex = selectEvent.rowIdx;
-                  },
-                  hideCode: false,
-                  hideKeys: ["programcode"],
-                  mode: PlutoGridMode.selectWithOneTap,
-                  onRowDoubleTap: (rowEvent) {
-                    controller.gridStateManager?.setFilter((element) =>
-                        element.cells["fpctIme"]?.value.toString() ==
-                        rowEvent.row.cells["starttime"]?.value.toString());
-                  },
-                ),
-              ),
-            ),
-            Row(
-              mainAxisSize: MainAxisSize.min,
+    controller.drgabbleDialog.value = Stack(
+      alignment: Alignment.topRight,
+      children: [
+        Container(
+          height: Get.height * 0.65,
+          width: Get.width / 2,
+          child: Card(
+            child: Column(
               mainAxisAlignment: MainAxisAlignment.center,
+              crossAxisAlignment: CrossAxisAlignment.center,
+              mainAxisSize: MainAxisSize.min,
               children: [
-                FormButtonWrapper(
-                  btnText: "Verify",
-                  showIcon: false,
-                  callback: () {
-                    controller.updateFPCTime();
-                  },
+                Expanded(
+                  child: Container(
+                    child: DataGridShowOnlyKeys(
+                      mapData:
+                          controller.viewFPCData?.map((e) => e.toJson()).toList() ??
+                              [],
+                      onload: (loadEvent) {
+                        controller.fpcGridStateManager = loadEvent.stateManager;
+                      },
+                      onSelected: (selectEvent) {
+                        controller.selectedFPCindex = selectEvent.rowIdx;
+                      },
+                      hideCode: false,
+                      hideKeys: ["programcode"],
+                      mode: PlutoGridMode.selectWithOneTap,
+                      onRowDoubleTap: (rowEvent) {
+                        controller.gridStateManager?.setFilter((element) =>
+                            element.cells["fpctIme"]?.value.toString() ==
+                            rowEvent.row.cells["starttime"]?.value.toString());
+                      },
+                    ),
+                  ),
                 ),
-                SizedBox(
-                  width: 10,
-                ),
-                FormButtonWrapper(
-                  btnText: "Filter",
-                  showIcon: false,
-                  callback: () {
-                    controller.filterMainGrid(controller
-                            .viewFPCData?[controller.selectedFPCindex!]
-                            .starttime ??
-                        "");
-                  },
-                ),
-                Spacer(),
-                FormButtonWrapper(
-                  btnText: "Close",
-                  showIcon: false,
-                  callback: () {
-                    controller.drgabbleDialog.value = null;
-                  },
-                ),
+                Row(
+                  mainAxisSize: MainAxisSize.min,
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    FormButtonWrapper(
+                      btnText: "Verify",
+                      showIcon: false,
+                      callback: () {
+                        controller.updateFPCTime();
+                      },
+                    ),
+                    SizedBox(
+                      width: 10,
+                    ),
+                    FormButtonWrapper(
+                      btnText: "Filter",
+                      showIcon: false,
+                      callback: () {
+                        controller.filterMainGrid(controller
+                                .viewFPCData?[controller.selectedFPCindex!]
+                                .starttime ??
+                            "");
+                      },
+                  
+                  ],
+                )
               ],
-            )
-          ],
+            ),
+          ),
         ),
-      ),
+        IconButton(onPressed: (){
+controller.drgabbleDialog.value = null;
+        }, icon: Icon(Icons.close))
+      ],
     );
   }
 }

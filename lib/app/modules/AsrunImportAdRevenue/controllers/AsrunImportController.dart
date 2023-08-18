@@ -120,6 +120,7 @@ class AsrunImportController extends GetxController {
   }
 
   loadAsrunData() {
+    isEnable.value = false;
     Get.find<ConnectorControl>().POSTMETHOD(
         api: ApiFactory.AsrunImport_LoadRunData(selectLocation?.key,
             selectChannel?.key, selectedDate.text.fromdMyToyMd()),
