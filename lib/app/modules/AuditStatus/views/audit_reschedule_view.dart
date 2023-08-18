@@ -44,13 +44,21 @@ class AuditReschdule extends StatelessWidget {
                 runSpacing: 5,
                 crossAxisAlignment: WrapCrossAlignment.end,
                 children: [
-                  DropDownField.formDropDown1WidthMap(controller.locations.value, (value) {
+                  DropDownField.formDropDown1WidthMap(
+                      controller.locations.value, (value) {
                     // controller.selectedLocation = value;
                     // controller.getChannel(value.key);
-                  }, "Location", 0.24, isEnable: true, selected: DropDownValue(key: data.locationCode, value: data.locationName)),
-                  DropDownField.formDropDown1WidthMap(controller.channels.value, (value) {
+                  }, "Location", 0.24,
+                      isEnable: true,
+                      selected: DropDownValue(
+                          key: data.locationCode, value: data.locationName)),
+                  DropDownField.formDropDown1WidthMap(controller.channels.value,
+                      (value) {
                     // controller.selectedChannel = value;
-                  }, "Channel", 0.24, isEnable: true, selected: DropDownValue(key: data.channelCode, value: data.channelName)),
+                  }, "Channel", 0.24,
+                      isEnable: true,
+                      selected: DropDownValue(
+                          key: data.channelCode, value: data.channelName)),
                   SizedBox(
                       width: Get.width * 0.24,
                       child: Row(
@@ -60,48 +68,87 @@ class AuditReschdule extends StatelessWidget {
                           DateWithThreeTextField(
                               widthRation: 0.115,
                               title: "FPC Eff. Dt.",
-                              mainTextController: TextEditingController(text: data.bookingEffectiveDate?.fromyMdTodMy())),
+                              mainTextController: TextEditingController(
+                                  text: data.bookingEffectiveDate
+                                      ?.fromyMdTodMy())),
                           DateWithThreeTextField(
                               widthRation: 0.115,
                               title: "Resch Dt.",
                               onFocusChange: (value) {},
-                              mainTextController: TextEditingController(text: data.rescheduledate?.fromyMdTodMy())),
+                              mainTextController: TextEditingController(
+                                  text: data.rescheduledate?.fromyMdTodMy())),
                         ],
                       )),
-                  InputFields.formField1(hintTxt: "Ref No", width: 0.24, controller: TextEditingController(text: data.rescheduleReferenceNumber)),
+                  InputFields.formField1(
+                      hintTxt: "Ref No",
+                      width: 0.24,
+                      controller: TextEditingController(
+                          text: data.rescheduleReferenceNumber)),
                   Container(
                     width: Get.width * 0.24,
-                    child: Row(mainAxisSize: MainAxisSize.max, mainAxisAlignment: MainAxisAlignment.spaceBetween, children: [
-                      DateWithThreeTextField(
-                          widthRation: 0.115,
-                          title: "Ref Date",
-                          onFocusChange: (value) {},
-                          mainTextController: TextEditingController(text: data.bookingEffectiveDate?.split("T")[0].fromyMdTodMy())),
-                      InputFields.formField1(
-                          hintTxt: "Booking No", width: 0.115, isEnable: false, controller: TextEditingController(text: data.bookingNumber)),
-                    ]),
+                    child: Row(
+                        mainAxisSize: MainAxisSize.max,
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        children: [
+                          DateWithThreeTextField(
+                              widthRation: 0.115,
+                              title: "Ref Date",
+                              onFocusChange: (value) {},
+                              mainTextController: TextEditingController(
+                                  text: data.bookingEffectiveDate
+                                      ?.split("T")[0]
+                                      .fromyMdTodMy())),
+                          InputFields.formField1(
+                              hintTxt: "Booking No",
+                              width: 0.115,
+                              isEnable: false,
+                              controller: TextEditingController(
+                                  text: data.bookingNumber)),
+                        ]),
                   ),
-                  InputFields.formField1(hintTxt: "Deal No", isEnable: false, width: 0.24, controller: TextEditingController(text: data.dealNo)),
+                  InputFields.formField1(
+                      hintTxt: "Deal No",
+                      isEnable: false,
+                      width: 0.24,
+                      controller: TextEditingController(text: data.dealNo)),
                   SizedBox(
                       width: Get.width * 0.24,
-                      child: Row(mainAxisSize: MainAxisSize.max, mainAxisAlignment: MainAxisAlignment.start, children: [
-                        InputFields.formField1(
-                            isEnable: false,
-                            width: 0.14,
-                            hintTxt: "Reschedule No",
-                            controller: TextEditingController(text: data.rescheduleMonth.toString())),
-                        InputFields.formField1(
-                            isEnable: false, width: 0.09, hintTxt: "", controller: TextEditingController(text: data.rescheduleNumber.toString())),
-                      ])),
+                      child: Row(
+                          mainAxisSize: MainAxisSize.max,
+                          mainAxisAlignment: MainAxisAlignment.start,
+                          children: [
+                            InputFields.formField1(
+                                isEnable: false,
+                                width: 0.14,
+                                hintTxt: "Reschedule No",
+                                controller: TextEditingController(
+                                    text: data.rescheduleMonth.toString())),
+                            InputFields.formField1(
+                                isEnable: false,
+                                width: 0.09,
+                                hintTxt: "",
+                                controller: TextEditingController(
+                                    text: data.rescheduleNumber.toString())),
+                          ])),
                   DropDownField.formDropDown1WidthMap([], (value) {
                     // controller.selectedChannel = value;
-                  }, "Client", 0.24, isEnable: false, selected: DropDownValue(key: data.clientCode, value: data.clientName)),
+                  }, "Client", 0.24,
+                      isEnable: false,
+                      selected: DropDownValue(
+                          key: data.clientCode, value: data.clientName)),
                   DropDownField.formDropDown1WidthMap([], (value) {
                     // controller.selectedChannel = value;
-                  }, "Agency", 0.24, isEnable: false, selected: DropDownValue(key: data.agencyCode, value: data.agencyName)),
-                  DropDownField.formDropDown1WidthMap([DropDownValue(key: data.brandCode, value: data.brandName)], (value) {
+                  }, "Agency", 0.24,
+                      isEnable: false,
+                      selected: DropDownValue(
+                          key: data.agencyCode, value: data.agencyName)),
+                  DropDownField.formDropDown1WidthMap([
+                    DropDownValue(key: data.brandCode, value: data.brandName)
+                  ], (value) {
                     // controller.selectedChannel = value;
-                  }, "Brand", 0.24, selected: DropDownValue(key: data.brandCode, value: data.brandName)),
+                  }, "Brand", 0.24,
+                      selected: DropDownValue(
+                          key: data.brandCode, value: data.brandName)),
                   InkWell(
                     onTap: () {},
                     child: Row(
@@ -147,14 +194,31 @@ class AuditReschdule extends StatelessWidget {
                                 onRowChecked: (rowcheckEvent) {},
                                 hideCode: false,
                                 exportFileName: "Audit Reschedule",
-                                hideKeys: ["channelcode", "locationcode", "dealRowNumber"],
+                                dateFormatKeys: ["auditedon"],
+                                hideKeys: [
+                                  "channelcode",
+                                  "locationcode",
+                                  "dealRowNumber"
+                                ],
                                 rowCheckColor: Colors.white,
                                 onload: (loadEvent) {},
                                 colorCallback: (rowEvent) {
-                                  if (controller.auditStatusReschduleDisplay?.lstReshedule?[rowEvent.rowIdx].audited == null) {
+                                  if (controller
+                                          .auditStatusReschduleDisplay
+                                          ?.lstReshedule?[rowEvent.rowIdx]
+                                          .audited ==
+                                      null) {
                                     return Color(0xFF96FF96);
-                                  } else if ((controller.auditStatusReschduleDisplay?.lstReshedule?[rowEvent.rowIdx].audited ?? 0) <
-                                      (controller.auditStatusReschduleDisplay?.lstReshedule?[rowEvent.rowIdx].totalspots ?? 0)) {
+                                  } else if ((controller
+                                              .auditStatusReschduleDisplay
+                                              ?.lstReshedule?[rowEvent.rowIdx]
+                                              .audited ??
+                                          0) <
+                                      (controller
+                                              .auditStatusReschduleDisplay
+                                              ?.lstReshedule?[rowEvent.rowIdx]
+                                              .totalspots ??
+                                          0)) {
                                     return Color(0xFFFF9696);
                                   }
 
@@ -164,7 +228,11 @@ class AuditReschdule extends StatelessWidget {
                                 checkRowKey: "auditStatus",
                                 hideCheckKeysValue: true,
                                 actionIcon: Icons.check_box_outlined,
-                                mapData: controller.auditStatusReschduleDisplay?.lstReshedule?.map((e) => e.toJson()).toList() ?? []),
+                                mapData: controller.auditStatusReschduleDisplay
+                                        ?.lstReshedule
+                                        ?.map((e) => e.toJson())
+                                        .toList() ??
+                                    []),
                           );
                         }),
                   ),
@@ -179,14 +247,26 @@ class AuditReschdule extends StatelessWidget {
                                 onRowChecked: (rowcheckEvent) {},
                                 hideCode: false,
                                 exportFileName: "Audit Cancellation",
-                                hideKeys: ["channelcode", "locationcode", "dealRowNumber"],
+                                hideKeys: [
+                                  "channelcode",
+                                  "locationcode",
+                                  "dealRowNumber"
+                                ],
                                 rowCheckColor: Colors.white,
                                 formatDate: false,
+                                dateFormatKeys: ["auditedon"],
                                 onload: (loadEvent) {},
                                 hideCheckKeysValue: true,
-                                actionIconKey: {"audited": Icons.check_box_rounded, "requested": Icons.check_box_rounded},
+                                actionIconKey: {
+                                  "audited": Icons.check_box_rounded,
+                                  "requested": Icons.check_box_rounded
+                                },
                                 actionIcon: Icons.check_box_outlined,
-                                mapData: controller.auditStatusReschduleDisplay?.lstBooking?.map((e) => e.toJson()).toList() ?? []),
+                                mapData: controller
+                                        .auditStatusReschduleDisplay?.lstBooking
+                                        ?.map((e) => e.toJson())
+                                        .toList() ??
+                                    []),
                           );
                         }),
                   ),

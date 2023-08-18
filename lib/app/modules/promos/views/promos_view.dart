@@ -107,7 +107,7 @@ class SchedulePromoView extends StatelessWidget {
                                               if (controller.selectLocation != null && controller.selectChannel != null) {
                                                 controller.showDetails();
                                               } else {
-                                                LoadingDialog.showErrorDialog("");
+                                                LoadingDialog.showErrorDialog("Please select Location and Channel.");
                                               }
                                             },
                                           ),
@@ -191,7 +191,8 @@ class SchedulePromoView extends StatelessWidget {
                                                             element.telecastTime?.toLowerCase() == promo.telecastTime?.toLowerCase() &&
                                                             element.rowNo == promo.rowNo);
                                                         controller.promoScheduled.removeAt(controller.scheduledPromoStateManager!.currentRowIdx!);
-                                                        controller.calcaulateExceed(controller.scheduledPromoStateManager!.currentRowIdx!);
+                                                        controller.calcaulateExceed(controller.scheduledPromoStateManager!.currentRowIdx!,
+                                                            focusBackGrid: true);
                                                       }
                                                     }
                                                     return KeyEventResult.skipRemainingHandlers;

@@ -220,7 +220,7 @@ class SchedulePromoController extends GetxController {
     }
   }
 
-  calcaulateExceed(index) {
+  calcaulateExceed(index, {bool focusBackGrid = false}) {
     timeBand.value = dailyFpc[index].startTime ?? "00:00:00:00";
     programName.value = dailyFpc[index].programName ?? "";
 
@@ -235,6 +235,9 @@ class SchedulePromoController extends GetxController {
 
     scheduledTC.text = Utils.getDurationSecond(second: _totalPromoTime);
     dailyFpc.refresh();
+    if (focusBackGrid) {
+      scheduledPromoStateManager?.gridFocusNode.requestFocus();
+    }
   }
 
   void handleDelete() {

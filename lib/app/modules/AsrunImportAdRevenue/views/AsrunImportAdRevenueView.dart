@@ -25,8 +25,8 @@ import '../../../providers/ApiFactory.dart';
 import '../../../providers/SizeDefine.dart';
 import '../controllers/AsrunImportController.dart';
 
-class AsrunImportAdRevenueView extends GetView<AsrunImportController> {
-  AsrunImportController controllerX = Get.put(AsrunImportController());
+class AsrunImportAdRevenueView extends StatelessWidget {
+  AsrunImportController controller = Get.put(AsrunImportController());
 
   @override
   Widget build(BuildContext context) {
@@ -51,16 +51,16 @@ class AsrunImportAdRevenueView extends GetView<AsrunImportController> {
                 children: [
                   Obx(
                     () => DropDownField.formDropDown1WidthMap(
-                      controllerX.locations.value,
+                      controller.locations.value,
                       (value) {
-                        controllerX.selectLocation = value;
-                        controllerX
-                            .getChannels(controllerX.selectLocation?.key ?? "");
+                        controller.selectLocation = value;
+                        controller
+                            .getChannels(controller.selectLocation?.key ?? "");
                       },
                       "Location",
                       0.12,
-                      isEnable: controllerX.isEnable.value,
-                      selected: controllerX.selectLocation,
+                      isEnable: controller.isEnable.value,
+                      selected: controller.selectLocation,
                       autoFocus: true,
                       dialogWidth: 330,
                       dialogHeight: Get.height * .7,
@@ -70,17 +70,14 @@ class AsrunImportAdRevenueView extends GetView<AsrunImportController> {
                   /// channel
                   Obx(
                     () => DropDownField.formDropDown1WidthMap(
-                      controllerX.channels.value,
+                      controller.channels.value,
                       (value) {
-                        controllerX.selectChannel = value;
-                        controllerX.checkboxesMap["FPC"] = true;
-                        controllerX.checkboxesMap["GFK"] = true;
-                        controllerX.checkboxesMap.refresh();
+                        controller.selectChannel = value;
                       },
                       "Channel",
                       0.12,
-                      isEnable: controllerX.isEnable.value,
-                      selected: controllerX.selectChannel,
+                      isEnable: controller.isEnable.value,
+                      selected: controller.selectChannel,
                       autoFocus: true,
                       dialogWidth: 330,
                       dialogHeight: Get.height * .7,
@@ -91,14 +88,14 @@ class AsrunImportAdRevenueView extends GetView<AsrunImportController> {
                       title: "Log Date",
                       splitType: "-",
                       widthRation: 0.09,
-                      isEnable: controllerX.isEnable.value,
-                      onFocusChange: (data) {
+                      isEnable: controller.isEnable.value,
+                      onFocusChange: (data) async {
                         LoadingDialog.call(barrierDismissible: false);
-                        controllerX.loadAsrunData();
-                        controllerX.loadviewFPCData();
+                        await controller.loadAsrunData();
+                        await controller.loadviewFPCData();
                         Get.back();
                       },
-                      mainTextController: controllerX.selectedDate,
+                      mainTextController: controller.selectedDate,
                     ),
                   ),
                   Padding(
@@ -125,12 +122,12 @@ class AsrunImportAdRevenueView extends GetView<AsrunImportController> {
                           Obx(() => Padding(
                                 padding: const EdgeInsets.only(top: 15.0),
                                 child: Checkbox(
-                                  value: controllerX
+                                  value: controller
                                       .checkboxesMap.value[checkbox.key],
                                   onChanged: (val) {
-                                    controllerX.checkboxesMap
+                                    controller.checkboxesMap
                                         .value[checkbox.key] = val;
-                                    controllerX.checkboxesMap.refresh();
+                                    controller.checkboxesMap.refresh();
                                   },
                                   materialTapTargetSize:
                                       MaterialTapTargetSize.shrinkWrap,
@@ -149,7 +146,7 @@ class AsrunImportAdRevenueView extends GetView<AsrunImportController> {
                   InputFields.formField1(
                     isEnable: false,
                     hintTxt: "Start Time",
-                    controller: controllerX.startTime_,
+                    controller: controller.startTime_,
                     width: 0.09,
                   ),
                 ],
@@ -160,7 +157,7 @@ class AsrunImportAdRevenueView extends GetView<AsrunImportController> {
 
           GetBuilder<AsrunImportController>(
             id: "fpcData",
-            init: controllerX,
+            init: controller,
             builder: (controller) {
               return Expanded(
                   // width: Get.width,
@@ -171,8 +168,8 @@ class AsrunImportAdRevenueView extends GetView<AsrunImportController> {
                     ? DataGridShowOnlyKeys(
                         exportFileName: "Asrun Import",
                         // onFocusChange: (value) {
-                        //   // controllerX.gridStateManager!.setGridMode(PlutoGridMode.selectWithOneTap);
-                        //   // controllerX.selectedPlutoGridMode = PlutoGridMode.selectWithOneTap;
+                        //   // controller.gridStateManager!.setGridMode(PlutoGridMode.selectWithOneTap);
+                        //   // controller.selectedPlutoGridMode = PlutoGridMode.selectWithOneTap;
                         // },
                         onload: (loadevent) {
                           loadevent.stateManager.setSelecting(true);
@@ -222,7 +219,7 @@ class AsrunImportAdRevenueView extends GetView<AsrunImportController> {
                         ],
                         // mode: PlutoGridMode.selectWithOneTap,
                         // colorCallback: (PlutoRowColorContext plutoContext) {
-                        //   // return Color(controllerX.transmissionLogList![plutoContext.rowIdx].colorNo ?? Colors.white.value);
+                        //   // return Color(controller.transmissionLogList![plutoContext.rowIdx].colorNo ?? Colors.white.value);
                         // },
                         onSelected: (PlutoGridOnSelectedEvent event) {
                           event.selectedRows?.forEach((element) {
@@ -241,14 +238,14 @@ class AsrunImportAdRevenueView extends GetView<AsrunImportController> {
                         //     print("On select>>" + map["Episode Dur"].value.toString());
 
                         //     print("On Print moved cell>>>" +
-                        //         jsonEncode(controllerX.gridStateManager?.rows[i].cells["Episode Dur"]?.value.toString()));
+                        //         jsonEncode(controller.gridStateManager?.rows[i].cells["Episode Dur"]?.value.toString()));
 
-                        //     controllerX.gridStateManager?.rows[i].cells["Episode Dur"] = PlutoCell(value: val - (i - onRowMoved.idx));
+                        //     controller.gridStateManager?.rows[i].cells["Episode Dur"] = PlutoCell(value: val - (i - onRowMoved.idx));
                         //   }
-                        //   controllerX.gridStateManager?.notifyListeners();
+                        //   controller.gridStateManager?.notifyListeners();
                         // },
-                        // mode: controllerX.selectedPlutoGridMode,
-                        mapData: controllerX.asrunData!
+                        // mode: controller.selectedPlutoGridMode,
+                        mapData: controller.asrunData!
                             .map((e) => e.toJson())
                             .toList())
                     : Container(
@@ -283,7 +280,7 @@ class AsrunImportAdRevenueView extends GetView<AsrunImportController> {
                             topRight: Radius.circular(10)),
                       ),
                       child: GetBuilder<AsrunImportController>(
-                          init: controllerX,
+                          init: controller,
                           id: "transButtons",
                           builder: (controller) {
                             return Container(
@@ -315,9 +312,8 @@ class AsrunImportAdRevenueView extends GetView<AsrunImportController> {
                                     child: Icon(Icons.arrow_upward),
                                     onTap: () {
                                       if (controller.selectedFPCindex == 0) {
-                                        controller.selectedFPCindex =
-                                            controllerX
-                                                .gridStateManager?.rows.length;
+                                        controller.selectedFPCindex = controller
+                                            .gridStateManager?.rows.length;
                                       } else {
                                         controller.selectedFPCindex =
                                             (controller.selectedFPCindex ?? 1) -
@@ -334,7 +330,7 @@ class AsrunImportAdRevenueView extends GetView<AsrunImportController> {
                                   InkWell(
                                     child: Icon(Icons.arrow_downward),
                                     onTap: () {
-                                      if (controllerX
+                                      if (controller
                                               .gridStateManager?.rows.length ==
                                           controller.selectedFPCindex) {
                                         controller.selectedFPCindex = 0;
@@ -367,7 +363,7 @@ class AsrunImportAdRevenueView extends GetView<AsrunImportController> {
   buttonVisibilty(btn) {
     switch (btn) {
       case "Import":
-        return (controllerX.asrunData ?? []).isEmpty ? true : false;
+        return (controller.asrunData ?? []).isEmpty ? true : false;
 
       case "Commercials":
       case "Error":
@@ -375,7 +371,7 @@ class AsrunImportAdRevenueView extends GetView<AsrunImportController> {
       case "Swap":
       case "Paste Up":
       case "Paste Down":
-        return (controllerX.asrunData ?? []).isEmpty ? false : true;
+        return (controller.asrunData ?? []).isEmpty ? false : true;
 
       default:
         return null;
@@ -421,7 +417,7 @@ class AsrunImportAdRevenueView extends GetView<AsrunImportController> {
   }
 
   showSwap() {
-    controller.drgabbleDialog?.value = Card(
+    controller.drgabbleDialog.value = Card(
       shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(5)),
       child: Container(
         height: Get.height * .35,
@@ -801,49 +797,27 @@ class AsrunImportAdRevenueView extends GetView<AsrunImportController> {
   }
 
   showFPCDialog(context) {
-    return Get.defaultDialog(
-      barrierDismissible: true,
-      title: "View FPC",
-      titleStyle: const TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
-      titlePadding: const EdgeInsets.only(top: 10),
-      contentPadding: const EdgeInsets.symmetric(horizontal: 10, vertical: 5),
-      content: Container(
-        height: Get.height * 0.80,
-        width: Get.width / 2,
-        child: DataGridShowOnlyKeys(
-          mapData:
-              controllerX.viewFPCData?.map((e) => e.toJson()).toList() ?? [],
-          onload: (loadEvent) {
-            controller.fpcGridStateManager = loadEvent.stateManager;
-          },
-          onSelected: (selectEvent) {
-            controllerX.selectedFPCindex = selectEvent.rowIdx;
-          },
-          mode: PlutoGridMode.selectWithOneTap,
-          onRowDoubleTap: (rowEvent) {
-            controllerX.gridStateManager?.setFilter((element) =>
-                element.cells["fpctIme"]?.value.toString() ==
-                rowEvent.row.cells["starttime"]?.value.toString());
-          },
-        ),
-      ),
-      confirm: FormButtonWrapper(
-        btnText: "Verify",
-        showIcon: false,
-        callback: () {
-          controller.updateFPCTime();
+    controller.drgabbleDialog.value = SizedBox(
+      height: Get.height * 0.65,
+      width: Get.width / 2,
+      child: DataGridShowOnlyKeys(
+        key: const Key("FPC Dialog"),
+        mapData: controller.viewFPCData?.map((e) => e.toJson()).toList() ?? [],
+        onload: (loadEvent) {
+          controller.fpcGridStateManager = loadEvent.stateManager;
+        },
+        onSelected: (selectEvent) {
+          controller.selectedFPCindex = selectEvent.rowIdx;
+        },
+        hideCode: false,
+        hideKeys: ["programcode"],
+        mode: PlutoGridMode.selectWithOneTap,
+        onRowDoubleTap: (rowEvent) {
+          controller.gridStateManager?.setFilter((element) =>
+              element.cells["fpctIme"]?.value.toString() ==
+              rowEvent.row.cells["starttime"]?.value.toString());
         },
       ),
-      cancel: FormButtonWrapper(
-        btnText: "Filter",
-        showIcon: false,
-        callback: () {
-          controller.filterMainGrid(
-              controller.viewFPCData?[controller.selectedFPCindex!].starttime ??
-                  "");
-        },
-      ),
-      radius: 10,
     );
   }
 }
