@@ -154,7 +154,7 @@ class NewShortContentFormController extends GetxController {
             segment.text),
         fun: (rawdata) {
           if (rawdata is Map && rawdata.containsKey("infoRetrivedRecords")) {
-            Map data = rawdata["infoRetrivedRecords"][0];
+            Map data = rawdata[0];
             switch (selectedType.value?.key) {
               //       {
               //     "stillCode": null,
@@ -218,7 +218,7 @@ class NewShortContentFormController extends GetxController {
                 selectedTape.value = categeroies.firstWhereOrNull((element) =>
                     element.key?.toLowerCase() ==
                     (data["TapeTypeCode"] ?? "").toString().toLowerCase());
-                caption.text = data["SlideCode"] ?? "";
+                caption.text = data["SlideCaption"] ?? "";
                 txCaption.text = data["ExportTapeCaption"] ?? "";
                 selectedCategory.value = categeroies.firstWhereOrNull(
                     (element) =>
