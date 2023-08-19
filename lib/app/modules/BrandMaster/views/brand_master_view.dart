@@ -31,7 +31,7 @@ class BrandMasterView extends StatelessWidget {
       body: Center(
         child: SizedBox(
           width: size.width * .82,
-          height: size.height * .84,
+          height: size.height * .9,
           child: Dialog(
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
@@ -76,6 +76,9 @@ class BrandMasterView extends StatelessWidget {
                                     autoFocus: true,
                                     // maxLength: 1
                                     ),
+                                    SizedBox(
+                                      height: 5,
+                                    ),
                                     InputFields.formField1(
                                       hintTxt: "Brand Name",
                                       controller: controllerX.brandController,
@@ -87,6 +90,9 @@ class BrandMasterView extends StatelessWidget {
 
                                       },
                                       // autoFocus: true,
+                                    ),
+                                    SizedBox(
+                                      height: 5,
                                     ),
                                     Row(
                                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -117,6 +123,9 @@ class BrandMasterView extends StatelessWidget {
 
                                         ),
                                       ],
+                                    ),
+                                    SizedBox(
+                                      height: 5,
                                     ),
                                     Row(
                                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -198,6 +207,9 @@ class BrandMasterView extends StatelessWidget {
                                         )*/
                                       ],
                                     ),
+                                    SizedBox(
+                                      height: 5,
+                                    ),
                                     InputFields.formField1(
                                       hintTxt: "Product Level 1",
                                       // autoFocus: true,
@@ -208,6 +220,9 @@ class BrandMasterView extends StatelessWidget {
 
                                       },
                                       // autoFocus: true,
+                                    ),
+                                    SizedBox(
+                                      height: 5,
                                     ),
                                     InputFields.formField1(
                                       hintTxt: "Product Level 2",
@@ -220,6 +235,9 @@ class BrandMasterView extends StatelessWidget {
                                       },
                                       // autoFocus: true,
                                     ),
+                                    SizedBox(
+                                      height: 5,
+                                    ),
                                     InputFields.formField1(
                                       hintTxt: "Product Level 3",
                                       // autoFocus: true,
@@ -230,6 +248,9 @@ class BrandMasterView extends StatelessWidget {
 
                                       },
                                       // autoFocus: true,
+                                    ),
+                                    SizedBox(
+                                      height: 5,
                                     ),
                                     InputFields.formField1(
                                       hintTxt: "Product Level 4",
@@ -256,13 +277,11 @@ class BrandMasterView extends StatelessWidget {
                           padding: const EdgeInsets.all(8.0),
                           child: Container(
                               decoration: BoxDecoration(
-                                  border: Border.all(color: Colors.black)),
+                                  border: Border.all(color: Colors.grey)),
                                   child: GetBuilder<BrandMasterController>(
                                       id: "grid",
                                       builder: (controllerX) {
                                         return Container(
-                                            decoration: BoxDecoration(
-                                                border: Border.all(color: Colors.black)),
                                             child:
                                             (controllerX.clientDetailsAndBrandModel != null)?
                                             (controllerX.clientDetailsAndBrandModel!.clientdtails != null &&
