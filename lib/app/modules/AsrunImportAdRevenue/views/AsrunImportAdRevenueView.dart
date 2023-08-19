@@ -797,76 +797,50 @@ class AsrunImportAdRevenueView extends StatelessWidget {
   }
 
   showFPCDialog(context) {
-    controller.drgabbleDialog.value = Card(
-      child: Column(
-        mainAxisAlignment: MainAxisAlignment.center,
-        crossAxisAlignment: CrossAxisAlignment.center,
-        mainAxisSize: MainAxisSize.min,
-        children: [
-          Container(
-            height: Get.height * 0.65,
-            width: Get.width / 2,
-            child: KeepAlive(
-              keepAlive: true,
-              child: DataGridShowOnlyKeys(
-                key: GlobalKey(),
-                mapData:
-                    controller.viewFPCData?.map((e) => e.toJson()).toList() ??
-                        [],
-                onload: (loadEvent) {
-                  controller.fpcGridStateManager = loadEvent.stateManager;
-                },
-                onSelected: (selectEvent) {
-                  controller.selectedFPCindex = selectEvent.rowIdx;
-                },
-                hideCode: false,
-                hideKeys: ["programcode"],
-                mode: PlutoGridMode.selectWithOneTap,
-                onRowDoubleTap: (rowEvent) {
-                  controller.gridStateManager?.setFilter((element) =>
-                      element.cells["fpctIme"]?.value.toString() ==
-                      rowEvent.row.cells["starttime"]?.value.toString());
-                },
-              ),
-            ),
-          ),
-          Row(
-            mainAxisSize: MainAxisSize.min,
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: [
-              FormButtonWrapper(
-                btnText: "Verify",
-                showIcon: false,
-                callback: () {
-                  controller.updateFPCTime();
-                },
-              ),
-              SizedBox(
-                width: 10,
-              ),
-              FormButtonWrapper(
-                btnText: "Filter",
-                showIcon: false,
-                callback: () {
-                  controller.filterMainGrid(controller
-                          .viewFPCData?[controller.selectedFPCindex!]
-                          .starttime ??
-                      "");
-                },
-              ),
-              SizedBox(
-                width: 10,
-              ),
-              FormButtonWrapper(
-                btnText: "Filter",
-                showIcon: false,
-                callback: () {
-                  controller.drgabbleDialog.value = null;
-                },
-              ),
-            ],
-          )
-        ],
+    Get.defaultDialog(
+      barrierDismissible: true,
+      title: "View FPC",
+      titleStyle: const TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+      titlePadding: const EdgeInsets.only(top: 10),
+      contentPadding: const EdgeInsets.symmetric(horizontal: 10, vertical: 5),
+      radius: 10,
+      content: Container(
+        height: Get.height * 0.65,
+        width: Get.width / 2,
+        child: DataGridShowOnlyKeys(
+          mapData:
+              controller.viewFPCData?.map((e) => e.toJson()).toList() ?? [],
+          onload: (loadEvent) {
+            controller.fpcGridStateManager = loadEvent.stateManager;
+          },
+          onSelected: (selectEvent) {
+            controller.selectedFPCindex = selectEvent.rowIdx;
+          },
+          hideCode: false,
+          hideKeys: ["programcode"],
+          mode: PlutoGridMode.selectWithOneTap,
+          onRowDoubleTap: (rowEvent) {
+            controller.gridStateManager?.setFilter((element) =>
+                element.cells["fpctIme"]?.value.toString() ==
+                rowEvent.row.cells["starttime"]?.value.toString());
+          },
+        ),
+      ),
+      confirm: FormButtonWrapper(
+        btnText: "Verify",
+        showIcon: false,
+        callback: () {
+          controller.updateFPCTime();
+        },
+      ),
+      cancel: FormButtonWrapper(
+        btnText: "Filter",
+        showIcon: false,
+        callback: () {
+          controller.filterMainGrid(
+              controller.viewFPCData?[controller.selectedFPCindex!].starttime ??
+                  "");
+        },
       ),
     );
   }
