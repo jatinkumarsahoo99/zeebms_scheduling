@@ -156,7 +156,7 @@ class TransmissionLogView extends StatelessWidget {
                               widthRation: 0.12,
                               isEnable: controller.isEnable.value,
                               onFocusChange: (data) {
-                               /* DateTime date = DateFormat("dd-MM-yyyy").parse(data);
+                                /* DateTime date = DateFormat("dd-MM-yyyy").parse(data);
                                 print("Focus date is>>>" + date.toString());
                                 bool valDate = date.isBefore(DateTime.now());
                                 bool isSameDate = DateUtils.isSameDay(date, DateTime.now());
@@ -385,6 +385,7 @@ class TransmissionLogView extends StatelessWidget {
                                     controller.addEventToUndo();
                                     controller.gridStateManager
                                         ?.removeCurrentRow();
+                                    controller.colorGrid(false);
                                   });
 
                                   break;
@@ -1041,13 +1042,14 @@ class TransmissionLogView extends StatelessWidget {
                           btnText: "Search",
                           showIcon: false,
                           callback: () {
-                            if(controller.selectEvent==null){
-                              LoadingDialog.showErrorDialog("Please select event");
-                            }else {
+                            if (controller.selectEvent == null) {
+                              LoadingDialog.showErrorDialog(
+                                  "Please select event");
+                            } else {
                               controller.getBtnInsertSearchClick(
                                   isMine: controller.isMy.value,
-                                  eventType: controller.selectEvent?.value ??
-                                      "",
+                                  eventType:
+                                      controller.selectEvent?.value ?? "",
                                   txId: controller.txId_.text,
                                   txCaption: controller.txCaption_.text);
                             }
@@ -1063,7 +1065,7 @@ class TransmissionLogView extends StatelessWidget {
                             // LoadingDialog.call();
                             // controller.btnFastInsert_Add_Click();
                             LoadingDialog.call();
-                            Future.delayed(Duration(seconds: 2),() {
+                            Future.delayed(Duration(seconds: 2), () {
                               controller.btnFastInsert_Add_Click();
                             });
                           },
@@ -1146,7 +1148,8 @@ class TransmissionLogView extends StatelessWidget {
                                   onload: (PlutoGridOnLoadedEvent load) {
                                     controller.tblFastInsert =
                                         load.stateManager;
-                                    load.stateManager.setSelectingMode(PlutoGridSelectingMode.row);
+                                    load.stateManager.setSelectingMode(
+                                        PlutoGridSelectingMode.row);
                                     load.stateManager.setSelecting(true);
                                     load.stateManager.toggleSelectingRow(0);
                                   },
@@ -1154,15 +1157,15 @@ class TransmissionLogView extends StatelessWidget {
                                   onRowDoubleTap:
                                       (PlutoGridOnRowDoubleTapEvent tap) {
                                     // controller.tblFastInsert?.unCheckedRows;
-                                   /* controller.tblFastInsert
+                                    /* controller.tblFastInsert
                                         ?.setRowChecked(tap.row, true);*/
                                     // controller.tblFastInsert
                                     //     ?.setCurrentCell(tap.cell, tap.rowIdx);
                                     LoadingDialog.call();
-                                    Future.delayed(Duration(seconds: 2),() {
-                                      controller.btnFastInsert_Add_Click1(tap.rowIdx);
+                                    Future.delayed(Duration(seconds: 2), () {
+                                      controller
+                                          .btnFastInsert_Add_Click1(tap.rowIdx);
                                     });
-
                                   },
                                   mapData: (controller.inserSearchModel
                                       ?.lstListMyEventData?.lstListMyEventClips!
@@ -2168,9 +2171,16 @@ class TransmissionLogView extends StatelessWidget {
                                           ?.map((e) => e.toJson())
                                           .toList())!)
                                   // _dataTable3()
-                                  : const WarningBox(
-                                      text:
-                                          'Enter Location, Channel & Date to get the Break Definitions'),
+                                  : Container(
+                                      width: Get.width * 0.3,
+                                      height: Get.height * 0.53,
+                                      decoration: BoxDecoration(
+                                        border: Border.all(
+                                          color: Colors.grey.shade400,
+                                          width: 1,
+                                        ),
+                                      ),
+                                    ),
                             );
                           }),
                     ],
