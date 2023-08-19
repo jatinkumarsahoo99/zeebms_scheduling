@@ -360,12 +360,16 @@ class CommercialView extends GetView<CommercialController> {
                 controller.programCodeSelected = controller.commercialProgramList![plutoGrid.rowIdx!].programcode;
               },
               onRowDoubleTap: (plutoGrid) async {
+
                 controller.canshowFilterList = true;
+                controller.programCodeSelected = controller.commercialProgramList![plutoGrid.rowIdx!].programcode;
                 controller.lastProgramSelectedIdx = plutoGrid.rowIdx;
+                controller.sm?.setCurrentCell(
+                    controller.sm?.getRowByIdx(controller.lastProgramSelectedIdx)?.cells['fpcTime'], controller.lastProgramSelectedIdx);
                 controller.selectedProgram = controller.commercialProgramList![plutoGrid.rowIdx];
                 controller.programFpcTimeSelected = controller.commercialProgramList![plutoGrid.rowIdx].fpcTime;
-                await controller.showSelectedProgramList();
-                controller.updateTab();
+                 controller.showSelectedProgramList();
+                // controller.updateTab();
               },
             );
           } else {
@@ -425,7 +429,7 @@ class CommercialView extends GetView<CommercialController> {
                   ],
                   colorCallback: (PlutoRowColorContext plutoContext) {
                     try {
-                      if ((plutoContext.row.cells.containsValue(controller.sm?.currentCell))) {
+                      if ((plutoContext.row.cells.containsValue(controller.gridStateManager?.currentCell))) {
                         return Colors.deepPurple.shade200;
                       } else {
                         return controller.colorSort(controller.showCommercialDetailsList![plutoContext.rowIdx].eventType.toString());
@@ -547,7 +551,8 @@ class CommercialView extends GetView<CommercialController> {
                   child: DataGridFromMap(
                     onload: (sm) {
                       controller.fpcMisMatchSM = sm.stateManager;
-                      sm.stateManager.setSelectingMode(PlutoGridSelectingMode.row);
+                      controller.fpcMisMatchSM?.setSelectingMode(PlutoGridSelectingMode.row);
+                      controller.fpcMisMatchSM?.setSelecting(true);
                       // controller.fpcMisMatchSM?.setCurrentCell(
                       //     controller.fpcMisMatchSM?.getRowByIdx(controller.mainSelectedIndex)?.cells['eventType'], controller.mainSelectedIndex ?? 0);
                       // controller.fpcMisMatchSM?.moveCurrentCellByRowIdx(controller.mainSelectedIndex ?? 0, PlutoMoveDirection.down);
@@ -665,6 +670,7 @@ class CommercialView extends GetView<CommercialController> {
                     mode: PlutoGridMode.normal,
                     onload: (sm) {
                       controller.markedAsErrorSM = sm.stateManager;
+                      controller.markedAsErrorSM?.setSelecting(true);
                       sm.stateManager.setSelectingMode(PlutoGridSelectingMode.row);
                       // controller.markedAsErrorSM?.setCurrentCell(
                       //     controller.markedAsErrorSM?.getRowByIdx(controller.mainSelectedIndex)?.cells['eventType'],
