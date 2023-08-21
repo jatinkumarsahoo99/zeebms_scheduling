@@ -49,6 +49,7 @@ class DealView extends GetView<RoBookingController> {
                                   load.stateManager.setCurrentCell(controller.currentGridCell, controller.currentGridCell?.row.sortIdx);
                                 }
                               },
+                              hideCode: false,
                               onRowDoubleTap: (value) {
                                 controller.currentGridCell = value.cell;
                                 gridcontroller.dealdoubleclick(
@@ -69,6 +70,7 @@ class DealView extends GetView<RoBookingController> {
                                         gridcontroller.dealViewGrid!.columns.indexWhere((element) => element.field == value.cell.column.field),
                                         value.rowIdx);
                                   },
+                                  hideCode: false,
                                 )
                               : Container(
                                   decoration: BoxDecoration(border: Border.all(width: 1.0, color: Colors.grey)),
