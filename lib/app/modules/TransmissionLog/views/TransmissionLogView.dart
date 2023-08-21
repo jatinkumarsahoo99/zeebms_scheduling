@@ -274,6 +274,7 @@ class TransmissionLogView extends StatelessWidget {
                                   PlutoGridMode.selectWithOneTap;
                             },*/
                             hideCode: false,
+                            draggableKeys: ["transmissionTime"],
                             colorCallback: (PlutoRowColorContext colorData) {
                               PlutoRow currentRow =
                                   colorData.stateManager.rows[colorData.rowIdx];
@@ -1065,7 +1066,7 @@ class TransmissionLogView extends StatelessWidget {
                             // LoadingDialog.call();
                             // controller.btnFastInsert_Add_Click();
                             LoadingDialog.call();
-                            Future.delayed(Duration(seconds: 2), () {
+                            Future.delayed(Duration(seconds: 1), () {
                               controller.btnFastInsert_Add_Click();
                             });
                           },
@@ -1148,9 +1149,11 @@ class TransmissionLogView extends StatelessWidget {
                                   onload: (PlutoGridOnLoadedEvent load) {
                                     controller.tblFastInsert =
                                         load.stateManager;
+                                    load.stateManager
+                                        .setGridMode(PlutoGridMode.normal);
                                     load.stateManager.setSelectingMode(
                                         PlutoGridSelectingMode.row);
-                                    load.stateManager.setSelecting(true);
+                                    // load.stateManager.setSelecting(true);
                                     load.stateManager.toggleSelectingRow(0);
                                   },
                                   // colorCallback: (renderC) => Colors.red[200]!,
@@ -1166,6 +1169,15 @@ class TransmissionLogView extends StatelessWidget {
                                       controller
                                           .btnFastInsert_Add_Click1(tap.rowIdx);
                                     });
+                                  },
+                                  colorCallback: (colorData) {
+                                    if (controller
+                                            .tblFastInsert?.currentRowIdx ==
+                                        colorData.rowIdx) {
+                                      return Color(0xFFD1C4E9);
+                                    }else{
+                                      return Colors.white;
+                                    }
                                   },
                                   mapData: (controller.inserSearchModel
                                       ?.lstListMyEventData?.lstListMyEventClips!
