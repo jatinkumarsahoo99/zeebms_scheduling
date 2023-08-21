@@ -32,6 +32,7 @@ class DataGridFromMapTransmissionLog extends StatelessWidget {
       this.actionOnPress,
       this.onSelected,
       this.onRowsMoved,
+      this.draggableKeys,
       this.onChanged,
       this.onContextMenuClick,
       this.onRowDoubleTap,
@@ -61,6 +62,7 @@ class DataGridFromMapTransmissionLog extends StatelessWidget {
   final Function? actionOnPress;
   Color Function(PlutoRowColorContext)? colorCallback;
   Function(PlutoGridOnLoadedEvent)? onload;
+  List<String>? draggableKeys;
 
   @override
   Widget build(BuildContext context) {
@@ -107,7 +109,7 @@ class DataGridFromMapTransmissionLog extends StatelessWidget {
                 decoration: BoxDecoration(
                   border: Border.all(color: Colors.transparent,width: 0.01),
                   borderRadius: BorderRadius.circular(1),
-                  // color: Colors.white
+                  color: Colors.white
                 ),
                 alignment: Alignment.centerLeft,
                 // color: (key == "epsNo" || key == "tapeid" || key == "status") ? ColorData.cellColor(rendererContext.row.cells[key]?.value, key) : null,
@@ -343,7 +345,7 @@ class DataGridFromMapTransmissionLog extends StatelessWidget {
               );
             }),
             enableSorting: enableSort,
-            enableRowDrag: key=="transmissionTime"?true:false,
+            enableRowDrag: draggableKeys!=null?draggableKeys!.contains(key):false,
             enableEditingMode: false,
             enableDropToResize: true,
             enableContextMenu: false,

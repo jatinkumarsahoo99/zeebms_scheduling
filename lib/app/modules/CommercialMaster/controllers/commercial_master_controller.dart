@@ -465,6 +465,9 @@ class CommercialMasterController extends GetxController {
             agencyDetails.clear();
             agencyDetailsMaster.clear();
             brandType.clear();
+            selectedBrandType = null;
+            selectedAgencyDetails = null;
+            agencyNameController.text="";
             if (map.containsKey('agencyType') && map['agencyType'].length > 0) {
               log("agencyType" + map['agencyType'].toString());
               agencyDetails.clear();

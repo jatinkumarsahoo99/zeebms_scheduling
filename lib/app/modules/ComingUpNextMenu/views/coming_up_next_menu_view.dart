@@ -30,22 +30,22 @@ class ComingUpNextMenuView extends StatelessWidget {
         child: SizedBox(
           width: size.width * .64,
           child: Dialog(
-            child: Padding(
-              padding: const EdgeInsets.all(8.0),
-              child: FocusTraversalGroup(
-                policy: OrderedTraversalPolicy(),
-                child: Column(
-                  mainAxisSize: MainAxisSize.min,
-                  children: [
-                    AppBar(
-                      title: Text('Coming Up Next Master'),
-                      centerTitle: true,
-                      backgroundColor: Colors.deepPurple,
-                    ),
-                    GetBuilder<ComingUpNextMenuController>(
-                      id: "top",
-                      builder: (controllerX) {
-                        return Column(
+            child: FocusTraversalGroup(
+              policy: OrderedTraversalPolicy(),
+              child: Column(
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  AppBar(
+                    title: Text('Coming Up Next Master'),
+                    centerTitle: true,
+                    backgroundColor: Colors.deepPurple,
+                  ),
+                  GetBuilder<ComingUpNextMenuController>(
+                    id: "top",
+                    builder: (controllerX) {
+                      return Padding(
+                        padding: const EdgeInsets.all(8.0),
+                        child: Column(
                           children: [
                             SizedBox(
                               height: 5,
@@ -69,7 +69,7 @@ class ComingUpNextMenuView extends StatelessWidget {
                                   }, "Channel", .26,
                                   isEnable: controllerX.isEnable,
                                   selected: controllerX.selectedChannel,
-                                  autoFocus: true,),
+                                  autoFocus: false,),
                               ],
                             ),
                             SizedBox(
@@ -78,73 +78,64 @@ class ComingUpNextMenuView extends StatelessWidget {
                             Row(
                               mainAxisAlignment: MainAxisAlignment.spaceBetween,
                               children: [
-                                InputFields.formField1(
-                                  hintTxt: "Tape Id",
-                                  controller: controllerX.tapeIdController,
-                                  width: 0.1,
-                                  focusNode: controllerX.tapeIdFocus,
-                                  isEnable: controllerX.isEnable,
-                                  onchanged: (value) {
+                                SizedBox(
+                                  width: size.width*0.26,
+                                  child: Row(
+                                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                    children: [
+                                      InputFields.formField1(
+                                        hintTxt: "Tape Id",
+                                        controller: controllerX.tapeIdController,
+                                        width: 0.11,
+                                        focusNode: controllerX.tapeIdFocus,
+                                        isEnable: controllerX.isEnable,
+                                        onchanged: (value) {
 
-                                  },
-                                  autoFocus: true,
+                                        },
+                                        autoFocus: false,
+                                      ),
+                                      InputFields.numbers3(
+                                          hintTxt: "Seg No.",
+                                          padLeft: 0,
+                                          controller: controllerX.segNoController,
+                                          width:0.11,
+                                          fN: controllerX.segNoFocus,
+                                          onchanged: (value){
+
+                                          }
+
+                                      ),
+                                    ],
+                                  ),
                                 ),
-                                InputFields.numbers3(
-                                    hintTxt: "Seg No.",
-                                    padLeft: 0,
-                                    controller: controllerX.segNoController,
-                                    width:0.1,
-                                    fN: controllerX.segNoFocus,
-                                  onchanged: (value){
 
-                                  }
+                                SizedBox(
+                                  width: size.width*0.26,
+                                  child: Row(
+                                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                    children: [
+                                      InputFields.formField1(
+                                        hintTxt: "House Id",
+                                        controller: controllerX.houseIdController,
+                                        width: 0.1,
+                                        isEnable: controllerX.isEnable,
+                                        onchanged: (value) {
 
+                                        },
+                                          focusNode: controllerX.houseIdFocus
+                                      ),
+                                      Container(
+                                        width: size.width*0.1,
+                                      )
+                                    ],
+                                  ),
                                 ),
-                                InputFields.formField1(
-                                  hintTxt: "House Id",
-                                  controller: controllerX.houseIdController,
-                                  width: 0.1,
-                                  isEnable: controllerX.isEnable,
-                                  onchanged: (value) {
 
-                                  },
-                                    focusNode: controllerX.houseIdFocus
-                                ),
-                                Container(
-                                  width: size.width*0.1,
-                                )
                               ],
                             ),
                             SizedBox(
                               height: 5,
                             ),
-                            /*Row(
-                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                              children: [
-                                InputFields.formField1(
-                                  hintTxt: "Program",
-                                  controller: controllerX.programController,
-                                  width: 0.1,
-                                  // isEnable: controllerX.isEnable,
-                                  onchanged: (value) {
-                                    controllerX.fetchProgram(value);
-
-                                  },
-                                  autoFocus: true,
-                                ),
-                                DropDownField.formDropDown1WidthMap(
-                                  [],
-                                      (value) {
-
-                                  }, "Program", .415,
-                                  isEnable: controllerX.isEnable,
-                                  selected: controllerX.selectedProgram,
-                                  autoFocus: true,),
-
-
-
-                              ],
-                            ),*/
                             DropDownField
                                 .formDropDownSearchAPI2(
                               GlobalKey(),
@@ -159,7 +150,7 @@ class ComingUpNextMenuView extends StatelessWidget {
                               parseKeyForKey: "programcode",
                               parseKeyForValue: 'programname',
                               selectedValue: controllerX.selectedProgram,
-                              autoFocus: true,
+                              autoFocus: false,
                               // maxLength: 1
                             ),
                             SizedBox(
@@ -170,61 +161,54 @@ class ComingUpNextMenuView extends StatelessWidget {
                               controller:controllerX.txCaptionController,
                               width: 0.6,
                               capital: true,
-                              autoFocus: true,
+                              autoFocus: false,
                               isEnable: controllerX.isEnable,
                               prefixText: "NEXT/",
                             ),
                             SizedBox(
                               height: 5,
                             ),
-                            Row(
-                              mainAxisAlignment:
-                              MainAxisAlignment.spaceBetween,
-                              children: [
-                                InputFields.formFieldNumberMask(
-                                    hintTxt: "SOM",
-                                    controller:   controllerX.somController,
-                                    widthRatio: 0.07,
-                                    isEnable: controllerX.isEnable,
-                                    onEditComplete: (val){
-                                      controllerX.calculateDuration();
-                                    },
-                                    // isTime: true,
-                                    // isEnable: controller.isEnable.value,
-                                    paddingLeft: 0),
-                                InputFields.formFieldNumberMask(
-                                    hintTxt: "EOM",
-                                    controller: controllerX.eomController,
-                                    widthRatio: 0.07,
-                                    isEnable: controllerX.isEnable,
-                                    onEditComplete: (val){
-                                      controllerX.calculateDuration();
-                                    },
-                                    // isTime: true,
-                                    // isEnable: controller.isEnable.value,
-                                    paddingLeft: 0),
-                                 Obx(()=>InputFields.formFieldDisable(
-                                   /*title: "Duration",
-                                  mainTextController: controllerX.durationController,
-                                  widthRation: 0.07,
-                                  isTime: false,
-                                  isEnable: false,*/
-                                   hintTxt: 'Duration',
-                                   value: controllerX.duration.value,
-                                   widthRatio:  0.07,
-                                 )) ,
-                              ],
-                            ),
+                            Align(
+                              alignment: Alignment.topLeft,
+                              child: Row(
+                                mainAxisAlignment:
+                                MainAxisAlignment.spaceBetween,
+                                children: [
+                                  InputFields.formFieldNumberMask(
+                                      hintTxt: "SOM",
+                                      controller:   controllerX.somController,
+                                      widthRatio: 0.1,
+                                      isEnable: controllerX.isEnable,
+                                      onEditComplete: (val){
+                                        controllerX.calculateDuration();
+                                      },
+                                      // isTime: true,
+                                      // isEnable: controller.isEnable.value,
+                                      paddingLeft: 0),
+                                  InputFields.formFieldNumberMask(
+                                      hintTxt: "EOM",
+                                      controller: controllerX.eomController,
+                                      widthRatio: 0.1,
+                                      isEnable: controllerX.isEnable,
+                                      onEditComplete: (val){
+                                        controllerX.calculateDuration();
+                                      },
+                                      // isTime: true,
+                                      // isEnable: controller.isEnable.value,
+                                      paddingLeft: 0),
 
-                            SizedBox(
-                              height: 5,
-                            ),
-                            Row(
-                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                              children: [
-                                SizedBox(
-                                  width: context.width * .23,
-                                  child: Obx(() {
+                                   Obx(()=>InputFields.formFieldDisable(
+                                     /*title: "Duration",
+                                    mainTextController: controllerX.durationController,
+                                    widthRation: 0.07,
+                                    isTime: false,
+                                    isEnable: false,*/
+                                     hintTxt: 'Duration',
+                                     value: controllerX.duration.value,
+                                     widthRatio:  0.1,
+                                   )) ,
+
+                                  Obx(() {
                                     return RadioRow1(
                                       items: ['Non-Dated', 'Dated'],
                                       groupValue: controllerX.selectedRadio.value,
@@ -232,61 +216,59 @@ class ComingUpNextMenuView extends StatelessWidget {
                                       onchange: (va) => controllerX.selectedRadio.value = va,
                                     );
                                   }),
-                                ),
-                                DateWithThreeTextField(
-                                  title: "Upto Date",
-                                  mainTextController: controllerX.uptoDateController,
-                                  widthRation: .1,
-                                  isEnable: controllerX.isEnable,
-                                ),
-                                Container(
-                                  width: size.width*0.2011,
-                                )
-                              ],
+                                  DateWithThreeTextField(
+                                    title: "Upto Date",
+                                    mainTextController: controllerX.uptoDateController,
+                                    widthRation: .1,
+                                    isEnable: controllerX.isEnable,
+                                  ),
+                                ],
+                              ),
                             ),
                             SizedBox(
                               height: 5,
                             ),
                           ],
-                        );
-                      }
-                    ),
-                    /// bottom common buttons
-                    Align(
-                      alignment: Alignment.topLeft,
-                      child: GetBuilder<HomeController>(
-                          id: "buttons",
-                          init: Get.find<HomeController>(),
-                          builder: (controller) {
-                            PermissionModel formPermissions = Get.find<MainController>()
-                                .permissionList!
-                                .lastWhere((element) =>
-                            element.appFormName == "frmComingUpNextMaster");
-                            if (controller.buttons != null) {
-                              return ButtonBar(
-                                alignment: MainAxisAlignment.start,
-                                mainAxisSize: MainAxisSize.min,
-                                children: [
-                                  for (var btn in controller.buttons!)
-                                    FormButtonWrapper(
-                                      btnText: btn["name"],
-                                      callback: Utils.btnAccessHandler2(btn['name'],
-                                          controller, formPermissions) ==
-                                          null
-                                          ? null
-                                          : () => controllerX.formHandler(
-                                        btn['name'],
-                                      ),
-                                    )
-                                ],
-                              );
-                            }
-                            return Container();
-                          }),
-                    ),
-                    SizedBox(height: 2),
-                  ],
-                ),
+                        ),
+                      );
+                    }
+                  ),
+                  /// bottom common buttons
+                  Align(
+                    alignment: Alignment.topCenter,
+                    child: GetBuilder<HomeController>(
+                        id: "buttons",
+                        init: Get.find<HomeController>(),
+                        builder: (controller) {
+                          PermissionModel formPermissions = Get.find<MainController>()
+                              .permissionList!
+                              .lastWhere((element) =>
+                          element.appFormName == "frmComingUpNextMaster");
+                          if (controller.buttons != null) {
+                            return Wrap(
+                              spacing: 5,
+                              runSpacing: 15,
+                              alignment: WrapAlignment.center,
+                              children: [
+                                for (var btn in controller.buttons!)
+                                  FormButtonWrapper(
+                                    btnText: btn["name"],
+                                    callback: Utils.btnAccessHandler2(btn['name'],
+                                        controller, formPermissions) ==
+                                        null
+                                        ? null
+                                        : () => controllerX.formHandler(
+                                      btn['name'],
+                                    ),
+                                  )
+                              ],
+                            );
+                          }
+                          return Container();
+                        }),
+                  ),
+                  SizedBox(height: 8),
+                ],
               ),
             ),
           ),
