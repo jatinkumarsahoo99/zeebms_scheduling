@@ -25,22 +25,24 @@ class ComingUpMenuView extends StatelessWidget {
     return Scaffold(
       body: Center(
         child: SizedBox(
-          width: size.width * .64,
+          width: size.width * .73,
           child: Dialog(
-            child: Padding(
-              padding: const EdgeInsets.all(8.0),
-              child: Column(
-                mainAxisSize: MainAxisSize.min,
-                children: [
-                  AppBar(
-                    title: Text('Coming Up Menu Master'),
-                    centerTitle: true,
-                    backgroundColor: Colors.deepPurple,
-                  ),
-                  GetBuilder<ComingUpMenuController>(
-                      id: "top",
-                      builder: (controllerX) {
-                        return Column(children: [
+            child: Column(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                AppBar(
+                  title: Text('Coming Up Menu Master'),
+                  centerTitle: true,
+                  backgroundColor: Colors.deepPurple,
+                ),
+                GetBuilder<ComingUpMenuController>(
+                    id: "top",
+                    builder: (controllerX) {
+                      return Padding(
+                        padding: const EdgeInsets.all(8.0),
+                        child: Column(
+                          mainAxisSize: MainAxisSize.min,
+                          children: [
                           SizedBox(
                             height: 5,
                           ),
@@ -55,33 +57,43 @@ class ComingUpMenuView extends StatelessWidget {
                                       controllerX.selectedLocation?.key ?? "");
                                 },
                                 "Location",
-                                .21,
+                                0.23,
                                 isEnable: controllerX.isEnable,
                                 selected: controllerX.selectedLocation,
                                 autoFocus: true,
+                                inkWellFocusNode: controllerX.locationFocus
                               )),
-                              Obx(
-                                    () => DropDownField.formDropDown1WidthMap(
-                                  controllerX.channelList.value,
-                                      (value) {
-                                    controllerX.selectedChannel = value;
-                                  },
-                                  "Channel",
-                                  .21,
-                                  isEnable: controllerX.isEnable,
-                                  selected: controllerX.selectedChannel,
-                                  autoFocus: true,
+                              SizedBox(
+                                width: size.width*0.38,
+                                child: Row(
+                                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                  children: [
+                                    Obx(
+                                          () => DropDownField.formDropDown1WidthMap(
+                                        controllerX.channelList.value,
+                                            (value) {
+                                          controllerX.selectedChannel = value;
+                                        },
+                                        "Channel",
+                                            0.23,
+                                        isEnable: controllerX.isEnable,
+                                        selected: controllerX.selectedChannel,
+                                        autoFocus: true, inkWellFocusNode: controllerX.channelFocus
+                                      ),
+                                    ),
+                                    InputFields.formField1(
+                                      hintTxt: "Tape Id",
+                                      controller: controllerX.tapeIdController,
+                                      width: 0.11,
+                                      focusNode: controllerX.tapeIdFocus,
+                                      isEnable: controllerX.isEnable,
+                                      onchanged: (value) {},
+                                      autoFocus: true,
+                                    ),
+                                  ],
                                 ),
                               ),
-                              InputFields.formField1(
-                                hintTxt: "Tape Id",
-                                controller: controllerX.tapeIdController,
-                                width: 0.1,
-                                focusNode: controllerX.tapeIdFocus,
-                                isEnable: controllerX.isEnable,
-                                onchanged: (value) {},
-                                autoFocus: true,
-                              ),
+
                             ],
                           ),
                           SizedBox(
@@ -94,28 +106,39 @@ class ComingUpMenuView extends StatelessWidget {
                                 hintTxt: "Seg No.",
                                 padLeft: 0,
                                 controller: controllerX.segNoController,
-                                width: 0.21,
+                                width: 0.23,
                                 fN: controllerX.segNoFocus,
-                                isNegativeReq: false
+                                isNegativeReq: false,
                               ),
-                              InputFields.formField1(
-                                hintTxt: "House Id",
-                                controller: controllerX.houseIdController,
-                                width: 0.1,
-                                isEnable: controllerX.isEnable,
-                                onchanged: (value) {},
-                                focusNode: controllerX.houseIdFocus,
-                                autoFocus: true,
+                              SizedBox(
+                                width: size.width*0.38,
+                                child: Row(
+                                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                  children: [
+                                    InputFields.formField1(
+                                      hintTxt: "House Id",
+                                      controller: controllerX.houseIdController,
+                                      width: 0.11,
+                                      isEnable: controllerX.isEnable,
+                                      onchanged: (value) {},
+                                      focusNode: controllerX.houseIdFocus,
+                                      autoFocus: true,
+                                    ),
+                                    InputFields.formField1(
+                                      hintTxt: "Tx Caption",
+                                      controller: controllerX.txCaptionController,
+                                      width: 0.25,
+                                      capital: true,
+                                      autoFocus: true,
+                                      isEnable: controllerX.isEnable,
+                                      prefixText: "M/",
+                                      focusNode: controllerX.txFocus
+
+                                    ),
+                                  ],
+                                ),
                               ),
-                              InputFields.formField1(
-                                hintTxt: "Tx Caption",
-                                controller: controllerX.txCaptionController,
-                                width: 0.21,
-                                capital: true,
-                                autoFocus: true,
-                                isEnable: controllerX.isEnable,
-                                prefixText: "M/",
-                              ),
+
                             ],
                           ),
                           SizedBox(
@@ -127,7 +150,7 @@ class ComingUpMenuView extends StatelessWidget {
                               InputFields.formFieldNumberMask(
                                   hintTxt: "Start Time",
                                   controller: controllerX.startTimeController,
-                                  widthRatio: 0.21,
+                                  widthRatio: 0.23,
                                   isEnable: controllerX.isEnable,
                                   /*onEditComplete: (val){
                                         controllerX.calculateDuration();
@@ -135,121 +158,144 @@ class ComingUpMenuView extends StatelessWidget {
                                   // isTime: true,
                                   // isEnable: controller.isEnable.value,
                                   paddingLeft: 0),
-                              InputFields.formFieldNumberMask(
-                                  hintTxt: "End Time",
-                                  controller: controllerX.endTimeController,
-                                  widthRatio: 0.068,
-                                  isEnable: controllerX.isEnable,
-                                  onEditComplete: (val) {},
-                                  // isTime: true,
-                                  // isEnable: controller.isEnable.value,
-                                  paddingLeft: 0),
-                              InputFields.formFieldNumberMask(
-                                  hintTxt: "SOM",
-                                  controller: controllerX.somController,
-                                  widthRatio: 0.068,
-                                  isEnable: controllerX.isEnable,
-                                  onEditComplete: (val) {
-                                    controllerX.calculateDuration();
-                                  },
-                                  // isTime: true,
-                                  // isEnable: controller.isEnable.value,
-                                  paddingLeft: 0),
-                              InputFields.formFieldNumberMask(
-                                  hintTxt: "EOM",
-                                  controller: controllerX.eomController,
-                                  widthRatio: 0.068,
-                                  isEnable: controllerX.isEnable,
-                                  onEditComplete: (val) {
-                                    controllerX.calculateDuration();
-                                  },
-                                  // isTime: true,
-                                  // isEnable: controller.isEnable.value,
-                                  paddingLeft: 0),
-                              /*TimeWithThreeTextField(
+                              SizedBox(
+                                width: size.width*0.38,
+                                child: Row(
+                                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                  children: [
+                                    InputFields.formFieldNumberMask(
+                                        hintTxt: "End Time",
+                                        controller: controllerX.endTimeController,
+                                        widthRatio: 0.11,
+                                        isEnable: controllerX.isEnable,
+                                        onEditComplete: (val) {},
+                                        // isTime: true,
+                                        // isEnable: controller.isEnable.value,
+                                        paddingLeft: 0),
+                                    SizedBox(
+                                      width: size.width*0.25,
+                                      child: Row(
+                                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                        children: [
+                                          InputFields.formFieldNumberMask(
+                                              hintTxt: "SOM",
+                                              controller: controllerX.somController,
+                                              widthRatio: 0.068,
+                                              isEnable: controllerX.isEnable,
+                                              onEditComplete: (val) {
+                                                controllerX.calculateDuration();
+                                              },
+                                              // isTime: true,
+                                              // isEnable: controller.isEnable.value,
+                                              paddingLeft: 0),
+                                          InputFields.formFieldNumberMask(
+                                              hintTxt: "EOM",
+                                              controller: controllerX.eomController,
+                                              widthRatio: 0.068,
+                                              isEnable: controllerX.isEnable,
+                                              onEditComplete: (val) {
+                                                controllerX.calculateDuration();
+                                              },
+                                              // isTime: true,
+                                              // isEnable: controller.isEnable.value,
+                                              paddingLeft: 0),
+                                          /*TimeWithThreeTextField(
                         title: "Duration",
                         mainTextController:
                             controllerX.durationController.value,
                         widthRation: 0.068,
                         isTime: false,
                         isEnable: false,
-                      ),*/
-                              Obx(() => InputFields.formFieldDisable(
-                                hintTxt: "Duration",
-                                value: controllerX.duration.value,
-                                widthRatio: 0.07,
-                              ))
+                    ),*/
+                                          Obx(() => InputFields.formFieldDisable(
+                                            hintTxt: "Duration",
+                                            value: controllerX.duration.value,
+                                            widthRatio: 0.07,
+                                          ))
+                                        ],
+                                      ),
+                                    ),
+
+                                  ],
+                                ),
+                              ),
+
                             ],
                           ),
                           SizedBox(
                             height: 5,
                           ),
-                          Row(
-                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                          Align(
+                            alignment: Alignment.topLeft,
+                            child: SizedBox(
+                              width: size.width*0.23,
+                              child: Row(
+                                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                children: [
+                                  DateWithThreeTextField(
+                                    title: "Menu Date",
+                                    mainTextController: controllerX.menuDateController,
+                                    widthRation: .1,
+                                    isEnable: controllerX.isEnable,
+                                  ),
+                                  DateWithThreeTextField(
+                                    title: "Upto Date",
+                                    mainTextController: controllerX.uptoDateController,
+                                    widthRation: .1,
+                                    isEnable: controllerX.isEnable,
+                                  ),
+                                ],
+                              ),
+                            ),
+                          ),
+                          SizedBox(
+                            height: 5,
+                          ),
+                        ],),
+                      );
+                    }
+                ),
+                SizedBox(height: 6),
+                /// bottom common buttons
+                Align(
+                  alignment: Alignment.topCenter,
+                  child: GetBuilder<HomeController>(
+                      id: "buttons",
+                      init: Get.find<HomeController>(),
+                      builder: (controller) {
+                        PermissionModel formPermissions =
+                            Get.find<MainController>()
+                                .permissionList!
+                                .lastWhere((element) =>
+                                    element.appFormName ==
+                                    "frmComingUpMenuMaster");
+                        if (controller.buttons != null) {
+                          return Wrap(
+                            spacing: 5,
+                            runSpacing: 15,
+                            alignment: WrapAlignment.center,
                             children: [
-                              DateWithThreeTextField(
-                                title: "Menu Date",
-                                mainTextController: controllerX.menuDateController,
-                                widthRation: .21,
-                                isEnable: controllerX.isEnable,
-                              ),
-                              DateWithThreeTextField(
-                                title: "Upto Date",
-                                mainTextController: controllerX.uptoDateController,
-                                widthRation: .21,
-                                isEnable: controllerX.isEnable,
-                              ),
-                              Container(
-                                width: size.width * 0.1,
-                              )
-                            ],
-                          ),
-                          SizedBox(
-                            height: 5,
-                          ),
-                        ],);
-                      }
-                  ),
-                  /// bottom common buttons
-                  Align(
-                    alignment: Alignment.topLeft,
-                    child: GetBuilder<HomeController>(
-                        id: "buttons",
-                        init: Get.find<HomeController>(),
-                        builder: (controller) {
-                          PermissionModel formPermissions =
-                              Get.find<MainController>()
-                                  .permissionList!
-                                  .lastWhere((element) =>
-                                      element.appFormName ==
-                                      "frmComingUpMenuMaster");
-                          if (controller.buttons != null) {
-                            return ButtonBar(
-                              alignment: MainAxisAlignment.start,
-                              mainAxisSize: MainAxisSize.min,
-                              children: [
-                                for (var btn in controller.buttons!)
-                                  FormButtonWrapper(
-                                    btnText: btn["name"],
-                                    callback: Utils.btnAccessHandler2(
-                                                btn['name'],
-                                                controller,
-                                                formPermissions) ==
-                                            null
-                                        ? null
-                                        : () => controllerX.formHandler(
+                              for (var btn in controller.buttons!)
+                                FormButtonWrapper(
+                                  btnText: btn["name"],
+                                  callback: Utils.btnAccessHandler2(
                                               btn['name'],
-                                            ),
-                                  )
-                              ],
-                            );
-                          }
-                          return Container();
-                        }),
-                  ),
-                  SizedBox(height: 2),
-                ],
-              ),
+                                              controller,
+                                              formPermissions) ==
+                                          null
+                                      ? null
+                                      : () => controllerX.formHandler(
+                                            btn['name'],
+                                          ),
+                                )
+                            ],
+                          );
+                        }
+                        return Container();
+                      }),
+                ),
+                SizedBox(height: 8),
+              ],
             ),
           ),
         ),

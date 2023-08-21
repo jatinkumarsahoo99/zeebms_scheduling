@@ -39,7 +39,7 @@ class AuditStatusView extends GetView<AuditStatusController> {
                     () => DropDownField.formDropDown1WidthMap(
                         controller.locations.value, (data) {
                       controller.selectLocation = data;
-                      controller.getChannels(data?.key);
+                      controller.getChannels(data.key);
                     }, "Location", 0.24),
                   ),
                   Obx(

@@ -15,29 +15,31 @@ class _RadioRow1State extends State<RadioRow1> {
   @override
   Widget build(BuildContext context) {
     return Row(
+      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+      crossAxisAlignment: CrossAxisAlignment.center,
       children: widget.items
           .map(
             (e) => Padding(
-          padding: const EdgeInsets.only(left: 5),
-          child: Row(
-            children: [
-              Radio<String>(
-                  value: e,
-                  groupValue: widget.groupValue,
-                  onChanged:(( widget.disabledRadios?.contains(e) ?? false) || (e == "Non-Dated"))
-                      ? null
-                      : (value) {
-                    widget.onchange!(value);
-                  }),
-              Text(
-                e,
-                style: TextStyle(
-                  color: ((widget.disabledRadios?.contains(e) ?? false)||   (e == "Non-Dated")) ? Colors.grey : Colors.black,
-                ),
+              padding: const EdgeInsets.only(left: 0.0,top: 10,bottom: 0,right: 0),
+              child: Row(
+                children: [
+                  Radio<String>(
+                      value: e,
+                      groupValue: widget.groupValue,
+                      onChanged:(( widget.disabledRadios?.contains(e) ?? false) || (e == "Non-Dated"))
+                          ? null
+                          : (value) {
+                        widget.onchange!(value);
+                      }),
+                  Text(
+                    e,
+                    style: TextStyle(
+                      color: ((widget.disabledRadios?.contains(e) ?? false)||   (e == "Non-Dated")) ? Colors.grey : Colors.black,
+                    ),
+                  ),
+                ],
               ),
-            ],
-          ),
-        ),
+            ),
       )
           .toList(),
     );

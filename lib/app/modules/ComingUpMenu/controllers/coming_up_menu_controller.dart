@@ -31,6 +31,7 @@ class ComingUpMenuController extends GetxController {
   FocusNode houseIdFocus = FocusNode();
   FocusNode locationFocus = FocusNode();
   FocusNode channelFocus = FocusNode();
+  FocusNode txFocus = FocusNode();
 
   RxList<DropDownValue> locationList = RxList([]);
   RxList<DropDownValue> channelList = RxList([]);
