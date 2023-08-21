@@ -256,7 +256,17 @@ class SpotsView extends GetView<RoBookingController> {
                                         ),
                                         FormButtonWrapper(
                                           btnText: "Clear",
-                                          callback: () {},
+                                          callback: () {
+                                            chequeNoCtrl.text = "";
+                                            chqDateCtrl.text = "";
+                                            chequeAmtCtrl.text = "";
+                                            bankCtrl.text = "";
+                                            chequeRecByCtrl.text = "";
+                                            chequeRecOnCtrl.text = "";
+                                            remarkCtrl.text = "";
+                                            listdata.clear();
+                                            listdata.refresh();
+                                          },
                                         ),
                                       ],
                                     )

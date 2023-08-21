@@ -39,7 +39,7 @@ class SearchPivotPage extends StatelessWidget {
     for (var row in controller.searchPivotResult!) {
       Map<String, PlutoCell> cells = {};
       for (var value in (row as Map).entries) {
-        cells[value.key] = PlutoCell(value: value.value ?? "");
+        cells[value.key] = PlutoCell(value: (value.value ?? "").toString());
       }
       rows.add(PlutoRow(cells: cells));
     }
