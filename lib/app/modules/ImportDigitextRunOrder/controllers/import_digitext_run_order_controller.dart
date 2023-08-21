@@ -203,8 +203,10 @@ class ImportDigitextRunOrderController extends GetxController {
   }
 
   saveRunOrder() {
-    if (selectedLocation == null || selectedChannel == null) {
-      LoadingDialog.callErrorMessage1(msg: "Please select location & channel");
+    if (importedFile.value == null) {
+      LoadingDialog.callErrorMessage1(msg: "Empty path name is legal.");
+    } else if (selectedLocation == null || selectedChannel == null) {
+      LoadingDialog.callErrorMessage1(msg: "Please Select Location & Channel.");
     } else {
       LoadingDialog.call();
       dio.FormData formData = dio.FormData.fromMap({
