@@ -203,24 +203,28 @@ class ImportDigitextRunOrderController extends GetxController {
   }
 
   saveRunOrder() {
-    LoadingDialog.call();
-    dio.FormData formData = dio.FormData.fromMap({
-      'ImportFile': dio.MultipartFile.fromBytes(
-        importedFile.value!.bytes!.toList(),
-        filename: importedFile.value!.name,
-      )
-    });
+    if (selectedLocation == null || selectedChannel == null) {
+      LoadingDialog.callErrorMessage1(msg: "Please select location & channel");
+    } else {
+      LoadingDialog.call();
+      dio.FormData formData = dio.FormData.fromMap({
+        'ImportFile': dio.MultipartFile.fromBytes(
+          importedFile.value!.bytes!.toList(),
+          filename: importedFile.value!.name,
+        )
+      });
 
-    Get.find<ConnectorControl>().POSTMETHOD_FORMDATA(
-        api: ApiFactory.IMPORT_DIGITEX_RUN_ORDER_SAVE(selectedLocation!.key, selectedChannel!.key, df2.format(df1.parse(scheduleDate.text))),
-        json: formData,
-        fun: (value) {
-          Get.back();
-          try {
-            LoadingDialog.callErrorMessage1(msg: value);
-          } catch (e) {
-            LoadingDialog.callErrorMessage1(msg: "Failed To Import File");
-          }
-        });
+      Get.find<ConnectorControl>().POSTMETHOD_FORMDATA(
+          api: ApiFactory.IMPORT_DIGITEX_RUN_ORDER_SAVE(selectedLocation!.key, selectedChannel!.key, df2.format(df1.parse(scheduleDate.text))),
+          json: formData,
+          fun: (value) {
+            Get.back();
+            try {
+              LoadingDialog.callErrorMessage1(msg: value);
+            } catch (e) {
+              LoadingDialog.callErrorMessage1(msg: "Failed To Import File");
+            }
+          });
+    }
   }
 }
