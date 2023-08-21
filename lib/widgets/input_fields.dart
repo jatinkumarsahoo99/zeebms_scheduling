@@ -30,6 +30,7 @@ import '../app/providers/SizeDefine.dart';
 import '../app/providers/Utils.dart';
 import 'InputFormatters/input_formatters.dart';
 import 'dart:js' as js;
+
 /// Uppercase text formater
 class WithoutUpperCase extends TextInputFormatter {
   @override
@@ -205,7 +206,7 @@ class InputFields {
         if (showTitle) ...{
           LabelText.style(
             hint: hintTxt,
-            txtColor: ((isEnable ?? true)) ? Colors.black : Colors.grey,
+            txtColor: Colors.black,
           ),
         },
         Container(
@@ -245,7 +246,7 @@ class InputFields {
             decoration: InputDecoration(
                 enabled: isEnable ?? true,
                 // prefixText: prefixText,
-                
+
                 prefixIcon: prefixText != null
                     ? SizedBox(
                         child: Center(
@@ -348,7 +349,7 @@ class InputFields {
 
           child: TextFormField(
             maxLines: maxLines,
-            toolbarOptions: ToolbarOptions(copy: true,cut: true,paste: false,selectAll: true),
+            toolbarOptions: ToolbarOptions(copy: true, cut: true, paste: false, selectAll: true),
             focusNode: focusNode,
             minLines: maxLines,
             autofocus: autoFocus,
@@ -365,10 +366,10 @@ class InputFields {
             onFieldSubmitted: onFieldSubmitted,
             inputFormatters: inputformatters.isEmpty
                 ? [
-              LengthLimitingTextInputFormatter(SizeDefine.maxcharlimit),
-              FilteringTextInputFormatter.deny("  "),
-              // FilteringTextInputFormatter.allow(RegExp(r"^(\w+ ?)*$")),
-            ]
+                    LengthLimitingTextInputFormatter(SizeDefine.maxcharlimit),
+                    FilteringTextInputFormatter.deny("  "),
+                    // FilteringTextInputFormatter.allow(RegExp(r"^(\w+ ?)*$")),
+                  ]
                 : inputformatters,
             controller: controller,
             style: TextStyle(fontSize: 12, color: (isEnable ?? true) ? Colors.black : Colors.grey),
@@ -378,18 +379,18 @@ class InputFields {
                 // prefixText: prefixText,
                 prefixIcon: prefixText != null
                     ? SizedBox(
-                  child: Center(
-                    widthFactor: 0.0,
-                    child: Text(
-                      " $prefixText ",
-                      style: TextStyle(
-                        backgroundColor: Colors.grey.shade500,
-                        color: Colors.white,
-                        fontSize: 12,
-                      ),
-                    ),
-                  ),
-                )
+                        child: Center(
+                          widthFactor: 0.0,
+                          child: Text(
+                            " $prefixText ",
+                            style: TextStyle(
+                              backgroundColor: Colors.grey.shade500,
+                              color: Colors.white,
+                              fontSize: 12,
+                            ),
+                          ),
+                        ),
+                      )
                     : null,
                 prefixStyle: TextStyle(
                   backgroundColor: Colors.grey.shade500,
@@ -426,7 +427,6 @@ class InputFields {
       ],
     );
   }
-
 
   static Widget formFieldWidthWithValidation(
       {String? Function(String?)? validator,
@@ -472,7 +472,7 @@ class InputFields {
             textAlign: TextAlign.left,
             controller: controller,
             enabled: isEnable ?? true,
-            style: TextStyle(fontSize: 12,fontFamily: 'disable-paste'),
+            style: TextStyle(fontSize: 12, fontFamily: 'disable-paste'),
             decoration: InputDecoration(
                 errorBorder: InputBorder.none,
                 counterText: "",
