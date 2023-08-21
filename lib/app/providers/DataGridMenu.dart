@@ -358,7 +358,7 @@ class DataGridMenu {
         showBottomSheet(
             context: context,
             builder: (context) {
-              var _selectedColumn = "";
+              var _selectedColumn = stateManager.currentColumn?.field ?? "";
               DropDownValue _preselectedColumn =
                   DropDownValue(key: stateManager.currentColumn?.field ?? "", value: stateManager.currentColumn?.title ?? "");
               TextEditingController _findctrl = TextEditingController();
