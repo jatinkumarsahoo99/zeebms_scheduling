@@ -132,7 +132,7 @@ class _DateWithThreeTextFieldState extends State<DateWithThreeTextField> {
           widget.title,
           style: TextStyle(
             fontSize: SizeDefine.labelSize1,
-            color: textColor,
+            color: Colors.black,
             fontWeight: FontWeight.w500,
           ),
         ),
@@ -196,11 +196,9 @@ class _DateWithThreeTextFieldState extends State<DateWithThreeTextField> {
                             decoration: style,
                             onChanged: (value) {
                               int no = int.tryParse(value) ?? 00;
-                              int selectedMonth =
-                                  getMonthINTFromMonthStr(textCtr[1].text);
+                              int selectedMonth = getMonthINTFromMonthStr(textCtr[1].text);
 
-                              if (no > maxDays[selectedMonth - 1] ||
-                                  value == "00") {
+                              if (no > maxDays[selectedMonth - 1] || value == "00") {
                                 textCtr[0].text = "01";
                                 cursorAtLast(0);
                               }
