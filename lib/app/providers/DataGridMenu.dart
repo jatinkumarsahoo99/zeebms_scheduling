@@ -359,6 +359,8 @@ class DataGridMenu {
             context: context,
             builder: (context) {
               var _selectedColumn = "";
+              DropDownValue _preselectedColumn =
+                  DropDownValue(key: stateManager.currentColumn?.field ?? "", value: stateManager.currentColumn?.title ?? "");
               TextEditingController _findctrl = TextEditingController();
               var _almost = RxBool(false);
               var _fromstart = RxBool(false);
@@ -393,9 +395,11 @@ class DataGridMenu {
                                   stateManager.columns.map((e) => DropDownValue(key: e.field, value: e.title)).toList(),
                                   (value) {
                                     _selectedColumn = value.key!;
+                                    _preselectedColumn = value;
                                   },
                                   "Column",
                                   0.15,
+                                  selected: _preselectedColumn,
                                   // context,
                                   showtitle: false,
                                 ),
