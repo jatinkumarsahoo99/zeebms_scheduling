@@ -977,7 +977,7 @@ class RoBookingController extends GetxController {
     Get.find<ConnectorControl>().POSTMETHOD(
         api: ApiFactory.RO_BOOKING_OnSave_Check,
         json: {
-          "chkSummaryType": false,
+          "chkSummaryType": addSpotData?.lstSpots?.isNotEmpty,
           "lstdgvSpots":
               addSpotData?.lstSpots?.map((e) => e.toJson()).toList() ?? bookingNoLeaveData?.lstSpots?.map((e) => e.toJson()).toList() ?? [],
           "brandName": selectedBrand?.key
