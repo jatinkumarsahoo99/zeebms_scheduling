@@ -15,6 +15,7 @@ import 'package:get/get_connect/http/src/utils/utils.dart';
 import 'package:intl/intl.dart';
 import 'package:bms_scheduling/widgets/PlutoGrid/pluto_grid.dart';
 import 'package:dio/dio.dart' as dio;
+import 'package:url_launcher/url_launcher.dart';
 
 import '../../../controller/ConnectorControl.dart';
 import '../../../controller/HomeController.dart';
@@ -77,22 +78,22 @@ class RoCancellationController extends GetxController {
       }
     });
     cancelNumberFocus.addListener(() {
-      if (!cancelNumberFocus.hasFocus && (cancelNumberctrl.text.isNotEmpty && !cancelFetchData)) {
+      if (!cancelNumberFocus.hasFocus && (cancelNumberctrl.text.isNotEmpty && !cancelFetchData) && cancelMonthctrl.text.isNotEmpty) {
         onCancelNoLeave();
       }
     });
   }
 
-  formHandler(String btnName) {
-    if (btnName == "Save") {
-      save();
-    } else if (btnName == "Clear") {
-      Get.delete<RoCancellationController>();
-      Get.find<HomeController>().clearPage1();
-    } else if (btnName == "Docs") {
-      docs();
-    }
-  }
+  // formHandler(String btnName) {
+  //   if (btnName == "Save") {
+  //     save();
+  //   } else if (btnName == "Clear") {
+  //     // Get.delete<RoCancellationController>();
+  //     Get.find<HomeController>().clearPage1();
+  //   } else if (btnName == "Docs") {
+  //     docs();
+  //   }
+  // }
 
   getLocation() {
     LoadingDialog.call();
@@ -141,8 +142,10 @@ class RoCancellationController extends GetxController {
 
   onBookingNoLeave(bookingNo) {
     // print("ON BOOKING NUMBER LEAVE CALLED>>>");
+    if(selectedChannel==null||selectedLocation==null){
+      return;
+    }
     LoadingDialog.call();
-
     try {
       Get.find<ConnectorControl>().POSTMETHOD(
           api: ApiFactory.RO_CANCELLATION_BOOKINGNO_LEAVE,
@@ -165,7 +168,8 @@ class RoCancellationController extends GetxController {
             }
           });
     } catch (e) {
-      LoadingDialog.callErrorMessage1(msg: "Failed To Load  Data");
+      Get.back();
+      // LoadingDialog.callErrorMessage1(msg: "Failed To Load  Data");
     }
 
     print("ON BOOKING NUMBER LEAVE END>>>");
@@ -173,6 +177,9 @@ class RoCancellationController extends GetxController {
 
   onCancelNoLeave() {
     // print("ON BOOKING NUMBER LEAVE CALLED>>>");
+    if(selectedLocation==null || selectedChannel==null){
+      return;
+    }
     LoadingDialog.call();
     try {
       Get.find<ConnectorControl>().POSTMETHOD(
@@ -287,8 +294,8 @@ class RoCancellationController extends GetxController {
       intTotalAmount.value = 0;
       intTotalValuationAmount.value = 0;
       // roCancellationGridManager!.setFilter((element) => element.checked!);
-      var list = roCancellationData?.cancellationData?.lstBookingNoStatusData?.where((element) => !(element.requested ?? false)).toList() ?? [];
-      print(list.length);
+      var list = roCancellationData?.cancellationData?.lstBookingNoStatusData?.where((element) => (element.requested ?? false)).toList() ?? [];
+      // print(list.length);
       for (LstBookingNoStatusData element in list) {
         if (element.cancelNumber == null && (element.cancelNumber?.isEmpty ?? true)) {
           intTotalCount.value = (intTotalCount.value ?? 0) + 1;
@@ -373,9 +380,13 @@ class RoCancellationController extends GetxController {
   }
 
   pickFile() async {
-    FilePickerResult? result = await FilePicker.platform.pickFiles();
+    FilePickerResult? result = await FilePicker.platform.pickFiles(
+      allowMultiple: false,
+      allowedExtensions: ['xlsx'],
+      type: FileType.custom,
+    );
 
-    if (result != null && result.files.single != null) {
+    if (result != null && result.files.isNotEmpty) {
       importedFile = result.files.single;
 
       importfile();

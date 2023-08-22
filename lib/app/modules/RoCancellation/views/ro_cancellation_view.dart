@@ -15,8 +15,9 @@ import '../../../data/PermissionModel.dart';
 import '../../../routes/app_pages.dart';
 import '../controllers/ro_cancellation_controller.dart';
 
-class RoCancellationView extends GetView<RoCancellationController> {
-  const RoCancellationView({Key? key}) : super(key: key);
+class RoCancellationView extends StatelessWidget {
+  RoCancellationView({Key? key}) : super(key: key);
+  final controller = Get.put<RoCancellationController>(RoCancellationController());
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -76,14 +77,15 @@ class RoCancellationView extends GetView<RoCancellationController> {
                         isEnable: controller.enableEffDate.value,
                         title: "Eff. Date",
                         onFocusChange: (value) {
-                          controller.cancelMonthctrl.text = value.split("-")[2] + value.split("-")[1];
+                          controller.cancelMonthctrl.text =
+                              value.split("-")[2] + value.split("-")[1];
                           controller.enableCancelMonth.value = false;
                         },
                         mainTextController: controller.effDatectrl,
                       ),
                     ),
                     InputFields.formField1(
-                      hintTxt: "Reference", //23082001w
+                      hintTxt: "Reference", //23082001w,23082004w
                       width: controller.widthratio,
                       controller: controller.refNumberctrl,
                     ),
@@ -142,12 +144,29 @@ class RoCancellationView extends GetView<RoCancellationController> {
                           value: controller.selectAll.value,
                           onChanged: (newVal) {
                             if (controller.roCancellationGridManager != null &&
-                                controller.roCancellationData?.cancellationData?.lstBookingNoStatusData != null) {
-                              controller.selectAll.value = !controller.selectAll.value;
-                              for (var i = 0; i < (controller.roCancellationData!.cancellationData!.lstBookingNoStatusData!.length); i++) {
-                                controller.roCancellationData!.cancellationData!.lstBookingNoStatusData?[i].requested = controller.selectAll.value;
-                                controller.roCancellationGridManager!.changeCellValue(
-                                  controller.roCancellationGridManager!.getRowByIdx(i)!.cells['requested']!,
+                                controller.roCancellationData?.cancellationData
+                                        ?.lstBookingNoStatusData !=
+                                    null) {
+                              controller.selectAll.value =
+                                  !controller.selectAll.value;
+                              for (var i = 0;
+                                  i <
+                                      (controller
+                                          .roCancellationData!
+                                          .cancellationData!
+                                          .lstBookingNoStatusData!
+                                          .length);
+                                  i++) {
+                                controller
+                                    .roCancellationData!
+                                    .cancellationData!
+                                    .lstBookingNoStatusData?[i]
+                                    .requested = controller.selectAll.value;
+                                controller.roCancellationGridManager!
+                                    .changeCellValue(
+                                  controller.roCancellationGridManager!
+                                      .getRowByIdx(i)!
+                                      .cells['requested']!,
                                   controller.selectAll.value.toString(),
                                   callOnChangedEvent: false,
                                   force: true,
@@ -176,10 +195,14 @@ class RoCancellationView extends GetView<RoCancellationController> {
                 child: Row(
                   mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                   children: [
-                    Obx(() => Text("Total Spots: ${controller.intTotalCount.value ?? "--"}")),
-                    Obx(() => Text("Total Duration: ${controller.intTotalDuration.value ?? "--"}")),
-                    Obx(() => Text("Total Amount: ${controller.intTotalAmount.value ?? "--"}")),
-                    Obx(() => Text("Total Val. Amount: ${controller.intTotalValuationAmount.value ?? "--"}")),
+                    Obx(() => Text(
+                        "Total Spots: ${controller.intTotalCount.value ?? "--"}")),
+                    Obx(() => Text(
+                        "Total Duration: ${controller.intTotalDuration.value ?? "--"}")),
+                    Obx(() => Text(
+                        "Total Amount: ${controller.intTotalAmount.value ?? "--"}")),
+                    Obx(() => Text(
+                        "Total Val. Amount: ${controller.intTotalValuationAmount.value ?? "--"}")),
                     FormButtonWrapper(
                       width: Get.width * 0.07,
                       btnText: "Import",
@@ -208,9 +231,13 @@ class RoCancellationView extends GetView<RoCancellationController> {
                   id: "cancelData",
                   builder: (cancelDatactrl) {
                     if (cancelDatactrl.roCancellationData == null ||
-                        cancelDatactrl.roCancellationData!.cancellationData == null ||
-                        cancelDatactrl.roCancellationData!.cancellationData!.lstBookingNoStatusData == null ||
-                        cancelDatactrl.roCancellationData!.cancellationData!.lstBookingNoStatusData!.isEmpty) {
+                        cancelDatactrl.roCancellationData!.cancellationData ==
+                            null ||
+                        cancelDatactrl.roCancellationData!.cancellationData!
+                                .lstBookingNoStatusData ==
+                            null ||
+                        cancelDatactrl.roCancellationData!.cancellationData!
+                            .lstBookingNoStatusData!.isEmpty) {
                       return SizedBox(width: double.infinity);
                     } else {
                       return DataGridFromMap3(
@@ -219,33 +246,49 @@ class RoCancellationView extends GetView<RoCancellationController> {
                         uncheckCheckBoxStr: "false",
                         mode: PlutoGridMode.normal,
                         onload: (loadEvent) {
-                          controller.roCancellationGridManager = loadEvent.stateManager;
+                          controller.roCancellationGridManager =
+                              loadEvent.stateManager;
                         },
                         onEdit: (event) {
                           // print(event.oldValue);
                           // print(event.value);
-                          if ((cancelDatactrl.roCancellationData?.cancellationData?.lstBookingNoStatusData?[event.rowIdx].requested1 ?? false)) {
-                            controller.roCancellationGridManager!.changeCellValue(
-                              controller.roCancellationGridManager!.getRowByIdx(event.rowIdx)!.cells['requested']!,
+                          if ((cancelDatactrl
+                                  .roCancellationData
+                                  ?.cancellationData
+                                  ?.lstBookingNoStatusData?[event.rowIdx]
+                                  .requested1 ??
+                              false)) {
+                            controller.roCancellationGridManager!
+                                .changeCellValue(
+                              controller.roCancellationGridManager!
+                                  .getRowByIdx(event.rowIdx)!
+                                  .cells['requested']!,
                               'true',
                               callOnChangedEvent: false,
                               force: true,
                               notify: true,
                             );
                           } else {
-                            controller.roCancellationGridManager!.changeCellValue(
-                              controller.roCancellationGridManager!.getRowByIdx(event.rowIdx)!.cells['requested']!,
+                            controller.roCancellationGridManager!
+                                .changeCellValue(
+                              controller.roCancellationGridManager!
+                                  .getRowByIdx(event.rowIdx)!
+                                  .cells['requested']!,
                               !(event.oldValue == "true") ? 'true' : 'false',
                               callOnChangedEvent: false,
                               force: true,
                               notify: true,
                             );
-                            cancelDatactrl.roCancellationData!.cancellationData!.lstBookingNoStatusData![event.rowIdx].requested =
-                                event.value == "true";
+                            cancelDatactrl
+                                .roCancellationData!
+                                .cancellationData!
+                                .lstBookingNoStatusData![event.rowIdx]
+                                .requested = event.value == "true";
                           }
                           // debugPrint(cancelDatactrl.roCancellationData!.cancellationData!.lstBookingNoStatusData![event.rowIdx].requested.toString());
                         },
-                        mapData: cancelDatactrl.roCancellationData!.cancellationData!.lstBookingNoStatusData!
+                        mapData: cancelDatactrl.roCancellationData!
+                            .cancellationData!.lstBookingNoStatusData!
                             .map((e) => e.toJson(fromSave: false))
                             .toList(),
                       );
@@ -262,8 +305,11 @@ class RoCancellationView extends GetView<RoCancellationController> {
               builder: (btncontroller) {
                 PermissionModel? formPermissions;
                 try {
-                  formPermissions = Get.find<MainController>().permissionList?.lastWhere((element) {
-                    return element.appFormName == Routes.RO_CANCELLATION.replaceAll("/", "");
+                  formPermissions = Get.find<MainController>()
+                      .permissionList
+                      ?.lastWhere((element) {
+                    return element.appFormName ==
+                        Routes.RO_CANCELLATION.replaceAll("/", "");
                   });
                 } catch (e) {
                   print(e.toString());
@@ -278,9 +324,12 @@ class RoCancellationView extends GetView<RoCancellationController> {
                       for (var btn in btncontroller.buttons!)
                         FormButtonWrapper(
                           btnText: btn["name"],
-                          callback: (formPermissions != null && Utils.btnAccessHandler2(btn['name'], btncontroller, formPermissions!) == null)
+                          callback: (formPermissions != null &&
+                                  Utils.btnAccessHandler2(btn['name'],
+                                          btncontroller, formPermissions!) ==
+                                      null)
                               ? null
-                              : () => controller.formHandler(btn['name']),
+                              : () => formHandler(btn['name']),
                         ),
                     ],
                   ),
@@ -291,5 +340,16 @@ class RoCancellationView extends GetView<RoCancellationController> {
         ),
       ),
     );
+  }
+
+  formHandler(String btnName) {
+    if (btnName == "Save") {
+      controller.save();
+    } else if (btnName == "Clear") {
+      Get.delete<RoCancellationController>();
+      Get.find<HomeController>().clearPage1();
+    } else if (btnName == "Docs") {
+      controller.docs();
+    }
   }
 }

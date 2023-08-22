@@ -313,22 +313,23 @@ class FillerView extends GetView<FillerController> {
                                 inkwellFocus: controller.fillerCaptionFN,
                               ),
                             ),
-
+                            const SizedBox(width: 5),
                             /// TAPE ID eg: PCHF24572
-                            InputFields.formField1Width(
-                              widthRatio: 0.12,
-                              paddingLeft: 5,
+                            InputFields.formField1(
+                              width: 0.12,
+                              padLeft: 5,
                               hintTxt: "Tape ID",
                               controller: controller.tapeId_,
+                              focusNode: controller.tapeIDFocusNode,
                               isEnable: true,
-                              onChange: (value) {
-                                if (value.toString().isEmpty) {
-                                  controller.clearBottonControlls();
-                                } else {
-                                  controller.getFillerValuesByTapeCode(
-                                      value.toString());
-                                }
-                              },
+                              // onChange: (value) {
+                              //   if (value.toString().isEmpty) {
+                              //     controller.clearBottonControlls();
+                              //   } else {
+                              //     controller.getFillerValuesByTapeCode(
+                              //         value.toString());
+                              //   }
+                              // },
                               maxLen: 10,
                             ),
 
@@ -338,6 +339,7 @@ class FillerView extends GetView<FillerController> {
                               paddingLeft: 5,
                               hintTxt: "Seg No",
                               controller: controller.segNo_,
+                              disabledTextColor: Colors.black,
                               isEnable: false,
                               maxLen: 10,
                             ),
@@ -348,6 +350,7 @@ class FillerView extends GetView<FillerController> {
                               paddingLeft: 5,
                               hintTxt: "Seg Dur",
                               controller: controller.segDur_,
+                              disabledTextColor: Colors.black,
                               isEnable: false,
                               maxLen: 10,
                             ),
