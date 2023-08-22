@@ -101,7 +101,12 @@ class RoBookingController extends GetxController {
   RoBookingSaveCheckTapeId? savecheckData;
   bool showGstPopUp = true;
   int editMode = 0;
-  PlutoCell? currentGridCell;
+  int? bookingNoLeaveDealCurrentRow;
+  String? bookingNoLeaveDealCurrentColumn;
+
+  int? dealNoLeaveCurrentRow;
+  String? dealNoLeaveDealCurrentColumn;
+
   DropDownValue? selectedGST;
   RxList<SpotsNotVerified> spotsNotVerified = RxList<SpotsNotVerified>([]);
   var channels = RxList<DropDownValue>();
@@ -807,6 +812,8 @@ class RoBookingController extends GetxController {
         },
         fun: (value) {
           if (value is Map && value.containsKey("info_LeaveBookingNumber")) {
+            bookingNoLeaveDealCurrentColumn = "";
+            bookingNoLeaveDealCurrentRow = null;
             bookingNoLeaveData = RoBookingBkgNOLeaveData.fromJson(value["info_LeaveBookingNumber"]);
             selectedClient = DropDownValue(
                 key: bookingNoLeaveData!.lstClientAgency!.first.clientcode, value: bookingNoLeaveData!.lstClientAgency!.first.clientname);
