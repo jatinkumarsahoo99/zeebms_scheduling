@@ -31,7 +31,7 @@ class BrandMasterView extends StatelessWidget {
       body: Center(
         child: SizedBox(
           width: size.width * .82,
-          height: size.height * .9,
+          // height: size.height * .95,
           child: Dialog(
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
@@ -66,7 +66,7 @@ class BrandMasterView extends StatelessWidget {
                                     onchanged: (DropDownValue? val) {
                                     print(">>>" + val.toString());
                                     controllerX.selectedClient = val;
-                                    controllerX.fetchClientDetails((val?.value ??"")??"");
+                                    // controllerX.fetchClientDetails((val?.value ??"")??"");
                                     },
                                     title: 'Client',
                                     url:ApiFactory.BRANDMASTER_GETCLIENT,
@@ -74,6 +74,8 @@ class BrandMasterView extends StatelessWidget {
                                     parseKeyForValue: 'ClientName',
                                     selectedValue: controllerX.selectedClient,
                                     autoFocus: true,
+
+                                      inkwellFocus: controllerX.clientFocus,
                                     // maxLength: 1
                                     ),
                                     SizedBox(
@@ -83,8 +85,9 @@ class BrandMasterView extends StatelessWidget {
                                       hintTxt: "Brand Name",
                                       controller: controllerX.brandController,
                                       width: 0.36,
+                                      autoFocus: false,
                                       // autoFocus: true,
-                                      focusNode: controllerX.brandName,
+                                      focusNode: controllerX.brandNameFocus,
                                       // isEnable: controllerX.isEnable,
                                       onchanged: (value) {
 
@@ -101,11 +104,12 @@ class BrandMasterView extends StatelessWidget {
                                           hintTxt: "Brand Short Name",
                                           controller: controllerX.brandShortNameController,
                                           width: 0.2,
+
                                           // autoFocus: true,
                                           // isEnable: controllerX.isEnable,
                                           onchanged: (value) {
 
-                                          },
+                                          },autoFocus: true
                                           // autoFocus: true,
                                         ),
                                         SizedBox(
@@ -130,34 +134,11 @@ class BrandMasterView extends StatelessWidget {
                                     Row(
                                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                                       children: [
-                                        /*InputFields.formField1(
-                                          hintTxt: "Product",
-                                          controller:controllerX.productController,
-                                          width: 0.1,
-                                          // autoFocus: true,
-                                          focusNode: controllerX.productFocus,
-                                          // isEnable: controllerX.isEnable,
-                                          onchanged: (value) {
-                                            // controllerX.fetchProduct(value);
-                                          },
-                                          // autoFocus: true,
-                                        ),
-                                      Obx(()=>DropDownField.formDropDown1WidthMap(
-                                        controllerX.productList.value,
-                                            (value) {
-                                              controllerX.selectedProduct = value;
-                                              controllerX.getProductDetails(value.key??"");
-
-                                        }, "Product", .2,
-                                        // autoFocus: true,
-                                        isEnable: controllerX.isEnable,
-                                        selected: controllerX.selectedProduct,
-                                        // autoFocus: true,
-                                      )),*/
                                         DropDownField
                                             .formDropDownSearchAPI2(
                                           GlobalKey(),
                                           context,
+
                                           width: context.width * 0.3,
                                           onchanged: (DropDownValue? val) {
                                             print(">>>" + val.toString());
@@ -170,7 +151,7 @@ class BrandMasterView extends StatelessWidget {
                                           parseKeyForKey: "productcode",
                                           parseKeyForValue: 'Productname',
                                           selectedValue: controllerX.selectedProduct,
-                                          autoFocus: true,
+                                          autoFocus: false,
                                           // maxLength: 1
                                         ),
                                         InkWell(
@@ -218,7 +199,9 @@ class BrandMasterView extends StatelessWidget {
                                       // isEnable: controllerX.isEnable,
                                       onchanged: (value) {
 
-                                      },
+                                      },autoFocus: false,
+                                      focusNode: controllerX.productLevel1Focus
+
                                       // autoFocus: true,
                                     ),
                                     SizedBox(
@@ -233,6 +216,7 @@ class BrandMasterView extends StatelessWidget {
                                       onchanged: (value) {
 
                                       },
+                                        focusNode: controllerX.productLevel2Focus
                                       // autoFocus: true,
                                     ),
                                     SizedBox(
@@ -247,6 +231,7 @@ class BrandMasterView extends StatelessWidget {
                                       onchanged: (value) {
 
                                       },
+                                        focusNode: controllerX.productLevel3Focus
                                       // autoFocus: true,
                                     ),
                                     SizedBox(
@@ -261,6 +246,7 @@ class BrandMasterView extends StatelessWidget {
                                       onchanged: (value) {
 
                                       },
+                                        focusNode: controllerX.productLevel4Focus
                                       // autoFocus: true,
                                     ),
 
@@ -290,7 +276,10 @@ class BrandMasterView extends StatelessWidget {
                                             DataGridFromMap(
                                                 hideCode: false,
                                                 formatDate: false,
+                                                csvFormat: true,
                                                 focusNode: controllerX.gridFocus,
+                                                exportFileName: "Brand Master",
+                                                hideKeys: ['clientName'],
                                                 onRowDoubleTap: (PlutoGridOnRowDoubleTapEvent val){
                                                   controllerX.fetchDataFromGrid(val.rowIdx);
                                                   controllerX.selectedIndex = val.rowIdx;

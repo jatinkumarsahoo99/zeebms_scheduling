@@ -13,6 +13,7 @@ import 'package:bms_scheduling/widgets/PlutoGrid/pluto_grid.dart';
 // import 'package:pluto_grid_export/pluto_grid_export.dart' as pluto_grid_export;
 import 'package:bms_scheduling/widgets/PlutoGridExport/pluto_grid_export.dart' as pluto_grid_export;
 
+import '../../widgets/PlutoGridExport/src/pluto_grid_export1.dart';
 import '../../widgets/Snack.dart';
 import '../../widgets/dropdown.dart';
 import '../../widgets/input_fields.dart';
@@ -24,13 +25,15 @@ import 'ApiFactory.dart';
 import 'ExportData.dart';
 
 class DataGridMenu {
-  showGridMenu(
-    PlutoGridStateManager stateManager,
-    TapDownDetails details,
-    BuildContext context, {
-    String? exportFileName,
-    List<SecondaryShowDialogModel>? extraList,
-  }) async {
+  showGridMenu(PlutoGridStateManager stateManager,
+      TapDownDetails details,
+
+      BuildContext context, {
+        String? exportFileName,
+        List<SecondaryShowDialogModel>? extraList,
+        bool  csvFormat = false
+      }) async {
+    print(">>>>>csvFormat"+csvFormat.toString());
     clearFilterList() {
       Get.find<MainController>().filters1[stateManager.hashCode.toString()] = RxList([]);
     }
@@ -327,7 +330,15 @@ class DataGridMenu {
         break;
       case DataGridMenuItem.exportToCSv:
         String title = "csv_export";
-        var exportCSV = pluto_grid_export.PlutoGridExport.exportCSV(stateManager);
+        var exportCSV;
+
+        if(!csvFormat){
+          exportCSV = pluto_grid_export.PlutoGridExport.exportCSV(
+              stateManager);
+        }else{
+          exportCSV = PlutoGridExport1.exportCSV(
+              stateManager);
+        }
         var exported = const Utf8Encoder().convert(
             // FIX Add starting \u{FEFF} / 0xEF, 0xBB, 0xBF
             // This allows open the file in Excel with proper character interpretation

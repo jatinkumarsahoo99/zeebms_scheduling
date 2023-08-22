@@ -34,12 +34,17 @@ class BrandMasterController extends GetxController {
   FocusNode clientFocus = FocusNode();
   FocusNode productFocus = FocusNode();
   FocusNode gridFocus = FocusNode();
-  FocusNode brandName = FocusNode();
+  FocusNode brandNameFocus = FocusNode();
+
+  FocusNode productLevel1Focus = FocusNode();
+  FocusNode productLevel2Focus = FocusNode();
+  FocusNode productLevel3Focus = FocusNode();
+  FocusNode productLevel4Focus = FocusNode();
 
   TextEditingController clientController = TextEditingController();
   TextEditingController brandController = TextEditingController();
   TextEditingController brandShortNameController = TextEditingController();
-  TextEditingController separationTimeController = TextEditingController(text: '1');
+  TextEditingController separationTimeController = TextEditingController(text: '0');
   TextEditingController productController = TextEditingController();
 
   TextEditingController productLevel1Controller = TextEditingController();
@@ -60,6 +65,7 @@ class BrandMasterController extends GetxController {
   }
 
   fetchClient(String client) {
+    isFocusNodeActive = false;
     Get.find<ConnectorControl>().GETMETHODCALL(
         api: ApiFactory.BRANDMASTER_GETCLIENT+client,
         fun: (map) {
@@ -116,11 +122,17 @@ class BrandMasterController extends GetxController {
         });
   }
 
-
+  closeDialogIfOpen() {
+    if (Get.isDialogOpen ?? false) {
+      Get.back();
+    }
+  }
   fetchClientDetails(String client){
+    LoadingDialog.call();
     Get.find<ConnectorControl>().GETMETHODCALL(
-        api: ApiFactory.BRANDMASTER_GETCLIENTDETAILS+Uri.encodeComponent(client),
+        api: ApiFactory.BRANDMASTER_GETCLIENTDETAILS+Uri.encodeComponent(client.replaceAll("'",  "")),
         fun: (map) {
+          closeDialogIfOpen();
           print(">>>>>>map"+jsonEncode(map));
           isFocusNodeActive = false;
           if (map is Map && map.containsKey('clientdtails') && map['clientdtails'] != null &&
@@ -156,11 +168,14 @@ class BrandMasterController extends GetxController {
   }
   String strcode = "0";
   BrandMasterRetriveModel? brandMasterRetriveModel;
+
   getRetriveData(String brandName){
+    LoadingDialog.call();
     isFocusNodeActive = false;
     Get.find<ConnectorControl>().GETMETHODCALL(
         api: ApiFactory.BRANDMASTER_GETBRAND+Uri.encodeComponent(brandName),
         fun: (map) {
+          closeDialogIfOpen();
           isFocusNodeActive = false;
           // strcode
            print(">>>>>"+ jsonEncode(map).toString());
@@ -186,6 +201,8 @@ class BrandMasterController extends GetxController {
              productLevel2Controller.text = (brandMasterRetriveModel?.getBrandList?[0].level1Name ??"").toString();
              productLevel3Controller.text = (brandMasterRetriveModel?.getBrandList?[0].level2Name ??"").toString();
              productLevel4Controller.text = (brandMasterRetriveModel?.getBrandList?[0].level3Name ??"").toString();
+
+             // selectedProduct = DropDownValue(value:(brandMasterRetriveModel?.getBrandList?[0].Productname ??"") , key: (brandMasterRetriveModel?.getBrandList?[0].productCode ??""));
              update(['top']);
            }else{
              strcode = "0";
@@ -207,6 +224,7 @@ class BrandMasterController extends GetxController {
   }
 
   txtBrandNameLostFocus(){
+    isFocusNodeActive = false;
     brandController.text = replaceInvalidChar(brandController.text);
     if(brandController.text != null && brandController.text != ""){
       getRetriveData(brandController.text);
@@ -222,116 +240,6 @@ class BrandMasterController extends GetxController {
       documentKey = "Brandmaster " + strcode;
     }
 
-    /* PlutoGridStateManager? viewDocsStateManger;
-    try {
-      LoadingDialog.call();
-      await Get.find<ConnectorControl>().GET_METHOD_CALL_HEADER(
-          api: ApiFactory.COMMON_DOCS_LOAD(documentKey),
-          fun: (data) {
-            if (data is Map && data.containsKey("info_GetAllDocument")) {
-              documents = [];
-              for (var doc in data["info_GetAllDocument"]) {
-                documents.add(RoCancellationDocuments.fromJson(doc));
-              }
-              Get.back();
-            }
-          });
-    } catch (e) {
-      Get.back();
-    }
-    Get.defaultDialog(
-        title: "Documents",
-        content: SizedBox(
-          width: Get.width / 2.5,
-          height: Get.height / 2.5,
-          child: Scaffold(
-            body: RawKeyboardListener(
-              focusNode: FocusNode(),
-              onKey: (value) {
-                if (value.isKeyPressed(LogicalKeyboardKey.delete)) {
-                  LoadingDialog.delete(
-                    "Want to delete selected row",
-                        () async {
-                      LoadingDialog.call();
-                      await Get.find<ConnectorControl>().DELETEMETHOD(
-                        api: ApiFactory.COMMON_DOCS_DELETE(documents[viewDocsStateManger!.currentRowIdx!].documentId.toString()),
-                        fun: (data) {
-                          Get.back();
-                        },
-                      );
-                      Get.back();
-                      docs();
-                    },
-                    cancel: () {},
-                  );
-                }
-              },
-              child: DataGridShowOnlyKeys(
-                hideCode: true,
-                hideKeys: ["documentId"],
-                dateFromat: "dd-MM-yyyy HH:mm",
-                mapData: documents.map((e) => e.toJson()).toList(),
-                onload: (loadGrid) {
-                  viewDocsStateManger = loadGrid.stateManager;
-                },
-                onRowDoubleTap: (row) {
-                  Get.find<ConnectorControl>().GET_METHOD_CALL_HEADER(
-                      api: ApiFactory.COMMON_DOCS_VIEW((documents[row.rowIdx].documentId).toString()),
-                      fun: (data) {
-                        if (data is Map && data.containsKey("addingDocument")) {
-                          ExportData()
-                              .exportFilefromByte(base64Decode(data["addingDocument"][0]["documentData"]), data["addingDocument"][0]["documentname"]);
-                        }
-                      });
-                },
-              ),
-            ),
-          ),
-        ),
-        actions: {"Add Doc": () async {}, "View Doc": () {},
-          "Attach Email": () {}}.entries.map((e) =>
-            FormButtonWrapper(
-          btnText: e.key,
-          callback: e.key == "Add Doc"
-              ? () async {
-            FilePickerResult? result = await FilePicker.platform.pickFiles(allowMultiple: false);
-
-            if (result != null && result.files.isNotEmpty) {
-              LoadingDialog.call();
-              await Get.find<ConnectorControl>().POSTMETHOD_FORMDATA_HEADER(
-                  api: ApiFactory.COMMON_DOCS_ADD,
-                  fun: (data) {
-                    if (data is Map && data.containsKey("addingDocument")) {
-                      for (var doc in data["addingDocument"]) {
-                        documents.add(RoCancellationDocuments.fromJson(doc));
-                      }
-                      Get.back();
-                      docs();
-                    }
-                  },
-                  json: {
-                    "documentKey": documentKey,
-                    "loggedUser": Get.find<MainController>().user?.logincode ?? "",
-                    "strFilePath": result.files.first.name,
-                    "bytes": base64.encode(List<int>.from(result.files.first.bytes ?? []))
-                  });
-              Get.back();
-            }
-          }
-              : e.key == "View Doc"
-              ? () {
-            Get.find<ConnectorControl>().GET_METHOD_CALL_HEADER(
-                api: ApiFactory.COMMON_DOCS_VIEW((documents[viewDocsStateManger!.currentCell!.row.sortIdx].documentId).toString()),
-                fun: (data) {
-                  if (data is Map && data.containsKey("addingDocument")) {
-                    ExportData().exportFilefromByte(
-                        base64Decode(data["addingDocument"][0]["documentData"]), data["addingDocument"][0]["documentname"]);
-                  }
-                });
-          }
-              : () {},
-        )).toList()
-    );*/
 
     Get.defaultDialog(
       title: "Documents",
@@ -343,91 +251,115 @@ class BrandMasterController extends GetxController {
 
   fetchDataFromGrid(int index){
     // clientDetailsAndBrandModel
-    if(clientDetailsAndBrandModel != null && clientDetailsAndBrandModel!.clientdtails!.length > 0){
-      brandController.text = clientDetailsAndBrandModel!.clientdtails?[index].brandName??"";
-      brandShortNameController.text = clientDetailsAndBrandModel!.clientdtails?[index].brandName ??"";
-      productController.text =clientDetailsAndBrandModel!.clientdtails?[index].productName??"";
-      productController.text = clientDetailsAndBrandModel!.clientdtails?[index].productName??"";
-      productLevel1Controller.text = clientDetailsAndBrandModel!.clientdtails?[index].level1Name ??"";
-      productLevel2Controller.text = clientDetailsAndBrandModel!.clientdtails?[index].level1Name ??"";
-      productLevel3Controller.text = clientDetailsAndBrandModel!.clientdtails?[index].level2Name ??"";
-      productLevel4Controller.text = clientDetailsAndBrandModel!.clientdtails?[index].level3Name ??"";
-      selectedProduct = DropDownValue(value:clientDetailsAndBrandModel!.clientdtails?[index].productName , key: "product");
+    if(gridStateManager != null && (gridStateManager?.rows.length??0) > 0){
+      // brandController.text = clientDetailsAndBrandModel!.clientdtails?[index].brandName??"";
+      brandController.text = gridStateManager?.rows[gridStateManager?.currentRowIdx??0].cells['brandName']?.value ??"";
+
+      // brandShortNameController.text = clientDetailsAndBrandModel!.clientdtails?[index].brandName ??"";
+      brandShortNameController.text = gridStateManager?.rows[gridStateManager?.currentRowIdx??0].cells['brandName']?.value ??"";
+      // productController.text =clientDetailsAndBrandModel!.clientdtails?[index].productName??"";
+      productController.text = gridStateManager?.rows[gridStateManager?.currentRowIdx??0].cells['productName']?.value ??"";
+
+      // productLevel1Controller.text = clientDetailsAndBrandModel!.clientdtails?[index].level1Name ??"";
+      productLevel1Controller.text = gridStateManager?.rows[gridStateManager?.currentRowIdx??0].cells['level1Name']?.value ??"";
+
+      // productLevel2Controller.text = clientDetailsAndBrandModel!.clientdtails?[index].level1Name ??"";
+      productLevel2Controller.text = gridStateManager?.rows[gridStateManager?.currentRowIdx??0].cells['level1Name']?.value ??"";
+
+      // productLevel3Controller.text = clientDetailsAndBrandModel!.clientdtails?[index].level2Name ??"";
+      productLevel3Controller.text = gridStateManager?.rows[gridStateManager?.currentRowIdx??0].cells['level2Name']?.value ??"";
+
+      // productLevel4Controller.text = clientDetailsAndBrandModel!.clientdtails?[index].level3Name ??"";
+      productLevel4Controller.text =  gridStateManager?.rows[gridStateManager?.currentRowIdx??0].cells['level3Name']?.value ??"";
+
+      selectedProduct = DropDownValue(value:(gridStateManager?.rows[gridStateManager?.currentRowIdx??0].cells['productName']?.value ??"") , key: "product");
       getRetriveData( brandController.text);
       update(['top']);
     }
   }
 
-  void ValidateAndSaveRecord(){
-    if(selectedClient == null){
+  void ValidateAndSaveRecord() {
+    if (selectedClient == null) {
       Snack.callError("Client Name cannot be empty");
-    }else if(brandController.text == null || brandController.text == ""){
+    } else if (brandController.text == null || brandController.text == "") {
       Snack.callError("Brand Name cannot be empty.");
-    }else if(brandController.text == null || brandController.text == ""){
+    } else if (brandController.text == null || brandController.text == "") {
       Snack.callError("Brand Name cannot be empty.");
-    }else if(brandShortNameController.text == null || brandController.text == ""){
+    } else
+    if (brandShortNameController.text == null || brandController.text == "") {
       Snack.callError("Brand Short Name cannot be empty.");
-    }else if(productController.text == null || productController.text == ""){
+    } else if (selectedProduct == null ) {
       Snack.callError("Product Name cannot be empty.");
+    } else if(strcode != "0"){
+      LoadingDialog.recordExists("Record Already exist!\n Do you want to modify it?", () {
+        isEnable = true;
+        saveDataApi();
+      });
     }else{
-
-      Map<String,dynamic> postData = {
-        "brandCode": strcode??"0",
-        "brandName": brandController.text??"",
-        "brandShortName": brandShortNameController.text??"",
-        "productCode": selectedProduct?.key??"",
-        "clientCode":selectedClient?.key??"",
-        "modifiedBy": Get.find<MainController>().user?.logincode ?? "",
-        "separationTime": separationTimeController.text
-      };
-      LoadingDialog.call();
-      print(">>>>"+postData.toString());
-      Get.find<ConnectorControl>().POSTMETHOD(
-          api: ApiFactory.BRANDMASTER_SAVE,
-          json: postData,
-          fun: (map) {
-            Get.back();
-            print(">>>>"+jsonEncode(map).toString());
-            if(map is Map && map.containsKey("brandMater") && map['brandMater'] != null){
-              clearAll();
-              Snack.callSuccess(map['brandMater']??"");
-            }else{
-              Snack.callError((map??"Something went wrong").toString());
-            }
-          });
-
+      saveDataApi();
     }
   }
+  void saveDataApi(){
+    Map<String,dynamic> postData = {
+      "brandCode": strcode??"0",
+      "brandName": brandController.text??"",
+      "brandShortName": brandShortNameController.text??"",
+      "productCode": selectedProduct?.key??"",
+      "clientCode":selectedClient?.key??"",
+      "modifiedBy": Get.find<MainController>().user?.logincode ?? "",
+      "separationTime": separationTimeController.text
+    };
+    LoadingDialog.call();
+    print(">>>>"+postData.toString());
+    Get.find<ConnectorControl>().POSTMETHOD(
+        api: ApiFactory.BRANDMASTER_SAVE,
+        json: postData,
+        fun: (map) {
+          Get.back();
+          print(">>>>"+jsonEncode(map).toString());
+          if(map is Map && map.containsKey("brandMater") && map['brandMater'] != null){
+            clearAll();
+            if(strcode != "0"){
+              LoadingDialog.callDataSavedMessage("Record is updated successfully.");
+            }else{
+              LoadingDialog.callDataSavedMessage("Record is inserted successfully.");
+            }
 
+          }else{
+            LoadingDialog.showErrorDialog((map??"Something went wrong").toString());
+          }
+        });
+
+  }
 
 
 
 
   @override
   void onInit() {
+    brandNameFocus.addListener(() {
+      if(brandNameFocus.hasFocus){
+        isFocusNodeActive = true;
+      }if(!brandNameFocus.hasFocus){
+        if(brandController.text != null && brandController.text != "" ){
+          txtBrandNameLostFocus();
+        }
+
+      }
+      print(">>>>isFocusNodeActive"+isFocusNodeActive.toString());
+    });
+
     clientFocus.addListener(() {
       if(clientFocus.hasFocus){
         isFocusNodeActive = true;
+      }if(clientFocus.hasFocus && isFocusNodeActive){
+        if(selectedClient != null && selectedClient?.value != "" ){
+          fetchClientDetails(selectedClient?.value??"");
+        }
       }
-      if(!clientFocus.hasFocus && isFocusNodeActive){
-        fetchClient(clientController.text);
-      }
+      print(">>>>isFocusNodeActive"+isFocusNodeActive.toString());
     });
-   /* productFocus.addListener(() {
-      if(productFocus.hasFocus){
-        isFocusNodeActive = true;
-      }
-      if(!productFocus.hasFocus && isFocusNodeActive){
-        fetchProduct(productController.text);
-      }
-    });*/
-    brandName.addListener(() {
-      if(brandName.hasFocus){
-        isFocusNodeActive = true;
-      }if(!brandName.hasFocus && isFocusNodeActive){
-        txtBrandNameLostFocus();
-      }
-    });
+
     fetchOnLoad();
 
 
