@@ -285,7 +285,21 @@ class RoRescheduleView extends StatelessWidget {
                                 } else {
                                   return DataGridShowOnlyKeys(
                                     mapData: gridController.roRescheduleOnLeaveData!.lstdgvUpdated!.map((e) => e.toJson()).toList(),
-                                    showonly: ["programName","scheduleDate","scheduleTime","exportTapeCode","commercialCaption","tapeDuration","spotAmount","bookingDetailCode","recordnumber","segmentNumber","breaknumber","spotPositionTypeName","positionName"],
+                                    showonly: [
+                                      "programName",
+                                      "scheduleDate",
+                                      "scheduleTime",
+                                      "exportTapeCode",
+                                      "commercialCaption",
+                                      "tapeDuration",
+                                      "spotAmount",
+                                      "bookingDetailCode",
+                                      "recordnumber",
+                                      "segmentNumber",
+                                      "breaknumber",
+                                      "spotPositionTypeName",
+                                      "positionName"
+                                    ],
                                     extraList: [
                                       SecondaryShowDialogModel("Delete", () {
                                         if (controller.updatedplutoGridStateManager?.currentCell != null) {
@@ -303,7 +317,7 @@ class RoRescheduleView extends StatelessWidget {
                                     onload: (loadEvent) {
                                       controller.updatedplutoGridStateManager = loadEvent.stateManager;
                                     },
-                                    formatDate: false,
+                                    formatDate: true,
                                   );
                                 }
                               }),
@@ -381,7 +395,9 @@ class RoRescheduleView extends StatelessWidget {
                                     ),
                                     FormButtonWrapper(
                                       btnText: "Close",
-                                      callback: () {},
+                                      callback: () {
+                                        controller.closeModify();
+                                      },
                                     )
                                   ],
                                 )

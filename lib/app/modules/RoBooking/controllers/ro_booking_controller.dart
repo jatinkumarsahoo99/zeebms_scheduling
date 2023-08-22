@@ -489,9 +489,9 @@ class RoBookingController extends GetxController {
               }
             }
 
-            if (response["info_SetVerify"]['info_SpotsNotVerified'] != null) {
+            if (response["info_SetVerify"]['lstSpotsNotVerified'] != null) {
               spotsNotVerified.value = <SpotsNotVerified>[];
-              response["info_SetVerify"]['info_SpotsNotVerified'].forEach((v) {
+              response["info_SetVerify"]['lstSpotsNotVerified'].forEach((v) {
                 spotsNotVerified.add(SpotsNotVerified.fromJson(v));
               });
             }
