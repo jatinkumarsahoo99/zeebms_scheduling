@@ -101,7 +101,12 @@ class RoBookingController extends GetxController {
   RoBookingSaveCheckTapeId? savecheckData;
   bool showGstPopUp = true;
   int editMode = 0;
-  PlutoCell? currentGridCell;
+  int? bookingNoLeaveDealCurrentRow;
+  String? bookingNoLeaveDealCurrentColumn;
+
+  int? dealNoLeaveCurrentRow;
+  String? dealNoLeaveDealCurrentColumn;
+
   DropDownValue? selectedGST;
   RxList<SpotsNotVerified> spotsNotVerified = RxList<SpotsNotVerified>([]);
   var channels = RxList<DropDownValue>();
@@ -807,6 +812,8 @@ class RoBookingController extends GetxController {
         },
         fun: (value) {
           if (value is Map && value.containsKey("info_LeaveBookingNumber")) {
+            bookingNoLeaveDealCurrentColumn = "";
+            bookingNoLeaveDealCurrentRow = null;
             bookingNoLeaveData = RoBookingBkgNOLeaveData.fromJson(value["info_LeaveBookingNumber"]);
             selectedClient = DropDownValue(
                 key: bookingNoLeaveData!.lstClientAgency!.first.clientcode, value: bookingNoLeaveData!.lstClientAgency!.first.clientname);
@@ -977,7 +984,7 @@ class RoBookingController extends GetxController {
     Get.find<ConnectorControl>().POSTMETHOD(
         api: ApiFactory.RO_BOOKING_OnSave_Check,
         json: {
-          "chkSummaryType": false,
+          "chkSummaryType": addSpotData?.lstSpots?.isNotEmpty,
           "lstdgvSpots":
               addSpotData?.lstSpots?.map((e) => e.toJson()).toList() ?? bookingNoLeaveData?.lstSpots?.map((e) => e.toJson()).toList() ?? [],
           "brandName": selectedBrand?.key

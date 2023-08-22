@@ -46,8 +46,22 @@ class _DateWithThreeTextFieldState extends State<DateWithThreeTextField> {
 
   DateTime? dateTime;
   late DateFormat requireFormatDateStr;
-  List<String> months = ["Janurary", "Feburary", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"];
-  bool isLeapYearFun(int year) => (year % 4 == 0) && ((year % 100 != 0) || (year % 400 == 0));
+  List<String> months = [
+    "Janurary",
+    "Feburary",
+    "March",
+    "April",
+    "May",
+    "June",
+    "July",
+    "August",
+    "September",
+    "October",
+    "November",
+    "December"
+  ];
+  bool isLeapYearFun(int year) =>
+      (year % 4 == 0) && ((year % 100 != 0) || (year % 400 == 0));
   List<int> maxDays = [];
 
   @override
@@ -106,7 +120,8 @@ class _DateWithThreeTextFieldState extends State<DateWithThreeTextField> {
   @override
   Widget build(BuildContext context) {
     final textColor = (widget.isEnable) ? Colors.black : Colors.grey;
-    final borderColor = (widget.isEnable) ? Colors.deepPurpleAccent : Colors.grey;
+    final borderColor =
+        (widget.isEnable) ? Colors.deepPurpleAccent : Colors.grey;
     return Column(
       mainAxisAlignment: MainAxisAlignment.start,
       mainAxisSize: MainAxisSize.min,
@@ -117,7 +132,7 @@ class _DateWithThreeTextFieldState extends State<DateWithThreeTextField> {
           widget.title,
           style: TextStyle(
             fontSize: SizeDefine.labelSize1,
-            color: textColor,
+            color: Colors.black,
             fontWeight: FontWeight.w500,
           ),
         ),
@@ -143,35 +158,46 @@ class _DateWithThreeTextFieldState extends State<DateWithThreeTextField> {
                       child: RawKeyboardListener(
                         focusNode: focus[0],
                         onKey: (event) async {
-                          if (event.isShiftPressed && event.isKeyPressed(LogicalKeyboardKey.tab)) {
-                          } else if (event.isKeyPressed(LogicalKeyboardKey.tab)) {
+                          if (event.isShiftPressed &&
+                              event.isKeyPressed(LogicalKeyboardKey.tab)) {
+                          } else if (event
+                              .isKeyPressed(LogicalKeyboardKey.tab)) {
                             FocusScope.of(context).nextFocus(); //months
                             FocusScope.of(context).nextFocus(); // years
-                            FocusScope.of(context).nextFocus(); // next widget get focus
+                            FocusScope.of(context)
+                                .nextFocus(); // next widget get focus
                             if (widget.onFocusChange != null) {
                               await assignValueToMainTextEditingController();
-                              widget.onFocusChange!(widget.mainTextController.text);
+                              widget.onFocusChange!(
+                                  widget.mainTextController.text);
                             }
-                          } else if (event.isKeyPressed(LogicalKeyboardKey.arrowRight)) {
+                          } else if (event
+                              .isKeyPressed(LogicalKeyboardKey.arrowRight)) {
                             FocusScope.of(context).nextFocus(); //months
-                          } else if (event.isKeyPressed(LogicalKeyboardKey.arrowLeft)) {
+                          } else if (event
+                              .isKeyPressed(LogicalKeyboardKey.arrowLeft)) {
                             cursorAtLast(0);
-                          } else if (event.isKeyPressed(LogicalKeyboardKey.arrowUp)) {
+                          } else if (event
+                              .isKeyPressed(LogicalKeyboardKey.arrowUp)) {
                             incrementDecrementOnKeyBoardEvent(0, widget.day);
-                          } else if (event.isKeyPressed(LogicalKeyboardKey.arrowDown)) {
-                            incrementDecrementOnKeyBoardEvent(0, widget.day, up: false);
+                          } else if (event
+                              .isKeyPressed(LogicalKeyboardKey.arrowDown)) {
+                            incrementDecrementOnKeyBoardEvent(0, widget.day,
+                                up: false);
                           }
                         },
                         child: Padding(
                           padding: const EdgeInsets.only(top: 2),
                           child: TextFormField(
                             controller: textCtr[0],
-                            inputFormatters: [FilteringTextInputFormatter.digitsOnly],
+                            inputFormatters: [
+                              FilteringTextInputFormatter.digitsOnly
+                            ],
                             decoration: style,
                             onChanged: (value) {
                               int no = int.tryParse(value) ?? 00;
                               int selectedMonth = getMonthINTFromMonthStr(textCtr[1].text);
-                             
+
                               if (no > maxDays[selectedMonth - 1] || value == "00") {
                                 textCtr[0].text = "01";
                                 cursorAtLast(0);
@@ -208,23 +234,32 @@ class _DateWithThreeTextFieldState extends State<DateWithThreeTextField> {
                       child: RawKeyboardListener(
                         focusNode: focus[1],
                         onKey: (event) async {
-                          if (event.isShiftPressed && event.isKeyPressed(LogicalKeyboardKey.tab)) {
+                          if (event.isShiftPressed &&
+                              event.isKeyPressed(LogicalKeyboardKey.tab)) {
                             FocusScope.of(context).previousFocus(); //day
-                          } else if (event.isKeyPressed(LogicalKeyboardKey.tab)) {
+                          } else if (event
+                              .isKeyPressed(LogicalKeyboardKey.tab)) {
                             FocusScope.of(context).nextFocus(); // year
-                            FocusScope.of(context).nextFocus(); // next widget get focus
+                            FocusScope.of(context)
+                                .nextFocus(); // next widget get focus
                             if (widget.onFocusChange != null) {
                               await assignValueToMainTextEditingController();
-                              widget.onFocusChange!(widget.mainTextController.text);
+                              widget.onFocusChange!(
+                                  widget.mainTextController.text);
                             }
-                          } else if (event.isKeyPressed(LogicalKeyboardKey.arrowLeft)) {
+                          } else if (event
+                              .isKeyPressed(LogicalKeyboardKey.arrowLeft)) {
                             FocusScope.of(context).previousFocus(); //day
-                          } else if (event.isKeyPressed(LogicalKeyboardKey.arrowRight)) {
+                          } else if (event
+                              .isKeyPressed(LogicalKeyboardKey.arrowRight)) {
                             FocusScope.of(context).nextFocus(); //year
-                          } else if (event.isKeyPressed(LogicalKeyboardKey.arrowUp)) {
+                          } else if (event
+                              .isKeyPressed(LogicalKeyboardKey.arrowUp)) {
                             incrementDecrementOnKeyBoardEvent(1, widget.month);
-                          } else if (event.isKeyPressed(LogicalKeyboardKey.arrowDown)) {
-                            incrementDecrementOnKeyBoardEvent(1, widget.month, up: false);
+                          } else if (event
+                              .isKeyPressed(LogicalKeyboardKey.arrowDown)) {
+                            incrementDecrementOnKeyBoardEvent(1, widget.month,
+                                up: false);
                           }
                         },
                         child: Padding(
@@ -236,8 +271,11 @@ class _DateWithThreeTextFieldState extends State<DateWithThreeTextField> {
                             ],
                             decoration: style,
                             onChanged: (value) {
-                              if (previousTextInMonth + value == "10" || previousTextInMonth + value == "11" || previousTextInMonth + value == "12") {
-                                setMonthInTextField(previousTextInMonth + value);
+                              if (previousTextInMonth + value == "10" ||
+                                  previousTextInMonth + value == "11" ||
+                                  previousTextInMonth + value == "12") {
+                                setMonthInTextField(
+                                    previousTextInMonth + value);
                               } else {
                                 setMonthInTextField(value);
                               }
@@ -271,30 +309,41 @@ class _DateWithThreeTextFieldState extends State<DateWithThreeTextField> {
                       child: RawKeyboardListener(
                         focusNode: focus[2],
                         onKey: (event) async {
-                          if (event.isShiftPressed && event.isKeyPressed(LogicalKeyboardKey.tab)) {
+                          if (event.isShiftPressed &&
+                              event.isKeyPressed(LogicalKeyboardKey.tab)) {
                             FocusScope.of(context).previousFocus(); //minutes
                             FocusScope.of(context).previousFocus(); //Hours
-                          } else if (event.isKeyPressed(LogicalKeyboardKey.tab)) {
-                            FocusScope.of(context).nextFocus(); // next widget get focus
+                          } else if (event
+                              .isKeyPressed(LogicalKeyboardKey.tab)) {
+                            FocusScope.of(context)
+                                .nextFocus(); // next widget get focus
                             if (widget.onFocusChange != null) {
                               await assignValueToMainTextEditingController();
-                              widget.onFocusChange!(widget.mainTextController.text);
+                              widget.onFocusChange!(
+                                  widget.mainTextController.text);
                             }
-                          } else if (event.isKeyPressed(LogicalKeyboardKey.arrowUp)) {
+                          } else if (event
+                              .isKeyPressed(LogicalKeyboardKey.arrowUp)) {
                             incrementDecrementOnKeyBoardEvent(2, widget.year);
-                          } else if (event.isKeyPressed(LogicalKeyboardKey.arrowLeft)) {
+                          } else if (event
+                              .isKeyPressed(LogicalKeyboardKey.arrowLeft)) {
                             FocusScope.of(context).previousFocus(); //month
-                          } else if (event.isKeyPressed(LogicalKeyboardKey.arrowRight)) {
+                          } else if (event
+                              .isKeyPressed(LogicalKeyboardKey.arrowRight)) {
                             cursorAtLast(2);
-                          } else if (event.isKeyPressed(LogicalKeyboardKey.arrowDown)) {
-                            incrementDecrementOnKeyBoardEvent(2, widget.year, up: false);
+                          } else if (event
+                              .isKeyPressed(LogicalKeyboardKey.arrowDown)) {
+                            incrementDecrementOnKeyBoardEvent(2, widget.year,
+                                up: false);
                           }
                         },
                         child: Padding(
                           padding: const EdgeInsets.only(top: 2),
                           child: TextFormField(
                             controller: textCtr[2],
-                            inputFormatters: [FilteringTextInputFormatter.digitsOnly],
+                            inputFormatters: [
+                              FilteringTextInputFormatter.digitsOnly
+                            ],
                             decoration: style,
                             onChanged: (value) {
                               if (value.length == 4) {
@@ -334,7 +383,8 @@ class _DateWithThreeTextFieldState extends State<DateWithThreeTextField> {
                               // var now = DateTime.now();
                               textCtr[0].text = selectedDate.day.toString();
                               addZeroAndSetCursorAtLast(0);
-                              textCtr[1].text = getMonthsFromIndex(selectedDate.month);
+                              textCtr[1].text =
+                                  getMonthsFromIndex(selectedDate.month);
                               textCtr[2].text = selectedDate.year.toString();
                             }
                             FocusScope.of(context).requestFocus(iconFocusNode);
@@ -343,7 +393,11 @@ class _DateWithThreeTextFieldState extends State<DateWithThreeTextField> {
                         );
                       }
                     : null,
-                child: Icon(Icons.date_range, size: 16, color: widget.isEnable ? Colors.deepPurpleAccent : Colors.grey),
+                child: Icon(Icons.date_range,
+                    size: 16,
+                    color: widget.isEnable
+                        ? Colors.deepPurpleAccent
+                        : Colors.grey),
               ),
             ],
           ),
@@ -429,23 +483,28 @@ class _DateWithThreeTextFieldState extends State<DateWithThreeTextField> {
 
   assignNewValeToEditTextField() {
     var now = DateTime.now();
-    List<String?> tempDate = widget.mainTextController.text.split(widget.splitType);
+    List<String?> tempDate =
+        widget.mainTextController.text.split(widget.splitType);
     if (tempDate.length == 3) {
       if (originalDate.isEmpty) {
         originalDate = widget.mainTextController.text;
       }
       tempDate = widget.mainTextController.text.split(widget.splitType);
-      textCtr[0].text = (tempDate[0] ?? (now.day < 10 ? "0${now.day}" : now.day.toString())); //DD
-      textCtr[1].text = (getMonthsFromIndex(int.tryParse(tempDate[1] ?? "0") ?? 0)); //MMM
+      textCtr[0].text = (tempDate[0] ??
+          (now.day < 10 ? "0${now.day}" : now.day.toString())); //DD
+      textCtr[1].text =
+          (getMonthsFromIndex(int.tryParse(tempDate[1] ?? "0") ?? 0)); //MMM
       textCtr[2].text = tempDate[2] ?? now.year.toString(); //YYYY
     } else {
       textCtr[0].text = now.day < 10 ? "0${now.day}" : now.day.toString();
       textCtr[1].text = getMonthsFromIndex(now.month);
       textCtr[2].text = now.year.toString();
       if (originalDate.isEmpty) {
-        originalDate = "${now.day < 10 ? "0${now.day}" : now.day.toString()}-${now.month}-${now.year}";
+        originalDate =
+            "${now.day < 10 ? "0${now.day}" : now.day.toString()}-${now.month}-${now.year}";
       }
     }
+    selectedDateTime = DateFormat("dd-MM-yyyy").parse(originalDate);
   }
 
   assignValueToMainTextEditingController() async {
@@ -457,11 +516,17 @@ class _DateWithThreeTextFieldState extends State<DateWithThreeTextField> {
       textCtr[2].text = DateTime.now().year.toString();
     }
     int tempMonth = getMonthINTFromMonthStr(textCtr[1].text);
-    String time = textCtr[0].text + widget.splitType + (tempMonth >= 10 ? tempMonth.toString() : "0$tempMonth") + widget.splitType + textCtr[2].text;
+    String time = textCtr[0].text +
+        widget.splitType +
+        (tempMonth >= 10 ? tempMonth.toString() : "0$tempMonth") +
+        widget.splitType +
+        textCtr[2].text;
     selectedDateTime = DateFormat("dd-MM-yyyy").parse(time);
 
-    if ((widget.endDate != null && DateFormat("dd-MM-yyyy").parse(time).isAfter(widget.endDate!)) ||
-        (widget.startDate != null && DateFormat("dd-MM-yyyy").parse(time).isBefore(widget.startDate!))) {
+    if ((widget.endDate != null &&
+            DateFormat("dd-MM-yyyy").parse(time).isAfter(widget.endDate!)) ||
+        (widget.startDate != null &&
+            DateFormat("dd-MM-yyyy").parse(time).isBefore(widget.startDate!))) {
       widget.mainTextController.text = originalDate;
       assignNewValeToEditTextField();
     } else {
@@ -501,7 +566,9 @@ class _DateWithThreeTextFieldState extends State<DateWithThreeTextField> {
       /// month
       int selectedMonth = getMonthINTFromMonthStr(textCtr[1].text);
       int dayInt = int.tryParse(textCtr[0].text) ?? 0;
-      selectedMonth = up ? selectedMonth = selectedMonth + 1 : selectedMonth = selectedMonth - 1;
+      selectedMonth = up
+          ? selectedMonth = selectedMonth + 1
+          : selectedMonth = selectedMonth - 1;
       if (selectedMonth > 12) {
         selectedMonth = 1;
       } else if (selectedMonth <= 0) {

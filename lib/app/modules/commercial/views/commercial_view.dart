@@ -13,6 +13,7 @@ import '../../../../widgets/dropdown.dart';
 import '../../../../widgets/gridFromMap.dart';
 import '../../../../widgets/gridFromMap1.dart';
 import '../../../controller/HomeController.dart';
+import '../../../providers/ApiFactory.dart';
 import '../../../providers/SizeDefine.dart';
 import '../controllers/commercial_controller.dart';
 
@@ -82,7 +83,11 @@ class CommercialView extends GetView<CommercialController> {
                                   title: "From Date",
                                   mainTextController: controller.date_,
                                   widthRation: controller.widthSize,
-                                  // startDate: DateTime.now(),
+                                  startDate:
+                                      (ApiFactory.Enviroment.toLowerCase() ==
+                                              "prod")
+                                          ? DateTime.now()
+                                          : null,
                                 ),
                                 const SizedBox(
                                   width: 20,
@@ -109,14 +114,16 @@ class CommercialView extends GetView<CommercialController> {
                                   ),
                                 ),
                                 Padding(
-                                  padding: const EdgeInsets.only(top: 16.0, left: 15),
+                                  padding: const EdgeInsets.only(
+                                      top: 16.0, left: 15),
                                   child: Row(
                                     children: [
                                       Obx(() {
                                         return CheckBoxWidget1(
                                           title: "Insert After",
                                           value: controller.insertAfter.value,
-                                          onChanged: (a) => controller.insertAfter.value = a ?? false,
+                                          onChanged: (a) => controller
+                                              .insertAfter.value = a ?? false,
                                           fn: controller.insertAfterFN,
                                         );
                                       }),
@@ -144,7 +151,8 @@ class CommercialView extends GetView<CommercialController> {
                               /// input forms
                               Expanded(
                                 child: Container(
-                                  padding: const EdgeInsets.fromLTRB(15, 15, 7, 0),
+                                  padding:
+                                      const EdgeInsets.fromLTRB(15, 15, 7, 0),
                                   child: programTable(context),
                                 ),
                               ),
@@ -153,7 +161,8 @@ class CommercialView extends GetView<CommercialController> {
                               Expanded(
                                 flex: 2,
                                 child: Container(
-                                  padding: const EdgeInsets.fromLTRB(15, 15, 7, 0),
+                                  padding:
+                                      const EdgeInsets.fromLTRB(15, 15, 7, 0),
                                   child: GetBuilder<CommercialController>(
                                       init: CommercialController(),
                                       id: "reports",
@@ -253,11 +262,13 @@ class CommercialView extends GetView<CommercialController> {
                       mainAxisAlignment: MainAxisAlignment.end,
                       crossAxisAlignment: CrossAxisAlignment.center,
                       children: [
-                        Obx(() => Text('Commercial Spots : ${controller.commercialSpots.value}')),
+                        Obx(() => Text(
+                            'Commercial Spots : ${controller.commercialSpots.value}')),
                         const SizedBox(
                           width: 20,
                         ),
-                        Obx(() => Text('Commercial Duration : ${controller.commercialDuration.value}')),
+                        Obx(() => Text(
+                            'Commercial Duration : ${controller.commercialDuration.value}')),
                       ],
                     )
                   else if (controller.selectedIndex.value == 1)
@@ -334,38 +345,66 @@ class CommercialView extends GetView<CommercialController> {
     return GetBuilder<CommercialController>(
         id: "programTable",
         builder: (controller) {
-          if (controller.commercialProgramList != null && (controller.commercialProgramList?.isNotEmpty)!) {
+          if (controller.commercialProgramList != null &&
+              (controller.commercialProgramList?.isNotEmpty)!) {
             return DataGridFromMap(
               mode: controller.selectedProgramPlutoGridMode,
               showonly: const [
                 "fpcTime",
                 "programname",
               ],
-              colorCallback: (row) => (row.row.cells.containsValue(controller.sm?.currentCell)) ? Colors.deepPurple.shade200 : Colors.white,
+              colorCallback: (row) =>
+                  (row.row.cells.containsValue(controller.sm?.currentCell))
+                      ? Colors.deepPurple.shade200
+                      : Colors.white,
               onload: (sm) {
                 controller.sm = sm.stateManager;
                 sm.stateManager.setCurrentCell(
-                    sm.stateManager.getRowByIdx(controller.lastProgramSelectedIdx)?.cells['fpcTime'], controller.lastProgramSelectedIdx);
-                sm.stateManager.moveCurrentCellByRowIdx(controller.lastProgramSelectedIdx, PlutoMoveDirection.down);
-                controller.lastProgramSelectedIdx = controller.lastProgramSelectedIdx;
-                controller.selectedProgram = controller.commercialProgramList![controller.lastProgramSelectedIdx];
-                controller.programFpcTimeSelected = controller.commercialProgramList![controller.lastProgramSelectedIdx].fpcTime;
-                controller.programCodeSelected = controller.commercialProgramList![controller.lastProgramSelectedIdx].programcode;
+                    sm.stateManager
+                        .getRowByIdx(controller.lastProgramSelectedIdx)
+                        ?.cells['fpcTime'],
+                    controller.lastProgramSelectedIdx);
+                sm.stateManager.moveCurrentCellByRowIdx(
+                    controller.lastProgramSelectedIdx, PlutoMoveDirection.down);
+                controller.lastProgramSelectedIdx =
+                    controller.lastProgramSelectedIdx;
+                controller.selectedProgram = controller
+                    .commercialProgramList![controller.lastProgramSelectedIdx];
+                controller.programFpcTimeSelected = controller
+                    .commercialProgramList![controller.lastProgramSelectedIdx]
+                    .fpcTime;
+                controller.programCodeSelected = controller
+                    .commercialProgramList![controller.lastProgramSelectedIdx]
+                    .programcode;
               },
-              mapData: (controller.commercialProgramList?.map((e) => e.toJson()).toList())!,
+              mapData: (controller.commercialProgramList
+                  ?.map((e) => e.toJson())
+                  .toList())!,
               onSelected: (plutoGrid) {
                 controller.lastProgramSelectedIdx = plutoGrid.rowIdx ?? 0;
-                controller.selectedProgram = controller.commercialProgramList![plutoGrid.rowIdx!];
-                controller.programFpcTimeSelected = controller.commercialProgramList![plutoGrid.rowIdx!].fpcTime;
-                controller.programCodeSelected = controller.commercialProgramList![plutoGrid.rowIdx!].programcode;
+                controller.selectedProgram =
+                    controller.commercialProgramList![plutoGrid.rowIdx!];
+                controller.programFpcTimeSelected = controller
+                    .commercialProgramList![plutoGrid.rowIdx!].fpcTime;
+                controller.programCodeSelected = controller
+                    .commercialProgramList![plutoGrid.rowIdx!].programcode;
               },
               onRowDoubleTap: (plutoGrid) async {
                 controller.canshowFilterList = true;
+                controller.programCodeSelected = controller
+                    .commercialProgramList![plutoGrid.rowIdx!].programcode;
                 controller.lastProgramSelectedIdx = plutoGrid.rowIdx;
-                controller.selectedProgram = controller.commercialProgramList![plutoGrid.rowIdx];
-                controller.programFpcTimeSelected = controller.commercialProgramList![plutoGrid.rowIdx].fpcTime;
-                await controller.showSelectedProgramList();
-                controller.updateTab();
+                controller.sm?.setCurrentCell(
+                    controller.sm
+                        ?.getRowByIdx(controller.lastProgramSelectedIdx)
+                        ?.cells['fpcTime'],
+                    controller.lastProgramSelectedIdx);
+                controller.selectedProgram =
+                    controller.commercialProgramList![plutoGrid.rowIdx];
+                controller.programFpcTimeSelected =
+                    controller.commercialProgramList![plutoGrid.rowIdx].fpcTime;
+                controller.showSelectedProgramList();
+                // controller.updateTab();
               },
             );
           } else {
@@ -391,15 +430,22 @@ class CommercialView extends GetView<CommercialController> {
         GetBuilder<CommercialController>(
           id: "schedulingTable",
           builder: (controller) {
-            if (controller.showCommercialDetailsList != null && (controller.showCommercialDetailsList?.isNotEmpty)!) {
+            if (controller.showCommercialDetailsList != null &&
+                (controller.showCommercialDetailsList?.isNotEmpty)!) {
               return Expanded(
                 child: DataGridFromMap1(
                   onload: (event) {
                     controller.gridStateManager = event.stateManager;
-                    event.stateManager.setSelectingMode(PlutoGridSelectingMode.row);
+                    event.stateManager
+                        .setSelectingMode(PlutoGridSelectingMode.row);
                     controller.gridStateManager?.setCurrentCell(
-                        event.stateManager.getRowByIdx(controller.selectedDDIndex)?.cells['eventType'], controller.selectedDDIndex ?? 0);
-                    controller.gridStateManager?.moveCurrentCellByRowIdx(controller.selectedDDIndex ?? 0, PlutoMoveDirection.down);
+                        event.stateManager
+                            .getRowByIdx(controller.selectedDDIndex)
+                            ?.cells['eventType'],
+                        controller.selectedDDIndex ?? 0);
+                    controller.gridStateManager?.moveCurrentCellByRowIdx(
+                        controller.selectedDDIndex ?? 0,
+                        PlutoMoveDirection.down);
                   },
                   showSrNo: true,
                   hideKeys: ["fpcTime"],
@@ -425,10 +471,14 @@ class CommercialView extends GetView<CommercialController> {
                   ],
                   colorCallback: (PlutoRowColorContext plutoContext) {
                     try {
-                      if ((plutoContext.row.cells.containsValue(controller.sm?.currentCell))) {
+                      if ((plutoContext.row.cells.containsValue(
+                          controller.gridStateManager?.currentCell))) {
                         return Colors.deepPurple.shade200;
                       } else {
-                        return controller.colorSort(controller.showCommercialDetailsList![plutoContext.rowIdx].eventType.toString());
+                        return controller.colorSort(controller
+                            .showCommercialDetailsList![plutoContext.rowIdx]
+                            .eventType
+                            .toString());
                       }
                     } catch (e) {
                       return Colors.white;
@@ -443,9 +493,14 @@ class CommercialView extends GetView<CommercialController> {
                     // if (controller.lastSelectedIdxSchd != (controller.selectedDDIndex ?? 0)) {
                     //   controller.lastSelectedIdxSchd = controller.selectedDDIndex ?? 0;
                     // }
-                    if (controller.showCommercialDetailsList![controller.lastSelectedIdxSchd].canChangeFpc) {
+                    if (controller
+                        .showCommercialDetailsList![
+                            controller.lastSelectedIdxSchd]
+                        .canChangeFpc) {
                       controller.gridStateManager!.changeCellValue(
-                        controller.gridStateManager!.getRowByIdx(controller.lastSelectedIdxSchd)!.cells['fpcTime ']!,
+                        controller.gridStateManager!
+                            .getRowByIdx(controller.lastSelectedIdxSchd)!
+                            .cells['fpcTime ']!,
                         "",
                         callOnChangedEvent: false,
                         force: true,
@@ -453,12 +508,18 @@ class CommercialView extends GetView<CommercialController> {
                       );
                     }
                     controller.selectedDDIndex = event.rowIdx;
-                    controller.selectedShowOnTab = controller.showCommercialDetailsList![event.rowIdx!];
-                    if (event.rowIdx != null && (controller.showCommercialDetailsList![event.rowIdx!].canChangeFpc)) {
+                    controller.selectedShowOnTab =
+                        controller.showCommercialDetailsList![event.rowIdx!];
+                    if (event.rowIdx != null &&
+                        (controller.showCommercialDetailsList![event.rowIdx!]
+                            .canChangeFpc)) {
                       controller.lastSelectedIdxSchd = event.rowIdx ?? 0;
                       controller.gridStateManager!.changeCellValue(
-                        controller.gridStateManager!.getRowByIdx(event.rowIdx!)!.cells['fpcTime ']!,
-                        controller.showCommercialDetailsList![event.rowIdx!].fpcTime,
+                        controller.gridStateManager!
+                            .getRowByIdx(event.rowIdx!)!
+                            .cells['fpcTime ']!,
+                        controller
+                            .showCommercialDetailsList![event.rowIdx!].fpcTime,
                         callOnChangedEvent: false,
                         force: true,
                         notify: true,
@@ -472,30 +533,61 @@ class CommercialView extends GetView<CommercialController> {
                     // controller.gridStateManager?.notifyListeners();
 
                     try {
-                      if (controller.gridStateManager?.rows[onRowMoved.idx].cells['eventType']?.value.toString().trim() == "S") {
-                        LoadingDialog.showErrorDialog("You cannot move selected segment");
+                      if (controller.gridStateManager?.rows[onRowMoved.idx]
+                              .cells['eventType']?.value
+                              .toString()
+                              .trim() ==
+                          "S") {
+                        LoadingDialog.showErrorDialog(
+                            "You cannot move selected segment");
                       } else {
-                        int? rownumber = int.tryParse(controller.gridStateManager?.rows[onRowMoved.idx].cells['rownumber']?.value.toString() ?? "0");
-                        int? moveRowNumber = controller.showCommercialDetailsList?[onRowMoved.idx].rownumber;
+                        int? rownumber = int.tryParse(controller
+                                .gridStateManager
+                                ?.rows[onRowMoved.idx]
+                                .cells['rownumber']
+                                ?.value
+                                .toString() ??
+                            "0");
+                        int? moveRowNumber = controller
+                            .showCommercialDetailsList?[onRowMoved.idx]
+                            .rownumber;
 
                         int? oldIdx, newIdx;
-                        for (var i = 0; i < (controller.mainCommercialShowDetailsList?.length ?? 0); i++) {
-                          if (controller.mainCommercialShowDetailsList?[i].rownumber == rownumber) {
+                        for (var i = 0;
+                            i <
+                                (controller.mainCommercialShowDetailsList
+                                        ?.length ??
+                                    0);
+                            i++) {
+                          if (controller.mainCommercialShowDetailsList?[i]
+                                  .rownumber ==
+                              rownumber) {
                             oldIdx = i;
                           }
-                          if (controller.mainCommercialShowDetailsList?[i].rownumber == moveRowNumber) {
+                          if (controller.mainCommercialShowDetailsList?[i]
+                                  .rownumber ==
+                              moveRowNumber) {
                             newIdx = i;
                           }
                         }
                         if (oldIdx != null && newIdx != null) {
-                          var removedObject = controller.mainCommercialShowDetailsList?.removeAt(oldIdx);
+                          var removedObject = controller
+                              .mainCommercialShowDetailsList
+                              ?.removeAt(oldIdx);
                           if (removedObject != null) {
-                            controller.mainCommercialShowDetailsList?.insert(newIdx, removedObject);
+                            controller.mainCommercialShowDetailsList
+                                ?.insert(newIdx, removedObject);
                           }
                         }
 
-                        for (var i = 0; i < (controller.mainCommercialShowDetailsList?.length ?? 0); i++) {
-                          controller.mainCommercialShowDetailsList?[i].rownumber = i;
+                        for (var i = 0;
+                            i <
+                                (controller.mainCommercialShowDetailsList
+                                        ?.length ??
+                                    0);
+                            i++) {
+                          controller
+                              .mainCommercialShowDetailsList?[i].rownumber = i;
                         }
                       }
                       if (controller.canshowFilterList) {
@@ -508,7 +600,9 @@ class CommercialView extends GetView<CommercialController> {
                     }
                   },
                   mode: PlutoGridMode.selectWithOneTap,
-                  mapData: controller.showCommercialDetailsList!.value.map((e) => e.toJson(fromSave: false)).toList(),
+                  mapData: controller.showCommercialDetailsList!.value
+                      .map((e) => e.toJson(fromSave: false))
+                      .toList(),
                 ),
               );
             } else {
@@ -542,18 +636,23 @@ class CommercialView extends GetView<CommercialController> {
             id: "fpcMismatchTable",
             init: controller,
             builder: (controller) {
-              if (controller.showCommercialDetailsList != null && (controller.showCommercialDetailsList?.isNotEmpty)!) {
+              if (controller.showCommercialDetailsList != null &&
+                  (controller.showCommercialDetailsList?.isNotEmpty)!) {
                 return Expanded(
                   child: DataGridFromMap(
                     onload: (sm) {
                       controller.fpcMisMatchSM = sm.stateManager;
-                      sm.stateManager.setSelectingMode(PlutoGridSelectingMode.row);
+                      controller.fpcMisMatchSM
+                          ?.setSelectingMode(PlutoGridSelectingMode.row);
+                      controller.fpcMisMatchSM?.setSelecting(true);
                       // controller.fpcMisMatchSM?.setCurrentCell(
                       //     controller.fpcMisMatchSM?.getRowByIdx(controller.mainSelectedIndex)?.cells['eventType'], controller.mainSelectedIndex ?? 0);
                       // controller.fpcMisMatchSM?.moveCurrentCellByRowIdx(controller.mainSelectedIndex ?? 0, PlutoMoveDirection.down);
                       // sm.stateManager.setSelecting(true);
                     },
-                    mapData: (controller.showCommercialDetailsList?.map((e) => e.toJson()).toList())!,
+                    mapData: (controller.showCommercialDetailsList
+                        ?.map((e) => e.toJson())
+                        .toList())!,
                     showonly: const [
                       "fpcTime",
                       "breakNumber",
@@ -575,33 +674,54 @@ class CommercialView extends GetView<CommercialController> {
                       "pProgramMaster"
                     ],
                     mode: PlutoGridMode.normal,
-                    colorCallback: (row) =>
-                        (row.row.cells.containsValue(controller.fpcMisMatchSM?.currentCell)) ? Colors.deepPurple.shade200 : Colors.white,
+                    colorCallback: (row) => (row.row.cells.containsValue(
+                            controller.fpcMisMatchSM?.currentCell))
+                        ? Colors.deepPurple.shade200
+                        : Colors.white,
                     onRowDoubleTap: (plutoGrid) {
                       controller.mainSelectedIndex = plutoGrid.rowIdx;
                       if (controller.changeFpcTaped) {
                         controller.changeFpcTaped = false;
-                        controller.showCommercialDetailsList?.value =
-                            controller.mainCommercialShowDetailsList!.where((o) => o.bStatus.toString() == 'F').toList();
+                        controller.showCommercialDetailsList?.value = controller
+                            .mainCommercialShowDetailsList!
+                            .where((o) => o.bStatus.toString() == 'F')
+                            .toList();
                         controller.update(['fpcMismatchTable']);
                       }
                       controller.fpcMisMatchSM?.setCurrentCell(
-                          controller.fpcMisMatchSM?.getRowByIdx(controller.mainSelectedIndex)?.cells['eventType'], controller.mainSelectedIndex ?? 0);
-                      controller.selectedShowOnTab = controller.showCommercialDetailsList![plutoGrid.rowIdx];
+                          controller.fpcMisMatchSM
+                              ?.getRowByIdx(controller.mainSelectedIndex)
+                              ?.cells['eventType'],
+                          controller.mainSelectedIndex ?? 0);
+                      controller.selectedShowOnTab = controller
+                          .showCommercialDetailsList![plutoGrid.rowIdx];
 
-                      controller.exportTapeCodeSelected = controller.showCommercialDetailsList![plutoGrid.rowIdx].exportTapeCode.toString();
+                      controller.exportTapeCodeSelected = controller
+                          .showCommercialDetailsList![plutoGrid.rowIdx]
+                          .exportTapeCode
+                          .toString();
 
-                      controller.pDailyFPCSelected = controller.showCommercialDetailsList![plutoGrid.rowIdx].pDailyFPC.toString();
+                      controller.pDailyFPCSelected = controller
+                          .showCommercialDetailsList![plutoGrid.rowIdx]
+                          .pDailyFPC
+                          .toString();
                     },
                     onSelected: (plutoGrid) {
                       // print(plutoGrid.rowIdx!.toString());
 
                       controller.mainSelectedIndex = plutoGrid.rowIdx!;
-                      controller.selectedShowOnTab = controller.showCommercialDetailsList![plutoGrid.rowIdx!];
+                      controller.selectedShowOnTab = controller
+                          .showCommercialDetailsList![plutoGrid.rowIdx!];
 
-                      controller.exportTapeCodeSelected = controller.showCommercialDetailsList![plutoGrid.rowIdx!].exportTapeCode.toString();
+                      controller.exportTapeCodeSelected = controller
+                          .showCommercialDetailsList![plutoGrid.rowIdx!]
+                          .exportTapeCode
+                          .toString();
 
-                      controller.pDailyFPCSelected = controller.showCommercialDetailsList![plutoGrid.rowIdx!].pDailyFPC.toString();
+                      controller.pDailyFPCSelected = controller
+                          .showCommercialDetailsList![plutoGrid.rowIdx!]
+                          .pDailyFPC
+                          .toString();
 
                       // print(">>>>>> fpcMismatchTable Data >>>>>>${jsonEncode(controller.selectedShowOnTab?.toJson())}");
                     },
@@ -612,7 +732,8 @@ class CommercialView extends GetView<CommercialController> {
                   child: Card(
                     clipBehavior: Clip.hardEdge,
                     shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(0), // if you need this
+                      borderRadius:
+                          BorderRadius.circular(0), // if you need this
                       side: BorderSide(
                         color: Colors.grey.shade300,
                         width: 1,
@@ -636,12 +757,17 @@ class CommercialView extends GetView<CommercialController> {
         GetBuilder<CommercialController>(
             id: "misMatchTable",
             builder: (controller) {
-              if (controller.showCommercialDetailsList != null && (controller.showCommercialDetailsList?.isNotEmpty)!) {
+              if (controller.showCommercialDetailsList != null &&
+                  (controller.showCommercialDetailsList?.isNotEmpty)!) {
                 return Expanded(
                   child: DataGridFromMap(
-                    colorCallback: (row) =>
-                        (row.row.cells.containsValue(controller.markedAsErrorSM?.currentCell)) ? Colors.deepPurple.shade200 : Colors.white,
-                    mapData: (controller.showCommercialDetailsList?.map((e) => e.toJson()).toList())!,
+                    colorCallback: (row) => (row.row.cells.containsValue(
+                            controller.markedAsErrorSM?.currentCell))
+                        ? Colors.deepPurple.shade200
+                        : Colors.white,
+                    mapData: (controller.showCommercialDetailsList
+                        ?.map((e) => e.toJson())
+                        .toList())!,
                     showonly: const [
                       "fpcTime",
                       "breakNumber",
@@ -665,7 +791,9 @@ class CommercialView extends GetView<CommercialController> {
                     mode: PlutoGridMode.normal,
                     onload: (sm) {
                       controller.markedAsErrorSM = sm.stateManager;
-                      sm.stateManager.setSelectingMode(PlutoGridSelectingMode.row);
+                      controller.markedAsErrorSM?.setSelecting(true);
+                      sm.stateManager
+                          .setSelectingMode(PlutoGridSelectingMode.row);
                       // controller.markedAsErrorSM?.setCurrentCell(
                       //     controller.markedAsErrorSM?.getRowByIdx(controller.mainSelectedIndex)?.cells['eventType'],
                       //     controller.mainSelectedIndex ?? 0);
@@ -673,7 +801,8 @@ class CommercialView extends GetView<CommercialController> {
                     },
                     onSelected: (plutoGrid) {
                       controller.mainSelectedIndex = plutoGrid.rowIdx!;
-                      controller.selectedShowOnTab = controller.showCommercialDetailsList![plutoGrid.rowIdx!];
+                      controller.selectedShowOnTab = controller
+                          .showCommercialDetailsList![plutoGrid.rowIdx!];
                     },
                   ),
                 );
@@ -682,7 +811,8 @@ class CommercialView extends GetView<CommercialController> {
                   child: Card(
                     clipBehavior: Clip.hardEdge,
                     shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(0), // if you need this
+                      borderRadius:
+                          BorderRadius.circular(0), // if you need this
                       side: BorderSide(
                         color: Colors.grey.shade300,
                         width: 1,

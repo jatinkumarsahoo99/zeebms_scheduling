@@ -138,7 +138,7 @@ class ReleaseWoNonFpcView extends GetView {
               ),
               DropDownField.formDropDown1WidthMap(
                 controller.onloadData.value.lstcboTelecastType ?? [],
-                (value) => controller.nonFPCSelectedTelecasteType = value,
+                controller.handleReleaseWoNonFpcTelecastTypeOnChanged,
                 "Telecast Type",
                 0.1775,
                 selected: controller.nonFPCSelectedTelecasteType,
