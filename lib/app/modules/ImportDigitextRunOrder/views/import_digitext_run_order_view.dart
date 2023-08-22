@@ -260,15 +260,24 @@ class ImportDigitextRunOrderView extends GetView<ImportDigitextRunOrderControlle
                       // pa
                       children: [
                         for (var btn in btncontroller.buttons!)
-                          Obx(
-                            () => FormButtonWrapper(
-                              isEnabled: controller.allowSave.value && btn["name"] == "Save",
-                              btnText: btn["name"],
-                              // isEnabled: btn['isDisabled'],
-                              callback:
-                                  Utils.btnAccessHandler2(btn['name'], btncontroller, formPermissions) == null ? null : () => btnHandler(btn['name']),
-                            ),
-                          ),
+                          btn["name"] == "Save"
+                              ? Obx(
+                                  () => FormButtonWrapper(
+                                    isEnabled: controller.allowSave.value,
+                                    btnText: btn["name"],
+                                    // isEnabled: btn['isDisabled'],
+                                    callback: Utils.btnAccessHandler2(btn['name'], btncontroller, formPermissions) == null
+                                        ? null
+                                        : () => btnHandler(btn['name']),
+                                  ),
+                                )
+                              : FormButtonWrapper(
+                                  btnText: btn["name"],
+                                  // isEnabled: btn['isDisabled'],
+                                  callback: Utils.btnAccessHandler2(btn['name'], btncontroller, formPermissions) == null
+                                      ? null
+                                      : () => btnHandler(btn['name']),
+                                ),
                       ],
                     ),
                   ),

@@ -52,6 +52,7 @@ class DataGridFromMap extends StatelessWidget {
     this.focusNode,
     this.previousWidgetFN,
     this.witdthSpecificColumn,
+    this.csvFormat = false
   }) : super(key: key);
   final List mapData;
   bool enableSort;
@@ -80,6 +81,7 @@ class DataGridFromMap extends StatelessWidget {
   final List<String>? editKeys;
   final Function? actionOnPress;
   final bool doPasccal;
+  final bool? csvFormat;
   Color Function(PlutoRowColorContext)? colorCallback;
   Function(PlutoGridOnLoadedEvent)? onload;
   final GlobalKey rebuildKey = GlobalKey();

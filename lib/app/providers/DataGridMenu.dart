@@ -13,6 +13,7 @@ import 'package:bms_scheduling/widgets/PlutoGrid/pluto_grid.dart';
 // import 'package:pluto_grid_export/pluto_grid_export.dart' as pluto_grid_export;
 import 'package:bms_scheduling/widgets/PlutoGridExport/pluto_grid_export.dart' as pluto_grid_export;
 
+import '../../widgets/PlutoGridExport/src/pluto_grid_export1.dart';
 import '../../widgets/Snack.dart';
 import '../../widgets/dropdown.dart';
 import '../../widgets/input_fields.dart';
@@ -24,13 +25,15 @@ import 'ApiFactory.dart';
 import 'ExportData.dart';
 
 class DataGridMenu {
-  showGridMenu(
-    PlutoGridStateManager stateManager,
-    TapDownDetails details,
-    BuildContext context, {
-    String? exportFileName,
-    List<SecondaryShowDialogModel>? extraList,
-  }) async {
+  showGridMenu(PlutoGridStateManager stateManager,
+      TapDownDetails details,
+
+      BuildContext context, {
+        String? exportFileName,
+        List<SecondaryShowDialogModel>? extraList,
+        bool  csvFormat = false
+      }) async {
+    print(">>>>>csvFormat"+csvFormat.toString());
     clearFilterList() {
       Get.find<MainController>().filters1[stateManager.hashCode.toString()] = RxList([]);
     }
@@ -327,7 +330,15 @@ class DataGridMenu {
         break;
       case DataGridMenuItem.exportToCSv:
         String title = "csv_export";
-        var exportCSV = pluto_grid_export.PlutoGridExport.exportCSV(stateManager);
+        var exportCSV;
+
+        if(!csvFormat){
+          exportCSV = pluto_grid_export.PlutoGridExport.exportCSV(
+              stateManager);
+        }else{
+          exportCSV = PlutoGridExport1.exportCSV(
+              stateManager);
+        }
         var exported = const Utf8Encoder().convert(
             // FIX Add starting \u{FEFF} / 0xEF, 0xBB, 0xBF
             // This allows open the file in Excel with proper character interpretation
@@ -358,7 +369,9 @@ class DataGridMenu {
         showBottomSheet(
             context: context,
             builder: (context) {
-              var _selectedColumn = "";
+              var _selectedColumn = stateManager.currentColumn?.field ?? "";
+              DropDownValue _preselectedColumn =
+                  DropDownValue(key: stateManager.currentColumn?.field ?? "", value: stateManager.currentColumn?.title ?? "");
               TextEditingController _findctrl = TextEditingController();
               var _almost = RxBool(false);
               var _fromstart = RxBool(false);
@@ -393,9 +406,11 @@ class DataGridMenu {
                                   stateManager.columns.map((e) => DropDownValue(key: e.field, value: e.title)).toList(),
                                   (value) {
                                     _selectedColumn = value.key!;
+                                    _preselectedColumn = value;
                                   },
                                   "Column",
                                   0.15,
+                                  selected: _preselectedColumn,
                                   // context,
                                   showtitle: false,
                                 ),
