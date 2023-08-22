@@ -11,6 +11,7 @@ import '../../../../widgets/dropdown.dart';
 import '../../../../widgets/gridFromMap.dart';
 import '../../../../widgets/input_fields.dart';
 import '../../../controller/HomeController.dart';
+import '../../../providers/ApiFactory.dart';
 import '../../../providers/Utils.dart';
 import '../../filler/controllers/filler_controller.dart';
 import '../controllers/event_secondary_controller.dart';
@@ -85,7 +86,12 @@ class EventSecondaryView extends GetView<EventSecondaryController> {
                                       isEnable:
                                           controller.controllsEnabled.value,
                                       mainTextController: controller.fromdateTC,
-                                      endDate: DateTime.now(),
+                                      // endDate: DateTime.now(),
+                                       endDate:
+                                      (ApiFactory.Enviroment.toLowerCase() ==
+                                              "prod")
+                                          ? DateTime.now()
+                                          : null,
                                     ),
                                   ),
                                   FormButton(
@@ -250,7 +256,7 @@ class EventSecondaryView extends GetView<EventSecondaryController> {
                               ),
                             ),
                             Padding(
-                              padding: const EdgeInsets.fromLTRB(0, 10, 0, 0),
+                              padding: const EdgeInsets.fromLTRB(0, 16, 0, 0),
                               child: Obx(
                                 () {
                                   return Row(

@@ -153,6 +153,7 @@ class CommercialController extends GetxController {
           fun: (data) {
             Get.back();
             if (data["locationSelect"] is List) {
+              selectedChannel = null;
               channels.value = (data["locationSelect"] as List).map((e) => DropDownValue(key: e["channelCode"], value: e["channelName"])).toList();
             } else {
               LoadingDialog.callErrorMessage1(msg: "Failed To Load Initial Data");
