@@ -66,7 +66,7 @@ class BrandMasterView extends StatelessWidget {
                                     onchanged: (DropDownValue? val) {
                                     print(">>>" + val.toString());
                                     controllerX.selectedClient = val;
-                                    controllerX.fetchClientDetails((val?.value ??"")??"");
+                                    // controllerX.fetchClientDetails((val?.value ??"")??"");
                                     },
                                     title: 'Client',
                                     url:ApiFactory.BRANDMASTER_GETCLIENT,
@@ -74,7 +74,8 @@ class BrandMasterView extends StatelessWidget {
                                     parseKeyForValue: 'ClientName',
                                     selectedValue: controllerX.selectedClient,
                                     autoFocus: true,
-                                      inkwellFocus: controllerX.clientFocus
+
+                                      inkwellFocus: controllerX.clientFocus,
                                     // maxLength: 1
                                     ),
                                     SizedBox(
@@ -275,6 +276,7 @@ class BrandMasterView extends StatelessWidget {
                                             DataGridFromMap(
                                                 hideCode: false,
                                                 formatDate: false,
+                                                csvFormat: true,
                                                 focusNode: controllerX.gridFocus,
                                                 exportFileName: "Brand Master",
                                                 hideKeys: ['clientName'],

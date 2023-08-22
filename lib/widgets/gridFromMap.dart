@@ -52,6 +52,7 @@ class DataGridFromMap extends StatelessWidget {
     this.focusNode,
     this.previousWidgetFN,
     this.witdthSpecificColumn,
+    this.csvFormat = false
   }) : super(key: key);
   final List mapData;
   bool enableSort;
@@ -80,6 +81,7 @@ class DataGridFromMap extends StatelessWidget {
   final List<String>? editKeys;
   final Function? actionOnPress;
   final bool doPasccal;
+  final bool? csvFormat;
   Color Function(PlutoRowColorContext)? colorCallback;
   Function(PlutoGridOnLoadedEvent)? onload;
   final GlobalKey rebuildKey = GlobalKey();
@@ -122,7 +124,7 @@ class DataGridFromMap extends StatelessWidget {
             return GestureDetector(
               onSecondaryTapDown: canShowFilter? (detail) {
                 if (onContextMenuClick == null) {
-                  DataGridMenu().showGridMenu(rendererContext.stateManager, detail, context, exportFileName: exportFileName);
+                  DataGridMenu().showGridMenu(rendererContext.stateManager, detail, context, exportFileName: exportFileName, csvFormat: csvFormat??false);
                 } else {
                   DataGridMenu().showGridCustomMenu(rendererContext.stateManager, detail, context,
                       exportFileName: exportFileName, onPressedClick: onContextMenuClick, plutoContext: rendererContext);
@@ -169,7 +171,7 @@ class DataGridFromMap extends StatelessWidget {
                   return GestureDetector(
                     onSecondaryTapDown: canShowFilter?(detail) {
                       if (onContextMenuClick == null) {
-                        DataGridMenu().showGridMenu(rendererContext.stateManager, detail, context, exportFileName: exportFileName);
+                        DataGridMenu().showGridMenu(rendererContext.stateManager, detail, context, exportFileName: exportFileName,csvFormat: csvFormat??false);
                       } else {
                         DataGridMenu().showGridCustomMenu(rendererContext.stateManager, detail, context,
                             exportFileName: exportFileName, onPressedClick: onContextMenuClick, plutoContext: rendererContext);
@@ -233,7 +235,7 @@ class DataGridFromMap extends StatelessWidget {
                   return GestureDetector(
                     onSecondaryTapDown: canShowFilter? (detail) {
                       if (onContextMenuClick == null) {
-                        DataGridMenu().showGridMenu(rendererContext.stateManager, detail, context, exportFileName: exportFileName);
+                        DataGridMenu().showGridMenu(rendererContext.stateManager, detail, context, exportFileName: exportFileName,csvFormat: csvFormat??false);
                       } else {
                         DataGridMenu().showGridCustomMenu(rendererContext.stateManager, detail, context,
                             exportFileName: exportFileName, onPressedClick: onContextMenuClick, plutoContext: rendererContext);
@@ -308,7 +310,7 @@ class DataGridFromMap extends StatelessWidget {
                 return GestureDetector(
                   onSecondaryTapDown: canShowFilter? (detail) {
                     if (onContextMenuClick == null) {
-                      DataGridMenu().showGridMenu(rendererContext.stateManager, detail, context, exportFileName: exportFileName);
+                      DataGridMenu().showGridMenu(rendererContext.stateManager, detail, context, exportFileName: exportFileName,csvFormat: csvFormat??false);
                     } else {
                       DataGridMenu().showGridCustomMenu(rendererContext.stateManager, detail, context,
                           exportFileName: exportFileName, onPressedClick: onContextMenuClick, plutoContext: rendererContext);

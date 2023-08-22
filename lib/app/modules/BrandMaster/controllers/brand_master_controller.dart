@@ -130,7 +130,7 @@ class BrandMasterController extends GetxController {
   fetchClientDetails(String client){
     LoadingDialog.call();
     Get.find<ConnectorControl>().GETMETHODCALL(
-        api: ApiFactory.BRANDMASTER_GETCLIENTDETAILS+Uri.encodeComponent(client),
+        api: ApiFactory.BRANDMASTER_GETCLIENTDETAILS+Uri.encodeComponent(client.replaceAll("'",  "")),
         fun: (map) {
           closeDialogIfOpen();
           print(">>>>>>map"+jsonEncode(map));
