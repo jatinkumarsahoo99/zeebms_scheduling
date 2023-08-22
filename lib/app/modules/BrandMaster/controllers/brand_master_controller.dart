@@ -340,7 +340,7 @@ class BrandMasterController extends GetxController {
     brandNameFocus.addListener(() {
       if(brandNameFocus.hasFocus){
         isFocusNodeActive = true;
-      }if(!brandNameFocus.hasFocus){
+      }if(!brandNameFocus.hasFocus && isFocusNodeActive){
         if(brandController.text != null && brandController.text != "" ){
           txtBrandNameLostFocus();
         }
