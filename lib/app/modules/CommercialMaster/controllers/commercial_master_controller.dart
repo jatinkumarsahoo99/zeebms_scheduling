@@ -280,6 +280,7 @@ class CommercialMasterController extends GetxController {
         contin = false;
         callSaveApi();
       });
+
     } else {
       callSaveApi();
     }
