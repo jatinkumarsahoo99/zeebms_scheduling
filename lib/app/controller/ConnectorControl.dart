@@ -149,7 +149,7 @@ class ConnectorControl extends GetConnect {
         if (e.response?.data is Map && e.response?.data.containsKey("status")) {
           LoadingDialog.showErrorDialog(e.response?.data["status"]);
         }
-      }else {
+      } else {
         switch (e.type) {
           case DioErrorType.connectionTimeout:
           case DioErrorType.cancel:
@@ -301,7 +301,14 @@ class ConnectorControl extends GetConnect {
           Get.back();
         }
         if (e.response?.data is Map && e.response?.data.containsKey("status")) {
-          LoadingDialog.showErrorDialog(e.response?.data["status"]);
+          if (e.response?.data["status"] is num) {
+            LoadingDialog.showErrorDialog(
+                (e.response?.data["title"]).toString());
+          } else {
+            LoadingDialog.showErrorDialog(
+                (e.response?.data["status"]).toString());
+          }
+          // LoadingDialog.showErrorDialog((e.response?.data["status"]));
         }
       } else {
         switch (e.type) {
@@ -553,7 +560,7 @@ class ConnectorControl extends GetConnect {
           // print("RESPONSE CALL>>>>" + JsonEncoder().convert(response.data).toString());
           fun(response.data);
         } catch (e) {
-          if(failed!=null){
+          if (failed != null) {
             failed();
           }
           print("Message is: " + e.toString());
@@ -565,7 +572,7 @@ class ConnectorControl extends GetConnect {
         fun(failedMap);
       }
     } on DioError catch (e) {
-      if(failed!=null){
+      if (failed != null) {
         failed();
       }
       if (e.response?.statusCode == 401) {
