@@ -206,7 +206,7 @@ class LstBookingNoStatusData {
     } else {
       data['requested'] = (requested ?? false).toString();
       data['programName'] = programName;
-      data['scheduleDate'] = scheduleDate;
+      data['scheduleDate'] = (scheduleDate??'').contains("T")?(scheduleDate??'').split("T")[0]:(scheduleDate??'');
       data['scheduleTime'] = scheduleTime;
       data['tapeCaption'] = tapeCaption;
       data['tapeID'] = tapeID;

@@ -773,6 +773,7 @@ class DataGridFromMap3 extends StatelessWidget {
                         style: TextStyle(
                           fontSize: SizeDefine.columnTitleFontSize,
                         ),
+                        maxLines: 1,
                       ),
                     }
                   ],
@@ -790,6 +791,7 @@ class DataGridFromMap3 extends StatelessWidget {
                     : null,
                 child: Text(
                   rendererContext.cell.value.toString(),
+                  maxLines: 1,
                   style: TextStyle(
                     fontSize: SizeDefine.columnTitleFontSize,
                   ),
