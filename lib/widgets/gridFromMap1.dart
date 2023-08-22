@@ -285,7 +285,6 @@ class DataGridFromMap1 extends StatelessWidget {
             configuration: plutoGridConfiguration(focusNode: _focusNode,rowHeight: 25),
             rowColorCallback: colorCallback,
             onLoaded: onload,
-            
             columns: segColumn,
             onRowDoubleTap: onRowDoubleTap,
             onRowsMoved: onRowsMoved,

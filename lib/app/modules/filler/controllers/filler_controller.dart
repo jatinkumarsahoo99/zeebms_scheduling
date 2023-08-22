@@ -87,12 +87,20 @@ class FillerController extends GetxController {
   var importedFile = Rxn<PlatformFile>();
   TextEditingController fileController = TextEditingController();
   PlutoGridStateManager? bottomSM;
+  FocusNode tapeIDFocusNode = FocusNode();
   // var tempMap = {};
 
   @override
   void onReady() {
     super.onReady();
     getLocation();
+    tapeIDFocusNode.addListener(() {
+      if (!tapeIDFocusNode.hasFocus &&
+          tapeId_.text.isNotEmpty &&
+          !(Get.isDialogOpen ?? true)) {
+        getFillerValuesByTapeCode(tapeId_.text);
+      }
+    });
   }
 
   formHandler(btnName) async {
@@ -279,8 +287,8 @@ class FillerController extends GetxController {
 
   getFillerValuesByFillerCode(DropDownValue f) {
     try {
-      LoadingDialog.call();
       selectCaption.value = f;
+      LoadingDialog.call();
       Get.find<ConnectorControl>().GETMETHODCALL(
         api: ApiFactory.FILLER_VALUES_BY_FILLER_CODE(f.key),
         fun: (data) {
@@ -290,10 +298,13 @@ class FillerController extends GetxController {
           tapeId_.text = data['exportTapeCode'];
           segNo_.text = data['segmentNumber'];
           segDur_.text = data['fillerDuration'];
-          fillerCaptionFN.nextFocus();
+          fillerCaptionFN.previousFocus();
           Future.delayed(Duration(milliseconds: 50)).then((value) {
             fillerCaptionFN.requestFocus();
           });
+          // Future.delayed(Duration(milliseconds: 50)).then((value) {
+          //   fillerCaptionFN.requestFocus();
+          // });
         },
       );
     } catch (e) {
@@ -303,23 +314,33 @@ class FillerController extends GetxController {
 
   getFillerValuesByTapeCode(tapeCode) {
     try {
+      LoadingDialog.call();
       Get.find<ConnectorControl>().GETMETHODCALL(
-        api: ApiFactory.FILLER_VALUES_BY_TAPE_CODE(tapeCode),
-        fun: (dynamic data) {
-          print('>>> Data from Tape Code : $data');
+          api: ApiFactory.FILLER_VALUES_BY_TAPE_CODE(tapeCode),
+          fun: (data) {
+            Get.back();
+            if (data != null &&
+                data is Map<String, dynamic> &&
+                data.containsKey("fillerCode")) {
+              print('>>> Data from Tape Code : $data');
 
-          /// Need to show date in Filler caption, filler dropdown,tape idseg dur,total dur
-          fillerCode = data['fillerCode'];
-          selectCaption.value = DropDownValue(
-              key: data['fillerCode'].toString(),
-              value: data['fillerCaption'].toString());
+              /// Need to show date in Filler caption, filler dropdown,tape idseg dur,total dur
+              fillerCode = data['fillerCode'];
+              selectCaption.value = DropDownValue(
+                  key: data['fillerCode'].toString(),
+                  value: data['fillerCaption'].toString());
 
-          ///selectCaption.value = data['fillerCaption'];
-          tapeId_.text = data['exportTapeCode'];
-          segNo_.text = data['segmentNumber'];
-          segDur_.text = data['fillerDuration'];
-        },
-      );
+              ///selectCaption.value = data['fillerCaption'];
+              tapeId_.text = data['exportTapeCode'];
+              segNo_.text = data['segmentNumber'];
+              segDur_.text = data['fillerDuration'];
+            }
+          },
+          failed: (resp) {
+            Get.back();
+
+            print(resp.toString());
+          });
     } catch (e) {
       LoadingDialog.callErrorMessage1(msg: "Failed To Load Initial Data");
     }
@@ -522,7 +543,6 @@ class FillerController extends GetxController {
       }
       totalFiller.text = count.toString();
     }
-
     // var temp1st = fillerDailyFpcList[topLastSelectedIdx];
     // var totalDuration = temp1st.fpcTime;
     // var segDur = "0";
