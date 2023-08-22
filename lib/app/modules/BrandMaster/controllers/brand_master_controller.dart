@@ -128,20 +128,24 @@ class BrandMasterController extends GetxController {
     }
   }
   fetchClientDetails(String client){
+    isFocusNodeActive = false;
     LoadingDialog.call();
     Get.find<ConnectorControl>().GETMETHODCALL(
         api: ApiFactory.BRANDMASTER_GETCLIENTDETAILS+Uri.encodeComponent(client.replaceAll("'",  "")),
         fun: (map) {
           closeDialogIfOpen();
+          isFocusNodeActive = false;
           print(">>>>>>map"+jsonEncode(map));
           isFocusNodeActive = false;
           if (map is Map && map.containsKey('clientdtails') && map['clientdtails'] != null &&
               map['clientdtails'].length >0 ) {
             clientDetailsAndBrandModel = ClientDetailsAndBrandModel.
             fromJson(map as Map<String,dynamic>);
+            isFocusNodeActive = false;
             update(['grid']);
           }else{
             clientDetailsAndBrandModel = null;
+            isFocusNodeActive = false;
             update(['grid']);
           }
         });
@@ -204,8 +208,10 @@ class BrandMasterController extends GetxController {
 
              // selectedProduct = DropDownValue(value:(brandMasterRetriveModel?.getBrandList?[0].Productname ??"") , key: (brandMasterRetriveModel?.getBrandList?[0].productCode ??""));
              update(['top']);
-           }else{
+           }
+           else{
              strcode = "0";
+             isFocusNodeActive = false;
            }
 
         });
@@ -228,7 +234,9 @@ class BrandMasterController extends GetxController {
     brandController.text = replaceInvalidChar(brandController.text);
     if(brandController.text != null && brandController.text != ""){
       getRetriveData(brandController.text);
+      isFocusNodeActive = false;
     }
+    isFocusNodeActive = false;
   }
 
 
@@ -340,7 +348,7 @@ class BrandMasterController extends GetxController {
     brandNameFocus.addListener(() {
       if(brandNameFocus.hasFocus){
         isFocusNodeActive = true;
-      }if(!brandNameFocus.hasFocus && isFocusNodeActive){
+      }if((!brandNameFocus.hasFocus) && isFocusNodeActive){
         if(brandController.text != null && brandController.text != "" ){
           txtBrandNameLostFocus();
         }
@@ -352,7 +360,7 @@ class BrandMasterController extends GetxController {
     clientFocus.addListener(() {
       if(clientFocus.hasFocus){
         isFocusNodeActive = true;
-      }if(clientFocus.hasFocus && isFocusNodeActive){
+      }if((!clientFocus.hasFocus) && isFocusNodeActive){
         if(selectedClient != null && selectedClient?.value != "" ){
           fetchClientDetails(selectedClient?.value??"");
         }
