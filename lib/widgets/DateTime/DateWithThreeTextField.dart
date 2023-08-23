@@ -90,7 +90,9 @@ class _DateWithThreeTextFieldState extends State<DateWithThreeTextField> {
       Future.delayed(const Duration(seconds: 1)).then((value) {
         handleOnFocusChange();
         widget.mainTextController.addListener(() {
-          assignNewValeToEditTextField();
+          assignNewValeToEditTextField().then((value) {
+            assignValueToMainTextEditingController();
+          });
         });
       });
     });
@@ -196,9 +198,11 @@ class _DateWithThreeTextFieldState extends State<DateWithThreeTextField> {
                             decoration: style,
                             onChanged: (value) {
                               int no = int.tryParse(value) ?? 00;
-                              int selectedMonth = getMonthINTFromMonthStr(textCtr[1].text);
+                              int selectedMonth =
+                                  getMonthINTFromMonthStr(textCtr[1].text);
 
-                              if (no > maxDays[selectedMonth - 1] || value == "00") {
+                              if (no > maxDays[selectedMonth - 1] ||
+                                  value == "00") {
                                 textCtr[0].text = "01";
                                 cursorAtLast(0);
                               }
@@ -481,7 +485,7 @@ class _DateWithThreeTextFieldState extends State<DateWithThreeTextField> {
     }
   }
 
-  assignNewValeToEditTextField() {
+  Future<void> assignNewValeToEditTextField() async {
     var now = DateTime.now();
     List<String?> tempDate =
         widget.mainTextController.text.split(widget.splitType);
