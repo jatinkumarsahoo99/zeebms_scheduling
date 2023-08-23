@@ -21,7 +21,14 @@ class MakeGoodSpotsView extends GetView<RoBookingController> {
                 children: [
                   Row(
                     mainAxisSize: MainAxisSize.min,
-                    children: [Checkbox(value: false, onChanged: (value) {}), Text("Select All")],
+                    children: [
+                      Obx(() => Checkbox(
+                          value: controller.makeGoodSelectAll.value,
+                          onChanged: (value) {
+                            controller.makeGoodSelectAll.value = !controller.makeGoodSelectAll.value;
+                          })),
+                      Text("Select All")
+                    ],
                   ),
                   Spacer(),
                   DateWithThreeTextField(title: "From Date", widthRation: 0.09, mainTextController: controller.mgfromDateCtrl),
@@ -39,9 +46,14 @@ class MakeGoodSpotsView extends GetView<RoBookingController> {
                   child: Container(
                 child: Obx(() => controller.bookingNoLeaveData != null || controller.makeGoodData.value.isNotEmpty
                     ? DataGridShowOnlyKeys(
+                        onload: (loadevent) {
+                          controller.makeGoodGrid = loadevent.stateManager;
+                        },
                         mapData: controller.makeGoodData.value.isEmpty
-                            ? controller.bookingNoLeaveData?.lstSpots?.map((e) => e.toJson()).toList() ?? controller.makeGoodData.value
+                            ? controller.bookingNoLeaveData?.lstMakeGood?.map((e) => e.toJson()).toList() ?? controller.makeGoodData.value
                             : controller.makeGoodData.value,
+                        checkRowKey: "selecteRow",
+                        checkRow: true,
                         formatDate: false)
                     : Container(
                         decoration: BoxDecoration(border: Border.all(width: 1.0, color: Colors.grey)),

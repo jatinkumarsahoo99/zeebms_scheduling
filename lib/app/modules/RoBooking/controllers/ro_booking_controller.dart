@@ -59,9 +59,12 @@ class RoBookingController extends GetxController {
   PageController pagecontroller = PageController(keepPage: true);
   TextEditingController mgfromDateCtrl = TextEditingController(), mgtoDateCtrl = TextEditingController();
   PlutoGridStateManager? dealViewGrid;
+  PlutoGridStateManager? makeGoodGrid;
+
   PlutoGridStateManager? programViewGrid;
   PlutoGridStateManager? spotViewGrid;
   PlutoGridStateManager? spotVerifyGrid;
+  RxBool makeGoodSelectAll = RxBool(false);
 
   RoBookingAgencyLeaveData? agencyLeaveData;
   RxnString currentTab = RxnString();
