@@ -16,8 +16,8 @@ class RoBookingDealDblClick {
   String? total;
   int? intBaseDuration;
   int? intCountBased;
-  int? intSeconds;
-  int? balanceSeconds;
+  num? intSeconds;
+  num? balanceSeconds;
   int? intDealRowNo;
   BrandResponse? brandResponse;
 
