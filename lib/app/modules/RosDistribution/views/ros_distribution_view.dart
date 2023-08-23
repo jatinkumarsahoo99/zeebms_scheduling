@@ -20,7 +20,7 @@ class RosDistributionView extends GetView<RosDistributionController> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: Colors.grey[200],
+      // backgroundColor: Colors.grey[200],
       body: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
@@ -94,8 +94,9 @@ class RosDistributionView extends GetView<RosDistributionController> {
                 child: (controller.showDataModel.value.infoShowBucketList?.lstROSSpots?.isEmpty ?? true)
                     ? null
                     : DataGridFromMap(
-                        mapData: (controller.showDataModel.value.infoShowBucketList?.lstROSSpots ?? []).map((e) => e.toJson()).toList(),
+                        mapData: (controller.showDataModel.value.infoShowBucketList?.lstROSSpots ?? []).map((e) => e.toJson(fromSave: false)).toList(),
                         formatDate: true,
+                        
                         witdthSpecificColumn: {
                           "zoneName": 150,
                           "scheduledate": 150,

@@ -198,6 +198,7 @@ class DataGridFromMap extends StatelessWidget {
       for (var key in showonly!) {
         if ((mapData[0] as Map).containsKey(key)) {
           segColumn.add(PlutoColumn(
+            minWidth: 0,
               title: doPasccal
                   ? keyMapping != null
                       ? keyMapping!.containsKey(key)
@@ -272,6 +273,7 @@ class DataGridFromMap extends StatelessWidget {
     } else {
       for (var key in mapData[0].keys) {
         segColumn.add(PlutoColumn(
+          
             titlePadding: EdgeInsets.only(),
             title: doPasccal
                 ? key == "fpcCaption"
@@ -436,10 +438,7 @@ class DataGridFromMap extends StatelessWidget {
             enableEditingMode: editKeys != null && editKeys!.contains(key),
             enableDropToResize: true,
             enableContextMenu: false,
-            minWidth: (witdthSpecificColumn != null &&
-                    witdthSpecificColumn!.keys.toList().contains(key))
-                ? witdthSpecificColumn![key]!
-                : Utils.getColumnSize(key: key, value: mapData[0][key]),
+            minWidth: 0,
             width: (witdthSpecificColumn != null &&
                     witdthSpecificColumn!.keys.toList().contains(key))
                 ? witdthSpecificColumn![key]!
@@ -816,6 +815,7 @@ class DataGridFromMap3 extends StatelessWidget {
               : !showonly!.contains(key),
           enableColumnDrag: false,
           field: key,
+          
           type: PlutoColumnType.text()));
     }
 

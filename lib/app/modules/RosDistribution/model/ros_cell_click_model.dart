@@ -266,6 +266,8 @@ class LstAllocatedSpots {
   String? backColor;
   String? selectionBackColor;
   String? selectionForeColor;
+  String? startTime;
+  String? endTime;
 
   LstAllocatedSpots(
       {this.rid,
@@ -275,6 +277,8 @@ class LstAllocatedSpots {
       this.bookingNumber,
       this.bookingDetailCode,
       this.zoneName,
+      this.startTime,
+      this.endTime,
       this.brandcode,
       this.scheduledate,
       this.clientName,
@@ -328,39 +332,77 @@ class LstAllocatedSpots {
     backColor = json['backColor'];
     selectionBackColor = json['selectionBackColor'];
     selectionForeColor = json['selectionForeColor'];
+    startTime = json['starttime'];
+    endTime = json['endtime'];
   }
 
-  Map<String, dynamic> toJson() {
+  Map<String, dynamic> toJson({bool fromSave = true}) {
     final Map<String, dynamic> data = Map<String, dynamic>();
-    data['rid'] = rid;
-    data['rrr'] = rrr;
-    data['locationcode'] = locationcode;
-    data['channelcode'] = channelcode;
-    data['bookingNumber'] = bookingNumber;
-    data['bookingDetailCode'] = bookingDetailCode;
-    data['zoneName'] = zoneName;
-    data['brandcode'] = brandcode;
-    data['scheduledate'] = scheduledate;
-    data['clientName'] = clientName;
-    data['brandname'] = brandname;
-    data['tapeduration'] = tapeduration;
-    data['scheduletime'] = scheduletime;
-    data['rate'] = rate;
-    data['valuationrate'] = valuationrate;
-    data['sponsorTypeCode'] = sponsorTypeCode;
-    data['dealBand'] = dealBand;
-    data['commercialCode'] = commercialCode;
-    data['sponsorTypeName'] = sponsorTypeName;
-    data['dealNumber'] = dealNumber;
-    data['spotPriority'] = spotPriority;
-    data['dealTypeName'] = dealTypeName;
-    data['allocatedSpot'] = allocatedSpot;
-    data['groupcode'] = groupcode;
-    data['midend'] = midend;
-    data['midstart'] = midstart;
-    data['backColor'] = backColor;
-    data['selectionBackColor'] = selectionBackColor;
-    data['selectionForeColor'] = selectionForeColor;
+    if (fromSave) {
+      data['rid'] = rid;
+      data['rrr'] = rrr;
+      data['locationcode'] = locationcode;
+      data['channelcode'] = channelcode;
+      data['bookingNumber'] = bookingNumber;
+      data['bookingDetailCode'] = bookingDetailCode;
+      data['zoneName'] = zoneName;
+      data['brandcode'] = brandcode;
+      data['scheduledate'] = scheduledate;
+      data['clientName'] = clientName;
+      data['brandname'] = brandname;
+      data['tapeduration'] = tapeduration;
+      data['scheduletime'] = scheduletime;
+      data['rate'] = rate;
+      data['valuationrate'] = valuationrate;
+      data['sponsorTypeCode'] = sponsorTypeCode;
+      data['dealBand'] = dealBand;
+      data['commercialCode'] = commercialCode;
+      data['sponsorTypeName'] = sponsorTypeName;
+      data['dealNumber'] = dealNumber;
+      data['spotPriority'] = spotPriority;
+      data['dealTypeName'] = dealTypeName;
+      data['allocatedSpot'] = allocatedSpot;
+      data['groupcode'] = groupcode;
+      data['midend'] = midend;
+      data['midstart'] = midstart;
+      data['backColor'] = backColor;
+      data['selectionBackColor'] = selectionBackColor;
+      data['selectionForeColor'] = selectionForeColor;
+    } else {
+      // data['rid'] = rid;
+      data['RRR'] = rrr;
+      // data['locationcode'] = locationcode;
+      // data['channelcode'] = channelcode;
+      data['bookingNumber'] = bookingNumber;
+      data['bookingDetailCode'] = bookingDetailCode;
+      data['zoneName'] = zoneName;
+      data['brandcode'] = brandcode;
+      data['scheduledate'] = (scheduledate ?? "").contains("T")
+          ? (scheduledate ?? "").split("T")[0]
+          : (scheduledate ?? "");
+      data['clientName'] = clientName;
+      data['brandname'] = brandname;
+      data['tapeduration'] = tapeduration;
+      data['scheduletime'] = scheduletime;
+      data['starttime'] = startTime ?? "00:00:00";
+      data['endtime'] = endTime ?? "00:00:00";
+      data['rate'] = rate;
+      data['valuationrate'] = valuationrate;
+      // data['sponsorTypeCode'] = sponsorTypeCode;
+      data['dealBand'] = dealBand;
+      data['commercialCode'] = commercialCode;
+      data['sponsorTypeName'] = sponsorTypeName;
+      data['dealNumber'] = dealNumber;
+      data['spotPriority'] = spotPriority;
+      data['dealTypeName'] = dealTypeName;
+      data['allocatedSpot'] = allocatedSpot;
+      data['groupcode'] = groupcode;
+      // data['midend'] = midend;
+      // data['midstart'] = midstart;
+      // data['backColor'] = backColor;
+      // data['selectionBackColor'] = selectionBackColor;
+      // data['selectionForeColor'] = selectionForeColor;
+    }
     return data;
   }
 }
@@ -465,39 +507,73 @@ class LstUnallocatedSpots {
     selectionForeColor = json['selectionForeColor'];
   }
 
-  Map<String, dynamic> toJson() {
+  Map<String, dynamic> toJson({bool fromSave = true}) {
     final Map<String, dynamic> data = Map<String, dynamic>();
-    data['rid'] = rid;
-    data['rrr'] = rrr;
-    data['locationcode'] = locationcode;
-    data['channelcode'] = channelcode;
-    data['bookingNumber'] = bookingNumber;
-    data['bookingDetailCode'] = bookingDetailCode;
-    data['zoneName'] = zoneName;
-    data['brandcode'] = brandcode;
-    data['scheduledate'] = scheduledate;
-    data['clientName'] = clientName;
-    data['brandname'] = brandname;
-    data['tapeduration'] = tapeduration;
-    data['scheduletime'] = scheduletime;
-    data['starttime'] = starttime;
-    data['endtime'] = endtime;
-    data['rate'] = rate;
-    data['valuationrate'] = valuationrate;
-    data['sponsorTypeCode'] = sponsorTypeCode;
-    data['dealBand'] = dealBand;
-    data['commercialCode'] = commercialCode;
-    data['sponsorTypeName'] = sponsorTypeName;
-    data['dealNumber'] = dealNumber;
-    data['spotPriority'] = spotPriority;
-    data['dealTypeName'] = dealTypeName;
-    data['allocatedSpot'] = allocatedSpot;
-    data['groupcode'] = groupcode;
-    data['midend'] = midend;
-    data['midstart'] = midstart;
-    data['backColor'] = backColor;
-    data['selectionBackColor'] = selectionBackColor;
-    data['selectionForeColor'] = selectionForeColor;
+    if (fromSave) {
+      data['rid'] = rid;
+      data['rrr'] = rrr;
+      data['locationcode'] = locationcode;
+      data['channelcode'] = channelcode;
+      data['bookingNumber'] = bookingNumber;
+      data['bookingDetailCode'] = bookingDetailCode;
+      data['zoneName'] = zoneName;
+      data['brandcode'] = brandcode;
+      data['scheduledate'] = scheduledate;
+      data['clientName'] = clientName;
+      data['brandname'] = brandname;
+      data['tapeduration'] = tapeduration;
+      data['scheduletime'] = scheduletime;
+      data['starttime'] = starttime;
+      data['endtime'] = endtime;
+      data['rate'] = rate;
+      data['valuationrate'] = valuationrate;
+      data['sponsorTypeCode'] = sponsorTypeCode;
+      data['dealBand'] = dealBand;
+      data['commercialCode'] = commercialCode;
+      data['sponsorTypeName'] = sponsorTypeName;
+      data['dealNumber'] = dealNumber;
+      data['spotPriority'] = spotPriority;
+      data['dealTypeName'] = dealTypeName;
+      data['allocatedSpot'] = allocatedSpot;
+      data['groupcode'] = groupcode;
+      data['midend'] = midend;
+      data['midstart'] = midstart;
+      data['backColor'] = backColor;
+      data['selectionBackColor'] = selectionBackColor;
+      data['selectionForeColor'] = selectionForeColor;
+    } else {
+      // data['rid'] = rid;
+      data['RRR'] = rrr;
+      // data['locationcode'] = locationcode;
+      // data['channelcode'] = channelcode;
+      data['bookingNumber'] = bookingNumber;
+      data['bookingDetailCode'] = bookingDetailCode;
+      data['zoneName'] = zoneName;
+      // data['brandcode'] = brandcode;
+      data['scheduledate'] = (scheduledate??"").contains("T")?(scheduledate??"").split("T")[0]:(scheduledate??"");
+      data['clientName'] = clientName;
+      data['brandname'] = brandname;
+      data['tapeduration'] = tapeduration;
+      data['scheduletime'] = scheduletime;
+      data['starttime'] = starttime;
+      data['endtime'] = endtime;
+      data['rate'] = rate;
+      data['valuationrate'] = valuationrate;
+      // data['sponsorTypeCode'] = sponsorTypeCode;
+      data['dealBand'] = dealBand;
+      data['commercialCode'] = commercialCode;
+      data['sponsorTypeName'] = sponsorTypeName;
+      data['dealNumber'] = dealNumber;
+      data['spotPriority'] = spotPriority;
+      data['dealTypeName'] = dealTypeName;
+      data['allocatedSpot'] = allocatedSpot;
+      data['groupcode'] = groupcode;
+      data['midend'] = midend;
+      data['midstart'] = midstart;
+      // data['backColor'] = backColor;
+      // data['selectionBackColor'] = selectionBackColor;
+      // data['selectionForeColor'] = selectionForeColor;
+    }
     return data;
   }
 }

@@ -57,7 +57,9 @@ class SlideView extends GetView<SlideController> {
                   DateWithThreeTextField(
                     title: "Telecast Date",
                     widthRation: 0.12,
-                    onFocusChange: (data) => controller.onleaveTelecasteDate(),
+                    onFocusChange: (data) {
+                      controller.onleaveTelecasteDate();
+                    },
                     mainTextController: controller.telecastedateTC,
                   ),
                   DateWithThreeTextField(
@@ -91,22 +93,34 @@ class SlideView extends GetView<SlideController> {
               child: controller.dataTableList.isEmpty
                   ? null
                   : DataGridFromMap3(
-                      mapData: controller.dataTableList.value.map((e) => e.toJson()).toList(),
+                      enableSort: true,
+                      showSecondaryDialog: false,
+                      mapData: controller.dataTableList.value
+                          .map((e) => e.toJson())
+                          .toList(),
                       checkBoxStrComparison: "true",
                       uncheckCheckBoxStr: "false",
                       hideCode: true,
                       onload: (event) {
                         controller.stateManager = event.stateManager;
-                        event.stateManager.setSelectingMode(PlutoGridSelectingMode.row);
+                        event.stateManager
+                            .setSelectingMode(PlutoGridSelectingMode.row);
                         event.stateManager.setSelecting(true);
                         event.stateManager.setCurrentCell(
-                            event.stateManager.getRowByIdx(controller.lastSelectedIdx)?.cells['stationIdCheck'], controller.lastSelectedIdx);
-                        event.stateManager.moveCurrentCellByRowIdx(controller.lastSelectedIdx, PlutoMoveDirection.down, notify: true);
+                            event.stateManager
+                                .getRowByIdx(controller.lastSelectedIdx)
+                                ?.cells['stationIdCheck'],
+                            controller.lastSelectedIdx);
+                        event.stateManager.moveCurrentCellByRowIdx(
+                            controller.lastSelectedIdx, PlutoMoveDirection.down,
+                            notify: true);
                       },
                       onEdit: controller.onEdit,
                       actionOnPress: controller.actionOnPress,
-                      colorCallback: (row) =>
-                          (row.row.cells.containsValue(controller.stateManager?.currentCell)) ? Colors.deepPurple.shade200 : Colors.white,
+                      colorCallback: (row) => (row.row.cells.containsValue(
+                              controller.stateManager?.currentCell))
+                          ? Colors.deepPurple.shade200
+                          : Colors.white,
                       checkBoxColumnKey: const [
                         "stationIdCheck",
                         "presentsCheck",

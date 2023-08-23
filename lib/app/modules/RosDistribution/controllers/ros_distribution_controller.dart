@@ -491,6 +491,7 @@ class RosDistributionController extends GetxController {
     int lastSelectedIdx = 0, lastSelectedIdx2nd = 0, lastSelectedIdx3rd = 0;
     bool canRender = true;
     PlutoGridStateManager? tempSM1st, tempSM2nd, tempSM3rd;
+
     showDialog(
         context: Get.context!,
         builder: (_) {
@@ -975,6 +976,7 @@ class RosDistributionController extends GetxController {
                                         true)
                                     ? null
                                     : DataGridFromMap(
+                                      enableSort: true,
                                         mapData: (tempModel
                                                     .value
                                                     .infoGetFpcCellDoubleClick
@@ -1186,18 +1188,19 @@ class RosDistributionController extends GetxController {
                                                   ?.isEmpty ??
                                               true)
                                           ? null
-                                          : DataGridShowOnlyKeys(
+                                          : DataGridFromMap(
                                               exportFileName:
                                                   "ROS Distribution",
                                               mapData: (tempModel
                                                           .value
                                                           .infoGetFpcCellDoubleClick
                                                           ?.lstAllocatedSpots)
-                                                      ?.map((e) => e.toJson())
+                                                      ?.map((e) => e.toJson(fromSave: false))
                                                       .toList() ??
                                                   [],
                                               formatDate: false,
-                                              widthRatio: 220,
+                                              // widthRatio: 220,
+                                              enableSort: true,
                                               hideCode: false,
                                               colorCallback: (row) => (row
                                                       .row.cells
@@ -1257,12 +1260,13 @@ class RosDistributionController extends GetxController {
                                                   ?.isEmpty ??
                                               true)
                                           ? null
-                                          : DataGridShowOnlyKeys(
+                                          : DataGridFromMap(
+                                            enableSort: true,
                                               mapData: (tempModel
                                                           .value
                                                           .infoGetFpcCellDoubleClick
                                                           ?.lstUnallocatedSpots)
-                                                      ?.map((e) => e.toJson())
+                                                      ?.map((e) => e.toJson(fromSave: false))
                                                       .toList() ??
                                                   [],
                                               formatDate: false,
