@@ -576,6 +576,7 @@ class CommercialView extends GetView<CommercialController> {
                               .mainCommercialShowDetailsList
                               ?.removeAt(oldIdx);
                           if (removedObject != null) {
+                            removedObject.breakNumber = controller.mainCommercialShowDetailsList?[newIdx-1].breakNumber;
                             controller.mainCommercialShowDetailsList
                                 ?.insert(newIdx, removedObject);
                           }
