@@ -234,9 +234,7 @@ class BrandMasterController extends GetxController {
     brandController.text = replaceInvalidChar(brandController.text);
     if(brandController.text != null && brandController.text != ""){
       getRetriveData(brandController.text);
-      isFocusNodeActive = false;
     }
-    isFocusNodeActive = false;
   }
 
 
@@ -261,26 +259,26 @@ class BrandMasterController extends GetxController {
     // clientDetailsAndBrandModel
     if(gridStateManager != null && (gridStateManager?.rows.length??0) > 0){
       // brandController.text = clientDetailsAndBrandModel!.clientdtails?[index].brandName??"";
-      brandController.text = gridStateManager?.rows[gridStateManager?.currentRowIdx??0].cells['brandName']?.value ??"";
+      brandController.text = gridStateManager?.rows[index??0].cells['brandName']?.value ??"";
 
       // brandShortNameController.text = clientDetailsAndBrandModel!.clientdtails?[index].brandName ??"";
-      brandShortNameController.text = gridStateManager?.rows[gridStateManager?.currentRowIdx??0].cells['brandName']?.value ??"";
+      brandShortNameController.text = gridStateManager?.rows[index??0].cells['brandName']?.value ??"";
       // productController.text =clientDetailsAndBrandModel!.clientdtails?[index].productName??"";
-      productController.text = gridStateManager?.rows[gridStateManager?.currentRowIdx??0].cells['productName']?.value ??"";
+      productController.text = gridStateManager?.rows[index??0].cells['productName']?.value ??"";
 
       // productLevel1Controller.text = clientDetailsAndBrandModel!.clientdtails?[index].level1Name ??"";
-      productLevel1Controller.text = gridStateManager?.rows[gridStateManager?.currentRowIdx??0].cells['level1Name']?.value ??"";
+      productLevel1Controller.text = gridStateManager?.rows[index??0].cells['level1Name']?.value ??"";
 
       // productLevel2Controller.text = clientDetailsAndBrandModel!.clientdtails?[index].level1Name ??"";
-      productLevel2Controller.text = gridStateManager?.rows[gridStateManager?.currentRowIdx??0].cells['level1Name']?.value ??"";
+      productLevel2Controller.text = gridStateManager?.rows[index??0].cells['level1Name']?.value ??"";
 
       // productLevel3Controller.text = clientDetailsAndBrandModel!.clientdtails?[index].level2Name ??"";
-      productLevel3Controller.text = gridStateManager?.rows[gridStateManager?.currentRowIdx??0].cells['level2Name']?.value ??"";
+      productLevel3Controller.text = gridStateManager?.rows[index??0].cells['level2Name']?.value ??"";
 
       // productLevel4Controller.text = clientDetailsAndBrandModel!.clientdtails?[index].level3Name ??"";
-      productLevel4Controller.text =  gridStateManager?.rows[gridStateManager?.currentRowIdx??0].cells['level3Name']?.value ??"";
+      productLevel4Controller.text =  gridStateManager?.rows[index??0].cells['level3Name']?.value ??"";
 
-      selectedProduct = DropDownValue(value:(gridStateManager?.rows[gridStateManager?.currentRowIdx??0].cells['productName']?.value ??"") , key: "product");
+      selectedProduct = DropDownValue(value:(gridStateManager?.rows[index??0].cells['productName']?.value ??"") , key: "product");
       getRetriveData( brandController.text);
       update(['top']);
     }
