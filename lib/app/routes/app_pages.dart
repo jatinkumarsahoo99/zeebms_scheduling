@@ -58,7 +58,7 @@ class AppPages {
 
   static const INITIAL = kReleaseMode
       ? Routes.HOME
-      : Routes.RO_RESCHEDULE +
+      : Routes.RO_BOOKING +
           "?personalNo=hWlrtkk6LCUUIRgmutvmzg%3D%3D&loginCode=gsS2oEkuYKzI9aXanDqobQ%3D%3D&formName=ZdPOC%2BHl3hRJzHSclM%2B5m3sWVw1wpLPmNEvejYUOFLU%3D";
 
   static final routes = [
