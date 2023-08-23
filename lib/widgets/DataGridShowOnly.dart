@@ -299,7 +299,9 @@ class DataGridShowOnlyKeys extends StatelessWidget {
         try {
           for (var element in row.entries) {
             cells[element.key] = PlutoCell(
-              value: element.key == "selected" || element.value == null
+              value: element.key == "selected" ||
+                      element.key == checkRowKey ||
+                      element.value == null
                   ? ""
                   : element.key == "auditedon"
                       ? DateFormat.yMd().add_jm().format(DateTime.parse(

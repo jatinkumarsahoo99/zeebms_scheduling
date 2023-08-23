@@ -128,20 +128,24 @@ class BrandMasterController extends GetxController {
     }
   }
   fetchClientDetails(String client){
+    isFocusNodeActive = false;
     LoadingDialog.call();
     Get.find<ConnectorControl>().GETMETHODCALL(
         api: ApiFactory.BRANDMASTER_GETCLIENTDETAILS+Uri.encodeComponent(client.replaceAll("'",  "")),
         fun: (map) {
           closeDialogIfOpen();
+          isFocusNodeActive = false;
           print(">>>>>>map"+jsonEncode(map));
           isFocusNodeActive = false;
           if (map is Map && map.containsKey('clientdtails') && map['clientdtails'] != null &&
               map['clientdtails'].length >0 ) {
             clientDetailsAndBrandModel = ClientDetailsAndBrandModel.
             fromJson(map as Map<String,dynamic>);
+            isFocusNodeActive = false;
             update(['grid']);
           }else{
             clientDetailsAndBrandModel = null;
+            isFocusNodeActive = false;
             update(['grid']);
           }
         });
@@ -204,8 +208,10 @@ class BrandMasterController extends GetxController {
 
              // selectedProduct = DropDownValue(value:(brandMasterRetriveModel?.getBrandList?[0].Productname ??"") , key: (brandMasterRetriveModel?.getBrandList?[0].productCode ??""));
              update(['top']);
-           }else{
+           }
+           else{
              strcode = "0";
+             isFocusNodeActive = false;
            }
 
         });
@@ -253,26 +259,26 @@ class BrandMasterController extends GetxController {
     // clientDetailsAndBrandModel
     if(gridStateManager != null && (gridStateManager?.rows.length??0) > 0){
       // brandController.text = clientDetailsAndBrandModel!.clientdtails?[index].brandName??"";
-      brandController.text = gridStateManager?.rows[gridStateManager?.currentRowIdx??0].cells['brandName']?.value ??"";
+      brandController.text = gridStateManager?.rows[index??0].cells['brandName']?.value ??"";
 
       // brandShortNameController.text = clientDetailsAndBrandModel!.clientdtails?[index].brandName ??"";
-      brandShortNameController.text = gridStateManager?.rows[gridStateManager?.currentRowIdx??0].cells['brandName']?.value ??"";
+      brandShortNameController.text = gridStateManager?.rows[index??0].cells['brandName']?.value ??"";
       // productController.text =clientDetailsAndBrandModel!.clientdtails?[index].productName??"";
-      productController.text = gridStateManager?.rows[gridStateManager?.currentRowIdx??0].cells['productName']?.value ??"";
+      productController.text = gridStateManager?.rows[index??0].cells['productName']?.value ??"";
 
       // productLevel1Controller.text = clientDetailsAndBrandModel!.clientdtails?[index].level1Name ??"";
-      productLevel1Controller.text = gridStateManager?.rows[gridStateManager?.currentRowIdx??0].cells['level1Name']?.value ??"";
+      productLevel1Controller.text = gridStateManager?.rows[index??0].cells['level1Name']?.value ??"";
 
       // productLevel2Controller.text = clientDetailsAndBrandModel!.clientdtails?[index].level1Name ??"";
-      productLevel2Controller.text = gridStateManager?.rows[gridStateManager?.currentRowIdx??0].cells['level1Name']?.value ??"";
+      productLevel2Controller.text = gridStateManager?.rows[index??0].cells['level1Name']?.value ??"";
 
       // productLevel3Controller.text = clientDetailsAndBrandModel!.clientdtails?[index].level2Name ??"";
-      productLevel3Controller.text = gridStateManager?.rows[gridStateManager?.currentRowIdx??0].cells['level2Name']?.value ??"";
+      productLevel3Controller.text = gridStateManager?.rows[index??0].cells['level2Name']?.value ??"";
 
       // productLevel4Controller.text = clientDetailsAndBrandModel!.clientdtails?[index].level3Name ??"";
-      productLevel4Controller.text =  gridStateManager?.rows[gridStateManager?.currentRowIdx??0].cells['level3Name']?.value ??"";
+      productLevel4Controller.text =  gridStateManager?.rows[index??0].cells['level3Name']?.value ??"";
 
-      selectedProduct = DropDownValue(value:(gridStateManager?.rows[gridStateManager?.currentRowIdx??0].cells['productName']?.value ??"") , key: "product");
+      selectedProduct = DropDownValue(value:(gridStateManager?.rows[index??0].cells['productName']?.value ??"") , key: "product");
       getRetriveData( brandController.text);
       update(['top']);
     }
@@ -340,7 +346,7 @@ class BrandMasterController extends GetxController {
     brandNameFocus.addListener(() {
       if(brandNameFocus.hasFocus){
         isFocusNodeActive = true;
-      }if(!brandNameFocus.hasFocus){
+      }if((!brandNameFocus.hasFocus) && isFocusNodeActive){
         if(brandController.text != null && brandController.text != "" ){
           txtBrandNameLostFocus();
         }
@@ -352,7 +358,7 @@ class BrandMasterController extends GetxController {
     clientFocus.addListener(() {
       if(clientFocus.hasFocus){
         isFocusNodeActive = true;
-      }if(clientFocus.hasFocus && isFocusNodeActive){
+      }if((!clientFocus.hasFocus) && isFocusNodeActive){
         if(selectedClient != null && selectedClient?.value != "" ){
           fetchClientDetails(selectedClient?.value??"");
         }

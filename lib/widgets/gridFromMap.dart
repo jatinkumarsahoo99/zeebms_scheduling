@@ -131,7 +131,7 @@ class DataGridFromMap extends StatelessWidget {
                       if (onContextMenuClick == null) {
                         DataGridMenu().showGridMenu(
                             rendererContext.stateManager, detail, context,
-                            exportFileName: exportFileName);
+                            exportFileName: exportFileName,csvFormat: csvFormat??false);
                       } else {
                         DataGridMenu().showGridCustomMenu(
                             rendererContext.stateManager, detail, context,
@@ -228,7 +228,7 @@ class DataGridFromMap extends StatelessWidget {
                             if (onContextMenuClick == null) {
                               DataGridMenu().showGridMenu(
                                   rendererContext.stateManager, detail, context,
-                                  exportFileName: exportFileName);
+                                  exportFileName: exportFileName,csvFormat: csvFormat??false);
                             } else {
                               DataGridMenu().showGridCustomMenu(
                                   rendererContext.stateManager, detail, context,
@@ -302,7 +302,7 @@ class DataGridFromMap extends StatelessWidget {
                             if (onContextMenuClick == null) {
                               DataGridMenu().showGridMenu(
                                   rendererContext.stateManager, detail, context,
-                                  exportFileName: exportFileName);
+                                  exportFileName: exportFileName,csvFormat: csvFormat??false);
                             } else {
                               DataGridMenu().showGridCustomMenu(
                                   rendererContext.stateManager, detail, context,
@@ -373,7 +373,7 @@ class DataGridFromMap extends StatelessWidget {
                   onSecondaryTapDown: canShowFilter
                       ? (detail) {
                           DataGridMenu().showGridMenu(
-                              rendererContext.stateManager, detail, context);
+                              rendererContext.stateManager, detail, context,csvFormat: csvFormat??false);
                         }
                       : null,
                   child: Container(
@@ -412,7 +412,7 @@ class DataGridFromMap extends StatelessWidget {
                           if (onContextMenuClick == null) {
                             DataGridMenu().showGridMenu(
                                 rendererContext.stateManager, detail, context,
-                                exportFileName: exportFileName);
+                                exportFileName: exportFileName,csvFormat: csvFormat??false);
                           } else {
                             DataGridMenu().showGridCustomMenu(
                                 rendererContext.stateManager, detail, context,

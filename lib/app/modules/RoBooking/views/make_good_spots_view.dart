@@ -7,13 +7,14 @@ import 'package:flutter/material.dart';
 
 import 'package:get/get.dart';
 
-class MakeGoodSpotsView extends GetView<RoBookingController> {
+class MakeGoodSpotsView extends StatelessWidget {
   const MakeGoodSpotsView({Key? key}) : super(key: key);
   @override
   Widget build(BuildContext context) {
     return GetBuilder(
         init: Get.find<RoBookingController>(),
-        builder: (context) {
+        id: "makeGood",
+        builder: (controller) {
           return Column(
             children: [
               Row(
@@ -21,14 +22,50 @@ class MakeGoodSpotsView extends GetView<RoBookingController> {
                 children: [
                   Row(
                     mainAxisSize: MainAxisSize.min,
-                    children: [Checkbox(value: false, onChanged: (value) {}), Text("Select All")],
+                    children: [
+                      Obx(() => Checkbox(
+                          value: controller.makeGoodSelectAll.value,
+                          onChanged: (value) {
+                            controller.makeGoodSelectAll.value =
+                                value ?? !controller.makeGoodSelectAll.value;
+
+                            for (var i = 0;
+                                i <
+                                    (controller.bookingNoLeaveData
+                                                ?.lstMakeGood ??
+                                            [])
+                                        .length;
+                                i++) {
+                              controller.bookingNoLeaveData?.lstMakeGood![i]
+                                  .selectRow = value;
+                            }
+                            for (var i = 0;
+                                i < controller.makeGoodData.value.length;
+                                i++) {
+                              controller.makeGoodData[i]["selectRow"] = value;
+                            }
+
+                            for (var row
+                                in controller.makeGoodGrid?.rows ?? []) {
+                              controller.makeGoodGrid
+                                  ?.setRowChecked(row, value ?? false);
+                            }
+                          })),
+                      Text("Select All")
+                    ],
                   ),
                   Spacer(),
-                  DateWithThreeTextField(title: "From Date", widthRation: 0.09, mainTextController: controller.mgfromDateCtrl),
+                  DateWithThreeTextField(
+                      title: "From Date",
+                      widthRation: 0.09,
+                      mainTextController: controller.mgfromDateCtrl),
                   SizedBox(
                     width: 5,
                   ),
-                  DateWithThreeTextField(title: "to Date", widthRation: 0.09, mainTextController: controller.mgtoDateCtrl),
+                  DateWithThreeTextField(
+                      title: "to Date",
+                      widthRation: 0.09,
+                      mainTextController: controller.mgtoDateCtrl),
                   Spacer(),
                 ],
               ),
@@ -37,14 +74,24 @@ class MakeGoodSpotsView extends GetView<RoBookingController> {
               ),
               Expanded(
                   child: Container(
-                child: Obx(() => controller.bookingNoLeaveData != null || controller.makeGoodData.value.isNotEmpty
+                child: Obx(() => controller.bookingNoLeaveData != null ||
+                        controller.makeGoodData.value.isNotEmpty
                     ? DataGridShowOnlyKeys(
                         mapData: controller.makeGoodData.value.isEmpty
-                            ? controller.bookingNoLeaveData?.lstSpots?.map((e) => e.toJson()).toList() ?? controller.makeGoodData.value
+                            ? controller.bookingNoLeaveData?.lstMakeGood
+                                    ?.map((e) => e.toJson())
+                                    .toList() ??
+                                controller.makeGoodData.value
                             : controller.makeGoodData.value,
+                        checkRow: true,
+                        onload: (loadEvent) {
+                          controller.makeGoodGrid = loadEvent.stateManager;
+                        },
+                        checkRowKey: "selectRow",
                         formatDate: false)
                     : Container(
-                        decoration: BoxDecoration(border: Border.all(width: 1.0, color: Colors.grey)),
+                        decoration: BoxDecoration(
+                            border: Border.all(width: 1.0, color: Colors.grey)),
                       )),
               )),
               SizedBox(
