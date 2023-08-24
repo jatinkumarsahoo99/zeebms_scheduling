@@ -207,9 +207,14 @@ class RoRescheduleView extends StatelessWidget {
                                     hideKeys: const [],
                                     colorCallback: (p0) {
                                       if (controller.roRescheduleOnLeaveData!.lstDgvRO![p0.rowIdx].colorName!.isNotEmpty) {
-                                        return controller.roRescheduleOnLeaveData!.lstDgvRO![p0.rowIdx].colorName!.toLowerCase() == "rosybrown"
-                                            ? Colors.brown
-                                            : Colors.white;
+                                        switch (controller.roRescheduleOnLeaveData!.lstDgvRO![p0.rowIdx].colorName!.toLowerCase()) {
+                                          case "rosybrown":
+                                            return Color(0xFFbc8f8f);
+                                          case "grey":
+                                            return Colors.grey;
+                                          default:
+                                            return Colors.white;
+                                        }
                                       }
                                       return Colors.white;
                                     },

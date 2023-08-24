@@ -58,10 +58,8 @@ class AppPages {
 
   static const INITIAL = kReleaseMode
       ? Routes.HOME
-      : Routes.COMMERCIAL +
-          (1 == 1
-              ? "?personalNo=e7ScQlP7tXxBxRizIrkQIA%3D%3D&loginCode=scL134pM4e0EQtJCjv7r5Q%3D%3D"
-              : "?personalNo=kW5Bkf17%2FS5YF7ML28FmVg%3D%3D&loginCode=1BWIoBKeDl7qDSAAhxvXsQ%3D%3D&formName=OI8ukDpPPVN0I2BEXu2h4nuFu%2BZm1ZRpvP8NL4XCXzQ%3D");
+      : Routes.RO_RESCHEDULE +
+          "?personalNo=hWlrtkk6LCUUIRgmutvmzg%3D%3D&loginCode=gsS2oEkuYKzI9aXanDqobQ%3D%3D&formName=ZdPOC%2BHl3hRJzHSclM%2B5m3sWVw1wpLPmNEvejYUOFLU%3D";
 
   static final routes = [
     GetPage(
@@ -140,7 +138,7 @@ class AppPages {
     GetPage(
       name: _Paths.RO_CANCELLATION,
       page: () => AuthGuard1(childName: _Paths.RO_CANCELLATION),
-      // binding: RoCancellationBinding(),
+      binding: RoCancellationBinding(),
     ),
     GetPage(
       name: _Paths.RO_RESCHEDULE,
