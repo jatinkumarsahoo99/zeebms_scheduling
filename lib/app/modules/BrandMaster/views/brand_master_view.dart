@@ -109,7 +109,7 @@ class BrandMasterView extends StatelessWidget {
                                           // isEnable: controllerX.isEnable,
                                           onchanged: (value) {
 
-                                          },autoFocus: true
+                                          },autoFocus: false
                                           // autoFocus: true,
                                         ),
                                         SizedBox(
@@ -175,7 +175,8 @@ class BrandMasterView extends StatelessWidget {
 
                                             },
                                             // autoFocus: true,
-                                            isEnable: false
+                                            isEnable: false,
+                                            autoFocus: false
                                           ),
                                         ),
                                        /* Container(
@@ -231,7 +232,8 @@ class BrandMasterView extends StatelessWidget {
                                       onchanged: (value) {
 
                                       },
-                                        focusNode: controllerX.productLevel3Focus
+                                        focusNode: controllerX.productLevel3Focus,
+                                      autoFocus: false
                                       // autoFocus: true,
                                     ),
                                     SizedBox(
@@ -242,11 +244,13 @@ class BrandMasterView extends StatelessWidget {
                                       // autoFocus: true,
                                       controller: controllerX.productLevel4Controller,
                                       width: 0.36,
+
                                       // isEnable: controllerX.isEnable,
                                       onchanged: (value) {
 
                                       },
-                                        focusNode: controllerX.productLevel4Focus
+                                        focusNode: controllerX.productLevel4Focus,
+                                      autoFocus: false
                                       // autoFocus: true,
                                     ),
 

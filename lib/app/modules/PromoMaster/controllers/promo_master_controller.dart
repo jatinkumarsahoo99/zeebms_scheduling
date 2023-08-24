@@ -456,8 +456,7 @@ class PromoMasterController extends GetxController {
             handleOnChangedCategory(
               DropDownValue(
                 key: record.promoCategoryCode,
-                value: record.promoCategoryName,
-              ),
+                value: record.promoCategoryName,),
               callAPI: false,
             );
           }
