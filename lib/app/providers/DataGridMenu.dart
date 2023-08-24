@@ -488,11 +488,11 @@ class DataGridMenu {
                                         var _slecetedRow = _almost.value
                                             ? stateManager.rows.firstWhereOrNull((element) => (element.cells[_selectedColumn]!.value
                                                     .toString()
-                                                    .toLowerCase()
-                                                    .contains(_findctrl.text.toLowerCase()) &&
+                                                    .toLowerCase().trim()
+                                                    .contains(_findctrl.text.toLowerCase().trim()) &&
                                                 (_index == 0 || element.sortIdx > (_index ?? 0))))
                                             : stateManager.rows.firstWhere((element) =>
-                                                (element.cells[_selectedColumn]!.value.toString().toLowerCase() == _findctrl.text.toLowerCase() &&
+                                                (element.cells[_selectedColumn]!.value.toString().toLowerCase().trim() == _findctrl.text.toLowerCase().trim() &&
                                                     (_index == 0 || element.sortIdx > (_index ?? 0))));
                                         if (_slecetedRow == null) {
                                           stateManager.resetScrollToZero();
@@ -506,12 +506,12 @@ class DataGridMenu {
                                                   var _slecetedRow = _almost.value
                                                       ? stateManager.rows.firstWhereOrNull((element) => (element.cells[_selectedColumn]!.value
                                                               .toString()
-                                                              .toLowerCase()
-                                                              .contains(_findctrl.text.toLowerCase()) &&
+                                                              .toLowerCase().trim()
+                                                              .contains(_findctrl.text.toLowerCase().trim()) &&
                                                           (_index == 0 || element.sortIdx > (_index ?? 0))))
                                                       : stateManager.rows.firstWhere((element) =>
-                                                          (element.cells[_selectedColumn]!.value.toString().toLowerCase() ==
-                                                                  _findctrl.text.toLowerCase() &&
+                                                          (element.cells[_selectedColumn]!.value.toString().toLowerCase().trim() ==
+                                                                  _findctrl.text.toLowerCase().trim() &&
                                                               (_index == 0 || element.sortIdx > (_index ?? 0))));
                                                   print(_slecetedRow!.cells[_selectedColumn]!.value.toString() +
                                                       _slecetedRow.cells[_selectedColumn]!.value.runtimeType.toString());
