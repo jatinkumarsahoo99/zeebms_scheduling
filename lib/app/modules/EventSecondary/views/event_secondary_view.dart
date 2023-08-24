@@ -348,11 +348,15 @@ class EventSecondaryView extends GetView<EventSecondaryController> {
                                   ),
                                   FormButton(
                                     btnText: "Add FPC",
-                                    callback: controller.handleAddFPCTap,
+                                    callback: () {
+                                      // controller.handleAddFPCTap();
+                                    },
                                   ),
                                   FormButton(
                                     btnText: "Delete ALL",
-                                    callback: controller.handleDeleteAllTap,
+                                    callback: () {
+                                      // controller.handleDeleteAllTap();
+                                    },
                                   ),
                                 ],
                               ),

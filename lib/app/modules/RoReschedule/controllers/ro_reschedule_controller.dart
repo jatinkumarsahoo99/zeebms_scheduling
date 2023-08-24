@@ -384,24 +384,27 @@ class RoRescheduleController extends GetxController {
 
   onChangeTapeIDClick() {
     var tapeId = roRescheduleOnLeaveData!.lstDgvRO![plutoGridStateManager!.currentCell!.row.sortIdx].exportTapeCode;
-
-    print(tapeId);
-    Get.find<ConnectorControl>().POSTMETHOD_FORMDATA(
-        api: ApiFactory.RO_RESCHEDULE_SELECTED_INDEX_CHNAGE_TAPEID,
-        json: {"TapeID": tapeId, "lstTapeDetails": roRescheduleOnLeaveData!.lstTapeDetails!.map((e) => e.toJson()).toList()},
-        fun: (data) {
-          if (data is Map && data.containsKey("info_SelectedIndexChanged_TapeID")) {
-            var tapeData = data["info_SelectedIndexChanged_TapeID"];
-            chnageTapeIdCap.text = tapeData["commercialCaption"];
-            if (roRescheduleOnLeaveData?.lstcmbTapeID != null && roRescheduleOnLeaveData!.lstcmbTapeID!.isNotEmpty) {
-              modifySelectedTapeCode = DropDownValue(
-                  key: roRescheduleOnLeaveData?.lstcmbTapeID![0].exporttapecode, value: roRescheduleOnLeaveData?.lstcmbTapeID![0].exporttapecode);
+    if (roRescheduleOnLeaveData?.lstDgvRO?[plutoGridStateManager!.currentCell!.row.sortIdx].edit == 1) {
+      LoadingDialog.callErrorMessage1(msg: "selected spot is already rescheduled");
+    } else {
+      print(tapeId);
+      Get.find<ConnectorControl>().POSTMETHOD_FORMDATA(
+          api: ApiFactory.RO_RESCHEDULE_SELECTED_INDEX_CHNAGE_TAPEID,
+          json: {"TapeID": tapeId, "lstTapeDetails": roRescheduleOnLeaveData!.lstTapeDetails!.map((e) => e.toJson()).toList()},
+          fun: (data) {
+            if (data is Map && data.containsKey("info_SelectedIndexChanged_TapeID")) {
+              var tapeData = data["info_SelectedIndexChanged_TapeID"];
+              chnageTapeIdCap.text = tapeData["commercialCaption"];
+              if (roRescheduleOnLeaveData?.lstcmbTapeID != null && roRescheduleOnLeaveData!.lstcmbTapeID!.isNotEmpty) {
+                modifySelectedTapeCode = DropDownValue(
+                    key: roRescheduleOnLeaveData?.lstcmbTapeID![0].exporttapecode, value: roRescheduleOnLeaveData?.lstcmbTapeID![0].exporttapecode);
+              }
+              changeTapeIdSeg.text = roRescheduleOnLeaveData!.lstDgvRO![plutoGridStateManager!.currentCell!.row.sortIdx].segmentNumber.toString();
+              changeTapeIdDur.text = roRescheduleOnLeaveData!.lstDgvRO![plutoGridStateManager!.currentCell!.row.sortIdx].tapeDuration.toString();
+              changeTapeId.value = !changeTapeId.value;
             }
-            changeTapeIdSeg.text = roRescheduleOnLeaveData!.lstDgvRO![plutoGridStateManager!.currentCell!.row.sortIdx].segmentNumber.toString();
-            changeTapeIdDur.text = roRescheduleOnLeaveData!.lstDgvRO![plutoGridStateManager!.currentCell!.row.sortIdx].tapeDuration.toString();
-            changeTapeId.value = !changeTapeId.value;
-          }
-        });
+          });
+    }
   }
 
   modify() {
@@ -435,6 +438,7 @@ class RoRescheduleController extends GetxController {
               roRescheduleOnLeaveData!.lstdgvUpdated = (data["info_Modify"]["lstdgvUpdated"] as List).map((e) => LstdgvUpdated.fromJson(e)).toList();
             }
             update(["dgvGrid", "updatedgvGrid"]);
+            closeModify();
             if (data["info_Modify"].containsKey("message") && data["info_Modify"]["message"] != null) {
               LoadingDialog.callInfoMessage(data["info_Modify"]["message"]);
             }

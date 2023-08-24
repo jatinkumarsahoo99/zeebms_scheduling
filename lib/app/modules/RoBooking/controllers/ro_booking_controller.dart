@@ -59,6 +59,7 @@ class RoBookingController extends GetxController {
   PageController pagecontroller = PageController(keepPage: true);
   TextEditingController mgfromDateCtrl = TextEditingController(), mgtoDateCtrl = TextEditingController();
   PlutoGridStateManager? dealViewGrid;
+
   PlutoGridStateManager? programViewGrid;
   PlutoGridStateManager? spotViewGrid;
   PlutoGridStateManager? spotVerifyGrid;
@@ -101,6 +102,7 @@ class RoBookingController extends GetxController {
   RoBookingSaveCheckTapeId? savecheckData;
   bool showGstPopUp = true;
   int editMode = 0;
+
   int? bookingNoLeaveDealCurrentRow;
   String? bookingNoLeaveDealCurrentColumn;
 
@@ -114,6 +116,8 @@ class RoBookingController extends GetxController {
   var agencies = RxList<DropDownValue>();
   RxList tapeIds = RxList([]);
   RxList makeGoodData = RxList([]);
+  RxBool makeGoodSelectAll = RxBool(false);
+  PlutoGridStateManager? makeGoodGrid;
 
   FocusNode bookingNoFocus = FocusNode(),
       dealNoFocus = FocusNode(),
@@ -300,7 +304,9 @@ class RoBookingController extends GetxController {
           "dealType": dealNoLeaveData?.dealType,
           "intSubRevenueTypeCode": dealDblClickData?.intSubRevenueTypeCode,
           "locationCode": selectedLocation?.key,
+          "balanceSeconds": dealDblClickData?.balanceSeconds ?? 0,
           "channelCode": selectedChannel?.key,
+          "intSeconds": dealDblClickData?.intSeconds ?? 0,
           "brandCode": selectedBrand?.key,
           "caption": bookingTapeLeaveData?.caption,
           "revenueType": bookingTapeLeaveData?.tapeRevenue,
@@ -465,40 +471,44 @@ class RoBookingController extends GetxController {
   }
 
   setVerify() {
-    Get.find<ConnectorControl>().POSTMETHOD(
-        api: ApiFactory.RO_BOOKING_GetSetVerify,
-        json: {
-          "locationName": selectedLocation!.value,
-          "channelName": selectedChannel!.value,
-          "bookingMonth": bookingMonthCtrl.text,
-          "bookingNumber": bookingNoCtrl.text,
-          "loginName": Get.find<MainController>().user?.logincode,
-          "locationCode": selectedLocation!.key,
-          "channelCode": selectedChannel!.key,
-          "loggedUser": Get.find<MainController>().user?.logincode,
-          "lstdgvVerifySpot": spotsNotVerifiedClickData?.lstdgvVerifySpot,
-        },
-        fun: (response) {
-          if (response is Map && response.containsKey("info_SetVerify")) {
-            spotsNotVerifiedClickData = null;
-            if (response["info_SetVerify"]["message"] != null) {
-              if (response["info_SetVerify"]["message"].toString().toLowerCase().contains("verification status updated")) {
-                LoadingDialog.callDataSaved(msg: response["info_SetVerify"]["message"]);
-              } else {
-                LoadingDialog.callErrorMessage1(msg: response["info_SetVerify"]["message"]);
+    if ((spotsNotVerifiedClickData?.lstdgvVerifySpot ?? []).isNotEmpty) {
+      Get.find<ConnectorControl>().POSTMETHOD(
+          api: ApiFactory.RO_BOOKING_GetSetVerify,
+          json: {
+            "locationName": selectedLocation!.value,
+            "channelName": selectedChannel!.value,
+            "bookingMonth": bookingMonthCtrl.text,
+            "bookingNumber": bookingNoCtrl.text,
+            "loginName": Get.find<MainController>().user?.logincode,
+            "locationCode": selectedLocation!.key,
+            "channelCode": selectedChannel!.key,
+            "loggedUser": Get.find<MainController>().user?.logincode,
+            "lstdgvVerifySpot": spotsNotVerifiedClickData?.lstdgvVerifySpot,
+          },
+          fun: (response) {
+            if (response is Map && response.containsKey("info_SetVerify")) {
+              spotsNotVerifiedClickData = null;
+              if (response["info_SetVerify"]["message"] != null) {
+                if (response["info_SetVerify"]["message"].toString().toLowerCase().contains("verification status updated")) {
+                  LoadingDialog.callDataSaved(msg: response["info_SetVerify"]["message"]);
+                } else {
+                  LoadingDialog.callErrorMessage1(msg: response["info_SetVerify"]["message"]);
+                }
               }
-            }
 
-            if (response["info_SetVerify"]['info_SpotsNotVerified'] != null) {
-              spotsNotVerified.value = <SpotsNotVerified>[];
-              response["info_SetVerify"]['info_SpotsNotVerified'].forEach((v) {
-                spotsNotVerified.add(SpotsNotVerified.fromJson(v));
-              });
+              if (response["info_SetVerify"]['lstSpotsNotVerified'] != null) {
+                spotsNotVerified.value = <SpotsNotVerified>[];
+                response["info_SetVerify"]['lstSpotsNotVerified'].forEach((v) {
+                  spotsNotVerified.add(SpotsNotVerified.fromJson(v));
+                });
+              }
+              pagecontroller.jumpToPage(5);
+              currentTab.value = "Spots Not Verified";
             }
-            pagecontroller.jumpToPage(5);
-            currentTab.value = "Spots Not Verified";
-          }
-        });
+          });
+    } else {
+      LoadingDialog.callInfoMessage("No Spot To Verify");
+    }
   }
 
   tapIdLeave(selectedvalue) {
