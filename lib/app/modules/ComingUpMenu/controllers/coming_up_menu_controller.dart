@@ -458,6 +458,63 @@ class ComingUpMenuController extends GetxController {
 
 
           }
+          else{
+            if(isTapeId){
+              if (tapeIdController.text != "" &&
+                  (segNoController.text != "" && segNoController.text != "0")) {
+                String? res = "";
+                await CheckExportTapeCode(tapeIdController.text, segNoController.text,
+                    strCode, "", ApiFactory.COMING_UP_MENU_MASTER_TAPEIDLEAVE)
+                    .then((value) {
+                  res = value;
+                });
+                if (res != "" && res != null) {
+                  LoadingDialog.callInfoMessage(
+                    res ?? "Tape ID & Segment Number you entered is already used for ",
+                    callback: () {
+                      isEnable = true;
+                      if (strCode != "") {
+                        tapeIdController.text = strTapeID;
+                      } else {
+                        tapeIdFocus.requestFocus();
+                        // tapeIdController.text ="";
+                      }
+                      // update(['updateLeft']);
+                    },
+                  );
+                }
+              }
+            }
+            else{
+              if (tapeIdController.text != "" &&
+                  (segNoController.text != "" && segNoController.text != "0")) {
+                String? res = "";
+                await CheckExportTapeCode(tapeIdController.text, segNoController.text,
+                    strCode, "", ApiFactory.COMING_UP_MENU_MASTER_SEGLNOLEAVE)
+                    .then((value) {
+                  res = value;
+                });
+
+                if (res != "" && res != null) {
+                  LoadingDialog.callInfoMessage(
+                    res ?? "Tape ID & Segment Number you entered is already used for ",
+                    callback: () {
+                      isEnable = true;
+                      if (strCode != "") {
+                        // tapeIdController.text = strTapeID;
+                        segNoController.text = "";
+                        print(">>>>>" + segNoController.text);
+                      } else {
+                        segNoFocus.requestFocus();
+                        // segNoController.text ="";
+                      }
+                      // update(['updateLeft']);
+                    },
+                  );
+                }
+              }
+            }
+          }
         });
   }
 
