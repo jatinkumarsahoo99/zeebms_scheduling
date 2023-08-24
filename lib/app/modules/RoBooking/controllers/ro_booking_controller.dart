@@ -59,12 +59,10 @@ class RoBookingController extends GetxController {
   PageController pagecontroller = PageController(keepPage: true);
   TextEditingController mgfromDateCtrl = TextEditingController(), mgtoDateCtrl = TextEditingController();
   PlutoGridStateManager? dealViewGrid;
-  PlutoGridStateManager? makeGoodGrid;
 
   PlutoGridStateManager? programViewGrid;
   PlutoGridStateManager? spotViewGrid;
   PlutoGridStateManager? spotVerifyGrid;
-  RxBool makeGoodSelectAll = RxBool(false);
 
   RoBookingAgencyLeaveData? agencyLeaveData;
   RxnString currentTab = RxnString();
@@ -104,6 +102,7 @@ class RoBookingController extends GetxController {
   RoBookingSaveCheckTapeId? savecheckData;
   bool showGstPopUp = true;
   int editMode = 0;
+
   int? bookingNoLeaveDealCurrentRow;
   String? bookingNoLeaveDealCurrentColumn;
 
@@ -117,6 +116,8 @@ class RoBookingController extends GetxController {
   var agencies = RxList<DropDownValue>();
   RxList tapeIds = RxList([]);
   RxList makeGoodData = RxList([]);
+  RxBool makeGoodSelectAll = RxBool(false);
+  PlutoGridStateManager? makeGoodGrid;
 
   FocusNode bookingNoFocus = FocusNode(),
       dealNoFocus = FocusNode(),
@@ -303,7 +304,9 @@ class RoBookingController extends GetxController {
           "dealType": dealNoLeaveData?.dealType,
           "intSubRevenueTypeCode": dealDblClickData?.intSubRevenueTypeCode,
           "locationCode": selectedLocation?.key,
+          "balanceSeconds": dealDblClickData?.balanceSeconds ?? 0,
           "channelCode": selectedChannel?.key,
+          "intSeconds": dealDblClickData?.intSeconds ?? 0,
           "brandCode": selectedBrand?.key,
           "caption": bookingTapeLeaveData?.caption,
           "revenueType": bookingTapeLeaveData?.tapeRevenue,
