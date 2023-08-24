@@ -471,40 +471,44 @@ class RoBookingController extends GetxController {
   }
 
   setVerify() {
-    Get.find<ConnectorControl>().POSTMETHOD(
-        api: ApiFactory.RO_BOOKING_GetSetVerify,
-        json: {
-          "locationName": selectedLocation!.value,
-          "channelName": selectedChannel!.value,
-          "bookingMonth": bookingMonthCtrl.text,
-          "bookingNumber": bookingNoCtrl.text,
-          "loginName": Get.find<MainController>().user?.logincode,
-          "locationCode": selectedLocation!.key,
-          "channelCode": selectedChannel!.key,
-          "loggedUser": Get.find<MainController>().user?.logincode,
-          "lstdgvVerifySpot": spotsNotVerifiedClickData?.lstdgvVerifySpot,
-        },
-        fun: (response) {
-          if (response is Map && response.containsKey("info_SetVerify")) {
-            spotsNotVerifiedClickData = null;
-            if (response["info_SetVerify"]["message"] != null) {
-              if (response["info_SetVerify"]["message"].toString().toLowerCase().contains("verification status updated")) {
-                LoadingDialog.callDataSaved(msg: response["info_SetVerify"]["message"]);
-              } else {
-                LoadingDialog.callErrorMessage1(msg: response["info_SetVerify"]["message"]);
+    if ((spotsNotVerifiedClickData?.lstdgvVerifySpot ?? []).isNotEmpty) {
+      Get.find<ConnectorControl>().POSTMETHOD(
+          api: ApiFactory.RO_BOOKING_GetSetVerify,
+          json: {
+            "locationName": selectedLocation!.value,
+            "channelName": selectedChannel!.value,
+            "bookingMonth": bookingMonthCtrl.text,
+            "bookingNumber": bookingNoCtrl.text,
+            "loginName": Get.find<MainController>().user?.logincode,
+            "locationCode": selectedLocation!.key,
+            "channelCode": selectedChannel!.key,
+            "loggedUser": Get.find<MainController>().user?.logincode,
+            "lstdgvVerifySpot": spotsNotVerifiedClickData?.lstdgvVerifySpot,
+          },
+          fun: (response) {
+            if (response is Map && response.containsKey("info_SetVerify")) {
+              spotsNotVerifiedClickData = null;
+              if (response["info_SetVerify"]["message"] != null) {
+                if (response["info_SetVerify"]["message"].toString().toLowerCase().contains("verification status updated")) {
+                  LoadingDialog.callDataSaved(msg: response["info_SetVerify"]["message"]);
+                } else {
+                  LoadingDialog.callErrorMessage1(msg: response["info_SetVerify"]["message"]);
+                }
               }
-            }
 
-            if (response["info_SetVerify"]['lstSpotsNotVerified'] != null) {
-              spotsNotVerified.value = <SpotsNotVerified>[];
-              response["info_SetVerify"]['lstSpotsNotVerified'].forEach((v) {
-                spotsNotVerified.add(SpotsNotVerified.fromJson(v));
-              });
+              if (response["info_SetVerify"]['lstSpotsNotVerified'] != null) {
+                spotsNotVerified.value = <SpotsNotVerified>[];
+                response["info_SetVerify"]['lstSpotsNotVerified'].forEach((v) {
+                  spotsNotVerified.add(SpotsNotVerified.fromJson(v));
+                });
+              }
+              pagecontroller.jumpToPage(5);
+              currentTab.value = "Spots Not Verified";
             }
-            pagecontroller.jumpToPage(5);
-            currentTab.value = "Spots Not Verified";
-          }
-        });
+          });
+    } else {
+      LoadingDialog.callInfoMessage("No Spot To Verify");
+    }
   }
 
   tapIdLeave(selectedvalue) {
