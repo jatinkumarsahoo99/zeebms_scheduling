@@ -140,7 +140,7 @@ class AppPages {
     GetPage(
       name: _Paths.RO_CANCELLATION,
       page: () => AuthGuard1(childName: _Paths.RO_CANCELLATION),
-      // binding: RoCancellationBinding(),
+      binding: RoCancellationBinding(),
     ),
     GetPage(
       name: _Paths.RO_RESCHEDULE,

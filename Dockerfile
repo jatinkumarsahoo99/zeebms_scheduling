@@ -1,4 +1,4 @@
-FROM zeelakscontainer.azurecr.io/bms-web-va:1.1 AS build-env
+FROM zeelakscontainer.azurecr.io/bms-web-va:1.3 AS build-env
 ARG Environment_name
 
 # Prerequisites
@@ -39,7 +39,7 @@ WORKDIR /app/
 RUN flutter build web  --dart-define=ENV=${Environment_name} 
 #RUN flutter run
 
-FROM zeelakscontainer.azurecr.io/bms-web-va:1.1
+FROM zeelakscontainer.azurecr.io/bms-web-va:1.3
 RUN apt-get update
 RUN apt-get install curl -y
 RUN curl -sL https://deb.nodesource.com/setup_19.x | bash

@@ -100,11 +100,20 @@ class ComingUpNextMenuController extends GetxController {
     Utils.oldBMSConvertToSecondsValue(value: (somController.text));
     num secondEom =
     Utils.oldBMSConvertToSecondsValue(value: eomController.text);
-    durationController.text =
-        Utils.convertToTimeFromDouble(value: secondEom - secondSom);
-    duration.value =  Utils.convertToTimeFromDouble(value: secondEom - secondSom);
 
-     sec = Utils.oldBMSConvertToSecondsValue(value: durationController.value.text);
+
+    if (eomController.text.length >= 11) {
+      if ((secondEom - secondSom) < 0) {
+        LoadingDialog.showErrorDialog("EOM should not be less than SOM.");
+      } else {
+        durationController.text =
+            Utils.convertToTimeFromDouble(value: secondEom - secondSom);
+        duration.value =  Utils.convertToTimeFromDouble(value: secondEom - secondSom);
+
+        sec = Utils.oldBMSConvertToSecondsValue(value: durationController.value.text);
+      }
+    }
+
     // durationController.refresh();
 
     print(">>>>>>>>>" + durationController.text);

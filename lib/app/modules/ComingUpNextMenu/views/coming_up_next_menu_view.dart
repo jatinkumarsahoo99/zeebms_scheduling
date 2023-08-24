@@ -221,6 +221,7 @@ class ComingUpNextMenuView extends StatelessWidget {
                                     mainTextController: controllerX.uptoDateController,
                                     widthRation: .1,
                                     isEnable: controllerX.isEnable,
+                                    startDate: DateTime.now(),
                                   ),
                                 ],
                               ),
