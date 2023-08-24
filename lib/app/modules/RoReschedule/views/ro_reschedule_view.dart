@@ -206,7 +206,8 @@ class RoRescheduleView extends StatelessWidget {
                                     mode: PlutoGridMode.selectWithOneTap,
                                     hideKeys: const [],
                                     colorCallback: (p0) {
-                                      if (controller.roRescheduleOnLeaveData!.lstDgvRO![p0.rowIdx].colorName!.isNotEmpty) {
+                                      if (controller.roRescheduleOnLeaveData!.lstDgvRO![p0.rowIdx].colorName != null &&
+                                          controller.roRescheduleOnLeaveData!.lstDgvRO![p0.rowIdx].colorName!.isNotEmpty) {
                                         switch (controller.roRescheduleOnLeaveData!.lstDgvRO![p0.rowIdx].colorName!.toLowerCase()) {
                                           case "rosybrown":
                                             return Color(0xFFbc8f8f);
