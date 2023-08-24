@@ -514,6 +514,7 @@ class ComingUpMenuController extends GetxController {
                 }
               }
             }
+
           }
         });
   }
