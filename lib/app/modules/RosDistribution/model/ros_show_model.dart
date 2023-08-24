@@ -208,7 +208,7 @@ class LstROSSpots {
       data['spotPriority'] = spotPriority;
       data['dealTypeName'] = dealTypeName;
       data['allocatedSpot'] = allocatedSpot;
-      // data['groupcode'] = groupcode;
+      data['groupcode'] = groupcode;
     }
     return data;
   }
