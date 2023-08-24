@@ -438,6 +438,7 @@ class RoRescheduleController extends GetxController {
               roRescheduleOnLeaveData!.lstdgvUpdated = (data["info_Modify"]["lstdgvUpdated"] as List).map((e) => LstdgvUpdated.fromJson(e)).toList();
             }
             update(["dgvGrid", "updatedgvGrid"]);
+            closeModify();
             if (data["info_Modify"].containsKey("message") && data["info_Modify"]["message"] != null) {
               LoadingDialog.callInfoMessage(data["info_Modify"]["message"]);
             }
