@@ -251,12 +251,13 @@ class SchedulePromoController extends GetxController {
           api: ApiFactory.PROMOS_DELETE(selectLocation?.key ?? "", selectChannel?.key ?? "",
               DateFormat("yyyy-MM-ddT00:00:00").format(DateFormat("dd-MM-yyyy").parse(fromdateTC.text))),
           fun: (resp) {
-            showDetails();
             closeDialog();
+
             if (resp != null) {
             } else {
               LoadingDialog.showErrorDialog(resp.toString());
             }
+            showDetails();
           },
         );
       });
