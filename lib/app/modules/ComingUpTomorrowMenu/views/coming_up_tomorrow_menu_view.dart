@@ -48,23 +48,25 @@ class ComingUpTomorrowMenuView extends StatelessWidget {
                         Row(
                           mainAxisAlignment: MainAxisAlignment.spaceBetween,
                           children: [
-                            DropDownField.formDropDown1WidthMap(
-                              controllerX.locationList.value,
-                                  (value) {
-                                controllerX.selectedLocation = value;
-                                controllerX.fetchListOfChannel(controllerX.selectedLocation?.key??"");
-                              }, "Location", .26,
-                              isEnable: controllerX.isEnable,
-                              selected: controllerX.selectedLocation,
-                              autoFocus: true,),
-                            DropDownField.formDropDown1WidthMap(
-                              controllerX.channelList.value,
-                                  (value) {
-                                controllerX.selectedChannel = value;
-                              }, "Channel", .26,
-                              isEnable: controllerX.isEnable,
-                              selected: controllerX.selectedChannel,
-                              autoFocus: true,),
+                          Obx(()=> DropDownField.formDropDown1WidthMap(
+                            controllerX.locationList.value,
+                                (value) {
+                              controllerX.selectedLocation?.value = value;
+                              controllerX.fetchListOfChannel(controllerX.selectedLocation?.value?.key??"");
+                            }, "Location", .26,
+                            isEnable: controllerX.isEnable,
+                            inkWellFocusNode: controllerX.locationFocus,
+                            selected: controllerX.selectedLocation?.value,
+                            autoFocus: true,),)  ,
+                           Obx(()=>DropDownField.formDropDown1WidthMap(
+                             controllerX.channelList.value,
+                                 (value) {
+                               controllerX.selectedChannel?.value = value;
+                             }, "Channel", .26,
+                             isEnable: controllerX.isEnable,
+                             selected: controllerX.selectedChannel?.value,
+                             inkWellFocusNode: controllerX.channelFocus,
+                             autoFocus: false,), ) ,
                           ],
                         ),
                         SizedBox(
@@ -88,7 +90,7 @@ class ComingUpTomorrowMenuView extends StatelessWidget {
                                     onchanged: (value) {
 
                                     },
-                                    autoFocus: true,
+                                    autoFocus: false,
                                   ),
                                   InputFields.numbers3(
                                     hintTxt: "Seg No.",
@@ -118,7 +120,7 @@ class ComingUpTomorrowMenuView extends StatelessWidget {
 
                                     },
                                     focusNode: controllerX.houseIdFocus,
-                                    autoFocus: true,
+                                    autoFocus: false,
                                   ),
                                   InputFields.formField1(
                                     hintTxt: "Tx Caption",
@@ -126,7 +128,7 @@ class ComingUpTomorrowMenuView extends StatelessWidget {
                                     width: 0.103,
                                     padLeft: 0,
                                     capital: true,
-                                    autoFocus: true,
+                                    autoFocus: false,
                                     isEnable: controllerX.isEnable,
                                     prefixText: "TOM/",
                                   ),
@@ -142,23 +144,25 @@ class ComingUpTomorrowMenuView extends StatelessWidget {
                         Row(
                           mainAxisAlignment: MainAxisAlignment.spaceBetween,
                           children: [
-                            DropDownField.formDropDown1WidthMap(
-                              controllerX.programTypeList.value,
-                                  (value) {
-                                controllerX.selectedProgramType= value;
-                                controllerX.fetchProgram(value.key??"");
-                              }, "Program Type", .26,
-                              isEnable: controllerX.isEnable,
-                              selected: controllerX.selectedProgramType,
-                              autoFocus: true,),
-                            DropDownField.formDropDown1WidthMap(
-                              controllerX.programList.value,
-                                  (value) {
-                                controllerX.selectedProgram = value;
-                              }, "Program", .26,
-                              isEnable: controllerX.isEnable,
-                              selected: controllerX.selectedProgram,
-                              autoFocus: true,),
+                           Obx(()=> DropDownField.formDropDown1WidthMap(
+                            controllerX.programTypeList.value,
+                                (value) {
+                              controllerX.selectedProgramType?.value = value;
+                              controllerX.fetchProgram(value.key??"");
+                            }, "Program Type", .26,
+                            isEnable: controllerX.isEnable,
+                            selected: controllerX.selectedProgramType?.value,
+                             inkWellFocusNode: controllerX.programTypeFocus,
+                            autoFocus: false,) ) ,
+                           Obx(()=> DropDownField.formDropDown1WidthMap(
+                             controllerX.programList.value,
+                                 (value) {
+                               controllerX.selectedProgram?.value = value;
+                             }, "Program", .26,
+                             isEnable: controllerX.isEnable,
+                             inkWellFocusNode: controllerX.programFocus,
+                             selected: controllerX.selectedProgram?.value,
+                             autoFocus: false,) ) ,
                           ],
                         ),
 
@@ -174,9 +178,9 @@ class ComingUpTomorrowMenuView extends StatelessWidget {
                                 controller:   controllerX.somController,
                                 widthRatio: 0.1,
                                 isEnable: controllerX.isEnable,
-                                onEditComplete: (val){
+                                /*onEditComplete: (val){
                                   controllerX.calculateDuration();
-                                },
+                                },*/
                                 // isTime: true,
                                 // isEnable: controller.isEnable.value,
                                 paddingLeft: 0),

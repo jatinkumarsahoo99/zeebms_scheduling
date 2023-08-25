@@ -100,20 +100,11 @@ class ComingUpNextMenuController extends GetxController {
     Utils.oldBMSConvertToSecondsValue(value: (somController.text));
     num secondEom =
     Utils.oldBMSConvertToSecondsValue(value: eomController.text);
+    durationController.text =
+        Utils.convertToTimeFromDouble(value: secondEom - secondSom);
+    duration.value =  Utils.convertToTimeFromDouble(value: secondEom - secondSom);
 
-
-    if (eomController.text.length >= 11) {
-      if ((secondEom - secondSom) < 0) {
-        LoadingDialog.showErrorDialog("EOM should not be less than SOM.");
-      } else {
-        durationController.text =
-            Utils.convertToTimeFromDouble(value: secondEom - secondSom);
-        duration.value =  Utils.convertToTimeFromDouble(value: secondEom - secondSom);
-
-        sec = Utils.oldBMSConvertToSecondsValue(value: durationController.value.text);
-      }
-    }
-
+     sec = Utils.oldBMSConvertToSecondsValue(value: durationController.value.text);
     // durationController.refresh();
 
     print(">>>>>>>>>" + durationController.text);
@@ -538,9 +529,9 @@ class ComingUpNextMenuController extends GetxController {
         }else if (string == "Search") {
           Get.to(
             SearchPage(
-              key: Key("Coming Up Tomorrow Master"),
-              screenName: "Coming Up Tomorrow Master",
-              appBarName: "Coming Up Tomorrow Master",
+              key: Key("Coming Up Next Master"),
+              screenName: "Coming Up Next Master",
+              appBarName: "Coming Up Next Master",
               strViewName: "vTesting",
               isAppBarReq: true,
             ),

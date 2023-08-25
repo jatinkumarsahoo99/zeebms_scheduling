@@ -43,6 +43,7 @@ class DateWiseFillerReportView extends StatelessWidget {
                   isEnable: controllerX.isEnable,
                   selected: controllerX.selectedLocation,
                   dialogHeight: Get.height * .4,
+                  inkWellFocusNode: controllerX.locationFocus,
                   autoFocus: true,),)  ,
                   SizedBox(
                     width: 8,
@@ -55,6 +56,7 @@ class DateWiseFillerReportView extends StatelessWidget {
                     isEnable: controllerX.isEnable,
                     selected: controllerX.selectedChannel,
                     dialogHeight: Get.height * .4,
+                    inkWellFocusNode: controllerX.channelFocus,
                     autoFocus: true,),)  ,
                   SizedBox(
                     width: 8,
@@ -102,6 +104,7 @@ class DateWiseFillerReportView extends StatelessWidget {
                             hideCode: false,
                             formatDate: false,
                             focusNode: controllerX.gridFocus,
+                            exportFileName: "Date Wise Filler Report",
                             // checkRow: true,
                             // checkRowKey: "no",
                             mode: PlutoGridMode.selectWithOneTap,
