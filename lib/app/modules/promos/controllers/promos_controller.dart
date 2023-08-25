@@ -231,6 +231,8 @@ class SchedulePromoController extends GetxController {
     }
     if (_totalPromoTime > (promoData?.dailyFPC?[index].promoCap ?? 0)) {
       dailyFpc[index].exceed = true;
+    } else {
+      dailyFpc[index].exceed = false;
     }
 
     scheduledTC.text = Utils.getDurationSecond(second: _totalPromoTime);
