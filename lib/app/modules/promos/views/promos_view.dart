@@ -179,6 +179,15 @@ class SchedulePromoView extends StatelessWidget {
                                                         : Colors.white,
                                                 onload: (event) {
                                                   controller.scheduledPromoStateManager = event.stateManager;
+                                                  event.stateManager.setSelectingMode(PlutoGridSelectingMode.row);
+                                                  event.stateManager.setSelecting(true);
+                                                  event.stateManager.setCurrentCell(
+                                                      event.stateManager.getRowByIdx(controller.schedulePromoSelectedIdx)?.cells['promoPolicyName'],
+                                                      controller.schedulePromoSelectedIdx);
+                                                  // event.stateManager.moveCurrentCell(PlutoMoveDirection.down, force: true, notify: true);
+                                                  event.stateManager.moveCurrentCellByRowIdx(
+                                                      controller.schedulePromoSelectedIdx, PlutoMoveDirection.down,
+                                                      notify: true);
                                                   controller.scheduledPromoStateManager!.gridFocusNode.onKeyEvent = (node, event) {
                                                     print("Key Pressed");
                                                     if (event is KeyDownEvent && event.logicalKey == LogicalKeyboardKey.delete) {
@@ -191,21 +200,11 @@ class SchedulePromoView extends StatelessWidget {
                                                             element.telecastTime?.toLowerCase() == promo.telecastTime?.toLowerCase() &&
                                                             element.rowNo == promo.rowNo);
                                                         controller.promoScheduled.removeAt(controller.scheduledPromoStateManager!.currentRowIdx!);
-                                                        controller.calcaulateExceed(controller.scheduledPromoStateManager!.currentRowIdx!,
-                                                            focusBackGrid: true);
+                                                        controller.calcaulateExceed(controller.fpcSelectedIdx, focusBackGrid: true);
                                                       }
                                                     }
                                                     return KeyEventResult.skipRemainingHandlers;
                                                   };
-                                                  event.stateManager.setSelectingMode(PlutoGridSelectingMode.row);
-                                                  event.stateManager.setSelecting(true);
-                                                  event.stateManager.setCurrentCell(
-                                                      event.stateManager.getRowByIdx(controller.schedulePromoSelectedIdx)?.cells['promoPolicyName'],
-                                                      controller.schedulePromoSelectedIdx);
-                                                  // event.stateManager.moveCurrentCell(PlutoMoveDirection.down, force: true, notify: true);
-                                                  event.stateManager.moveCurrentCellByRowIdx(
-                                                      controller.schedulePromoSelectedIdx, PlutoMoveDirection.down,
-                                                      notify: true);
                                                 },
                                                 onSelected: (row) => controller.schedulePromoSelectedIdx = row.rowIdx ?? 0,
                                               ),
