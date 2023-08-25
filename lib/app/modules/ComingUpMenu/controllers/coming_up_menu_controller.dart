@@ -402,7 +402,7 @@ class ComingUpMenuController extends GetxController {
               if (tapeIdController.text != "" &&
                   (segNoController.text != "" && segNoController.text != "0")) {
                 String? res = "";
-                await CheckExportTapeCode(tapeIdController.text, segNoController.text,
+                await checkExportTapeCode(tapeIdController.text, segNoController.text,
                     strCode, "", ApiFactory.COMING_UP_MENU_MASTER_TAPEIDLEAVE)
                     .then((value) {
                   res = value;
@@ -428,7 +428,7 @@ class ComingUpMenuController extends GetxController {
               if (tapeIdController.text != "" &&
                   (segNoController.text != "" && segNoController.text != "0")) {
                 String? res = "";
-                await CheckExportTapeCode(tapeIdController.text, segNoController.text,
+                await checkExportTapeCode(tapeIdController.text, segNoController.text,
                     strCode, "", ApiFactory.COMING_UP_MENU_MASTER_SEGLNOLEAVE)
                     .then((value) {
                   res = value;
@@ -463,7 +463,7 @@ class ComingUpMenuController extends GetxController {
               if (tapeIdController.text != "" &&
                   (segNoController.text != "" && segNoController.text != "0")) {
                 String? res = "";
-                await CheckExportTapeCode(tapeIdController.text, segNoController.text,
+                await checkExportTapeCode(tapeIdController.text, segNoController.text,
                     strCode, "", ApiFactory.COMING_UP_MENU_MASTER_TAPEIDLEAVE)
                     .then((value) {
                   res = value;
@@ -489,7 +489,7 @@ class ComingUpMenuController extends GetxController {
               if (tapeIdController.text != "" &&
                   (segNoController.text != "" && segNoController.text != "0")) {
                 String? res = "";
-                await CheckExportTapeCode(tapeIdController.text, segNoController.text,
+                await checkExportTapeCode(tapeIdController.text, segNoController.text,
                     strCode, "", ApiFactory.COMING_UP_MENU_MASTER_SEGLNOLEAVE)
                     .then((value) {
                   res = value;
@@ -541,7 +541,7 @@ class ComingUpMenuController extends GetxController {
     }
   }
 
-  Future<String> CheckExportTapeCode(String tapeId, String segNo,
+  Future<String> checkExportTapeCode(String tapeId, String segNo,
       String strCode, String houseId, String api) async {
     Completer<String> completer = Completer<String>();
     Map<String, dynamic> data = {
@@ -557,7 +557,6 @@ class ComingUpMenuController extends GetxController {
           api: api,
           json: data,
           fun: (map) {
-            log(">>>>" + map.toString());
             if (map is Map &&
                 map.containsKey('houseid') &&
                 map['houseid'] != null) {
@@ -638,7 +637,7 @@ class ComingUpMenuController extends GetxController {
       if (houseIdController.text.trim() != "") {
         LoadingDialog.call();
         String? res = "";
-        await CheckExportTapeCode("", "", strCode, houseIdController.text,
+        await checkExportTapeCode("", "", strCode, houseIdController.text,
                 ApiFactory.COMING_UP_MENU_MASTER_HOUSEIDLEAVE)
             .then((value) {
           res = value;

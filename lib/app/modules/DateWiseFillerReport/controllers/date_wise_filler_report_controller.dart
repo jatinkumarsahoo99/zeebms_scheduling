@@ -16,7 +16,6 @@ import '../DateWiseFillerModel.dart';
 class DateWiseFillerReportController extends GetxController {
   //TODO: Implement DateWiseFillerReportController
 
-
   final count = 0.obs;
   bool isEnable = true;
 
@@ -28,18 +27,31 @@ class DateWiseFillerReportController extends GetxController {
   RxList<DropDownValue> channelList = RxList([]);
   FocusNode gridFocus = FocusNode();
 
+  FocusNode locationFocus = FocusNode();
+  FocusNode channelFocus = FocusNode();
+
   DropDownValue? selectedLocation;
   DropDownValue? selectedChannel;
   PlutoGridStateManager? gridStateManager;
 
   TextEditingController dateController = new TextEditingController();
   DateWiseFillerModel? dateWiseFillerModel;
+
+  closeDialogIfOpen() {
+    if (Get.isDialogOpen ?? false) {
+      Get.back();
+    }
+  }
+
   fetchPageLoadData() {
+    LoadingDialog.call();
     Get.find<ConnectorControl>().GETMETHODCALL(
         api: ApiFactory.DATEWISEFILLER_LOAD,
-        fun: ( map) {
-          if(map is Map){
-            if (map.containsKey("location") && map['location'] != null &&
+        fun: (map) {
+          closeDialogIfOpen();
+          if (map is Map) {
+            if (map.containsKey("location") &&
+                map['location'] != null &&
                 map['location'].length > 0) {
               locationList.clear();
               map['location'].forEach((e) {
@@ -47,7 +59,8 @@ class DateWiseFillerReportController extends GetxController {
                     e, "locationCode", "locationName"));
               });
             }
-            if (map.containsKey("channel") && map['channel'] != null &&
+            if (map.containsKey("channel") &&
+                map['channel'] != null &&
                 map['channel'].length > 0) {
               channelList.clear();
               map['channel'].forEach((e) {
@@ -55,9 +68,7 @@ class DateWiseFillerReportController extends GetxController {
                     e, "channelcode", "channelname"));
               });
             }
-
           }
-
         });
   }
 
@@ -66,42 +77,46 @@ class DateWiseFillerReportController extends GetxController {
       Snack.callError("Please select location");
     } else if (selectedChannel == null) {
       Snack.callError("Please select channel");
-    } else if (dateController.text == null ||
-        dateController.text == "") {
+    } else if (dateController.text == null || dateController.text == "") {
       Snack.callError("Please select date");
     } else {
       LoadingDialog.call();
-      print(">>>>date"+dateController.text);
+      print(">>>>date" + dateController.text);
       DateTime formatdate = DateFormat("dd-MM-yyyy").parse(dateController.text);
-      String date = DateFormat("yyyy-MM-ddTHH:mm:ss").format (formatdate).toString();
+      String date =
+          DateFormat("yyyy-MM-ddTHH:mm:ss").format(formatdate).toString();
 
       print(">>>>$date");
 
       // ((Get.find<MainController>().user != null) ? Aes.encrypt(Get.find<MainController>().user?.personnelNo ?? "") : "")
-     Map<String,dynamic> postData = {
-       "locationcode": selectedLocation?.key??"",
-       "channelcode": selectedChannel?.key??"",
-       "teldate":date??""
-     } ;
-     print(">>>>>>>>"+postData.toString());
-     // LoadingDialog.call();
+      Map<String, dynamic> postData = {
+        "locationcode": selectedLocation?.key ?? "",
+        "channelcode": selectedChannel?.key ?? "",
+        "teldate": date ?? ""
+      };
+      print(">>>>>>>>" + postData.toString());
+      // LoadingDialog.call();
       Get.find<ConnectorControl>().POSTMETHOD(
           api: ApiFactory.DATEWISEFILLER_GENERATE,
           json: postData,
           fun: (map) {
             Get.back();
-            print("response"+jsonEncode(map) .toString());
-            if(map is Map && map.containsKey("datewiseErrorSpots") &&
-                map['datewiseErrorSpots'] != null && map['datewiseErrorSpots'].length >0 ){
-              dateWiseFillerModel = DateWiseFillerModel.fromJson(map as Map<String,dynamic>);
+            print("response" + jsonEncode(map).toString());
+            if (map is Map &&
+                map.containsKey("datewiseErrorSpots") &&
+                map['datewiseErrorSpots'] != null &&
+                map['datewiseErrorSpots'].length > 0) {
+              dateWiseFillerModel =
+                  DateWiseFillerModel.fromJson(map as Map<String, dynamic>);
               update(['grid']);
-            }else{
+            } else {
               dateWiseFillerModel = null;
               update(['grid']);
             }
           });
     }
   }
+
   clearAll() {
     Get.delete<DateWiseFillerReportController>();
     Get.find<HomeController>().clearPage1();
@@ -109,12 +124,12 @@ class DateWiseFillerReportController extends GetxController {
 
   @override
   void onInit() {
-    fetchPageLoadData();
     super.onInit();
   }
 
   @override
   void onReady() {
+    fetchPageLoadData();
     super.onReady();
   }
 
@@ -122,10 +137,12 @@ class DateWiseFillerReportController extends GetxController {
   void onClose() {
     super.onClose();
   }
+
   formHandler(String string) {
-     if(string == "Clear"){
-       clearAll();
-     }
+    if (string == "Clear") {
+      clearAll();
+    }
   }
+
   void increment() => count.value++;
 }

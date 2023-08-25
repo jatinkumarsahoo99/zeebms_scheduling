@@ -28,6 +28,9 @@ class DateWiseErrorSpotsController extends GetxController {
   var selectedRadio = "".obs;
   FocusNode gridFocus = FocusNode();
 
+  FocusNode locationFocus = FocusNode();
+  FocusNode channelFocus = FocusNode();
+
   RxList<DropDownValue> locationList = RxList([]);
   RxList<DropDownValue> channelList = RxList([]);
 
@@ -39,12 +42,17 @@ class DateWiseErrorSpotsController extends GetxController {
   TextEditingController fromDateController = TextEditingController();
   TextEditingController toDateController =  TextEditingController();
   DatewiseErrorSpotsModel? datewiseErrorSpotsModel;
+  closeDialogIfOpen() {
+    if (Get.isDialogOpen ?? false) {
+      Get.back();
+    }
+  }
   fetchPageLoadData() {
-    // print(">>>>>>>>>>>>>"+"jatin");
+   LoadingDialog.call();
     Get.find<ConnectorControl>().GETMETHODCALL(
         api: ApiFactory.DATEWISEERROR_LOAD,
         fun: ( map) {
-          // print(">>>>>>>map"+map.toString());
+          closeDialogIfOpen();
           if(map is Map && map.containsKey('dateWiseLoadInfo') &&  map['dateWiseLoadInfo'] != null){
             if (map['dateWiseLoadInfo'].containsKey("location") && map['dateWiseLoadInfo']['location'] != null &&
                 map['dateWiseLoadInfo']['location'].length > 0) {
@@ -124,12 +132,12 @@ class DateWiseErrorSpotsController extends GetxController {
 
   @override
   void onInit() {
-    fetchPageLoadData();
     super.onInit();
   }
 
   @override
   void onReady() {
+    fetchPageLoadData();
     super.onReady();
   }
 
