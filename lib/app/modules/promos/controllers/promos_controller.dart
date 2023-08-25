@@ -231,12 +231,14 @@ class SchedulePromoController extends GetxController {
     }
     if (_totalPromoTime > (promoData?.dailyFPC?[index].promoCap ?? 0)) {
       dailyFpc[index].exceed = true;
+    } else {
+      dailyFpc[index].exceed = false;
     }
 
     scheduledTC.text = Utils.getDurationSecond(second: _totalPromoTime);
     dailyFpc.refresh();
     if (focusBackGrid) {
-      scheduledPromoStateManager?.gridFocusNode.requestFocus();
+      Future.delayed(const Duration(seconds: 2)).then((value) => promoScheduled.refresh());
     }
   }
 
@@ -252,10 +254,12 @@ class SchedulePromoController extends GetxController {
               DateFormat("yyyy-MM-ddT00:00:00").format(DateFormat("dd-MM-yyyy").parse(fromdateTC.text))),
           fun: (resp) {
             closeDialog();
+
             if (resp != null) {
             } else {
               LoadingDialog.showErrorDialog(resp.toString());
             }
+            showDetails();
           },
         );
       });
