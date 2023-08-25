@@ -236,7 +236,7 @@ class SchedulePromoController extends GetxController {
     scheduledTC.text = Utils.getDurationSecond(second: _totalPromoTime);
     dailyFpc.refresh();
     if (focusBackGrid) {
-      scheduledPromoStateManager?.gridFocusNode.requestFocus();
+      Future.delayed(const Duration(seconds: 2)).then((value) => promoScheduled.refresh());
     }
   }
 
@@ -251,6 +251,7 @@ class SchedulePromoController extends GetxController {
           api: ApiFactory.PROMOS_DELETE(selectLocation?.key ?? "", selectChannel?.key ?? "",
               DateFormat("yyyy-MM-ddT00:00:00").format(DateFormat("dd-MM-yyyy").parse(fromdateTC.text))),
           fun: (resp) {
+            showDetails();
             closeDialog();
             if (resp != null) {
             } else {
