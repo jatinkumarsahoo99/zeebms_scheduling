@@ -296,7 +296,9 @@ class RoBookingController extends GetxController {
             totSpotCtrl.text = (addSpotData?.totalSpots ?? "").toString();
             totDurCtrl.text = (addSpotData?.totalDuration ?? "").toString();
             totAmtCtrl.text = (addSpotData?.totalAmount ?? "").toString();
-
+            bookingNoLeaveData?.lstdgvDealDetails =
+                addSpotData?.lstdgvDealDetails;
+            dealNoLeaveData?.lstdgvDealDetails = addSpotData?.lstdgvDealDetails;
             if (addSpotData?.message != null) {
               for (var msg in addSpotData?.message ?? []) {
                 LoadingDialog.callErrorMessage1(msg: msg);

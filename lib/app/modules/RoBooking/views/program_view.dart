@@ -259,10 +259,10 @@ class ProgramView extends GetView<RoBookingController> {
                             border: Border.all(width: 1.0, color: Colors.grey)),
                       )
                     : DataGridFromMap(
-                        mapData: controller.bookingTapeLeaveData?.lstdgvProgram
+                        mapData: controller.dealDblClickData?.lstProgram
                                 ?.map((e) => e.toJson())
                                 .toList() ??
-                            controller.dealDblClickData?.lstProgram
+                            controller.bookingTapeLeaveData?.lstdgvProgram
                                 ?.map((e) => e.toJson())
                                 .toList() ??
                             [],
