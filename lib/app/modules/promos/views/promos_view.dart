@@ -194,6 +194,12 @@ class SchedulePromoView extends StatelessWidget {
                                                                 .fpcSelectedCol],
                                                         controller
                                                             .fpcSelectedIdx);
+                                                    event.stateManager
+                                                        .moveScrollByRow(
+                                                            PlutoMoveDirection
+                                                                .down,
+                                                            controller
+                                                                .fpcSelectedIdx);
                                                   }
                                                 },
                                                 mode: PlutoGridMode
