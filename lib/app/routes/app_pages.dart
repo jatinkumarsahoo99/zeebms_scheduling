@@ -58,7 +58,8 @@ class AppPages {
 
   static const INITIAL = kReleaseMode
       ? Routes.HOME
-      : "${Routes.SCHEDULE_PROMO}?personalNo=hWlrtkk6LCUUIRgmutvmzg%3D%3D&loginCode=gsS2oEkuYKzI9aXanDqobQ%3D%3D&formName=ZdPOC%2BHl3hRJzHSclM%2B5m3sWVw1wpLPmNEvejYUOFLU%3D";
+      : Routes.ROS_DISTRIBUTION +
+          "?personalNo=e7ScQlP7tXxBxRizIrkQIA%3D%3D&loginCode=scL134pM4e0EQtJCjv7r5Q%3D%3D&formName=MS0cvvaO5aFOBItqRvg6ulhDLdn7kvV8lN1s7pzGgWA%3D";
 
   static final routes = [
     GetPage(
