@@ -18,42 +18,42 @@ import '../app/styles/theme.dart';
 class DataGridFromMap extends StatelessWidget {
   final Map<String, double>? witdthSpecificColumn;
   final bool canShowFilter;
-  DataGridFromMap({
-    Key? key,
-    required this.mapData,
-    this.canShowFilter = true,
-    this.colorCallback,
-    this.showSrNo = true,
-    this.hideCode = true,
-    this.widthRatio,
-    this.showonly,
-    this.enableSort = false,
-    this.onload,
-    this.hideKeys,
-    this.mode,
-    this.editKeys,
-    this.onEdit,
-    this.actionIcon,
-    this.keyMapping,
-    this.actionIconKey,
-    this.columnAutoResize = true,
-    this.actionOnPress,
-    this.onSelected,
-    this.onRowCheck,
-    this.onContextMenuClick,
-    this.checkRowKey = "selected",
-    this.onRowDoubleTap,
-    this.formatDate = true,
-    this.dateFromat = "dd-MM-yyyy",
-    this.onFocusChange,
-    this.checkRow,
-    this.doPasccal = true,
-    this.exportFileName,
-    this.focusNode,
-    this.previousWidgetFN,
-    this.witdthSpecificColumn,
-    this.csvFormat = false
-  }) : super(key: key);
+  DataGridFromMap(
+      {Key? key,
+      required this.mapData,
+      this.canShowFilter = true,
+      this.colorCallback,
+      this.showSrNo = true,
+      this.hideCode = true,
+      this.widthRatio,
+      this.showonly,
+      this.enableSort = false,
+      this.onload,
+      this.hideKeys,
+      this.mode,
+      this.editKeys,
+      this.onEdit,
+      this.actionIcon,
+      this.keyMapping,
+      this.actionIconKey,
+      this.columnAutoResize = true,
+      this.actionOnPress,
+      this.onSelected,
+      this.onRowCheck,
+      this.onContextMenuClick,
+      this.checkRowKey = "selected",
+      this.onRowDoubleTap,
+      this.formatDate = true,
+      this.dateFromat = "dd-MM-yyyy",
+      this.onFocusChange,
+      this.checkRow,
+      this.doPasccal = true,
+      this.exportFileName,
+      this.focusNode,
+      this.previousWidgetFN,
+      this.witdthSpecificColumn,
+      this.csvFormat = false})
+      : super(key: key);
   final List mapData;
   bool enableSort;
 
@@ -131,7 +131,8 @@ class DataGridFromMap extends StatelessWidget {
                       if (onContextMenuClick == null) {
                         DataGridMenu().showGridMenu(
                             rendererContext.stateManager, detail, context,
-                            exportFileName: exportFileName,csvFormat: csvFormat??false);
+                            exportFileName: exportFileName,
+                            csvFormat: csvFormat ?? false);
                       } else {
                         DataGridMenu().showGridCustomMenu(
                             rendererContext.stateManager, detail, context,
@@ -198,7 +199,7 @@ class DataGridFromMap extends StatelessWidget {
       for (var key in showonly!) {
         if ((mapData[0] as Map).containsKey(key)) {
           segColumn.add(PlutoColumn(
-            minWidth: 0,
+              minWidth: 0,
               title: doPasccal
                   ? keyMapping != null
                       ? keyMapping!.containsKey(key)
@@ -228,7 +229,8 @@ class DataGridFromMap extends StatelessWidget {
                             if (onContextMenuClick == null) {
                               DataGridMenu().showGridMenu(
                                   rendererContext.stateManager, detail, context,
-                                  exportFileName: exportFileName,csvFormat: csvFormat??false);
+                                  exportFileName: exportFileName,
+                                  csvFormat: csvFormat ?? false);
                             } else {
                               DataGridMenu().showGridCustomMenu(
                                   rendererContext.stateManager, detail, context,
@@ -273,7 +275,6 @@ class DataGridFromMap extends StatelessWidget {
     } else {
       for (var key in mapData[0].keys) {
         segColumn.add(PlutoColumn(
-          
             titlePadding: EdgeInsets.only(),
             title: doPasccal
                 ? key == "fpcCaption"
@@ -302,7 +303,8 @@ class DataGridFromMap extends StatelessWidget {
                             if (onContextMenuClick == null) {
                               DataGridMenu().showGridMenu(
                                   rendererContext.stateManager, detail, context,
-                                  exportFileName: exportFileName,csvFormat: csvFormat??false);
+                                  exportFileName: exportFileName,
+                                  csvFormat: csvFormat ?? false);
                             } else {
                               DataGridMenu().showGridCustomMenu(
                                   rendererContext.stateManager, detail, context,
@@ -373,7 +375,8 @@ class DataGridFromMap extends StatelessWidget {
                   onSecondaryTapDown: canShowFilter
                       ? (detail) {
                           DataGridMenu().showGridMenu(
-                              rendererContext.stateManager, detail, context,csvFormat: csvFormat??false);
+                              rendererContext.stateManager, detail, context,
+                              csvFormat: csvFormat ?? false);
                         }
                       : null,
                   child: Container(
@@ -412,7 +415,8 @@ class DataGridFromMap extends StatelessWidget {
                           if (onContextMenuClick == null) {
                             DataGridMenu().showGridMenu(
                                 rendererContext.stateManager, detail, context,
-                                exportFileName: exportFileName,csvFormat: csvFormat??false);
+                                exportFileName: exportFileName,
+                                csvFormat: csvFormat ?? false);
                           } else {
                             DataGridMenu().showGridCustomMenu(
                                 rendererContext.stateManager, detail, context,
@@ -500,11 +504,11 @@ class DataGridFromMap extends StatelessWidget {
             ),
             rowColorCallback: colorCallback,
             onLoaded: (load) {
-              load.stateManager.setColumnSizeConfig(PlutoGridColumnSizeConfig(
-                  autoSizeMode: columnAutoResize
-                      ? PlutoAutoSizeMode.none
-                      : PlutoAutoSizeMode.scale,
-                  resizeMode: PlutoResizeMode.normal));
+              // load.stateManager.setColumnSizeConfig(PlutoGridColumnSizeConfig(
+              //     autoSizeMode: columnAutoResize
+              //         ? PlutoAutoSizeMode.none
+              //         : PlutoAutoSizeMode.scale,
+              //     resizeMode: PlutoResizeMode.normal));
               load.stateManager.setKeepFocus(false);
               if (onload != null) {
                 onload!(load);
@@ -815,7 +819,6 @@ class DataGridFromMap3 extends StatelessWidget {
               : !showonly!.contains(key),
           enableColumnDrag: false,
           field: key,
-          
           type: PlutoColumnType.text()));
     }
 
