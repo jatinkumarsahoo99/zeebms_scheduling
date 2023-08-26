@@ -269,6 +269,7 @@ class SchedulePromoController extends GetxController {
     }
 
     scheduledTC.text = Utils.getDurationSecond(second: _totalPromoTime);
+    countTC.text = promoScheduled.length.toString();
     dailyFpc.refresh();
     if (focusBackGrid) {
       Future.delayed(
