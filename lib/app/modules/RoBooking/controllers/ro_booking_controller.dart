@@ -58,7 +58,9 @@ class RoBookingController extends GetxController {
       maxspendCtrl = TextEditingController();
   PageController pagecontroller = PageController(keepPage: true);
   TextEditingController mgfromDateCtrl = TextEditingController(),
-      mgtoDateCtrl = TextEditingController();
+      mgtoDateCtrl = TextEditingController(),
+      pgkillDateCtrl = TextEditingController();
+
   PlutoGridStateManager? dealViewGrid;
 
   PlutoGridStateManager? programViewGrid;
@@ -577,6 +579,9 @@ class RoBookingController extends GetxController {
             selectedSeg = DropDownValue(
                 key: bookingTapeLeaveData?.cboSegNo,
                 value: bookingTapeLeaveData?.cboSegNo);
+            pgkillDateCtrl.text = DateFormat("dd-MM-yyyy").format(
+                DateFormat("MM/dd/yyyy")
+                    .parse(bookingTapeLeaveData!.dtpKillDate!.split(" ")[0]));
             update(["init"]);
             update(["programView"]);
             tapeIddropdownFocus.requestFocus();
