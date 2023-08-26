@@ -104,7 +104,7 @@ class PreviousAdditons {
     action = json['action'];
     tonumber = json['tonumber'];
     exportTapeCaption = json['exportTapeCaption'];
-    duration = json['duration'].toString();
+    duration = json['duration']!=null? (json['duration'] is int?json['duration'].toString():json["duration"]):"";
     spotPositionShortName = json['spotPositionShortName'];
     exportTapeCode = json['exportTapeCode'];
     scheduletime = json['scheduletime'];
@@ -125,7 +125,8 @@ class PreviousAdditons {
     data['action'] = this.action;
     data['tonumber'] = this.tonumber;
     data['exportTapeCaption'] = this.exportTapeCaption;
-    data['duration'] = num.tryParse(this.duration ?? "0");
+    // data['duration'] = num.tryParse(this.duration ?? "0");
+    data['duration'] = this.duration;
     data['spotPositionShortName'] = this.spotPositionShortName;
     data['ExportTapeCode'] = this.exportTapeCode;
     data['Scheduletime'] = this.scheduletime;
