@@ -385,6 +385,12 @@ class RoRescheduleView extends StatelessWidget {
                                                 ?.removeAt(controller
                                                     .updatedplutoGridStateManager!
                                                     .currentRowIdx!);
+                                            gridController
+                                                .roRescheduleOnLeaveData!
+                                                .lstUpdateTable
+                                                ?.removeAt(controller
+                                                    .updatedplutoGridStateManager!
+                                                    .currentRowIdx!);
 
                                             controller
                                                 .update(["updatedgvGrid"]);
@@ -396,7 +402,22 @@ class RoRescheduleView extends StatelessWidget {
                                                       element.bookingDetailCode
                                                           .toString() ==
                                                       bookingCode);
+                                              int tableindex = controller
+                                                  .roRescheduleOnLeaveData!
+                                                  .lstTable!
+                                                  .indexWhere((element) =>
+                                                      element.bookingDetailCode
+                                                          .toString() ==
+                                                      bookingCode);
 
+                                              controller
+                                                  .roRescheduleOnLeaveData!
+                                                  .lstTable![tableindex]
+                                                  .colorName = "";
+                                              controller
+                                                  .roRescheduleOnLeaveData!
+                                                  .lstTable![tableindex]
+                                                  .edit = 0;
                                               controller
                                                   .roRescheduleOnLeaveData!
                                                   .lstDgvRO![index]
