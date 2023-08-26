@@ -44,7 +44,7 @@ class CommingUpNextRetriveModel {
     programCode = json['programCode'];
     programTypeCode = json['programTypeCode'];
     originalRepeatCode = json['originalRepeatCode'];
-    exportTapeCaption = json['exportTapeCaption'];
+    exportTapeCaption = (json['exportTapeCaption']??json['exportTapeCaption']??"");
     segmentNumber = json['segmentNumber'];
     slideDuration = json['slideDuration'];
     som = json['som'];

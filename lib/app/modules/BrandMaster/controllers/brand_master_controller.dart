@@ -4,6 +4,7 @@ import 'dart:developer';
 import 'package:bms_scheduling/app/data/DropDownValue.dart';
 import 'package:bms_scheduling/widgets/LoadingDialog.dart';
 import 'package:flutter/cupertino.dart';
+import 'package:flutter/services.dart';
 import 'package:get/get.dart';
 
 import '../../../../widgets/PlutoGrid/src/manager/pluto_grid_state_manager.dart';
@@ -27,7 +28,7 @@ class BrandMasterController extends GetxController {
   var clientDetails = RxList<DropDownValue>();
   DropDownValue? selectedClientDetails;
   DropDownValue? selectedClient;
-  DropDownValue? selectedProduct;
+  Rxn<DropDownValue>? selectedProduct =Rxn<DropDownValue>(null);
 
   FocusNode clientFocus = FocusNode();
   FocusNode productFocus = FocusNode();
@@ -68,14 +69,15 @@ class BrandMasterController extends GetxController {
     Get.find<ConnectorControl>().GETMETHODCALL(
         api: ApiFactory.BRANDMASTER_GETCLIENT + client,
         fun: (map) {
-          // print(">>>>>>map"+jsonEncode(map));
           isFocusNodeActive = false;
           if (map is List && map.isNotEmpty) {
+            List<DropDownValue> dataList =[];
             clientList.clear();
-            map.forEach((e) {
-              clientList.add(
+            for (var e in map) {
+              dataList.add(
                   DropDownValue.fromJsonDynamic(e, "ClientCode", "ClientName"));
-            });
+            }
+            clientList .addAll(dataList);
           } else {
             clientList.clear();
           }
@@ -86,14 +88,15 @@ class BrandMasterController extends GetxController {
     Get.find<ConnectorControl>().GETMETHODCALL(
         api: ApiFactory.BRANDMASTER_GETPRODUCT + product,
         fun: (map) {
-          print(">>>>>>map" + jsonEncode(map));
           isFocusNodeActive = false;
           if (map is List && map.isNotEmpty) {
+            List<DropDownValue> dataList = [];
             productList.clear();
-            map.forEach((e) {
-              productList.add(DropDownValue.fromJsonDynamic(
+            for (var e in map) {
+              dataList.add(DropDownValue.fromJsonDynamic(
                   e, "productcode", "Productname"));
-            });
+            }
+            productList.addAll(dataList);
           } else {
             productList.clear();
           }
@@ -141,7 +144,6 @@ class BrandMasterController extends GetxController {
         fun: (map) {
           closeDialogIfOpen();
           isFocusNodeActive = false;
-          print(">>>>>>map" + jsonEncode(map));
           isFocusNodeActive = false;
           if (map is Map &&
               map.containsKey('clientdtails') &&
@@ -164,7 +166,6 @@ class BrandMasterController extends GetxController {
     Get.find<ConnectorControl>().GETMETHODCALL(
         api: ApiFactory.BRANDMASTER_GETPRODUCTDETAILS + productCode,
         fun: (map) {
-          print(">>>>>>map" + jsonEncode(map));
           if (map is Map &&
               map.containsKey('getproduct') &&
               map['getproduct'] != null &&
@@ -198,7 +199,6 @@ class BrandMasterController extends GetxController {
           closeDialogIfOpen();
           isFocusNodeActive = false;
           // strcode
-          print(">>>>>" + jsonEncode(map).toString());
           if (map is Map &&
               map.containsKey("getBrandList") &&
               map['getBrandList'] != null &&
@@ -222,7 +222,7 @@ class BrandMasterController extends GetxController {
                   brandMasterRetriveModel?.getBrandList?[0].productCode
                       .toString()
                       .trim()) {
-                selectedProduct = DropDownValue(
+                selectedProduct?.value = DropDownValue(
                     value: element.value ?? "Product",
                     key: brandMasterRetriveModel?.getBrandList?[0].productCode);
                 break;
@@ -280,7 +280,7 @@ class BrandMasterController extends GetxController {
     if (strcode == null || strcode == "") {
       documentKey = "";
     } else {
-      documentKey = "Brandmaster " + strcode;
+      documentKey = "Brandmaster $strcode";
     }
 
     Get.defaultDialog(
@@ -321,7 +321,7 @@ class BrandMasterController extends GetxController {
       productLevel4Controller.text =
           gridStateManager?.rows[index ?? 0].cells['level3Name']?.value ?? "";
 
-      selectedProduct = DropDownValue(
+      selectedProduct?.value = DropDownValue(
           value:
               (gridStateManager?.rows[index ?? 0].cells['productName']?.value ??
                   ""),
@@ -331,7 +331,7 @@ class BrandMasterController extends GetxController {
     }
   }
 
-  void ValidateAndSaveRecord() {
+  void validateAndSaveRecord() {
     if (selectedClient == null) {
       Snack.callError("Client Name cannot be empty");
     } else if (brandController.text == null || brandController.text == "") {
@@ -359,19 +359,17 @@ class BrandMasterController extends GetxController {
       "brandCode": strcode ?? "0",
       "brandName": brandController.text ?? "",
       "brandShortName": brandShortNameController.text ?? "",
-      "productCode": selectedProduct?.key ?? "",
+      "productCode": selectedProduct?.value?.key ?? "",
       "clientCode": selectedClient?.key ?? "",
       "modifiedBy": Get.find<MainController>().user?.logincode ?? "",
       "separationTime": separationTimeController.text
     };
     LoadingDialog.call();
-    print(">>>>" + postData.toString());
     Get.find<ConnectorControl>().POSTMETHOD(
         api: ApiFactory.BRANDMASTER_SAVE,
         json: postData,
         fun: (map) {
           Get.back();
-          print(">>>>" + jsonEncode(map).toString());
           if (map is Map &&
               map.containsKey("brandMater") &&
               map['brandMater'] != null) {
@@ -392,29 +390,29 @@ class BrandMasterController extends GetxController {
 
   @override
   void onInit() {
-    brandNameFocus.addListener(() {
-      if (brandNameFocus.hasFocus) {
-        isFocusNodeActive = true;
-      }
-      if ((!brandNameFocus.hasFocus) && isFocusNodeActive) {
-        if (brandController.text != null && brandController.text != "") {
-          txtBrandNameLostFocus();
+    brandNameFocus = FocusNode(
+      onKeyEvent: (node, event) {
+        if (event.logicalKey == LogicalKeyboardKey.tab) {
+          if (brandController.text != null && brandController.text != "") {
+            txtBrandNameLostFocus();
+          }
+          return KeyEventResult.ignored;
         }
-      }
-      print(">>>>isFocusNodeActive" + isFocusNodeActive.toString());
-    });
+        return KeyEventResult.ignored;
+      },
+    );
 
-    clientFocus.addListener(() {
-      if (clientFocus.hasFocus) {
-        isFocusNodeActive = true;
-      }
-      if ((!clientFocus.hasFocus) && isFocusNodeActive) {
-        if (selectedClient != null && selectedClient?.value != "") {
-          fetchClientDetails(selectedClient?.value ?? "");
+    clientFocus = FocusNode(
+      onKeyEvent: (node, event) {
+        if (event.logicalKey == LogicalKeyboardKey.tab) {
+          if (selectedClient != null && selectedClient?.value != "") {
+            fetchClientDetails(selectedClient?.value ?? "");
+          }
+          return KeyEventResult.ignored;
         }
-      }
-      print(">>>>isFocusNodeActive" + isFocusNodeActive.toString());
-    });
+        return KeyEventResult.ignored;
+      },
+    );
 
     super.onInit();
   }
@@ -436,12 +434,12 @@ class BrandMasterController extends GetxController {
     if (string == "Clear") {
       clearAll();
     } else if (string == "Save") {
-      ValidateAndSaveRecord();
+      validateAndSaveRecord();
     } else if (string == "Docs") {
       docs();
     } else if (string == "Search") {
       Get.to(
-        SearchPage(
+        const SearchPage(
           key: Key("Brand Master"),
           screenName: "Brand Master",
           appBarName: "Brand Master",

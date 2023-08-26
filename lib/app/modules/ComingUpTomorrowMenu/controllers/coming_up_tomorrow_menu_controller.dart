@@ -21,7 +21,7 @@ import '../../CommonSearch/views/common_search_view.dart';
 class ComingUpTomorrowMenuController extends GetxController {
   //TODO: Implement ComingUpTomorrowMenuController
   bool isEnable = true;
-  bool isEnable1 = true;
+  Rx<bool> isEnable1 = Rx<bool>(true);
 
   final count = 0.obs;
   var clientDetails = RxList<DropDownValue>();
@@ -248,14 +248,15 @@ class ComingUpTomorrowMenuController extends GetxController {
           api: ApiFactory.COMINGUPTOMORROWMASTER_SAVE,
           json: postData,
           fun: (map) {
-            log(">>>>" + map.toString());
-            Get.back();
-            log(">>>>strCode" + strCode.toString());
-            if (map != null && map is String) {
+            closeDialogIfOpen();
+            if (map is Map && map.containsKey("message") && map['message'] != null) {
               if (strCode != "") {
-                Snack.callSuccess((map ?? "Record is updated successfully.").toString());
+                Snack.callSuccess((map['message'] ?? "Record is updated successfully.").toString());
               } else {
-                Snack.callSuccess((map ?? "Record is inserted successfully.").toString());
+                strCode = map['cutCode'];
+                houseIdController.text = map['houseID'];
+                tapeIdController.text = map['exportTapeCode'];
+                Snack.callSuccess((map['message'] ?? "Record is inserted successfully.").toString());
               }
             } else {
               Snack.callError((map ?? "Something went wrong").toString());
@@ -373,6 +374,9 @@ class ComingUpTomorrowMenuController extends GetxController {
             selectedProgram?.refresh();
             selectedChannel?.refresh();
             selectedProgramType?.refresh();
+
+
+
             exportTapeCodeValidate(isTapeId:isTapeId);
           }
           else {
@@ -394,6 +398,14 @@ class ComingUpTomorrowMenuController extends GetxController {
             .then((value) {
           res = value;
         });
+        isEnable1.value = false;
+        isEnable1.refresh();
+        if(commingUpNextRetriveModel != null && commingUpNextRetriveModel?.dated == "N"){
+          selectedRadio.value = "Non-Dated";
+        }else{
+          selectedRadio.value = "Dated";
+        }
+        selectedRadio.refresh();
         if (res != "" && res != null) {
           LoadingDialog.callInfoMessage(
               res ??"", callback: () {
@@ -419,6 +431,14 @@ class ComingUpTomorrowMenuController extends GetxController {
             .then((value) {
           res = value;
         });
+        isEnable1.value = false;
+        isEnable1.refresh();
+        if(commingUpNextRetriveModel != null && commingUpNextRetriveModel?.dated == "N"){
+          selectedRadio.value = "Non-Dated";
+        }else{
+          selectedRadio.value = "Dated";
+        }
+        selectedRadio.refresh();
         if (res != "") {
           LoadingDialog.callInfoMessage(
               res ??
@@ -592,7 +612,7 @@ class ComingUpTomorrowMenuController extends GetxController {
       clearAll();
     } else if (string == "Search") {
       Get.to(
-        SearchPage(
+        const SearchPage(
           key: Key("Coming Up Tomorrow Master"),
           screenName: "Coming Up Tomorrow Master",
           appBarName: "Coming Up Tomorrow Master",

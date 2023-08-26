@@ -142,7 +142,7 @@ class BrandMasterView extends StatelessWidget {
                                           width: context.width * 0.3,
                                           onchanged: (DropDownValue? val) {
                                             print(">>>" + val.toString());
-                                            controllerX.selectedProduct = val;
+                                            controllerX.selectedProduct?.value = val;
                                             controllerX.getProductDetails(val?.key??"");
                                             // controllerX.fetchClientDetails((val?.value ??"")??"");
                                           },
@@ -150,7 +150,7 @@ class BrandMasterView extends StatelessWidget {
                                           url:ApiFactory.BRANDMASTER_GETPRODUCT,
                                           parseKeyForKey: "productcode",
                                           parseKeyForValue: 'Productname',
-                                          selectedValue: controllerX.selectedProduct,
+                                          selectedValue: controllerX.selectedProduct?.value,
                                           autoFocus: false,
                                           // maxLength: 1
                                         ),
