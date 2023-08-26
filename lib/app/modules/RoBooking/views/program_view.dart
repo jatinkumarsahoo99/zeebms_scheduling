@@ -13,7 +13,7 @@ import 'package:intl/intl.dart';
 
 import '../../../data/DropDownValue.dart';
 
-class ProgramView extends GetView<RoBookingController> {
+class ProgramView extends StatelessWidget {
   const ProgramView({Key? key}) : super(key: key);
   @override
   Widget build(BuildContext context) {
@@ -151,15 +151,7 @@ class ProgramView extends GetView<RoBookingController> {
                           isEnable: false,
                           widthRation: 0.12,
                           title: "Kill Date",
-                          mainTextController: TextEditingController(
-                              text: controller
-                                          .bookingTapeLeaveData?.dtpKillDate !=
-                                      null
-                                  ? DateFormat("dd-MM-yyyy").format(
-                                      DateFormat("MM/dd/yyyy hh:mm:ss").parse(
-                                          controller.bookingTapeLeaveData!
-                                              .dtpKillDate!))
-                                  : null)),
+                          mainTextController: controller.pgkillDateCtrl),
                       DropDownField.formDropDown1WidthMap(
                           controller.roBookingInitData?.lstspotpositiontype
                                   ?.map((e) => DropDownValue(
