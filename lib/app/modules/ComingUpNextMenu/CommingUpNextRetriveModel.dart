@@ -37,7 +37,7 @@ class CommingUpNextRetriveModel {
         this.eom});
 
   CommingUpNextRetriveModel.fromJson(Map<String, dynamic> json) {
-    cunCode = json['cunCode'].toString();
+    cunCode = (json['cunCode']??json['cutCode']??"").toString();
     channelCode = json['channelCode'];
     houseID = json['houseID'];
     exportTapeCode = json['exportTapeCode'];

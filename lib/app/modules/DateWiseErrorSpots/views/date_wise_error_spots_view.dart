@@ -43,7 +43,9 @@ class DateWiseErrorSpotsView extends StatelessWidget{
                     isEnable: controllerX.isEnable,
                     selected: controllerX.selectedLocation,
                     dialogHeight: Get.height * .4,
-                    autoFocus: true,),)  ,
+                    autoFocus: true,
+                    inkWellFocusNode: controllerX.locationFocus
+                  ),)  ,
                   SizedBox(
                     width: 5,
                   ),
@@ -55,7 +57,9 @@ class DateWiseErrorSpotsView extends StatelessWidget{
                     isEnable: controllerX.isEnable,
                     selected: controllerX.selectedChannel,
                     dialogHeight: Get.height * .4,
-                    autoFocus: true,),)  ,
+                    autoFocus: false,
+                      inkWellFocusNode: controllerX.channelFocus
+                  ),)  ,
                   SizedBox(
                     width: 5,
                   ),
@@ -108,6 +112,8 @@ class DateWiseErrorSpotsView extends StatelessWidget{
                             DataGridFromMap(
                                 hideCode: false,
                                 formatDate: false,
+                                exportFileName: "Datewise Error Spots Report",
+                                csvFormat: true,
                                 focusNode: controllerX.gridFocus,
                                 // checkRow: true,
                                 // checkRowKey: "no",
