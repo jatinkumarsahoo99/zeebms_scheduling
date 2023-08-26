@@ -291,19 +291,20 @@ class RoBookingController extends GetxController {
         api: ApiFactory.RO_BOOKING_AddSpot,
         fun: (value) {
           if (value is Map && value.containsKey("info_OnAddSpots")) {
-            addSpotData =
-                RoBookingAddSpotData.fromJson(value["info_OnAddSpots"]);
-            totSpotCtrl.text = (addSpotData?.totalSpots ?? "").toString();
-            totDurCtrl.text = (addSpotData?.totalDuration ?? "").toString();
-            totAmtCtrl.text = (addSpotData?.totalAmount ?? "").toString();
-            bookingNoLeaveData?.lstdgvDealDetails =
-                addSpotData?.lstdgvDealDetails;
-            dealNoLeaveData?.lstdgvDealDetails = addSpotData?.lstdgvDealDetails;
             if (addSpotData?.message != null) {
               for (var msg in addSpotData?.message ?? []) {
                 LoadingDialog.callErrorMessage1(msg: msg);
               }
             } else {
+              addSpotData =
+                  RoBookingAddSpotData.fromJson(value["info_OnAddSpots"]);
+              totSpotCtrl.text = (addSpotData?.totalSpots ?? "").toString();
+              totDurCtrl.text = (addSpotData?.totalDuration ?? "").toString();
+              totAmtCtrl.text = (addSpotData?.totalAmount ?? "").toString();
+              bookingNoLeaveData?.lstdgvDealDetails =
+                  addSpotData?.lstdgvDealDetails;
+              dealNoLeaveData?.lstdgvDealDetails =
+                  addSpotData?.lstdgvDealDetails;
               pagecontroller.jumpToPage(0);
               currentTab.value = "Deal";
             }
