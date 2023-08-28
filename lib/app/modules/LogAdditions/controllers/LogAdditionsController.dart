@@ -186,11 +186,14 @@ class LogAdditionsController extends GetxController {
       Snack.callError("Please select channel");
     } else if (selectedDate.text == "") {
       Snack.callError("Please select date");
-    } else if (selectAdditions.value == null) {
+    }
+    /*else if (selectAdditions.value == null) {
       Snack.callError("Please select addition");
-    } else {
-      if (selectAdditions.value?.value != "All" &&
-          selectAdditions.value?.value != "New") {
+    } */
+    else {
+      if (selectAdditions.value?.value == null ||
+          (selectAdditions.value?.value != "All" &&
+              selectAdditions.value?.value != "New")) {
         LoadingDialog.recordExists(
             "Do you want to update the remarks?",
             () {
@@ -256,7 +259,7 @@ class LogAdditionsController extends GetxController {
                   (logAdditionModel?.displayPreviousAdditon?.previousAdditons
                       ?.map((e) => e.toJson1())
                       .toList())!,
-                  "${selectLocation?.value ?? ""} ${selectChannel?.value?.value ?? ""} ${DateFormat('yyyy-MM-dd').format(DateFormat("dd-MM-yyyy").parse(selectedDate.text))} ${"Addition" + map["postAdditionsoutput"]["additionselected"]}.xlsx",
+                  "${selectLocation?.value ?? ""} ${selectChannel?.value?.value ?? ""} ${DateFormat('yyyy-MM-dd').format(DateFormat("dd-MM-yyyy").parse(selectedDate.text))} ${"Addition" + (map["postAdditionsoutput"]["additionselected"]??"1")}.xlsx",
                   callBack: () {});
             });
           } else {
@@ -283,9 +286,12 @@ class LogAdditionsController extends GetxController {
     }
   }
 
-  getSetting(){
+  getSetting() {
     for (var value in (gridStateManager?.columns)!) {
-      print("Width value>>>"+value.width.toString()+" key is>>>"+value.title);
+      print("Width value>>>" +
+          value.width.toString() +
+          " key is>>>" +
+          value.title);
     }
   }
 }

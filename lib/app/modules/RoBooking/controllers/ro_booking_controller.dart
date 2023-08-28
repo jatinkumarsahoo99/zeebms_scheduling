@@ -57,7 +57,8 @@ class RoBookingController extends GetxController {
       gstNoCtrl = TextEditingController(),
       maxspendCtrl = TextEditingController();
   PageController pagecontroller = PageController(keepPage: true);
-  TextEditingController mgfromDateCtrl = TextEditingController(), mgtoDateCtrl = TextEditingController();
+  TextEditingController mgfromDateCtrl = TextEditingController(), mgtoDateCtrl = TextEditingController(), pgkillDateCtrl = TextEditingController();
+
   PlutoGridStateManager? dealViewGrid;
 
   PlutoGridStateManager? programViewGrid;
@@ -278,15 +279,16 @@ class RoBookingController extends GetxController {
         fun: (value) {
           if (value is Map && value.containsKey("info_OnAddSpots")) {
             addSpotData = RoBookingAddSpotData.fromJson(value["info_OnAddSpots"]);
-            totSpotCtrl.text = (addSpotData?.totalSpots ?? "").toString();
-            totDurCtrl.text = (addSpotData?.totalDuration ?? "").toString();
-            totAmtCtrl.text = (addSpotData?.totalAmount ?? "").toString();
-
             if (addSpotData?.message != null) {
               for (var msg in addSpotData?.message ?? []) {
                 LoadingDialog.callErrorMessage1(msg: msg);
               }
             } else {
+              totSpotCtrl.text = (addSpotData?.totalSpots ?? "").toString();
+              totDurCtrl.text = (addSpotData?.totalDuration ?? "").toString();
+              totAmtCtrl.text = (addSpotData?.totalAmount ?? "").toString();
+              bookingNoLeaveData?.lstdgvDealDetails = addSpotData?.lstdgvDealDetails;
+              dealNoLeaveData?.lstdgvDealDetails = addSpotData?.lstdgvDealDetails;
               pagecontroller.jumpToPage(0);
               currentTab.value = "Deal";
             }
@@ -320,7 +322,7 @@ class RoBookingController extends GetxController {
           "txtTotal_text": dealDblClickData?.total ?? bookingTapeLeaveData?.total,
           "cboDealNo_selectedValue": selectedDeal?.key,
           "locationName": selectedLocation?.value,
-          "channelName": selectedChannel?.key
+          "channelName": selectedChannel?.value
         });
   }
 
@@ -527,6 +529,7 @@ class RoBookingController extends GetxController {
           if (response is Map && response.containsKey("info_LeaveTapedId")) {
             bookingTapeLeaveData = RoBookingTapeLeave.fromJson(response["info_LeaveTapedId"]);
             selectedSeg = DropDownValue(key: bookingTapeLeaveData?.cboSegNo, value: bookingTapeLeaveData?.cboSegNo);
+            pgkillDateCtrl.text = DateFormat("dd-MM-yyyy").format(DateFormat("MM/dd/yyyy").parse(bookingTapeLeaveData!.dtpKillDate!.split(" ")[0]));
             update(["init"]);
             update(["programView"]);
             tapeIddropdownFocus.requestFocus();

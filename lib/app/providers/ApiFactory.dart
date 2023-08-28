@@ -50,6 +50,9 @@ class ApiFactory {
       "$BASE_URL_COMMON/api/CommonDoc/AddDocument";
   static String COMMON_DOCS_DELETE(String docId) =>
       "$BASE_URL_COMMON/api/CommonDoc/DeleteDocument?DocumentID=$docId";
+  static String USER_SETTINGS = "$BASE_URL_COMMON/api/MDI/SaveUserSettingData";
+  static String FETCH_USER_SETTING = "$BASE_URL_COMMON/api/MDI/GetUserSetting";
+
 
   ////////////////////// SEARCH ////////////////////////////
 
