@@ -4,10 +4,12 @@ import 'dart:html' as html;
 // import 'package:bms_programming/app/providers/ApiFactory.dart';
 import 'package:flutter/services.dart';
 import 'package:get/get.dart';
+import '../../widgets/PlutoGrid/src/manager/pluto_grid_state_manager.dart';
 import '../data/DrawerModel.dart';
 import '../providers/Aes.dart';
 import '../providers/ApiFactory.dart';
 import '../routes/app_pages.dart';
+import 'ConnectorControl.dart';
 import 'MainController.dart';
 
 class HomeController extends GetxController {
@@ -62,5 +64,56 @@ class HomeController extends GetxController {
     } catch (e) {
       print(e.toString());
     }
+  }
+
+
+  void postUserGridSetting(
+      {required List<PlutoGridStateManager> listStateManager}) {
+    if (listStateManager == null || listStateManager.length > 0) return;
+    List data = [];
+    for (int i = 0; i < listStateManager.length; i++) {
+      Map<String, dynamic> singleMap = {};
+      listStateManager[0].columns.forEach((element) {
+        singleMap[element.field] = element.width;
+      });
+      String? mapData = jsonEncode(singleMap);
+      data.add({
+        "formName": Get.find<MainController>().formName ?? "",
+        "controlName": (i + 1).toString() + "_table",
+        "userSettings": mapData
+      });
+    }
+    Get.find<ConnectorControl>().POSTMETHOD(
+        api: ApiFactory.USER_SETTINGS,
+        json: {"lstUserSettings": data},
+        fun: (map) {});
+  }
+  Future<List<Map<String, double>>>? fetchUserSetting() {
+    List<Map<String, double>> data=[];
+    Map<String, double> userGridSetting = {};
+    Get.find<ConnectorControl>().GETMETHODCALL(
+        api: ApiFactory.FETCH_USER_SETTING +
+            "?formName=${Get.find<MainController>().formName}",
+        fun: (map) {
+          print("Data is>>" + jsonEncode(map));
+          if (map is Map &&
+              map.containsKey("userSetting") &&
+              map["userSetting"] != null) {
+            map["userSetting"].forEach((e){
+              Map<String, double> userGridSetting = {};
+              jsonDecode(e["userSettings"]).forEach((key, value) {
+                print("Data key is>>" +
+                    key.toString() +
+                    " value is>>>" +
+                    value.toString());
+                userGridSetting[key] = value;
+              });
+              data.add(userGridSetting);
+            });
+            return data;
+          }else{
+            return null;
+          }
+        });
   }
 }

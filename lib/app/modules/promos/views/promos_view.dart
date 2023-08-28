@@ -194,6 +194,12 @@ class SchedulePromoView extends StatelessWidget {
                                                                 .fpcSelectedCol],
                                                         controller
                                                             .fpcSelectedIdx);
+                                                    event.stateManager
+                                                        .moveScrollByRow(
+                                                            PlutoMoveDirection
+                                                                .down,
+                                                            controller
+                                                                .fpcSelectedIdx);
                                                   }
                                                 },
                                                 mode: PlutoGridMode
@@ -289,40 +295,50 @@ class SchedulePromoView extends StatelessWidget {
                                                             controller
                                                                 .scheduledPromoStateManager!
                                                                 .currentRowIdx!];
-                                                        controller.promoData
-                                                            ?.promoScheduled
-                                                            ?.removeWhere((element) =>
-                                                                element.programCode ==
-                                                                    promo
-                                                                        .programCode &&
-                                                                element.telecastTime
-                                                                        ?.toLowerCase() ==
-                                                                    promo
-                                                                        .telecastTime
-                                                                        ?.toLowerCase() &&
-                                                                element.rowNo ==
-                                                                    promo
-                                                                        .rowNo);
-                                                        controller
-                                                            .promoScheduled
-                                                            .removeAt(controller
-                                                                .scheduledPromoStateManager!
-                                                                .currentRowIdx!);
-                                                        if (controller
-                                                                .schedulePromoSelectedIdx !=
-                                                            0) {
+                                                        if ((promo.promoCode ??
+                                                                "")
+                                                            .isEmpty) {
+                                                          LoadingDialog
+                                                              .callErrorMessage1(
+                                                                  msg:
+                                                                      "You cannot delete segment now. Select Promo Row");
+                                                        } else {
+                                                          controller.promoData
+                                                              ?.promoScheduled
+                                                              ?.removeWhere((element) =>
+                                                                  element.programCode ==
+                                                                      promo
+                                                                          .programCode &&
+                                                                  element.telecastTime
+                                                                          ?.toLowerCase() ==
+                                                                      promo
+                                                                          .telecastTime
+                                                                          ?.toLowerCase() &&
+                                                                  element.rowNo ==
+                                                                      promo
+                                                                          .rowNo);
                                                           controller
-                                                                  .schedulePromoSelectedIdx =
-                                                              controller
-                                                                      .schedulePromoSelectedIdx -
-                                                                  1;
-                                                        }
-
-                                                        controller.calcaulateExceed(
+                                                              .promoScheduled
+                                                              .removeAt(controller
+                                                                  .scheduledPromoStateManager!
+                                                                  .currentRowIdx!);
+                                                          if (controller
+                                                                  .schedulePromoSelectedIdx !=
+                                                              0) {
                                                             controller
-                                                                .fpcSelectedIdx,
-                                                            focusBackGrid:
-                                                                true);
+                                                                    .schedulePromoSelectedIdx =
+                                                                controller
+                                                                        .schedulePromoSelectedIdx -
+                                                                    1;
+                                                          }
+
+                                                          controller
+                                                              .calcaulateExceed(
+                                                                  controller
+                                                                      .fpcSelectedIdx,
+                                                                  focusBackGrid:
+                                                                      true);
+                                                        }
                                                       }
                                                     }
                                                     return KeyEventResult
