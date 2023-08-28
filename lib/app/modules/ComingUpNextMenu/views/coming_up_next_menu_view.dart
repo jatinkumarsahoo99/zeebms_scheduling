@@ -2,10 +2,12 @@ import 'package:bms_scheduling/app/data/DropDownValue.dart';
 import 'package:flutter/material.dart';
 
 import 'package:get/get.dart';
+import 'package:intl/intl.dart';
 
 import '../../../../widgets/DateTime/DateWithThreeTextField.dart';
 import '../../../../widgets/DateTime/TimeWithThreeTextField.dart';
 import '../../../../widgets/FormButton.dart';
+import '../../../../widgets/LoadingDialog.dart';
 import '../../../../widgets/dropdown.dart';
 import '../../../../widgets/input_fields.dart';
 import '../../../../widgets/radio_row1.dart';
@@ -56,31 +58,37 @@ class ComingUpNextMenuView extends StatelessWidget {
                                 mainAxisAlignment: MainAxisAlignment
                                     .spaceBetween,
                                 children: [
-                                  DropDownField.formDropDown1WidthMap(
-                                    controllerX.locationList.value,
-                                        (value) {
-                                      controllerX.selectedLocation?.value =
-                                          value;
-                                      controllerX.fetchListOfChannel(
-                                          controllerX.selectedLocation?.value
-                                              ?.key ?? "");
-                                    }, "Location", .26,
-                                    isEnable: controllerX.isEnable,
-                                    selected: controllerX.selectedLocation
-                                        ?.value,
-                                    inkWellFocusNode: controllerX.locationFocus,
-                                    autoFocus: true,),
-                                  DropDownField.formDropDown1WidthMap(
-                                    controllerX.channelList.value,
-                                        (value) {
-                                      controllerX.selectedChannel?.value =
-                                          value;
-                                    }, "Channel", .26,
-                                    isEnable: controllerX.isEnable,
-                                    selected: controllerX.selectedChannel
-                                        ?.value,
-                                    inkWellFocusNode: controllerX.channelFocus,
-                                    autoFocus: false,),
+                                  Obx(() {
+                                    return DropDownField.formDropDown1WidthMap(
+                                      controllerX.locationList.value,
+                                          (value) {
+                                        controllerX.selectedLocation?.value =
+                                            value;
+                                        controllerX.fetchListOfChannel(
+                                            controllerX.selectedLocation?.value
+                                                ?.key ?? "");
+                                      }, "Location", .26,
+                                      isEnable: controllerX.isEnable,
+                                      selected: controllerX.selectedLocation
+                                          ?.value,
+                                      inkWellFocusNode: controllerX
+                                          .locationFocus,
+                                      autoFocus: true,);
+                                  }),
+                                  Obx(() {
+                                    return DropDownField.formDropDown1WidthMap(
+                                      controllerX.channelList.value,
+                                          (value) {
+                                        controllerX.selectedChannel?.value =
+                                            value;
+                                      }, "Channel", .26,
+                                      isEnable: controllerX.isEnable,
+                                      selected: controllerX.selectedChannel
+                                          ?.value,
+                                      inkWellFocusNode: controllerX
+                                          .channelFocus,
+                                      autoFocus: false,);
+                                  }),
                                 ],
                               ),
                               SizedBox(
@@ -143,9 +151,7 @@ class ComingUpNextMenuView extends StatelessWidget {
                                               width: 0.1,
                                               isEnable: controllerX.isEnable1
                                                   .value,
-                                              onchanged: (value) {
-
-                                              },
+                                              onchanged: (value) {},
                                               focusNode: controllerX
                                                   .houseIdFocus
                                           );
@@ -162,26 +168,28 @@ class ComingUpNextMenuView extends StatelessWidget {
                               SizedBox(
                                 height: 5,
                               ),
-                              DropDownField
-                                  .formDropDownSearchAPI2(
-                                GlobalKey(),
-                                context,
-                                width: context.width * 0.6,
-                                onchanged: (DropDownValue? val) {
-                                  print(">>>" + val.toString());
-                                  controllerX.selectedProgram?.value = val;
-                                },
-                                title: 'Program',
-                                url: ApiFactory
-                                    .COMINGUPNEXTMASTER_PROGRAMSEARCH,
-                                parseKeyForKey: "programcode",
-                                parseKeyForValue: 'programname',
-                                selectedValue: controllerX.selectedProgram
-                                    ?.value,
-                                autoFocus: false,
-                                // maxLength: 1
-                              ),
-                              SizedBox(
+                              Obx(() {
+                                return DropDownField
+                                    .formDropDownSearchAPI2(
+                                  GlobalKey(),
+                                  context,
+                                  width: context.width * 0.6,
+                                  onchanged: (DropDownValue? val) {
+                                    print(">>>" + val.toString());
+                                    controllerX.selectedProgram?.value = val;
+                                  },
+                                  title: 'Program',
+                                  url: ApiFactory
+                                      .COMINGUPNEXTMASTER_PROGRAMSEARCH,
+                                  parseKeyForKey: "programcode",
+                                  parseKeyForValue: 'programname',
+                                  selectedValue: controllerX.selectedProgram
+                                      ?.value,
+                                  autoFocus: false,
+                                  // maxLength: 1
+                                );
+                              }),
+                              const SizedBox(
                                 height: 5,
                               ),
                               InputFields.formField1(
@@ -240,18 +248,30 @@ class ComingUpNextMenuView extends StatelessWidget {
                                         items: ['Non-Dated', 'Dated'],
                                         groupValue: controllerX.selectedRadio
                                             .value,
-                                        disabledRadios: ['Non-Dated', 'Dated'].where((element) => element !=  controllerX.selectedRadio.value).toList(),
+                                        disabledRadios: ['Non-Dated', 'Dated']
+                                            .where((element) =>
+                                        element !=
+                                            controllerX.selectedRadio.value)
+                                            .toList(),
                                         onchange: (va) =>
                                         controllerX.selectedRadio.value = va,
                                       );
                                     }),
-                                    DateWithThreeTextField(
-                                      title: "Upto Date",
-                                      mainTextController: controllerX
-                                          .uptoDateController,
-                                      widthRation: .1,
-                                      isEnable: controllerX.isEnable,
-                                      startDate: DateTime.now(),
+                                    GetBuilder<ComingUpNextMenuController>(
+                                      assignId: true,
+                                      id: "date",
+                                      builder: (controllerX) {
+                                        return DateWithThreeTextField(
+                                          title: "Upto Date",
+                                          mainTextController: controllerX.uptoDateController,
+                                          widthRation: .1,
+                                          formatting: "dd-MM-yyyy",
+                                          isEnable: controllerX.isEnable,
+                                          startDate: controllerX.startDate,
+                                          intailDate: controllerX.startDate,
+                                          endDate: DateTime.now().add(const Duration(days: 2050)),
+                                        );
+                                      },
                                     ),
                                   ],
                                 ),

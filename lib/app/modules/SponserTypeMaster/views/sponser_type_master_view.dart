@@ -7,6 +7,7 @@ import 'package:flutter/material.dart';
 
 import 'package:get/get.dart';
 
+import '../../CommonSearch/views/common_search_view.dart';
 import '../controllers/sponser_type_master_controller.dart';
 
 class SponserTypeMasterView extends StatelessWidget {
@@ -122,6 +123,16 @@ class SponserTypeMasterView extends StatelessWidget {
         Get.delete<SponserTypeMasterController>();
         Get.find<HomeController>().clearPage1();
         break;
+      case "Search":
+        Get.to(
+          const SearchPage(
+            key: Key("Sponsor Type Master"),
+            screenName: "Coming Up Meu Master",
+            appBarName: "Coming Up Menu Master",
+            strViewName: "BMS_view_ComingUpMenu",
+            isAppBarReq: true,
+          ),
+        );
         break;
       default:
     }

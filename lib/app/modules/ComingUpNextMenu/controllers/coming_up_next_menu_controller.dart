@@ -54,6 +54,7 @@ class ComingUpNextMenuController extends GetxController {
   TextEditingController eomController = TextEditingController();
   // TextEditingController durationController = TextEditingController();
   TextEditingController uptoDateController = TextEditingController();
+  DateTime startDate = DateTime.now();
 
   TextEditingController durationController = TextEditingController();
   RxString duration = RxString("00:00:00:00");
@@ -67,6 +68,7 @@ class ComingUpNextMenuController extends GetxController {
 
   fetchPageLoadData() {
     LoadingDialog.call();
+
     Get.find<ConnectorControl>().GETMETHODCALL(
         api: ApiFactory.COMINGUPNEXTMASTER_NEW_LOAD,
         fun: (map) {
@@ -188,7 +190,7 @@ class ComingUpNextMenuController extends GetxController {
         "dated": ((selectedRadio.value == "Dated") ? "Y" : "N"),
         // "killDate": "2023-07-11T15:06:29.531Z",
         "killDate": DateFormat("yyyy-MM-ddTHH:mm:ss")
-            .format(DateFormat("dd-MM-yyyy").parse(uptoDateController.text)),
+            .format(DateFormat("dd-MM-yyyy").parse(uptoDateController.value.text)),
         "modifiedBy": Get.find<MainController>().user?.logincode ?? "",
         "locationCode": selectedLocation?.value?.key ?? "",
         "eom": eomController.text
@@ -199,11 +201,14 @@ class ComingUpNextMenuController extends GetxController {
           json: postData,
           fun: (map) {
             Get.back();
-            if (map != null && map is String) {
+            if (map != null && map is Map && map.containsKey("message")) {
               if (strCode != "") {
-                Snack.callSuccess(map ?? "Record is updated successfully.");
+                Snack.callSuccess(map['message'] ?? "Record is updated successfully.");
               } else {
-                Snack.callSuccess(map ?? "Record is inserted successfully.");
+                strCode = map['cunCode'];
+                tapeIdController.text = map['exportTapeCode'];
+                houseIdController.text= map['houseID'];
+                Snack.callSuccess(map['message'] ?? "Record is inserted successfully.");
               }
             } else {
               Snack.callError((map ?? "Something went wrong").toString());
@@ -256,6 +261,9 @@ class ComingUpNextMenuController extends GetxController {
                 CommingUpNextRetriveModel.fromJson(map['lstComingUpNextMenu'][0]);
             strCode = commingUpNextRetriveModel?.cunCode ?? "";
 
+            startDate = (DateFormat("yyyy-MM-ddTHH:mm:ss")
+                .parse(commingUpNextRetriveModel!.killDate!));
+
             durationController.text =
                 commingUpNextRetriveModel?.slideDuration.toString() ?? "";
 
@@ -280,7 +288,7 @@ class ComingUpNextMenuController extends GetxController {
 
             selectedProgram?.value = DropDownValue(
                 key: commingUpNextRetriveModel?.programCode ?? "",
-                value: "program");
+                value: commingUpNextRetriveModel?.programName??"");
 
             txCaptionController.text =
                 commingUpNextRetriveModel?.exportTapeCaption ?? "";
@@ -289,10 +297,16 @@ class ComingUpNextMenuController extends GetxController {
                 (commingUpNextRetriveModel?.som) ?? "00:00:00:00";
             eomController.text =
                 (commingUpNextRetriveModel?.eom) ?? "00:00:00:00";
+
             uptoDateController.text = (DateFormat("dd-MM-yyyy").format(
-                    DateFormat("yyyy-MM-ddTHH:mm:ss")
-                        .parse(commingUpNextRetriveModel!.killDate!)))
+                DateFormat("yyyy-MM-ddTHH:mm:ss")
+                    .parse(commingUpNextRetriveModel!.killDate!)))
                 .toString();
+
+            print(">>>>>>>>>date"+uptoDateController.text);
+            print(">>>>>>>>>date"+(startDate).toString());
+            print(">>>>>>>>>>>>>>>"+DateTime.now().toString());
+            update(['date']);
             calculateDuration();
             isEnable1.value = false;
             if (commingUpNextRetriveModel != null &&
@@ -322,6 +336,8 @@ class ComingUpNextMenuController extends GetxController {
             }
             selectedLocation?.refresh();
             selectedChannel?.refresh();
+            selectedProgram?.refresh();
+
             checkCode(isTapeId: isTapeId);
           } else {
             commingUpNextRetriveModel = null;
@@ -480,6 +496,7 @@ class ComingUpNextMenuController extends GetxController {
 
   @override
   void onInit() {
+
     segNoFocus = FocusNode(
       onKeyEvent: (node, event) {
         if (event.logicalKey == LogicalKeyboardKey.tab) {
