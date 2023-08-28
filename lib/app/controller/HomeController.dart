@@ -101,7 +101,7 @@ class HomeController extends GetxController {
               map["userSetting"] != null) {
             map["userSetting"].forEach((e){
               Map<String, double> userGridSetting = {};
-              jsonDecode(e).forEach((key, value) {
+              jsonDecode(e["userSettings"]).forEach((key, value) {
                 print("Data key is>>" +
                     key.toString() +
                     " value is>>>" +
