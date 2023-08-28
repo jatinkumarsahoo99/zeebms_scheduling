@@ -36,106 +36,106 @@ class SpotPriorityView extends GetView<SpotPriorityController> {
                       const EdgeInsets.symmetric(vertical: 8, horizontal: 15),
                   child: SizedBox(
                     width: double.maxFinite,
-                    child: Wrap(
-                      crossAxisAlignment: WrapCrossAlignment.center,
-                      runSpacing: 0.0,
-                      direction: Axis.horizontal,
-                      spacing: 5,
-                      children: [
-                        Obx(
-                          () => DropDownField.formDropDown1WidthMap(
-                            controllerX.locations.value,
-                            (value) {
-                              controllerX.selectLocation = value;
-                              controllerX.selectChannel.value = null;
-                              controllerX.getChannels(
-                                  controllerX.selectLocation?.key ?? "");
-                              // controllerX.getChannels(controllerX.selectLocation?.key ?? "");
-                            },
-                            "Location",
-                            0.12,
-                            // onFocusChange: (value){
-                            //   controllerX.getChannels(controllerX.selectLocation?.key ?? "");
-                            // },
-                            isEnable: controllerX.isEnable.value,
-                            selected: controllerX.selectLocation,
-                            autoFocus: true,
-                            dialogWidth: 330,
-                            dialogHeight: Get.height * .7,
+                    child: FocusTraversalGroup(
+                      policy: OrderedTraversalPolicy(),
+                      child: Wrap(
+                        crossAxisAlignment: WrapCrossAlignment.center,
+                        runSpacing: 0.0,
+                        direction: Axis.horizontal,
+                        spacing: 5,
+                        children: [
+                          Obx(
+                            () => DropDownField.formDropDown1WidthMap(
+                              controllerX.locations.value,
+                              (value) {
+                                controllerX.selectLocation = value;
+                                controllerX.selectChannel.value = null;
+                                controllerX.getChannels(
+                                    controllerX.selectLocation?.key ?? "");
+                                // controllerX.getChannels(controllerX.selectLocation?.key ?? "");
+                              },
+                              "Location",
+                              0.12,
+                              isEnable: controllerX.isEnable.value,
+                              selected: controllerX.selectLocation,
+                              autoFocus: true,
+                              // dialogWidth: 330,
+                              dialogHeight: Get.height * .7,
+                            ),
                           ),
-                        ),
 
-                        /// channel
-                        Obx(
-                          () => DropDownField.formDropDown1WidthMap(
-                            controllerX.channels.value,
-                            (value) {
-                              controllerX.selectChannel.value = value;
-                            },
-                            "Channel",
-                            0.12,
-                            isEnable: controllerX.isEnable.value,
-                            selected: controllerX.selectChannel.value,
-                            autoFocus: false,
-                            dialogWidth: 330,
-                            dialogHeight: Get.height * .7,
+                          /// channel
+                          Obx(
+                            () => DropDownField.formDropDown1WidthMap(
+                              controllerX.channels.value,
+                              (value) {
+                                controllerX.selectChannel.value = value;
+                              },
+                              "Channel",
+                              0.12,
+                              isEnable: controllerX.isEnable.value,
+                              selected: controllerX.selectChannel.value,
+                              autoFocus: true,
+                              // dialogWidth: 330,
+                              dialogHeight: Get.height * .7,
+                            ),
                           ),
-                        ),
 
-                        Obx(
-                          () => DateWithThreeTextField(
-                            title: "From",
-                            splitType: "-",
-                            widthRation: 0.12,
-                            isEnable: controllerX.isEnable.value,
-                            onFocusChange: (data) {},
-                            mainTextController: controllerX.frmDate,
+                          Obx(
+                            () => DateWithThreeTextField(
+                              title: "From",
+                              splitType: "-",
+                              widthRation: 0.12,
+                              isEnable: controllerX.isEnable.value,
+                              onFocusChange: (data) {},
+                              mainTextController: controllerX.frmDate,
+                            ),
                           ),
-                        ),
-                        Obx(
-                          () => DateWithThreeTextField(
-                            title: "To",
-                            splitType: "-",
-                            widthRation: 0.12,
-                            isEnable: controllerX.isEnable.value,
-                            onFocusChange: (data) {},
-                            mainTextController: controllerX.toDate,
+                          Obx(
+                            () => DateWithThreeTextField(
+                              title: "To",
+                              splitType: "-",
+                              widthRation: 0.12,
+                              isEnable: controllerX.isEnable.value,
+                              onFocusChange: (data) {},
+                              mainTextController: controllerX.toDate,
+                            ),
                           ),
-                        ),
-                        Padding(
-                          padding: const EdgeInsets.only(
-                              top: 14.0, left: 5, right: 10),
-                          child: FormButtonWrapper(
-                            btnText: "Show Details",
-                            callback: () {
-                              controllerX.getShowDetails();
-                            },
-                            showIcon: false,
+                          Padding(
+                            padding: const EdgeInsets.only(
+                                top: 14.0, left: 5, right: 10),
+                            child: FormButtonWrapper(
+                              btnText: "Show Details",
+                              callback: () {
+                                controllerX.getShowDetails();
+                              },
+                              showIcon: false,
+                            ),
                           ),
-                        ),
-                        SizedBox(
-                          width: 25,
-                        ),
+                          SizedBox(
+                            width: 25,
+                          ),
 
-                        /// channel
-                        Obx(
-                          () => DropDownField.formDropDownWidthMapArrowUpDown(
-                            controllerX.priorityList.value,
-                            (value) {
-                              controllerX.selectPriority = value;
-                            },
-                            "Select Priority",
-                            0.12,
-                            // isEnable: controllerX.isEnable.value,
-                            selected: controllerX.selectPriority,
-                            autoFocus: true,
-                            dialogWidth: 200,
-                            dialogHeight: Get.height * .6,
+                          /// channel
+                          Obx(
+                            () => DropDownField.formDropDownWidthMapArrowUpDown(
+                              controllerX.priorityList.value,
+                              (value) {
+                                controllerX.selectPriority = value;
+                              },
+                              "Select Priority",
+                              0.12,
+                              // isEnable: controllerX.isEnable.value,
+                              selected: controllerX.selectPriority,
+                              autoFocus: true,
+                              dialogWidth: 200,
+                              dialogHeight: Get.height * .6,
+                            ),
                           ),
-                        ),
 
-                        /// duration
-                      ],
+                          /// duration
+                        ],
+                      ),
                     ),
                   ),
                 );
