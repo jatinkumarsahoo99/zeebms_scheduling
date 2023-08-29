@@ -26,7 +26,7 @@ class _RadioRow1State extends State<RadioRow1> {
                   Radio<String>(
                       value: e,
                       groupValue: widget.groupValue,
-                      onChanged:(( widget.disabledRadios?.contains(e) ?? false) || (e == "Non-Dated"))
+                      onChanged:(( widget.disabledRadios?.contains(e)) ?? false)
                           ? null
                           : (value) {
                         widget.onchange!(value);
@@ -34,7 +34,7 @@ class _RadioRow1State extends State<RadioRow1> {
                   Text(
                     e,
                     style: TextStyle(
-                      color: ((widget.disabledRadios?.contains(e) ?? false)||   (e == "Non-Dated")) ? Colors.grey : Colors.black,
+                      color: ((widget.disabledRadios?.contains(e) ?? false)) ? Colors.grey : Colors.black,
                     ),
                   ),
                 ],

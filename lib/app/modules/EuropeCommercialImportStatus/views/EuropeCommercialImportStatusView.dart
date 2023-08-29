@@ -4,7 +4,9 @@ import 'package:get/get.dart';
 
 import '../../../../widgets/DateTime/DateWithThreeTextField.dart';
 import '../../../../widgets/FormButton.dart';
+import '../../../../widgets/PlutoGrid/src/pluto_grid.dart';
 import '../../../../widgets/gridFromMap.dart';
+import '../../../controller/HomeController.dart';
 import '../controllers/EuropeCommercialImportStatusController.dart';
 
 class EuropeCommercialImportStatusView extends GetView<EuropeCommercialImportStatusController> {
@@ -61,17 +63,20 @@ class EuropeCommercialImportStatusView extends GetView<EuropeCommercialImportSta
                             controllerX.getGenerate();
                             // controllerX.addTable();
                           },
-                          showIcon: false,
+                          showIcon: true,
                         ),
                       ), Padding(
                         padding: const EdgeInsets.only(left: 10, top: 15),
                         child: FormButton(
                           btnText: "Exit",
                           callback: () {
+                            if(controllerX.stateManager != null){
+                              Get.find<HomeController>().postUserGridSetting(listStateManager: [controllerX.stateManager!]);
+                            }
                             // controllerX.calculateSegDur();
                             // controllerX.addTable();
                           },
-                          showIcon: false,
+                          showIcon: true,
                         ),
                       ),
                     ],
@@ -112,8 +117,9 @@ class EuropeCommercialImportStatusView extends GetView<EuropeCommercialImportSta
 
                           },
                           showSrNo: true,
-                          onload: (val) {
-
+                          witdthSpecificColumn: controllerX.userGridSetting1?[0]??{},
+                          onload: (PlutoGridOnLoadedEvent grid) {
+                            controllerX.stateManager = grid.stateManager;
                           },
                         ),
                       ),

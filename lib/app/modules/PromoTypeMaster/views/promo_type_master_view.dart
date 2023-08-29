@@ -6,6 +6,9 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
 import '../../../../widgets/CheckBoxWidget.dart';
+import '../../../controller/MainController.dart';
+import '../../../data/PermissionModel.dart';
+import '../../../providers/Utils.dart';
 import '../controllers/promo_type_master_controller.dart';
 
 class PromoTypeMasterView extends StatelessWidget {
@@ -96,7 +99,7 @@ class PromoTypeMasterView extends StatelessWidget {
                   ],
                 ),
                 const SizedBox(height: 20),
-                GetBuilder<HomeController>(
+                /*GetBuilder<HomeController>(
                   id: "buttons",
                   init: Get.find<HomeController>(),
                   builder: (btncontroller) {
@@ -115,6 +118,41 @@ class PromoTypeMasterView extends StatelessWidget {
                       ],
                     );
                   },
+                ),*/
+                Align(
+                  alignment: Alignment.topCenter,
+                  child: GetBuilder<HomeController>(
+                      id: "buttons",
+                      init: Get.find<HomeController>(),
+                      builder: (controll) {
+                        PermissionModel formPermissions = Get
+                            .find<MainController>()
+                            .permissionList!
+                            .lastWhere((element) =>
+                        element.appFormName == "frmPromoTypeMaster");
+                        formPermissions.delete = false;
+                        if (controll.buttons != null) {
+                          return Wrap(
+                            spacing: 5,
+                            runSpacing: 15,
+                            alignment: WrapAlignment.center,
+                            children: [
+                              for (var btn in controll.buttons!)
+                                FormButtonWrapper(
+                                  btnText: btn["name"],
+                                  callback: Utils.btnAccessHandler2(
+                                      btn['name'],
+                                      controll, formPermissions) ==
+                                      null
+                                      ? null
+                                      : () =>
+                                      controller.btnHandler(btn["name"]),
+                                )
+                            ],
+                          );
+                        }
+                        return Container();
+                      }),
                 ),
                 const SizedBox(height: 20),
               ],

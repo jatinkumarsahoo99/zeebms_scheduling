@@ -6,6 +6,8 @@ import 'package:bms_scheduling/widgets/LoadingDialog.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
+import '../../../controller/HomeController.dart';
+
 class SpotPositionTypeMasterController extends GetxController {
   //TODO: Implement SpotPositionTypeMasterController
 
@@ -18,7 +20,8 @@ class SpotPositionTypeMasterController extends GetxController {
   var spots = RxList<DropDownValue>();
   var positionNo = RxBool(false);
   FocusNode positionNameFocus = FocusNode();
-  String? spotPositionTypeCode;
+  FocusNode typeShortNameFocus = FocusNode();
+  String? spotPositionTypeCode = "";
 
   @override
   void onInit() {
@@ -27,6 +30,12 @@ class SpotPositionTypeMasterController extends GetxController {
       if ((!positionNameFocus.hasFocus) && spotPostionName.text.isNotEmpty) {
         spotPostionName.text = spotPostionName.text.toUpperCase();
         getData();
+      }
+    });
+
+    typeShortNameFocus.addListener(() {
+      if(spotShortName.text.isNotEmpty){
+        spotShortName.text = spotShortName.text.toUpperCase();
       }
     });
     super.onInit();
@@ -46,9 +55,11 @@ class SpotPositionTypeMasterController extends GetxController {
   }
 
   getData() {
+    LoadingDialog.call();
     Get.find<ConnectorControl>().GETMETHODCALL(
         api: ApiFactory.SpotPositionTypeGetRecord("", spotPostionName.text),
         fun: (data) {
+          closeDialogIfOpen();
           if (data is Map &&
               data.containsKey("retrieveRecord") &&
               (data["retrieveRecord"] as List).isNotEmpty) {
@@ -97,28 +108,57 @@ class SpotPositionTypeMasterController extends GetxController {
         });
   }
 
+  validateSave(){
+    if(spotPositionTypeCode  != ""){
+      LoadingDialog.recordExists(
+          "Record Already exist!\nDo you want to modify it?", () {
+        saveData();
+        // update(['top']);
+      });
+    }else{
+      saveData();
+    }
+  }
+  closeDialogIfOpen() {
+    if (Get.isDialogOpen ?? false) {
+      Get.back();
+    }
+  }
   saveData() {
-    Get.find<ConnectorControl>().POSTMETHOD(
-        api: ApiFactory.SpotPositionTypeSaveRecord,
-        json: {
-          "spotPositionTypeCode": spotPositionTypeCode,
-          "spotPositionTypeName": spotPostionName.text,
-          "spotPositionShortName": spotShortName.text,
-          "spotPositionInLog": logPosition.text,
-          "spotComesInLog": selectedSpotInLog.value?.key,
-          "breakNumberApplies": breakNo.value ? "Y" : "N",
-          "positionApplies": positionNo.value ? "Y" : "N",
-          "modifiedBy": Get.find<MainController>().user?.logincode,
-          "spotPositionPremium": positionPremium.text
-        },
-        fun: (data) {
-          if (data is Map && data.containsKey("saveRecord")) {
-            LoadingDialog.callDataSaved(msg: data["saveRecord"]);
-          }
-          if (data is String) {
-            LoadingDialog.callErrorMessage1(msg: data);
-          }
-        });
+    if(spotPostionName.text == ""){
+      LoadingDialog.showErrorDialog("Spot Type Position Name cannot be empty.");
+    }else if(spotShortName.text == ""){
+      LoadingDialog.showErrorDialog("Spot Type Short Name cannot be empty.");
+    }else if(selectedSpotInLog.value == null){
+      LoadingDialog.showErrorDialog("Please Select Spot Short Name.");
+    }else{
+      LoadingDialog.call();
+      Get.find<ConnectorControl>().POSTMETHOD(
+          api: ApiFactory.SpotPositionTypeSaveRecord,
+          json: {
+            "spotPositionTypeCode": spotPositionTypeCode,
+            "spotPositionTypeName": spotPostionName.text,
+            "spotPositionShortName": spotShortName.text,
+            "spotPositionInLog": logPosition.text,
+            "spotComesInLog": selectedSpotInLog.value?.key,
+            "breakNumberApplies": breakNo.value ? "Y" : "N",
+            "positionApplies": positionNo.value ? "Y" : "N",
+            "modifiedBy": Get.find<MainController>().user?.logincode,
+            "spotPositionPremium": positionPremium.text
+          },
+          fun: (data) {
+            closeDialogIfOpen();
+            if (data is Map && data.containsKey("saveRecord")) {
+              Get.delete<SpotPositionTypeMasterController>();
+              Get.find<HomeController>().clearPage1();
+              LoadingDialog.callDataSaved(msg: data["saveRecord"]);
+            }
+            if (data is String) {
+              LoadingDialog.callErrorMessage1(msg: data);
+            }
+          });
+    }
+
   }
 
   @override

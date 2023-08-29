@@ -88,6 +88,7 @@ class HomeController extends GetxController {
         json: {"lstUserSettings": data},
         fun: (map) {});
   }
+
   Future<List<Map<String, double>>>? fetchUserSetting() {
     List<Map<String, double>> data=[];
     Map<String, double> userGridSetting = {};

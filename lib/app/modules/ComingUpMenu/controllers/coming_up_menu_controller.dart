@@ -651,11 +651,9 @@ class ComingUpMenuController extends GetxController {
               if (strCode != "") {
                 houseIdController.text = "";
                 // tapeIdController.text = strTapeID;
-                print(">>>>>" + houseIdController.text);
               } else {
                 houseIdFocus.requestFocus();
                 // houseIdController.text ="";
-                print(">>>>>" + houseIdController.text);
               }
               // update(['updateLeft']);
             },
@@ -672,7 +670,7 @@ class ComingUpMenuController extends GetxController {
       clearAll();
     } else if (string == "Search") {
       Get.to(
-        SearchPage(
+        const SearchPage(
           key: Key("Coming Up Menu Master"),
           screenName: "Coming Up Meu Master",
           appBarName: "Coming Up Menu Master",
