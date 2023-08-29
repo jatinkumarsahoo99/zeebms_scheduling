@@ -86,7 +86,6 @@ class EuropeDropSpotsView extends GetView<EuropeDropSpotsController> {
                       (data) {
                         controller.selectChannel = data;
                         controller.getClientList();
-                        ;
                       },
                       "Channel",
                       controller.widthSize,
@@ -182,9 +181,10 @@ class EuropeDropSpotsView extends GetView<EuropeDropSpotsController> {
                             controller.stateManager=event.stateManager;
                           },
                           checkRowKey: "clientname",
+
                           hideKeys: ["selectItem"],
                           checkRow: true,
-                          showSrNo: false,
+                          showSrNo: true,
                           // actionIcon: Icons.delete_forever_rounded,
                         ),
                       ),
