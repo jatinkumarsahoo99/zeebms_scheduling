@@ -37,7 +37,6 @@ import '../modules/SalesAuditExtraSpotsReport/bindings/sales_audit_extra_spots_r
 import '../modules/SalesAuditNew/bindings/sales_audit_new_binding.dart';
 import '../modules/SalesAuditNotTelecastReport/bindings/sales_audit_not_telecast_report_binding.dart';
 import '../modules/SecondaryEventMaster/bindings/secondary_event_master_binding.dart';
-import '../modules/SecondaryEventTemplateMaster/bindings/secondary_event_template_master_binding.dart';
 import '../modules/SlideMaster/bindings/slide_master_binding.dart';
 import '../modules/SponserTypeMaster/bindings/sponser_type_master_binding.dart';
 import '../modules/SpotPositionTypeMaster/bindings/spot_position_type_master_binding.dart';
@@ -47,7 +46,6 @@ import '../modules/TransmissionLog/bindings/transmission_log_binding.dart';
 import '../modules/commercial/bindings/commercial_binding.dart';
 import '../modules/filler/bindings/filler_binding.dart';
 import '../modules/material_id_search/bindings/material_id_search_binding.dart';
-import '../modules/promos/bindings/promos_binding.dart';
 import '../modules/slide/bindings/slide_binding.dart';
 import '../providers/AuthGuard1.dart';
 

@@ -88,6 +88,7 @@ class FpcMismatchController extends GetxController {
     } else {
       // LoadingDialog.call();
       selectButton = SelectButton.DisplayMismatch;
+      update(["button_data"]);
       selectedDate = df1.parse(date_.text);
       Get.find<ConnectorControl>().GETMETHODCALL(
           api: ApiFactory.FPC_MISMATCH(selectedLocation?.key ?? "",
@@ -119,6 +120,7 @@ class FpcMismatchController extends GetxController {
       // LoadingDialog.call();
       selectButton = SelectButton.DisplayError;
       selectedDate = df1.parse(date_.text);
+      update(["button_data"]);
       Get.find<ConnectorControl>().GETMETHODCALL(
           api: ApiFactory.FPC_MISMATCH_ERROR(selectedLocation?.key ?? "",
               selectedChannel?.key ?? "", df2.format(selectedDate!)),
@@ -148,6 +150,7 @@ class FpcMismatchController extends GetxController {
       // LoadingDialog.call();
       selectButton = SelectButton.DisplayAll;
       selectedDate = df1.parse(date_.text);
+      update(["button_data"]);
       Get.find<ConnectorControl>().GETMETHODCALL(
         api: ApiFactory.FPC_MISMATCH_ALL(selectedLocation?.key ?? "",
             selectedChannel?.key ?? "", df2.format(selectedDate!)),
@@ -259,8 +262,8 @@ class FpcMismatchController extends GetxController {
     } else if (selectedChannel == null) {
       Snack.callError("Please select location");
     } else if ((dataList?.isEmpty)!) {
-      Snack.callError("Spots Errors successfully.");
-      // Snack.callError("Table should not be blank");
+      // Snack.callError("Spots Errors successfully.");
+      Snack.callError("Table should not be blank");
 
     } else if (!(dataList?.any((element) => (element.selectItem)!))!) {
       Snack.callError("Please select row");
@@ -292,7 +295,7 @@ class FpcMismatchController extends GetxController {
         fun: (dynamic value) {
           Get.back();
           if (value.toString().toLowerCase() == "success") {
-            LoadingDialog.callDataSavedMessage("Record added successfully",
+            LoadingDialog.callDataSavedMessage("Spots Errors successfully.",
                 callback: () {
               checkDataAndFetch();
             });
@@ -324,19 +327,11 @@ class FpcMismatchController extends GetxController {
     } else if (selectedChannel == null) {
       Snack.callError("Please select location");
     } else if ((dataList?.isEmpty)!) {
-      Snack.callError("Spots Errors Undo successfully.");
-      // Snack.callError("Table should not be blank");
+      // Snack.callError("Spots Errors Undo successfully.");
+      Snack.callError("Table should not be blank");
     } else if (!(dataList?.any((element) => (element.selectItem)!))!) {
       Snack.callError("Please select row");
     } else {
-      // var postMap = [
-      //   {
-      //     "locationCode": "string",
-      //     "channelCode": "string",
-      //     "bookingNumber": "string",
-      //     "bookingDetailCode": "string"
-      //   }
-      // ];
       List<FPCMisMatchModel> postMapList = (dataList
           ?.where((element) => (element.selectItem == true))
           .toList())!;
@@ -352,7 +347,7 @@ class FpcMismatchController extends GetxController {
         fun: (dynamic value) {
           Get.back();
           if (value.toString().toLowerCase() == "success") {
-            LoadingDialog.callDataSavedMessage("Record undo successfully",
+            LoadingDialog.callDataSavedMessage("Spots Errors Undo successfully.",
                 callback: () {
               checkDataAndFetch();
             });
