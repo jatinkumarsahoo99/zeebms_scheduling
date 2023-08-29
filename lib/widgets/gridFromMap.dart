@@ -331,9 +331,7 @@ class DataGridFromMap extends StatelessWidget {
             enableDropToResize: true,
             enableContextMenu: false,
 
-            minWidth: (witdthSpecificColumn != null && witdthSpecificColumn!.keys.toList().contains(key))
-                ? witdthSpecificColumn![key]!
-                : Utils.getColumnSize(key: key, value: mapData[0][key]),
+            minWidth: 5,
 
             width: (witdthSpecificColumn != null && witdthSpecificColumn!.keys.toList().contains(key))
                 ? witdthSpecificColumn![key]!

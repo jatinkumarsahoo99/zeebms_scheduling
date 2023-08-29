@@ -49,7 +49,7 @@ class SpotPriorityView extends GetView<SpotPriorityController> {
                               controllerX.locations.value,
                               (value) {
                                 controllerX.selectLocation = value;
-                                controllerX.selectChannel.value = null;
+                                controllerX.selectChannel1 = null;
                                 controllerX.getChannels(
                                     controllerX.selectLocation?.key ?? "");
                                 // controllerX.getChannels(controllerX.selectLocation?.key ?? "");
@@ -70,11 +70,12 @@ class SpotPriorityView extends GetView<SpotPriorityController> {
                               controllerX.channels.value,
                               (value) {
                                 controllerX.selectChannel.value = value;
+                                controllerX.selectChannel1 = value;
                               },
                               "Channel",
                               0.12,
                               isEnable: controllerX.isEnable.value,
-                              selected: controllerX.selectChannel.value,
+                              selected: controllerX.selectChannel1,
                               autoFocus: true,
                               // dialogWidth: 330,
                               dialogHeight: Get.height * .7,

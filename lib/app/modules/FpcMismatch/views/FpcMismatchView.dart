@@ -121,9 +121,10 @@ class FpcMismatchView extends GetView<FpcMismatchController> {
                       ),
                       DateWithThreeTextField(
                         title: "As On Date",
-                        startDate: DateTime.now(),
+                        // startDate: DateTime.now(),
                         //Note: Data Availble on 1 OCT 2012
-                        // startDate: DateTime.now().subtract(Duration(days: 5000)),
+                        startDate:
+                            DateTime.now().subtract(Duration(days: 5000)),
                         endDate: DateTime.now().add(Duration(days: 1825)),
                         mainTextController: controllerX.date_,
                         widthRation: controllerX.widthSize,
@@ -135,57 +136,99 @@ class FpcMismatchView extends GetView<FpcMismatchController> {
                         padding: const EdgeInsets.only(top: 15.0),
                         child: Row(
                           children: [
-                            FormButton(
-                              btnText: "Display Mismatch",
-                              callback: () {
-                                controllerX.hideKeysAllowed.value = false;
-                                controllerX.fetchMismatch();
-                                controllerX.fetchProgram();
+                            const SizedBox(
+                              width: 4,
+                            ),
+                            GetBuilder<FpcMismatchController>(
+                              id: "button_data",
+                              init: controllerX,
+                              builder: (controller) {
+                                print("Rebuild called for buttons>>>"+controllerX.selectButton.toString());
+                                return Row(
+                                  children: [
+                                    FormButton(
+                                      btnText: "  Display Mismatch  ",
+                                      callback: () {
+                                        controllerX.hideKeysAllowed.value =
+                                            false;
+                                        controllerX.fetchMismatch();
+                                        controllerX.fetchProgram();
+                                      },
+                                      showIcon: controllerX.selectButton ==
+                                              SelectButton.DisplayMismatch
+                                          ? true
+                                          : false,
+                                      iconDataM: Icons.check_circle_outline_sharp,
+                                    ),
+                                    const SizedBox(
+                                      width: 10,
+                                    ),
+                                    FormButton(
+                                      btnText: "  Display Error  ",
+                                      callback: () {
+                                        controllerX.hideKeysAllowed.value =
+                                            false;
+                                        controllerX.fetchMismatchError();
+                                        controllerX.fetchProgram();
+                                      },
+                                      showIcon: controllerX.selectButton ==
+                                              SelectButton.DisplayError
+                                          ? true
+                                          : false,
+                                      iconDataM: Icons.check_circle_outline_sharp,
+                                    ),
+                                    const SizedBox(
+                                      width: 10,
+                                    ),
+                                    FormButton(
+                                      btnText: "  Display All  ",
+                                      callback: () {
+                                        controllerX.hideKeysAllowed.value =
+                                            true;
+                                        controllerX.fetchMismatchAll();
+                                        controllerX.fetchProgram();
+                                      },
+                                      showIcon: controllerX.selectButton ==
+                                              SelectButton.DisplayAll
+                                          ? true
+                                          : false,
+                                      iconDataM: Icons.check_circle_outline_sharp,
+                                    ),
+                                  ],
+                                );
                               },
                             ),
                             const SizedBox(
-                              width: 10,
+                              width: 8,
                             ),
-                            FormButton(
-                              btnText: "Display Error",
-                              callback: () {
-                                controllerX.hideKeysAllowed.value = true;
-                                controllerX.fetchMismatchError();
-                                controllerX.fetchProgram();
-                              },
+                            Container(
+                              width: 2,
+                              height: 35,
+                              color: Colors.grey,
                             ),
                             const SizedBox(
-                              width: 10,
+                              width: 8,
                             ),
-                            FormButton(
-                              btnText: "Display All",
-                              callback: () {
-                                controllerX.hideKeysAllowed.value = true;
-                                controllerX.fetchMismatchAll();
-                                controllerX.fetchProgram();
-                              },
-                            ),
-                            const SizedBox(
-                              width: 10,
-                            ),
-                            FormButton(
-                              btnText: "  Make Error  ",
+                            FormButton2(
+                              btnText: "  Mark Error  ",
                               callback: () {
                                 controllerX.saveMarkError();
                                 // controllerX.fetchMismatch();
                                 // controllerX.fetchProgram();
                               },
+                              showIcon: false,
                             ),
                             const SizedBox(
                               width: 10,
                             ),
-                            FormButton(
+                            FormButton2(
                               btnText: "  Undo Error  ",
                               callback: () {
                                 controllerX.saveUndoMarkError();
                                 // controllerX.fetchMismatchError();
                                 // controllerX.fetchProgram();
                               },
+                              showIcon: false,
                             ),
                           ],
                         ),
@@ -275,7 +318,7 @@ class FpcMismatchView extends GetView<FpcMismatchController> {
         id: "fpcMaster",
         // init: CreateBreakPatternController(),
         builder: (controller) {
-          print("Data grid values>>>" + controllerX.dataList.toString());
+          // print("Data grid values>>>" + controllerX.dataList.toString());
           if (controllerX.dataList != null &&
               (controllerX.dataList?.isNotEmpty)!) {
             // final key = GlobalKey();
@@ -311,13 +354,10 @@ class FpcMismatchView extends GetView<FpcMismatchController> {
                   switch (controllerX.selectButton) {
                     case SelectButton.DisplayError:
                       return Colors.red;
-                      break;
                     case SelectButton.DisplayAll:
                       return Colors.white;
-                      break;
                     case SelectButton.DisplayMismatch:
                       return Colors.yellow;
-                      break;
                     default:
                       return Colors.white;
                   }
