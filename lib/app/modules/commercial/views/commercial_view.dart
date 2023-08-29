@@ -53,7 +53,7 @@ class CommercialView extends GetView<CommercialController> {
                                     controller.locations.value,
                                     (value) {
                                       controller.selectedLocation = value;
-                                      
+
                                       controller.getChannel(value.key);
                                     },
                                     "Location",
@@ -530,17 +530,28 @@ class CommercialView extends GetView<CommercialController> {
                     //
                   },
                   onRowsMoved: (PlutoGridOnRowsMovedEvent onRowMoved) {
-                    controller.selectedDDIndex = onRowMoved.idx;
-                    // controller.gridStateManager?.notifyListeners();
-                    
+                    // controller.selectedDDIndex = onRowMoved.idx;
+
                     try {
                       if (controller.gridStateManager?.rows[onRowMoved.idx]
                               .cells['eventType']?.value
                               .toString()
                               .trim() ==
                           "S") {
+                        // var newRow = controller.gridStateManager?.currentRow;
+                        // controller.gridStateManager?.removeCurrentRow();
+                        // controller.gridStateManager?.insertRows(
+                        //     controller.selectedDDIndex!, [newRow!]);
+                        // controller.gridStateManager?.notifyListeners(true,
+                        //     controller.gridStateManager?.insertRows.hashCode);
                         LoadingDialog.showErrorDialog(
-                            "You cannot move selected segment");
+                            "You cannot move selected segment", callback: () {
+                          // controller.gridStateManager?.setCurrentCell(
+                          //     controller.gridStateManager
+                          //         ?.getRowByIdx(controller.selectedDDIndex)
+                          //         ?.cells['eventType'],
+                          //     controller.selectedDDIndex ?? 0);
+                        });
                       } else {
                         int? rownumber = int.tryParse(controller
                                 .gridStateManager
@@ -576,7 +587,9 @@ class CommercialView extends GetView<CommercialController> {
                               .mainCommercialShowDetailsList
                               ?.removeAt(oldIdx);
                           if (removedObject != null) {
-                            removedObject.breakNumber = controller.mainCommercialShowDetailsList?[newIdx-1].breakNumber;
+                            removedObject.breakNumber = controller
+                                .mainCommercialShowDetailsList?[newIdx - 1]
+                                .breakNumber;
                             controller.mainCommercialShowDetailsList
                                 ?.insert(newIdx, removedObject);
                           }
@@ -591,14 +604,23 @@ class CommercialView extends GetView<CommercialController> {
                           controller
                               .mainCommercialShowDetailsList?[i].rownumber = i;
                         }
-                      }
-                      if (controller.canshowFilterList) {
-                        controller.showSelectedProgramList();
-                      } else {
-                        controller.showTabList();
+
+                        // var newRow = controller.gridStateManager?.currentRow;
+                        // controller.gridStateManager?.removeCurrentRow();
+                        // controller.gridStateManager?.insertRows(
+                        //     onRowMoved.idx, [onRowMoved.rows[onRowMoved.idx]]);
+                        // controller.gridStateManager?.notifyListeners(true,
+                        //     controller.gridStateManager?.insertRows.hashCode);
+                        // controller.selectedDDIndex = onRowMoved.idx;
                       }
                     } catch (e) {
                       LoadingDialog.showErrorDialog(e.toString());
+                    }
+                    controller.selectedDDIndex = onRowMoved.idx;
+                    if (controller.canshowFilterList) {
+                      controller.showSelectedProgramList();
+                    } else {
+                      controller.showTabList();
                     }
                   },
                   mode: PlutoGridMode.selectWithOneTap,
@@ -648,8 +670,13 @@ class CommercialView extends GetView<CommercialController> {
                           ?.setSelectingMode(PlutoGridSelectingMode.row);
                       controller.fpcMisMatchSM?.setSelecting(true);
                       controller.fpcMisMatchSM?.setCurrentCell(
-                          controller.fpcMisMatchSM?.getRowByIdx(controller.mainSelectedIndex)?.cells['eventType'], controller.mainSelectedIndex ?? 0);
-                      controller.fpcMisMatchSM?.moveCurrentCellByRowIdx(controller.mainSelectedIndex ?? 0, PlutoMoveDirection.down);
+                          controller.fpcMisMatchSM
+                              ?.getRowByIdx(controller.mainSelectedIndex)
+                              ?.cells['eventType'],
+                          controller.mainSelectedIndex ?? 0);
+                      controller.fpcMisMatchSM?.moveCurrentCellByRowIdx(
+                          controller.mainSelectedIndex ?? 0,
+                          PlutoMoveDirection.down);
                     },
                     mapData: (controller.showCommercialDetailsList
                         ?.map((e) => e.toJson())
@@ -796,9 +823,13 @@ class CommercialView extends GetView<CommercialController> {
                       sm.stateManager
                           .setSelectingMode(PlutoGridSelectingMode.row);
                       controller.markedAsErrorSM?.setCurrentCell(
-                          controller.markedAsErrorSM?.getRowByIdx(controller.mainSelectedIndex)?.cells['eventType'],
+                          controller.markedAsErrorSM
+                              ?.getRowByIdx(controller.mainSelectedIndex)
+                              ?.cells['eventType'],
                           controller.mainSelectedIndex ?? 0);
-                      controller.markedAsErrorSM?.moveCurrentCellByRowIdx(controller.mainSelectedIndex ?? 0, PlutoMoveDirection.down);
+                      controller.markedAsErrorSM?.moveCurrentCellByRowIdx(
+                          controller.mainSelectedIndex ?? 0,
+                          PlutoMoveDirection.down);
                     },
                     onSelected: (plutoGrid) {
                       controller.mainSelectedIndex = plutoGrid.rowIdx!;
