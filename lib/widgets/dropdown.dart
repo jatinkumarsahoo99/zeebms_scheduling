@@ -2568,7 +2568,9 @@ class DropDownField {
                                     style: TextStyle(
                                       fontSize: SizeDefine.dropDownFontSize - 1,
                                     ),
-                                  ))
+                                  ),
+
+                                  )
                                 ]);
                           } else {
                             var tempList = RxList<DropDownValue>([]);
