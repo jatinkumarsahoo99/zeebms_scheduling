@@ -91,7 +91,6 @@ class HomeController extends GetxController {
 
   Future<List<Map<String, double>>>? fetchUserSetting() {
     List<Map<String, double>> data=[];
-    Map<String, double> userGridSetting = {};
     Get.find<ConnectorControl>().GETMETHODCALL(
         api: ApiFactory.FETCH_USER_SETTING +
             "?formName=${Get.find<MainController>().formName.trim()}",
