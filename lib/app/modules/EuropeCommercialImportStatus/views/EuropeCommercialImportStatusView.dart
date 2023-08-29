@@ -9,8 +9,10 @@ import '../../../../widgets/gridFromMap.dart';
 import '../../../controller/HomeController.dart';
 import '../controllers/EuropeCommercialImportStatusController.dart';
 
-class EuropeCommercialImportStatusView extends GetView<EuropeCommercialImportStatusController> {
-  EuropeCommercialImportStatusController controllerX = Get.put(EuropeCommercialImportStatusController());
+class EuropeCommercialImportStatusView
+    extends GetView<EuropeCommercialImportStatusController> {
+  EuropeCommercialImportStatusController controllerX =
+      Get.put(EuropeCommercialImportStatusController());
 
   @override
   Widget build(BuildContext context) {
@@ -25,35 +27,36 @@ class EuropeCommercialImportStatusView extends GetView<EuropeCommercialImportSta
               init: controllerX,
               id: "updateView",
               builder: (control) {
-
                 return Padding(
-                  padding: const EdgeInsets.symmetric(vertical: 8,horizontal: 10),
+                  padding:
+                      const EdgeInsets.symmetric(vertical: 8, horizontal: 10),
                   child: Wrap(
                     crossAxisAlignment: WrapCrossAlignment.center,
                     runSpacing: 5,
                     spacing: 5,
                     children: [
-                     DateWithThreeTextField(
-                          title: "Effective Date",
-                          splitType: "-",
-                          widthRation: 0.12,
-                          // isEnable: controller.isEnable.value,
-                          onFocusChange: (data) {
-                            // controller.selectedDate.text =
-                            //     DateFormat('dd/MM/yyyy').format(
-                            //         DateFormat("dd-MM-yyyy").parse(data));
-                            // DateFormat("dd-MM-yyyy").parse(data);
-                            print("Called when focus changed");
-                            /*controller.getDailyFPCDetailsList(
+                      DateWithThreeTextField(
+                        title: "Effective Date",
+                        splitType: "-",
+                        widthRation: 0.12,
+                        // isEnable: controller.isEnable.value,
+                        onFocusChange: (data) {
+                          // controller.selectedDate.text =
+                          //     DateFormat('dd/MM/yyyy').format(
+                          //         DateFormat("dd-MM-yyyy").parse(data));
+                          // DateFormat("dd-MM-yyyy").parse(data);
+                          print("Called when focus changed");
+                          /*controller.getDailyFPCDetailsList(
                                   controller.selectedLocationId.text,
                                   controller.selectedChannelId.text,
                                   controller.convertToAPIDateType(),
                                 );*/
 
-                            // controller.isTableDisplayed.value = true;
-                          },
-                          mainTextController: controller.selectedDate,
-                        ),
+                          // controller.isTableDisplayed.value = true;
+                        },
+                        mainTextController: controller.selectedDate,
+                      ),
+
                       /// Add Btn
                       Padding(
                         padding: const EdgeInsets.only(left: 10, top: 15),
@@ -64,18 +67,19 @@ class EuropeCommercialImportStatusView extends GetView<EuropeCommercialImportSta
                             // controllerX.addTable();
                           },
                           showIcon: true,
-
                         ),
-                      ), Padding(
+                      ),
+                      Padding(
                         padding: const EdgeInsets.only(left: 10, top: 15),
                         child: FormButton(
                           btnText: "Exit",
                           callback: () {
-                            if(controllerX.stateManager != null){
-                              Get.find<HomeController>().postUserGridSetting(listStateManager: [controllerX.stateManager!]);
+                            if (controllerX.stateManager != null) {
+                              Get.find<HomeController>().postUserGridSetting(
+                                  listStateManager: [
+                                    controllerX.stateManager!
+                                  ]);
                             }
-                            // controllerX.calculateSegDur();
-                            // controllerX.addTable();
                           },
                           showIcon: true,
                         ),
@@ -110,15 +114,11 @@ class EuropeCommercialImportStatusView extends GetView<EuropeCommercialImportSta
                         child: DataGridFromMap(
                           mapData: (controller.listData!),
                           widthRatio: (Get.width / 9) + 5,
-
-                          onRowDoubleTap: (event) {
-
-                          },
-                          onSelected: (event) {
-
-                          },
+                          onRowDoubleTap: (event) {},
+                          onSelected: (event) {},
                           showSrNo: true,
-                          witdthSpecificColumn: controllerX.userGridSetting1?[0]??{},
+                          witdthSpecificColumn:
+                              controllerX.userGridSetting1?[0] ?? {},
                           onload: (PlutoGridOnLoadedEvent grid) {
                             controllerX.stateManager = grid.stateManager;
                           },
@@ -126,27 +126,25 @@ class EuropeCommercialImportStatusView extends GetView<EuropeCommercialImportSta
                       ),
                     );
                   } else {
-                  return Expanded(
-                    child: Card(
-                      clipBehavior: Clip.hardEdge,
-                      shape: RoundedRectangleBorder(
-                        borderRadius:
-                        BorderRadius.circular(0), // if you need this
-                        side: BorderSide(
-                          color: Colors.grey.shade300,
-                          width: 1,
+                    return Expanded(
+                      child: Card(
+                        clipBehavior: Clip.hardEdge,
+                        shape: RoundedRectangleBorder(
+                          borderRadius:
+                              BorderRadius.circular(0), // if you need this
+                          side: BorderSide(
+                            color: Colors.grey.shade300,
+                            width: 1,
+                          ),
+                        ),
+                        child: Container(
+                          height: Get.height - (4 * kToolbarHeight),
                         ),
                       ),
-                      child: Container(
-                        height: Get.height - (4 * kToolbarHeight),
-                      ),
-                    ),
-                  );
+                    );
                   }
                 }),
             // Divider(),
-
-
           ],
         ),
       ),
