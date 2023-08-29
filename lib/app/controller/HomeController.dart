@@ -69,7 +69,7 @@ class HomeController extends GetxController {
 
   void postUserGridSetting(
       {required List<PlutoGridStateManager> listStateManager}) {
-    if (listStateManager == null || listStateManager.length > 0) return;
+    if (listStateManager == null || listStateManager.isEmpty) return;
     List data = [];
     for (int i = 0; i < listStateManager.length; i++) {
       Map<String, dynamic> singleMap = {};
