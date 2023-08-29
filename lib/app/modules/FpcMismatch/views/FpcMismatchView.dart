@@ -143,7 +143,8 @@ class FpcMismatchView extends GetView<FpcMismatchController> {
                               id: "button_data",
                               init: controllerX,
                               builder: (controller) {
-                                print("Rebuild called for buttons>>>"+controllerX.selectButton.toString());
+                                print("Rebuild called for buttons>>>" +
+                                    controllerX.selectButton.toString());
                                 return Row(
                                   children: [
                                     FormButton(
@@ -158,7 +159,8 @@ class FpcMismatchView extends GetView<FpcMismatchController> {
                                               SelectButton.DisplayMismatch
                                           ? true
                                           : false,
-                                      iconDataM: Icons.check_circle_outline_sharp,
+                                      iconDataM:
+                                          Icons.check_circle_outline_sharp,
                                     ),
                                     const SizedBox(
                                       width: 10,
@@ -175,7 +177,8 @@ class FpcMismatchView extends GetView<FpcMismatchController> {
                                               SelectButton.DisplayError
                                           ? true
                                           : false,
-                                      iconDataM: Icons.check_circle_outline_sharp,
+                                      iconDataM:
+                                          Icons.check_circle_outline_sharp,
                                     ),
                                     const SizedBox(
                                       width: 10,
@@ -192,7 +195,8 @@ class FpcMismatchView extends GetView<FpcMismatchController> {
                                               SelectButton.DisplayAll
                                           ? true
                                           : false,
-                                      iconDataM: Icons.check_circle_outline_sharp,
+                                      iconDataM:
+                                          Icons.check_circle_outline_sharp,
                                     ),
                                   ],
                                 );
@@ -355,7 +359,21 @@ class FpcMismatchView extends GetView<FpcMismatchController> {
                     case SelectButton.DisplayError:
                       return Colors.red;
                     case SelectButton.DisplayAll:
-                      return Colors.white;
+                      if (plutoContext.row.cells["bookingstatus"]?.value != null &&
+                          plutoContext.row.cells["bookingstatus"]?.value
+                                  .toString()
+                                  .toLowerCase() ==
+                              "e") {
+                        return Colors.red;
+                      } else if (plutoContext.row.cells["bookingstatus"]?.value != null &&
+                          plutoContext.row.cells["bookingstatus"]?.value
+                                  .toString()
+                                  .toLowerCase() ==
+                              "b") {
+                        return Colors.yellow;
+                      } else {
+                        return Colors.white;
+                      }
                     case SelectButton.DisplayMismatch:
                       return Colors.yellow;
                     default:
