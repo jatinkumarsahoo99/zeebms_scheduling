@@ -7,7 +7,9 @@ class ROSDistuibutionShowModel {
   }
 
   ROSDistuibutionShowModel.fromJson(Map<String, dynamic> json) {
-    infoShowBucketList = json['info_ShowBucketList'] != null ? InfoShowBucketList.fromJson(json['info_ShowBucketList']) : null;
+    infoShowBucketList = json['info_ShowBucketList'] != null
+        ? InfoShowBucketList.fromJson(json['info_ShowBucketList'])
+        : null;
   }
 
   Map<String, dynamic> toJson() {
@@ -25,7 +27,11 @@ class InfoShowBucketList {
   List<String>? controlEnableFalse;
   List<String>? controlEnableTrue;
 
-  InfoShowBucketList({this.lstROSSpots, this.lstFPC, this.controlEnableFalse, this.controlEnableTrue});
+  InfoShowBucketList(
+      {this.lstROSSpots,
+      this.lstFPC,
+      this.controlEnableFalse,
+      this.controlEnableTrue});
 
   InfoShowBucketList.fromJson(Map<String, dynamic> json) {
     if (json['lstROSSpots'] != null) {
@@ -147,35 +153,63 @@ class LstROSSpots {
     groupcode = json['groupcode'];
   }
 
-  Map<String, dynamic> toJson() {
+  Map<String, dynamic> toJson({bool fromSave = true}) {
     final Map<String, dynamic> data = <String, dynamic>{};
-    data['allocatedSpot'] = allocatedSpot;
-    data['rid'] = rid;
-    data['rrr'] = rrr;
-    data['locationcode'] = locationcode;
-    data['channelcode'] = channelcode;
-    data['bookingNumber'] = bookingNumber;
-    data['bookingDetailCode'] = bookingDetailCode;
-    data['zoneName'] = zoneName;
-    data['brandcode'] = brandcode;
-    data['scheduledate'] = scheduledate;
-    data['clientName'] = clientName;
-    data['brandname'] = brandname;
-    data['tapeduration'] = tapeduration;
-    data['scheduletime'] = scheduletime;
-    data['starttime'] = starttime;
-    data['endtime'] = endtime;
-    data['rate'] = rate;
-    data['valuationrate'] = valuationrate;
-    data['sponsorTypeCode'] = sponsorTypeCode;
-    data['dealBand'] = dealBand;
-    data['commercialCode'] = commercialCode;
-    data['sponsorTypeName'] = sponsorTypeName;
-    data['dealNumber'] = dealNumber;
-    data['spotPriority'] = spotPriority;
-    data['dealTypeName'] = dealTypeName;
-
-    data['groupcode'] = groupcode;
+    if (fromSave) {
+      data['rid'] = rid;
+      data['rrr'] = rrr;
+      data['locationcode'] = locationcode;
+      data['channelcode'] = channelcode;
+      data['bookingNumber'] = bookingNumber;
+      data['bookingDetailCode'] = bookingDetailCode;
+      data['zoneName'] = zoneName;
+      data['brandcode'] = brandcode;
+      data['scheduledate'] = scheduledate;
+      data['clientName'] = clientName;
+      data['brandname'] = brandname;
+      data['tapeduration'] = tapeduration;
+      data['scheduletime'] = scheduletime;
+      data['starttime'] = starttime;
+      data['endtime'] = endtime;
+      data['rate'] = rate;
+      data['valuationrate'] = valuationrate;
+      data['sponsorTypeCode'] = sponsorTypeCode;
+      data['dealBand'] = dealBand;
+      data['commercialCode'] = commercialCode;
+      data['sponsorTypeName'] = sponsorTypeName;
+      data['dealNumber'] = dealNumber;
+      data['spotPriority'] = spotPriority;
+      data['dealTypeName'] = dealTypeName;
+      data['allocatedSpot'] = allocatedSpot;
+      data['groupcode'] = groupcode;
+    } else {
+      // data['rid'] = rid;
+      data['RRR'] = rrr;
+      // data['locationcode'] = locationcode;
+      // data['channelcode'] = channelcode;
+      data['bookingNumber'] = bookingNumber;
+      data['bookingDetailCode'] = bookingDetailCode;
+      data['zoneName'] = zoneName;
+      // data['brandcode'] = brandcode;
+      data['scheduledate'] = scheduledate;
+      data['clientName'] = clientName;
+      data['brandname'] = brandname;
+      data['tapeduration'] = tapeduration;
+      data['scheduletime'] = scheduletime;
+      data['starttime'] = starttime;
+      data['endtime'] = endtime;
+      data['rate'] = rate;
+      data['valuationrate'] = valuationrate;
+      // data['sponsorTypeCode'] = sponsorTypeCode;
+      data['dealBand'] = dealBand;
+      data['commercialCode'] = commercialCode;
+      data['sponsorTypeName'] = sponsorTypeName;
+      data['dealNumber'] = dealNumber;
+      data['spotPriority'] = spotPriority;
+      data['dealTypeName'] = dealTypeName;
+      data['allocatedSpot'] = allocatedSpot;
+      data['groupcode'] = groupcode;
+    }
     return data;
   }
 }

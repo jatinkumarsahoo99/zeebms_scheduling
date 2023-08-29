@@ -63,7 +63,10 @@ class FillerView extends GetView<FillerController> {
                       isEnable: controller.isEnable.value,
                       onFocusChange: (data) => controller.fetchFPCDetails(),
                       mainTextController: controller.date_,
-                      endDate: DateTime.now(),
+                      // endDate: DateTime.now(),
+                      startDate: (ApiFactory.Enviroment.toLowerCase() == "prod")
+                          ? DateTime.now()
+                          : null,
                     ),
                   ),
                   const SizedBox(width: 20),
@@ -92,13 +95,15 @@ class FillerView extends GetView<FillerController> {
                                       () => DropDownField.formDropDown1WidthMap(
                                         controller.locations.value,
                                         (value) {
-                                          controller.selectedImportLocation = value;
+                                          controller.selectedImportLocation =
+                                              value;
                                           controller.getChannel(value.key);
                                         },
                                         "Location",
                                         0.15,
                                         autoFocus: true,
-                                        selected: controller.selectedImportLocation,
+                                        selected:
+                                            controller.selectedImportLocation,
                                       ),
                                     ),
                                     const SizedBox(width: 15),
@@ -106,12 +111,14 @@ class FillerView extends GetView<FillerController> {
                                       () => DropDownField.formDropDown1WidthMap(
                                         controller.channels.value,
                                         (value) {
-                                          controller.selectedImportChannel = value;
+                                          controller.selectedImportChannel =
+                                              value;
                                         },
                                         "Channel",
                                         0.15,
                                         dialogHeight: Get.height * .7,
-                                        selected: controller.selectedImportChannel,
+                                        selected:
+                                            controller.selectedImportChannel,
                                       ),
                                     ),
                                   ],
@@ -132,8 +139,13 @@ class FillerView extends GetView<FillerController> {
                                           // print('Selected Date $data');
                                           // controller.fetchFPCDetails();
                                         },
-                                        mainTextController: controller.fillerFromDate_,
-                                        endDate: DateTime.now(),
+                                        mainTextController:
+                                            controller.fillerFromDate_,
+                                        endDate: (ApiFactory.Enviroment
+                                                    .toLowerCase() ==
+                                                "prod")
+                                            ? DateTime.now()
+                                            : null,
                                       ),
                                     ),
                                     const SizedBox(width: 15),
@@ -143,12 +155,17 @@ class FillerView extends GetView<FillerController> {
                                         splitType: "-",
                                         widthRation: 0.15,
                                         isEnable: controller.isEnable.value,
-                                        startDate: DateTime.now(),
+                                        startDate: (ApiFactory.Enviroment
+                                                    .toLowerCase() ==
+                                                "prod")
+                                            ? DateTime.now()
+                                            : null,
                                         onFocusChange: (data) {
                                           // print('Selected Date $data');
                                           // controller.fetchFPCDetails();
                                         },
-                                        mainTextController: controller.fillerToDate_,
+                                        mainTextController:
+                                            controller.fillerToDate_,
                                       ),
                                     ),
                                   ],
@@ -184,7 +201,8 @@ class FillerView extends GetView<FillerController> {
                           ),
                           textCancel: "Cancel",
                           onConfirm: () {
-                            controller.getFillerValuesByImportFillersWithTapeCode();
+                            controller
+                                .getFillerValuesByImportFillersWithTapeCode();
                           },
                         );
                       },
@@ -210,29 +228,46 @@ class FillerView extends GetView<FillerController> {
                       showSrNo: true,
                       formatDate: false,
                       showSecondaryDialog: false,
-                      mapData: (controller.fillerDailyFpcList.value.map((e) => e.toJson()).toList()),
-                      showonly: ["fpcTime", "endTime", "programName", "epsNo", "tape id", "episodeCaption"],
+                      mapData: (controller.fillerDailyFpcList.value
+                          .map((e) => e.toJson())
+                          .toList()),
+                      showonly: [
+                        "fpcTime",
+                        "endTime",
+                        "programName",
+                        "epsNo",
+                        "tape id",
+                        "episodeCaption"
+                      ],
                       widthRatio: (Get.width * 0.2) / 2 + 7,
                       mode: PlutoGridMode.normal,
                       onload: (event) {
                         controller.gridStateManager = event.stateManager;
                         event.stateManager.setCurrentCell(
-                            event.stateManager.getRowByIdx(controller.topLastSelectedIdx)?.cells['fpcTime'], controller.bottomLastSelectedIdx);
+                            event.stateManager
+                                .getRowByIdx(controller.topLastSelectedIdx)
+                                ?.cells['fpcTime'],
+                            controller.bottomLastSelectedIdx);
                       },
                       onRowDoubleTap: (plutoGrid) {
                         controller.topLastSelectedIdx = plutoGrid.rowIdx;
                         controller.gridStateManager?.setCurrentCell(
-                            controller.gridStateManager?.getRowByIdx(controller.topLastSelectedIdx)?.cells['fpcTime'],
+                            controller.gridStateManager
+                                ?.getRowByIdx(controller.topLastSelectedIdx)
+                                ?.cells['fpcTime'],
                             controller.bottomLastSelectedIdx);
                         controller.topLastSelectedIdx = plutoGrid.rowIdx;
                         // controller.totalFiller.clear();
                         controller.totalFillerDur.clear();
                         // controller.totalFillerDur.text = "00:00:00:00";
-                        controller.fetchSegmentDetails(controller.fillerDailyFpcList[plutoGrid.rowIdx]);
+                        controller.fetchSegmentDetails(
+                            controller.fillerDailyFpcList[plutoGrid.rowIdx]);
                       },
                       // onSelected: (plutoGrid) {},
-                      colorCallback: (row) =>
-                          (row.row.cells.containsValue(controller.gridStateManager?.currentCell)) ? Colors.deepPurple.shade200 : Colors.white,
+                      colorCallback: (row) => (row.row.cells.containsValue(
+                              controller.gridStateManager?.currentCell))
+                          ? Colors.deepPurple.shade200
+                          : Colors.white,
                     ),
                   );
                 }),
@@ -270,28 +305,31 @@ class FillerView extends GetView<FillerController> {
                                 url: ApiFactory.FILLER_CAPTION,
                                 parseKeyForKey: "fillerCode",
                                 parseKeyForValue: "fillerCaption",
-                                onchanged: (data) => controller.getFillerValuesByFillerCode(data),
+                                onchanged: (data) => controller
+                                    .getFillerValuesByFillerCode(data),
                                 selectedValue: controller.selectCaption.value,
                                 width: w * 0.45,
                                 dialogHeight: 250,
                                 inkwellFocus: controller.fillerCaptionFN,
                               ),
                             ),
-
+                            const SizedBox(width: 5),
                             /// TAPE ID eg: PCHF24572
-                            InputFields.formField1Width(
-                              widthRatio: 0.12,
-                              paddingLeft: 5,
+                            InputFields.formField1(
+                              width: 0.12,
+                              padLeft: 5,
                               hintTxt: "Tape ID",
                               controller: controller.tapeId_,
+                              focusNode: controller.tapeIDFocusNode,
                               isEnable: true,
-                              onChange: (value) {
-                                if (value.toString().isEmpty) {
-                                  controller.clearBottonControlls();
-                                } else {
-                                  controller.getFillerValuesByTapeCode(value.toString());
-                                }
-                              },
+                              // onChange: (value) {
+                              //   if (value.toString().isEmpty) {
+                              //     controller.clearBottonControlls();
+                              //   } else {
+                              //     controller.getFillerValuesByTapeCode(
+                              //         value.toString());
+                              //   }
+                              // },
                               maxLen: 10,
                             ),
 
@@ -301,6 +339,7 @@ class FillerView extends GetView<FillerController> {
                               paddingLeft: 5,
                               hintTxt: "Seg No",
                               controller: controller.segNo_,
+                              disabledTextColor: Colors.black,
                               isEnable: false,
                               maxLen: 10,
                             ),
@@ -311,6 +350,7 @@ class FillerView extends GetView<FillerController> {
                               paddingLeft: 5,
                               hintTxt: "Seg Dur",
                               controller: controller.segDur_,
+                              disabledTextColor: Colors.black,
                               isEnable: false,
                               maxLen: 10,
                             ),
@@ -373,8 +413,14 @@ class FillerView extends GetView<FillerController> {
                                 btnText: "Delete",
                                 callback: () {
                                   if (controller.fillerSegmentList.isNotEmpty &&
-                                      controller.fillerSegmentList[controller.bottomLastSelectedIdx].allowMove == "1") {
-                                    controller.fillerSegmentList.removeAt(controller.bottomLastSelectedIdx);
+                                      controller
+                                              .fillerSegmentList[controller
+                                                  .bottomLastSelectedIdx]
+                                              .allowMove ==
+                                          "1") {
+                                    controller.fillerSegmentList.removeAt(
+                                        controller.bottomLastSelectedIdx);
+                                    controller.calculateFillerAndTotalFiller();
                                   }
                                 },
                               ),
@@ -390,18 +436,30 @@ class FillerView extends GetView<FillerController> {
                         Expanded(
                           child: Obx(() {
                             return Visibility(
-                              visible: ((controller.fillerSegmentList.value.isNotEmpty)),
-                              replacement: Container(decoration: BoxDecoration(border: Border.all(color: Colors.grey))),
+                              visible: ((controller
+                                  .fillerSegmentList.value.isNotEmpty)),
+                              replacement: Container(
+                                  decoration: BoxDecoration(
+                                      border: Border.all(color: Colors.grey))),
                               child: DataGridFromMap3(
-                                mapData: (controller.fillerSegmentList.map((e) => e.toJson()).toList()),
+                                mapData: (controller.fillerSegmentList
+                                    .map((e) => e.toJson())
+                                    .toList()),
                                 // widthRatio: (Get.width * 0.2) / 2 + 7,
                                 formatDate: false,
                                 secondaryExtraDialogList: [
                                   SecondaryShowDialogModel(
                                     "Delete",
                                     () {
-                                      if (controller.fillerSegmentList[controller.bottomLastSelectedIdx].allowMove == "1") {
-                                        controller.fillerSegmentList.removeAt(controller.bottomLastSelectedIdx);
+                                      if (controller
+                                              .fillerSegmentList[controller
+                                                  .bottomLastSelectedIdx]
+                                              .allowMove ==
+                                          "1") {
+                                        controller.fillerSegmentList.removeAt(
+                                            controller.bottomLastSelectedIdx);
+                                        controller
+                                            .calculateFillerAndTotalFiller();
                                       }
                                       // controller.fillerSegmentList.removeAt(controller.bottomLastSelectedIdx);
                                     },
@@ -409,21 +467,42 @@ class FillerView extends GetView<FillerController> {
                                 ],
                                 onload: (event) {
                                   controller.bottomSM = event.stateManager;
-                                  event.stateManager.setCurrentCell(event.stateManager.getRowByIdx(controller.bottomLastSelectedIdx)?.cells['segNo'],
+                                  event.stateManager.setCurrentCell(
+                                      event.stateManager
+                                          .getRowByIdx(
+                                              controller.bottomLastSelectedIdx)
+                                          ?.cells['segNo'],
                                       controller.bottomLastSelectedIdx);
                                 },
-                                colorCallback: (row) => (controller.fillerSegmentList[row.rowIdx].allowMove == "1" ||
-                                        controller.fillerSegmentList[row.rowIdx].ponumber == 1)
+                                colorCallback: (row) => (controller
+                                                .fillerSegmentList[row.rowIdx]
+                                                .allowMove ==
+                                            "1" ||
+                                        controller.fillerSegmentList[row.rowIdx]
+                                                .ponumber ==
+                                            1)
                                     ? Colors.red
-                                    : (row.row.cells.containsValue(controller.bottomSM?.currentCell))
+                                    : (row.row.cells.containsValue(
+                                            controller.bottomSM?.currentCell))
                                         ? Colors.deepPurple.shade200
                                         : Colors.white,
                                 onSelected: (plutoGrid) {
-                                  controller.bottomLastSelectedIdx = plutoGrid.rowIdx ?? 0;
-                                  controller.selectedSegment = controller.fillerSegmentList[plutoGrid.rowIdx!];
+                                  controller.bottomLastSelectedIdx =
+                                      plutoGrid.rowIdx ?? 0;
+                                  controller.selectedSegment = controller
+                                      .fillerSegmentList[plutoGrid.rowIdx!];
                                 },
                                 mode: PlutoGridMode.selectWithOneTap,
-                                showonly: ["segNo", "seq", "brkNo", "ponumber", "tape id", "segmentCaption", "som", "segDur"],
+                                showonly: [
+                                  "segNo",
+                                  "seq",
+                                  "brkNo",
+                                  "ponumber",
+                                  "tape id",
+                                  "segmentCaption",
+                                  "som",
+                                  "segDur"
+                                ],
                               ),
                             );
                           }),

@@ -48,7 +48,10 @@ class PromoMasterController extends GetxController {
   List<PermissionModel>? formPermissions;
 
   var rightDataTable = <LstAnnotationLoadDatas>[].obs;
-  String promoCode = "", strHouseID = "", strSegmentNumber = "", commercialCode = "";
+  String promoCode = "",
+      strHouseID = "",
+      strSegmentNumber = "",
+      commercialCode = "";
   PromoMasterOnloadModel? onloadModel;
   var channelList = <DropDownValue>[].obs;
   var txCaptionPreFix = "".obs;
@@ -74,6 +77,7 @@ class PromoMasterController extends GetxController {
 
   var locationFN = FocusNode(),
       somFN = FocusNode(),
+      categoryFN = FocusNode(),
       eomFN = FocusNode(),
       fillerNameFN = FocusNode(),
       captionFN = FocusNode(),
@@ -87,7 +91,8 @@ class PromoMasterController extends GetxController {
   @override
   void onInit() {
     selectedDropDowns = List.generate(12, (index) => null);
-    formPermissions = Utils.fetchPermissions1(Routes.PROMO_MASTER.replaceAll("/", ""));
+    formPermissions =
+        Utils.fetchPermissions1(Routes.PROMO_MASTER.replaceAll("/", ""));
     super.onInit();
   }
 
@@ -169,14 +174,18 @@ class PromoMasterController extends GetxController {
       LoadingDialog.showErrorDialog("Please enter duration.");
     } else if (somCtr.text.isEmpty) {
       LoadingDialog.showErrorDialog("Please enter SOM.");
-    } else if ((Utils.oldBMSConvertToSecondsValue(value: eomCtr.text) - Utils.oldBMSConvertToSecondsValue(value: somCtr.text)).isNegative) {
+    } else if ((Utils.oldBMSConvertToSecondsValue(value: eomCtr.text) -
+            Utils.oldBMSConvertToSecondsValue(value: somCtr.text))
+        .isNegative) {
       eomCtr.clear();
-      LoadingDialog.showErrorDialog("EOM should not less than SOM", callback: () {
+      LoadingDialog.showErrorDialog("EOM should not less than SOM",
+          callback: () {
         eomFN.requestFocus();
       });
     } else {
       if (promoCode.isNotEmpty) {
-        LoadingDialog.recordExists("Record Already exist!\nDo you want to modify it?", saveRecord);
+        LoadingDialog.recordExists(
+            "Record Already exist!\nDo you want to modify it?", saveRecord);
       } else {
         saveRecord();
       }
@@ -193,8 +202,11 @@ class PromoMasterController extends GetxController {
             resp is Map<String, dynamic> &&
             resp['saveRecords'] != null &&
             resp['saveRecords']['strMessage'] != null &&
-            resp['saveRecords']['strMessage'].toString().contains("successfully")) {
-          LoadingDialog.callDataSaved(msg: resp['saveRecords']['strMessage'].toString());
+            resp['saveRecords']['strMessage']
+                .toString()
+                .contains("successfully")) {
+          LoadingDialog.callDataSaved(
+              msg: resp['saveRecords']['strMessage'].toString());
         } else {
           LoadingDialog.showErrorDialog(resp.toString());
         }
@@ -215,16 +227,19 @@ class PromoMasterController extends GetxController {
         "segmentNumber": segHash.value,
         "som": somCtr.text,
         "dated": "D",
-        "killDate": DateFormat('yyyy-MM-dd').format(DateFormat("dd-MM-yyyy").parse(endDateCtr.text)),
+        "killDate": DateFormat('yyyy-MM-dd')
+            .format(DateFormat("dd-MM-yyyy").parse(endDateCtr.text)),
         "modifiedBy": Get.find<MainController>().user?.logincode,
-        "startDate": DateFormat('yyyy-MM-dd').format(DateFormat("dd-MM-yyyy").parse(startDateCtr.text)),
+        "startDate": DateFormat('yyyy-MM-dd')
+            .format(DateFormat("dd-MM-yyyy").parse(startDateCtr.text)),
         "ptype": selectedDropDowns[5]?.key,
         "remarks": "",
         "blanktapeid": blankTapeIDCtr.text,
         "locationcode": selectedDropDowns[2]?.key,
         "billflag": num.tryParse(selectedDropDowns[9]?.key ?? "0") ?? 0,
         "companycode": selectedDropDowns[1]?.key,
-        "lstAnnotation": rightDataTable.map((element) => element.toJson()).toList(),
+        "lstAnnotation":
+            rightDataTable.map((element) => element.toJson()).toList(),
       },
     );
   }
@@ -263,121 +278,6 @@ class PromoMasterController extends GetxController {
     ).then((value) {
       Get.delete<CommonDocsController>(tag: "commonDocs");
     });
-
-    // PlutoGridStateManager? viewDocsStateManger;
-    // try {
-    //   LoadingDialog.call();
-    //   await Get.find<ConnectorControl>().GET_METHOD_CALL_HEADER(
-    //       api: ApiFactory.COMMON_DOCS_LOAD(documentKey),
-    //       fun: (data) {
-    //         if (data is Map && data.containsKey("info_GetAllDocument")) {
-    //           documents = [];
-    //           for (var doc in data["info_GetAllDocument"]) {
-    //             documents.add(RoCancellationDocuments.fromJson(doc));
-    //           }
-    //           Get.back();
-    //         }
-    //       });
-    // } catch (e) {
-    //   Get.back();
-    // }
-    // Get.defaultDialog(
-    //   title: "Documents",
-    //   content: SizedBox(
-    //     width: Get.width / 2.5,
-    //     height: Get.height / 2.5,
-    //     child: Scaffold(
-    //       body: RawKeyboardListener(
-    //         focusNode: FocusNode(),
-    //         onKey: (value) {
-    //           if (value.isKeyPressed(LogicalKeyboardKey.delete)) {
-    //             LoadingDialog.delete(
-    //               "Want to delete selected row",
-    //               () async {
-    //                 LoadingDialog.call();
-    //                 await Get.find<ConnectorControl>().DELETEMETHOD(
-    //                   api: ApiFactory.COMMON_DOCS_DELETE(documents[viewDocsStateManger!.currentRowIdx!].documentId.toString()),
-    //                   fun: (data) {
-    //                     Get.back();
-    //                   },
-    //                 );
-    //                 Get.back();
-    //                 docs();
-    //               },
-    //               cancel: () {},
-    //             );
-    //           }
-    //         },
-    //         child: DataGridShowOnlyKeys(
-    //           hideCode: true,
-    //           hideKeys: ["documentId"],
-    //           dateFromat: "dd-MM-yyyy HH:mm",
-    //           mapData: documents.map((e) => e.toJson()).toList(),
-    //           onload: (loadGrid) {
-    //             viewDocsStateManger = loadGrid.stateManager;
-    //           },
-    //           onRowDoubleTap: (row) {
-    //             Get.find<ConnectorControl>().GET_METHOD_CALL_HEADER(
-    //                 api: ApiFactory.COMMON_DOCS_VIEW((documents[row.rowIdx].documentId).toString()),
-    //                 fun: (data) {
-    //                   if (data is Map && data.containsKey("addingDocument")) {
-    //                     ExportData()
-    //                         .exportFilefromByte(base64Decode(data["addingDocument"][0]["documentData"]), data["addingDocument"][0]["documentname"]);
-    //                   }
-    //                 });
-    //           },
-    //         ),
-    //       ),
-    //     ),
-    //   ),
-    //   actions: {
-    //     "Add Doc": () async {},
-    //     "View Doc": () {},
-    //   }
-    //       .entries
-    //       .map((e) => FormButtonWrapper(
-    //             btnText: e.key,
-    //             callback: e.key == "Add Doc"
-    //                 ? () async {
-    //                     FilePickerResult? result = await FilePicker.platform.pickFiles(allowMultiple: false);
-
-    //                     if (result != null && result.files.isNotEmpty) {
-    //                       LoadingDialog.call();
-    //                       await Get.find<ConnectorControl>().POSTMETHOD_FORMDATA_HEADER(
-    //                           api: ApiFactory.COMMON_DOCS_ADD,
-    //                           fun: (data) {
-    //                             if (data is Map && data.containsKey("addingDocument")) {
-    //                               for (var doc in data["addingDocument"]) {
-    //                                 documents.add(RoCancellationDocuments.fromJson(doc));
-    //                               }
-    //                               Get.back();
-    //                               docs();
-    //                             }
-    //                           },
-    //                           json: {
-    //                             "documentKey": documentKey,
-    //                             "loggedUser": Get.find<MainController>().user?.logincode ?? "",
-    //                             "strFilePath": result.files.first.name,
-    //                             "bytes": base64.encode(List<int>.from(result.files.first.bytes ?? []))
-    //                           });
-    //                       Get.back();
-    //                     }
-    //                   }
-    //                 : e.key == "View Doc"
-    //                     ? () {
-    //                         Get.find<ConnectorControl>().GET_METHOD_CALL_HEADER(
-    //                             api: ApiFactory.COMMON_DOCS_VIEW((documents[viewDocsStateManger!.currentCell!.row.sortIdx].documentId).toString()),
-    //                             fun: (data) {
-    //                               if (data is Map && data.containsKey("addingDocument")) {
-    //                                 ExportData().exportFilefromByte(
-    //                                     base64Decode(data["addingDocument"][0]["documentData"]), data["addingDocument"][0]["documentname"]);
-    //                               }
-    //                             });
-    //                       }
-    //                     : () {},
-    //           ))
-    //       .toList(),
-    // );
   }
 
   clearPage() {
@@ -405,11 +305,13 @@ class PromoMasterController extends GetxController {
   }
 
   calculateDuration({bool showDialog = true}) {
-    var diff = (Utils.oldBMSConvertToSecondsValue(value: eomCtr.text) - Utils.oldBMSConvertToSecondsValue(value: somCtr.text));
+    var diff = (Utils.oldBMSConvertToSecondsValue(value: eomCtr.text) -
+        Utils.oldBMSConvertToSecondsValue(value: somCtr.text));
 
     if (diff.isNegative && showDialog) {
       eomCtr.clear();
-      LoadingDialog.showErrorDialog("EOM should not less than SOM", callback: () {
+      LoadingDialog.showErrorDialog("EOM should not less than SOM",
+          callback: () {
         eomFN.requestFocus();
       });
     } else {
@@ -421,9 +323,11 @@ class PromoMasterController extends GetxController {
     update(['rootUI']);
   }
 
-  captionLeave() {
-    if (captionCtr.text.trim().isNotEmpty) {
+  captionLeave() async {
+    if (captionCtr.text.trim().isNotEmpty && !(Get.isDialogOpen ?? false)) {
       txCaptionCtr.text = captionCtr.text.trim();
+      await retrieveRecord(captionCtr.text, '', '', segHash.value, "");
+      categoryFN.requestFocus();
     }
   }
 
@@ -440,15 +344,19 @@ class PromoMasterController extends GetxController {
     if (blankTapeIDCtr.text.trim().isNotEmpty) {
       LoadingDialog.call();
       Get.find<ConnectorControl>().GETMETHODCALL(
-        api: ApiFactory.PROMO_MASTER_BLANK_TAPE_ID_LEAVE(blankTapeIDCtr.text.trim()),
+        api: ApiFactory.PROMO_MASTER_BLANK_TAPE_ID_LEAVE(
+            blankTapeIDCtr.text.trim()),
         fun: (resp) {
           Get.back();
           if (resp != null &&
               resp is Map<String, dynamic> &&
               resp['resLeaveBlankTapeId'] != null &&
               resp['resLeaveBlankTapeId']['message'] != null &&
-              resp['resLeaveBlankTapeId']['message'].toString() == "Invalid blank tape id.") {
-            LoadingDialog.showErrorDialog(resp['resLeaveBlankTapeId']['message'].toString(), callback: () {
+              resp['resLeaveBlankTapeId']['message'].toString() ==
+                  "Invalid blank tape id.") {
+            LoadingDialog.showErrorDialog(
+                resp['resLeaveBlankTapeId']['message'].toString(),
+                callback: () {
               blanktapeIdFN.requestFocus();
             });
           }
@@ -468,11 +376,14 @@ class PromoMasterController extends GetxController {
               resp is Map<String, dynamic> &&
               resp['cartNo_Leave'] != null &&
               resp['cartNo_Leave']['eventName'] != null &&
-              resp['cartNo_Leave']['eventName'].toString().contains("House ID you entered is already used for")) {
+              resp['cartNo_Leave']['eventName']
+                  .toString()
+                  .contains("House ID you entered is already used for")) {
             // if (promoCode.isNotEmpty) {
             //   txNoCtr.text = strHouseID;
             // }
-            LoadingDialog.showErrorDialog(resp['cartNo_Leave']['eventName'].toString(), callback: () {
+            LoadingDialog.showErrorDialog(
+                resp['cartNo_Leave']['eventName'].toString(), callback: () {
               txNoFN.requestFocus();
             });
           } else {
@@ -491,19 +402,24 @@ class PromoMasterController extends GetxController {
       txNoCtr.text = "AUTO";
     }
 
-    if (txNoCtr.text.trim().isNotEmpty && segHash.value != 0 && !Get.isDialogOpen!) {
+    if (txNoCtr.text.trim().isNotEmpty &&
+        segHash.value != 0 &&
+        !Get.isDialogOpen!) {
       retrieveRecord("", "", "", 0, txNoCtr.text.trim());
     }
   }
 
-  Future<void> retrieveRecord(String text, String code, String exporttapecode, int segno, String houseID) async {
+  Future<void> retrieveRecord(String text, String code, String exporttapecode,
+      int segno, String houseID) async {
     LoadingDialog.call();
     await Get.find<ConnectorControl>().POSTMETHOD(
       api: ApiFactory.PROMO_MASTER_RETRIVE_RECORDS,
       fun: (resp) {
         closeDialogIfOpen();
-        PromoMasterRetriveModel retriveM = PromoMasterRetriveModel.fromJson(resp);
-        if (retriveM.retrieveRecord != null && (retriveM.retrieveRecord?.isNotEmpty ?? false)) {
+        PromoMasterRetriveModel retriveM =
+            PromoMasterRetriveModel.fromJson(resp);
+        if (retriveM.retrieveRecord != null &&
+            (retriveM.retrieveRecord?.isNotEmpty ?? false)) {
           RetrieveRecord record = retriveM.retrieveRecord![0];
 
           /// promo code
@@ -518,23 +434,31 @@ class PromoMasterController extends GetxController {
 
           /// duration
           if (record.promoDuration != null) {
-            durationCtr.text = Utils.convertToTimeFromDouble(value: record.promoDuration ?? 0);
+            durationCtr.text =
+                Utils.convertToTimeFromDouble(value: record.promoDuration ?? 0);
           }
 
           /// promo-type
           if (record.promoTypeCode != null) {
-            var tempPromoType = onloadModel?.promoMasterOnLoad?.lstPromoType?.firstWhereOrNull((element) => element.key == record.promoTypeCode);
+            onloadModel?.promoMasterOnLoad?.lstPromoType = record.lstPromoType;
+            var tempPromoType = onloadModel?.promoMasterOnLoad?.lstPromoType
+                ?.firstWhereOrNull(
+                    (element) => element.key == record.promoTypeCode);
             if (tempPromoType != null) {
               selectedDropDowns[4] = tempPromoType;
+              update(['promoTypeUI']);
             }
           }
 
           /// category
-          if (record.promoCategoryCode != null && record.promoCategoryName != null) {
-            handleOnChangedCategory(DropDownValue(
-              key: record.promoCategoryCode,
-              value: record.promoCategoryName,
-            ));
+          if (record.promoCategoryCode != null &&
+              record.promoCategoryName != null) {
+            handleOnChangedCategory(
+              DropDownValue(
+                key: record.promoCategoryCode,
+                value: record.promoCategoryName,),
+              callAPI: false,
+            );
           }
 
           /// tape-id
@@ -549,7 +473,9 @@ class PromoMasterController extends GetxController {
 
           /// tape-type
           if (record.tapeTypeCode != null) {
-            var tempTapetype = onloadModel?.promoMasterOnLoad?.lstTapeType?.firstWhereOrNull((element) => element.key == record.tapeTypeCode);
+            var tempTapetype = onloadModel?.promoMasterOnLoad?.lstTapeType
+                ?.firstWhereOrNull(
+                    (element) => element.key == record.tapeTypeCode);
             if (tempTapetype != null) {
               selectedDropDowns[10] = tempTapetype;
             }
@@ -557,19 +483,23 @@ class PromoMasterController extends GetxController {
 
           /// location
           if (record.locationcode != null) {
-            var tempLoaction = onloadModel?.promoMasterOnLoad?.lstLocation?.firstWhereOrNull((element) => element.key == record.locationcode);
+            var tempLoaction = onloadModel?.promoMasterOnLoad?.lstLocation
+                ?.firstWhereOrNull(
+                    (element) => element.key == record.locationcode);
             if (tempLoaction != null) {
               selectedDropDowns[2] = tempLoaction;
             }
           }
 
           /// CHANNELS
-          var tempChannel = channelList.firstWhereOrNull((element) => element.key == record.channelCode);
+          var tempChannel = channelList
+              .firstWhereOrNull((element) => element.key == record.channelCode);
           if (tempChannel != null) {
             selectedDropDowns[3] = tempChannel;
           } else if (selectedDropDowns[0] != null) {
             locationOnChanged(selectedDropDowns[2]).then((value) {
-              var tempChannel2 = channelList.firstWhereOrNull((element) => element.key == record.channelCode);
+              var tempChannel2 = channelList.firstWhereOrNull(
+                  (element) => element.key == record.channelCode);
               if (tempChannel2 != null) {
                 selectedDropDowns[3] = tempChannel2;
               }
@@ -586,8 +516,10 @@ class PromoMasterController extends GetxController {
 
           /// org/repeat
           if (record.originalRepeatCode != null) {
-            var temporiginalRepeatCode =
-                onloadModel?.promoMasterOnLoad?.lstOriginalRepeat?.firstWhereOrNull((element) => element.key == record.originalRepeatCode);
+            var temporiginalRepeatCode = onloadModel
+                ?.promoMasterOnLoad?.lstOriginalRepeat
+                ?.firstWhereOrNull(
+                    (element) => element.key == record.originalRepeatCode);
             if (temporiginalRepeatCode != null) {
               selectedDropDowns[8] = temporiginalRepeatCode;
             }
@@ -617,7 +549,8 @@ class PromoMasterController extends GetxController {
 
           /// start-date
           if (record.startDate != null) {
-            startDateCtr.text = DateFormat("dd-MM-yyyy").format(DateFormat("yyyy-MM-ddThh:mm:ss").parse(record.startDate!));
+            startDateCtr.text = DateFormat("dd-MM-yyyy").format(
+                DateFormat("yyyy-MM-ddThh:mm:ss").parse(record.startDate!));
           }
 
           /// blan tape id
@@ -627,7 +560,9 @@ class PromoMasterController extends GetxController {
 
           /// billing
           if (record.billflag != null) {
-            var tempBilling = onloadModel?.promoMasterOnLoad?.lstBilling?.firstWhereOrNull((element) => element.key == record.billflag.toString());
+            var tempBilling = onloadModel?.promoMasterOnLoad?.lstBilling
+                ?.firstWhereOrNull(
+                    (element) => element.key == record.billflag.toString());
             if (tempBilling != null) {
               selectedDropDowns[9] = tempBilling;
             }
@@ -643,7 +578,8 @@ class PromoMasterController extends GetxController {
 
           /// empty title dropdown
           if (record.ptype != null) {
-            var tempPtype = onloadModel?.promoMasterOnLoad?.lstptype?.firstWhereOrNull((element) => element.key == record.ptype);
+            var tempPtype = onloadModel?.promoMasterOnLoad?.lstptype
+                ?.firstWhereOrNull((element) => element.key == record.ptype);
             if (tempPtype != null) {
               selectedDropDowns[5] = tempPtype;
             }
@@ -651,7 +587,8 @@ class PromoMasterController extends GetxController {
 
           /// end-date
           if (record.killDate != null) {
-            endDateCtr.text = DateFormat("dd-MM-yyyy").format(DateFormat("yyyy-MM-ddThh:mm:ss").parse(record.killDate!));
+            endDateCtr.text = DateFormat("dd-MM-yyyy").format(
+                DateFormat("yyyy-MM-ddThh:mm:ss").parse(record.killDate!));
           }
 
           /// right-table-data
@@ -681,7 +618,9 @@ class PromoMasterController extends GetxController {
         api: ApiFactory.PROMO_MASTER_ON_LEAVE_LOCATION(val.key ?? ""),
         fun: (resp) {
           closeDialogIfOpen();
-          if (resp != null && resp is Map<String, dynamic> && resp["onLeaveLocation"] != null) {
+          if (resp != null &&
+              resp is Map<String, dynamic> &&
+              resp["onLeaveLocation"] != null) {
             selectedDropDowns[3] = null;
             channelList.clear();
             channelList.addAll((resp['onLeaveLocation'] as List<dynamic>)
@@ -718,14 +657,17 @@ class PromoMasterController extends GetxController {
   }
 
   Future<void> handleCopyTap() async {
-    await retrieveRecord("", "", copyCtr.text, (int.tryParse(segNoCtr.text) ?? 0), "");
+    await retrieveRecord(
+        "", "", copyCtr.text, (int.tryParse(segNoCtr.text) ?? 0), "");
     tapeIDCtr.text = "AUTO";
     txNoCtr.text = "AUTO";
     segHash.value = 1;
     segNoCtr.text = 1.toString();
     var now = DateTime.now();
-    captionCtr.text = "${captionCtr.text}-${DateFormat("yyyyMMdd").format(now)}";
-    txCaptionCtr.text = "${txCaptionCtr.text}-${DateFormat("yyyyMMdd").format(now)}";
+    captionCtr.text =
+        "${captionCtr.text}-${DateFormat("yyyyMMdd").format(now)}";
+    txCaptionCtr.text =
+        "${txCaptionCtr.text}-${DateFormat("yyyyMMdd").format(now)}";
     startDateCtr.text = "${now.day}-${now.month}-${now.year}";
     now = now.copyWith(month: now.month + 1);
     endDateCtr.text = "${now.day}-${now.month}-${now.year}";
@@ -756,8 +698,28 @@ class PromoMasterController extends GetxController {
     }
   }
 
-  void handleOnChangedCategory(DropDownValue? val) {
+  void handleOnChangedCategory(DropDownValue? val, {bool callAPI = false}) {
     selectedDropDowns[0] = val;
+    if (callAPI) {
+      selectedDropDowns[4] = null;
+      Get.find<ConnectorControl>().GETMETHODCALL(
+        api: ApiFactory.PROMO_MASTER_GET_PROMO_TYPE(val?.key ?? ""),
+        fun: (resp) {
+          if (resp != null && resp['promoType'] != null) {
+            onloadModel?.promoMasterOnLoad?.lstPromoType = [];
+            for (var element in resp['promoType']) {
+              onloadModel?.promoMasterOnLoad?.lstPromoType?.add(
+                DropDownValue(
+                  key: element['code'].toString(),
+                  value: element['name'].toString(),
+                ),
+              );
+            }
+            update(['promoTypeUI']);
+          }
+        },
+      );
+    }
     if (val != null && val.value != null && val.value!.length >= 2) {
       txCaptionPreFix.value = "${val.value!.substring(0, 2)}/".toUpperCase();
     }
@@ -773,7 +735,9 @@ class PromoMasterController extends GetxController {
       await Get.find<ConnectorControl>().POSTMETHOD(
         api: ApiFactory.PROMO_MASTER_GET_PROGRAM_PICKER,
         fun: (resp) {
-          if (resp != null && resp is Map<String, dynamic> && resp['programPicker'] != null) {
+          if (resp != null &&
+              resp is Map<String, dynamic> &&
+              resp['programPicker'] != null) {
             tempList = resp['programPicker'];
           }
         },
@@ -785,7 +749,6 @@ class PromoMasterController extends GetxController {
       return true;
     }
 
-    SizedBox();
     Get.defaultDialog(
       title: "Program Picker",
       content: SizedBox(

@@ -491,6 +491,7 @@ class RosDistributionController extends GetxController {
     int lastSelectedIdx = 0, lastSelectedIdx2nd = 0, lastSelectedIdx3rd = 0;
     bool canRender = true;
     PlutoGridStateManager? tempSM1st, tempSM2nd, tempSM3rd;
+
     showDialog(
         context: Get.context!,
         builder: (_) {
@@ -975,6 +976,7 @@ class RosDistributionController extends GetxController {
                                         true)
                                     ? null
                                     : DataGridFromMap(
+                                        enableSort: true,
                                         mapData: (tempModel
                                                     .value
                                                     .infoGetFpcCellDoubleClick
@@ -1186,18 +1188,20 @@ class RosDistributionController extends GetxController {
                                                   ?.isEmpty ??
                                               true)
                                           ? null
-                                          : DataGridShowOnlyKeys(
+                                          : DataGridFromMap(
                                               exportFileName:
                                                   "ROS Distribution",
                                               mapData: (tempModel
                                                           .value
                                                           .infoGetFpcCellDoubleClick
                                                           ?.lstAllocatedSpots)
-                                                      ?.map((e) => e.toJson())
+                                                      ?.map((e) => e.toJson(
+                                                          fromSave: false))
                                                       .toList() ??
                                                   [],
                                               formatDate: false,
-                                              widthRatio: 220,
+                                              // widthRatio: 220,
+                                              enableSort: true,
                                               hideCode: false,
                                               colorCallback: (row) => (row
                                                       .row.cells
@@ -1257,12 +1261,14 @@ class RosDistributionController extends GetxController {
                                                   ?.isEmpty ??
                                               true)
                                           ? null
-                                          : DataGridShowOnlyKeys(
+                                          : DataGridFromMap(
+                                              enableSort: true,
                                               mapData: (tempModel
                                                           .value
                                                           .infoGetFpcCellDoubleClick
                                                           ?.lstUnallocatedSpots)
-                                                      ?.map((e) => e.toJson())
+                                                      ?.map((e) => e.toJson(
+                                                          fromSave: false))
                                                       .toList() ??
                                                   [],
                                               formatDate: false,
@@ -1459,16 +1465,21 @@ class RosDistributionController extends GetxController {
               resp['info_tblROSSpots'] != null &&
               resp['info_tblROSSpots'] is List<dynamic>) {
             for (var element in (resp['info_tblROSSpots'] as List<dynamic>)) {
-              mainGridIdx = int.tryParse(element['Rid']) ?? -1;
+              mainGridIdx = (element['rid'] ?? -1);
               if (mainGridIdx != -1) {
                 showDataModel
                     .value
                     .infoShowBucketList
                     ?.lstROSSpots?[mainGridIdx]
-                    .allocatedSpot = element['AllocatedSpot'];
+                    .allocatedSpot = element['allocatedSpot'];
+                mainGSM!.changeCellValue(
+                  mainGSM!.getRowByIdx(mainGridIdx)!.cells['allocatedSpot']!,
+                  element['allocatedSpot'],
+                  force: true,
+                );
               }
             }
-            showDataModel.refresh();
+            // showDataModel.refresh();
             if ((resp['info_tblROSSpots'] as List<dynamic>).isNotEmpty) {
               LoadingDialog.callDataSaved(msg: "Allocation done.");
             } else {
@@ -1479,11 +1490,8 @@ class RosDistributionController extends GetxController {
           }
         },
         json: {
-          // "rowIndex": mainGridIdx,
           "allocPercentVisiable": false,
           "allocationLst": list,
-          // "loggedUser": Get.find<MainController>().user?.logincode,
-          // "allocPercentValue": "100",
         },
       );
     }
@@ -1495,32 +1503,119 @@ class RosDistributionController extends GetxController {
         (showDataModel.value.infoShowBucketList?.lstROSSpots?.isEmpty ??
             true)) {
       return;
+    } else if (mainGSM?.currentRowIdx == null) {
+      LoadingDialog.showErrorDialog("Please select row");
     } else {
+      var list = [];
+      if (mainGSM?.currentSelectingRows.isNotEmpty ?? false) {
+        for (var i = 0;
+            i <
+                (showDataModel.value.infoShowBucketList?.lstROSSpots?.length ??
+                    0);
+            i++) {
+          if ((mainGSM?.currentSelectingRows
+                      .any((element) => element.sortIdx == i) ??
+                  false) &&
+              ((showDataModel.value.infoShowBucketList?.lstROSSpots?[i]
+                      .allocatedSpot?.isNotEmpty) ??
+                  false)) {
+            showDataModel.value.infoShowBucketList?.lstROSSpots?[i].rid = i;
+            list.add(showDataModel.value.infoShowBucketList?.lstROSSpots?[i]
+                .toJson());
+            // mainGridIdx = i;
+          }
+        }
+      } else {
+        if (showDataModel
+                .value
+                .infoShowBucketList
+                ?.lstROSSpots?[mainGSM!.currentRowIdx!]
+                .allocatedSpot
+                ?.isNotEmpty ??
+            false) {
+          mainGridIdx = mainGSM!.currentRowIdx!;
+          showDataModel.value.infoShowBucketList?.lstROSSpots?[mainGridIdx]
+              .rid = mainGridIdx;
+          list.add(showDataModel
+              .value.infoShowBucketList?.lstROSSpots?[mainGridIdx]
+              .toJson());
+        }
+      }
+      if (list.isEmpty) {
+        return;
+      }
       LoadingDialog.call();
-
       Get.find<ConnectorControl>().POSTMETHOD(
-          api: ApiFactory.RO_DISTRIBUTION_GET_DEALLOCATE_DATA,
-          fun: (resp) {
-            closeDialogIfOpen();
-            if (resp != null &&
-                resp is Map<String, dynamic> &&
-                resp['info_GetRollback'] != null) {
-              LoadingDialog.callDataSaved(
-                  msg: resp['info_GetRollback']['message'][0].toString());
-            } else {
-              LoadingDialog.showErrorDialog(resp.toString());
+        api: ApiFactory.RO_DISTRIBUTION_GET_DEALLOCATE_DATA,
+        fun: (resp) {
+          closeDialogIfOpen();
+          if (resp != null &&
+              resp is Map<String, dynamic> &&
+              resp['info_GetRollback'] != null &&
+              resp['info_GetRollback']['lstDeAllocateData'] is List<dynamic>) {
+            for (var element in (resp['info_GetRollback']['lstDeAllocateData']
+                as List<dynamic>)) {
+              mainGridIdx = (element['rid'] ?? -1);
+              if (mainGridIdx != -1) {
+                showDataModel.value.infoShowBucketList
+                    ?.lstROSSpots?[mainGridIdx].allocatedSpot = "";
+                mainGSM!.changeCellValue(
+                  mainGSM!.getRowByIdx(mainGridIdx)!.cells['allocatedSpot']!,
+                  "",
+                  force: true,
+                );
+              }
             }
-          },
-          json: {
-            "locationCode": selectedLocation?.key,
-            "channelCode": selectedChannel?.key,
-            "fromDate": DateFormat("yyyy-MM-dd")
-                .format(DateFormat("dd-MM-yyyy").parse(date.text)),
-            "lstROSSpots": showDataModel.value.infoShowBucketList?.lstROSSpots
-                ?.map((e) => e.toJson())
-                .toList(),
-          });
+            // showDataModel.refresh();
+            if ((resp['info_GetRollback']['lstDeAllocateData'] as List<dynamic>)
+                .isNotEmpty) {
+              LoadingDialog.callDataSaved(msg: "Deallocation Done.");
+            } else {
+              LoadingDialog.showErrorDialog("Deallocation failed");
+            }
+          } else {
+            LoadingDialog.showErrorDialog(resp.toString());
+          }
+        },
+        json: {
+          "locationCode": selectedLocation?.key,
+          "channelCode": selectedChannel?.key,
+          "fromDate": DateFormat("yyyy-MM-dd")
+              .format(DateFormat("dd-MM-yyyy").parse(date.text)),
+          "lstROSSpots": list,
+        },
+      );
     }
+    // if (selectedLocation == null ||
+    //     selectedChannel == null ||
+    //     (showDataModel.value.infoShowBucketList?.lstROSSpots?.isEmpty ??
+    //         true)) {
+    //   return;
+    // } else {
+    //   LoadingDialog.call();
+    //   Get.find<ConnectorControl>().POSTMETHOD(
+    //       api: ApiFactory.RO_DISTRIBUTION_GET_DEALLOCATE_DATA,
+    //       fun: (resp) {
+    //         closeDialogIfOpen();
+    //         if (resp != null &&
+    //             resp is Map<String, dynamic> &&
+    //             resp['info_GetRollback'] != null) {
+    //           LoadingDialog.callDataSaved(
+    //               msg: resp['info_GetRollback']['message'][0].toString());
+    //         } else {
+    //           LoadingDialog.showErrorDialog(resp.toString());
+    //         }
+    //       },
+    //       json: {
+    //         "locationCode": selectedLocation?.key,
+    //         "channelCode": selectedChannel?.key,
+    //         "fromDate": DateFormat("yyyy-MM-dd")
+    //             .format(DateFormat("dd-MM-yyyy").parse(date.text)),
+    //         "lstROSSpots": showDataModel.value.infoShowBucketList?.lstROSSpots
+    //             ?.map((e) => e.toJson())
+    //             .toList(),
+    //       });
+    // }
   }
 
   ////////////// Head section button click Functionality end/////////
@@ -1596,13 +1691,14 @@ class RosDistributionController extends GetxController {
   }
 
   clearAllPage() {
+    // locationFN.requestFocus();
     mainGSM = null;
     mainGridIdx = 0;
     selectedLocation = null;
     selectedChannel = null;
     date.clear();
     // date.text = "${DateTime.now().day}-${DateTime.now().month}-${DateTime.now().year}";
-    location.refresh();
+    
     channel.refresh();
     enableControllos.value = true;
     showDataModel.value = ROSDistuibutionShowModel();
@@ -1617,8 +1713,10 @@ class RosDistributionController extends GetxController {
       element['value'] = false;
       return element;
     }).toList();
-
-    locationFN.requestFocus();
+    location.refresh();
+    Future.delayed(const Duration(milliseconds: 200)).then((value) {
+      locationFN.requestFocus();
+    });
   }
 
   handleOnLocationChanged(DropDownValue? val) {

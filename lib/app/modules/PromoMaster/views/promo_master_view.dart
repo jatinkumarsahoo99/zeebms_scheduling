@@ -64,11 +64,12 @@ class PromoMasterView extends GetView<PromoMasterController> {
                                                   ?.promoMasterOnLoad
                                                   ?.lstCategory ??
                                               [],
-                                          controller.handleOnChangedCategory,
+                                          (val)=>controller.handleOnChangedCategory(val,callAPI: true),
                                           "Category",
                                           .35,
                                           selected:
                                               controller.selectedDropDowns[0],
+                                              inkWellFocusNode: controller.categoryFN,
                                         ),
                                         Obx(
                                           () {
@@ -153,19 +154,25 @@ class PromoMasterView extends GetView<PromoMasterController> {
                                                 controller.selectedDropDowns[3],
                                           );
                                         }),
-                                        DropDownField.formDropDown1WidthMap(
-                                          controller
-                                                  .onloadModel
-                                                  ?.promoMasterOnLoad
-                                                  ?.lstPromoType ??
-                                              [],
-                                          (val) => controller
-                                              .selectedDropDowns[4] = val,
-                                          "Promo Type",
-                                          controller.componentWidthRatio,
-                                          selected:
-                                              controller.selectedDropDowns[4],
-                                          // inkWellFocusNode: controller.locationFN,
+                                        GetBuilder(
+                                          init: controller,
+                                          id: 'promoTypeUI',
+                                          
+                                          builder: (_) {
+                                            return DropDownField.formDropDown1WidthMap(
+                                              controller
+                                                      .onloadModel
+                                                      ?.promoMasterOnLoad
+                                                      ?.lstPromoType ??
+                                                  [],
+                                              (val) => controller
+                                                  .selectedDropDowns[4] = val,
+                                              "Promo Type",
+                                              controller.componentWidthRatio,
+                                              selected:
+                                                  controller.selectedDropDowns[4],
+                                            );
+                                          }
                                         ),
                                         InputFields.formField1(
                                           hintTxt: "Blan Tape ID",
@@ -297,41 +304,7 @@ class PromoMasterView extends GetView<PromoMasterController> {
                                                     .size
                                                     .width *
                                                 controller.componentWidthRatio)
-                                        // Align(
-                                        //   alignment: Alignment.topLeft,
-                                        //   child: Padding(
-                                        //     padding:  EdgeInsets.only(
-                                        //         left: MediaQuery.of(context)
-                                        //                         .size
-                                        //                         .width *
-                                        //                     .018),
-                                        //     child: Row(
-                                        //       mainAxisSize: MainAxisSize.min,
-                                        //       children: [
-                                        //         DateWithThreeTextField(
-                                        //           title: "Start Date",
-                                        //           mainTextController:
-                                        //               controller.startDateCtr,
-                                        //           widthRation: controller
-                                        //               .componentWidthRatio,
-                                        //         ),
-                                        //         SizedBox(
-                                        //             width:
-                                        //                 MediaQuery.of(context)
-                                        //                         .size
-                                        //                         .width *
-                                        //                     .01),
-                                        //         DateWithThreeTextField(
-                                        //           title: "End Date",
-                                        //           mainTextController:
-                                        //               controller.endDateCtr,
-                                        //           widthRation: controller
-                                        //               .componentWidthRatio,
-                                        //         ),
-                                        //       ],
-                                        //     ),
-                                        //   ),
-                                        // ),
+                                       
                                       ],
                                     ),
                                   ],

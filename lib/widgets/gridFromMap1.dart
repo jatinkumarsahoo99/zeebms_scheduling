@@ -75,6 +75,34 @@ class DataGridFromMap1 extends StatelessWidget {
           width: Utils.getColumnSize(
             key: "no",
           ),
+          cellPadding: const EdgeInsets.all(0),
+          renderer: ((rendererContext) {
+            // print("On rendererContext called");
+            return Container(
+              // height: 25,
+              height: double.infinity,
+              // width: Utils.getColumnSize1(key: key, value: mapData[0][key]),
+              // padding: EdgeInsets.only(
+              //   left: 
+              // ),
+              decoration: BoxDecoration(
+                border: Border.all(color: Colors.transparent,width: 0.01),
+                borderRadius: BorderRadius.circular(1),
+                color: Colors.white
+              ),
+              alignment: Alignment.center,
+              // color: (key == "epsNo" || key == "tapeid" || key == "status") ? ColorData.cellColor(rendererContext.row.cells[key]?.value, key) : null,
+              child: Text(
+                (rendererContext.rowIdx + 1).toString(),
+                maxLines: 1,
+                overflow: TextOverflow.ellipsis,
+                style: TextStyle(
+                  fontSize: SizeDefine.columnTitleFontSize,
+              ),
+            )
+            );
+          }),
+          
           enableAutoEditing: false,
           hide: hideCode! && key.toString().toLowerCase() != "hourcode" && key.toString().toLowerCase().contains("code"),
           enableColumnDrag: false,
@@ -131,6 +159,7 @@ class DataGridFromMap1 extends StatelessWidget {
               enableRowDrag: true,
               enableEditingMode: false,
               enableDropToResize: true,
+
               enableContextMenu: false,
               // width: Utils.getColumnSize(key: key, value: mapData[0][key]),
               minWidth: Utils.getColumnSize(key: key, value: mapData[0][key]),
@@ -253,7 +282,7 @@ class DataGridFromMap1 extends StatelessWidget {
         onFocusChange: onFocusChange,
         child: PlutoGrid(
             mode: mode ?? PlutoGridMode.normal,
-            configuration: plutoGridConfiguration(focusNode: _focusNode),
+            configuration: plutoGridConfiguration(focusNode: _focusNode,rowHeight: 25),
             rowColorCallback: colorCallback,
             onLoaded: onload,
             columns: segColumn,

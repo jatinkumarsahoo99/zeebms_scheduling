@@ -6,6 +6,9 @@ import 'package:bms_scheduling/widgets/LoadingDialog.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
+import '../../../controller/HomeController.dart';
+import '../../CommonSearch/views/common_search_view.dart';
+
 class PromoTypeMasterController extends GetxController {
   FocusNode categoryFN = FocusNode();
 
@@ -114,6 +117,31 @@ class PromoTypeMasterController extends GetxController {
         }
       },
     );
+  }
+
+  btnHandler(btnName) {
+    switch (btnName) {
+      case "Delete":
+        null;
+        break;
+      case "Clear":
+        Get.delete<PromoTypeMasterController>();
+        Get.find<HomeController>().clearPage1();
+        break;
+      case "Save":
+        validateSaveRecord();
+        break;
+      case "Search":
+        Get.to(const SearchPage(
+          key: Key("Promo Type Master"),
+          screenName: "Promo Type Master",
+          appBarName: "Promo Type Master",
+          strViewName: "vTesting",
+          isAppBarReq: true,
+        ));
+        break;
+      default:
+    }
   }
 
   @override

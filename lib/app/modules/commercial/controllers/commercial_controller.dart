@@ -153,6 +153,7 @@ class CommercialController extends GetxController {
           fun: (data) {
             Get.back();
             if (data["locationSelect"] is List) {
+              selectedChannel = null;
               channels.value = (data["locationSelect"] as List).map((e) => DropDownValue(key: e["channelCode"], value: e["channelName"])).toList();
             } else {
               LoadingDialog.callErrorMessage1(msg: "Failed To Load Initial Data");
@@ -321,7 +322,7 @@ class CommercialController extends GetxController {
       String? isItrated;
       showCommercialDetailsList?.value = [];
       for (var i = 0; i < (mainCommercialShowDetailsList?.length ?? 0); i++) {
-        if (mainCommercialShowDetailsList?[i].bStatus == "B") {
+        if (mainCommercialShowDetailsList?[i].bStatus == "B"&&mainCommercialShowDetailsList?[i].fpcTime==programFpcTimeSelected) {
           var temp = mainCommercialShowDetailsList![i];
           if (isItrated == null || isItrated != temp.fpcTime2) {
             isItrated = temp.fpcTime2;
@@ -333,9 +334,12 @@ class CommercialController extends GetxController {
         }
       }
     }
-    showCommercialDetailsList?.refresh();
+    // showCommercialDetailsList?.refresh();
     // print(programFpcTimeSelected.toString());
-    updateTab();
+    // update(["programTable"]);
+    update(["schedulingTable"]);
+    update(["fpcMismatchTable"]);
+    update(["misMatchTable"]);
     calculateSpotAndDuration();
     // return showCommercialDetailsList?.value;
   }

@@ -11,8 +11,10 @@ import 'package:get/get.dart';
 import 'package:bms_scheduling/widgets/PlutoGrid/pluto_grid.dart';
 
 // import 'package:pluto_grid_export/pluto_grid_export.dart' as pluto_grid_export;
-import 'package:bms_scheduling/widgets/PlutoGridExport/pluto_grid_export.dart' as pluto_grid_export;
+import 'package:bms_scheduling/widgets/PlutoGridExport/pluto_grid_export.dart'
+    as pluto_grid_export;
 
+import '../../widgets/PlutoGridExport/src/pluto_grid_export1.dart';
 import '../../widgets/Snack.dart';
 import '../../widgets/dropdown.dart';
 import '../../widgets/input_fields.dart';
@@ -24,45 +26,44 @@ import 'ApiFactory.dart';
 import 'ExportData.dart';
 
 class DataGridMenu {
-  showGridMenu(PlutoGridStateManager stateManager,
-      TapDownDetails details,
-      BuildContext context, {
-        String? exportFileName,
-        List<SecondaryShowDialogModel>? extraList,
-      }) async {
+  showGridMenu(PlutoGridStateManager stateManager, TapDownDetails details,
+      BuildContext context,
+      {String? exportFileName,
+      List<SecondaryShowDialogModel>? extraList,
+      bool csvFormat = false}) async {
+    print(">>>>>csvFormat" + csvFormat.toString());
     clearFilterList() {
-      Get
-          .find<MainController>()
-          .filters1[stateManager.hashCode.toString()] = RxList([]);
+      Get.find<MainController>().filters1[stateManager.hashCode.toString()] =
+          RxList([]);
     }
 
     checkStateManagerIsNew() async {
       print("Hashcode======================> ${stateManager.hashCode}");
-      if (Get
-          .find<MainController>()
+      if (Get.find<MainController>()
           .filters1
-          .containsKey(stateManager.hashCode.toString())) {} else {
+          .containsKey(stateManager.hashCode.toString())) {
+      } else {
         clearFilterList();
       }
     }
 
     applyfilters(PlutoGridStateManager stateManager) {
-      var _filters = Get
-          .find<MainController>()
-          .filters1[stateManager.hashCode.toString()] ?? [];
+      var _filters = Get.find<MainController>()
+              .filters1[stateManager.hashCode.toString()] ??
+          [];
       stateManager.setFilter((element) => true);
       List<PlutoRow> _filterRows = stateManager.rows;
       for (var filter in _filters) {
         if (filter.operator == "equal") {
-          _filterRows =
-              _filterRows.where((element) =>
-              element.cells[filter.field]!
-                  .value == filter.value).toList();
+          _filterRows = _filterRows
+              .where((element) =>
+                  element.cells[filter.field]!.value == filter.value)
+              .toList();
         } else {
-          _filterRows =
-              _filterRows.where((element) =>
-              element.cells[filter.field]!
-                  .value != filter.value).toList();
+          _filterRows = _filterRows
+              .where((element) =>
+                  element.cells[filter.field]!.value != filter.value)
+              .toList();
         }
       }
       stateManager.setFilter((element) => _filterRows.contains(element));
@@ -72,8 +73,9 @@ class DataGridMenu {
       List _allValues = [];
       var _selectedValues = RxList([]);
       if (stateManager.currentCell != null) {
-        _allValues = stateManager.rows.map((e) =>
-            e.cells[stateManager.currentCell!.column.field]!.value.toString())
+        _allValues = stateManager.rows
+            .map((e) => e.cells[stateManager.currentCell!.column.field]!.value
+                .toString())
             .toSet()
             .toList();
       }
@@ -93,38 +95,37 @@ class DataGridMenu {
                     shrinkWrap: true,
                     itemBuilder: ((context, index) {
                       return Obx(
-                            () =>
-                            Card(
-                              color: _selectedValues.contains(_allValues[index])
-                                  ? Colors.deepPurple
-                                  : Colors.white,
-                              child: InkWell(
-                                focusColor: Colors.deepPurple[200],
-                                canRequestFocus: true,
-                                onTap: () {
-                                  if (_selectedValues.contains(
-                                      _allValues[index])) {
-                                    _selectedValues.remove(_allValues[index]);
-                                  } else {
-                                    _selectedValues.add(_allValues[index]);
-                                  }
-                                },
-                                child: Padding(
-                                  padding: const EdgeInsets.all(8),
-                                  child: Text(
-                                    _allValues[index],
-                                    style: _selectedValues.contains(
-                                        _allValues[index])
-                                        ? TextStyle(fontWeight: FontWeight.bold,
-                                        fontSize: 12,
-                                        color: Colors.white)
+                        () => Card(
+                          color: _selectedValues.contains(_allValues[index])
+                              ? Colors.deepPurple
+                              : Colors.white,
+                          child: InkWell(
+                            focusColor: Colors.deepPurple[200],
+                            canRequestFocus: true,
+                            onTap: () {
+                              if (_selectedValues.contains(_allValues[index])) {
+                                _selectedValues.remove(_allValues[index]);
+                              } else {
+                                _selectedValues.add(_allValues[index]);
+                              }
+                            },
+                            child: Padding(
+                              padding: const EdgeInsets.all(8),
+                              child: Text(
+                                _allValues[index],
+                                style:
+                                    _selectedValues.contains(_allValues[index])
+                                        ? TextStyle(
+                                            fontWeight: FontWeight.bold,
+                                            fontSize: 12,
+                                            color: Colors.white)
                                         : TextStyle(
-                                      fontSize: 12,
-                                    ),
-                                  ),
-                                ),
+                                            fontSize: 12,
+                                          ),
                               ),
                             ),
+                          ),
+                        ),
                       );
                     }),
                     itemCount: _allValues.length,
@@ -139,19 +140,21 @@ class DataGridMenu {
                 Get.back();
               },
               icon: Icon(Icons.clear_rounded),
-              label: Text("Cancel"),),
+              label: Text("Cancel"),
+            ),
             ElevatedButton.icon(
               onPressed: () {
-                stateManager.setFilter(
-                        (element) =>
-                        _selectedValues.any((value) =>
+                stateManager.setFilter((element) => _selectedValues.any(
+                    (value) =>
                         value ==
-                            element.cells[stateManager.currentCell!.column
-                                .field]!.value.toString()));
+                        element.cells[stateManager.currentCell!.column.field]!
+                            .value
+                            .toString()));
                 Get.back();
               },
               icon: Icon(Icons.done),
-              label: Text("Done"),),
+              label: Text("Done"),
+            ),
           ]);
     }
 
@@ -183,39 +186,39 @@ class DataGridMenu {
           height: 36,
           enabled: true,
           child: Obx(
-                () {
+            () {
               checkStateManagerIsNew();
-              return ((Get
-                  .find<MainController>()
-                  .filters1[stateManager.hashCode.toString()] ?? []).isEmpty)
+              return ((Get.find<MainController>()
+                              .filters1[stateManager.hashCode.toString()] ??
+                          [])
+                      .isEmpty)
                   ? Text('Remove Last Filter', style: TextStyle(fontSize: 13))
                   : PopupMenuButton<RowFilter>(
-                child: Text(
-                  'Remove Last Filter',
-                  style: TextStyle(fontSize: 12, fontWeight: FontWeight.normal),
-                ),
-                // onSelected: (Filter result) {
-                //   // setState(() { _selection = result; });
-                // Navigator.pop(context); },
-                itemBuilder: (BuildContext context) {
-                  var _filters = Get
-                      .find<MainController>()
-                      .filters1[stateManager.hashCode.toString()]!;
-                  return <PopupMenuEntry<RowFilter>>[
-                    for (var i = 0; i < _filters.length; i++)
-                      PopupMenuItem(
-                        child: Text("[${_filters[i].field}] ${_filters[i]
-                            .operator == 'equal' ? '=' : '<>'} ${_filters[i]
-                            .value}"),
-                        onTap: () {
-                          _filters.removeAt(i);
-                          applyfilters(stateManager);
-                          Get.back();
-                        },
-                      )
-                  ];
-                },
-              );
+                      child: Text(
+                        'Remove Last Filter',
+                        style: TextStyle(
+                            fontSize: 12, fontWeight: FontWeight.normal),
+                      ),
+                      // onSelected: (Filter result) {
+                      //   // setState(() { _selection = result; });
+                      // Navigator.pop(context); },
+                      itemBuilder: (BuildContext context) {
+                        var _filters = Get.find<MainController>()
+                            .filters1[stateManager.hashCode.toString()]!;
+                        return <PopupMenuEntry<RowFilter>>[
+                          for (var i = 0; i < _filters.length; i++)
+                            PopupMenuItem(
+                              child: Text(
+                                  "[${_filters[i].field}] ${_filters[i].operator == 'equal' ? '=' : '<>'} ${_filters[i].value}"),
+                              onTap: () {
+                                _filters.removeAt(i);
+                                applyfilters(stateManager);
+                                Get.back();
+                              },
+                            )
+                        ];
+                      },
+                    );
             },
           ),
         ),
@@ -264,14 +267,14 @@ class DataGridMenu {
         if (extraList != null && extraList.isNotEmpty) ...{
           ...List.generate(
             extraList.length,
-                (index) {
+            (index) {
               return PopupMenuItem<DataGridMenuItem>(
                 value: DataGridMenuItem.extraList,
                 height: 36,
                 enabled: true,
                 onTap: () => extraList[index].callback(),
-                child: Text(
-                    extraList[index].title, style: TextStyle(fontSize: 13)),
+                child: Text(extraList[index].title,
+                    style: TextStyle(fontSize: 13)),
               );
             },
           ).toList(),
@@ -282,12 +285,12 @@ class DataGridMenu {
     switch (selected) {
       case DataGridMenuItem.selectedfilter:
         if (stateManager.currentCell != null) {
-          Get
-              .find<MainController>()
+          Get.find<MainController>()
               .filters1[stateManager.hashCode.toString()]!
-              .add(RowFilter(field: stateManager.currentCell!.column.field,
-              operator: "equal",
-              value: stateManager.currentCell!.value));
+              .add(RowFilter(
+                  field: stateManager.currentCell!.column.field,
+                  operator: "equal",
+                  value: stateManager.currentCell!.value));
         }
 
         applyfilters(stateManager);
@@ -299,12 +302,12 @@ class DataGridMenu {
 
       case DataGridMenuItem.excludeslected:
         if (stateManager.currentCell != null) {
-          Get
-              .find<MainController>()
+          Get.find<MainController>()
               .filters1[stateManager.hashCode.toString()]!
-              .add(RowFilter(field: stateManager.currentCell!.column.field,
-              operator: "notequal",
-              value: stateManager.currentCell!.value));
+              .add(RowFilter(
+                  field: stateManager.currentCell!.column.field,
+                  operator: "notequal",
+                  value: stateManager.currentCell!.value));
         }
         applyfilters(stateManager);
 
@@ -315,9 +318,9 @@ class DataGridMenu {
 
         break;
       case DataGridMenuItem.removeLastFilter:
-      // print(filters.length);
-      // // filters.length > 1 ? filters.removeLast() : filters.clear();
-      // applyfilters(stateManager);
+        // print(filters.length);
+        // // filters.length > 1 ? filters.removeLast() : filters.clear();
+        // applyfilters(stateManager);
         break;
       case DataGridMenuItem.clearfilter:
         clearFilterList();
@@ -331,29 +334,31 @@ class DataGridMenu {
             exportFileName ?? "Excel-${DateTime.now().toString()}");
         break;
       case DataGridMenuItem.exportPDF:
-      // pluto_grid_export.PlutoGridDefaultPdfExport plutoGridPdfExport =
-      //     pluto_grid_export.PlutoGridDefaultPdfExport(
-      //   title: "ExportedData${DateTime.now().toString()}",
-      //   creator: "BMS_Flutter",
-      //   format: pluto_grid_export.PdfPageFormat.a4.landscape,
-      // );
-      // ExportData().exportPdfFromGridData(plutoGridPdfExport, stateManager);
+        // pluto_grid_export.PlutoGridDefaultPdfExport plutoGridPdfExport =
+        //     pluto_grid_export.PlutoGridDefaultPdfExport(
+        //   title: "ExportedData${DateTime.now().toString()}",
+        //   creator: "BMS_Flutter",
+        //   format: pluto_grid_export.PdfPageFormat.a4.landscape,
+        // );
+        // ExportData().exportPdfFromGridData(plutoGridPdfExport, stateManager);
 
         break;
       case DataGridMenuItem.print:
         stateManager.setShowLoading(true);
         Get.find<ConnectorControl>().POSTMETHOD_FORMDATAWITHTYPE(
-          api: ApiFactory.CONVERT_TO_PDF,
-          fun: (value) {
-            stateManager.setShowLoading(false);
-            // ExportData().printFromGridData1((exportFileName ?? 'export${DateTime.now().toString()}') + ".pdf",value);
-            ExportData().printFromGridData1((exportFileName ?? 'export${DateTime.now().toString()}') + ".pdf",base64.decode(value));
-          },
-          json: stateManager.toJson(),
-          failed: (){
-            stateManager.setShowLoading(false);
-          }
-        );
+            api: ApiFactory.CONVERT_TO_PDF,
+            fun: (value) {
+              stateManager.setShowLoading(false);
+              // ExportData().printFromGridData1((exportFileName ?? 'export${DateTime.now().toString()}') + ".pdf",value);
+              ExportData().printFromGridData1(
+                  (exportFileName ?? 'export${DateTime.now().toString()}') +
+                      ".pdf",
+                  base64.decode(value));
+            },
+            json: stateManager.toJson(),
+            failed: () {
+              stateManager.setShowLoading(false);
+            });
         /*pluto_grid_export
             .PlutoGridDefaultPdfExport plutoGridPdfExport = pluto_grid_export
             .PlutoGridDefaultPdfExport(
@@ -366,17 +371,26 @@ class DataGridMenu {
         break;
       case DataGridMenuItem.exportToCSv:
         String title = "csv_export";
-        var exportCSV = pluto_grid_export.PlutoGridExport.exportCSV(
-            stateManager);
+        var exportCSV;
+
+        if (!csvFormat) {
+          exportCSV = pluto_grid_export.PlutoGridExport.exportCSV(stateManager);
+        } else {
+          exportCSV = PlutoGridExport1.exportCSV(stateManager);
+        }
         var exported = const Utf8Encoder().convert(
-          // FIX Add starting \u{FEFF} / 0xEF, 0xBB, 0xBF
-          // This allows open the file in Excel with proper character interpretation
-          // See https://stackoverflow.com/a/155176
+            // FIX Add starting \u{FEFF} / 0xEF, 0xBB, 0xBF
+            // This allows open the file in Excel with proper character interpretation
+            // See https://stackoverflow.com/a/155176
             '\u{FEFF}$exportCSV');
 
-        FlutterFileSaver().writeFileAsBytes(fileName: (exportFileName ?? 'export${DateTime.now().toString()}') + '.csv',
+        FlutterFileSaver()
+            .writeFileAsBytes(
+          fileName:
+              (exportFileName ?? 'export${DateTime.now().toString()}') + '.csv',
           bytes: exported,
-        ).catchError((error) {
+        )
+            .catchError((error) {
           // This code will be executed if there is an error while saving the file.
           Snack.callError("Error saving file: $error");
         });
@@ -386,7 +400,8 @@ class DataGridMenu {
         Get.find<ConnectorControl>().POSTMETHOD_FORMDATAWITHTYPE(
           api: ApiFactory.EXPORT_TO_XML,
           fun: (value) {
-            ExportData().exportFilefromString(value,
+            ExportData().exportFilefromString(
+                value,
                 (exportFileName ?? 'export${DateTime.now().toString()}') +
                     ".xml");
           },
@@ -394,14 +409,18 @@ class DataGridMenu {
         );
         break;
       case DataGridMenuItem.find:
+        // ignore: use_build_context_synchronously
         showBottomSheet(
             context: context,
             builder: (context) {
-              var _selectedColumn = "";
+              var _selectedColumn = stateManager.currentColumn?.field ?? "";
+              DropDownValue _preselectedColumn = DropDownValue(
+                  key: stateManager.currentColumn?.field ?? "",
+                  value: stateManager.currentColumn?.title ?? "");
               TextEditingController _findctrl = TextEditingController();
               var _almost = RxBool(false);
               var _fromstart = RxBool(false);
-              int? _index = 0;
+              int _index = 0;
               return Card(
                 child: Padding(
                   padding: EdgeInsets.zero,
@@ -429,15 +448,17 @@ class DataGridMenu {
                                 ),
                                 const SizedBox(width: 5),
                                 DropDownField.formDropDown1WidthMap(
-                                  stateManager.columns.map((e) =>
-                                      DropDownValue(
+                                  stateManager.columns
+                                      .map((e) => DropDownValue(
                                           key: e.field, value: e.title))
                                       .toList(),
-                                      (value) {
+                                  (value) {
                                     _selectedColumn = value.key!;
+                                    _preselectedColumn = value;
                                   },
                                   "Column",
                                   0.15,
+                                  selected: _preselectedColumn,
                                   // context,
                                   showtitle: false,
                                 ),
@@ -463,7 +484,8 @@ class DataGridMenu {
                                   ),
                                 ),
                                 const SizedBox(width: 5),
-                                InputFields.formField1(hintTxt: "For",
+                                InputFields.formField1(
+                                    hintTxt: "For",
                                     controller: _findctrl,
                                     width: 0.15,
                                     showTitle: false),
@@ -483,9 +505,9 @@ class DataGridMenu {
                                         _almost.value = !_almost.value;
                                       },
                                       child: Obx(
-                                            () =>
-                                            Icon(_almost.value ? Icons
-                                                .check_box_outlined : Icons
+                                        () => Icon(_almost.value
+                                            ? Icons.check_box_outlined
+                                            : Icons
                                                 .check_box_outline_blank_rounded),
                                       )),
                                   Text("Almost"),
@@ -504,9 +526,9 @@ class DataGridMenu {
                                         _fromstart.value = !_fromstart.value;
                                       },
                                       child: Obx(
-                                            () =>
-                                            Icon(_fromstart.value ? Icons
-                                                .check_box_outlined : Icons
+                                        () => Icon(_fromstart.value
+                                            ? Icons.check_box_outlined
+                                            : Icons
                                                 .check_box_outline_blank_rounded),
                                       )),
                                   Text("From Start")
@@ -524,26 +546,26 @@ class DataGridMenu {
                                           _selectedColumn != "") {
                                         var _slecetedRow = _almost.value
                                             ? stateManager.rows
-                                            .firstWhereOrNull((element) =>
-                                        (element.cells[_selectedColumn]!.value
-                                            .toString()
-                                            .toLowerCase()
-                                            .contains(
-                                            _findctrl.text.toLowerCase()) &&
-                                            (_index == 0 || element.sortIdx >
-                                                (_index ?? 0))))
-                                            : stateManager.rows.firstWhere((
-                                            element) =>
-                                        (element.cells[_selectedColumn]!.value
-                                            .toString().toLowerCase() ==
-                                            _findctrl.text.toLowerCase() &&
-                                            (_index == 0 || element.sortIdx >
-                                                (_index ?? 0))));
+                                                .firstWhereOrNull((element) =>
+                                                    (element.cells[_selectedColumn]!.value.toString().toLowerCase().trim().contains(_findctrl.text.toLowerCase().trim()) &&
+                                                        (_index == 0 ||
+                                                            element.sortIdx >
+                                                                (_index))))
+                                            : stateManager.rows.firstWhereOrNull(
+                                                (element) => (element
+                                                            .cells[_selectedColumn]!
+                                                            .value
+                                                            .toString()
+                                                            .toLowerCase()
+                                                            .trim() ==
+                                                        _findctrl.text.toLowerCase().trim() &&
+                                                    (_index == 0 || element.sortIdx > (_index))));
                                         if (_slecetedRow == null) {
                                           stateManager.resetScrollToZero();
 
-                                          Get.defaultDialog(content: Text(
-                                              "You Have reach the end !\nDo u want to restart?"),
+                                          Get.defaultDialog(
+                                              content: Text(
+                                                  "You Have reach the end !\nDo u want to restart?"),
                                               actions: [
                                                 ElevatedButton.icon(
                                                     onPressed: () {
@@ -551,42 +573,33 @@ class DataGridMenu {
                                                       stateManager
                                                           .resetScrollToZero();
                                                       Get.back();
-                                                      var _slecetedRow = _almost
-                                                          .value
-                                                          ? stateManager.rows
-                                                          .firstWhereOrNull((
-                                                          element) =>
-                                                      (element
-                                                          .cells[_selectedColumn]!
-                                                          .value
-                                                          .toString()
-                                                          .toLowerCase()
-                                                          .contains(
-                                                          _findctrl.text
-                                                              .toLowerCase()) &&
-                                                          (_index == 0 ||
-                                                              element.sortIdx >
-                                                                  (_index ??
-                                                                      0))))
+                                                      var _slecetedRow = _almost.value
+                                                          ? stateManager.rows.firstWhereOrNull((element) => (element
+                                                                  .cells[
+                                                                      _selectedColumn]!
+                                                                  .value
+                                                                  .toString()
+                                                                  .toLowerCase()
+                                                                  .trim()
+                                                                  .contains(_findctrl.text
+                                                                      .toLowerCase()
+                                                                      .trim()) &&
+                                                              (_index == 0 ||
+                                                                  element.sortIdx >
+                                                                      (_index ??
+                                                                          0))))
                                                           : stateManager.rows
-                                                          .firstWhere((
-                                                          element) =>
-                                                      (element
-                                                          .cells[_selectedColumn]!
-                                                          .value.toString()
-                                                          .toLowerCase() ==
-                                                          _findctrl.text
-                                                              .toLowerCase() &&
-                                                          (_index == 0 ||
-                                                              element.sortIdx >
-                                                                  (_index ??
-                                                                      0))));
+                                                              .firstWhere((element) => (element.cells[_selectedColumn]!.value.toString().toLowerCase().trim() == _findctrl.text.toLowerCase().trim() && (_index == 0 || element.sortIdx > (_index ?? 0))));
                                                       print(_slecetedRow!
-                                                          .cells[_selectedColumn]!
-                                                          .value.toString() +
+                                                              .cells[
+                                                                  _selectedColumn]!
+                                                              .value
+                                                              .toString() +
                                                           _slecetedRow
-                                                              .cells[_selectedColumn]!
-                                                              .value.runtimeType
+                                                              .cells[
+                                                                  _selectedColumn]!
+                                                              .value
+                                                              .runtimeType
                                                               .toString());
                                                       _index =
                                                           _slecetedRow.sortIdx;
@@ -595,28 +608,28 @@ class DataGridMenu {
 
                                                       stateManager
                                                           .moveScrollByRow(
-                                                          PlutoMoveDirection
-                                                              .down,
-                                                          _slecetedRow.sortIdx -
-                                                              1);
+                                                              PlutoMoveDirection
+                                                                  .down,
+                                                              _slecetedRow
+                                                                      .sortIdx -
+                                                                  1);
 
-                                                      stateManager.setKeepFocus(
-                                                          false);
-                                                      for (var element in stateManager
-                                                          .rows) {
-                                                        stateManager
-                                                            .setRowChecked(
-                                                            element, false,
-                                                            notify: false);
-                                                      }
                                                       stateManager
-                                                          .setRowChecked(
-                                                          _slecetedRow, true,
-                                                          notify: true);
-                                                      stateManager
-                                                          .setCurrentCell(
-                                                          _slecetedRow
-                                                              .cells[_selectedColumn],
+                                                          .setKeepFocus(false);
+                                                      // for (var element in stateManager
+                                                      //     .rows) {
+                                                      //   stateManager
+                                                      //       .setRowChecked(
+                                                      //       element, false,
+                                                      //       notify: false);
+                                                      // }
+                                                      // stateManager
+                                                      //     .setRowChecked(
+                                                      //     _slecetedRow, true,
+                                                      //     notify: true);
+                                                      stateManager.setCurrentCell(
+                                                          _slecetedRow.cells[
+                                                              _selectedColumn],
                                                           _slecetedRow.sortIdx);
                                                     },
                                                     icon: Icon(Icons.done),
@@ -629,34 +642,39 @@ class DataGridMenu {
                                                     label: Text("NO")),
                                               ]);
                                         } else {
-                                          print(_slecetedRow
-                                              .cells[_selectedColumn]!.value
-                                              .toString() +
-                                              _slecetedRow
-                                                  .cells[_selectedColumn]!.value
-                                                  .runtimeType.toString());
+                                          // print(_slecetedRow
+                                          //         .cells[_selectedColumn]!.value
+                                          //         .toString() +
+                                          //     _slecetedRow
+                                          //         .cells[_selectedColumn]!
+                                          //         .value
+                                          //         .runtimeType
+                                          //         .toString());
                                           if (_slecetedRow.sortIdx == 0) {
-                                            _index = _index! + 1;
+                                            _index = 1;
                                           } else {
                                             _index = _slecetedRow.sortIdx;
                                           }
 
                                           stateManager.resetScrollToZero();
                                           stateManager.moveScrollByRow(
-                                              PlutoMoveDirection.down,
-                                              _slecetedRow.sortIdx - 1);
+                                              PlutoMoveDirection.down, _index);
                                           stateManager.setKeepFocus(false);
-                                          for (var element in stateManager
-                                              .rows) {
-                                            stateManager.setRowChecked(
-                                                element, false, notify: false);
-                                          }
-                                          stateManager.setRowChecked(
-                                              _slecetedRow, true, notify: true);
+                                          // for (var element in stateManager
+                                          //     .rows) {
+                                          //   stateManager.setRowChecked(
+                                          //       element, false, notify: false);
+                                          // }
+                                          // stateManager.setRowChecked(
+                                          //     _slecetedRow, true, notify: true);
                                           stateManager.setCurrentCell(
-                                              _slecetedRow
-                                                  .cells[_selectedColumn],
-                                              _slecetedRow.sortIdx);
+                                              _index == 1
+                                                  ? stateManager
+                                                      .getRowByIdx(_index)!
+                                                      .cells[_selectedColumn]
+                                                  : _slecetedRow
+                                                      .cells[_selectedColumn],
+                                              _index);
                                         }
                                       }
                                     },
@@ -666,13 +684,13 @@ class DataGridMenu {
                                 ElevatedButton.icon(
                                     label: Text(""),
                                     onPressed: () {
-                                      for (var element in stateManager
-                                          .rows) {
-                                        stateManager
-                                            .setRowChecked(
-                                            element, false,
-                                            notify: false);
-                                      }
+                                      // for (var element in stateManager
+                                      //     .rows) {
+                                      //   stateManager
+                                      //       .setRowChecked(
+                                      //       element, false,
+                                      //       notify: false);
+                                      // }
                                       Navigator.pop(context);
                                     },
                                     icon: Icon(Icons.clear_outlined)),
@@ -680,22 +698,32 @@ class DataGridMenu {
                                 ElevatedButton(
                                     onPressed: () {
                                       stateManager.setFilter((element) =>
-                                      stateManager.currentCell == null
-                                          ? true
-                                          : element.cells[stateManager
-                                          .currentCell!.column.field]!.value ==
-                                          stateManager.currentCell!.value);
+                                          stateManager.currentCell == null
+                                              ? true
+                                              : element
+                                                      .cells[stateManager
+                                                          .currentCell!
+                                                          .column
+                                                          .field]!
+                                                      .value ==
+                                                  stateManager
+                                                      .currentCell!.value);
                                     },
                                     child: Text("FS")),
                                 SizedBox(width: 15),
                                 ElevatedButton(
                                     onPressed: () {
                                       stateManager.setFilter((element) =>
-                                      stateManager.currentCell == null
-                                          ? true
-                                          : element.cells[stateManager
-                                          .currentCell!.column.field]!.value !=
-                                          stateManager.currentCell!.value);
+                                          stateManager.currentCell == null
+                                              ? true
+                                              : element
+                                                      .cells[stateManager
+                                                          .currentCell!
+                                                          .column
+                                                          .field]!
+                                                      .value !=
+                                                  stateManager
+                                                      .currentCell!.value);
                                     },
                                     child: Text("XF")),
                                 SizedBox(width: 15),
@@ -732,11 +760,12 @@ class DataGridMenu {
 
   showGridCustomMenu(PlutoGridStateManager stateManager, TapDownDetails details,
       BuildContext context,
-      {String? exportFileName, Function? onPressedClick, required PlutoColumnRendererContext plutoContext}) async {
+      {String? exportFileName,
+      Function? onPressedClick,
+      required PlutoColumnRendererContext plutoContext}) async {
     clearFilterList() {
-      Get
-          .find<MainController>()
-          .filters1[stateManager.hashCode.toString()] = RxList([]);
+      Get.find<MainController>().filters1[stateManager.hashCode.toString()] =
+          RxList([]);
     }
 
     void printStatement(List list) {
@@ -747,12 +776,12 @@ class DataGridMenu {
         list[1].setShowLoading(false);
       }
     }
+
     void printStatement1() async {
       try {
         stateManager.setShowLoading(true);
-        pluto_grid_export
-            .PlutoGridDefaultPdfExport plutoGridPdfExport = pluto_grid_export
-            .PlutoGridDefaultPdfExport(
+        pluto_grid_export.PlutoGridDefaultPdfExport plutoGridPdfExport =
+            pluto_grid_export.PlutoGridDefaultPdfExport(
           title: exportFileName ?? "ExportedData${DateTime.now().toString()}",
           creator: "BMS_Flutter",
           format: pluto_grid_export.PdfPageFormat.a4.landscape,
@@ -765,31 +794,31 @@ class DataGridMenu {
 
     checkStateManagerIsNew() async {
       print("Hashcode======================> ${stateManager.hashCode}");
-      if (Get
-          .find<MainController>()
+      if (Get.find<MainController>()
           .filters1
-          .containsKey(stateManager.hashCode.toString())) {} else {
+          .containsKey(stateManager.hashCode.toString())) {
+      } else {
         clearFilterList();
       }
     }
 
     applyfilters(PlutoGridStateManager stateManager) {
-      var _filters = Get
-          .find<MainController>()
-          .filters1[stateManager.hashCode.toString()] ?? [];
+      var _filters = Get.find<MainController>()
+              .filters1[stateManager.hashCode.toString()] ??
+          [];
       stateManager.setFilter((element) => true);
       List<PlutoRow> _filterRows = stateManager.rows;
       for (var filter in _filters) {
         if (filter.operator == "equal") {
-          _filterRows =
-              _filterRows.where((element) =>
-              element.cells[filter.field]!
-                  .value == filter.value).toList();
+          _filterRows = _filterRows
+              .where((element) =>
+                  element.cells[filter.field]!.value == filter.value)
+              .toList();
         } else {
-          _filterRows =
-              _filterRows.where((element) =>
-              element.cells[filter.field]!
-                  .value != filter.value).toList();
+          _filterRows = _filterRows
+              .where((element) =>
+                  element.cells[filter.field]!.value != filter.value)
+              .toList();
         }
       }
       stateManager.setFilter((element) => _filterRows.contains(element));
@@ -799,8 +828,9 @@ class DataGridMenu {
       List _allValues = [];
       var _selectedValues = RxList([]);
       if (stateManager.currentCell != null) {
-        _allValues = stateManager.rows.map((e) =>
-            e.cells[stateManager.currentCell!.column.field]!.value.toString())
+        _allValues = stateManager.rows
+            .map((e) => e.cells[stateManager.currentCell!.column.field]!.value
+                .toString())
             .toSet()
             .toList();
       }
@@ -820,38 +850,37 @@ class DataGridMenu {
                     shrinkWrap: true,
                     itemBuilder: ((context, index) {
                       return Obx(
-                            () =>
-                            Card(
-                              color: _selectedValues.contains(_allValues[index])
-                                  ? Colors.deepPurple
-                                  : Colors.white,
-                              child: InkWell(
-                                focusColor: Colors.deepPurple[200],
-                                canRequestFocus: true,
-                                onTap: () {
-                                  if (_selectedValues.contains(
-                                      _allValues[index])) {
-                                    _selectedValues.remove(_allValues[index]);
-                                  } else {
-                                    _selectedValues.add(_allValues[index]);
-                                  }
-                                },
-                                child: Padding(
-                                  padding: const EdgeInsets.all(8),
-                                  child: Text(
-                                    _allValues[index],
-                                    style: _selectedValues.contains(
-                                        _allValues[index])
-                                        ? TextStyle(fontWeight: FontWeight.bold,
-                                        fontSize: 12,
-                                        color: Colors.white)
+                        () => Card(
+                          color: _selectedValues.contains(_allValues[index])
+                              ? Colors.deepPurple
+                              : Colors.white,
+                          child: InkWell(
+                            focusColor: Colors.deepPurple[200],
+                            canRequestFocus: true,
+                            onTap: () {
+                              if (_selectedValues.contains(_allValues[index])) {
+                                _selectedValues.remove(_allValues[index]);
+                              } else {
+                                _selectedValues.add(_allValues[index]);
+                              }
+                            },
+                            child: Padding(
+                              padding: const EdgeInsets.all(8),
+                              child: Text(
+                                _allValues[index],
+                                style:
+                                    _selectedValues.contains(_allValues[index])
+                                        ? TextStyle(
+                                            fontWeight: FontWeight.bold,
+                                            fontSize: 12,
+                                            color: Colors.white)
                                         : TextStyle(
-                                      fontSize: 12,
-                                    ),
-                                  ),
-                                ),
+                                            fontSize: 12,
+                                          ),
                               ),
                             ),
+                          ),
+                        ),
                       );
                     }),
                     itemCount: _allValues.length,
@@ -869,12 +898,12 @@ class DataGridMenu {
                 label: Text("Cancel")),
             ElevatedButton.icon(
                 onPressed: () {
-                  stateManager.setFilter(
-                          (element) =>
-                          _selectedValues.any((value) =>
+                  stateManager.setFilter((element) => _selectedValues.any(
+                      (value) =>
                           value ==
-                              element.cells[stateManager.currentCell!.column
-                                  .field]!.value.toString()));
+                          element.cells[stateManager.currentCell!.column.field]!
+                              .value
+                              .toString()));
                   Get.back();
                 },
                 icon: Icon(Icons.done),
@@ -882,7 +911,8 @@ class DataGridMenu {
           ]);
     }
 
-    var selected = await showMenu(context: context,
+    var selected = await showMenu(
+        context: context,
         position: RelativeRect.fromSize(
             details.globalPosition & Size(40, 40), Get.size),
         items: [
@@ -909,40 +939,39 @@ class DataGridMenu {
             height: 36,
             enabled: true,
             child: Obx(
-                  () {
+              () {
                 checkStateManagerIsNew();
-                return ((Get
-                    .find<MainController>()
-                    .filters1[stateManager.hashCode.toString()] ?? []).isEmpty)
+                return ((Get.find<MainController>()
+                                .filters1[stateManager.hashCode.toString()] ??
+                            [])
+                        .isEmpty)
                     ? Text('Remove Last Filter', style: TextStyle(fontSize: 13))
                     : PopupMenuButton<RowFilter>(
-                  child: Text(
-                    'Remove Last Filter',
-                    style: TextStyle(
-                        fontSize: 12, fontWeight: FontWeight.normal),
-                  ),
-                  // onSelected: (Filter result) {
-                  //   // setState(() { _selection = result; });
-                  // Navigator.pop(context); },
-                  itemBuilder: (BuildContext context) {
-                    var _filters = Get
-                        .find<MainController>()
-                        .filters1[stateManager.hashCode.toString()]!;
-                    return <PopupMenuEntry<RowFilter>>[
-                      for (var i = 0; i < _filters.length; i++)
-                        PopupMenuItem(
-                          child: Text("[${_filters[i].field}] ${_filters[i]
-                              .operator == 'equal' ? '=' : '<>'} ${_filters[i]
-                              .value}"),
-                          onTap: () {
-                            _filters.removeAt(i);
-                            applyfilters(stateManager);
-                            Get.back();
-                          },
-                        )
-                    ];
-                  },
-                );
+                        child: Text(
+                          'Remove Last Filter',
+                          style: TextStyle(
+                              fontSize: 12, fontWeight: FontWeight.normal),
+                        ),
+                        // onSelected: (Filter result) {
+                        //   // setState(() { _selection = result; });
+                        // Navigator.pop(context); },
+                        itemBuilder: (BuildContext context) {
+                          var _filters = Get.find<MainController>()
+                              .filters1[stateManager.hashCode.toString()]!;
+                          return <PopupMenuEntry<RowFilter>>[
+                            for (var i = 0; i < _filters.length; i++)
+                              PopupMenuItem(
+                                child: Text(
+                                    "[${_filters[i].field}] ${_filters[i].operator == 'equal' ? '=' : '<>'} ${_filters[i].value}"),
+                                onTap: () {
+                                  _filters.removeAt(i);
+                                  applyfilters(stateManager);
+                                  Get.back();
+                                },
+                              )
+                          ];
+                        },
+                      );
               },
             ),
           ),
@@ -1010,12 +1039,12 @@ class DataGridMenu {
     switch (selected) {
       case DataGridMenuItem.selectedfilter:
         if (stateManager.currentCell != null) {
-          Get
-              .find<MainController>()
+          Get.find<MainController>()
               .filters1[stateManager.hashCode.toString()]!
-              .add(RowFilter(field: stateManager.currentCell!.column.field,
-              operator: "equal",
-              value: stateManager.currentCell!.value));
+              .add(RowFilter(
+                  field: stateManager.currentCell!.column.field,
+                  operator: "equal",
+                  value: stateManager.currentCell!.value));
         }
 
         applyfilters(stateManager);
@@ -1027,12 +1056,12 @@ class DataGridMenu {
 
       case DataGridMenuItem.excludeslected:
         if (stateManager.currentCell != null) {
-          Get
-              .find<MainController>()
+          Get.find<MainController>()
               .filters1[stateManager.hashCode.toString()]!
-              .add(RowFilter(field: stateManager.currentCell!.column.field,
-              operator: "notequal",
-              value: stateManager.currentCell!.value));
+              .add(RowFilter(
+                  field: stateManager.currentCell!.column.field,
+                  operator: "notequal",
+                  value: stateManager.currentCell!.value));
         }
         applyfilters(stateManager);
 
@@ -1043,9 +1072,9 @@ class DataGridMenu {
 
         break;
       case DataGridMenuItem.removeLastFilter:
-      // print(filters.length);
-      // // filters.length > 1 ? filters.removeLast() : filters.clear();
-      // applyfilters(stateManager);
+        // print(filters.length);
+        // // filters.length > 1 ? filters.removeLast() : filters.clear();
+        // applyfilters(stateManager);
         break;
       case DataGridMenuItem.clearfilter:
         clearFilterList();
@@ -1059,17 +1088,17 @@ class DataGridMenu {
             exportFileName ?? "Excel-${DateTime.now().toString()}");
         break;
       case DataGridMenuItem.exportPDF:
-      // pluto_grid_export.PlutoGridDefaultPdfExport plutoGridPdfExport =
-      //     pluto_grid_export.PlutoGridDefaultPdfExport(
-      //   title: "ExportedData${DateTime.now().toString()}",
-      //   creator: "BMS_Flutter",
-      //   format: pluto_grid_export.PdfPageFormat.a4.landscape,
-      // );
-      // ExportData().exportPdfFromGridData(plutoGridPdfExport, stateManager);
+        // pluto_grid_export.PlutoGridDefaultPdfExport plutoGridPdfExport =
+        //     pluto_grid_export.PlutoGridDefaultPdfExport(
+        //   title: "ExportedData${DateTime.now().toString()}",
+        //   creator: "BMS_Flutter",
+        //   format: pluto_grid_export.PdfPageFormat.a4.landscape,
+        // );
+        // ExportData().exportPdfFromGridData(plutoGridPdfExport, stateManager);
 
         break;
       case DataGridMenuItem.print:
-      /*try {
+        /*try {
           stateManager.setShowLoading(true);
           pluto_grid_export
               .PlutoGridDefaultPdfExport plutoGridPdfExport = pluto_grid_export
@@ -1083,46 +1112,50 @@ class DataGridMenu {
           stateManager.setShowLoading(false);
         }*/
 
-      stateManager.setShowLoading(true);
+        stateManager.setShowLoading(true);
         Get.find<ConnectorControl>().POSTMETHOD_FORMDATAWITHTYPE(
-          api: ApiFactory.CONVERT_TO_PDF,
-          fun: (value) {
-            stateManager.setShowLoading(false);
-            ExportData().printFromGridData1((exportFileName ?? 'export${DateTime.now().toString()}') + ".pdf",base64.decode(value));
-            // ExportData().printFromGridData1((exportFileName ?? 'export${DateTime.now().toString()}') + ".pdf",value);
-          },
-          json: stateManager.toJson(),
-          failed: (){
-            stateManager.setShowLoading(false);
-          }
-        );
+            api: ApiFactory.CONVERT_TO_PDF,
+            fun: (value) {
+              stateManager.setShowLoading(false);
+              ExportData().printFromGridData1(
+                  (exportFileName ?? 'export${DateTime.now().toString()}') +
+                      ".pdf",
+                  base64.decode(value));
+              // ExportData().printFromGridData1((exportFileName ?? 'export${DateTime.now().toString()}') + ".pdf",value);
+            },
+            json: stateManager.toJson(),
+            failed: () {
+              stateManager.setShowLoading(false);
+            });
         // printStatement1();
         break;
       case DataGridMenuItem.exportToCSv:
         String title = "csv_export";
-        var exportCSV = pluto_grid_export.PlutoGridExport.exportCSV(
-            stateManager);
+        var exportCSV =
+            pluto_grid_export.PlutoGridExport.exportCSV(stateManager);
         var exported = const Utf8Encoder().convert(
-          // FIX Add starting \u{FEFF} / 0xEF, 0xBB, 0xBF
-          // This allows open the file in Excel with proper character interpretation
-          // See https://stackoverflow.com/a/155176
+            // FIX Add starting \u{FEFF} / 0xEF, 0xBB, 0xBF
+            // This allows open the file in Excel with proper character interpretation
+            // See https://stackoverflow.com/a/155176
             '\u{FEFF}$exportCSV');
 
         FlutterFileSaver()
             .writeFileAsBytes(
-          fileName: (exportFileName ?? 'export${DateTime.now().toString()}') +
-              '.csv',
-          bytes: exported,
-        )
+              fileName:
+                  (exportFileName ?? 'export${DateTime.now().toString()}') +
+                      '.csv',
+              bytes: exported,
+            )
             .then((value) => Snack.callSuccess("File save to $value"));
         // await FileSaver.instance.saveFile("$title.csv", exported, ".csv");
         break;
       case DataGridMenuItem.exportToXml:
-      //TODO
+        //TODO
         Get.find<ConnectorControl>().POSTMETHOD_FORMDATAWITHTYPE(
           api: ApiFactory.EXPORT_TO_XML,
           fun: (value) {
-            ExportData().exportFilefromString(value,
+            ExportData().exportFilefromString(
+                value,
                 (exportFileName ?? 'export${DateTime.now().toString()}') +
                     ".xml");
           },
@@ -1130,29 +1163,29 @@ class DataGridMenu {
         );
         break;
       case DataGridMenuItem.find:
-      // ScaffoldMessenger.of(context).showSnackBar(SnackBar(
-      //     margin:
-      //         EdgeInsets.symmetric(vertical: kToolbarHeight, horizontal: 10),
-      //     duration: Duration(minutes: 10),
-      //     behavior: SnackBarBehavior.floating,
-      //     content: Container(
-      //       height: 40,
-      //       child: Row(
-      //         mainAxisAlignment: MainAxisAlignment.center,
-      //         mainAxisSize: MainAxisSize.min,
-      //         children: [
-      //           DropDownField.simpleDropDownwithWidthRatio(
-      //               stateManager.columns
-      //                   .map((e) =>
-      //                       DropDownValue(key: e.field, value: e.title))
-      //                   .toList(),
-      //               (value) {},
-      //               "Columns",
-      //               0.20,
-      //               context)
-      //         ],
-      //       ),
-      //     )));
+        // ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+        //     margin:
+        //         EdgeInsets.symmetric(vertical: kToolbarHeight, horizontal: 10),
+        //     duration: Duration(minutes: 10),
+        //     behavior: SnackBarBehavior.floating,
+        //     content: Container(
+        //       height: 40,
+        //       child: Row(
+        //         mainAxisAlignment: MainAxisAlignment.center,
+        //         mainAxisSize: MainAxisSize.min,
+        //         children: [
+        //           DropDownField.simpleDropDownwithWidthRatio(
+        //               stateManager.columns
+        //                   .map((e) =>
+        //                       DropDownValue(key: e.field, value: e.title))
+        //                   .toList(),
+        //               (value) {},
+        //               "Columns",
+        //               0.20,
+        //               context)
+        //         ],
+        //       ),
+        //     )));
 
         showBottomSheet(
             context: context,
@@ -1185,10 +1218,11 @@ class DataGridMenu {
                             ),
                             const SizedBox(width: 5),
                             DropDownField.formDropDown1WidthMap(
-                              stateManager.columns.map((e) =>
-                                  DropDownValue(key: e.field, value: e.title))
+                              stateManager.columns
+                                  .map((e) => DropDownValue(
+                                      key: e.field, value: e.title))
                                   .toList(),
-                                  (value) {
+                              (value) {
                                 _selectedColumn = value.key!;
                               },
                               "Column",
@@ -1215,7 +1249,8 @@ class DataGridMenu {
                               ),
                             ),
                             const SizedBox(width: 5),
-                            InputFields.formField1(hintTxt: "For",
+                            InputFields.formField1(
+                                hintTxt: "For",
                                 controller: _findctrl,
                                 width: 0.15,
                                 showTitle: false),
@@ -1232,10 +1267,9 @@ class DataGridMenu {
                                   _almost.value = !_almost.value;
                                 },
                                 child: Obx(
-                                      () =>
-                                      Icon(_almost.value ? Icons
-                                          .check_box_outlined : Icons
-                                          .check_box_outline_blank_rounded),
+                                  () => Icon(_almost.value
+                                      ? Icons.check_box_outlined
+                                      : Icons.check_box_outline_blank_rounded),
                                 )),
                             Text("Almost"),
                           ],
@@ -1251,10 +1285,9 @@ class DataGridMenu {
                                   _fromstart.value = !_fromstart.value;
                                 },
                                 child: Obx(
-                                      () =>
-                                      Icon(_fromstart.value ? Icons
-                                          .check_box_outlined : Icons
-                                          .check_box_outline_blank_rounded),
+                                  () => Icon(_fromstart.value
+                                      ? Icons.check_box_outlined
+                                      : Icons.check_box_outline_blank_rounded),
                                 )),
                             Text("From Start")
                           ],
@@ -1270,27 +1303,25 @@ class DataGridMenu {
                                     if (_findctrl.text != "" &&
                                         _selectedColumn != "") {
                                       var _slecetedRow = _almost.value
-                                          ? stateManager.rows.firstWhereOrNull((
-                                          element) =>
-                                      (element.cells[_selectedColumn]!.value
-                                          .toString()
-                                          .toLowerCase()
-                                          .contains(
-                                          _findctrl.text.toLowerCase()) &&
-                                          (_index == 0 ||
-                                              element.sortIdx > (_index ?? 0))))
-                                          : stateManager.rows.firstWhere((
-                                          element) =>
-                                      (element.cells[_selectedColumn]!.value
-                                          .toString().toLowerCase() ==
-                                          _findctrl.text.toLowerCase() &&
-                                          (_index == 0 || element.sortIdx >
-                                              (_index ?? 0))));
+                                          ? stateManager.rows.firstWhereOrNull((element) =>
+                                              (element.cells[_selectedColumn]!.value.toString().toLowerCase().contains(_findctrl.text.toLowerCase()) &&
+                                                  (_index == 0 ||
+                                                      element.sortIdx >
+                                                          (_index ?? 0))))
+                                          : stateManager.rows.firstWhere((element) =>
+                                              (element.cells[_selectedColumn]!.value
+                                                          .toString()
+                                                          .toLowerCase() ==
+                                                      _findctrl.text
+                                                          .toLowerCase() &&
+                                                  (_index == 0 ||
+                                                      element.sortIdx > (_index ?? 0))));
                                       if (_slecetedRow == null) {
                                         stateManager.resetScrollToZero();
 
-                                        Get.defaultDialog(content: Text(
-                                            "You Have reach the end !\nDo u want to restart?"),
+                                        Get.defaultDialog(
+                                            content: Text(
+                                                "You Have reach the end !\nDo u want to restart?"),
                                             actions: [
                                               ElevatedButton.icon(
                                                   onPressed: () {
@@ -1299,38 +1330,30 @@ class DataGridMenu {
                                                         .resetScrollToZero();
                                                     Get.back();
                                                     var _slecetedRow = _almost
-                                                        .value
-                                                        ? stateManager.rows
-                                                        .firstWhereOrNull((
-                                                        element) =>
-                                                    (element
-                                                        .cells[_selectedColumn]!
-                                                        .value
-                                                        .toString()
-                                                        .toLowerCase()
-                                                        .contains(_findctrl.text
-                                                        .toLowerCase()) &&
-                                                        (_index == 0 ||
-                                                            element.sortIdx >
-                                                                (_index ?? 0))))
-                                                        : stateManager.rows
-                                                        .firstWhere((element) =>
-                                                    (element
-                                                        .cells[_selectedColumn]!
-                                                        .value.toString()
-                                                        .toLowerCase() ==
-                                                        _findctrl.text
-                                                            .toLowerCase() &&
-                                                        (_index == 0 ||
-                                                            element.sortIdx >
-                                                                (_index ??
-                                                                    0))));
+                                                            .value
+                                                        ? stateManager.rows.firstWhereOrNull(
+                                                            (element) => (element.cells[_selectedColumn]!.value.toString().toLowerCase().contains(_findctrl.text.toLowerCase()) &&
+                                                                (_index == 0 ||
+                                                                    element.sortIdx >
+                                                                        (_index ??
+                                                                            0))))
+                                                        : stateManager.rows.firstWhere((element) => (element
+                                                                    .cells[_selectedColumn]!
+                                                                    .value
+                                                                    .toString()
+                                                                    .toLowerCase() ==
+                                                                _findctrl.text.toLowerCase() &&
+                                                            (_index == 0 || element.sortIdx > (_index ?? 0))));
                                                     print(_slecetedRow!
-                                                        .cells[_selectedColumn]!
-                                                        .value.toString() +
+                                                            .cells[
+                                                                _selectedColumn]!
+                                                            .value
+                                                            .toString() +
                                                         _slecetedRow
-                                                            .cells[_selectedColumn]!
-                                                            .value.runtimeType
+                                                            .cells[
+                                                                _selectedColumn]!
+                                                            .value
+                                                            .runtimeType
                                                             .toString());
                                                     _index =
                                                         _slecetedRow.sortIdx;
@@ -1339,25 +1362,27 @@ class DataGridMenu {
 
                                                     stateManager
                                                         .moveScrollByRow(
-                                                        PlutoMoveDirection.down,
-                                                        _slecetedRow.sortIdx -
-                                                            1);
+                                                            PlutoMoveDirection
+                                                                .down,
+                                                            _slecetedRow
+                                                                    .sortIdx -
+                                                                1);
 
-                                                    stateManager.setKeepFocus(
-                                                        false);
-                                                    for (var element in stateManager
-                                                        .rows) {
-                                                      stateManager
-                                                          .setRowChecked(
-                                                          element, false,
-                                                          notify: false);
-                                                    }
-                                                    stateManager.setRowChecked(
-                                                        _slecetedRow, true,
-                                                        notify: true);
+                                                    stateManager
+                                                        .setKeepFocus(false);
+                                                    // for (var element in stateManager
+                                                    //     .rows) {
+                                                    //   stateManager
+                                                    //       .setRowChecked(
+                                                    //       element, false,
+                                                    //       notify: false);
+                                                    // }
+                                                    // stateManager.setRowChecked(
+                                                    //     _slecetedRow, true,
+                                                    //     notify: true);
                                                     stateManager.setCurrentCell(
-                                                        _slecetedRow
-                                                            .cells[_selectedColumn],
+                                                        _slecetedRow.cells[
+                                                            _selectedColumn],
                                                         _slecetedRow.sortIdx);
                                                   },
                                                   icon: Icon(Icons.done),
@@ -1370,13 +1395,12 @@ class DataGridMenu {
                                                   label: Text("NO")),
                                             ]);
                                       } else {
-                                        print(
+                                        print(_slecetedRow
+                                                .cells[_selectedColumn]!.value
+                                                .toString() +
                                             _slecetedRow.cells[_selectedColumn]!
-                                                .value.toString() +
-                                                _slecetedRow
-                                                    .cells[_selectedColumn]!
-                                                    .value.runtimeType
-                                                    .toString());
+                                                .value.runtimeType
+                                                .toString());
                                         if (_slecetedRow.sortIdx == 0) {
                                           _index = _index! + 1;
                                         } else {
@@ -1388,12 +1412,12 @@ class DataGridMenu {
                                             PlutoMoveDirection.down,
                                             _slecetedRow.sortIdx - 1);
                                         stateManager.setKeepFocus(false);
-                                        for (var element in stateManager.rows) {
-                                          stateManager.setRowChecked(
-                                              element, false, notify: false);
-                                        }
-                                        stateManager.setRowChecked(
-                                            _slecetedRow, true, notify: true);
+                                        // for (var element in stateManager.rows) {
+                                        //   stateManager.setRowChecked(
+                                        //       element, false, notify: false);
+                                        // }
+                                        // stateManager.setRowChecked(
+                                        //     _slecetedRow, true, notify: true);
                                         stateManager.setCurrentCell(
                                             _slecetedRow.cells[_selectedColumn],
                                             _slecetedRow.sortIdx);
@@ -1413,22 +1437,32 @@ class DataGridMenu {
                               ElevatedButton(
                                   onPressed: () {
                                     stateManager.setFilter((element) =>
-                                    stateManager.currentCell == null
-                                        ? true
-                                        : element.cells[stateManager
-                                        .currentCell!.column.field]!.value ==
-                                        stateManager.currentCell!.value);
+                                        stateManager.currentCell == null
+                                            ? true
+                                            : element
+                                                    .cells[stateManager
+                                                        .currentCell!
+                                                        .column
+                                                        .field]!
+                                                    .value ==
+                                                stateManager
+                                                    .currentCell!.value);
                                   },
                                   child: Text("FS")),
                               SizedBox(width: 15),
                               ElevatedButton(
                                   onPressed: () {
                                     stateManager.setFilter((element) =>
-                                    stateManager.currentCell == null
-                                        ? true
-                                        : element.cells[stateManager
-                                        .currentCell!.column.field]!.value !=
-                                        stateManager.currentCell!.value);
+                                        stateManager.currentCell == null
+                                            ? true
+                                            : element
+                                                    .cells[stateManager
+                                                        .currentCell!
+                                                        .column
+                                                        .field]!
+                                                    .value !=
+                                                stateManager
+                                                    .currentCell!.value);
                                   },
                                   child: Text("XF")),
                               SizedBox(width: 15),
@@ -1465,40 +1499,41 @@ class DataGridMenu {
 
   showGridCustomTransmissionLog(PlutoGridStateManager stateManager,
       TapDownDetails details, BuildContext context,
-      {String? exportFileName, Function? onPressedClick, required PlutoColumnRendererContext plutoContext}) async {
+      {String? exportFileName,
+      Function? onPressedClick,
+      required PlutoColumnRendererContext plutoContext}) async {
     clearFilterList() {
-      Get
-          .find<MainController>()
-          .filters1[stateManager.hashCode.toString()] = RxList([]);
+      Get.find<MainController>().filters1[stateManager.hashCode.toString()] =
+          RxList([]);
     }
 
     checkStateManagerIsNew() async {
       print("Hashcode======================> ${stateManager.hashCode}");
-      if (Get
-          .find<MainController>()
+      if (Get.find<MainController>()
           .filters1
-          .containsKey(stateManager.hashCode.toString())) {} else {
+          .containsKey(stateManager.hashCode.toString())) {
+      } else {
         clearFilterList();
       }
     }
 
     applyfilters(PlutoGridStateManager stateManager) {
-      var _filters = Get
-          .find<MainController>()
-          .filters1[stateManager.hashCode.toString()] ?? [];
+      var _filters = Get.find<MainController>()
+              .filters1[stateManager.hashCode.toString()] ??
+          [];
       stateManager.setFilter((element) => true);
       List<PlutoRow> _filterRows = stateManager.rows;
       for (var filter in _filters) {
         if (filter.operator == "equal") {
-          _filterRows =
-              _filterRows.where((element) =>
-              element.cells[filter.field]!
-                  .value == filter.value).toList();
+          _filterRows = _filterRows
+              .where((element) =>
+                  element.cells[filter.field]!.value == filter.value)
+              .toList();
         } else {
-          _filterRows =
-              _filterRows.where((element) =>
-              element.cells[filter.field]!
-                  .value != filter.value).toList();
+          _filterRows = _filterRows
+              .where((element) =>
+                  element.cells[filter.field]!.value != filter.value)
+              .toList();
         }
       }
       stateManager.setFilter((element) => _filterRows.contains(element));
@@ -1508,8 +1543,9 @@ class DataGridMenu {
       List _allValues = [];
       var _selectedValues = RxList([]);
       if (stateManager.currentCell != null) {
-        _allValues = stateManager.rows.map((e) =>
-            e.cells[stateManager.currentCell!.column.field]!.value.toString())
+        _allValues = stateManager.rows
+            .map((e) => e.cells[stateManager.currentCell!.column.field]!.value
+                .toString())
             .toSet()
             .toList();
       }
@@ -1529,38 +1565,37 @@ class DataGridMenu {
                     shrinkWrap: true,
                     itemBuilder: ((context, index) {
                       return Obx(
-                            () =>
-                            Card(
-                              color: _selectedValues.contains(_allValues[index])
-                                  ? Colors.deepPurple
-                                  : Colors.white,
-                              child: InkWell(
-                                focusColor: Colors.deepPurple[200],
-                                canRequestFocus: true,
-                                onTap: () {
-                                  if (_selectedValues.contains(
-                                      _allValues[index])) {
-                                    _selectedValues.remove(_allValues[index]);
-                                  } else {
-                                    _selectedValues.add(_allValues[index]);
-                                  }
-                                },
-                                child: Padding(
-                                  padding: const EdgeInsets.all(8),
-                                  child: Text(
-                                    _allValues[index],
-                                    style: _selectedValues.contains(
-                                        _allValues[index])
-                                        ? TextStyle(fontWeight: FontWeight.bold,
-                                        fontSize: 12,
-                                        color: Colors.white)
+                        () => Card(
+                          color: _selectedValues.contains(_allValues[index])
+                              ? Colors.deepPurple
+                              : Colors.white,
+                          child: InkWell(
+                            focusColor: Colors.deepPurple[200],
+                            canRequestFocus: true,
+                            onTap: () {
+                              if (_selectedValues.contains(_allValues[index])) {
+                                _selectedValues.remove(_allValues[index]);
+                              } else {
+                                _selectedValues.add(_allValues[index]);
+                              }
+                            },
+                            child: Padding(
+                              padding: const EdgeInsets.all(8),
+                              child: Text(
+                                _allValues[index],
+                                style:
+                                    _selectedValues.contains(_allValues[index])
+                                        ? TextStyle(
+                                            fontWeight: FontWeight.bold,
+                                            fontSize: 12,
+                                            color: Colors.white)
                                         : TextStyle(
-                                      fontSize: 12,
-                                    ),
-                                  ),
-                                ),
+                                            fontSize: 12,
+                                          ),
                               ),
                             ),
+                          ),
+                        ),
                       );
                     }),
                     itemCount: _allValues.length,
@@ -1578,12 +1613,12 @@ class DataGridMenu {
                 label: Text("Cancel")),
             ElevatedButton.icon(
                 onPressed: () {
-                  stateManager.setFilter(
-                          (element) =>
-                          _selectedValues.any((value) =>
+                  stateManager.setFilter((element) => _selectedValues.any(
+                      (value) =>
                           value ==
-                              element.cells[stateManager.currentCell!.column
-                                  .field]!.value.toString()));
+                          element.cells[stateManager.currentCell!.column.field]!
+                              .value
+                              .toString()));
                   Get.back();
                 },
                 icon: Icon(Icons.done),
@@ -1591,7 +1626,8 @@ class DataGridMenu {
           ]);
     }
 
-    var selected = await showMenu(context: context,
+    var selected = await showMenu(
+        context: context,
         position: RelativeRect.fromSize(
             details.globalPosition & Size(40, 40), Get.size),
         items: [
@@ -1618,40 +1654,39 @@ class DataGridMenu {
             height: 30,
             enabled: true,
             child: Obx(
-                  () {
+              () {
                 checkStateManagerIsNew();
-                return ((Get
-                    .find<MainController>()
-                    .filters1[stateManager.hashCode.toString()] ?? []).isEmpty)
+                return ((Get.find<MainController>()
+                                .filters1[stateManager.hashCode.toString()] ??
+                            [])
+                        .isEmpty)
                     ? Text('Remove Last Filter', style: TextStyle(fontSize: 13))
                     : PopupMenuButton<RowFilter>(
-                  child: Text(
-                    'Remove Last Filter',
-                    style: TextStyle(
-                        fontSize: 12, fontWeight: FontWeight.normal),
-                  ),
-                  // onSelected: (Filter result) {
-                  //   // setState(() { _selection = result; });
-                  // Navigator.pop(context); },
-                  itemBuilder: (BuildContext context) {
-                    var _filters = Get
-                        .find<MainController>()
-                        .filters1[stateManager.hashCode.toString()]!;
-                    return <PopupMenuEntry<RowFilter>>[
-                      for (var i = 0; i < _filters.length; i++)
-                        PopupMenuItem(
-                          child: Text("[${_filters[i].field}] ${_filters[i]
-                              .operator == 'equal' ? '=' : '<>'} ${_filters[i]
-                              .value}"),
-                          onTap: () {
-                            _filters.removeAt(i);
-                            applyfilters(stateManager);
-                            Get.back();
-                          },
-                        )
-                    ];
-                  },
-                );
+                        child: Text(
+                          'Remove Last Filter',
+                          style: TextStyle(
+                              fontSize: 12, fontWeight: FontWeight.normal),
+                        ),
+                        // onSelected: (Filter result) {
+                        //   // setState(() { _selection = result; });
+                        // Navigator.pop(context); },
+                        itemBuilder: (BuildContext context) {
+                          var _filters = Get.find<MainController>()
+                              .filters1[stateManager.hashCode.toString()]!;
+                          return <PopupMenuEntry<RowFilter>>[
+                            for (var i = 0; i < _filters.length; i++)
+                              PopupMenuItem(
+                                child: Text(
+                                    "[${_filters[i].field}] ${_filters[i].operator == 'equal' ? '=' : '<>'} ${_filters[i].value}"),
+                                onTap: () {
+                                  _filters.removeAt(i);
+                                  applyfilters(stateManager);
+                                  Get.back();
+                                },
+                              )
+                          ];
+                        },
+                      );
               },
             ),
           ),
@@ -1755,8 +1790,8 @@ class DataGridMenu {
             value: DataGridMenuItem.removeMarkError,
             height: 30,
             enabled: true,
-            child: Text(
-                'Remove & Mark as Error', style: TextStyle(fontSize: 13)),
+            child:
+                Text('Remove & Mark as Error', style: TextStyle(fontSize: 13)),
           ),
           const PopupMenuItem<DataGridMenuItem>(
             value: DataGridMenuItem.rescheduleSpots,
@@ -1774,12 +1809,12 @@ class DataGridMenu {
     switch (selected) {
       case DataGridMenuItem.selectedfilter:
         if (stateManager.currentCell != null) {
-          Get
-              .find<MainController>()
+          Get.find<MainController>()
               .filters1[stateManager.hashCode.toString()]!
-              .add(RowFilter(field: stateManager.currentCell!.column.field,
-              operator: "equal",
-              value: stateManager.currentCell!.value));
+              .add(RowFilter(
+                  field: stateManager.currentCell!.column.field,
+                  operator: "equal",
+                  value: stateManager.currentCell!.value));
         }
 
         applyfilters(stateManager);
@@ -1791,12 +1826,12 @@ class DataGridMenu {
 
       case DataGridMenuItem.excludeslected:
         if (stateManager.currentCell != null) {
-          Get
-              .find<MainController>()
+          Get.find<MainController>()
               .filters1[stateManager.hashCode.toString()]!
-              .add(RowFilter(field: stateManager.currentCell!.column.field,
-              operator: "notequal",
-              value: stateManager.currentCell!.value));
+              .add(RowFilter(
+                  field: stateManager.currentCell!.column.field,
+                  operator: "notequal",
+                  value: stateManager.currentCell!.value));
         }
         applyfilters(stateManager);
 
@@ -1807,9 +1842,9 @@ class DataGridMenu {
 
         break;
       case DataGridMenuItem.removeLastFilter:
-      // print(filters.length);
-      // // filters.length > 1 ? filters.removeLast() : filters.clear();
-      // applyfilters(stateManager);
+        // print(filters.length);
+        // // filters.length > 1 ? filters.removeLast() : filters.clear();
+        // applyfilters(stateManager);
         break;
       case DataGridMenuItem.clearfilter:
         clearFilterList();
@@ -1823,13 +1858,13 @@ class DataGridMenu {
             exportFileName ?? "Excel-${DateTime.now().toString()}");
         break;
       case DataGridMenuItem.exportPDF:
-      // pluto_grid_export.PlutoGridDefaultPdfExport plutoGridPdfExport =
-      //     pluto_grid_export.PlutoGridDefaultPdfExport(
-      //   title: "ExportedData${DateTime.now().toString()}",
-      //   creator: "BMS_Flutter",
-      //   format: pluto_grid_export.PdfPageFormat.a4.landscape,
-      // );
-      // ExportData().exportPdfFromGridData(plutoGridPdfExport, stateManager);
+        // pluto_grid_export.PlutoGridDefaultPdfExport plutoGridPdfExport =
+        //     pluto_grid_export.PlutoGridDefaultPdfExport(
+        //   title: "ExportedData${DateTime.now().toString()}",
+        //   creator: "BMS_Flutter",
+        //   format: pluto_grid_export.PdfPageFormat.a4.landscape,
+        // );
+        // ExportData().exportPdfFromGridData(plutoGridPdfExport, stateManager);
 
         break;
       case DataGridMenuItem.print:
@@ -1846,40 +1881,44 @@ class DataGridMenu {
             api: ApiFactory.CONVERT_TO_PDF,
             fun: (value) {
               stateManager.setShowLoading(false);
-              ExportData().printFromGridData1((exportFileName ?? 'export${DateTime.now().toString()}') + ".pdf",base64.decode(value));
+              ExportData().printFromGridData1(
+                  (exportFileName ?? 'export${DateTime.now().toString()}') +
+                      ".pdf",
+                  base64.decode(value));
               // ExportData().printFromGridData1((exportFileName ?? 'export${DateTime.now().toString()}') + ".pdf",value);
             },
             json: stateManager.toJson(),
-            failed: (){
+            failed: () {
               stateManager.setShowLoading(false);
-            }
-        );
+            });
         break;
       case DataGridMenuItem.exportToCSv:
         String title = "csv_export";
-        var exportCSV = pluto_grid_export.PlutoGridExport.exportCSV(
-            stateManager);
+        var exportCSV =
+            pluto_grid_export.PlutoGridExport.exportCSV(stateManager);
         var exported = const Utf8Encoder().convert(
-          // FIX Add starting \u{FEFF} / 0xEF, 0xBB, 0xBF
-          // This allows open the file in Excel with proper character interpretation
-          // See https://stackoverflow.com/a/155176
+            // FIX Add starting \u{FEFF} / 0xEF, 0xBB, 0xBF
+            // This allows open the file in Excel with proper character interpretation
+            // See https://stackoverflow.com/a/155176
             '\u{FEFF}$exportCSV');
 
         FlutterFileSaver()
             .writeFileAsBytes(
-          fileName: (exportFileName ?? 'export${DateTime.now().toString()}') +
-              '.csv',
-          bytes: exported,
-        )
+              fileName:
+                  (exportFileName ?? 'export${DateTime.now().toString()}') +
+                      '.csv',
+              bytes: exported,
+            )
             .then((value) => Snack.callSuccess("File save to $value"));
         // await FileSaver.instance.saveFile("$title.csv", exported, ".csv");
         break;
       case DataGridMenuItem.exportToXml:
-      //TODO
+        //TODO
         Get.find<ConnectorControl>().POSTMETHOD_FORMDATAWITHTYPE(
           api: ApiFactory.EXPORT_TO_XML,
           fun: (value) {
-            ExportData().exportFilefromString(value,
+            ExportData().exportFilefromString(
+                value,
                 (exportFileName ?? 'export${DateTime.now().toString()}') +
                     ".xml");
           },
@@ -1887,29 +1926,29 @@ class DataGridMenu {
         );
         break;
       case DataGridMenuItem.find:
-      // ScaffoldMessenger.of(context).showSnackBar(SnackBar(
-      //     margin:
-      //         EdgeInsets.symmetric(vertical: kToolbarHeight, horizontal: 10),
-      //     duration: Duration(minutes: 10),
-      //     behavior: SnackBarBehavior.floating,
-      //     content: Container(
-      //       height: 40,
-      //       child: Row(
-      //         mainAxisAlignment: MainAxisAlignment.center,
-      //         mainAxisSize: MainAxisSize.min,
-      //         children: [
-      //           DropDownField.simpleDropDownwithWidthRatio(
-      //               stateManager.columns
-      //                   .map((e) =>
-      //                       DropDownValue(key: e.field, value: e.title))
-      //                   .toList(),
-      //               (value) {},
-      //               "Columns",
-      //               0.20,
-      //               context)
-      //         ],
-      //       ),
-      //     )));
+        // ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+        //     margin:
+        //         EdgeInsets.symmetric(vertical: kToolbarHeight, horizontal: 10),
+        //     duration: Duration(minutes: 10),
+        //     behavior: SnackBarBehavior.floating,
+        //     content: Container(
+        //       height: 40,
+        //       child: Row(
+        //         mainAxisAlignment: MainAxisAlignment.center,
+        //         mainAxisSize: MainAxisSize.min,
+        //         children: [
+        //           DropDownField.simpleDropDownwithWidthRatio(
+        //               stateManager.columns
+        //                   .map((e) =>
+        //                       DropDownValue(key: e.field, value: e.title))
+        //                   .toList(),
+        //               (value) {},
+        //               "Columns",
+        //               0.20,
+        //               context)
+        //         ],
+        //       ),
+        //     )));
 
         showBottomSheet(
             context: context,
@@ -1942,10 +1981,11 @@ class DataGridMenu {
                             ),
                             const SizedBox(width: 5),
                             DropDownField.formDropDown1WidthMap(
-                              stateManager.columns.map((e) =>
-                                  DropDownValue(key: e.field, value: e.title))
+                              stateManager.columns
+                                  .map((e) => DropDownValue(
+                                      key: e.field, value: e.title))
                                   .toList(),
-                                  (value) {
+                              (value) {
                                 _selectedColumn = value.key!;
                               },
                               "Column",
@@ -1972,7 +2012,8 @@ class DataGridMenu {
                               ),
                             ),
                             const SizedBox(width: 5),
-                            InputFields.formField1(hintTxt: "For",
+                            InputFields.formField1(
+                                hintTxt: "For",
                                 controller: _findctrl,
                                 width: 0.15,
                                 showTitle: false),
@@ -1989,10 +2030,9 @@ class DataGridMenu {
                                   _almost.value = !_almost.value;
                                 },
                                 child: Obx(
-                                      () =>
-                                      Icon(_almost.value ? Icons
-                                          .check_box_outlined : Icons
-                                          .check_box_outline_blank_rounded),
+                                  () => Icon(_almost.value
+                                      ? Icons.check_box_outlined
+                                      : Icons.check_box_outline_blank_rounded),
                                 )),
                             Text("Almost"),
                           ],
@@ -2008,10 +2048,9 @@ class DataGridMenu {
                                   _fromstart.value = !_fromstart.value;
                                 },
                                 child: Obx(
-                                      () =>
-                                      Icon(_fromstart.value ? Icons
-                                          .check_box_outlined : Icons
-                                          .check_box_outline_blank_rounded),
+                                  () => Icon(_fromstart.value
+                                      ? Icons.check_box_outlined
+                                      : Icons.check_box_outline_blank_rounded),
                                 )),
                             Text("From Start")
                           ],
@@ -2027,27 +2066,25 @@ class DataGridMenu {
                                     if (_findctrl.text != "" &&
                                         _selectedColumn != "") {
                                       var _slecetedRow = _almost.value
-                                          ? stateManager.rows.firstWhereOrNull((
-                                          element) =>
-                                      (element.cells[_selectedColumn]!.value
-                                          .toString()
-                                          .toLowerCase()
-                                          .contains(
-                                          _findctrl.text.toLowerCase()) &&
-                                          (_index == 0 ||
-                                              element.sortIdx > (_index ?? 0))))
-                                          : stateManager.rows.firstWhere((
-                                          element) =>
-                                      (element.cells[_selectedColumn]!.value
-                                          .toString().toLowerCase() ==
-                                          _findctrl.text.toLowerCase() &&
-                                          (_index == 0 || element.sortIdx >
-                                              (_index ?? 0))));
+                                          ? stateManager.rows.firstWhereOrNull((element) =>
+                                              (element.cells[_selectedColumn]!.value.toString().toLowerCase().contains(_findctrl.text.toLowerCase()) &&
+                                                  (_index == 0 ||
+                                                      element.sortIdx >
+                                                          (_index ?? 0))))
+                                          : stateManager.rows.firstWhere((element) =>
+                                              (element.cells[_selectedColumn]!.value
+                                                          .toString()
+                                                          .toLowerCase() ==
+                                                      _findctrl.text
+                                                          .toLowerCase() &&
+                                                  (_index == 0 ||
+                                                      element.sortIdx > (_index ?? 0))));
                                       if (_slecetedRow == null) {
                                         stateManager.resetScrollToZero();
 
-                                        Get.defaultDialog(content: Text(
-                                            "You Have reach the end !\nDo u want to restart?"),
+                                        Get.defaultDialog(
+                                            content: Text(
+                                                "You Have reach the end !\nDo u want to restart?"),
                                             actions: [
                                               ElevatedButton.icon(
                                                   onPressed: () {
@@ -2056,38 +2093,30 @@ class DataGridMenu {
                                                         .resetScrollToZero();
                                                     Get.back();
                                                     var _slecetedRow = _almost
-                                                        .value
-                                                        ? stateManager.rows
-                                                        .firstWhereOrNull((
-                                                        element) =>
-                                                    (element
-                                                        .cells[_selectedColumn]!
-                                                        .value
-                                                        .toString()
-                                                        .toLowerCase()
-                                                        .contains(_findctrl.text
-                                                        .toLowerCase()) &&
-                                                        (_index == 0 ||
-                                                            element.sortIdx >
-                                                                (_index ?? 0))))
-                                                        : stateManager.rows
-                                                        .firstWhere((element) =>
-                                                    (element
-                                                        .cells[_selectedColumn]!
-                                                        .value.toString()
-                                                        .toLowerCase() ==
-                                                        _findctrl.text
-                                                            .toLowerCase() &&
-                                                        (_index == 0 ||
-                                                            element.sortIdx >
-                                                                (_index ??
-                                                                    0))));
+                                                            .value
+                                                        ? stateManager.rows.firstWhereOrNull(
+                                                            (element) => (element.cells[_selectedColumn]!.value.toString().toLowerCase().contains(_findctrl.text.toLowerCase()) &&
+                                                                (_index == 0 ||
+                                                                    element.sortIdx >
+                                                                        (_index ??
+                                                                            0))))
+                                                        : stateManager.rows.firstWhere((element) => (element
+                                                                    .cells[_selectedColumn]!
+                                                                    .value
+                                                                    .toString()
+                                                                    .toLowerCase() ==
+                                                                _findctrl.text.toLowerCase() &&
+                                                            (_index == 0 || element.sortIdx > (_index ?? 0))));
                                                     print(_slecetedRow!
-                                                        .cells[_selectedColumn]!
-                                                        .value.toString() +
+                                                            .cells[
+                                                                _selectedColumn]!
+                                                            .value
+                                                            .toString() +
                                                         _slecetedRow
-                                                            .cells[_selectedColumn]!
-                                                            .value.runtimeType
+                                                            .cells[
+                                                                _selectedColumn]!
+                                                            .value
+                                                            .runtimeType
                                                             .toString());
                                                     _index =
                                                         _slecetedRow.sortIdx;
@@ -2096,25 +2125,27 @@ class DataGridMenu {
 
                                                     stateManager
                                                         .moveScrollByRow(
-                                                        PlutoMoveDirection.down,
-                                                        _slecetedRow.sortIdx -
-                                                            1);
+                                                            PlutoMoveDirection
+                                                                .down,
+                                                            _slecetedRow
+                                                                    .sortIdx -
+                                                                1);
 
-                                                    stateManager.setKeepFocus(
-                                                        false);
-                                                    for (var element in stateManager
-                                                        .rows) {
-                                                      stateManager
-                                                          .setRowChecked(
-                                                          element, false,
-                                                          notify: false);
-                                                    }
-                                                    stateManager.setRowChecked(
-                                                        _slecetedRow, true,
-                                                        notify: true);
+                                                    stateManager
+                                                        .setKeepFocus(false);
+                                                    // for (var element in stateManager
+                                                    //     .rows) {
+                                                    //   stateManager
+                                                    //       .setRowChecked(
+                                                    //       element, false,
+                                                    //       notify: false);
+                                                    // }
+                                                    // stateManager.setRowChecked(
+                                                    //     _slecetedRow, true,
+                                                    //     notify: true);
                                                     stateManager.setCurrentCell(
-                                                        _slecetedRow
-                                                            .cells[_selectedColumn],
+                                                        _slecetedRow.cells[
+                                                            _selectedColumn],
                                                         _slecetedRow.sortIdx);
                                                   },
                                                   icon: Icon(Icons.done),
@@ -2127,13 +2158,12 @@ class DataGridMenu {
                                                   label: Text("NO")),
                                             ]);
                                       } else {
-                                        print(
+                                        print(_slecetedRow
+                                                .cells[_selectedColumn]!.value
+                                                .toString() +
                                             _slecetedRow.cells[_selectedColumn]!
-                                                .value.toString() +
-                                                _slecetedRow
-                                                    .cells[_selectedColumn]!
-                                                    .value.runtimeType
-                                                    .toString());
+                                                .value.runtimeType
+                                                .toString());
                                         if (_slecetedRow.sortIdx == 0) {
                                           _index = _index! + 1;
                                         } else {
@@ -2145,12 +2175,12 @@ class DataGridMenu {
                                             PlutoMoveDirection.down,
                                             _slecetedRow.sortIdx - 1);
                                         stateManager.setKeepFocus(false);
-                                        for (var element in stateManager.rows) {
-                                          stateManager.setRowChecked(
-                                              element, false, notify: false);
-                                        }
-                                        stateManager.setRowChecked(
-                                            _slecetedRow, true, notify: true);
+                                        // for (var element in stateManager.rows) {
+                                        //   stateManager.setRowChecked(
+                                        //       element, false, notify: false);
+                                        // }
+                                        // stateManager.setRowChecked(
+                                        //     _slecetedRow, true, notify: true);
                                         stateManager.setCurrentCell(
                                             _slecetedRow.cells[_selectedColumn],
                                             _slecetedRow.sortIdx);
@@ -2170,22 +2200,32 @@ class DataGridMenu {
                               ElevatedButton(
                                   onPressed: () {
                                     stateManager.setFilter((element) =>
-                                    stateManager.currentCell == null
-                                        ? true
-                                        : element.cells[stateManager
-                                        .currentCell!.column.field]!.value ==
-                                        stateManager.currentCell!.value);
+                                        stateManager.currentCell == null
+                                            ? true
+                                            : element
+                                                    .cells[stateManager
+                                                        .currentCell!
+                                                        .column
+                                                        .field]!
+                                                    .value ==
+                                                stateManager
+                                                    .currentCell!.value);
                                   },
                                   child: Text("FS")),
                               SizedBox(width: 15),
                               ElevatedButton(
                                   onPressed: () {
                                     stateManager.setFilter((element) =>
-                                    stateManager.currentCell == null
-                                        ? true
-                                        : element.cells[stateManager
-                                        .currentCell!.column.field]!.value !=
-                                        stateManager.currentCell!.value);
+                                        stateManager.currentCell == null
+                                            ? true
+                                            : element
+                                                    .cells[stateManager
+                                                        .currentCell!
+                                                        .column
+                                                        .field]!
+                                                    .value !=
+                                                stateManager
+                                                    .currentCell!.value);
                                   },
                                   child: Text("XF")),
                               SizedBox(width: 15),

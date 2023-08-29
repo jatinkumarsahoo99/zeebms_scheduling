@@ -18,41 +18,42 @@ import '../app/styles/theme.dart';
 class DataGridFromMap extends StatelessWidget {
   final Map<String, double>? witdthSpecificColumn;
   final bool canShowFilter;
-  DataGridFromMap({
-    Key? key,
-    required this.mapData,
-    this.canShowFilter = true,
-    this.colorCallback,
-    this.showSrNo = true,
-    this.hideCode = true,
-    this.widthRatio,
-    this.showonly,
-    this.enableSort = false,
-    this.onload,
-    this.hideKeys,
-    this.mode,
-    this.editKeys,
-    this.onEdit,
-    this.actionIcon,
-    this.keyMapping,
-    this.actionIconKey,
-    this.columnAutoResize = true,
-    this.actionOnPress,
-    this.onSelected,
-    this.onRowCheck,
-    this.onContextMenuClick,
-    this.checkRowKey = "selected",
-    this.onRowDoubleTap,
-    this.formatDate = true,
-    this.dateFromat = "dd-MM-yyyy",
-    this.onFocusChange,
-    this.checkRow,
-    this.doPasccal = true,
-    this.exportFileName,
-    this.focusNode,
-    this.previousWidgetFN,
-    this.witdthSpecificColumn,
-  }) : super(key: key);
+  DataGridFromMap(
+      {Key? key,
+      required this.mapData,
+      this.canShowFilter = true,
+      this.colorCallback,
+      this.showSrNo = true,
+      this.hideCode = true,
+      this.widthRatio,
+      this.showonly,
+      this.enableSort = false,
+      this.onload,
+      this.hideKeys,
+      this.mode,
+      this.editKeys,
+      this.onEdit,
+      this.actionIcon,
+      this.keyMapping,
+      this.actionIconKey,
+      this.columnAutoResize = true,
+      this.actionOnPress,
+      this.onSelected,
+      this.onRowCheck,
+      this.onContextMenuClick,
+      this.checkRowKey = "selected",
+      this.onRowDoubleTap,
+      this.formatDate = true,
+      this.dateFromat = "dd-MM-yyyy",
+      this.onFocusChange,
+      this.checkRow,
+      this.doPasccal = true,
+      this.exportFileName,
+      this.focusNode,
+      this.previousWidgetFN,
+      this.witdthSpecificColumn,
+      this.csvFormat = false})
+      : super(key: key);
   final List mapData;
   bool enableSort;
 
@@ -80,6 +81,7 @@ class DataGridFromMap extends StatelessWidget {
   final List<String>? editKeys;
   final Function? actionOnPress;
   final bool doPasccal;
+  final bool? csvFormat;
   Color Function(PlutoRowColorContext)? colorCallback;
   Function(PlutoGridOnLoadedEvent)? onload;
   final GlobalKey rebuildKey = GlobalKey();
@@ -115,35 +117,89 @@ class DataGridFromMap extends StatelessWidget {
           enableContextMenu: false,
           width: 40,
           enableAutoEditing: false,
-          hide: hideCode! && key.toString().toLowerCase() != "hourcode" && key.toString().toLowerCase().contains("code"),
+          hide: hideCode! &&
+              key.toString().toLowerCase() != "hourcode" &&
+              key.toString().toLowerCase().contains("code"),
           enableColumnDrag: false,
           field: "no",
-          renderer: (rendererContext) {
+          cellPadding: const EdgeInsets.all(0),
+          renderer: ((rendererContext) {
+            // print("On rendererContext called");
             return GestureDetector(
-              onSecondaryTapDown: canShowFilter? (detail) {
-                if (onContextMenuClick == null) {
-                  DataGridMenu().showGridMenu(rendererContext.stateManager, detail, context, exportFileName: exportFileName);
-                } else {
-                  DataGridMenu().showGridCustomMenu(rendererContext.stateManager, detail, context,
-                      exportFileName: exportFileName, onPressedClick: onContextMenuClick, plutoContext: rendererContext);
-                }
-              }:null,
-              child: Text(
-                (rendererContext.cell.value ?? "").toString(),
-                style: TextStyle(
-                  fontSize: SizeDefine.columnTitleFontSize,
-                ),
-                maxLines: 1,
-                overflow: TextOverflow.ellipsis,
-              ),
+              onSecondaryTapDown: canShowFilter
+                  ? (detail) {
+                      if (onContextMenuClick == null) {
+                        DataGridMenu().showGridMenu(
+                            rendererContext.stateManager, detail, context,
+                            exportFileName: exportFileName,
+                            csvFormat: csvFormat ?? false);
+                      } else {
+                        DataGridMenu().showGridCustomMenu(
+                            rendererContext.stateManager, detail, context,
+                            exportFileName: exportFileName,
+                            onPressedClick: onContextMenuClick,
+                            plutoContext: rendererContext);
+                      }
+                    }
+                  : null,
+              child: Container(
+                  // height: 25,
+                  height: double.infinity,
+                  // width: Utils.getColumnSize1(key: key, value: mapData[0][key]),
+                  // padding: EdgeInsets.only(
+                  //   left:
+                  // ),
+                  decoration: BoxDecoration(
+                      border:
+                          Border.all(color: Colors.transparent, width: 0.01),
+                      borderRadius: BorderRadius.circular(1),
+                      color: Colors.white),
+                  alignment: Alignment.center,
+                  // color: (key == "epsNo" || key == "tapeid" || key == "status") ? ColorData.cellColor(rendererContext.row.cells[key]?.value, key) : null,
+                  child: Text(
+                    (rendererContext.rowIdx + 1).toString(),
+                    maxLines: 1,
+                    overflow: TextOverflow.ellipsis,
+                    style: TextStyle(
+                      fontSize: SizeDefine.columnTitleFontSize,
+                    ),
+                  )),
             );
-          },
+          }),
+          // renderer: (rendererContext) {
+          //   return GestureDetector(
+          //     onSecondaryTapDown: canShowFilter
+          //         ? (detail) {
+          //             if (onContextMenuClick == null) {
+          //               DataGridMenu().showGridMenu(
+          //                   rendererContext.stateManager, detail, context,
+          //                   exportFileName: exportFileName);
+          //             } else {
+          //               DataGridMenu().showGridCustomMenu(
+          //                   rendererContext.stateManager, detail, context,
+          //                   exportFileName: exportFileName,
+          //                   onPressedClick: onContextMenuClick,
+          //                   plutoContext: rendererContext);
+          //             }
+          //           }
+          //         : null,
+          //     child: Text(
+          //       (rendererContext.cell.value ?? "").toString(),
+          //       style: TextStyle(
+          //         fontSize: SizeDefine.columnTitleFontSize,
+          //       ),
+          //       maxLines: 1,
+          //       overflow: TextOverflow.ellipsis,
+          //     ),
+          //   );
+          // },
           type: PlutoColumnType.text()));
     }
     if (showonly != null && showonly!.isNotEmpty) {
       for (var key in showonly!) {
         if ((mapData[0] as Map).containsKey(key)) {
           segColumn.add(PlutoColumn(
+              minWidth: 0,
               title: doPasccal
                   ? keyMapping != null
                       ? keyMapping!.containsKey(key)
@@ -153,7 +209,8 @@ class DataGridFromMap extends StatelessWidget {
                               : key.toString().pascalCaseToNormal()
                       : key.toString().pascalCaseToNormal()
                   : key.toString(),
-              enableRowChecked: (checkRow == true && key == checkRowKey) ? true : false,
+              enableRowChecked:
+                  (checkRow == true && key == checkRowKey) ? true : false,
               renderer: ((rendererContext) {
                 if (actionIconKey != null && key == actionIconKey) {
                   return GestureDetector(
@@ -167,14 +224,22 @@ class DataGridFromMap extends StatelessWidget {
                   );
                 } else {
                   return GestureDetector(
-                    onSecondaryTapDown: canShowFilter?(detail) {
-                      if (onContextMenuClick == null) {
-                        DataGridMenu().showGridMenu(rendererContext.stateManager, detail, context, exportFileName: exportFileName);
-                      } else {
-                        DataGridMenu().showGridCustomMenu(rendererContext.stateManager, detail, context,
-                            exportFileName: exportFileName, onPressedClick: onContextMenuClick, plutoContext: rendererContext);
-                      }
-                    }:null,
+                    onSecondaryTapDown: canShowFilter
+                        ? (detail) {
+                            if (onContextMenuClick == null) {
+                              DataGridMenu().showGridMenu(
+                                  rendererContext.stateManager, detail, context,
+                                  exportFileName: exportFileName,
+                                  csvFormat: csvFormat ?? false);
+                            } else {
+                              DataGridMenu().showGridCustomMenu(
+                                  rendererContext.stateManager, detail, context,
+                                  exportFileName: exportFileName,
+                                  onPressedClick: onContextMenuClick,
+                                  plutoContext: rendererContext);
+                            }
+                          }
+                        : null,
                     child: Text(
                       (rendererContext.cell.value ?? "").toString(),
                       style: TextStyle(
@@ -198,15 +263,16 @@ class DataGridFromMap extends StatelessWidget {
               enableAutoEditing: false,
               hide: showonly == null
                   ? (hideKeys != null && hideKeys!.contains(key)) ||
-                      hideCode! && key.toString().toLowerCase() != "hourcode" && key.toString().toLowerCase().contains("code")
+                      hideCode! &&
+                          key.toString().toLowerCase() != "hourcode" &&
+                          key.toString().toLowerCase().contains("code")
                   : !showonly!.contains(key),
               enableColumnDrag: false,
               field: key,
               type: PlutoColumnType.text()));
         }
       }
-    }
-    else {
+    } else {
       for (var key in mapData[0].keys) {
         segColumn.add(PlutoColumn(
             titlePadding: EdgeInsets.only(),
@@ -215,7 +281,8 @@ class DataGridFromMap extends StatelessWidget {
                     ? "FPC Caption"
                     : key.toString().pascalCaseToNormal()
                 : key,
-            enableRowChecked: (checkRow == true && key == checkRowKey) ? true : false,
+            enableRowChecked:
+                (checkRow == true && key == checkRowKey) ? true : false,
             renderer: ((rendererContext) {
               if (actionIconKey != null) {
                 if (key == actionIconKey) {
@@ -231,14 +298,22 @@ class DataGridFromMap extends StatelessWidget {
                   );
                 } else {
                   return GestureDetector(
-                    onSecondaryTapDown: canShowFilter? (detail) {
-                      if (onContextMenuClick == null) {
-                        DataGridMenu().showGridMenu(rendererContext.stateManager, detail, context, exportFileName: exportFileName);
-                      } else {
-                        DataGridMenu().showGridCustomMenu(rendererContext.stateManager, detail, context,
-                            exportFileName: exportFileName, onPressedClick: onContextMenuClick, plutoContext: rendererContext);
-                      }
-                    }:null,
+                    onSecondaryTapDown: canShowFilter
+                        ? (detail) {
+                            if (onContextMenuClick == null) {
+                              DataGridMenu().showGridMenu(
+                                  rendererContext.stateManager, detail, context,
+                                  exportFileName: exportFileName,
+                                  csvFormat: csvFormat ?? false);
+                            } else {
+                              DataGridMenu().showGridCustomMenu(
+                                  rendererContext.stateManager, detail, context,
+                                  exportFileName: exportFileName,
+                                  onPressedClick: onContextMenuClick,
+                                  plutoContext: rendererContext);
+                            }
+                          }
+                        : null,
                     child: Text(
                       rendererContext.cell.value.toString(),
                       style: TextStyle(
@@ -250,44 +325,68 @@ class DataGridFromMap extends StatelessWidget {
                     ),
                   );
                 }
-              } else if (GetInstance().isRegistered<TransmissionLogController>() &&
+              } else if (GetInstance()
+                      .isRegistered<TransmissionLogController>() &&
                   Get.find<TransmissionLogController>().tsListData != null &&
-                  ((Get.find<TransmissionLogController>().tsListData?.length ?? 0) > 0)) {
+                  ((Get.find<TransmissionLogController>().tsListData?.length ??
+                          0) >
+                      0)) {
                 bool isColorRed = false;
-                int intPromoCap = Get.find<TransmissionLogController>().tsPromoCap.value;
-                int intCommercialCap = Get.find<TransmissionLogController>().tsCommercialCap.value;
+                int intPromoCap =
+                    Get.find<TransmissionLogController>().tsPromoCap.value;
+                int intCommercialCap =
+                    Get.find<TransmissionLogController>().tsCommercialCap.value;
                 if (key == "promoDuration") {
-                  if (num.tryParse(rendererContext.row.cells["promoDuration"]?.value.toString() ?? "0")! > intPromoCap / 60.0) {
+                  if (num.tryParse(rendererContext
+                              .row.cells["promoDuration"]?.value
+                              .toString() ??
+                          "0")! >
+                      intPromoCap / 60.0) {
                     isColorRed = true;
                   }
                 }
                 if (key == "commercialduration") {
-                  if (num.tryParse(rendererContext.row.cells["commercialduration"]?.value.toString() ?? "0")! > intCommercialCap / 60.0) {
+                  if (num.tryParse(rendererContext
+                              .row.cells["commercialduration"]?.value
+                              .toString() ??
+                          "0")! >
+                      intCommercialCap / 60.0) {
                     isColorRed = true;
                   }
                 }
                 if (key == "totaladd") {
-                  if (num.tryParse(rendererContext.row.cells["totaladd"]?.value.toString() ?? "0")! > (intCommercialCap + intPromoCap) / 60.0) {
+                  if (num.tryParse(rendererContext.row.cells["totaladd"]?.value
+                              .toString() ??
+                          "0")! >
+                      (intCommercialCap + intPromoCap) / 60.0) {
                     isColorRed = true;
                   }
                 }
                 if (key == "Commercial & Promo") {
-                  if (num.tryParse(rendererContext.row.cells["Commercial & Promo"]?.value.toString() ?? "0")! >
+                  if (num.tryParse(rendererContext
+                              .row.cells["Commercial & Promo"]?.value
+                              .toString() ??
+                          "0")! >
                       (intCommercialCap + intPromoCap) / 60.0) {
                     isColorRed = true;
                   }
                 }
                 return GestureDetector(
-                  onSecondaryTapDown: canShowFilter? (detail) {
-                    DataGridMenu().showGridMenu(rendererContext.stateManager, detail, context);
-                  }:null,
+                  onSecondaryTapDown: canShowFilter
+                      ? (detail) {
+                          DataGridMenu().showGridMenu(
+                              rendererContext.stateManager, detail, context,
+                              csvFormat: csvFormat ?? false);
+                        }
+                      : null,
                   child: Container(
                     height: 25,
                     padding: EdgeInsets.only(
                       left: 6,
                     ),
                     decoration: BoxDecoration(
-                      border: Border.all(color: Colors.transparent, width: 0.01),
+                      border:
+                          Border.all(color: Colors.transparent, width: 0.01),
                       borderRadius: BorderRadius.circular(1),
                       color: isColorRed ? Colors.red : null,
                     ),
@@ -299,21 +398,34 @@ class DataGridFromMap extends StatelessWidget {
                       overflow: TextOverflow.ellipsis,
                       style: TextStyle(
                           fontSize: SizeDefine.columnTitleFontSize,
-                          fontWeight:
-                              rendererContext.row.cells["modifed"]?.value.toString().toLowerCase() == "y" ? FontWeight.bold : FontWeight.normal),
+                          fontWeight: rendererContext
+                                      .row.cells["modifed"]?.value
+                                      .toString()
+                                      .toLowerCase() ==
+                                  "y"
+                              ? FontWeight.bold
+                              : FontWeight.normal),
                     ),
                   ),
                 );
               } else {
                 return GestureDetector(
-                  onSecondaryTapDown: canShowFilter? (detail) {
-                    if (onContextMenuClick == null) {
-                      DataGridMenu().showGridMenu(rendererContext.stateManager, detail, context, exportFileName: exportFileName);
-                    } else {
-                      DataGridMenu().showGridCustomMenu(rendererContext.stateManager, detail, context,
-                          exportFileName: exportFileName, onPressedClick: onContextMenuClick, plutoContext: rendererContext);
-                    }
-                  }:null,
+                  onSecondaryTapDown: canShowFilter
+                      ? (detail) {
+                          if (onContextMenuClick == null) {
+                            DataGridMenu().showGridMenu(
+                                rendererContext.stateManager, detail, context,
+                                exportFileName: exportFileName,
+                                csvFormat: csvFormat ?? false);
+                          } else {
+                            DataGridMenu().showGridCustomMenu(
+                                rendererContext.stateManager, detail, context,
+                                exportFileName: exportFileName,
+                                onPressedClick: onContextMenuClick,
+                                plutoContext: rendererContext);
+                          }
+                        }
+                      : null,
                   child: Text(
                     rendererContext.cell.value.toString(),
                     style: TextStyle(
@@ -330,17 +442,17 @@ class DataGridFromMap extends StatelessWidget {
             enableEditingMode: editKeys != null && editKeys!.contains(key),
             enableDropToResize: true,
             enableContextMenu: false,
-
-            minWidth: 5,
-
-            width: (witdthSpecificColumn != null && witdthSpecificColumn!.keys.toList().contains(key))
+            minWidth: 0,
+            width: (witdthSpecificColumn != null &&
+                    witdthSpecificColumn!.keys.toList().contains(key))
                 ? witdthSpecificColumn![key]!
                 : Utils.getColumnSize(key: key, value: mapData[0][key]),
-
             enableAutoEditing: false,
             hide: showonly == null
                 ? (hideKeys != null && hideKeys!.contains(key)) ||
-                    hideCode! && key.toString().toLowerCase() != "hourcode" && key.toString().toLowerCase().contains("code")
+                    hideCode! &&
+                        key.toString().toLowerCase() != "hourcode" &&
+                        key.toString().toLowerCase().contains("code")
                 : !showonly!.contains(key),
             enableColumnDrag: false,
             field: key,
@@ -360,8 +472,10 @@ class DataGridFromMap extends StatelessWidget {
           cells[element.key] = PlutoCell(
             value: element.key == "selected" || element.value == null
                 ? ""
-                : element.key.toString().toLowerCase().contains("date") && formatDate!
-                    ? DateFormat(dateFromat).format(DateTime.parse(element.value.toString().replaceAll("T", " ")))
+                : element.key.toString().toLowerCase().contains("date") &&
+                        formatDate!
+                    ? DateFormat(dateFromat).format(DateTime.parse(
+                        element.value.toString().replaceAll("T", " ")))
                     : element.value.toString(),
           );
         }
@@ -386,11 +500,15 @@ class DataGridFromMap extends StatelessWidget {
               actionOnPress: actionOnPress,
               actionKey: actionIconKey,
               previousWidgetFN: previousWidgetFN,
+              rowHeight: 25,
             ),
             rowColorCallback: colorCallback,
             onLoaded: (load) {
-              load.stateManager
-                  .setColumnSizeConfig(PlutoGridColumnSizeConfig(autoSizeMode:  columnAutoResize?PlutoAutoSizeMode.none:PlutoAutoSizeMode.scale , resizeMode: PlutoResizeMode.normal));
+              // load.stateManager.setColumnSizeConfig(PlutoGridColumnSizeConfig(
+              //     autoSizeMode: columnAutoResize
+              //         ? PlutoAutoSizeMode.none
+              //         : PlutoAutoSizeMode.scale,
+              //     resizeMode: PlutoResizeMode.normal));
               load.stateManager.setKeepFocus(false);
               if (onload != null) {
                 onload!(load);
@@ -481,7 +599,8 @@ class DataGridFromMap3 extends StatelessWidget {
   final List<String?>? actionIconKey;
   final bool columnAutoResize;
   final List<String>? editKeys;
-  final Function(PlutoGridCellPosition position, bool isSpaceCalled)? actionOnPress;
+  final Function(PlutoGridCellPosition position, bool isSpaceCalled)?
+      actionOnPress;
   final bool doPasccal;
   Color Function(PlutoRowColorContext)? colorCallback;
   Function(PlutoGridOnLoadedEvent)? onload;
@@ -513,8 +632,45 @@ class DataGridFromMap3 extends StatelessWidget {
           enableDropToResize: true,
           enableContextMenu: false,
           width: 25,
+          cellPadding: const EdgeInsets.all(0),
           enableAutoEditing: false,
-          hide: hideCode! && key.toString().toLowerCase() != "hourcode" && key.toString().toLowerCase().contains("code"),
+          renderer: ((rendererContext) {
+            // print("On rendererContext called");
+            return GestureDetector(
+              onSecondaryTapDown: showSecondaryDialog
+                  ? (detail) {
+                      DataGridMenu().showGridMenu(
+                          rendererContext.stateManager, detail, context,
+                          exportFileName: exportFileName);
+                    }
+                  : null,
+              child: Container(
+                  // height: 25,
+                  height: double.infinity,
+                  // width: Utils.getColumnSize1(key: key, value: mapData[0][key]),
+                  // padding: EdgeInsets.only(
+                  //   left:
+                  // ),
+                  decoration: BoxDecoration(
+                      border:
+                          Border.all(color: Colors.transparent, width: 0.01),
+                      borderRadius: BorderRadius.circular(1),
+                      color: Colors.white),
+                  alignment: Alignment.center,
+                  // color: (key == "epsNo" || key == "tapeid" || key == "status") ? ColorData.cellColor(rendererContext.row.cells[key]?.value, key) : null,
+                  child: Text(
+                    (rendererContext.rowIdx + 1).toString(),
+                    maxLines: 1,
+                    overflow: TextOverflow.ellipsis,
+                    style: TextStyle(
+                      fontSize: SizeDefine.columnTitleFontSize,
+                    ),
+                  )),
+            );
+          }),
+          hide: hideCode! &&
+              key.toString().toLowerCase() != "hourcode" &&
+              key.toString().toLowerCase().contains("code"),
           enableColumnDrag: false,
           field: "no",
           type: PlutoColumnType.text()));
@@ -526,7 +682,9 @@ class DataGridFromMap3 extends StatelessWidget {
           minWidth: 0,
           titlePadding: const EdgeInsets.only(),
           sort: sort,
-          titleSpan: enableColumnDoubleTap != null && enableColumnDoubleTap!.isNotEmpty && enableColumnDoubleTap!.contains(key)
+          titleSpan: enableColumnDoubleTap != null &&
+                  enableColumnDoubleTap!.isNotEmpty &&
+                  enableColumnDoubleTap!.contains(key)
               ? TextSpan(
                   text: doPasccal
                       ? key == "fpcCaption"
@@ -548,20 +706,27 @@ class DataGridFromMap3 extends StatelessWidget {
               : key,
           enableRowChecked: false,
           renderer: ((rendererContext) {
-            if (checkBoxColumnKey != null && checkBoxColumnKey!.isNotEmpty && checkBoxColumnKey!.contains(key)) {
+            if (checkBoxColumnKey != null &&
+                checkBoxColumnKey!.isNotEmpty &&
+                checkBoxColumnKey!.contains(key)) {
               return GestureDetector(
                 // canRequestFocus: false,
                 onSecondaryTapDown: showSecondaryDialog
                     ? (detail) {
-                        DataGridMenu().showGridMenu(rendererContext.stateManager, detail, context,
-                            exportFileName: exportFileName, extraList: secondaryExtraDialogList);
+                        DataGridMenu().showGridMenu(
+                            rendererContext.stateManager, detail, context,
+                            exportFileName: exportFileName,
+                            extraList: secondaryExtraDialogList);
                       }
                     : null,
                 onTap: !(checkBoxColumnNoEditKey?.contains(key) ?? false)
                     ? () {
-                        if (showTitleInCheckBox != null && showTitleInCheckBox!.isNotEmpty) {
+                        if (showTitleInCheckBox != null &&
+                            showTitleInCheckBox!.isNotEmpty) {
                           var temp = mapData[rendererContext.rowIdx][key];
-                          temp['key'] = (temp['key'] == checkBoxStrComparison) ? uncheckCheckBoxStr : checkBoxStrComparison;
+                          temp['key'] = (temp['key'] == checkBoxStrComparison)
+                              ? uncheckCheckBoxStr
+                              : checkBoxStrComparison;
                           rendererContext.stateManager.changeCellValue(
                             rendererContext.cell,
                             temp,
@@ -572,7 +737,9 @@ class DataGridFromMap3 extends StatelessWidget {
                         } else {
                           rendererContext.stateManager.changeCellValue(
                             rendererContext.cell,
-                            rendererContext.cell.value == checkBoxStrComparison ? uncheckCheckBoxStr : checkBoxStrComparison,
+                            rendererContext.cell.value == checkBoxStrComparison
+                                ? uncheckCheckBoxStr
+                                : checkBoxStrComparison,
                             force: true,
                             callOnChangedEvent: true,
                             notify: true,
@@ -584,28 +751,34 @@ class DataGridFromMap3 extends StatelessWidget {
                   mainAxisSize: MainAxisSize.max,
                   children: [
                     Icon(
-                      ((showTitleInCheckBox != null && showTitleInCheckBox!.isNotEmpty)
+                      ((showTitleInCheckBox != null &&
+                                      showTitleInCheckBox!.isNotEmpty)
                                   ? mapData[rendererContext.rowIdx][key]['key']
                                   : rendererContext.cell.value.toString()) ==
                               checkBoxStrComparison
                           ? Icons.check_box
                           : Icons.check_box_outline_blank,
-                      color: ((showTitleInCheckBox != null && showTitleInCheckBox!.isNotEmpty)
+                      color: ((showTitleInCheckBox != null &&
+                                      showTitleInCheckBox!.isNotEmpty)
                                   ? mapData[rendererContext.rowIdx][key]['key']
                                   : rendererContext.cell.value.toString()) ==
                               checkBoxStrComparison
                           ? Colors.deepPurpleAccent
                           : Colors.grey,
                     ),
-                    if (showTitleInCheckBox != null && showTitleInCheckBox!.isNotEmpty && showTitleInCheckBox!.contains(key)) ...{
+                    if (showTitleInCheckBox != null &&
+                        showTitleInCheckBox!.isNotEmpty &&
+                        showTitleInCheckBox!.contains(key)) ...{
                       const SizedBox(width: 5),
                       Text(
-                        (showTitleInCheckBox != null && showTitleInCheckBox!.isNotEmpty)
+                        (showTitleInCheckBox != null &&
+                                showTitleInCheckBox!.isNotEmpty)
                             ? mapData[rendererContext.rowIdx][key]['value']
                             : mapData[rendererContext.rowIdx][key],
                         style: TextStyle(
                           fontSize: SizeDefine.columnTitleFontSize,
                         ),
+                        maxLines: 1,
                       ),
                     }
                   ],
@@ -615,12 +788,15 @@ class DataGridFromMap3 extends StatelessWidget {
               return GestureDetector(
                 onSecondaryTapDown: showSecondaryDialog
                     ? (detail) {
-                        DataGridMenu().showGridMenu(rendererContext.stateManager, detail, context,
-                            exportFileName: exportFileName, extraList: secondaryExtraDialogList);
+                        DataGridMenu().showGridMenu(
+                            rendererContext.stateManager, detail, context,
+                            exportFileName: exportFileName,
+                            extraList: secondaryExtraDialogList);
                       }
                     : null,
                 child: Text(
                   rendererContext.cell.value.toString(),
+                  maxLines: 1,
                   style: TextStyle(
                     fontSize: SizeDefine.columnTitleFontSize,
                   ),
@@ -637,7 +813,9 @@ class DataGridFromMap3 extends StatelessWidget {
           enableAutoEditing: false,
           hide: showonly == null
               ? (hideKeys != null && hideKeys!.contains(key)) ||
-                  hideCode! && key.toString().toLowerCase() != "hourcode" && key.toString().toLowerCase().contains("code")
+                  hideCode! &&
+                      key.toString().toLowerCase() != "hourcode" &&
+                      key.toString().toLowerCase().contains("code")
               : !showonly!.contains(key),
           enableColumnDrag: false,
           field: key,
@@ -679,11 +857,13 @@ class DataGridFromMap3 extends StatelessWidget {
               actionOnPress: actionOnPress,
               actionKey: actionIconKey ?? [],
               previousWidgetFN: previousWidgetFN,
+              rowHeight: 25,
             ).copyWith(style: gridStyle),
             rowColorCallback: colorCallback,
             onLoaded: (load) {
-              load.stateManager
-                  .setColumnSizeConfig(PlutoGridColumnSizeConfig(autoSizeMode: PlutoAutoSizeMode.none, resizeMode: PlutoResizeMode.normal));
+              load.stateManager.setColumnSizeConfig(PlutoGridColumnSizeConfig(
+                  autoSizeMode: PlutoAutoSizeMode.none,
+                  resizeMode: PlutoResizeMode.normal));
               load.stateManager.setKeepFocus(false);
               if (onload != null) {
                 onload!(load);

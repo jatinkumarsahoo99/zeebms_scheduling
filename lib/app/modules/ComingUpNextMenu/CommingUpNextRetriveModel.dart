@@ -16,6 +16,7 @@ class CommingUpNextRetriveModel {
   String? modifiedBy;
   String? locationCode;
   String? eom;
+  String? programName;
 
   CommingUpNextRetriveModel(
       {this.cunCode,
@@ -34,17 +35,19 @@ class CommingUpNextRetriveModel {
         this.killDate,
         this.modifiedBy,
         this.locationCode,
-        this.eom});
+        this.eom,
+        this.programName
+      });
 
   CommingUpNextRetriveModel.fromJson(Map<String, dynamic> json) {
-    cunCode = json['cunCode'].toString();
+    cunCode = (json['cunCode']??json['cutCode']??"").toString();
     channelCode = json['channelCode'];
     houseID = json['houseID'];
     exportTapeCode = json['exportTapeCode'];
     programCode = json['programCode'];
     programTypeCode = json['programTypeCode'];
     originalRepeatCode = json['originalRepeatCode'];
-    exportTapeCaption = json['exportTapeCaption'];
+    exportTapeCaption = (json['exportTapeCaption']??json['exportTapeCaption']??"");
     segmentNumber = json['segmentNumber'];
     slideDuration = json['slideDuration'];
     som = json['som'];
@@ -54,6 +57,7 @@ class CommingUpNextRetriveModel {
     modifiedBy = json['modifiedBy'];
     locationCode = json['locationCode'];
     eom = json['eom'];
+    programName = json['programName'];
   }
 
   Map<String, dynamic> toJson() {
@@ -75,6 +79,7 @@ class CommingUpNextRetriveModel {
     data['modifiedBy'] = this.modifiedBy;
     data['locationCode'] = this.locationCode;
     data['eom'] = this.eom;
+    data['programName'] = this.programName;
     return data;
   }
 }

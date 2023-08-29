@@ -57,8 +57,10 @@ class RoBookingController extends GetxController {
       gstNoCtrl = TextEditingController(),
       maxspendCtrl = TextEditingController();
   PageController pagecontroller = PageController(keepPage: true);
-  TextEditingController mgfromDateCtrl = TextEditingController(), mgtoDateCtrl = TextEditingController();
+  TextEditingController mgfromDateCtrl = TextEditingController(), mgtoDateCtrl = TextEditingController(), pgkillDateCtrl = TextEditingController();
+
   PlutoGridStateManager? dealViewGrid;
+
   PlutoGridStateManager? programViewGrid;
   PlutoGridStateManager? spotViewGrid;
   PlutoGridStateManager? spotVerifyGrid;
@@ -101,7 +103,13 @@ class RoBookingController extends GetxController {
   RoBookingSaveCheckTapeId? savecheckData;
   bool showGstPopUp = true;
   int editMode = 0;
-  PlutoCell? currentGridCell;
+
+  int? bookingNoLeaveDealCurrentRow;
+  String? bookingNoLeaveDealCurrentColumn;
+
+  int? dealNoLeaveCurrentRow;
+  String? dealNoLeaveDealCurrentColumn;
+
   DropDownValue? selectedGST;
   RxList<SpotsNotVerified> spotsNotVerified = RxList<SpotsNotVerified>([]);
   var channels = RxList<DropDownValue>();
@@ -109,6 +117,8 @@ class RoBookingController extends GetxController {
   var agencies = RxList<DropDownValue>();
   RxList tapeIds = RxList([]);
   RxList makeGoodData = RxList([]);
+  RxBool makeGoodSelectAll = RxBool(false);
+  PlutoGridStateManager? makeGoodGrid;
 
   FocusNode bookingNoFocus = FocusNode(),
       dealNoFocus = FocusNode(),
@@ -269,15 +279,16 @@ class RoBookingController extends GetxController {
         fun: (value) {
           if (value is Map && value.containsKey("info_OnAddSpots")) {
             addSpotData = RoBookingAddSpotData.fromJson(value["info_OnAddSpots"]);
-            totSpotCtrl.text = (addSpotData?.totalSpots ?? "").toString();
-            totDurCtrl.text = (addSpotData?.totalDuration ?? "").toString();
-            totAmtCtrl.text = (addSpotData?.totalAmount ?? "").toString();
-
             if (addSpotData?.message != null) {
               for (var msg in addSpotData?.message ?? []) {
                 LoadingDialog.callErrorMessage1(msg: msg);
               }
             } else {
+              totSpotCtrl.text = (addSpotData?.totalSpots ?? "").toString();
+              totDurCtrl.text = (addSpotData?.totalDuration ?? "").toString();
+              totAmtCtrl.text = (addSpotData?.totalAmount ?? "").toString();
+              bookingNoLeaveData?.lstdgvDealDetails = addSpotData?.lstdgvDealDetails;
+              dealNoLeaveData?.lstdgvDealDetails = addSpotData?.lstdgvDealDetails;
               pagecontroller.jumpToPage(0);
               currentTab.value = "Deal";
             }
@@ -295,7 +306,9 @@ class RoBookingController extends GetxController {
           "dealType": dealNoLeaveData?.dealType,
           "intSubRevenueTypeCode": dealDblClickData?.intSubRevenueTypeCode,
           "locationCode": selectedLocation?.key,
+          "balanceSeconds": dealDblClickData?.balanceSeconds ?? 0,
           "channelCode": selectedChannel?.key,
+          "intSeconds": dealDblClickData?.intSeconds ?? 0,
           "brandCode": selectedBrand?.key,
           "caption": bookingTapeLeaveData?.caption,
           "revenueType": bookingTapeLeaveData?.tapeRevenue,
@@ -309,7 +322,7 @@ class RoBookingController extends GetxController {
           "txtTotal_text": dealDblClickData?.total ?? bookingTapeLeaveData?.total,
           "cboDealNo_selectedValue": selectedDeal?.key,
           "locationName": selectedLocation?.value,
-          "channelName": selectedChannel?.key
+          "channelName": selectedChannel?.value
         });
   }
 
@@ -460,40 +473,44 @@ class RoBookingController extends GetxController {
   }
 
   setVerify() {
-    Get.find<ConnectorControl>().POSTMETHOD(
-        api: ApiFactory.RO_BOOKING_GetSetVerify,
-        json: {
-          "locationName": selectedLocation!.value,
-          "channelName": selectedChannel!.value,
-          "bookingMonth": bookingMonthCtrl.text,
-          "bookingNumber": bookingNoCtrl.text,
-          "loginName": Get.find<MainController>().user?.logincode,
-          "locationCode": selectedLocation!.key,
-          "channelCode": selectedChannel!.key,
-          "loggedUser": Get.find<MainController>().user?.logincode,
-          "lstdgvVerifySpot": spotsNotVerifiedClickData?.lstdgvVerifySpot,
-        },
-        fun: (response) {
-          if (response is Map && response.containsKey("info_SetVerify")) {
-            spotsNotVerifiedClickData = null;
-            if (response["info_SetVerify"]["message"] != null) {
-              if (response["info_SetVerify"]["message"].toString().toLowerCase().contains("verification status updated")) {
-                LoadingDialog.callDataSaved(msg: response["info_SetVerify"]["message"]);
-              } else {
-                LoadingDialog.callErrorMessage1(msg: response["info_SetVerify"]["message"]);
+    if ((spotsNotVerifiedClickData?.lstdgvVerifySpot ?? []).isNotEmpty) {
+      Get.find<ConnectorControl>().POSTMETHOD(
+          api: ApiFactory.RO_BOOKING_GetSetVerify,
+          json: {
+            "locationName": selectedLocation!.value,
+            "channelName": selectedChannel!.value,
+            "bookingMonth": bookingMonthCtrl.text,
+            "bookingNumber": bookingNoCtrl.text,
+            "loginName": Get.find<MainController>().user?.logincode,
+            "locationCode": selectedLocation!.key,
+            "channelCode": selectedChannel!.key,
+            "loggedUser": Get.find<MainController>().user?.logincode,
+            "lstdgvVerifySpot": spotsNotVerifiedClickData?.lstdgvVerifySpot,
+          },
+          fun: (response) {
+            if (response is Map && response.containsKey("info_SetVerify")) {
+              spotsNotVerifiedClickData = null;
+              if (response["info_SetVerify"]["message"] != null) {
+                if (response["info_SetVerify"]["message"].toString().toLowerCase().contains("verification status updated")) {
+                  LoadingDialog.callDataSaved(msg: response["info_SetVerify"]["message"]);
+                } else {
+                  LoadingDialog.callErrorMessage1(msg: response["info_SetVerify"]["message"]);
+                }
               }
-            }
 
-            if (response["info_SetVerify"]['info_SpotsNotVerified'] != null) {
-              spotsNotVerified.value = <SpotsNotVerified>[];
-              response["info_SetVerify"]['info_SpotsNotVerified'].forEach((v) {
-                spotsNotVerified.add(SpotsNotVerified.fromJson(v));
-              });
+              if (response["info_SetVerify"]['lstSpotsNotVerified'] != null) {
+                spotsNotVerified.value = <SpotsNotVerified>[];
+                response["info_SetVerify"]['lstSpotsNotVerified'].forEach((v) {
+                  spotsNotVerified.add(SpotsNotVerified.fromJson(v));
+                });
+              }
+              pagecontroller.jumpToPage(5);
+              currentTab.value = "Spots Not Verified";
             }
-            pagecontroller.jumpToPage(5);
-            currentTab.value = "Spots Not Verified";
-          }
-        });
+          });
+    } else {
+      LoadingDialog.callInfoMessage("No Spot To Verify");
+    }
   }
 
   tapIdLeave(selectedvalue) {
@@ -512,6 +529,7 @@ class RoBookingController extends GetxController {
           if (response is Map && response.containsKey("info_LeaveTapedId")) {
             bookingTapeLeaveData = RoBookingTapeLeave.fromJson(response["info_LeaveTapedId"]);
             selectedSeg = DropDownValue(key: bookingTapeLeaveData?.cboSegNo, value: bookingTapeLeaveData?.cboSegNo);
+            pgkillDateCtrl.text = DateFormat("dd-MM-yyyy").format(DateFormat("MM/dd/yyyy").parse(bookingTapeLeaveData!.dtpKillDate!.split(" ")[0]));
             update(["init"]);
             update(["programView"]);
             tapeIddropdownFocus.requestFocus();
@@ -807,6 +825,8 @@ class RoBookingController extends GetxController {
         },
         fun: (value) {
           if (value is Map && value.containsKey("info_LeaveBookingNumber")) {
+            bookingNoLeaveDealCurrentColumn = "";
+            bookingNoLeaveDealCurrentRow = null;
             bookingNoLeaveData = RoBookingBkgNOLeaveData.fromJson(value["info_LeaveBookingNumber"]);
             selectedClient = DropDownValue(
                 key: bookingNoLeaveData!.lstClientAgency!.first.clientcode, value: bookingNoLeaveData!.lstClientAgency!.first.clientname);
@@ -977,7 +997,7 @@ class RoBookingController extends GetxController {
     Get.find<ConnectorControl>().POSTMETHOD(
         api: ApiFactory.RO_BOOKING_OnSave_Check,
         json: {
-          "chkSummaryType": false,
+          "chkSummaryType": addSpotData?.lstSpots?.isNotEmpty,
           "lstdgvSpots":
               addSpotData?.lstSpots?.map((e) => e.toJson()).toList() ?? bookingNoLeaveData?.lstSpots?.map((e) => e.toJson()).toList() ?? [],
           "brandName": selectedBrand?.key

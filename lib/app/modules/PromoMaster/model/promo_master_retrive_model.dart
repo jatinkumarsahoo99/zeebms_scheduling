@@ -1,3 +1,5 @@
+import 'package:bms_scheduling/app/data/DropDownValue.dart';
+
 class PromoMasterRetriveModel {
   List<RetrieveRecord>? retrieveRecord;
 
@@ -15,7 +17,8 @@ class PromoMasterRetriveModel {
   Map<String, dynamic> toJson() {
     final Map<String, dynamic> data = new Map<String, dynamic>();
     if (this.retrieveRecord != null) {
-      data['retrieveRecord'] = this.retrieveRecord!.map((v) => v.toJson()).toList();
+      data['retrieveRecord'] =
+          this.retrieveRecord!.map((v) => v.toJson()).toList();
     }
     return data;
   }
@@ -58,6 +61,7 @@ class RetrieveRecord {
   String? companyName;
   String? eom;
   List<LstAnnotationLoadDatas>? lstAnnotationLoadDatas;
+  List<DropDownValue>? lstPromoType;
 
   RetrieveRecord(
       {this.promoCode,
@@ -136,7 +140,16 @@ class RetrieveRecord {
     if (json['lstAnnotationLoadDatas'] != null) {
       lstAnnotationLoadDatas = <LstAnnotationLoadDatas>[];
       json['lstAnnotationLoadDatas'].forEach((v) {
-        lstAnnotationLoadDatas!.add(new LstAnnotationLoadDatas.fromJson(v));
+        lstAnnotationLoadDatas!.add( LstAnnotationLoadDatas.fromJson(v));
+      });
+    }
+    if (json['lstPromoType'] != null) {
+      lstPromoType = <DropDownValue>[];
+      json['lstPromoType'].forEach((v) {
+        lstPromoType!.add(DropDownValue(
+          key: v['code'].toString(),
+          value: v['name'].toString(),
+        ));
       });
     }
   }
@@ -179,7 +192,8 @@ class RetrieveRecord {
     data['companyName'] = this.companyName;
     data['eom'] = this.eom;
     if (this.lstAnnotationLoadDatas != null) {
-      data['lstAnnotationLoadDatas'] = this.lstAnnotationLoadDatas!.map((v) => v.toJson()).toList();
+      data['lstAnnotationLoadDatas'] =
+          this.lstAnnotationLoadDatas!.map((v) => v.toJson()).toList();
     }
     return data;
   }
@@ -192,7 +206,8 @@ class LstAnnotationLoadDatas {
   String? tCin;
   String? tCout;
 
-  LstAnnotationLoadDatas({this.rowno, this.eventId, this.eventname, this.tCin, this.tCout});
+  LstAnnotationLoadDatas(
+      {this.rowno, this.eventId, this.eventname, this.tCin, this.tCout});
 
   LstAnnotationLoadDatas.fromJson(Map<String, dynamic> json) {
     rowno = json['rowno'];
