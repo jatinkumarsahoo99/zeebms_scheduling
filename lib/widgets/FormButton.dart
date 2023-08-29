@@ -195,7 +195,6 @@ class FormButton extends StatelessWidget {
       onPressed: (isEnabled ?? true)
           ? (btnText == "Exit")
               ? () {
-                print("exit call");
                   if (callback != null) {
                     callback!();
                   }
