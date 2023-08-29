@@ -97,7 +97,11 @@ class _PlutoDefaultCellState extends PlutoStateWithChange<PlutoDefaultCell> {
 
     _canRowDrag = update<bool>(
       _canRowDrag,
-      widget.column.enableRowDrag && stateManager.canRowDrag,
+
+      /// [&& stateManager.canRowDrag]
+      /// Why I removed this bcz after applying filter row can't move
+      // widget.column.enableRowDrag && stateManager.canRowDrag,
+      widget.column.enableRowDrag,
     );
 
     _isCurrentCell = update<bool>(
@@ -163,39 +167,113 @@ class _PlutoDefaultCellState extends PlutoStateWithChange<PlutoDefaultCell> {
       );
     }
 
-    return Row(children: [
-      if (_canRowDrag)
-        _RowDragIconWidget(
-          column: widget.column,
-          row: widget.row,
-          rowIdx: widget.rowIdx,
-          stateManager: stateManager,
-          feedbackWidget: cellWidget,
-          dragIcon: Icon(
-            Icons.drag_indicator,
-            size: style.iconSize,
-            color: style.iconColor,
+    // return Row(
+    //   children: [
+    //     if (_canRowDrag)
+    //       _RowDragIconWidget(
+    //         column: widget.column,
+    //         row: widget.row,
+    //         rowIdx: widget.rowIdx,
+    //         stateManager: stateManager,
+    //         feedbackWidget: cellWidget,
+    //         dragIcon: Icon(
+    //           Icons.drag_indicator,
+    //           size: style.iconSize,
+    //           color: style.iconColor,
+    //         ),
+    //       ),
+    //     if (widget.column.enableRowChecked)
+    //       CheckboxSelectionWidget(
+    //         column: widget.column,
+    //         row: widget.row,
+    //         rowIdx: widget.rowIdx,
+    //         stateManager: stateManager,
+    //       ),
+    //     if (spacingWidget != null) spacingWidget,
+    //     if (expandIcon != null) expandIcon,
+    //     Expanded(child: cellWidget),
+    //     if (_showGroupCount)
+    //       Text(
+    //         '($_groupCount)',
+    //         style: stateManager.configuration.style.cellTextStyle.copyWith(
+    //           decoration: TextDecoration.none,
+    //           fontWeight: FontWeight.normal,
+    //         ),
+    //       ),
+    //   ],
+    // );
+
+    if (_canRowDrag) {
+      return _RowDragIconWidget(
+        column: widget.column,
+        row: widget.row,
+        rowIdx: widget.rowIdx,
+        stateManager: stateManager,
+        dragIcon: IntrinsicWidth(
+          child: Row(
+            children: [
+              if (widget.column.enableRowChecked)
+                CheckboxSelectionWidget(
+                  column: widget.column,
+                  row: widget.row,
+                  rowIdx: widget.rowIdx,
+                  stateManager: stateManager,
+                ),
+              if (spacingWidget != null) spacingWidget,
+              if (expandIcon != null) expandIcon,
+              Expanded(child: cellWidget),
+              if (_showGroupCount)
+                Text(
+                  '($_groupCount)',
+                  style:
+                      stateManager.configuration.style.cellTextStyle.copyWith(
+                    decoration: TextDecoration.none,
+                    fontWeight: FontWeight.normal,
+                  ),
+                ),
+            ],
           ),
         ),
-      if (widget.column.enableRowChecked)
-        CheckboxSelectionWidget(
-          column: widget.column,
-          row: widget.row,
-          rowIdx: widget.rowIdx,
-          stateManager: stateManager,
-        ),
-      if (spacingWidget != null) spacingWidget,
-      if (expandIcon != null) expandIcon,
-      Expanded(child: cellWidget),
-      if (_showGroupCount)
-        Text(
-          '($_groupCount)',
-          style: stateManager.configuration.style.cellTextStyle.copyWith(
-            decoration: TextDecoration.none,
-            fontWeight: FontWeight.normal,
-          ),
-        ),
-    ]);
+        feedbackWidget: cellWidget,
+      );
+    } else {
+      return Row(
+        children: [
+          // if (_canRowDrag)
+          //   _RowDragIconWidget(
+          //     column: widget.column,
+          //     row: widget.row,
+          //     rowIdx: widget.rowIdx,
+          //     stateManager: stateManager,
+          //     feedbackWidget: cellWidget,
+          //     dragIcon: Icon(
+          //       Icons.drag_indicator,
+          //       size: style.iconSize,
+          //       color: style.iconColor,
+          //     ),
+          //   ),
+
+          if (widget.column.enableRowChecked)
+            CheckboxSelectionWidget(
+              column: widget.column,
+              row: widget.row,
+              rowIdx: widget.rowIdx,
+              stateManager: stateManager,
+            ),
+          if (spacingWidget != null) spacingWidget,
+          if (expandIcon != null) expandIcon,
+          Expanded(child: cellWidget),
+          if (_showGroupCount)
+            Text(
+              '($_groupCount)',
+              style: stateManager.configuration.style.cellTextStyle.copyWith(
+                decoration: TextDecoration.none,
+                fontWeight: FontWeight.normal,
+              ),
+            ),
+        ],
+      );
+    }
   }
 }
 
