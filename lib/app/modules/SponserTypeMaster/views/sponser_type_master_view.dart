@@ -7,6 +7,9 @@ import 'package:flutter/material.dart';
 
 import 'package:get/get.dart';
 
+import '../../../controller/MainController.dart';
+import '../../../data/PermissionModel.dart';
+import '../../../providers/Utils.dart';
 import '../../CommonSearch/views/common_search_view.dart';
 import '../controllers/sponser_type_master_controller.dart';
 
@@ -18,7 +21,7 @@ class SponserTypeMasterView extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text('SponserTypeMasterView'),
+        title: const Text('SponsorTypeMasterView'),
         centerTitle: true,
       ),
       body: Center(
@@ -31,7 +34,7 @@ class SponserTypeMasterView extends StatelessWidget {
                       mainAxisSize: MainAxisSize.min,
                       children: [
                         AppBar(
-                          title: Text('Sposner Type Master'),
+                          title: const Text('Sponsor Type Master'),
                           centerTitle: true,
                           backgroundColor: Colors.deepPurple,
                         ),
@@ -42,74 +45,76 @@ class SponserTypeMasterView extends StatelessWidget {
                           spacing: Get.width * 0.01,
                           children: [
                             InputFields.formField1(
-                                hintTxt: "Sponser",
+                                hintTxt: "Sponsor",
                                 controller: controller.sponserName,
                                 width: 0.48,
+                                autoFocus: true,
                                 focusNode: controller.sponserNameFocus),
                             InputFields.formField1(
                               hintTxt: "Short Name",
                               controller: controller.shortName,
                               width: 0.48,
                             ),
+
                             InputFields.numbers(
                               padLeft: 0,
                               hintTxt: "Premium",
                               controller: controller.premium,
                               width: 0.235,
+                              isNegativeReq: false
                             ),
                             Obx(() => DropDownField.formDropDown1WidthMap([
                                   DropDownValue(key: "M", value: "Multiple"),
                                   DropDownValue(key: "S", value: "Single")
-                                ], (value) => {}, "Sponser Type", 0.235,
+                                ], (value) => {
+                              controller.selectedSponser.value = value
+                            }, "Sponsor Type", 0.235,
+                                dialogHeight: 120,
                                     selected:
                                         controller.selectedSponser.value)),
                           ],
                         ),
                         SizedBox(
+                          height: MediaQuery.of(context).size.height*0.07,
+                        ),
+                        Align(
+                          alignment: Alignment.topCenter,
+                          child: GetBuilder<HomeController>(
+                              id: "buttons",
+                              init: Get.find<HomeController>(),
+                              builder: (controller) {
+                                PermissionModel formPermissions =
+                                Get.find<MainController>()
+                                    .permissionList!
+                                    .lastWhere((element) =>
+                                element.appFormName ==
+                                    "frmSponsorTypeMaster");
+                                if (controller.buttons != null) {
+                                  return Wrap(
+                                    spacing: 5,
+                                    runSpacing: 15,
+                                    alignment: WrapAlignment.center,
+                                    children: [
+                                      for (var btn in controller.buttons!)
+                                        FormButtonWrapper(
+                                          btnText: btn["name"],
+                                          callback: Utils.btnAccessHandler2(btn['name'],
+                                              controller, formPermissions) ==
+                                              null
+                                              ? null
+                                              : () => btnhandler(
+                                            btn['name'],
+                                          ),
+                                        )
+                                    ],
+                                  );
+                                }
+                                return Container();
+                              }),
+                        ),
+                        SizedBox(
                           height: 10,
                         ),
-                        GetBuilder<HomeController>(
-                            id: "buttons",
-                            init: Get.find<HomeController>(),
-                            builder: (btncontroller) {
-                              /* PermissionModel formPermissions = Get.find<MainController>()
-                      .permissionList!
-                      .lastWhere((element) {
-                    return element.appFormName == "frmSegmentsDetails";
-                  });*/
-
-                              return btncontroller.buttons == null
-                                  ? Container()
-                                  : Card(
-                                      margin: EdgeInsets.fromLTRB(4, 4, 4, 0),
-                                      shape: RoundedRectangleBorder(
-                                        borderRadius: BorderRadius.only(
-                                            topLeft: Radius.circular(10),
-                                            topRight: Radius.circular(10)),
-                                      ),
-                                      child: Container(
-                                        width: Get.width,
-                                        padding: const EdgeInsets.all(8.0),
-                                        child: Wrap(
-                                          spacing: 10,
-                                          // buttonHeight: 20,
-                                          alignment: WrapAlignment.start,
-                                          // mainAxisSize: MainAxisSize.max,
-                                          // pa
-                                          children: [
-                                            for (var btn
-                                                in btncontroller.buttons!)
-                                              FormButtonWrapper(
-                                                btnText: btn["name"],
-                                                // isEnabled: btn['isDisabled'],
-                                                callback: () =>
-                                                    btnhandler(btn["name"]),
-                                              )
-                                          ],
-                                        ),
-                                      ),
-                                    );
-                            })
                       ])))),
     );
   }
@@ -117,7 +122,7 @@ class SponserTypeMasterView extends StatelessWidget {
   btnhandler(btnName) {
     switch (btnName) {
       case "Save":
-        controller.saveData();
+        controller.validateSave();
         break;
       case "Clear":
         Get.delete<SponserTypeMasterController>();
@@ -127,9 +132,9 @@ class SponserTypeMasterView extends StatelessWidget {
         Get.to(
           const SearchPage(
             key: Key("Sponsor Type Master"),
-            screenName: "Coming Up Meu Master",
-            appBarName: "Coming Up Menu Master",
-            strViewName: "BMS_view_ComingUpMenu",
+            screenName: "Sponsor Type Master",
+            appBarName: "Sponsor Type Master",
+            strViewName: "vTesting",
             isAppBarReq: true,
           ),
         );

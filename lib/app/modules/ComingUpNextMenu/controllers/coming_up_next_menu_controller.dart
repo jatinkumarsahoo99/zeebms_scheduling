@@ -55,6 +55,7 @@ class ComingUpNextMenuController extends GetxController {
   // TextEditingController durationController = TextEditingController();
   TextEditingController uptoDateController = TextEditingController();
   DateTime startDate = DateTime.now();
+  DateTime initialDate = DateTime.now();
 
   TextEditingController durationController = TextEditingController();
   RxString duration = RxString("00:00:00:00");
@@ -262,7 +263,7 @@ class ComingUpNextMenuController extends GetxController {
             strCode = commingUpNextRetriveModel?.cunCode ?? "";
 
             startDate = (DateFormat("yyyy-MM-ddTHH:mm:ss")
-                .parse(commingUpNextRetriveModel!.killDate!));
+                .parse(commingUpNextRetriveModel!.killDate!)).subtract(Duration(days: 1));
 
             durationController.text =
                 commingUpNextRetriveModel?.slideDuration.toString() ?? "";

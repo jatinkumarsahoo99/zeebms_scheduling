@@ -268,8 +268,8 @@ class ComingUpNextMenuView extends StatelessWidget {
                                           formatting: "dd-MM-yyyy",
                                           isEnable: controllerX.isEnable,
                                           startDate: controllerX.startDate,
-                                          intailDate: controllerX.startDate,
-                                          endDate: DateTime.now().add(const Duration(days: 2050)),
+                                          // intailDate: controllerX.startDate,
+                                          // endDate: DateTime.now().add(const Duration(days: 2050)),
                                         );
                                       },
                                     ),

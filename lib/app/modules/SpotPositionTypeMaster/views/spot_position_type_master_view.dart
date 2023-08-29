@@ -8,6 +8,9 @@ import 'package:flutter/material.dart';
 
 import 'package:get/get.dart';
 
+import '../../../controller/MainController.dart';
+import '../../../data/PermissionModel.dart';
+import '../../../providers/Utils.dart';
 import '../controllers/spot_position_type_master_controller.dart';
 
 class SpotPositionTypeMasterView extends StatelessWidget {
@@ -48,29 +51,37 @@ class SpotPositionTypeMasterView extends StatelessWidget {
                               controller: controller.spotPostionName,
                               focusNode: controller.positionNameFocus,
                               width: 0.36,
+                                capital: true
                             ),
                             InputFields.formField1(
                               hintTxt: "Spot Type Short Name",
                               controller: controller.spotShortName,
+                              focusNode: controller.typeShortNameFocus,
                               width: 0.175,
+                               capital: true,
                             ),
                             InputFields.numbers(
                               hintTxt: "Log Position",
                               padLeft: 0,
                               controller: controller.logPosition,
                               width: 0.175,
+                                isNegativeReq: false
                             ),
                             Obx(() => DropDownField.formDropDown1WidthMap(
                                 controller.spots.value,
-                                (value) => {},
+                                (value) => {
+                                  controller.selectedSpotInLog.value = value
+                                },
                                 "Spot In Log",
                                 0.175,
+                                dialogHeight: 170,
                                 selected: controller.selectedSpotInLog.value)),
                             InputFields.numbers(
-                              hintTxt: "Spot Position Premium ",
+                              hintTxt: "Spot Position Premium",
                               padLeft: 0,
                               controller: controller.positionPremium,
                               width: 0.175,
+                              isNegativeReq: false
                             ),
                             SizedBox(
                               width: Get.width * 0.175,
@@ -119,16 +130,10 @@ class SpotPositionTypeMasterView extends StatelessWidget {
                         SizedBox(
                           height: 15,
                         ),
-                        GetBuilder<HomeController>(
+                      /*  GetBuilder<HomeController>(
                             id: "buttons",
                             init: Get.find<HomeController>(),
                             builder: (btncontroller) {
-                              /* PermissionModel formPermissions = Get.find<MainController>()
-                      .permissionList!
-                      .lastWhere((element) {
-                    return element.appFormName == "frmSegmentsDetails";
-                  });*/
-
                               return btncontroller.buttons == null
                                   ? Container()
                                   : Card(
@@ -160,7 +165,45 @@ class SpotPositionTypeMasterView extends StatelessWidget {
                                         ),
                                       ),
                                     );
-                            })
+                            }),*/
+                        Align(
+                          alignment: Alignment.topCenter,
+                          child: GetBuilder<HomeController>(
+                              id: "buttons",
+                              init: Get.find<HomeController>(),
+                              builder: (controller) {
+                                PermissionModel formPermissions =
+                                Get.find<MainController>()
+                                    .permissionList!
+                                    .lastWhere((element) =>
+                                element.appFormName ==
+                                    "frmSpotPositionTypeMaster");
+                                if (controller.buttons != null) {
+                                  return Wrap(
+                                    spacing: 5,
+                                    runSpacing: 15,
+                                    alignment: WrapAlignment.center,
+                                    children: [
+                                      for (var btn in controller.buttons!)
+                                        FormButtonWrapper(
+                                          btnText: btn["name"],
+                                          callback: Utils.btnAccessHandler2(btn['name'],
+                                              controller, formPermissions) ==
+                                              null
+                                              ? null
+                                              : () => btnhandler(
+                                            btn['name'],
+                                          ),
+                                        )
+                                    ],
+                                  );
+                                }
+                                return Container();
+                              }),
+                        ),
+                        SizedBox(
+                          height: 10,
+                        ),
                       ])))),
     );
   }
@@ -168,7 +211,7 @@ class SpotPositionTypeMasterView extends StatelessWidget {
   btnhandler(btnName) {
     switch (btnName) {
       case "Save":
-        controller.saveData();
+        controller.validateSave();
         break;
       case "Delete":
         null;
