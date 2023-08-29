@@ -23,7 +23,8 @@ class SpotPriorityController extends GetxController {
 
   //input controllers
   DropDownValue? selectLocation;
-  Rxn<DropDownValue> selectChannel=Rxn<DropDownValue>();
+  DropDownValue? selectChannel1;
+  Rxn<DropDownValue> selectChannel = Rxn<DropDownValue>();
   DropDownValue? selectPriority;
   PlutoGridStateManager? gridStateManager;
 
@@ -80,7 +81,8 @@ class SpotPriorityController extends GetxController {
           fun: (Map<String, dynamic> map) {
             Get.back();
             if (map.containsKey("showDetails")) {
-              spotPriorityModel = SpotPriorityModel.fromJson(map["showDetails"]);
+              spotPriorityModel =
+                  SpotPriorityModel.fromJson(map["showDetails"]);
               update(["spotPriorityList"]);
             } else {
               Snack.callError("No Data Found");
@@ -94,37 +96,49 @@ class SpotPriorityController extends GetxController {
       Snack.callError("Please select location");
     } else if (selectChannel.value == null) {
       Snack.callError("Please select channel");
-    } else if (spotPriorityModel == null) {
-      Snack.callError("There is no data to save");
+    } else if (gridStateManager == null || spotPriorityModel == null) {
+      Snack.callError("Sorry! There is no data to save");
     } else {
-      var filterList = spotPriorityModel?.lstbookingdetail?.where((e) {
-        return (e.priorityCode! > 0);
-      });
-      var mapData = {
-        "locationcode": selectLocation?.key ?? "",
-        "channelcode": selectChannel?.value?.key ?? "",
-        "fromDate": frmDate.text,
-        "toDate": toDate.text,
-        "spotprioritys": filterList?.map((e) {
-          return e.toJson1();
-        }).toList()
-      };
-      LoadingDialog.call();
-      Get.find<ConnectorControl>().POSTMETHOD(
-          api: ApiFactory.SPOT_PRIORITY_SAVE(),
-          json: mapData,
-          fun: (Map<String, dynamic> map) {
-            Get.back();
-            if (map.containsKey("postSave") &&
-                map["postSave"] == "Records are updated successfully.") {
-              LoadingDialog.callDataSaved(callback: () {
-                Get.delete<SpotPriorityController>();
-                Get.find<HomeController>().clearPage1();
-              });
-            } else {
-              Snack.callError(map.toString());
-            }
-          });
+      if (spotPriorityModel?.areRecordExistsInSpotPriority != null &&
+          (spotPriorityModel?.areRecordExistsInSpotPriority ?? false)) {
+        LoadingDialog.recordExists(
+            "Priority already defined!\nDo you want to overwrite this?", () {
+          postData();
+        }, deleteTitle: "Yes", deleteCancel: "No", cancel: () {});
+      } else {
+        postData();
+      }
     }
+  }
+
+  postData() {
+    var filterList = spotPriorityModel?.lstbookingdetail?.where((e) {
+      return (e.priorityCode! > 0);
+    });
+    var mapData = {
+      "locationcode": selectLocation?.key ?? "",
+      "channelcode": selectChannel?.value?.key ?? "",
+      "fromDate": frmDate.text,
+      "toDate": toDate.text,
+      "spotprioritys": filterList?.map((e) {
+        return e.toJson1();
+      }).toList()
+    };
+    LoadingDialog.call();
+    Get.find<ConnectorControl>().POSTMETHOD(
+        api: ApiFactory.SPOT_PRIORITY_SAVE(),
+        json: mapData,
+        fun: (Map<String, dynamic> map) {
+          Get.back();
+          if (map.containsKey("postSave") &&
+              map["postSave"] == "Records are updated successfully.") {
+            LoadingDialog.callDataSaved(callback: () {
+              Get.delete<SpotPriorityController>();
+              Get.find<HomeController>().clearPage1();
+            });
+          } else {
+            Snack.callError(map.toString());
+          }
+        });
   }
 }
