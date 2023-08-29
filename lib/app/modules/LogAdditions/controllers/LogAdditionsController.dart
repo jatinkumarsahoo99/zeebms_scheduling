@@ -237,8 +237,8 @@ class LogAdditionsController extends GetxController {
           if (map is Map &&
               map.containsKey("postAdditionsoutput") &&
               map["postAdditionsoutput"] != null &&
-              map["postAdditionsoutput"].containsKey("success") &&
-              map["postAdditionsoutput"]["success"] == "success") {
+              map["postAdditionsoutput"].containsKey("success") /*&&
+              map["postAdditionsoutput"]["success"] == "success"*/) {
             // logAddionName.value = logAddionName.value + map["postAdditionsoutput"]["additionselected"];
             // getAdditionListCheck("Addition"+map["postAdditionsoutput"]["additionselected"]);
             if (map["postAdditionsoutput"]["lstAddition"] != null) {
@@ -259,7 +259,7 @@ class LogAdditionsController extends GetxController {
                   (logAdditionModel?.displayPreviousAdditon?.previousAdditons
                       ?.map((e) => e.toJson1())
                       .toList())!,
-                  "${selectLocation?.value ?? ""} ${selectChannel?.value?.value ?? ""} ${DateFormat('yyyy-MM-dd').format(DateFormat("dd-MM-yyyy").parse(selectedDate.text))} ${"Addition" + (map["postAdditionsoutput"]["additionselected"]??"1")}.xlsx",
+                  "${selectLocation?.value ?? ""} ${selectChannel?.value?.value ?? ""} ${DateFormat('yyyy-MM-dd').format(DateFormat("dd-MM-yyyy").parse(selectedDate.text))} ${"Addition " + (map["postAdditionsoutput"]["additionselected"]??"1")}",
                   callBack: () {});
             });
           } else {
