@@ -73,12 +73,12 @@ class HomeController extends GetxController {
     List data = [];
     for (int i = 0; i < listStateManager.length; i++) {
       Map<String, dynamic> singleMap = {};
-      listStateManager[0].columns.forEach((element) {
+      listStateManager[i].columns.forEach((element) {
         singleMap[element.field] = element.width;
       });
       String? mapData = jsonEncode(singleMap);
       data.add({
-        "formName": Get.find<MainController>().formName ?? "",
+        "formName": Get.find<MainController>().formName.trim() ?? "",
         "controlName": (i + 1).toString() + "_table",
         "userSettings": mapData
       });
@@ -94,7 +94,7 @@ class HomeController extends GetxController {
     Map<String, double> userGridSetting = {};
     Get.find<ConnectorControl>().GETMETHODCALL(
         api: ApiFactory.FETCH_USER_SETTING +
-            "?formName=${Get.find<MainController>().formName}",
+            "?formName=${Get.find<MainController>().formName.trim()}",
         fun: (map) {
           print("Data is>>" + jsonEncode(map));
           if (map is Map &&
