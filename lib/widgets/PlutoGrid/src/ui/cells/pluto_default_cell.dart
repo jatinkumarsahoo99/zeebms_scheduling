@@ -375,9 +375,9 @@ class _RowDragIconWidget extends StatelessWidget {
               child: Row(
                 children: [
                   dragIcon,
-                  Expanded(
-                    child: feedbackWidget,
-                  ),
+                  // Expanded(
+                  //   child: feedbackWidget,
+                  // ),
                 ],
               ),
             ),
