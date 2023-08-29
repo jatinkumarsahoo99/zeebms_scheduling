@@ -49,7 +49,6 @@ class FormButtonWrapper extends StatelessWidget {
     );
   }
 }
-
 class FormButtonWrapper1 extends StatelessWidget {
   final String btnText;
   final VoidCallback? callback;
@@ -195,17 +194,20 @@ class FormButton extends StatelessWidget {
           alignment: Alignment.center),
       onPressed: (isEnabled ?? true)
           ? (btnText == "Exit")
-          ? () {
-        LoadingDialog.callExitForm(() {
-          if (html.window.location.href.contains("loginCode")) {
-            Utils.callJSToExit(param: "exit|${Utils.getFormName()}");
-            callback!();
-          } else {
-            Get.back();
-          }
-        });
-      }
-          : callback
+              ? () {
+                  if (callback != null) {
+                    callback!();
+                  }
+
+                  LoadingDialog.callExitForm(() {
+                    if (html.window.location.href.contains("loginCode")) {
+                      Utils.callJSToExit(param: "exit|${Utils.getFormName()}");
+                    } else {
+                      Get.back();
+                    }
+                  });
+                }
+              : callback
           : null,
       icon: showIcon ? Icon(iconData, size: 16) : Container(),
       label: Text(btnText.trim(),
@@ -263,7 +265,6 @@ class FormButton extends StatelessWidget {
     // }
   }
 }
-
 class FormButton2 extends StatelessWidget {
   final String btnText;
   final VoidCallback? callback;
@@ -461,8 +462,7 @@ class FormButton3 extends StatelessWidget {
     var iconData;
     if (btnText.toLowerCase() == "save") {
       iconData = Icons.save;
-    } else if (btnText.toLowerCase() == "delete" ||
-        btnText.toLowerCase() == "delete variance") {
+    } else if (btnText.toLowerCase() == "delete" || btnText.toLowerCase() == "delete variance") {
       iconData = Icons.delete;
     } else if (btnText.toLowerCase() == "verify") {
       iconData = Icons.verified_rounded;
