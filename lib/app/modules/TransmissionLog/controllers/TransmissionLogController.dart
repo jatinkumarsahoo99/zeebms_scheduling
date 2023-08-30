@@ -145,6 +145,7 @@ class TransmissionLogController extends GetxController {
 
   var canDialogShow = false.obs;
   Widget? dialogWidget;
+  Rxn<int> initialOffset=Rxn<int>(null);
 
   @override
   void onInit() {
@@ -3726,7 +3727,19 @@ class TransmissionLogController extends GetxController {
     return completer.future;
   }
 
+  Offset? getOffSetValue(BoxConstraints constraints){
+    switch(initialOffset.value){
+      case 1:
+        return Offset((constraints.maxWidth / 3)+30, constraints.maxHeight / 3);
+      case 2:
+        return Offset(Get.width*0.09, Get.height*0.12);
+      default:
+        return null;
+    }
+  }
+
   Future<bool>? showDialogForYesNo1(String title) {
+    initialOffset.value=1;
     Completer<bool> completer = Completer<bool>();
     dialogWidget = Material(
       color: Colors.white,

@@ -42,6 +42,9 @@ import '../modules/SponserTypeMaster/bindings/sponser_type_master_binding.dart';
 import '../modules/SpotPositionTypeMaster/bindings/spot_position_type_master_binding.dart';
 import '../modules/SpotPriority/bindings/spot_priority_binding.dart';
 import '../modules/StillMaster/bindings/still_master_binding.dart';
+import '../modules/TestPage/bindings/test_page_binding.dart';
+import '../modules/TestPage/controllers/test_page_controller.dart';
+import '../modules/TestPage/views/test_page_view.dart';
 import '../modules/TransmissionLog/bindings/transmission_log_binding.dart';
 import '../modules/commercial/bindings/commercial_binding.dart';
 import '../modules/filler/bindings/filler_binding.dart';
@@ -56,7 +59,7 @@ class AppPages {
 
   static const INITIAL = kReleaseMode
       ? Routes.HOME
-      : "${Routes.TRANSMISSION_LOG}?personalNo=%2F7i0zDr%2FLpXNOAIr8lUluw%3D%3D&loginCode=1BWIoBKeDl7qDSAAhxvXsQ%3D%3D&formName=9TH%2FHz5wtFnEcyoT04qs%2BQ%3D%3D";
+      : "${Routes.TEST_PAGE}?personalNo=%2F7i0zDr%2FLpXNOAIr8lUluw%3D%3D&loginCode=1BWIoBKeDl7qDSAAhxvXsQ%3D%3D&formName=9TH%2FHz5wtFnEcyoT04qs%2BQ%3D%3D";
 
   static final routes = [
     GetPage(
@@ -340,6 +343,11 @@ class AppPages {
     GetPage(
       name: _Paths.SECONDARY_EVENT_TEMPLATE_MASTER,
       page: () => AuthGuard1(childName: _Paths.SECONDARY_EVENT_TEMPLATE_MASTER),
+    ),
+    GetPage(
+      name: _Paths.TEST_PAGE,
+      binding: TestPageBinding(),
+      page: () => TestPageView(),
     )
   ];
 }
