@@ -21,6 +21,8 @@ class CommercialController extends GetxController {
   // int selectIndex = 0;
   int? selectedDDIndex;
 
+  List<Map<String, double>>? userGridSetting1 = [];
+
   int selectedGroup = 0;
   double widthSize = 0.17;
   String? programFpcTimeSelected;
@@ -58,8 +60,10 @@ class CommercialController extends GetxController {
   // List<PlutoColumn> initColumn = [];
   // List<PermissionModel>? formPermissions;
   List<CommercialProgramModel>? commercialProgramList = [];
-  RxList<CommercialShowOnTabModel>? showCommercialDetailsList = <CommercialShowOnTabModel>[].obs;
-  RxList<CommercialShowOnTabModel>? mainCommercialShowDetailsList = <CommercialShowOnTabModel>[].obs;
+  RxList<CommercialShowOnTabModel>? showCommercialDetailsList =
+      <CommercialShowOnTabModel>[].obs;
+  RxList<CommercialShowOnTabModel>? mainCommercialShowDetailsList =
+      <CommercialShowOnTabModel>[].obs;
 
   /////////////Pluto Grid////////////
   // PlutoGridStateManager? stateManager;
@@ -79,12 +83,14 @@ class CommercialController extends GetxController {
   bool canshowFilterList = false;
 
   TextEditingController date_ = TextEditingController();
-  TextEditingController refDateControl = TextEditingController(text: DateFormat("dd-MM-yyyy").format(DateTime.now()));
+  TextEditingController refDateControl = TextEditingController(
+      text: DateFormat("dd-MM-yyyy").format(DateTime.now()));
 
   @override
   void onInit() {
     super.onInit();
     getLocations();
+    fetchUserSetting1();
   }
 
   var locationFN = FocusNode();
@@ -154,9 +160,13 @@ class CommercialController extends GetxController {
             Get.back();
             if (data["locationSelect"] is List) {
               selectedChannel = null;
-              channels.value = (data["locationSelect"] as List).map((e) => DropDownValue(key: e["channelCode"], value: e["channelName"])).toList();
+              channels.value = (data["locationSelect"] as List)
+                  .map((e) => DropDownValue(
+                      key: e["channelCode"], value: e["channelName"]))
+                  .toList();
             } else {
-              LoadingDialog.callErrorMessage1(msg: "Failed To Load Initial Data");
+              LoadingDialog.callErrorMessage1(
+                  msg: "Failed To Load Initial Data");
             }
           });
     } catch (e) {
@@ -175,7 +185,10 @@ class CommercialController extends GetxController {
       LoadingDialog.call();
       selectedDate = df1.parse(date_.text);
       Get.find<ConnectorControl>().GETMETHODCALL(
-          api: ApiFactory.COMMERCIAL_SHOW_FPC_SCHEDULLING_DETAILS(selectedLocation?.key ?? "", selectedChannel?.key ?? "", df1.format(selectedDate!)),
+          api: ApiFactory.COMMERCIAL_SHOW_FPC_SCHEDULLING_DETAILS(
+              selectedLocation?.key ?? "",
+              selectedChannel?.key ?? "",
+              df1.format(selectedDate!)),
           fun: (dynamic list) {
             var map = {};
             map["loc"] = selectedLocation;
@@ -193,13 +206,17 @@ class CommercialController extends GetxController {
             selectedDDIndex = 0;
             commercialProgramList?.clear();
             list['showDetails']["lstDailyFPC"].forEach((element) {
-              commercialProgramList?.add(CommercialProgramModel.fromJson(element));
+              commercialProgramList
+                  ?.add(CommercialProgramModel.fromJson(element));
             });
 
             mainCommercialShowDetailsList?.clear();
             showCommercialDetailsList?.clear();
-            list['showDetails']['lstCommercialShuffling'].asMap().forEach((index, element) {
-              mainCommercialShowDetailsList?.add(CommercialShowOnTabModel.fromJson(element, index));
+            list['showDetails']['lstCommercialShuffling']
+                .asMap()
+                .forEach((index, element) {
+              mainCommercialShowDetailsList
+                  ?.add(CommercialShowOnTabModel.fromJson(element, index));
             });
             // showCommercialDetailsList?.value = mainCommercialShowDetailsList!.where((o) => o.bStatus.toString() == 'B').toList();
             showTabList();
@@ -255,15 +272,28 @@ class CommercialController extends GetxController {
     }
   }
 
+  fetchUserSetting1() async {
+    userGridSetting1 = await Get.find<HomeController>().fetchUserSetting();
+    print(userGridSetting1);
+    // userGridSetting1?.firstWhereOrNull((element) => element['']);
+    // print(userGridSetting1?.firstWhere(
+    //         (element) => element['controlName'].toString() == "1_table") ??
+    //     "Nhi mila bhai");
+  }
+
   Future<dynamic> showTabList() async {
     if (!canshowFilterList) {
       showCommercialDetailsList?.clear();
       if (selectedIndex.value == 1) {
         /// FPC MISMATCH
-        showCommercialDetailsList?.value = mainCommercialShowDetailsList!.where((o) => o.bStatus.toString() == 'F').toList();
+        showCommercialDetailsList?.value = mainCommercialShowDetailsList!
+            .where((o) => o.bStatus.toString() == 'F')
+            .toList();
       } else if (selectedIndex.value == 2) {
         /// MARK AS ERROR
-        showCommercialDetailsList?.value = mainCommercialShowDetailsList!.where((o) => o.bStatus.toString() == 'E').toList();
+        showCommercialDetailsList?.value = mainCommercialShowDetailsList!
+            .where((o) => o.bStatus.toString() == 'E')
+            .toList();
       } else {
         /// SCHEDULING
         // showCommercialDetailsList?.value = mainCommercialShowDetailsList!.where((o) => o.bStatus.toString() == 'B').toList();
@@ -293,15 +323,23 @@ class CommercialController extends GetxController {
   }
 
   void calculateSpotAndDuration() {
-    commercialSpots.value = showCommercialDetailsList?.where((element) => element.eventType?.trim() == "C").toList().length.toString() ?? "0";
+    commercialSpots.value = showCommercialDetailsList
+            ?.where((element) => element.eventType?.trim() == "C")
+            .toList()
+            .length
+            .toString() ??
+        "0";
     // commercialDuration
     double intTotalDuration = 0;
     for (int i = 0; i < (showCommercialDetailsList?.length ?? 0); i++) {
       if (showCommercialDetailsList?[i].eventType?.trim() == "C") {
-        intTotalDuration = intTotalDuration + Utils.oldBMSConvertToSecondsValue(value: showCommercialDetailsList![i].duration!);
+        intTotalDuration = intTotalDuration +
+            Utils.oldBMSConvertToSecondsValue(
+                value: showCommercialDetailsList![i].duration!);
       }
     }
-    commercialDuration.value = Utils.convertToTimeFromDouble(value: intTotalDuration);
+    commercialDuration.value =
+        Utils.convertToTimeFromDouble(value: intTotalDuration);
     // commercialSpots.refresh();
     // commercialDuration.refresh();
   }
@@ -309,12 +347,18 @@ class CommercialController extends GetxController {
   Future<void> showSelectedProgramList() async {
     if (selectedIndex.value == 1) {
       /// FPC MISMATCH
-      showCommercialDetailsList?.value =
-          mainCommercialShowDetailsList!.where((o) => o.fpcTime.toString() == programFpcTimeSelected && o.bStatus.toString() == 'F').toList();
+      showCommercialDetailsList?.value = mainCommercialShowDetailsList!
+          .where((o) =>
+              o.fpcTime.toString() == programFpcTimeSelected &&
+              o.bStatus.toString() == 'F')
+          .toList();
     } else if (selectedIndex.value == 2) {
       /// MARK AS ERROR
-      showCommercialDetailsList?.value =
-          mainCommercialShowDetailsList!.where((o) => o.fpcTime.toString() == programFpcTimeSelected && o.bStatus.toString() == 'E').toList();
+      showCommercialDetailsList?.value = mainCommercialShowDetailsList!
+          .where((o) =>
+              o.fpcTime.toString() == programFpcTimeSelected &&
+              o.bStatus.toString() == 'E')
+          .toList();
     } else {
       /// SCHEDULING
       // showCommercialDetailsList?.value =
@@ -322,7 +366,9 @@ class CommercialController extends GetxController {
       String? isItrated;
       showCommercialDetailsList?.value = [];
       for (var i = 0; i < (mainCommercialShowDetailsList?.length ?? 0); i++) {
-        if (mainCommercialShowDetailsList?[i].bStatus == "B"&&mainCommercialShowDetailsList?[i].fpcTime==programFpcTimeSelected) {
+        if (mainCommercialShowDetailsList?[i].bStatus == "B" &&
+            mainCommercialShowDetailsList?[i].fpcTime ==
+                programFpcTimeSelected) {
           var temp = mainCommercialShowDetailsList![i];
           if (isItrated == null || isItrated != temp.fpcTime2) {
             isItrated = temp.fpcTime2;
@@ -347,7 +393,8 @@ class CommercialController extends GetxController {
   PlutoGridStateManager? fpcMisMatchSM;
 
   changeFPCOnClick() {
-    if (fpcMisMatchSM?.currentRowIdx == null || fpcMisMatchSM?.currentRowIdx == null) {
+    if (fpcMisMatchSM?.currentRowIdx == null ||
+        fpcMisMatchSM?.currentRowIdx == null) {
       LoadingDialog.showErrorDialog("Please select row first");
     } else if ((fpcMisMatchSM!.currentSelectingRows.isEmpty)) {
       changeFpcTaped = true;
@@ -357,13 +404,18 @@ class CommercialController extends GetxController {
       mainSelectedIndex = fpcMisMatchSM?.currentRowIdx ?? 0;
       for (var i = 0; i < mainCommercialShowDetailsList!.length; i++) {
         if (mainCommercialShowDetailsList![i].bStatus == "F" &&
-            (showCommercialDetailsList![fpcMisMatchSM!.currentRowIdx!].rownumber) == mainCommercialShowDetailsList![i].rownumber) {
+            (showCommercialDetailsList![fpcMisMatchSM!.currentRowIdx!]
+                    .rownumber) ==
+                mainCommercialShowDetailsList![i].rownumber) {
           mainCommercialShowDetailsList![i].bStatus = "B";
           mainCommercialShowDetailsList![i].fpcTime = programFpcTimeSelected;
-          mainCommercialShowDetailsList![i].pProgramMaster = programCodeSelected;
+          mainCommercialShowDetailsList![i].pProgramMaster =
+              programCodeSelected;
           mainCommercialShowDetailsList![i].pDailyFPC = programCodeSelected;
           fpcMisMatchSM?.changeCellValue(
-            fpcMisMatchSM!.getRowByIdx(fpcMisMatchSM!.currentRowIdx!)!.cells['fpcTime']!,
+            fpcMisMatchSM!
+                .getRowByIdx(fpcMisMatchSM!.currentRowIdx!)!
+                .cells['fpcTime']!,
             programFpcTimeSelected,
             force: true,
             notify: true,
@@ -376,10 +428,13 @@ class CommercialController extends GetxController {
       for (var i = 0; i < mainCommercialShowDetailsList!.length; i++) {
         if (mainCommercialShowDetailsList![i].bStatus == "F") {
           for (var element in fpcMisMatchSM!.currentSelectingRows) {
-            if (mainCommercialShowDetailsList![i].rownumber == showCommercialDetailsList![element.sortIdx].rownumber) {
+            if (mainCommercialShowDetailsList![i].rownumber ==
+                showCommercialDetailsList![element.sortIdx].rownumber) {
               mainCommercialShowDetailsList![i].bStatus = "B";
-              mainCommercialShowDetailsList![i].fpcTime = programFpcTimeSelected;
-              mainCommercialShowDetailsList![i].pProgramMaster = programCodeSelected;
+              mainCommercialShowDetailsList![i].fpcTime =
+                  programFpcTimeSelected;
+              mainCommercialShowDetailsList![i].pProgramMaster =
+                  programCodeSelected;
               mainCommercialShowDetailsList![i].pDailyFPC = programCodeSelected;
               fpcMisMatchSM?.changeCellValue(
                 fpcMisMatchSM!.getRowByIdx(element.sortIdx)!.cells['fpcTime']!,
@@ -409,7 +464,9 @@ class CommercialController extends GetxController {
     //   force: true,
     //   notify: true,
     // );
-    fpcMisMatchSM?.setCurrentCell(fpcMisMatchSM?.getRowByIdx(mainSelectedIndex)?.cells['fpcTime'], mainSelectedIndex);
+    fpcMisMatchSM?.setCurrentCell(
+        fpcMisMatchSM?.getRowByIdx(mainSelectedIndex)?.cells['fpcTime'],
+        mainSelectedIndex);
 
     /// BStatus == "B" &&
     /// FPCTime == programFpcTimeSelected &&
@@ -432,15 +489,20 @@ class CommercialController extends GetxController {
   }
 
   misMatchOnClick() {
-    LoadingDialog.recordExists("Want to change FPC of selected record(s)?", () async {
-      if (fpcMisMatchSM?.currentRowIdx == null || fpcMisMatchSM?.currentRowIdx == null) {
+    LoadingDialog.recordExists("Want to change FPC of selected record(s)?",
+        () async {
+      if (fpcMisMatchSM?.currentRowIdx == null ||
+          fpcMisMatchSM?.currentRowIdx == null) {
         LoadingDialog.showErrorDialog("Please select row first");
       } else if ((fpcMisMatchSM!.currentSelectingRows.isEmpty)) {
         for (var i = 0; i < mainCommercialShowDetailsList!.length; i++) {
           if (mainCommercialShowDetailsList![i].bStatus == "F" &&
-              (showCommercialDetailsList![fpcMisMatchSM!.currentRowIdx!].rownumber) == mainCommercialShowDetailsList![i].rownumber) {
+              (showCommercialDetailsList![fpcMisMatchSM!.currentRowIdx!]
+                      .rownumber) ==
+                  mainCommercialShowDetailsList![i].rownumber) {
             mainCommercialShowDetailsList![i].bStatus = "B";
-            mainCommercialShowDetailsList![i].pProgramMaster = pDailyFPCSelected;
+            mainCommercialShowDetailsList![i].pProgramMaster =
+                pDailyFPCSelected;
             break;
           }
         }
@@ -449,9 +511,11 @@ class CommercialController extends GetxController {
         for (var i = 0; i < mainCommercialShowDetailsList!.length; i++) {
           if (mainCommercialShowDetailsList![i].bStatus == "F") {
             for (var element in fpcMisMatchSM!.currentSelectingRows) {
-              if (mainCommercialShowDetailsList![i].rownumber == showCommercialDetailsList![element.sortIdx].rownumber) {
+              if (mainCommercialShowDetailsList![i].rownumber ==
+                  showCommercialDetailsList![element.sortIdx].rownumber) {
                 mainCommercialShowDetailsList![i].bStatus = "B";
-                mainCommercialShowDetailsList![i].pProgramMaster = pDailyFPCSelected;
+                mainCommercialShowDetailsList![i].pProgramMaster =
+                    pDailyFPCSelected;
               }
             }
           }
@@ -475,13 +539,17 @@ class CommercialController extends GetxController {
   }
 
   markAsErrorOnClick() {
-    LoadingDialog.recordExists("Want to mark as error to selected record(s)?", () {
-      if (fpcMisMatchSM?.currentRowIdx == null || fpcMisMatchSM?.currentRowIdx == null) {
+    LoadingDialog.recordExists("Want to mark as error to selected record(s)?",
+        () {
+      if (fpcMisMatchSM?.currentRowIdx == null ||
+          fpcMisMatchSM?.currentRowIdx == null) {
         LoadingDialog.showErrorDialog("Please select row first");
       } else if ((fpcMisMatchSM!.currentSelectingRows.isEmpty)) {
         for (var i = 0; i < mainCommercialShowDetailsList!.length; i++) {
           if (mainCommercialShowDetailsList![i].bStatus == "F" &&
-              (showCommercialDetailsList![fpcMisMatchSM!.currentRowIdx!].rownumber) == mainCommercialShowDetailsList![i].rownumber) {
+              (showCommercialDetailsList![fpcMisMatchSM!.currentRowIdx!]
+                      .rownumber) ==
+                  mainCommercialShowDetailsList![i].rownumber) {
             mainCommercialShowDetailsList![i].bStatus = "E";
             break;
           }
@@ -491,7 +559,8 @@ class CommercialController extends GetxController {
         for (var i = 0; i < mainCommercialShowDetailsList!.length; i++) {
           if (mainCommercialShowDetailsList![i].bStatus == "F") {
             for (var element in fpcMisMatchSM!.currentSelectingRows) {
-              if (mainCommercialShowDetailsList![i].rownumber == showCommercialDetailsList![element.sortIdx].rownumber) {
+              if (mainCommercialShowDetailsList![i].rownumber ==
+                  showCommercialDetailsList![element.sortIdx].rownumber) {
                 mainCommercialShowDetailsList![i].bStatus = "E";
               }
             }
@@ -517,12 +586,15 @@ class CommercialController extends GetxController {
   PlutoGridStateManager? markedAsErrorSM;
   unMarkAsErrorOnClick() {
     LoadingDialog.recordExists("Want to un-mark selected record(s)?", () {
-      if (markedAsErrorSM?.currentRowIdx == null || markedAsErrorSM?.currentRowIdx == null) {
+      if (markedAsErrorSM?.currentRowIdx == null ||
+          markedAsErrorSM?.currentRowIdx == null) {
         LoadingDialog.showErrorDialog("Please select row first");
       } else if ((markedAsErrorSM!.currentSelectingRows.isEmpty)) {
         for (var i = 0; i < mainCommercialShowDetailsList!.length; i++) {
           if (mainCommercialShowDetailsList![i].bStatus == "E" &&
-              (showCommercialDetailsList![markedAsErrorSM!.currentRowIdx!].rownumber) == mainCommercialShowDetailsList![i].rownumber) {
+              (showCommercialDetailsList![markedAsErrorSM!.currentRowIdx!]
+                      .rownumber) ==
+                  mainCommercialShowDetailsList![i].rownumber) {
             mainCommercialShowDetailsList![i].bStatus = "B";
             break;
           }
@@ -532,13 +604,15 @@ class CommercialController extends GetxController {
         for (var i = 0; i < mainCommercialShowDetailsList!.length; i++) {
           if (mainCommercialShowDetailsList![i].bStatus == "E") {
             for (var element in markedAsErrorSM!.currentSelectingRows) {
-              if (mainCommercialShowDetailsList![i].rownumber == showCommercialDetailsList![element.sortIdx].rownumber) {
+              if (mainCommercialShowDetailsList![i].rownumber ==
+                  showCommercialDetailsList![element.sortIdx].rownumber) {
                 mainCommercialShowDetailsList![i].bStatus = "B";
               }
             }
           }
         }
-        markedAsErrorSM?.removeRows((markedAsErrorSM?.currentSelectingRows ?? []));
+        markedAsErrorSM
+            ?.removeRows((markedAsErrorSM?.currentSelectingRows ?? []));
       }
     });
     // /// BStatus == "B"
@@ -560,7 +634,11 @@ class CommercialController extends GetxController {
       Snack.callError("Please select location");
     } else if (selectedChannel == null) {
       Snack.callError("Please select location");
-    } else if (mainCommercialShowDetailsList?.where((o) => o.bStatus.toString() == 'F').toList().isNotEmpty ?? true) {
+    } else if (mainCommercialShowDetailsList
+            ?.where((o) => o.bStatus.toString() == 'F')
+            .toList()
+            .isNotEmpty ??
+        true) {
       LoadingDialog.showErrorDialog("Please clear all mismatch spots.");
     } else {
       LoadingDialog.call();
@@ -570,15 +648,19 @@ class CommercialController extends GetxController {
           "locationCode": selectedLocation?.key.toString(),
           "channelCode": selectedChannel?.key.toString(),
           "scheduleDate": df1.format(selectedDate!),
-          "lstCommercialShuffling": mainCommercialShowDetailsList?.map((e) => e.toJson()).toList(),
+          "lstCommercialShuffling":
+              mainCommercialShowDetailsList?.map((e) => e.toJson()).toList(),
         };
 
         Get.find<ConnectorControl>().POSTMETHOD(
             api: ApiFactory.SAVE_COMMERCIAL_DETAILS,
             fun: (dynamic data) {
               Get.back();
-              if (data != null && data is Map<String, dynamic> && data['csSaveOutput'] != null) {
-                LoadingDialog.callDataSaved(msg: data['csSaveOutput'].toString());
+              if (data != null &&
+                  data is Map<String, dynamic> &&
+                  data['csSaveOutput'] != null) {
+                LoadingDialog.callDataSaved(
+                    msg: data['csSaveOutput'].toString());
               } else {
                 LoadingDialog.showErrorDialog(data.toString());
               }

@@ -17,11 +17,14 @@ import '../../../providers/ApiFactory.dart';
 import '../../../providers/SizeDefine.dart';
 import '../controllers/commercial_controller.dart';
 
-class CommercialView extends GetView<CommercialController> {
+class CommercialView extends StatelessWidget {
   CommercialView({Key? key}) : super(key: key);
 
-  var formName = 'Schedule Commercials';
-  void handleOnRowChecked(PlutoGridOnRowCheckedEvent event) {}
+  CommercialController controller = Get.put<CommercialController>(
+    CommercialController(),
+  );
+  // var formName = 'Schedule Commercials';
+  // void handleOnRowChecked(PlutoGridOnRowCheckedEvent event) {}
 
   @override
   Widget build(BuildContext context) {
@@ -196,7 +199,7 @@ class CommercialView extends GetView<CommercialController> {
                                         btnText: btn["name"],
                                         callback: btn["name"] == "Delete"
                                             ? null
-                                            : () => controller.formHandler(
+                                            : () => formHandler(
                                                   btn['name'],
                                                 ),
                                       )
@@ -407,6 +410,9 @@ class CommercialView extends GetView<CommercialController> {
                 controller.showSelectedProgramList();
                 // controller.updateTab();
               },
+              witdthSpecificColumn: controller.userGridSetting1
+                  ?.firstWhereOrNull((element) =>
+                      element['controlName'].toString() == "1_table"),
             );
           } else {
             return Container(
@@ -435,6 +441,9 @@ class CommercialView extends GetView<CommercialController> {
                 (controller.showCommercialDetailsList?.isNotEmpty)!) {
               return Expanded(
                 child: DataGridFromMap1(
+                  witdthSpecificColumn: controller.userGridSetting1
+                      ?.firstWhereOrNull((element) =>
+                          element['controlName'].toString() == "2_table"),
                   onload: (event) {
                     controller.gridStateManager = event.stateManager;
                     event.stateManager
@@ -664,6 +673,9 @@ class CommercialView extends GetView<CommercialController> {
                   (controller.showCommercialDetailsList?.isNotEmpty)!) {
                 return Expanded(
                   child: DataGridFromMap(
+                    witdthSpecificColumn: controller.userGridSetting1
+                        ?.firstWhereOrNull((element) =>
+                            element['controlName'].toString() == "3_table"),
                     onload: (sm) {
                       controller.fpcMisMatchSM = sm.stateManager;
                       controller.fpcMisMatchSM
@@ -789,6 +801,9 @@ class CommercialView extends GetView<CommercialController> {
                   (controller.showCommercialDetailsList?.isNotEmpty)!) {
                 return Expanded(
                   child: DataGridFromMap(
+                    witdthSpecificColumn: controller.userGridSetting1
+                        ?.firstWhereOrNull((element) =>
+                            element['controlName'].toString() == "4_table"),
                     colorCallback: (row) => (row.row.cells.containsValue(
                             controller.markedAsErrorSM?.currentCell))
                         ? Colors.deepPurple.shade200
@@ -859,5 +874,37 @@ class CommercialView extends GetView<CommercialController> {
             }),
       ],
     );
+  }
+
+  formHandler(btnName) async {
+    if (btnName == "Clear") {
+      Get.delete<CommercialController>();
+      Get.find<HomeController>().clearPage1();
+    }
+
+    if (btnName == "Save") {
+      controller.saveSchedulingData();
+    }
+
+    if (btnName == "Exit") {
+      var lstSM = <PlutoGridStateManager>[];
+
+      if (controller.sm != null) {
+        lstSM.add(controller.sm!);
+      }
+      if (controller.gridStateManager != null) {
+        lstSM.add(controller.gridStateManager!);
+      }
+      if (controller.fpcMisMatchSM != null) {
+        lstSM.add(controller.fpcMisMatchSM!);
+      }
+      if (controller.markedAsErrorSM != null) {
+        lstSM.add(controller.markedAsErrorSM!);
+      }
+
+      if (lstSM.isNotEmpty) {
+        Get.find<HomeController>().postUserGridSetting(listStateManager: lstSM);
+      }
+    }
   }
 }
