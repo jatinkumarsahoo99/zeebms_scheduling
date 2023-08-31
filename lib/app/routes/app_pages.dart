@@ -56,7 +56,7 @@ class AppPages {
 
   static const INITIAL = kReleaseMode
       ? Routes.HOME
-      : "${Routes.EUROPE_RUNNING_ORDER_STATUS}?personalNo=hWlrtkk6LCUUIRgmutvmzg%3D%3D&loginCode=gsS2oEkuYKzI9aXanDqobQ%3D%3D&formName=ZdPOC%2BHl3hRJzHSclM%2B5m3sWVw1wpLPmNEvejYUOFLU%3D";
+      : "${Routes.TRANSMISSION_LOG}?personalNo=%2F7i0zDr%2FLpXNOAIr8lUluw%3D%3D&loginCode=1BWIoBKeDl7qDSAAhxvXsQ%3D%3D&formName=9TH%2FHz5wtFnEcyoT04qs%2BQ%3D%3D";
 
   static final routes = [
     GetPage(
@@ -340,6 +340,11 @@ class AppPages {
     GetPage(
       name: _Paths.SECONDARY_EVENT_TEMPLATE_MASTER,
       page: () => AuthGuard1(childName: _Paths.SECONDARY_EVENT_TEMPLATE_MASTER),
-    )
+    ),
+    // GetPage(
+    //   name: _Paths.TEST_PAGE,
+    //   binding: TestPageBinding(),
+    //   page: () => TestPageView(),
+    // )
   ];
 }
