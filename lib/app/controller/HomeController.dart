@@ -81,7 +81,7 @@ class HomeController extends GetxController {
       String? mapData = jsonEncode(singleMap);
       data.add({
         "formName": Get.find<MainController>().formName.replaceAll(" ", "") ?? "",
-        "controlName": tableNamesList !=null?(i + 1).toString() + "_table":tableNamesList?[i],
+        "controlName": tableNamesList ==null?"${i + 1}_table":tableNamesList?[i],
         "userSettings": mapData
       });
     }
@@ -91,9 +91,10 @@ class HomeController extends GetxController {
         fun: (map) {});
   }
 
-  Future<List<Map<String, double>>>? fetchUserSetting() {
-    Completer<List<Map<String, double>>> completer=Completer<List<Map<String, double>>>();
-    List<Map<String, double>> data=[];
+  Future<List<Map<String,Map<String, double>>>>? fetchUserSetting() {
+    Completer<List<Map<String,Map<String, double>>>> completer=Completer<List<Map<String,Map<String, double>>>>();
+    // List<Map<String, double>> data=[];
+    List<Map<String,Map<String, double>>> data=[];
     Get.find<ConnectorControl>().GETMETHODCALL(
         api: ApiFactory.FETCH_USER_SETTING +
             "?formName=${Get.find<MainController>().formName.replaceAll(" ", "")}",
@@ -103,6 +104,7 @@ class HomeController extends GetxController {
               map.containsKey("userSetting") &&
               map["userSetting"] != null) {
             map["userSetting"].forEach((e){
+             Map<String,Map<String, double>> userGridSettingMain = {};
               Map<String, double> userGridSetting = {};
               jsonDecode(e["userSettings"]).forEach((key, value) {
                 print("Data key is>>" +
@@ -111,7 +113,9 @@ class HomeController extends GetxController {
                     value.toString());
                 userGridSetting[key] = value;
               });
-              data.add(userGridSetting);
+             userGridSettingMain[e["controlName"]??""]=userGridSetting;
+              // data.add(userGridSetting);
+              data.add(userGridSettingMain);
             });
             completer.complete(data);
             // return data;

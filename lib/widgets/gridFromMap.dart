@@ -1152,7 +1152,7 @@ class DataGridFromMap4 extends StatelessWidget {
             enableRowChecked:
             (checkRow == true && key == checkRowKey) ? true : false,
             renderer: ((rendererContext) {
-              print(">>>>>>>>>"+showOnlyCheckBox.toString()+","+(rendererContext.cell.key??"").toString());
+              print(">>>>>>>>>"+showOnlyCheckBox.toString()+","+(key??"").toString());
               if (actionIconKey != null) {
                 if (key == actionIconKey) {
                   return GestureDetector(
@@ -1297,9 +1297,10 @@ class DataGridFromMap4 extends StatelessWidget {
                     }
                   }
                       : null,
-                  child:((rendererContext.cell.key??"").toString().
+                  child:((key??"").toString().
                   toLowerCase().trim() == ( checkRowKey??"").toString().toLowerCase().trim())?
-                  Checkbox(value: rendererContext.cell.value??false,
+                  Checkbox(value:(rendererContext.cell.value != null &&
+                      (rendererContext.cell.value).toString().trim() == "true")? true:false,
                     onChanged: (bool? value) {  },
                     materialTapTargetSize:
                     MaterialTapTargetSize.shrinkWrap,): Text(
