@@ -42,9 +42,6 @@ import '../modules/SponserTypeMaster/bindings/sponser_type_master_binding.dart';
 import '../modules/SpotPositionTypeMaster/bindings/spot_position_type_master_binding.dart';
 import '../modules/SpotPriority/bindings/spot_priority_binding.dart';
 import '../modules/StillMaster/bindings/still_master_binding.dart';
-import '../modules/TestPage/bindings/test_page_binding.dart';
-import '../modules/TestPage/controllers/test_page_controller.dart';
-import '../modules/TestPage/views/test_page_view.dart';
 import '../modules/TransmissionLog/bindings/transmission_log_binding.dart';
 import '../modules/commercial/bindings/commercial_binding.dart';
 import '../modules/filler/bindings/filler_binding.dart';
@@ -344,10 +341,10 @@ class AppPages {
       name: _Paths.SECONDARY_EVENT_TEMPLATE_MASTER,
       page: () => AuthGuard1(childName: _Paths.SECONDARY_EVENT_TEMPLATE_MASTER),
     ),
-    GetPage(
-      name: _Paths.TEST_PAGE,
-      binding: TestPageBinding(),
-      page: () => TestPageView(),
-    )
+    // GetPage(
+    //   name: _Paths.TEST_PAGE,
+    //   binding: TestPageBinding(),
+    //   page: () => TestPageView(),
+    // )
   ];
 }

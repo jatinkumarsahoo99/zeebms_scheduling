@@ -57,7 +57,6 @@ abstract class Routes {
   static const D_SERIES_SPECIFICATION = _Paths.D_SERIES_SPECIFICATION;
   static const EUROPE_RUNNING_ORDER_STATUS = _Paths.EUROPE_RUNNING_ORDER_STATUS;
   static const EUROPE_DROP_SPOTS = _Paths.EUROPE_DROP_SPOTS;
-  static const TEST_PAGE = _Paths.TEST_PAGE;
 }
 
 abstract class RoutesList {
@@ -97,7 +96,6 @@ abstract class RoutesList {
     _Paths.SECONDARY_EVENT_TEMPLATE_MASTER,
     _Paths.LOG_CONVERT,
     _Paths.MATERIAL_ID_SEARCH,
-    _Paths.TEST_PAGE,
   ];
 }
 
@@ -156,5 +154,4 @@ abstract class _Paths {
   static const CREATIVE_TAG_ON = '/frmCreativeTagOnLink';
   static const EUROPE_RUNNING_ORDER_STATUS = '/Robookingotherrevenues';
   static const EUROPE_DROP_SPOTS = '/RorescheduleOtherrevune';
-  static const TEST_PAGE = '/testPage';
 }
