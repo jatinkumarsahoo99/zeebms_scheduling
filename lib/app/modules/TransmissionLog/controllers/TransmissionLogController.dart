@@ -3564,8 +3564,9 @@ class TransmissionLogController extends GetxController {
             // tblLog.Rows[dr['rownumber']].Selected = true;
             gridStateManager?.moveScrollByRow(PlutoMoveDirection.down,
                 int.tryParse(dr.cells['rownumber']?.value ?? "")!);
-            gridStateManager?.setCurrentCell(dr.cells["no"],
-                int.tryParse(dr.cells['rownumber']?.value ?? "")!);
+
+            // gridStateManager?.setCurrentCell(dr.cells["no"], int.tryParse(dr.cells['rownumber']?.value ?? "")!);
+            gridStateManager?.toggleSelectingRow(int.tryParse(dr.cells['rownumber']?.value ?? "")!);
             LoadingDialog.callInfoMessage(
                 "Ros spot outside contracted timeband!\nUnable to proceed with save");
 
@@ -3577,10 +3578,9 @@ class TransmissionLogController extends GetxController {
             // tblLog.Rows[dr['rownumber']].Selected = true;
             gridStateManager?.moveScrollByRow(PlutoMoveDirection.down,
                 int.tryParse(dr.cells['rownumber']?.value ?? ""));
-            gridStateManager?.setCurrentCell(dr.cells["no"],
-                int.tryParse(dr.cells['rownumber']?.value ?? "")!);
-            bool? isYesClick = await showDialogForYesNo1(
-                "Ros spot within 5 minutes of contracted timeband!\nDo you want to proceed with Save?");
+            // gridStateManager?.setCurrentCell(dr.cells["no"], int.tryParse(dr.cells['rownumber']?.value ?? "")!);
+            gridStateManager?.toggleSelectingRow(int.tryParse(dr.cells['rownumber']?.value ?? "")!);
+            bool? isYesClick = await showDialogForYesNo1("Ros spot within 5 minutes of contracted timeband!\nDo you want to proceed with Save?");
             if (isYesClick != null) {
               if (!isYesClick) {
                 print("checkRosTransmissionTime(300)>>>>" +
