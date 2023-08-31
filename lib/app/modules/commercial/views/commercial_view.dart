@@ -13,15 +13,19 @@ import '../../../../widgets/dropdown.dart';
 import '../../../../widgets/gridFromMap.dart';
 import '../../../../widgets/gridFromMap1.dart';
 import '../../../controller/HomeController.dart';
+import '../../../data/user_data_settings_model.dart';
 import '../../../providers/ApiFactory.dart';
 import '../../../providers/SizeDefine.dart';
 import '../controllers/commercial_controller.dart';
 
-class CommercialView extends GetView<CommercialController> {
+class CommercialView extends StatelessWidget {
   CommercialView({Key? key}) : super(key: key);
 
-  var formName = 'Schedule Commercials';
-  void handleOnRowChecked(PlutoGridOnRowCheckedEvent event) {}
+  CommercialController controller = Get.put<CommercialController>(
+    CommercialController(),
+  );
+  // var formName = 'Schedule Commercials';
+  // void handleOnRowChecked(PlutoGridOnRowCheckedEvent event) {}
 
   @override
   Widget build(BuildContext context) {
@@ -111,7 +115,10 @@ class CommercialView extends GetView<CommercialController> {
                                   padding: const EdgeInsets.only(top: 17.0),
                                   child: FormButton(
                                     btnText: "Verify",
-                                    callback: () {},
+                                    callback: () {
+                                      print(controller.userDataSettings
+                                          ?.toJson());
+                                    },
                                   ),
                                 ),
                                 Padding(
@@ -196,7 +203,7 @@ class CommercialView extends GetView<CommercialController> {
                                         btnText: btn["name"],
                                         callback: btn["name"] == "Delete"
                                             ? null
-                                            : () => controller.formHandler(
+                                            : () => formHandler(
                                                   btn['name'],
                                                 ),
                                       )
@@ -407,6 +414,10 @@ class CommercialView extends GetView<CommercialController> {
                 controller.showSelectedProgramList();
                 // controller.updateTab();
               },
+              witdthSpecificColumn: (controller.userDataSettings?.userSetting
+                  ?.firstWhere((element) => element.controlName == "sm",
+                      orElse: () => UserSetting())
+                  .userSettings),
             );
           } else {
             return Container(
@@ -435,6 +446,13 @@ class CommercialView extends GetView<CommercialController> {
                 (controller.showCommercialDetailsList?.isNotEmpty)!) {
               return Expanded(
                 child: DataGridFromMap1(
+                  witdthSpecificColumn: (controller
+                      .userDataSettings?.userSetting
+                      ?.firstWhere(
+                          (element) =>
+                              element.controlName == "gridStateManager",
+                          orElse: () => UserSetting())
+                      .userSettings),
                   onload: (event) {
                     controller.gridStateManager = event.stateManager;
                     event.stateManager
@@ -664,6 +682,15 @@ class CommercialView extends GetView<CommercialController> {
                   (controller.showCommercialDetailsList?.isNotEmpty)!) {
                 return Expanded(
                   child: DataGridFromMap(
+                    witdthSpecificColumn: (controller
+                        .userDataSettings?.userSetting
+                        ?.firstWhere(
+                            (element) => element.controlName == "fpcMisMatchSM",
+                            orElse: () => UserSetting())
+                        .userSettings),
+                    // witdthSpecificColumn: controller.userGridSetting1
+                    //     ?.firstWhereOrNull((element) =>
+                    //         element['controlName'].toString() == "3_table"),
                     onload: (sm) {
                       controller.fpcMisMatchSM = sm.stateManager;
                       controller.fpcMisMatchSM
@@ -789,6 +816,16 @@ class CommercialView extends GetView<CommercialController> {
                   (controller.showCommercialDetailsList?.isNotEmpty)!) {
                 return Expanded(
                   child: DataGridFromMap(
+                    // witdthSpecificColumn: controller.userGridSetting1
+                    //     ?.firstWhereOrNull((element) =>
+                    //         element['controlName'].toString() == "4_table"),
+                    witdthSpecificColumn: (controller
+                        .userDataSettings?.userSetting
+                        ?.firstWhere(
+                            (element) =>
+                                element.controlName == "markedAsErrorSM",
+                            orElse: () => UserSetting())
+                        .userSettings),
                     colorCallback: (row) => (row.row.cells.containsValue(
                             controller.markedAsErrorSM?.currentCell))
                         ? Colors.deepPurple.shade200
@@ -859,5 +896,25 @@ class CommercialView extends GetView<CommercialController> {
             }),
       ],
     );
+  }
+
+  formHandler(btnName) async {
+    if (btnName == "Clear") {
+      Get.delete<CommercialController>();
+      Get.find<HomeController>().clearPage1();
+    }
+
+    if (btnName == "Save") {
+      controller.saveSchedulingData();
+    }
+
+    if (btnName == "Exit") {
+      Get.find<HomeController>().postUserGridSetting2(listStateManager: [
+        {"sm": controller.sm},
+        {"gridStateManager": controller.gridStateManager},
+        {"fpcMisMatchSM": controller.fpcMisMatchSM},
+        {"markedAsErrorSM": controller.markedAsErrorSM},
+      ]);
+    }
   }
 }

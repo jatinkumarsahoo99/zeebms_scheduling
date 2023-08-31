@@ -29,13 +29,16 @@ class DataGridFromMap1 extends StatelessWidget {
       this.actionIcon,
       this.actionIconKey,
       this.actionOnPress,
+      this.columnAutoResize = true,
       this.onSelected,
       this.onRowsMoved,
       this.onRowDoubleTap,
       this.formatDate = true,
       this.dateFromat = "dd-MM-yyyy",
+      this.witdthSpecificColumn,
       this.onFocusChange})
       : super(key: key);
+  final Map<String, double>? witdthSpecificColumn;
   final List mapData;
   bool enableSort;
   final bool? showSrNo;
@@ -53,6 +56,7 @@ class DataGridFromMap1 extends StatelessWidget {
   final double? widthRatio;
   final IconData? actionIcon;
   final String? actionIconKey;
+  final bool columnAutoResize;
   final Function? actionOnPress;
   Color Function(PlutoRowColorContext)? colorCallback;
   Function(PlutoGridOnLoadedEvent)? onload;
@@ -72,39 +76,40 @@ class DataGridFromMap1 extends StatelessWidget {
           enableEditingMode: false,
           enableDropToResize: true,
           enableContextMenu: false,
-          width: Utils.getColumnSize(
-            key: "no",
-          ),
+          minWidth: 0,
+          width: (witdthSpecificColumn != null &&
+                  witdthSpecificColumn!.keys.toList().contains('no'))
+              ? witdthSpecificColumn!['no']!
+              : Utils.getColumnSize(key: 'no', value: mapData[0][key]),
           cellPadding: const EdgeInsets.all(0),
           renderer: ((rendererContext) {
             // print("On rendererContext called");
             return Container(
-              // height: 25,
-              height: double.infinity,
-              // width: Utils.getColumnSize1(key: key, value: mapData[0][key]),
-              // padding: EdgeInsets.only(
-              //   left: 
-              // ),
-              decoration: BoxDecoration(
-                border: Border.all(color: Colors.transparent,width: 0.01),
-                borderRadius: BorderRadius.circular(1),
-                color: Colors.white
-              ),
-              alignment: Alignment.center,
-              // color: (key == "epsNo" || key == "tapeid" || key == "status") ? ColorData.cellColor(rendererContext.row.cells[key]?.value, key) : null,
-              child: Text(
-                (rendererContext.rowIdx + 1).toString(),
-                maxLines: 1,
-                overflow: TextOverflow.ellipsis,
-                style: TextStyle(
-                  fontSize: SizeDefine.columnTitleFontSize,
-              ),
-            )
-            );
+                // height: 25,
+                height: double.infinity,
+                // width: Utils.getColumnSize1(key: key, value: mapData[0][key]),
+                // padding: EdgeInsets.only(
+                //   left:
+                // ),
+                decoration: BoxDecoration(
+                    border: Border.all(color: Colors.transparent, width: 0.01),
+                    borderRadius: BorderRadius.circular(1),
+                    color: Colors.white),
+                alignment: Alignment.center,
+                // color: (key == "epsNo" || key == "tapeid" || key == "status") ? ColorData.cellColor(rendererContext.row.cells[key]?.value, key) : null,
+                child: Text(
+                  (rendererContext.rowIdx + 1).toString(),
+                  maxLines: 1,
+                  overflow: TextOverflow.ellipsis,
+                  style: TextStyle(
+                    fontSize: SizeDefine.columnTitleFontSize,
+                  ),
+                ));
           }),
-          
           enableAutoEditing: false,
-          hide: hideCode! && key.toString().toLowerCase() != "hourcode" && key.toString().toLowerCase().contains("code"),
+          hide: hideCode! &&
+              key.toString().toLowerCase() != "hourcode" &&
+              key.toString().toLowerCase().contains("code"),
           enableColumnDrag: false,
           field: "no",
           type: PlutoColumnType.text()));
@@ -113,7 +118,14 @@ class DataGridFromMap1 extends StatelessWidget {
       for (var key in showonly!) {
         if ((mapData[0] as Map).containsKey(key)) {
           segColumn.add(PlutoColumn(
-              title: key == "fpcCaption" ? "FPC Caption" : key.toString().pascalCaseToNormal(),
+              minWidth: 0,
+              width: (witdthSpecificColumn != null &&
+                      witdthSpecificColumn!.keys.toList().contains(key))
+                  ? witdthSpecificColumn![key]!
+                  : Utils.getColumnSize(key: key, value: mapData[0][key]),
+              title: key == "fpcCaption"
+                  ? "FPC Caption"
+                  : key.toString().pascalCaseToNormal(),
               enableRowChecked: false,
               readOnly: true,
               renderer: ((rendererContext) {
@@ -131,7 +143,8 @@ class DataGridFromMap1 extends StatelessWidget {
                   } else {
                     return GestureDetector(
                       onSecondaryTapDown: (detail) {
-                        DataGridMenu().showGridMenu(rendererContext.stateManager, detail, context);
+                        DataGridMenu().showGridMenu(
+                            rendererContext.stateManager, detail, context);
                       },
                       child: Text(
                         rendererContext.cell.value.toString(),
@@ -144,7 +157,8 @@ class DataGridFromMap1 extends StatelessWidget {
                 } else {
                   return GestureDetector(
                     onSecondaryTapDown: (detail) {
-                      DataGridMenu().showGridMenu(rendererContext.stateManager, detail, context);
+                      DataGridMenu().showGridMenu(
+                          rendererContext.stateManager, detail, context);
                     },
                     child: Text(
                       rendererContext.cell.value.toString(),
@@ -159,14 +173,14 @@ class DataGridFromMap1 extends StatelessWidget {
               enableRowDrag: true,
               enableEditingMode: false,
               enableDropToResize: true,
-
               enableContextMenu: false,
               // width: Utils.getColumnSize(key: key, value: mapData[0][key]),
-              minWidth: Utils.getColumnSize(key: key, value: mapData[0][key]),
               enableAutoEditing: false,
               hide: showonly == null
                   ? (hideKeys != null && hideKeys!.contains(key)) ||
-                      hideCode! && key.toString().toLowerCase() != "hourcode" && key.toString().toLowerCase().contains("code")
+                      hideCode! &&
+                          key.toString().toLowerCase() != "hourcode" &&
+                          key.toString().toLowerCase().contains("code")
                   : !showonly!.contains(key),
               enableColumnDrag: false,
               field: key,
@@ -176,8 +190,15 @@ class DataGridFromMap1 extends StatelessWidget {
     } else {
       for (var key in mapData[0].keys) {
         segColumn.add(PlutoColumn(
+            minWidth: 0,
+            width: (witdthSpecificColumn != null &&
+                    witdthSpecificColumn!.keys.toList().contains(key))
+                ? witdthSpecificColumn![key]!
+                : Utils.getColumnSize(key: key, value: mapData[0][key]),
             cellPadding: EdgeInsets.zero,
-            title: key == "fpcCaption" ? "FPC Caption" : key.toString().pascalCaseToNormal(),
+            title: key == "fpcCaption"
+                ? "FPC Caption"
+                : key.toString().pascalCaseToNormal(),
             enableRowChecked: false,
             readOnly: true,
             // backgroundColor: Colors.red,
@@ -196,7 +217,8 @@ class DataGridFromMap1 extends StatelessWidget {
                 } else {
                   return GestureDetector(
                     onSecondaryTapDown: (detail) {
-                      DataGridMenu().showGridMenu(rendererContext.stateManager, detail, context);
+                      DataGridMenu().showGridMenu(
+                          rendererContext.stateManager, detail, context);
                     },
                     child: Text(
                       rendererContext.cell.value.toString(),
@@ -210,7 +232,8 @@ class DataGridFromMap1 extends StatelessWidget {
                 // print("Data is>>>"+(rendererContext.row.cells["color"]?.value.toString()??""));
                 return GestureDetector(
                   onSecondaryTapDown: (detail) {
-                    DataGridMenu().showGridMenu(rendererContext.stateManager, detail, context);
+                    DataGridMenu().showGridMenu(
+                        rendererContext.stateManager, detail, context);
                   },
                   child: Container(
                     height: 25,
@@ -218,7 +241,8 @@ class DataGridFromMap1 extends StatelessWidget {
                       left: 6,
                     ),
                     decoration: BoxDecoration(
-                      border: Border.all(color: Colors.transparent,width: 0.01),
+                      border:
+                          Border.all(color: Colors.transparent, width: 0.01),
                       borderRadius: BorderRadius.circular(1),
                     ),
                     alignment: Alignment.centerLeft,
@@ -227,8 +251,13 @@ class DataGridFromMap1 extends StatelessWidget {
                       rendererContext.cell.value.toString(),
                       style: TextStyle(
                           fontSize: SizeDefine.columnTitleFontSize,
-                          fontWeight:
-                              rendererContext.row.cells["modifed"]?.value.toString().toLowerCase() == "y" ? FontWeight.bold : FontWeight.normal),
+                          fontWeight: rendererContext
+                                      .row.cells["modifed"]?.value
+                                      .toString()
+                                      .toLowerCase() ==
+                                  "y"
+                              ? FontWeight.bold
+                              : FontWeight.normal),
                     ),
                   ),
                 );
@@ -239,12 +268,12 @@ class DataGridFromMap1 extends StatelessWidget {
             enableEditingMode: false,
             enableDropToResize: true,
             enableContextMenu: false,
-            // width: Utils.getColumnSize(key: key, value: mapData[0][key])
-            minWidth: Utils.getColumnSize(key: key, value: mapData[0][key]),
             enableAutoEditing: false,
             hide: showonly == null
                 ? (hideKeys != null && hideKeys!.contains(key)) ||
-                    hideCode! && key.toString().toLowerCase() != "hourcode" && key.toString().toLowerCase().contains("code")
+                    hideCode! &&
+                        key.toString().toLowerCase() != "hourcode" &&
+                        key.toString().toLowerCase().contains("code")
                 : !showonly!.contains(key),
             enableColumnDrag: false,
             field: key,
@@ -264,8 +293,10 @@ class DataGridFromMap1 extends StatelessWidget {
           cells[element.key] = PlutoCell(
             value: element.key == "selected" || element.value == null
                 ? ""
-                : element.key.toString().toLowerCase().contains("date") && formatDate!
-                    ? DateFormat(dateFromat).format(DateTime.parse(element.value.toString().replaceAll("T", " ")))
+                : element.key.toString().toLowerCase().contains("date") &&
+                        formatDate!
+                    ? DateFormat(dateFromat).format(DateTime.parse(
+                        element.value.toString().replaceAll("T", " ")))
                     : element.value.toString(),
           );
         }
@@ -282,9 +313,19 @@ class DataGridFromMap1 extends StatelessWidget {
         onFocusChange: onFocusChange,
         child: PlutoGrid(
             mode: mode ?? PlutoGridMode.normal,
-            configuration: plutoGridConfiguration(focusNode: _focusNode,rowHeight: 25),
+            configuration:
+                plutoGridConfiguration(focusNode: _focusNode, rowHeight: 25),
             rowColorCallback: colorCallback,
-            onLoaded: onload,
+            onLoaded: (load) {
+              if (onload != null) {
+                onload!(load);
+              }
+              load.stateManager.setColumnSizeConfig(PlutoGridColumnSizeConfig(
+                  autoSizeMode: columnAutoResize
+                      ? PlutoAutoSizeMode.none
+                      : PlutoAutoSizeMode.scale,
+                  resizeMode: PlutoResizeMode.normal));
+            },
             columns: segColumn,
             onRowDoubleTap: onRowDoubleTap,
             onRowsMoved: onRowsMoved,
