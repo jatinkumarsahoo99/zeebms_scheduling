@@ -1789,11 +1789,17 @@ class TransmissionLogController extends GetxController {
       intSelectedRows = intSelectedRows.reversed.toList();
       // Future.delayed(Duration(seconds: 7), () {
       // Select the rows in the new order
+      gridStateManager?.clearCurrentSelecting();
+      bool isSelect=false;
       for (int i = (intSelectedRows.length - 1); i >= 0; i--) {
         print("Grid Focus index is >>>" + i.toString());
         print("Grid Focus index in intSelectedRows is >>>" +
             intSelectedRows[i].toString());
-        PlutoRow dr = (gridStateManager?.rows[intSelectedRows[i]])!;
+        // PlutoRow dr = (gridStateManager?.rows[intSelectedRows[i]])!;
+        if(!isSelect){
+          isSelect=true;
+          gridStateManager?.setCurrentCell(gridStateManager?.rows[intSelectedRows[i] - 1].cells["no"],intSelectedRows[i] - 1);
+        }
         gridStateManager?.toggleSelectingRow(intSelectedRows[i] - 1);
       }
       // });
@@ -1844,11 +1850,17 @@ class TransmissionLogController extends GetxController {
 
       // Select the rows in the new order
       // Future.delayed(Duration(seconds: 7), () {
+      gridStateManager?.clearCurrentSelecting();
+      bool isSelect=false;
       for (int i = (intSelectedRows.length - 2); i >= 0; i--) {
         print("Grid Focus index is >>>" + i.toString());
         print("Grid Focus index in intSelectedRows is >>>" +
             intSelectedRows[i].toString());
         // PlutoRow dr = (gridStateManager?.rows[intSelectedRows[i]])!;
+        if(!isSelect){
+          isSelect=true;
+          gridStateManager?.setCurrentCell(gridStateManager?.rows[intSelectedRows[i]].cells["no"],intSelectedRows[i]);
+        }
         gridStateManager?.toggleSelectingRow(intSelectedRows[i]);
       }
       print("Grid Focus index in intSelectedRows is >>>" +
