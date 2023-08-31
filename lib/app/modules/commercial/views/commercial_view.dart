@@ -13,6 +13,7 @@ import '../../../../widgets/dropdown.dart';
 import '../../../../widgets/gridFromMap.dart';
 import '../../../../widgets/gridFromMap1.dart';
 import '../../../controller/HomeController.dart';
+import '../../../data/user_data_settings_model.dart';
 import '../../../providers/ApiFactory.dart';
 import '../../../providers/SizeDefine.dart';
 import '../controllers/commercial_controller.dart';
@@ -114,7 +115,10 @@ class CommercialView extends StatelessWidget {
                                   padding: const EdgeInsets.only(top: 17.0),
                                   child: FormButton(
                                     btnText: "Verify",
-                                    callback: () {},
+                                    callback: () {
+                                      print(controller.userDataSettings
+                                          ?.toJson());
+                                    },
                                   ),
                                 ),
                                 Padding(
@@ -410,9 +414,10 @@ class CommercialView extends StatelessWidget {
                 controller.showSelectedProgramList();
                 // controller.updateTab();
               },
-              witdthSpecificColumn: controller.userGridSetting1
-                  ?.firstWhereOrNull((element) =>
-                      element['controlName'].toString() == "1_table"),
+              witdthSpecificColumn: (controller.userDataSettings?.userSetting
+                  ?.firstWhere((element) => element.controlName == "sm",
+                      orElse: () => UserSetting())
+                  .userSettings),
             );
           } else {
             return Container(
@@ -441,9 +446,13 @@ class CommercialView extends StatelessWidget {
                 (controller.showCommercialDetailsList?.isNotEmpty)!) {
               return Expanded(
                 child: DataGridFromMap1(
-                  witdthSpecificColumn: controller.userGridSetting1
-                      ?.firstWhereOrNull((element) =>
-                          element['controlName'].toString() == "2_table"),
+                  witdthSpecificColumn: (controller
+                      .userDataSettings?.userSetting
+                      ?.firstWhere(
+                          (element) =>
+                              element.controlName == "gridStateManager",
+                          orElse: () => UserSetting())
+                      .userSettings),
                   onload: (event) {
                     controller.gridStateManager = event.stateManager;
                     event.stateManager
@@ -673,9 +682,15 @@ class CommercialView extends StatelessWidget {
                   (controller.showCommercialDetailsList?.isNotEmpty)!) {
                 return Expanded(
                   child: DataGridFromMap(
-                    witdthSpecificColumn: controller.userGridSetting1
-                        ?.firstWhereOrNull((element) =>
-                            element['controlName'].toString() == "3_table"),
+                    witdthSpecificColumn: (controller
+                        .userDataSettings?.userSetting
+                        ?.firstWhere(
+                            (element) => element.controlName == "fpcMisMatchSM",
+                            orElse: () => UserSetting())
+                        .userSettings),
+                    // witdthSpecificColumn: controller.userGridSetting1
+                    //     ?.firstWhereOrNull((element) =>
+                    //         element['controlName'].toString() == "3_table"),
                     onload: (sm) {
                       controller.fpcMisMatchSM = sm.stateManager;
                       controller.fpcMisMatchSM
@@ -801,9 +816,16 @@ class CommercialView extends StatelessWidget {
                   (controller.showCommercialDetailsList?.isNotEmpty)!) {
                 return Expanded(
                   child: DataGridFromMap(
-                    witdthSpecificColumn: controller.userGridSetting1
-                        ?.firstWhereOrNull((element) =>
-                            element['controlName'].toString() == "4_table"),
+                    // witdthSpecificColumn: controller.userGridSetting1
+                    //     ?.firstWhereOrNull((element) =>
+                    //         element['controlName'].toString() == "4_table"),
+                    witdthSpecificColumn: (controller
+                        .userDataSettings?.userSetting
+                        ?.firstWhere(
+                            (element) =>
+                                element.controlName == "markedAsErrorSM",
+                            orElse: () => UserSetting())
+                        .userSettings),
                     colorCallback: (row) => (row.row.cells.containsValue(
                             controller.markedAsErrorSM?.currentCell))
                         ? Colors.deepPurple.shade200
@@ -887,24 +909,12 @@ class CommercialView extends StatelessWidget {
     }
 
     if (btnName == "Exit") {
-      var lstSM = <PlutoGridStateManager>[];
-
-      if (controller.sm != null) {
-        lstSM.add(controller.sm!);
-      }
-      if (controller.gridStateManager != null) {
-        lstSM.add(controller.gridStateManager!);
-      }
-      if (controller.fpcMisMatchSM != null) {
-        lstSM.add(controller.fpcMisMatchSM!);
-      }
-      if (controller.markedAsErrorSM != null) {
-        lstSM.add(controller.markedAsErrorSM!);
-      }
-
-      if (lstSM.isNotEmpty) {
-        Get.find<HomeController>().postUserGridSetting(listStateManager: lstSM);
-      }
+      Get.find<HomeController>().postUserGridSetting2(listStateManager: [
+        {"sm": controller.sm},
+        {"gridStateManager": controller.gridStateManager},
+        {"fpcMisMatchSM": controller.fpcMisMatchSM},
+        {"markedAsErrorSM": controller.markedAsErrorSM},
+      ]);
     }
   }
 }

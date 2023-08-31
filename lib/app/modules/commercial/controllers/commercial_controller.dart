@@ -10,6 +10,7 @@ import '../../../../widgets/Snack.dart';
 import '../../../controller/ConnectorControl.dart';
 import '../../../controller/HomeController.dart';
 import '../../../data/DropDownValue.dart';
+import '../../../data/user_data_settings_model.dart';
 import '../../../providers/ApiFactory.dart';
 import '../../../providers/Utils.dart';
 import '../CommercialProgramModel.dart';
@@ -53,6 +54,7 @@ class CommercialController extends GetxController {
   DateFormat df2 = DateFormat("MM-dd-yyyy");
   DateFormat dfFinal = DateFormat("yyyy-MM-ddThh:mm:ss");
   PlutoGridStateManager? sm;
+  UserDataSettings? userDataSettings;
 
   // List beams = [];
   // List<PlutoRow> beamRows = [];
@@ -258,27 +260,8 @@ class CommercialController extends GetxController {
     update(["misMatchTable"]);
   }
 
-  formHandler(btnName) async {
-    if (btnName == "Clear") {
-      clear();
-    }
-
-    if (btnName == "Save") {
-      saveSchedulingData();
-    }
-
-    if (btnName == "Exit") {
-      exit();
-    }
-  }
-
   fetchUserSetting1() async {
-    userGridSetting1 = await Get.find<HomeController>().fetchUserSetting();
-    print(userGridSetting1);
-    // userGridSetting1?.firstWhereOrNull((element) => element['']);
-    // print(userGridSetting1?.firstWhere(
-    //         (element) => element['controlName'].toString() == "1_table") ??
-    //     "Nhi mila bhai");
+    userDataSettings = await Get.find<HomeController>().fetchUserSetting2();
   }
 
   Future<dynamic> showTabList() async {
