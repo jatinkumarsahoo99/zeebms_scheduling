@@ -56,6 +56,7 @@ class DSeriesSpecificationView extends GetView<DSeriesSpecificationController> {
                             },
                             "Location",
                             controllerX.widthSize,
+                            inkWellFocusNode: controllerX.locationFocus,
                             // isEnable: controllerX.isEnable.value,
                             searchReq: true,
                             selected: controllerX.selectLocation,
@@ -69,6 +70,7 @@ class DSeriesSpecificationView extends GetView<DSeriesSpecificationController> {
                             },
                             "Channel",
                             controllerX.widthSize,
+                            inkWellFocusNode: controllerX.channelFocus,
                             // isEnable: controllerX.isEnable.value,
                             searchReq: true,
                             selected: controllerX.selectChannel,
@@ -80,6 +82,7 @@ class DSeriesSpecificationView extends GetView<DSeriesSpecificationController> {
                             },
                             "Event",
                             controllerX.widthSize,
+                            inkWellFocusNode: controllerX.eventFocus,
                             // isEnable: controllerX.isEnable.value,
                             searchReq: true,
                             selected: controllerX.selectEvent?.value,
@@ -203,12 +206,17 @@ class DSeriesSpecificationView extends GetView<DSeriesSpecificationController> {
                     return Expanded(
                       child: Padding(
                         padding: const EdgeInsets.symmetric(horizontal: 10),
-                        child: DataGridFromMap(
+                        child: DataGridFromMap4(
                           mapData: (controller.dSeriesModel?.search
                               ?.map((e) => e.toJson())
                               .toList())!,
                           widthRatio: (Get.width / 9) + 5,
                           showSrNo: true,
+                          csvFormat: true,
+                          showOnlyCheckBox:true,
+                          focusNode: controllerX.gridFocus,
+                          checkRowKey: "isLastSegment",
+                          exportFileName: "D Series Specifications",
                           onload: (PlutoGridOnLoadedEvent grid) {
                             controllerX.stateManager = grid.stateManager;
                           },
@@ -249,7 +257,8 @@ class DSeriesSpecificationView extends GetView<DSeriesSpecificationController> {
                   PermissionModel formPermissions = Get.find<MainController>()
                       .permissionList!
                       .lastWhere((element) {
-                    return element.appFormName == Routes.D_SERIES_SPECIFICATION.replaceAll("/", "");
+                    return element.appFormName ==
+                        Routes.D_SERIES_SPECIFICATION.replaceAll("/", "");
                   });
                   if (controller.buttons != null) {
                     return ButtonBar(
@@ -260,8 +269,8 @@ class DSeriesSpecificationView extends GetView<DSeriesSpecificationController> {
                           FormButtonWrapper(
                             btnText: btn["name"],
                             callback: Utils.btnAccessHandler2(btn['name'],
-                                            controller, formPermissions) ==
-                                        null
+                                        controller, formPermissions) ==
+                                    null
                                 ? null
                                 : () => formHandler(btn['name']),
                           )
@@ -279,7 +288,7 @@ class DSeriesSpecificationView extends GetView<DSeriesSpecificationController> {
   }
 
   formHandler(btn) {
-    switch(btn){
+    switch (btn) {
       case "Save":
         controllerX.save();
         break;

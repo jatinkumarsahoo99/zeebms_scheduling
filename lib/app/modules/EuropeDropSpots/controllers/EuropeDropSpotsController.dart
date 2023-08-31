@@ -55,6 +55,12 @@ class EuropeDropSpotsController extends GetxController {
   PlutoGridStateManager? stateManager;
 
   EuropeSpotModel? europeSpotModel;
+  Rx<bool> selectAll = Rx<bool>(false);
+
+  FocusNode locationFocus = FocusNode();
+  FocusNode channelFocus = FocusNode();
+  FocusNode clientFocus = FocusNode();
+  FocusNode agencyFocus = FocusNode();
 
   @override
   void onInit() {

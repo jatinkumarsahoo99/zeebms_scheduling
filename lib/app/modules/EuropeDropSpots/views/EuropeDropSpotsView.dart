@@ -76,6 +76,8 @@ class EuropeDropSpotsView extends GetView<EuropeDropSpotsController> {
                       controller.widthSize,
                       // isEnable: controllerX.isEnable.value,
                       searchReq: true,
+                      inkWellFocusNode: controller.locationFocus,
+
                       selected: controller.selectLocation,
                     )),
                 SizedBox(
@@ -89,6 +91,7 @@ class EuropeDropSpotsView extends GetView<EuropeDropSpotsController> {
                       },
                       "Channel",
                       controller.widthSize,
+                      inkWellFocusNode: controller.channelFocus,
 
                       // isEnable: controllerX.isEnable.value,
                       searchReq: true,
@@ -105,6 +108,7 @@ class EuropeDropSpotsView extends GetView<EuropeDropSpotsController> {
                       },
                       "Client",
                       controller.widthSize,
+                      inkWellFocusNode: controller.clientFocus,
                       // isEnable: controllerX.isEnable.value,
                       searchReq: true,
                       // selected: controllerX.selectOrgValue,
@@ -119,6 +123,7 @@ class EuropeDropSpotsView extends GetView<EuropeDropSpotsController> {
                       },
                       "Agency",
                       controller.widthSize,
+                      inkWellFocusNode: controller.agencyFocus,
                       // isEnable: controllerX.isEnable.value,
                       searchReq: true,
                       // selected: controllerX.selectOrgValue,
@@ -161,6 +166,17 @@ class EuropeDropSpotsView extends GetView<EuropeDropSpotsController> {
                 ),
               ],
             ),
+            Row(
+              mainAxisAlignment: MainAxisAlignment.start,
+              children: [
+                Checkbox(
+                    value: controller.selectAll.value, onChanged: (val) {}),
+                SizedBox(
+                  width: 10,
+                ),
+                Text("Select All")
+              ],
+            ),
             GetBuilder<EuropeDropSpotsController>(
                 id: "listUpdate",
                 init: controller,
@@ -177,8 +193,8 @@ class EuropeDropSpotsView extends GetView<EuropeDropSpotsController> {
                               ?.map((e) => e.toJson())
                               .toList())!,
                           widthRatio: (Get.width / 9) + 5,
-                          onload: (PlutoGridOnLoadedEvent event){
-                            controller.stateManager=event.stateManager;
+                          onload: (PlutoGridOnLoadedEvent event) {
+                            controller.stateManager = event.stateManager;
                           },
                           checkRowKey: "clientname",
 
@@ -218,7 +234,6 @@ class EuropeDropSpotsView extends GetView<EuropeDropSpotsController> {
                     child: FormButton(
                       btnText: "Drop Spot",
                       callback: () {
-
                         controller.dropClick();
                       },
                       showIcon: false,
@@ -287,8 +302,8 @@ class EuropeDropSpotsView extends GetView<EuropeDropSpotsController> {
               print("Data refresh");
               return DropDownField.formDropDown1WidthMap(
                 controller.fileList.value,
-                    (data) {
-                      controller.selectFile=data;
+                (data) {
+                  controller.selectFile = data;
                 },
                 "Select File Name",
                 controller.widthSize1,
@@ -296,7 +311,7 @@ class EuropeDropSpotsView extends GetView<EuropeDropSpotsController> {
                 searchReq: true,
                 // selected: controllerX.selectOrgValue,
               );
-            } ),
+            }),
             SizedBox(
               height: 5,
             ),
@@ -361,7 +376,6 @@ class EuropeDropSpotsView extends GetView<EuropeDropSpotsController> {
               widthRatio: controller.widthSize1,
               // fN: controllerX.partNoFocus,
             ),
-
             SizedBox(
               height: 10,
             ),
