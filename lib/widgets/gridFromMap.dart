@@ -916,7 +916,7 @@ class DataGridFromMap4 extends StatelessWidget {
         this.focusNode,
         this.previousWidgetFN,
         this.witdthSpecificColumn,
-        this.csvFormat = false,this.showOnlyCheckBox = false})
+        this.csvFormat = false,this.showOnlyCheckBox})
       : super(key: key);
   final List mapData;
   bool enableSort;
@@ -1152,6 +1152,7 @@ class DataGridFromMap4 extends StatelessWidget {
             enableRowChecked:
             (checkRow == true && key == checkRowKey) ? true : false,
             renderer: ((rendererContext) {
+              print(">>>>>>>>>"+showOnlyCheckBox.toString()+","+(rendererContext.cell.key??"").toString());
               if (actionIconKey != null) {
                 if (key == actionIconKey) {
                   return GestureDetector(
@@ -1296,10 +1297,19 @@ class DataGridFromMap4 extends StatelessWidget {
                     }
                   }
                       : null,
-                  child: Checkbox(value: rendererContext.cell.value??false,
+                  child:((rendererContext.cell.key??"").toString().
+                  toLowerCase().trim() == ( checkRowKey??"").toString().toLowerCase().trim())?
+                  Checkbox(value: rendererContext.cell.value??false,
                     onChanged: (bool? value) {  },
                     materialTapTargetSize:
-                    MaterialTapTargetSize.shrinkWrap,),
+                    MaterialTapTargetSize.shrinkWrap,): Text(
+                    rendererContext.cell.value.toString(),
+                    style: TextStyle(
+                      fontSize: SizeDefine.columnTitleFontSize,
+                    ),
+                    maxLines: 1,
+                    overflow: TextOverflow.ellipsis,
+                  ),
                 );
               }
               else {
