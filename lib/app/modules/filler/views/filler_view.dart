@@ -64,9 +64,7 @@ class FillerView extends GetView<FillerController> {
                       onFocusChange: (data) => controller.fetchFPCDetails(),
                       mainTextController: controller.date_,
                       // endDate: DateTime.now(),
-                      startDate: (ApiFactory.Enviroment.toLowerCase() == "prod")
-                          ? DateTime.now()
-                          : null,
+                      startDate: DateTime.now(),
                     ),
                   ),
                   const SizedBox(width: 20),
@@ -141,11 +139,7 @@ class FillerView extends GetView<FillerController> {
                                         },
                                         mainTextController:
                                             controller.fillerFromDate_,
-                                        endDate: (ApiFactory.Enviroment
-                                                    .toLowerCase() ==
-                                                "prod")
-                                            ? DateTime.now()
-                                            : null,
+                                        startDate: DateTime.now(),
                                       ),
                                     ),
                                     const SizedBox(width: 15),
@@ -155,11 +149,7 @@ class FillerView extends GetView<FillerController> {
                                         splitType: "-",
                                         widthRation: 0.15,
                                         isEnable: controller.isEnable.value,
-                                        startDate: (ApiFactory.Enviroment
-                                                    .toLowerCase() ==
-                                                "prod")
-                                            ? DateTime.now()
-                                            : null,
+                                        startDate: DateTime.now(),
                                         onFocusChange: (data) {
                                           // print('Selected Date $data');
                                           // controller.fetchFPCDetails();
@@ -314,6 +304,7 @@ class FillerView extends GetView<FillerController> {
                               ),
                             ),
                             const SizedBox(width: 5),
+
                             /// TAPE ID eg: PCHF24572
                             InputFields.formField1(
                               width: 0.12,

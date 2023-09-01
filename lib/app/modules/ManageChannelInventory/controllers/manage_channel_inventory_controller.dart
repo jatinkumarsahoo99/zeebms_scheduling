@@ -33,7 +33,8 @@ class ManageChannelInvemtoryController extends GetxController {
 
   @override
   void onInit() {
-    formPermissions = Utils.fetchPermissions1(Routes.MANAGE_CHANNEL_INVENTORY.replaceAll("/", ""));
+    formPermissions = Utils.fetchPermissions1(
+        Routes.MANAGE_CHANNEL_INVENTORY.replaceAll("/", ""));
     super.onInit();
   }
 
@@ -43,21 +44,25 @@ class ManageChannelInvemtoryController extends GetxController {
     getOnLoadData();
   }
 
-  saveSpecial(String fromDate, String toDate, String fromTime, String toTime, List<bool> weekdays, String updateType) {
-    if (fromDate == toDate) {
-      LoadingDialog.showErrorDialog("Special to Date cannot be less than Special From Date.");
-    }
+  saveSpecial(String fromDate, String toDate, String fromTime, String toTime,
+      List<bool> weekdays, String updateType) {
+    // if (fromDate == toDate) {
+    //   LoadingDialog.showErrorDialog(
+    //       "Special to Date cannot be less than Special From Date.");
+    // }
     //  else if ((Utils.convertToSecond(value: toTime) - Utils.convertToSecond(value: fromTime)) <= 0) {
     //   LoadingDialog.showErrorDialog("Please enter Duration.");
     // }
-    else if ((num.tryParse(dialogCounter.text) ?? 0) <= 0) {
+    // else
+    if ((num.tryParse(dialogCounter.text) ?? 0) <= 0) {
       LoadingDialog.showErrorDialog("Please enter Duration.");
     }
     // else if (selectedProgram == null) {
     //   LoadingDialog.showErrorDialog("Please select Program.");
     // }
     else if (updateType.isEmpty) {
-      LoadingDialog.showErrorDialog("Select Default or Add or Fixed for update.");
+      LoadingDialog.showErrorDialog(
+          "Select Default or Add or Fixed for update.");
     } else {
       int upType = 0;
       if (updateType == "Default") {
@@ -72,7 +77,10 @@ class ManageChannelInvemtoryController extends GetxController {
         api: ApiFactory.MANAGE_CHANNEL_INV_SAVE_SPECIAL,
         fun: (resp) {
           Get.back();
-          if (resp != null && resp is Map<String, dynamic> && resp['isError'] != null && !(resp['isError'] as bool)) {
+          if (resp != null &&
+              resp is Map<String, dynamic> &&
+              resp['isError'] != null &&
+              !(resp['isError'] as bool)) {
             LoadingDialog.callDataSaved(
               msg: resp['genericMessage'].toString(),
               callback: () {
@@ -91,8 +99,10 @@ class ManageChannelInvemtoryController extends GetxController {
           "locationcode": selectedLocation?.key ?? "",
           "channelcode": selectedChannel?.key ?? "",
           "duration": (num.tryParse(dialogCounter.text) ?? 0),
-          "fromDate": DateFormat("yyyy-MM-dd").format(DateFormat("dd-MM-yyyy").parse(fromDate)),
-          "toDate": DateFormat("yyyy-MM-dd").format(DateFormat("dd-MM-yyyy").parse(toDate)),
+          "fromDate": DateFormat("yyyy-MM-dd")
+              .format(DateFormat("dd-MM-yyyy").parse(fromDate)),
+          "toDate": DateFormat("yyyy-MM-dd")
+              .format(DateFormat("dd-MM-yyyy").parse(toDate)),
           "fromTime": fromTime,
           "toTime": toTime,
           "programCode": selectedProgram?.key ?? "",
@@ -116,14 +126,20 @@ class ManageChannelInvemtoryController extends GetxController {
         closeDialogIfOpen();
         if (resp != null && resp is List<dynamic>) {
           programs.clear();
-          programs.addAll((resp).map((e) => DropDownValue(key: e['programcode'].toString(), value: e['programname'].toString())).toList());
+          programs.addAll((resp)
+              .map((e) => DropDownValue(
+                  key: e['programcode'].toString(),
+                  value: e['programname'].toString()))
+              .toList());
         }
       },
       json: {
         "locationcode": selectedLocation?.key,
         "channelcode": selectedChannel?.key,
-        "fromDate": DateFormat("dd-MMM-yyyy").format(DateFormat("dd-MM-yyyy").parse(from)),
-        "toDate": DateFormat("dd-MMM-yyyy").format(DateFormat("dd-MM-yyyy").parse(to)),
+        "fromDate": DateFormat("dd-MMM-yyyy")
+            .format(DateFormat("dd-MM-yyyy").parse(from)),
+        "toDate": DateFormat("dd-MMM-yyyy")
+            .format(DateFormat("dd-MM-yyyy").parse(to)),
         "daysInCommaSep": weekDays,
       },
     );
@@ -136,7 +152,10 @@ class ManageChannelInvemtoryController extends GetxController {
       madeChanges = true;
       for (var i = 0; i < dataTableList.length; i++) {
         if (dataTableList[i].episodeDuration != null) {
-          dataTableList[i].commDuration = (dataTableList[i].episodeDuration ?? 0) * (num.tryParse(counterTC.text) ?? 0) / 30;
+          dataTableList[i].commDuration =
+              (dataTableList[i].episodeDuration ?? 0) *
+                  (num.tryParse(counterTC.text) ?? 0) /
+                  30;
         }
       }
       dataTableList.refresh();
@@ -149,14 +168,19 @@ class ManageChannelInvemtoryController extends GetxController {
     } else if (!madeChanges) {
       LoadingDialog.showErrorDialog("No changes to save");
     } else {
-      stateManager!.setCurrentCell(stateManager!.getRowByIdx(lastSelectedIdx)?.cells['telecastDate'], lastSelectedIdx);
+      stateManager!.setCurrentCell(
+          stateManager!.getRowByIdx(lastSelectedIdx)?.cells['telecastDate'],
+          lastSelectedIdx);
       LoadingDialog.call();
       Get.find<ConnectorControl>().POSTMETHOD(
         api: ApiFactory.MANAGE_CHANNEL_INV_SAVE_TODAY_ALL_DATA,
         fun: (resp) {
           closeDialogIfOpen();
           // LoadingDialog.callDataSaved(msg: resp.toString());
-          if (resp != null && resp is Map<String, dynamic> && resp['isError'] != null && !(resp['isError'] as bool)) {
+          if (resp != null &&
+              resp is Map<String, dynamic> &&
+              resp['isError'] != null &&
+              !(resp['isError'] as bool)) {
             LoadingDialog.callDataSaved(
               msg: resp['genericMessage'].toString(),
               callback: () {
@@ -172,10 +196,12 @@ class ManageChannelInvemtoryController extends GetxController {
         json: {
           "locationCode": selectedLocation?.key,
           "channelCode": selectedChannel?.key,
-          "effectiveDate": DateFormat("yyyy-MM-dd").format(DateFormat("dd-MM-yyyy").parse(effectiveDateTC.text)),
+          "effectiveDate": DateFormat("yyyy-MM-dd")
+              .format(DateFormat("dd-MM-yyyy").parse(effectiveDateTC.text)),
           "loginCode": Get.find<MainController>().user?.logincode ?? "",
           "allDays": fromSaveToday ? "N" : "Y",
-          "saveTodayDataRequest": dataTableList.value.map((e) => e.toJson(fromSave: true)).toList(),
+          "saveTodayDataRequest":
+              dataTableList.value.map((e) => e.toJson(fromSave: true)).toList(),
         },
       );
     }
@@ -206,7 +232,8 @@ class ManageChannelInvemtoryController extends GetxController {
       closeDialogIfOpen();
       LoadingDialog.call();
       Get.find<ConnectorControl>().GETMETHODCALL(
-        api: ApiFactory.MANAGE_CHANNEL_INV_LEAVE_LOCATION(val.key.toString(), Get.find<MainController>().user?.logincode ?? ""),
+        api: ApiFactory.MANAGE_CHANNEL_INV_LEAVE_LOCATION(val.key.toString(),
+            Get.find<MainController>().user?.logincode ?? ""),
         fun: (resp) {
           closeDialogIfOpen();
           if (resp != null && resp is List<dynamic>) {
@@ -245,6 +272,7 @@ class ManageChannelInvemtoryController extends GetxController {
             if (locationList.isNotEmpty) {
               selectedLocation = locationList.first;
               locationList.refresh();
+              handleOnChangedLocation(selectedLocation);
             }
           } else {
             LoadingDialog.showErrorDialog(resp.toString());
@@ -262,14 +290,19 @@ class ManageChannelInvemtoryController extends GetxController {
     } else {
       LoadingDialog.call();
       Get.find<ConnectorControl>().GETMETHODCALL(
-          api: ApiFactory.MANAGE_CHANNEL_INV_DISPLAY_DATA(selectedLocation?.key ?? "", selectedChannel?.key ?? "",
-              DateFormat("yyyy-MM-dd").format(DateFormat("dd-MM-yyyy").parse(effectiveDateTC.text))),
+          api: ApiFactory.MANAGE_CHANNEL_INV_DISPLAY_DATA(
+              selectedLocation?.key ?? "",
+              selectedChannel?.key ?? "",
+              DateFormat("yyyy-MM-dd").format(
+                  DateFormat("dd-MM-yyyy").parse(effectiveDateTC.text))),
           fun: (resp) {
             closeDialogIfOpen();
             madeChanges = false;
             if (resp != null && resp is List<dynamic>) {
               dataTableList.clear();
-              dataTableList.addAll((resp).map((e) => ManageChannelInventory.fromJson(e)).toList());
+              dataTableList.addAll((resp)
+                  .map((e) => ManageChannelInventory.fromJson(e))
+                  .toList());
             } else {
               LoadingDialog.showErrorDialog(resp.toString());
             }
