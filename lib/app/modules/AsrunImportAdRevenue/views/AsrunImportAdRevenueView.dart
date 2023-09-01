@@ -54,8 +54,7 @@ class AsrunImportAdRevenueView extends StatelessWidget {
                       controller.locations.value,
                       (value) {
                         controller.selectLocation = value;
-                        controller
-                            .getChannels(controller.selectLocation?.key ?? "");
+                        controller.getChannels(controller.selectLocation?.key ?? "");
                       },
                       "Location",
                       0.12,
@@ -122,15 +121,12 @@ class AsrunImportAdRevenueView extends StatelessWidget {
                           Obx(() => Padding(
                                 padding: const EdgeInsets.only(top: 15.0),
                                 child: Checkbox(
-                                  value: controller
-                                      .checkboxesMap.value[checkbox.key],
+                                  value: controller.checkboxesMap.value[checkbox.key],
                                   onChanged: (val) {
-                                    controller.checkboxesMap
-                                        .value[checkbox.key] = val;
+                                    controller.checkboxesMap.value[checkbox.key] = val;
                                     controller.checkboxesMap.refresh();
                                   },
-                                  materialTapTargetSize:
-                                      MaterialTapTargetSize.shrinkWrap,
+                                  materialTapTargetSize: MaterialTapTargetSize.shrinkWrap,
                                 ),
                               )),
                           Padding(
@@ -165,7 +161,7 @@ class AsrunImportAdRevenueView extends StatelessWidget {
                   child: Container(
                 color: Colors.white,
                 child: (controller.asrunData != null)
-                    ? DataGridShowOnlyKeys(
+                    ? DataGridWithShowOnlyKeys(
                         exportFileName: "Asrun Import",
                         // onFocusChange: (value) {
                         //   // controller.gridStateManager!.setGridMode(PlutoGridMode.selectWithOneTap);
@@ -173,8 +169,7 @@ class AsrunImportAdRevenueView extends StatelessWidget {
                         // },
                         onload: (loadevent) {
                           loadevent.stateManager.setSelecting(true);
-                          loadevent.stateManager
-                              .setSelectingMode(PlutoGridSelectingMode.row);
+                          loadevent.stateManager.setSelectingMode(PlutoGridSelectingMode.row);
 
                           controller.gridStateManager = loadevent.stateManager;
 
@@ -186,45 +181,29 @@ class AsrunImportAdRevenueView extends StatelessWidget {
                         },
                         extraList: [
                           SecondaryShowDialogModel("Mark Error", () {
-                            controller.gridStateManager?.changeCellValue(
-                                controller.gridStateManager!.currentRow!
-                                    .cells["isMismatch"]!,
-                                "1",
-                                force: true);
-                            controller
-                                .asrunData![controller
-                                    .gridStateManager!.currentRow!.sortIdx]
-                                .isMismatch = "1";
+                            controller.gridStateManager
+                                ?.changeCellValue(controller.gridStateManager!.currentRow!.cells["isMismatch"]!, "1", force: true);
+                            controller.asrunData![controller.gridStateManager!.currentRow!.sortIdx].isMismatch = "1";
                           })
                         ],
                         // hideKeys: ["color", "modifed"],
                         showSrNo: true,
                         colorCallback: (colorContext) {
                           try {
-                            return Color(int.parse(
-                                "0x${colorContext.row.cells["backColor"]!.value}"));
+                            return Color(int.parse("0x${colorContext.row.cells["backColor"]!.value}"));
                           } catch (e) {
                             return Colors.white;
                           }
                         },
                         hideCode: false,
-                        hideKeys: [
-                          "backColor",
-                          "foreColor",
-                          "vtr",
-                          "ch",
-                          "programTime",
-                          "scheduledate",
-                          "programCode"
-                        ],
+                        hideKeys: ["backColor", "foreColor", "vtr", "ch", "programTime", "scheduledate", "programCode"],
                         // mode: PlutoGridMode.selectWithOneTap,
                         // colorCallback: (PlutoRowColorContext plutoContext) {
                         //   // return Color(controller.transmissionLogList![plutoContext.rowIdx].colorNo ?? Colors.white.value);
                         // },
                         onSelected: (PlutoGridOnSelectedEvent event) {
                           event.selectedRows?.forEach((element) {
-                            print("On Print select" +
-                                jsonEncode(element.toJson()));
+                            print("On Print select" + jsonEncode(element.toJson()));
                           });
                         },
                         // onRowsMoved: (PlutoGridOnRowsMovedEvent onRowMoved) {
@@ -245,9 +224,7 @@ class AsrunImportAdRevenueView extends StatelessWidget {
                         //   controller.gridStateManager?.notifyListeners();
                         // },
                         // mode: controller.selectedPlutoGridMode,
-                        mapData: controller.asrunData!
-                            .map((e) => e.toJson())
-                            .toList())
+                        mapData: controller.asrunData!.map((e) => e.toJson()).toList())
                     : Container(
                         // height: Get.height * .33,
                         // width: Get.width,
@@ -275,9 +252,7 @@ class AsrunImportAdRevenueView extends StatelessWidget {
                   return Card(
                       margin: EdgeInsets.fromLTRB(4, 4, 4, 0),
                       shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.only(
-                            topLeft: Radius.circular(10),
-                            topRight: Radius.circular(10)),
+                        borderRadius: BorderRadius.only(topLeft: Radius.circular(10), topRight: Radius.circular(10)),
                       ),
                       child: GetBuilder<AsrunImportController>(
                           init: controller,
@@ -293,8 +268,7 @@ class AsrunImportAdRevenueView extends StatelessWidget {
                                 alignment: WrapAlignment.start,
                                 // pa
                                 children: [
-                                  for (var btn
-                                      in btncontroller.asurunImportButtoons!)
+                                  for (var btn in btncontroller.asurunImportButtoons!)
                                     FormButtonWrapper(
                                       btnText: btn["name"],
                                       isEnabled: buttonVisibilty(btn["name"]),
@@ -312,39 +286,22 @@ class AsrunImportAdRevenueView extends StatelessWidget {
                                     child: Icon(Icons.arrow_upward),
                                     onTap: () {
                                       if (controller.selectedFPCindex == 0) {
-                                        controller.selectedFPCindex = controller
-                                            .gridStateManager?.rows.length;
+                                        controller.selectedFPCindex = controller.gridStateManager?.rows.length;
                                       } else {
-                                        controller.selectedFPCindex =
-                                            (controller.selectedFPCindex ?? 1) -
-                                                1;
+                                        controller.selectedFPCindex = (controller.selectedFPCindex ?? 1) - 1;
                                       }
-                                      controller.filterMainGrid(controller
-                                              .viewFPCData?[
-                                                  controller.selectedFPCindex ??
-                                                      0]
-                                              .starttime ??
-                                          "");
+                                      controller.filterMainGrid(controller.viewFPCData?[controller.selectedFPCindex ?? 0].starttime ?? "");
                                     },
                                   ),
                                   InkWell(
                                     child: Icon(Icons.arrow_downward),
                                     onTap: () {
-                                      if (controller
-                                              .gridStateManager?.rows.length ==
-                                          controller.selectedFPCindex) {
+                                      if (controller.gridStateManager?.rows.length == controller.selectedFPCindex) {
                                         controller.selectedFPCindex = 0;
                                       } else {
-                                        controller.selectedFPCindex =
-                                            (controller.selectedFPCindex ?? 0) +
-                                                1;
+                                        controller.selectedFPCindex = (controller.selectedFPCindex ?? 0) + 1;
                                       }
-                                      controller.filterMainGrid(controller
-                                              .viewFPCData?[
-                                                  controller.selectedFPCindex ??
-                                                      0]
-                                              .starttime ??
-                                          "");
+                                      controller.filterMainGrid(controller.viewFPCData?[controller.selectedFPCindex ?? 0].starttime ?? "");
                                     },
                                   ),
                                 ],
@@ -387,8 +344,7 @@ class AsrunImportAdRevenueView extends StatelessWidget {
         controller.checkMissingAsrun();
         break;
       case "SP Verify":
-        showVerifyDialog(controller
-            .asrunData![controller.gridStateManager?.currentRow?.sortIdx ?? 0]);
+        showVerifyDialog(controller.asrunData![controller.gridStateManager?.currentRow?.sortIdx ?? 0]);
         break;
 
       case "Swap":
@@ -437,47 +393,30 @@ class AsrunImportAdRevenueView extends StatelessWidget {
                         btnText: "...",
                         showIcon: false,
                         callback: () {
-                          print(
-                              controller.gridStateManager!.currentRow!.sortIdx);
+                          print(controller.gridStateManager!.currentRow!.sortIdx);
                           if (controller.gridStateManager?.currentRow != null) {
-                            if (controller
-                                    .asrunData?[controller
-                                        .gridStateManager!.currentRow!.sortIdx]
-                                    .eventtype
-                                    ?.toLowerCase() !=
-                                "c") {
-                              LoadingDialog.callInfoMessage(
-                                  "Only Commericial Events Are Allowed for Swap");
+                            if (controller.asrunData?[controller.gridStateManager!.currentRow!.sortIdx].eventtype?.toLowerCase() != "c") {
+                              LoadingDialog.callInfoMessage("Only Commericial Events Are Allowed for Swap");
                             } else {
-                              controller.fromSwap.value = controller.asrunData?[
-                                  controller
-                                      .gridStateManager!.currentRow!.sortIdx];
-                              controller.fromSwapIndex = controller
-                                  .gridStateManager!.currentRow!.sortIdx;
+                              controller.fromSwap.value = controller.asrunData?[controller.gridStateManager!.currentRow!.sortIdx];
+                              controller.fromSwapIndex = controller.gridStateManager!.currentRow!.sortIdx;
                             }
                           }
                         }),
                     InputFields.formFieldNumberMask(
                         isEnable: false,
                         hintTxt: "",
-                        controller: TextEditingController(
-                            text: controller.fromSwap.value?.telecasttime),
+                        controller: TextEditingController(text: controller.fromSwap.value?.telecasttime),
                         widthRatio: 0.12,
                         isTime: true,
                         paddingLeft: 0),
                     InputFields.formField1(
-                        isEnable: false,
-                        width: 0.12,
-                        hintTxt: "",
-                        controller: TextEditingController(
-                            text: controller.fromSwap.value?.tapeId)),
+                        isEnable: false, width: 0.12, hintTxt: "", controller: TextEditingController(text: controller.fromSwap.value?.tapeId)),
                     InputFields.formField1(
                         isEnable: false,
                         width: 0.09,
                         hintTxt: "",
-                        controller: TextEditingController(
-                            text: controller.fromSwap.value?.eventNumber
-                                .toString()))
+                        controller: TextEditingController(text: controller.fromSwap.value?.eventNumber.toString()))
                   ],
                 )),
             SizedBox(
@@ -493,27 +432,14 @@ class AsrunImportAdRevenueView extends StatelessWidget {
                       callback: () {
                         print(controller.gridStateManager!.currentRow!.sortIdx);
                         if (controller.gridStateManager?.currentRow != null) {
-                          if (controller
-                                  .asrunData?[controller
-                                      .gridStateManager!.currentRow!.sortIdx]
-                                  .eventtype
-                                  ?.toLowerCase() !=
-                              "c") {
-                            LoadingDialog.callInfoMessage(
-                                "Only Commericial Events Are Allowed for Swap");
-                          } else if (controller
-                                  .asrunData?[controller
-                                      .gridStateManager!.currentRow!.sortIdx]
-                                  .tapeId !=
+                          if (controller.asrunData?[controller.gridStateManager!.currentRow!.sortIdx].eventtype?.toLowerCase() != "c") {
+                            LoadingDialog.callInfoMessage("Only Commericial Events Are Allowed for Swap");
+                          } else if (controller.asrunData?[controller.gridStateManager!.currentRow!.sortIdx].tapeId !=
                               controller.fromSwap.value?.tapeId) {
-                            LoadingDialog.callInfoMessage(
-                                "Only Matching Tapes are allowed for Swap");
+                            LoadingDialog.callInfoMessage("Only Matching Tapes are allowed for Swap");
                           } else {
-                            controller.toSwap.value = controller.asrunData?[
-                                controller
-                                    .gridStateManager!.currentRow!.sortIdx];
-                            controller.toSwapIndex = controller
-                                .gridStateManager!.currentRow!.sortIdx;
+                            controller.toSwap.value = controller.asrunData?[controller.gridStateManager!.currentRow!.sortIdx];
+                            controller.toSwapIndex = controller.gridStateManager!.currentRow!.sortIdx;
                           }
                         }
                       },
@@ -521,24 +447,17 @@ class AsrunImportAdRevenueView extends StatelessWidget {
                     InputFields.formFieldNumberMask(
                         isEnable: false,
                         hintTxt: "",
-                        controller: TextEditingController(
-                            text: controller.toSwap.value?.telecasttime ?? ""),
+                        controller: TextEditingController(text: controller.toSwap.value?.telecasttime ?? ""),
                         widthRatio: 0.12,
                         isTime: true,
                         paddingLeft: 0),
                     InputFields.formField1(
-                        isEnable: false,
-                        width: 0.12,
-                        hintTxt: "",
-                        controller: TextEditingController(
-                            text: controller.toSwap.value?.tapeId ?? "")),
+                        isEnable: false, width: 0.12, hintTxt: "", controller: TextEditingController(text: controller.toSwap.value?.tapeId ?? "")),
                     InputFields.formField1(
                         isEnable: false,
                         width: 0.09,
                         hintTxt: "",
-                        controller: TextEditingController(
-                            text: (controller.toSwap.value?.eventNumber ?? "")
-                                .toString()))
+                        controller: TextEditingController(text: (controller.toSwap.value?.eventNumber ?? "").toString()))
                   ],
                 )),
             SizedBox(
@@ -550,102 +469,47 @@ class AsrunImportAdRevenueView extends StatelessWidget {
                 FormButtonWrapper(
                   btnText: "Swap",
                   callback: () {
-                    int? fromIndex = controller.asrunData?.indexWhere(
-                        (element) =>
-                            controller.fromSwap.value?.eventNumber ==
-                            element.eventNumber);
-                    int? toIndex = controller.asrunData?.indexWhere((element) =>
-                        controller.toSwap.value?.eventNumber ==
-                        element.eventNumber);
+                    int? fromIndex = controller.asrunData?.indexWhere((element) => controller.fromSwap.value?.eventNumber == element.eventNumber);
+                    int? toIndex = controller.asrunData?.indexWhere((element) => controller.toSwap.value?.eventNumber == element.eventNumber);
 
                     var from = controller.fromSwap.value;
                     var to = controller.toSwap.value;
-                    PlutoRow fromRow =
-                        controller.gridStateManager!.rows[fromIndex!];
-                    PlutoRow toRow =
-                        controller.gridStateManager!.rows[toIndex!];
-                    controller.asrunData?[fromIndex].bookingnumber =
-                        to?.bookingnumber;
-                    controller.gridStateManager?.changeCellValue(
-                        fromRow.cells["bookingnumber"]!, to?.bookingnumber,
-                        notify: true);
-                    controller.asrunData?[fromIndex].scheduletime =
-                        to?.scheduletime;
-                    controller.gridStateManager?.changeCellValue(
-                        fromRow.cells["scheduletime"]!, to?.scheduletime,
-                        notify: true);
-                    controller.asrunData?[fromIndex].scheduledProgram =
-                        to?.scheduledProgram;
-                    controller.gridStateManager?.changeCellValue(
-                        fromRow.cells["scheduledProgram"]!,
-                        to?.scheduledProgram,
-                        notify: true);
+                    PlutoRow fromRow = controller.gridStateManager!.rows[fromIndex!];
+                    PlutoRow toRow = controller.gridStateManager!.rows[toIndex!];
+                    controller.asrunData?[fromIndex].bookingnumber = to?.bookingnumber;
+                    controller.gridStateManager?.changeCellValue(fromRow.cells["bookingnumber"]!, to?.bookingnumber, notify: true);
+                    controller.asrunData?[fromIndex].scheduletime = to?.scheduletime;
+                    controller.gridStateManager?.changeCellValue(fromRow.cells["scheduletime"]!, to?.scheduletime, notify: true);
+                    controller.asrunData?[fromIndex].scheduledProgram = to?.scheduledProgram;
+                    controller.gridStateManager?.changeCellValue(fromRow.cells["scheduledProgram"]!, to?.scheduledProgram, notify: true);
                     controller.asrunData?[fromIndex].rosBand = to?.rosBand;
-                    controller.gridStateManager?.changeCellValue(
-                        fromRow.cells["rosBand"]!, to?.rosBand,
-                        notify: true);
-                    controller.asrunData?[fromIndex].programTime =
-                        to?.programTime;
-                    controller.gridStateManager?.changeCellValue(
-                        fromRow.cells["programTime"]!, to?.programTime,
-                        notify: true);
-                    controller.asrunData?[fromIndex].isMismatch =
-                        to?.isMismatch;
-                    controller.gridStateManager?.changeCellValue(
-                        fromRow.cells["isMismatch"]!, to?.isMismatch,
-                        notify: true);
-                    controller.asrunData?[fromIndex].scheduledate =
-                        to?.scheduledate;
-                    controller.gridStateManager?.changeCellValue(
-                        fromRow.cells["scheduledate"]!, to?.scheduledate,
-                        notify: true);
-                    controller.asrunData?[fromIndex].tapeDuration =
-                        to?.tapeDuration;
-                    controller.gridStateManager?.changeCellValue(
-                        fromRow.cells["tapeDuration"]!, to?.tapeDuration,
-                        notify: true);
+                    controller.gridStateManager?.changeCellValue(fromRow.cells["rosBand"]!, to?.rosBand, notify: true);
+                    controller.asrunData?[fromIndex].programTime = to?.programTime;
+                    controller.gridStateManager?.changeCellValue(fromRow.cells["programTime"]!, to?.programTime, notify: true);
+                    controller.asrunData?[fromIndex].isMismatch = to?.isMismatch;
+                    controller.gridStateManager?.changeCellValue(fromRow.cells["isMismatch"]!, to?.isMismatch, notify: true);
+                    controller.asrunData?[fromIndex].scheduledate = to?.scheduledate;
+                    controller.gridStateManager?.changeCellValue(fromRow.cells["scheduledate"]!, to?.scheduledate, notify: true);
+                    controller.asrunData?[fromIndex].tapeDuration = to?.tapeDuration;
+                    controller.gridStateManager?.changeCellValue(fromRow.cells["tapeDuration"]!, to?.tapeDuration, notify: true);
 
                     /// TO DATA
-                    controller.asrunData?[toIndex].bookingnumber =
-                        from?.bookingnumber;
-                    controller.gridStateManager?.changeCellValue(
-                        toRow.cells["bookingnumber"]!, from?.bookingnumber,
-                        notify: true);
-                    controller.asrunData?[toIndex].scheduletime =
-                        from?.scheduletime;
-                    controller.gridStateManager?.changeCellValue(
-                        toRow.cells["scheduletime"]!, from?.scheduletime,
-                        notify: true);
-                    controller.asrunData?[toIndex].scheduledProgram =
-                        from?.scheduledProgram;
-                    controller.gridStateManager?.changeCellValue(
-                        toRow.cells["scheduledProgram"]!,
-                        from?.scheduledProgram,
-                        notify: true);
+                    controller.asrunData?[toIndex].bookingnumber = from?.bookingnumber;
+                    controller.gridStateManager?.changeCellValue(toRow.cells["bookingnumber"]!, from?.bookingnumber, notify: true);
+                    controller.asrunData?[toIndex].scheduletime = from?.scheduletime;
+                    controller.gridStateManager?.changeCellValue(toRow.cells["scheduletime"]!, from?.scheduletime, notify: true);
+                    controller.asrunData?[toIndex].scheduledProgram = from?.scheduledProgram;
+                    controller.gridStateManager?.changeCellValue(toRow.cells["scheduledProgram"]!, from?.scheduledProgram, notify: true);
                     controller.asrunData?[toIndex].rosBand = from?.rosBand;
-                    controller.gridStateManager?.changeCellValue(
-                        toRow.cells["rosBand"]!, from?.rosBand,
-                        notify: true);
-                    controller.asrunData?[toIndex].programTime =
-                        from?.programTime;
-                    controller.gridStateManager?.changeCellValue(
-                        toRow.cells["programTime"]!, from?.programTime,
-                        notify: true);
-                    controller.asrunData?[toIndex].isMismatch =
-                        from?.isMismatch;
-                    controller.gridStateManager?.changeCellValue(
-                        toRow.cells["isMismatch"]!, from?.isMismatch,
-                        notify: true);
-                    controller.asrunData?[toIndex].scheduledate =
-                        from?.scheduledate;
-                    controller.gridStateManager?.changeCellValue(
-                        toRow.cells["scheduledate"]!, from?.scheduledate,
-                        notify: true);
-                    controller.asrunData?[toIndex].tapeDuration =
-                        from?.tapeDuration;
-                    controller.gridStateManager?.changeCellValue(
-                        toRow.cells["tapeDuration"]!, from?.tapeDuration,
-                        notify: true);
+                    controller.gridStateManager?.changeCellValue(toRow.cells["rosBand"]!, from?.rosBand, notify: true);
+                    controller.asrunData?[toIndex].programTime = from?.programTime;
+                    controller.gridStateManager?.changeCellValue(toRow.cells["programTime"]!, from?.programTime, notify: true);
+                    controller.asrunData?[toIndex].isMismatch = from?.isMismatch;
+                    controller.gridStateManager?.changeCellValue(toRow.cells["isMismatch"]!, from?.isMismatch, notify: true);
+                    controller.asrunData?[toIndex].scheduledate = from?.scheduledate;
+                    controller.gridStateManager?.changeCellValue(toRow.cells["scheduledate"]!, from?.scheduledate, notify: true);
+                    controller.asrunData?[toIndex].tapeDuration = from?.tapeDuration;
+                    controller.gridStateManager?.changeCellValue(toRow.cells["tapeDuration"]!, from?.tapeDuration, notify: true);
                     //
                     // controller.update(["fpcData"]);
                   },
@@ -675,39 +539,27 @@ class AsrunImportAdRevenueView extends StatelessWidget {
   }
 
   paste({bool up = true}) {
-    if ((controller.gridStateManager?.currentSelectingRows ?? <PlutoRow>[])
-        .isNotEmpty) {
+    if ((controller.gridStateManager?.currentSelectingRows ?? <PlutoRow>[]).isNotEmpty) {
       print(controller.gridStateManager?.currentSelectingRows.length);
-      String fpcTime = (up
-              ? controller.gridStateManager?.currentSelectingRows.last
-              : controller.gridStateManager?.currentSelectingRows.first)
+      String fpcTime = (up ? controller.gridStateManager?.currentSelectingRows.last : controller.gridStateManager?.currentSelectingRows.first)
           ?.cells["fpctIme"]
           ?.value;
       String programCode = controller
-              .asrunData?[(up
-                      ? controller.gridStateManager?.currentSelectingRows.last
-                      : controller
-                          .gridStateManager?.currentSelectingRows.first)!
-                  .sortIdx]
+              .asrunData?[
+                  (up ? controller.gridStateManager?.currentSelectingRows.last : controller.gridStateManager?.currentSelectingRows.first)!.sortIdx]
               .programCode ??
           "";
 
-      String programName = (up
-              ? controller.gridStateManager?.currentSelectingRows.last
-              : controller.gridStateManager?.currentSelectingRows.first)
+      String programName = (up ? controller.gridStateManager?.currentSelectingRows.last : controller.gridStateManager?.currentSelectingRows.first)
           ?.cells["programName"]
           ?.value;
       print(fpcTime);
       print(programCode);
       print(programName);
-      for (var element in controller.gridStateManager?.currentSelectingRows ??
-          <PlutoRow>[]) {
-        controller.gridStateManager
-            ?.changeCellValue(element.cells["fpctIme"]!, fpcTime, force: true);
+      for (var element in controller.gridStateManager?.currentSelectingRows ?? <PlutoRow>[]) {
+        controller.gridStateManager?.changeCellValue(element.cells["fpctIme"]!, fpcTime, force: true);
         controller.asrunData?[element.sortIdx].fpctIme = fpcTime;
-        controller.gridStateManager?.changeCellValue(
-            element.cells["programName"]!, programName,
-            force: true);
+        controller.gridStateManager?.changeCellValue(element.cells["programName"]!, programName, force: true);
         controller.asrunData?[element.sortIdx].programName = programName;
         controller.asrunData?[element.sortIdx].programCode = programCode;
       }
@@ -715,8 +567,7 @@ class AsrunImportAdRevenueView extends StatelessWidget {
   }
 
   showVerifyDialog(AsRunData asrunData) {
-    TextEditingController fpcTime = TextEditingController(
-        text: asrunData.fpctIme ?? asrunData.telecasttime);
+    TextEditingController fpcTime = TextEditingController(text: asrunData.fpctIme ?? asrunData.telecasttime);
     DropDownValue? selectedProgram;
     return Get.defaultDialog(
       title: "Verify",
@@ -749,25 +600,18 @@ class AsrunImportAdRevenueView extends StatelessWidget {
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
                   InputFields.formFieldNumberMask(
-                      isEnable: true,
-                      hintTxt: "FPC Time",
-                      controller: fpcTime,
-                      widthRatio: 0.12,
-                      isTime: true,
-                      paddingLeft: 0),
+                      isEnable: true, hintTxt: "FPC Time", controller: fpcTime, widthRatio: 0.12, isTime: true, paddingLeft: 0),
                   InputFields.formFieldNumberMask(
                       isEnable: false,
                       hintTxt: "From",
-                      controller: TextEditingController(
-                          text: asrunData.fpctIme ?? asrunData.telecasttime),
+                      controller: TextEditingController(text: asrunData.fpctIme ?? asrunData.telecasttime),
                       widthRatio: 0.12,
                       isTime: true,
                       paddingLeft: 0),
                   InputFields.formFieldNumberMask(
                       isEnable: false,
                       hintTxt: "To",
-                      controller: TextEditingController(
-                          text: asrunData.fpctIme ?? asrunData.telecasttime),
+                      controller: TextEditingController(text: asrunData.fpctIme ?? asrunData.telecasttime),
                       widthRatio: 0.12,
                       isTime: true,
                       paddingLeft: 0),
@@ -789,8 +633,7 @@ class AsrunImportAdRevenueView extends StatelessWidget {
         btnText: "Verify",
         showIcon: false,
         callback: () {
-          controller.manualUpdateFPCTime(selectedProgram?.value,
-              selectedProgram?.key, fpcTime.text, asrunData);
+          controller.manualUpdateFPCTime(selectedProgram?.value, selectedProgram?.key, fpcTime.text, asrunData);
         },
       ),
     );
@@ -807,9 +650,8 @@ class AsrunImportAdRevenueView extends StatelessWidget {
       content: Container(
         height: Get.height * 0.65,
         width: Get.width / 2,
-        child: DataGridShowOnlyKeys(
-          mapData:
-              controller.viewFPCData?.map((e) => e.toJson()).toList() ?? [],
+        child: DataGridWithShowOnlyKeys(
+          mapData: controller.viewFPCData?.map((e) => e.toJson()).toList() ?? [],
           onload: (loadEvent) {
             controller.fpcGridStateManager = loadEvent.stateManager;
           },
@@ -820,9 +662,8 @@ class AsrunImportAdRevenueView extends StatelessWidget {
           hideKeys: ["programcode"],
           mode: PlutoGridMode.selectWithOneTap,
           onRowDoubleTap: (rowEvent) {
-            controller.gridStateManager?.setFilter((element) =>
-                element.cells["fpctIme"]?.value.toString() ==
-                rowEvent.row.cells["starttime"]?.value.toString());
+            controller.gridStateManager
+                ?.setFilter((element) => element.cells["fpctIme"]?.value.toString() == rowEvent.row.cells["starttime"]?.value.toString());
           },
         ),
       ),
@@ -837,9 +678,7 @@ class AsrunImportAdRevenueView extends StatelessWidget {
         btnText: "Filter",
         showIcon: false,
         callback: () {
-          controller.filterMainGrid(
-              controller.viewFPCData?[controller.selectedFPCindex!].starttime ??
-                  "");
+          controller.filterMainGrid(controller.viewFPCData?[controller.selectedFPCindex!].starttime ?? "");
         },
       ),
     );

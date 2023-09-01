@@ -354,7 +354,7 @@ class RoRescheduleController extends GetxController {
                           ),
                           Expanded(
                               child: Container(
-                            child: DataGridShowOnlyKeys(
+                            child: DataGridWithShowOnlyKeys(
                               onload: (load) {
                                 addSpotGridManager = load.stateManager;
                               },

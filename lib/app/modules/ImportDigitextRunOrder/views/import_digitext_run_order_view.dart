@@ -126,7 +126,7 @@ class ImportDigitextRunOrderView extends GetView<ImportDigitextRunOrderControlle
                                 return Stack(
                                   alignment: Alignment.bottomRight,
                                   children: [
-                                    DataGridShowOnlyKeys(
+                                    DataGridWithShowOnlyKeys(
                                       mapData: getPageData(index),
                                       formatDate: false,
                                       onload: (load) {
