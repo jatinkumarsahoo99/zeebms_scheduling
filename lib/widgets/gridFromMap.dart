@@ -1155,10 +1155,6 @@ class DataGridFromMap4 extends StatelessWidget {
             enableRowChecked:
                 (checkRow == true && key == checkRowKey) ? true : false,
             renderer: ((rendererContext) {
-              print(">>>>>>>>>" +
-                  showOnlyCheckBox.toString() +
-                  "," +
-                  (key ?? "").toString());
               if (actionIconKey != null) {
                 if (key == actionIconKey) {
                   return GestureDetector(

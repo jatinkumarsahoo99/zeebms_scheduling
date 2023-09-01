@@ -1,8 +1,10 @@
 import 'dart:async';
 import 'dart:convert';
+import 'dart:typed_data';
 
 import 'package:bms_scheduling/app/data/DropDownValue.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_file_saver/flutter_file_saver.dart';
 import 'package:get/get.dart';
 
 import '../../../../widgets/LoadingDialog.dart';
@@ -10,9 +12,11 @@ import '../../../../widgets/PlutoGrid/src/manager/pluto_grid_state_manager.dart'
 import '../../../../widgets/PlutoGrid/src/model/pluto_cell.dart';
 import '../../../../widgets/PlutoGrid/src/model/pluto_row.dart';
 import '../../../../widgets/PlutoGrid/src/pluto_grid.dart';
+import '../../../../widgets/Snack.dart';
 import '../../../controller/ConnectorControl.dart';
 import '../../../providers/ApiFactory.dart';
 import '../DSeriesModel.dart';
+import '../DSeriesSearchModel.dart';
 
 class DSeriesSpecificationController extends GetxController {
   final count = 0.obs;
@@ -88,13 +92,28 @@ class DSeriesSpecificationController extends GetxController {
         });
   }
 
+  getEventLeave(String? eventKey) {
+    stateManager?.setFilter((element) => true);
+    stateManager?.setFilter((e) =>
+        e.cells['eventType']?.value.toString().trim().toLowerCase() ==
+        (eventKey ?? "").toString().trim().toLowerCase());
+    stateManager?.notifyListeners();
+  }
+
   void btnAdd_Click() async {
     List<PlutoRow>? dt = stateManager?.rows;
     for (int i = 0; i < (dt?.length ?? 0); i++) {
       PlutoRow drc = dt![i];
-      if (drc.cells["eventType"]?.value == selectEvent?.value?.key &&
-          drc.cells["isLastSegment"]?.value == chckLastSegment.value &&
-          drc.cells["startPosition"]?.value == from_.text) {
+      print(">>>>>>>>>isLastSegment${drc.cells["isLastSegment"]?.value}");
+      if (((drc.cells["eventType"]?.value ?? "").toString().trim() ==
+              (selectEvent?.value?.key ?? "").toString().trim()) &&
+          ((drc.cells["isLastSegment"]?.value ?? "").toString().trim() ==
+              (chckLastSegment.value ?? "").toString().trim()) &&
+          ((drc.cells["startPosition"]?.value ?? "")
+                  .toString()
+                  .trim()
+                  .toLowerCase() ==
+              (from_.text ?? "").toString().trim().toLowerCase())) {
         bool? isYes = await showDialogForYesNo(
             "This entry already exists!\nDo you want to modify it?");
         if (isYes == false) {
@@ -141,17 +160,73 @@ class DSeriesSpecificationController extends GetxController {
       var postMap = {
         "locationCode": selectLocation?.key,
         "channelcode": selectChannel?.key,
-        "dseriesSpecs": stateManager?.rows.map((e) => e.toJsonIntConvert(intConverterKeys: ["startPosition","endPosition"],boolList:["isLastSegment"])).toList()
+        "dseriesSpecs": stateManager?.rows
+            .map((e) => e.toJsonIntConvert(
+                intConverterKeys: ["startPosition", "endPosition"],
+                boolList: ["isLastSegment"]))
+            .toList()
       };
       Get.find<ConnectorControl>().POSTMETHOD(
           api: ApiFactory.DSERIES_SPECIFICATION_SAVE,
           json: postMap,
           fun: (map) {
             Get.back();
-            if (map is Map && map.containsKey("save") && map["save"].toString().contains("successfully")) {
+            if (map is Map &&
+                map.containsKey("save") &&
+                map["save"].toString().contains("successfully")) {
               LoadingDialog.callDataSavedMessage("Data successfully");
-            }else{
+            } else {
               LoadingDialog.callInfoMessage(map.toString());
+            }
+          });
+    }
+  }
+
+  callSearchApi() {
+    if (selectLocation == null) {
+      LoadingDialog.callInfoMessage("Please select location");
+    } else if (selectChannel == null) {
+      LoadingDialog.callInfoMessage("Please select location");
+    } else if (stateManager == null) {
+      LoadingDialog.callInfoMessage("Table not available");
+    } else if ((stateManager?.rows.length ?? 0) <= 0) {
+      LoadingDialog.callInfoMessage("Please add some data in your grid");
+    } else {
+      LoadingDialog.call();
+      stateManager?.setFilter((element) => true);
+      var dSeriesSpecsList1 = stateManager?.rows
+          .map((e) => e.toJsonIntConvert(
+              intConverterKeys: ["startPosition", "endPosition"],
+              boolList: ["isLastSegment"]))
+          .toList();
+      var dSeriesSpecsList2 = dSeriesSpecsList1
+          ?.map((e) => ((DSeriesSearchModel.fromJson(e)).toJson()))
+          .toList();
+      var postMap = {
+        "locationCode": selectLocation?.key,
+        "channelcode": selectChannel?.key,
+        "dseriesSpecs": dSeriesSpecsList2
+      };
+      Get.find<ConnectorControl>().POSTMETHOD(
+          api: ApiFactory.DSERIES_SPECIFICATION_SEARCH,
+          json: postMap,
+          fun: (map) {
+            Get.back();
+            if (map is Map &&
+                map.containsKey("search") &&
+                map['search'] is Map &&
+                map['search'].containsKey("fileByte")) {
+              FlutterFileSaver()
+                  .writeFileAsBytes(
+                fileName: "testdseries" + '.sch',
+                bytes: base64.decode(map['search']['fileByte'] ?? "No data"),
+              )
+                  .catchError((error) {
+                // This code will be executed if there is an error while saving the file.
+                Snack.callError("Error saving file: $error");
+              });
+            } else {
+              LoadingDialog.showErrorDialog((map ?? "").toString());
             }
           });
     }
@@ -159,18 +234,22 @@ class DSeriesSpecificationController extends GetxController {
 
   void onDoubleClick(PlutoGridOnSelectedEvent onClick) {
     from_.text =
-        stateManager?.rows[onClick.rowIdx ?? 0].cells["startPosition"]?.value;
+        stateManager?.rows[onClick.rowIdx ?? 0].cells["startPosition"]?.value ??
+            "";
     to_.text =
-        stateManager?.rows[onClick.rowIdx ?? 0].cells["endPosition"]?.value;
+        stateManager?.rows[onClick.rowIdx ?? 0].cells["endPosition"]?.value ??
+            "";
     value_.text =
-        stateManager?.rows[onClick.rowIdx ?? 0].cells["dataValue"]?.value;
+        stateManager?.rows[onClick.rowIdx ?? 0].cells["dataValue"]?.value ?? "";
     desc_.text =
-        stateManager?.rows[onClick.rowIdx ?? 0].cells["description"]?.value;
-    chckLastSegment.value = (stateManager
-            ?.rows[onClick.rowIdx ?? 0].cells["isLastSegment"]?.value ==
+        stateManager?.rows[onClick.rowIdx ?? 0].cells["description"]?.value ??
+            "";
+    chckLastSegment.value = ((stateManager
+            ?.rows[onClick.rowIdx ?? 0].cells["isLastSegment"]?.value).toString().trim() ==
         "true");
-    print("ROw Data index is>>>" + onClick.rowIdx.toString());
+    print("ROw Data index is>>>" +  chckLastSegment.value.toString());
     DropDownValue? data;
+    chckLastSegment.refresh();
     eventList.forEach((element) {
       if (element.key.toString().trim().toLowerCase() ==
           stateManager?.rows[onClick.rowIdx ?? 0].cells["eventType"]?.value
