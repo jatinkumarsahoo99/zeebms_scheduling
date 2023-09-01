@@ -82,7 +82,7 @@ class CommercialMasterController extends GetxController {
   Rx<TextEditingController> duration = TextEditingController().obs;
   Rx<TextEditingController> tapeIdController =
       TextEditingController(text: "AUTO").obs;
-
+  PlutoGridStateManager? gridStateManager;
   List<Annotations> eventList = [];
   String? commercialCode = '0';
 

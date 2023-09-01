@@ -77,7 +77,8 @@ class ExtraSpotsWithRemarkView extends GetView<ExtraSpotsWithRemarkController> {
                               ),
                             )
                           : null,
-                      child: controller.dataTableList.isEmpty ? null : DataGridFromMap(mapData: controller.dataTableList.value),
+                      child: controller.dataTableList.isEmpty ? null :
+                      DataGridFromMap(mapData: controller.dataTableList.value),
                     );
                   },
                 ),

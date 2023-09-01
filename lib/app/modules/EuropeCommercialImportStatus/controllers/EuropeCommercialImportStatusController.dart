@@ -17,7 +17,7 @@ class EuropeCommercialImportStatusController extends GetxController {
   TextEditingController selectedDate=TextEditingController();
   List<dynamic>? listData;
   PlutoGridStateManager? stateManager;
-  List<Map<String, double>>? userGridSetting1 = [];
+  List<Map<String,Map<String, double>>>? userGridSetting1;
   @override
   void onInit() {
     fetchUserSetting1();
@@ -29,11 +29,11 @@ class EuropeCommercialImportStatusController extends GetxController {
     Get.find<ConnectorControl>().GETMETHODCALL(
         api: ApiFactory.EUROPE_COMMERCIAL_GENERATE(Utils.dateFormatChange(selectedDate.text, "dd-MM-yyyy", "dd-MMM-yyyy")),
         fun: (map) {
-          print("Location dta>>>" + jsonEncode(map));
+          // print("Location dta>>>" + jsonEncode(map));
           Get.back();
           if(map is Map && map.containsKey("genrate") && map["genrate"]!=null && map["genrate"].length>0){
             listData=map["genrate"];
-            print("Data length is>>>"+(listData?.length.toString()??""));
+            // print("Data length is>>>"+(listData?.length.toString()??""));
             update(["listUpdate"]);
           }
         });

@@ -5,6 +5,7 @@ import 'package:intl/intl.dart';
 
 import '../../../../widgets/LoadingDialog.dart';
 import '../../../controller/ConnectorControl.dart';
+import '../../../controller/HomeController.dart';
 import '../../../data/PermissionModel.dart';
 import '../../../providers/ApiFactory.dart';
 import '../../../providers/Utils.dart';
@@ -40,6 +41,10 @@ class ExtraSpotsWithRemarkController extends GetxController {
     channelList.refresh();
     locationFN.requestFocus();
   }
+  clearAll() {
+    Get.delete<ExtraSpotsWithRemarkController>();
+    Get.find<HomeController>().clearPage1();
+  }
 
   void handleGenerateButton() {
     if (selectedLocation == null || selectedChannel == null) {
@@ -68,7 +73,7 @@ class ExtraSpotsWithRemarkController extends GetxController {
 
   formHandler(btn) {
     if (btn == "Clear") {
-      clearPage();
+      clearAll();
     }
   }
 
