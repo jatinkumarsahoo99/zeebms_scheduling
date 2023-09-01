@@ -161,6 +161,7 @@ class SecondaryEventMasterView extends GetView<SecondaryEventMasterController> {
                           value: controller.duration.value,
                           widthRatio: .23,
                           leftPad: 0,
+                          color: Colors.black,
                         );
                       }),
                     ],
