@@ -16,7 +16,8 @@ import '../../../providers/Utils.dart';
 import '../controllers/audit_status_controller.dart';
 
 class AuditStatusView extends GetView<AuditStatusController> {
-  AuditStatusController controller = Get.put<AuditStatusController>(AuditStatusController());
+  AuditStatusController controller =
+      Get.put<AuditStatusController>(AuditStatusController());
 
   @override
   Widget build(BuildContext context) {
@@ -35,17 +36,22 @@ class AuditStatusView extends GetView<AuditStatusController> {
                 alignment: WrapAlignment.start,
                 children: [
                   Obx(
-                    () => DropDownField.formDropDown1WidthMap(controller.locations.value, (data) {
+                    () => DropDownField.formDropDown1WidthMap(
+                        controller.locations.value, (data) {
                       controller.selectLocation = data;
                       controller.getChannels(data.key);
                     }, "Location", 0.24),
                   ),
                   Obx(
-                    () => DropDownField.formDropDown1WidthMap(controller.channels.value, (data) {
+                    () => DropDownField.formDropDown1WidthMap(
+                        controller.channels.value, (data) {
                       controller.selectChannel = data;
                     }, "Channel", 0.24),
                   ),
-                  DateWithThreeTextField(title: "Date.", widthRation: 0.12, mainTextController: controller.dateController),
+                  DateWithThreeTextField(
+                      title: "Date.",
+                      widthRation: 0.12,
+                      mainTextController: controller.dateController),
                   Obx(() => Row(
                         mainAxisSize: MainAxisSize.min,
                         crossAxisAlignment: CrossAxisAlignment.end,
@@ -55,7 +61,8 @@ class AuditStatusView extends GetView<AuditStatusController> {
                                   children: [
                                     Radio(
                                         value: e,
-                                        groupValue: controller.currentType.value,
+                                        groupValue:
+                                            controller.currentType.value,
                                         onChanged: (value) {
                                           controller.currentType.value = e;
                                         }),
@@ -83,12 +90,14 @@ class AuditStatusView extends GetView<AuditStatusController> {
                 builder: (gridcontroller) {
                   return gridcontroller.bookingData.isEmpty
                       ? Container()
-                      : DataGridWithShowOnlyKeys(
+                      : DataGridShowOnlyKeys(
                           mapData: gridcontroller.bookingData,
                           formatDate: false,
                           exportFileName: "Audit Status",
                           colorCallback: (colorEvent) {
-                            return gridcontroller.getColor(gridcontroller.bookingData[colorEvent.rowIdx], colorEvent.rowIdx);
+                            return gridcontroller.getColor(
+                                gridcontroller.bookingData[colorEvent.rowIdx],
+                                colorEvent.rowIdx);
                           },
                           onRowDoubleTap: (event) {
                             if (controller.currentType.value == "Cancelation") {
@@ -108,7 +117,9 @@ class AuditStatusView extends GetView<AuditStatusController> {
               id: "buttons",
               init: Get.find<HomeController>(),
               builder: (btncontroller) {
-                PermissionModel formPermissions = Get.find<MainController>().permissionList!.lastWhere((element) {
+                PermissionModel formPermissions = Get.find<MainController>()
+                    .permissionList!
+                    .lastWhere((element) {
                   return element.appFormName == "frmNewBookingActivityReport";
                 });
                 if (btncontroller.buttons == null) {
@@ -117,7 +128,9 @@ class AuditStatusView extends GetView<AuditStatusController> {
                 return Card(
                   margin: EdgeInsets.fromLTRB(4, 4, 4, 0),
                   shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.only(topLeft: Radius.circular(10), topRight: Radius.circular(10)),
+                    borderRadius: BorderRadius.only(
+                        topLeft: Radius.circular(10),
+                        topRight: Radius.circular(10)),
                   ),
                   child: Container(
                     width: Get.width,
@@ -133,8 +146,11 @@ class AuditStatusView extends GetView<AuditStatusController> {
                           FormButtonWrapper(
                             btnText: btn["name"],
                             // isEnabled: btn['isDisabled'],
-                            callback:
-                                Utils.btnAccessHandler2(btn['name'], btncontroller, formPermissions) == null ? null : () => btnHnadler(btn['name']),
+                            callback: Utils.btnAccessHandler2(btn['name'],
+                                        btncontroller, formPermissions) ==
+                                    null
+                                ? null
+                                : () => btnHnadler(btn['name']),
                           ),
                       ],
                     ),

@@ -51,7 +51,7 @@ class CommonDocsView extends GetView<CommonDocsController> {
                                 child: Text("No Data Found"),
                               );
                             }
-                            return DataGridWithShowOnlyKeys(
+                            return DataGridShowOnlyKeys(
                               hideCode: true,
                               hideKeys: const ["documentId"],
                               dateFromat: "dd-MM-yyyy HH:mm",

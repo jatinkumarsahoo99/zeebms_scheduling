@@ -19,7 +19,7 @@ class VerifySpotsView extends GetView<RoBookingController> {
               Expanded(
                   child: Container(
                 decoration: BoxDecoration(border: Border.all(width: 1.0, color: Colors.grey)),
-                child: DataGridWithShowOnlyKeys(
+                child: DataGridShowOnlyKeys(
                   mapData: controller.spotsNotVerifiedClickData?.lstdgvVerifySpot ?? [],
                   editKeys: const [
                     "spotsEntered",
