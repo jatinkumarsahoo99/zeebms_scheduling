@@ -1174,6 +1174,8 @@ class ApiFactory {
       "/api/DSeriesSpecification/GetChannelsLeave?LocationCode=$locId&channelcode=$chnlId";
   static String DSERIES_SPECIFICATION_SAVE =
       BASE_URL + "/api/DSeriesSpecification/postSave";
+  static String DSERIES_SPECIFICATION_SEARCH =
+      BASE_URL + "/api/DSeriesSpecification/Search";
   ////////////////////////DSeries Specification- END/////////////////////////
 
   // ////////////////////Europe Commercial Import Status/////////////////////////
