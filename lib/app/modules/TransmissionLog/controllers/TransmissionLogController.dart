@@ -145,7 +145,7 @@ class TransmissionLogController extends GetxController {
 
   var canDialogShow = false.obs;
   Widget? dialogWidget;
-  Rxn<int> initialOffset=Rxn<int>(null);
+  Rxn<int> initialOffset = Rxn<int>(null);
 
   @override
   void onInit() {
@@ -1790,15 +1790,17 @@ class TransmissionLogController extends GetxController {
       // Future.delayed(Duration(seconds: 7), () {
       // Select the rows in the new order
       gridStateManager?.clearCurrentSelecting();
-      bool isSelect=false;
+      bool isSelect = false;
       for (int i = (intSelectedRows.length - 1); i >= 0; i--) {
         print("Grid Focus index is >>>" + i.toString());
         print("Grid Focus index in intSelectedRows is >>>" +
             intSelectedRows[i].toString());
         // PlutoRow dr = (gridStateManager?.rows[intSelectedRows[i]])!;
-        if(!isSelect){
-          isSelect=true;
-          gridStateManager?.setCurrentCell(gridStateManager?.rows[intSelectedRows[i] - 1].cells["no"],intSelectedRows[i] - 1);
+        if (!isSelect) {
+          isSelect = true;
+          gridStateManager?.setCurrentCell(
+              gridStateManager?.rows[intSelectedRows[i] - 1].cells["no"],
+              intSelectedRows[i] - 1);
         }
         gridStateManager?.toggleSelectingRow(intSelectedRows[i] - 1);
       }
@@ -1851,15 +1853,17 @@ class TransmissionLogController extends GetxController {
       // Select the rows in the new order
       // Future.delayed(Duration(seconds: 7), () {
       gridStateManager?.clearCurrentSelecting();
-      bool isSelect=false;
+      bool isSelect = false;
       for (int i = (intSelectedRows.length - 2); i >= 0; i--) {
         print("Grid Focus index is >>>" + i.toString());
         print("Grid Focus index in intSelectedRows is >>>" +
             intSelectedRows[i].toString());
         // PlutoRow dr = (gridStateManager?.rows[intSelectedRows[i]])!;
-        if(!isSelect){
-          isSelect=true;
-          gridStateManager?.setCurrentCell(gridStateManager?.rows[intSelectedRows[i]].cells["no"],intSelectedRows[i]);
+        if (!isSelect) {
+          isSelect = true;
+          gridStateManager?.setCurrentCell(
+              gridStateManager?.rows[intSelectedRows[i]].cells["no"],
+              intSelectedRows[i]);
         }
         gridStateManager?.toggleSelectingRow(intSelectedRows[i]);
       }
@@ -2094,9 +2098,11 @@ class TransmissionLogController extends GetxController {
               } else {
                 LoadingDialog.callInfoMessage(map.toString());
               }
-            },failed: (data){
-          LoadingDialog.callInfoMessage(data.toString());
-        });
+            },
+            failed: (data) {
+              Get.back();
+              LoadingDialog.callInfoMessage(data.toString());
+            });
       }
     }, deleteCancel: "No", deleteTitle: "Yes");
   }
@@ -2389,9 +2395,11 @@ class TransmissionLogController extends GetxController {
                 } else {
                   LoadingDialog.callInfoMessage(map.toString());
                 }
-              },failed: (data){
-            LoadingDialog.callInfoMessage(data.toString());
-          });
+              },
+              failed: (data) {
+                Get.back();
+                LoadingDialog.callInfoMessage(data.toString());
+              });
         });
       } else {
         LoadingDialog.call();
@@ -2416,7 +2424,10 @@ class TransmissionLogController extends GetxController {
                 isFetch.value = true;
                 update(["transmissionList"]);
               }
-            });
+            },failed: (data) {
+          Get.back();
+          LoadingDialog.callInfoMessage(data.toString());
+        });
       }
     }
   }
@@ -3486,12 +3497,14 @@ class TransmissionLogController extends GetxController {
           if ((intTransmissionTime - intFPCTime).abs() > seconds) {
             // tblLog.FirstDisplayedScrollingRowIndex = dr['rownumber'] - 10;
             // gridStateManager?.moveScrollByRow(PlutoMoveDirection.down, int.tryParse(dr.cells['rownumber']?.value)! - 10);
-            gridStateManager?.moveScrollByRow(PlutoMoveDirection.down, int.tryParse(dr.cells['rownumber']?.value)! +10);
+            gridStateManager?.moveScrollByRow(PlutoMoveDirection.down,
+                int.tryParse(dr.cells['rownumber']?.value)! + 10);
             if (int.tryParse(dr.cells['rownumber']?.value)! > 0) {
               // tblLog.Rows[dr['rownumber']].Selected = true;
               // gridStateManager?.setCurrentCell(dr.cells["no"], int.tryParse(dr.cells['rownumber']?.value)!);
               // gridStateManager?.setCurrentCell(dr.cells["no"], int.tryParse(dr.cells['rownumber']?.value)!);
-              gridStateManager?.toggleSelectingRow(/*dr.cells["no"],*/ int.tryParse(dr.cells['rownumber']?.value)!);
+              gridStateManager?.toggleSelectingRow(/*dr.cells["no"],*/
+                  int.tryParse(dr.cells['rownumber']?.value)!);
             } else {
               // tblLog.Rows[0].Selected = true;
               // gridStateManager?.setCurrentCell(dr.cells["no"], 0);
@@ -3504,7 +3517,9 @@ class TransmissionLogController extends GetxController {
             if (!isYes) {
               completer.complete(false);
 
-              break; ///Newly added for 2 times show dialog
+              break;
+
+              ///Newly added for 2 times show dialog
               // return false;
             }
           }
@@ -3582,7 +3597,8 @@ class TransmissionLogController extends GetxController {
                 int.tryParse(dr.cells['rownumber']?.value ?? "")!);
 
             // gridStateManager?.setCurrentCell(dr.cells["no"], int.tryParse(dr.cells['rownumber']?.value ?? "")!);
-            gridStateManager?.toggleSelectingRow(int.tryParse(dr.cells['rownumber']?.value ?? "")!);
+            gridStateManager?.toggleSelectingRow(
+                int.tryParse(dr.cells['rownumber']?.value ?? "")!);
             LoadingDialog.callInfoMessage(
                 "Ros spot outside contracted timeband!\nUnable to proceed with save");
 
@@ -3595,8 +3611,10 @@ class TransmissionLogController extends GetxController {
             gridStateManager?.moveScrollByRow(PlutoMoveDirection.down,
                 int.tryParse(dr.cells['rownumber']?.value ?? ""));
             // gridStateManager?.setCurrentCell(dr.cells["no"], int.tryParse(dr.cells['rownumber']?.value ?? "")!);
-            gridStateManager?.toggleSelectingRow(int.tryParse(dr.cells['rownumber']?.value ?? "")!);
-            bool? isYesClick = await showDialogForYesNo1("Ros spot within 5 minutes of contracted timeband!\nDo you want to proceed with Save?");
+            gridStateManager?.toggleSelectingRow(
+                int.tryParse(dr.cells['rownumber']?.value ?? "")!);
+            bool? isYesClick = await showDialogForYesNo1(
+                "Ros spot within 5 minutes of contracted timeband!\nDo you want to proceed with Save?");
             if (isYesClick != null) {
               if (!isYesClick) {
                 print("checkRosTransmissionTime(300)>>>>" +
@@ -3743,19 +3761,20 @@ class TransmissionLogController extends GetxController {
     return completer.future;
   }
 
-  Offset? getOffSetValue(BoxConstraints constraints){
-    switch(initialOffset.value){
+  Offset? getOffSetValue(BoxConstraints constraints) {
+    switch (initialOffset.value) {
       case 1:
-        return Offset((constraints.maxWidth / 3)+30, constraints.maxHeight / 3);
+        return Offset(
+            (constraints.maxWidth / 3) + 30, constraints.maxHeight / 3);
       case 2:
-        return Offset(Get.width*0.09, Get.height*0.12);
+        return Offset(Get.width * 0.09, Get.height * 0.12);
       default:
         return null;
     }
   }
 
   Future<bool>? showDialogForYesNo1(String title) {
-    initialOffset.value=1;
+    initialOffset.value = 1;
     Completer<bool> completer = Completer<bool>();
     dialogWidget = Material(
       color: Colors.white,
@@ -3791,7 +3810,9 @@ class TransmissionLogController extends GetxController {
                     completer.complete(true);
                   },
                 ),
-                SizedBox(width: 15,),
+                SizedBox(
+                  width: 15,
+                ),
                 FormButton(
                   btnText: "No",
                   callback: () {
