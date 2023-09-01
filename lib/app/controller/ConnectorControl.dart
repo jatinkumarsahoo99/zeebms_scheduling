@@ -114,7 +114,7 @@ class ConnectorControl extends GetConnect {
           print("Message is: " + e.toString());
         }
       } else if (response.statusCode == 500) {
-        print("MI II>>" + response.data);
+        // print("MI II>>" + response.data);
         if (failed != null) {
           failed(response.data);
         }
