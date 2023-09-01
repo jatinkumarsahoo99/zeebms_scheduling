@@ -6,6 +6,7 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:intl/intl.dart';
 
+import '../../../controller/HomeController.dart';
 import '../../../data/DropDownValue.dart';
 import '../../../data/PermissionModel.dart';
 import '../../../providers/Utils.dart';
@@ -41,10 +42,13 @@ class InventoryStatusReportController extends GetxController {
   void onClose() {
     super.onClose();
   }
-
+  clearAll() {
+    Get.delete<InventoryStatusReportController>();
+    Get.find<HomeController>().clearPage1();
+  }
   formHandler(btn) {
     if (btn == "Clear") {
-      clearPage();
+      clearAll();
     }
   }
 

@@ -32,7 +32,10 @@ class DSeriesSpecificationController extends GetxController {
   DSeriesModel? dSeriesModel;
 
   PlutoGridStateManager? stateManager;
-
+  FocusNode gridFocus = FocusNode();
+  FocusNode locationFocus = FocusNode();
+  FocusNode channelFocus = FocusNode();
+  FocusNode eventFocus = FocusNode();
   @override
   void onInit() {
     getLocations();

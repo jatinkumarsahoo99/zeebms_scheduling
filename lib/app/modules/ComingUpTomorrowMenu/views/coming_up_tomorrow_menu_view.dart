@@ -261,33 +261,39 @@ class ComingUpTomorrowMenuView extends StatelessWidget {
                       id: "buttons",
                       init: Get.find<HomeController>(),
                       builder: (controller) {
-                        PermissionModel formPermissions = Get
-                            .find<MainController>()
-                            .permissionList!
-                            .lastWhere((element) =>
-                        element.appFormName == "frmComingUpTomorrowMaster");
-                        if (controller.buttons != null) {
-                          return Wrap(
-                            spacing: 5,
-                            runSpacing: 15,
-                            alignment: WrapAlignment.center,
-                            children: [
-                              for (var btn in controller.buttons!)
-                                FormButtonWrapper(
-                                  btnText: btn["name"],
-                                  callback: Utils.btnAccessHandler2(btn['name'],
-                                      controller, formPermissions) ==
-                                      null
-                                      ? null
-                                      : () =>
-                                      controllerX.formHandler(
-                                        btn['name'],
-                                      ),
-                                )
-                            ],
-                          );
+                        try{
+                          PermissionModel formPermissions = Get
+                              .find<MainController>()
+                              .permissionList!
+                              .lastWhere((element) =>
+                          element.appFormName == "frmComingUpTomorrowMaster");
+                          if (controller.buttons != null) {
+                            return Wrap(
+                              spacing: 5,
+                              runSpacing: 15,
+                              alignment: WrapAlignment.center,
+                              children: [
+                                for (var btn in controller.buttons!)
+                                  FormButtonWrapper(
+                                    btnText: btn["name"],
+                                    callback: Utils.btnAccessHandler2(btn['name'],
+                                        controller, formPermissions) ==
+                                        null
+                                        ? null
+                                        : () =>
+                                        controllerX.formHandler(
+                                          btn['name'],
+                                        ),
+                                  )
+                              ],
+                            );
+                          }
+                          return Container();
+                        }catch(e){
+                          return Container();
                         }
-                        return Container();
+
+
                       }),
                 ),
                 SizedBox(height: 8),

@@ -72,41 +72,43 @@ class CommercialMasterView extends StatelessWidget {
                                           isEnable: controllerX.isEnable,
                                         ),
                                         SizedBox(
-                                          width: MediaQuery.of(context).size.width*0.365,
+                                          width: MediaQuery.of(context)
+                                                  .size
+                                                  .width *
+                                              0.365,
                                           child: Row(
                                             mainAxisAlignment:
-                                            MainAxisAlignment.spaceBetween,
+                                                MainAxisAlignment.spaceBetween,
                                             children: [
                                               InputFields.formField1(
                                                 hintTxt: "Tx Caption",
-                                                controller:
-                                                controllerX.txCaptionController,
+                                                controller: controllerX
+                                                    .txCaptionController,
                                                 width: 0.17,
                                                 capital: true,
                                                 autoFocus: false,
                                                 isEnable: controllerX.isEnable,
                                                 prefixText: "C/",
                                               ),
-                                              Obx(() =>
-                                                  DropDownField.formDropDown1WidthMap(
-                                                      controllerX.language.value,
-                                                          (value) {
-                                                        controllerX.selectedLanguage =
-                                                            value;
-                                                      },
-                                                      "Langauge",
-                                                      .17,
-                                                      autoFocus: false,
-                                                      isEnable: controllerX.isEnable,
-                                                      selected:
-                                                      controllerX.selectedLanguage,
-                                                      inkWellFocusNode: controllerX.languageFocus
-
-                                                  )),
+                                              Obx(() => DropDownField
+                                                      .formDropDown1WidthMap(
+                                                          controllerX.language
+                                                              .value, (value) {
+                                                    controllerX
+                                                            .selectedLanguage =
+                                                        value;
+                                                  }, "Langauge", .17,
+                                                          autoFocus: false,
+                                                          isEnable: controllerX
+                                                              .isEnable,
+                                                          selected: controllerX
+                                                              .selectedLanguage,
+                                                          inkWellFocusNode:
+                                                              controllerX
+                                                                  .languageFocus)),
                                             ],
                                           ),
                                         ),
-
                                       ],
                                     ),
                                     SizedBox(height: 4),
@@ -129,50 +131,68 @@ class CommercialMasterView extends StatelessWidget {
                                                 isEnable: controllerX.isEnable,
                                                 selected: controllerX
                                                     .selectedRevenueType,
-                                                inkWellFocusNode: controllerX.revenueFocus
+                                                inkWellFocusNode:
+                                                    controllerX.revenueFocus
                                                 // selected: DropDownValue(key: "0",value: "jks"),
                                                 )),
-
                                         SizedBox(
-                                          width: MediaQuery.of(context).size.width*0.365,
+                                          width: MediaQuery.of(context)
+                                                  .size
+                                                  .width *
+                                              0.365,
                                           child: Row(
                                             mainAxisAlignment:
-                                            MainAxisAlignment.spaceBetween,
+                                                MainAxisAlignment.spaceBetween,
                                             children: [
-                                              Obx(() =>
-                                                  DropDownField.formDropDown1WidthMap(
-                                                      controllerX.secType.value,
-                                                          (value) {
-                                                        controllerX.selectedSecType =
-                                                            value;
+                                              Obx(() => DropDownField
+                                                      .formDropDown1WidthMap(
+                                                          controllerX.secType
+                                                              .value, (value) {
+                                                    controllerX
+                                                            .selectedSecType =
+                                                        value;
 
-                                                        controllerX.getTapeId();
-                                                        // controllerX.isListenerActive = true;
-                                                      },
-                                                      "Sec Type",
-                                                      isEnable: controllerX.isEnable,
-                                                      .17,
-                                                      selected:
-                                                      controllerX.selectedSecType,
-                                                      autoFocus: false,
-                                                      inkWellFocusNode: controllerX.secTypeFocus
-                                                  )),
+                                                    controllerX.getTapeId();
+                                                    // controllerX.isListenerActive = true;
+                                                  },
+                                                          "Sec Type",
+                                                          isEnable: controllerX
+                                                              .isEnable,
+                                                          .17,
+                                                          selected: controllerX
+                                                              .selectedSecType,
+                                                          autoFocus: false,
+                                                          inkWellFocusNode:
+                                                              controllerX
+                                                                  .secTypeFocus)),
                                               RawKeyboardListener(
                                                 focusNode: FocusNode(),
                                                 onKey: (RawKeyEvent event) {
                                                   // Check if the event key is "v" (paste) and Ctrl (or Command) is pressed
-                                                  if ((event.isControlPressed || event.isMetaPressed) &&
-                                                      event.logicalKey == LogicalKeyboardKey.keyV &&
+                                                  if ((event.isControlPressed ||
+                                                          event
+                                                              .isMetaPressed) &&
+                                                      event.logicalKey ==
+                                                          LogicalKeyboardKey
+                                                              .keyV &&
                                                       event is! RawKeyUpEvent) {
                                                     print("Ctrl + V pressed");
+                                                    controllerX.tapeIdController
+                                                        .value.text = "";
+                                                    controllerX.txNoController
+                                                        .text = "";
                                                     controllerX
-                                                        .tapeIdController.value.text = "";
-                                                    controllerX.txNoController.text = "";
-                                                    controllerX.isListenerActive = false;
-                                                    LoadingDialog.callInfoMessage("Ctrl + V not permitted.",callback: (){
+                                                            .isListenerActive =
+                                                        false;
+                                                    LoadingDialog.callInfoMessage(
+                                                        "Ctrl + V not permitted.",
+                                                        callback: () {
                                                       controllerX
-                                                          .tapeIdController.value.text = "";
-                                                      controllerX.txNoController.text = "";
+                                                          .tapeIdController
+                                                          .value
+                                                          .text = "";
+                                                      controllerX.txNoController
+                                                          .text = "";
                                                     });
                                                   }
                                                 },
@@ -181,16 +201,16 @@ class CommercialMasterView extends StatelessWidget {
                                                   controller: controllerX
                                                       .tapeIdController.value,
                                                   width: 0.17,
-                                                  isEnable: controllerX.isEnableSelective,
+                                                  isEnable: controllerX
+                                                      .isEnableSelective,
                                                   autoFocus: false,
-                                                  focusNode: controllerX.tapeIdFocus,
+                                                  focusNode:
+                                                      controllerX.tapeIdFocus,
                                                 ),
                                               )
                                             ],
                                           ),
                                         ),
-
-
                                       ],
                                     ),
                                     SizedBox(height: 4),
@@ -245,29 +265,33 @@ class CommercialMasterView extends StatelessWidget {
                                           fN: controllerX.segNoFocus,
                                           // isEnabled: true,
                                         )),
-
                                         SizedBox(
-                                          width: MediaQuery.of(context).size.width*0.365,
+                                          width: MediaQuery.of(context)
+                                                  .size
+                                                  .width *
+                                              0.365,
                                           child: Row(
                                             mainAxisAlignment:
-                                            MainAxisAlignment.spaceBetween,
+                                                MainAxisAlignment.spaceBetween,
                                             children: [
                                               InputFields.formField1(
                                                   hintTxt: "TX No",
-                                                  controller:
-                                                  controllerX.txNoController,
+                                                  controller: controllerX
+                                                      .txNoController,
                                                   width: 0.17,
-                                                  isEnable: controllerX.isEnableSelective,
+                                                  isEnable: controllerX
+                                                      .isEnableSelective,
                                                   autoFocus: false,
-                                                  focusNode: controllerX.txNoFocus,
+                                                  focusNode:
+                                                      controllerX.txNoFocus,
                                                   onchanged: (val) {
                                                     controllerX.validateTxNo(
                                                         val, "", "");
                                                   }),
                                               InputFields.formField1(
                                                 hintTxt: "Agency Id",
-                                                controller:
-                                                controllerX.agencyIdController,
+                                                controller: controllerX
+                                                    .agencyIdController,
                                                 width: 0.17,
                                                 isEnable: controllerX.isEnable,
                                                 autoFocus: false,
@@ -275,8 +299,6 @@ class CommercialMasterView extends StatelessWidget {
                                             ],
                                           ),
                                         ),
-
-
                                       ],
                                     ),
                                     SizedBox(height: 4),
@@ -291,28 +313,33 @@ class CommercialMasterView extends StatelessWidget {
                                               controllerX.selectedTapeType =
                                                   value;
                                             }, "Tape Type", .17,
-                                                inkWellFocusNode: controllerX.tapeTypeFocus,
+                                                inkWellFocusNode:
+                                                    controllerX.tapeTypeFocus,
                                                 isEnable: controllerX.isEnable,
                                                 autoFocus: false,
                                                 selected: controllerX
                                                     .selectedTapeType)),
                                         SizedBox(
-                                          width: MediaQuery.of(context).size.width*0.365,
+                                          width: MediaQuery.of(context)
+                                                  .size
+                                                  .width *
+                                              0.365,
                                           child: Obx(() =>
                                               DropDownField.formDropDown1WidthMap(
                                                   controllerX.censorShipType
                                                       .value, (value) {
                                                 controllerX
-                                                    .selectedCensorShipType =
+                                                        .selectedCensorShipType =
                                                     value;
                                               }, "Censhorship", .365,
-                                                  isEnable: controllerX.isEnable,
+                                                  isEnable:
+                                                      controllerX.isEnable,
                                                   autoFocus: false,
-                                                  inkWellFocusNode: controllerX.censhorShipFocus,
+                                                  inkWellFocusNode: controllerX
+                                                      .censhorShipFocus,
                                                   selected: controllerX
                                                       .selectedCensorShipType)),
                                         ),
-
                                       ],
                                     ),
                                     SizedBox(height: 4),
@@ -343,22 +370,25 @@ class CommercialMasterView extends StatelessWidget {
                                             // isTime: true,
                                             // isEnable: controller.isEnable.value,
                                             paddingLeft: 0),
-
-
                                         SizedBox(
-                                          width: MediaQuery.of(context).size.width*0.365,
+                                          width: MediaQuery.of(context)
+                                                  .size
+                                                  .width *
+                                              0.365,
                                           child: Row(
                                             mainAxisAlignment:
-                                            MainAxisAlignment.spaceBetween,
+                                                MainAxisAlignment.spaceBetween,
                                             children: [
                                               InputFields.formFieldNumberMask(
                                                   hintTxt: "EOM",
                                                   controller:
-                                                  controllerX.eomController,
+                                                      controllerX.eomController,
                                                   widthRatio: 0.17,
-                                                  isEnable: controllerX.isEnable,
+                                                  isEnable:
+                                                      controllerX.isEnable,
                                                   onEditComplete: (val) {
-                                                    controllerX.calculateDuration();
+                                                    controllerX
+                                                        .calculateDuration();
                                                   },
                                                   // isTime: true,
                                                   // isEnable: controller.isEnable.value,
@@ -374,13 +404,14 @@ class CommercialMasterView extends StatelessWidget {
                                           },
                                         ),*/
                                               Obx(() => TimeWithThreeTextField(
-                                                title: "Duration",
-                                                mainTextController:
-                                                controllerX.duration.value,
-                                                widthRation: 0.17,
-                                                isTime: false,
-                                                isEnable: false,
-                                              )),
+                                                    title: "Duration",
+                                                    mainTextController:
+                                                        controllerX
+                                                            .duration.value,
+                                                    widthRation: 0.17,
+                                                    isTime: false,
+                                                    isEnable: false,
+                                                  )),
                                             ],
                                           ),
                                         ),
@@ -397,7 +428,6 @@ class CommercialMasterView extends StatelessWidget {
                                               controllerX.clientController,
                                           width: 0.17,
                                           isEnable: controllerX.isEnable,
-
                                           onchanged: (value) {
                                             if (value != null && value != "") {
                                               controllerX
@@ -423,25 +453,30 @@ class CommercialMasterView extends StatelessWidget {
                                         url: ApiFactory.COMMERCIAL_MASTER_GETAGENCYBRAND,
                                       ),*/
                                         SizedBox(
-                                          width: MediaQuery.of(context).size.width*0.365,
-                                          child:    Obx(() =>
+                                          width: MediaQuery.of(context)
+                                                  .size
+                                                  .width *
+                                              0.365,
+                                          child: Obx(() =>
                                               DropDownField.formDropDown1WidthMap(
-                                                  controllerX.clientDetails.value,
-                                                      (value) {
-                                                    controllerX
+                                                  controllerX.clientDetails
+                                                      .value, (value) {
+                                                controllerX
                                                         .selectedClientDetails =
-                                                        value;
-                                                    controllerX.getAgencyBrandType(
-                                                        value.key ?? "");
-                                                    controllerX.clientController.text = value.value??"" ;
-                                                  }, "Client", .365,
-                                                  isEnable: controllerX.isEnable,
+                                                    value;
+                                                controllerX.getAgencyBrandType(
+                                                    value.key ?? "");
+                                                controllerX.clientController
+                                                    .text = value.value ?? "";
+                                              }, "Client", .365,
+                                                  isEnable:
+                                                      controllerX.isEnable,
                                                   autoFocus: false,
-                                                  inkWellFocusNode: controllerX.clientFocus,
+                                                  inkWellFocusNode:
+                                                      controllerX.clientFocus,
                                                   selected: controllerX
                                                       .selectedClientDetails)),
                                         ),
-
                                       ],
                                     ),
                                     SizedBox(height: 4),
@@ -450,22 +485,19 @@ class CommercialMasterView extends StatelessWidget {
                                             MainAxisAlignment.spaceBetween,
                                         children: [
                                           Obx(() => DropDownField
-                                              .formDropDown1WidthMap(
-                                              controllerX.brandType
-                                                  .value, (value) {
-                                            controllerX.selectedBrandType =
-                                                value;
-                                            controllerX.getLevelDetails(
-                                                value.key ?? "");
-                                          }, "Brand", .17,
-                                              isEnable:
-                                              controllerX.isEnable,
-                                              autoFocus: false,
-                                              selected: controllerX
-                                                  .selectedBrandType)),
-
-
-
+                                                  .formDropDown1WidthMap(
+                                                      controllerX.brandType
+                                                          .value, (value) {
+                                                controllerX.selectedBrandType =
+                                                    value;
+                                                controllerX.getLevelDetails(
+                                                    value.key ?? "");
+                                              }, "Brand", .17,
+                                                      isEnable:
+                                                          controllerX.isEnable,
+                                                      autoFocus: false,
+                                                      selected: controllerX
+                                                          .selectedBrandType)),
                                           InputFields.formField1(
                                             hintTxt: "Product Name",
                                             controller: controllerX
@@ -474,8 +506,6 @@ class CommercialMasterView extends StatelessWidget {
                                             autoFocus: false,
                                             isEnable: false,
                                           ),
-
-
                                         ]),
                                     SizedBox(height: 4),
                                     GetBuilder<CommercialMasterController>(
@@ -493,12 +523,15 @@ class CommercialMasterView extends StatelessWidget {
                                                 autoFocus: false,
                                                 isEnable: false,
                                               ),
-
                                               SizedBox(
-                                                width: MediaQuery.of(context).size.width*0.365,
+                                                width: MediaQuery.of(context)
+                                                        .size
+                                                        .width *
+                                                    0.365,
                                                 child: Row(
                                                   mainAxisAlignment:
-                                                  MainAxisAlignment.spaceBetween,
+                                                      MainAxisAlignment
+                                                          .spaceBetween,
                                                   children: [
                                                     InputFields.formField1(
                                                       hintTxt: "Level 2",
@@ -516,12 +549,9 @@ class CommercialMasterView extends StatelessWidget {
                                                       autoFocus: false,
                                                       isEnable: false,
                                                     ),
-
                                                   ],
                                                 ),
                                               ),
-
-
                                             ],
                                           );
                                         }),
@@ -542,22 +572,26 @@ class CommercialMasterView extends StatelessWidget {
                                             },
                                             autoFocus: false,
                                           ),
-
                                           SizedBox(
-                                            width: MediaQuery.of(context).size.width*0.365,
-                                            child:   Obx(() =>
+                                            width: MediaQuery.of(context)
+                                                    .size
+                                                    .width *
+                                                0.365,
+                                            child: Obx(() =>
                                                 DropDownField.formDropDown1WidthMap(
                                                     controllerX.agencyDetails
                                                         .value, (value) {
                                                   controllerX
-                                                      .selectedAgencyDetails =
+                                                          .selectedAgencyDetails =
                                                       value;
                                                   controllerX
-                                                      .agencyNameController.text = value.value??"";
+                                                      .agencyNameController
+                                                      .text = value.value ?? "";
                                                 }, "Agency", .365,
-                                                    inkWellFocusNode: controllerX.agencyFocus,
+                                                    inkWellFocusNode:
+                                                        controllerX.agencyFocus,
                                                     isEnable:
-                                                    controllerX.isEnable,
+                                                        controllerX.isEnable,
                                                     autoFocus: false,
                                                     selected: controllerX
                                                         .selectedAgencyDetails)),
@@ -587,13 +621,14 @@ class CommercialMasterView extends StatelessWidget {
                                           widthRation: .17,
                                           isEnable: controllerX.isEnable,
                                         ),
-
-
                                         SizedBox(
-                                          width: MediaQuery.of(context).size.width*0.365,
+                                          width: MediaQuery.of(context)
+                                                  .size
+                                                  .width *
+                                              0.365,
                                           child: Row(
                                             mainAxisAlignment:
-                                            MainAxisAlignment.spaceBetween,
+                                                MainAxisAlignment.spaceBetween,
                                             children: [
                                               DateWithThreeTextField(
                                                 title: "Dispatch",
@@ -603,25 +638,26 @@ class CommercialMasterView extends StatelessWidget {
                                                 isEnable: controllerX.isEnable,
                                               ),
                                               InputFields.formField1(
-                                                hintTxt: "Clock ID",
-                                                focusNode: controllerX.clockIdFocus,
-                                                controller:
-                                                controllerX.clockIdController,
-                                                width: 0.17,
-                                                isEnable: controllerX.isEnable,
-                                                autoFocus: false
-                                                /*  onchanged: (val){
+                                                  hintTxt: "Clock ID",
+                                                  focusNode:
+                                                      controllerX.clockIdFocus,
+                                                  controller: controllerX
+                                                      .clockIdController,
+                                                  width: 0.17,
+                                                  isEnable:
+                                                      controllerX.isEnable,
+                                                  autoFocus: false
+                                                  /*  onchanged: (val){
                                             controllerX.fetchCommercialTapeMasterData(
                                                 "",
                                                 "",
                                                 0,
                                                 controllerX.clockIdController.text);
                                           }*/
-                                              ),
+                                                  ),
                                             ],
                                           ),
                                         ),
-
                                       ],
                                     ),
                                   ],
@@ -741,23 +777,48 @@ class CommercialMasterView extends StatelessWidget {
                                           ),
                                           child: (controllerX
                                                   .eventList.isNotEmpty)
-                                              ? DataGridFromMap(
-                                                  hideCode: false,
-                                                  formatDate: false,
-                                                  checkRow: true,
-                                                  checkRowKey: "no",
-                                                  onload:
-                                                      (PlutoGridOnLoadedEvent
-                                                          load) {
-                                                    /*controller.tblFastInsert =
-                                                        load.stateManager;*/
+                                              ? RawKeyboardListener(
+                                                  focusNode: FocusNode(),
+                                                  onKey: (RawKeyEvent event) {
+                                                    if (event.logicalKey ==
+                                                            LogicalKeyboardKey
+                                                                .delete &&
+                                                        event
+                                                            is! RawKeyUpEvent) {
+
+                                                      if( controllerX
+                                                          .gridStateManager != null &&  (controllerX
+                                                          .gridStateManager?.rows.length??0 ) > 0){
+                                                        print(
+                                                            "delete button pressed");
+                                                        controllerX
+                                                            .gridStateManager?.removeCurrentRow();
+                                                        controllerX
+                                                            .gridStateManager?.notifyListeners();
+                                                      }else{
+                                                        LoadingDialog.showErrorDialog("Please add some data");
+                                                      }
+                                                    }
                                                   },
-                                                  // colorCallback: (renderC) => Colors.red[200]!,
-                                                  mapData: (controllerX
-                                                          .eventList
-                                                          .map((e) =>
-                                                              e.toJson()))
-                                                      .toList())
+                                                  child: DataGridFromMap(
+                                                      hideCode: false,
+                                                      formatDate: false,
+                                                      checkRow: true,
+                                                      checkRowKey: "no",
+                                                      onload:
+                                                          (PlutoGridOnLoadedEvent
+                                                              load) {
+                                                        controllerX
+                                                                .gridStateManager =
+                                                            load.stateManager;
+                                                      },
+                                                      // colorCallback: (renderC) => Colors.red[200]!,
+                                                      mapData: (controllerX
+                                                              .eventList
+                                                              .map((e) =>
+                                                                  e.toJson()))
+                                                          .toList()),
+                                                )
                                               : Container(),
                                         ),
                                       ),

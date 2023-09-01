@@ -118,7 +118,7 @@ class EuropeCommercialImportStatusView
                           onSelected: (event) {},
                           showSrNo: true,
                           witdthSpecificColumn:
-                              controllerX.userGridSetting1?[0] ?? {},
+                          (controllerX.userGridSetting1!=null && ((controllerX.userGridSetting1?.length??0)>0))?(controllerX.userGridSetting1?[0].values.first ?? {}):{},
                           onload: (PlutoGridOnLoadedEvent grid) {
                             controllerX.stateManager = grid.stateManager;
                           },
