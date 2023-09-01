@@ -55,11 +55,8 @@ class RoRescheduleView extends StatelessWidget {
                             () => FocusTraversalOrder(
                               order: NumericFocusOrder(1),
                               child: DropDownField.formDropDown1WidthMap(
-                                controller
-                                    .reschedulngInitData!.lstlocationMaters!
-                                    .map((e) => DropDownValue(
-                                        key: e.locationCode,
-                                        value: e.locationName))
+                                controller.reschedulngInitData!.lstlocationMaters!
+                                    .map((e) => DropDownValue(key: e.locationCode, value: e.locationName))
                                     .toList(),
                                 (data) {
                                   controller.selectedLocation = data;
@@ -105,8 +102,7 @@ class RoRescheduleView extends StatelessWidget {
                                   title: "Eff Date.",
                                   isEnable: controller.enableFields.value,
                                   onFocusChange: (date) {
-                                    controller.bookingMonthCtrl.text =
-                                        date.split("-")[2] + date.split("-")[1];
+                                    controller.bookingMonthCtrl.text = date.split("-")[2] + date.split("-")[1];
                                   },
                                   widthRation: 0.24,
                                   mainTextController: controller.effDateCtrl),
@@ -114,17 +110,11 @@ class RoRescheduleView extends StatelessWidget {
                           ),
                           Obx(
                             () => InputFields.formField1(
-                                hintTxt: "Client",
-                                isEnable: controller.enableFields.value,
-                                controller: controller.clientCtrl,
-                                width: 0.24),
+                                hintTxt: "Client", isEnable: controller.enableFields.value, controller: controller.clientCtrl, width: 0.24),
                           ),
                           Obx(
                             () => InputFields.formField1(
-                                hintTxt: "Agency",
-                                isEnable: controller.enableFields.value,
-                                controller: controller.agencyCtrl,
-                                width: 0.24),
+                                hintTxt: "Agency", isEnable: controller.enableFields.value, controller: controller.agencyCtrl, width: 0.24),
                           ),
                           Obx(
                             () => InputFields.formField1(
@@ -143,17 +133,11 @@ class RoRescheduleView extends StatelessWidget {
                           ),
                           Obx(
                             () => InputFields.formField1(
-                                hintTxt: "Brand",
-                                isEnable: controller.enableFields.value,
-                                controller: controller.branCtrl,
-                                width: 0.24),
+                                hintTxt: "Brand", isEnable: controller.enableFields.value, controller: controller.branCtrl, width: 0.24),
                           ),
                           Obx(
                             () => InputFields.formField1(
-                                hintTxt: "Deal No",
-                                isEnable: controller.enableFields.value,
-                                controller: controller.delnoCtrl,
-                                width: 0.24),
+                                hintTxt: "Deal No", isEnable: controller.enableFields.value, controller: controller.delnoCtrl, width: 0.24),
                           ),
                           Obx(
                             () => InputFields.formField1(
@@ -172,30 +156,20 @@ class RoRescheduleView extends StatelessWidget {
                           ),
                           Obx(
                             () => InputFields.formField1(
-                                hintTxt: "Zone",
-                                isEnable: controller.enableFields.value,
-                                controller: controller.zoneCtrl,
-                                width: 0.24),
+                                hintTxt: "Zone", isEnable: controller.enableFields.value, controller: controller.zoneCtrl, width: 0.24),
                           ),
                           Container(
                             width: Get.width * 0.24,
                             child: Row(
                               children: [
-                                InputFields.formField1(
-                                    hintTxt: "Re-Sch No.",
-                                    isEnable: false,
-                                    controller: controller.bookingMonthCtrl,
-                                    width: 0.06),
+                                InputFields.formField1(hintTxt: "Re-Sch No.", isEnable: false, controller: controller.bookingMonthCtrl, width: 0.06),
                                 SizedBox(
                                   width: Get.width * 0.01,
                                 ),
                                 FocusTraversalOrder(
                                   order: NumericFocusOrder(5),
                                   child: InputFields.formField1(
-                                      hintTxt: "",
-                                      focusNode: controller.reScheduleFocus,
-                                      controller: controller.reSchedNoCtrl,
-                                      width: 0.17),
+                                      hintTxt: "", focusNode: controller.reScheduleFocus, controller: controller.reSchedNoCtrl, width: 0.17),
                                 ),
                               ],
                             ),
@@ -218,10 +192,7 @@ class RoRescheduleView extends StatelessWidget {
                               init: controller,
                               id: "dgvGrid",
                               builder: (gridController) {
-                                if ((gridController.roRescheduleOnLeaveData ==
-                                        null ||
-                                    gridController.roRescheduleOnLeaveData!
-                                        .lstDgvRO!.isEmpty)) {
+                                if ((gridController.roRescheduleOnLeaveData == null || gridController.roRescheduleOnLeaveData!.lstDgvRO!.isEmpty)) {
                                   return Container(
                                     decoration: BoxDecoration(
                                       border: Border.all(
@@ -231,25 +202,13 @@ class RoRescheduleView extends StatelessWidget {
                                     ),
                                   );
                                 } else {
-                                  return DataGridShowOnlyKeys(
+                                  return DataGridWithShowOnlyKeys(
                                     mode: PlutoGridMode.selectWithOneTap,
                                     hideKeys: const [],
                                     colorCallback: (p0) {
-                                      if (controller
-                                                  .roRescheduleOnLeaveData!
-                                                  .lstDgvRO![p0.rowIdx]
-                                                  .colorName !=
-                                              null &&
-                                          controller
-                                              .roRescheduleOnLeaveData!
-                                              .lstDgvRO![p0.rowIdx]
-                                              .colorName!
-                                              .isNotEmpty) {
-                                        switch (controller
-                                            .roRescheduleOnLeaveData!
-                                            .lstDgvRO![p0.rowIdx]
-                                            .colorName!
-                                            .toLowerCase()) {
+                                      if (controller.roRescheduleOnLeaveData!.lstDgvRO![p0.rowIdx].colorName != null &&
+                                          controller.roRescheduleOnLeaveData!.lstDgvRO![p0.rowIdx].colorName!.isNotEmpty) {
+                                        switch (controller.roRescheduleOnLeaveData!.lstDgvRO![p0.rowIdx].colorName!.toLowerCase()) {
                                           case "rosybrown":
                                             return Color(0xFFbc8f8f);
                                           case "grey":
@@ -282,17 +241,12 @@ class RoRescheduleView extends StatelessWidget {
                                       controller.closeModify();
                                     },
                                     onload: (load) {
-                                      controller.plutoGridStateManager =
-                                          load.stateManager;
+                                      controller.plutoGridStateManager = load.stateManager;
                                     },
                                     onRowDoubleTap: (tapEvent) {
-                                      controller.dgvGridnRowDoubleTap(
-                                          tapEvent.rowIdx);
+                                      controller.dgvGridnRowDoubleTap(tapEvent.rowIdx);
                                     },
-                                    mapData: gridController
-                                        .roRescheduleOnLeaveData!.lstDgvRO!
-                                        .map((e) => e.toJson())
-                                        .toList(),
+                                    mapData: gridController.roRescheduleOnLeaveData!.lstDgvRO!.map((e) => e.toJson()).toList(),
                                     formatDate: true,
                                   );
                                 }
@@ -323,13 +277,9 @@ class RoRescheduleView extends StatelessWidget {
                               init: controller,
                               id: "updatedgvGrid",
                               builder: (gridController) {
-                                if ((gridController.roRescheduleOnLeaveData ==
-                                        null ||
-                                    gridController.roRescheduleOnLeaveData!
-                                            .lstdgvUpdated ==
-                                        null ||
-                                    gridController.roRescheduleOnLeaveData!
-                                        .lstdgvUpdated!.isEmpty)) {
+                                if ((gridController.roRescheduleOnLeaveData == null ||
+                                    gridController.roRescheduleOnLeaveData!.lstdgvUpdated == null ||
+                                    gridController.roRescheduleOnLeaveData!.lstdgvUpdated!.isEmpty)) {
                                   return Container(
                                     decoration: BoxDecoration(
                                       border: Border.all(
@@ -339,11 +289,8 @@ class RoRescheduleView extends StatelessWidget {
                                     ),
                                   );
                                 } else {
-                                  return DataGridShowOnlyKeys(
-                                    mapData: gridController
-                                        .roRescheduleOnLeaveData!.lstdgvUpdated!
-                                        .map((e) => e.toJson())
-                                        .toList(),
+                                  return DataGridWithShowOnlyKeys(
+                                    mapData: gridController.roRescheduleOnLeaveData!.lstdgvUpdated!.map((e) => e.toJson()).toList(),
                                     showonly: [
                                       "programName",
                                       "scheduleDate",
@@ -361,83 +308,39 @@ class RoRescheduleView extends StatelessWidget {
                                     ],
                                     extraList: [
                                       SecondaryShowDialogModel("Delete", () {
-                                        if (controller
-                                                .updatedplutoGridStateManager
-                                                ?.currentCell !=
-                                            null) {
-                                          if (!(gridController
-                                              .roRescheduleOnLeaveData!
-                                              .lstdgvUpdated![controller
-                                                  .updatedplutoGridStateManager!
-                                                  .currentRowIdx!]
-                                              .audited!)) {
-                                            String bookingCode = gridController
-                                                    .roRescheduleOnLeaveData
-                                                    ?.lstdgvUpdated![controller
-                                                        .updatedplutoGridStateManager!
-                                                        .currentRowIdx!]
-                                                    .bookingDetailCode ??
+                                        if (controller.updatedplutoGridStateManager?.currentCell != null) {
+                                          if (!(gridController.roRescheduleOnLeaveData!
+                                              .lstdgvUpdated![controller.updatedplutoGridStateManager!.currentRowIdx!].audited!)) {
+                                            String bookingCode = gridController.roRescheduleOnLeaveData
+                                                    ?.lstdgvUpdated![controller.updatedplutoGridStateManager!.currentRowIdx!].bookingDetailCode ??
                                                 "";
 
-                                            gridController
-                                                .roRescheduleOnLeaveData!
-                                                .lstdgvUpdated
-                                                ?.removeAt(controller
-                                                    .updatedplutoGridStateManager!
-                                                    .currentRowIdx!);
-                                            gridController
-                                                .roRescheduleOnLeaveData!
-                                                .lstUpdateTable
-                                                ?.removeAt(controller
-                                                    .updatedplutoGridStateManager!
-                                                    .currentRowIdx!);
+                                            gridController.roRescheduleOnLeaveData!.lstdgvUpdated
+                                                ?.removeAt(controller.updatedplutoGridStateManager!.currentRowIdx!);
+                                            gridController.roRescheduleOnLeaveData!.lstUpdateTable
+                                                ?.removeAt(controller.updatedplutoGridStateManager!.currentRowIdx!);
 
-                                            controller
-                                                .update(["updatedgvGrid"]);
+                                            controller.update(["updatedgvGrid"]);
                                             if (bookingCode != "") {
-                                              int index = controller
-                                                  .roRescheduleOnLeaveData!
-                                                  .lstDgvRO!
-                                                  .indexWhere((element) =>
-                                                      element.bookingDetailCode
-                                                          .toString() ==
-                                                      bookingCode);
-                                              int tableindex = controller
-                                                  .roRescheduleOnLeaveData!
-                                                  .lstTable!
-                                                  .indexWhere((element) =>
-                                                      element.bookingDetailCode
-                                                          .toString() ==
-                                                      bookingCode);
+                                              int index = controller.roRescheduleOnLeaveData!.lstDgvRO!
+                                                  .indexWhere((element) => element.bookingDetailCode.toString() == bookingCode);
+                                              int tableindex = controller.roRescheduleOnLeaveData!.lstTable!
+                                                  .indexWhere((element) => element.bookingDetailCode.toString() == bookingCode);
 
-                                              controller
-                                                  .roRescheduleOnLeaveData!
-                                                  .lstTable![tableindex]
-                                                  .colorName = "";
-                                              controller
-                                                  .roRescheduleOnLeaveData!
-                                                  .lstTable![tableindex]
-                                                  .edit = 0;
-                                              controller
-                                                  .roRescheduleOnLeaveData!
-                                                  .lstDgvRO![index]
-                                                  .colorName = "";
-                                              controller
-                                                  .roRescheduleOnLeaveData!
-                                                  .lstDgvRO![index]
-                                                  .edit = 0;
+                                              controller.roRescheduleOnLeaveData!.lstTable![tableindex].colorName = "";
+                                              controller.roRescheduleOnLeaveData!.lstTable![tableindex].edit = 0;
+                                              controller.roRescheduleOnLeaveData!.lstDgvRO![index].colorName = "";
+                                              controller.roRescheduleOnLeaveData!.lstDgvRO![index].edit = 0;
                                               controller.update(["dgvGrid"]);
                                             }
                                           } else {
-                                            LoadingDialog.callInfoMessage(
-                                                "Spot is already audited, cannot delete selected RO");
+                                            LoadingDialog.callInfoMessage("Spot is already audited, cannot delete selected RO");
                                           }
                                         }
                                       })
                                     ],
                                     onload: (loadEvent) {
-                                      controller.updatedplutoGridStateManager =
-                                          loadEvent.stateManager;
+                                      controller.updatedplutoGridStateManager = loadEvent.stateManager;
                                     },
                                     formatDate: true,
                                   );
@@ -483,22 +386,14 @@ class RoRescheduleView extends StatelessWidget {
                         children: [
                           InkWell(
                             onTap: () {
-                              if (controller
-                                      .plutoGridStateManager!.currentCell !=
-                                  null) {
+                              if (controller.plutoGridStateManager!.currentCell != null) {
                                 controller.onChangeTapeIDClick();
                               }
                             },
-                            child: Row(
-                                mainAxisSize: MainAxisSize.max,
-                                mainAxisAlignment: MainAxisAlignment.start,
-                                children: [
-                                  Obx(() => Icon(controller.changeTapeId.value
-                                      ? Icons.check_box_outlined
-                                      : Icons
-                                          .check_box_outline_blank_outlined)),
-                                  const Text("Change Tape ID")
-                                ]),
+                            child: Row(mainAxisSize: MainAxisSize.max, mainAxisAlignment: MainAxisAlignment.start, children: [
+                              Obx(() => Icon(controller.changeTapeId.value ? Icons.check_box_outlined : Icons.check_box_outline_blank_outlined)),
+                              const Text("Change Tape ID")
+                            ]),
                           ),
                           const SizedBox(
                             width: 10,
@@ -509,33 +404,14 @@ class RoRescheduleView extends StatelessWidget {
                                   crossAxisAlignment: WrapCrossAlignment.end,
                                   children: [
                                     DropDownField.formDropDown1WidthMap(
-                                        (controller.roRescheduleOnLeaveData
-                                                    ?.lstcmbTapeID ??
-                                                [])
-                                            .map((e) => DropDownValue(
-                                                key: e.commercialCaption,
-                                                value: e.exporttapecode))
+                                        (controller.roRescheduleOnLeaveData?.lstcmbTapeID ?? [])
+                                            .map((e) => DropDownValue(key: e.commercialCaption, value: e.exporttapecode))
                                             .toList(), (data) {
-                                      controller.chnageTapeIdCap.text =
-                                          data.key!;
-                                    }, "Tape ID", 0.12,
-                                        selected:
-                                            controller.modifySelectedTapeCode),
-                                    InputFields.formField1(
-                                        hintTxt: "Seg",
-                                        isEnable: false,
-                                        controller: controller.changeTapeIdSeg,
-                                        width: 0.06),
-                                    InputFields.formField1(
-                                        hintTxt: "Dur",
-                                        isEnable: false,
-                                        controller: controller.changeTapeIdDur,
-                                        width: 0.06),
-                                    InputFields.formField1(
-                                        hintTxt: "Caption",
-                                        isEnable: false,
-                                        controller: controller.chnageTapeIdCap,
-                                        width: 0.18),
+                                      controller.chnageTapeIdCap.text = data.key!;
+                                    }, "Tape ID", 0.12, selected: controller.modifySelectedTapeCode),
+                                    InputFields.formField1(hintTxt: "Seg", isEnable: false, controller: controller.changeTapeIdSeg, width: 0.06),
+                                    InputFields.formField1(hintTxt: "Dur", isEnable: false, controller: controller.changeTapeIdDur, width: 0.06),
+                                    InputFields.formField1(hintTxt: "Caption", isEnable: false, controller: controller.chnageTapeIdCap, width: 0.18),
                                     FormButtonWrapper(
                                       btnText: "Modify",
                                       callback: () {
@@ -567,19 +443,14 @@ class RoRescheduleView extends StatelessWidget {
                       .lastWhere((element) {
                     return element.appFormName == "frmSegmentsDetails";
                   });*/
-                      PermissionModel formPermissions =
-                          Get.find<MainController>()
-                              .permissionList!
-                              .lastWhere((element) {
+                      PermissionModel formPermissions = Get.find<MainController>().permissionList!.lastWhere((element) {
                         return element.appFormName == "frmROBooking";
                       });
 
                       return Card(
                         margin: const EdgeInsets.fromLTRB(4, 4, 4, 0),
                         shape: const RoundedRectangleBorder(
-                          borderRadius: BorderRadius.only(
-                              topLeft: Radius.circular(10),
-                              topRight: Radius.circular(10)),
+                          borderRadius: BorderRadius.only(topLeft: Radius.circular(10), topRight: Radius.circular(10)),
                         ),
                         child: Container(
                           width: Get.width,
@@ -595,9 +466,7 @@ class RoRescheduleView extends StatelessWidget {
                                 FormButtonWrapper(
                                   btnText: btn["name"],
                                   // isEnabled: btn['isDisabled'],
-                                  callback: Utils.btnAccessHandler2(btn['name'],
-                                              btncontroller, formPermissions) ==
-                                          null
+                                  callback: Utils.btnAccessHandler2(btn['name'], btncontroller, formPermissions) == null
                                       ? null
                                       : () => btnHandler(btn['name']),
                                 ),
@@ -624,12 +493,7 @@ class RoRescheduleView extends StatelessWidget {
         Get.find<HomeController>().clearPage1();
         break;
       case "Search":
-        Get.to(const SearchPage(
-            screenName: "Ro Reschedule",
-            isAppBarReq: true,
-            isPopup: true,
-            appBarName: "Ro Reschedule",
-            strViewName: "vTesting"));
+        Get.to(const SearchPage(screenName: "Ro Reschedule", isAppBarReq: true, isPopup: true, appBarName: "Ro Reschedule", strViewName: "vTesting"));
         break;
       case "Docs":
         Get.defaultDialog(

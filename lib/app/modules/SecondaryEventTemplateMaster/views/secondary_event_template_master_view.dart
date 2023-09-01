@@ -290,7 +290,7 @@ class SecondaryEventTemplateMasterView extends StatelessWidget {
                                       id: "searchGrid",
                                       init: controller,
                                       builder: (searchcontroller) {
-                                        return DataGridShowOnlyKeys(
+                                        return DataGridWithShowOnlyKeys(
                                           onload: (event) {
                                             controller.searchGrid = event.stateManager;
                                           },

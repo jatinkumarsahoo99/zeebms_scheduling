@@ -49,7 +49,7 @@ class MaterialIdSearchView extends GetView<MaterialIdSearchController> {
           Obx(() => Expanded(
                 child: Container(
                   padding: const EdgeInsets.all(8.0),
-                  child: DataGridShowOnlyKeys(mapData: controller.data.value),
+                  child: DataGridWithShowOnlyKeys(mapData: controller.data.value),
                 ),
               ))
         ],

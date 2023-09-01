@@ -27,7 +27,7 @@ class SpotsView extends GetView<RoBookingController> {
         Expanded(
             child: Container(
           child: controller.bookingNoLeaveData != null || controller.addSpotData != null
-              ? DataGridShowOnlyKeys(
+              ? DataGridWithShowOnlyKeys(
                   onload: (loadEvent) {
                     controller.spotViewGrid = loadEvent.stateManager;
                   },
@@ -231,7 +231,7 @@ class SpotsView extends GetView<RoBookingController> {
                                       height: 5,
                                     ),
                                     Expanded(
-                                      child: Container(color: Colors.grey[100], child: Obx(() => DataGridShowOnlyKeys(mapData: listdata.value))),
+                                      child: Container(color: Colors.grey[100], child: Obx(() => DataGridWithShowOnlyKeys(mapData: listdata.value))),
                                     ),
                                     Row(
                                       mainAxisAlignment: MainAxisAlignment.center,
