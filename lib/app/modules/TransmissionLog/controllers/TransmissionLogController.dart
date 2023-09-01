@@ -3410,7 +3410,7 @@ class TransmissionLogController extends GetxController {
             gridStateManager?.setCurrentCell(
                 currentRow.cells["no"], currentRow.sortIdx);
 
-            bool? response = await showDialogForYesNo(
+            bool? response = await showDialogForYesNo1(
                 "Secondary events scheduled with an offset exceeding duration!\nDo you want to proceed?");
             if (response == null) {
               response = false;
@@ -3599,9 +3599,8 @@ class TransmissionLogController extends GetxController {
             // gridStateManager?.setCurrentCell(dr.cells["no"], int.tryParse(dr.cells['rownumber']?.value ?? "")!);
             gridStateManager?.toggleSelectingRow(
                 int.tryParse(dr.cells['rownumber']?.value ?? "")!);
-            LoadingDialog.callInfoMessage(
-                "Ros spot outside contracted timeband!\nUnable to proceed with save");
-
+            // LoadingDialog.callInfoMessage("Ros spot outside contracted timeband!\nUnable to proceed with save");
+            callInfoDialog("Ros spot outside contracted timeband!\nUnable to proceed with save");
             completer.complete(false);
             break;
             // return false;
@@ -3674,11 +3673,12 @@ class TransmissionLogController extends GetxController {
                       // tblLog.Rows[0].Selected = true;
                       gridStateManager?.setCurrentCell(dr.cells["no"], 0);
                     }
-                    bool? isYesClick = await showDialogForYesNo(
+                    bool? isYesClick = await showDialogForYesNo1(
                         "Same Products back to back\nDo you want to proceed with Save?");
                     isYesClick = isYesClick ?? false;
                     if (!isYesClick) {
                       completer.complete(false);
+                      break;
                     }
                   }
                 }
@@ -3725,11 +3725,12 @@ class TransmissionLogController extends GetxController {
               gridStateManager?.setCurrentCell(dr.cells["no"], 0);
             }
 
-            bool? isYesClick = await showDialogForYesNo(
+            bool? isYesClick = await showDialogForYesNo1(
                 "Competing Products back to back\nDo you want to exit with Save?");
             isYesClick = isYesClick ?? false;
             if (isYesClick) {
               completer.complete(false);
+              break;
             }
           }
         } else {
@@ -3841,5 +3842,50 @@ class TransmissionLogController extends GetxController {
       },
     );*/
     return completer.future;
+  }
+
+
+  callInfoDialog(String title) {
+    initialOffset.value = 1;
+    dialogWidget = Material(
+      color: Colors.white,
+      child: Padding(
+        padding: const EdgeInsets.all(15.0),
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            Icon(
+              CupertinoIcons.question_circle_fill,
+              color: Colors.blueAccent,
+              size: 55,
+            ),
+            SizedBox(
+              height: 20,
+            ),
+            Text(
+              title,
+              style: TextStyle(
+                  color: Colors.blueAccent, fontSize: SizeDefine.popupTxtSize),
+              textAlign: TextAlign.center,
+            ),
+            SizedBox(
+              height: 20,
+            ),
+            Row(
+              children: [
+                FormButton(
+                  btnText: "OK",
+                  callback: () {
+                    dialogWidget = null;
+                    canDialogShow.value = false;
+                  },
+                ),
+              ],
+            )
+          ],
+        ),
+      ),
+    );
+    canDialogShow.value = true;
   }
 }
