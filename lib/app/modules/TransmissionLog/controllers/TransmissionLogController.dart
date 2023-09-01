@@ -2094,7 +2094,9 @@ class TransmissionLogController extends GetxController {
               } else {
                 LoadingDialog.callInfoMessage(map.toString());
               }
-            });
+            },failed: (data){
+          LoadingDialog.callInfoMessage(data.toString());
+        });
       }
     }, deleteCancel: "No", deleteTitle: "Yes");
   }
@@ -2387,7 +2389,9 @@ class TransmissionLogController extends GetxController {
                 } else {
                   LoadingDialog.callInfoMessage(map.toString());
                 }
-              });
+              },failed: (data){
+            LoadingDialog.callInfoMessage(data.toString());
+          });
         });
       } else {
         LoadingDialog.call();
