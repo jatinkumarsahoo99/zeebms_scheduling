@@ -26,7 +26,8 @@ class SchedulePromoView extends StatelessWidget {
 
   late PlutoGridStateManager stateManager;
   var formName = 'Scheduling Promo';
-  final controller = Get.put<SchedulePromoController>(SchedulePromoController());
+  final controller =
+      Get.put<SchedulePromoController>(SchedulePromoController());
 
   void handleOnRowChecked(PlutoGridOnRowCheckedEvent event) {}
   //PromosController controller = Get.put(PromosController());
@@ -63,27 +64,35 @@ class SchedulePromoView extends StatelessWidget {
                                 crossAxisAlignment: CrossAxisAlignment.start,
                                 children: [
                                   Padding(
-                                    padding: const EdgeInsets.fromLTRB(0, 5, 0, 5),
+                                    padding:
+                                        const EdgeInsets.fromLTRB(0, 5, 0, 5),
                                     child: Row(
                                       children: [
                                         Obx(
-                                          () => DropDownField.formDropDown1WidthMap(
+                                          () => DropDownField
+                                              .formDropDown1WidthMap(
                                             controller.locations.value,
-                                            (value) => controller.getChannel(value),
+                                            (value) =>
+                                                controller.getChannel(value),
                                             "Location",
                                             0.15,
                                             selected: controller.selectLocation,
-                                            isEnable: controller.controllsEnabled.value,
+                                            isEnable: controller
+                                                .controllsEnabled.value,
                                             autoFocus: true,
-                                            inkWellFocusNode: controller.locationFN,
+                                            inkWellFocusNode:
+                                                controller.locationFN,
                                           ),
                                         ),
                                         const SizedBox(width: 15),
                                         Obx(
-                                          () => DropDownField.formDropDown1WidthMap(
+                                          () => DropDownField
+                                              .formDropDown1WidthMap(
                                             controller.channels.value,
-                                            (value) => controller.selectChannel = value,
-                                            isEnable: controller.controllsEnabled.value,
+                                            (value) => controller
+                                                .selectChannel = value,
+                                            isEnable: controller
+                                                .controllsEnabled.value,
                                             "Channel",
                                             0.15,
                                             dialogHeight: Get.height * .7,
@@ -95,36 +104,47 @@ class SchedulePromoView extends StatelessWidget {
                                           () => DateWithThreeTextField(
                                             title: "From Date",
                                             widthRation: .10,
-                                            isEnable: controller.controllsEnabled.value,
-                                            mainTextController: controller.fromdateTC,
+                                            isEnable: controller
+                                                .controllsEnabled.value,
+                                            mainTextController:
+                                                controller.fromdateTC,
                                           ),
                                         ),
                                         Padding(
-                                          padding: const EdgeInsets.only(left: 10, top: 17.0),
+                                          padding: const EdgeInsets.only(
+                                              left: 10, top: 17.0),
                                           child: FormButton(
                                             btnText: "Show Details",
                                             callback: () {
-                                              if (controller.selectLocation != null && controller.selectChannel != null) {
+                                              if (controller.selectLocation !=
+                                                      null &&
+                                                  controller.selectChannel !=
+                                                      null) {
                                                 controller.showDetails();
                                               } else {
-                                                LoadingDialog.showErrorDialog("Please select Location and Channel.");
+                                                LoadingDialog.showErrorDialog(
+                                                    "Please select Location and Channel.");
                                               }
                                             },
                                           ),
                                         ),
                                         const SizedBox(width: 10),
                                         Padding(
-                                          padding: const EdgeInsets.only(top: 17.0),
+                                          padding:
+                                              const EdgeInsets.only(top: 17.0),
                                           child: Obx(() {
                                             return FormButton(
                                               btnText: "Import",
-                                              isEnabled: controller.dailyFpc.value.isNotEmpty,
-                                              callback: controller.handleImportTap,
+                                              isEnabled: controller
+                                                  .dailyFpc.value.isNotEmpty,
+                                              callback:
+                                                  controller.handleImportTap,
                                             );
                                           }),
                                         ),
                                         Padding(
-                                          padding: const EdgeInsets.only(left: 10, top: 17.0),
+                                          padding: const EdgeInsets.only(
+                                              left: 10, top: 17.0),
                                           child: FormButton(
                                             btnText: "Delete",
                                             callback: controller.handleDelete,
@@ -136,28 +156,67 @@ class SchedulePromoView extends StatelessWidget {
                                   Expanded(
                                     child: Obx(() {
                                       return Container(
-                                        decoration: controller.dailyFpc.value.isEmpty ? BoxDecoration(border: Border.all(color: Colors.grey)) : null,
+                                        decoration:
+                                            controller.dailyFpc.value.isEmpty
+                                                ? BoxDecoration(
+                                                    border: Border.all(
+                                                        color: Colors.grey))
+                                                : null,
                                         child: controller.dailyFpc.value.isEmpty
                                             ? null
-                                            : DataGridWithShowOnlyKeys(
-                                                mapData: controller.dailyFpc.value.map((e) => e.toJson()).toList(),
-                                                onRowDoubleTap: (row) => controller.handleDoubleTapInLeft1stTable(row.rowIdx, row.cell.column.field),
+                                            : DataGridShowOnlyKeys(
+                                                mapData: controller
+                                                    .dailyFpc.value
+                                                    .map((e) => e.toJson())
+                                                    .toList(),
+                                                onRowDoubleTap: (row) => controller
+                                                    .handleDoubleTapInLeft1stTable(
+                                                        row.rowIdx,
+                                                        row.cell.column.field),
                                                 onload: (event) {
-                                                  controller.fpcStateManager = event.stateManager;
-                                                  event.stateManager.setSelectingMode(PlutoGridSelectingMode.cell);
-                                                  event.stateManager.setSelecting(true);
-                                                  if (controller.fpcSelectedCol.isNotEmpty) {
+                                                  controller.fpcStateManager =
+                                                      event.stateManager;
+                                                  event.stateManager
+                                                      .setSelectingMode(
+                                                          PlutoGridSelectingMode
+                                                              .cell);
+                                                  event.stateManager
+                                                      .setSelecting(true);
+                                                  if (controller.fpcSelectedCol
+                                                      .isNotEmpty) {
                                                     event.stateManager.setCurrentCell(
-                                                        event.stateManager.getRowByIdx(controller.fpcSelectedIdx)?.cells[controller.fpcSelectedCol],
-                                                        controller.fpcSelectedIdx);
-                                                    event.stateManager.moveScrollByRow(PlutoMoveDirection.down, controller.fpcSelectedIdx);
+                                                        event.stateManager
+                                                                .getRowByIdx(
+                                                                    controller
+                                                                        .fpcSelectedIdx)
+                                                                ?.cells[
+                                                            controller
+                                                                .fpcSelectedCol],
+                                                        controller
+                                                            .fpcSelectedIdx);
+                                                    event.stateManager
+                                                        .moveScrollByRow(
+                                                            PlutoMoveDirection
+                                                                .down,
+                                                            controller
+                                                                .fpcSelectedIdx);
                                                   }
                                                 },
-                                                mode: PlutoGridMode.selectWithOneTap,
-                                                colorCallback: (row) => controller.dailyFpc[row.rowIdx].exceed ? Colors.red : Colors.white,
+                                                mode: PlutoGridMode
+                                                    .selectWithOneTap,
+                                                colorCallback: (row) =>
+                                                    controller
+                                                            .dailyFpc[
+                                                                row.rowIdx]
+                                                            .exceed
+                                                        ? Colors.red
+                                                        : Colors.white,
                                                 onSelected: (row) => {
-                                                  controller.fpcSelectedIdx = row.rowIdx ?? 0,
-                                                  controller.fpcSelectedCol = row.cell?.column.field ?? ""
+                                                  controller.fpcSelectedIdx =
+                                                      row.rowIdx ?? 0,
+                                                  controller.fpcSelectedCol =
+                                                      row.cell?.column.field ??
+                                                          ""
                                                 },
                                               ),
                                       );
@@ -167,55 +226,128 @@ class SchedulePromoView extends StatelessWidget {
                                   Expanded(
                                     child: Obx(() {
                                       return Container(
-                                        decoration:
-                                            controller.promoScheduled.value.isEmpty ? BoxDecoration(border: Border.all(color: Colors.grey)) : null,
-                                        child: controller.promoScheduled.value.isEmpty
+                                        decoration: controller
+                                                .promoScheduled.value.isEmpty
+                                            ? BoxDecoration(
+                                                border: Border.all(
+                                                    color: Colors.grey))
+                                            : null,
+                                        child: controller
+                                                .promoScheduled.value.isEmpty
                                             ? null
-                                            : DataGridWithShowOnlyKeys(
-                                                mapData: controller.promoScheduled.value.map((e) => e.toJson()).toList(),
-                                                mode: PlutoGridMode.selectWithOneTap,
-                                                colorCallback: (row) =>
-                                                    (row.row.cells.containsValue(controller.scheduledPromoStateManager?.currentCell))
-                                                        ? Colors.deepPurple.shade200
-                                                        : Colors.white,
+                                            : DataGridShowOnlyKeys(
+                                                mapData: controller
+                                                    .promoScheduled.value
+                                                    .map((e) => e.toJson())
+                                                    .toList(),
+                                                mode: PlutoGridMode
+                                                    .selectWithOneTap,
+                                                colorCallback: (row) => (row
+                                                        .row.cells
+                                                        .containsValue(controller
+                                                            .scheduledPromoStateManager
+                                                            ?.currentCell))
+                                                    ? Colors.deepPurple.shade200
+                                                    : Colors.white,
                                                 onload: (event) {
-                                                  controller.scheduledPromoStateManager = event.stateManager;
-                                                  event.stateManager.setSelectingMode(PlutoGridSelectingMode.row);
-                                                  event.stateManager.setSelecting(true);
+                                                  controller
+                                                          .scheduledPromoStateManager =
+                                                      event.stateManager;
+                                                  event.stateManager
+                                                      .setSelectingMode(
+                                                          PlutoGridSelectingMode
+                                                              .row);
+                                                  event.stateManager
+                                                      .setSelecting(true);
                                                   event.stateManager.setCurrentCell(
-                                                      event.stateManager.getRowByIdx(controller.schedulePromoSelectedIdx)?.cells['promoPolicyName'],
-                                                      controller.schedulePromoSelectedIdx);
+                                                      event.stateManager
+                                                              .getRowByIdx(
+                                                                  controller
+                                                                      .schedulePromoSelectedIdx)
+                                                              ?.cells[
+                                                          'promoPolicyName'],
+                                                      controller
+                                                          .schedulePromoSelectedIdx);
                                                   // event.stateManager.moveCurrentCell(PlutoMoveDirection.down, force: true, notify: true);
-                                                  event.stateManager.moveCurrentCellByRowIdx(
-                                                      controller.schedulePromoSelectedIdx, PlutoMoveDirection.down,
-                                                      notify: true);
-                                                  controller.scheduledPromoStateManager!.gridFocusNode.onKeyEvent = (node, event) {
+                                                  event.stateManager
+                                                      .moveCurrentCellByRowIdx(
+                                                          controller
+                                                              .schedulePromoSelectedIdx,
+                                                          PlutoMoveDirection
+                                                              .down,
+                                                          notify: true);
+                                                  controller
+                                                      .scheduledPromoStateManager!
+                                                      .gridFocusNode
+                                                      .onKeyEvent = (node, event) {
                                                     print("Key Pressed");
-                                                    if (event is KeyDownEvent && event.logicalKey == LogicalKeyboardKey.delete) {
+                                                    if (event is KeyDownEvent &&
+                                                        event.logicalKey ==
+                                                            LogicalKeyboardKey
+                                                                .delete) {
                                                       print("Delete Pressed");
-                                                      if (controller.scheduledPromoStateManager?.currentCell != null) {
-                                                        PromoScheduled promo =
-                                                            controller.promoScheduled[controller.scheduledPromoStateManager!.currentRowIdx!];
-                                                        if ((promo.promoCode ?? "").isEmpty) {
-                                                          LoadingDialog.callErrorMessage1(msg: "You cannot delete segment now. Select Promo Row");
+                                                      if (controller
+                                                              .scheduledPromoStateManager
+                                                              ?.currentCell !=
+                                                          null) {
+                                                        PromoScheduled promo = controller
+                                                                .promoScheduled[
+                                                            controller
+                                                                .scheduledPromoStateManager!
+                                                                .currentRowIdx!];
+                                                        if ((promo.promoCode ??
+                                                                "")
+                                                            .isEmpty) {
+                                                          LoadingDialog
+                                                              .callErrorMessage1(
+                                                                  msg:
+                                                                      "You cannot delete segment now. Select Promo Row");
                                                         } else {
-                                                          controller.promoData?.promoScheduled?.removeWhere((element) =>
-                                                              element.programCode == promo.programCode &&
-                                                              element.telecastTime?.toLowerCase() == promo.telecastTime?.toLowerCase() &&
-                                                              element.rowNo == promo.rowNo);
-                                                          controller.promoScheduled.removeAt(controller.scheduledPromoStateManager!.currentRowIdx!);
-                                                          if (controller.schedulePromoSelectedIdx != 0) {
-                                                            controller.schedulePromoSelectedIdx = controller.schedulePromoSelectedIdx - 1;
+                                                          controller.promoData
+                                                              ?.promoScheduled
+                                                              ?.removeWhere((element) =>
+                                                                  element.programCode ==
+                                                                      promo
+                                                                          .programCode &&
+                                                                  element.telecastTime
+                                                                          ?.toLowerCase() ==
+                                                                      promo
+                                                                          .telecastTime
+                                                                          ?.toLowerCase() &&
+                                                                  element.rowNo ==
+                                                                      promo
+                                                                          .rowNo);
+                                                          controller
+                                                              .promoScheduled
+                                                              .removeAt(controller
+                                                                  .scheduledPromoStateManager!
+                                                                  .currentRowIdx!);
+                                                          if (controller
+                                                                  .schedulePromoSelectedIdx !=
+                                                              0) {
+                                                            controller
+                                                                    .schedulePromoSelectedIdx =
+                                                                controller
+                                                                        .schedulePromoSelectedIdx -
+                                                                    1;
                                                           }
 
-                                                          controller.calcaulateExceed(controller.fpcSelectedIdx, focusBackGrid: true);
+                                                          controller
+                                                              .calcaulateExceed(
+                                                                  controller
+                                                                      .fpcSelectedIdx,
+                                                                  focusBackGrid:
+                                                                      true);
                                                         }
                                                       }
                                                     }
-                                                    return KeyEventResult.skipRemainingHandlers;
+                                                    return KeyEventResult
+                                                        .skipRemainingHandlers;
                                                   };
                                                 },
-                                                onSelected: (row) => controller.schedulePromoSelectedIdx = row.rowIdx ?? 0,
+                                                onSelected: (row) => controller
+                                                        .schedulePromoSelectedIdx =
+                                                    row.rowIdx ?? 0,
                                               ),
                                       );
                                     }),
@@ -224,7 +356,8 @@ class SchedulePromoView extends StatelessWidget {
                                     padding: EdgeInsets.fromLTRB(0, 10, 0, 0),
                                     child: Obx(
                                       () {
-                                        return Text("Time Band : ${controller.timeBand.value}");
+                                        return Text(
+                                            "Time Band : ${controller.timeBand.value}");
                                       },
                                     ),
                                   ),
@@ -233,12 +366,14 @@ class SchedulePromoView extends StatelessWidget {
                                     children: [
                                       Obx(
                                         () {
-                                          return Text("Program : ${controller.programName.value}");
+                                          return Text(
+                                              "Program : ${controller.programName.value}");
                                         },
                                       ),
                                       const Spacer(),
                                       Padding(
-                                        padding: const EdgeInsets.only(top: 5.0),
+                                        padding:
+                                            const EdgeInsets.only(top: 5.0),
                                         child: InputFields.formField1Width(
                                           widthRatio: 0.09,
                                           paddingLeft: 5,
@@ -250,7 +385,8 @@ class SchedulePromoView extends StatelessWidget {
                                         ),
                                       ),
                                       Padding(
-                                        padding: const EdgeInsets.only(top: 5.0),
+                                        padding:
+                                            const EdgeInsets.only(top: 5.0),
                                         child: InputFields.formField1Width(
                                           widthRatio: 0.09,
                                           disabledTextColor: Colors.black,
@@ -262,7 +398,8 @@ class SchedulePromoView extends StatelessWidget {
                                         ),
                                       ),
                                       Padding(
-                                        padding: const EdgeInsets.only(top: 5.0),
+                                        padding:
+                                            const EdgeInsets.only(top: 5.0),
                                         child: InputFields.formField1Width(
                                           widthRatio: 0.09,
                                           paddingLeft: 5,
@@ -291,12 +428,14 @@ class SchedulePromoView extends StatelessWidget {
                                       Expanded(
                                         flex: 1,
                                         child: Padding(
-                                          padding: const EdgeInsets.only(top: 5.0),
+                                          padding:
+                                              const EdgeInsets.only(top: 5.0),
                                           child: InputFields.formField1Width(
                                             widthRatio: .15,
                                             paddingLeft: 5,
                                             hintTxt: "Promo Caption",
-                                            controller: controller.promoCaptionTC,
+                                            controller:
+                                                controller.promoCaptionTC,
                                             maxLen: 10,
                                           ),
                                         ),
@@ -304,12 +443,15 @@ class SchedulePromoView extends StatelessWidget {
                                       Expanded(
                                         flex: 1,
                                         child: Padding(
-                                          padding: const EdgeInsets.only(top: 5.0),
+                                          padding:
+                                              const EdgeInsets.only(top: 5.0),
                                           child: Obx(() {
                                             return InputFields.formFieldDisable(
-                                              widthRatio: (Get.width * 0.2) / 2 + 7,
+                                              widthRatio:
+                                                  (Get.width * 0.2) / 2 + 7,
                                               hintTxt: "",
-                                              value: controller.rightCount.value,
+                                              value:
+                                                  controller.rightCount.value,
                                             );
                                           }),
                                         ),
@@ -320,9 +462,11 @@ class SchedulePromoView extends StatelessWidget {
                                     children: [
                                       Expanded(
                                         child: Padding(
-                                          padding: const EdgeInsets.only(top: 5.0),
+                                          padding:
+                                              const EdgeInsets.only(top: 5.0),
                                           child: InputFields.formField1Width(
-                                            widthRatio: (Get.width * 0.2) / 2 + 7,
+                                            widthRatio:
+                                                (Get.width * 0.2) / 2 + 7,
                                             paddingLeft: 5,
                                             hintTxt: "Promo Id",
                                             controller: controller.promoIDTC,
@@ -333,36 +477,42 @@ class SchedulePromoView extends StatelessWidget {
                                     ],
                                   ),
                                   Row(
-                                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                    mainAxisAlignment:
+                                        MainAxisAlignment.spaceBetween,
                                     children: [
                                       Padding(
-                                        padding: const EdgeInsets.only(bottom: 8.0, top: 8.0),
+                                        padding: const EdgeInsets.only(
+                                            bottom: 8.0, top: 8.0),
                                         child: Row(children: [
                                           CheckBoxWidget1(
                                             title: "My",
                                             value: controller.myEnabled.value,
                                             onChanged: (val) {
-                                              controller.myEnabled.value = val ?? false;
+                                              controller.myEnabled.value =
+                                                  val ?? false;
                                             },
                                           ),
                                         ]),
                                       ),
                                       Padding(
-                                        padding: const EdgeInsets.only(left: 10, bottom: 5.0, top: 5.0),
+                                        padding: const EdgeInsets.only(
+                                            left: 10, bottom: 5.0, top: 5.0),
                                         child: FormButton(
                                           btnText: "Search",
                                           callback: controller.handleSearchTap,
                                         ),
                                       ),
                                       Padding(
-                                        padding: const EdgeInsets.only(left: 10, bottom: 5.0, top: 5.0),
+                                        padding: const EdgeInsets.only(
+                                            left: 10, bottom: 5.0, top: 5.0),
                                         child: FormButton(
                                           btnText: "Add",
                                           callback: controller.handleAddTap,
                                         ),
                                       ),
                                       Padding(
-                                        padding: const EdgeInsets.only(left: 10, bottom: 5.0, top: 5.0),
+                                        padding: const EdgeInsets.only(
+                                            left: 10, bottom: 5.0, top: 5.0),
                                         child: FormButton(
                                           btnText: "Auto Add",
                                           callback: () {},
@@ -373,35 +523,65 @@ class SchedulePromoView extends StatelessWidget {
                                   Expanded(
                                     child: Obx(() {
                                       return Container(
-                                        decoration:
-                                            controller.searchPromos.value.isEmpty ? BoxDecoration(border: Border.all(color: Colors.grey)) : null,
-                                        child: controller.searchPromos.value.isEmpty
+                                        decoration: controller
+                                                .searchPromos.value.isEmpty
+                                            ? BoxDecoration(
+                                                border: Border.all(
+                                                    color: Colors.grey))
+                                            : null,
+                                        child: controller
+                                                .searchPromos.value.isEmpty
                                             ? null
-                                            : DataGridWithShowOnlyKeys(
-                                                mapData: controller.searchPromos.value,
-                                                onRowDoubleTap: (row) {
-                                                  controller.handleOnSelectRightTable(row.rowIdx, row.cell.column.field);
-                                                  controller.handleDoubleTapInRightTable(row.rowIdx, row.cell.column.field);
-                                                },
+                                            : DataGridShowOnlyKeys(
+                                                mapData: controller
+                                                    .searchPromos.value,
+                                                onRowDoubleTap: (row) => controller
+                                                    .handleDoubleTapInRightTable(
+                                                        row.rowIdx,
+                                                        row.cell.column.field),
                                                 onload: (event) {
-                                                  controller.searchedPromoStateManager = event.stateManager;
-                                                  event.stateManager.setSelectingMode(PlutoGridSelectingMode.cell);
-                                                  event.stateManager.setSelecting(true);
-                                                  if (controller.searchPromoSelectedCol.isNotEmpty) {
-                                                    controller.searchedPromoStateManager?.setCurrentCell(
-                                                        controller.searchedPromoStateManager
-                                                            ?.getRowByIdx(controller.searchPromoSelectedIdx)
-                                                            ?.cells[controller.schedulePromoSelectedCol],
-                                                        controller.searchPromoSelectedIdx);
+                                                  controller
+                                                          .searchedPromoStateManager =
+                                                      event.stateManager;
+                                                  event.stateManager
+                                                      .setSelectingMode(
+                                                          PlutoGridSelectingMode
+                                                              .cell);
+                                                  event.stateManager
+                                                      .setSelecting(true);
+                                                  if (controller
+                                                      .searchPromoSelectedCol
+                                                      .isNotEmpty) {
+                                                    controller
+                                                        .searchedPromoStateManager
+                                                        ?.setCurrentCell(
+                                                            controller
+                                                                    .searchedPromoStateManager
+                                                                    ?.getRowByIdx(
+                                                                        controller
+                                                                            .searchPromoSelectedIdx)
+                                                                    ?.cells[
+                                                                controller
+                                                                    .schedulePromoSelectedCol],
+                                                            controller
+                                                                .searchPromoSelectedIdx);
                                                   }
                                                 },
-                                                colorCallback: (row) =>
-                                                    (row.row.cells.containsValue(controller.searchedPromoStateManager?.currentCell))
-                                                        ? Colors.deepPurple.shade200
-                                                        : Colors.white,
-                                                mode: PlutoGridMode.selectWithOneTap,
-                                                // onSelected: (row) =>
-                                                //     controller.handleOnSelectRightTable(row.rowIdx ?? 0, row.cell?.column.field ?? "caption"),
+                                                colorCallback: (row) => (row
+                                                        .row.cells
+                                                        .containsValue(controller
+                                                            .searchedPromoStateManager
+                                                            ?.currentCell))
+                                                    ? Colors.deepPurple.shade200
+                                                    : Colors.white,
+                                                mode: PlutoGridMode
+                                                    .selectWithOneTap,
+                                                onSelected: (row) => controller
+                                                    .handleOnSelectRightTable(
+                                                        row.rowIdx ?? 0,
+                                                        row.cell?.column
+                                                                .field ??
+                                                            "caption"),
                                               ),
                                       );
                                     }),
@@ -417,8 +597,12 @@ class SchedulePromoView extends StatelessWidget {
                         id: "buttons",
                         init: Get.find<HomeController>(),
                         builder: (btcontroller) {
-                          PermissionModel formPermissions = Get.find<MainController>().permissionList!.lastWhere((element) {
-                            return element.appFormName == Routes.SCHEDULE_PROMO.replaceAll("/", "");
+                          PermissionModel formPermissions =
+                              Get.find<MainController>()
+                                  .permissionList!
+                                  .lastWhere((element) {
+                            return element.appFormName ==
+                                Routes.SCHEDULE_PROMO.replaceAll("/", "");
                           });
                           if (btcontroller.buttons != null) {
                             return Container(
@@ -433,7 +617,11 @@ class SchedulePromoView extends StatelessWidget {
                                     //if (Utils.btnAccessHandler(btn['name'], controller.formPermissions!) != null)
                                     FormButtonWrapper(
                                       btnText: btn["name"],
-                                      callback: Utils.btnAccessHandler2(btn['name'], btcontroller, formPermissions) == null
+                                      callback: Utils.btnAccessHandler2(
+                                                  btn['name'],
+                                                  btcontroller,
+                                                  formPermissions) ==
+                                              null
                                           ? null
                                           : () => formHandler(
                                                 btn['name'],

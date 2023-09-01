@@ -93,7 +93,7 @@ class FinalAuditReportBeforeLogView extends GetView<FinalAuditReportBeforeLogCon
                       : null,
                   child: controller.dataTBList.isEmpty
                       ? null
-                      : DataGridWithShowOnlyKeys(
+                      : DataGridShowOnlyKeys(
                           mapData: controller.dataTBList.value,
                           formatDate: false,
                           exportFileName: "Final Audit Report (Before Telecast)",
@@ -105,7 +105,7 @@ class FinalAuditReportBeforeLogView extends GetView<FinalAuditReportBeforeLogCon
 
           /// bottom common buttons
           Padding(
-            padding: const EdgeInsets.only(top: 10, left: 10),
+            padding: const EdgeInsets.only(top: 10,left: 10),
             child: GetBuilder<HomeController>(
                 id: "buttons",
                 init: Get.find<HomeController>(),
