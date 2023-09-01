@@ -292,12 +292,21 @@ class ComingUpNextMenuView extends StatelessWidget {
                         id: "buttons",
                         init: Get.find<HomeController>(),
                         builder: (controller) {
-                          PermissionModel formPermissions = Get
+                          int indexData = Get
                               .find<MainController>()
                               .permissionList!
-                              .lastWhere((element) =>
+                              .lastIndexWhere((element) =>
                           element.appFormName == "frmComingUpNextMaster");
-                          if (controller.buttons != null) {
+                          /*PermissionModel formPermissions = Get
+                              .find<MainController>()
+                              .permissionList!
+                              .lastIndexWhere((element) =>
+                          element.appFormName == "frmComingUpNextMaster");*/
+                          // print(">>>>>>>>jks"+formPermissions.toString());
+                          if ( indexData != -1 && controller.buttons != null) {
+                            PermissionModel formPermissions = Get
+                                .find<MainController>()
+                                .permissionList![indexData];
                             return Wrap(
                               spacing: 5,
                               runSpacing: 15,

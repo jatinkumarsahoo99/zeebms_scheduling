@@ -35,7 +35,7 @@ class _RadioRowState extends State<RadioRow> {
     return List.generate(
         widget.items.length,
         (index) => Padding(
-              padding: EdgeInsets.only(left: index == 0 ? 0 : 5),
+              padding: EdgeInsets.only(left:(widget.isVertical ?? false)? 0:(index == 0) ? 0 : 5),
               child: Row(
                 children: [
                   Radio<String>(
