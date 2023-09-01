@@ -57,7 +57,7 @@ class MakeGoodSpotsView extends StatelessWidget {
               Expanded(
                   child: Container(
                 child: Obx(() => controller.bookingNoLeaveData != null || controller.makeGoodData.value.isNotEmpty
-                    ? DataGridShowOnlyKeys(
+                    ? DataGridWithShowOnlyKeys(
                         onload: (loadevent) {
                           controller.makeGoodGrid = loadevent.stateManager;
                         },
