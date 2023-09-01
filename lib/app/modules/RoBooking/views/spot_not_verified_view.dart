@@ -59,7 +59,7 @@ class SpotNotVerifiedView extends GetView<RoBookingController> {
               Expanded(
                   child: Container(
                 child: Obx(() => controller.spotsNotVerified.value.isNotEmpty
-                    ? DataGridWithShowOnlyKeys(
+                    ? DataGridShowOnlyKeys(
                         mapData: controller.spotsNotVerified.value.map((e) => e.toJson()).toList(),
                         formatDate: false,
                         onRowDoubleTap: (rowEvent) {
