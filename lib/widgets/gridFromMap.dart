@@ -115,7 +115,11 @@ class DataGridFromMap extends StatelessWidget {
           enableRowDrag: false,
           enableDropToResize: true,
           enableContextMenu: false,
-          width: 40,
+          minWidth: 0,
+          width: (witdthSpecificColumn != null &&
+                  witdthSpecificColumn!.keys.toList().contains('no'))
+              ? witdthSpecificColumn!['no']!
+              : Utils.getColumnSize(key: 'no', value: mapData[0][key]),
           enableAutoEditing: false,
           hide: hideCode! &&
               key.toString().toLowerCase() != "hourcode" &&
@@ -256,10 +260,10 @@ class DataGridFromMap extends StatelessWidget {
               enableEditingMode: editKeys != null && editKeys!.contains(key),
               enableDropToResize: true,
               enableContextMenu: false,
-              width: Utils.getColumnSize(
-                key: key,
-                value: mapData[0][key].toString(),
-              ),
+              width: (witdthSpecificColumn != null &&
+                      witdthSpecificColumn!.keys.toList().contains(key))
+                  ? witdthSpecificColumn![key]!
+                  : Utils.getColumnSize(key: key, value: mapData[0][key]),
               enableAutoEditing: false,
               hide: showonly == null
                   ? (hideKeys != null && hideKeys!.contains(key)) ||
@@ -504,11 +508,11 @@ class DataGridFromMap extends StatelessWidget {
             ),
             rowColorCallback: colorCallback,
             onLoaded: (load) {
-              // load.stateManager.setColumnSizeConfig(PlutoGridColumnSizeConfig(
-              //     autoSizeMode: columnAutoResize
-              //         ? PlutoAutoSizeMode.none
-              //         : PlutoAutoSizeMode.scale,
-              //     resizeMode: PlutoResizeMode.normal));
+              load.stateManager.setColumnSizeConfig(PlutoGridColumnSizeConfig(
+                  autoSizeMode: columnAutoResize
+                      ? PlutoAutoSizeMode.none
+                      : PlutoAutoSizeMode.scale,
+                  resizeMode: PlutoResizeMode.normal));
               load.stateManager.setKeepFocus(false);
               if (onload != null) {
                 onload!(load);

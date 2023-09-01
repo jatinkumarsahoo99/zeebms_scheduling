@@ -7,6 +7,7 @@ import 'package:flutter/services.dart';
 import 'package:get/get.dart';
 import '../../widgets/PlutoGrid/src/manager/pluto_grid_state_manager.dart';
 import '../data/DrawerModel.dart';
+import '../data/user_data_settings_model.dart';
 import '../providers/Aes.dart';
 import '../providers/ApiFactory.dart';
 import '../routes/app_pages.dart';
@@ -38,7 +39,8 @@ class HomeController extends GetxController {
   }
 
   getTransmissionLog() async {
-    String value = await rootBundle.loadString('assets/json/transmission_buttons.json');
+    String value =
+        await rootBundle.loadString('assets/json/transmission_buttons.json');
     tranmissionButtons = json.decode(value)["transmissionLog"];
     asurunImportButtoons = json.decode(value)["assrunImport"];
     update(["transButtons"]);
@@ -47,26 +49,36 @@ class HomeController extends GetxController {
   clearPage1() {
     try {
       print(html.window.location.href);
-      String extractName = (html.window.location.href.split("?")[0]).split(ApiFactory.SPLIT_CLEAR_PAGE)[1];
+      String extractName = (html.window.location.href.split("?")[0])
+          .split(ApiFactory.SPLIT_CLEAR_PAGE)[1];
       print("Extract name>>>>" + extractName);
-      var uri = Uri.dataFromString(html.window.location.href); //converts string to a uri
+      var uri = Uri.dataFromString(
+          html.window.location.href); //converts string to a uri
       Map<String, String> params = uri.queryParameters;
       print("Params are>>>>" + params.toString());
       if (RoutesList.listRoutes.contains("/" + extractName)) {
         if (extractName == "frmDailyFPC") {
           html.window.location.reload();
         } else {
-          String personalNo = Aes.encrypt(Get.find<MainController>().user?.personnelNo ?? "") ?? "";
-          String loginCode = (Aes.encrypt(Get.find<MainController>().user?.logincode ?? "") ?? "");
-          String formName = (Aes.encrypt(Get.find<MainController>().formName) ?? "");
-          Get.offAndToNamed("/" + extractName, parameters: {"loginCode": loginCode, "personalNo": personalNo, "formName": formName});
+          String personalNo =
+              Aes.encrypt(Get.find<MainController>().user?.personnelNo ?? "") ??
+                  "";
+          String loginCode =
+              (Aes.encrypt(Get.find<MainController>().user?.logincode ?? "") ??
+                  "");
+          String formName =
+              (Aes.encrypt(Get.find<MainController>().formName) ?? "");
+          Get.offAndToNamed("/" + extractName, parameters: {
+            "loginCode": loginCode,
+            "personalNo": personalNo,
+            "formName": formName
+          });
         }
       }
     } catch (e) {
       print(e.toString());
     }
   }
-
 
   void postUserGridSetting(
       {required List<PlutoGridStateManager> listStateManager,List<String>? tableNamesList}) {
@@ -124,6 +136,51 @@ class HomeController extends GetxController {
             // return null;
           }
         });
+    return completer.future;
+  }
+
+  void postUserGridSetting2(
+      {required List<Map<String, PlutoGridStateManager?>> listStateManager}) {
+    if (listStateManager.isEmpty) return;
+    var data = <Map<String, dynamic>>[];
+
+    for (var element in listStateManager) {
+      element.forEach(
+        (key, value) {
+          if (value != null) {
+            Map<String, double> singleMap = {};
+            for (var element in value.columns) {
+              singleMap[element.field] = element.width;
+            }
+            data.add(
+              UserSetting(
+                formName:
+                    Get.find<MainController>().formName.replaceAll(" ", ""),
+                controlName: key,
+                userSettings: singleMap,
+              ).toJson(),
+            );
+          }
+        },
+      );
+    }
+    Get.find<ConnectorControl>().POSTMETHOD(
+      api: ApiFactory.USER_SETTINGS,
+      json: {"lstUserSettings": data},
+      fun: (map) {},
+    );
+  }
+
+  Future<UserDataSettings> fetchUserSetting2() {
+    Completer<UserDataSettings> completer = Completer();
+    Get.find<ConnectorControl>().GETMETHODCALL(
+      api:
+          "${ApiFactory.FETCH_USER_SETTING}?formName=${Get.find<MainController>().formName.replaceAll(" ", "")}",
+      fun: (map) {
+        var userSettings = UserDataSettings.fromJson(map);
+        return completer.complete(userSettings);
+      },
+    );
     return completer.future;
   }
 }

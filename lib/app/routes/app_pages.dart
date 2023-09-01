@@ -101,7 +101,7 @@ class AppPages {
     GetPage(
       name: _Paths.COMMERCIAL,
       page: () => AuthGuard1(childName: _Paths.COMMERCIAL),
-      binding: CommercialBinding(),
+      // binding: CommercialBinding(),
     ),
     GetPage(
       name: _Paths.RO_BOOKING,
