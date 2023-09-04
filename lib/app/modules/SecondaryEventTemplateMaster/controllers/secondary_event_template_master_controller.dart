@@ -19,12 +19,16 @@ class SecondaryEventTemplateMasterController extends GetxController {
   RxList<DropDownValue> channels = RxList<DropDownValue>();
   RxList<DropDownValue> events = RxList<DropDownValue>();
   List<SecondaryTemplateEventColors> colors = [];
+  var durationCtr = TextEditingController(text: '00:00:00:00');
+  var controllsEnable = true.obs;
 
   DropDownValue? selectedLocation, selectedChannel;
   var selectedProgram = Rxn<DropDownValue>();
   DropDownValue? selectedEvent;
   RxBool mine = RxBool(false);
-  FocusNode txIdFocusNode = FocusNode(), locFocusNode = FocusNode();
+  FocusNode txIdFocusNode = FocusNode(),
+      locFocusNode = FocusNode(),
+      programFocusNode = FocusNode();
   RxBool enableFields = RxBool(true);
   List<SecondaryEventTemplateMasterProgram> gridPrograms = [];
   SecondaryEventTemplateMasterProgram? copiedProgram;
@@ -136,18 +140,25 @@ class SecondaryEventTemplateMasterController extends GetxController {
   }
 
   getProgramLeave() {
+    LoadingDialog.call();
     Get.find<ConnectorControl>().GETMETHODCALL(
         api: ApiFactory.SecondaryEventTemplateMasterGetProgramLeave(
             selectedLocation?.key,
             selectedChannel?.key,
             selectedProgram.value?.key),
         fun: (data) {
+          Get.back();
           if (data is Map && data.containsKey("getprogram")) {
             gridPrograms = [];
             for (var program in data["getprogram"]) {
               gridPrograms
                   .add(SecondaryEventTemplateMasterProgram.fromJson(program));
             }
+            programFocusNode.nextFocus();
+            Future.delayed(Duration(milliseconds: 100)).then((value) {
+              programFocusNode.requestFocus();
+            });
+            enableFields.value = false;
             update(["gridData"]);
           }
         });
@@ -167,6 +178,7 @@ class SecondaryEventTemplateMasterController extends GetxController {
             "caption": txCaption.text
           },
           fun: (data) {
+            Get.back();
             if (data is Map && data.containsKey("insertSearch")) {
               searchPrograms = [];
               for (var element in data["insertSearch"]) {
@@ -177,9 +189,9 @@ class SecondaryEventTemplateMasterController extends GetxController {
             }
           });
     } catch (e) {
+      Get.back();
       printError(info: "Failed to search");
     }
-    Get.back();
   }
 
   save() {
@@ -199,15 +211,5 @@ class SecondaryEventTemplateMasterController extends GetxController {
             LoadingDialog.callErrorMessage1(msg: data);
           }
         });
-  }
-
-  @override
-  void onReady() {
-    super.onReady();
-  }
-
-  @override
-  void onClose() {
-    super.onClose();
   }
 }
