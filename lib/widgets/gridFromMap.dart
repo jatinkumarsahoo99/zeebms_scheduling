@@ -573,6 +573,8 @@ class DataGridFromMap3 extends StatelessWidget {
     this.checkBoxColumnNoEditKey,
     this.showSecondaryDialog = true,
     this.secondaryExtraDialogList,
+    this.logicalKeyboardKey,
+    this.keyBoardButtonPressed,
   }) : super(key: key);
   final List<SecondaryShowDialogModel>? secondaryExtraDialogList;
   final bool showSecondaryDialog;
@@ -604,6 +606,8 @@ class DataGridFromMap3 extends StatelessWidget {
   final List<String?>? actionIconKey;
   final bool columnAutoResize;
   final List<String>? editKeys;
+  final void Function()? keyBoardButtonPressed;
+  final LogicalKeyboardKey? logicalKeyboardKey;
   final Function(PlutoGridCellPosition position, bool isSpaceCalled)?
       actionOnPress;
   final bool doPasccal;
@@ -862,6 +866,8 @@ class DataGridFromMap3 extends StatelessWidget {
               actionOnPress: actionOnPress,
               actionKey: actionIconKey ?? [],
               previousWidgetFN: previousWidgetFN,
+              actionOnPressKeyboard: keyBoardButtonPressed,
+              logicalKeyboardKey: logicalKeyboardKey,
               rowHeight: 25,
             ).copyWith(style: gridStyle),
             rowColorCallback: colorCallback,

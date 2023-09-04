@@ -18,9 +18,11 @@ import 'package:bms_scheduling/widgets/gridFromMap.dart';
 import 'package:bms_scheduling/widgets/input_fields.dart';
 import 'package:flutter/material.dart';
 import 'package:bms_scheduling/app/providers/DataGridMenu.dart';
+import 'package:flutter/services.dart';
 import 'package:get/get.dart';
 
 import '../../../../widgets/PlutoGrid/src/manager/pluto_grid_state_manager.dart';
+import '../../../../widgets/PlutoGrid/src/model/pluto_row.dart';
 import '../controllers/secondary_event_template_master_controller.dart';
 
 class SecondaryEventTemplateMasterView extends StatelessWidget {
@@ -142,6 +144,53 @@ class SecondaryEventTemplateMasterView extends StatelessWidget {
                                   ? null
                                   : DataGridFromMap3(
                                       hideCode: false,
+                                      // focusNode: controller.programFN
+                                      //   ..onKeyEvent = (node, event) {
+                                      //     if (event.logicalKey ==
+                                      //             LogicalKeyboardKey.delete &&
+                                      //         controller
+                                      //             .gridPrograms.isNotEmpty &&
+                                      //         controller.programGrid != null) {
+                                      //       print("Heyy");
+                                      //       for (var element in (controller
+                                      //               .programGrid
+                                      //               ?.currentSelectingRows ??
+                                      //           <PlutoRow>[])) {
+                                      //         controller
+                                      //             .gridPrograms[element.sortIdx]
+                                      //             .offSet = -1;
+                                      //       }
+                                      //       controller.gridPrograms.removeWhere(
+                                      //           (element) =>
+                                      //               element.offSet == -1);
+                                      //       controller.programGrid?.removeRows(
+                                      //           controller.programGrid
+                                      //                   ?.currentSelectingRows ??
+                                      //               []);
+                                      //       return KeyEventResult.handled;
+                                      //     }
+                                      //     return KeyEventResult.ignored;
+                                      //   },
+                                      keyBoardButtonPressed: () {
+                                        if (controller
+                                                .gridPrograms.isNotEmpty &&
+                                            controller.programGrid != null) {
+                                          for (var element in (controller
+                                                  .programGrid
+                                                  ?.currentSelectingRows ??
+                                              <PlutoRow>[])) {
+                                            controller
+                                                .gridPrograms[element.sortIdx]
+                                                .offSet = -1;
+                                          }
+                                          controller.gridPrograms.removeWhere(
+                                              (element) =>
+                                                  element.offSet == -1);
+                                          controller.update(['gridData']);
+                                        }
+                                      },
+                                      logicalKeyboardKey:
+                                          LogicalKeyboardKey.delete,
                                       mapData: controller.gridPrograms
                                           .map((e) => e.toJson(fromSave: false))
                                           .toList(),
@@ -619,12 +668,19 @@ class SecondaryEventTemplateMasterView extends StatelessWidget {
                                       FormButtonWrapper(
                                         btnText: "Add",
                                         callback: () {
-                                          if (controller
-                                                  .searchGrid?.currentRowIdx !=
-                                              null) {
-                                            var checkboxes =
-                                                controller.checkBoxes.value;
-
+                                          if (controller.searchGrid == null) {
+                                            return;
+                                          }
+                                          var checkboxes =
+                                              controller.checkBoxes.value;
+                                          if (controller.searchGrid
+                                                      ?.currentSelectingRows ==
+                                                  null ||
+                                              (controller
+                                                      .searchGrid
+                                                      ?.currentSelectingRows
+                                                      .isEmpty ??
+                                                  true)) {
                                             controller.gridPrograms.insert(
                                                 controller.programGrid
                                                         ?.currentRowIdx ??
@@ -649,9 +705,46 @@ class SecondaryEventTemplateMasterView extends StatelessWidget {
                                                         checkboxes[
                                                                 "Post Event"] ??
                                                             false));
-                                            controller.calculateRowNo();
-                                            controller.update(["gridData"]);
+                                          } else {
+                                            for (var element in (controller
+                                                    .searchGrid
+                                                    ?.currentSelectingRows ??
+                                                <PlutoRow>[])) {
+                                              controller.gridPrograms.insert(
+                                                  controller.programGrid
+                                                          ?.currentRowIdx ??
+                                                      controller
+                                                          .gridPrograms.length,
+                                                  SecondaryEventTemplateMasterProgram
+                                                      .convertSecondaryEventTemplateProgramGridDataToMasterProgram(
+                                                          controller.searchPrograms[
+                                                              element.sortIdx],
+                                                          checkboxes[
+                                                                  "First Segment"] ??
+                                                              false,
+                                                          checkboxes[
+                                                                  "Last Segment"] ??
+                                                              false,
+                                                          checkboxes[
+                                                                  "All Segments"] ??
+                                                              false,
+                                                          checkboxes[
+                                                                  "Pre Event"] ??
+                                                              false,
+                                                          checkboxes[
+                                                                  "Post Event"] ??
+                                                              false));
+                                            }
                                           }
+                                          // if (controller
+                                          //         .searchGrid?.currentRowIdx !=
+                                          //     null) {
+
+                                          //   controller.calculateRowNo();
+                                          //   controller.update(["gridData"]);
+                                          // }
+                                          controller.calculateRowNo();
+                                          controller.update(["gridData"]);
                                         },
                                       ),
                                     ],
@@ -723,7 +816,7 @@ class SecondaryEventTemplateMasterView extends StatelessWidget {
                                                   checkboxes["Post Event"] ??
                                                       false));
 
-                                      controller.calculateRowNo();
+                                      // controller.calculateRowNo();
                                       controller.update(["gridData"]);
                                     },
                                     hideCode: false,

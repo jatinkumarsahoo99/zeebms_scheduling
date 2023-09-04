@@ -21,6 +21,7 @@ class SecondaryEventTemplateMasterController extends GetxController {
   List<SecondaryTemplateEventColors> colors = [];
   var durationCtr = TextEditingController(text: '00:00:00:00');
   var controllsEnable = true.obs;
+  var programFN = FocusNode();
 
   DropDownValue? selectedLocation, selectedChannel;
   var selectedProgram = Rxn<DropDownValue>();
