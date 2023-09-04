@@ -26,7 +26,8 @@ class CheckBoxWidget1 extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Padding(
-      padding: EdgeInsets.symmetric(horizontal: horizontalPadding ?? 5, vertical: verticalPadding ?? 0),
+      padding: EdgeInsets.symmetric(
+          horizontal: horizontalPadding ?? 5, vertical: verticalPadding ?? 0),
       child: Row(
         mainAxisSize: MainAxisSize.min,
         children: [
@@ -34,13 +35,15 @@ class CheckBoxWidget1 extends StatelessWidget {
             return Checkbox(
               value: value,
               focusNode: fn,
-              onChanged: (newVal) {
-                value = (newVal ?? false);
-                re(() {});
-                if (onChanged != null) {
-                  onChanged!(value);
-                }
-              },
+              onChanged: isEnable
+                  ? (newVal) {
+                      value = (newVal ?? false);
+                      re(() {});
+                      if (onChanged != null) {
+                        onChanged!(value);
+                      }
+                    }
+                  : null,
             );
           }),
           if (showIcon) ...{
