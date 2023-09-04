@@ -24,7 +24,7 @@ class SecondaryEventTemplateMasterController extends GetxController {
   var selectedProgram = Rxn<DropDownValue>();
   DropDownValue? selectedEvent;
   RxBool mine = RxBool(false);
-  FocusNode txIdFocusNode = FocusNode();
+  FocusNode txIdFocusNode = FocusNode(), locFocusNode = FocusNode();
   RxBool enableFields = RxBool(true);
   List<SecondaryEventTemplateMasterProgram> gridPrograms = [];
   SecondaryEventTemplateMasterProgram? copiedProgram;
@@ -94,9 +94,11 @@ class SecondaryEventTemplateMasterController extends GetxController {
   }
 
   getChannel(locCode) {
+    LoadingDialog.call();
     Get.find<ConnectorControl>().GETMETHODCALL(
         api: ApiFactory.SecondaryEventTemplateMasterGetChannel(locCode),
         fun: (data) {
+          Get.back();
           if (data is Map && data.containsKey("channel")) {
             for (var e in data["channel"]) {
               channels.add(DropDownValue(

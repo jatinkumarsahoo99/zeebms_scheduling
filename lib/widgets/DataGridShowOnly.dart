@@ -356,8 +356,7 @@ class DataGridShowOnlyKeys extends StatelessWidget {
       );
     } else {
       return Container(
-        decoration:
-            BoxDecoration(border: Border.all(color: Colors.grey.shade100)),
+        decoration: BoxDecoration(border: Border.all(color: Colors.grey)),
       );
     }
   }
