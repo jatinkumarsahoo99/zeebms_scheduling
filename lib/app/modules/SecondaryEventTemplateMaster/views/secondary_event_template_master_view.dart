@@ -518,20 +518,44 @@ class SecondaryEventTemplateMasterView extends StatelessWidget {
                                     .map((e) => Obx(() => Row(
                                           mainAxisSize: MainAxisSize.min,
                                           children: [
-                                            Checkbox(
-                                                value: controller
-                                                    .checkBoxes[e.key],
-                                                onChanged: (value) {
-                                                  controller.checkBoxes[e.key] =
-                                                      value ?? false;
-                                                  controller.checkBoxes
-                                                      .refresh();
-                                                }),
-                                            Text(e.key,
-                                                style: TextStyle(
-                                                    fontSize:
-                                                        SizeDefine.labelSize1 +
-                                                            1))
+                                            CheckBoxWidget1(
+                                              title: e.key,
+                                              isEnable: ((e.key ==
+                                                              "First Segment" ||
+                                                          e.key ==
+                                                              "Last Segment") &&
+                                                      (controller.checkBoxes[
+                                                              'All Segments']
+                                                          as bool))
+                                                  ? false
+                                                  : true,
+                                              value: controller
+                                                  .checkBoxes[e.key] as bool,
+                                              onChanged: (value) {
+                                                controller.checkBoxes[e.key] =
+                                                    value ?? false;
+                                                if (e.key == "All Segments") {
+                                                  if (controller
+                                                          .checkBoxes[e.key]
+                                                      as bool) {
+                                                    controller.checkBoxes[
+                                                        "First Segment"] = true;
+                                                    controller.checkBoxes[
+                                                        "Last Segment"] = true;
+                                                  } else {
+                                                    controller.checkBoxes[
+                                                            "First Segment"] =
+                                                        false;
+                                                    controller.checkBoxes[
+                                                        "Last Segment"] = false;
+                                                  }
+                                                }
+                                                controller.checkBoxes.refresh();
+                                              },
+                                            ),
+                                            // if (e.key == 'All Segments') ...{
+                                            //   const Spacer(),
+                                            // }
                                           ],
                                         )))
                                     .toList(),
