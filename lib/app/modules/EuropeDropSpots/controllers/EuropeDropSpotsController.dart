@@ -27,7 +27,7 @@ class EuropeDropSpotsController extends GetxController {
     2: Text("Delete Russia Commercial"),
   };
   double widthSize = 0.12;
-  double widthSize1 = 0.17;
+  double widthSize1 = 0.19;
 
   RxList<DropDownValue> locationList = RxList([]);
   RxList<DropDownValue> loc = RxList([]);
@@ -61,6 +61,13 @@ class EuropeDropSpotsController extends GetxController {
   FocusNode channelFocus = FocusNode();
   FocusNode clientFocus = FocusNode();
   FocusNode agencyFocus = FocusNode();
+
+  FocusNode locationFocus2 = FocusNode();
+  FocusNode channelFocus2 = FocusNode();
+
+  FocusNode locationFocus3 = FocusNode();
+  FocusNode channelFocus3 = FocusNode();
+  FocusNode selectFileFocus = FocusNode();
 
   @override
   void onInit() {
@@ -164,6 +171,7 @@ class EuropeDropSpotsController extends GetxController {
   }
 
   getRunDate1() {
+    LoadingDialog.call();
     Get.find<ConnectorControl>().GETMETHODCALL(
         api: ApiFactory.EUROPE_DROP_SPOTS_GETRUNDATE(
             selectLocation_removeorder?.key ?? "",
@@ -172,6 +180,7 @@ class EuropeDropSpotsController extends GetxController {
                     selectedRemoveDate.text, "dd-MM-yyyy", "yyyy-MM-dd") +
                 "T00:00:00"),
         fun: (Map map) {
+          Get.back();
           fileList.clear();
           map["clientdtails"].forEach((e) {
             fileList.add(DropDownValue.fromJsonDynamic(
@@ -293,4 +302,23 @@ class EuropeDropSpotsController extends GetxController {
       }
     }
   }
+
+
+  selectAllBtn(bool status){
+    if(status){
+      stateManager?.setFilter((element) => true);
+      stateManager?.toggleAllRowChecked(true,notify: true);
+      selectAll.value = status??false;
+      selectAll.refresh();
+      stateManager?.notifyListeners();
+    }else{
+      stateManager?.setFilter((element) => true);
+      stateManager?.toggleAllRowChecked(false,notify: true);
+      selectAll.value = status??false;
+      selectAll.refresh();
+      stateManager?.notifyListeners();
+
+    }
+  }
+
 }
