@@ -636,7 +636,7 @@ class DataGridFromMap3 extends StatelessWidget {
           enableRowDrag: false,
           enableDropToResize: true,
           enableContextMenu: false,
-          width: 25,
+          width: 35,
           cellPadding: const EdgeInsets.all(0),
           enableAutoEditing: false,
           renderer: ((rendererContext) {
@@ -646,7 +646,8 @@ class DataGridFromMap3 extends StatelessWidget {
                   ? (detail) {
                       DataGridMenu().showGridMenu(
                           rendererContext.stateManager, detail, context,
-                          exportFileName: exportFileName);
+                          exportFileName: exportFileName,
+                          extraList: secondaryExtraDialogList);
                     }
                   : null,
               child: Container(
@@ -715,7 +716,6 @@ class DataGridFromMap3 extends StatelessWidget {
                 checkBoxColumnKey!.isNotEmpty &&
                 checkBoxColumnKey!.contains(key)) {
               return GestureDetector(
-                // canRequestFocus: false,
                 onSecondaryTapDown: showSecondaryDialog
                     ? (detail) {
                         DataGridMenu().showGridMenu(
@@ -724,34 +724,34 @@ class DataGridFromMap3 extends StatelessWidget {
                             extraList: secondaryExtraDialogList);
                       }
                     : null,
-                onTap: !(checkBoxColumnNoEditKey?.contains(key) ?? false)
-                    ? () {
-                        if (showTitleInCheckBox != null &&
-                            showTitleInCheckBox!.isNotEmpty) {
-                          var temp = mapData[rendererContext.rowIdx][key];
-                          temp['key'] = (temp['key'] == checkBoxStrComparison)
-                              ? uncheckCheckBoxStr
-                              : checkBoxStrComparison;
-                          rendererContext.stateManager.changeCellValue(
-                            rendererContext.cell,
-                            temp,
-                            force: true,
-                            callOnChangedEvent: true,
-                            notify: true,
-                          );
-                        } else {
-                          rendererContext.stateManager.changeCellValue(
-                            rendererContext.cell,
-                            rendererContext.cell.value == checkBoxStrComparison
-                                ? uncheckCheckBoxStr
-                                : checkBoxStrComparison,
-                            force: true,
-                            callOnChangedEvent: true,
-                            notify: true,
-                          );
-                        }
-                      }
-                    : null,
+                onTap: () {
+                  if (!(checkBoxColumnNoEditKey?.contains(key) ?? false)) {
+                    if (showTitleInCheckBox != null &&
+                        showTitleInCheckBox!.isNotEmpty) {
+                      var temp = mapData[rendererContext.rowIdx][key];
+                      temp['key'] = (temp['key'] == checkBoxStrComparison)
+                          ? uncheckCheckBoxStr
+                          : checkBoxStrComparison;
+                      rendererContext.stateManager.changeCellValue(
+                        rendererContext.cell,
+                        temp,
+                        force: true,
+                        callOnChangedEvent: true,
+                        notify: true,
+                      );
+                    } else {
+                      rendererContext.stateManager.changeCellValue(
+                        rendererContext.cell,
+                        rendererContext.cell.value == checkBoxStrComparison
+                            ? uncheckCheckBoxStr
+                            : checkBoxStrComparison,
+                        force: true,
+                        callOnChangedEvent: true,
+                        notify: true,
+                      );
+                    }
+                  }
+                },
                 child: Row(
                   mainAxisSize: MainAxisSize.max,
                   children: [
@@ -785,7 +785,7 @@ class DataGridFromMap3 extends StatelessWidget {
                         ),
                         maxLines: 1,
                       ),
-                    }
+                    },
                   ],
                 ),
               );

@@ -71,22 +71,39 @@ class SecondaryEventTemplateMasterProgram {
     offSet = null;
   }
 
-  Map<String, dynamic> toJson() {
+  Map<String, dynamic> toJson({bool fromSave = true}) {
     final Map<String, dynamic> data = <String, dynamic>{};
-    data['firstSegment'] = firstSegment;
-    data['lastSegment'] = lastSegment;
-    data['allSegments'] = allSegments;
-    data['preEvent'] = preEvent;
-    data['postEvent'] = postEvent;
-    data['eventType'] = eventType;
-    data['exportTapeCaption'] = exportTapeCaption;
-    data['exportTapeCode'] = exportTapeCode;
-    data['segmentNumber'] = segmentNumber ?? 0;
-    data['tapeDuration'] = tapeDuration;
-    data['som'] = som;
-    data['rowNumber'] = rowNumber;
-    data['eventCode'] = eventCode;
-    data['offSet'] = offSet ?? 0;
+    if (fromSave) {
+      data['firstSegment'] = firstSegment;
+      data['lastSegment'] = lastSegment;
+      data['allSegments'] = allSegments;
+      data['preEvent'] = preEvent;
+      data['postEvent'] = postEvent;
+      data['eventType'] = eventType;
+      data['exportTapeCaption'] = exportTapeCaption;
+      data['exportTapeCode'] = exportTapeCode;
+      data['segmentNumber'] = segmentNumber ?? 0;
+      data['tapeDuration'] = tapeDuration;
+      data['som'] = som;
+      data['rowNumber'] = rowNumber;
+      data['eventCode'] = eventCode;
+      data['offSet'] = offSet ?? 0;
+    } else {
+      data['firstSegment'] = (firstSegment ?? false).toString();
+      data['lastSegment'] = (lastSegment ?? false).toString();
+      data['allSegments'] = (allSegments ?? false).toString();
+      data['preEvent'] = (preEvent ?? false).toString();
+      data['postEvent'] = (postEvent ?? false).toString();
+      data['eventType'] = eventType;
+      data['exportTapeCaption'] = exportTapeCaption;
+      data['exportTapeCode'] = exportTapeCode;
+      data['segmentNumber'] = segmentNumber ?? 0;
+      data['tapeDuration'] = tapeDuration;
+      data['som'] = som;
+      data['rowNumber'] = rowNumber;
+      data['eventCode'] = eventCode;
+      data['offSet'] = offSet ?? 0;
+    }
     return data;
   }
 }
