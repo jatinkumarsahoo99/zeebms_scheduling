@@ -1389,8 +1389,9 @@ class SearchController extends GetxController {
         log(varainace.toString());
         log(value);
         print(value.toString());
-        completer.complete("");
         update(["initialData"]);
+        completer.complete("");
+
         // try {
         //   for (var element in value) {
         //     filters.add(SearchFilter.fromJson(element));
@@ -1408,8 +1409,9 @@ class SearchController extends GetxController {
         print(value.toString());
         grid = SearchBindGrid.fromJson(value);
         await updateGrid();
-        completer.complete("");
         update(["initialData"]);
+        completer.complete("");
+
         // List<PlutoColumn> columns = [];
         // for (Variances variance in grid!.variances!) {
         //   Map row = variance.toJson();
@@ -1443,7 +1445,7 @@ class SearchController extends GetxController {
         // }
       },
     );
-
+    update(["initialData"]);
     return completer.future;
   }
 
