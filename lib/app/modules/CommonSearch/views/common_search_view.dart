@@ -98,7 +98,7 @@ class SearchPage extends StatelessWidget {
                                 await controller
                                     .getVaraince(int.parse(value.key!));
                               },
-                              "Variance",
+                              "Select Variance",
                               0.3,
                               searchReq: true,
                               autoFocus: true,
