@@ -10,14 +10,15 @@ import '../../../../widgets/gridFromMap.dart';
 import '../../../controller/HomeController.dart';
 import '../../../controller/MainController.dart';
 import '../../../data/PermissionModel.dart';
+import '../../../data/user_data_settings_model.dart';
 import '../../../providers/Utils.dart';
 import '../controllers/date_wise_filler_report_controller.dart';
 
 class DateWiseFillerReportView extends StatelessWidget {
-   DateWiseFillerReportView({Key? key}) : super(key: key);
+  DateWiseFillerReportView({Key? key}) : super(key: key);
 
-   DateWiseFillerReportController controllerX =
-   Get.put<DateWiseFillerReportController>(DateWiseFillerReportController());
+  DateWiseFillerReportController controllerX =
+      Get.put<DateWiseFillerReportController>(DateWiseFillerReportController());
 
   @override
   Widget build(BuildContext context) {
@@ -35,29 +36,39 @@ class DateWiseFillerReportView extends StatelessWidget {
               Row(
                 mainAxisAlignment: MainAxisAlignment.start,
                 children: [
-                Obx(()=>DropDownField.formDropDown1WidthMap(
-                 controllerX.locationList.value??[],
+                  Obx(
+                    () => DropDownField.formDropDown1WidthMap(
+                      controllerX.locationList.value ?? [],
                       (value) {
                         controllerX.selectedLocation = value;
-                  }, "Location", .17,
-                  isEnable: controllerX.isEnable,
-                  selected: controllerX.selectedLocation,
-                  dialogHeight: Get.height * .4,
-                  inkWellFocusNode: controllerX.locationFocus,
-                  autoFocus: true,),)  ,
+                      },
+                      "Location",
+                      .17,
+                      isEnable: controllerX.isEnable,
+                      selected: controllerX.selectedLocation,
+                      dialogHeight: Get.height * .4,
+                      inkWellFocusNode: controllerX.locationFocus,
+                      autoFocus: true,
+                    ),
+                  ),
                   SizedBox(
                     width: 8,
                   ),
-                  Obx(()=>DropDownField.formDropDown1WidthMap(
-                    controllerX.channelList.value??[],
-                        (value) {
-                      controllerX.selectedChannel = value;
-                    }, "Channel", .17,
-                    isEnable: controllerX.isEnable,
-                    selected: controllerX.selectedChannel,
-                    dialogHeight: Get.height * .4,
-                    inkWellFocusNode: controllerX.channelFocus,
-                    autoFocus: true,),)  ,
+                  Obx(
+                    () => DropDownField.formDropDown1WidthMap(
+                      controllerX.channelList.value ?? [],
+                      (value) {
+                        controllerX.selectedChannel = value;
+                      },
+                      "Channel",
+                      .17,
+                      isEnable: controllerX.isEnable,
+                      selected: controllerX.selectedChannel,
+                      dialogHeight: Get.height * .4,
+                      inkWellFocusNode: controllerX.channelFocus,
+                      autoFocus: true,
+                    ),
+                  ),
                   SizedBox(
                     width: 8,
                   ),
@@ -72,8 +83,8 @@ class DateWiseFillerReportView extends StatelessWidget {
                     width: 8,
                   ),
                   Padding(
-                    padding: const EdgeInsets.only(
-                        top: 16.0, left: 10, right: 10),
+                    padding:
+                        const EdgeInsets.only(top: 16.0, left: 10, right: 10),
                     child: FormButtonWrapper(
                       btnText: "Genrate",
                       callback: () {
@@ -90,41 +101,52 @@ class DateWiseFillerReportView extends StatelessWidget {
               Expanded(
                 flex: 9,
                 child: GetBuilder<DateWiseFillerReportController>(
-                  id: "grid",
-                  builder: (controllerX) {
-                    return Container(
-                      decoration: BoxDecoration(
-                          border: Border.all(color: Colors.grey)),
-                      child:
-                      (controllerX.dateWiseFillerModel != null)?
-                      (controllerX.dateWiseFillerModel!.datewiseErrorSpots != null &&
-                          controllerX.dateWiseFillerModel!.datewiseErrorSpots!.isNotEmpty
-                      )?
-                      DataGridFromMap(
-                            hideCode: false,
-                            formatDate: false,
-                            focusNode: controllerX.gridFocus,
-                            exportFileName: "Date Wise Filler Report",
-                            // checkRow: true,
-                            // checkRowKey: "no",
-                            mode: PlutoGridMode.selectWithOneTap,
-                            onSelected: (PlutoGridOnSelectedEvent? val ){
-
-                            },
-
-                            onload: (PlutoGridOnLoadedEvent load) {
-
-                            },
-                            // colorCallback: (renderC) => Colors.red[200]!,
-                            mapData:controllerX.dateWiseFillerModel!.datewiseErrorSpots!.map((e) =>
-                                e.toJson()).toList() ):Container():Container()
-                    );
-                  }
-                ),
+                    id: "grid",
+                    builder: (controllerX) {
+                      return Container(
+                          decoration: BoxDecoration(
+                              border: Border.all(color: Colors.grey)),
+                          child: (controllerX.dateWiseFillerModel != null)
+                              ? (controllerX.dateWiseFillerModel!
+                                              .datewiseErrorSpots !=
+                                          null &&
+                                      controllerX.dateWiseFillerModel!
+                                          .datewiseErrorSpots!.isNotEmpty)
+                                  ? DataGridFromMap(
+                                      witdthSpecificColumn: (controllerX
+                                          .userDataSettings?.userSetting
+                                          ?.firstWhere(
+                                              (element) =>
+                                                  element.controlName ==
+                                                  "dateWiseReportGSM",
+                                              orElse: () => UserSetting())
+                                          .userSettings),
+                                      hideCode: false,
+                                      formatDate: false,
+                                      focusNode: controllerX.gridFocus,
+                                      exportFileName: "Date Wise Filler Report",
+                                      // checkRow: true,
+                                      // checkRowKey: "no",
+                                      mode: PlutoGridMode.selectWithOneTap,
+                                      onSelected:
+                                          (PlutoGridOnSelectedEvent? val) {},
+                                      onload: (PlutoGridOnLoadedEvent load) {
+                                        controllerX.dateWiseReportGSM =
+                                            load.stateManager;
+                                      },
+                                      // colorCallback: (renderC) => Colors.red[200]!,
+                                      mapData: controllerX.dateWiseFillerModel!
+                                          .datewiseErrorSpots!
+                                          .map((e) => e.toJson())
+                                          .toList())
+                                  : Container()
+                              : Container());
+                    }),
               ),
               SizedBox(
                 height: 8,
               ),
+
               /// bottom common buttons
               Align(
                 alignment: Alignment.topLeft,
@@ -132,10 +154,11 @@ class DateWiseFillerReportView extends StatelessWidget {
                     id: "buttons",
                     init: Get.find<HomeController>(),
                     builder: (controller) {
-                      PermissionModel formPermissions = Get.find<MainController>()
-                          .permissionList!
-                          .lastWhere((element) =>
-                      element.appFormName == "frmDatewiseFillerReport");
+                      PermissionModel formPermissions =
+                          Get.find<MainController>().permissionList!.lastWhere(
+                              (element) =>
+                                  element.appFormName ==
+                                  "frmDatewiseFillerReport");
                       if (controller.buttons != null) {
                         return Wrap(
                           spacing: 5,
@@ -146,12 +169,12 @@ class DateWiseFillerReportView extends StatelessWidget {
                               FormButtonWrapper(
                                 btnText: btn["name"],
                                 callback: Utils.btnAccessHandler2(btn['name'],
-                                    controller, formPermissions) ==
-                                    null
+                                            controller, formPermissions) ==
+                                        null
                                     ? null
                                     : () => controllerX.formHandler(
-                                  btn['name'],
-                                ),
+                                          btn['name'],
+                                        ),
                               )
                           ],
                         );

@@ -81,9 +81,11 @@ class HomeController extends GetxController {
   }
 
   void postUserGridSetting(
-      {required List<PlutoGridStateManager> listStateManager,List<String>? tableNamesList}) {
+      {required List<PlutoGridStateManager> listStateManager,
+      List<String>? tableNamesList}) {
     if (listStateManager == null || listStateManager.isEmpty) return;
-    if (tableNamesList!=null && (tableNamesList.length!=listStateManager.length)) return;
+    if (tableNamesList != null &&
+        (tableNamesList.length != listStateManager.length)) return;
     List data = [];
     for (int i = 0; i < listStateManager.length; i++) {
       Map<String, dynamic> singleMap = {};
@@ -92,8 +94,10 @@ class HomeController extends GetxController {
       });
       String? mapData = jsonEncode(singleMap);
       data.add({
-        "formName": Get.find<MainController>().formName.replaceAll(" ", "") ?? "",
-        "controlName": tableNamesList ==null?"${i + 1}_table":tableNamesList?[i],
+        "formName":
+            Get.find<MainController>().formName.replaceAll(" ", "") ?? "",
+        "controlName":
+            tableNamesList == null ? "${i + 1}_table" : tableNamesList?[i],
         "userSettings": mapData
       });
     }
@@ -103,10 +107,11 @@ class HomeController extends GetxController {
         fun: (map) {});
   }
 
-  Future<List<Map<String,Map<String, double>>>>? fetchUserSetting() {
-    Completer<List<Map<String,Map<String, double>>>> completer=Completer<List<Map<String,Map<String, double>>>>();
+  Future<List<Map<String, Map<String, double>>>>? fetchUserSetting() {
+    Completer<List<Map<String, Map<String, double>>>> completer =
+        Completer<List<Map<String, Map<String, double>>>>();
     // List<Map<String, double>> data=[];
-    List<Map<String,Map<String, double>>> data=[];
+    List<Map<String, Map<String, double>>> data = [];
     Get.find<ConnectorControl>().GETMETHODCALL(
         api: ApiFactory.FETCH_USER_SETTING +
             "?formName=${Get.find<MainController>().formName.replaceAll(" ", "")}",
@@ -115,8 +120,8 @@ class HomeController extends GetxController {
           if (map is Map &&
               map.containsKey("userSetting") &&
               map["userSetting"] != null) {
-            map["userSetting"].forEach((e){
-             Map<String,Map<String, double>> userGridSettingMain = {};
+            map["userSetting"].forEach((e) {
+              Map<String, Map<String, double>> userGridSettingMain = {};
               Map<String, double> userGridSetting = {};
               jsonDecode(e["userSettings"]).forEach((key, value) {
                 print("Data key is>>" +
@@ -125,13 +130,13 @@ class HomeController extends GetxController {
                     value.toString());
                 userGridSetting[key] = value;
               });
-             userGridSettingMain[e["controlName"]??""]=userGridSetting;
+              userGridSettingMain[e["controlName"] ?? ""] = userGridSetting;
               // data.add(userGridSetting);
               data.add(userGridSettingMain);
             });
             completer.complete(data);
             // return data;
-          }else{
+          } else {
             completer.complete(null);
             // return null;
           }
@@ -164,6 +169,7 @@ class HomeController extends GetxController {
         },
       );
     }
+    if (data.isEmpty) return;
     Get.find<ConnectorControl>().POSTMETHOD(
       api: ApiFactory.USER_SETTINGS,
       json: {"lstUserSettings": data},

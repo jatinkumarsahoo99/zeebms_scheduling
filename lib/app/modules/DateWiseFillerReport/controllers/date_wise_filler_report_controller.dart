@@ -10,6 +10,7 @@ import '../../../../widgets/PlutoGrid/src/manager/pluto_grid_state_manager.dart'
 import '../../../../widgets/Snack.dart';
 import '../../../controller/ConnectorControl.dart';
 import '../../../controller/HomeController.dart';
+import '../../../data/user_data_settings_model.dart';
 import '../../../providers/ApiFactory.dart';
 import '../DateWiseFillerModel.dart';
 
@@ -36,6 +37,18 @@ class DateWiseFillerReportController extends GetxController {
 
   TextEditingController dateController = new TextEditingController();
   DateWiseFillerModel? dateWiseFillerModel;
+  UserDataSettings? userDataSettings;
+  PlutoGridStateManager? dateWiseReportGSM;
+  @override
+  void onInit() {
+    super.onInit();
+    fetchUserSetting1();
+  }
+
+  fetchUserSetting1() async {
+    userDataSettings = await Get.find<HomeController>().fetchUserSetting2();
+    update(['grid']);
+  }
 
   closeDialogIfOpen() {
     if (Get.isDialogOpen ?? false) {
@@ -123,11 +136,6 @@ class DateWiseFillerReportController extends GetxController {
   }
 
   @override
-  void onInit() {
-    super.onInit();
-  }
-
-  @override
   void onReady() {
     fetchPageLoadData();
     super.onReady();
@@ -141,6 +149,10 @@ class DateWiseFillerReportController extends GetxController {
   formHandler(String string) {
     if (string == "Clear") {
       clearAll();
+    } else if (string == "Exit") {
+      Get.find<HomeController>().postUserGridSetting2(listStateManager: [
+        {"dateWiseReportGSM": dateWiseReportGSM}
+      ]);
     }
   }
 
