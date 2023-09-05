@@ -37,8 +37,8 @@ class DateWiseFillerReportController extends GetxController {
 
   TextEditingController dateController = new TextEditingController();
   DateWiseFillerModel? dateWiseFillerModel;
-  UserDataSettings? userDataSettings;
   PlutoGridStateManager? dateWiseReportGSM;
+  UserDataSettings? userDataSettings;
   @override
   void onInit() {
     super.onInit();
