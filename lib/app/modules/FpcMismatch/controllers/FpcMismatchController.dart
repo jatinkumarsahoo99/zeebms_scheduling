@@ -9,8 +9,10 @@ import 'package:bms_scheduling/widgets/PlutoGrid/pluto_grid.dart';
 import '../../../../widgets/LoadingDialog.dart';
 import '../../../../widgets/Snack.dart';
 import '../../../controller/ConnectorControl.dart';
+import '../../../controller/HomeController.dart';
 import '../../../controller/MainController.dart';
 import '../../../data/system_envirtoment.dart';
+import '../../../data/user_data_settings_model.dart';
 import '../../../providers/ApiFactory.dart';
 import '../FPCMisMatchModel.dart';
 import '../FPCMisMatchProgramModel.dart';
@@ -35,10 +37,12 @@ class FpcMismatchController extends GetxController {
   int? selectIndex = 0;
 
   double widthSize = 0.12;
-  PlutoGridStateManager? stateManager;
+  PlutoGridStateManager? stateManager, programTable;
 
   SelectButton? selectButton;
-  RxBool hideKeysAllowed=RxBool(false);
+  RxBool hideKeysAllowed = RxBool(false);
+
+  UserDataSettings? userDataSettings;
 
   @override
   void onInit() {
@@ -46,6 +50,11 @@ class FpcMismatchController extends GetxController {
     fetchLocation();
     date_.text = df1.format(now);
     super.onInit();
+    fetchUserSetting1();
+  }
+
+  fetchUserSetting1() async {
+    userDataSettings = await Get.find<HomeController>().fetchUserSetting2();
   }
 
   fetchLocation() {
@@ -264,7 +273,6 @@ class FpcMismatchController extends GetxController {
     } else if ((dataList?.isEmpty)!) {
       // Snack.callError("Spots Errors successfully.");
       Snack.callError("Table should not be blank");
-
     } else if (!(dataList?.any((element) => (element.selectItem)!))!) {
       Snack.callError("Please select row");
     } else {
@@ -347,8 +355,8 @@ class FpcMismatchController extends GetxController {
         fun: (dynamic value) {
           Get.back();
           if (value.toString().toLowerCase() == "success") {
-            LoadingDialog.callDataSavedMessage("Spots Errors Undo successfully.",
-                callback: () {
+            LoadingDialog.callDataSavedMessage(
+                "Spots Errors Undo successfully.", callback: () {
               checkDataAndFetch();
             });
           } else {

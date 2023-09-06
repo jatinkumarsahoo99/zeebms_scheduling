@@ -145,7 +145,8 @@ class HomeController extends GetxController {
   }
 
   void postUserGridSetting2(
-      {required List<Map<String, PlutoGridStateManager?>> listStateManager}) {
+      {required List<Map<String, PlutoGridStateManager?>> listStateManager,
+      String? formName}) {
     if (listStateManager.isEmpty) return;
     var data = <Map<String, dynamic>>[];
 
@@ -159,7 +160,7 @@ class HomeController extends GetxController {
             }
             data.add(
               UserSetting(
-                formName:
+                formName: (formName?.replaceAll(' ', ' ')) ??
                     Get.find<MainController>().formName.replaceAll(" ", ""),
                 controlName: key,
                 userSettings: singleMap,
@@ -177,11 +178,11 @@ class HomeController extends GetxController {
     );
   }
 
-  Future<UserDataSettings> fetchUserSetting2() {
+  Future<UserDataSettings> fetchUserSetting2({String? formName}) {
     Completer<UserDataSettings> completer = Completer();
     Get.find<ConnectorControl>().GETMETHODCALL(
       api:
-          "${ApiFactory.FETCH_USER_SETTING}?formName=${Get.find<MainController>().formName.replaceAll(" ", "")}",
+          "${ApiFactory.FETCH_USER_SETTING}?formName=${(formName?.replaceAll(" ", "")) ?? Get.find<MainController>().formName.replaceAll(" ", "")}",
       fun: (map) {
         var userSettings = UserDataSettings.fromJson(map);
         return completer.complete(userSettings);

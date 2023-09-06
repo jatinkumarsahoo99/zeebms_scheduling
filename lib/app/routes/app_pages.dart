@@ -56,7 +56,7 @@ class AppPages {
 
   static const INITIAL = kReleaseMode
       ? Routes.HOME
-      : "${Routes.D_SERIES_SPECIFICATION}?personalNo=R9vVPL7er1Os/usemWG/Iw==&loginCode=0iGe3vK5h2KGjfSKZTpmsQ==&formName=uGidZuVahrniTl5wXm82iI5koDUKijYI8Ck6oBREJWg%3D";
+      : "${Routes.IMPORT_DIGITEXT_RUN_ORDER}?personalNo=R9vVPL7er1Os/usemWG/Iw==&loginCode=0iGe3vK5h2KGjfSKZTpmsQ==&formName=Wua3ROEXP4SsedR3e%2BGuQ%2FlngX90kZ748eUfEa7ToQs%3D";
 
   static final routes = [
     GetPage(

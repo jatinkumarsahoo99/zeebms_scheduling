@@ -15,6 +15,7 @@ import '../../../../widgets/gridFromMap.dart';
 import '../../../controller/HomeController.dart';
 import '../../../controller/MainController.dart';
 import '../../../data/PermissionModel.dart';
+import '../../../data/user_data_settings_model.dart';
 import '../../../providers/Utils.dart';
 import '../controllers/FpcMismatchController.dart';
 
@@ -30,6 +31,10 @@ class FpcMismatchView extends GetView<FpcMismatchController> {
         // controllerX.clear();
         break;
       case "Exit":
+        Get.find<HomeController>().postUserGridSetting2(listStateManager: [
+          {"fpcMaster": controller.stateManager},
+          {"programTable": controller.programTable},
+        ]);
         Get.delete<FpcMismatchController>();
         break;
       case "Refresh":
@@ -330,6 +335,11 @@ class FpcMismatchView extends GetView<FpcMismatchController> {
               // height: 400,
               flex: 5,
               child: DataGridFromMap(
+                witdthSpecificColumn: (controller.userDataSettings?.userSetting
+                    ?.firstWhere(
+                        (element) => element.controlName == "fpcMaster",
+                        orElse: () => UserSetting())
+                    .userSettings),
                 showSrNo: true,
                 mapData:
                     (controllerX.dataList?.map((e) => e.toJson1()).toList())!,
@@ -359,13 +369,16 @@ class FpcMismatchView extends GetView<FpcMismatchController> {
                     case SelectButton.DisplayError:
                       return Colors.red;
                     case SelectButton.DisplayAll:
-                      if (plutoContext.row.cells["bookingstatus"]?.value != null &&
+                      if (plutoContext.row.cells["bookingstatus"]?.value !=
+                              null &&
                           plutoContext.row.cells["bookingstatus"]?.value
                                   .toString()
                                   .toLowerCase() ==
                               "e") {
                         return Colors.red;
-                      } else if (plutoContext.row.cells["bookingstatus"]?.value != null &&
+                      } else if (plutoContext
+                                  .row.cells["bookingstatus"]?.value !=
+                              null &&
                           plutoContext.row.cells["bookingstatus"]?.value
                                   .toString()
                                   .toLowerCase() ==
@@ -428,7 +441,15 @@ class FpcMismatchView extends GetView<FpcMismatchController> {
               // height: 400,
               flex: 2,
               child: DataGridFromMap(
+                witdthSpecificColumn: (controller.userDataSettings?.userSetting
+                    ?.firstWhere(
+                        (element) => element.controlName == "programTable",
+                        orElse: () => UserSetting())
+                    .userSettings),
                 showSrNo: true,
+                onload: (sm) {
+                  controllerX.programTable = sm.stateManager;
+                },
                 mapData: (controllerX.programList
                     ?.map((e) => e.toJson1())
                     .toList())!,
