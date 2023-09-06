@@ -12,6 +12,7 @@ import 'package:flutter/services.dart';
 
 import 'package:get/get.dart';
 
+import '../../../data/user_data_settings_model.dart';
 import '../../RoBooking/views/dummydata.dart';
 import '../controllers/mam_work_orders_controller.dart';
 
@@ -47,7 +48,8 @@ class ReleaseWoNonFpcView extends GetView {
               ),
               Expanded(
                 child: Padding(
-                  padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
+                  padding:
+                      const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
                   child: Text(
                       controller.nonFPCWOReleaseTXID
                           ? "Work order will be released for single episodes and not for range. Please ensure segment entry is done in order to get time code update."
@@ -101,7 +103,8 @@ class ReleaseWoNonFpcView extends GetView {
                   context,
                   title: "RMS Program",
                   url: ApiFactory.MAM_WORK_ORDER_NON_FPC_RMS_SEARCH,
-                  onchanged: (val) => controller.nonFPCSelectedRMSProgram.value = val,
+                  onchanged: (val) =>
+                      controller.nonFPCSelectedRMSProgram.value = val,
                   width: Get.width * .3,
                   customInData: "cboProgramsList",
                   parseKeyForKey: "programcode",
@@ -152,7 +155,9 @@ class ReleaseWoNonFpcView extends GetView {
                   children: [
                     StatefulBuilder(builder: (context, re) {
                       return CheckBoxWidget1(
-                        title: controller.nonFPCQualityHD ? "Quality HD" : "Quality SD",
+                        title: controller.nonFPCQualityHD
+                            ? "Quality HD"
+                            : "Quality SD",
                         value: controller.nonFPCQualityHD,
                         onChanged: (val) {
                           controller.nonFPCQualityHD = val ?? false;
@@ -168,12 +173,18 @@ class ReleaseWoNonFpcView extends GetView {
                       },
                     ),
                     InputFields.formField1(
-                        hintTxt: "TX Id", isEnable: controller.nonFPCWOReleaseTXID, controller: controller.nonFPCTxID, width: 0.14),
+                        hintTxt: "TX Id",
+                        isEnable: controller.nonFPCWOReleaseTXID,
+                        controller: controller.nonFPCTxID,
+                        width: 0.14),
                   ],
                 ),
               ),
               DateWithThreeTextField(
-                  title: "Tel Date", widthRation: 0.148, mainTextController: controller.nonFPCTelDate, isEnable: controller.nonFPCWOReleaseTXID),
+                  title: "Tel Date",
+                  widthRation: 0.148,
+                  mainTextController: controller.nonFPCTelDate,
+                  isEnable: controller.nonFPCWOReleaseTXID),
               TimeWithThreeTextField(
                 mainTextController: controller.nonFPCTelTime,
                 title: "Tel Time",
@@ -193,10 +204,19 @@ class ReleaseWoNonFpcView extends GetView {
             () {
               return controller.nonFPCDataTableList.value.isEmpty
                   ? Container(
-                      decoration: BoxDecoration(border: Border.all(color: Colors.grey)),
+                      decoration:
+                          BoxDecoration(border: Border.all(color: Colors.grey)),
                     )
                   : DataGridFromMap3(
-                      mapData: controller.nonFPCDataTableList.value.map((e) => e.toJson()).toList(),
+                      witdthSpecificColumn: (controller
+                          .userDataSettings?.userSetting
+                          ?.firstWhere(
+                              (element) => element.controlName == "woNonFPCSM",
+                              orElse: () => UserSetting())
+                          .userSettings),
+                      mapData: controller.nonFPCDataTableList.value
+                          .map((e) => e.toJson())
+                          .toList(),
                       formatDate: false,
                       checkBoxColumnKey: const [
                         "segmented",
@@ -213,8 +233,10 @@ class ReleaseWoNonFpcView extends GetView {
                         "requireApproval",
                         "release",
                       ],
+                      onload: (sm) => controller.woNonFPCSM = sm.stateManager,
                       enableColumnDoubleTap: ["release"],
-                      onColumnHeaderDoubleTap: controller.handleColumTapNonFPCWO,
+                      onColumnHeaderDoubleTap:
+                          controller.handleColumTapNonFPCWO,
                     );
             },
           ),
