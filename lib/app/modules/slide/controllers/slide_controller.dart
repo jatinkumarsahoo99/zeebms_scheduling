@@ -22,7 +22,7 @@ class SlideController extends GetxController {
   var dataTableList = <SlideModel>[].obs;
   int lastSelectedIdx = 0;
   PlutoGridStateManager? stateManager;
-  @override
+
   @override
   void onReady() {
     super.onReady();
