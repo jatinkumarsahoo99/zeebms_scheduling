@@ -8,6 +8,8 @@ import 'package:intl/intl.dart';
 
 import '../../../../widgets/LoadingDialog.dart';
 import '../../../controller/ConnectorControl.dart';
+import '../../../controller/HomeController.dart';
+import '../../../data/user_data_settings_model.dart';
 import '../../../providers/ApiFactory.dart';
 import '../model/slide_model.dart';
 
@@ -21,9 +23,18 @@ class SlideController extends GetxController {
   int lastSelectedIdx = 0;
   PlutoGridStateManager? stateManager;
   @override
+  @override
   void onReady() {
     super.onReady();
     getLocation();
+    fetchUserSetting1();
+  }
+
+  UserDataSettings? userDataSettings;
+
+  fetchUserSetting1() async {
+    userDataSettings = await Get.find<HomeController>().fetchUserSetting2();
+    dataTableList.refresh();
   }
 
   clearPage() {
@@ -183,6 +194,10 @@ class SlideController extends GetxController {
       clearPage();
     } else if (btn == "Save") {
       save();
+    } else if (btn == "Exit") {
+      Get.find<HomeController>().postUserGridSetting2(listStateManager: [
+        {"stateManager": stateManager},
+      ]);
     }
   }
 

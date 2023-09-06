@@ -9,6 +9,7 @@ import '../../../../widgets/PlutoGrid/src/pluto_grid.dart';
 import '../../../../widgets/dropdown.dart';
 import '../../../../widgets/gridFromMap.dart';
 import '../../../controller/HomeController.dart';
+import '../../../data/user_data_settings_model.dart';
 import '../controllers/slide_controller.dart';
 
 class SlideView extends GetView<SlideController> {
@@ -93,6 +94,13 @@ class SlideView extends GetView<SlideController> {
               child: controller.dataTableList.isEmpty
                   ? null
                   : DataGridFromMap3(
+                      witdthSpecificColumn: (controller
+                          .userDataSettings?.userSetting
+                          ?.firstWhere(
+                              (element) =>
+                                  element.controlName == "stateManager",
+                              orElse: () => UserSetting())
+                          .userSettings),
                       enableSort: true,
                       showSecondaryDialog: false,
                       mapData: controller.dataTableList.value
