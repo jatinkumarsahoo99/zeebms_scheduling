@@ -90,7 +90,9 @@ class SchedulePromoController extends GetxController {
 
   fetchUserSetting1() async {
     userDataSettings = await Get.find<HomeController>().fetchUserSetting2();
-    update(['fpcMaster', 'programTable']);
+    dailyFpc.refresh();
+    promoScheduled.refresh();
+    searchPromos.refresh();
   }
 
   void getChannel(DropDownValue? val) {
