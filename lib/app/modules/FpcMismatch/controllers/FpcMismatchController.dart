@@ -42,19 +42,25 @@ class FpcMismatchController extends GetxController {
   SelectButton? selectButton;
   RxBool hideKeysAllowed = RxBool(false);
 
-  UserDataSettings? userDataSettings;
-
   @override
   void onInit() {
     // fetchChannel();
     fetchLocation();
     date_.text = df1.format(now);
     super.onInit();
+  }
+
+  UserDataSettings? userDataSettings;
+
+  @override
+  void onReady() {
+    super.onReady();
     fetchUserSetting1();
   }
 
   fetchUserSetting1() async {
     userDataSettings = await Get.find<HomeController>().fetchUserSetting2();
+    update(['fpcMaster', 'programTable']);
   }
 
   fetchLocation() {
