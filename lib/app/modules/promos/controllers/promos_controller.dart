@@ -10,7 +10,9 @@ import 'package:intl/intl.dart';
 import '../../../../widgets/LoadingDialog.dart';
 import '../../../../widgets/PlutoGrid/src/manager/pluto_grid_state_manager.dart';
 import '../../../controller/ConnectorControl.dart';
+import '../../../controller/HomeController.dart';
 import '../../../data/DropDownValue.dart';
+import '../../../data/user_data_settings_model.dart';
 import '../../../providers/ExportData.dart';
 import '../../../providers/Utils.dart';
 import '../promo_model.dart';
@@ -81,6 +83,14 @@ class SchedulePromoController extends GetxController {
   void onReady() {
     super.onReady();
     getLocation();
+    fetchUserSetting1();
+  }
+
+  UserDataSettings? userDataSettings;
+
+  fetchUserSetting1() async {
+    userDataSettings = await Get.find<HomeController>().fetchUserSetting2();
+    update(['fpcMaster', 'programTable']);
   }
 
   void getChannel(DropDownValue? val) {

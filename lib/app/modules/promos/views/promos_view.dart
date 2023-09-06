@@ -18,6 +18,7 @@ import '../../../../widgets/input_fields.dart';
 import '../../../controller/HomeController.dart';
 import '../../../controller/MainController.dart';
 import '../../../data/PermissionModel.dart';
+import '../../../data/user_data_settings_model.dart';
 import '../../CommonSearch/views/common_search_view.dart';
 import '../controllers/promos_controller.dart';
 
@@ -35,9 +36,6 @@ class SchedulePromoView extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final w = MediaQuery.of(context).size.width;
-    final h = MediaQuery.of(context).size.height;
-
     return GetBuilder<SchedulePromoController>(
         init: controller,
         id: "initData",
@@ -165,6 +163,17 @@ class SchedulePromoView extends StatelessWidget {
                                         child: controller.dailyFpc.value.isEmpty
                                             ? null
                                             : DataGridShowOnlyKeys(
+                                                keysWidths: (controller
+                                                    .userDataSettings
+                                                    ?.userSetting
+                                                    ?.firstWhere(
+                                                        (element) =>
+                                                            element
+                                                                .controlName ==
+                                                            "fpcStateManager",
+                                                        orElse: () =>
+                                                            UserSetting())
+                                                    .userSettings),
                                                 mapData: controller
                                                     .dailyFpc.value
                                                     .map((e) => e.toJson())
@@ -236,6 +245,17 @@ class SchedulePromoView extends StatelessWidget {
                                                 .promoScheduled.value.isEmpty
                                             ? null
                                             : DataGridShowOnlyKeys(
+                                                keysWidths: (controller
+                                                    .userDataSettings
+                                                    ?.userSetting
+                                                    ?.firstWhere(
+                                                        (element) =>
+                                                            element
+                                                                .controlName ==
+                                                            "scheduledPromoStateManager",
+                                                        orElse: () =>
+                                                            UserSetting())
+                                                    .userSettings),
                                                 mapData: controller
                                                     .promoScheduled.value
                                                     .map((e) => e.toJson())
@@ -533,6 +553,17 @@ class SchedulePromoView extends StatelessWidget {
                                                 .searchPromos.value.isEmpty
                                             ? null
                                             : DataGridShowOnlyKeys(
+                                                keysWidths: (controller
+                                                    .userDataSettings
+                                                    ?.userSetting
+                                                    ?.firstWhere(
+                                                        (element) =>
+                                                            element
+                                                                .controlName ==
+                                                            "searchedPromoStateManager",
+                                                        orElse: () =>
+                                                            UserSetting())
+                                                    .userSettings),
                                                 mapData: controller
                                                     .searchPromos.value,
                                                 onRowDoubleTap: (row) => controller
@@ -647,6 +678,12 @@ class SchedulePromoView extends StatelessWidget {
       Get.find<HomeController>().clearPage1();
     } else if (btnName == "Save") {
       controller.saveData();
+    } else if (btnName == "Exit") {
+      Get.find<HomeController>().postUserGridSetting2(listStateManager: [
+        {"searchedPromoStateManager": controller.searchedPromoStateManager},
+        {"scheduledPromoStateManager": controller.scheduledPromoStateManager},
+        {"fpcStateManager": controller.fpcStateManager},
+      ]);
     } else if (btnName == "Search") {
       Get.to(SearchPage(
           key: Key("Promo Scheduling"),
