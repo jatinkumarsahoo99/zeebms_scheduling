@@ -7,6 +7,7 @@ import '../../../../widgets/FormButton.dart';
 import '../../../../widgets/dropdown.dart';
 import '../../../../widgets/gridFromMap.dart';
 import '../../../controller/HomeController.dart';
+import '../../../data/user_data_settings_model.dart';
 import '../../../providers/Utils.dart';
 import '../controllers/sales_audit_extra_spots_report_controller.dart';
 
@@ -81,10 +82,19 @@ class SalesAuditExtraSpotsReportView
                                 border: Border.all(color: Colors.grey)),
                           )
                         : DataGridFromMap(
+                            onload: (sm) {
+                              controller.stateManager = sm.stateManager;
+                            },
+                            witdthSpecificColumn: (controller
+                                .userDataSettings?.userSetting
+                                ?.firstWhere(
+                                    (element) =>
+                                        element.controlName == "stateManager",
+                                    orElse: () => UserSetting())
+                                .userSettings),
                             mapData: controller.dataTBList.value,
                             formatDate: true,
                             columnAutoResize: false,
-                            
                             exportFileName: "Sales Audit (Extra Spots Report)",
                           );
                   },
