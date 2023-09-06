@@ -366,7 +366,7 @@ class TransmissionLogController extends GetxController {
   }
 
   void btnExportFetchFpc({Function? fun}) {
-    LoadingDialog.call();
+    // LoadingDialog.call();
     Get.find<ConnectorControl>().GETMETHODCALL(
         api: ApiFactory.TRANSMISSION_LOG_EXPORT_FPC_TIME(
             selectLocation?.key ?? '',
@@ -374,7 +374,7 @@ class TransmissionLogController extends GetxController {
             selectedDate.text,
             isStandby.value),
         fun: (map) {
-          Get.back();
+          // Get.back();
           // print("jsonData"+map.toString());
           if (map is Map && map.containsKey("resFPCTime")) {
             exportFPCTime =
@@ -385,7 +385,10 @@ class TransmissionLogController extends GetxController {
           } else {
             Snack.callError(map.toString());
           }
-        });
+        },failed: (val){
+          Get.back();
+          print("Getting error in btnExportFetchFpc() : "+val.toString());
+    });
   }
 
   void btnRescheduleSpots({Function? fun}) {
@@ -505,6 +508,10 @@ class TransmissionLogController extends GetxController {
           } else {
             Snack.callError(map.toString());
           }
+        },
+        failed: (val) {
+          Get.back();
+          Snack.callError(val.toString()??"");
         });
   }
 
@@ -2424,10 +2431,11 @@ class TransmissionLogController extends GetxController {
                 isFetch.value = true;
                 update(["transmissionList"]);
               }
-            },failed: (data) {
-          Get.back();
-          LoadingDialog.callInfoMessage(data.toString());
-        });
+            },
+            failed: (data) {
+              Get.back();
+              LoadingDialog.callInfoMessage(data.toString());
+            });
       }
     }
   }
@@ -3600,7 +3608,8 @@ class TransmissionLogController extends GetxController {
             gridStateManager?.toggleSelectingRow(
                 int.tryParse(dr.cells['rownumber']?.value ?? "")!);
             // LoadingDialog.callInfoMessage("Ros spot outside contracted timeband!\nUnable to proceed with save");
-            callInfoDialog("Ros spot outside contracted timeband!\nUnable to proceed with save");
+            callInfoDialog(
+                "Ros spot outside contracted timeband!\nUnable to proceed with save");
             completer.complete(false);
             break;
             // return false;
@@ -3843,7 +3852,6 @@ class TransmissionLogController extends GetxController {
     );*/
     return completer.future;
   }
-
 
   callInfoDialog(String title) {
     initialOffset.value = 1;
