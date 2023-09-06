@@ -1,21 +1,21 @@
+import 'package:bms_scheduling/app/controller/HomeController.dart';
 import 'package:bms_scheduling/app/modules/AsrunImportAdRevenue/bindings/arun_data.dart';
 import 'package:bms_scheduling/app/modules/AsrunImportAdRevenue/bindings/asrun_fpc_data.dart';
 import 'package:bms_scheduling/app/providers/ExportData.dart';
 import 'package:bms_scheduling/app/providers/extensions/string_extensions.dart';
 import 'package:bms_scheduling/widgets/LoadingDialog.dart';
+import 'package:bms_scheduling/widgets/PlutoGrid/pluto_grid.dart';
+import 'package:dio/dio.dart' as dio;
 import 'package:file_picker/file_picker.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:get/get.dart';
-import 'package:bms_scheduling/widgets/PlutoGrid/pluto_grid.dart';
-import 'package:intl/intl.dart';
+
 import '../../../controller/ConnectorControl.dart';
 import '../../../controller/MainController.dart';
 import '../../../data/DropDownValue.dart';
+import '../../../data/user_data_settings_model.dart';
 import '../../../providers/ApiFactory.dart';
-import '../../home/controllers/home_controller.dart';
 import '../AsrunImportModel.dart';
-import 'package:dio/dio.dart' as dio;
 
 class AsrunImportController extends GetxController {
   var locations = RxList<DropDownValue>();
@@ -94,6 +94,19 @@ class AsrunImportController extends GetxController {
   void onInit() {
     super.onInit();
     getLocations();
+  }
+
+  @override
+  void onReady() {
+    super.onReady();
+    fetchUserSetting1();
+  }
+
+  UserDataSettings? userDataSettings;
+
+  fetchUserSetting1() async {
+    userDataSettings = await Get.find<HomeController>().fetchUserSetting2();
+    update(['fpcData']);
   }
 
   getLocations() {
