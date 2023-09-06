@@ -46,6 +46,7 @@ class SlideController extends GetxController {
     locationList.refresh();
     channelList.refresh();
     locationFN.requestFocus();
+    stateManager = null;
   }
 
   void getChannel(DropDownValue? val) {
