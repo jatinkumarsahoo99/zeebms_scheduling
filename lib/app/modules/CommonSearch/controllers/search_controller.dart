@@ -1,3 +1,4 @@
+import 'dart:async';
 import 'dart:convert';
 import 'dart:developer';
 import 'dart:math' as math;
@@ -239,7 +240,15 @@ class SearchController extends GetxController {
                     fun: (value) async {
                       Get.back();
                       Get.back();
-                      LoadingDialog.callDataSavedMessage("Variance Deleted Successfully");
+                      LoadingDialog.callDataSavedMessage("Variance Deleted Successfully",callback: (){
+                        grid = null;
+                        varainace = [];
+                        addsum.value = false;
+                        selectVarianceId = null;
+                        print(selectVarianceId.toString());
+                        update(["initialData"]);
+                        getInitialData();
+                      });
                       //Snack.callSuccess("Varinat Deleted Successfully");
                     });
               } catch (e) {
@@ -1372,6 +1381,7 @@ class SearchController extends GetxController {
   }
 
   getInitialData() async {
+    Completer<String> completer = Completer<String>();
     await Get.find<ConnectorControl>().GET_METHOD_CALL_HEADER(
       api: ApiFactory.SEARCH_VARIANCE(screenName: screenName, viewName: strViewName, loginCode: Get.find<MainController>().user?.logincode ?? ""),
       fun: (value) {
@@ -1379,6 +1389,8 @@ class SearchController extends GetxController {
         log(varainace.toString());
         log(value);
         print(value.toString());
+        update(["initialData"]);
+        completer.complete("");
 
         // try {
         //   for (var element in value) {
@@ -1397,6 +1409,8 @@ class SearchController extends GetxController {
         print(value.toString());
         grid = SearchBindGrid.fromJson(value);
         await updateGrid();
+        update(["initialData"]);
+        completer.complete("");
 
         // List<PlutoColumn> columns = [];
         // for (Variances variance in grid!.variances!) {
@@ -1432,6 +1446,7 @@ class SearchController extends GetxController {
       },
     );
     update(["initialData"]);
+    return completer.future;
   }
 
   getVaraince(id) async {

@@ -79,6 +79,7 @@ class DSeriesSpecificationView extends GetView<DSeriesSpecificationController> {
                             controllerX.eventList.value,
                             (data) {
                               controllerX.selectEvent?.value = data;
+                              controllerX.getEventLeave(data.key??"");
                             },
                             "Event",
                             controllerX.widthSize,
@@ -295,6 +296,9 @@ class DSeriesSpecificationView extends GetView<DSeriesSpecificationController> {
       case "Clear":
         Get.find<HomeController>().clearPage1();
         Get.delete<DSeriesSpecificationController>();
+        break;
+      case "Search":
+        controllerX.callSearchApi();
         break;
     }
   }

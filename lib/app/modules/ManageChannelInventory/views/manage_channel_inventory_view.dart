@@ -22,7 +22,8 @@ import '../../../controller/HomeController.dart';
 import '../../../providers/Utils.dart';
 import '../controllers/manage_channel_inventory_controller.dart';
 
-class ManageChannelInvemtoryView extends GetView<ManageChannelInvemtoryController> {
+class ManageChannelInvemtoryView
+    extends GetView<ManageChannelInvemtoryController> {
   const ManageChannelInvemtoryView({Key? key}) : super(key: key);
   @override
   Widget build(BuildContext context) {
@@ -68,7 +69,8 @@ class ManageChannelInvemtoryView extends GetView<ManageChannelInvemtoryControlle
                       mainTextController: controller.effectiveDateTC,
                       widthRation: 0.15,
                       onFocusChange: (date) {
-                        controller.weekDaysTC.text = DateFormat('EEEE').format(DateFormat("dd-MM-yyyy").parse(date));
+                        controller.weekDaysTC.text = DateFormat('EEEE')
+                            .format(DateFormat("dd-MM-yyyy").parse(date));
                       },
                       isEnable: controller.bottomControllsEnable.value,
                       startDate: DateTime.now(),
@@ -81,7 +83,9 @@ class ManageChannelInvemtoryView extends GetView<ManageChannelInvemtoryControlle
                     isEnable: false,
                   ),
                   const SizedBox(width: 10),
-                  FormButton(btnText: "Display", callback: controller.handleGenerateButton)
+                  FormButton(
+                      btnText: "Display",
+                      callback: controller.handleGenerateButton)
                 ],
               ),
 
@@ -101,29 +105,46 @@ class ManageChannelInvemtoryView extends GetView<ManageChannelInvemtoryControlle
                       child: controller.dataTableList.value.isEmpty
                           ? null
                           : DataGridFromMap(
-                              mapData: controller.dataTableList.value.map((e) => e.toJson()).toList(),
+                              enableAutoEditing: true,
+                              mapData: controller.dataTableList.value
+                                  .map((e) => e.toJson())
+                                  .toList(),
                               editKeys: ["commDuration"],
                               onEdit: (row) {
                                 controller.lastSelectedIdx = row.rowIdx;
                                 if (RegExp(r'^[0-9]+$').hasMatch(row.value)) {
-                                  controller.dataTableList[row.rowIdx].commDuration = num.tryParse(row.value.toString());
+                                  controller.dataTableList[row.rowIdx]
+                                          .commDuration =
+                                      num.tryParse(row.value.toString());
                                   controller.madeChanges = true;
                                 } else {
-                                  controller.dataTableList.refresh();
+                                  controller.stateManager?.changeCellValue(
+                                    controller.stateManager!
+                                        .getRowByIdx(row.rowIdx)!
+                                        .cells['commDuration']!,
+                                    controller
+                                        .dataTableList[row.rowIdx].commDuration
+                                        .toString(),
+                                  );
                                 }
                               },
                               witdthSpecificColumn: {
                                 "commDuration": 200,
                               },
                               mode: PlutoGridMode.normal,
-                              colorCallback: (row) =>
-                                  (row.row.cells.containsValue(controller.stateManager?.currentCell)) ? Colors.deepPurple.shade200 : Colors.white,
+                              // colorCallback: (row) {
+                              //   return Colors.white;
+                              // },
                               onload: (event) {
                                 controller.stateManager = event.stateManager;
-                                event.stateManager.setSelectingMode(PlutoGridSelectingMode.row);
+                                event.stateManager.setSelectingMode(
+                                    PlutoGridSelectingMode.row);
                                 event.stateManager.setSelecting(true);
                                 event.stateManager.setCurrentCell(
-                                    event.stateManager.getRowByIdx(controller.lastSelectedIdx)?.cells['commDuration'], controller.lastSelectedIdx);
+                                    event.stateManager
+                                        .getRowByIdx(controller.lastSelectedIdx)
+                                        ?.cells['commDuration'],
+                                    controller.lastSelectedIdx);
                               },
                             ),
                     );
@@ -171,7 +192,8 @@ class ManageChannelInvemtoryView extends GetView<ManageChannelInvemtoryControlle
                             child: FormButton(
                               btnText: controller.buttonsList[index],
                               callback: controller.bottomControllsEnable.value
-                                  ? () => handleBottonButtonsTap(controller.buttonsList[index], context)
+                                  ? () => handleBottonButtonsTap(
+                                      controller.buttonsList[index], context)
                                   : null,
                             ),
                           ),
@@ -198,7 +220,9 @@ class ManageChannelInvemtoryView extends GetView<ManageChannelInvemtoryControlle
                             for (var btn in btncontroller.buttons!) ...{
                               FormButtonWrapper(
                                 btnText: btn["name"],
-                                callback: ((Utils.btnAccessHandler(btn['name'], controller.formPermissions!) == null))
+                                callback: ((Utils.btnAccessHandler(btn['name'],
+                                            controller.formPermissions!) ==
+                                        null))
                                     ? null
                                     : () => controller.formHandler(btn['name']),
                               )
@@ -218,7 +242,8 @@ class ManageChannelInvemtoryView extends GetView<ManageChannelInvemtoryControlle
 
   handleBottonButtonsTap(String btnName, BuildContext context) {
     if (btnName == "Special") {
-      if (controller.selectedLocation == null || controller.selectedChannel == null) {
+      if (controller.selectedLocation == null ||
+          controller.selectedChannel == null) {
         LoadingDialog.showErrorDialog("Please select Location,Channel.");
       } else {
         controller.bottomControllsEnable.value = false;
@@ -236,19 +261,42 @@ class ManageChannelInvemtoryView extends GetView<ManageChannelInvemtoryControlle
           content: Column(
             mainAxisSize: MainAxisSize.min,
             children: [
-              DropDownField.formDropDownDisableWidth(null, "Location", .31, selected: controller.selectedLocation?.value ?? ""),
+              DropDownField.formDropDownDisableWidth(null, "Location", .31,
+                  selected: controller.selectedLocation?.value ?? ""),
               const SizedBox(height: 2),
-              DropDownField.formDropDownDisableWidth(null, "Channel", .31, selected: controller.selectedChannel?.value ?? ""),
+              DropDownField.formDropDownDisableWidth(null, "Channel", .31,
+                  selected: controller.selectedChannel?.value ?? ""),
               const SizedBox(height: 5),
               Row(
                 children: [
-                  CheckBoxWidget1(title: "Sun", value: selectedWeekDays[1], onChanged: (a) => selectedWeekDays[1] = a ?? false),
-                  CheckBoxWidget1(title: "Mon", value: selectedWeekDays[2], onChanged: (a) => selectedWeekDays[2] = a ?? false),
-                  CheckBoxWidget1(title: "Tue", value: selectedWeekDays[3], onChanged: (a) => selectedWeekDays[3] = a ?? false),
-                  CheckBoxWidget1(title: "Wed", value: selectedWeekDays[4], onChanged: (a) => selectedWeekDays[4] = a ?? false),
-                  CheckBoxWidget1(title: "Thu", value: selectedWeekDays[5], onChanged: (a) => selectedWeekDays[5] = a ?? false),
-                  CheckBoxWidget1(title: "Fri", value: selectedWeekDays[6], onChanged: (a) => selectedWeekDays[6] = a ?? false),
-                  CheckBoxWidget1(title: "Sat", value: selectedWeekDays[7], onChanged: (a) => selectedWeekDays[7] = a ?? false),
+                  CheckBoxWidget1(
+                      title: "Sun",
+                      value: selectedWeekDays[1],
+                      onChanged: (a) => selectedWeekDays[1] = a ?? false),
+                  CheckBoxWidget1(
+                      title: "Mon",
+                      value: selectedWeekDays[2],
+                      onChanged: (a) => selectedWeekDays[2] = a ?? false),
+                  CheckBoxWidget1(
+                      title: "Tue",
+                      value: selectedWeekDays[3],
+                      onChanged: (a) => selectedWeekDays[3] = a ?? false),
+                  CheckBoxWidget1(
+                      title: "Wed",
+                      value: selectedWeekDays[4],
+                      onChanged: (a) => selectedWeekDays[4] = a ?? false),
+                  CheckBoxWidget1(
+                      title: "Thu",
+                      value: selectedWeekDays[5],
+                      onChanged: (a) => selectedWeekDays[5] = a ?? false),
+                  CheckBoxWidget1(
+                      title: "Fri",
+                      value: selectedWeekDays[6],
+                      onChanged: (a) => selectedWeekDays[6] = a ?? false),
+                  CheckBoxWidget1(
+                      title: "Sat",
+                      value: selectedWeekDays[7],
+                      onChanged: (a) => selectedWeekDays[7] = a ?? false),
                 ],
               ),
               const SizedBox(height: 5),
@@ -275,7 +323,8 @@ class ManageChannelInvemtoryView extends GetView<ManageChannelInvemtoryControlle
                         }
                       }
                       weekDays = weekDays.isEmpty ? "0" : "0,$weekDays";
-                      controller.getPrograms(fromDateCtr.text, toDateCtr.text, weekDays);
+                      controller.getPrograms(
+                          fromDateCtr.text, toDateCtr.text, weekDays);
                     },
                   ),
                 ],

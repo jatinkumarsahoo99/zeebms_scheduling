@@ -88,11 +88,7 @@ class CommercialView extends StatelessWidget {
                                   title: "From Date",
                                   mainTextController: controller.date_,
                                   widthRation: controller.widthSize,
-                                  startDate:
-                                      (ApiFactory.Enviroment.toLowerCase() ==
-                                              "prod")
-                                          ? DateTime.now()
-                                          : null,
+                                  startDate: DateTime.now(),
                                 ),
                                 const SizedBox(
                                   width: 20,

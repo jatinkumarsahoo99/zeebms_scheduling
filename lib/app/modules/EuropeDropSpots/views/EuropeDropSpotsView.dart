@@ -27,7 +27,8 @@ class EuropeDropSpotsView extends GetView<EuropeDropSpotsController> {
             SizedBox(
               height: 10,
             ),
-            Obx(() => Padding(
+            Obx(() =>
+                Padding(
                   padding: const EdgeInsets.only(left: 10.0),
                   child: CupertinoSlidingSegmentedControl(
                       groupValue: controller.segmentedControlGroupValue.value,
@@ -40,15 +41,18 @@ class EuropeDropSpotsView extends GetView<EuropeDropSpotsController> {
             SizedBox(
               height: 5,
             ),
-            Obx(() => Expanded(
+            Obx(() =>
+                Expanded(
                   child: Column(
                     children: [
                       if (controller.segmentedControlGroupValue.value == 0)
                         droppedSpots()
-                      else if (controller.segmentedControlGroupValue.value == 1)
-                        removeRunningSpots()
-                      else if (controller.segmentedControlGroupValue.value == 2)
-                        deleteCommercial()
+                      else
+                        if (controller.segmentedControlGroupValue.value == 1)
+                          removeRunningSpots()
+                        else
+                          if (controller.segmentedControlGroupValue.value == 2)
+                            deleteCommercial()
                     ],
                   ),
                 ))
@@ -66,32 +70,35 @@ class EuropeDropSpotsView extends GetView<EuropeDropSpotsController> {
           children: [
             Row(
               children: [
-                Obx(() => DropDownField.formDropDown1WidthMap(
+                Obx(() =>
+                    DropDownField.formDropDown1WidthMap(
                       controller.locationList.value ?? [],
-                      (data) {
+                          (data) {
                         controller.selectLocation = data;
                         controller.getChannel(data.key, 1);
                       },
                       "Location",
                       controller.widthSize,
+
                       // isEnable: controllerX.isEnable.value,
                       searchReq: true,
                       inkWellFocusNode: controller.locationFocus,
-
                       selected: controller.selectLocation,
                     )),
                 SizedBox(
                   width: 3,
                 ),
-                Obx(() => DropDownField.formDropDown1WidthMap(
+                Obx(() =>
+                    DropDownField.formDropDown1WidthMap(
                       controller.channelList.value ?? [],
-                      (data) {
+                          (data) {
                         controller.selectChannel = data;
                         controller.getClientList();
                       },
                       "Channel",
                       controller.widthSize,
                       inkWellFocusNode: controller.channelFocus,
+
 
                       // isEnable: controllerX.isEnable.value,
                       searchReq: true,
@@ -100,32 +107,36 @@ class EuropeDropSpotsView extends GetView<EuropeDropSpotsController> {
                 SizedBox(
                   width: 3,
                 ),
-                Obx(() => DropDownField.formDropDown1WidthMap(
+                Obx(() =>
+                    DropDownField.formDropDown1WidthMap(
                       controller.clientList.value,
-                      (data) {
+                          (data) {
                         controller.selectClient = data;
                         controller.getAgentList();
                       },
                       "Client",
-                      controller.widthSize,
+                      controller.widthSize1,
                       inkWellFocusNode: controller.clientFocus,
                       // isEnable: controllerX.isEnable.value,
                       searchReq: true,
+                      selected: controller.selectClient
                       // selected: controllerX.selectOrgValue,
                     )),
                 SizedBox(
                   width: 3,
                 ),
-                Obx(() => DropDownField.formDropDown1WidthMap(
+                Obx(() =>
+                    DropDownField.formDropDown1WidthMap(
                       controller.agentList.value,
-                      (data) {
+                          (data) {
                         controller.selectAgency = data;
                       },
                       "Agency",
-                      controller.widthSize,
+                      controller.widthSize1,
                       inkWellFocusNode: controller.agencyFocus,
                       // isEnable: controllerX.isEnable.value,
                       searchReq: true,
+                      selected:  controller.selectAgency
                       // selected: controllerX.selectOrgValue,
                     )),
                 SizedBox(
@@ -151,10 +162,10 @@ class EuropeDropSpotsView extends GetView<EuropeDropSpotsController> {
                   mainTextController: controller.selectedToDate,
                 ),
                 SizedBox(
-                  width: 5,
+                  width: 3,
                 ),
                 Padding(
-                  padding: const EdgeInsets.only(left: 10, top: 15),
+                  padding: const EdgeInsets.only(left: 3, top: 15),
                   child: FormButton(
                     btnText: "Generate",
                     callback: () {
@@ -166,16 +177,24 @@ class EuropeDropSpotsView extends GetView<EuropeDropSpotsController> {
                 ),
               ],
             ),
-            Row(
-              mainAxisAlignment: MainAxisAlignment.start,
-              children: [
-                Checkbox(
-                    value: controller.selectAll.value, onChanged: (val) {}),
-                SizedBox(
-                  width: 10,
-                ),
-                Text("Select All")
-              ],
+            Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 10.0),
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.start,
+                children: [
+                  Obx(() {
+                    return Checkbox(
+                        value: controller.selectAll.value,
+                        onChanged: (val) {
+                          controller.selectAllBtn(val ?? false);
+                        });
+                  }),
+                  SizedBox(
+                    width: 10,
+                  ),
+                  Text("Select All")
+                ],
+              ),
             ),
             GetBuilder<EuropeDropSpotsController>(
                 id: "listUpdate",
@@ -197,10 +216,14 @@ class EuropeDropSpotsView extends GetView<EuropeDropSpotsController> {
                             controller.stateManager = event.stateManager;
                           },
                           checkRowKey: "clientname",
+                          onRowCheck: (PlutoGridOnRowCheckedEvent e) {
 
+                          },
+                          exportFileName: "Europe Drop Spots",
                           hideKeys: ["selectItem"],
                           checkRow: true,
                           showSrNo: true,
+                          hideCode: false,
                           // actionIcon: Icons.delete_forever_rounded,
                         ),
                       ),
@@ -211,7 +234,7 @@ class EuropeDropSpotsView extends GetView<EuropeDropSpotsController> {
                         clipBehavior: Clip.hardEdge,
                         shape: RoundedRectangleBorder(
                           borderRadius:
-                              BorderRadius.circular(0), // if you need this
+                          BorderRadius.circular(0), // if you need this
                           side: BorderSide(
                             color: Colors.grey.shade300,
                             width: 1,
@@ -254,14 +277,16 @@ class EuropeDropSpotsView extends GetView<EuropeDropSpotsController> {
         padding: const EdgeInsets.symmetric(horizontal: 18.0),
         child: Column(
           children: [
-            Obx(() => DropDownField.formDropDown1WidthMap(
+            Obx(() =>
+                DropDownField.formDropDown1WidthMap(
                   controller.locationList.value ?? [],
-                  (data) {
+                      (data) {
                     controller.selectLocation_removeorder = data;
                     controller.getChannel(data.key, 2);
                   },
                   "Location",
                   controller.widthSize1,
+                  inkWellFocusNode: controller.locationFocus2,
                   // isEnable: controllerX.isEnable.value,
                   searchReq: true,
                   // selected: controllerX.selectOrgValue,
@@ -269,14 +294,16 @@ class EuropeDropSpotsView extends GetView<EuropeDropSpotsController> {
             SizedBox(
               height: 5,
             ),
-            Obx(() => DropDownField.formDropDown1WidthMap(
+            Obx(() =>
+                DropDownField.formDropDown1WidthMap(
                   controller.channelList1.value ?? [],
-                  (data) {
+                      (data) {
                     controller.selectChannel_removeorder = data;
                     controller.getRunDate1();
                   },
                   "Channel",
                   controller.widthSize1,
+                  inkWellFocusNode: controller.channelFocus2,
 
                   // isEnable: controllerX.isEnable.value,
                   searchReq: true,
@@ -302,14 +329,15 @@ class EuropeDropSpotsView extends GetView<EuropeDropSpotsController> {
               print("Data refresh");
               return DropDownField.formDropDown1WidthMap(
                 controller.fileList.value,
-                (data) {
+                    (data) {
                   controller.selectFile = data;
                 },
                 "Select File Name",
                 controller.widthSize1,
                 // isEnable: controllerX.isEnable.value,
                 searchReq: true,
-                // selected: controllerX.selectOrgValue,
+                selected: controller.selectFile,
+                inkWellFocusNode: controller.selectFileFocus
               );
             }),
             SizedBox(
@@ -339,14 +367,16 @@ class EuropeDropSpotsView extends GetView<EuropeDropSpotsController> {
         padding: const EdgeInsets.symmetric(horizontal: 18.0),
         child: Column(
           children: [
-            Obx(() => DropDownField.formDropDown1WidthMap(
+            Obx(() =>
+                DropDownField.formDropDown1WidthMap(
                   controller.locationList.value ?? [],
-                  (data) {
+                      (data) {
                     controller.selectLocation_deleteRussia = data;
                     controller.getChannel(data.key, 3);
                   },
                   "Location",
                   controller.widthSize1,
+                  inkWellFocusNode: controller.locationFocus3,
                   // isEnable: controllerX.isEnable.value,
                   searchReq: true,
                   // selected: controllerX.selectOrgValue,
@@ -354,13 +384,15 @@ class EuropeDropSpotsView extends GetView<EuropeDropSpotsController> {
             SizedBox(
               height: 5,
             ),
-            Obx(() => DropDownField.formDropDown1WidthMap(
+            Obx(() =>
+                DropDownField.formDropDown1WidthMap(
                   controller.channelList2.value ?? [],
-                  (data) {
+                      (data) {
                     controller.selectChannel_deleteRussia = data;
                   },
                   "Channel",
                   controller.widthSize1,
+                  inkWellFocusNode: controller.channelFocus3,
 
                   // isEnable: controllerX.isEnable.value,
                   searchReq: true,
