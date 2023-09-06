@@ -12,7 +12,9 @@ import 'package:intl/intl.dart';
 import '../../../../widgets/LoadingDialog.dart';
 import '../../../../widgets/Snack.dart';
 import '../../../controller/ConnectorControl.dart';
+import '../../../controller/HomeController.dart';
 import '../../../data/DropDownValue.dart';
+import '../../../data/user_data_settings_model.dart';
 import '../../../providers/ApiFactory.dart';
 import '../../../providers/ExportData.dart';
 import '../../../providers/Utils.dart';
@@ -94,6 +96,7 @@ class FillerController extends GetxController {
   void onReady() {
     super.onReady();
     getLocation();
+    fetchUserSetting1();
     tapeIDFocusNode.addListener(() {
       if (!tapeIDFocusNode.hasFocus &&
           tapeId_.text.isNotEmpty &&
@@ -103,11 +106,24 @@ class FillerController extends GetxController {
     });
   }
 
+  UserDataSettings? userDataSettings;
+
+  fetchUserSetting1() async {
+    userDataSettings = await Get.find<HomeController>().fetchUserSetting2();
+    fillerDailyFpcList.refresh();
+    fillerSegmentList.refresh();
+  }
+
   formHandler(btnName) async {
     if (btnName == "Clear") {
       clear();
     } else if (btnName == "Save") {
       saveData();
+    } else if (btnName == "Exit") {
+      Get.find<HomeController>().postUserGridSetting2(listStateManager: [
+        {"gridStateManager": gridStateManager},
+        {"bottomSM": bottomSM},
+      ]);
     } else if (btnName == "Search") {
       Get.to(
         SearchPage(
