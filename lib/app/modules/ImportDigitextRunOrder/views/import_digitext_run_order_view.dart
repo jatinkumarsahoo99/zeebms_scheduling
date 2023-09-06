@@ -17,25 +17,39 @@ import 'package:get/get.dart';
 
 import '../../../controller/HomeController.dart';
 import '../../../data/PermissionModel.dart';
+import '../../../data/user_data_settings_model.dart';
 import '../controllers/import_digitext_run_order_controller.dart';
 
-class ImportDigitextRunOrderView extends GetView<ImportDigitextRunOrderController> {
+class ImportDigitextRunOrderView
+    extends GetView<ImportDigitextRunOrderController> {
   const ImportDigitextRunOrderView({Key? key}) : super(key: key);
 
   getPageData(int index) {
     switch (index) {
       case 0:
-        return (controller.digitexRunOrderData?.missingClients?.map((e) => e.toJson()).toList() ?? []);
+        return (controller.digitexRunOrderData?.missingClients
+                ?.map((e) => e.toJson())
+                .toList() ??
+            []);
       case 1:
         return (controller.digitexRunOrderData?.newBrands ?? []);
       case 2:
         return (controller.digitexRunOrderData?.newClocks ?? []);
       case 3:
-        return (controller.digitexRunOrderData?.missingAgencies?.map((e) => e.toJson()).toList() ?? []);
+        return (controller.digitexRunOrderData?.missingAgencies
+                ?.map((e) => e.toJson())
+                .toList() ??
+            []);
       case 4:
-        return (controller.digitexRunOrderData?.missingLinks?.map((e) => e.toJson()).toList() ?? []);
+        return (controller.digitexRunOrderData?.missingLinks
+                ?.map((e) => e.toJson())
+                .toList() ??
+            []);
       case 5:
-        return (controller.digitexRunOrderData?.myData?.map((e) => e.toJson()).toList() ?? []);
+        return (controller.digitexRunOrderData?.myData
+                ?.map((e) => e.toJson())
+                .toList() ??
+            []);
       default:
         return [];
     }
@@ -60,17 +74,22 @@ class ImportDigitextRunOrderView extends GetView<ImportDigitextRunOrderControlle
                     spacing: 10,
                     children: [
                       Obx(
-                        () => DropDownField.formDropDown1WidthMap(controller.locations.value, (value) {
+                        () => DropDownField.formDropDown1WidthMap(
+                            controller.locations.value, (value) {
                           controller.selectedLocation = value;
                           controller.getChannel(value.key);
                         }, "Location", 0.18),
                       ),
                       Obx(
-                        () => DropDownField.formDropDown1WidthMap(controller.channels.value, (value) {
+                        () => DropDownField.formDropDown1WidthMap(
+                            controller.channels.value, (value) {
                           controller.selectedChannel = value;
                         }, "Channel", 0.18),
                       ),
-                      DateWithThreeTextField(title: "Schedule Date.", widthRation: 0.12, mainTextController: controller.scheduleDate),
+                      DateWithThreeTextField(
+                          title: "Schedule Date.",
+                          widthRation: 0.12,
+                          mainTextController: controller.scheduleDate),
                       FormButtonWrapper(
                         btnText: "Load",
                         iconDataM: Icons.upload_file_rounded,
@@ -78,7 +97,11 @@ class ImportDigitextRunOrderView extends GetView<ImportDigitextRunOrderControlle
                           controller.pickFile();
                         },
                       ),
-                      InputFields.formField1(hintTxt: "File", isEnable: false, width: 0.24, controller: controller.fileController),
+                      InputFields.formField1(
+                          hintTxt: "File",
+                          isEnable: false,
+                          width: 0.24,
+                          controller: controller.fileController),
                     ],
                   ),
                 ),
@@ -100,10 +123,12 @@ class ImportDigitextRunOrderView extends GetView<ImportDigitextRunOrderControlle
                 child: CupertinoSlidingSegmentedControl(
                     groupValue: controller.selectedradiofilter.value,
                     padding: EdgeInsets.zero,
-                    children: Map.fromEntries(controller.radiofilters.map((e) => MapEntry(e, Text(e)))),
+                    children: Map.fromEntries(controller.radiofilters
+                        .map((e) => MapEntry(e, Text(e)))),
                     onValueChanged: (value) {
                       controller.selectedradiofilter.value = value ?? "";
-                      controller.pageController.jumpToPage(controller.radiofilters.indexOf(value!));
+                      controller.pageController
+                          .jumpToPage(controller.radiofilters.indexOf(value!));
                     }),
               )),
           // Middle Section taking up entire remaining space
@@ -127,11 +152,19 @@ class ImportDigitextRunOrderView extends GetView<ImportDigitextRunOrderControlle
                                   alignment: Alignment.bottomRight,
                                   children: [
                                     DataGridShowOnlyKeys(
+                                      keysWidths: (controller
+                                          .userDataSettings?.userSetting
+                                          ?.firstWhere(
+                                              (element) =>
+                                                  element.controlName == "data",
+                                              orElse: () => UserSetting())
+                                          .userSettings),
                                       mapData: getPageData(index),
                                       formatDate: false,
                                       onload: (load) {
                                         if (index == 0) {
-                                          controller.clientGridStateManager = load.stateManager;
+                                          controller.clientGridStateManager =
+                                              load.stateManager;
                                         }
                                       },
                                       hideCode: false,
@@ -147,12 +180,25 @@ class ImportDigitextRunOrderView extends GetView<ImportDigitextRunOrderControlle
                                                       hintTxt: "Digitex",
                                                       width: 0.24,
                                                       isEnable: false,
-                                                      controller: TextEditingController(text: tapEvent.row.cells["clientstoCreate"]?.value ?? "")),
-                                                  DropDownField.formDropDownSearchAPI2(GlobalKey(), context,
-                                                      parseKeyForKey: "clientCode",
-                                                      parseKeyForValue: "clientName",
-                                                      title: "Client",
-                                                      url: ApiFactory.IMPORT_DIGITEX_RUN_ORDER_CLIENT, onchanged: (data) {
+                                                      controller:
+                                                          TextEditingController(
+                                                              text: tapEvent
+                                                                      .row
+                                                                      .cells[
+                                                                          "clientstoCreate"]
+                                                                      ?.value ??
+                                                                  "")),
+                                                  DropDownField
+                                                      .formDropDownSearchAPI2(
+                                                          GlobalKey(), context,
+                                                          parseKeyForKey:
+                                                              "clientCode",
+                                                          parseKeyForValue:
+                                                              "clientName",
+                                                          title: "Client",
+                                                          url: ApiFactory
+                                                              .IMPORT_DIGITEX_RUN_ORDER_CLIENT,
+                                                          onchanged: (data) {
                                                     _client = data;
                                                   }),
                                                 ],
@@ -161,13 +207,17 @@ class ImportDigitextRunOrderView extends GetView<ImportDigitextRunOrderControlle
                                                   btnText: "Map",
                                                   callback: () {
                                                     if (_client != null) {
-                                                      controller.updateClientData(tapEvent, _client!);
+                                                      controller
+                                                          .updateClientData(
+                                                              tapEvent,
+                                                              _client!);
                                                     }
                                                   }),
                                               confirm: FormButtonWrapper(
                                                   btnText: "Clear",
                                                   callback: () {
-                                                    controller.clearClientData(tapEvent, _client!);
+                                                    controller.clearClientData(
+                                                        tapEvent, _client!);
                                                   }));
                                         } else if (index == 3) {
                                           Get.defaultDialog(
@@ -179,12 +229,25 @@ class ImportDigitextRunOrderView extends GetView<ImportDigitextRunOrderControlle
                                                       hintTxt: "Digitex",
                                                       width: 0.24,
                                                       isEnable: false,
-                                                      controller: TextEditingController(text: tapEvent.row.cells["agenciestoCreate"]?.value ?? "")),
-                                                  DropDownField.formDropDownSearchAPI2(GlobalKey(), context,
-                                                      parseKeyForKey: "agencyCode",
-                                                      parseKeyForValue: "agencyName",
-                                                      title: "Agency",
-                                                      url: ApiFactory.IMPORT_DIGITEX_RUN_ORDER_AGENCY, onchanged: (data) {
+                                                      controller:
+                                                          TextEditingController(
+                                                              text: tapEvent
+                                                                      .row
+                                                                      .cells[
+                                                                          "agenciestoCreate"]
+                                                                      ?.value ??
+                                                                  "")),
+                                                  DropDownField
+                                                      .formDropDownSearchAPI2(
+                                                          GlobalKey(), context,
+                                                          parseKeyForKey:
+                                                              "agencyCode",
+                                                          parseKeyForValue:
+                                                              "agencyName",
+                                                          title: "Agency",
+                                                          url: ApiFactory
+                                                              .IMPORT_DIGITEX_RUN_ORDER_AGENCY,
+                                                          onchanged: (data) {
                                                     _client = data;
                                                   }),
                                                 ],
@@ -193,13 +256,17 @@ class ImportDigitextRunOrderView extends GetView<ImportDigitextRunOrderControlle
                                                   btnText: "Map",
                                                   callback: () {
                                                     if (_client != null) {
-                                                      controller.updateAgencyData(tapEvent, _client!);
+                                                      controller
+                                                          .updateAgencyData(
+                                                              tapEvent,
+                                                              _client!);
                                                     }
                                                   }),
                                               confirm: FormButtonWrapper(
                                                   btnText: "Clear",
                                                   callback: () {
-                                                    controller.clearAgencyData(tapEvent, _client!);
+                                                    controller.clearAgencyData(
+                                                        tapEvent, _client!);
                                                   }));
                                         }
                                       },
@@ -207,7 +274,8 @@ class ImportDigitextRunOrderView extends GetView<ImportDigitextRunOrderControlle
                                     if (index == 0)
                                       FormButtonWrapper(
                                         btnText: "Map Client",
-                                        iconDataM: Icons.business_center_rounded,
+                                        iconDataM:
+                                            Icons.business_center_rounded,
                                         callback: () {
                                           controller.mapClients();
                                         },
@@ -240,14 +308,18 @@ class ImportDigitextRunOrderView extends GetView<ImportDigitextRunOrderControlle
                       .lastWhere((element) {
                     return element.appFormName == "frmSegmentsDetails";
                   });*/
-                PermissionModel formPermissions = Get.find<MainController>().permissionList!.lastWhere((element) {
+                PermissionModel formPermissions = Get.find<MainController>()
+                    .permissionList!
+                    .lastWhere((element) {
                   return element.appFormName == "frmBARBRunOrder";
                 });
 
                 return Card(
                   margin: const EdgeInsets.fromLTRB(4, 4, 4, 0),
                   shape: const RoundedRectangleBorder(
-                    borderRadius: BorderRadius.only(topLeft: Radius.circular(10), topRight: Radius.circular(10)),
+                    borderRadius: BorderRadius.only(
+                        topLeft: Radius.circular(10),
+                        topRight: Radius.circular(10)),
                   ),
                   child: Container(
                     width: Get.width,
@@ -266,7 +338,11 @@ class ImportDigitextRunOrderView extends GetView<ImportDigitextRunOrderControlle
                                     isEnabled: controller.allowSave.value,
                                     btnText: btn["name"],
                                     // isEnabled: btn['isDisabled'],
-                                    callback: Utils.btnAccessHandler2(btn['name'], btncontroller, formPermissions) == null
+                                    callback: Utils.btnAccessHandler2(
+                                                btn['name'],
+                                                btncontroller,
+                                                formPermissions) ==
+                                            null
                                         ? null
                                         : () => btnHandler(btn['name']),
                                   ),
@@ -274,7 +350,9 @@ class ImportDigitextRunOrderView extends GetView<ImportDigitextRunOrderControlle
                               : FormButtonWrapper(
                                   btnText: btn["name"],
                                   // isEnabled: btn['isDisabled'],
-                                  callback: Utils.btnAccessHandler2(btn['name'], btncontroller, formPermissions) == null
+                                  callback: Utils.btnAccessHandler2(btn['name'],
+                                              btncontroller, formPermissions) ==
+                                          null
                                       ? null
                                       : () => btnHandler(btn['name']),
                                 ),
@@ -292,6 +370,11 @@ class ImportDigitextRunOrderView extends GetView<ImportDigitextRunOrderControlle
     switch (name) {
       case "Save":
         controller.saveRunOrder();
+        break;
+      case "Exit":
+        Get.find<HomeController>().postUserGridSetting2(listStateManager: [
+          {"data": controller.clientGridStateManager},
+        ]);
         break;
       case "Clear":
         Get.delete<ImportDigitextRunOrderController>();
