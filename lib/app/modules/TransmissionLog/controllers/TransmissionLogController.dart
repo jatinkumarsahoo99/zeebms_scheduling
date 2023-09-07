@@ -385,10 +385,11 @@ class TransmissionLogController extends GetxController {
           } else {
             Snack.callError(map.toString());
           }
-        },failed: (val){
+        },
+        failed: (val) {
           Get.back();
-          print("Getting error in btnExportFetchFpc() : "+val.toString());
-    });
+          print("Getting error in btnExportFetchFpc() : " + val.toString());
+        });
   }
 
   void btnRescheduleSpots({Function? fun}) {
@@ -490,29 +491,33 @@ class TransmissionLogController extends GetxController {
   }
 
   void btnSearchSegment({Function? fun}) {
-    LoadingDialog.call();
-    Get.find<ConnectorControl>().GETMETHODCALL(
-        api: ApiFactory.TRANSMISSION_LOG_SEARCH_SEGMENT(
-            selectProgramSegment?.key ?? "",
-            txtSegment_epNo.text,
-            selectTapeSegmentDialog?.key ?? "",
-            false),
-        fun: (map) {
-          Get.back();
-          segmentList?.clear();
-          if (map is Map &&
-              map.containsKey("lstProgramSegments") &&
-              map["lstProgramSegments"] != null) {
-            segmentList = map["lstProgramSegments"];
-            update(["segmentList"]);
-          } else {
-            Snack.callError(map.toString());
-          }
-        },
-        failed: (val) {
-          Get.back();
-          Snack.callError(val.toString()??"");
-        });
+    if (selectProgramSegment == null) {
+      LoadingDialog.callErrorMessage("Please select program");
+    } else {
+      LoadingDialog.call();
+      Get.find<ConnectorControl>().GETMETHODCALL(
+          api: ApiFactory.TRANSMISSION_LOG_SEARCH_SEGMENT(
+              selectProgramSegment?.key ?? "",
+              txtSegment_epNo.text,
+              selectTapeSegmentDialog?.key ?? "",
+              false),
+          fun: (map) {
+            Get.back();
+            segmentList?.clear();
+            if (map is Map &&
+                map.containsKey("lstProgramSegments") &&
+                map["lstProgramSegments"] != null) {
+              segmentList = map["lstProgramSegments"];
+              update(["segmentList"]);
+            } else {
+              Snack.callError(map.toString());
+            }
+          },
+          failed: (val) {
+            Get.back();
+            Snack.callError(val.toString() ?? "");
+          });
+    }
   }
 
   void getInitTsCall({Function? fun}) {
