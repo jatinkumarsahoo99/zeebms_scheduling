@@ -376,7 +376,7 @@ class LstAllocatedSpots {
       data['bookingNumber'] = bookingNumber;
       data['bookingDetailCode'] = bookingDetailCode;
       data['zoneName'] = zoneName;
-      data['brandcode'] = brandcode;
+      // data['brandcode'] = brandcode;
       data['scheduledate'] = (scheduledate ?? "").contains("T")
           ? (scheduledate ?? "").split("T")[0]
           : (scheduledate ?? "");
@@ -550,7 +550,9 @@ class LstUnallocatedSpots {
       data['bookingDetailCode'] = bookingDetailCode;
       data['zoneName'] = zoneName;
       // data['brandcode'] = brandcode;
-      data['scheduledate'] = (scheduledate??"").contains("T")?(scheduledate??"").split("T")[0]:(scheduledate??"");
+      data['scheduledate'] = (scheduledate ?? "").contains("T")
+          ? (scheduledate ?? "").split("T")[0]
+          : (scheduledate ?? "");
       data['clientName'] = clientName;
       data['brandname'] = brandname;
       data['tapeduration'] = tapeduration;

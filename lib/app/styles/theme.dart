@@ -88,6 +88,11 @@ PlutoGridConfiguration plutoGridConfiguration({
                 fontSize: SizeDefine.columnTitleFontSize,
                 fontWeight: FontWeight.bold)),
         enterKeyAction: PlutoGridEnterKeyAction.none,
+        columnSize: PlutoGridColumnSizeConfig(
+          resizeMode: PlutoResizeMode.normal,
+          autoSizeMode:
+              autoScale ? PlutoAutoSizeMode.scale : PlutoAutoSizeMode.none,
+        ),
         tabKeyAction: PlutoGridTabKeyAction.moveToNextOnEdge,
         scrollbar: const PlutoGridScrollbarConfig(
             draggableScrollbar: true, isAlwaysShown: true, hoverWidth: 15));
@@ -119,7 +124,7 @@ PlutoGridConfiguration plutoGridConfigurationTransmisionLog({
         columnSize: PlutoGridColumnSizeConfig(
           resizeMode: PlutoResizeMode.normal,
           autoSizeMode:
-              !autoScale ? PlutoAutoSizeMode.scale : PlutoAutoSizeMode.none,
+              autoScale ? PlutoAutoSizeMode.scale : PlutoAutoSizeMode.none,
         ),
         style: PlutoGridStyleConfig(
             rowHeight: 20,

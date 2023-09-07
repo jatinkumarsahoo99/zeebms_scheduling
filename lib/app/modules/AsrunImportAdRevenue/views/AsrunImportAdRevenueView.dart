@@ -4,23 +4,19 @@ import 'package:bms_scheduling/app/modules/AsrunImportAdRevenue/bindings/arun_da
 import 'package:bms_scheduling/app/providers/DataGridMenu.dart';
 import 'package:bms_scheduling/widgets/DataGridShowOnly.dart';
 import 'package:bms_scheduling/widgets/LoadingDialog.dart';
+import 'package:bms_scheduling/widgets/PlutoGrid/pluto_grid.dart';
 import 'package:bms_scheduling/widgets/floating_dialog.dart';
 import 'package:flutter/material.dart';
-
 import 'package:get/get.dart';
-import 'package:bms_scheduling/widgets/PlutoGrid/pluto_grid.dart';
 
 import '../../../../widgets/DateTime/DateWithThreeTextField.dart';
 import '../../../../widgets/FormButton.dart';
-import '../../../../widgets/WarningBox.dart';
 // import '../../../../widgets/cutom_dropdown.dart';
 import '../../../../widgets/dropdown.dart';
-import '../../../../widgets/gridFromMap.dart';
-import '../../../../widgets/gridFromMap1.dart';
 import '../../../../widgets/input_fields.dart';
-import '../../../../widgets/radio_row.dart';
 import '../../../controller/HomeController.dart';
 import '../../../data/DropDownValue.dart';
+import '../../../data/user_data_settings_model.dart';
 import '../../../providers/ApiFactory.dart';
 import '../../../providers/SizeDefine.dart';
 import '../controllers/AsrunImportController.dart';
@@ -166,6 +162,12 @@ class AsrunImportAdRevenueView extends StatelessWidget {
                 color: Colors.white,
                 child: (controller.asrunData != null)
                     ? DataGridShowOnlyKeys(
+                        keysWidths: (controller.userDataSettings?.userSetting
+                            ?.firstWhere(
+                                (element) =>
+                                    element.controlName == "gridStateManager",
+                                orElse: () => UserSetting())
+                            .userSettings),
                         exportFileName: "Asrun Import",
                         // onFocusChange: (value) {
                         //   // controller.gridStateManager!.setGridMode(PlutoGridMode.selectWithOneTap);
@@ -416,6 +418,12 @@ class AsrunImportAdRevenueView extends StatelessWidget {
         break;
       case "Import":
         controller.pickFile();
+        break;
+      case "Exit":
+        Get.find<HomeController>().postUserGridSetting2(listStateManager: [
+          {"stateManager": controller.gridStateManager},
+          {"fpcGridStateManager": controller.fpcGridStateManager},
+        ]);
         break;
       case "Error":
         controller.checkError();
@@ -820,6 +828,11 @@ class AsrunImportAdRevenueView extends StatelessWidget {
         height: Get.height * 0.65,
         width: Get.width / 2,
         child: DataGridShowOnlyKeys(
+          keysWidths: (controller.userDataSettings?.userSetting
+              ?.firstWhere(
+                  (element) => element.controlName == "fpcGridStateManager",
+                  orElse: () => UserSetting())
+              .userSettings),
           mapData:
               controller.viewFPCData?.map((e) => e.toJson()).toList() ?? [],
           onload: (loadEvent) {

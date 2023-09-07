@@ -10,8 +10,10 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:get/get.dart';
 
+import '../../../data/user_data_settings_model.dart';
 import '../controllers/mam_work_orders_controller.dart';
-import 'package:bms_scheduling/widgets/PlutoGrid/pluto_grid.dart' show PlutoGridMode;
+import 'package:bms_scheduling/widgets/PlutoGrid/pluto_grid.dart'
+    show PlutoGridMode;
 
 class WoHistoryView extends GetView {
   const WoHistoryView(this.controller, {Key? key}) : super(key: key);
@@ -86,7 +88,8 @@ class WoHistoryView extends GetView {
                 return CheckBoxWidget1(
                   title: "Tel Dt",
                   value: controller.woHtelDate.value,
-                  onChanged: (val) => controller.woHtelDate.value = val ?? false,
+                  onChanged: (val) =>
+                      controller.woHtelDate.value = val ?? false,
                 );
               }),
               DateWithThreeTextField(
@@ -114,10 +117,21 @@ class WoHistoryView extends GetView {
             () {
               return (controller.wHDTList.isEmpty)
                   ? Container(
-                      decoration: BoxDecoration(border: Border.all(color: Colors.grey)),
+                      decoration:
+                          BoxDecoration(border: Border.all(color: Colors.grey)),
                     )
                   : DataGridFromMap(
-                      mapData: controller.wHDTList.map((e) => e.toJson()).toList(),
+                      witdthSpecificColumn: (controller
+                          .userDataSettings?.userSetting
+                          ?.firstWhere(
+                              (element) => element.controlName == "woHistorySM",
+                              orElse: () => UserSetting())
+                          .userSettings),
+                      onload: (sm) {
+                        controller.woHistorySM = sm.stateManager;
+                      },
+                      mapData:
+                          controller.wHDTList.map((e) => e.toJson()).toList(),
                       mode: PlutoGridMode.selectWithOneTap,
                       formatDate: false,
                     );

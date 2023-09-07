@@ -513,11 +513,11 @@ class DataGridFromMap extends StatelessWidget {
             ),
             rowColorCallback: colorCallback,
             onLoaded: (load) {
-              load.stateManager.setColumnSizeConfig(PlutoGridColumnSizeConfig(
-                  autoSizeMode: columnAutoResize
-                      ? PlutoAutoSizeMode.none
-                      : PlutoAutoSizeMode.scale,
-                  resizeMode: PlutoResizeMode.normal));
+              // load.stateManager.setColumnSizeConfig(PlutoGridColumnSizeConfig(
+              //     autoSizeMode: columnAutoResize
+              //         ? PlutoAutoSizeMode.none
+              //         : PlutoAutoSizeMode.scale,
+              //     resizeMode: PlutoResizeMode.normal));
               load.stateManager.setKeepFocus(false);
               if (onload != null) {
                 onload!(load);
@@ -579,7 +579,10 @@ class DataGridFromMap3 extends StatelessWidget {
     this.secondaryExtraDialogList,
     this.logicalKeyboardKey,
     this.keyBoardButtonPressed,
+    this.witdthSpecificColumn,
   }) : super(key: key);
+  final Map<String, double>? witdthSpecificColumn;
+
   final List<SecondaryShowDialogModel>? secondaryExtraDialogList;
   final bool showSecondaryDialog;
   final FocusNode? previousWidgetFN;
@@ -638,13 +641,16 @@ class DataGridFromMap3 extends StatelessWidget {
       segColumn.add(PlutoColumn(
           title: "No.",
           minWidth: 0,
+          width: (witdthSpecificColumn != null &&
+                  witdthSpecificColumn!.keys.toList().contains('no'))
+              ? witdthSpecificColumn![key]!
+              : Utils.getColumnSize(key: 'no', value: mapData[0][key]),
           enableRowChecked: false,
           readOnly: true,
           enableSorting: enableSort,
           enableRowDrag: false,
           enableDropToResize: true,
           enableContextMenu: false,
-          width: 35,
           cellPadding: const EdgeInsets.all(0),
           enableAutoEditing: false,
           renderer: ((rendererContext) {
@@ -694,6 +700,10 @@ class DataGridFromMap3 extends StatelessWidget {
     for (var key in mapData[0].keys) {
       segColumn.add(PlutoColumn(
           minWidth: 0,
+          width: (witdthSpecificColumn != null &&
+                  witdthSpecificColumn!.keys.toList().contains(key))
+              ? witdthSpecificColumn![key]!
+              : Utils.getColumnSize(key: key, value: mapData[0][key]),
           titlePadding: const EdgeInsets.only(),
           sort: sort,
           titleSpan: enableColumnDoubleTap != null &&
@@ -822,7 +832,6 @@ class DataGridFromMap3 extends StatelessWidget {
           enableEditingMode: editKeys != null && editKeys!.contains(key),
           enableDropToResize: true,
           enableContextMenu: false,
-          width: Utils.getColumnSize(key: key, value: mapData[0][key]),
           enableAutoEditing: false,
           hide: showonly == null
               ? (hideKeys != null && hideKeys!.contains(key)) ||
@@ -876,9 +885,9 @@ class DataGridFromMap3 extends StatelessWidget {
             ).copyWith(style: gridStyle),
             rowColorCallback: colorCallback,
             onLoaded: (load) {
-              load.stateManager.setColumnSizeConfig(PlutoGridColumnSizeConfig(
-                  autoSizeMode: PlutoAutoSizeMode.none,
-                  resizeMode: PlutoResizeMode.normal));
+              // load.stateManager.setColumnSizeConfig(PlutoGridColumnSizeConfig(
+              //     autoSizeMode: PlutoAutoSizeMode.none,
+              //     resizeMode: PlutoResizeMode.normal));
               load.stateManager.setKeepFocus(false);
               if (onload != null) {
                 onload!(load);

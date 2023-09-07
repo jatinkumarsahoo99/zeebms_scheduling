@@ -61,6 +61,7 @@ class EuropeCommercialImportStatusController extends GetxController {
         },
         fun: (map) {});
   }
+
   fetchUserSetting1() async {
     userGridSetting1 = await Get.find<HomeController>().fetchUserSetting();
     userGridSetting1?.forEach((e){

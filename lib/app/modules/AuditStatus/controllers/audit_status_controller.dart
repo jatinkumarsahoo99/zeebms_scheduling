@@ -16,7 +16,10 @@ import 'package:bms_scheduling/widgets/input_fields.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
+import '../../../../widgets/PlutoGrid/src/manager/pluto_grid_state_manager.dart';
+import '../../../controller/HomeController.dart';
 import '../../../data/DropDownValue.dart';
+import '../../../data/user_data_settings_model.dart';
 import '../bindings/audit_status_cancel_deals.dart';
 import '../views/audit_cancellatin_view.dart';
 
@@ -37,6 +40,7 @@ class AuditStatusController extends GetxController {
   List<AuditStatusShowReschdule>? showReschduleData;
   AuditStatusCancelDeals? auditStatusCancelDeals;
   AuditStatusReschduleDisplay? auditStatusReschduleDisplay;
+  PlutoGridStateManager? stateManager;
 
   //input controllers
   DropDownValue? selectLocation;
@@ -412,6 +416,13 @@ class AuditStatusController extends GetxController {
   @override
   void onReady() {
     super.onReady();
+    fetchUserSetting1();
+  }
+
+  UserDataSettings? userDataSettings;
+
+  fetchUserSetting1() async {
+    userDataSettings = await Get.find<HomeController>().fetchUserSetting2();
   }
 
   @override

@@ -2230,141 +2230,144 @@ class TransmissionLogView extends StatelessWidget {
                   child: SizedBox(
                     width: Get.width * 0.8,
                     // height: Get.he,
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: <Widget>[
-                        Row(
-                          children: [
-                            GetBuilder<TransmissionLogController>(
-                              id: "selectedProgram",
-                              init: controller,
-                              builder: (controller) =>
-                                  DropDownField.formDropDownSearchAPI2(
-                                    GlobalKey(),
-                                    context,
-                                    title: "Program",
-                                    onchanged: (DropDownValue? value) async {
-                                      controller.selectProgramSegment = value;
-                                      // selectedProgramId.text = value?.key ?? "";
-                                      // selectedProgram.text = value?.value ?? "";
-                                      // selectProgram = value;
-                                      // await controller.getDataAfterProgLoad(controller.selectedLocationId.text, controller.selectedChannelId.text, value!.key);
-                                    },
-                                    url: ApiFactory
-                                        .TRANSMISSION_LOG_SEGMENT_PROGRAM_SEARCH(),
-                                    width: MediaQuery.of(context).size.width * .2,
-                                    // selectedValue: selectProgram,
-                                    widthofDialog: 350,
-                                    dialogHeight: Get.height * .65,
-                                    parseKeyForKey: "ProgramCode",
-                                    parseKeyForValue: "ProgramName",
-                                  ),
-                            ),
-                            Focus(
-                              onFocusChange: (focus) {
-                                if (!focus) {
-                                  controller.getEpisodeLeaveSegment();
-                                }
-                              },
-                              canRequestFocus: false,
-                              skipTraversal: true,
-                              child: InputFields.numbers(
-                                hintTxt: "Episode No",
-                                onchanged: (val) {
+                    child: FocusTraversalGroup(
+                      policy: OrderedTraversalPolicy(),
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: <Widget>[
+                          Row(
+                            children: [
+                              GetBuilder<TransmissionLogController>(
+                                id: "selectedProgram",
+                                init: controller,
+                                builder: (controller) =>
+                                    DropDownField.formDropDownSearchAPI2(
+                                      GlobalKey(),
+                                      context,
+                                      title: "Program",
+                                      onchanged: (DropDownValue? value) async {
+                                        controller.selectProgramSegment = value;
+                                        // selectedProgramId.text = value?.key ?? "";
+                                        // selectedProgram.text = value?.value ?? "";
+                                        // selectProgram = value;
+                                        // await controller.getDataAfterProgLoad(controller.selectedLocationId.text, controller.selectedChannelId.text, value!.key);
+                                      },
+                                      url: ApiFactory
+                                          .TRANSMISSION_LOG_SEGMENT_PROGRAM_SEARCH(),
+                                      width: MediaQuery.of(context).size.width * .2,
+                                      // selectedValue: selectProgram,
+                                      widthofDialog: 350,
+                                      dialogHeight: Get.height * .65,
+                                      parseKeyForKey: "ProgramCode",
+                                      parseKeyForValue: "ProgramName",
+                                    ),
+                              ),
+                              Focus(
+                                onFocusChange: (focus) {
+                                  if (!focus) {
+                                    controller.getEpisodeLeaveSegment();
+                                  }
+                                },
+                                canRequestFocus: false,
+                                skipTraversal: true,
+                                child: InputFields.numbers(
+                                  hintTxt: "Episode No",
+                                  onchanged: (val) {
 // controller.getEpisodeLeaveSegment();
-                                },
-                                controller: controller.txtSegment_epNo..text = "0",
-                                isNegativeReq: false,
-                                width: 0.12,
+                                  },
+                                  controller: controller.txtSegment_epNo..text = "0",
+                                  isNegativeReq: false,
+                                  width: 0.12,
+                                ),
                               ),
-                            ),
-                            SizedBox(
-                              width: 10,
-                            ),
-                            Padding(
-                              padding: EdgeInsets.only(top: 3),
-                              child: InputFields.formFieldNumberMask(
-                                  hintTxt: "FPC Time",
-                                  controller: controller.segmentFpcTime_
-                                    ..text = "00:00:00",
-                                  widthRatio: 0.12,
-                                  isTime: true,
-                                  paddingLeft: 0),
-                            ),
-                            SizedBox(
-                              width: 10,
-                            ),
-                            Obx(
-                                  () => DropDownField.formDropDown1WidthMap(
-                                controller.listTapeDetailsSegment?.value,
-                                    (value) {
-                                  controller.selectTapeSegmentDialog = value;
-                                  // controller.selectedLocationId.text = value.key!;
-                                  // controller.selectedLocationName.text = value.value!;
-                                  // controller.getChannelsBasedOnLocation(value.key!);
-                                },
-                                "Tape",
-                                0.12,
-                                // isEnable: controller.isEnable.value,
-                                selected: controller.selectTapeSegmentDialog,
-                                autoFocus: true,
-                                // dialogWidth: 330,
-                                dialogHeight: Get.height * .7,
+                              SizedBox(
+                                width: 10,
                               ),
-                            ),
-                            SizedBox(
-                              width: 10,
-                            ),
-                            Padding(
-                              padding: const EdgeInsets.only(top: 15.0, left: 10),
-                              child: FormButtonWrapper(
-                                btnText: "Search",
-                                showIcon: false,
-                                callback: () {
-                                  controller.btnSearchSegment();
-                                },
+                              Padding(
+                                padding: EdgeInsets.only(top: 3),
+                                child: InputFields.formFieldNumberMask(
+                                    hintTxt: "FPC Time",
+                                    controller: controller.segmentFpcTime_
+                                      ..text = "00:00:00",
+                                    widthRatio: 0.12,
+                                    isTime: true,
+                                    paddingLeft: 0),
                               ),
-                            ),
-                            Padding(
-                              padding: const EdgeInsets.only(top: 15.0, left: 10),
-                              child: FormButtonWrapper(
-                                btnText: "Add",
-                                showIcon: false,
-                                callback: () {
-                                  // Get.back();
-                                  controller.btnInsProg_Addsegments_Click();
-                                },
+                              SizedBox(
+                                width: 10,
                               ),
-                            ),
-                          ],
-                        ),
-                        SizedBox(
-                          height: 15,
-                        ),
-                        GetBuilder<TransmissionLogController>(
-                            id: "segmentList",
-                            init: controller,
-                            builder: (controller) {
-                              return SizedBox(
-                                // width: 500,
-                                width: Get.width * 0.8,
-                                height: Get.height * 0.6,
-                                child: (controller.segmentList != null)
-                                    ? DataGridFromMap(
-                                    hideCode: false,
-                                    formatDate: false,
-                                    onload: (PlutoGridOnLoadedEvent load) {
-                                      controller.tblSegement = load.stateManager;
-                                    },
-                                    // colorCallback: (renderC) => Colors.red[200]!,
-                                    mapData: (controller.segmentList!))
-                                // _dataTable3()
-                                    : const WarningBox(
-                                    text:
-                                    'Enter Location, Channel & Date to get the Break Definitions'),
-                              );
-                            })
-                      ],
+                              Obx(
+                                    () => DropDownField.formDropDown1WidthMap(
+                                  controller.listTapeDetailsSegment?.value,
+                                      (value) {
+                                    controller.selectTapeSegmentDialog = value;
+                                    // controller.selectedLocationId.text = value.key!;
+                                    // controller.selectedLocationName.text = value.value!;
+                                    // controller.getChannelsBasedOnLocation(value.key!);
+                                  },
+                                  "Tape",
+                                  0.12,
+                                  // isEnable: controller.isEnable.value,
+                                  selected: controller.selectTapeSegmentDialog,
+                                  autoFocus: true,
+                                  // dialogWidth: 330,
+                                  dialogHeight: Get.height * .7,
+                                ),
+                              ),
+                              SizedBox(
+                                width: 10,
+                              ),
+                              Padding(
+                                padding: const EdgeInsets.only(top: 15.0, left: 10),
+                                child: FormButtonWrapper(
+                                  btnText: "Search",
+                                  showIcon: false,
+                                  callback: () {
+                                    controller.btnSearchSegment();
+                                  },
+                                ),
+                              ),
+                              Padding(
+                                padding: const EdgeInsets.only(top: 15.0, left: 10),
+                                child: FormButtonWrapper(
+                                  btnText: "Add",
+                                  showIcon: false,
+                                  callback: () {
+                                    // Get.back();
+                                    controller.btnInsProg_Addsegments_Click();
+                                  },
+                                ),
+                              ),
+                            ],
+                          ),
+                          SizedBox(
+                            height: 15,
+                          ),
+                          GetBuilder<TransmissionLogController>(
+                              id: "segmentList",
+                              init: controller,
+                              builder: (controller) {
+                                return SizedBox(
+                                  // width: 500,
+                                  width: Get.width * 0.8,
+                                  height: Get.height * 0.6,
+                                  child: (controller.segmentList != null)
+                                      ? DataGridFromMap(
+                                      hideCode: false,
+                                      formatDate: false,
+                                      onload: (PlutoGridOnLoadedEvent load) {
+                                        controller.tblSegement = load.stateManager;
+                                      },
+                                      // colorCallback: (renderC) => Colors.red[200]!,
+                                      mapData: (controller.segmentList!))
+                                  // _dataTable3()
+                                      : const WarningBox(
+                                      text:
+                                      'Enter Location, Channel & Date to get the Break Definitions'),
+                                );
+                              })
+                        ],
+                      ),
                     ),
                   ),
                 ),

@@ -11,6 +11,7 @@ import '../../../../widgets/dropdown.dart';
 import '../../../../widgets/gridFromMap.dart';
 import '../../../../widgets/input_fields.dart';
 import '../../../controller/HomeController.dart';
+import '../../../data/user_data_settings_model.dart';
 import '../../../providers/ApiFactory.dart';
 import '../../../providers/Utils.dart';
 import '../../filler/controllers/filler_controller.dart';
@@ -87,11 +88,7 @@ class EventSecondaryView extends GetView<EventSecondaryController> {
                                           controller.controllsEnabled.value,
                                       mainTextController: controller.fromdateTC,
                                       // endDate: DateTime.now(),
-                                       endDate:
-                                      (ApiFactory.Enviroment.toLowerCase() ==
-                                              "prod")
-                                          ? DateTime.now()
-                                          : null,
+                                      startDate: DateTime.now(),
                                     ),
                                   ),
                                   FormButton(
@@ -118,7 +115,15 @@ class EventSecondaryView extends GetView<EventSecondaryController> {
                                   child: controller.left1stDT.value.isEmpty
                                       ? null
                                       : DataGridFromMap(
-                                        canShowFilter:false,
+                                          witdthSpecificColumn: (controller
+                                              .userDataSettings?.userSetting
+                                              ?.firstWhere(
+                                                  (element) =>
+                                                      element.controlName ==
+                                                      "left1stSM",
+                                                  orElse: () => UserSetting())
+                                              .userSettings),
+                                          canShowFilter: false,
                                           mapData: controller.left1stDT.value
                                               .map((e) => e.toJson())
                                               .toList(),
@@ -181,14 +186,15 @@ class EventSecondaryView extends GetView<EventSecondaryController> {
                                                   LoadingDialog.showErrorDialog(
                                                       "First select the row to delete?");
                                                 } else if (controller
-                                                        .left2ndDT[controller
-                                                            .left2ndGridSelectedIdx]
-                                                        .eventCode ==
-                                                    null||controller
-                                                        .left2ndDT[controller
-                                                            .left2ndGridSelectedIdx]
-                                                        .eventCode ==
-                                                    0) {
+                                                            .left2ndDT[controller
+                                                                .left2ndGridSelectedIdx]
+                                                            .eventCode ==
+                                                        null ||
+                                                    controller
+                                                            .left2ndDT[controller
+                                                                .left2ndGridSelectedIdx]
+                                                            .eventCode ==
+                                                        0) {
                                                   LoadingDialog.showErrorDialog(
                                                       "You cannot delete segment row. Select Promo Row.");
                                                 } else {
@@ -207,7 +213,16 @@ class EventSecondaryView extends GetView<EventSecondaryController> {
                                               }
                                             },
                                             child: DataGridFromMap(
-                                              canShowFilter:false,
+                                              witdthSpecificColumn: (controller
+                                                  .userDataSettings?.userSetting
+                                                  ?.firstWhere(
+                                                      (element) =>
+                                                          element.controlName ==
+                                                          "left2ndSM",
+                                                      orElse: () =>
+                                                          UserSetting())
+                                                  .userSettings),
+                                              canShowFilter: false,
                                               mapData: controller
                                                   .left2ndDT.value
                                                   .map((e) => e.toJson())
@@ -374,7 +389,15 @@ class EventSecondaryView extends GetView<EventSecondaryController> {
                                   child: controller.right3rdDT.value.isEmpty
                                       ? null
                                       : DataGridFromMap(
-                                        canShowFilter:false,
+                                          witdthSpecificColumn: (controller
+                                              .userDataSettings?.userSetting
+                                              ?.firstWhere(
+                                                  (element) =>
+                                                      element.controlName ==
+                                                      "rightSM",
+                                                  orElse: () => UserSetting())
+                                              .userSettings),
+                                          canShowFilter: false,
                                           mapData: controller.right3rdDT.value,
                                           onRowDoubleTap: (row) => controller
                                               .handleDoubleTapInRightTable(

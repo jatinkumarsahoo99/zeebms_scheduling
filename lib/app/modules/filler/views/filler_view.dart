@@ -9,6 +9,7 @@ import '../../../../widgets/dropdown.dart';
 import '../../../../widgets/gridFromMap.dart';
 import '../../../../widgets/input_fields.dart';
 import '../../../controller/HomeController.dart';
+import '../../../data/user_data_settings_model.dart';
 import '../../../providers/ApiFactory.dart';
 import '../controllers/filler_controller.dart';
 
@@ -63,7 +64,6 @@ class FillerView extends GetView<FillerController> {
                       isEnable: controller.isEnable.value,
                       onFocusChange: (data) => controller.fetchFPCDetails(),
                       mainTextController: controller.date_,
-                      // endDate: DateTime.now(),
                       startDate: DateTime.now(),
                     ),
                   ),
@@ -139,7 +139,7 @@ class FillerView extends GetView<FillerController> {
                                         },
                                         mainTextController:
                                             controller.fillerFromDate_,
-                                        startDate: DateTime.now(),
+                                        endDate: DateTime.now(),
                                       ),
                                     ),
                                     const SizedBox(width: 15),
@@ -216,6 +216,13 @@ class FillerView extends GetView<FillerController> {
                     ),
                     child: DataGridFromMap3(
                       showSrNo: true,
+                      witdthSpecificColumn: (controller
+                          .userDataSettings?.userSetting
+                          ?.firstWhere(
+                              (element) =>
+                                  element.controlName == "gridStateManager",
+                              orElse: () => UserSetting())
+                          .userSettings),
                       formatDate: false,
                       showSecondaryDialog: false,
                       mapData: (controller.fillerDailyFpcList.value
@@ -395,6 +402,7 @@ class FillerView extends GetView<FillerController> {
                               child: FormButton(
                                 btnText: "Add",
                                 callback: controller.handleAddTap,
+                                focusNode: controller.addFN,
                               ),
                             ),
                             const SizedBox(width: 10),
@@ -402,6 +410,7 @@ class FillerView extends GetView<FillerController> {
                               padding: const EdgeInsets.only(top: 15.0),
                               child: FormButton(
                                 btnText: "Delete",
+                                focusNode: controller.deleteFN,
                                 callback: () {
                                   if (controller.fillerSegmentList.isNotEmpty &&
                                       controller
@@ -412,6 +421,10 @@ class FillerView extends GetView<FillerController> {
                                     controller.fillerSegmentList.removeAt(
                                         controller.bottomLastSelectedIdx);
                                     controller.calculateFillerAndTotalFiller();
+                                    Future.delayed(Duration(milliseconds: 200))
+                                        .then((value) {
+                                      controller.deleteFN.requestFocus();
+                                    });
                                   }
                                 },
                               ),
@@ -433,6 +446,13 @@ class FillerView extends GetView<FillerController> {
                                   decoration: BoxDecoration(
                                       border: Border.all(color: Colors.grey))),
                               child: DataGridFromMap3(
+                                witdthSpecificColumn: (controller
+                                    .userDataSettings?.userSetting
+                                    ?.firstWhere(
+                                        (element) =>
+                                            element.controlName == "bottomSM",
+                                        orElse: () => UserSetting())
+                                    .userSettings),
                                 mapData: (controller.fillerSegmentList
                                     .map((e) => e.toJson())
                                     .toList()),
