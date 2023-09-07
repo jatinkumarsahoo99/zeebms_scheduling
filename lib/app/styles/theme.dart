@@ -91,7 +91,7 @@ PlutoGridConfiguration plutoGridConfiguration({
         columnSize: PlutoGridColumnSizeConfig(
           resizeMode: PlutoResizeMode.normal,
           autoSizeMode:
-              !autoScale ? PlutoAutoSizeMode.scale : PlutoAutoSizeMode.none,
+              autoScale ? PlutoAutoSizeMode.scale : PlutoAutoSizeMode.none,
         ),
         tabKeyAction: PlutoGridTabKeyAction.moveToNextOnEdge,
         scrollbar: const PlutoGridScrollbarConfig(
@@ -124,7 +124,7 @@ PlutoGridConfiguration plutoGridConfigurationTransmisionLog({
         columnSize: PlutoGridColumnSizeConfig(
           resizeMode: PlutoResizeMode.normal,
           autoSizeMode:
-              !autoScale ? PlutoAutoSizeMode.scale : PlutoAutoSizeMode.none,
+              autoScale ? PlutoAutoSizeMode.scale : PlutoAutoSizeMode.none,
         ),
         style: PlutoGridStyleConfig(
             rowHeight: 20,
@@ -192,7 +192,7 @@ PlutoGridConfiguration plutoGridConfiguration2({
         columnSize: PlutoGridColumnSizeConfig(
           resizeMode: PlutoResizeMode.normal,
           autoSizeMode:
-              !autoScale ? PlutoAutoSizeMode.scale : PlutoAutoSizeMode.none,
+              autoScale ? PlutoAutoSizeMode.scale : PlutoAutoSizeMode.none,
         ),
         style: PlutoGridStyleConfig(
             rowHeight: rowHeight,
