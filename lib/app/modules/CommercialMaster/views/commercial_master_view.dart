@@ -148,11 +148,9 @@ class CommercialMasterView extends StatelessWidget {
                                                       .formDropDown1WidthMap(
                                                           controllerX.secType
                                                               .value, (value) {
-                                                    controllerX
-                                                            .selectedSecType =
-                                                        value;
+                                                    controllerX.selectedSecType?.value = value;
 
-                                                    controllerX.getTapeId();
+                                                    controllerX.getTapeId(value.key??"");
                                                     // controllerX.isListenerActive = true;
                                                   },
                                                           "Sec Type",
@@ -160,7 +158,7 @@ class CommercialMasterView extends StatelessWidget {
                                                               .isEnable,
                                                           .17,
                                                           selected: controllerX
-                                                              .selectedSecType,
+                                                              .selectedSecType?.value,
                                                           autoFocus: false,
                                                           inkWellFocusNode:
                                                               controllerX
@@ -263,6 +261,8 @@ class CommercialMasterView extends StatelessWidget {
                                           isNegativeReq: false,
                                           width: 0.17,
                                           fN: controllerX.segNoFocus,
+                                              isEnabled: controllerX
+                                                  .isEnableSelective,
                                           // isEnabled: true,
                                         )),
                                         SizedBox(
@@ -347,28 +347,12 @@ class CommercialMasterView extends StatelessWidget {
                                       mainAxisAlignment:
                                           MainAxisAlignment.spaceBetween,
                                       children: [
-                                        /*TimeWithThreeTextField(
-                                          title: "SOM",
-                                          mainTextController:
-                                              controllerX.somController,
-                                          widthRation: 0.17,
-                                          isTime: false,
-                                          onFocusChange: (time) {
-                                            print("time" + time);
-                                            controllerX.calculateDuration();
-                                          },
-                                        ),*/
                                         InputFields.formFieldNumberMask(
                                             hintTxt: "SOM",
                                             controller:
                                                 controllerX.somController,
                                             widthRatio: 0.17,
                                             isEnable: controllerX.isEnable,
-                                            /*onEditComplete: (val){
-                                        controllerX.calculateDuration();
-                                      },*/
-                                            // isTime: true,
-                                            // isEnable: controller.isEnable.value,
                                             paddingLeft: 0),
                                         SizedBox(
                                           width: MediaQuery.of(context)
@@ -393,16 +377,6 @@ class CommercialMasterView extends StatelessWidget {
                                                   // isTime: true,
                                                   // isEnable: controller.isEnable.value,
                                                   paddingLeft: 0),
-                                              /* TimeWithThreeTextField(
-                                          title: "EOM",
-                                          mainTextController:
-                                              controllerX.eomController,
-                                          widthRation: 0.17,
-                                          isTime: false,
-                                          onFocusChange: (time) {
-                                            controllerX.calculateDuration();
-                                          },
-                                        ),*/
                                               Obx(() => TimeWithThreeTextField(
                                                     title: "Duration",
                                                     mainTextController:
@@ -462,7 +436,7 @@ class CommercialMasterView extends StatelessWidget {
                                                   controllerX.clientDetails
                                                       .value, (value) {
                                                 controllerX
-                                                        .selectedClientDetails =
+                                                        .selectedClientDetails?.value =
                                                     value;
                                                 controllerX.getAgencyBrandType(
                                                     value.key ?? "");
@@ -475,7 +449,7 @@ class CommercialMasterView extends StatelessWidget {
                                                   inkWellFocusNode:
                                                       controllerX.clientFocus,
                                                   selected: controllerX
-                                                      .selectedClientDetails)),
+                                                      .selectedClientDetails?.value)),
                                         ),
                                       ],
                                     ),
@@ -488,7 +462,7 @@ class CommercialMasterView extends StatelessWidget {
                                                   .formDropDown1WidthMap(
                                                       controllerX.brandType
                                                           .value, (value) {
-                                                controllerX.selectedBrandType =
+                                                controllerX.selectedBrandType?.value =
                                                     value;
                                                 controllerX.getLevelDetails(
                                                     value.key ?? "");
@@ -497,7 +471,7 @@ class CommercialMasterView extends StatelessWidget {
                                                           controllerX.isEnable,
                                                       autoFocus: false,
                                                       selected: controllerX
-                                                          .selectedBrandType)),
+                                                          .selectedBrandType?.value)),
                                           InputFields.formField1(
                                             hintTxt: "Product Name",
                                             controller: controllerX
@@ -582,7 +556,7 @@ class CommercialMasterView extends StatelessWidget {
                                                     controllerX.agencyDetails
                                                         .value, (value) {
                                                   controllerX
-                                                          .selectedAgencyDetails =
+                                                          .selectedAgencyDetails?.value =
                                                       value;
                                                   controllerX
                                                       .agencyNameController
@@ -594,7 +568,7 @@ class CommercialMasterView extends StatelessWidget {
                                                         controllerX.isEnable,
                                                     autoFocus: false,
                                                     selected: controllerX
-                                                        .selectedAgencyDetails)),
+                                                        .selectedAgencyDetails?.value)),
                                           ),
                                         ]),
                                     /* SizedBox(height: 14),
