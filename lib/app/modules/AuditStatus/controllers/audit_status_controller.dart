@@ -11,6 +11,7 @@ import 'package:bms_scheduling/app/providers/extensions/string_extensions.dart';
 import 'package:bms_scheduling/widgets/DataGridShowOnly.dart';
 import 'package:bms_scheduling/widgets/DateTime/DateWithThreeTextField.dart';
 import 'package:bms_scheduling/widgets/FormButton.dart';
+import 'package:bms_scheduling/widgets/LoadingDialog.dart';
 import 'package:bms_scheduling/widgets/input_fields.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
@@ -80,6 +81,7 @@ class AuditStatusController extends GetxController {
   List bookingData = [];
 
   showBtnData() {
+    LoadingDialog.call();
     if ((currentType.value ?? "").isNotEmpty) {
       Get.find<ConnectorControl>().POSTMETHOD(
           api: ApiFactory.NewBookingActivityReport_BtnShow,
@@ -91,6 +93,7 @@ class AuditStatusController extends GetxController {
             "type": gettypeName(currentType.value)
           },
           fun: (map) {
+            Get.back();
             if (map is Map && map.containsKey("inFo_Show")) {
               if (map["inFo_Show"]["lstAdditions"] != null) {
                 bookingData = map["inFo_Show"]["lstAdditions"];
@@ -118,7 +121,7 @@ class AuditStatusController extends GetxController {
             element.containsKey("auditedSpots") &&
             element.containsKey("totalspots") &&
             element["auditedSpots"] != element["totalspots"] &&
-            element["auditedSpots"] < dr["totalspots"])) {
+            (element["auditedSpots"] ?? 0) < (dr["totalspots"] ?? 0))) {
       return const Color.fromRGBO(255, 150, 150, 1);
     }
 

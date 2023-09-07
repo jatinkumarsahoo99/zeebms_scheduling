@@ -100,11 +100,15 @@ class FillerMasterController extends GetxController {
     musicDirectorCtr.clear();
     musicCompanyCtr.clear();
     selectedDropDowns = List.generate(20, (index) => null);
-    if (onloadModel?.fillerMasterOnload?.lsttapesource != null && onloadModel!.fillerMasterOnload!.lsttapesource!.isNotEmpty) {
-      selectedDropDowns[16] = onloadModel!.fillerMasterOnload!.lsttapesource![0];
+    if (onloadModel?.fillerMasterOnload?.lsttapesource != null &&
+        onloadModel!.fillerMasterOnload!.lsttapesource!.isNotEmpty) {
+      selectedDropDowns[16] =
+          onloadModel!.fillerMasterOnload!.lsttapesource![0];
     }
-    if (onloadModel?.fillerMasterOnload?.lstProducerTape != null && onloadModel!.fillerMasterOnload!.lstProducerTape!.isNotEmpty) {
-      selectedDropDowns[17] = onloadModel!.fillerMasterOnload!.lstProducerTape![0];
+    if (onloadModel?.fillerMasterOnload?.lstProducerTape != null &&
+        onloadModel!.fillerMasterOnload!.lstProducerTape!.isNotEmpty) {
+      selectedDropDowns[17] =
+          onloadModel!.fillerMasterOnload!.lstProducerTape![0];
     }
     updateUI();
     locationFN.requestFocus();
@@ -114,7 +118,8 @@ class FillerMasterController extends GetxController {
   void onInit() {
     selectedDropDowns = List.generate(20, (index) => null);
 
-    formPermissions = Utils.fetchPermissions1(Routes.FILLER_MASTER.replaceAll("/", ""));
+    formPermissions =
+        Utils.fetchPermissions1(Routes.FILLER_MASTER.replaceAll("/", ""));
     super.onInit();
   }
 
@@ -126,11 +131,13 @@ class FillerMasterController extends GetxController {
   }
 
   calculateDuration({bool showDialog = true}) {
-    var diff = (Utils.oldBMSConvertToSecondsValue(value: eomCtr.text) - Utils.oldBMSConvertToSecondsValue(value: somCtr.text));
+    var diff = (Utils.oldBMSConvertToSecondsValue(value: eomCtr.text) -
+        Utils.oldBMSConvertToSecondsValue(value: somCtr.text));
 
     if (diff.isNegative && showDialog) {
       eomCtr.clear();
-      LoadingDialog.showErrorDialog("EOM should not less than SOM", callback: () {
+      LoadingDialog.showErrorDialog("EOM should not less than SOM",
+          callback: () {
         eomFN.requestFocus();
       });
     } else {
@@ -188,7 +195,8 @@ class FillerMasterController extends GetxController {
   }
 
   setCartNo() async {
-    if (tapeIDCtr.text.trim().isNotEmpty && segNoCtrLeft.text.trim().isNotEmpty) {
+    if (tapeIDCtr.text.trim().isNotEmpty &&
+        segNoCtrLeft.text.trim().isNotEmpty) {
       var cartNo = tapeIDCtr.text.trim();
       txNoCtr.text = cartNo.substring(0, min(cartNo.length, 13));
     } else {
@@ -205,14 +213,20 @@ class FillerMasterController extends GetxController {
     if (segNoCtrLeft.text.trim().isNotEmpty) {
       tapeIDCtr.text = tapeIDCtr.text.trim();
       // txNoCtr.text = "${tapeIDCtr.text.trim()}-${segNoCtrLeft.text.trim()}";
-      if (tapeIDCtr.text.trim().isNotEmpty && segNoCtrLeft.text.trim() != "0" && segNoCtrLeft.text.trim().isNotEmpty) {
+      if (tapeIDCtr.text.trim().isNotEmpty &&
+          segNoCtrLeft.text.trim() != "0" &&
+          segNoCtrLeft.text.trim().isNotEmpty) {
         LoadingDialog.call();
         await Get.find<ConnectorControl>().POSTMETHOD(
           api: ApiFactory.FILLER_MASTER_SEGNO_LEAVE,
           fun: (resp) {
             Get.back();
-            if (resp != null && resp is Map<String, dynamic> && resp['segNumber'] != null && resp['segNumber']['eventName'] != null) {
-              LoadingDialog.showErrorDialog(resp['segNumber']['eventName'].toString(), callback: () {
+            if (resp != null &&
+                resp is Map<String, dynamic> &&
+                resp['segNumber'] != null &&
+                resp['segNumber']['eventName'] != null) {
+              LoadingDialog.showErrorDialog(
+                  resp['segNumber']['eventName'].toString(), callback: () {
                 tapeIDFN.requestFocus();
               });
             }
@@ -229,20 +243,26 @@ class FillerMasterController extends GetxController {
     } else {
       segNoCtrLeft.text = "0";
     }
-    retrievRecord(tapeCode: tapeIDCtr.text, segNo: segNoCtrLeft.text);
+    retrievRecord(
+        tapeCode: tapeIDCtr.text, segNo: segNoCtrLeft.text, fromCopy: true);
   }
 
   tapeIDLeave() async {
     tapeIDCtr.text = tapeIDCtr.text.trim();
     await setCartNo();
-    if (tapeIDCtr.text.trim().isNotEmpty && (segNoCtrLeft.text.trim().isNotEmpty && segNoCtrLeft.text != "0")) {
+    if (tapeIDCtr.text.trim().isNotEmpty &&
+        (segNoCtrLeft.text.trim().isNotEmpty && segNoCtrLeft.text != "0")) {
       LoadingDialog.call();
       await Get.find<ConnectorControl>().POSTMETHOD(
         api: ApiFactory.FILLER_MASTER_TAPE_ID_LEAVE,
         fun: (resp) {
           Get.back();
-          if (resp != null && resp is Map<String, dynamic> && resp['tapeID_Leave'] != null && resp['tapeID_Leave']['eventName'] != null) {
-            LoadingDialog.showErrorDialog(resp['tapeID_Leave']['eventName'].toString(), callback: () {
+          if (resp != null &&
+              resp is Map<String, dynamic> &&
+              resp['tapeID_Leave'] != null &&
+              resp['tapeID_Leave']['eventName'] != null) {
+            LoadingDialog.showErrorDialog(
+                resp['tapeID_Leave']['eventName'].toString(), callback: () {
               tapeIDFN.requestFocus();
             });
           }
@@ -268,7 +288,9 @@ class FillerMasterController extends GetxController {
         api: ApiFactory.FILLER_MASTER_ON_LEAVE_LOCATION(val.key ?? ""),
         fun: (resp) {
           closeDialogIfOpen();
-          if (resp != null && resp is Map<String, dynamic> && resp["onLeaveLocation"] != null) {
+          if (resp != null &&
+              resp is Map<String, dynamic> &&
+              resp["onLeaveLocation"] != null) {
             selectedDropDowns[19] = null;
             channelList.clear();
             channelList.addAll((resp['onLeaveLocation'] as List<dynamic>)
@@ -289,7 +311,12 @@ class FillerMasterController extends GetxController {
     }
   }
 
-  retrievRecord({String text = "", String code = "", String tapeCode = "", String segNo = "", bool fromCopy = false}) async {
+  retrievRecord(
+      {String text = "",
+      String code = "",
+      String tapeCode = "",
+      String segNo = "",
+      bool fromCopy = false}) async {
     LoadingDialog.call();
     await Get.find<ConnectorControl>().POSTMETHOD(
       api: ApiFactory.FILLER_MASTER_RETRIVE_RECORDS,
@@ -297,7 +324,9 @@ class FillerMasterController extends GetxController {
         closeDialogIfOpen();
         if (resp != null && resp is Map<String, dynamic>) {
           var tempModel = RetriveRecordFillerMasterModel.fromJson(resp);
-          HouseID? tempModel2 = (tempModel.houseID?.isNotEmpty ?? false) ? tempModel.houseID![0] : null;
+          HouseID? tempModel2 = (tempModel.houseID?.isNotEmpty ?? false)
+              ? tempModel.houseID![0]
+              : null;
 
           if (tempModel2 != null && onloadModel != null) {
             /// FILLER CODE
@@ -306,18 +335,22 @@ class FillerMasterController extends GetxController {
             }
 
             ///LOCATION
-            var tempLocation = onloadModel?.fillerMasterOnload?.lstLocation?.firstWhereOrNull((element) => element.key == tempModel2.locationcode);
+            var tempLocation = onloadModel?.fillerMasterOnload?.lstLocation
+                ?.firstWhereOrNull(
+                    (element) => element.key == tempModel2.locationcode);
             if (tempLocation != null) {
               selectedDropDowns[0] = tempLocation;
             }
 
             /// CHANNELS
-            var tempChannel = channelList.firstWhereOrNull((element) => element.key == tempModel2.channelcode);
+            var tempChannel = channelList.firstWhereOrNull(
+                (element) => element.key == tempModel2.channelcode);
             if (tempChannel != null) {
               selectedDropDowns[19] = tempChannel;
             } else if (selectedDropDowns[0] != null) {
               locationOnChanged(selectedDropDowns[0]).then((value) {
-                var tempChannel2 = channelList.firstWhereOrNull((element) => element.key == tempModel2.channelcode);
+                var tempChannel2 = channelList.firstWhereOrNull(
+                    (element) => element.key == tempModel2.channelcode);
                 if (tempChannel2 != null) {
                   selectedDropDowns[19] = tempChannel2;
                 }
@@ -325,14 +358,18 @@ class FillerMasterController extends GetxController {
             }
 
             ///MOVIE GRADE
-            var movieGrade = onloadModel?.fillerMasterOnload?.lstMovieGrade?.firstWhereOrNull((element) => element.key == tempModel2.grade);
+            var movieGrade = onloadModel?.fillerMasterOnload?.lstMovieGrade
+                ?.firstWhereOrNull(
+                    (element) => element.key == tempModel2.grade);
             if (movieGrade != null) {
               selectedDropDowns[15] = movieGrade;
             }
 
             /// BANNER CODE
-            if (tempModel2.bannerCode != null && tempModel2.bannerName != null) {
-              selectedDropDowns[2] = DropDownValue(key: tempModel2.bannerCode, value: tempModel2.bannerName);
+            if (tempModel2.bannerCode != null &&
+                tempModel2.bannerName != null) {
+              selectedDropDowns[2] = DropDownValue(
+                  key: tempModel2.bannerCode, value: tempModel2.bannerName);
             }
 
             /// TX-CAPTION
@@ -344,7 +381,9 @@ class FillerMasterController extends GetxController {
             }
 
             /// FILLER-NAME
+            ///
             if (fromCopy && tempModel2.fillerCaption != null) {
+              print(tempModel2.fillerCaption);
               fillerNameCtr.text = tempModel2.fillerCaption ?? "";
             }
 
@@ -375,79 +414,100 @@ class FillerMasterController extends GetxController {
             calculateDuration(showDialog: false);
 
             /// TAPE-TYPE
-            var tapeTypeCode =
-                onloadModel?.fillerMasterOnload?.lstTapetypemaster?.firstWhereOrNull((element) => element.key == tempModel2.tapeTypeCode);
+            var tapeTypeCode = onloadModel
+                ?.fillerMasterOnload?.lstTapetypemaster
+                ?.firstWhereOrNull(
+                    (element) => element.key == tempModel2.tapeTypeCode);
             if (tapeTypeCode != null) {
               selectedDropDowns[3] = tapeTypeCode;
             }
 
             /// TYPE
-            var typeCode =
-                onloadModel?.fillerMasterOnload?.lstfillertypemaster?.firstWhereOrNull((element) => element.key == tempModel2.fillerTypeCode);
+            var typeCode = onloadModel?.fillerMasterOnload?.lstfillertypemaster
+                ?.firstWhereOrNull(
+                    (element) => element.key == tempModel2.fillerTypeCode);
             if (typeCode != null) {
               selectedDropDowns[4] = typeCode;
             }
 
             /// CENSHORSHIP
-            var censhorShipCode =
-                onloadModel?.fillerMasterOnload?.lstCensorshipMaster?.firstWhereOrNull((element) => element.key == tempModel2.censorshipCode);
+            var censhorShipCode = onloadModel
+                ?.fillerMasterOnload?.lstCensorshipMaster
+                ?.firstWhereOrNull(
+                    (element) => element.key == tempModel2.censorshipCode);
             if (censhorShipCode != null) {
               selectedDropDowns[5] = censhorShipCode;
             }
 
             /// LANGAUGE
-            var langaugeCode =
-                onloadModel?.fillerMasterOnload?.lstLanguagemaster?.firstWhereOrNull((element) => element.key == tempModel2.languageCode);
+            var langaugeCode = onloadModel
+                ?.fillerMasterOnload?.lstLanguagemaster
+                ?.firstWhereOrNull(
+                    (element) => element.key == tempModel2.languageCode);
             if (langaugeCode != null) {
               selectedDropDowns[6] = langaugeCode;
             }
 
             /// PRODUCTION
-            var production = onloadModel?.fillerMasterOnload?.lstproduction?.firstWhereOrNull((element) => element.key == tempModel2.inHouseOutHouse);
+            var production = onloadModel?.fillerMasterOnload?.lstproduction
+                ?.firstWhereOrNull(
+                    (element) => element.key == tempModel2.inHouseOutHouse);
             if (production != null) {
               selectedDropDowns[7] = production;
             }
 
             /// SEG-ID
             /// COLOR
-            var color = onloadModel?.fillerMasterOnload?.lstcolor?.firstWhereOrNull((element) => element.key == tempModel2.blackWhite);
+            var color = onloadModel?.fillerMasterOnload?.lstcolor
+                ?.firstWhereOrNull(
+                    (element) => element.key == tempModel2.blackWhite);
             if (color != null) {
               selectedDropDowns[8] = color;
             }
 
             /// REGION
-            var region = onloadModel?.fillerMasterOnload?.lstRegion?.firstWhereOrNull((element) => element.key == tempModel2.regioncode.toString());
+            var region = onloadModel?.fillerMasterOnload?.lstRegion
+                ?.firstWhereOrNull((element) =>
+                    element.key == tempModel2.regioncode.toString());
             if (region != null) {
               selectedDropDowns[9] = color;
             }
 
             /// ENERGY
-            var energy = onloadModel?.fillerMasterOnload?.lstEnegry?.firstWhereOrNull((element) => element.key == tempModel2.energyCode.toString());
+            var energy = onloadModel?.fillerMasterOnload?.lstEnegry
+                ?.firstWhereOrNull((element) =>
+                    element.key == tempModel2.energyCode.toString());
             if (energy != null) {
               selectedDropDowns[10] = energy;
             }
 
             /// ERA
-            var era = onloadModel?.fillerMasterOnload?.lstEra?.firstWhereOrNull((element) => element.key == tempModel2.eraCode.toString());
+            var era = onloadModel?.fillerMasterOnload?.lstEra?.firstWhereOrNull(
+                (element) => element.key == tempModel2.eraCode.toString());
             if (era != null) {
               selectedDropDowns[11] = era;
             }
 
             /// SONG-GRADE
-            var songGrade =
-                onloadModel?.fillerMasterOnload?.lstSongGrade?.firstWhereOrNull((element) => element.key == tempModel2.gradeCode.toString());
+            var songGrade = onloadModel?.fillerMasterOnload?.lstSongGrade
+                ?.firstWhereOrNull((element) =>
+                    element.key == tempModel2.gradeCode.toString());
             if (songGrade != null) {
               selectedDropDowns[12] = songGrade;
             }
 
             /// MOOD
-            var mood = onloadModel?.fillerMasterOnload?.lstMood?.firstWhereOrNull((element) => element.key == tempModel2.moodCode.toString());
+            var mood = onloadModel?.fillerMasterOnload?.lstMood
+                ?.firstWhereOrNull(
+                    (element) => element.key == tempModel2.moodCode.toString());
             if (mood != null) {
               selectedDropDowns[13] = mood;
             }
 
             /// TEMPO
-            var tempo = onloadModel?.fillerMasterOnload?.lstTempo?.firstWhereOrNull((element) => element.key == tempModel2.tempoCode.toString());
+            var tempo = onloadModel?.fillerMasterOnload?.lstTempo
+                ?.firstWhereOrNull((element) =>
+                    element.key == tempModel2.tempoCode.toString());
             if (tempo != null) {
               selectedDropDowns[14] = tempo;
             }
@@ -483,14 +543,16 @@ class FillerMasterController extends GetxController {
 
             /// START-DATE
             if (tempModel2.fromDate != null) {
-              startDateCtr.text =
-                  DateFormat("dd-MM-yyyy").format(DateFormat("yyyy-MM-ddThh:mm:ss").parse(tempModel2.fromDate ?? "2023-06-14T23:59:59"));
+              startDateCtr.text = DateFormat("dd-MM-yyyy").format(
+                  DateFormat("yyyy-MM-ddThh:mm:ss")
+                      .parse(tempModel2.fromDate ?? "2023-06-14T23:59:59"));
             }
 
             /// END-DATE
             if (tempModel2.killDate != null) {
-              endDateCtr.text =
-                  DateFormat("dd-MM-yyyy").format(DateFormat("yyyy-MM-ddThh:mm:ss").parse(tempModel2.killDate ?? "2023-06-14T23:59:59"));
+              endDateCtr.text = DateFormat("dd-MM-yyyy").format(
+                  DateFormat("yyyy-MM-ddThh:mm:ss")
+                      .parse(tempModel2.killDate ?? "2023-06-14T23:59:59"));
             }
 
             if (tempModel2.lstAnnotationLoadDatas != null) {
@@ -562,13 +624,17 @@ class FillerMasterController extends GetxController {
     } catch (e) {
       print(e.toString());
     }
-    if (somCtr.text.trim().isEmpty || somCtr.text.trim() == "00:00:00:00") {
+    if (somCtr.text.trim().isEmpty) {
       LoadingDialog.showErrorDialog("Please enter SOM.");
-    } else if (eomCtr.text.trim().isEmpty || eomCtr.text.trim() == "00:00:00:00") {
+    } else if (eomCtr.text.trim().isEmpty ||
+        eomCtr.text.trim() == "00:00:00:00") {
       LoadingDialog.showErrorDialog("Please enter EOM.");
-    } else if ((Utils.oldBMSConvertToSecondsValue(value: eomCtr.text) - Utils.oldBMSConvertToSecondsValue(value: somCtr.text)).isNegative) {
+    } else if ((Utils.oldBMSConvertToSecondsValue(value: eomCtr.text) -
+            Utils.oldBMSConvertToSecondsValue(value: somCtr.text))
+        .isNegative) {
       eomCtr.clear();
-      LoadingDialog.showErrorDialog("EOM should not less than SOM", callback: () {
+      LoadingDialog.showErrorDialog("EOM should not less than SOM",
+          callback: () {
         eomFN.requestFocus();
       });
     } else if (selectedDropDowns[3] == null) {
@@ -599,8 +665,11 @@ class FillerMasterController extends GetxController {
               resp is Map<String, dynamic> &&
               resp['saveRecord'] != null &&
               resp['saveRecord']['strMessage'] != null &&
-              resp['saveRecord']['strMessage'].toString().contains("successfully")) {
-            LoadingDialog.callDataSaved(msg: resp['saveRecord']['strMessage'].toString());
+              resp['saveRecord']['strMessage']
+                  .toString()
+                  .contains("successfully")) {
+            LoadingDialog.callDataSaved(
+                msg: resp['saveRecord']['strMessage'].toString());
           } else {
             LoadingDialog.showErrorDialog(resp.toString());
           }
@@ -620,8 +689,10 @@ class FillerMasterController extends GetxController {
           "inHouseOutHouse": selectedDropDowns[7]?.key,
           "segmentNumber": num.tryParse(segNoCtrLeft.text) ?? 0,
           "som": somCtr.text,
-          "fromDate": DateFormat("yyyy-MM-ddT00:00:00").format(startDate), // "2023-06-26T09:54:57.806Z"
-          "killDate": DateFormat("yyyy-MM-ddT00:00:00").format(endDate), // "2023-06-26T09:54:57.806Z"
+          "fromDate": DateFormat("yyyy-MM-ddT00:00:00")
+              .format(startDate), // "2023-06-26T09:54:57.806Z"
+          "killDate": DateFormat("yyyy-MM-ddT00:00:00")
+              .format(endDate), // "2023-06-26T09:54:57.806Z"
           "fillerSynopsis": synopsisCtr.text,
           "modifiedBy": Get.find<MainController>().user?.logincode,
           "houseId": txNoCtr.text,
@@ -701,13 +772,18 @@ class FillerMasterController extends GetxController {
       api: ApiFactory.FILLER_MASTER_ON_LOAD,
       fun: (resp) {
         closeDialogIfOpen();
-        if (resp is Map<String, dynamic> && resp['fillerMasterOnload'] != null) {
+        if (resp is Map<String, dynamic> &&
+            resp['fillerMasterOnload'] != null) {
           onloadModel = FillerMasterOnLoadModel.fromJson(resp);
-          if (onloadModel?.fillerMasterOnload?.lsttapesource != null && onloadModel!.fillerMasterOnload!.lsttapesource!.isNotEmpty) {
-            selectedDropDowns[16] = onloadModel!.fillerMasterOnload!.lsttapesource![0];
+          if (onloadModel?.fillerMasterOnload?.lsttapesource != null &&
+              onloadModel!.fillerMasterOnload!.lsttapesource!.isNotEmpty) {
+            selectedDropDowns[16] =
+                onloadModel!.fillerMasterOnload!.lsttapesource![0];
           }
-          if (onloadModel?.fillerMasterOnload?.lstProducerTape != null && onloadModel!.fillerMasterOnload!.lstProducerTape!.isNotEmpty) {
-            selectedDropDowns[17] = onloadModel!.fillerMasterOnload!.lstProducerTape![0];
+          if (onloadModel?.fillerMasterOnload?.lstProducerTape != null &&
+              onloadModel!.fillerMasterOnload!.lstProducerTape!.isNotEmpty) {
+            selectedDropDowns[17] =
+                onloadModel!.fillerMasterOnload!.lstProducerTape![0];
           }
           updateUI();
         } else {

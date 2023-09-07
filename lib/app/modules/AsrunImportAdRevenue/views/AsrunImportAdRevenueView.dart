@@ -195,7 +195,18 @@ class AsrunImportAdRevenueView extends StatelessWidget {
                                 .asrunData![controller
                                     .gridStateManager!.currentRow!.sortIdx]
                                 .isMismatch = "1";
-                          })
+                            controller.gridStateManager?.setCurrentCell(
+                                controller.gridStateManager!.currentRow!
+                                    .cells["isMismatch"]!,
+                                controller.gridStateManager!.currentRowIdx);
+                            controller.gridStateManager!.moveScrollByColumn(
+                                PlutoMoveDirection.right,
+                                controller.gridStateManager?.columns.indexWhere(
+                                    (element) =>
+                                        element ==
+                                        controller
+                                            .gridStateManager!.currentColumn));
+                          }),
                         ],
                         // hideKeys: ["color", "modifed"],
                         showSrNo: true,
@@ -717,7 +728,8 @@ class AsrunImportAdRevenueView extends StatelessWidget {
   showVerifyDialog(AsRunData asrunData) {
     TextEditingController fpcTime = TextEditingController(
         text: asrunData.fpctIme ?? asrunData.telecasttime);
-    DropDownValue? selectedProgram;
+    DropDownValue? selectedProgram =
+        DropDownValue(key: asrunData.programCode, value: asrunData.programName);
     return Get.defaultDialog(
       title: "Verify",
       content: Container(
