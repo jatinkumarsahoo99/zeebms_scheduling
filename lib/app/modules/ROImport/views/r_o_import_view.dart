@@ -72,7 +72,9 @@ class ROImportView extends GetView<ROImportController> {
                             Text(
                               controller.leftMsg.value,
                               style: TextStyle(
-                                color: controller.saveEnabled.value ? Colors.green : Colors.red,
+                                color: controller.saveEnabled.value
+                                    ? Colors.green
+                                    : Colors.red,
                                 fontWeight: FontWeight.bold,
                               ),
                             ),
@@ -87,7 +89,40 @@ class ROImportView extends GetView<ROImportController> {
                                     : null,
                                 child: controller.topLeftDataTable.isNotEmpty
                                     ? DataGridFromMap(
-                                        mapData: controller.topLeftDataTable.value,
+                                        mapData:
+                                            controller.topLeftDataTable.value,
+                                        doPasccal: true,
+                                        keyMapping: const {
+                                          "breaK_NUMBER": "BREAK NUMBER",
+                                          "remarks": "REMARKS",
+                                          "rO_NUMBER": "RO NUMBER",
+                                          "flighting_Date": "FLIGHTING DATE",
+                                          "flighting_Time": "FLIGHTING TIME",
+                                          "tapE_ID": "TAPE ID",
+                                          "flighting_Code": "FLIGHTING CODE",
+                                          "client": "CLIENT",
+                                          "brand": "BRAND",
+                                          "agency": "AGENCY",
+                                          "tape_Dur": "TAPE DUR",
+                                          "total_Spots": "TOTAL SPOTS",
+                                          "rate": "RATE",
+                                          "rate_per_10_Sec": "RATE PER 10 SEC",
+                                          "paid_FCT": "PAID FCT",
+                                          "bonus_FCT": "BONUS FCT",
+                                          "amount": "AMOUNT",
+                                          "agency_Commission":
+                                              "AGENCY COMMISSION",
+                                          "total_Excl_VAT": "TOTAL EXCL VAT",
+                                          "vat": "VAT",
+                                          "sales_Executive": "SALES EXECUTIVE",
+                                          "weekday_Weekend": "WEEKDAY WEEKEND",
+                                          "time_Band": "TIME BAND",
+                                          "channel": "CHANNEL",
+                                          "deal_Number": "DEAL NUMBER",
+                                          "deal_Row_Number": "DEAL ROW NUMBER",
+                                          "locationCode": "LOCATION CODE",
+                                          "channelCode": "CHANNEL CODE"
+                                        },
                                         exportFileName: "RO Import",
                                       )
                                     : null,
@@ -126,8 +161,40 @@ class ROImportView extends GetView<ROImportController> {
                                     : null,
                                 child: controller.topRightDataTable.isNotEmpty
                                     ? DataGridFromMap(
-                                        mapData: controller.topRightDataTable.value,
-                                        doPasccal: false,
+                                        mapData:
+                                            controller.topRightDataTable.value,
+                                        doPasccal: true,
+                                        keyMapping: const {
+                                          "breaK_NUMBER": "BREAK NUMBER",
+                                          "remarks": "REMARKS",
+                                          "rO_NUMBER": "RO NUMBER",
+                                          "flighting_Date": "FLIGHTING DATE",
+                                          "flighting_Time": "FLIGHTING TIME",
+                                          "tapE_ID": "TAPE ID",
+                                          "flighting_Code": "FLIGHTING CODE",
+                                          "client": "CLIENT",
+                                          "brand": "BRAND",
+                                          "agency": "AGENCY",
+                                          "tape_Dur": "TAPE DUR",
+                                          "total_Spots": "TOTAL SPOTS",
+                                          "rate": "RATE",
+                                          "rate_per_10_Sec": "RATE PER 10 SEC",
+                                          "paid_FCT": "PAID FCT",
+                                          "bonus_FCT": "BONUS FCT",
+                                          "amount": "AMOUNT",
+                                          "agency_Commission":
+                                              "AGENCY COMMISSION",
+                                          "total_Excl_VAT": "TOTAL EXCL VAT",
+                                          "vat": "VAT",
+                                          "sales_Executive": "SALES EXECUTIVE",
+                                          "weekday_Weekend": "WEEKDAY WEEKEND",
+                                          "time_Band": "TIME BAND",
+                                          "channel": "CHANNEL",
+                                          "deal_Number": "DEAL NUMBER",
+                                          "deal_Row_Number": "DEAL ROW NUMBER",
+                                          "locationCode": "LOCATION CODE",
+                                          "channelCode": "CHANNEL CODE"
+                                        },
                                         exportFileName: "RO Import",
                                       )
                                     : null,
@@ -162,7 +229,10 @@ class ROImportView extends GetView<ROImportController> {
                             ),
                           )
                         : null,
-                    child: controller.bottomDataTable.isEmpty ? null : DataGridFromMap(mapData: controller.bottomDataTable.value),
+                    child: controller.bottomDataTable.isEmpty
+                        ? null
+                        : DataGridFromMap(
+                            mapData: controller.bottomDataTable.value),
                   );
                 }),
               ),
@@ -184,10 +254,12 @@ class ROImportView extends GetView<ROImportController> {
                             for (var btn in btncontroller.buttons!) ...{
                               FormButtonWrapper(
                                 btnText: btn["name"],
-                                callback:
-                                    (((btn["name"] == "Save") && controller.saveEnabled.value) || (btn['name'] == "Clear") || (btn['name'] == "Exit"))
-                                        ? () => controller.formHandler(btn['name'])
-                                        : null,
+                                callback: (((btn["name"] == "Save") &&
+                                            controller.saveEnabled.value) ||
+                                        (btn['name'] == "Clear") ||
+                                        (btn['name'] == "Exit"))
+                                    ? () => controller.formHandler(btn['name'])
+                                    : null,
                               )
                             },
                           ],

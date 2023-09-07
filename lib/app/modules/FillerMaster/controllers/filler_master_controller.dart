@@ -708,12 +708,12 @@ class FillerMasterController extends GetxController {
           "musicCompany": musicCompanyCtr.text,
           "releaseYear": releaseYearCtr.text,
           "grade": selectedDropDowns[15]?.key, //
-          "moodCode": num.tryParse(selectedDropDowns[13]?.key ?? "0") ?? 0,
-          "energyCode": num.tryParse(selectedDropDowns[10]?.key ?? "0") ?? 0,
-          "tempoCode": num.tryParse(selectedDropDowns[14]?.key ?? "0") ?? 0,
-          "eraCode": num.tryParse(selectedDropDowns[11]?.key ?? "0") ?? 0,
-          "gradeCode": num.tryParse(selectedDropDowns[12]?.key ?? "0") ?? 0, //
-          "regioncode": num.tryParse(selectedDropDowns[9]?.key ?? "0") ?? 0, //
+          "moodCode": num.tryParse(selectedDropDowns[13]?.key ?? ""),
+          "energyCode": num.tryParse(selectedDropDowns[10]?.key ?? ""),
+          "tempoCode": num.tryParse(selectedDropDowns[14]?.key ?? ""),
+          "eraCode": num.tryParse(selectedDropDowns[11]?.key ?? ""),
+          "gradeCode": num.tryParse(selectedDropDowns[12]?.key ?? ""), //
+          "regioncode": num.tryParse(selectedDropDowns[9]?.key ?? ""), //
           "lstAnnotation": rightDataTable.value.map((e) => e.toJson()).toList(),
         },
       );
