@@ -3,6 +3,7 @@ import 'dart:convert';
 import 'package:bms_scheduling/widgets/PlutoGrid/pluto_grid.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:get/get.dart';
 
 import '../../../../widgets/CheckBoxWidget.dart';
@@ -88,7 +89,7 @@ class CommercialView extends StatelessWidget {
                                   title: "From Date",
                                   mainTextController: controller.date_,
                                   widthRation: controller.widthSize,
-                                  startDate: DateTime.now(),
+                                  // startDate: DateTime.now(),
                                 ),
                                 const SizedBox(
                                   width: 20,
@@ -134,6 +135,7 @@ class CommercialView extends StatelessWidget {
                                       CheckBoxWidget1(
                                         title: "Auto Shuffle",
                                         value: controller.autoShuffle,
+                                        fn: controller.autoShuffleFN,
                                       ),
                                     ],
                                   ),
@@ -196,6 +198,9 @@ class CommercialView extends StatelessWidget {
                                     for (var btn in btcontroller.buttons!)
                                       //if (Utils.btnAccessHandler(btn['name'], controller.formPermissions!) != null)
                                       FormButtonWrapper(
+                                        focusNode: btn["name"] == "Save"
+                                            ? controller.saveFN
+                                            : null,
                                         btnText: btn["name"],
                                         callback: btn["name"] == "Delete"
                                             ? null
@@ -604,6 +609,12 @@ class CommercialView extends StatelessWidget {
                             removedObject.breakNumber = controller
                                 .mainCommercialShowDetailsList?[newIdx - 1]
                                 .breakNumber;
+                            removedObject.fpcTime2 = controller
+                                .mainCommercialShowDetailsList?[newIdx - 1]
+                                .fpcTime2;
+                            removedObject.fpcTime = controller
+                                .mainCommercialShowDetailsList?[newIdx - 1]
+                                .fpcTime;
                             controller.mainCommercialShowDetailsList
                                 ?.insert(newIdx, removedObject);
                           }
