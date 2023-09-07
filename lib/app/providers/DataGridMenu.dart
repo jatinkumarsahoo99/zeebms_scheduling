@@ -72,6 +72,10 @@ class DataGridMenu {
     customFilter(PlutoGridStateManager stateManager) {
       List _allValues = [];
       var _selectedValues = RxList([]);
+      print("1st foucus Added");
+      if(stateManager.currentCell == null && ((stateManager.rows.length??0)>0)){
+        stateManager.setCurrentCell((stateManager.rows[0].cells.values.first), 0);
+      }
       if (stateManager.currentCell != null) {
         _allValues = stateManager.rows
             .map((e) => e.cells[stateManager.currentCell!.column.field]!.value
@@ -827,6 +831,10 @@ class DataGridMenu {
     customFilter(PlutoGridStateManager stateManager) {
       List _allValues = [];
       var _selectedValues = RxList([]);
+      print("1st foucus Added");
+      if(stateManager.currentCell == null && ((stateManager.rows.length??0)>0)){
+        stateManager.setCurrentCell((stateManager.rows[0].cells.values.first), 0);
+      }
       if (stateManager.currentCell != null) {
         _allValues = stateManager.rows
             .map((e) => e.cells[stateManager.currentCell!.column.field]!.value
