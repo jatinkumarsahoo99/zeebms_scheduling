@@ -19,6 +19,7 @@ import '../../../../widgets/Snack.dart';
 import '../../../controller/ConnectorControl.dart';
 import '../../../controller/HomeController.dart';
 import '../../../controller/MainController.dart';
+import '../../../data/user_data_settings_model.dart';
 import '../../../providers/ApiFactory.dart';
 import '../../../providers/ExportData.dart';
 import '../../CommonDocs/controllers/common_docs_controller.dart';
@@ -153,8 +154,7 @@ class SalesAuditNewController extends GetxController {
     if (((gridStateManagerLeft?.rows.length ?? 0) < 1) ||
         ((gridStateManagerRight?.rows.length ?? 0) < 1)) {
       return;
-    }
-    else if (gridStateManagerLeft
+    } else if (gridStateManagerLeft
             ?.rows[gridStateManagerLeft?.currentRowIdx ?? 0]
             .cells['exportTapeCode']
             ?.value
@@ -401,7 +401,7 @@ class SalesAuditNewController extends GetxController {
                     .gettables!.lstAsrunlog2 as Iterable<LstAsrunlog2>);
                 masterListAsrunLog2.addAll(listAsrunLog2);
               }
-              update(['leftOne', 'text','rightOne']);
+              update(['leftOne', 'text', 'rightOne']);
             } else {
               salesAuditGetRetrieveModel = null;
               listAsrunLog2.clear();
@@ -420,8 +420,8 @@ class SalesAuditNewController extends GetxController {
 
     LoadingDialog.call();
     Map<String, dynamic> postData = {
-      "locationcode": selectedLocation?.key??"",
-      "channelcode": selectedChannel?.key??"",
+      "locationcode": selectedLocation?.key ?? "",
+      "channelcode": selectedChannel?.key ?? "",
       "loggedUsercode": Get.find<MainController>().user?.logincode ?? "",
       "date": DateFormat("yyyy-MM-ddTHH:mm:ss")
           .format(DateFormat("dd-MM-yyyy").parse(scheduledController.text)),
@@ -433,23 +433,22 @@ class SalesAuditNewController extends GetxController {
 
     print(">>>>>>postData${jsonEncode(postData)}");
     Get.find<ConnectorControl>().POSTMETHOD(
-        api: ApiFactory.SALESAUDIT_NEW_SAVEDATA,
-        json: postData,
-        fun: (map) {
-          Get.back();
-          print(">>>>>map$map");
-          if (map is Map && map.containsKey("postSalesAduit")) {
-            LoadingDialog.callDataSavedMessage((map['postSalesAduit'] ?? ""),
-                callback: () {
-              // clearAll();
-              Get.back();
-            });
-          } else {
-            Snack.callError((map??"").toString());
-          }
-        },
-
-        );
+      api: ApiFactory.SALESAUDIT_NEW_SAVEDATA,
+      json: postData,
+      fun: (map) {
+        Get.back();
+        print(">>>>>map$map");
+        if (map is Map && map.containsKey("postSalesAduit")) {
+          LoadingDialog.callDataSavedMessage((map['postSalesAduit'] ?? ""),
+              callback: () {
+            // clearAll();
+            Get.back();
+          });
+        } else {
+          Snack.callError((map ?? "").toString());
+        }
+      },
+    );
   }
 
   List<Map<String, dynamic>> getDataFromGrid(
@@ -461,21 +460,24 @@ class SalesAuditNewController extends GetxController {
     for (var row in statemanager.rows) {
       Map<String, dynamic> rowMap = {};
       for (var key in row.cells.keys) {
-        if(key.toString().trim() == "telecastTime"){
-          if(row.cells[key]?.value != null && (row.cells[key]?.value??"").toString().trim() != ""){
-            rowMap[key] = DateFormat("yyyy-MM-ddT").format(DateTime.now()) + (row.cells[key]?.value ?? "");
-          }else{
-            rowMap[key] = DateFormat("yyyy-MM-dd").format(DateTime.now()) + (row.cells[key]?.value ?? "");
+        if (key.toString().trim() == "telecastTime") {
+          if (row.cells[key]?.value != null &&
+              (row.cells[key]?.value ?? "").toString().trim() != "") {
+            rowMap[key] = DateFormat("yyyy-MM-ddT").format(DateTime.now()) +
+                (row.cells[key]?.value ?? "");
+          } else {
+            rowMap[key] = DateFormat("yyyy-MM-dd").format(DateTime.now()) +
+                (row.cells[key]?.value ?? "");
           }
-        }else{
+        } else {
           rowMap[key] = row.cells[key]?.value ?? "";
         }
-
       }
       mapList.add(rowMap);
     }
     return mapList;
   }
+
   List<Map<String, dynamic>> getDataFromGrid1(
       PlutoGridStateManager statemanager) {
     statemanager.setFilter((element) => true);
@@ -484,20 +486,21 @@ class SalesAuditNewController extends GetxController {
     for (var row in statemanager.rows) {
       Map<String, dynamic> rowMap = {};
       for (var key in row.cells.keys) {
-        if(key.toString().trim() == "rowNumber"){
+        if (key.toString().trim() == "rowNumber") {
           // rowMap[key] = DateFormat("yyyy-MM-dd").format(DateTime.now()) + (row.cells[key]?.value ?? "");
           continue;
-        }else if(key.toString().trim() == "telecastTime"){
-          if(row.cells[key]?.value != null && (row.cells[key]?.value??"").toString().trim() != ""){
-            rowMap[key] = DateFormat("yyyy-MM-ddT").format(DateTime.now()) + (row.cells[key]?.value ?? "");
-          }else{
-            rowMap[key] = DateFormat("yyyy-MM-dd").format(DateTime.now()) + (row.cells[key]?.value ?? "");
+        } else if (key.toString().trim() == "telecastTime") {
+          if (row.cells[key]?.value != null &&
+              (row.cells[key]?.value ?? "").toString().trim() != "") {
+            rowMap[key] = DateFormat("yyyy-MM-ddT").format(DateTime.now()) +
+                (row.cells[key]?.value ?? "");
+          } else {
+            rowMap[key] = DateFormat("yyyy-MM-dd").format(DateTime.now()) +
+                (row.cells[key]?.value ?? "");
           }
-        }
-        else{
+        } else {
           rowMap[key] = row.cells[key]?.value ?? "";
         }
-
       }
       mapList.add(rowMap);
     }
@@ -559,10 +562,11 @@ class SalesAuditNewController extends GetxController {
         "";
 
     BookingDetailcode = (gridStateManagerRight
-            ?.rows[gridStateManagerRight?.currentRowIdx ?? 0]
-            .cells['bookingDetailCode']
-            ?.value ??
-        "").toString();
+                ?.rows[gridStateManagerRight?.currentRowIdx ?? 0]
+                .cells['bookingDetailCode']
+                ?.value ??
+            "")
+        .toString();
 
     // tblSpots - listAsrunLog2 - leftIndex - gridStateManagerLeft
     // tblAsrun - listAsrunLog1 - rightindex - gridStateManagerRight
@@ -573,7 +577,9 @@ class SalesAuditNewController extends GetxController {
                     "") ==
                 BookingNumber) &&
             ((gridStateManagerLeft?.rows[i].cells['bookingDetailCode']?.value ??
-                    "").toString().trim() ==
+                        "")
+                    .toString()
+                    .trim() ==
                 BookingDetailcode.toString().trim())) {
           // gridStateManager?.setGridMode(PlutoGridMode.select) ;
           gridStateManagerLeft?.setCurrentCell(
@@ -585,11 +591,16 @@ class SalesAuditNewController extends GetxController {
     }
     // tblSpots - listAsrunLog2 - leftIndex - gridStateManagerLeft
     // tblAsrun - listAsrunLog1 - rightindex - gridStateManagerRight
-    for (int j = 0; j < (gridStateManagerLeft?.rows.length??0); j++) {
-      if ((gridStateManagerLeft?.rows[j].cells['dealTime']?.value??"").toString().trim()  != "") {
+    for (int j = 0; j < (gridStateManagerLeft?.rows.length ?? 0); j++) {
+      if ((gridStateManagerLeft?.rows[j].cells['dealTime']?.value ?? "")
+              .toString()
+              .trim() !=
+          "") {
         IsRos = true;
 
-        ros = (gridStateManagerLeft?.rows[j].cells['dealTime']?.value??"").toString().split("-");
+        ros = (gridStateManagerLeft?.rows[j].cells['dealTime']?.value ?? "")
+            .toString()
+            .split("-");
 
         RosStart = "${ros[0]}:00";
 
@@ -614,27 +625,44 @@ class SalesAuditNewController extends GetxController {
       // tblSpots - listAsrunLog2 - leftIndex - gridStateManagerLeft
       // tblAsrun - listAsrunLog1 - rightindex - gridStateManagerRight
 
-      if ((gridStateManagerLeft?.rows[j].cells['telecastTime']?.value??"").toString().trim() == "" &&
-        (  ( gridStateManagerLeft?.rows[j].cells['exportTapeCode']?.value??"").toString().trim() == Exporttapecode.toString().trim()) &&
-          (gridStateManagerLeft?.rows[j].cells['tapeDuration']?.value??"").toString().trim() == TApeduration.toString().trim() &&
-          DateTime.parse("2023-01-01 ${gridStateManagerLeft?.rows[j].cells['scheduleTime']?.value??""}")
+      if ((gridStateManagerLeft?.rows[j].cells['telecastTime']?.value ?? "")
+                  .toString()
+                  .trim() ==
+              "" &&
+          ((gridStateManagerLeft?.rows[j].cells['exportTapeCode']?.value ?? "")
+                  .toString()
+                  .trim() ==
+              Exporttapecode.toString().trim()) &&
+          (gridStateManagerLeft?.rows[j].cells['tapeDuration']?.value ?? "")
+                  .toString()
+                  .trim() ==
+              TApeduration.toString().trim() &&
+          DateTime.parse(
+                      "2023-01-01 ${gridStateManagerLeft?.rows[j].cells['scheduleTime']?.value ?? ""}")
                   .difference(DateTime.parse("2023-01-01 $FPCtime"))
                   .inMinutes
                   .abs() <=
               4 &&
           !IsRos) {
-        gridStateManagerLeft?.setCurrentCell( gridStateManagerLeft?.rows[j].cells["exportTapeCode"], j) ;
+        gridStateManagerLeft?.setCurrentCell(
+            gridStateManagerLeft?.rows[j].cells["exportTapeCode"], j);
         gridStateManagerLeft?.notifyListeners();
-        btnMapClick(gridStateManagerRight?.currentRowIdx??0, gridStateManagerLeft?.currentRowIdx??0);
+        btnMapClick(gridStateManagerRight?.currentRowIdx ?? 0,
+            gridStateManagerLeft?.currentRowIdx ?? 0);
         return;
       }
     }
 
-    for (int k = 0; k < (gridStateManagerLeft?.rows.length??0); k++) {
-      if ( (gridStateManagerLeft?.rows[k].cells['dealTime']?.value ?? "" ).toString().trim() != "") {
+    for (int k = 0; k < (gridStateManagerLeft?.rows.length ?? 0); k++) {
+      if ((gridStateManagerLeft?.rows[k].cells['dealTime']?.value ?? "")
+              .toString()
+              .trim() !=
+          "") {
         IsRos = true;
 
-        ros = (gridStateManagerLeft?.rows[k].cells['dealTime']?.value ?? "" ).toString().split("-");
+        ros = (gridStateManagerLeft?.rows[k].cells['dealTime']?.value ?? "")
+            .toString()
+            .split("-");
 
         RosStart = "${ros[0]}:00";
 
@@ -652,15 +680,24 @@ class SalesAuditNewController extends GetxController {
 
           MidRosStart = RosEnd;
         }
-      }
-      else {
+      } else {
         IsRos = false;
       }
       // DateTime.parse("2023-01-01 ${TelecastTime}")
 
-      if ((gridStateManagerLeft?.rows[k].cells['telecastTime']?.value ?? "" ).toString().trim() == "" &&
-          (gridStateManagerLeft?.rows[k].cells['exportTapeCode']?.value ?? "").toString().trim() == Exporttapecode.toString().trim() &&
-         (gridStateManagerLeft?.rows[k].cells['tapeDuration']?.value ?? "" ).toString().trim() == TApeduration.toString().trim() && IsRos) {
+      if ((gridStateManagerLeft?.rows[k].cells['telecastTime']?.value ?? "")
+                  .toString()
+                  .trim() ==
+              "" &&
+          (gridStateManagerLeft?.rows[k].cells['exportTapeCode']?.value ?? "")
+                  .toString()
+                  .trim() ==
+              Exporttapecode.toString().trim() &&
+          (gridStateManagerLeft?.rows[k].cells['tapeDuration']?.value ?? "")
+                  .toString()
+                  .trim() ==
+              TApeduration.toString().trim() &&
+          IsRos) {
         if ((DateTime.parse("2023-01-01 ${TelecastTime}")
                         .compareTo(RosStartParse!) >
                     0 &&
@@ -673,9 +710,11 @@ class SalesAuditNewController extends GetxController {
                 DateTime.parse("2023-01-01 ${TelecastTime}")
                         .compareTo(DateTime.parse("2023-01-01 ${MidRosEnd}")) <
                     0)) {
-          gridStateManagerLeft?.setCurrentCell( gridStateManagerLeft?.rows[k].cells["exportTapeCode"], k) ;
+          gridStateManagerLeft?.setCurrentCell(
+              gridStateManagerLeft?.rows[k].cells["exportTapeCode"], k);
           gridStateManagerLeft?.notifyListeners();
-          btnMapClick(gridStateManagerRight?.currentRowIdx??0, gridStateManagerLeft?.currentRowIdx??0);
+          btnMapClick(gridStateManagerRight?.currentRowIdx ?? 0,
+              gridStateManagerLeft?.currentRowIdx ?? 0);
           return;
         }
       }
@@ -734,8 +773,9 @@ class SalesAuditNewController extends GetxController {
   void btnAutoClick() {
     // tblSpots - listAsrunLog2 - leftIndex -gridStateManagerLeft
     // tblAsrun - listAsrunLog1 - rightindex - gridStateManagerRight
-    for (int i = 0; i < (gridStateManagerRight?.rows.length??0); i++) {
-      gridStateManagerRight?.setCurrentCell(gridStateManagerRight?.rows[i].cells["telecastTime"], i) ;
+    for (int i = 0; i < (gridStateManagerRight?.rows.length ?? 0); i++) {
+      gridStateManagerRight?.setCurrentCell(
+          gridStateManagerRight?.rows[i].cells["telecastTime"], i);
       gridStateManagerRight?.notifyListeners();
       doMatch(i);
     }
@@ -825,13 +865,14 @@ class SalesAuditNewController extends GetxController {
           gridStateManagerLeft
               ?.rows[leftIndex].cells['bookingDetailCode']?.value;
       gridStateManagerRight?.rows[rightindex].cells['remark']?.value =
-       (   gridStateManagerLeft?.rows[leftIndex].cells['bookingNumber']?.value ??
-              "") +
-                  "-" +
-                  (gridStateManagerLeft?.rows[leftIndex]
-                              .cells['bookingDetailCode']?.value ??
-                          "")
-                      .toString();
+          (gridStateManagerLeft
+                      ?.rows[leftIndex].cells['bookingNumber']?.value ??
+                  "") +
+              "-" +
+              (gridStateManagerLeft
+                          ?.rows[leftIndex].cells['bookingDetailCode']?.value ??
+                      "")
+                  .toString();
       gridStateManagerLeft?.notifyListeners();
       gridStateManagerRight?.notifyListeners();
       Matched = true;
@@ -870,13 +911,14 @@ class SalesAuditNewController extends GetxController {
           gridStateManagerLeft
               ?.rows[leftIndex].cells['bookingDetailCode']?.value;
       gridStateManagerRight?.rows[rightindex].cells['remark']?.value =
-         ( gridStateManagerLeft?.rows[leftIndex].cells['bookingNumber']?.value ??
-              "") +
-                  "-" +
-                  (gridStateManagerLeft?.rows[leftIndex]
-                              .cells['bookingDetailCode']?.value ??
-                          "")
-                      .toString();
+          (gridStateManagerLeft
+                      ?.rows[leftIndex].cells['bookingNumber']?.value ??
+                  "") +
+              "-" +
+              (gridStateManagerLeft
+                          ?.rows[leftIndex].cells['bookingDetailCode']?.value ??
+                      "")
+                  .toString();
       gridStateManagerLeft?.notifyListeners();
       gridStateManagerRight?.notifyListeners();
 
@@ -909,13 +951,13 @@ class SalesAuditNewController extends GetxController {
                 ?.rows[leftIndex].cells['bookingDetailCode']?.value;
         gridStateManagerRight?.rows[rightindex].cells['remark']?.value =
             (gridStateManagerLeft
-                    ?.rows[leftIndex].cells['bookingNumber']?.value ??
-                "") +
-                    "-" +
-                    (gridStateManagerLeft?.rows[leftIndex]
-                                .cells['bookingDetailCode']?.value ??
-                            "")
-                        .toString();
+                        ?.rows[leftIndex].cells['bookingNumber']?.value ??
+                    "") +
+                "-" +
+                (gridStateManagerLeft?.rows[leftIndex]
+                            .cells['bookingDetailCode']?.value ??
+                        "")
+                    .toString();
         gridStateManagerLeft?.notifyListeners();
         gridStateManagerRight?.notifyListeners();
       }, cancel: () {
@@ -924,8 +966,6 @@ class SalesAuditNewController extends GetxController {
     }
     setNextRow1(exporttapecode);
   }
-
-
 
   tapeBtn(int leftIndex, int rightIndex) {
     // tblSpots - listAsrunLog2 - leftIndex -gridStateManagerLeft
@@ -1260,6 +1300,14 @@ class SalesAuditNewController extends GetxController {
   void onReady() {
     fetchPageLoadData();
     super.onReady();
+    fetchUserSetting1();
+  }
+
+  UserDataSettings? userDataSettings;
+
+  fetchUserSetting1() async {
+    userDataSettings = await Get.find<HomeController>().fetchUserSetting2();
+    update(['leftOne', 'rightOne']);
   }
 
   formHandler(String str) {
@@ -1269,6 +1317,11 @@ class SalesAuditNewController extends GetxController {
       saveData();
     } else if (str == "Docs") {
       docs();
+    } else if (str == "Exit") {
+      Get.find<HomeController>().postUserGridSetting2(listStateManager: [
+        {"gridStateManagerLeft": gridStateManagerLeft},
+        {"gridStateManagerRight": gridStateManagerRight},
+      ]);
     }
   }
 

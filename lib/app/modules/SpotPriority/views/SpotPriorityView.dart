@@ -9,6 +9,7 @@ import '../../../../widgets/gridFromMap.dart';
 import '../../../controller/HomeController.dart';
 import '../../../controller/MainController.dart';
 import '../../../data/PermissionModel.dart';
+import '../../../data/user_data_settings_model.dart';
 import '../../../providers/DataGridMenu.dart';
 import '../../../providers/Utils.dart';
 import '../../../routes/app_pages.dart';
@@ -148,7 +149,6 @@ class SpotPriorityView extends GetView<SpotPriorityController> {
               id: "spotPriorityList",
               // init: controllerX,
               builder: (controller) {
-                print("Print called test");
                 return Expanded(
                   // width: Get.width,
                   // height: Get.height * .33,
@@ -156,6 +156,13 @@ class SpotPriorityView extends GetView<SpotPriorityController> {
                           (controllerX.spotPriorityModel?.lstbookingdetail
                               ?.isNotEmpty)!)
                       ? DataGridFromMap(
+                          witdthSpecificColumn: (controller
+                              .userDataSettings?.userSetting
+                              ?.firstWhere(
+                                  (element) =>
+                                      element.controlName == "gridStateManager",
+                                  orElse: () => UserSetting())
+                              .userSettings),
                           onload: (loadevent) {
                             controllerX.gridStateManager =
                                 loadevent.stateManager;
@@ -325,6 +332,11 @@ class SpotPriorityView extends GetView<SpotPriorityController> {
     switch (btn) {
       case "Save":
         controllerX.saveSpotPriority();
+        break;
+      case "Exit":
+        Get.find<HomeController>().postUserGridSetting2(listStateManager: [
+          {"gridStateManager": controllerX.gridStateManager},
+        ]);
         break;
       case "Clear":
         Get.delete<SpotPriorityController>();

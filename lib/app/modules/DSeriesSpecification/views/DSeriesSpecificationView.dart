@@ -12,6 +12,7 @@ import '../../../../widgets/input_fields.dart';
 import '../../../controller/HomeController.dart';
 import '../../../controller/MainController.dart';
 import '../../../data/PermissionModel.dart';
+import '../../../data/user_data_settings_model.dart';
 import '../../../providers/SizeDefine.dart';
 import '../../../providers/Utils.dart';
 import '../../../routes/app_pages.dart';
@@ -79,7 +80,7 @@ class DSeriesSpecificationView extends GetView<DSeriesSpecificationController> {
                             controllerX.eventList.value,
                             (data) {
                               controllerX.selectEvent?.value = data;
-                              controllerX.getEventLeave(data.key??"");
+                              controllerX.getEventLeave(data.key ?? "");
                             },
                             "Event",
                             controllerX.widthSize,
@@ -208,13 +209,20 @@ class DSeriesSpecificationView extends GetView<DSeriesSpecificationController> {
                       child: Padding(
                         padding: const EdgeInsets.symmetric(horizontal: 10),
                         child: DataGridFromMap4(
+                          witdthSpecificColumn: (controllerX
+                              .userDataSettings?.userSetting
+                              ?.firstWhere(
+                                  (element) =>
+                                      element.controlName == "stateManager",
+                                  orElse: () => UserSetting())
+                              .userSettings),
                           mapData: (controller.dSeriesModel?.search
                               ?.map((e) => e.toJson())
                               .toList())!,
                           widthRatio: (Get.width / 9) + 5,
                           showSrNo: true,
                           csvFormat: true,
-                          showOnlyCheckBox:true,
+                          showOnlyCheckBox: true,
                           focusNode: controllerX.gridFocus,
                           checkRowKey: "isLastSegment",
                           exportFileName: "D Series Specifications",
@@ -299,6 +307,11 @@ class DSeriesSpecificationView extends GetView<DSeriesSpecificationController> {
         break;
       case "Search":
         controllerX.callSearchApi();
+        break;
+      case "Exit":
+        Get.find<HomeController>().postUserGridSetting2(listStateManager: [
+          {"stateManager": controllerX.stateManager}
+        ]);
         break;
     }
   }

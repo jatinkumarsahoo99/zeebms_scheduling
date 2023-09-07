@@ -14,6 +14,7 @@ import '../../../controller/HomeController.dart';
 import '../../../controller/MainController.dart';
 import '../../../data/PermissionModel.dart';
 import '../../../data/system_envirtoment.dart';
+import '../../../data/user_data_settings_model.dart';
 import '../../../providers/ApiFactory.dart';
 import '../../../data/DropDownValue.dart';
 import '../ChannelListModel.dart';
@@ -55,36 +56,46 @@ class SalesAuditNotTelecastReportController extends GetxController {
   RxBool checked = RxBool(false);
   //input controllers
   DropDownValue? selectLocation;
-  RxString selectValue=RxString("");
+  RxString selectValue = RxString("");
   ChannelListModel? channelListModel;
   bool chk_radnottel = false;
   bool chk_raderror = false;
-  FocusNode locationNode =FocusNode();
-  SalesAuditNotTRLstChannelModel? salesAuditNotTRLstChannelModel = SalesAuditNotTRLstChannelModel(generate:Generate(lsterror: [],lstnottel: []) );
-   getType(String name){
-    if(name == 'Not telecasted'){
-      chk_raderror=false;
+  FocusNode locationNode = FocusNode();
+  PlutoGridStateManager? stateManager;
+  SalesAuditNotTRLstChannelModel? salesAuditNotTRLstChannelModel =
+      SalesAuditNotTRLstChannelModel(
+          generate: Generate(lsterror: [], lstnottel: []));
+  getType(String name) {
+    if (name == 'Not telecasted') {
+      chk_raderror = false;
       chk_radnottel = true;
-    }else{
-      chk_radnottel=false;
-      chk_raderror =true;
+    } else {
+      chk_radnottel = false;
+      chk_raderror = true;
     }
-
   }
-  clearAll(){
+
+  clearAll() {
     Get.delete<SalesAuditNotTelecastReportController>();
     Get.find<HomeController>().clearPage1();
   }
 
   @override
   void onInit() {
-
     super.onInit();
   }
+
   @override
   void onReady() {
     fetchAllLoaderData();
     super.onReady();
+  }
+
+  UserDataSettings? userDataSettings;
+
+  fetchUserSetting1() async {
+    userDataSettings = await Get.find<HomeController>().fetchUserSetting2();
+    update(['listUpdate']);
   }
 
   closeDialogIfOpen() {
@@ -102,102 +113,107 @@ class SalesAuditNotTelecastReportController extends GetxController {
           // Get.back();
           closeDialogIfOpen();
           // log(">>>>>>"+map.toString());
-          if(map is Map && map.containsKey('pageload')){
+          if (map is Map && map.containsKey('pageload')) {
             locations.clear();
             channelList.clear();
-            if(map['pageload'].containsKey('lstlocation') &&
-                map['pageload']['lstlocation'].length > 0 ){
-                map['pageload']['lstlocation'].forEach((e){
-                locations.add(DropDownValue.fromJsonDynamic(e, "locationCode", "locationName"));
+            if (map['pageload'].containsKey('lstlocation') &&
+                map['pageload']['lstlocation'].length > 0) {
+              map['pageload']['lstlocation'].forEach((e) {
+                locations.add(DropDownValue.fromJsonDynamic(
+                    e, "locationCode", "locationName"));
               });
-            }if(map['pageload'].containsKey('lstchannel') &&
-                map['pageload']['lstchannel'].length > 0){
-              map['pageload']['lstchannel'].forEach((e){
-                channelList.add(new ChannelListModel(channelCode: e['channelCode'], channelName: e['channelName'],ischecked: false));
-                channelListMaster.add(new ChannelListModel(channelCode: e['channelCode'], channelName: e['channelName'],ischecked: false));
+            }
+            if (map['pageload'].containsKey('lstchannel') &&
+                map['pageload']['lstchannel'].length > 0) {
+              map['pageload']['lstchannel'].forEach((e) {
+                channelList.add(new ChannelListModel(
+                    channelCode: e['channelCode'],
+                    channelName: e['channelName'],
+                    ischecked: false));
+                channelListMaster.add(new ChannelListModel(
+                    channelCode: e['channelCode'],
+                    channelName: e['channelName'],
+                    ischecked: false));
               });
               update(['updateTable1']);
             }
           }
-         
         });
   }
-  search(String pattern){
-    if(pattern != null && pattern != ""){
+
+  search(String pattern) {
+    if (pattern != null && pattern != "") {
       channelList.clear();
-      channelList.addAll(channelListMaster.where((element) =>
-          element.channelName.toString().toLowerCase().contains(pattern.toString().toLowerCase())).toList()) ;
+      channelList.addAll(channelListMaster
+          .where((element) => element.channelName
+              .toString()
+              .toLowerCase()
+              .contains(pattern.toString().toLowerCase()))
+          .toList());
       update(['updateTable1']);
-    }else{
+    } else {
       channelList.clear();
       channelList.addAll(channelListMaster);
       update(['updateTable1']);
     }
-
-
   }
 
-  fetchGetGenerate(){
-    List<ChannelListModel> channelListFilter=[];
-    channelListFilter = channelList.where((element) =>
-    element.ischecked == true).toList();
+  fetchGetGenerate() {
+    List<ChannelListModel> channelListFilter = [];
+    channelListFilter =
+        channelList.where((element) => element.ischecked == true).toList();
 
-
-
-
-
-    if(selectLocation == null){
+    if (selectLocation == null) {
       Snack.callError("Please select location");
-    }else if(channelListFilter.isEmpty){
+    } else if (channelListFilter.isEmpty) {
       Snack.callError("Please select some channel");
-    }else if(frmDate.text == null || frmDate.text == ""){
+    } else if (frmDate.text == null || frmDate.text == "") {
       Snack.callError("Please select from date");
-    }else if(toDate.text == null || toDate.text == ""){
+    } else if (toDate.text == null || toDate.text == "") {
       Snack.callError("Please select to date");
-    }else if(chk_radnottel == false && chk_raderror == false){
+    } else if (chk_radnottel == false && chk_raderror == false) {
       Snack.callError("Please select not telecasted or Error Sports");
-    }else{
+    } else {
       DateTime fromDateNew = DateFormat("dd-MM-yyyy").parse(frmDate.text);
       DateTime toDateNew = DateFormat("dd-MM-yyyy").parse(toDate.text);
-      if(fromDateNew.isAfter(toDateNew)){
+      if (fromDateNew.isAfter(toDateNew)) {
         LoadingDialog.showErrorDialog("Please select from date correctly");
-      }else{
-
-      }
-
+      } else {}
 
       LoadingDialog.call();
-      Map<String,dynamic> postData = {
+      Map<String, dynamic> postData = {
         "lstChannelList": channelListFilter.map((e) => e.toJson1()).toList(),
-        "locationcode": selectLocation!.key??"",
+        "locationcode": selectLocation!.key ?? "",
         // "channelCode": selectLocation!.key??"",
-        "fromdate":DateFormat('yyyy-MM-ddTHH:mm:ss').format(
-            DateFormat("dd-MM-yyyy").parse(frmDate.text)),
-        "todate": DateFormat('yyyy-MM-ddTHH:mm:ss').format(
-            DateFormat("dd-MM-yyyy").parse(toDate.text)),
+        "fromdate": DateFormat('yyyy-MM-ddTHH:mm:ss')
+            .format(DateFormat("dd-MM-yyyy").parse(frmDate.text)),
+        "todate": DateFormat('yyyy-MM-ddTHH:mm:ss')
+            .format(DateFormat("dd-MM-yyyy").parse(toDate.text)),
         "chk_radnottel": chk_radnottel,
         "chk_raderror": chk_raderror
       };
-      print(">>>>>postData>>>"+(postData).toString());
+      print(">>>>>postData>>>" + (postData).toString());
       Get.find<ConnectorControl>().POSTMETHOD(
           api: ApiFactory.SALESAUDIT_NOT_TELECAST_GETGENERATE,
           json: postData,
-          fun: (Map<String,dynamic> map) {
+          fun: (Map<String, dynamic> map) {
             Get.back();
 
-            if(map is Map && map.containsKey('generate')){
-              salesAuditNotTRLstChannelModel = SalesAuditNotTRLstChannelModel.fromJson(map) ;
+            if (map is Map && map.containsKey('generate')) {
+              salesAuditNotTRLstChannelModel =
+                  SalesAuditNotTRLstChannelModel.fromJson(map);
 
               update(['listUpdate']);
-            }else{
-              salesAuditNotTRLstChannelModel = SalesAuditNotTRLstChannelModel(generate:Generate(lsterror: [],lstnottel: []) );
+            } else {
+              salesAuditNotTRLstChannelModel = SalesAuditNotTRLstChannelModel(
+                  generate: Generate(lsterror: [], lstnottel: []));
               update(['listUpdate']);
             }
-            print("map>>>"+ jsonEncode(salesAuditNotTRLstChannelModel?.toJson()).toString());
+            print("map>>>" +
+                jsonEncode(salesAuditNotTRLstChannelModel?.toJson())
+                    .toString());
           });
     }
-
-
   }
 
   formHandler(String string) {
@@ -205,6 +221,4 @@ class SalesAuditNotTelecastReportController extends GetxController {
       clearAll();
     }
   }
-
-
 }

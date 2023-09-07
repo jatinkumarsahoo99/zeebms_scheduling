@@ -72,6 +72,10 @@ class DataGridMenu {
     customFilter(PlutoGridStateManager stateManager) {
       List _allValues = [];
       var _selectedValues = RxList([]);
+      print("1st foucus Added");
+      if(stateManager.currentCell == null && ((stateManager.rows.length??0)>0)){
+        stateManager.setCurrentCell((stateManager.rows[0].cells.values.first), 0);
+      }
       if (stateManager.currentCell != null) {
         _allValues = stateManager.rows
             .map((e) => e.cells[stateManager.currentCell!.column.field]!.value
@@ -667,14 +671,24 @@ class DataGridMenu {
                                           // }
                                           // stateManager.setRowChecked(
                                           //     _slecetedRow, true, notify: true);
-                                          stateManager.setCurrentCell(
+                                          /*stateManager.setCurrentCell(
                                               _index == 1
                                                   ? stateManager
                                                       .getRowByIdx(_index)!
                                                       .cells[_selectedColumn]
                                                   : _slecetedRow
                                                       .cells[_selectedColumn],
-                                              _index);
+                                              _index);*/
+                                          if(stateManager.currentRow!=null && stateManager.currentRow?.sortIdx==0 && _slecetedRow.sortIdx==2){
+                                            stateManager.setCurrentCell(
+                                                stateManager.getRowByIdx(_slecetedRow.sortIdx-1)?.cells[_selectedColumn],
+                                                _slecetedRow.sortIdx-1);
+                                          }else {
+                                            stateManager.setCurrentCell(
+                                                _slecetedRow
+                                                    .cells[_selectedColumn],
+                                                _slecetedRow.sortIdx);
+                                          }
                                         }
                                       }
                                     },
@@ -827,6 +841,10 @@ class DataGridMenu {
     customFilter(PlutoGridStateManager stateManager) {
       List _allValues = [];
       var _selectedValues = RxList([]);
+      print("1st foucus Added");
+      if(stateManager.currentCell == null && ((stateManager.rows.length??0)>0)){
+        stateManager.setCurrentCell((stateManager.rows[0].cells.values.first), 0);
+      }
       if (stateManager.currentCell != null) {
         _allValues = stateManager.rows
             .map((e) => e.cells[stateManager.currentCell!.column.field]!.value
@@ -1743,14 +1761,24 @@ class DataGridMenu {
                                           // }
                                           // stateManager.setRowChecked(
                                           //     _slecetedRow, true, notify: true);
-                                          stateManager.setCurrentCell(
+                                          /*stateManager.setCurrentCell(
                                               _index == 1
                                                   ? stateManager
                                                   .getRowByIdx(_index)!
                                                   .cells[_selectedColumn]
                                                   : _slecetedRow
                                                   .cells[_selectedColumn],
-                                              _index);
+                                              _index);*/
+                                          if(stateManager.currentRow!=null && stateManager.currentRow?.sortIdx==0 && _slecetedRow.sortIdx==2){
+                                            stateManager.setCurrentCell(
+                                                stateManager.getRowByIdx(_slecetedRow.sortIdx-1)?.cells[_selectedColumn],
+                                                _slecetedRow.sortIdx-1);
+                                          }else {
+                                            stateManager.setCurrentCell(
+                                                _slecetedRow
+                                                    .cells[_selectedColumn],
+                                                _slecetedRow.sortIdx);
+                                          }
                                         }
                                       }
                                     },
@@ -1880,6 +1908,10 @@ class DataGridMenu {
     customFilter(PlutoGridStateManager stateManager) {
       List _allValues = [];
       var _selectedValues = RxList([]);
+      print("1st foucus Added");
+      if(stateManager.currentCell == null && ((stateManager.rows.length??0)>0)){
+        stateManager.setCurrentCell((stateManager.rows[0].cells.values.first), 0);
+      }
       if (stateManager.currentCell != null) {
         _allValues = stateManager.rows
             .map((e) => e.cells[stateManager.currentCell!.column.field]!.value
@@ -2721,7 +2753,7 @@ class DataGridMenu {
                                     onPressed: () {
                                       if (_findctrl.text != "" &&
                                           _selectedColumn != "") {
-                                        var _slecetedRow = _almost.value
+                                        PlutoRow? _slecetedRow = _almost.value
                                             ? stateManager.rows
                                             .firstWhereOrNull((element) =>
                                         (element.cells[_selectedColumn]!.value.toString().toLowerCase().trim().contains(_findctrl.text.toLowerCase().trim()) &&
@@ -2827,6 +2859,7 @@ class DataGridMenu {
                                           //         .value
                                           //         .runtimeType
                                           //         .toString());
+                                          print("Index selected is>>"+_slecetedRow.sortIdx.toString());
                                           if (_slecetedRow.sortIdx == 0) {
                                             _index = 1;
                                           } else {
@@ -2835,7 +2868,7 @@ class DataGridMenu {
 
                                           stateManager.resetScrollToZero();
                                           stateManager.moveScrollByRow(
-                                              PlutoMoveDirection.down, _index);
+                                              PlutoMoveDirection.down, _slecetedRow.sortIdx);
                                           stateManager.setKeepFocus(false);
                                           // for (var element in stateManager
                                           //     .rows) {
@@ -2844,14 +2877,16 @@ class DataGridMenu {
                                           // }
                                           // stateManager.setRowChecked(
                                           //     _slecetedRow, true, notify: true);
-                                          stateManager.setCurrentCell(
-                                              _index == 1
-                                                  ? stateManager
-                                                  .getRowByIdx(_index)!
-                                                  .cells[_selectedColumn]
-                                                  : _slecetedRow
-                                                  .cells[_selectedColumn],
-                                              _index);
+                                          if(stateManager.currentRow!=null && stateManager.currentRow?.sortIdx==0 && _slecetedRow.sortIdx==2){
+                                            stateManager.setCurrentCell(
+                                                stateManager.getRowByIdx(_slecetedRow.sortIdx-1)?.cells[_selectedColumn],
+                                                _slecetedRow.sortIdx-1);
+                                          }else {
+                                            stateManager.setCurrentCell(
+                                                _slecetedRow
+                                                    .cells[_selectedColumn],
+                                                _slecetedRow.sortIdx);
+                                          }
                                         }
                                       }
                                     },

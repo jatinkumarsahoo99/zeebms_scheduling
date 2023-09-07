@@ -14,6 +14,8 @@ import '../../../../widgets/PlutoGrid/src/model/pluto_row.dart';
 import '../../../../widgets/PlutoGrid/src/pluto_grid.dart';
 import '../../../../widgets/Snack.dart';
 import '../../../controller/ConnectorControl.dart';
+import '../../../controller/HomeController.dart';
+import '../../../data/user_data_settings_model.dart';
 import '../../../providers/ApiFactory.dart';
 import '../DSeriesModel.dart';
 import '../DSeriesSearchModel.dart';
@@ -40,10 +42,18 @@ class DSeriesSpecificationController extends GetxController {
   FocusNode locationFocus = FocusNode();
   FocusNode channelFocus = FocusNode();
   FocusNode eventFocus = FocusNode();
+
+  UserDataSettings? userDataSettings;
   @override
   void onInit() {
-    getLocations();
     super.onInit();
+    getLocations();
+    fetchUserSetting1();
+  }
+
+  fetchUserSetting1() async {
+    userDataSettings = await Get.find<HomeController>().fetchUserSetting2();
+    update(['listUpdate']);
   }
 
   getLocations() {
@@ -244,10 +254,12 @@ class DSeriesSpecificationController extends GetxController {
     desc_.text =
         stateManager?.rows[onClick.rowIdx ?? 0].cells["description"]?.value ??
             "";
-    chckLastSegment.value = ((stateManager
-            ?.rows[onClick.rowIdx ?? 0].cells["isLastSegment"]?.value).toString().trim() ==
-        "true");
-    print("ROw Data index is>>>" +  chckLastSegment.value.toString());
+    chckLastSegment.value =
+        ((stateManager?.rows[onClick.rowIdx ?? 0].cells["isLastSegment"]?.value)
+                .toString()
+                .trim() ==
+            "true");
+    print("ROw Data index is>>>" + chckLastSegment.value.toString());
     DropDownValue? data;
     chckLastSegment.refresh();
     eventList.forEach((element) {

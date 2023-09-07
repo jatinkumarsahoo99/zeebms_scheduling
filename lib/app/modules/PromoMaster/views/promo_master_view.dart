@@ -11,6 +11,7 @@ import '../../../../widgets/dropdown.dart';
 import '../../../../widgets/gridFromMap.dart';
 import '../../../../widgets/input_fields.dart';
 import '../../../controller/HomeController.dart';
+import '../../../data/user_data_settings_model.dart';
 import '../../../providers/Utils.dart';
 import '../controllers/promo_master_controller.dart';
 
@@ -64,12 +65,15 @@ class PromoMasterView extends GetView<PromoMasterController> {
                                                   ?.promoMasterOnLoad
                                                   ?.lstCategory ??
                                               [],
-                                          (val)=>controller.handleOnChangedCategory(val,callAPI: true),
+                                          (val) => controller
+                                              .handleOnChangedCategory(val,
+                                                  callAPI: true),
                                           "Category",
                                           .35,
                                           selected:
                                               controller.selectedDropDowns[0],
-                                              inkWellFocusNode: controller.categoryFN,
+                                          inkWellFocusNode:
+                                              controller.categoryFN,
                                         ),
                                         Obx(
                                           () {
@@ -155,25 +159,24 @@ class PromoMasterView extends GetView<PromoMasterController> {
                                           );
                                         }),
                                         GetBuilder(
-                                          init: controller,
-                                          id: 'promoTypeUI',
-                                          
-                                          builder: (_) {
-                                            return DropDownField.formDropDown1WidthMap(
-                                              controller
-                                                      .onloadModel
-                                                      ?.promoMasterOnLoad
-                                                      ?.lstPromoType ??
-                                                  [],
-                                              (val) => controller
-                                                  .selectedDropDowns[4] = val,
-                                              "Promo Type",
-                                              controller.componentWidthRatio,
-                                              selected:
-                                                  controller.selectedDropDowns[4],
-                                            );
-                                          }
-                                        ),
+                                            init: controller,
+                                            id: 'promoTypeUI',
+                                            builder: (_) {
+                                              return DropDownField
+                                                  .formDropDown1WidthMap(
+                                                controller
+                                                        .onloadModel
+                                                        ?.promoMasterOnLoad
+                                                        ?.lstPromoType ??
+                                                    [],
+                                                (val) => controller
+                                                    .selectedDropDowns[4] = val,
+                                                "Promo Type",
+                                                controller.componentWidthRatio,
+                                                selected: controller
+                                                    .selectedDropDowns[4],
+                                              );
+                                            }),
                                         InputFields.formField1(
                                           hintTxt: "Blan Tape ID",
                                           controller: controller.blankTapeIDCtr,
@@ -304,7 +307,6 @@ class PromoMasterView extends GetView<PromoMasterController> {
                                                     .size
                                                     .width *
                                                 controller.componentWidthRatio)
-                                       
                                       ],
                                     ),
                                   ],
@@ -417,6 +419,22 @@ class PromoMasterView extends GetView<PromoMasterController> {
                                                         focusNode: controller
                                                             .rightTableFN,
                                                         child: DataGridFromMap(
+                                                          witdthSpecificColumn: (controller
+                                                              .userDataSettings
+                                                              ?.userSetting
+                                                              ?.firstWhere(
+                                                                  (element) =>
+                                                                      element
+                                                                          .controlName ==
+                                                                      "stateManager",
+                                                                  orElse: () =>
+                                                                      UserSetting())
+                                                              .userSettings),
+                                                          onload: (sm) {
+                                                            controller
+                                                                    .stateManager =
+                                                                sm.stateManager;
+                                                          },
                                                           mapData: controller
                                                               .rightDataTable
                                                               .value
@@ -440,7 +458,8 @@ class PromoMasterView extends GetView<PromoMasterController> {
                                           Row(
                                             crossAxisAlignment:
                                                 CrossAxisAlignment.end,
-                                                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                            mainAxisAlignment:
+                                                MainAxisAlignment.spaceBetween,
                                             children: [
                                               InputFields.formField1(
                                                   hintTxt: "Copy",

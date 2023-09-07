@@ -9,7 +9,9 @@ import 'package:get/get.dart';
 import 'package:intl/intl.dart';
 import 'package:bms_scheduling/widgets/PlutoGrid/pluto_grid.dart';
 
+import '../../../controller/HomeController.dart';
 import '../../../data/DropDownValue.dart';
+import '../../../data/user_data_settings_model.dart';
 
 class ImportDigitextRunOrderController extends GetxController {
   //TODO: Implement ImportDigitextRunOrderController
@@ -37,6 +39,7 @@ class ImportDigitextRunOrderController extends GetxController {
   PlutoGridStateManager? agencyGridStateManager;
   final count = 0.obs;
   var allowSave = RxBool(true);
+
   @override
   void onInit() {
     getLocation();
@@ -44,9 +47,17 @@ class ImportDigitextRunOrderController extends GetxController {
     super.onInit();
   }
 
+  UserDataSettings? userDataSettings;
+
   @override
   void onReady() {
     super.onReady();
+    fetchUserSetting1();
+  }
+
+  fetchUserSetting1() async {
+    userDataSettings = await Get.find<HomeController>().fetchUserSetting2();
+    update(['data']);
   }
 
   @override

@@ -17,6 +17,7 @@ import 'package:get/get.dart';
 
 import '../../../controller/HomeController.dart';
 import '../../../data/PermissionModel.dart';
+import '../../../data/user_data_settings_model.dart';
 import '../controllers/import_digitext_run_order_controller.dart';
 
 class ImportDigitextRunOrderView extends StatelessWidget {
@@ -152,6 +153,13 @@ class ImportDigitextRunOrderView extends StatelessWidget {
                                   alignment: Alignment.bottomRight,
                                   children: [
                                     DataGridShowOnlyKeys(
+                                      keysWidths: (controller
+                                          .userDataSettings?.userSetting
+                                          ?.firstWhere(
+                                              (element) =>
+                                                  element.controlName == "data",
+                                              orElse: () => UserSetting())
+                                          .userSettings),
                                       mapData: getPageData(index),
                                       formatDate: false,
                                       onload: (load) {
@@ -363,6 +371,11 @@ class ImportDigitextRunOrderView extends StatelessWidget {
     switch (name) {
       case "Save":
         controller.saveRunOrder();
+        break;
+      case "Exit":
+        Get.find<HomeController>().postUserGridSetting2(listStateManager: [
+          {"data": controller.clientGridStateManager},
+        ]);
         break;
       case "Clear":
         Get.delete<ImportDigitextRunOrderController>();

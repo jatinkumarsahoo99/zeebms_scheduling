@@ -15,6 +15,7 @@ import '../../../../widgets/gridFromMap.dart';
 import '../../../controller/HomeController.dart';
 import '../../../controller/MainController.dart';
 import '../../../data/PermissionModel.dart';
+import '../../../data/user_data_settings_model.dart';
 import '../../../providers/SizeDefine.dart';
 import '../../../providers/Utils.dart';
 import '../controllers/SalesAuditNewController.dart';
@@ -284,11 +285,18 @@ class SalesAuditNewView  extends StatelessWidget  {
                                                  // print("singlr click"+val!.row!.toJson().toString());
                                                  print("singlr click"+val!.rowIdx.toString());
                                                  controller.selectedIndex = val.rowIdx;
-                                                 // controller.gridStateManagerRight?.setCurrentCell(controller.gridStateManagerRight?.rows[2].cells["no"], 2) ;
+                                                //  controller.gridStateManagerRight?.setCurrentCell(controller.gridStateManagerRight?.rows[2].cells["no"], 2) ;
                                              },
                                             hideKeys: ['locationcode','channelcode',
                                               'recordnumber','telecastProgram','rowNumber','remarks1',
                                               'programCode','previousBookingStatus','scheduleProgramCode'],
+                                            witdthSpecificColumn: (controller
+                                                        .userDataSettings?.userSetting
+                                                        ?.firstWhere(
+                                                            (element) =>
+                                                                element.controlName == "gridStateManagerLeft",
+                                                            orElse: () => UserSetting())
+                                                        .userSettings),
                                             onload:
                                                 (PlutoGridOnLoadedEvent load) {
 
@@ -363,7 +371,13 @@ class SalesAuditNewView  extends StatelessWidget  {
                                                   print("singlr click"+val!.rowIdx.toString());
                                                   controller.selectedRightIndex = val.rowIdx;
                                                 },
-
+                                                 witdthSpecificColumn: (controller
+                                                        .userDataSettings?.userSetting
+                                                        ?.firstWhere(
+                                                            (element) =>
+                                                                element.controlName == "gridStateManagerRight",
+                                                            orElse: () => UserSetting())
+                                                        .userSettings),
                                                 onload:
                                                     (PlutoGridOnLoadedEvent
                                                 load) {

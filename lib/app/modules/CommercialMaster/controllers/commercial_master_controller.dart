@@ -19,6 +19,7 @@ import '../../../../widgets/Snack.dart';
 import '../../../controller/ConnectorControl.dart';
 import '../../../controller/MainController.dart';
 import '../../../data/DropDownValue.dart';
+import '../../../data/user_data_settings_model.dart';
 import '../../../providers/ApiFactory.dart';
 import '../../../providers/Utils.dart';
 import '../../CommonDocs/controllers/common_docs_controller.dart';
@@ -935,6 +936,13 @@ class CommercialMasterController extends GetxController {
   @override
   void onReady() {
     super.onReady();
+    fetchUserSetting1();
+  }
+
+  UserDataSettings? userDataSettings;
+
+  fetchUserSetting1() async {
+    userDataSettings = await Get.find<HomeController>().fetchUserSetting2();
   }
 
   @override
@@ -960,6 +968,10 @@ class CommercialMasterController extends GetxController {
       clearAll();
     } else if (string == "Save") {
       saveData();
+    } else if (string == "Exit") {
+      Get.find<HomeController>().postUserGridSetting2(listStateManager: [
+        {"gridStateManager": gridStateManager},
+      ]);
     } else if (string == "Search") {
       search();
     } else if (string == "Docs") {

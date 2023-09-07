@@ -10,6 +10,8 @@ import 'package:get/get.dart';
 import 'package:intl/intl.dart';
 import 'package:bms_scheduling/widgets/PlutoGrid/pluto_grid.dart';
 
+import '../../../controller/HomeController.dart';
+import '../../../data/user_data_settings_model.dart';
 import '../models/cancel_wo_model.dart';
 import '../models/non_fpc_wo_dt.dart';
 import '../models/wo_aspdfpc_model.dart';
@@ -27,6 +29,8 @@ class MamWorkOrdersController extends GetxController {
   var selectedTab = "Release WO Non FPC".obs;
   PageController pageController = PageController();
   var onloadData = MAMWORKORDERONLOADMODEL().obs;
+  UserDataSettings? userDataSettings;
+
   // Common Varaibles START
   ///
   ///
@@ -35,6 +39,7 @@ class MamWorkOrdersController extends GetxController {
   ///
   /// Release WO NON FPC Varaibles START
   var nonFPCWOTypeFN = FocusNode();
+  PlutoGridStateManager? woNonFPCSM;
   bool nonFPCEnableAll = false;
   var nonFPCChannelList = <DropDownValue>[].obs;
   var nonFPCSelectedRMSProgram = DropDownValue().obs;
@@ -60,6 +65,7 @@ class MamWorkOrdersController extends GetxController {
   ///
   ///
   /// WO AS PER DAILY DAILY FPC VARAIBLES START
+  PlutoGridStateManager? woAsPerDailyFPCSMFirst, woAsPerDailyFPCSMSecond;
   DropDownValue? woAsPerDailyFPCSelectedWoType,
       woAsPerDailyFPCSelectedLocation,
       woAsPerDailyFPCSelectedChannel;
@@ -87,6 +93,8 @@ class MamWorkOrdersController extends GetxController {
   ///
   ///
   /// Cancel WO varaibles end
+
+  PlutoGridStateManager? cwoSM;
   DropDownValue? cwoSelectedWOT,
       cWOSelectedWOTLocation,
       cWOSelectedWOTChannel,
@@ -106,6 +114,7 @@ class MamWorkOrdersController extends GetxController {
   ///
   ///
   /// WO HISTORY VARAIBLES START
+  PlutoGridStateManager? woHistorySM;
   DropDownValue? woHSelectedLocation,
       woHSelectedChannel,
       woHSelectedProgram,
@@ -119,12 +128,6 @@ class MamWorkOrdersController extends GetxController {
   var woHtelDate = true.obs;
 
   /// WO HISTORY VARAIBLES END
-
-  @override
-  void onReady() {
-    super.onReady();
-    initalizeAPI();
-  }
 
   ///
   ///
@@ -141,6 +144,7 @@ class MamWorkOrdersController extends GetxController {
   ///
   //////////////////////////////////////// WO HISTORY FUNCTIONALITY START//////////////////////////////////////
   clearWOHistoryPage() async {
+    woHistorySM = null;
     woHSelectedLocation = null;
     woHSelectedChannel = null;
     woHSelectedProgram = null;
@@ -239,6 +243,7 @@ class MamWorkOrdersController extends GetxController {
   ///
   //////////////////////////////////////// CANCEL WO FUNCTIONALITY START////////////////////////////////////////
   clearCancelWOPage() async {
+    cwoSM = null;
     cwoDataTableList.clear();
     cwoSelectedWOT = null;
     cWOSelectedWOTLocation = null;
@@ -389,6 +394,7 @@ class MamWorkOrdersController extends GetxController {
     rePushJsonTC.value = "";
     rePushModel.value = REPushModel();
     canEnableRePush = false;
+    woRepushSM = null;
   }
 
   rePushLoadGetData() {
@@ -491,6 +497,7 @@ class MamWorkOrdersController extends GetxController {
   ///
   //////////////////////////////////////// RELEASE WO NON FPC FUNCTIONALITY START//////////////////////////////////////////
   clearReleaseWONonFPCPage() async {
+    woNonFPCSM = null;
     nonFPCSelectedWorkOrderType = null;
     nonFPCSelectedLoc = null;
     nonFPCSelectedChannel = null;
@@ -551,7 +558,7 @@ class MamWorkOrdersController extends GetxController {
       LoadingDialog.showErrorDialog("Please enter from episode.");
     } else if (nonFPCToEpi.text.isEmpty) {
       LoadingDialog.showErrorDialog("Please enter to episode.");
-    }else if (nonFPCEpiSegments.text.isEmpty) {
+    } else if (nonFPCEpiSegments.text.isEmpty) {
       LoadingDialog.showErrorDialog("Please enter to episode segs.");
     } else {
       LoadingDialog.call();
@@ -559,7 +566,9 @@ class MamWorkOrdersController extends GetxController {
         api: ApiFactory.MAM_WORK_ORDER_NON_FPC_GETTXID,
         fun: (resp) {
           Get.back();
-          if(resp!=null && resp is Map<String,dynamic> && resp['txId']!=null){
+          if (resp != null &&
+              resp is Map<String, dynamic> &&
+              resp['txId'] != null) {
             nonFPCTxID.text = resp['txId'].toString();
           }
         },
@@ -943,6 +952,8 @@ class MamWorkOrdersController extends GetxController {
     woAsPerDFPCEnableAll = false;
     woAsPerDailyFPCSaveList.clear();
     woAPDFPCTelecateDateTC.text = getCurrentDateTime;
+    woAsPerDailyFPCSMFirst = null;
+    woAsPerDailyFPCSMSecond = null;
   }
 
   ////////////////////////////////////////// WO AS PER DAILY DAILY FPC FUNCTIONALITY END//////////////////////////////////////////
@@ -955,6 +966,29 @@ class MamWorkOrdersController extends GetxController {
   ///
   ///
   //////////////////////////////// COMMON FUNCTION ON THIS FORM START///////////////////////////////////////////////////
+
+  @override
+  void onReady() {
+    super.onReady();
+    initalizeAPI();
+    fetchUserSetting1();
+  }
+
+  fetchUserSetting1() async {
+    userDataSettings = await Get.find<HomeController>().fetchUserSetting2();
+    if (selectedTab.value == mainTabs[0]) {
+      nonFPCDataTableList.refresh();
+    } else if (selectedTab.value == mainTabs[1]) {
+      woASPDFPCModel.refresh();
+      woAsPerDailyFPCSaveList.refresh();
+    } else if (selectedTab.value == mainTabs[2]) {
+      rePushModel.refresh();
+    } else if (selectedTab.value == mainTabs[3]) {
+      cwoDataTableList.refresh();
+    } else if (selectedTab.value == mainTabs[4]) {
+      wHDTList.refresh();
+    }
+  }
 
   initalizeAPI() async {
     LoadingDialog.call();
@@ -998,6 +1032,15 @@ class MamWorkOrdersController extends GetxController {
   formHandler(btn) {
     if (btn == "Clear") {
       clearPage();
+    } else if (btn == "Exit") {
+      Get.find<HomeController>().postUserGridSetting2(listStateManager: [
+        {"woNonFPCSM": woNonFPCSM},
+        {"woAsPerDailyFPCSMFirst": woAsPerDailyFPCSMFirst},
+        {"woAsPerDailyFPCSMSecond": woAsPerDailyFPCSMSecond},
+        {"woRepushSM": woRepushSM},
+        {"cwoSM": cwoSM},
+        {"woHistorySM": woHistorySM},
+      ]);
     }
   }
 

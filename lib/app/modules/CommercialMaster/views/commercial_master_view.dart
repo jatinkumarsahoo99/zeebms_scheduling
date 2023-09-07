@@ -18,6 +18,7 @@ import '../../../controller/HomeController.dart';
 import '../../../controller/MainController.dart';
 import '../../../data/DropDownValue.dart';
 import '../../../data/PermissionModel.dart';
+import '../../../data/user_data_settings_model.dart';
 import '../../../providers/ApiFactory.dart';
 import '../../../providers/SizeDefine.dart';
 import '../../../providers/Utils.dart';
@@ -551,22 +552,42 @@ class CommercialMasterView extends StatelessWidget {
                                                                 .delete &&
                                                         event
                                                             is! RawKeyUpEvent) {
-
-                                                      if( controllerX
-                                                          .gridStateManager != null &&  (controllerX
-                                                          .gridStateManager?.rows.length??0 ) > 0){
+                                                      if (controllerX
+                                                                  .gridStateManager !=
+                                                              null &&
+                                                          (controllerX
+                                                                      .gridStateManager
+                                                                      ?.rows
+                                                                      .length ??
+                                                                  0) >
+                                                              0) {
                                                         print(
                                                             "delete button pressed");
                                                         controllerX
-                                                            .gridStateManager?.removeCurrentRow();
+                                                            .gridStateManager
+                                                            ?.removeCurrentRow();
                                                         controllerX
-                                                            .gridStateManager?.notifyListeners();
-                                                      }else{
-                                                        LoadingDialog.showErrorDialog("Please add some data");
+                                                            .gridStateManager
+                                                            ?.notifyListeners();
+                                                      } else {
+                                                        LoadingDialog
+                                                            .showErrorDialog(
+                                                                "Please add some data");
                                                       }
                                                     }
                                                   },
                                                   child: DataGridFromMap(
+                                                      witdthSpecificColumn: (controllerX
+                                                          .userDataSettings
+                                                          ?.userSetting
+                                                          ?.firstWhere(
+                                                              (element) =>
+                                                                  element
+                                                                      .controlName ==
+                                                                  "gridStateManager",
+                                                              orElse: () =>
+                                                                  UserSetting())
+                                                          .userSettings),
                                                       hideCode: false,
                                                       formatDate: false,
                                                       checkRow: true,

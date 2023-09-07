@@ -7,7 +7,9 @@ import 'package:get/get.dart';
 import 'package:flutter/material.dart';
 
 import '../../../controller/ConnectorControl.dart';
+import '../../../controller/HomeController.dart';
 import '../../../data/DropDownValue.dart';
+import '../../../data/user_data_settings_model.dart';
 import '../../../providers/ApiFactory.dart';
 import '../EuropeSpotModel.dart';
 
@@ -69,10 +71,17 @@ class EuropeDropSpotsController extends GetxController {
   FocusNode channelFocus3 = FocusNode();
   FocusNode selectFileFocus = FocusNode();
 
+  UserDataSettings? userDataSettings;
   @override
   void onInit() {
-    getInitial();
     super.onInit();
+    getInitial();
+    fetchUserSetting1();
+  }
+
+  fetchUserSetting1() async {
+    userDataSettings = await Get.find<HomeController>().fetchUserSetting2();
+    update(['listUpdate']);
   }
 
   getInitial() {
@@ -136,13 +145,13 @@ class EuropeDropSpotsController extends GetxController {
         json: postMap,
         fun: (map) {
           Get.back();
-         if(map is Map && map.toString().contains("successfully")){
-           LoadingDialog.callDataSavedMessage(
-             "Spots Dropped Successfully",
-           );
-         }else{
-           LoadingDialog.callInfoMessage(map.toString());
-         }
+          if (map is Map && map.toString().contains("successfully")) {
+            LoadingDialog.callDataSavedMessage(
+              "Spots Dropped Successfully",
+            );
+          } else {
+            LoadingDialog.callInfoMessage(map.toString());
+          }
         });
   }
 
@@ -271,9 +280,11 @@ class EuropeDropSpotsController extends GetxController {
         json: postMap,
         fun: (map) {
           Get.back();
-          if(map is Map && map.containsKey("update") && map["update"].toString().contains("successfully")){
+          if (map is Map &&
+              map.containsKey("update") &&
+              map["update"].toString().contains("successfully")) {
             LoadingDialog.callDataSavedMessage(map["update"]);
-          }else{
+          } else {
             LoadingDialog.callInfoMessage(map.toString());
           }
         });
@@ -303,22 +314,19 @@ class EuropeDropSpotsController extends GetxController {
     }
   }
 
-
-  selectAllBtn(bool status){
-    if(status){
+  selectAllBtn(bool status) {
+    if (status) {
       stateManager?.setFilter((element) => true);
-      stateManager?.toggleAllRowChecked(true,notify: true);
-      selectAll.value = status??false;
+      stateManager?.toggleAllRowChecked(true, notify: true);
+      selectAll.value = status ?? false;
       selectAll.refresh();
       stateManager?.notifyListeners();
-    }else{
+    } else {
       stateManager?.setFilter((element) => true);
-      stateManager?.toggleAllRowChecked(false,notify: true);
-      selectAll.value = status??false;
+      stateManager?.toggleAllRowChecked(false, notify: true);
+      selectAll.value = status ?? false;
       selectAll.refresh();
       stateManager?.notifyListeners();
-
     }
   }
-
 }

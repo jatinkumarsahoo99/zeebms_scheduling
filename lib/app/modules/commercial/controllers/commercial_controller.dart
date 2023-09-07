@@ -2,6 +2,7 @@ import 'dart:convert';
 
 import 'package:bms_scheduling/widgets/PlutoGrid/pluto_grid.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:get/get.dart';
 import 'package:intl/intl.dart';
 
@@ -88,11 +89,31 @@ class CommercialController extends GetxController {
   TextEditingController refDateControl = TextEditingController(
       text: DateFormat("dd-MM-yyyy").format(DateTime.now()));
 
+  FocusNode autoShuffleFN = FocusNode();
+  FocusNode saveFN = FocusNode();
+
   @override
   void onInit() {
     super.onInit();
     getLocations();
     fetchUserSetting1();
+    autoShuffleFN.onKey = (node, event) {
+      if (!event.isShiftPressed && event.isKeyPressed(LogicalKeyboardKey.tab)) {
+        saveFN.requestFocus();
+        return KeyEventResult.handled;
+      } else {
+        return KeyEventResult.ignored;
+      }
+    };
+
+    saveFN.onKey = (node, event) {
+      if (event.isShiftPressed && event.isKeyPressed(LogicalKeyboardKey.tab)) {
+        autoShuffleFN.requestFocus();
+        return KeyEventResult.handled;
+      } else {
+        return KeyEventResult.ignored;
+      }
+    };
   }
 
   var locationFN = FocusNode();

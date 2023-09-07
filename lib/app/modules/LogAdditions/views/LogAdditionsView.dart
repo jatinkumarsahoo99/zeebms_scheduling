@@ -12,6 +12,7 @@ import '../../../../widgets/input_fields.dart';
 import '../../../controller/HomeController.dart';
 import '../../../controller/MainController.dart';
 import '../../../data/PermissionModel.dart';
+import '../../../data/user_data_settings_model.dart';
 import '../../../providers/SizeDefine.dart';
 import '../../../providers/Utils.dart';
 import '../../../routes/app_pages.dart';
@@ -269,6 +270,13 @@ class LogAdditionsView extends GetView<LogAdditionsController> {
                           (controllerX.logAdditionModel?.displayPreviousAdditon
                               ?.previousAdditons?.isNotEmpty)!)
                       ? DataGridFromMap(
+                          witdthSpecificColumn: (controller
+                              .userDataSettings?.userSetting
+                              ?.firstWhere(
+                                  (element) =>
+                                      element.controlName == "transmissionList",
+                                  orElse: () => UserSetting())
+                              .userSettings),
                           onFocusChange: (value) {
                             controllerX.gridStateManager!
                                 .setGridMode(PlutoGridMode.selectWithOneTap);
@@ -276,7 +284,6 @@ class LogAdditionsView extends GetView<LogAdditionsController> {
                                 PlutoGridMode.selectWithOneTap;
                             // controllerX.getSetting();
                           },
-                          witdthSpecificColumn: {"duration": 70},
                           onload: (loadevent) {
                             controllerX.gridStateManager =
                                 loadevent.stateManager;
@@ -328,8 +335,8 @@ class LogAdditionsView extends GetView<LogAdditionsController> {
                               showIcon: false,
                               // isEnabled: btn['isDisabled'],
                               callback: Utils.btnAccessHandler2(btn['name'],
-                                              controller, formPermissions) ==
-                                          null
+                                          controller, formPermissions) ==
+                                      null
                                   ? null
                                   : () => formHandler(btn['name']),
                             ),
@@ -356,6 +363,11 @@ class LogAdditionsView extends GetView<LogAdditionsController> {
       case "clear":
         Get.delete<LogAdditionsController>();
         Get.find<HomeController>().clearPage1();
+        break;
+      case "Exit":
+        Get.find<HomeController>().postUserGridSetting2(listStateManager: [
+          {"transmissionList": controller.gridStateManager},
+        ]);
         break;
       case "search":
         Get.to(SearchPage(

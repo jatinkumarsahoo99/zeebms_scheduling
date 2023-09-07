@@ -11,6 +11,7 @@ import '../../../controller/ConnectorControl.dart';
 import '../../../controller/HomeController.dart';
 import '../../../controller/MainController.dart';
 import '../../../data/DropDownValue.dart';
+import '../../../data/user_data_settings_model.dart';
 import '../../../providers/ApiFactory.dart';
 import '../../../providers/ExportData.dart';
 import '../LogAdditionModel.dart';
@@ -43,6 +44,19 @@ class LogAdditionsController extends GetxController {
   PlutoGridMode selectedPlutoGridMode = PlutoGridMode.normal;
 
   // RxString logAddionName = RxString("Addition");
+
+  UserDataSettings? userDataSettings;
+
+  @override
+  void onReady() {
+    super.onReady();
+    fetchUserSetting1();
+  }
+
+  fetchUserSetting1() async {
+    userDataSettings = await Get.find<HomeController>().fetchUserSetting2();
+    update(['transmissionList']);
+  }
 
   @override
   void onInit() {
@@ -235,10 +249,12 @@ class LogAdditionsController extends GetxController {
         fun: (map) {
           Navigator.pop(Get.context!);
           if (map is Map &&
-              map.containsKey("postAdditionsoutput") &&
-              map["postAdditionsoutput"] != null &&
-              map["postAdditionsoutput"].containsKey("success") /*&&
-              map["postAdditionsoutput"]["success"] == "success"*/) {
+                  map.containsKey("postAdditionsoutput") &&
+                  map["postAdditionsoutput"] != null &&
+                  map["postAdditionsoutput"].containsKey(
+                      "success") /*&&
+              map["postAdditionsoutput"]["success"] == "success"*/
+              ) {
             // logAddionName.value = logAddionName.value + map["postAdditionsoutput"]["additionselected"];
             // getAdditionListCheck("Addition"+map["postAdditionsoutput"]["additionselected"]);
             if (map["postAdditionsoutput"]["lstAddition"] != null) {
@@ -259,7 +275,7 @@ class LogAdditionsController extends GetxController {
                   (logAdditionModel?.displayPreviousAdditon?.previousAdditons
                       ?.map((e) => e.toJson1())
                       .toList())!,
-                  "${selectLocation?.value ?? ""} ${selectChannel?.value?.value ?? ""} ${DateFormat('yyyy-MM-dd').format(DateFormat("dd-MM-yyyy").parse(selectedDate.text))} ${"Addition " + (map["postAdditionsoutput"]["additionselected"]??"1")}",
+                  "${selectLocation?.value ?? ""} ${selectChannel?.value?.value ?? ""} ${DateFormat('yyyy-MM-dd').format(DateFormat("dd-MM-yyyy").parse(selectedDate.text))} ${"Addition " + (map["postAdditionsoutput"]["additionselected"] ?? "1")}",
                   callBack: () {});
             });
           } else {

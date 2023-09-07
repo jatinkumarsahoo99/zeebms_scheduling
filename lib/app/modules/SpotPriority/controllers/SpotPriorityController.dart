@@ -8,6 +8,7 @@ import '../../../../widgets/Snack.dart';
 import '../../../controller/ConnectorControl.dart';
 import '../../../controller/HomeController.dart';
 import '../../../data/DropDownValue.dart';
+import '../../../data/user_data_settings_model.dart';
 import '../../../providers/ApiFactory.dart';
 import '../SpotPriorityModel.dart';
 
@@ -38,6 +39,19 @@ class SpotPriorityController extends GetxController {
   void onInit() {
     getLocations();
     super.onInit();
+  }
+
+  @override
+  void onReady() {
+    super.onReady();
+    fetchUserSetting1();
+  }
+
+  UserDataSettings? userDataSettings;
+
+  fetchUserSetting1() async {
+    userDataSettings = await Get.find<HomeController>().fetchUserSetting2();
+    update(['spotPriorityList']);
   }
 
   getLocations() {
