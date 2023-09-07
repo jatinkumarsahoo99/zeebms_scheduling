@@ -88,11 +88,7 @@ class EventSecondaryView extends GetView<EventSecondaryController> {
                                           controller.controllsEnabled.value,
                                       mainTextController: controller.fromdateTC,
                                       // endDate: DateTime.now(),
-                                      endDate: (ApiFactory.Enviroment
-                                                  .toLowerCase() ==
-                                              "prod")
-                                          ? DateTime.now()
-                                          : null,
+                                      startDate: DateTime.now(),
                                     ),
                                   ),
                                   FormButton(
