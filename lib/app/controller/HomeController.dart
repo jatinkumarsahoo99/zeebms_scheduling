@@ -81,13 +81,13 @@ class HomeController extends GetxController {
   }
 
   void postUserGridSetting(
-      {required List<PlutoGridStateManager> listStateManager,List<String>? tableNamesList}) {
+      {required List<PlutoGridStateManager?>? listStateManager,List<String>? tableNamesList}) {
     if (listStateManager == null || listStateManager.isEmpty) return;
     if (tableNamesList!=null && (tableNamesList.length!=listStateManager.length)) return;
     List data = [];
     for (int i = 0; i < listStateManager.length; i++) {
       Map<String, dynamic> singleMap = {};
-      listStateManager[i].columns.forEach((element) {
+      listStateManager[i]?.columns.forEach((element) {
         singleMap[element.field] = element.width;
       });
       String? mapData = jsonEncode(singleMap);
