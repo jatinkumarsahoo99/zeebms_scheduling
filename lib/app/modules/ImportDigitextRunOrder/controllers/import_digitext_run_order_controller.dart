@@ -138,17 +138,21 @@ class ImportDigitextRunOrderController extends GetxController {
   }
 
   pickFile() async {
-    FilePickerResult? result = await FilePicker.platform.pickFiles(
-        type: FileType.custom,
-        initialDirectory: "*08/08/2023 00:00:00*",
-        allowedExtensions: ["txt"]);
-
-    if (result != null && result.files.single != null) {
-      importedFile.value = result.files.single;
-      fileController.text = result.files.single.name;
-      importfile();
+    if (selectedLocation == null || selectedChannel == null) {
+      LoadingDialog.callErrorMessage1(msg: "Please Select Location & Channel.");
     } else {
-      // User canceled the pic5ker
+      FilePickerResult? result = await FilePicker.platform.pickFiles(
+          type: FileType.custom,
+          initialDirectory: "*08/08/2023 00:00:00*",
+          allowedExtensions: ["txt"]);
+
+      if (result != null && result.files.single != null) {
+        importedFile.value = result.files.single;
+        fileController.text = result.files.single.name;
+        importfile();
+      } else {
+        // User canceled the pic5ker
+      }
     }
   }
 

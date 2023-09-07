@@ -20,9 +20,10 @@ import '../../../data/PermissionModel.dart';
 import '../../../data/user_data_settings_model.dart';
 import '../controllers/import_digitext_run_order_controller.dart';
 
-class ImportDigitextRunOrderView
-    extends GetView<ImportDigitextRunOrderController> {
-  const ImportDigitextRunOrderView({Key? key}) : super(key: key);
+class ImportDigitextRunOrderView extends StatelessWidget {
+  ImportDigitextRunOrderView({Key? key}) : super(key: key);
+  final controller = Get.put<ImportDigitextRunOrderController>(
+      ImportDigitextRunOrderController());
 
   getPageData(int index) {
     switch (index) {

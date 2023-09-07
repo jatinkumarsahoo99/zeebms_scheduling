@@ -178,10 +178,15 @@ class SchedulePromoView extends StatelessWidget {
                                                     .dailyFpc.value
                                                     .map((e) => e.toJson())
                                                     .toList(),
-                                                onRowDoubleTap: (row) => controller
-                                                    .handleDoubleTapInLeft1stTable(
-                                                        row.rowIdx,
-                                                        row.cell.column.field),
+                                                onRowDoubleTap: (row) {
+                                                  controller.fpcSelectedIdx =
+                                                      row.rowIdx ?? 0;
+                                                  controller
+                                                      .handleDoubleTapInLeft1stTable(
+                                                          row.rowIdx,
+                                                          row.cell.column
+                                                              .field);
+                                                },
                                                 onload: (event) {
                                                   controller.fpcStateManager =
                                                       event.stateManager;
@@ -221,8 +226,8 @@ class SchedulePromoView extends StatelessWidget {
                                                         ? Colors.red
                                                         : Colors.white,
                                                 onSelected: (row) => {
-                                                  controller.fpcSelectedIdx =
-                                                      row.rowIdx ?? 0,
+                                                  // controller.fpcSelectedIdx =
+                                                  //     row.rowIdx ?? 0,
                                                   controller.fpcSelectedCol =
                                                       row.cell?.column.field ??
                                                           ""

@@ -1,6 +1,7 @@
 import 'dart:convert';
 import 'dart:developer';
 
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 
 import 'package:get/get.dart';
@@ -128,8 +129,9 @@ class FpcMismatchView extends GetView<FpcMismatchController> {
                         title: "As On Date",
                         // startDate: DateTime.now(),
                         //Note: Data Availble on 1 OCT 2012
-                        startDate:
-                            DateTime.now().subtract(Duration(days: 5000)),
+                        startDate: kDebugMode
+                            ? DateTime.now().subtract(Duration(days: 5000))
+                            : DateTime.now(),
                         endDate: DateTime.now().add(Duration(days: 1825)),
                         mainTextController: controllerX.date_,
                         widthRation: controllerX.widthSize,
