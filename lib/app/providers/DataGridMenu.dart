@@ -671,14 +671,24 @@ class DataGridMenu {
                                           // }
                                           // stateManager.setRowChecked(
                                           //     _slecetedRow, true, notify: true);
-                                          stateManager.setCurrentCell(
+                                          /*stateManager.setCurrentCell(
                                               _index == 1
                                                   ? stateManager
                                                       .getRowByIdx(_index)!
                                                       .cells[_selectedColumn]
                                                   : _slecetedRow
                                                       .cells[_selectedColumn],
-                                              _index);
+                                              _index);*/
+                                          if(stateManager.currentRow!=null && stateManager.currentRow?.sortIdx==0 && _slecetedRow.sortIdx==2){
+                                            stateManager.setCurrentCell(
+                                                stateManager.getRowByIdx(_slecetedRow.sortIdx-1)?.cells[_selectedColumn],
+                                                _slecetedRow.sortIdx-1);
+                                          }else {
+                                            stateManager.setCurrentCell(
+                                                _slecetedRow
+                                                    .cells[_selectedColumn],
+                                                _slecetedRow.sortIdx);
+                                          }
                                         }
                                       }
                                     },
@@ -1751,14 +1761,24 @@ class DataGridMenu {
                                           // }
                                           // stateManager.setRowChecked(
                                           //     _slecetedRow, true, notify: true);
-                                          stateManager.setCurrentCell(
+                                          /*stateManager.setCurrentCell(
                                               _index == 1
                                                   ? stateManager
                                                   .getRowByIdx(_index)!
                                                   .cells[_selectedColumn]
                                                   : _slecetedRow
                                                   .cells[_selectedColumn],
-                                              _index);
+                                              _index);*/
+                                          if(stateManager.currentRow!=null && stateManager.currentRow?.sortIdx==0 && _slecetedRow.sortIdx==2){
+                                            stateManager.setCurrentCell(
+                                                stateManager.getRowByIdx(_slecetedRow.sortIdx-1)?.cells[_selectedColumn],
+                                                _slecetedRow.sortIdx-1);
+                                          }else {
+                                            stateManager.setCurrentCell(
+                                                _slecetedRow
+                                                    .cells[_selectedColumn],
+                                                _slecetedRow.sortIdx);
+                                          }
                                         }
                                       }
                                     },
