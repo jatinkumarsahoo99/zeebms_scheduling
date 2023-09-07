@@ -320,11 +320,11 @@ class DataGridFromMap1 extends StatelessWidget {
               if (onload != null) {
                 onload!(load);
               }
-              load.stateManager.setColumnSizeConfig(PlutoGridColumnSizeConfig(
-                  autoSizeMode: columnAutoResize
-                      ? PlutoAutoSizeMode.none
-                      : PlutoAutoSizeMode.scale,
-                  resizeMode: PlutoResizeMode.normal));
+              // load.stateManager.setColumnSizeConfig(PlutoGridColumnSizeConfig(
+              //     autoSizeMode: columnAutoResize
+              //         ? PlutoAutoSizeMode.none
+              //         : PlutoAutoSizeMode.scale,
+              //     resizeMode: PlutoResizeMode.normal));
             },
             columns: segColumn,
             onRowDoubleTap: onRowDoubleTap,

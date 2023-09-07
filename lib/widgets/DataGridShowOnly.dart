@@ -380,9 +380,9 @@ class DataGridShowOnlyKeys extends StatelessWidget {
               onRowChecked: onRowChecked,
               rowColorCallback: colorCallback,
               onLoaded: (load) {
-                load.stateManager.setColumnSizeConfig(PlutoGridColumnSizeConfig(
-                    autoSizeMode: PlutoAutoSizeMode.none,
-                    resizeMode: PlutoResizeMode.normal));
+                // load.stateManager.setColumnSizeConfig(PlutoGridColumnSizeConfig(
+                //     autoSizeMode: PlutoAutoSizeMode.none,
+                //     resizeMode: PlutoResizeMode.normal));
                 load.stateManager.setKeepFocus(false);
                 if (onload != null) {
                   onload!(load);
