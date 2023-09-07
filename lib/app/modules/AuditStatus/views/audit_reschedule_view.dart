@@ -21,8 +21,8 @@ class AuditReschdule extends StatelessWidget {
   // final int cancelNumber;
   // final int cancelMonth;
   const AuditReschdule({super.key, required this.controller});
-  final AuditStatusController controller;
 
+  final AuditStatusController controller;
   @override
   Widget build(BuildContext context) {
     AuditStatusShowReschdule data = controller.showReschduleData!.first;
@@ -201,7 +201,29 @@ class AuditReschdule extends StatelessWidget {
                                   "dealRowNumber"
                                 ],
                                 rowCheckColor: Colors.white,
-                                onload: (loadEvent) {},
+                                onload: (loadEvent) {
+                                  for (var element in (controller
+                                              .auditStatusReschduleDisplay
+                                              ?.lstReshedule ??
+                                          [])
+                                      .where((element) =>
+                                          (element.auditStatus ?? false))
+                                      .toList()) {}
+                                  for (var i = 0;
+                                      i <
+                                          (controller.auditStatusReschduleDisplay
+                                                      ?.lstReshedule ??
+                                                  [])
+                                              .length;
+                                      i++) {
+                                    if (controller.auditStatusReschduleDisplay
+                                            ?.lstReshedule![i].auditStatus ==
+                                        true) {
+                                      loadEvent.stateManager.setRowChecked(
+                                          loadEvent.stateManager.rows[i], true);
+                                    }
+                                  }
+                                },
                                 colorCallback: (rowEvent) {
                                   if (controller
                                           .auditStatusReschduleDisplay
