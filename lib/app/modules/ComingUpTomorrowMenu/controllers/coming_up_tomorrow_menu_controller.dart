@@ -374,7 +374,8 @@ class ComingUpTomorrowMenuController extends GetxController {
             selectedProgram?.refresh();
             selectedChannel?.refresh();
             selectedProgramType?.refresh();
-
+            isEnable1.value = false;
+            isEnable1.refresh();
 
 
             exportTapeCodeValidate(isTapeId:isTapeId);
@@ -398,8 +399,6 @@ class ComingUpTomorrowMenuController extends GetxController {
             .then((value) {
           res = value;
         });
-        isEnable1.value = false;
-        isEnable1.refresh();
         if(commingUpNextRetriveModel != null && commingUpNextRetriveModel?.dated == "N"){
           selectedRadio.value = "Non-Dated";
         }else{
