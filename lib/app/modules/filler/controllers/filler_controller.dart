@@ -495,6 +495,9 @@ class FillerController extends GetxController {
     return false;
   }
 
+  FocusNode addFN = FocusNode();
+  FocusNode deleteFN = FocusNode();
+
   Future<void> handleAddTap() async {
     if (selectedLocation == null) {
       Snack.callError("Please select Location");
@@ -537,6 +540,10 @@ class FillerController extends GetxController {
         bottomSM?.setCurrentCell(
             bottomSM?.getRowByIdx(bottomLastSelectedIdx)?.cells['segNo'],
             bottomLastSelectedIdx);
+
+        Future.delayed(Duration(milliseconds: 200)).then((value) {
+          addFN.requestFocus();
+        });
       } catch (e) {
         LoadingDialog.showErrorDialog(e.toString());
       }

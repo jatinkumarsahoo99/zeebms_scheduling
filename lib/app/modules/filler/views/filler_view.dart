@@ -64,7 +64,6 @@ class FillerView extends GetView<FillerController> {
                       isEnable: controller.isEnable.value,
                       onFocusChange: (data) => controller.fetchFPCDetails(),
                       mainTextController: controller.date_,
-                      // endDate: DateTime.now(),
                       startDate: DateTime.now(),
                     ),
                   ),
@@ -140,7 +139,7 @@ class FillerView extends GetView<FillerController> {
                                         },
                                         mainTextController:
                                             controller.fillerFromDate_,
-                                        startDate: DateTime.now(),
+                                        endDate: DateTime.now(),
                                       ),
                                     ),
                                     const SizedBox(width: 15),
@@ -403,6 +402,7 @@ class FillerView extends GetView<FillerController> {
                               child: FormButton(
                                 btnText: "Add",
                                 callback: controller.handleAddTap,
+                                focusNode: controller.addFN,
                               ),
                             ),
                             const SizedBox(width: 10),
@@ -410,6 +410,7 @@ class FillerView extends GetView<FillerController> {
                               padding: const EdgeInsets.only(top: 15.0),
                               child: FormButton(
                                 btnText: "Delete",
+                                focusNode: controller.deleteFN,
                                 callback: () {
                                   if (controller.fillerSegmentList.isNotEmpty &&
                                       controller
@@ -420,6 +421,10 @@ class FillerView extends GetView<FillerController> {
                                     controller.fillerSegmentList.removeAt(
                                         controller.bottomLastSelectedIdx);
                                     controller.calculateFillerAndTotalFiller();
+                                    Future.delayed(Duration(milliseconds: 200))
+                                        .then((value) {
+                                      controller.deleteFN.requestFocus();
+                                    });
                                   }
                                 },
                               ),
