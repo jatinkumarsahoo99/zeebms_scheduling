@@ -12,6 +12,7 @@ import 'package:flutter/services.dart';
 import 'package:get/get.dart';
 import 'package:bms_scheduling/widgets/PlutoGrid/pluto_grid.dart';
 
+import '../../../data/user_data_settings_model.dart';
 import '../controllers/mam_work_orders_controller.dart';
 
 class CancelWoView extends GetView {
@@ -102,7 +103,8 @@ class CancelWoView extends GetView {
                 return CheckBoxWidget1(
                   title: "Tel Dt",
                   value: controller.cWOtelDate.value,
-                  onChanged: (val) => controller.cWOtelDate.value = val ?? false,
+                  onChanged: (val) =>
+                      controller.cWOtelDate.value = val ?? false,
                 );
               }),
               DateWithThreeTextField(
@@ -128,15 +130,28 @@ class CancelWoView extends GetView {
             () {
               return (controller.cwoDataTableList.isEmpty)
                   ? Container(
-                      decoration: BoxDecoration(border: Border.all(color: Colors.grey)),
+                      decoration:
+                          BoxDecoration(border: Border.all(color: Colors.grey)),
                     )
                   : DataGridFromMap3(
-                      mapData: controller.cwoDataTableList.map((e) => e.toJson()).toList(),
+                      witdthSpecificColumn: (controller
+                          .userDataSettings?.userSetting
+                          ?.firstWhere(
+                              (element) => element.controlName == "cwoSM",
+                              orElse: () => UserSetting())
+                          .userSettings),
+                      onload: (sm) {
+                        controller.cwoSM = sm.stateManager;
+                      },
+                      mapData: controller.cwoDataTableList
+                          .map((e) => e.toJson())
+                          .toList(),
                       checkBoxStrComparison: true.toString(),
                       uncheckCheckBoxStr: false.toString(),
                       checkBoxColumnKey: ['cancelWO'],
                       onEdit: controller.cancelWOViewDataTableEdit,
-                      onColumnHeaderDoubleTap: controller.cancelWOViewDataTableDoubleTap,
+                      onColumnHeaderDoubleTap:
+                          controller.cancelWOViewDataTableDoubleTap,
                       enableColumnDoubleTap: ['cancelWO'],
                       mode: PlutoGridMode.selectWithOneTap,
                     );

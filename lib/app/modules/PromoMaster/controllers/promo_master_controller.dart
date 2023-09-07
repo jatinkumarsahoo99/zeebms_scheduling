@@ -20,7 +20,9 @@ import '../../../../widgets/DataGridShowOnly.dart';
 import '../../../../widgets/FormButton.dart';
 import '../../../../widgets/PlutoGrid/src/manager/pluto_grid_state_manager.dart';
 import '../../../../widgets/PlutoGrid/src/pluto_grid.dart';
+import '../../../controller/HomeController.dart';
 import '../../../data/PermissionModel.dart';
+import '../../../data/user_data_settings_model.dart';
 import '../../../providers/ExportData.dart';
 import '../../../providers/Utils.dart';
 import '../../../routes/app_pages.dart';
@@ -59,6 +61,7 @@ class PromoMasterController extends GetxController {
   int rightTableSelectedIdx = -1;
   List<RoCancellationDocuments> documents = [];
   double componentWidthRatio = .17;
+  PlutoGridStateManager? stateManager;
 
   var startDateCtr = TextEditingController(),
       endDateCtr = TextEditingController(),
@@ -101,6 +104,13 @@ class PromoMasterController extends GetxController {
     super.onReady();
     initailAPICall();
     addListeners2();
+  }
+
+  UserDataSettings? userDataSettings;
+
+  fetchUserSetting1() async {
+    userDataSettings = await Get.find<HomeController>().fetchUserSetting2();
+    rightDataTable.refresh();
   }
 
   addListeners2() {
@@ -249,6 +259,10 @@ class PromoMasterController extends GetxController {
       clearPage();
     } else if (btnName == "Save") {
       validateAndSaveRecord();
+    } else if (btnName == "Exit") {
+      Get.find<HomeController>().postUserGridSetting2(listStateManager: [
+        {"stateManager": stateManager},
+      ]);
     } else if (btnName == "Search") {
       Get.to(
         SearchPage(
@@ -281,6 +295,7 @@ class PromoMasterController extends GetxController {
   }
 
   clearPage() {
+    stateManager = null;
     promoCode = "";
     txCaptionPreFix.value = "PR/";
     segHash.value = 1;
@@ -456,7 +471,8 @@ class PromoMasterController extends GetxController {
             handleOnChangedCategory(
               DropDownValue(
                 key: record.promoCategoryCode,
-                value: record.promoCategoryName,),
+                value: record.promoCategoryName,
+              ),
               callAPI: false,
             );
           }

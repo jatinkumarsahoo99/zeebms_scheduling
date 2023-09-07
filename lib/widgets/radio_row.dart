@@ -5,7 +5,7 @@ class RadioRow extends StatefulWidget {
   final String groupValue;
   final bool? isVertical;
   final Function? onchange;
-  final List<String>? disabledRadios;
+  final List<String>? disabledRadios, unFocusRadios;
   const RadioRow({
     Key? key,
     required this.items,
@@ -13,6 +13,7 @@ class RadioRow extends StatefulWidget {
     this.onchange,
     this.isVertical,
     this.disabledRadios,
+    this.unFocusRadios,
   }) : super(key: key);
 
   @override
@@ -35,33 +36,43 @@ class _RadioRowState extends State<RadioRow> {
     return List.generate(
         widget.items.length,
         (index) => Padding(
-              padding: EdgeInsets.only(left:(widget.isVertical ?? false)? 0:(index == 0) ? 0 : 5),
-              child: Row(
-                children: [
-                  Radio<String>(
-                      value: widget.items[index],
-                      groupValue: widget.groupValue,
-                      materialTapTargetSize: MaterialTapTargetSize.shrinkWrap,
-                      visualDensity:
-                          const VisualDensity(horizontal: -4, vertical: -4),
-                      onChanged: widget.disabledRadios
-                                  ?.contains(widget.items[index]) ??
-                              false
-                          ? null
-                          : (value) {
-                              widget.onchange!(value);
-                            }),
-                  Text(
-                    widget.items[index],
-                    style: TextStyle(
-                      color: widget.disabledRadios
-                                  ?.contains(widget.items[index]) ??
-                              false
-                          ? Colors.grey
-                          : Colors.black,
+              padding: EdgeInsets.only(
+                  left: (widget.isVertical ?? false)
+                      ? 0
+                      : (index == 0)
+                          ? 0
+                          : 5),
+              child: ExcludeFocus(
+                excluding:
+                    widget.unFocusRadios?.contains(widget.items[index]) ??
+                        false,
+                child: Row(
+                  children: [
+                    Radio<String>(
+                        value: widget.items[index],
+                        groupValue: widget.groupValue,
+                        materialTapTargetSize: MaterialTapTargetSize.shrinkWrap,
+                        visualDensity:
+                            const VisualDensity(horizontal: -4, vertical: -4),
+                        onChanged: widget.disabledRadios
+                                    ?.contains(widget.items[index]) ??
+                                false
+                            ? null
+                            : (value) {
+                                widget.onchange!(value);
+                              }),
+                    Text(
+                      widget.items[index],
+                      style: TextStyle(
+                        color: widget.disabledRadios
+                                    ?.contains(widget.items[index]) ??
+                                false
+                            ? Colors.grey
+                            : Colors.black,
+                      ),
                     ),
-                  ),
-                ],
+                  ],
+                ),
               ),
             )).toList();
     // return widget.items

@@ -14,14 +14,14 @@ import '../../../../widgets/radio_row.dart';
 import '../../../controller/HomeController.dart';
 import '../../../controller/MainController.dart';
 import '../../../data/PermissionModel.dart';
+import '../../../data/user_data_settings_model.dart';
 import '../../../providers/Utils.dart';
 import '../controllers/SalesAuditNotTelecastReportController.dart';
 
-class SalesAuditNotTelecastReportView
-    extends StatelessWidget  {
-
+class SalesAuditNotTelecastReportView extends StatelessWidget {
   SalesAuditNotTelecastReportController controllerX =
-      Get.put<SalesAuditNotTelecastReportController>(SalesAuditNotTelecastReportController());
+      Get.put<SalesAuditNotTelecastReportController>(
+          SalesAuditNotTelecastReportController());
 
   final GlobalKey rebuildKey = GlobalKey();
 
@@ -36,6 +36,9 @@ class SalesAuditNotTelecastReportView
         // controllerX.clear();
         break;
       case "Exit":
+        Get.find<HomeController>().postUserGridSetting2(listStateManager: [
+          {"stateManager": controllerX.stateManager},
+        ]);
         Get.delete<SalesAuditNotTelecastReportController>();
         break;
       case "Refresh":
@@ -93,7 +96,8 @@ class SalesAuditNotTelecastReportView
                                           0.22,
                                           isEnable: controllerX.isEnable.value,
                                           selected: controllerX.selectLocation,
-                                              inkWellFocusNode: controllerX.locationNode,
+                                          inkWellFocusNode:
+                                              controllerX.locationNode,
                                           autoFocus: true,
                                           dialogWidth: 330,
                                           dialogHeight: Get.height * .35,
@@ -104,26 +108,33 @@ class SalesAuditNotTelecastReportView
                                             const EdgeInsets.only(top: 8.0),
                                         child: Row(
                                           children: [
-                                           Obx(()=>Checkbox(
-                                             value: controllerX.checked.value,
-                                             onChanged: (bool? value) {
-                                               controllerX.checked.value = value!;
-                                               if(value!){
-                                                 for (var element in controllerX
-                                                     .channelList) {
-                                                       element.ischecked = true;
-                                                 }
-                                                 controllerX.update(['updateTable1']);
-                                               }else{
-                                                 for (var element in controllerX
-                                                     .channelList) {
-                                                   element.ischecked = false;
-                                                 }
-                                                 controllerX.update(['updateTable1']);
-                                               }
-
-                                             },
-                                           )) ,
+                                            Obx(() => Checkbox(
+                                                  value:
+                                                      controllerX.checked.value,
+                                                  onChanged: (bool? value) {
+                                                    controllerX.checked.value =
+                                                        value!;
+                                                    if (value!) {
+                                                      for (var element
+                                                          in controllerX
+                                                              .channelList) {
+                                                        element.ischecked =
+                                                            true;
+                                                      }
+                                                      controllerX.update(
+                                                          ['updateTable1']);
+                                                    } else {
+                                                      for (var element
+                                                          in controllerX
+                                                              .channelList) {
+                                                        element.ischecked =
+                                                            false;
+                                                      }
+                                                      controllerX.update(
+                                                          ['updateTable1']);
+                                                    }
+                                                  },
+                                                )),
                                             Text(
                                               "Channel",
                                               style: TextStyle(fontSize: 12),
@@ -176,13 +187,20 @@ class SalesAuditNotTelecastReportView
                                                         children: [
                                                           Checkbox(
                                                             value: controllerX
-                                                                .channelList[index].ischecked,
+                                                                .channelList[
+                                                                    index]
+                                                                .ischecked,
                                                             onChanged:
                                                                 (bool? value) {
-                                                                  controllerX
-                                                                      .channelList[index].ischecked = value;
-                                                                  controllerX.update(['updateTable1']);
-                                                                },
+                                                              controllerX
+                                                                  .channelList[
+                                                                      index]
+                                                                  .ischecked = value;
+                                                              controllerX
+                                                                  .update([
+                                                                'updateTable1'
+                                                              ]);
+                                                            },
                                                           ),
                                                           Expanded(
                                                             child: Text(
@@ -239,9 +257,10 @@ class SalesAuditNotTelecastReportView
                                               "Error Sports"
                                             ],
                                             groupValue:
-                                                controllerX.selectValue.value ?? "",
+                                                controllerX.selectValue.value ??
+                                                    "",
                                             onchange: (String v) {
-                                              controllerX.selectValue.value=v;
+                                              controllerX.selectValue.value = v;
                                               controllerX.getType(v);
                                             },
                                           )),
@@ -282,7 +301,7 @@ class SalesAuditNotTelecastReportView
                     PermissionModel formPermissions = Get.find<MainController>()
                         .permissionList!
                         .lastWhere((element) =>
-                    element.appFormName == "frmsalesauditnottelecast");
+                            element.appFormName == "frmsalesauditnottelecast");
                     if (controller.buttons != null) {
                       return ButtonBar(
                         alignment: MainAxisAlignment.start,
@@ -292,10 +311,12 @@ class SalesAuditNotTelecastReportView
                             FormButtonWrapper(
                               btnText: btn["name"],
                               callback: Utils.btnAccessHandler2(btn['name'],
-                                  controller, formPermissions) ==
-                                  null
+                                          controller, formPermissions) ==
+                                      null
                                   ? null
-                                  : () => controllerX.formHandler(btn['name'],),
+                                  : () => controllerX.formHandler(
+                                        btn['name'],
+                                      ),
                             )
                         ],
                       );
@@ -314,16 +335,29 @@ class SalesAuditNotTelecastReportView
         id: "listUpdate",
         // init: CreateBreakPatternController(),
         builder: (controller) {
-          if (controllerX.chk_radnottel ) {
-            if((controllerX.salesAuditNotTRLstChannelModel?.generate?.lstnottel?.length??0)>0){
+          if (controllerX.chk_radnottel) {
+            if ((controllerX.salesAuditNotTRLstChannelModel?.generate?.lstnottel
+                        ?.length ??
+                    0) >
+                0) {
               return Expanded(
                 flex: 10,
                 // height: 400,
                 child: DataGridFromMap(
                   showSrNo: false,
+                  onload: (sm) {
+                    controllerX.stateManager = sm.stateManager;
+                  },
+                  witdthSpecificColumn: (controller
+                      .userDataSettings?.userSetting
+                      ?.firstWhere(
+                          (element) => element.controlName == "stateManager",
+                          orElse: () => UserSetting())
+                      .userSettings),
                   exportFileName: "Sales Audit NotTelecast Report",
                   formatDate: false,
-                  mapData: (controllerX.salesAuditNotTRLstChannelModel?.generate?.lstnottel
+                  mapData: (controllerX
+                      .salesAuditNotTRLstChannelModel?.generate?.lstnottel
                       ?.map((e) => e.toJson())
                       .toList())!,
                   // mapData: (controllerX.dataList)!,
@@ -331,27 +365,39 @@ class SalesAuditNotTelecastReportView
                   hideCode: false,
                 ),
               );
-            }else{
+            } else {
               return Expanded(
                 flex: 10,
                 child: Container(
                   // height: Get.height - (2 * kToolbarHeight),
                   decoration:
-                  BoxDecoration(border: Border.all(color: Colors.grey)),
+                      BoxDecoration(border: Border.all(color: Colors.grey)),
                 ),
               );
             }
-
-          }else if(controllerX.chk_raderror){
-            if((controllerX.salesAuditNotTRLstChannelModel?.generate?.lsterror?.length??0)>0){
+          } else if (controllerX.chk_raderror) {
+            if ((controllerX.salesAuditNotTRLstChannelModel?.generate?.lsterror
+                        ?.length ??
+                    0) >
+                0) {
               return Expanded(
                 flex: 10,
                 // height: 400,
                 child: DataGridFromMap(
                   showSrNo: true,
+                  onload: (sm) {
+                    controllerX.stateManager = sm.stateManager;
+                  },
+                  witdthSpecificColumn: (controller
+                      .userDataSettings?.userSetting
+                      ?.firstWhere(
+                          (element) => element.controlName == "stateManager",
+                          orElse: () => UserSetting())
+                      .userSettings),
                   exportFileName: "Sales Audit NotTelecast Report",
                   formatDate: false,
-                  mapData: (controllerX.salesAuditNotTRLstChannelModel?.generate?.lsterror
+                  mapData: (controllerX
+                      .salesAuditNotTRLstChannelModel?.generate?.lsterror
                       ?.map((e) => e.toJson())
                       .toList())!,
                   // mapData: (controllerX.dataList)!,
@@ -359,18 +405,17 @@ class SalesAuditNotTelecastReportView
                   hideCode: false,
                 ),
               );
-            }else{
+            } else {
               return Expanded(
                 flex: 10,
                 child: Container(
                   // height: Get.height - (2 * kToolbarHeight),
                   decoration:
-                  BoxDecoration(border: Border.all(color: Colors.grey)),
+                      BoxDecoration(border: Border.all(color: Colors.grey)),
                 ),
               );
             }
-          }
-          else {
+          } else {
             // return _dataTable2();
             return Expanded(
               flex: 10,
