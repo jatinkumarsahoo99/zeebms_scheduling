@@ -55,612 +55,378 @@ class CommercialMasterView extends StatelessWidget {
                               child: Container(
                                 decoration: BoxDecoration(
                                     border: Border.all(color: Colors.grey)),
-                                padding: const EdgeInsets.all(16),
-                                child: ListView(
+                                padding: const EdgeInsets.all(10),
+                                child: Wrap(
+                                  crossAxisAlignment: WrapCrossAlignment.end,
+                                  spacing: Get.width*0.025,
+                                  runSpacing: 7,
                                   children: [
-                                    Row(
-                                      mainAxisAlignment:
-                                          MainAxisAlignment.spaceBetween,
-                                      children: [
-                                        InputFields.formField1(
-                                          hintTxt: "Caption",
-                                          controller:
-                                              controllerX.captionController,
-                                          width: 0.17,
-                                          autoFocus: true,
-                                          capital: true,
-                                          focusNode: controllerX.captionFocus,
-                                          isEnable: controllerX.isEnable,
-                                        ),
-                                        SizedBox(
-                                          width: MediaQuery.of(context)
-                                                  .size
-                                                  .width *
-                                              0.365,
-                                          child: Row(
-                                            mainAxisAlignment:
-                                                MainAxisAlignment.spaceBetween,
-                                            children: [
-                                              InputFields.formField1(
-                                                hintTxt: "Tx Caption",
-                                                controller: controllerX
-                                                    .txCaptionController,
-                                                width: 0.17,
-                                                capital: true,
-                                                autoFocus: false,
-                                                isEnable: controllerX.isEnable,
-                                                prefixText: "C/",
-                                              ),
-                                              Obx(() => DropDownField
-                                                      .formDropDown1WidthMap(
-                                                          controllerX.language
-                                                              .value, (value) {
-                                                    controllerX
-                                                            .selectedLanguage =
-                                                        value;
-                                                  }, "Langauge", .17,
-                                                          autoFocus: false,
-                                                          isEnable: controllerX
-                                                              .isEnable,
-                                                          selected: controllerX
-                                                              .selectedLanguage,
-                                                          inkWellFocusNode:
-                                                              controllerX
-                                                                  .languageFocus)),
-                                            ],
-                                          ),
-                                        ),
-                                      ],
+                                    InputFields.formField1(
+                                      hintTxt: "Caption",
+                                      controller:
+                                          controllerX.captionController,
+                                      width: 0.365,
+                                      autoFocus: true,
+                                      capital: true,
+                                      focusNode: controllerX.captionFocus,
+                                      isEnable: controllerX.isEnable,
                                     ),
-                                    SizedBox(height: 4),
-                                    Row(
-                                      mainAxisAlignment:
-                                          MainAxisAlignment.spaceBetween,
-                                      children: [
-                                        Obx(() =>
-                                            DropDownField.formDropDown1WidthMap(
-                                                controllerX.revenueType.value,
-                                                (value) {
-                                              controllerX.selectedRevenueType =
-                                                  value;
-                                              controllerX.getSecType(controllerX
-                                                      .selectedRevenueType
-                                                      ?.key ??
-                                                  "");
-                                            }, "Revenue Type", .17,
+                                    InputFields.formField1(
+                                      hintTxt: "Tx Caption",
+                                      controller: controllerX
+                                          .txCaptionController,
+                                      width: 0.17,
+                                      capital: true,
+                                      autoFocus: false,
+                                      isEnable: controllerX.isEnable,
+                                      prefixText: "C/",
+                                    ),
+                                    Obx(() => DropDownField
+                                            .formDropDown1WidthMap(
+                                                controllerX.language
+                                                    .value, (value) {
+                                          controllerX
+                                                  .selectedLanguage =
+                                              value;
+                                        }, "Langauge", .17,
                                                 autoFocus: false,
-                                                isEnable: controllerX.isEnable,
+                                                isEnable: controllerX
+                                                    .isEnable,
                                                 selected: controllerX
-                                                    .selectedRevenueType,
+                                                    .selectedLanguage,
                                                 inkWellFocusNode:
-                                                    controllerX.revenueFocus
-                                                // selected: DropDownValue(key: "0",value: "jks"),
-                                                )),
-                                        SizedBox(
-                                          width: MediaQuery.of(context)
-                                                  .size
-                                                  .width *
-                                              0.365,
-                                          child: Row(
-                                            mainAxisAlignment:
-                                                MainAxisAlignment.spaceBetween,
-                                            children: [
-                                              Obx(() => DropDownField
-                                                      .formDropDown1WidthMap(
-                                                          controllerX.secType
-                                                              .value, (value) {
                                                     controllerX
-                                                            .selectedSecType =
-                                                        value;
-
-                                                    controllerX.getTapeId();
-                                                    // controllerX.isListenerActive = true;
-                                                  },
-                                                          "Sec Type",
-                                                          isEnable: controllerX
-                                                              .isEnable,
-                                                          .17,
-                                                          selected: controllerX
-                                                              .selectedSecType,
-                                                          autoFocus: false,
-                                                          inkWellFocusNode:
-                                                              controllerX
-                                                                  .secTypeFocus)),
-                                              RawKeyboardListener(
-                                                focusNode: FocusNode(),
-                                                onKey: (RawKeyEvent event) {
-                                                  // Check if the event key is "v" (paste) and Ctrl (or Command) is pressed
-                                                  if ((event.isControlPressed ||
-                                                          event
-                                                              .isMetaPressed) &&
-                                                      event.logicalKey ==
-                                                          LogicalKeyboardKey
-                                                              .keyV &&
-                                                      event is! RawKeyUpEvent) {
-                                                    print("Ctrl + V pressed");
-                                                    controllerX.tapeIdController
-                                                        .value.text = "";
-                                                    controllerX.txNoController
-                                                        .text = "";
-                                                    controllerX
-                                                            .isListenerActive =
-                                                        false;
-                                                    LoadingDialog.callInfoMessage(
-                                                        "Ctrl + V not permitted.",
-                                                        callback: () {
-                                                      controllerX
-                                                          .tapeIdController
-                                                          .value
-                                                          .text = "";
-                                                      controllerX.txNoController
-                                                          .text = "";
-                                                    });
-                                                  }
-                                                },
-                                                child: InputFields.formField3(
-                                                  hintTxt: "Tape ID",
-                                                  controller: controllerX
-                                                      .tapeIdController.value,
-                                                  width: 0.17,
-                                                  isEnable: controllerX
-                                                      .isEnableSelective,
-                                                  autoFocus: false,
-                                                  focusNode:
-                                                      controllerX.tapeIdFocus,
-                                                ),
-                                              )
-                                            ],
-                                          ),
-                                        ),
-                                      ],
-                                    ),
-                                    SizedBox(height: 4),
-                                    Row(
-                                      mainAxisAlignment:
-                                          MainAxisAlignment.spaceBetween,
-                                      children: [
-                                        /* SizedBox(
-                                          width: Get.width * .17,
-                                          child: NumericStepButton1(
-                                            onChanged: (val) {
-                                              controllerX.segController.text = val.toString();
-
-                                              controllerX.validateTxNo1("",controllerX.tapeIdController.value.text, controllerX.segController.text);
-
-                                            },
-
-                                            count: int.parse((controllerX
-                                                            .segController
-                                                            .text !=
-                                                        null &&
-                                                    controllerX.segController
-                                                            .text !=
-                                                        "")
-                                                ? controllerX.segController.text
-                                                : "1"),
-                                            hint: "Seg #",
-                                          ),
-
-                                        ),*/
-                                        SizedBox(
-                                            // width: Get.width * .17,
-                                            child: InputFields.numbers3(
-                                          hintTxt: "Seg #",
-                                          padLeft: 0,
-                                          onchanged: (val) {
-                                            print("onchanged call");
-                                            // controllerX.segController.text = val.toString();
-                                            controllerX.txNoController
-                                                .text = controllerX
-                                                    .tapeIdController
-                                                    .value
-                                                    .text +
-                                                "-" +
-                                                controllerX.segController.text;
-
-                                            // controllerX.validateTxNo1("",controllerX.tapeIdController.value.text, controllerX.segController.text);
-                                          },
-                                          controller: controllerX.segController,
-                                          isNegativeReq: false,
-                                          width: 0.17,
-                                          fN: controllerX.segNoFocus,
-                                          // isEnabled: true,
-                                        )),
-                                        SizedBox(
-                                          width: MediaQuery.of(context)
-                                                  .size
-                                                  .width *
-                                              0.365,
-                                          child: Row(
-                                            mainAxisAlignment:
-                                                MainAxisAlignment.spaceBetween,
-                                            children: [
-                                              InputFields.formField1(
-                                                  hintTxt: "TX No",
-                                                  controller: controllerX
-                                                      .txNoController,
-                                                  width: 0.17,
-                                                  isEnable: controllerX
-                                                      .isEnableSelective,
-                                                  autoFocus: false,
-                                                  focusNode:
-                                                      controllerX.txNoFocus,
-                                                  onchanged: (val) {
-                                                    controllerX.validateTxNo(
-                                                        val, "", "");
-                                                  }),
-                                              InputFields.formField1(
-                                                hintTxt: "Agency Id",
-                                                controller: controllerX
-                                                    .agencyIdController,
-                                                width: 0.17,
-                                                isEnable: controllerX.isEnable,
-                                                autoFocus: false,
-                                              ),
-                                            ],
-                                          ),
-                                        ),
-                                      ],
-                                    ),
-                                    SizedBox(height: 4),
-                                    Row(
-                                      mainAxisAlignment:
-                                          MainAxisAlignment.spaceBetween,
-                                      children: [
-                                        Obx(() =>
-                                            DropDownField.formDropDown1WidthMap(
-                                                controllerX.tapeType.value,
-                                                (value) {
-                                              controllerX.selectedTapeType =
-                                                  value;
-                                            }, "Tape Type", .17,
-                                                inkWellFocusNode:
-                                                    controllerX.tapeTypeFocus,
-                                                isEnable: controllerX.isEnable,
-                                                autoFocus: false,
-                                                selected: controllerX
-                                                    .selectedTapeType)),
-                                        SizedBox(
-                                          width: MediaQuery.of(context)
-                                                  .size
-                                                  .width *
-                                              0.365,
-                                          child: Obx(() =>
-                                              DropDownField.formDropDown1WidthMap(
-                                                  controllerX.censorShipType
-                                                      .value, (value) {
-                                                controllerX
-                                                        .selectedCensorShipType =
-                                                    value;
-                                              }, "Censhorship", .365,
-                                                  isEnable:
-                                                      controllerX.isEnable,
-                                                  autoFocus: false,
-                                                  inkWellFocusNode: controllerX
-                                                      .censhorShipFocus,
-                                                  selected: controllerX
-                                                      .selectedCensorShipType)),
-                                        ),
-                                      ],
-                                    ),
-                                    SizedBox(height: 4),
-                                    Row(
-                                      mainAxisAlignment:
-                                          MainAxisAlignment.spaceBetween,
-                                      children: [
-                                        /*TimeWithThreeTextField(
-                                          title: "SOM",
-                                          mainTextController:
-                                              controllerX.somController,
-                                          widthRation: 0.17,
-                                          isTime: false,
-                                          onFocusChange: (time) {
-                                            print("time" + time);
-                                            controllerX.calculateDuration();
-                                          },
-                                        ),*/
-                                        InputFields.formFieldNumberMask(
-                                            hintTxt: "SOM",
-                                            controller:
-                                                controllerX.somController,
-                                            widthRatio: 0.17,
+                                                        .languageFocus)),
+                                    Obx(() =>
+                                        DropDownField.formDropDown1WidthMap(
+                                            controllerX.revenueType.value,
+                                            (value) {
+                                          controllerX.selectedRevenueType =
+                                              value;
+                                          controllerX.getSecType(controllerX
+                                                  .selectedRevenueType
+                                                  ?.key ??
+                                              "");
+                                        }, "Revenue Type", .17,
+                                            autoFocus: false,
                                             isEnable: controllerX.isEnable,
-                                            /*onEditComplete: (val){
-                                        controllerX.calculateDuration();
-                                      },*/
-                                            // isTime: true,
-                                            // isEnable: controller.isEnable.value,
-                                            paddingLeft: 0),
-                                        SizedBox(
-                                          width: MediaQuery.of(context)
-                                                  .size
-                                                  .width *
-                                              0.365,
-                                          child: Row(
-                                            mainAxisAlignment:
-                                                MainAxisAlignment.spaceBetween,
-                                            children: [
-                                              InputFields.formFieldNumberMask(
-                                                  hintTxt: "EOM",
-                                                  controller:
-                                                      controllerX.eomController,
-                                                  widthRatio: 0.17,
-                                                  isEnable:
-                                                      controllerX.isEnable,
-                                                  onEditComplete: (val) {
-                                                    controllerX
-                                                        .calculateDuration();
-                                                  },
-                                                  // isTime: true,
-                                                  // isEnable: controller.isEnable.value,
-                                                  paddingLeft: 0),
-                                              /* TimeWithThreeTextField(
-                                          title: "EOM",
-                                          mainTextController:
-                                              controllerX.eomController,
-                                          widthRation: 0.17,
-                                          isTime: false,
-                                          onFocusChange: (time) {
-                                            controllerX.calculateDuration();
-                                          },
-                                        ),*/
-                                              Obx(() => TimeWithThreeTextField(
-                                                    title: "Duration",
-                                                    mainTextController:
-                                                        controllerX
-                                                            .duration.value,
-                                                    widthRation: 0.17,
-                                                    isTime: false,
-                                                    isEnable: false,
-                                                  )),
-                                            ],
-                                          ),
-                                        ),
-                                      ],
-                                    ),
-                                    SizedBox(height: 4),
-                                    Row(
-                                      mainAxisAlignment:
-                                          MainAxisAlignment.spaceBetween,
-                                      children: [
-                                        InputFields.formField1(
-                                          hintTxt: "Client",
-                                          controller:
-                                              controllerX.clientController,
-                                          width: 0.17,
-                                          isEnable: controllerX.isEnable,
-                                          onchanged: (value) {
-                                            if (value != null && value != "") {
-                                              controllerX
-                                                  .getClientDetails(value);
-                                            } else {
-                                              controllerX.clientDetails.clear();
-                                            }
-                                          },
-                                          autoFocus: true,
-                                        ),
-                                        /* DropDownField.formDropDownSearchAPI2(
-                                        GlobalKey(),
-                                        context,
-                                        width: context.width * .3712,
-                                        onchanged: (val) {
-                                          if(val != null && val != ""){
-                                            controllerX.selectedClientDetails = val;
-                                            controllerX. getAgencyBrandType(val.key??"");
-                                          }
+                                            selected: controllerX
+                                                .selectedRevenueType,
+                                            inkWellFocusNode:
+                                                controllerX.revenueFocus
+                                            // selected: DropDownValue(key: "0",value: "jks"),
+                                            )),
+                                    Obx(() => DropDownField
+                                            .formDropDown1WidthMap(
+                                                controllerX.secType
+                                                    .value, (value) {
+                                          controllerX.selectedSecType?.value = value;
 
+                                          controllerX.getTapeId(value.key??"");
+                                          // controllerX.isListenerActive = true;
                                         },
-                                        title: 'Client',
-                                        url: ApiFactory.COMMERCIAL_MASTER_GETAGENCYBRAND,
-                                      ),*/
-                                        SizedBox(
-                                          width: MediaQuery.of(context)
-                                                  .size
-                                                  .width *
-                                              0.365,
-                                          child: Obx(() =>
-                                              DropDownField.formDropDown1WidthMap(
-                                                  controllerX.clientDetails
-                                                      .value, (value) {
-                                                controllerX
-                                                        .selectedClientDetails =
-                                                    value;
-                                                controllerX.getAgencyBrandType(
-                                                    value.key ?? "");
-                                                controllerX.clientController
-                                                    .text = value.value ?? "";
-                                              }, "Client", .365,
-                                                  isEnable:
-                                                      controllerX.isEnable,
-                                                  autoFocus: false,
-                                                  inkWellFocusNode:
-                                                      controllerX.clientFocus,
-                                                  selected: controllerX
-                                                      .selectedClientDetails)),
-                                        ),
-                                      ],
-                                    ),
-                                    SizedBox(height: 4),
-                                    Row(
-                                        mainAxisAlignment:
-                                            MainAxisAlignment.spaceBetween,
-                                        children: [
-                                          Obx(() => DropDownField
-                                                  .formDropDown1WidthMap(
-                                                      controllerX.brandType
-                                                          .value, (value) {
-                                                controllerX.selectedBrandType =
-                                                    value;
-                                                controllerX.getLevelDetails(
-                                                    value.key ?? "");
-                                              }, "Brand", .17,
-                                                      isEnable:
-                                                          controllerX.isEnable,
-                                                      autoFocus: false,
-                                                      selected: controllerX
-                                                          .selectedBrandType)),
-                                          InputFields.formField1(
-                                            hintTxt: "Product Name",
-                                            controller: controllerX
-                                                .productNameController,
-                                            width: 0.365,
-                                            autoFocus: false,
-                                            isEnable: false,
-                                          ),
-                                        ]),
-                                    SizedBox(height: 4),
-                                    GetBuilder<CommercialMasterController>(
-                                        id: "level",
-                                        builder: (controllerX) {
-                                          return Row(
-                                            mainAxisAlignment:
-                                                MainAxisAlignment.spaceBetween,
-                                            children: [
-                                              InputFields.formField1(
-                                                hintTxt: "Level 1",
-                                                controller: controllerX
-                                                    .level1Controller,
-                                                width: 0.17,
+                                                "Sec Type",
+                                                isEnable: controllerX
+                                                    .isEnable,
+                                                .17,
+                                                selected: controllerX
+                                                    .selectedSecType?.value,
                                                 autoFocus: false,
-                                                isEnable: false,
-                                              ),
-                                              SizedBox(
-                                                width: MediaQuery.of(context)
-                                                        .size
-                                                        .width *
-                                                    0.365,
-                                                child: Row(
-                                                  mainAxisAlignment:
-                                                      MainAxisAlignment
-                                                          .spaceBetween,
-                                                  children: [
-                                                    InputFields.formField1(
-                                                      hintTxt: "Level 2",
-                                                      controller: controllerX
-                                                          .level2Controller,
-                                                      width: 0.17,
-                                                      autoFocus: false,
-                                                      isEnable: false,
-                                                    ),
-                                                    InputFields.formField1(
-                                                      hintTxt: "Level 3",
-                                                      controller: controllerX
-                                                          .level3Controller,
-                                                      width: 0.17,
-                                                      autoFocus: false,
-                                                      isEnable: false,
-                                                    ),
-                                                  ],
-                                                ),
-                                              ),
-                                            ],
-                                          );
-                                        }),
-                                    SizedBox(height: 4),
-                                    Row(
-                                        mainAxisAlignment:
-                                            MainAxisAlignment.spaceBetween,
-                                        children: [
-                                          InputFields.formField1(
-                                            hintTxt: "Agency",
-                                            controller: controllerX
-                                                .agencyNameController,
-                                            width: 0.17,
-                                            isEnable: controllerX.isEnable,
-                                            onchanged: (val) {
-                                              controllerX.getAgencyDetails(val);
-                                              // controllerX.isListenerActive = true;
-                                            },
-                                            autoFocus: false,
-                                          ),
-                                          SizedBox(
-                                            width: MediaQuery.of(context)
-                                                    .size
-                                                    .width *
-                                                0.365,
-                                            child: Obx(() =>
-                                                DropDownField.formDropDown1WidthMap(
-                                                    controllerX.agencyDetails
-                                                        .value, (value) {
-                                                  controllerX
-                                                          .selectedAgencyDetails =
-                                                      value;
-                                                  controllerX
-                                                      .agencyNameController
-                                                      .text = value.value ?? "";
-                                                }, "Agency", .365,
-                                                    inkWellFocusNode:
-                                                        controllerX.agencyFocus,
-                                                    isEnable:
-                                                        controllerX.isEnable,
-                                                    autoFocus: false,
-                                                    selected: controllerX
-                                                        .selectedAgencyDetails)),
-                                          ),
-                                        ]),
-                                    /* SizedBox(height: 14),
-                                  DropDownField.formDropDownSearchAPI2(
-                                    GlobalKey(),
-                                    context,
-                                    width: context.width * 0.6,
-                                    onchanged: (val) {
-                                      // print("val"+val.toString());
-                                    },
-                                    title: 'Agency',
-                                    url: '',
-                                  ),*/
-
-                                    SizedBox(height: 4),
-                                    Row(
-                                      mainAxisAlignment:
-                                          MainAxisAlignment.spaceBetween,
-                                      children: [
-                                        DateWithThreeTextField(
-                                          title: "End Date",
-                                          mainTextController:
-                                              controllerX.endDateController,
-                                          widthRation: .17,
-                                          isEnable: controllerX.isEnable,
-                                        ),
-                                        SizedBox(
-                                          width: MediaQuery.of(context)
-                                                  .size
-                                                  .width *
-                                              0.365,
-                                          child: Row(
-                                            mainAxisAlignment:
-                                                MainAxisAlignment.spaceBetween,
-                                            children: [
-                                              DateWithThreeTextField(
-                                                title: "Dispatch",
-                                                mainTextController: controllerX
-                                                    .dispatchDateController,
-                                                widthRation: .17,
-                                                isEnable: controllerX.isEnable,
-                                              ),
-                                              InputFields.formField1(
-                                                  hintTxt: "Clock ID",
-                                                  focusNode:
-                                                      controllerX.clockIdFocus,
-                                                  controller: controllerX
-                                                      .clockIdController,
-                                                  width: 0.17,
-                                                  isEnable:
-                                                      controllerX.isEnable,
-                                                  autoFocus: false
-                                                  /*  onchanged: (val){
-                                            controllerX.fetchCommercialTapeMasterData(
-                                                "",
-                                                "",
-                                                0,
-                                                controllerX.clockIdController.text);
-                                          }*/
-                                                  ),
-                                            ],
-                                          ),
-                                        ),
-                                      ],
+                                                inkWellFocusNode:
+                                                    controllerX
+                                                        .secTypeFocus)),
+                                    RawKeyboardListener(
+                                      focusNode: FocusNode(),
+                                      onKey: (RawKeyEvent event) {
+                                        // Check if the event key is "v" (paste) and Ctrl (or Command) is pressed
+                                        if ((event.isControlPressed ||
+                                                event
+                                                    .isMetaPressed) &&
+                                            event.logicalKey ==
+                                                LogicalKeyboardKey
+                                                    .keyV &&
+                                            event is! RawKeyUpEvent) {
+                                          print("Ctrl + V pressed");
+                                          controllerX.tapeIdController
+                                              .value.text = "";
+                                          controllerX.txNoController
+                                              .text = "";
+                                          controllerX
+                                                  .isListenerActive =
+                                              false;
+                                          LoadingDialog.callInfoMessage(
+                                              "Ctrl + V not permitted.",
+                                              callback: () {
+                                            controllerX
+                                                .tapeIdController
+                                                .value
+                                                .text = "";
+                                            controllerX.txNoController
+                                                .text = "";
+                                          });
+                                        }
+                                      },
+                                      child: InputFields.formField3(
+                                        hintTxt: "Tape ID",
+                                        controller: controllerX
+                                            .tapeIdController.value,
+                                        width: 0.17,
+                                        isEnable: controllerX
+                                            .isEnableSelective,
+                                        autoFocus: false,
+                                        focusNode:
+                                            controllerX.tapeIdFocus,
+                                      ),
                                     ),
+                                    InputFields.numbers3(
+                                      hintTxt: "Seg #",
+                                      padLeft: 0,
+                                      onchanged: (val) {
+                                    print("onchanged call");
+                                    // controllerX.segController.text = val.toString();
+                                    controllerX.txNoController
+                                        .text = controllerX
+                                            .tapeIdController
+                                            .value
+                                            .text +
+                                        "-" +
+                                        controllerX.segController.text;
+
+                                    // controllerX.validateTxNo1("",controllerX.tapeIdController.value.text, controllerX.segController.text);
+                                      },
+                                      controller: controllerX.segController,
+                                      isNegativeReq: false,
+                                      width: 0.17,
+                                      fN: controllerX.segNoFocus,
+                                      isEnabled: controllerX
+                                          .isEnableSelective,
+                                      // isEnabled: true,
+                                    ),
+                                    InputFields.formField1(
+                                        hintTxt: "TX No",
+                                        controller: controllerX
+                                            .txNoController,
+                                        width: 0.17,
+                                        isEnable: controllerX
+                                            .isEnableSelective,
+                                        autoFocus: false,
+                                        focusNode:
+                                            controllerX.txNoFocus,
+                                        onchanged: (val) {
+                                          controllerX.validateTxNo(
+                                              val, "", "");
+                                        }),
+                                    InputFields.formField1(
+                                      hintTxt: "Agency Id",
+                                      controller: controllerX
+                                          .agencyIdController,
+                                      width: 0.17,
+                                      isEnable: controllerX.isEnable,
+                                      autoFocus: false,
+                                    ),
+                                    Obx(() =>
+                                        DropDownField.formDropDown1WidthMap(
+                                            controllerX.tapeType.value,
+                                            (value) {
+                                          controllerX.selectedTapeType =
+                                              value;
+                                        }, "Tape Type", .17,
+                                            inkWellFocusNode:
+                                                controllerX.tapeTypeFocus,
+                                            isEnable: controllerX.isEnable,
+                                            autoFocus: false,
+                                            selected: controllerX
+                                                .selectedTapeType)),
+                                    Obx(() =>
+                                        DropDownField.formDropDown1WidthMap(
+                                            controllerX.censorShipType
+                                                .value, (value) {
+                                          controllerX
+                                                  .selectedCensorShipType =
+                                              value;
+                                        }, "Censhorship", 0.17,
+                                            isEnable:
+                                                controllerX.isEnable,
+                                            autoFocus: false,
+                                            inkWellFocusNode: controllerX
+                                                .censhorShipFocus,
+                                            selected: controllerX
+                                                .selectedCensorShipType)),
+                                    InputFields.formFieldNumberMask(
+                                        hintTxt: "SOM",
+                                        controller:
+                                            controllerX.somController,
+                                        widthRatio: 0.17,
+                                        isEnable: controllerX.isEnable,
+                                        paddingLeft: 0),
+                                    InputFields.formFieldNumberMask(
+                                        hintTxt: "EOM",
+                                        controller:
+                                            controllerX.eomController,
+                                        widthRatio: 0.17,
+                                        isEnable:
+                                            controllerX.isEnable,
+                                        onEditComplete: (val) {
+                                          controllerX
+                                              .calculateDuration();
+                                        },
+                                        // isTime: true,
+                                        // isEnable: controller.isEnable.value,
+                                        paddingLeft: 0),
+                                    Obx(() => TimeWithThreeTextField(
+                                          title: "Duration",
+                                          mainTextController:
+                                              controllerX
+                                                  .duration.value,
+                                          widthRation: 0.17,
+                                          isTime: false,
+                                          isEnable: false,
+                                        )),
+                                    InputFields.formField1(
+                                      hintTxt: "Client",
+                                      controller:
+                                          controllerX.clientController,
+                                      width: 0.17,
+                                      isEnable: controllerX.isEnable,
+                                      onchanged: (value) {
+                                        if (value != null && value != "") {
+                                          controllerX
+                                              .getClientDetails(value);
+                                        } else {
+                                          controllerX.clientDetails.clear();
+                                        }
+                                      },
+                                      autoFocus: true,
+                                    ),
+                                    Obx(() =>
+                                        DropDownField.formDropDown1WidthMap(
+                                            controllerX.clientDetails
+                                                .value, (value) {
+                                          controllerX
+                                                  .selectedClientDetails?.value =
+                                              value;
+                                          controllerX.getAgencyBrandType(
+                                              value.key ?? "");
+                                          controllerX.clientController
+                                              .text = value.value ?? "";
+                                        }, "Client", .365,
+                                            isEnable:
+                                                controllerX.isEnable,
+                                            autoFocus: false,
+                                            inkWellFocusNode:
+                                                controllerX.clientFocus,
+                                            selected: controllerX
+                                                .selectedClientDetails?.value)),
+                                    Obx(() => DropDownField
+                                            .formDropDown1WidthMap(
+                                                controllerX.brandType
+                                                    .value, (value) {
+                                          controllerX.selectedBrandType?.value =
+                                              value;
+                                          controllerX.getLevelDetails(
+                                              value.key ?? "");
+                                        }, "Brand", .17,
+                                                isEnable:
+                                                    controllerX.isEnable,
+                                                autoFocus: false,
+                                                selected: controllerX
+                                                    .selectedBrandType?.value)),
+                                    InputFields.formField1(
+                                      hintTxt: "Product Name",
+                                      controller: controllerX
+                                          .productNameController,
+                                      width: 0.365,
+                                      autoFocus: false,
+                                      isEnable: false,
+                                    ),
+
+                                    InputFields.formField1(
+                                      hintTxt: "Level 1",
+                                      controller: controllerX
+                                          .level1Controller,
+                                      width: 0.17,
+                                      autoFocus: false,
+                                      isEnable: false,
+                                    ),
+                                    InputFields.formField1(
+                                      hintTxt: "Level 2",
+                                      controller: controllerX
+                                          .level2Controller,
+                                      width: 0.17,
+                                      autoFocus: false,
+                                      isEnable: false,
+                                    ),
+                                    InputFields.formField1(
+                                      hintTxt: "Level 3",
+                                      controller: controllerX
+                                          .level3Controller,
+                                      width: 0.17,
+                                      autoFocus: false,
+                                      isEnable: false,
+                                    ),
+
+                                    InputFields.formField1(
+                                      hintTxt: "Agency",
+                                      controller: controllerX
+                                          .agencyNameController,
+                                      width: 0.17,
+                                      isEnable: controllerX.isEnable,
+                                      onchanged: (val) {
+                                        controllerX.getAgencyDetails(val);
+                                        // controllerX.isListenerActive = true;
+                                      },
+                                      autoFocus: false,
+                                    ),
+                                    Obx(() =>
+                                        DropDownField.formDropDown1WidthMap(
+                                            controllerX.agencyDetails
+                                                .value, (value) {
+                                          controllerX
+                                                  .selectedAgencyDetails?.value =
+                                              value;
+                                          controllerX
+                                              .agencyNameController
+                                              .text = value.value ?? "";
+                                        }, "Agency", .365,
+                                            inkWellFocusNode:
+                                                controllerX.agencyFocus,
+                                            isEnable:
+                                                controllerX.isEnable,
+                                            autoFocus: false,
+                                            selected: controllerX
+                                                .selectedAgencyDetails?.value)),
+                                    DateWithThreeTextField(
+                                      title: "End Date",
+                                      mainTextController:
+                                          controllerX.endDateController,
+                                      widthRation: .17,
+                                      isEnable: controllerX.isEnable,
+                                    ),
+                                    DateWithThreeTextField(
+                                      title: "Dispatch",
+                                      mainTextController: controllerX
+                                          .dispatchDateController,
+                                      widthRation: .17,
+                                      isEnable: controllerX.isEnable,
+                                    ),
+                                    InputFields.formField1(
+                                        hintTxt: "Clock ID",
+                                        focusNode:
+                                            controllerX.clockIdFocus,
+                                        controller: controllerX
+                                            .clockIdController,
+                                        width: 0.17,
+                                        isEnable:
+                                            controllerX.isEnable,
+                                        autoFocus: false
+                                        /*  onchanged: (val){
+                                      controllerX.fetchCommercialTapeMasterData(
+                                      "",
+                                      "",
+                                      0,
+                                      controllerX.clockIdController.text);
+                                    }*/
+                                        ),
                                   ],
                                 ),
                               ),
