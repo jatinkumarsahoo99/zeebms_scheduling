@@ -492,7 +492,7 @@ class TransmissionLogController extends GetxController {
 
   void btnSearchSegment({Function? fun}) {
     if (selectProgramSegment == null) {
-      LoadingDialog.callErrorMessage("Please select program");
+      // LoadingDialog.callInfoMessage("Please select program");
     } else {
       LoadingDialog.call();
       Get.find<ConnectorControl>().GETMETHODCALL(
