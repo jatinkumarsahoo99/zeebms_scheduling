@@ -12,6 +12,7 @@ import '../../../../widgets/dropdown.dart';
 import '../../../controller/HomeController.dart';
 import '../../../controller/MainController.dart';
 import '../../../data/PermissionModel.dart';
+import '../../../data/user_data_settings_model.dart';
 import '../../../providers/Utils.dart';
 import '../controllers/ros_distribution_controller.dart';
 
@@ -68,11 +69,16 @@ class RosDistributionView extends GetView<RosDistributionController> {
                               isEnable: controller.enableControllos.value,
                             );
                           }),
-                          for (int index = 0; index < controller.topButtons.length; index++) ...{
+                          for (int index = 0;
+                              index < controller.topButtons.length;
+                              index++) ...{
                             FormButtonWrapper(
-                              btnText: controller.topButtons.value[index]['name'],
-                              callback: controller.topButtons.value[index]['callback'],
-                              isEnabled: controller.topButtons.value[index]['isEnabled'],
+                              btnText: controller.topButtons.value[index]
+                                  ['name'],
+                              callback: controller.topButtons.value[index]
+                                  ['callback'],
+                              isEnabled: controller.topButtons.value[index]
+                                  ['isEnabled'],
                             )
                           },
                         ],
@@ -85,44 +91,66 @@ class RosDistributionView extends GetView<RosDistributionController> {
             child: Obx(() {
               return Container(
                 margin: const EdgeInsets.all(8),
-                decoration: (controller.showDataModel.value.infoShowBucketList?.lstROSSpots?.isEmpty ?? true)
+                decoration: (controller.showDataModel.value.infoShowBucketList
+                            ?.lstROSSpots?.isEmpty ??
+                        true)
                     ? BoxDecoration(
                         border: Border.all(
                         color: Colors.grey,
                       ))
                     : null,
-                child: (controller.showDataModel.value.infoShowBucketList?.lstROSSpots?.isEmpty ?? true)
+                child: (controller.showDataModel.value.infoShowBucketList
+                            ?.lstROSSpots?.isEmpty ??
+                        true)
                     ? null
                     : DataGridFromMap(
-                        mapData: (controller.showDataModel.value.infoShowBucketList?.lstROSSpots ?? []).map((e) => e.toJson(fromSave: false)).toList(),
+                        mapData: (controller.showDataModel.value
+                                    .infoShowBucketList?.lstROSSpots ??
+                                [])
+                            .map((e) => e.toJson(fromSave: false))
+                            .toList(),
                         formatDate: true,
-                        
-                        witdthSpecificColumn: {
-                          "zoneName": 150,
-                          "scheduledate": 150,
-                        },
+
+                        witdthSpecificColumn: (controller
+                            .userDataSettings?.userSetting
+                            ?.firstWhere(
+                                (element) => element.controlName == "mainGSM",
+                                orElse: () => UserSetting())
+                            .userSettings),
                         onload: (event) {
                           controller.mainGSM = event.stateManager;
-                          event.stateManager.setSelectingMode(PlutoGridSelectingMode.row);
-                          event.stateManager.setSelecting(true);
                           event.stateManager
-                              .setCurrentCell(event.stateManager.getRowByIdx(controller.mainGridIdx)!.cells['allocatedSpot'], controller.mainGridIdx);
-                          event.stateManager.moveCurrentCellByRowIdx(controller.mainGridIdx, PlutoMoveDirection.down);
+                              .setSelectingMode(PlutoGridSelectingMode.row);
+                          event.stateManager.setSelecting(true);
+                          event.stateManager.setCurrentCell(
+                              event.stateManager
+                                  .getRowByIdx(controller.mainGridIdx)!
+                                  .cells['allocatedSpot'],
+                              controller.mainGridIdx);
+                          event.stateManager.moveCurrentCellByRowIdx(
+                              controller.mainGridIdx, PlutoMoveDirection.down);
                         },
+
                         exportFileName: "ROS Distribution",
                         enableSort: true,
-                        colorCallback: (row) =>
-                            (row.row.cells.containsValue(controller.mainGSM?.currentCell)) ? Colors.deepPurple.shade200 : Colors.white,
+                        colorCallback: (row) => (row.row.cells
+                                .containsValue(controller.mainGSM?.currentCell))
+                            ? Colors.deepPurple.shade200
+                            : Colors.white,
                         hideKeys: ['rid'],
                         widthRatio: 220,
                         hideCode: false,
 
-                        onSelected: (row) => controller.mainGridIdx = row.rowIdx ?? 0,
+                        onSelected: (row) =>
+                            controller.mainGridIdx = row.rowIdx ?? 0,
                         // mode: PlutoGridMode.selectWithOneTap,
                         onRowDoubleTap: (row) {
                           controller.mainGridIdx = row.rowIdx;
-                          controller.mainGSM
-                              ?.setCurrentCell(controller.mainGSM?.getRowByIdx(controller.mainGridIdx)!.cells['allocatedSpot'], controller.mainGridIdx);
+                          controller.mainGSM?.setCurrentCell(
+                              controller.mainGSM
+                                  ?.getRowByIdx(controller.mainGridIdx)!
+                                  .cells['allocatedSpot'],
+                              controller.mainGridIdx);
                           controller.handleAllocationTap();
                         },
                       ),
@@ -133,14 +161,18 @@ class RosDistributionView extends GetView<RosDistributionController> {
               id: "buttons",
               init: Get.find<HomeController>(),
               builder: (btncontroller) {
-                PermissionModel formPermissions = Get.find<MainController>().permissionList!.lastWhere((element) {
+                PermissionModel formPermissions = Get.find<MainController>()
+                    .permissionList!
+                    .lastWhere((element) {
                   return element.appFormName == "FrmRosDistribution";
                 });
 
                 return Card(
                   margin: const EdgeInsets.fromLTRB(4, 4, 4, 0),
                   shape: const RoundedRectangleBorder(
-                    borderRadius: BorderRadius.only(topLeft: Radius.circular(10), topRight: Radius.circular(10)),
+                    borderRadius: BorderRadius.only(
+                        topLeft: Radius.circular(10),
+                        topRight: Radius.circular(10)),
                   ),
                   clipBehavior: Clip.hardEdge,
                   child: Container(
@@ -152,24 +184,35 @@ class RosDistributionView extends GetView<RosDistributionController> {
                         spacing: 10,
                         // pa
                         children: [
-                          for (var btn in (btncontroller.buttons??[])) ...{
+                          for (var btn in (btncontroller.buttons ?? [])) ...{
                             FormButtonWrapper(
                               btnText: btn["name"],
-                              callback: ((Utils.btnAccessHandler(btn['name'], controller.formPermissions!) == null))
+                              callback: ((Utils.btnAccessHandler(btn['name'],
+                                          controller.formPermissions!) ==
+                                      null))
                                   ? null
-                                  : () => controller.bottomFormHandler(btn['name']),
+                                  : () =>
+                                      controller.bottomFormHandler(btn['name']),
                             )
                           },
                           for (var checkBox in controller.checkBoxes)
                             InkWell(
                               onTap: () {
-                                controller.checkBoxes[controller.checkBoxes.indexOf(checkBox)]["value"] =
-                                    !(controller.checkBoxes[controller.checkBoxes.indexOf(checkBox)]["value"]! as bool);
-                                if (controller.checkBoxes.indexOf(checkBox) == 0) {
+                                controller.checkBoxes[
+                                        controller.checkBoxes.indexOf(checkBox)]
+                                    ["value"] = !(controller.checkBoxes[
+                                        controller.checkBoxes.indexOf(checkBox)]
+                                    ["value"]! as bool);
+                                if (controller.checkBoxes.indexOf(checkBox) ==
+                                    0) {
                                   controller.handleOnChangedInOpenDeals();
-                                } else if (controller.checkBoxes.indexOf(checkBox) == 1) {
+                                } else if (controller.checkBoxes
+                                        .indexOf(checkBox) ==
+                                    1) {
                                   controller.handleOnChangedInROSSpots();
-                                } else if (controller.checkBoxes.indexOf(checkBox) == 2) {
+                                } else if (controller.checkBoxes
+                                        .indexOf(checkBox) ==
+                                    2) {
                                   controller.handleOnChangedInSpotBuys();
                                 }
                                 controller.checkBoxes.refresh();
@@ -177,7 +220,9 @@ class RosDistributionView extends GetView<RosDistributionController> {
                               child: Row(
                                 mainAxisSize: MainAxisSize.min,
                                 children: [
-                                  Icon(checkBox["value"] as bool ? Icons.check_box_rounded : Icons.check_box_outline_blank),
+                                  Icon(checkBox["value"] as bool
+                                      ? Icons.check_box_rounded
+                                      : Icons.check_box_outline_blank),
                                   Text(checkBox["name"].toString())
                                 ],
                               ),

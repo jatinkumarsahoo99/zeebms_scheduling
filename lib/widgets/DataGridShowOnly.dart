@@ -97,14 +97,54 @@ class DataGridShowOnlyKeys extends StatelessWidget {
             enableRowDrag: false,
             enableDropToResize: true,
             enableContextMenu: false,
-            minWidth: 0,
-            width: 25,
             enableAutoEditing: false,
+            enableColumnDrag: false,
+            field: "no",
+            minWidth: 0,
+            cellPadding: const EdgeInsets.all(0),
+            width:
+                (keysWidths != null && keysWidths!.keys.toList().contains('no'))
+                    ? keysWidths!['no']!
+                    : Utils.getColumnSize(key: 'no', value: mapData[0][key]),
             hide: hideCode! &&
                 key.toString().toLowerCase() != "hourcode" &&
                 key.toString().toLowerCase().contains("code"),
-            enableColumnDrag: false,
-            field: "no",
+            renderer: ((rendererContext) {
+              // print("On rendererContext called");
+              return GestureDetector(
+                onSecondaryTapDown: (a) {
+                  DataGridMenu().showGridMenu(
+                    rendererContext.stateManager,
+                    a,
+                    context,
+                    exportFileName: exportFileName,
+                    // csvFormat: csvFormat ?? false,
+                  );
+                },
+                child: Container(
+                    // height: 25,
+                    height: double.infinity,
+                    // width: Utils.getColumnSize1(key: key, value: mapData[0][key]),
+                    // padding: EdgeInsets.only(
+                    //   left:
+                    // ),
+                    decoration: BoxDecoration(
+                        border:
+                            Border.all(color: Colors.transparent, width: 0.01),
+                        borderRadius: BorderRadius.circular(1),
+                        color: Colors.white),
+                    alignment: Alignment.center,
+                    // color: (key == "epsNo" || key == "tapeid" || key == "status") ? ColorData.cellColor(rendererContext.row.cells[key]?.value, key) : null,
+                    child: Text(
+                      (rendererContext.rowIdx + 1).toString(),
+                      maxLines: 1,
+                      overflow: TextOverflow.ellipsis,
+                      style: TextStyle(
+                        fontSize: SizeDefine.columnTitleFontSize,
+                      ),
+                    )),
+              );
+            }),
             type: PlutoColumnType.text()));
       }
       if (showonly != null && showonly!.isNotEmpty) {
