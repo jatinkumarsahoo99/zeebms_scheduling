@@ -362,7 +362,7 @@ class SalesAuditNotTelecastReportView extends StatelessWidget {
                       .toList())!,
                   // mapData: (controllerX.dataList)!,
                   widthRatio: Get.width / 9 - 1,
-                  hideCode: false,
+                  hideCode: true,
                 ),
               );
             } else {
