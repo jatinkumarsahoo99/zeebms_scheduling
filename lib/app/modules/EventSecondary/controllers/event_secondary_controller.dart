@@ -9,8 +9,10 @@ import '../../../../widgets/FormButton.dart';
 import '../../../../widgets/LoadingDialog.dart';
 import '../../../../widgets/PlutoGrid/src/manager/pluto_grid_state_manager.dart';
 import '../../../controller/ConnectorControl.dart';
+import '../../../controller/HomeController.dart';
 import '../../../data/DropDownValue.dart';
 import '../../../data/PermissionModel.dart';
+import '../../../data/user_data_settings_model.dart';
 import '../../../providers/Utils.dart';
 // import '../../promos/promo_model.dart';
 import '../../../routes/app_pages.dart';
@@ -57,6 +59,16 @@ class EventSecondaryController extends GetxController {
   void onReady() {
     super.onReady();
     getLocation();
+    fetchUserSetting1();
+  }
+
+  UserDataSettings? userDataSettings;
+
+  fetchUserSetting1() async {
+    userDataSettings = await Get.find<HomeController>().fetchUserSetting2();
+    left1stDT.refresh();
+    left2ndDT.refresh();
+    right3rdDT.refresh();
   }
 
   clearPage() {
@@ -102,6 +114,12 @@ class EventSecondaryController extends GetxController {
       clearPage();
     } else if (btnName == "Save") {
       saveData();
+    } else if (btnName == "Exit") {
+      Get.find<HomeController>().postUserGridSetting2(listStateManager: [
+        {"rightSM": rightSM},
+        {"left2ndSM": left2ndSM},
+        {"left1stSM": left1stSM},
+      ]);
     } else if (btnName == "Search") {
       Get.to(
         SearchPage(

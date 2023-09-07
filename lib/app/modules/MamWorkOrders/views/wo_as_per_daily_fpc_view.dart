@@ -6,6 +6,7 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:bms_scheduling/widgets/PlutoGrid/pluto_grid.dart';
 
+import '../../../data/user_data_settings_model.dart';
 import '../controllers/mam_work_orders_controller.dart';
 
 class WoAsPerDailyFpcView extends GetView {
@@ -70,24 +71,42 @@ class WoAsPerDailyFpcView extends GetView {
                 flex: 2,
                 child: Obx(
                   () {
-                    return (controller.woASPDFPCModel.value.programResponse?.dailyFpc?.isEmpty ?? true)
+                    return (controller.woASPDFPCModel.value.programResponse
+                                ?.dailyFpc?.isEmpty ??
+                            true)
                         ? Container(
-                            decoration: BoxDecoration(border: Border.all(color: Colors.grey)),
+                            decoration: BoxDecoration(
+                                border: Border.all(color: Colors.grey)),
                           )
                         : DataGridFromMap3(
-                            mapData: controller.woASPDFPCModel.value.programResponse?.dailyFpc?.map((e) => e.toJson()).toList() ?? [],
+                            mapData: controller.woASPDFPCModel.value
+                                    .programResponse?.dailyFpc
+                                    ?.map((e) => e.toJson())
+                                    .toList() ??
+                                [],
                             enableColumnDoubleTap: ['release', 'quality'],
                             checkBoxStrComparison: true.toString(),
                             uncheckCheckBoxStr: false.toString(),
                             checkBoxColumnKey: ['release'],
                             editKeys: ['quality'],
                             onEdit: controller.aPDFPCOnDataTableEdit,
-                            onColumnHeaderDoubleTap: controller.aPDFPCOnColumnDoubleTap,
-                            // colorCallback: (row){
-                            // },
+                            onColumnHeaderDoubleTap:
+                                controller.aPDFPCOnColumnDoubleTap,
                             mode: PlutoGridMode.normal,
+                            witdthSpecificColumn: (controller
+                                .userDataSettings?.userSetting
+                                ?.firstWhere(
+                                    (element) =>
+                                        element.controlName ==
+                                        "woAsPerDailyFPCSMFirst",
+                                    orElse: () => UserSetting())
+                                .userSettings),
                             onload: (manager) {
-                              manager.stateManager.setCurrentCell(manager.stateManager.firstCell, 0, notify: true);
+                              controller.woAsPerDailyFPCSMFirst =
+                                  manager.stateManager;
+                              manager.stateManager.setCurrentCell(
+                                  manager.stateManager.firstCell, 0,
+                                  notify: true);
                             },
                           );
                   },
@@ -99,10 +118,25 @@ class WoAsPerDailyFpcView extends GetView {
                   () {
                     return (controller.woAsPerDailyFPCSaveList.isEmpty)
                         ? Container(
-                            decoration: BoxDecoration(border: Border.all(color: Colors.grey)),
+                            decoration: BoxDecoration(
+                                border: Border.all(color: Colors.grey)),
                           )
                         : DataGridFromMap(
-                            mapData: controller.woAsPerDailyFPCSaveList.map((e) => e).toList(),
+                            witdthSpecificColumn: (controller
+                                .userDataSettings?.userSetting
+                                ?.firstWhere(
+                                    (element) =>
+                                        element.controlName ==
+                                        "woAsPerDailyFPCSMSecond",
+                                    orElse: () => UserSetting())
+                                .userSettings),
+                            onload: (sm) {
+                              controller.woAsPerDailyFPCSMSecond =
+                                  sm.stateManager;
+                            },
+                            mapData: controller.woAsPerDailyFPCSaveList
+                                .map((e) => e)
+                                .toList(),
                           );
                   },
                 ),

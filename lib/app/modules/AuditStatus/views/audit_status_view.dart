@@ -12,6 +12,7 @@ import 'package:get/get.dart';
 
 import '../../../controller/MainController.dart';
 import '../../../data/PermissionModel.dart';
+import '../../../data/user_data_settings_model.dart';
 import '../../../providers/Utils.dart';
 import '../controllers/audit_status_controller.dart';
 
@@ -91,6 +92,12 @@ class AuditStatusView extends GetView<AuditStatusController> {
                   return gridcontroller.bookingData.isEmpty
                       ? Container()
                       : DataGridShowOnlyKeys(
+                          keysWidths: (controller.userDataSettings?.userSetting
+                              ?.firstWhere(
+                                  (element) =>
+                                      element.controlName == "stateManager",
+                                  orElse: () => UserSetting())
+                              .userSettings),
                           mapData: gridcontroller.bookingData,
                           formatDate: false,
                           exportFileName: "Audit Status",
@@ -98,6 +105,9 @@ class AuditStatusView extends GetView<AuditStatusController> {
                             return gridcontroller.getColor(
                                 gridcontroller.bookingData[colorEvent.rowIdx],
                                 colorEvent.rowIdx);
+                          },
+                          onload: (sm) {
+                            controller.stateManager = sm.stateManager;
                           },
                           onRowDoubleTap: (event) {
                             if (controller.currentType.value == "Cancelation") {
@@ -166,6 +176,11 @@ class AuditStatusView extends GetView<AuditStatusController> {
     switch (btnName) {
       case "Refresh":
         controller.showBtnData();
+        break;
+      case "Exit":
+        Get.find<HomeController>().postUserGridSetting2(listStateManager: [
+          {"stateManager": controller.stateManager},
+        ]);
         break;
       case "Clear":
         Get.delete<AuditStatusController>();

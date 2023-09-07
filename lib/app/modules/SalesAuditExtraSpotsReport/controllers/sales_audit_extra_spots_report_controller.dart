@@ -4,9 +4,12 @@ import 'package:get/get.dart';
 import 'package:intl/intl.dart';
 
 import '../../../../widgets/LoadingDialog.dart';
+import '../../../../widgets/PlutoGrid/src/manager/pluto_grid_state_manager.dart';
 import '../../../controller/ConnectorControl.dart';
+import '../../../controller/HomeController.dart';
 import '../../../data/DropDownValue.dart';
 import '../../../data/PermissionModel.dart';
+import '../../../data/user_data_settings_model.dart';
 import '../../../providers/ApiFactory.dart';
 import '../../../providers/Utils.dart';
 import '../../../routes/app_pages.dart';
@@ -18,11 +21,14 @@ class SalesAuditExtraSpotsReportController extends GetxController {
   var locationFn = FocusNode();
   DropDownValue? selectedLocation, selectedChannel;
 
-  var fromDateIDCtr = TextEditingController(), toDateCtr = TextEditingController();
+  var fromDateIDCtr = TextEditingController(),
+      toDateCtr = TextEditingController();
+  PlutoGridStateManager? stateManager;
 
   @override
   void onInit() {
-    formPermissions = Utils.fetchPermissions1(Routes.SALES_AUDIT_EXTRA_SPOTS_REPORT.replaceAll("/", ""));
+    formPermissions = Utils.fetchPermissions1(
+        Routes.SALES_AUDIT_EXTRA_SPOTS_REPORT.replaceAll("/", ""));
     super.onInit();
   }
 
@@ -30,12 +36,23 @@ class SalesAuditExtraSpotsReportController extends GetxController {
   void onReady() {
     super.onReady();
     getOnLoadData();
+    fetchUserSetting1();
+  }
+
+  UserDataSettings? userDataSettings;
+
+  fetchUserSetting1() async {
+    userDataSettings = await Get.find<HomeController>().fetchUserSetting2();
   }
 
   formHandler(String btnName) {
     if (btnName == "Clear") {
       clearData();
-    } else if (btnName == "Save") {}
+    } else if (btnName == "Exit") {
+      Get.find<HomeController>().postUserGridSetting2(listStateManager: [
+        {"stateManager": stateManager},
+      ]);
+    }
   }
 
   clearData() {
@@ -46,6 +63,7 @@ class SalesAuditExtraSpotsReportController extends GetxController {
     locationFn.requestFocus();
     fromDateIDCtr.clear();
     toDateCtr.clear();
+    stateManager = null;
     dataTBList.clear();
   }
 
@@ -59,7 +77,9 @@ class SalesAuditExtraSpotsReportController extends GetxController {
         api: ApiFactory.SALES_AUDIT_EXTRA_SPOTS_GENERATE,
         fun: (resp) {
           closeDialogIfOpen();
-          if (resp != null && resp is Map<String, dynamic> && resp['generate'] != null) {
+          if (resp != null &&
+              resp is Map<String, dynamic> &&
+              resp['generate'] != null) {
             dataTBList.clear();
             dataTBList.value.addAll(resp['generate'] as List<dynamic>);
           } else {
@@ -69,8 +89,10 @@ class SalesAuditExtraSpotsReportController extends GetxController {
         json: {
           "locationcode": selectedLocation?.key ?? "",
           "channelcode": selectedChannel?.key ?? "",
-          "fromdate": DateFormat("yyyy-MM-dd").format(DateFormat('dd-MM-yyyy').parse(fromDateIDCtr.text)),
-          "todate": DateFormat("yyyy-MM-dd").format(DateFormat('dd-MM-yyyy').parse(toDateCtr.text)),
+          "fromdate": DateFormat("yyyy-MM-dd")
+              .format(DateFormat('dd-MM-yyyy').parse(fromDateIDCtr.text)),
+          "todate": DateFormat("yyyy-MM-dd")
+              .format(DateFormat('dd-MM-yyyy').parse(toDateCtr.text)),
         },
       );
     }
@@ -86,22 +108,26 @@ class SalesAuditExtraSpotsReportController extends GetxController {
         api: ApiFactory.SALES_AUDIT_EXTRA_SPOTS_ON_LOAD,
         fun: (resp) {
           closeDialogIfOpen();
-          if (resp != null && resp is Map<String, dynamic> && resp['pageload'] != null) {
+          if (resp != null &&
+              resp is Map<String, dynamic> &&
+              resp['pageload'] != null) {
             if (resp['pageload']['lstlocation'] != null) {
-              locationList.value.addAll((resp['pageload']['lstlocation'] as List<dynamic>)
-                  .map((e) => DropDownValue(
-                        key: e['locationCode'].toString(),
-                        value: e['locationName'].toString(),
-                      ))
-                  .toList());
+              locationList.value
+                  .addAll((resp['pageload']['lstlocation'] as List<dynamic>)
+                      .map((e) => DropDownValue(
+                            key: e['locationCode'].toString(),
+                            value: e['locationName'].toString(),
+                          ))
+                      .toList());
             }
             if (resp['pageload']['lstchannel'] != null) {
-              channelList.value.addAll((resp['pageload']['lstchannel'] as List<dynamic>)
-                  .map((e) => DropDownValue(
-                        key: e['channelCode'].toString(),
-                        value: e['channelName'].toString(),
-                      ))
-                  .toList());
+              channelList.value
+                  .addAll((resp['pageload']['lstchannel'] as List<dynamic>)
+                      .map((e) => DropDownValue(
+                            key: e['channelCode'].toString(),
+                            value: e['channelName'].toString(),
+                          ))
+                      .toList());
             }
           } else {
             LoadingDialog.showErrorDialog(resp.toString());

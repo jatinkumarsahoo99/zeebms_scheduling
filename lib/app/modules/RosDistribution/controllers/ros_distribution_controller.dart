@@ -22,7 +22,9 @@ import '../../../../widgets/dropdown.dart';
 import '../../../../widgets/gridFromMap.dart';
 import '../../../../widgets/input_fields.dart';
 import '../../../../widgets/radio_row.dart';
+import '../../../controller/HomeController.dart';
 import '../../../data/PermissionModel.dart';
+import '../../../data/user_data_settings_model.dart';
 import '../../../providers/Utils.dart';
 import '../../../routes/app_pages.dart';
 import '../../CommonSearch/views/common_search_view.dart';
@@ -44,8 +46,11 @@ class RosDistributionController extends GetxController {
   var selectedReportTab = "Client Wise".obs;
   var reportList = <dynamic>[].obs;
 
+  UserDataSettings? userDataSettings;
+
   var checkBoxes = [].obs;
   int mainGridIdx = 0;
+  PlutoGridStateManager? tempSM1st, tempSM2nd, tempSM3rd;
 
   @override
   void onInit() {
@@ -113,6 +118,7 @@ class RosDistributionController extends GetxController {
   void onReady() {
     super.onReady();
     callInitailsAPI();
+    fetchUserSetting1();
   }
 
   ///////////////////////// Check box on change bottom start/////////
@@ -490,7 +496,6 @@ class RosDistributionController extends GetxController {
     tempModel.value.infoGetFpcCellDoubleClick?.lstFPC = temp22;
     int lastSelectedIdx = 0, lastSelectedIdx2nd = 0, lastSelectedIdx3rd = 0;
     bool canRender = true;
-    PlutoGridStateManager? tempSM1st, tempSM2nd, tempSM3rd;
 
     showDialog(
         context: Get.context!,
@@ -1109,6 +1114,14 @@ class RosDistributionController extends GetxController {
                                             );
                                           }
                                         },
+                                        witdthSpecificColumn: (userDataSettings
+                                            ?.userSetting
+                                            ?.firstWhere(
+                                                (element) =>
+                                                    element.controlName ==
+                                                    "tempSM1st",
+                                                orElse: () => UserSetting())
+                                            .userSettings),
                                         onload: (sm) {
                                           tempSM1st = sm.stateManager;
                                           if ((tempModel
@@ -1189,6 +1202,17 @@ class RosDistributionController extends GetxController {
                                               true)
                                           ? null
                                           : DataGridFromMap(
+                                              witdthSpecificColumn:
+                                                  (userDataSettings
+                                                      ?.userSetting
+                                                      ?.firstWhere(
+                                                          (element) =>
+                                                              element
+                                                                  .controlName ==
+                                                              "tempSM2nd",
+                                                          orElse: () =>
+                                                              UserSetting())
+                                                      .userSettings),
                                               exportFileName:
                                                   "ROS Distribution",
                                               mapData: (tempModel
@@ -1296,6 +1320,17 @@ class RosDistributionController extends GetxController {
                                                           .backColor ??
                                                       ""),
                                               // mode: PlutoGridMode.selectWithOneTap,
+                                              witdthSpecificColumn:
+                                                  (userDataSettings
+                                                      ?.userSetting
+                                                      ?.firstWhere(
+                                                          (element) =>
+                                                              element
+                                                                  .controlName ==
+                                                              "tempSM3rd",
+                                                          orElse: () =>
+                                                              UserSetting())
+                                                      .userSettings),
                                               onload: (sm) {
                                                 tempSM3rd = sm.stateManager;
                                                 sm.stateManager.setCurrentCell(
@@ -1698,7 +1733,7 @@ class RosDistributionController extends GetxController {
     selectedChannel = null;
     date.clear();
     // date.text = "${DateTime.now().day}-${DateTime.now().month}-${DateTime.now().year}";
-    
+
     channel.refresh();
     enableControllos.value = true;
     showDataModel.value = ROSDistuibutionShowModel();
@@ -1748,9 +1783,23 @@ class RosDistributionController extends GetxController {
     }
   }
 
+  fetchUserSetting1() async {
+    userDataSettings = await Get.find<HomeController>().fetchUserSetting2();
+    update(['fpcMaster', 'programTable']);
+    showDataModel.refresh();
+    // tempModel.refresh();
+  }
+
   bottomFormHandler(String btnName) {
     if (btnName == "Clear") {
       clearAllPage();
+    } else if (btnName == "Exit") {
+      Get.find<HomeController>().postUserGridSetting2(listStateManager: [
+        {"tempSM1st": tempSM1st},
+        {"tempSM2nd": tempSM2nd},
+        {"tempSM3rd": tempSM3rd},
+        {"mainGSM": mainGSM},
+      ]);
     } else if (btnName == "Search") {
       Get.to(
         SearchPage(

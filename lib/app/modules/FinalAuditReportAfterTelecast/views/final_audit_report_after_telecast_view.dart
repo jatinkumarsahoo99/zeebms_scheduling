@@ -10,10 +10,12 @@ import 'package:flutter/material.dart';
 
 import 'package:get/get.dart';
 
+import '../../../data/user_data_settings_model.dart';
 import '../../../providers/Utils.dart';
 import '../controllers/final_audit_report_after_telecast_controller.dart';
 
-class FinalAuditReportAfterTelecastView extends GetView<FinalAuditReportAfterTelecastController> {
+class FinalAuditReportAfterTelecastView
+    extends GetView<FinalAuditReportAfterTelecastController> {
   const FinalAuditReportAfterTelecastView({Key? key}) : super(key: key);
   @override
   Widget build(BuildContext context) {
@@ -73,7 +75,8 @@ class FinalAuditReportAfterTelecastView extends GetView<FinalAuditReportAfterTel
             child: Obx(
               () {
                 return Container(
-                  margin: const EdgeInsets.symmetric(horizontal: 4, vertical: 2),
+                  margin:
+                      const EdgeInsets.symmetric(horizontal: 4, vertical: 2),
                   decoration: controller.dataTBList.isEmpty
                       ? BoxDecoration(
                           border: Border.all(
@@ -84,6 +87,15 @@ class FinalAuditReportAfterTelecastView extends GetView<FinalAuditReportAfterTel
                   child: controller.dataTBList.isEmpty
                       ? null
                       : DataGridShowOnlyKeys(
+                          onload: (sm) {
+                            controller.stateManager = sm.stateManager;
+                          },
+                          keysWidths: (controller.userDataSettings?.userSetting
+                              ?.firstWhere(
+                                  (element) =>
+                                      element.controlName == "stateManager",
+                                  orElse: () => UserSetting())
+                              .userSettings),
                           mapData: controller.dataTBList.value,
                           formatDate: true,
                           exportFileName: "Final Audit Report (After Telecast)",
@@ -92,9 +104,10 @@ class FinalAuditReportAfterTelecastView extends GetView<FinalAuditReportAfterTel
               },
             ),
           ),
+
           /// bottom common buttons
           Padding(
-            padding: const EdgeInsets.only(left: 4,top: 10,bottom: 10),
+            padding: const EdgeInsets.only(left: 4, top: 10, bottom: 10),
             child: GetBuilder<HomeController>(
                 id: "buttons",
                 init: Get.find<HomeController>(),
@@ -110,7 +123,9 @@ class FinalAuditReportAfterTelecastView extends GetView<FinalAuditReportAfterTel
                         for (var btn in btncontroller.buttons!) ...{
                           FormButtonWrapper(
                             btnText: btn["name"],
-                            callback: ((Utils.btnAccessHandler(btn['name'], controller.formPermissions!) == null))
+                            callback: ((Utils.btnAccessHandler(btn['name'],
+                                        controller.formPermissions!) ==
+                                    null))
                                 ? null
                                 : () => controller.formHandler(btn['name']),
                           )

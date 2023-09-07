@@ -19,6 +19,7 @@ import '../../../../widgets/Snack.dart';
 import '../../../controller/ConnectorControl.dart';
 import '../../../controller/MainController.dart';
 import '../../../data/DropDownValue.dart';
+import '../../../data/user_data_settings_model.dart';
 import '../../../providers/ApiFactory.dart';
 import '../../../providers/Utils.dart';
 import '../../CommonDocs/controllers/common_docs_controller.dart';
@@ -261,7 +262,8 @@ class CommercialMasterController extends GetxController {
     } /*else if (eomController.text == "00:00:00:00" ||
         eomController.text == "") {
       Snack.callError("Please enter EOM.");
-    }*/ else if (duration.value.text == "00:00:00:00" ||
+    }*/
+    else if (duration.value.text == "00:00:00:00" ||
         duration.value.text == "") {
       Snack.callError("Please enter duration.");
     } else if (selectedBrandType == null) {
@@ -269,7 +271,6 @@ class CommercialMasterController extends GetxController {
     } else if (selectedAgencyDetails == null) {
       Snack.callError("Please select Agency.");
     } else if ((commercialCode != "0" && commercialCode != "") && contin) {
-
       LoadingDialog.recordExists("Do you want to modify it?", () {
         isEnable = true;
         isEnableSelective = true;
@@ -280,42 +281,42 @@ class CommercialMasterController extends GetxController {
         contin = false;
         callSaveApi();
       });
-
     } else {
       callSaveApi();
     }
   }
-  callSaveApi(){
+
+  callSaveApi() {
     LoadingDialog.call();
     CommercialTapeMasterPostData commercialTapeMasterPostData =
-    new CommercialTapeMasterPostData(
-        commercialCaption: captionController.text,
-        exportTapeCaption: txCaptionController.text,
-        agencyCode: selectedAgencyDetails?.key ?? "",
-        agencytapeid: agencyIdController.text,
-        brandCode: selectedBrandType?.key ?? "",
-        censorshipCode: selectedCensorShipType?.key ?? "",
-        clockid: clockIdController.text,
-        commercialCode: commercialCode ?? "0",
-        eom: eomController.text,
-        som: somController.text,
-        commercialDuration:
-        Utils.oldBMSConvertToSecondsValue(value: duration.value.text)
-            .toString(),
-        despatchDate: DateFormat('M/d/yyyy hh:mm:ss a').format(
-            DateFormat("dd-MM-yyyy").parse(dispatchDateController.text)),
-        killDate: DateFormat('M/d/yyyy hh:mm:ss a').format(
-            DateFormat("dd-MM-yyyy").parse(endDateController.text)),
-        eventsubtype: selectedSecType?.key ?? "",
-        eventtypecode: selectedRevenueType?.key ?? "",
-        houseID: txNoController.text,
-        segmentNumber: segController.text,
-        languagecode: selectedLanguage?.key ?? "",
-        exportTapeCode: tapeIdController.value.text,
-        tapeTypeCode: selectedTapeType?.key ?? "",
-        annotations: eventList,
-        recievedOn:
-        DateFormat('M/d/yyyy hh:mm:ss a').format(DateTime.now()));
+        new CommercialTapeMasterPostData(
+            commercialCaption: captionController.text,
+            exportTapeCaption: txCaptionController.text,
+            agencyCode: selectedAgencyDetails?.key ?? "",
+            agencytapeid: agencyIdController.text,
+            brandCode: selectedBrandType?.key ?? "",
+            censorshipCode: selectedCensorShipType?.key ?? "",
+            clockid: clockIdController.text,
+            commercialCode: commercialCode ?? "0",
+            eom: eomController.text,
+            som: somController.text,
+            commercialDuration:
+                Utils.oldBMSConvertToSecondsValue(value: duration.value.text)
+                    .toString(),
+            despatchDate: DateFormat('M/d/yyyy hh:mm:ss a').format(
+                DateFormat("dd-MM-yyyy").parse(dispatchDateController.text)),
+            killDate: DateFormat('M/d/yyyy hh:mm:ss a')
+                .format(DateFormat("dd-MM-yyyy").parse(endDateController.text)),
+            eventsubtype: selectedSecType?.key ?? "",
+            eventtypecode: selectedRevenueType?.key ?? "",
+            houseID: txNoController.text,
+            segmentNumber: segController.text,
+            languagecode: selectedLanguage?.key ?? "",
+            exportTapeCode: tapeIdController.value.text,
+            tapeTypeCode: selectedTapeType?.key ?? "",
+            annotations: eventList,
+            recievedOn:
+                DateFormat('M/d/yyyy hh:mm:ss a').format(DateTime.now()));
     print((jsonEncode(commercialTapeMasterPostData.toJson())));
 
     Get.find<ConnectorControl>().POSTMETHOD(
@@ -325,16 +326,19 @@ class CommercialMasterController extends GetxController {
           Get.back();
           print("map>>>>>" + map.toString());
           if (map is Map && map.containsKey("isError")) {
-
             if (map['isError'] == false) {
-              LoadingDialog.callDataSavedMessage(map['genericMessage']??"Record Saved Successfully",
+              LoadingDialog.callDataSavedMessage(
+                  map['genericMessage'] ?? "Record Saved Successfully",
                   callback: () {
-                    // clearAll();
-                  });
-              if(map.containsKey('saveModel') && map['saveModel'] != null && map['saveModel'].length >0){
+                // clearAll();
+              });
+              if (map.containsKey('saveModel') &&
+                  map['saveModel'] != null &&
+                  map['saveModel'].length > 0) {
                 txNoController.text = map['saveModel'][0]['houseid'];
-                tapeIdController.value.text = map['saveModel'][0]['exportTapecode'] ;
-                commercialCode = map['saveModel'][0]['commercialCode'] ;
+                tapeIdController.value.text =
+                    map['saveModel'][0]['exportTapecode'];
+                commercialCode = map['saveModel'][0]['commercialCode'];
               }
             } else {
               // Get.back();
@@ -346,7 +350,6 @@ class CommercialMasterController extends GetxController {
           }
         });
   }
-
 
   addEvent() {
     if (selectedEvent == null) {
@@ -468,7 +471,7 @@ class CommercialMasterController extends GetxController {
             brandType.clear();
             selectedBrandType = null;
             selectedAgencyDetails = null;
-            agencyNameController.text="";
+            agencyNameController.text = "";
             if (map.containsKey('agencyType') && map['agencyType'].length > 0) {
               log("agencyType" + map['agencyType'].toString());
               agencyDetails.clear();
@@ -760,19 +763,21 @@ class CommercialMasterController extends GetxController {
             commercialCode = commercialTapeMasterData!.commercialCode ?? "0";
             print(">>>>jks " + endDateController.text);
             // eventList
-            if(commercialTapeMasterData?.lstAnnotation != null &&
-                (commercialTapeMasterData?.lstAnnotation?.length??0) >0){
+            if (commercialTapeMasterData?.lstAnnotation != null &&
+                (commercialTapeMasterData?.lstAnnotation?.length ?? 0) > 0) {
               commercialTapeMasterData?.lstAnnotation?.forEach((element) {
-                eventList.add(Annotations(tcIn: element.tCin,tcOut: element.tCout,eventName: element.eventname));
+                eventList.add(Annotations(
+                    tcIn: element.tCin,
+                    tcOut: element.tCout,
+                    eventName: element.eventname));
               });
             }
             isEnable = true;
             isEnableSelective = false;
             isListenerActive = false;
 
-            update(['updateLeft','eventTable']);
-          }
-          else {
+            update(['updateLeft', 'eventTable']);
+          } else {
             isListenerActive = false;
           }
         });
@@ -808,6 +813,13 @@ class CommercialMasterController extends GetxController {
   @override
   void onReady() {
     super.onReady();
+    fetchUserSetting1();
+  }
+
+  UserDataSettings? userDataSettings;
+
+  fetchUserSetting1() async {
+    userDataSettings = await Get.find<HomeController>().fetchUserSetting2();
   }
 
   @override
@@ -833,6 +845,10 @@ class CommercialMasterController extends GetxController {
       clearAll();
     } else if (string == "Save") {
       saveData();
+    } else if (string == "Exit") {
+      Get.find<HomeController>().postUserGridSetting2(listStateManager: [
+        {"gridStateManager": gridStateManager},
+      ]);
     } else if (string == "Search") {
       search();
     } else if (string == "Docs") {
