@@ -427,7 +427,6 @@ class DataGridMenu {
               var _almost = RxBool(true);
               var _fromstart = RxBool(false);
               int _index = stateManager.currentRowIdx ?? 0;
-              // bool isFromStart = stateManager.currentRowIdx == 0;
               return Card(
                 child: Padding(
                   padding: EdgeInsets.zero,
@@ -554,35 +553,22 @@ class DataGridMenu {
                                         if (_fromstart.value) {
                                           _index = -1;
                                         }
-                                        // var _slecetedRow = _almost.value
-                                        //     ? stateManager.rows.firstWhereOrNull(
-                                        //         (element) => (element
-                                        //                 .cells[_selectedColumn]!
-                                        //                 .value
-                                        //                 .toString()
-                                        //                 .toLowerCase()
-                                        //                 .trim()
-                                        //                 .contains(_findctrl.text
-                                        //                     .toLowerCase()
-                                        //                     .trim()) &&
-                                        //             (element.sortIdx > _index)))
-                                        //     : stateManager.rows.firstWhereOrNull((element) =>
-                                        //         (element.cells[_selectedColumn]!.value.toString().toLowerCase().trim() ==
-                                        //                 _findctrl.text.toLowerCase().trim() &&
-                                        //             (element.sortIdx > _index)));
-
-                                        var _slecetedRow = stateManager.rows
-                                            .firstWhereOrNull((element) =>
-                                                (element.cells[_selectedColumn]!
-                                                            .value
-                                                            .toString()
+                                        var _slecetedRow = _almost.value
+                                            ? stateManager.rows.firstWhereOrNull(
+                                                (element) => (element
+                                                        .cells[_selectedColumn]!
+                                                        .value
+                                                        .toString()
+                                                        .toLowerCase()
+                                                        .trim()
+                                                        .contains(_findctrl.text
                                                             .toLowerCase()
-                                                            .trim() ==
-                                                        _findctrl.text
-                                                            .toLowerCase()
-                                                            .trim() &&
-                                                    (element.sortIdx >
-                                                        _index)));
+                                                            .trim()) &&
+                                                    (element.sortIdx > _index)))
+                                            : stateManager.rows.firstWhereOrNull((element) =>
+                                                (element.cells[_selectedColumn]!.value.toString().toLowerCase().trim() ==
+                                                        _findctrl.text.toLowerCase().trim() &&
+                                                    (element.sortIdx > _index)));
 
                                         if (_slecetedRow == null) {
                                           stateManager.resetScrollToZero();
@@ -1217,329 +1203,8 @@ class DataGridMenu {
         );
         break;
       case DataGridMenuItem.find:
-        // ScaffoldMessenger.of(context).showSnackBar(SnackBar(
-        //     margin:
-        //         EdgeInsets.symmetric(vertical: kToolbarHeight, horizontal: 10),
-        //     duration: Duration(minutes: 10),
-        //     behavior: SnackBarBehavior.floating,
-        //     content: Container(
-        //       height: 40,
-        //       child: Row(
-        //         mainAxisAlignment: MainAxisAlignment.center,
-        //         mainAxisSize: MainAxisSize.min,
-        //         children: [
-        //           DropDownField.simpleDropDownwithWidthRatio(
-        //               stateManager.columns
-        //                   .map((e) =>
-        //                       DropDownValue(key: e.field, value: e.title))
-        //                   .toList(),
-        //               (value) {},
-        //               "Columns",
-        //               0.20,
-        //               context)
-        //         ],
-        //       ),
-        //     )));
-
-        /*showBottomSheet(
-            context: context,
-            builder: (context) {
-              var _selectedColumn = "";
-              TextEditingController _findctrl = TextEditingController();
-              var _almost = RxBool(false);
-              var _fromstart = RxBool(false);
-              int? _index = 0;
-              return Card(
-                child: Padding(
-                  padding: EdgeInsets.zero,
-                  child: Container(
-                    width: Get.width,
-                    height: 50,
-                    child: Row(
-                      // mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                      mainAxisSize: MainAxisSize.min,
-                      crossAxisAlignment: CrossAxisAlignment.end,
-                      children: [
-                        Row(
-                          children: [
-                            Text(
-                              "Column",
-                              // style: TextStyle(
-                              //   fontSize: SizeDefine.labelSize1,
-                              //   color: Colors.black,
-                              //   fontWeight: FontWeight.w500,
-                              // ),
-                            ),
-                            const SizedBox(width: 5),
-                            DropDownField.formDropDown1WidthMap(
-                              stateManager.columns
-                                  .map((e) => DropDownValue(
-                                      key: e.field, value: e.title))
-                                  .toList(),
-                              (value) {
-                                _selectedColumn = value.key!;
-                              },
-                              "Column",
-                              0.15,
-                              // context,
-                              showtitle: false,
-                            ),
-                          ],
-                        ),
-                        SizedBox(width: 15),
-                        Row(
-                          // crossAxisAlignment: CrossAxisAlignment.center,
-                          // mainAxisAlignment: MainAxisAlignment.center,
-                          children: [
-                            Padding(
-                              padding: const EdgeInsets.only(top: 24),
-                              child: Text(
-                                "For",
-                                // style: TextStyle(
-                                //   fontSize: SizeDefine.labelSize1,
-                                //   color: Colors.black,
-                                //   fontWeight: FontWeight.w500,
-                                // ),
-                              ),
-                            ),
-                            const SizedBox(width: 5),
-                            InputFields.formField1(
-                                hintTxt: "For",
-                                controller: _findctrl,
-                                width: 0.15,
-                                showTitle: false),
-                          ],
-                        ),
-                        SizedBox(width: 15),
-                        Row(
-                          crossAxisAlignment: CrossAxisAlignment.center,
-                          // mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                          mainAxisSize: MainAxisSize.max,
-                          children: [
-                            InkWell(
-                                onTap: () {
-                                  _almost.value = !_almost.value;
-                                },
-                                child: Obx(
-                                  () => Icon(_almost.value
-                                      ? Icons.check_box_outlined
-                                      : Icons.check_box_outline_blank_rounded),
-                                )),
-                            Text("Almost"),
-                          ],
-                        ),
-                        const SizedBox(width: 5),
-                        Row(
-                          crossAxisAlignment: CrossAxisAlignment.center,
-                          // mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                          mainAxisSize: MainAxisSize.max,
-                          children: [
-                            InkWell(
-                                onTap: () {
-                                  _fromstart.value = !_fromstart.value;
-                                },
-                                child: Obx(
-                                  () => Icon(_fromstart.value
-                                      ? Icons.check_box_outlined
-                                      : Icons.check_box_outline_blank_rounded),
-                                )),
-                            Text("From Start")
-                          ],
-                        ),
-                        const SizedBox(width: 15),
-                        Transform.scale(
-                          scale: .85,
-                          child: Row(
-                            children: [
-                              ElevatedButton.icon(
-                                  label: Text(""),
-                                  onPressed: () {
-                                    if (_findctrl.text != "" &&
-                                        _selectedColumn != "") {
-                                      var _slecetedRow = _almost.value
-                                          ? stateManager.rows.firstWhereOrNull((element) =>
-                                              (element.cells[_selectedColumn]!.value.toString().toLowerCase().contains(_findctrl.text.toLowerCase()) &&
-                                                  (_index == 0 ||
-                                                      element.sortIdx >
-                                                          (_index ?? 0))))
-                                          : stateManager.rows.firstWhere((element) =>
-                                              (element.cells[_selectedColumn]!.value
-                                                          .toString()
-                                                          .toLowerCase() ==
-                                                      _findctrl.text
-                                                          .toLowerCase() &&
-                                                  (_index == 0 ||
-                                                      element.sortIdx > (_index ?? 0))));
-                                      if (_slecetedRow == null) {
-                                        stateManager.resetScrollToZero();
-
-                                        Get.defaultDialog(
-                                            content: Text(
-                                                "You Have reach the end !\nDo u want to restart?"),
-                                            actions: [
-                                              ElevatedButton.icon(
-                                                  onPressed: () {
-                                                    _index = 0;
-                                                    stateManager
-                                                        .resetScrollToZero();
-                                                    Get.back();
-                                                    var _slecetedRow = _almost
-                                                            .value
-                                                        ? stateManager.rows.firstWhereOrNull(
-                                                            (element) => (element.cells[_selectedColumn]!.value.toString().toLowerCase().contains(_findctrl.text.toLowerCase()) &&
-                                                                (_index == 0 ||
-                                                                    element.sortIdx >
-                                                                        (_index ??
-                                                                            0))))
-                                                        : stateManager.rows.firstWhere((element) => (element
-                                                                    .cells[_selectedColumn]!
-                                                                    .value
-                                                                    .toString()
-                                                                    .toLowerCase() ==
-                                                                _findctrl.text.toLowerCase() &&
-                                                            (_index == 0 || element.sortIdx > (_index ?? 0))));
-                                                    print(_slecetedRow!
-                                                            .cells[
-                                                                _selectedColumn]!
-                                                            .value
-                                                            .toString() +
-                                                        _slecetedRow
-                                                            .cells[
-                                                                _selectedColumn]!
-                                                            .value
-                                                            .runtimeType
-                                                            .toString());
-                                                    _index =
-                                                        _slecetedRow.sortIdx;
-                                                    stateManager
-                                                        .resetScrollToZero();
-
-                                                    stateManager
-                                                        .moveScrollByRow(
-                                                            PlutoMoveDirection
-                                                                .down,
-                                                            _slecetedRow
-                                                                    .sortIdx -
-                                                                1);
-
-                                                    stateManager
-                                                        .setKeepFocus(false);
-                                                    // for (var element in stateManager
-                                                    //     .rows) {
-                                                    //   stateManager
-                                                    //       .setRowChecked(
-                                                    //       element, false,
-                                                    //       notify: false);
-                                                    // }
-                                                    // stateManager.setRowChecked(
-                                                    //     _slecetedRow, true,
-                                                    //     notify: true);
-                                                    stateManager.setCurrentCell(
-                                                        _slecetedRow.cells[
-                                                            _selectedColumn],
-                                                        _slecetedRow.sortIdx);
-                                                  },
-                                                  icon: Icon(Icons.done),
-                                                  label: Text("YES")),
-                                              ElevatedButton.icon(
-                                                  onPressed: () {
-                                                    Get.back();
-                                                  },
-                                                  icon: Icon(Icons.clear),
-                                                  label: Text("NO")),
-                                            ]);
-                                      } else {
-                                        print(_slecetedRow
-                                                .cells[_selectedColumn]!.value
-                                                .toString() +
-                                            _slecetedRow.cells[_selectedColumn]!
-                                                .value.runtimeType
-                                                .toString());
-                                        if (_slecetedRow.sortIdx == 0) {
-                                          _index = _index! + 1;
-                                        } else {
-                                          _index = _slecetedRow.sortIdx;
-                                        }
-
-                                        stateManager.resetScrollToZero();
-                                        stateManager.moveScrollByRow(
-                                            PlutoMoveDirection.down,
-                                            _slecetedRow.sortIdx - 1);
-                                        stateManager.setKeepFocus(false);
-                                        // for (var element in stateManager.rows) {
-                                        //   stateManager.setRowChecked(
-                                        //       element, false, notify: false);
-                                        // }
-                                        // stateManager.setRowChecked(
-                                        //     _slecetedRow, true, notify: true);
-                                        stateManager.setCurrentCell(
-                                            _slecetedRow.cells[_selectedColumn],
-                                            _slecetedRow.sortIdx);
-                                      }
-                                    }
-                                  },
-                                  icon: Icon(Icons
-                                      .keyboard_double_arrow_right_rounded)),
-                              SizedBox(width: 15),
-                              ElevatedButton.icon(
-                                  label: Text(""),
-                                  onPressed: () {
-                                    Navigator.pop(context);
-                                  },
-                                  icon: Icon(Icons.clear_outlined)),
-                              SizedBox(width: 15),
-                              ElevatedButton(
-                                  onPressed: () {
-                                    stateManager.setFilter((element) =>
-                                        stateManager.currentCell == null
-                                            ? true
-                                            : element
-                                                    .cells[stateManager
-                                                        .currentCell!
-                                                        .column
-                                                        .field]!
-                                                    .value ==
-                                                stateManager
-                                                    .currentCell!.value);
-                                  },
-                                  child: Text("FS")),
-                              SizedBox(width: 15),
-                              ElevatedButton(
-                                  onPressed: () {
-                                    stateManager.setFilter((element) =>
-                                        stateManager.currentCell == null
-                                            ? true
-                                            : element
-                                                    .cells[stateManager
-                                                        .currentCell!
-                                                        .column
-                                                        .field]!
-                                                    .value !=
-                                                stateManager
-                                                    .currentCell!.value);
-                                  },
-                                  child: Text("XF")),
-                              SizedBox(width: 15),
-                              ElevatedButton(
-                                  onPressed: () {
-                                    stateManager.setFilter((element) => true);
-                                  },
-                                  child: Text("RF")),
-                              SizedBox(width: 15),
-                              ElevatedButton(
-                                  onPressed: () {
-                                    customFilter(stateManager);
-                                  },
-                                  child: Text("CF")),
-                            ],
-                          ),
-                        ),
-                      ],
-                    ),
-                  ),
-                ),
-              );
-            });*/
+       
+        // ignore: use_build_context_synchronously
         showBottomSheet(
             context: context,
             builder: (context) {
@@ -1548,9 +1213,9 @@ class DataGridMenu {
                   key: stateManager.currentColumn?.field ?? "",
                   value: stateManager.currentColumn?.title ?? "");
               TextEditingController _findctrl = TextEditingController();
-              var _almost = RxBool(false);
+              var _almost = RxBool(true);
               var _fromstart = RxBool(false);
-              int _index = 0;
+              int _index = stateManager.currentRowIdx ?? 0;
               return Card(
                 child: Padding(
                   padding: EdgeInsets.zero,
@@ -1674,22 +1339,25 @@ class DataGridMenu {
                                     onPressed: () {
                                       if (_findctrl.text != "" &&
                                           _selectedColumn != "") {
+                                        if (_fromstart.value) {
+                                          _index = -1;
+                                        }
                                         var _slecetedRow = _almost.value
-                                            ? stateManager.rows
-                                                .firstWhereOrNull((element) =>
-                                                    (element.cells[_selectedColumn]!.value.toString().toLowerCase().trim().contains(_findctrl.text.toLowerCase().trim()) &&
-                                                        (_index == 0 ||
-                                                            element.sortIdx >
-                                                                (_index))))
-                                            : stateManager.rows.firstWhereOrNull(
+                                            ? stateManager.rows.firstWhereOrNull(
                                                 (element) => (element
-                                                            .cells[_selectedColumn]!
-                                                            .value
-                                                            .toString()
+                                                        .cells[_selectedColumn]!
+                                                        .value
+                                                        .toString()
+                                                        .toLowerCase()
+                                                        .trim()
+                                                        .contains(_findctrl.text
                                                             .toLowerCase()
-                                                            .trim() ==
+                                                            .trim()) &&
+                                                    (element.sortIdx > _index)))
+                                            : stateManager.rows.firstWhereOrNull((element) =>
+                                                (element.cells[_selectedColumn]!.value.toString().toLowerCase().trim() ==
                                                         _findctrl.text.toLowerCase().trim() &&
-                                                    (_index == 0 || element.sortIdx > (_index))));
+                                                    (element.sortIdx > _index)));
                                         if (_slecetedRow == null) {
                                           stateManager.resetScrollToZero();
 
@@ -1772,6 +1440,25 @@ class DataGridMenu {
                                                     label: Text("NO")),
                                               ]);
                                         } else {
+                                          if (_fromstart.value) {
+                                            _fromstart.value = false;
+                                          }
+                                          _index = _slecetedRow.sortIdx;
+                                          stateManager.resetScrollToZero();
+                                          if (_index <= 10) {
+                                            stateManager.moveScrollByRow(
+                                                PlutoMoveDirection.up,
+                                                _slecetedRow.sortIdx);
+                                          } else {
+                                            stateManager.moveScrollByRow(
+                                                PlutoMoveDirection.down,
+                                                _slecetedRow.sortIdx);
+                                          }
+                                          stateManager.setKeepFocus(false);
+                                          stateManager.setCurrentCell(
+                                              _slecetedRow
+                                                  .cells[_selectedColumn],
+                                              _slecetedRow.sortIdx);
                                           // print(_slecetedRow
                                           //         .cells[_selectedColumn]!.value
                                           //         .toString() +
@@ -1780,16 +1467,16 @@ class DataGridMenu {
                                           //         .value
                                           //         .runtimeType
                                           //         .toString());
-                                          if (_slecetedRow.sortIdx == 0) {
-                                            _index = 1;
-                                          } else {
-                                            _index = _slecetedRow.sortIdx;
-                                          }
+                                          // if (_slecetedRow.sortIdx == 0) {
+                                          //   _index = 1;
+                                          // } else {
+                                          //   _index = _slecetedRow.sortIdx;
+                                          // }
 
-                                          stateManager.resetScrollToZero();
-                                          stateManager.moveScrollByRow(
-                                              PlutoMoveDirection.down, _index);
-                                          stateManager.setKeepFocus(false);
+                                          // stateManager.resetScrollToZero();
+                                          // stateManager.moveScrollByRow(
+                                          //     PlutoMoveDirection.down, _index);
+                                          // stateManager.setKeepFocus(false);
                                           // for (var element in stateManager
                                           //     .rows) {
                                           //   stateManager.setRowChecked(
@@ -1805,24 +1492,24 @@ class DataGridMenu {
                                                   : _slecetedRow
                                                   .cells[_selectedColumn],
                                               _index);*/
-                                          if (stateManager.currentRow != null &&
-                                              stateManager
-                                                      .currentRow?.sortIdx ==
-                                                  0 &&
-                                              _slecetedRow.sortIdx == 2) {
-                                            stateManager.setCurrentCell(
-                                                stateManager
-                                                    .getRowByIdx(
-                                                        _slecetedRow.sortIdx -
-                                                            1)
-                                                    ?.cells[_selectedColumn],
-                                                _slecetedRow.sortIdx - 1);
-                                          } else {
-                                            stateManager.setCurrentCell(
-                                                _slecetedRow
-                                                    .cells[_selectedColumn],
-                                                _slecetedRow.sortIdx);
-                                          }
+                                          // if (stateManager.currentRow != null &&
+                                          //     stateManager
+                                          //             .currentRow?.sortIdx ==
+                                          //         0 &&
+                                          //     _slecetedRow.sortIdx == 2) {
+                                          //   stateManager.setCurrentCell(
+                                          //       stateManager
+                                          //           .getRowByIdx(
+                                          //               _slecetedRow.sortIdx -
+                                          //                   1)
+                                          //           ?.cells[_selectedColumn],
+                                          //       _slecetedRow.sortIdx - 1);
+                                          // } else {
+                                          //   stateManager.setCurrentCell(
+                                          //       _slecetedRow
+                                          //           .cells[_selectedColumn],
+                                          //       _slecetedRow.sortIdx);
+                                          // }
                                         }
                                       }
                                     },
@@ -2342,329 +2029,8 @@ class DataGridMenu {
         );
         break;
       case DataGridMenuItem.find:
-        // ScaffoldMessenger.of(context).showSnackBar(SnackBar(
-        //     margin:
-        //         EdgeInsets.symmetric(vertical: kToolbarHeight, horizontal: 10),
-        //     duration: Duration(minutes: 10),
-        //     behavior: SnackBarBehavior.floating,
-        //     content: Container(
-        //       height: 40,
-        //       child: Row(
-        //         mainAxisAlignment: MainAxisAlignment.center,
-        //         mainAxisSize: MainAxisSize.min,
-        //         children: [
-        //           DropDownField.simpleDropDownwithWidthRatio(
-        //               stateManager.columns
-        //                   .map((e) =>
-        //                       DropDownValue(key: e.field, value: e.title))
-        //                   .toList(),
-        //               (value) {},
-        //               "Columns",
-        //               0.20,
-        //               context)
-        //         ],
-        //       ),
-        //     )));
-
-        /*showBottomSheet(
-            context: context,
-            builder: (context) {
-              var _selectedColumn = "";
-              TextEditingController _findctrl = TextEditingController();
-              var _almost = RxBool(false);
-              var _fromstart = RxBool(false);
-              int? _index = 0;
-              return Card(
-                child: Padding(
-                  padding: EdgeInsets.zero,
-                  child: Container(
-                    width: Get.width,
-                    height: 50,
-                    child: Row(
-                      // mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                      mainAxisSize: MainAxisSize.min,
-                      crossAxisAlignment: CrossAxisAlignment.end,
-                      children: [
-                        Row(
-                          children: [
-                            Text(
-                              "Column",
-                              // style: TextStyle(
-                              //   fontSize: SizeDefine.labelSize1,
-                              //   color: Colors.black,
-                              //   fontWeight: FontWeight.w500,
-                              // ),
-                            ),
-                            const SizedBox(width: 5),
-                            DropDownField.formDropDown1WidthMap(
-                              stateManager.columns
-                                  .map((e) => DropDownValue(
-                                      key: e.field, value: e.title))
-                                  .toList(),
-                              (value) {
-                                _selectedColumn = value.key!;
-                              },
-                              "Column",
-                              0.15,
-                              // context,
-                              showtitle: false,
-                            ),
-                          ],
-                        ),
-                        SizedBox(width: 15),
-                        Row(
-                          // crossAxisAlignment: CrossAxisAlignment.center,
-                          // mainAxisAlignment: MainAxisAlignment.center,
-                          children: [
-                            Padding(
-                              padding: const EdgeInsets.only(top: 24),
-                              child: Text(
-                                "For",
-                                // style: TextStyle(
-                                //   fontSize: SizeDefine.labelSize1,
-                                //   color: Colors.black,
-                                //   fontWeight: FontWeight.w500,
-                                // ),
-                              ),
-                            ),
-                            const SizedBox(width: 5),
-                            InputFields.formField1(
-                                hintTxt: "For",
-                                controller: _findctrl,
-                                width: 0.15,
-                                showTitle: false),
-                          ],
-                        ),
-                        SizedBox(width: 15),
-                        Row(
-                          crossAxisAlignment: CrossAxisAlignment.center,
-                          // mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                          mainAxisSize: MainAxisSize.max,
-                          children: [
-                            InkWell(
-                                onTap: () {
-                                  _almost.value = !_almost.value;
-                                },
-                                child: Obx(
-                                  () => Icon(_almost.value
-                                      ? Icons.check_box_outlined
-                                      : Icons.check_box_outline_blank_rounded),
-                                )),
-                            Text("Almost"),
-                          ],
-                        ),
-                        const SizedBox(width: 5),
-                        Row(
-                          crossAxisAlignment: CrossAxisAlignment.center,
-                          // mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                          mainAxisSize: MainAxisSize.max,
-                          children: [
-                            InkWell(
-                                onTap: () {
-                                  _fromstart.value = !_fromstart.value;
-                                },
-                                child: Obx(
-                                  () => Icon(_fromstart.value
-                                      ? Icons.check_box_outlined
-                                      : Icons.check_box_outline_blank_rounded),
-                                )),
-                            Text("From Start")
-                          ],
-                        ),
-                        const SizedBox(width: 15),
-                        Transform.scale(
-                          scale: .85,
-                          child: Row(
-                            children: [
-                              ElevatedButton.icon(
-                                  label: Text(""),
-                                  onPressed: () {
-                                    if (_findctrl.text != "" &&
-                                        _selectedColumn != "") {
-                                      var _slecetedRow = _almost.value
-                                          ? stateManager.rows.firstWhereOrNull((element) =>
-                                              (element.cells[_selectedColumn]!.value.toString().toLowerCase().contains(_findctrl.text.toLowerCase()) &&
-                                                  (_index == 0 ||
-                                                      element.sortIdx >
-                                                          (_index ?? 0))))
-                                          : stateManager.rows.firstWhere((element) =>
-                                              (element.cells[_selectedColumn]!.value
-                                                          .toString()
-                                                          .toLowerCase() ==
-                                                      _findctrl.text
-                                                          .toLowerCase() &&
-                                                  (_index == 0 ||
-                                                      element.sortIdx > (_index ?? 0))));
-                                      if (_slecetedRow == null) {
-                                        stateManager.resetScrollToZero();
-
-                                        Get.defaultDialog(
-                                            content: Text(
-                                                "You Have reach the end !\nDo u want to restart?"),
-                                            actions: [
-                                              ElevatedButton.icon(
-                                                  onPressed: () {
-                                                    _index = 0;
-                                                    stateManager
-                                                        .resetScrollToZero();
-                                                    Get.back();
-                                                    var _slecetedRow = _almost
-                                                            .value
-                                                        ? stateManager.rows.firstWhereOrNull(
-                                                            (element) => (element.cells[_selectedColumn]!.value.toString().toLowerCase().contains(_findctrl.text.toLowerCase()) &&
-                                                                (_index == 0 ||
-                                                                    element.sortIdx >
-                                                                        (_index ??
-                                                                            0))))
-                                                        : stateManager.rows.firstWhere((element) => (element
-                                                                    .cells[_selectedColumn]!
-                                                                    .value
-                                                                    .toString()
-                                                                    .toLowerCase() ==
-                                                                _findctrl.text.toLowerCase() &&
-                                                            (_index == 0 || element.sortIdx > (_index ?? 0))));
-                                                    print(_slecetedRow!
-                                                            .cells[
-                                                                _selectedColumn]!
-                                                            .value
-                                                            .toString() +
-                                                        _slecetedRow
-                                                            .cells[
-                                                                _selectedColumn]!
-                                                            .value
-                                                            .runtimeType
-                                                            .toString());
-                                                    _index =
-                                                        _slecetedRow.sortIdx;
-                                                    stateManager
-                                                        .resetScrollToZero();
-
-                                                    stateManager
-                                                        .moveScrollByRow(
-                                                            PlutoMoveDirection
-                                                                .down,
-                                                            _slecetedRow
-                                                                    .sortIdx -
-                                                                1);
-
-                                                    stateManager
-                                                        .setKeepFocus(false);
-                                                    // for (var element in stateManager
-                                                    //     .rows) {
-                                                    //   stateManager
-                                                    //       .setRowChecked(
-                                                    //       element, false,
-                                                    //       notify: false);
-                                                    // }
-                                                    // stateManager.setRowChecked(
-                                                    //     _slecetedRow, true,
-                                                    //     notify: true);
-                                                    stateManager.setCurrentCell(
-                                                        _slecetedRow.cells[
-                                                            _selectedColumn],
-                                                        _slecetedRow.sortIdx);
-                                                  },
-                                                  icon: Icon(Icons.done),
-                                                  label: Text("YES")),
-                                              ElevatedButton.icon(
-                                                  onPressed: () {
-                                                    Get.back();
-                                                  },
-                                                  icon: Icon(Icons.clear),
-                                                  label: Text("NO")),
-                                            ]);
-                                      } else {
-                                        print(_slecetedRow
-                                                .cells[_selectedColumn]!.value
-                                                .toString() +
-                                            _slecetedRow.cells[_selectedColumn]!
-                                                .value.runtimeType
-                                                .toString());
-                                        if (_slecetedRow.sortIdx == 0) {
-                                          _index = _index! + 1;
-                                        } else {
-                                          _index = _slecetedRow.sortIdx;
-                                        }
-
-                                        stateManager.resetScrollToZero();
-                                        stateManager.moveScrollByRow(
-                                            PlutoMoveDirection.down,
-                                            _slecetedRow.sortIdx - 1);
-                                        stateManager.setKeepFocus(false);
-                                        // for (var element in stateManager.rows) {
-                                        //   stateManager.setRowChecked(
-                                        //       element, false, notify: false);
-                                        // }
-                                        // stateManager.setRowChecked(
-                                        //     _slecetedRow, true, notify: true);
-                                        stateManager.setCurrentCell(
-                                            _slecetedRow.cells[_selectedColumn],
-                                            _slecetedRow.sortIdx);
-                                      }
-                                    }
-                                  },
-                                  icon: Icon(Icons
-                                      .keyboard_double_arrow_right_rounded)),
-                              SizedBox(width: 15),
-                              ElevatedButton.icon(
-                                  label: Text(""),
-                                  onPressed: () {
-                                    Navigator.pop(context);
-                                  },
-                                  icon: Icon(Icons.clear_outlined)),
-                              SizedBox(width: 15),
-                              ElevatedButton(
-                                  onPressed: () {
-                                    stateManager.setFilter((element) =>
-                                        stateManager.currentCell == null
-                                            ? true
-                                            : element
-                                                    .cells[stateManager
-                                                        .currentCell!
-                                                        .column
-                                                        .field]!
-                                                    .value ==
-                                                stateManager
-                                                    .currentCell!.value);
-                                  },
-                                  child: Text("FS")),
-                              SizedBox(width: 15),
-                              ElevatedButton(
-                                  onPressed: () {
-                                    stateManager.setFilter((element) =>
-                                        stateManager.currentCell == null
-                                            ? true
-                                            : element
-                                                    .cells[stateManager
-                                                        .currentCell!
-                                                        .column
-                                                        .field]!
-                                                    .value !=
-                                                stateManager
-                                                    .currentCell!.value);
-                                  },
-                                  child: Text("XF")),
-                              SizedBox(width: 15),
-                              ElevatedButton(
-                                  onPressed: () {
-                                    stateManager.setFilter((element) => true);
-                                  },
-                                  child: Text("RF")),
-                              SizedBox(width: 15),
-                              ElevatedButton(
-                                  onPressed: () {
-                                    customFilter(stateManager);
-                                  },
-                                  child: Text("CF")),
-                            ],
-                          ),
-                        ),
-                      ],
-                    ),
-                  ),
-                ),
-              );
-            });*/
+       
+        // ignore: use_build_context_synchronously
         showBottomSheet(
             context: context,
             builder: (context) {
@@ -2673,9 +2039,9 @@ class DataGridMenu {
                   key: stateManager.currentColumn?.field ?? "",
                   value: stateManager.currentColumn?.title ?? "");
               TextEditingController _findctrl = TextEditingController();
-              var _almost = RxBool(false);
+              var _almost = RxBool(true);
               var _fromstart = RxBool(false);
-              int _index = 0;
+              int _index = stateManager.currentRowIdx ?? 0;
               return Card(
                 child: Padding(
                   padding: EdgeInsets.zero,
@@ -2799,22 +2165,26 @@ class DataGridMenu {
                                     onPressed: () {
                                       if (_findctrl.text != "" &&
                                           _selectedColumn != "") {
-                                        PlutoRow? _slecetedRow = _almost.value
-                                            ? stateManager.rows
-                                                .firstWhereOrNull((element) =>
-                                                    (element.cells[_selectedColumn]!.value.toString().toLowerCase().trim().contains(_findctrl.text.toLowerCase().trim()) &&
-                                                        (_index == 0 ||
-                                                            element.sortIdx >
-                                                                (_index))))
-                                            : stateManager.rows.firstWhereOrNull(
+                                        if (_fromstart.value) {
+                                          _index = -1;
+                                        }
+                                        var _slecetedRow = _almost.value
+                                            ? stateManager.rows.firstWhereOrNull(
                                                 (element) => (element
-                                                            .cells[_selectedColumn]!
-                                                            .value
-                                                            .toString()
+                                                        .cells[_selectedColumn]!
+                                                        .value
+                                                        .toString()
+                                                        .toLowerCase()
+                                                        .trim()
+                                                        .contains(_findctrl.text
                                                             .toLowerCase()
-                                                            .trim() ==
+                                                            .trim()) &&
+                                                    (element.sortIdx > _index)))
+                                            : stateManager.rows.firstWhereOrNull((element) =>
+                                                (element.cells[_selectedColumn]!.value.toString().toLowerCase().trim() ==
                                                         _findctrl.text.toLowerCase().trim() &&
-                                                    (_index == 0 || element.sortIdx > (_index))));
+                                                    (element.sortIdx > _index)));
+                                        
                                         if (_slecetedRow == null) {
                                           stateManager.resetScrollToZero();
 
@@ -2897,6 +2267,25 @@ class DataGridMenu {
                                                     label: Text("NO")),
                                               ]);
                                         } else {
+                                          if (_fromstart.value) {
+                                            _fromstart.value = false;
+                                          }
+                                          _index = _slecetedRow.sortIdx;
+                                          stateManager.resetScrollToZero();
+                                          if (_index <= 10) {
+                                            stateManager.moveScrollByRow(
+                                                PlutoMoveDirection.up,
+                                                _slecetedRow.sortIdx);
+                                          } else {
+                                            stateManager.moveScrollByRow(
+                                                PlutoMoveDirection.down,
+                                                _slecetedRow.sortIdx);
+                                          }
+                                          stateManager.setKeepFocus(false);
+                                          stateManager.setCurrentCell(
+                                              _slecetedRow
+                                                  .cells[_selectedColumn],
+                                              _slecetedRow.sortIdx);
                                           // print(_slecetedRow
                                           //         .cells[_selectedColumn]!.value
                                           //         .toString() +
@@ -2905,19 +2294,19 @@ class DataGridMenu {
                                           //         .value
                                           //         .runtimeType
                                           //         .toString());
-                                          print("Index selected is>>" +
-                                              _slecetedRow.sortIdx.toString());
-                                          if (_slecetedRow.sortIdx == 0) {
-                                            _index = 1;
-                                          } else {
-                                            _index = _slecetedRow.sortIdx;
-                                          }
+                                          // print("Index selected is>>" +
+                                          //     _slecetedRow.sortIdx.toString());
+                                          // if (_slecetedRow.sortIdx == 0) {
+                                          //   _index = 1;
+                                          // } else {
+                                          //   _index = _slecetedRow.sortIdx;
+                                          // }
 
-                                          stateManager.resetScrollToZero();
-                                          stateManager.moveScrollByRow(
-                                              PlutoMoveDirection.down,
-                                              _slecetedRow.sortIdx);
-                                          stateManager.setKeepFocus(false);
+                                          // stateManager.resetScrollToZero();
+                                          // stateManager.moveScrollByRow(
+                                          //     PlutoMoveDirection.down,
+                                          //     _slecetedRow.sortIdx);
+                                          // stateManager.setKeepFocus(false);
                                           // for (var element in stateManager
                                           //     .rows) {
                                           //   stateManager.setRowChecked(
@@ -2925,24 +2314,24 @@ class DataGridMenu {
                                           // }
                                           // stateManager.setRowChecked(
                                           //     _slecetedRow, true, notify: true);
-                                          if (stateManager.currentRow != null &&
-                                              stateManager
-                                                      .currentRow?.sortIdx ==
-                                                  0 &&
-                                              _slecetedRow.sortIdx == 2) {
-                                            stateManager.setCurrentCell(
-                                                stateManager
-                                                    .getRowByIdx(
-                                                        _slecetedRow.sortIdx -
-                                                            1)
-                                                    ?.cells[_selectedColumn],
-                                                _slecetedRow.sortIdx - 1);
-                                          } else {
-                                            stateManager.setCurrentCell(
-                                                _slecetedRow
-                                                    .cells[_selectedColumn],
-                                                _slecetedRow.sortIdx);
-                                          }
+                                          // if (stateManager.currentRow != null &&
+                                          //     stateManager
+                                          //             .currentRow?.sortIdx ==
+                                          //         0 &&
+                                          //     _slecetedRow.sortIdx == 2) {
+                                          //   stateManager.setCurrentCell(
+                                          //       stateManager
+                                          //           .getRowByIdx(
+                                          //               _slecetedRow.sortIdx -
+                                          //                   1)
+                                          //           ?.cells[_selectedColumn],
+                                          //       _slecetedRow.sortIdx - 1);
+                                          // } else {
+                                          //   stateManager.setCurrentCell(
+                                          //       _slecetedRow
+                                          //           .cells[_selectedColumn],
+                                          //       _slecetedRow.sortIdx);
+                                          // }
                                         }
                                       }
                                     },
