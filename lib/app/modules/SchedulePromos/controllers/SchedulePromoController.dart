@@ -216,11 +216,11 @@ class SchedulePromoController extends GetxController {
     calcaulateExceed(index);
   }
 
-  handleDoubleTapInRightTable(int index, String col) {
+  handleDoubleTapInRightTable(int? index, String col) {
     if (promoScheduled.isEmpty) {
-      LoadingDialog.showErrorDialog("ProgramSegaments can't be empty");
+      LoadingDialog.showErrorDialog("ProgramSegments can't be empty");
     } else {
-      searchPromoSelectedIdx = index;
+      searchPromoSelectedIdx = index??0;
       searchedPromoStateManager?.setCurrentCell(
           searchedPromoStateManager
               ?.getRowByIdx(searchPromoSelectedIdx)
@@ -254,7 +254,7 @@ class SchedulePromoController extends GetxController {
       schedulePromoSelectedIdx = schedulePromoSelectedIdx + 1;
       promoScheduled.refresh();
       scheduledTC.text = Utils.convertToTimeFromDouble(
-          value: (Utils.convertToSecond(value: scheduledTC.text)) +
+          value: (Utils.oldBMSConvertToSecondsValue(value: scheduledTC.text)) +
               (tempRightModel['duration'] ?? 0));
       calcaulateExceed(fpcSelectedIdx);
       countTC.text = promoScheduled.length.toString();
