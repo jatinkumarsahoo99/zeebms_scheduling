@@ -7,6 +7,7 @@ import 'package:bms_scheduling/app/providers/ApiFactory.dart';
 import 'package:bms_scheduling/app/routes/app_pages.dart';
 import 'package:bms_scheduling/widgets/LoadingDialog.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:get/get.dart';
 import 'package:intl/intl.dart';
 
@@ -99,6 +100,7 @@ class FillerMasterController extends GetxController {
     singerCtr.clear();
     musicDirectorCtr.clear();
     musicCompanyCtr.clear();
+    fillerCode = "";
     selectedDropDowns = List.generate(20, (index) => null);
     if (onloadModel?.fillerMasterOnload?.lsttapesource != null &&
         onloadModel!.fillerMasterOnload!.lsttapesource!.isNotEmpty) {
@@ -117,7 +119,16 @@ class FillerMasterController extends GetxController {
   @override
   void onInit() {
     selectedDropDowns = List.generate(20, (index) => null);
-
+    eomFN = FocusNode(
+      onKeyEvent: (node, event) {
+        if (event.logicalKey == LogicalKeyboardKey.tab &&
+            event is KeyDownEvent) {
+          calculateDuration();
+          return KeyEventResult.ignored;
+        }
+        return KeyEventResult.ignored;
+      },
+    );
     formPermissions =
         Utils.fetchPermissions1(Routes.FILLER_MASTER.replaceAll("/", ""));
     super.onInit();
@@ -181,15 +192,11 @@ class FillerMasterController extends GetxController {
     fillerNameFN.addListener(() async {
       if (!fillerNameFN.hasFocus) {
         if (fillerNameCtr.text.isNotEmpty) {
-          txCaptionCtr.text = fillerNameCtr.text;
+          txCaptionCtr.text = fillerNameCtr.text.capitalizeFirst!;
+          fillerNameCtr.text = fillerNameCtr.text.capitalizeFirst!;
           await retrievRecord(text: fillerNameCtr.text.trim());
           closeDialogIfOpen();
         }
-      }
-    });
-    eomFN.addListener(() {
-      if (!eomFN.hasFocus) {
-        calculateDuration();
       }
     });
   }
@@ -653,8 +660,6 @@ class FillerMasterController extends GetxController {
       LoadingDialog.showErrorDialog("Banner cannot be empty.");
     } else if (startDate.isAfter(endDate)) {
       LoadingDialog.showErrorDialog("Start date should not more than end date");
-    } else if (endDate.isBefore(DateTime.now())) {
-      LoadingDialog.showErrorDialog("End date should not less than today.");
     } else {
       LoadingDialog.call();
       Get.find<ConnectorControl>().POSTMETHOD(
@@ -708,12 +713,12 @@ class FillerMasterController extends GetxController {
           "musicCompany": musicCompanyCtr.text,
           "releaseYear": releaseYearCtr.text,
           "grade": selectedDropDowns[15]?.key, //
-          "moodCode": num.tryParse(selectedDropDowns[13]?.key ?? "0") ?? 0,
-          "energyCode": num.tryParse(selectedDropDowns[10]?.key ?? "0") ?? 0,
-          "tempoCode": num.tryParse(selectedDropDowns[14]?.key ?? "0") ?? 0,
-          "eraCode": num.tryParse(selectedDropDowns[11]?.key ?? "0") ?? 0,
-          "gradeCode": num.tryParse(selectedDropDowns[12]?.key ?? "0") ?? 0, //
-          "regioncode": num.tryParse(selectedDropDowns[9]?.key ?? "0") ?? 0, //
+          "moodCode": num.tryParse(selectedDropDowns[13]?.key ?? ""),
+          "energyCode": num.tryParse(selectedDropDowns[10]?.key ?? ""),
+          "tempoCode": num.tryParse(selectedDropDowns[14]?.key ?? ""),
+          "eraCode": num.tryParse(selectedDropDowns[11]?.key ?? ""),
+          "gradeCode": num.tryParse(selectedDropDowns[12]?.key ?? ""), //
+          "regioncode": num.tryParse(selectedDropDowns[9]?.key ?? ""), //
           "lstAnnotation": rightDataTable.value.map((e) => e.toJson()).toList(),
         },
       );

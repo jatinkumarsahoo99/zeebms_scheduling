@@ -1,5 +1,5 @@
 import 'package:bms_scheduling/app/modules/RoBooking/controllers/ro_booking_controller.dart';
-import 'package:bms_scheduling/app/modules/promos/promo_model.dart';
+import 'package:bms_scheduling/app/modules/SchedulePromos/promo_model.dart';
 import 'package:bms_scheduling/app/providers/Utils.dart';
 import 'package:bms_scheduling/app/routes/app_pages.dart';
 import 'package:bms_scheduling/widgets/DataGridShowOnly.dart';
@@ -20,7 +20,7 @@ import '../../../controller/MainController.dart';
 import '../../../data/PermissionModel.dart';
 import '../../../data/user_data_settings_model.dart';
 import '../../CommonSearch/views/common_search_view.dart';
-import '../controllers/promos_controller.dart';
+import '../controllers/SchedulePromoController.dart';
 
 class SchedulePromoView extends StatelessWidget {
   SchedulePromoView({Key? key}) : super(key: key);
@@ -307,9 +307,11 @@ class SchedulePromoView extends StatelessWidget {
                                                       .onKeyEvent = (node, event) {
                                                     print("Key Pressed");
                                                     if (event is KeyDownEvent &&
-                                                        event.logicalKey ==
+                                                        (event.logicalKey ==
                                                             LogicalKeyboardKey
-                                                                .delete) {
+                                                                .delete || event.logicalKey ==
+                                                            LogicalKeyboardKey
+                                                                .backspace)) {
                                                       print("Delete Pressed");
                                                       if (controller
                                                               .scheduledPromoStateManager
@@ -365,9 +367,12 @@ class SchedulePromoView extends StatelessWidget {
                                                                       true);
                                                         }
                                                       }
+                                                      return KeyEventResult
+                                                          .handled;
+                                                    }else {
+                                                      return KeyEventResult
+                                                          .ignored;
                                                     }
-                                                    return KeyEventResult
-                                                        .skipRemainingHandlers;
                                                   };
                                                 },
                                                 onSelected: (row) => controller
@@ -583,6 +588,14 @@ class SchedulePromoView extends StatelessWidget {
                                                       .setSelectingMode(
                                                           PlutoGridSelectingMode
                                                               .cell);
+                                                  if(controller
+                                                      .searchPromos.value.isNotEmpty) {
+                                                    event.stateManager
+                                                        .setCurrentCell(
+                                                        event.stateManager
+                                                            .rows[0].cells
+                                                            .values.first, 0);
+                                                  }
                                                   event.stateManager
                                                       .setSelecting(true);
                                                   if (controller

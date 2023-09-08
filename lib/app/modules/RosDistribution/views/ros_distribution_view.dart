@@ -138,7 +138,7 @@ class RosDistributionView extends GetView<RosDistributionController> {
                             ? Colors.deepPurple.shade200
                             : Colors.white,
                         hideKeys: ['rid'],
-                        widthRatio: 220,
+                        // widthRatio: 220,
                         hideCode: false,
 
                         onSelected: (row) =>

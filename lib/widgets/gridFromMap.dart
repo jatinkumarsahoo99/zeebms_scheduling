@@ -36,7 +36,7 @@ class DataGridFromMap extends StatelessWidget {
       this.actionIcon,
       this.keyMapping,
       this.actionIconKey,
-      this.columnAutoResize = true,
+      this.columnAutoResize = false,
       this.actionOnPress,
       this.onSelected,
       this.onRowCheck,
@@ -283,10 +283,14 @@ class DataGridFromMap extends StatelessWidget {
         segColumn.add(PlutoColumn(
             titlePadding: EdgeInsets.only(),
             title: doPasccal
-                ? key == "fpcCaption"
-                    ? "FPC Caption"
+                ? keyMapping != null
+                    ? keyMapping!.containsKey(key)
+                        ? keyMapping![key]
+                        : key == "fpcCaption"
+                            ? "FPC Caption"
+                            : key.toString().pascalCaseToNormal()
                     : key.toString().pascalCaseToNormal()
-                : key,
+                : key.toString(),
             enableRowChecked:
                 (checkRow == true && key == checkRowKey) ? true : false,
             renderer: ((rendererContext) {
@@ -921,7 +925,7 @@ class DataGridFromMap4 extends StatelessWidget {
       this.actionIcon,
       this.keyMapping,
       this.actionIconKey,
-      this.columnAutoResize = true,
+      this.columnAutoResize = false,
       this.actionOnPress,
       this.onSelected,
       this.onRowCheck,

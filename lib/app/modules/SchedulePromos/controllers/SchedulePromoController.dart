@@ -216,11 +216,11 @@ class SchedulePromoController extends GetxController {
     calcaulateExceed(index);
   }
 
-  handleDoubleTapInRightTable(int index, String col) {
+  handleDoubleTapInRightTable(int? index, String col) {
     if (promoScheduled.isEmpty) {
-      LoadingDialog.showErrorDialog("ProgramSegaments can't be empty");
+      LoadingDialog.showErrorDialog("ProgramSegments can't be empty");
     } else {
-      searchPromoSelectedIdx = index;
+      searchPromoSelectedIdx = index??0;
       searchedPromoStateManager?.setCurrentCell(
           searchedPromoStateManager
               ?.getRowByIdx(searchPromoSelectedIdx)
@@ -254,7 +254,7 @@ class SchedulePromoController extends GetxController {
       schedulePromoSelectedIdx = schedulePromoSelectedIdx + 1;
       promoScheduled.refresh();
       scheduledTC.text = Utils.convertToTimeFromDouble(
-          value: (Utils.convertToSecond(value: scheduledTC.text)) +
+          value: (Utils.oldBMSConvertToSecondsValue(value: scheduledTC.text)) +
               (tempRightModel['duration'] ?? 0));
       calcaulateExceed(fpcSelectedIdx);
       countTC.text = promoScheduled.length.toString();
@@ -269,10 +269,10 @@ class SchedulePromoController extends GetxController {
             ?.where((element) => timeBand.value == element.telecastTime)
             .toList() ??
         [];
-    int _totalPromoTime = 0;
+    num _totalPromoTime = 0;
     for (var promo in promos) {
       _totalPromoTime = _totalPromoTime +
-          Utils.convertToSecond(value: promo.promoDuration ?? "00:00:00:00");
+          Utils.oldBMSConvertToSecondsValue(value: promo.promoDuration ?? "00:00:00:00");
     }
     if (_totalPromoTime > (promoData?.dailyFPC?[index].promoCap ?? 0)) {
       dailyFpc[index].exceed = true;
@@ -280,7 +280,8 @@ class SchedulePromoController extends GetxController {
       dailyFpc[index].exceed = false;
     }
 
-    scheduledTC.text = Utils.getDurationSecond(second: _totalPromoTime);
+    // scheduledTC.text = Utils.getDurationSecond(second: _totalPromoTime);
+    scheduledTC.text = Utils.convertToTimeFromDouble(value: _totalPromoTime);
     countTC.text = promoScheduled.length.toString();
     dailyFpc.refresh();
     if (focusBackGrid) {
