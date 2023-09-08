@@ -65,7 +65,7 @@ class LstAsrunlog2 {
   String? scheduleTime;
   String? exportTapeCode;
   String? exportTapeCaption;
-  double? spotamount;
+  String? spotamount;
   int? tapeDuration;
   String? telecastTime;
   String? dealno;
@@ -122,7 +122,7 @@ class LstAsrunlog2 {
     scheduleTime = json['scheduleTime'];
     exportTapeCode = json['exportTapeCode'];
     exportTapeCaption = json['exportTapeCaption'];
-    spotamount = json['spotamount'];
+    spotamount = (json['spotamount']??"0").toString();
     tapeDuration = json['tapeDuration'];
     telecastTime = json['telecastTime'];
     dealno = json['dealno'];
@@ -253,6 +253,7 @@ class LstAsrunlog1 {
     data['remark'] = this.remark;
     return data;
   }
+
   Map<String, dynamic> toJson1() {
     final Map<String, dynamic> data = new Map<String, dynamic>();
 
@@ -266,4 +267,5 @@ class LstAsrunlog1 {
 
     return data;
   }
+
 }

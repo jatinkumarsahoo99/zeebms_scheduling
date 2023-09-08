@@ -71,6 +71,9 @@ class SalesAuditExtraSpotsReportController extends GetxController {
     if (selectedLocation == null || selectedChannel == null) {
       LoadingDialog.showErrorDialog("Please select Location, Channel");
       return;
+    }else if((DateFormat('dd-MM-yyyy').parse(fromDateIDCtr.text)).isAfter(DateFormat('dd-MM-yyyy').parse(toDateCtr.text)) ){
+      LoadingDialog.showErrorDialog("Please select from date and to date in proper order");
+      return;
     } else {
       LoadingDialog.call();
       Get.find<ConnectorControl>().POSTMETHOD(
