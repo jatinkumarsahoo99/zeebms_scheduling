@@ -336,6 +336,29 @@ class FillerMasterView extends GetView<FillerMasterController> {
                                           maxLen: 80,
                                           padLeft: 0,
                                         ),
+                                        InputFields.formField1(
+                                          hintTxt: "Singer",
+                                          controller: controller.singerCtr,
+                                          width: 0.17,
+                                          maxLen: 80,
+                                          padLeft: 0,
+                                        ),
+                                        InputFields.formField1(
+                                          hintTxt: "Music Director",
+                                          controller:
+                                              controller.musicDirectorCtr,
+                                          width: 0.17,
+                                          maxLen: 80,
+                                          padLeft: 0,
+                                        ),
+                                        InputFields.formField1(
+                                          hintTxt: "Music company",
+                                          controller:
+                                              controller.musicCompanyCtr,
+                                          width: 0.17,
+                                          maxLen: 80,
+                                          padLeft: 0,
+                                        ),
                                         DropDownField.formDropDown1WidthMap(
                                           controller
                                                   .onloadModel

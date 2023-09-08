@@ -46,10 +46,10 @@ class CommercialMasterController extends GetxController {
   DropDownValue? selectedRevenueType;
   DropDownValue? selectedTapeType;
   DropDownValue? selectedCensorShipType;
-  DropDownValue? selectedSecType;
-  DropDownValue? selectedClientDetails;
-  DropDownValue? selectedAgencyDetails;
-  DropDownValue? selectedBrandType;
+  Rxn<DropDownValue>? selectedSecType = Rxn<DropDownValue>(null);
+  Rxn<DropDownValue> ? selectedClientDetails= Rxn<DropDownValue>(null);
+  Rxn<DropDownValue> ? selectedAgencyDetails= Rxn<DropDownValue>(null);
+  Rxn<DropDownValue> ? selectedBrandType= Rxn<DropDownValue>(null);
   DropDownValue? selectedEvent;
 
   TextEditingController clientController = TextEditingController();
@@ -107,12 +107,95 @@ class CommercialMasterController extends GetxController {
   // bool segEnable = true;
   bool isListenerActive = false;
 
+  String replaceInvalidChar(String text, {bool upperCase = false}) {
+    text = text.trim();
+    if (upperCase == false) {
+      text = text.toLowerCase();
+      text = text
+          .split(' ')
+          .map((word) =>
+      word.isNotEmpty ? word[0].toUpperCase() + word.substring(1) : '')
+          .join(' ');
+    } else {
+      text = text.toUpperCase();
+    }
+    text = text.replaceAll("'", "`");
+    return text;
+  }
+
   @override
   void onInit() {
     duration.value.text = "00:00:00:00";
     segController.text = '1';
     getAllDropDownList();
-    captionFocus.addListener(() {
+
+    captionFocus = FocusNode(
+      onKeyEvent: (node, event) {
+        if (event.logicalKey == LogicalKeyboardKey.tab) {
+          if ( captionController.text != null && captionController.text != "") {
+            captionController.text = replaceInvalidChar(captionController.text,upperCase: true) ;
+            txCaptionController.text =
+                captionController.text;
+            fetchCommercialTapeMasterData(captionController.text, "", 0, "");
+          }
+          return KeyEventResult.ignored;
+        }
+        return KeyEventResult.ignored;
+      },
+    );
+
+    txNoFocus = FocusNode(
+      onKeyEvent: (node, event) {
+        if (event.logicalKey == LogicalKeyboardKey.tab) {
+          validateTxNo(txNoController.text, "", "");
+          return KeyEventResult.ignored;
+        }
+        return KeyEventResult.ignored;
+      },
+    );
+
+    tapeIdFocus = FocusNode(
+      onKeyEvent: (node, event) {
+        if (event.logicalKey == LogicalKeyboardKey.tab) {
+          if (tapeIdController.value.text != null &&
+              tapeIdController.value.text != "") {
+            txNoController.text =
+                "${tapeIdController.value.text}-${segController.text}";
+            fetchCommercialTapeMasterData("", tapeIdController.value.text,
+                int.parse((segController.text) ?? "0"), "");
+            // validateTxNo("", tapeIdController.value.text, segController.text);
+          }
+          return KeyEventResult.ignored;
+        }
+        return KeyEventResult.ignored;
+      },
+    );
+
+    clockIdFocus = FocusNode(
+      onKeyEvent: (node, event) {
+        if (event.logicalKey == LogicalKeyboardKey.tab) {
+          if (clockIdController.text != "" && clockIdController.text != null) {
+            if(tapeIdController.value.text == ""){
+              fetchCommercialTapeMasterData("", "", 0, clockIdController.text);
+            }
+          }
+          return KeyEventResult.ignored;
+        }
+        return KeyEventResult.ignored;
+      },
+    );
+
+    segNoFocus = FocusNode(
+      onKeyEvent: (node, event) {
+        if (event.logicalKey == LogicalKeyboardKey.tab) {
+          validateTxNo1("", tapeIdController.value.text, segController.text);
+          return KeyEventResult.ignored;
+        }
+        return KeyEventResult.ignored;
+      },
+    );
+
+    /* captionFocus.addListener(() {
       if (isListenerActive && !captionFocus.hasFocus) {
         print("api called on focus changed");
         if (captionController.text != "" && captionController.text != null) {
@@ -125,6 +208,7 @@ class CommercialMasterController extends GetxController {
         isListenerActive = true;
       }
     });
+
     tapeIdFocus.addListener(() {
       if (isListenerActive && !tapeIdFocus.hasFocus) {
         if (tapeIdController.value.text != null &&
@@ -139,6 +223,7 @@ class CommercialMasterController extends GetxController {
         isListenerActive = true;
       }
     });
+
     txNoFocus.addListener(() {
       if (isListenerActive && !txNoFocus.hasFocus) {
         validateTxNo(txNoController.text, "", "");
@@ -147,6 +232,7 @@ class CommercialMasterController extends GetxController {
         isListenerActive = true;
       }
     });
+
     clockIdFocus.addListener(() {
       if (isListenerActive && !(clockIdFocus.hasFocus)) {
         if (clockIdController.text != "" && clockIdController.text != null) {
@@ -157,6 +243,8 @@ class CommercialMasterController extends GetxController {
         isListenerActive = true;
       }
     });
+
+
     segNoFocus.addListener(() {
       if (isListenerActive && (segNoFocus.hasFocus == false)) {
         print("listener call");
@@ -166,7 +254,7 @@ class CommercialMasterController extends GetxController {
         // txNoController.text = tapeIdController.value.text + "-" + segController.text;
         isListenerActive = true;
       }
-    });
+    });*/
 
     super.onInit();
   }
@@ -226,10 +314,18 @@ class CommercialMasterController extends GetxController {
         Utils.oldBMSConvertToSecondsValue(value: somController.text);
     num secondEom =
         Utils.oldBMSConvertToSecondsValue(value: eomController.text);
-    duration.value.text =
-        Utils.convertToTimeFromDouble(value: secondEom - secondSom);
 
-    var sec = Utils.oldBMSConvertToSecondsValue(value: duration.value.text);
+    var sec;
+    if (eomController.text.length >= 11) {
+      if ((secondEom - secondSom) < 0) {
+        LoadingDialog.showErrorDialog("EOM should not be less than SOM.");
+      } else {
+        duration.value.text =
+            Utils.convertToTimeFromDouble(value: secondEom - secondSom);
+
+         sec = Utils.oldBMSConvertToSecondsValue(value: duration.value.text);
+      }
+    }
 
     print(">>>>>>>>>" + duration.value.text);
     print(">>>>>>>>>" + sec.toString());
@@ -270,16 +366,11 @@ class CommercialMasterController extends GetxController {
       Snack.callError("Please select brand");
     } else if (selectedAgencyDetails == null) {
       Snack.callError("Please select Agency.");
-    } else if ((commercialCode != "0" && commercialCode != "") && contin) {
+    } else if ((commercialCode != "0" && commercialCode != "")) {
       LoadingDialog.recordExists("Do you want to modify it?", () {
         isEnable = true;
-        isEnableSelective = true;
-        isListenerActive = false;
-        contin = false;
-        update(['updateLeft']);
-      }, cancel: () {
-        contin = false;
         callSaveApi();
+        update(['updateLeft']);
       });
     } else {
       callSaveApi();
@@ -287,14 +378,24 @@ class CommercialMasterController extends GetxController {
   }
 
   callSaveApi() {
+    LoadingDialog.recordExists(
+        "End Date selected is ${DateFormat('MM/dd/yyyy hh:mm:ss a').format(DateFormat("dd-MM-yyyy").parse(endDateController.text))}. Want to proceed?",
+        () {
+      isEnable = true;
+      callSaveBtnApi();
+      update(['updateLeft']);
+    });
+  }
+
+  callSaveBtnApi() {
     LoadingDialog.call();
     CommercialTapeMasterPostData commercialTapeMasterPostData =
-        new CommercialTapeMasterPostData(
+        CommercialTapeMasterPostData(
             commercialCaption: captionController.text,
             exportTapeCaption: txCaptionController.text,
-            agencyCode: selectedAgencyDetails?.key ?? "",
+            agencyCode: selectedAgencyDetails?.value?.key ?? "",
             agencytapeid: agencyIdController.text,
-            brandCode: selectedBrandType?.key ?? "",
+            brandCode: selectedBrandType?.value?.key ?? "",
             censorshipCode: selectedCensorShipType?.key ?? "",
             clockid: clockIdController.text,
             commercialCode: commercialCode ?? "0",
@@ -307,7 +408,7 @@ class CommercialMasterController extends GetxController {
                 DateFormat("dd-MM-yyyy").parse(dispatchDateController.text)),
             killDate: DateFormat('M/d/yyyy hh:mm:ss a')
                 .format(DateFormat("dd-MM-yyyy").parse(endDateController.text)),
-            eventsubtype: selectedSecType?.key ?? "",
+            eventsubtype: selectedSecType?.value?.key ?? "",
             eventtypecode: selectedRevenueType?.key ?? "",
             houseID: txNoController.text,
             segmentNumber: segController.text,
@@ -317,14 +418,13 @@ class CommercialMasterController extends GetxController {
             annotations: eventList,
             recievedOn:
                 DateFormat('M/d/yyyy hh:mm:ss a').format(DateTime.now()));
-    print((jsonEncode(commercialTapeMasterPostData.toJson())));
+    // print((jsonEncode(commercialTapeMasterPostData.toJson())));
 
     Get.find<ConnectorControl>().POSTMETHOD(
         api: ApiFactory.COMMERCIAL_MASTER_SAVE_COMMERCIALTAPE,
         json: commercialTapeMasterPostData.toJson(),
         fun: (map) {
           Get.back();
-          print("map>>>>>" + map.toString());
           if (map is Map && map.containsKey("isError")) {
             if (map['isError'] == false) {
               LoadingDialog.callDataSavedMessage(
@@ -342,11 +442,13 @@ class CommercialMasterController extends GetxController {
               }
             } else {
               // Get.back();
-              Snack.callError((map ?? "Something went wrong").toString());
+              LoadingDialog.showErrorDialog(
+                  (map ?? "Something went wrong").toString());
             }
           } else {
             // Get.back();
-            Snack.callError((map ?? "Something went wrong").toString());
+            LoadingDialog.showErrorDialog(
+                (map ?? "Something went wrong").toString());
           }
         });
   }
@@ -384,6 +486,13 @@ class CommercialMasterController extends GetxController {
               language.clear();
               map['language'].forEach((e) {
                 language.add(DropDownValue.fromJson1(e));
+              });
+            }
+            // secType
+            if (map.containsKey("secType") && map["secType"].length > 0) {
+              secType.clear();
+              map['secType'].forEach((e) {
+                secType.add(DropDownValue.fromJson1(e));
               });
             }
             if (map.containsKey("revenueType") &&
@@ -431,17 +540,26 @@ class CommercialMasterController extends GetxController {
     });
   }
 
-  getSecType(String key) {
+  getSecType(String key,{int ? keyName}) {
     Get.find<ConnectorControl>().GETMETHODCALL(
         api: ApiFactory.COMMERCIAL_MASTER_GETSECTYPE + key,
-        fun: (List<dynamic> map) {
-          log("map" + map.toString());
-          secType.clear();
+        fun: ( map) {
           if (map is List && map.isNotEmpty) {
-            map.forEach((e) {
+            secType.clear();
+            for (var e in map) {
               secType.add(
                   DropDownValue.fromJsonDynamic(e, "eventCode", "eventName"));
-            });
+            }
+            if( keyName != null){
+              for (var element in secType) {
+                if(element.key.toString().trim() == keyName.toString().trim()){
+                  selectedSecType?.value = DropDownValue(key:element.key.toString() ,value:element.value??"");
+                  selectedSecType?.refresh();
+                  break;
+                }
+              }
+            }
+
           }
         });
   }
@@ -449,49 +567,64 @@ class CommercialMasterController extends GetxController {
   getClientDetails(String clientName) {
     Get.find<ConnectorControl>().GETMETHODCALL(
         api: ApiFactory.COMMERCIAL_MASTER_GETCLIENTDETAILS + clientName,
-        fun: (List<dynamic> map) {
-          clientDetails.clear();
+        fun: ( map) {
           if (map is List && map.isNotEmpty) {
-            map.forEach((e) {
+            clientDetails.clear();
+
+            for (var e in map) {
               clientDetails.add(
                   DropDownValue.fromJsonDynamic(e, "clientCode", "clientName"));
-            });
+            }
           }
         });
   }
 
-  getAgencyBrandType(String clientCode) {
-    Get.find<ConnectorControl>().GETMETHODCALL(
-        api: ApiFactory.COMMERCIAL_MASTER_GETAGENCYBRAND + clientCode,
-        fun: (Map map) {
-          if (map is Map) {
-            log("agencyType" + map['agencyType'].toString());
-            agencyDetails.clear();
-            agencyDetailsMaster.clear();
-            brandType.clear();
-            selectedBrandType = null;
-            selectedAgencyDetails = null;
-            agencyNameController.text = "";
-            if (map.containsKey('agencyType') && map['agencyType'].length > 0) {
-              log("agencyType" + map['agencyType'].toString());
+  getAgencyBrandType(String clientCode,{String? agName,String? agKey,
+    String? braName,String ?braKey}) {
+    try{
+      Get.find<ConnectorControl>().GETMETHODCALL(
+          api: ApiFactory.COMMERCIAL_MASTER_GETAGENCYBRAND + clientCode,
+          fun: ( map) {
+            if (map is Map) {
               agencyDetails.clear();
               agencyDetailsMaster.clear();
-              map['agencyType'].forEach((e) {
-                agencyDetails.add(DropDownValue.fromJsonDynamic(
-                    e, "agencyCode", "agencyName"));
-                agencyDetailsMaster.add(DropDownValue.fromJsonDynamic(
-                    e, "agencyCode", "agencyName"));
-              });
-            }
-            if (map.containsKey('brandType') && map['brandType'].length > 0) {
               brandType.clear();
-              map['brandType'].forEach((e) {
-                brandType.add(
-                    DropDownValue.fromJsonDynamic(e, "brandCode", "brandName"));
-              });
+              selectedBrandType = Rxn<DropDownValue>(null);
+              selectedAgencyDetails = Rxn<DropDownValue>(null);
+              agencyNameController.text = "";
+              if (map.containsKey('agencyType') && map['agencyType'].length > 0) {
+                agencyDetails.clear();
+                agencyDetailsMaster.clear();
+                map['agencyType'].forEach((e) {
+                  agencyDetails.add(DropDownValue.fromJsonDynamic(
+                      e, "agencyCode", "agencyName"));
+                  agencyDetailsMaster.add(DropDownValue.fromJsonDynamic(
+                      e, "agencyCode", "agencyName"));
+                });
+
+
+              }
+              if(agKey != null && agName != null && agKey.trim() != "" && agName.trim() != ""){
+                selectedAgencyDetails?.value = DropDownValue(value:agName ,key:agKey );
+                agencyNameController.text = agName;
+                selectedAgencyDetails?.refresh();
+              }
+              if (map.containsKey('brandType') && map['brandType'].length > 0) {
+                brandType.clear();
+                map['brandType'].forEach((e) {
+                  brandType.add(DropDownValue.fromJsonDynamic(e, "brandCode", "brandName"));
+                });
+              }
+              if(braKey != null && braName != null && braKey.trim() != "" && braName.trim() != ""){
+                selectedBrandType?.value = DropDownValue(value:braName ,key:braKey );
+                selectedBrandType?.refresh();
+              }
             }
-          }
-        });
+          });
+    }catch(e){
+
+    }
+
   }
 
   getLevelDetails(String brandCode) {
@@ -558,12 +691,10 @@ class CommercialMasterController extends GetxController {
       "houseid": houseId ?? ""
     };
     isListenerActive = false;
-    print(">>>>" + postData.toString());
     Get.find<ConnectorControl>().POSTMETHOD(
         api: ApiFactory.COMMERCIAL_MASTER_VALIDATE_TXNO,
         json: postData,
         fun: (map) {
-          log("genericMessage>>>>" + map.toString());
           if (map is Map) {
             if (map['isError'] == false) {
               if (map['genericMessage'] != null &&
@@ -609,7 +740,7 @@ class CommercialMasterController extends GetxController {
   getAgencyDetails(String data) {
     Map<String, dynamic> postData = {
       "AgencyName": data,
-      "clientCode": selectedClientDetails!.key ?? "",
+      "clientCode": selectedClientDetails?.value?.key ?? "",
     };
     Get.find<ConnectorControl>().POSTMETHOD(
         api: ApiFactory.COMMERCIAL_MASTER_GET_AGENCYDETAILS,
@@ -646,22 +777,15 @@ class CommercialMasterController extends GetxController {
       "clockid": clockId ?? ""
     };
     // Get.back();
-    print("postData>>>" + postData.toString());
     Get.find<ConnectorControl>().POSTMETHOD(
         api: ApiFactory.COMMERCIAL_MASTER_GET_COMMERCIALTAPEMASTER,
         json: postData,
         fun: (map) {
           closeDialogIfOpen();
-          log("map>>> " + map.toString());
           if (map is List && map.isNotEmpty) {
             commercialTapeMasterData =
                 CommercialTapeMasterData.fromJson(map[0]);
             eventList.clear();
-            print(">>>>" + commercialTapeMasterData!.toJson().toString());
-            // selectedLanguage =  ;
-            /*selectedLanguage = language
-                .where((el) => el.key == commercialTapeMasterData!.languagecode)
-                .toList()[0];*/
 
             for (var element in language) {
               if (element.key == commercialTapeMasterData!.languagecode) {
@@ -702,32 +826,36 @@ class CommercialMasterController extends GetxController {
                     (p0) => p0.key == commercialTapeMasterData!.censorshipCode)
                 .toList()[0];*/
 
-            selectedSecType = DropDownValue(
-                key: commercialTapeMasterData!.eventsubtype.toString() ?? "",
-                value: selectedRevenueType!.value);
-
-            selectedClientDetails = DropDownValue(
-                value: commercialTapeMasterData!.clientName,
-                key: commercialTapeMasterData!.clientCode);
+            selectedClientDetails?.value = DropDownValue(
+                value: commercialTapeMasterData?.clientName,
+                key: commercialTapeMasterData?.clientCode);
             clientController.text = commercialTapeMasterData!.clientName ?? "";
 
-            selectedAgencyDetails = DropDownValue(
-                value: commercialTapeMasterData!.agencyName,
-                key: commercialTapeMasterData!.agencyCode);
+            /*selectedAgencyDetails?.value = DropDownValue(
+                value: commercialTapeMasterData?.agencyName,
+                key: commercialTapeMasterData?.agencyCode);
 
-            selectedBrandType = DropDownValue(
-                value: commercialTapeMasterData!.brandName,
-                key: commercialTapeMasterData!.brandCode);
+            selectedBrandType?.value = DropDownValue(
+                value: commercialTapeMasterData?.brandName,
+                key: commercialTapeMasterData?.brandCode);*/
+
+            getSecType(selectedRevenueType?.key??"",keyName:commercialTapeMasterData?.eventsubtype);
+
+            getAgencyBrandType(commercialTapeMasterData?.clientCode??"",
+                agKey:commercialTapeMasterData?.agencyCode,
+                agName: commercialTapeMasterData?.agencyName,
+                braKey: commercialTapeMasterData?.brandCode ,
+                braName: commercialTapeMasterData?.brandName  );
 
             agencyNameController.text =
                 commercialTapeMasterData!.agencyName ?? "";
 
-            level1Controller.text = commercialTapeMasterData!.level1Name ?? "";
-            level2Controller.text = commercialTapeMasterData!.level2Name ?? "";
-            level3Controller.text = commercialTapeMasterData!.level3Name ?? "";
+            level1Controller.text = commercialTapeMasterData?.level1Name ?? "";
+            level2Controller.text = commercialTapeMasterData?.level2Name ?? "";
+            level3Controller.text = commercialTapeMasterData?.level3Name ?? "";
 
-            somController.text = commercialTapeMasterData!.som ?? "";
-            eomController.text = commercialTapeMasterData!.eom ?? "";
+            somController.text = commercialTapeMasterData?.som ?? "";
+            eomController.text = commercialTapeMasterData?.eom ?? "";
 
             num secondSom =
                 Utils.oldBMSConvertToSecondsValue(value: somController.text);
@@ -737,31 +865,30 @@ class CommercialMasterController extends GetxController {
                 Utils.convertToTimeFromDouble(value: secondEom - secondSom);
 
             agencyIdController.text =
-                commercialTapeMasterData!.agencytapeid ?? "";
+                commercialTapeMasterData?.agencytapeid ?? "";
             // print(">>>>jks "+somController.text);
             tapeIdController.value.text =
-                commercialTapeMasterData!.exportTapeCode ?? "";
+                commercialTapeMasterData?.exportTapeCode ?? "";
 
             durationController.text =
-                commercialTapeMasterData!.commercialDuration.toString() ?? "";
+                commercialTapeMasterData?.commercialDuration.toString() ?? "";
             captionController.text =
-                commercialTapeMasterData!.commercialCaption ?? "";
+                commercialTapeMasterData?.commercialCaption ?? "";
             txCaptionController.text =
-                commercialTapeMasterData!.exportTapeCaption ?? "";
+                commercialTapeMasterData?.exportTapeCaption ?? "";
             segController.text =
-                commercialTapeMasterData!.segmentNumber.toString() ?? "";
+                commercialTapeMasterData?.segmentNumber.toString() ?? "";
             txNoController.text = commercialTapeMasterData!.houseID ?? "";
             // agencyIdController.text=commercialTapeMasterData.ag;
             productNameController.text =
-                commercialTapeMasterData!.productName ?? "";
+                commercialTapeMasterData?.productName ?? "";
             // agencyNameController.text="";
-            clockIdController.text = commercialTapeMasterData!.clockid ?? "";
+            clockIdController.text = commercialTapeMasterData?.clockid ?? "";
             endDateController.text = DateFormat("dd-MM-yyyy").format(
                 df.parse(commercialTapeMasterData!.killDate.toString()));
             dispatchDateController.text = DateFormat("dd-MM-yyyy").format(
                 df.parse(commercialTapeMasterData!.despatchDate.toString()));
             commercialCode = commercialTapeMasterData!.commercialCode ?? "0";
-            print(">>>>jks " + endDateController.text);
             // eventList
             if (commercialTapeMasterData?.lstAnnotation != null &&
                 (commercialTapeMasterData?.lstAnnotation?.length ?? 0) > 0) {
@@ -774,26 +901,22 @@ class CommercialMasterController extends GetxController {
             }
             isEnable = true;
             isEnableSelective = false;
-            isListenerActive = false;
 
             update(['updateLeft', 'eventTable']);
-          } else {
-            isListenerActive = false;
+            clockIdFocus.nextFocus();
           }
         });
   }
 
-  getTapeId() {
+  getTapeId(String? key) {
     // isListenerActive = true;
     Get.find<ConnectorControl>().GETMETHODCALL(
         api: ApiFactory.COMMERCIAL_MASTER_GET_TAPID(
-            selectedRevenueType!.key ?? "", selectedSecType!.key ?? ""),
+            selectedRevenueType!.key ?? "", selectedSecType?.value?.key ?? ""),
         fun: (String map) {
           if (map != "" && map != null) {
             tapeIdController.value.text = map ?? "";
-            // validateTxNo(tapeIdController.value.text +"-"+ segController.text);
-            isListenerActive = false;
-            update(['tapeId']);
+
             fetchCommercialTapeMasterData(
                 "",
                 tapeIdController.value.text,

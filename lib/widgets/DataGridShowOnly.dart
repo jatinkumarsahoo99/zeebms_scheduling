@@ -26,7 +26,7 @@ class DataGridShowOnlyKeys extends StatelessWidget {
     this.actionIcon,
     this.keyMapping,
     this.actionIconKey,
-    this.columnAutoResize = true,
+    this.columnAutoResize = false,
     this.actionOnPress,
     this.rowCheckColor = const Color(0xFFD1C4E9),
     this.onSelected,
@@ -380,9 +380,9 @@ class DataGridShowOnlyKeys extends StatelessWidget {
               onRowChecked: onRowChecked,
               rowColorCallback: colorCallback,
               onLoaded: (load) {
-                load.stateManager.setColumnSizeConfig(PlutoGridColumnSizeConfig(
-                    autoSizeMode: PlutoAutoSizeMode.none,
-                    resizeMode: PlutoResizeMode.normal));
+                // load.stateManager.setColumnSizeConfig(PlutoGridColumnSizeConfig(
+                //     autoSizeMode: PlutoAutoSizeMode.none,
+                //     resizeMode: PlutoResizeMode.normal));
                 load.stateManager.setKeepFocus(false);
                 if (onload != null) {
                   onload!(load);

@@ -45,7 +45,7 @@ PlutoGridConfiguration plutoGridConfiguration({
   Function? actionOnPress,
   String? actionKey,
   double rowHeight = 35,
-  bool autoScale = true,
+  bool autoScale = false,
   Color? checkColor = const Color(0xFFD1C4E9),
   required FocusNode focusNode,
   FocusNode? previousWidgetFN,
@@ -88,6 +88,11 @@ PlutoGridConfiguration plutoGridConfiguration({
                 fontSize: SizeDefine.columnTitleFontSize,
                 fontWeight: FontWeight.bold)),
         enterKeyAction: PlutoGridEnterKeyAction.none,
+        columnSize: PlutoGridColumnSizeConfig(
+          resizeMode: PlutoResizeMode.normal,
+          autoSizeMode:
+              autoScale ? PlutoAutoSizeMode.scale : PlutoAutoSizeMode.none,
+        ),
         tabKeyAction: PlutoGridTabKeyAction.moveToNextOnEdge,
         scrollbar: const PlutoGridScrollbarConfig(
             draggableScrollbar: true, isAlwaysShown: true, hoverWidth: 15));
@@ -95,7 +100,7 @@ PlutoGridConfiguration plutoGridConfiguration({
 PlutoGridConfiguration plutoGridConfigurationTransmisionLog({
   Function? actionOnPress,
   String? actionKey,
-  bool autoScale = true,
+  bool autoScale = false,
   Color? checkColor = const Color(0xFFD1C4E9),
   required FocusNode focusNode,
   FocusNode? previousWidgetFN,
@@ -119,7 +124,7 @@ PlutoGridConfiguration plutoGridConfigurationTransmisionLog({
         columnSize: PlutoGridColumnSizeConfig(
           resizeMode: PlutoResizeMode.normal,
           autoSizeMode:
-              !autoScale ? PlutoAutoSizeMode.scale : PlutoAutoSizeMode.none,
+              autoScale ? PlutoAutoSizeMode.scale : PlutoAutoSizeMode.none,
         ),
         style: PlutoGridStyleConfig(
             rowHeight: 20,
@@ -150,7 +155,7 @@ PlutoGridConfiguration plutoGridConfigurationTransmisionLog({
 PlutoGridConfiguration plutoGridConfiguration2({
   Function(PlutoGridCellPosition index, bool isSpace)? actionOnPress,
   required List<String?> actionKey,
-  bool autoScale = true,
+  bool autoScale = false,
   required FocusNode focusNode,
   FocusNode? previousWidgetFN,
   double rowHeight = 25,
