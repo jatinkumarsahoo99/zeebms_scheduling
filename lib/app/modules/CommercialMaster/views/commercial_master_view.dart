@@ -56,8 +56,6 @@ class CommercialMasterView extends StatelessWidget {
                                 crossAxisAlignment: CrossAxisAlignment.start,
                                 mainAxisSize: MainAxisSize.max,
                                 children: [
-                                  Text(""),
-                                  SizedBox(height: 5),
                                   Expanded(
                                     child: Container(
                                       decoration: BoxDecoration(

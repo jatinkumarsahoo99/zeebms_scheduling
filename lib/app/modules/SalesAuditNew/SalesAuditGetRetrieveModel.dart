@@ -122,7 +122,7 @@ class LstAsrunlog2 {
     scheduleTime = json['scheduleTime'];
     exportTapeCode = json['exportTapeCode'];
     exportTapeCaption = json['exportTapeCaption'];
-    spotamount = (json['spotamount']??"0").toString();
+    spotamount = (json['Spotamount']??"0").toString();
     tapeDuration = json['tapeDuration'];
     telecastTime = json['telecastTime'];
     dealno = json['dealno'];
@@ -153,7 +153,8 @@ class LstAsrunlog2 {
     data['scheduleTime'] = this.scheduleTime;
     data['exportTapeCode'] = this.exportTapeCode;
     data['exportTapeCaption'] = this.exportTapeCaption;
-    data['spotamount'] = this.spotamount;
+    // data['spotamount'] = this.spotamount;
+    data['Spotamount'] = this.spotamount;
     data['tapeDuration'] = this.tapeDuration;
     data['telecastTime'] = this.telecastTime;
     data['dealno'] = this.dealno;
