@@ -43,6 +43,7 @@ class CommercialMasterView extends StatelessWidget {
               child: FocusTraversalGroup(
                 policy: OrderedTraversalPolicy(),
                 child: Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceAround,
                   children: [
                     GetBuilder<CommercialMasterController>(
                         init: controllerX,
@@ -60,7 +61,7 @@ class CommercialMasterView extends StatelessWidget {
                                     child: Container(
                                       decoration: BoxDecoration(
                                           border: Border.all(color: Colors.grey)),
-                                      padding: const EdgeInsets.all(16),
+                                      padding: const EdgeInsets.all(6),
                                       child: Wrap(
                                         crossAxisAlignment: WrapCrossAlignment.end,
                                         spacing: Get.width*0.025,
@@ -441,7 +442,6 @@ class CommercialMasterView extends StatelessWidget {
                             ),
                           );
                         }),
-                    SizedBox(width: 4),
                     Expanded(
                       flex: 8,
                       child: GetBuilder<CommercialMasterController>(
