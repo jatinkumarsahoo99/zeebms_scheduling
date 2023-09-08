@@ -307,9 +307,11 @@ class SchedulePromoView extends StatelessWidget {
                                                       .onKeyEvent = (node, event) {
                                                     print("Key Pressed");
                                                     if (event is KeyDownEvent &&
-                                                        event.logicalKey ==
+                                                        (event.logicalKey ==
                                                             LogicalKeyboardKey
-                                                                .delete) {
+                                                                .delete || event.logicalKey ==
+                                                            LogicalKeyboardKey
+                                                                .backspace)) {
                                                       print("Delete Pressed");
                                                       if (controller
                                                               .scheduledPromoStateManager
