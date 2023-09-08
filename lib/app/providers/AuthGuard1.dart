@@ -21,7 +21,7 @@ import 'package:bms_scheduling/app/modules/RosDistribution/views/ros_distributio
 import 'package:bms_scheduling/app/modules/SalesAuditExtraSpotsReport/views/sales_audit_extra_spots_report_view.dart';
 import 'package:bms_scheduling/app/modules/SalesAuditNotTelecastReport/views/SalesAuditNotTelecastReportView.dart';
 import 'package:bms_scheduling/app/modules/material_id_search/views/material_id_search_view.dart';
-import 'package:bms_scheduling/app/modules/promos/views/promos_view.dart';
+import 'package:bms_scheduling/app/modules/SchedulePromos/views/SchedulePromoView.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import '../../widgets/LoadingScreen.dart';
