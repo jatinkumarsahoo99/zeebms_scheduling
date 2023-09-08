@@ -1,5 +1,6 @@
 import 'dart:async';
 import 'dart:convert';
+import 'dart:developer';
 
 import 'package:bms_scheduling/app/data/DropDownValue.dart';
 import 'package:bms_scheduling/app/modules/RoCancellation/bindings/ro_cancellation_doc.dart';
@@ -372,7 +373,7 @@ class SalesAuditNewController extends GetxController {
               selectedLocation!.key ?? "", selectedChannel!.key ?? "", date),
           fun: (map) async {
             Get.back();
-            print(">>>>>>>map${jsonEncode(map)}");
+
             listAsrunLog2.clear();
             listAsrunLog1.clear();
             masterListAsrunLog2.clear();
@@ -382,8 +383,10 @@ class SalesAuditNewController extends GetxController {
                 map['gettables'] != null) {
               // lstAsrunLog1.clear();
               // lstAsrunLog2.clear();
+              print(">>>>>>>map${jsonEncode(map)}");
               salesAuditGetRetrieveModel = SalesAuditGetRetrieveModel.fromJson(
                   map as Map<String, dynamic>);
+              print(">>>>>>>mapGenerate${jsonEncode(salesAuditGetRetrieveModel?.toJson())}");
               // masterListAsrunLog2.addAll(listAsrunLog2);
               // masterListAsrunLog1.addAll(listAsrunLog1);
 
@@ -469,9 +472,20 @@ class SalesAuditNewController extends GetxController {
             rowMap[key] = DateFormat("yyyy-MM-dd").format(DateTime.now()) +
                 (row.cells[key]?.value ?? "");
           }
-        } else {
+        }
+        else if(key.toString().trim() == "telecastDate"){
+          if (row.cells[key]?.value != null &&
+              (row.cells[key]?.value ?? "").toString().trim() != "") {
+            rowMap[key] = DateFormat('yyyy-MM-ddTHH:mm:ss').
+            format(DateFormat("dd/MM/yyyy").parse(row.cells[key]?.value));
+          } else {
+            rowMap[key] = (row.cells[key]?.value ?? "");
+          }
+        }
+        else {
           rowMap[key] = row.cells[key]?.value ?? "";
         }
+
       }
       mapList.add(rowMap);
     }

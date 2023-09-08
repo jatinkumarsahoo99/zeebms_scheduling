@@ -281,14 +281,15 @@ class SalesAuditNewView  extends StatelessWidget  {
                                             // checkRow: true,
                                             // checkRowKey: "no",
                                             mode: PlutoGridMode.normal,
+
                                             onSelected: (PlutoGridOnSelectedEvent? val ){
                                                  // print("singlr click"+val!.row!.toJson().toString());
                                                  print("singlr click"+val!.rowIdx.toString());
                                                  controller.selectedIndex = val.rowIdx;
                                                 //  controller.gridStateManagerRight?.setCurrentCell(controller.gridStateManagerRight?.rows[2].cells["no"], 2) ;
                                              },
-                                            hideKeys: ['locationcode','channelcode',
-                                              'recordnumber','telecastProgram','rowNumber','remarks1',
+                                            hideKeys: const ['locationcode','channelcode',
+                                              'recordnumber','rowNumber',
                                               'programCode','previousBookingStatus','scheduleProgramCode'],
                                             witdthSpecificColumn: (controller
                                                         .userDataSettings?.userSetting
@@ -317,6 +318,7 @@ class SalesAuditNewView  extends StatelessWidget  {
                                               controller.gridStateManagerLeft?.moveCurrentCellByRowIdx(controller.selectedIndex??0, PlutoMoveDirection.down);
                                               load.stateManager.notifyListeners();
                                             },
+                                            enableSort: true,
                                             // colorCallback: (renderC) => Colors.red[200]!,
                                             mapData:controller.listAsrunLog2.map((e) =>
                                                 e.toJson()).toList() ):Container():Container(),
@@ -339,7 +341,8 @@ class SalesAuditNewView  extends StatelessWidget  {
                                             (controller.listAsrunLog1.length >0 )?
                                             DataGridFromMap(
                                                 hideCode: false,
-                                                formatDate: false,
+                                                formatDate: true,
+                                                dateFromat: "dd/MM/yyyy",
                                                 focusNode: controller.rightFocusNode,
                                                 exportFileName: "Sales Audit New",
                                                 onRowDoubleTap: (PlutoGridOnRowDoubleTapEvent? val){
@@ -365,7 +368,7 @@ class SalesAuditNewView  extends StatelessWidget  {
                                                 // checkRow: true,
                                                 // checkRowKey: "no",
                                                 mode: PlutoGridMode.selectWithOneTap,
-                                                hideKeys: ['programCode'],
+                                                hideKeys: ['programCode','rownumber','bookingDetailCode'],
                                                 onSelected: (PlutoGridOnSelectedEvent? val ){
                                                   // print("singlr click"+val!.row!.toJson().toString());
                                                   print("singlr click"+val!.rowIdx.toString());
