@@ -586,6 +586,14 @@ class SchedulePromoView extends StatelessWidget {
                                                       .setSelectingMode(
                                                           PlutoGridSelectingMode
                                                               .cell);
+                                                  if(controller
+                                                      .searchPromos.value.isNotEmpty) {
+                                                    event.stateManager
+                                                        .setCurrentCell(
+                                                        event.stateManager
+                                                            .rows[0].cells
+                                                            .values.first, 0);
+                                                  }
                                                   event.stateManager
                                                       .setSelecting(true);
                                                   if (controller
