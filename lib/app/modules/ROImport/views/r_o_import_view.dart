@@ -89,6 +89,7 @@ class ROImportView extends GetView<ROImportController> {
                                     : null,
                                 child: controller.topLeftDataTable.isNotEmpty
                                     ? DataGridFromMap(
+                                        hideCode: false,
                                         mapData:
                                             controller.topLeftDataTable.value,
                                         doPasccal: true,
@@ -163,6 +164,7 @@ class ROImportView extends GetView<ROImportController> {
                                     ? DataGridFromMap(
                                         mapData:
                                             controller.topRightDataTable.value,
+                                        hideCode: false,
                                         doPasccal: true,
                                         keyMapping: const {
                                           "breaK_NUMBER": "BREAK NUMBER",
