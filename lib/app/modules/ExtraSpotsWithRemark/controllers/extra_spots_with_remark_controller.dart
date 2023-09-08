@@ -84,9 +84,9 @@ class ExtraSpotsWithRemarkController extends GetxController {
       fun: (resp) {
         closeDialogIfOpen();
         if (resp != null && resp is Map<String, dynamic>) {
-          if (resp['location'] != null) {
+          if (resp['extraSpotsPageLoad']['location'] != null) {
             locationList.clear();
-            locationList.addAll((resp['location'] as List<dynamic>)
+            locationList.addAll((resp['extraSpotsPageLoad']['location'] as List<dynamic>)
                 .map((e) => DropDownValue(
                       key: e['locationCode'].toString(),
                       value: e['locationName'].toString(),
@@ -97,7 +97,7 @@ class ExtraSpotsWithRemarkController extends GetxController {
               locationList.refresh();
             }
             channelList.clear();
-            channelList.addAll((resp['channel'] as List<dynamic>)
+            channelList.addAll((resp['extraSpotsPageLoad']['channel'] as List<dynamic>)
                 .map((e) => DropDownValue(
                       key: e['channelCode'].toString(),
                       value: e['channelName'].toString(),

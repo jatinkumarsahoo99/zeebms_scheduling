@@ -63,24 +63,28 @@ class DateWiseFillerReportController extends GetxController {
         fun: (map) {
           closeDialogIfOpen();
           if (map is Map) {
-            if (map.containsKey("location") &&
-                map['location'] != null &&
-                map['location'].length > 0) {
-              locationList.clear();
-              map['location'].forEach((e) {
-                locationList.add(DropDownValue.fromJsonDynamic(
-                    e, "locationCode", "locationName"));
-              });
+            // pageLoadInfo
+            if(map.containsKey("pageLoadInfo") & map['pageLoadInfo'] != null){
+              if (map['pageLoadInfo'].containsKey("location") &&
+                  map['pageLoadInfo']['location'] != null &&
+                  map['pageLoadInfo']['location'].length > 0) {
+                locationList.clear();
+                map['pageLoadInfo']['location'].forEach((e) {
+                  locationList.add(DropDownValue.fromJsonDynamic(
+                      e, "locationCode", "locationName"));
+                });
+              }
+              if (map['pageLoadInfo'].containsKey("channel") &&
+                  map['pageLoadInfo']['channel'] != null &&
+                  map['pageLoadInfo']['channel'].length > 0) {
+                channelList.clear();
+                map['pageLoadInfo']['channel'].forEach((e) {
+                  channelList.add(DropDownValue.fromJsonDynamic(
+                      e, "channelcode", "channelname"));
+                });
+              }
             }
-            if (map.containsKey("channel") &&
-                map['channel'] != null &&
-                map['channel'].length > 0) {
-              channelList.clear();
-              map['channel'].forEach((e) {
-                channelList.add(DropDownValue.fromJsonDynamic(
-                    e, "channelcode", "channelname"));
-              });
-            }
+
           }
         });
   }
