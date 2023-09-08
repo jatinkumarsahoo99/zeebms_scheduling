@@ -29,7 +29,7 @@ class DataGridFromMap1 extends StatelessWidget {
       this.actionIcon,
       this.actionIconKey,
       this.actionOnPress,
-      this.columnAutoResize = true,
+      this.columnAutoResize = false,
       this.onSelected,
       this.onRowsMoved,
       this.onRowDoubleTap,

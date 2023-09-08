@@ -45,7 +45,7 @@ PlutoGridConfiguration plutoGridConfiguration({
   Function? actionOnPress,
   String? actionKey,
   double rowHeight = 35,
-  bool autoScale = true,
+  bool autoScale = false,
   Color? checkColor = const Color(0xFFD1C4E9),
   required FocusNode focusNode,
   FocusNode? previousWidgetFN,
@@ -100,7 +100,7 @@ PlutoGridConfiguration plutoGridConfiguration({
 PlutoGridConfiguration plutoGridConfigurationTransmisionLog({
   Function? actionOnPress,
   String? actionKey,
-  bool autoScale = true,
+  bool autoScale = false,
   Color? checkColor = const Color(0xFFD1C4E9),
   required FocusNode focusNode,
   FocusNode? previousWidgetFN,
@@ -155,7 +155,7 @@ PlutoGridConfiguration plutoGridConfigurationTransmisionLog({
 PlutoGridConfiguration plutoGridConfiguration2({
   Function(PlutoGridCellPosition index, bool isSpace)? actionOnPress,
   required List<String?> actionKey,
-  bool autoScale = true,
+  bool autoScale = false,
   required FocusNode focusNode,
   FocusNode? previousWidgetFN,
   double rowHeight = 25,
