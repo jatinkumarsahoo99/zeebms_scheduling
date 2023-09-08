@@ -1,5 +1,6 @@
 import 'dart:async';
 import 'dart:convert';
+import 'dart:developer';
 
 import 'package:bms_scheduling/app/data/DropDownValue.dart';
 import 'package:bms_scheduling/app/modules/RoCancellation/bindings/ro_cancellation_doc.dart';
@@ -372,7 +373,7 @@ class SalesAuditNewController extends GetxController {
               selectedLocation!.key ?? "", selectedChannel!.key ?? "", date),
           fun: (map) async {
             Get.back();
-            print(">>>>>>>map${jsonEncode(map)}");
+
             listAsrunLog2.clear();
             listAsrunLog1.clear();
             masterListAsrunLog2.clear();
@@ -382,8 +383,10 @@ class SalesAuditNewController extends GetxController {
                 map['gettables'] != null) {
               // lstAsrunLog1.clear();
               // lstAsrunLog2.clear();
+              print(">>>>>>>map${jsonEncode(map)}");
               salesAuditGetRetrieveModel = SalesAuditGetRetrieveModel.fromJson(
                   map as Map<String, dynamic>);
+              print(">>>>>>>mapGenerate${jsonEncode(salesAuditGetRetrieveModel?.toJson())}");
               // masterListAsrunLog2.addAll(listAsrunLog2);
               // masterListAsrunLog1.addAll(listAsrunLog1);
 
@@ -469,9 +472,20 @@ class SalesAuditNewController extends GetxController {
             rowMap[key] = DateFormat("yyyy-MM-dd").format(DateTime.now()) +
                 (row.cells[key]?.value ?? "");
           }
-        } else {
+        }
+        else if(key.toString().trim() == "telecastDate"){
+          if (row.cells[key]?.value != null &&
+              (row.cells[key]?.value ?? "").toString().trim() != "") {
+            rowMap[key] = DateFormat('yyyy-MM-ddTHH:mm:ss').
+            format(DateFormat("dd/MM/yyyy").parse(row.cells[key]?.value));
+          } else {
+            rowMap[key] = (row.cells[key]?.value ?? "");
+          }
+        }
+        else {
           rowMap[key] = row.cells[key]?.value ?? "";
         }
+
       }
       mapList.add(rowMap);
     }
@@ -513,6 +527,7 @@ class SalesAuditNewController extends GetxController {
   }
 
   void doMatch(int rightIndex) {
+
     String Exporttapecode,
         FPCtime,
         TApeduration,
@@ -647,8 +662,8 @@ class SalesAuditNewController extends GetxController {
         gridStateManagerLeft?.setCurrentCell(
             gridStateManagerLeft?.rows[j].cells["exportTapeCode"], j);
         gridStateManagerLeft?.notifyListeners();
-        btnMapClick(gridStateManagerRight?.currentRowIdx ?? 0,
-            gridStateManagerLeft?.currentRowIdx ?? 0);
+        btnMapClick(gridStateManagerRight?.currentRowIdx,
+            gridStateManagerLeft?.currentRowIdx);
         return;
       }
     }
@@ -713,8 +728,8 @@ class SalesAuditNewController extends GetxController {
           gridStateManagerLeft?.setCurrentCell(
               gridStateManagerLeft?.rows[k].cells["exportTapeCode"], k);
           gridStateManagerLeft?.notifyListeners();
-          btnMapClick(gridStateManagerRight?.currentRowIdx ?? 0,
-              gridStateManagerLeft?.currentRowIdx ?? 0);
+          btnMapClick(gridStateManagerRight?.currentRowIdx,
+              gridStateManagerLeft?.currentRowIdx);
           return;
         }
       }
@@ -773,12 +788,17 @@ class SalesAuditNewController extends GetxController {
   void btnAutoClick() {
     // tblSpots - listAsrunLog2 - leftIndex -gridStateManagerLeft
     // tblAsrun - listAsrunLog1 - rightindex - gridStateManagerRight
-    for (int i = 0; i < (gridStateManagerRight?.rows.length ?? 0); i++) {
-      gridStateManagerRight?.setCurrentCell(
-          gridStateManagerRight?.rows[i].cells["telecastTime"], i);
-      gridStateManagerRight?.notifyListeners();
-      doMatch(i);
+    if(gridStateManagerRight != null && gridStateManagerLeft != null){
+      for (int i = 0; i < (gridStateManagerRight?.rows.length ?? 0); i++) {
+        gridStateManagerRight?.setCurrentCell(
+            gridStateManagerRight?.rows[i].cells["telecastTime"], i);
+        gridStateManagerRight?.notifyListeners();
+        doMatch(i);
+      }
+    }else{
+      // LoadingDialog.showErrorDialog("");
     }
+
     // colorGrid();
   }
 
@@ -788,154 +808,71 @@ class SalesAuditNewController extends GetxController {
     }
   }
 
-  void btnMapClick(int rightindex, int leftIndex) {
-    String exporttapecode, FPCtime, TApeduration, Telecasttime;
-    bool Matched = false;
-    String programCode, rowNumber;
-    print("jks3");
-    // tblAsrun.CurrentRow.Selected = true;
-    // right table
+  void btnMapClick(int? rightindex, int? leftIndex) {
 
-    // tblSpots - listAsrunLog2 - leftIndex -gridStateManagerLeft
-    // tblAsrun - listAsrunLog1 - rightindex - gridStateManagerRight
+    if(rightindex != null && leftIndex != null){
+      String exporttapecode, FPCtime, TApeduration, Telecasttime;
+      bool Matched = false;
+      String programCode, rowNumber;
+      print("jks3");
+      // tblAsrun.CurrentRow.Selected = true;
+      // right table
 
-    exporttapecode = gridStateManagerRight
-            ?.rows[rightindex].cells['exportTapeCode']?.value ??
-        "";
-    programCode =
-        gridStateManagerRight?.rows[rightindex].cells['programCode']?.value ??
-            "";
-    rowNumber =
-        gridStateManagerRight?.rows[rightindex].cells['rownumber']?.value ?? "";
-    FPCtime =
-        gridStateManagerRight?.rows[rightindex].cells['fpctime']?.value ?? "";
-    TApeduration =
-        gridStateManagerRight?.rows[rightindex].cells['tapeDuration']?.value ??
-            "";
-    Telecasttime =
-        gridStateManagerRight?.rows[rightindex].cells['telecastTime']?.value ??
-            "";
+      // tblSpots - listAsrunLog2 - leftIndex -gridStateManagerLeft
+      // tblAsrun - listAsrunLog1 - rightindex - gridStateManagerRight
 
-    if (gridStateManagerRight?.rows[rightindex].cells['bookingNumber']?.value !=
-            null &&
-        gridStateManagerRight?.rows[rightindex].cells['bookingNumber']?.value !=
-            "") {
-      print("jks1");
-      // SetNextRow(rightindex,leftIndex);
-      setNextRow1(exporttapecode);
+      exporttapecode = gridStateManagerRight
+          ?.rows[rightindex].cells['exportTapeCode']?.value ??
+          "";
+      programCode =
+          gridStateManagerRight?.rows[rightindex].cells['programCode']?.value ??
+              "";
+      rowNumber =
+          gridStateManagerRight?.rows[rightindex].cells['rownumber']?.value ?? "";
+      FPCtime =
+          gridStateManagerRight?.rows[rightindex].cells['fpctime']?.value ?? "";
+      TApeduration =
+          gridStateManagerRight?.rows[rightindex].cells['tapeDuration']?.value ??
+              "";
+      Telecasttime =
+          gridStateManagerRight?.rows[rightindex].cells['telecastTime']?.value ??
+              "";
 
-      return;
-    }
-    if (gridStateManagerLeft?.rows[leftIndex].cells['telecastTime']?.value !=
-            null &&
-        gridStateManagerLeft?.rows[leftIndex].cells['telecastTime']?.value !=
-            "") {
-      print("jks2");
-      // SetNextRow(rightindex,leftIndex);
+      if (gridStateManagerRight?.rows[rightindex].cells['bookingNumber']?.value !=
+          null &&
+          gridStateManagerRight?.rows[rightindex].cells['bookingNumber']?.value !=
+              "") {
+        print("jks1");
+        // SetNextRow(rightindex,leftIndex);
+        setNextRow1(exporttapecode);
 
-      setNextRow1(exporttapecode);
-      return;
-    }
-    // tblSpots - listAsrunLog2 - leftIndex -gridStateManagerLeft
-    // tblAsrun - listAsrunLog1 - rightindex - gridStateManagerRight
+        return;
+      }
+      if (gridStateManagerLeft?.rows[leftIndex].cells['telecastTime']?.value !=
+          null &&
+          gridStateManagerLeft?.rows[leftIndex].cells['telecastTime']?.value !=
+              "") {
+        print("jks2");
+        // SetNextRow(rightindex,leftIndex);
 
-    if (exporttapecode.trim() ==
-            gridStateManagerLeft?.rows[leftIndex].cells['exportTapeCode']?.value
-                .toString()
-                .trim() &&
-        TApeduration.toString().trim() ==
-            gridStateManagerLeft?.rows[leftIndex].cells['tapeDuration']?.value
-                .toString()
-                .trim() &&
-        gridStateManagerLeft?.rows[leftIndex].cells['dealTime']?.value !=
-            null &&
-        gridStateManagerLeft?.rows[leftIndex].cells['dealTime']?.value != "") {
-      print(">>>>>>>>>>>>inside if one");
-      gridStateManagerLeft?.rows[leftIndex].cells['telecastTime']?.value =
-          Telecasttime;
-      gridStateManagerLeft?.rows[leftIndex].cells['programCode']?.value =
-          programCode;
-      gridStateManagerLeft?.rows[leftIndex].cells['rowNumber']?.value =
-          int.parse(rowNumber);
+        setNextRow1(exporttapecode);
+        return;
+      }
+      // tblSpots - listAsrunLog2 - leftIndex -gridStateManagerLeft
+      // tblAsrun - listAsrunLog1 - rightindex - gridStateManagerRight
 
-      gridStateManagerRight?.rows[rightindex].cells['bookingNumber']?.value =
-          gridStateManagerLeft?.rows[leftIndex].cells['bookingNumber']?.value;
-      gridStateManagerRight
-              ?.rows[rightindex].cells['bookingDetailCode']?.value =
-          gridStateManagerLeft
-              ?.rows[leftIndex].cells['bookingDetailCode']?.value;
-      gridStateManagerRight?.rows[rightindex].cells['remark']?.value =
-          (gridStateManagerLeft
-                      ?.rows[leftIndex].cells['bookingNumber']?.value ??
-                  "") +
-              "-" +
-              (gridStateManagerLeft
-                          ?.rows[leftIndex].cells['bookingDetailCode']?.value ??
-                      "")
-                  .toString();
-      gridStateManagerLeft?.notifyListeners();
-      gridStateManagerRight?.notifyListeners();
-      Matched = true;
-      // update(['leftOne','rightOne']);
-    }
-    // tblSpots - listAsrunLog2 - leftIndex -gridStateManagerLeft
-    // tblAsrun - listAsrunLog1 - rightindex - gridStateManagerRight
-
-    if (exporttapecode.trim() ==
-            gridStateManagerLeft?.rows[leftIndex].cells['exportTapeCode']?.value
-                .toString()
-                .trim() &&
-        TApeduration.toString().trim() ==
-            gridStateManagerLeft?.rows[leftIndex].cells['tapeDuration']?.value
-                .toString()
-                .trim() &&
-        (gridStateManagerLeft?.rows[leftIndex].cells['dealTime']?.value !=
-                null ||
-            gridStateManagerLeft?.rows[leftIndex].cells['dealTime']?.value !=
-                "") &&
-        gridStateManagerLeft?.rows[leftIndex].cells['scheduleTime']?.value ==
-            FPCtime &&
-        !Matched) {
-      print(">>>>>>>>>>>>inside if two");
-      gridStateManagerLeft?.rows[leftIndex].cells['telecastTime']?.value =
-          Telecasttime;
-      gridStateManagerLeft?.rows[leftIndex].cells['programCode']?.value =
-          programCode;
-      gridStateManagerLeft?.rows[leftIndex].cells['rowNumber']?.value =
-          int.parse(rowNumber);
-
-      gridStateManagerRight?.rows[rightindex].cells['bookingNumber']?.value =
-          gridStateManagerLeft?.rows[leftIndex].cells['bookingNumber']?.value;
-      gridStateManagerRight
-              ?.rows[rightindex].cells['bookingDetailCode']?.value =
-          gridStateManagerLeft
-              ?.rows[leftIndex].cells['bookingDetailCode']?.value;
-      gridStateManagerRight?.rows[rightindex].cells['remark']?.value =
-          (gridStateManagerLeft
-                      ?.rows[leftIndex].cells['bookingNumber']?.value ??
-                  "") +
-              "-" +
-              (gridStateManagerLeft
-                          ?.rows[leftIndex].cells['bookingDetailCode']?.value ??
-                      "")
-                  .toString();
-      gridStateManagerLeft?.notifyListeners();
-      gridStateManagerRight?.notifyListeners();
-
-      Matched = true;
-    }
-
-    // tblSpots - listAsrunLog2 - leftIndex -gridStateManagerLeft
-    // tblAsrun - listAsrunLog1 - rightindex - gridStateManagerRight
-    if (!Matched &&
-        exporttapecode.trim() ==
-            gridStateManagerLeft?.rows[leftIndex].cells['exportTapeCode']?.value
-                .toString()
-                .trim()) {
-      print(">>>>>>>>>>>>inside if three");
-      LoadingDialog.recordExists(
-          "Only the Tapeid Matches!\nDo you want to force match these spots?",
-          () {
+      if (exporttapecode.trim() ==
+          gridStateManagerLeft?.rows[leftIndex].cells['exportTapeCode']?.value
+              .toString()
+              .trim() &&
+          TApeduration.toString().trim() ==
+              gridStateManagerLeft?.rows[leftIndex].cells['tapeDuration']?.value
+                  .toString()
+                  .trim() &&
+          gridStateManagerLeft?.rows[leftIndex].cells['dealTime']?.value !=
+              null &&
+          gridStateManagerLeft?.rows[leftIndex].cells['dealTime']?.value != "") {
+        print(">>>>>>>>>>>>inside if one");
         gridStateManagerLeft?.rows[leftIndex].cells['telecastTime']?.value =
             Telecasttime;
         gridStateManagerLeft?.rows[leftIndex].cells['programCode']?.value =
@@ -946,37 +883,145 @@ class SalesAuditNewController extends GetxController {
         gridStateManagerRight?.rows[rightindex].cells['bookingNumber']?.value =
             gridStateManagerLeft?.rows[leftIndex].cells['bookingNumber']?.value;
         gridStateManagerRight
-                ?.rows[rightindex].cells['bookingDetailCode']?.value =
+            ?.rows[rightindex].cells['bookingDetailCode']?.value =
             gridStateManagerLeft
                 ?.rows[leftIndex].cells['bookingDetailCode']?.value;
         gridStateManagerRight?.rows[rightindex].cells['remark']?.value =
             (gridStateManagerLeft
-                        ?.rows[leftIndex].cells['bookingNumber']?.value ??
-                    "") +
+                ?.rows[leftIndex].cells['bookingNumber']?.value ??
+                "") +
                 "-" +
-                (gridStateManagerLeft?.rows[leftIndex]
-                            .cells['bookingDetailCode']?.value ??
-                        "")
+                (gridStateManagerLeft
+                    ?.rows[leftIndex].cells['bookingDetailCode']?.value ??
+                    "")
                     .toString();
         gridStateManagerLeft?.notifyListeners();
         gridStateManagerRight?.notifyListeners();
-      }, cancel: () {
-        Get.back();
-      });
+        Matched = true;
+        // update(['leftOne','rightOne']);
+      }
+      // tblSpots - listAsrunLog2 - leftIndex -gridStateManagerLeft
+      // tblAsrun - listAsrunLog1 - rightindex - gridStateManagerRight
+
+      if (exporttapecode.trim() ==
+          gridStateManagerLeft?.rows[leftIndex].cells['exportTapeCode']?.value
+              .toString()
+              .trim() &&
+          TApeduration.toString().trim() ==
+              gridStateManagerLeft?.rows[leftIndex].cells['tapeDuration']?.value
+                  .toString()
+                  .trim() &&
+          (gridStateManagerLeft?.rows[leftIndex].cells['dealTime']?.value !=
+              null ||
+              gridStateManagerLeft?.rows[leftIndex].cells['dealTime']?.value !=
+                  "") &&
+          gridStateManagerLeft?.rows[leftIndex].cells['scheduleTime']?.value ==
+              FPCtime &&
+          !Matched) {
+        print(">>>>>>>>>>>>inside if two");
+        gridStateManagerLeft?.rows[leftIndex].cells['telecastTime']?.value =
+            Telecasttime;
+        gridStateManagerLeft?.rows[leftIndex].cells['programCode']?.value =
+            programCode;
+        gridStateManagerLeft?.rows[leftIndex].cells['rowNumber']?.value =
+            int.parse(rowNumber);
+
+        gridStateManagerRight?.rows[rightindex].cells['bookingNumber']?.value =
+            gridStateManagerLeft?.rows[leftIndex].cells['bookingNumber']?.value;
+        gridStateManagerRight
+            ?.rows[rightindex].cells['bookingDetailCode']?.value =
+            gridStateManagerLeft
+                ?.rows[leftIndex].cells['bookingDetailCode']?.value;
+        gridStateManagerRight?.rows[rightindex].cells['remark']?.value =
+            (gridStateManagerLeft
+                ?.rows[leftIndex].cells['bookingNumber']?.value ??
+                "") +
+                "-" +
+                (gridStateManagerLeft
+                    ?.rows[leftIndex].cells['bookingDetailCode']?.value ??
+                    "")
+                    .toString();
+        gridStateManagerLeft?.notifyListeners();
+        gridStateManagerRight?.notifyListeners();
+
+        Matched = true;
+      }
+
+      // tblSpots - listAsrunLog2 - leftIndex -gridStateManagerLeft
+      // tblAsrun - listAsrunLog1 - rightindex - gridStateManagerRight
+      if (!Matched &&
+          exporttapecode.trim() ==
+              gridStateManagerLeft?.rows[leftIndex].cells['exportTapeCode']?.value
+                  .toString()
+                  .trim()) {
+        print(">>>>>>>>>>>>inside if three");
+        LoadingDialog.recordExists(
+            "Only the Tapeid Matches!\nDo you want to force match these spots?",
+                () {
+              gridStateManagerLeft?.rows[leftIndex].cells['telecastTime']?.value =
+                  Telecasttime;
+              gridStateManagerLeft?.rows[leftIndex].cells['programCode']?.value =
+                  programCode;
+              gridStateManagerLeft?.rows[leftIndex].cells['rowNumber']?.value =
+                  int.parse(rowNumber);
+
+              gridStateManagerRight?.rows[rightindex].cells['bookingNumber']?.value =
+                  gridStateManagerLeft?.rows[leftIndex].cells['bookingNumber']?.value;
+              gridStateManagerRight
+                  ?.rows[rightindex].cells['bookingDetailCode']?.value =
+                  gridStateManagerLeft
+                      ?.rows[leftIndex].cells['bookingDetailCode']?.value;
+              gridStateManagerRight?.rows[rightindex].cells['remark']?.value =
+                  (gridStateManagerLeft
+                      ?.rows[leftIndex].cells['bookingNumber']?.value ??
+                      "") +
+                      "-" +
+                      (gridStateManagerLeft?.rows[leftIndex]
+                          .cells['bookingDetailCode']?.value ??
+                          "")
+                          .toString();
+              gridStateManagerLeft?.notifyListeners();
+              gridStateManagerRight?.notifyListeners();
+            }, cancel: () {
+          Get.back();
+        });
+      }
+      setNextRow1(exporttapecode);
     }
-    setNextRow1(exporttapecode);
+    else{
+      // LoadingDialog.showErrorDialog("It's should at least one row in both the grid");
+      return;
+    }
+
+
   }
 
-  tapeBtn(int leftIndex, int rightIndex) {
+  tapeBtn({int? leftIndex, int? rightIndex}) {
     // tblSpots - listAsrunLog2 - leftIndex -gridStateManagerLeft
     // tblAsrun - listAsrunLog1 - rightindex - gridStateManagerRight
-    String exportTapeCode = gridStateManagerRight
-            ?.rows[gridStateManagerRight?.currentRowIdx ?? 0]
-            .cells['exportTapeCode']
-            ?.value ??
-        "";
 
-    if (gridStateManagerLeft != null) {
+    print(">>>>>>>>>>>>>leftIndex "+leftIndex.toString()+" "+rightIndex.toString());
+    String? exportTapeCode;
+    if(leftIndex != null){
+      exportTapeCode = gridStateManagerLeft
+          ?.rows[leftIndex]
+          .cells['exportTapeCode']
+          ?.value ??
+          "";
+      print(">>>>>>>>>>>exportTapeCode1"+exportTapeCode.toString());
+    }
+    if(rightIndex != null){
+      exportTapeCode = gridStateManagerRight
+          ?.rows[rightIndex]
+          .cells['exportTapeCode']
+          ?.value ??
+          "";
+      print(">>>>>>>>>>>exportTapeCode2"+exportTapeCode.toString());
+    }
+
+
+    print(">>>>>>>>>>>exportTapeCode"+exportTapeCode.toString());
+    if (gridStateManagerLeft != null ) {
       if (showError.value == true && showCancel.value == true) {
         gridStateManagerLeft?.setFilter((element) => true);
         gridStateManagerRight?.setFilter((element) => true);
@@ -991,7 +1036,8 @@ class SalesAuditNewController extends GetxController {
 
         gridStateManagerLeft?.notifyListeners();
         gridStateManagerRight?.notifyListeners();
-      } else if (showError.value == true) {
+      }
+      else if (showError.value == true) {
         gridStateManagerLeft?.setFilter((element) => true);
         gridStateManagerRight?.setFilter((element) => true);
 
@@ -1006,7 +1052,8 @@ class SalesAuditNewController extends GetxController {
 
         gridStateManagerLeft?.notifyListeners();
         gridStateManagerRight?.notifyListeners();
-      } else if (showCancel.value == true) {
+      }
+      else if (showCancel.value == true) {
         gridStateManagerLeft?.setFilter((element) => true);
         gridStateManagerRight?.setFilter((element) => true);
         gridStateManagerLeft?.setFilter((e) =>
@@ -1020,7 +1067,8 @@ class SalesAuditNewController extends GetxController {
                 exportTapeCode.toString().trim()));
         gridStateManagerLeft?.notifyListeners();
         gridStateManagerRight?.notifyListeners();
-      } else {
+      }
+      else {
         gridStateManagerLeft?.setFilter((element) => true);
         gridStateManagerRight?.setFilter((element) => true);
         gridStateManagerLeft?.setFilter((e) =>
