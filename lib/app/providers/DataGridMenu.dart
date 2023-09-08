@@ -73,8 +73,10 @@ class DataGridMenu {
       List _allValues = [];
       var _selectedValues = RxList([]);
       print("1st foucus Added");
-      if(stateManager.currentCell == null && ((stateManager.rows.length??0)>0)){
-        stateManager.setCurrentCell((stateManager.rows[0].cells.values.first), 0);
+      if (stateManager.currentCell == null &&
+          ((stateManager.rows.length ?? 0) > 0)) {
+        stateManager.setCurrentCell(
+            (stateManager.rows[0].cells.values.first), 0);
       }
       if (stateManager.currentCell != null) {
         _allValues = stateManager.rows
@@ -422,9 +424,10 @@ class DataGridMenu {
                   key: stateManager.currentColumn?.field ?? "",
                   value: stateManager.currentColumn?.title ?? "");
               TextEditingController _findctrl = TextEditingController();
-              var _almost = RxBool(false);
+              var _almost = RxBool(true);
               var _fromstart = RxBool(false);
-              int _index = 0;
+              int _index = stateManager.currentRowIdx ?? 0;
+              // bool isFromStart = stateManager.currentRowIdx == 0;
               return Card(
                 child: Padding(
                   padding: EdgeInsets.zero,
@@ -548,22 +551,39 @@ class DataGridMenu {
                                     onPressed: () {
                                       if (_findctrl.text != "" &&
                                           _selectedColumn != "") {
-                                        var _slecetedRow = _almost.value
-                                            ? stateManager.rows
-                                                .firstWhereOrNull((element) =>
-                                                    (element.cells[_selectedColumn]!.value.toString().toLowerCase().trim().contains(_findctrl.text.toLowerCase().trim()) &&
-                                                        (_index == 0 ||
-                                                            element.sortIdx >
-                                                                (_index))))
-                                            : stateManager.rows.firstWhereOrNull(
-                                                (element) => (element
-                                                            .cells[_selectedColumn]!
+                                        if (_fromstart.value) {
+                                          _index = -1;
+                                        }
+                                        // var _slecetedRow = _almost.value
+                                        //     ? stateManager.rows.firstWhereOrNull(
+                                        //         (element) => (element
+                                        //                 .cells[_selectedColumn]!
+                                        //                 .value
+                                        //                 .toString()
+                                        //                 .toLowerCase()
+                                        //                 .trim()
+                                        //                 .contains(_findctrl.text
+                                        //                     .toLowerCase()
+                                        //                     .trim()) &&
+                                        //             (element.sortIdx > _index)))
+                                        //     : stateManager.rows.firstWhereOrNull((element) =>
+                                        //         (element.cells[_selectedColumn]!.value.toString().toLowerCase().trim() ==
+                                        //                 _findctrl.text.toLowerCase().trim() &&
+                                        //             (element.sortIdx > _index)));
+
+                                        var _slecetedRow = stateManager.rows
+                                            .firstWhereOrNull((element) =>
+                                                (element.cells[_selectedColumn]!
                                                             .value
                                                             .toString()
                                                             .toLowerCase()
                                                             .trim() ==
-                                                        _findctrl.text.toLowerCase().trim() &&
-                                                    (_index == 0 || element.sortIdx > (_index))));
+                                                        _findctrl.text
+                                                            .toLowerCase()
+                                                            .trim() &&
+                                                    (element.sortIdx >
+                                                        _index)));
+
                                         if (_slecetedRow == null) {
                                           stateManager.resetScrollToZero();
 
@@ -654,16 +674,30 @@ class DataGridMenu {
                                           //         .value
                                           //         .runtimeType
                                           //         .toString());
-                                          if (_slecetedRow.sortIdx == 0) {
-                                            _index = 1;
-                                          } else {
-                                            _index = _slecetedRow.sortIdx;
+                                          // if (_slecetedRow.sortIdx == 0) {
+                                          //   _index = 1;
+                                          // } else {
+                                          //   _index = _slecetedRow.sortIdx;
+                                          // }
+                                          if (_fromstart.value) {
+                                            _fromstart.value = false;
                                           }
-
+                                          _index = _slecetedRow.sortIdx;
                                           stateManager.resetScrollToZero();
-                                          stateManager.moveScrollByRow(
-                                              PlutoMoveDirection.down, _index);
+                                          if (_index <= 10) {
+                                            stateManager.moveScrollByRow(
+                                                PlutoMoveDirection.up,
+                                                _slecetedRow.sortIdx);
+                                          } else {
+                                            stateManager.moveScrollByRow(
+                                                PlutoMoveDirection.down,
+                                                _slecetedRow.sortIdx);
+                                          }
                                           stateManager.setKeepFocus(false);
+                                          stateManager.setCurrentCell(
+                                              _slecetedRow
+                                                  .cells[_selectedColumn],
+                                              _slecetedRow.sortIdx);
                                           // for (var element in stateManager
                                           //     .rows) {
                                           //   stateManager.setRowChecked(
@@ -671,24 +705,24 @@ class DataGridMenu {
                                           // }
                                           // stateManager.setRowChecked(
                                           //     _slecetedRow, true, notify: true);
-                                          /*stateManager.setCurrentCell(
-                                              _index == 1
-                                                  ? stateManager
-                                                      .getRowByIdx(_index)!
-                                                      .cells[_selectedColumn]
-                                                  : _slecetedRow
-                                                      .cells[_selectedColumn],
-                                              _index);*/
-                                          if(stateManager.currentRow!=null && stateManager.currentRow?.sortIdx==0 && _slecetedRow.sortIdx==2){
-                                            stateManager.setCurrentCell(
-                                                stateManager.getRowByIdx(_slecetedRow.sortIdx-1)?.cells[_selectedColumn],
-                                                _slecetedRow.sortIdx-1);
-                                          }else {
-                                            stateManager.setCurrentCell(
-                                                _slecetedRow
-                                                    .cells[_selectedColumn],
-                                                _slecetedRow.sortIdx);
-                                          }
+                                          // stateManager.setCurrentCell(
+                                          //     _index == 1
+                                          //         ? stateManager
+                                          //             .getRowByIdx(_index)!
+                                          //             .cells[_selectedColumn]
+                                          //         : _slecetedRow
+                                          //             .cells[_selectedColumn],
+                                          //     _index);
+                                          // if(stateManager.currentRow!=null && stateManager.currentRow?.sortIdx==0 && _slecetedRow.sortIdx==2){
+                                          //   stateManager.setCurrentCell(
+                                          //       stateManager.getRowByIdx(_slecetedRow.sortIdx-1)?.cells[_selectedColumn],
+                                          //       _slecetedRow.sortIdx-1);
+                                          // }else {
+                                          //   stateManager.setCurrentCell(
+                                          //       _slecetedRow
+                                          //           .cells[_selectedColumn],
+                                          //       _slecetedRow.sortIdx);
+                                          // }
                                         }
                                       }
                                     },
@@ -842,8 +876,10 @@ class DataGridMenu {
       List _allValues = [];
       var _selectedValues = RxList([]);
       print("1st foucus Added");
-      if(stateManager.currentCell == null && ((stateManager.rows.length??0)>0)){
-        stateManager.setCurrentCell((stateManager.rows[0].cells.values.first), 0);
+      if (stateManager.currentCell == null &&
+          ((stateManager.rows.length ?? 0) > 0)) {
+        stateManager.setCurrentCell(
+            (stateManager.rows[0].cells.values.first), 0);
       }
       if (stateManager.currentCell != null) {
         _allValues = stateManager.rows
@@ -1544,9 +1580,9 @@ class DataGridMenu {
                                 DropDownField.formDropDown1WidthMap(
                                   stateManager.columns
                                       .map((e) => DropDownValue(
-                                      key: e.field, value: e.title))
+                                          key: e.field, value: e.title))
                                       .toList(),
-                                      (value) {
+                                  (value) {
                                     _selectedColumn = value.key!;
                                     _preselectedColumn = value;
                                   },
@@ -1599,10 +1635,10 @@ class DataGridMenu {
                                         _almost.value = !_almost.value;
                                       },
                                       child: Obx(
-                                            () => Icon(_almost.value
+                                        () => Icon(_almost.value
                                             ? Icons.check_box_outlined
                                             : Icons
-                                            .check_box_outline_blank_rounded),
+                                                .check_box_outline_blank_rounded),
                                       )),
                                   Text("Almost"),
                                 ],
@@ -1620,10 +1656,10 @@ class DataGridMenu {
                                         _fromstart.value = !_fromstart.value;
                                       },
                                       child: Obx(
-                                            () => Icon(_fromstart.value
+                                        () => Icon(_fromstart.value
                                             ? Icons.check_box_outlined
                                             : Icons
-                                            .check_box_outline_blank_rounded),
+                                                .check_box_outline_blank_rounded),
                                       )),
                                   Text("From Start")
                                 ],
@@ -1640,20 +1676,20 @@ class DataGridMenu {
                                           _selectedColumn != "") {
                                         var _slecetedRow = _almost.value
                                             ? stateManager.rows
-                                            .firstWhereOrNull((element) =>
-                                        (element.cells[_selectedColumn]!.value.toString().toLowerCase().trim().contains(_findctrl.text.toLowerCase().trim()) &&
-                                            (_index == 0 ||
-                                                element.sortIdx >
-                                                    (_index))))
+                                                .firstWhereOrNull((element) =>
+                                                    (element.cells[_selectedColumn]!.value.toString().toLowerCase().trim().contains(_findctrl.text.toLowerCase().trim()) &&
+                                                        (_index == 0 ||
+                                                            element.sortIdx >
+                                                                (_index))))
                                             : stateManager.rows.firstWhereOrNull(
                                                 (element) => (element
-                                                .cells[_selectedColumn]!
-                                                .value
-                                                .toString()
-                                                .toLowerCase()
-                                                .trim() ==
-                                                _findctrl.text.toLowerCase().trim() &&
-                                                (_index == 0 || element.sortIdx > (_index))));
+                                                            .cells[_selectedColumn]!
+                                                            .value
+                                                            .toString()
+                                                            .toLowerCase()
+                                                            .trim() ==
+                                                        _findctrl.text.toLowerCase().trim() &&
+                                                    (_index == 0 || element.sortIdx > (_index))));
                                         if (_slecetedRow == null) {
                                           stateManager.resetScrollToZero();
 
@@ -1669,29 +1705,29 @@ class DataGridMenu {
                                                       Get.back();
                                                       var _slecetedRow = _almost.value
                                                           ? stateManager.rows.firstWhereOrNull((element) => (element
-                                                          .cells[
-                                                      _selectedColumn]!
-                                                          .value
-                                                          .toString()
-                                                          .toLowerCase()
-                                                          .trim()
-                                                          .contains(_findctrl.text
-                                                          .toLowerCase()
-                                                          .trim()) &&
-                                                          (_index == 0 ||
-                                                              element.sortIdx >
-                                                                  (_index ??
-                                                                      0))))
+                                                                  .cells[
+                                                                      _selectedColumn]!
+                                                                  .value
+                                                                  .toString()
+                                                                  .toLowerCase()
+                                                                  .trim()
+                                                                  .contains(_findctrl.text
+                                                                      .toLowerCase()
+                                                                      .trim()) &&
+                                                              (_index == 0 ||
+                                                                  element.sortIdx >
+                                                                      (_index ??
+                                                                          0))))
                                                           : stateManager.rows
-                                                          .firstWhere((element) => (element.cells[_selectedColumn]!.value.toString().toLowerCase().trim() == _findctrl.text.toLowerCase().trim() && (_index == 0 || element.sortIdx > (_index ?? 0))));
+                                                              .firstWhere((element) => (element.cells[_selectedColumn]!.value.toString().toLowerCase().trim() == _findctrl.text.toLowerCase().trim() && (_index == 0 || element.sortIdx > (_index ?? 0))));
                                                       print(_slecetedRow!
-                                                          .cells[
-                                                      _selectedColumn]!
-                                                          .value
-                                                          .toString() +
+                                                              .cells[
+                                                                  _selectedColumn]!
+                                                              .value
+                                                              .toString() +
                                                           _slecetedRow
                                                               .cells[
-                                                          _selectedColumn]!
+                                                                  _selectedColumn]!
                                                               .value
                                                               .runtimeType
                                                               .toString());
@@ -1702,11 +1738,11 @@ class DataGridMenu {
 
                                                       stateManager
                                                           .moveScrollByRow(
-                                                          PlutoMoveDirection
-                                                              .down,
-                                                          _slecetedRow
-                                                              .sortIdx -
-                                                              1);
+                                                              PlutoMoveDirection
+                                                                  .down,
+                                                              _slecetedRow
+                                                                      .sortIdx -
+                                                                  1);
 
                                                       stateManager
                                                           .setKeepFocus(false);
@@ -1723,7 +1759,7 @@ class DataGridMenu {
                                                       //     notify: true);
                                                       stateManager.setCurrentCell(
                                                           _slecetedRow.cells[
-                                                          _selectedColumn],
+                                                              _selectedColumn],
                                                           _slecetedRow.sortIdx);
                                                     },
                                                     icon: Icon(Icons.done),
@@ -1769,11 +1805,19 @@ class DataGridMenu {
                                                   : _slecetedRow
                                                   .cells[_selectedColumn],
                                               _index);*/
-                                          if(stateManager.currentRow!=null && stateManager.currentRow?.sortIdx==0 && _slecetedRow.sortIdx==2){
+                                          if (stateManager.currentRow != null &&
+                                              stateManager
+                                                      .currentRow?.sortIdx ==
+                                                  0 &&
+                                              _slecetedRow.sortIdx == 2) {
                                             stateManager.setCurrentCell(
-                                                stateManager.getRowByIdx(_slecetedRow.sortIdx-1)?.cells[_selectedColumn],
-                                                _slecetedRow.sortIdx-1);
-                                          }else {
+                                                stateManager
+                                                    .getRowByIdx(
+                                                        _slecetedRow.sortIdx -
+                                                            1)
+                                                    ?.cells[_selectedColumn],
+                                                _slecetedRow.sortIdx - 1);
+                                          } else {
                                             stateManager.setCurrentCell(
                                                 _slecetedRow
                                                     .cells[_selectedColumn],
@@ -1802,32 +1846,32 @@ class DataGridMenu {
                                 ElevatedButton(
                                     onPressed: () {
                                       stateManager.setFilter((element) =>
-                                      stateManager.currentCell == null
-                                          ? true
-                                          : element
-                                          .cells[stateManager
-                                          .currentCell!
-                                          .column
-                                          .field]!
-                                          .value ==
-                                          stateManager
-                                              .currentCell!.value);
+                                          stateManager.currentCell == null
+                                              ? true
+                                              : element
+                                                      .cells[stateManager
+                                                          .currentCell!
+                                                          .column
+                                                          .field]!
+                                                      .value ==
+                                                  stateManager
+                                                      .currentCell!.value);
                                     },
                                     child: Text("FS")),
                                 SizedBox(width: 15),
                                 ElevatedButton(
                                     onPressed: () {
                                       stateManager.setFilter((element) =>
-                                      stateManager.currentCell == null
-                                          ? true
-                                          : element
-                                          .cells[stateManager
-                                          .currentCell!
-                                          .column
-                                          .field]!
-                                          .value !=
-                                          stateManager
-                                              .currentCell!.value);
+                                          stateManager.currentCell == null
+                                              ? true
+                                              : element
+                                                      .cells[stateManager
+                                                          .currentCell!
+                                                          .column
+                                                          .field]!
+                                                      .value !=
+                                                  stateManager
+                                                      .currentCell!.value);
                                     },
                                     child: Text("XF")),
                                 SizedBox(width: 15),
@@ -1909,8 +1953,10 @@ class DataGridMenu {
       List _allValues = [];
       var _selectedValues = RxList([]);
       print("1st foucus Added");
-      if(stateManager.currentCell == null && ((stateManager.rows.length??0)>0)){
-        stateManager.setCurrentCell((stateManager.rows[0].cells.values.first), 0);
+      if (stateManager.currentCell == null &&
+          ((stateManager.rows.length ?? 0) > 0)) {
+        stateManager.setCurrentCell(
+            (stateManager.rows[0].cells.values.first), 0);
       }
       if (stateManager.currentCell != null) {
         _allValues = stateManager.rows
@@ -2659,9 +2705,9 @@ class DataGridMenu {
                                 DropDownField.formDropDown1WidthMap(
                                   stateManager.columns
                                       .map((e) => DropDownValue(
-                                      key: e.field, value: e.title))
+                                          key: e.field, value: e.title))
                                       .toList(),
-                                      (value) {
+                                  (value) {
                                     _selectedColumn = value.key!;
                                     _preselectedColumn = value;
                                   },
@@ -2714,10 +2760,10 @@ class DataGridMenu {
                                         _almost.value = !_almost.value;
                                       },
                                       child: Obx(
-                                            () => Icon(_almost.value
+                                        () => Icon(_almost.value
                                             ? Icons.check_box_outlined
                                             : Icons
-                                            .check_box_outline_blank_rounded),
+                                                .check_box_outline_blank_rounded),
                                       )),
                                   Text("Almost"),
                                 ],
@@ -2735,10 +2781,10 @@ class DataGridMenu {
                                         _fromstart.value = !_fromstart.value;
                                       },
                                       child: Obx(
-                                            () => Icon(_fromstart.value
+                                        () => Icon(_fromstart.value
                                             ? Icons.check_box_outlined
                                             : Icons
-                                            .check_box_outline_blank_rounded),
+                                                .check_box_outline_blank_rounded),
                                       )),
                                   Text("From Start")
                                 ],
@@ -2755,20 +2801,20 @@ class DataGridMenu {
                                           _selectedColumn != "") {
                                         PlutoRow? _slecetedRow = _almost.value
                                             ? stateManager.rows
-                                            .firstWhereOrNull((element) =>
-                                        (element.cells[_selectedColumn]!.value.toString().toLowerCase().trim().contains(_findctrl.text.toLowerCase().trim()) &&
-                                            (_index == 0 ||
-                                                element.sortIdx >
-                                                    (_index))))
+                                                .firstWhereOrNull((element) =>
+                                                    (element.cells[_selectedColumn]!.value.toString().toLowerCase().trim().contains(_findctrl.text.toLowerCase().trim()) &&
+                                                        (_index == 0 ||
+                                                            element.sortIdx >
+                                                                (_index))))
                                             : stateManager.rows.firstWhereOrNull(
                                                 (element) => (element
-                                                .cells[_selectedColumn]!
-                                                .value
-                                                .toString()
-                                                .toLowerCase()
-                                                .trim() ==
-                                                _findctrl.text.toLowerCase().trim() &&
-                                                (_index == 0 || element.sortIdx > (_index))));
+                                                            .cells[_selectedColumn]!
+                                                            .value
+                                                            .toString()
+                                                            .toLowerCase()
+                                                            .trim() ==
+                                                        _findctrl.text.toLowerCase().trim() &&
+                                                    (_index == 0 || element.sortIdx > (_index))));
                                         if (_slecetedRow == null) {
                                           stateManager.resetScrollToZero();
 
@@ -2784,29 +2830,29 @@ class DataGridMenu {
                                                       Get.back();
                                                       var _slecetedRow = _almost.value
                                                           ? stateManager.rows.firstWhereOrNull((element) => (element
-                                                          .cells[
-                                                      _selectedColumn]!
-                                                          .value
-                                                          .toString()
-                                                          .toLowerCase()
-                                                          .trim()
-                                                          .contains(_findctrl.text
-                                                          .toLowerCase()
-                                                          .trim()) &&
-                                                          (_index == 0 ||
-                                                              element.sortIdx >
-                                                                  (_index ??
-                                                                      0))))
+                                                                  .cells[
+                                                                      _selectedColumn]!
+                                                                  .value
+                                                                  .toString()
+                                                                  .toLowerCase()
+                                                                  .trim()
+                                                                  .contains(_findctrl.text
+                                                                      .toLowerCase()
+                                                                      .trim()) &&
+                                                              (_index == 0 ||
+                                                                  element.sortIdx >
+                                                                      (_index ??
+                                                                          0))))
                                                           : stateManager.rows
-                                                          .firstWhere((element) => (element.cells[_selectedColumn]!.value.toString().toLowerCase().trim() == _findctrl.text.toLowerCase().trim() && (_index == 0 || element.sortIdx > (_index ?? 0))));
+                                                              .firstWhere((element) => (element.cells[_selectedColumn]!.value.toString().toLowerCase().trim() == _findctrl.text.toLowerCase().trim() && (_index == 0 || element.sortIdx > (_index ?? 0))));
                                                       print(_slecetedRow!
-                                                          .cells[
-                                                      _selectedColumn]!
-                                                          .value
-                                                          .toString() +
+                                                              .cells[
+                                                                  _selectedColumn]!
+                                                              .value
+                                                              .toString() +
                                                           _slecetedRow
                                                               .cells[
-                                                          _selectedColumn]!
+                                                                  _selectedColumn]!
                                                               .value
                                                               .runtimeType
                                                               .toString());
@@ -2817,11 +2863,11 @@ class DataGridMenu {
 
                                                       stateManager
                                                           .moveScrollByRow(
-                                                          PlutoMoveDirection
-                                                              .down,
-                                                          _slecetedRow
-                                                              .sortIdx -
-                                                              1);
+                                                              PlutoMoveDirection
+                                                                  .down,
+                                                              _slecetedRow
+                                                                      .sortIdx -
+                                                                  1);
 
                                                       stateManager
                                                           .setKeepFocus(false);
@@ -2838,7 +2884,7 @@ class DataGridMenu {
                                                       //     notify: true);
                                                       stateManager.setCurrentCell(
                                                           _slecetedRow.cells[
-                                                          _selectedColumn],
+                                                              _selectedColumn],
                                                           _slecetedRow.sortIdx);
                                                     },
                                                     icon: Icon(Icons.done),
@@ -2859,7 +2905,8 @@ class DataGridMenu {
                                           //         .value
                                           //         .runtimeType
                                           //         .toString());
-                                          print("Index selected is>>"+_slecetedRow.sortIdx.toString());
+                                          print("Index selected is>>" +
+                                              _slecetedRow.sortIdx.toString());
                                           if (_slecetedRow.sortIdx == 0) {
                                             _index = 1;
                                           } else {
@@ -2868,7 +2915,8 @@ class DataGridMenu {
 
                                           stateManager.resetScrollToZero();
                                           stateManager.moveScrollByRow(
-                                              PlutoMoveDirection.down, _slecetedRow.sortIdx);
+                                              PlutoMoveDirection.down,
+                                              _slecetedRow.sortIdx);
                                           stateManager.setKeepFocus(false);
                                           // for (var element in stateManager
                                           //     .rows) {
@@ -2877,11 +2925,19 @@ class DataGridMenu {
                                           // }
                                           // stateManager.setRowChecked(
                                           //     _slecetedRow, true, notify: true);
-                                          if(stateManager.currentRow!=null && stateManager.currentRow?.sortIdx==0 && _slecetedRow.sortIdx==2){
+                                          if (stateManager.currentRow != null &&
+                                              stateManager
+                                                      .currentRow?.sortIdx ==
+                                                  0 &&
+                                              _slecetedRow.sortIdx == 2) {
                                             stateManager.setCurrentCell(
-                                                stateManager.getRowByIdx(_slecetedRow.sortIdx-1)?.cells[_selectedColumn],
-                                                _slecetedRow.sortIdx-1);
-                                          }else {
+                                                stateManager
+                                                    .getRowByIdx(
+                                                        _slecetedRow.sortIdx -
+                                                            1)
+                                                    ?.cells[_selectedColumn],
+                                                _slecetedRow.sortIdx - 1);
+                                          } else {
                                             stateManager.setCurrentCell(
                                                 _slecetedRow
                                                     .cells[_selectedColumn],
@@ -2910,32 +2966,32 @@ class DataGridMenu {
                                 ElevatedButton(
                                     onPressed: () {
                                       stateManager.setFilter((element) =>
-                                      stateManager.currentCell == null
-                                          ? true
-                                          : element
-                                          .cells[stateManager
-                                          .currentCell!
-                                          .column
-                                          .field]!
-                                          .value ==
-                                          stateManager
-                                              .currentCell!.value);
+                                          stateManager.currentCell == null
+                                              ? true
+                                              : element
+                                                      .cells[stateManager
+                                                          .currentCell!
+                                                          .column
+                                                          .field]!
+                                                      .value ==
+                                                  stateManager
+                                                      .currentCell!.value);
                                     },
                                     child: Text("FS")),
                                 SizedBox(width: 15),
                                 ElevatedButton(
                                     onPressed: () {
                                       stateManager.setFilter((element) =>
-                                      stateManager.currentCell == null
-                                          ? true
-                                          : element
-                                          .cells[stateManager
-                                          .currentCell!
-                                          .column
-                                          .field]!
-                                          .value !=
-                                          stateManager
-                                              .currentCell!.value);
+                                          stateManager.currentCell == null
+                                              ? true
+                                              : element
+                                                      .cells[stateManager
+                                                          .currentCell!
+                                                          .column
+                                                          .field]!
+                                                      .value !=
+                                                  stateManager
+                                                      .currentCell!.value);
                                     },
                                     child: Text("XF")),
                                 SizedBox(width: 15),
