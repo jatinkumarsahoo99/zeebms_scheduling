@@ -63,7 +63,7 @@ class SalesAuditExtraSpotsReportView
                     title: "To Date",
                     mainTextController: controller.toDateCtr,
                     widthRation: .15,
-                    startDate: DateTime.now(),
+                    intailDate:DateTime.now().subtract(const Duration(days: 367)) ,
                   ),
                   FormButton(
                     btnText: "Generate",

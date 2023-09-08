@@ -256,7 +256,7 @@ class SalesAuditNewView  extends StatelessWidget  {
                                             exportFileName: "Sales Audit New",
                                             onRowDoubleTap: (PlutoGridOnRowDoubleTapEvent? val){
                                                   print(">>>>>>>>"+val!.rowIdx .toString());
-                                                  controller.tapeBtn(val.rowIdx,controller.gridStateManagerRight!.currentRowIdx??0);
+                                                  controller.tapeBtn(leftIndex: val.rowIdx,rightIndex: controller.gridStateManagerRight?.currentRowIdx);
 
                                                },
                                             colorCallback: (PlutoRowColorContext colorData){
@@ -311,10 +311,10 @@ class SalesAuditNewView  extends StatelessWidget  {
                                                 load.stateManager.setFilter((element) => true);
                                               }
                                               controller.gridStateManagerLeft = load.stateManager;
-                                              controller.gridStateManagerLeft!.setCurrentCell(controller.gridStateManagerLeft!.
-                                              getRowByIdx(controller.selectedIndex)!.cells['exportTapeCode'],
+                                              controller.gridStateManagerLeft?.setCurrentCell(controller.gridStateManagerLeft?.
+                                              getRowByIdx(controller.selectedIndex)?.cells['exportTapeCode'],
                                                   controller.selectedIndex);
-                                              controller.gridStateManagerLeft!.moveCurrentCellByRowIdx(controller.selectedIndex??0, PlutoMoveDirection.down);
+                                              controller.gridStateManagerLeft?.moveCurrentCellByRowIdx(controller.selectedIndex??0, PlutoMoveDirection.down);
                                               load.stateManager.notifyListeners();
                                             },
                                             // colorCallback: (renderC) => Colors.red[200]!,
@@ -344,7 +344,7 @@ class SalesAuditNewView  extends StatelessWidget  {
                                                 exportFileName: "Sales Audit New",
                                                 onRowDoubleTap: (PlutoGridOnRowDoubleTapEvent? val){
                                                   print(">>>>>>>>"+val!.row.toString());
-                                                  controller.tapeBtn(controller.gridStateManagerLeft!.currentRowIdx??0,val.rowIdx);
+                                                  controller.tapeBtn(leftIndex: controller.gridStateManagerLeft?.currentRowIdx,rightIndex: val.rowIdx);
                                                 },
                                                 colorCallback: (PlutoRowColorContext colorData){
                                                   Color color = Colors.white;
@@ -382,10 +382,10 @@ class SalesAuditNewView  extends StatelessWidget  {
                                                     (PlutoGridOnLoadedEvent
                                                 load) {
                                                   controller.gridStateManagerRight = load.stateManager;
-                                                  controller.gridStateManagerRight!.setCurrentCell(controller.gridStateManagerRight!.
-                                                  getRowByIdx(controller.selectedRightIndex)!.cells['exportTapeCode'],
+                                                  controller.gridStateManagerRight?.setCurrentCell(controller.gridStateManagerRight?.
+                                                  getRowByIdx(controller.selectedRightIndex)?.cells['exportTapeCode'],
                                                       controller.selectedRightIndex);
-                                                  controller.gridStateManagerRight!.moveCurrentCellByRowIdx(controller.selectedRightIndex??0,
+                                                  controller.gridStateManagerRight?.moveCurrentCellByRowIdx(controller.selectedRightIndex??0,
                                                       PlutoMoveDirection.down);
 
                                                   /*controller.tblFastInsert =
@@ -444,8 +444,16 @@ class SalesAuditNewView  extends StatelessWidget  {
                               showIcon: false,
                               // isEnabled: btn['isDisabled'],
                               callback: (){
-                                controller.tapeBtn(controller.gridStateManagerLeft!.currentRowIdx??0,
-                                    controller.gridStateManagerRight!.currentRowIdx??0);
+                                if(controller.gridStateManagerLeft != null &&
+                                    controller.gridStateManagerRight != null ){
+                                  controller.tapeBtn(leftIndex: controller.gridStateManagerLeft?.currentRowIdx,
+                                     rightIndex:  controller.gridStateManagerRight?.currentRowIdx);
+                                }else if(controller.gridStateManagerLeft != null){
+                                  controller.tapeBtn(leftIndex: controller.gridStateManagerLeft?.currentRowIdx);
+                                }else if(controller.gridStateManagerRight != null){
+                                  controller.tapeBtn(rightIndex: controller.gridStateManagerRight?.currentRowIdx);
+                                }
+
                               },
                             ),
                             FormButtonWrapper(
@@ -461,7 +469,7 @@ class SalesAuditNewView  extends StatelessWidget  {
                               showIcon: false,
                               // isEnabled: btn['isDisabled'],
                               callback: (){
-                                controller.btnMapClick(controller.gridStateManagerRight!.currentRowIdx??0,controller.gridStateManagerLeft!.currentRowIdx??0);
+                                controller.btnMapClick(controller.gridStateManagerRight?.currentRowIdx,controller.gridStateManagerLeft?.currentRowIdx);
                               },
                             ),
                             FormButtonWrapper(
