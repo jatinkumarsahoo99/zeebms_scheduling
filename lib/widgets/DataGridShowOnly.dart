@@ -26,7 +26,7 @@ class DataGridShowOnlyKeys extends StatelessWidget {
     this.actionIcon,
     this.keyMapping,
     this.actionIconKey,
-    this.columnAutoResize = true,
+    this.columnAutoResize = false,
     this.actionOnPress,
     this.rowCheckColor = const Color(0xFFD1C4E9),
     this.onSelected,
