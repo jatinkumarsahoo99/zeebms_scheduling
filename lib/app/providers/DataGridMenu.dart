@@ -69,14 +69,14 @@ class DataGridMenu {
       stateManager.setFilter((element) => _filterRows.contains(element));
     }
 
-    customFilter(PlutoGridStateManager stateManager) {
+    customFilter(PlutoGridStateManager stateManager,{String? selectedColumn}) {
       List _allValues = [];
       var _selectedValues = RxList([]);
       print("1st foucus Added");
       if (stateManager.currentCell == null &&
           ((stateManager.rows.length ?? 0) > 0)) {
         stateManager.setCurrentCell(
-            (stateManager.rows[0].cells.values.first), 0);
+            (selectedColumn!=null?(stateManager.rows[0].cells[selectedColumn]):(stateManager.rows[0].cells.values.first)), 0);
       }
       if (stateManager.currentCell != null) {
         _allValues = stateManager.rows
@@ -769,7 +769,7 @@ class DataGridMenu {
                                 SizedBox(width: 15),
                                 ElevatedButton(
                                     onPressed: () {
-                                      customFilter(stateManager);
+                                      customFilter(stateManager,selectedColumn: _selectedColumn);
                                     },
                                     child: Text("CF")),
                               ],
