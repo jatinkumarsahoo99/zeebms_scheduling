@@ -7,7 +7,9 @@ import 'package:intl/intl.dart';
 import '../../../../widgets/LoadingDialog.dart';
 import '../../../../widgets/PlutoGrid/src/manager/pluto_grid_state_manager.dart';
 import '../../../controller/ConnectorControl.dart';
+import '../../../controller/HomeController.dart';
 import '../../../data/DropDownValue.dart';
+import '../../../data/user_data_settings_model.dart';
 import '../../../providers/ApiFactory.dart';
 import '../../../providers/Utils.dart';
 import '../../../routes/app_pages.dart';
@@ -30,6 +32,7 @@ class ManageChannelInvemtoryController extends GetxController {
   var buttonsList = ["Default", "Save Today", "Save All Days", "Special"];
   var programs = <DropDownValue>[].obs;
   bool madeChanges = false;
+  UserDataSettings? userDataSettings;
 
   @override
   void onInit() {
@@ -42,6 +45,12 @@ class ManageChannelInvemtoryController extends GetxController {
   void onReady() {
     super.onReady();
     getOnLoadData();
+    fetchUserSetting1();
+  }
+
+  fetchUserSetting1() async {
+    userDataSettings = await Get.find<HomeController>().fetchUserSetting2();
+    dataTableList.refresh();
   }
 
   saveSpecial(String fromDate, String toDate, String fromTime, String toTime,
@@ -323,6 +332,10 @@ class ManageChannelInvemtoryController extends GetxController {
   formHandler(btn) {
     if (btn == "Clear") {
       clearPage();
-    } else if (btn == "Save") {}
+    } else if (btn == "Exit") {
+      Get.find<HomeController>().postUserGridSetting2(listStateManager: [
+        {"stateManager": stateManager},
+      ]);
+    }
   }
 }
