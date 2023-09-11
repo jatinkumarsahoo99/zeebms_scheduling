@@ -167,22 +167,23 @@ class InventoryStatusReportView
                             widthRation: 0.17,
                           ),
                           const Spacer(),
+                          SizedBox(
+                            width: context.width * 0.17,
+                            child: FormButton(
+                                btnText: "Generate",
+                                callback: controller.generateData),
+                          ),
+                          const SizedBox(height: 10),
                           Row(
                             children: [
                               Expanded(
                                   child: FormButton(
                                       btnText: "Clear",
                                       callback: controller.clearPage)),
-                              SizedBox(width: 10),
-                              Expanded(child: FormButton(btnText: "Exit")),
+                              const SizedBox(width: 10),
+                              const Expanded(
+                                  child: FormButton(btnText: "Exit")),
                             ],
-                          ),
-                          const SizedBox(height: 10),
-                          SizedBox(
-                            width: context.width * 0.17,
-                            child: FormButton(
-                                btnText: "Generate",
-                                callback: controller.generateData),
                           ),
                           const SizedBox(height: 10),
                         ],
