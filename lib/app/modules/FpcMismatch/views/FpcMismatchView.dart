@@ -378,7 +378,7 @@ class FpcMismatchView extends GetView<FpcMismatchController> {
                                   .toLowerCase() ==
                               "e") {
                         return Colors.red;
-                      } else if (plutoContext
+                      } /*else if (plutoContext
                                   .row.cells["bookingstatus"]?.value !=
                               null &&
                           plutoContext.row.cells["bookingstatus"]?.value
@@ -386,11 +386,11 @@ class FpcMismatchView extends GetView<FpcMismatchController> {
                                   .toLowerCase() ==
                               "b") {
                         return Colors.yellow;
-                      } else {
+                      }*/ else {
                         return Colors.white;
                       }
                     case SelectButton.DisplayMismatch:
-                      return Colors.yellow;
+                      return Colors.white;
                     default:
                       return Colors.white;
                   }
