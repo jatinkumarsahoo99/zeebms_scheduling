@@ -275,13 +275,18 @@ class AsrunImportController extends GetxController {
             if (map is Map &&
                 map.containsKey("isCheck") &&
                 map.containsKey("message")) {
-              LoadingDialog.callInfoMessage(
-                  map["message"].toString().split("\n").first, callback: () {
-                LoadingDialog.modify(
-                    "Asrun Missing Do Yount Want To Proceed with Save?", () {
-                  saveAsrun();
-                }, () {}, cancelTitle: "No", deleteTitle: "Yes");
-              });
+              print("Error: ${map["message"].toString().split("\n").first}");
+              if (map["message"].toString().split("\n").first == "null") {
+                saveAsrun();
+              } else {
+                LoadingDialog.callInfoMessage(
+                    map["message"].toString().split("\n").first, callback: () {
+                  LoadingDialog.modify(
+                      "Asrun Missing Do Yount Want To Proceed with Save?", () {
+                    saveAsrun();
+                  }, () {}, cancelTitle: "No", deleteTitle: "Yes");
+                });
+              }
             }
             // if (map is Map && map.containsKey("progMismatch") && map["progMismatch"]["message"] != null) {
             //   LoadingDialog.callInfoMessage(map["progMismatch"]["message"]);

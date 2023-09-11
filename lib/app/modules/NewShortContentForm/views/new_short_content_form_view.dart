@@ -84,10 +84,10 @@ class NewShortContentFormView extends StatelessWidget {
                         selected: controller.selectedCategory.value),
                   ),
                   InputFields.formField1(
-                    hintTxt: "Caption",
-                    controller: controller.caption,
-                    width: 0.24,
-                  ),
+                      hintTxt: "Caption",
+                      controller: controller.caption,
+                      width: 0.24,
+                      focusNode: controller.captionFN),
                   InputFields.formField1(
                     hintTxt: "TX Caption",
                     controller: controller.txCaption,
@@ -129,7 +129,6 @@ class NewShortContentFormView extends StatelessWidget {
                   InputFields.formField1(
                     hintTxt: "House ID",
                     controller: controller.houseId,
-                    focusNode: controller.houseFocusNode,
                     width: 0.155,
                   ),
                   Obx(
@@ -155,16 +154,18 @@ class NewShortContentFormView extends StatelessWidget {
                   //   width: 0.325,
                   // ),
                   InputFields.formFieldNumberMask(
-                      hintTxt: "SOM",
-                      widthRatio: .155,
-                      controller: controller.som,
-                      paddingLeft: 0,
-                      isTime: true),
+                    hintTxt: "SOM",
+                    widthRatio: .155,
+                    controller: controller.som,
+                    paddingLeft: 0,
+                    // isTime: true
+                  ),
                   InputFields.formFieldNumberMask(
                       hintTxt: "EOM",
                       widthRatio: .155,
                       controller: controller.eom,
-                      isTime: true,
+                      // isTime: true,
+                      textFieldFN: controller.eomFN,
                       paddingLeft: 0),
                   InputFields.formFieldNumberMask(
                       hintTxt: "Duration",
@@ -260,7 +261,7 @@ class NewShortContentFormView extends StatelessWidget {
   btnHandler(name) async {
     switch (name) {
       case "Save":
-        await controller.save();
+        await controller.saveValidate();
 
         break;
       case "Search":

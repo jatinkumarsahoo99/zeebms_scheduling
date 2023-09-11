@@ -1,6 +1,7 @@
 import 'package:bms_scheduling/app/controller/ConnectorControl.dart';
 import 'package:bms_scheduling/app/providers/Utils.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:get/get.dart';
 import 'package:intl/intl.dart';
 
@@ -24,7 +25,9 @@ class NewShortContentFormController extends GetxController {
       categoryFocusNode = FocusNode(),
       programFocusNode = FocusNode(),
       tapeFocusNode = FocusNode(),
-      orgFocusNode = FocusNode();
+      orgFocusNode = FocusNode(),
+      eomFN = FocusNode(),
+      captionFN = FocusNode();
   String? typeCode;
 
   Rxn<DropDownValue> selectedLocation = Rxn<DropDownValue>();
@@ -66,6 +69,23 @@ class NewShortContentFormController extends GetxController {
             }
           }
         });
+  }
+
+  calculateDuration({bool showDialog = true}) {
+    var diff = (Utils.oldBMSConvertToSecondsValue(value: eom.text) -
+        Utils.oldBMSConvertToSecondsValue(value: som.text));
+
+    print("diff: $diff");
+
+    if (diff.isNegative && showDialog) {
+      eom.clear();
+      LoadingDialog.showErrorDialog("EOM should not less than SOM",
+          callback: () {
+        eomFN.requestFocus();
+      });
+    } else {
+      duration.text = Utils.convertToTimeFromDouble(value: diff);
+    }
   }
 
   getChannel(locationCode) {
@@ -300,6 +320,46 @@ class NewShortContentFormController extends GetxController {
         });
   }
 
+  saveValidate() {
+    late DateTime startD, endD;
+    startD = DateFormat("dd-MM-yyyy").parse(startData.text);
+    endD = DateFormat("dd-MM-yyyy").parse(endDate.text);
+    if (selectedLocation.value?.key == null) {
+      LoadingDialog.showErrorDialog("Location cannot be empty.");
+    } else if (selectedChannel.value?.key == null) {
+      LoadingDialog.showErrorDialog("Channel cannot be empty.");
+    } else if (eom.text == "00:00:00:00") {
+      eomFN.requestFocus();
+      LoadingDialog.showErrorDialog("EOM cannot be empty.");
+    } else if (startD.isAfter(endD)) {
+      LoadingDialog.showErrorDialog("Start date should not more than end date");
+    }
+    // else if (fillerNameCtr.text.trim().isEmpty) {
+    //   LoadingDialog.showErrorDialog("Filler Caption cannot be empty.");
+    // } else if (txCaptionCtr.text.trim().isEmpty) {
+    //   LoadingDialog.showErrorDialog("Export Tape Caption cannot be empty.");
+    // } else if (tapeIDCtr.text.trim().isEmpty) {
+    //   LoadingDialog.showErrorDialog("Export Tape Code cannot be empty.");
+    // } else if (segNoCtrLeft.text.trim().isEmpty) {
+    //   LoadingDialog.showErrorDialog("Segment Number cannot be empty.");
+    // } else if (txNoCtr.text.trim().isEmpty) {
+    //   LoadingDialog.showErrorDialog("House ID cannot be empty.");
+    // }
+    //  else {
+    //   if (fillerCode.isNotEmpty) {
+    //     LoadingDialog.recordExists(
+    //       "Record Already exits!\nDo you want to modify it?",
+    //       () {
+    //         save();
+    //       },
+    //     );
+    //   }
+    else {
+      save();
+    }
+    // }
+  }
+
   save() async {
     var body = {};
     List _durations = duration.text.split(":");
@@ -420,6 +480,14 @@ class NewShortContentFormController extends GetxController {
     return true;
   }
 
+  setCaption() {
+    if (caption.text.trim().isNotEmpty) {
+      txCaption.text = caption.text;
+    } else {
+      txCaption.text = "";
+    }
+  }
+
   @override
   void onInit() {
     getInitData();
@@ -427,6 +495,22 @@ class NewShortContentFormController extends GetxController {
       if (!houseFocusNode.hasFocus && houseId.text.isNotEmpty) {
         houseleave();
         retriveRecord();
+      }
+    });
+
+    eomFN = FocusNode(
+      onKeyEvent: (node, event) {
+        if (event.logicalKey == LogicalKeyboardKey.tab &&
+            event is KeyDownEvent) {
+          calculateDuration();
+          return KeyEventResult.ignored;
+        }
+        return KeyEventResult.ignored;
+      },
+    );
+    captionFN.addListener(() {
+      if (!captionFN.hasFocus) {
+        setCaption();
       }
     });
     super.onInit();
