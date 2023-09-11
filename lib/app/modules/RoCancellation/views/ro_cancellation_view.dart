@@ -12,12 +12,14 @@ import '../../../../widgets/gridFromMap.dart';
 import '../../../controller/HomeController.dart';
 import '../../../controller/MainController.dart';
 import '../../../data/PermissionModel.dart';
+import '../../../data/user_data_settings_model.dart';
 import '../../../routes/app_pages.dart';
 import '../controllers/ro_cancellation_controller.dart';
 
 class RoCancellationView extends StatelessWidget {
   RoCancellationView({Key? key}) : super(key: key);
-  final controller = Get.put<RoCancellationController>(RoCancellationController());
+  final controller =
+      Get.put<RoCancellationController>(RoCancellationController());
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -241,6 +243,14 @@ class RoCancellationView extends StatelessWidget {
                       return SizedBox(width: double.infinity);
                     } else {
                       return DataGridFromMap3(
+                        witdthSpecificColumn: (controller
+                            .userDataSettings?.userSetting
+                            ?.firstWhere(
+                                (element) =>
+                                    element.controlName ==
+                                    "roCancellationGridManager",
+                                orElse: () => UserSetting())
+                            .userSettings),
                         checkBoxColumnKey: const ['requested'],
                         checkBoxStrComparison: "true",
                         uncheckCheckBoxStr: "false",
@@ -350,6 +360,10 @@ class RoCancellationView extends StatelessWidget {
       Get.find<HomeController>().clearPage1();
     } else if (btnName == "Docs") {
       controller.docs();
+    } else if (btnName == "Docs") {
+      Get.find<HomeController>().postUserGridSetting2(listStateManager: [
+        {"roCancellationGridManager": controller.roCancellationGridManager},
+      ]);
     }
   }
 }

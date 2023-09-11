@@ -11,6 +11,7 @@ import '../../../../widgets/dropdown.dart';
 import '../../../../widgets/gridFromMap.dart';
 import '../../../../widgets/radio_row.dart';
 import '../../../controller/HomeController.dart';
+import '../../../data/user_data_settings_model.dart';
 import '../../../providers/Utils.dart';
 import '../controllers/inventory_status_report_controller.dart';
 
@@ -209,15 +210,19 @@ class InventoryStatusReportView
                                     // colorCallback: (row) => (row.row.cells.containsValue(controller.stateManager?.currentCell))
                                     //     ? Colors.deepPurple.shade200
                                     //     : Colors.white,
-                                    // onload: (event) {
-                                    //   controller.stateManager = event.stateManager;
-                                    //   event.stateManager.setSelectingMode(PlutoGridSelectingMode.row);
-                                    //   event.stateManager.setSelecting(true);
-                                    // },
-                                    witdthSpecificColumn: {
-                                      "programtype": 130,
-                                      "programname": 200,
-                                      "rmsProgram": 200,
+                                    witdthSpecificColumn: (controller
+                                        .userDataSettings?.userSetting
+                                        ?.firstWhere(
+                                            (element) =>
+                                                element.controlName ==
+                                                "stateManager",
+                                            orElse: () => UserSetting())
+                                        .userSettings),
+                                    onload: (event) {
+                                      controller.stateManager =
+                                          event.stateManager;
+                                      // event.stateManager.setSelectingMode(PlutoGridSelectingMode.row);
+                                      // event.stateManager.setSelecting(true);
                                     },
                                   ),
                           );

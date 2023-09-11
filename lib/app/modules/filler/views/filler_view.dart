@@ -100,7 +100,7 @@ class FillerView extends GetView<FillerController> {
                                         "Location",
                                         0.15,
                                         autoFocus: true,
-                                        height: 200,
+                                        height: 130,
                                         selected:
                                             controller.selectedImportLocation,
                                       ),
@@ -116,7 +116,7 @@ class FillerView extends GetView<FillerController> {
                                         "Channel",
                                         0.15,
                                         // dialogHeight: Get.height * .7,
-                                        height: 200,
+                                        height: 130,
                                         selected:
                                             controller.selectedImportChannel,
                                       ),

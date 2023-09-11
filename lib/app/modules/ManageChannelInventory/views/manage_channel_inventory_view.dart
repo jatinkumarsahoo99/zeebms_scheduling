@@ -19,6 +19,7 @@ import '../../../../widgets/gridFromMap.dart';
 import '../../../../widgets/gridFromMap1.dart';
 import '../../../../widgets/radio_row.dart';
 import '../../../controller/HomeController.dart';
+import '../../../data/user_data_settings_model.dart';
 import '../../../providers/Utils.dart';
 import '../controllers/manage_channel_inventory_controller.dart';
 
@@ -128,13 +129,17 @@ class ManageChannelInvemtoryView
                                   );
                                 }
                               },
-                              witdthSpecificColumn: {
-                                "commDuration": 200,
-                              },
                               mode: PlutoGridMode.normal,
                               // colorCallback: (row) {
                               //   return Colors.white;
                               // },
+                              witdthSpecificColumn: (controller
+                                  .userDataSettings?.userSetting
+                                  ?.firstWhere(
+                                      (element) =>
+                                          element.controlName == "stateManager",
+                                      orElse: () => UserSetting())
+                                  .userSettings),
                               onload: (event) {
                                 controller.stateManager = event.stateManager;
                                 event.stateManager.setSelectingMode(
