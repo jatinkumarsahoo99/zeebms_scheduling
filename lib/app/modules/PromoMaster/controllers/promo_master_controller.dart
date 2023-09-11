@@ -365,13 +365,12 @@ class PromoMasterController extends GetxController {
           Get.back();
           if (resp != null &&
               resp is Map<String, dynamic> &&
-              resp['resLeaveBlankTapeId'] != null &&
-              resp['resLeaveBlankTapeId']['message'] != null &&
-              resp['resLeaveBlankTapeId']['message'].toString() ==
+              resp['leaveBlankTapeId'] != null &&
+              resp['leaveBlankTapeId']['message'] != null &&
+              resp['leaveBlankTapeId']['message'].toString() ==
                   "Invalid blank tape id.") {
             LoadingDialog.showErrorDialog(
-                resp['resLeaveBlankTapeId']['message'].toString(),
-                callback: () {
+                resp['leaveBlankTapeId']['message'].toString(), callback: () {
               blanktapeIdFN.requestFocus();
             });
           }
@@ -389,16 +388,16 @@ class PromoMasterController extends GetxController {
           Get.back();
           if (resp != null &&
               resp is Map<String, dynamic> &&
-              resp['cartNo_Leave'] != null &&
-              resp['cartNo_Leave']['eventName'] != null &&
-              resp['cartNo_Leave']['eventName']
+              resp['cartNoLeave'] != null &&
+              resp['cartNoLeave']['eventName'] != null &&
+              resp['cartNoLeave']['eventName']
                   .toString()
                   .contains("House ID you entered is already used for")) {
             // if (promoCode.isNotEmpty) {
             //   txNoCtr.text = strHouseID;
             // }
             LoadingDialog.showErrorDialog(
-                resp['cartNo_Leave']['eventName'].toString(), callback: () {
+                resp['cartNoLeave']['eventName'].toString(), callback: () {
               txNoFN.requestFocus();
             });
           } else {
