@@ -29,6 +29,8 @@ void main() async {
   await DefaultCacheManager().emptyCache();
   setPathUrlStrategy();
 
+  // print("User id is>>"+Aes.)
+
   ///Don't comment it....Testing is going on
   String data = await rootBundle.loadString('assets/AppConfig.json');
   print(">>Keyvault JSON DATA>>>" + data.toString());
