@@ -1411,16 +1411,16 @@ class RosDistributionController extends GetxController {
             closeDialogIfOpen();
             if (resp != null &&
                 resp is Map<String, dynamic> &&
-                resp['info_GetUnalloacted']['lstROSSpots'] != null &&
-                resp['info_GetUnalloacted']['lstROSSpots'] is List<dynamic> &&
-                (resp['info_GetUnalloacted']['lstROSSpots'] as List<dynamic>)
+                resp['info_Services']['lstROSSpots'] != null &&
+                resp['info_Services']['lstROSSpots'] is List<dynamic> &&
+                (resp['info_Services']['lstROSSpots'] as List<dynamic>)
                     .isNotEmpty) {
               var tempData = ROSDistuibutionShowModel.copyWith(
                   infoShowBucketList: showDataModel.value.infoShowBucketList);
               tempData.infoShowBucketList ??= InfoShowBucketList();
               tempData.infoShowBucketList?.lstROSSpots ??= <LstROSSpots>[];
               tempData.infoShowBucketList?.lstROSSpots?.clear();
-              for (var element in resp['info_GetEmptyList']['lstROSSpots']) {
+              for (var element in resp['info_Services']['lstROSSpots']) {
                 tempData.infoShowBucketList?.lstROSSpots
                     ?.add(LstROSSpots.fromJson(element));
               }

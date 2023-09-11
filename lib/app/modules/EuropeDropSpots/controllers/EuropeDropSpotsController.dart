@@ -87,23 +87,28 @@ class EuropeDropSpotsController extends GetxController {
   getInitial() {
     Get.find<ConnectorControl>().GETMETHODCALL(
         api: ApiFactory.EUROPE_DROP_SPOTS_INITIAL(),
-        fun: (Map map) {
+        fun: ( map) {
           print("Location dta>>>" + jsonEncode(map));
-          locationList.clear();
-          loc.clear();
-          locationCode.clear();
-          map["location"].forEach((e) {
-            locationList.add(DropDownValue.fromJsonDynamic(
-                e, "locationCode", "locationName"));
-          });
-          map["loc"].forEach((e) {
-            loc.add(DropDownValue.fromJsonDynamic(
-                e, "locationCode", "locationName"));
-          });
-          map["locationcode"].forEach((e) {
-            loc.add(DropDownValue.fromJsonDynamic(
-                e, "locationCode", "locationName"));
-          });
+
+          if(map is Map && map.containsKey('pageLoadInfo')&& map['pageLoadInfo'] != null){
+            locationList.clear();
+            loc.clear();
+            locationCode.clear();
+            map['pageLoadInfo']["location"].forEach((e) {
+              locationList.add(DropDownValue.fromJsonDynamic(
+                  e, "locationCode", "locationName"));
+            });
+            map['pageLoadInfo']["loc"].forEach((e) {
+              loc.add(DropDownValue.fromJsonDynamic(
+                  e, "locationCode", "locationName"));
+            });
+            map['pageLoadInfo']["locationcode"].forEach((e) {
+              loc.add(DropDownValue.fromJsonDynamic(
+                  e, "locationCode", "locationName"));
+            });
+          }
+
+
         });
   }
 
