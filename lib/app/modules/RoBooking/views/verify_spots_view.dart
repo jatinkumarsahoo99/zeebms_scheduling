@@ -6,6 +6,8 @@ import 'package:flutter/material.dart';
 
 import 'package:get/get.dart';
 
+import '../../../data/user_data_settings_model.dart';
+
 class VerifySpotsView extends GetView<RoBookingController> {
   const VerifySpotsView({Key? key}) : super(key: key);
   @override
@@ -18,15 +20,25 @@ class VerifySpotsView extends GetView<RoBookingController> {
             children: [
               Expanded(
                   child: Container(
-                decoration: BoxDecoration(border: Border.all(width: 1.0, color: Colors.grey)),
+                decoration: BoxDecoration(
+                    border: Border.all(width: 1.0, color: Colors.grey)),
                 child: DataGridShowOnlyKeys(
-                  mapData: controller.spotsNotVerifiedClickData?.lstdgvVerifySpot ?? [],
+                  mapData:
+                      controller.spotsNotVerifiedClickData?.lstdgvVerifySpot ??
+                          [],
                   editKeys: const [
                     "spotsEntered",
                   ],
                   onEdit: (editEvent) {
-                    controller.spotsNotVerifiedClickData?.lstdgvVerifySpot?[editEvent.rowIdx]["spotsEntered"] = editEvent.value;
+                    controller.spotsNotVerifiedClickData
+                            ?.lstdgvVerifySpot?[editEvent.rowIdx]
+                        ["spotsEntered"] = editEvent.value;
                   },
+                  keysWidths: (controller.userDataSettings?.userSetting
+                      ?.firstWhere(
+                          (element) => element.controlName == "spotVerifyGrid",
+                          orElse: () => UserSetting())
+                      .userSettings),
                   onload: (loadEvent) {
                     controller.spotVerifyGrid = loadEvent.stateManager;
                   },

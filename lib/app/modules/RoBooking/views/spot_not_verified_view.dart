@@ -9,6 +9,7 @@ import 'package:flutter/material.dart';
 
 import 'package:get/get.dart';
 
+import '../../../data/user_data_settings_model.dart';
 import 'dummydata.dart';
 
 class SpotNotVerifiedView extends GetView<RoBookingController> {
@@ -29,14 +30,24 @@ class SpotNotVerifiedView extends GetView<RoBookingController> {
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
                   DropDownField.formDropDown1WidthMap(
-                      controller.roBookingInitData!.lstLocation!.map((e) => DropDownValue(key: e.locationCode, value: e.locationName)).toList(),
+                      controller.roBookingInitData!.lstLocation!
+                          .map((e) => DropDownValue(
+                              key: e.locationCode, value: e.locationName))
+                          .toList(),
                       (value) => {selectedLocation = value},
                       "Location",
                       0.24,
                       dialogHeight: Get.height / 3),
                   DropDownField.formDropDown1WidthMap(
-                      controller.channels.value, dialogHeight: Get.height / 3, (value) => {selectedChannel = value}, "Channel", 0.24),
-                  DateWithThreeTextField(title: "FPC Eff. Dt.", widthRation: 0.12, mainTextController: effectdateController),
+                      controller.channels.value,
+                      dialogHeight: Get.height / 3,
+                      (value) => {selectedChannel = value},
+                      "Channel",
+                      0.24),
+                  DateWithThreeTextField(
+                      title: "FPC Eff. Dt.",
+                      widthRation: 0.12,
+                      mainTextController: effectdateController),
                   FormButtonWrapper(
                     btnText: "Spot Not Verified",
                     iconDataM: Icons.cancel_presentation_outlined,
@@ -44,7 +55,8 @@ class SpotNotVerifiedView extends GetView<RoBookingController> {
                       controller.getSpotNotVerified(
                           selectedLocation?.key ?? "",
                           selectedChannel?.key ?? "",
-                          effectdateController.text.split("-")[2] + effectdateController.text.split("-")[1],
+                          effectdateController.text.split("-")[2] +
+                              effectdateController.text.split("-")[1],
                           Get.find<MainController>().user?.logincode ?? "");
                       // controller.getSpotsNotVerified(
                       //     selectedLocation!.key, selectedChannel!.key, effectdateController.text.split("-")[2] + effectdateController.text.split("-")[1]);
@@ -60,14 +72,27 @@ class SpotNotVerifiedView extends GetView<RoBookingController> {
                   child: Container(
                 child: Obx(() => controller.spotsNotVerified.value.isNotEmpty
                     ? DataGridShowOnlyKeys(
-                        mapData: controller.spotsNotVerified.value.map((e) => e.toJson()).toList(),
+                        mapData: controller.spotsNotVerified.value
+                            .map((e) => e.toJson())
+                            .toList(),
                         formatDate: false,
                         onRowDoubleTap: (rowEvent) {
                           controller.spotnotverifiedclick(rowEvent.rowIdx);
                         },
+                        onload: (sm) {
+                          controller.spotNotVerifiedGrid = sm.stateManager;
+                        },
+                        keysWidths: (controller.userDataSettings?.userSetting
+                            ?.firstWhere(
+                                (element) =>
+                                    element.controlName ==
+                                    "spotNotVerifiedGrid",
+                                orElse: () => UserSetting())
+                            .userSettings),
                       )
                     : Container(
-                        decoration: BoxDecoration(border: Border.all(width: 1.0, color: Colors.grey)),
+                        decoration: BoxDecoration(
+                            border: Border.all(width: 1.0, color: Colors.grey)),
                       )),
               ))
             ],

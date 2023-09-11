@@ -8,6 +8,7 @@ import 'package:get/get.dart';
 import 'package:intl/intl.dart';
 
 import '../../../../widgets/DateTime/DateWithThreeTextField.dart';
+import '../../../data/user_data_settings_model.dart';
 import 'dummydata.dart';
 
 class DealView extends GetView<RoBookingController> {
@@ -54,6 +55,14 @@ class DealView extends GetView<RoBookingController> {
                                       .bookingNoLeaveData!.lstdgvDealDetails!
                                       .map((e) => e.toJson())
                                       .toList(),
+                                  keysWidths: (controller
+                                      .userDataSettings?.userSetting
+                                      ?.firstWhere(
+                                          (element) =>
+                                              element.controlName ==
+                                              "dealViewGrid",
+                                          orElse: () => UserSetting())
+                                      .userSettings),
                                   onload: (load) {
                                     gridcontroller.dealViewGrid =
                                         load.stateManager;
@@ -103,6 +112,14 @@ class DealView extends GetView<RoBookingController> {
                                           .dealNoLeaveData!.lstdgvDealDetails!
                                           .map((e) => e.toJson())
                                           .toList(),
+                                      keysWidths: (controller
+                                          .userDataSettings?.userSetting
+                                          ?.firstWhere(
+                                              (element) =>
+                                                  element.controlName ==
+                                                  "dealViewGrid",
+                                              orElse: () => UserSetting())
+                                          .userSettings),
                                       onload: (load) {
                                         gridcontroller.dealViewGrid =
                                             load.stateManager;
