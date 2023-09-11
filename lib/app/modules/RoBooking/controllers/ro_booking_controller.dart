@@ -932,6 +932,9 @@ class RoBookingController extends GetxController {
   }
 
   onBookingNoLeave({String? bookingNumber}) {
+    if (bookingMonthCtrl.text.isEmpty) {
+      return;
+    }
     Get.find<ConnectorControl>().POSTMETHOD(
         api: ApiFactory.RO_BOOKING_BOOKING_NO_LEAVE,
         json: {

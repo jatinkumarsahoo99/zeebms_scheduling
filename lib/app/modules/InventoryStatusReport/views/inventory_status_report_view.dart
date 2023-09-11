@@ -11,10 +11,12 @@ import '../../../../widgets/dropdown.dart';
 import '../../../../widgets/gridFromMap.dart';
 import '../../../../widgets/radio_row.dart';
 import '../../../controller/HomeController.dart';
+import '../../../data/user_data_settings_model.dart';
 import '../../../providers/Utils.dart';
 import '../controllers/inventory_status_report_controller.dart';
 
-class InventoryStatusReportView extends GetView<InventoryStatusReportController> {
+class InventoryStatusReportView
+    extends GetView<InventoryStatusReportController> {
   const InventoryStatusReportView({Key? key}) : super(key: key);
   @override
   Widget build(BuildContext context) {
@@ -36,7 +38,8 @@ class InventoryStatusReportView extends GetView<InventoryStatusReportController>
                         children: [
                           Obx(() {
                             return DropDownField.formDropDown1WidthMap(
-                              controller.onLoadModel.value?.info?.locations ?? [],
+                              controller.onLoadModel.value?.info?.locations ??
+                                  [],
                               (v) => controller.selectedLocation = v,
                               "Location",
                               .16,
@@ -82,29 +85,52 @@ class InventoryStatusReportView extends GetView<InventoryStatusReportController>
                           Container(
                             height: MediaQuery.of(context).size.height * .3,
                             decoration: BoxDecoration(
-                              border: Border.all(color: Colors.deepPurpleAccent),
+                              border:
+                                  Border.all(color: Colors.deepPurpleAccent),
                               borderRadius: BorderRadius.circular(0),
                             ),
                             // margin: EdgeInsets.only(top: 8),
                             child: Obx(() {
                               return ListView.builder(
                                 controller: ScrollController(),
-                                itemCount: (controller.onLoadModel.value?.info?.channels ?? []).length,
+                                itemCount: (controller.onLoadModel.value?.info
+                                            ?.channels ??
+                                        [])
+                                    .length,
                                 itemBuilder: (context, int index) {
                                   return Row(
                                     children: [
-                                      StatefulBuilder(builder: (context, reCreate) {
+                                      StatefulBuilder(
+                                          builder: (context, reCreate) {
                                         return Checkbox(
-                                          value: controller.onLoadModel.value?.info?.channels?[index].isSelected ?? false,
+                                          value: controller
+                                                  .onLoadModel
+                                                  .value
+                                                  ?.info
+                                                  ?.channels?[index]
+                                                  .isSelected ??
+                                              false,
                                           onChanged: (bool? value) {
-                                            controller.onLoadModel.value?.info?.channels?[index].isSelected = value ?? false;
+                                            controller
+                                                .onLoadModel
+                                                .value
+                                                ?.info
+                                                ?.channels?[index]
+                                                .isSelected = value ?? false;
                                             reCreate(() {});
                                           },
                                         );
                                       }),
                                       Expanded(
                                         child: Text(
-                                          controller.onLoadModel.value?.info?.channels?[index].downValue?.value ?? "",
+                                          controller
+                                                  .onLoadModel
+                                                  .value
+                                                  ?.info
+                                                  ?.channels?[index]
+                                                  .downValue
+                                                  ?.value ??
+                                              "",
                                           style: TextStyle(fontSize: 12),
                                         ),
                                       )
@@ -117,10 +143,15 @@ class InventoryStatusReportView extends GetView<InventoryStatusReportController>
                           SizedBox(height: 10),
                           Obx(() {
                             return RadioRow(
-                              items: ['Old Format', 'Detail (KAM-NON CAM)', 'Summary (KAM-NON KAM)'],
+                              items: [
+                                'Old Format',
+                                'Detail (KAM-NON CAM)',
+                                'Summary (KAM-NON KAM)'
+                              ],
                               groupValue: controller.selectedRadio.value,
                               isVertical: true,
-                              onchange: (val) => controller.selectedRadio.value = val,
+                              onchange: (val) =>
+                                  controller.selectedRadio.value = val,
                             );
                           }),
                           SizedBox(height: 10),
@@ -138,7 +169,10 @@ class InventoryStatusReportView extends GetView<InventoryStatusReportController>
                           const Spacer(),
                           Row(
                             children: [
-                              Expanded(child: FormButton(btnText: "Clear", callback: controller.clearPage)),
+                              Expanded(
+                                  child: FormButton(
+                                      btnText: "Clear",
+                                      callback: controller.clearPage)),
                               SizedBox(width: 10),
                               Expanded(child: FormButton(btnText: "Exit")),
                             ],
@@ -146,7 +180,9 @@ class InventoryStatusReportView extends GetView<InventoryStatusReportController>
                           const SizedBox(height: 10),
                           SizedBox(
                             width: context.width * 0.17,
-                            child: FormButton(btnText: "Generate", callback: controller.generateData),
+                            child: FormButton(
+                                btnText: "Generate",
+                                callback: controller.generateData),
                           ),
                           const SizedBox(height: 10),
                         ],
@@ -173,15 +209,19 @@ class InventoryStatusReportView extends GetView<InventoryStatusReportController>
                                     // colorCallback: (row) => (row.row.cells.containsValue(controller.stateManager?.currentCell))
                                     //     ? Colors.deepPurple.shade200
                                     //     : Colors.white,
-                                    // onload: (event) {
-                                    //   controller.stateManager = event.stateManager;
-                                    //   event.stateManager.setSelectingMode(PlutoGridSelectingMode.row);
-                                    //   event.stateManager.setSelecting(true);
-                                    // },
-                                    witdthSpecificColumn: {
-                                      "programtype": 130,
-                                      "programname": 200,
-                                      "rmsProgram": 200,
+                                    witdthSpecificColumn: (controller
+                                        .userDataSettings?.userSetting
+                                        ?.firstWhere(
+                                            (element) =>
+                                                element.controlName ==
+                                                "stateManager",
+                                            orElse: () => UserSetting())
+                                        .userSettings),
+                                    onload: (event) {
+                                      controller.stateManager =
+                                          event.stateManager;
+                                      // event.stateManager.setSelectingMode(PlutoGridSelectingMode.row);
+                                      // event.stateManager.setSelecting(true);
                                     },
                                   ),
                           );
@@ -209,7 +249,9 @@ class InventoryStatusReportView extends GetView<InventoryStatusReportController>
                           for (var btn in btncontroller.buttons!) ...{
                             FormButtonWrapper(
                               btnText: btn["name"],
-                              callback: ((Utils.btnAccessHandler(btn['name'], controller.formPermissions!) == null))
+                              callback: ((Utils.btnAccessHandler(btn['name'],
+                                          controller.formPermissions!) ==
+                                      null))
                                   ? null
                                   : () => controller.formHandler(btn['name']),
                             )
