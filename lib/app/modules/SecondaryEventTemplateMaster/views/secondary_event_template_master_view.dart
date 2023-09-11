@@ -23,6 +23,7 @@ import 'package:get/get.dart';
 
 import '../../../../widgets/PlutoGrid/src/manager/pluto_grid_state_manager.dart';
 import '../../../../widgets/PlutoGrid/src/model/pluto_row.dart';
+import '../../../data/user_data_settings_model.dart';
 import '../controllers/secondary_event_template_master_controller.dart';
 
 class SecondaryEventTemplateMasterView extends StatelessWidget {
@@ -189,6 +190,14 @@ class SecondaryEventTemplateMasterView extends StatelessWidget {
                                           controller.update(['gridData']);
                                         }
                                       },
+                                      witdthSpecificColumn: (controller
+                                          .userDataSettings?.userSetting
+                                          ?.firstWhere(
+                                              (element) =>
+                                                  element.controlName ==
+                                                  "programGrid",
+                                              orElse: () => UserSetting())
+                                          .userSettings),
                                       logicalKeyboardKey:
                                           LogicalKeyboardKey.delete,
                                       mapData: controller.gridPrograms
@@ -766,6 +775,14 @@ class SecondaryEventTemplateMasterView extends StatelessWidget {
                                 init: controller,
                                 builder: (searchcontroller) {
                                   return DataGridShowOnlyKeys(
+                                    keysWidths: (controller
+                                        .userDataSettings?.userSetting
+                                        ?.firstWhere(
+                                            (element) =>
+                                                element.controlName ==
+                                                "searchGrid",
+                                            orElse: () => UserSetting())
+                                        .userSettings),
                                     onload: (event) {
                                       controller.searchGrid =
                                           event.stateManager;
@@ -886,6 +903,12 @@ class SecondaryEventTemplateMasterView extends StatelessWidget {
     switch (btnName) {
       case "Save":
         controller.save();
+        break;
+      case "Exit":
+        Get.find<HomeController>().postUserGridSetting2(listStateManager: [
+          {"searchGrid": controller.searchGrid},
+          {"programGrid": controller.programGrid},
+        ]);
         break;
       case "Clear":
         Get.delete<SecondaryEventTemplateMasterController>();
