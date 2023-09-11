@@ -22,7 +22,9 @@ import 'package:get/get.dart';
 import 'package:intl/intl.dart';
 import 'package:bms_scheduling/widgets/PlutoGrid/pluto_grid.dart';
 
+import '../../../controller/HomeController.dart';
 import '../../../data/DropDownValue.dart';
+import '../../../data/user_data_settings_model.dart';
 import '../../CommonDocs/controllers/common_docs_controller.dart';
 import '../../CommonDocs/views/common_docs_view.dart';
 
@@ -62,6 +64,7 @@ class RoRescheduleController extends GetxController {
       chnageTapeIdCap = TextEditingController();
   PlutoGridStateManager? plutoGridStateManager;
   PlutoGridStateManager? updatedplutoGridStateManager;
+  UserDataSettings? userDataSettings;
   bool canSave = true;
   // @override
   // void onInit() {
@@ -101,6 +104,12 @@ class RoRescheduleController extends GetxController {
     });
 
     super.onReady();
+    fetchUserSetting1();
+  }
+
+  fetchUserSetting1() async {
+    userDataSettings = await Get.find<HomeController>().fetchUserSetting2();
+    update(['updatedgvGrid', 'dgvGrid']);
   }
 
   loadinitData() async {
