@@ -67,6 +67,7 @@ class RoRescheduleView extends StatelessWidget {
                                 },
                                 "Location",
                                 0.24,
+                                autoFocus: true,
                                 selected: controller.selectedLocation,
                                 isEnable: controller.enableFields.value,
                               ),
@@ -509,18 +510,24 @@ class RoRescheduleView extends StatelessWidget {
                                   crossAxisAlignment: WrapCrossAlignment.end,
                                   children: [
                                     DropDownField.formDropDown1WidthMap(
-                                        (controller.roRescheduleOnLeaveData
-                                                    ?.lstcmbTapeID ??
-                                                [])
-                                            .map((e) => DropDownValue(
-                                                key: e.commercialCaption,
-                                                value: e.exporttapecode))
-                                            .toList(), (data) {
-                                      controller.chnageTapeIdCap.text =
-                                          data.key!;
-                                    }, "Tape ID", 0.12,
-                                        selected:
-                                            controller.modifySelectedTapeCode),
+                                      (controller.roRescheduleOnLeaveData
+                                                  ?.lstcmbTapeID ??
+                                              [])
+                                          .map((e) => DropDownValue(
+                                              key: e.commercialCaption,
+                                              value: e.exporttapecode))
+                                          .toList(),
+                                      (data) {
+                                        controller.chnageTapeIdCap.text =
+                                            data.key!;
+                                        controller.modifySelectedTapeCode =
+                                            data;
+                                      },
+                                      "Tape ID",
+                                      0.12,
+                                      selected:
+                                          controller.modifySelectedTapeCode,
+                                    ),
                                     InputFields.formField1(
                                         hintTxt: "Seg",
                                         isEnable: false,
