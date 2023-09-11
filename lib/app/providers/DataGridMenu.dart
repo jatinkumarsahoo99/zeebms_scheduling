@@ -118,7 +118,7 @@ class DataGridMenu {
                             child: Padding(
                               padding: const EdgeInsets.all(8),
                               child: Text(
-                                _allValues[index],
+                                _allValues[index]==""?"BLANK":_allValues[index],
                                 style:
                                     _selectedValues.contains(_allValues[index])
                                         ? TextStyle(
@@ -1735,26 +1735,32 @@ class DataGridMenu {
             details.globalPosition & Size(40, 40), Get.size),
         items: [
           const PopupMenuItem<DataGridMenuItem>(
-            value: DataGridMenuItem.find,
-            height: 30,
+            value: DataGridMenuItem.delete,
+            height: 25,
             enabled: true,
-            child: Text('Find', style: TextStyle(fontSize: 13)),
+            child: Text('Delete', style: TextStyle(fontSize: 11)),
+          ),
+          const PopupMenuItem<DataGridMenuItem>(
+            value: DataGridMenuItem.find,
+            height: 25,
+            enabled: true,
+            child: Text('Find', style: TextStyle(fontSize: 11)),
           ),
           const PopupMenuItem<DataGridMenuItem>(
             value: DataGridMenuItem.selectedfilter,
-            height: 30,
+            height: 25,
             enabled: true,
-            child: Text('Filter By Selection', style: TextStyle(fontSize: 13)),
+            child: Text('Filter By Selection', style: TextStyle(fontSize: 11)),
           ),
           const PopupMenuItem<DataGridMenuItem>(
             value: DataGridMenuItem.excludeslected,
-            height: 30,
+            height: 25,
             enabled: true,
-            child: Text('Filter By Exclusion', style: TextStyle(fontSize: 13)),
+            child: Text('Filter By Exclusion', style: TextStyle(fontSize: 11)),
           ),
           PopupMenuItem<DataGridMenuItem>(
             value: DataGridMenuItem.removeLastFilter,
-            height: 30,
+            height: 25,
             enabled: true,
             child: Obx(
               () {
@@ -1763,12 +1769,12 @@ class DataGridMenu {
                                 .filters1[stateManager.hashCode.toString()] ??
                             [])
                         .isEmpty)
-                    ? Text('Remove Last Filter', style: TextStyle(fontSize: 13))
+                    ? Text('Remove Last Filter', style: TextStyle(fontSize: 11))
                     : PopupMenuButton<RowFilter>(
                         child: Text(
                           'Remove Last Filter',
                           style: TextStyle(
-                              fontSize: 12, fontWeight: FontWeight.normal),
+                              fontSize: 11, fontWeight: FontWeight.normal),
                         ),
                         // onSelected: (Filter result) {
                         //   // setState(() { _selection = result; });
@@ -1795,15 +1801,15 @@ class DataGridMenu {
           ),
           const PopupMenuItem<DataGridMenuItem>(
             value: DataGridMenuItem.clearfilter,
-            height: 30,
+            height: 25,
             enabled: true,
-            child: Text('Remove All Filters', style: TextStyle(fontSize: 13)),
+            child: Text('Remove All Filters', style: TextStyle(fontSize: 11)),
           ),
           const PopupMenuItem<DataGridMenuItem>(
             value: DataGridMenuItem.export,
-            height: 30,
+            height: 25,
             enabled: true,
-            child: Text('Export To Excel', style: TextStyle(fontSize: 13)),
+            child: Text('Export To Excel', style: TextStyle(fontSize: 11)),
           ),
           /* const PopupMenuItem<DataGridMenuItem>(
             value: DataGridMenuItem.print,
@@ -1813,94 +1819,94 @@ class DataGridMenu {
           ),*/
           const PopupMenuItem<DataGridMenuItem>(
             value: DataGridMenuItem.customFilter,
-            height: 30,
+            height: 25,
             enabled: true,
-            child: Text('Custom Filter', style: TextStyle(fontSize: 13)),
+            child: Text('Custom Filter', style: TextStyle(fontSize: 11)),
           ),
           const PopupMenuItem<DataGridMenuItem>(
             value: DataGridMenuItem.exportToXml,
-            height: 30,
+            height: 25,
             enabled: true,
-            child: Text('Export To XML', style: TextStyle(fontSize: 13)),
+            child: Text('Export To XML', style: TextStyle(fontSize: 11)),
           ),
           const PopupMenuItem<DataGridMenuItem>(
             value: DataGridMenuItem.export,
-            height: 30,
+            height: 25,
             enabled: true,
-            child: Text('Fast Export To Excel', style: TextStyle(fontSize: 13)),
+            child: Text('Fast Export To Excel', style: TextStyle(fontSize: 11)),
           ),
           const PopupMenuItem<DataGridMenuItem>(
             value: DataGridMenuItem.exportToCSv,
-            height: 30,
+            height: 25,
             enabled: true,
-            child: Text('Export To CSV', style: TextStyle(fontSize: 13)),
+            child: Text('Export To CSV', style: TextStyle(fontSize: 11)),
           ),
           const PopupMenuItem<DataGridMenuItem>(
             value: DataGridMenuItem.delete,
-            height: 30,
+            height: 25,
             enabled: true,
-            child: Text('Delete (Del)', style: TextStyle(fontSize: 13)),
+            child: Text('Delete (Del)', style: TextStyle(fontSize: 11)),
           ),
           const PopupMenuItem<DataGridMenuItem>(
             value: DataGridMenuItem.cut,
-            height: 30,
+            height: 25,
             enabled: true,
-            child: Text('Cut (F2)', style: TextStyle(fontSize: 13)),
+            child: Text('Cut (F2)', style: TextStyle(fontSize: 11)),
           ),
           const PopupMenuItem<DataGridMenuItem>(
             value: DataGridMenuItem.copy,
-            height: 30,
+            height: 25,
             enabled: true,
-            child: Text('Copy (F3)', style: TextStyle(fontSize: 13)),
+            child: Text('Copy (F3)', style: TextStyle(fontSize: 11)),
           ),
           const PopupMenuItem<DataGridMenuItem>(
             value: DataGridMenuItem.paste,
-            height: 30,
+            height: 25,
             enabled: true,
-            child: Text('Paste (F4)', style: TextStyle(fontSize: 13)),
+            child: Text('Paste (F4)', style: TextStyle(fontSize: 11)),
           ),
           const PopupMenuItem<DataGridMenuItem>(
             value: DataGridMenuItem.clearpaste,
-            height: 30,
+            height: 25,
             enabled: true,
-            child: Text('Clear Paste', style: TextStyle(fontSize: 13)),
+            child: Text('Clear Paste', style: TextStyle(fontSize: 11)),
           ),
           const PopupMenuItem<DataGridMenuItem>(
             value: DataGridMenuItem.verifyTime,
-            height: 30,
+            height: 25,
             enabled: true,
-            child: Text('Verify Time (F5)', style: TextStyle(fontSize: 13)),
+            child: Text('Verify Time (F5)', style: TextStyle(fontSize: 11)),
           ),
           const PopupMenuItem<DataGridMenuItem>(
             value: DataGridMenuItem.fixedEvent,
-            height: 30,
+            height: 25,
             enabled: true,
-            child: Text('Fixed Event', style: TextStyle(fontSize: 13)),
+            child: Text('Fixed Event', style: TextStyle(fontSize: 11)),
           ),
           const PopupMenuItem<DataGridMenuItem>(
             value: DataGridMenuItem.freezeColumn,
-            height: 30,
+            height: 25,
             enabled: true,
-            child: Text('Freeze Column', style: TextStyle(fontSize: 13)),
+            child: Text('Freeze Column', style: TextStyle(fontSize: 11)),
           ),
           const PopupMenuItem<DataGridMenuItem>(
             value: DataGridMenuItem.unFreezeColumn,
-            height: 30,
+            height: 25,
             enabled: true,
-            child: Text('Un-Freeze Column', style: TextStyle(fontSize: 13)),
+            child: Text('Un-Freeze Column', style: TextStyle(fontSize: 11)),
           ),
           const PopupMenuItem<DataGridMenuItem>(
             value: DataGridMenuItem.removeMarkError,
-            height: 30,
+            height: 25,
             enabled: true,
             child:
-                Text('Remove & Mark as Error', style: TextStyle(fontSize: 13)),
+                Text('Remove & Mark as Error', style: TextStyle(fontSize: 11)),
           ),
           const PopupMenuItem<DataGridMenuItem>(
             value: DataGridMenuItem.rescheduleSpots,
-            height: 30,
+            height: 25,
             enabled: true,
-            child: Text('Reschedule Spots', style: TextStyle(fontSize: 13)),
+            child: Text('Reschedule Spots', style: TextStyle(fontSize: 11)),
           ),
         ]);
     if (onPressedClick != null) {

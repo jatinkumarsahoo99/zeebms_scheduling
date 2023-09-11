@@ -572,7 +572,7 @@ class SchedulePromoView extends StatelessWidget {
                                                                 .controlName ==
                                                             "searchedPromoStateManager",
                                                         orElse: () =>
-                                                            UserSetting())
+                                                            UserSetting(userSettings: {"eventType":40}))
                                                     .userSettings),
                                                 mapData: controller
                                                     .searchPromos.value,
