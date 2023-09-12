@@ -6,7 +6,7 @@ class BrandMasterRetriveModel {
   BrandMasterRetriveModel.fromJson(Map<String, dynamic> json) {
     if (json['getBrandList'] != null) {
       getBrandList = <GetBrandList>[];
-      json['getBrandList'].forEach((v) {
+      json['getBrandList']['lstbrand'].forEach((v) {
         getBrandList!.add(new GetBrandList.fromJson(v));
       });
     }

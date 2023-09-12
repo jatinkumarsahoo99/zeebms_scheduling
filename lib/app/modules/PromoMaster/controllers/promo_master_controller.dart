@@ -215,8 +215,12 @@ class PromoMasterController extends GetxController {
             resp['saveRecords']['strMessage']
                 .toString()
                 .contains("successfully")) {
-          LoadingDialog.callDataSaved(
-              msg: resp['saveRecords']['strMessage'].toString());
+          var msg = resp['saveRecords']['strMessage'].toString();
+          if (msg.contains('inserted')) {
+            msg =
+                "${resp['saveRecords']['strMessage']}\nID: ${resp['saveRecords']['promoCode']}";
+          }
+          LoadingDialog.callDataSaved(msg: msg);
         } else {
           LoadingDialog.showErrorDialog(resp.toString());
         }

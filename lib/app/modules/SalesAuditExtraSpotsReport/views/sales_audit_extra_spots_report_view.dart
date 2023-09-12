@@ -57,13 +57,13 @@ class SalesAuditExtraSpotsReportView
                     title: "From Date",
                     mainTextController: controller.fromDateIDCtr,
                     widthRation: .15,
-                    endDate: DateTime.now(),
+                    // endDate: DateTime.now(),
                   ),
                   DateWithThreeTextField(
                     title: "To Date",
                     mainTextController: controller.toDateCtr,
                     widthRation: .15,
-                    startDate: DateTime.now(),
+                    // startDate: DateTime.now(),
                   ),
                   FormButton(
                     btnText: "Generate",
