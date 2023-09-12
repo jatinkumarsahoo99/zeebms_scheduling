@@ -53,7 +53,6 @@ class ApiFactory {
   static String USER_SETTINGS = "$BASE_URL_COMMON/api/MDI/SaveUserSettingData";
   static String FETCH_USER_SETTING = "$BASE_URL_COMMON/api/MDI/GetUserSetting";
 
-
   ////////////////////// SEARCH ////////////////////////////
 
   static String SEARCH_SEND_NAME(
@@ -1088,6 +1087,8 @@ class ApiFactory {
       "$BASE_URL/api/AsrunImport/SaveTempDetail";
   static String AsrunImport_AsunOnImport =
       "$BASE_URL/api/AsrunImport/AsrunOnImport";
+  static String AsrunImport_CheckProgramSequence =
+      "$BASE_URL/api/AsrunImport/CheckProgramSequence";
   ////////////////////////////// Audit Status ////////////////////////////////////////
   static String NewBookingActivityReport_GetLoadLocation =
       "$BASE_URL/api/AsrunImport/GetLoadLocation";
