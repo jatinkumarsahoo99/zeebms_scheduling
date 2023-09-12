@@ -99,10 +99,10 @@ class ExtraSpotsWithRemarkController extends GetxController {
                           value: e['locationName'].toString(),
                         ))
                     .toList());
-            if (locationList.isNotEmpty) {
-              selectedLocation = locationList.first;
-              locationList.refresh();
-            }
+            // if (locationList.isNotEmpty) {
+            //   selectedLocation = locationList.first;
+            //   locationList.refresh();
+            // }
             channelList.clear();
             channelList
                 .addAll((resp['extraSpotsPageLoad']['channel'] as List<dynamic>)

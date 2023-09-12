@@ -5,6 +5,7 @@ import 'dart:math' as math;
 import 'package:data_table_2/data_table_2.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'dart:html' as html;
 import 'package:flutter/services.dart';
 import 'package:get/get.dart';
 import 'package:get/get_state_manager/src/simple/get_controllers.dart';
@@ -23,6 +24,7 @@ import '../../../controller/MainController.dart';
 import '../../../data/DropDownValue.dart';
 import '../../../providers/ApiFactory.dart';
 import '../../../providers/ExportData.dart';
+import '../../../providers/Utils.dart';
 import '../search_bindgrid.dart';
 import '../views/pivotPage.dart';
 import '../views/searchResult.dart';
@@ -290,6 +292,13 @@ class SearchController extends GetxController {
     }
     if (btnName == "Exit") {
       Get.back();
+      LoadingDialog.callExitForm(() {
+        if (html.window.location.href.contains("loginCode")) {
+          Utils.callJSToExit(param: "exit|${Utils.getFormName()}");
+        } else {
+          Get.back();
+        }
+      });
     }
     if (btnName == "Done") {
       Get.back();
