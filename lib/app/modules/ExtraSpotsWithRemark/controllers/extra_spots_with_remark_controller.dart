@@ -21,7 +21,8 @@ class ExtraSpotsWithRemarkController extends GetxController {
 
   @override
   void onInit() {
-    formPermissions = Utils.fetchPermissions1(Routes.EXTRA_SPOTS_WITH_REMARK.replaceAll("/", ""));
+    formPermissions = Utils.fetchPermissions1(
+        Routes.EXTRA_SPOTS_WITH_REMARK.replaceAll("/", ""));
     super.onInit();
   }
 
@@ -41,10 +42,11 @@ class ExtraSpotsWithRemarkController extends GetxController {
     channelList.refresh();
     locationFN.requestFocus();
   }
-  clearAll() {
-    Get.delete<ExtraSpotsWithRemarkController>();
-    Get.find<HomeController>().clearPage1();
-  }
+
+  // clearAll() {
+  //   Get.delete<ExtraSpotsWithRemarkController>();
+  //   Get.find<HomeController>().clearPage1();
+  // }
 
   void handleGenerateButton() {
     if (selectedLocation == null || selectedChannel == null) {
@@ -55,12 +57,16 @@ class ExtraSpotsWithRemarkController extends GetxController {
         api: ApiFactory.EXTRA_SPOT_WITH_REVIEW_REPORT_GENERATE(
           selectedLocation!.key,
           selectedChannel!.key,
-          DateFormat("yyyy-MM-ddT00:00:00").format(DateFormat("dd-MM-yyyy").parse(fromDateTC.text)),
-          DateFormat("yyyy-MM-ddT00:00:00").format(DateFormat("dd-MM-yyyy").parse(toDateTC.text)),
+          DateFormat("yyyy-MM-ddT00:00:00")
+              .format(DateFormat("dd-MM-yyyy").parse(fromDateTC.text)),
+          DateFormat("yyyy-MM-ddT00:00:00")
+              .format(DateFormat("dd-MM-yyyy").parse(toDateTC.text)),
         ),
         fun: (resp) {
           closeDialogIfOpen();
-          if (resp != null && resp is Map<String, dynamic> && resp['extraSpotsReport'] != null) {
+          if (resp != null &&
+              resp is Map<String, dynamic> &&
+              resp['extraSpotsReport'] != null) {
             dataTableList.clear();
             dataTableList.addAll((resp['extraSpotsReport']));
           } else {
@@ -73,7 +79,7 @@ class ExtraSpotsWithRemarkController extends GetxController {
 
   formHandler(btn) {
     if (btn == "Clear") {
-      clearAll();
+      clearPage();
     }
   }
 
@@ -86,23 +92,25 @@ class ExtraSpotsWithRemarkController extends GetxController {
         if (resp != null && resp is Map<String, dynamic>) {
           if (resp['extraSpotsPageLoad']['location'] != null) {
             locationList.clear();
-            locationList.addAll((resp['extraSpotsPageLoad']['location'] as List<dynamic>)
-                .map((e) => DropDownValue(
-                      key: e['locationCode'].toString(),
-                      value: e['locationName'].toString(),
-                    ))
-                .toList());
+            locationList.addAll(
+                (resp['extraSpotsPageLoad']['location'] as List<dynamic>)
+                    .map((e) => DropDownValue(
+                          key: e['locationCode'].toString(),
+                          value: e['locationName'].toString(),
+                        ))
+                    .toList());
             if (locationList.isNotEmpty) {
               selectedLocation = locationList.first;
               locationList.refresh();
             }
             channelList.clear();
-            channelList.addAll((resp['extraSpotsPageLoad']['channel'] as List<dynamic>)
-                .map((e) => DropDownValue(
-                      key: e['channelCode'].toString(),
-                      value: e['channelName'].toString(),
-                    ))
-                .toList());
+            channelList
+                .addAll((resp['extraSpotsPageLoad']['channel'] as List<dynamic>)
+                    .map((e) => DropDownValue(
+                          key: e['channelCode'].toString(),
+                          value: e['channelName'].toString(),
+                        ))
+                    .toList());
           }
         } else {
           LoadingDialog.showErrorDialog(resp.toString());

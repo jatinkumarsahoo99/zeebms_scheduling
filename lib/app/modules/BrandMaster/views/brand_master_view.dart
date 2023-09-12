@@ -161,12 +161,9 @@ class BrandMasterView extends StatelessWidget {
                                             onTap: () {
                                               Get.to(
                                                 SearchPage(
-                                                  key: Key(
-                                                      "Product Levels - Search"),
-                                                  screenName:
-                                                      "Product Levels - Search",
-                                                  appBarName:
-                                                      "Product Levels - Search",
+                                                  key: Key("Product Levels"),
+                                                  screenName: "Product Levels",
+                                                  appBarName: "Product Levels ",
                                                   strViewName: "Productlevels",
                                                   isAppBarReq: true,
                                                 ),
