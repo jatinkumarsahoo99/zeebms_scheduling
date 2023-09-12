@@ -1,5 +1,6 @@
 import 'package:bms_scheduling/app/controller/MainController.dart';
 import 'package:bms_scheduling/app/data/PermissionModel.dart';
+import 'package:bms_scheduling/widgets/PlutoGrid/pluto_grid.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:intl/intl.dart';
@@ -171,16 +172,20 @@ class ManageChannelInvemtoryController extends GetxController {
     }
   }
 
-  void saveTodayAndAllData(bool fromSaveToday) {
+  Future<void> saveTodayAndAllData(bool fromSaveToday) async {
     if (selectedLocation == null || selectedChannel == null) {
       LoadingDialog.showErrorDialog("Please select Location,Channel.");
     } else if (!madeChanges) {
       LoadingDialog.showErrorDialog("No changes to save");
     } else {
-      stateManager!.setCurrentCell(
-          stateManager!.getRowByIdx(lastSelectedIdx)?.cells['telecastDate'],
-          lastSelectedIdx);
+      // stateManager!.setCurrentCell(
+      //     stateManager!.getRowByIdx(lastSelectedIdx)?.cells['telecastDate'],
+      //     lastSelectedIdx);
       LoadingDialog.call();
+      if (stateManager?.isEditing ?? false) {
+        stateManager?.moveCurrentCell(PlutoMoveDirection.right);
+        await Future.delayed(Duration(seconds: 2));
+      }
       Get.find<ConnectorControl>().POSTMETHOD(
         api: ApiFactory.MANAGE_CHANNEL_INV_SAVE_TODAY_ALL_DATA,
         fun: (resp) {
@@ -223,6 +228,10 @@ class ManageChannelInvemtoryController extends GetxController {
     dataTableList.clear();
     effectiveDateTC.clear();
     weekDaysTC.clear();
+    // try {
+    //   selectedLocation =
+    //       locationList.firstWhere((element) => element.value == "ASIA");
+    // } catch (e) {}
     selectedLocation = null;
     selectedChannel = null;
     locationList.refresh();
@@ -279,7 +288,10 @@ class ManageChannelInvemtoryController extends GetxController {
                     ))
                 .toList());
             if (locationList.isNotEmpty) {
-              selectedLocation = locationList.first;
+              try {
+                selectedLocation = locationList
+                    .firstWhere((element) => element.value == "ASIA");
+              } catch (e) {}
               locationList.refresh();
               handleOnChangedLocation(selectedLocation);
             }
