@@ -43,7 +43,6 @@ import '../modules/SpotPositionTypeMaster/bindings/spot_position_type_master_bin
 import '../modules/SpotPriority/bindings/spot_priority_binding.dart';
 import '../modules/StillMaster/bindings/still_master_binding.dart';
 import '../modules/TransmissionLog/bindings/transmission_log_binding.dart';
-import '../modules/commercial/bindings/commercial_binding.dart';
 import '../modules/filler/bindings/filler_binding.dart';
 import '../modules/material_id_search/bindings/material_id_search_binding.dart';
 import '../modules/slide/bindings/slide_binding.dart';
@@ -57,7 +56,7 @@ class AppPages {
   static const INITIAL = kReleaseMode
       ? Routes.HOME
       // : "${Routes.SCHEDULE_PROMO}?personalNo=R9vVPL7er1Os/usemWG/Iw==&loginCode=0iGe3vK5h2KGjfSKZTpmsQ==&formName=ZdPOC%2BHl3hRJzHSclM%2B5m3sWVw1wpLPmNEvejYUOFLU%3D";
-      : "${Routes.LOG_ADDITIONS}?personalNo=%2F7i0zDr%2FLpXNOAIr8lUluw%3D%3D&loginCode=1BWIoBKeDl7qDSAAhxvXsQ%3D%3D&formName=mdeuNtheXmENhFAlD4AObQ%3D%3D";
+      : "${Routes.SPOT_PRIORITY}?personalNo=%2F7i0zDr%2FLpXNOAIr8lUluw%3D%3D&loginCode=1BWIoBKeDl7qDSAAhxvXsQ%3D%3D&formName=mdeuNtheXmENhFAlD4AObQ%3D%3D";
 
   static final routes = [
     GetPage(
