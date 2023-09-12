@@ -163,7 +163,7 @@ class FillerMasterController extends GetxController {
       saveValidate();
     } else if (btnName == "Search") {
       Get.to(
-        SearchPage(
+        const SearchPage(
           key: Key("Filler Master"),
           screenName: "Filler Master",
           appBarName: "Filler Master",

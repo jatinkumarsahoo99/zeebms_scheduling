@@ -127,10 +127,10 @@ class NewShortContentFormView extends StatelessWidget {
                     width: 0.16,
                   ),
                   InputFields.formField1(
-                    hintTxt: "House ID",
-                    controller: controller.houseId,
-                    width: 0.155,
-                  ),
+                      hintTxt: "House ID",
+                      controller: controller.houseId,
+                      width: 0.155,
+                      focusNode: controller.houseFocusNode),
                   Obx(
                     () => DropDownField.formDropDownSearchAPI2(
                       GlobalKey(),
@@ -154,25 +154,25 @@ class NewShortContentFormView extends StatelessWidget {
                   //   width: 0.325,
                   // ),
                   InputFields.formFieldNumberMask(
-                    hintTxt: "SOM",
-                    widthRatio: .155,
-                    controller: controller.som,
-                    paddingLeft: 0,
-                    // isTime: true
-                  ),
+                      hintTxt: "SOM",
+                      widthRatio: .155,
+                      controller: controller.som,
+                      paddingLeft: 0,
+                      isTime: true),
                   InputFields.formFieldNumberMask(
                       hintTxt: "EOM",
                       widthRatio: .155,
                       controller: controller.eom,
-                      // isTime: true,
+                      isTime: true,
                       textFieldFN: controller.eomFN,
                       paddingLeft: 0),
-                  InputFields.formFieldNumberMask(
-                      hintTxt: "Duration",
-                      widthRatio: .16,
-                      isTime: true,
-                      controller: controller.duration,
-                      paddingLeft: 0),
+                  InputFields.formField1(
+                    hintTxt: "Duration",
+                    controller: controller.duration,
+                    width: .16,
+                    isEnable: false,
+                    padLeft: 0,
+                  ),
                   DateWithThreeTextField(
                     title: "Start Date",
                     mainTextController: controller.startData,
