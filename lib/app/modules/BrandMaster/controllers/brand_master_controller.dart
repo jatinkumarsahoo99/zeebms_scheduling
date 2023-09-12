@@ -225,17 +225,17 @@ class BrandMasterController extends GetxController {
             separationTimeController.text =
                 (brandMasterRetriveModel?.getBrandList?[0].separationTime ?? "")
                     .toString();
-            for (var element in masterProductList) {
-              if (element.key.toString().trim() ==
-                  brandMasterRetriveModel?.getBrandList?[0].productCode
-                      .toString()
-                      .trim()) {
-                selectedProduct?.value = DropDownValue(
-                    value: element.value ?? "Product",
-                    key: brandMasterRetriveModel?.getBrandList?[0].productCode);
-                break;
-              }
-            }
+            // for (var element in masterProductList) {
+            //   if (element.key.toString().trim() ==
+            //       brandMasterRetriveModel?.getBrandList?[0].productCode
+            //           .toString()
+            //           .trim()) {
+            //     selectedProduct?.value = DropDownValue(
+            //         value: element.value ?? "Product",
+            //         key: brandMasterRetriveModel?.getBrandList?[0].productCode);
+            //     break;
+            //   }
+            // }
 
             productLevel1Controller.text =
                 (brandMasterRetriveModel?.getBrandList?[0].ptName ?? "")
@@ -249,8 +249,15 @@ class BrandMasterController extends GetxController {
             productLevel4Controller.text =
                 (brandMasterRetriveModel?.getBrandList?[0].level3Name ?? "")
                     .toString();
-
-            // selectedProduct = DropDownValue(value:(brandMasterRetriveModel?.getBrandList?[0].Productname ??"") , key: (brandMasterRetriveModel?.getBrandList?[0].productCode ??""));
+            if (brandMasterRetriveModel?.getBrandList?[0].productName != null &&
+                brandMasterRetriveModel?.getBrandList?[0].productCode != null) {
+              selectedProduct?.value = DropDownValue(
+                  value:
+                      brandMasterRetriveModel?.getBrandList?[0].productName ??
+                          "",
+                  key: (brandMasterRetriveModel?.getBrandList?[0].productCode ??
+                      ""));
+            }
             update(['top']);
           } else {
             strcode = "0";

@@ -48,14 +48,9 @@ class InventoryStatusReportController extends GetxController {
     dataTableList.refresh();
   }
 
-  clearAll() {
-    Get.delete<InventoryStatusReportController>();
-    Get.find<HomeController>().clearPage1();
-  }
-
   formHandler(btn) {
     if (btn == "Clear") {
-      clearAll();
+      clearPage();
     } else if (btn == "Exit") {
       Get.find<HomeController>().postUserGridSetting2(listStateManager: [
         {"stateManager": stateManager},
@@ -64,7 +59,6 @@ class InventoryStatusReportController extends GetxController {
   }
 
   hanldeChangedOnAllChannel(bool? val) {
-    print(val);
     channelAllSelected.value = val ?? false;
     var tempChannelList = onLoadModel.value?.info?.channels?.map(
       (e) {
@@ -77,6 +71,10 @@ class InventoryStatusReportController extends GetxController {
   }
 
   clearPage() {
+    try {
+      selectedLocation = onLoadModel.value?.info?.locations
+          ?.firstWhere((element) => element.value == "ASIA");
+    } catch (e) {}
     selectedRadio.value = "";
     channelAllSelected.value = false;
     var tempChannelList = onLoadModel.value?.info?.channels?.map(
@@ -85,6 +83,7 @@ class InventoryStatusReportController extends GetxController {
         return e;
       },
     ).toList();
+
     onLoadModel.value?.info?.channels = tempChannelList ?? [];
     fromDateTC.clear();
     toDateTC.clear();
@@ -100,7 +99,10 @@ class InventoryStatusReportController extends GetxController {
         closeDialogIfOpen();
         if (resp != null && resp is Map<String, dynamic>) {
           onLoadModel.value = InventoryStatusReportLoadModel.fromJson(resp);
-          selectedLocation = onLoadModel.value?.info?.locations?[0];
+          try {
+            selectedLocation = onLoadModel.value?.info?.locations
+                ?.firstWhere((element) => element.value == "ASIA");
+          } catch (e) {}
           onLoadModel.refresh();
         } else {
           LoadingDialog.showErrorDialog(resp.toString());
