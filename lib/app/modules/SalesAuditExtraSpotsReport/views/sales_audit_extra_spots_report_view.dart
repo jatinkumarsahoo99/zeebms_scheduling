@@ -63,7 +63,7 @@ class SalesAuditExtraSpotsReportView
                     title: "To Date",
                     mainTextController: controller.toDateCtr,
                     widthRation: .15,
-                    intailDate:DateTime.now().subtract(const Duration(days: 367)) ,
+                    startDate: DateTime.now(),
                   ),
                   FormButton(
                     btnText: "Generate",
@@ -94,7 +94,7 @@ class SalesAuditExtraSpotsReportView
                                 .userSettings),
                             mapData: controller.dataTBList.value,
                             formatDate: true,
-                            columnAutoResize: false,
+                            // columnAutoResize: false,
                             exportFileName: "Sales Audit (Extra Spots Report)",
                           );
                   },
