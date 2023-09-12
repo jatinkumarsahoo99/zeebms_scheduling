@@ -397,7 +397,7 @@ class AsrunImportAdRevenueView extends StatelessWidget {
         controller.saveTempDetails();
         break;
       case "Save":
-        controller.checkMissingAsrun();
+        controller.checkProgramSequence();
         break;
       case "SP Verify":
         showVerifyDialog(controller

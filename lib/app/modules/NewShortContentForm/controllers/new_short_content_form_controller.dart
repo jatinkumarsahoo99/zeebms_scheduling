@@ -41,9 +41,9 @@ class NewShortContentFormController extends GetxController {
   TextEditingController caption = TextEditingController(),
       txCaption = TextEditingController(),
       houseId = TextEditingController(),
-      som = TextEditingController(),
-      eom = TextEditingController(),
-      duration = TextEditingController(),
+      som = TextEditingController(text: "00:00:00:00"),
+      eom = TextEditingController(text: "00:00:00:00"),
+      duration = TextEditingController(text: "00:00:00:00"),
       startData = TextEditingController(),
       endDate = TextEditingController(),
       segment = TextEditingController(),
@@ -72,6 +72,8 @@ class NewShortContentFormController extends GetxController {
   }
 
   calculateDuration({bool showDialog = true}) {
+    print(eom.text);
+    print(som.text);
     var diff = (Utils.oldBMSConvertToSecondsValue(value: eom.text) -
         Utils.oldBMSConvertToSecondsValue(value: som.text));
 
@@ -328,9 +330,19 @@ class NewShortContentFormController extends GetxController {
       LoadingDialog.showErrorDialog("Location cannot be empty.");
     } else if (selectedChannel.value?.key == null) {
       LoadingDialog.showErrorDialog("Channel cannot be empty.");
-    } else if (eom.text == "00:00:00:00") {
+    } else if (som.text.trim().isEmpty) {
+      LoadingDialog.showErrorDialog("Please enter SOM.");
+    } else if (eom.text.trim().isEmpty || eom.text.trim() == "00:00:00:00") {
+      LoadingDialog.showErrorDialog("Please enter EOM.");
       eomFN.requestFocus();
-      LoadingDialog.showErrorDialog("EOM cannot be empty.");
+    } else if ((Utils.oldBMSConvertToSecondsValue(value: eom.text) -
+            Utils.oldBMSConvertToSecondsValue(value: som.text))
+        .isNegative) {
+      eom.clear();
+      LoadingDialog.showErrorDialog("EOM should not less than SOM",
+          callback: () {
+        eomFN.requestFocus();
+      });
     } else if (startD.isAfter(endD)) {
       LoadingDialog.showErrorDialog("Start date should not more than end date");
     }
@@ -380,7 +392,7 @@ class NewShortContentFormController extends GetxController {
         "segmentNumber": int.tryParse(segment.text),
         "stillDuration": intDuration,
         "houseId": houseId.text, // Common in (still/Slide/vignetee)
-        "som": som.text, // Common in (still/Slide/vignetee)
+        "som": som.text + ":00", // Common in (still/Slide/vignetee)
         "tapeTypeCode": selectedTape.value?.key, // Common in (still/Slide)
         "dated": DateFormat("yyyy-MM-dd").format(DateFormat("dd-MM-yyyy")
             .parse(startData.text)), // Common in (still/Slide)
@@ -393,7 +405,7 @@ class NewShortContentFormController extends GetxController {
             selectedLocation.value?.key, // Common in (still/Slide/Vignette)
         "channelcode": selectedChannel
             .value?.key, // Common in (still/Slide/vignetteCaption)
-        "eom": eom.text, // Common in (still/Slide/vignetee)
+        "eom": eom.text + ":00", // Common in (still/Slide/vignetee)
         "stillType": selectedCategory.value?.key,
       };
     }
@@ -461,11 +473,9 @@ class NewShortContentFormController extends GetxController {
         fun: (rawdata) {
           Get.back();
           try {
-            if (rawdata is Map &&
-                rawdata.containsKey("onSaveShortCode") &&
-                rawdata["onSaveShortCode"]["result"] != null) {
+            if (rawdata is Map && rawdata.containsKey("onSaveShortCode")) {
               LoadingDialog.callDataSaved(
-                  msg: rawdata["onSaveShortCode"]["result"]["message"]);
+                  msg: rawdata["onSaveShortCode"]["message"]);
               return true;
             } else {
               LoadingDialog.callErrorMessage1(msg: "Save Failed");
