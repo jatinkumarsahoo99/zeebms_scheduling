@@ -174,6 +174,7 @@ class SpotPriorityView extends GetView<SpotPriorityController> {
                                 .setSelectingMode(PlutoGridSelectingMode.row);
                           },
                           hideCode: false,
+                          enableSort: true,
                           exportFileName:
                               Get.find<MainController>().formName ?? "",
                           onContextMenuClick:
@@ -245,19 +246,44 @@ class SpotPriorityView extends GetView<SpotPriorityController> {
                                 }
                                 break;
                               case DataGridMenuItem.clearPriority:
-                                controllerX.gridStateManager?.rows[rowIdx]
-                                    .cells["priorityname"]?.value = "";
-                                controllerX.gridStateManager?.rows[rowIdx]
-                                    .cells["priorityCode"]?.value = 0;
-                                controllerX
-                                    .spotPriorityModel
-                                    ?.lstbookingdetail![rowIdx]
-                                    .priorityname = null;
-                                controllerX
-                                    .spotPriorityModel
-                                    ?.lstbookingdetail![rowIdx]
-                                    .priorityCode = 0;
-                                controllerX.gridStateManager?.notifyListeners();
+                                if ((controllerX.gridStateManager
+                                            ?.currentSelectingRows.length ??
+                                        0) ==
+                                    0) {
+                                  controllerX.gridStateManager?.rows[rowIdx]
+                                      .cells["priorityname"]?.value = "";
+                                  controllerX.gridStateManager?.rows[rowIdx]
+                                      .cells["priorityCode"]?.value = 0;
+                                  controllerX
+                                      .spotPriorityModel
+                                      ?.lstbookingdetail![rowIdx]
+                                      .priorityname = null;
+                                  controllerX
+                                      .spotPriorityModel
+                                      ?.lstbookingdetail![rowIdx]
+                                      .priorityCode = 0;
+                                  controllerX.gridStateManager
+                                      ?.notifyListeners();
+                                } else {
+                                  for (PlutoRow dr in (controllerX
+                                      .gridStateManager
+                                      ?.currentSelectingRows)!) {
+                                    dr.cells["priorityname"]?.value = "";
+
+                                    dr.cells["priorityCode"]?.value =
+                                        0;
+                                    controllerX
+                                        .spotPriorityModel
+                                        ?.lstbookingdetail![dr.sortIdx]
+                                        .priorityname = "";
+                                    controllerX
+                                        .spotPriorityModel
+                                        ?.lstbookingdetail![dr.sortIdx]
+                                        .priorityCode =0;
+                                  }
+                                  controllerX.gridStateManager
+                                      ?.notifyListeners();
+                                }
                                 break;
                             }
                           },
