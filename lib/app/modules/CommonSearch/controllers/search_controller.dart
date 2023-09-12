@@ -290,7 +290,7 @@ class SearchController extends GetxController {
     if (btnName == "Save") {
       ExportData().exportExcelFromJsonList(searchResult, screenName);
     }
-    if (btnName == "Exit") {
+    if (btnName == "Exit ") {
       Get.back();
       LoadingDialog.callExitForm(() {
         if (html.window.location.href.contains("loginCode")) {
