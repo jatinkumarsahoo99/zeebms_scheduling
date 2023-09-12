@@ -6,6 +6,7 @@ import 'package:bms_scheduling/widgets/DataGridShowOnly.dart';
 import 'package:bms_scheduling/widgets/LoadingDialog.dart';
 import 'package:bms_scheduling/widgets/PlutoGrid/pluto_grid.dart';
 import 'package:bms_scheduling/widgets/floating_dialog.dart';
+import 'package:bms_scheduling/widgets/gridFromMap.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
@@ -408,7 +409,7 @@ class AsrunImportAdRevenueView extends StatelessWidget {
         showSwap();
         break;
       case "View FPC":
-        showFPCDialog(Get.context);
+        showFPCDialog();
         break;
       case "Paste Up":
         paste();
@@ -816,57 +817,141 @@ class AsrunImportAdRevenueView extends StatelessWidget {
     );
   }
 
-  showFPCDialog(context) {
-    Get.defaultDialog(
-      barrierDismissible: true,
-      title: "View FPC",
-      titleStyle: const TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
-      titlePadding: const EdgeInsets.only(top: 10),
-      contentPadding: const EdgeInsets.symmetric(horizontal: 10, vertical: 5),
-      radius: 10,
-      content: Container(
+  showFPCDialog() {
+    controller.drgabbleDialog.value = Material(
+      color: Colors.white,
+      child: SizedBox(
         height: Get.height * 0.65,
         width: Get.width / 2,
-        child: DataGridShowOnlyKeys(
-          keysWidths: (controller.userDataSettings?.userSetting
-              ?.firstWhere(
-                  (element) => element.controlName == "fpcGridStateManager",
-                  orElse: () => UserSetting())
-              .userSettings),
-          mapData:
-              controller.viewFPCData?.map((e) => e.toJson()).toList() ?? [],
-          onload: (loadEvent) {
-            controller.fpcGridStateManager = loadEvent.stateManager;
-          },
-          onSelected: (selectEvent) {
-            controller.selectedFPCindex = selectEvent.rowIdx;
-          },
-          hideCode: false,
-          hideKeys: ["programcode"],
-          mode: PlutoGridMode.selectWithOneTap,
-          onRowDoubleTap: (rowEvent) {
-            controller.gridStateManager?.setFilter((element) =>
-                element.cells["fpctIme"]?.value.toString() ==
-                rowEvent.row.cells["starttime"]?.value.toString());
-          },
+        // decoration: BoxDecoration(
+        //   borderRadius: BorderRadius.circular(10),
+        //   color: Colors.white,
+        // ),
+        child: Column(
+          children: [
+            Align(
+              alignment: Alignment.topRight,
+              child: IconButton(
+                onPressed: () {
+                  controller.drgabbleDialog.value = null;
+                },
+                icon: const Icon(Icons.close),
+              ),
+            ),
+            GetBuilder(
+                init: controller,
+                builder: (_) {
+                  return Expanded(
+                    // height: Get.height * 0.4,
+                    child: DataGridFromMap(
+                      witdthSpecificColumn: (controller
+                          .userDataSettings?.userSetting
+                          ?.firstWhere(
+                              (element) =>
+                                  element.controlName == "fpcGridStateManager",
+                              orElse: () => UserSetting())
+                          .userSettings),
+                      mapData: controller.viewFPCData
+                              ?.map((e) => e.toJson())
+                              .toList() ??
+                          [],
+                      onload: (loadEvent) {
+                        controller.fpcGridStateManager = loadEvent.stateManager;
+                      },
+                      onSelected: (selectEvent) {
+                        controller.selectedFPCindex = selectEvent.rowIdx;
+                      },
+                      hideCode: false,
+                      hideKeys: ["programcode"],
+                      mode: PlutoGridMode.selectWithOneTap,
+                      onRowDoubleTap: (rowEvent) {
+                        controller.gridStateManager?.setFilter((element) =>
+                            element.cells["fpctIme"]?.value.toString() ==
+                            rowEvent.row.cells["starttime"]?.value.toString());
+                      },
+                    ),
+                  );
+                }),
+            SizedBox(height: 10),
+            Row(
+              mainAxisAlignment: MainAxisAlignment.center,
+              crossAxisAlignment: CrossAxisAlignment.center,
+              children: [
+                FormButtonWrapper(
+                  btnText: "Verify",
+                  showIcon: false,
+                  callback: () {
+                    controller.updateFPCTime();
+                  },
+                ),
+                SizedBox(width: 10),
+                FormButtonWrapper(
+                  btnText: "Filter",
+                  showIcon: false,
+                  callback: () {
+                    controller.filterMainGrid(controller
+                            .viewFPCData?[controller.selectedFPCindex!]
+                            .starttime ??
+                        "");
+                  },
+                )
+              ],
+            ),
+            SizedBox(height: 10)
+          ],
         ),
       ),
-      confirm: FormButtonWrapper(
-        btnText: "Verify",
-        showIcon: false,
-        callback: () {
-          controller.updateFPCTime();
-        },
-      ),
-      cancel: FormButtonWrapper(
-        btnText: "Filter",
-        showIcon: false,
-        callback: () {
-          controller.filterMainGrid(
-              controller.viewFPCData?[controller.selectedFPCindex!].starttime ??
-                  "");
-        },
-      ),
     );
+    // Get.defaultDialog(
+    //   barrierDismissible: true,
+    //   title: "View FPC",
+    //   titleStyle: const TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+    //   titlePadding: const EdgeInsets.only(top: 10),
+    //   contentPadding: const EdgeInsets.symmetric(horizontal: 10, vertical: 5),
+    //   radius: 10,
+    //   content: Container(
+    //     height: Get.height * 0.65,
+    //     width: Get.width / 2,
+    //     child: DataGridShowOnlyKeys(
+    //       keysWidths: (controller.userDataSettings?.userSetting
+    //           ?.firstWhere(
+    //               (element) => element.controlName == "fpcGridStateManager",
+    //               orElse: () => UserSetting())
+    //           .userSettings),
+    //       mapData:
+    //           controller.viewFPCData?.map((e) => e.toJson()).toList() ?? [],
+    //       onload: (loadEvent) {
+    //         controller.fpcGridStateManager = loadEvent.stateManager;
+    //       },
+    //       onSelected: (selectEvent) {
+    //         controller.selectedFPCindex = selectEvent.rowIdx;
+    //       },
+    //       hideCode: false,
+    //       hideKeys: ["programcode"],
+    //       mode: PlutoGridMode.selectWithOneTap,
+    //       onRowDoubleTap: (rowEvent) {
+    //         controller.gridStateManager?.setFilter((element) =>
+    //             element.cells["fpctIme"]?.value.toString() ==
+    //             rowEvent.row.cells["starttime"]?.value.toString());
+    //       },
+    //     ),
+    //   ),
+    //   confirm: FormButtonWrapper(
+    //     btnText: "Verify",
+    //     showIcon: false,
+    //     callback: () {
+    //       controller.updateFPCTime();
+    //     },
+    //   ),
+    //   cancel: FormButtonWrapper(
+    //     btnText: "Filter",
+    //     showIcon: false,
+    //     callback: () {
+    //       controller.filterMainGrid(
+    //           controller.viewFPCData?[controller.selectedFPCindex!].starttime ??
+    //               "");
+    //     },
+    //   ),
+    // );
   }
 }

@@ -99,11 +99,11 @@ class InventoryStatusReportController extends GetxController {
         closeDialogIfOpen();
         if (resp != null && resp is Map<String, dynamic>) {
           onLoadModel.value = InventoryStatusReportLoadModel.fromJson(resp);
-          try {
-            selectedLocation = onLoadModel.value?.info?.locations
-                ?.firstWhere((element) => element.value == "ASIA");
-          } catch (e) {}
-          onLoadModel.refresh();
+          // try {
+          //   selectedLocation = onLoadModel.value?.info?.locations
+          //       ?.firstWhere((element) => element.value == "ASIA");
+          // } catch (e) {}
+          // onLoadModel.refresh();
         } else {
           LoadingDialog.showErrorDialog(resp.toString());
         }

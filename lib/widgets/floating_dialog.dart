@@ -5,7 +5,12 @@ class DraggableFab extends StatefulWidget {
   final Offset? initPosition;
   final double securityBottom;
 
-  const DraggableFab({Key? key, required this.child, this.initPosition, this.securityBottom: 0}) : super(key: key);
+  const DraggableFab(
+      {Key? key,
+      required this.child,
+      this.initPosition,
+      this.securityBottom = 0})
+      : super(key: key);
 
   @override
   _DraggableFabState createState() => _DraggableFabState();
@@ -21,7 +26,8 @@ class _DraggableFabState extends State<DraggableFab> {
   @override
   void initState() {
     super.initState();
-    WidgetsBinding.instance.addPostFrameCallback((_) => _getWidgetSize(context));
+    WidgetsBinding.instance
+        .addPostFrameCallback((_) => _getWidgetSize(context));
   }
 
   void _getWidgetSize(BuildContext context) {
@@ -30,7 +36,8 @@ class _DraggableFabState extends State<DraggableFab> {
     if (widget.initPosition != null) {
       _calculatePosition(widget.initPosition!);
     } else {
-      final RenderBox renderBox = key.currentContext?.findRenderObject() as RenderBox;
+      final RenderBox renderBox =
+          key.currentContext?.findRenderObject() as RenderBox;
       final offset = renderBox.localToGlobal(Offset.zero) / 2;
       _calculatePosition(offset);
     }
