@@ -71,10 +71,10 @@ class InventoryStatusReportController extends GetxController {
   }
 
   clearPage() {
-    try {
-      selectedLocation = onLoadModel.value?.info?.locations
-          ?.firstWhere((element) => element.value == "ASIA");
-    } catch (e) {}
+    // try {
+    //   selectedLocation = onLoadModel.value?.info?.locations
+    //       ?.firstWhere((element) => element.value == "ASIA");
+    // } catch (e) {}
     selectedRadio.value = "";
     channelAllSelected.value = false;
     var tempChannelList = onLoadModel.value?.info?.channels?.map(
@@ -87,6 +87,7 @@ class InventoryStatusReportController extends GetxController {
     onLoadModel.value?.info?.channels = tempChannelList ?? [];
     fromDateTC.clear();
     toDateTC.clear();
+    dataTableList.clear();
     onLoadModel.refresh();
     locationFN.requestFocus();
   }
