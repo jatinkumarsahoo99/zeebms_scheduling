@@ -400,7 +400,8 @@ class NewShortContentFormController extends GetxController {
         "programCode": selectedProgram.value?.key, // Common in (still/Vignette)
         "exportTapeCaption": houseId.text, // Common in (still/Slide)
         "exportTapeCode": txCaption.text, // Common in (still/Slide)
-        "segmentNumber": int.tryParse(segment.text),
+        "segmentNumber": segment.text,
+        // int.tryParse(segment.text),
         "stillDuration": intDuration,
         "houseId": houseId.text, // Common in (still/Slide/vignetee)
         "som": som.text, // Common in (still/Slide/vignetee)
@@ -456,6 +457,7 @@ class NewShortContentFormController extends GetxController {
         "vignetteCaption": caption.text,
         "vignetteDuration": intDuration,
         "exportTapeCode_VG": txCaption.text,
+        "exportTapeCaption": houseId.text,
         "originalRepeatCode": selectedOrgRep.value?.key,
         "segmentNumber_VG": segment.text,
         "startDate": DateFormat("yyyy-MM-dd")
@@ -474,6 +476,7 @@ class NewShortContentFormController extends GetxController {
         "houseId": houseId.text, // Common in (still/Slide/vignetee)
         "som": som.text, // Common in (still/Slide/vignetee)
         "programCode": selectedProgram.value?.key,
+        "modifiedBy": Get.find<MainController>().user?.logincode,
       };
     }
     LoadingDialog().callwithCancel();
@@ -581,6 +584,7 @@ class NewShortContentFormController extends GetxController {
     selectedProgram.value = null;
     selectedTape.value = null;
     selectedOrgRep.value = null;
+    caption.clear();
     txCaption.clear();
     houseId.clear();
     startData.clear();
