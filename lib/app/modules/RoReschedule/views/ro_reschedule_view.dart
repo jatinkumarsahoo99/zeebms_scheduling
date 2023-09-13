@@ -298,6 +298,12 @@ class RoRescheduleView extends StatelessWidget {
                                     onRowDoubleTap: (tapEvent) {
                                       controller.dgvGridnRowDoubleTap(
                                           tapEvent.rowIdx);
+                                      controller.plutoGridStateManager
+                                          ?.setCurrentCell(
+                                              controller.plutoGridStateManager!
+                                                  .getRowByIdx(tapEvent.rowIdx)!
+                                                  .cells['programName'],
+                                              tapEvent.rowIdx);
                                     },
                                     mapData: gridController
                                         .roRescheduleOnLeaveData!.lstDgvRO!

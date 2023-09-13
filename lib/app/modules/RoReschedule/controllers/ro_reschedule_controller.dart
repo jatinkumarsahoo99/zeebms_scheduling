@@ -467,6 +467,16 @@ class RoRescheduleController extends GetxController {
                                     viewDoubleClickData
                                         .lstDetTable![i].bookedSpots = 0;
                                   }
+                                  num keyboardValue =
+                                      num.tryParse(editEvent.value ?? '0') ?? 0;
+                                  if (keyboardValue > 1) {
+                                    addSpotGridManager!.changeCellValue(
+                                        editEvent.row.cells["bookedSpots"]!,
+                                        "0",
+                                        callOnChangedEvent: false,
+                                        force: true);
+                                    return;
+                                  }
                                   viewDoubleClickData
                                           .lstDetTable![editEvent.rowIdx]
                                           .bookedSpots =
@@ -480,6 +490,7 @@ class RoRescheduleController extends GetxController {
                                         notify: false,
                                         callOnChangedEvent: false);
                                   }
+
                                   addSpotGridManager!.changeCellValue(
                                       editEvent.row.cells["bookedSpots"]!,
                                       int.tryParse(editEvent.value) ?? "0",
@@ -767,7 +778,12 @@ class RoRescheduleController extends GetxController {
 
             if (data["info_AddSpots"].containsKey("message") &&
                 data["info_AddSpots"]["message"] != null) {
-              LoadingDialog.callInfoMessage(data["info_AddSpots"]["message"]);
+              if (Get.isDialogOpen ?? false) {
+                Get.back();
+              }
+              LoadingDialog.callInfoMessage(
+                data["info_AddSpots"]["message"],
+              );
             }
           }
         });
