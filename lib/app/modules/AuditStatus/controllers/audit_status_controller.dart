@@ -115,19 +115,21 @@ class AuditStatusController extends GetxController {
   Color getColor(Map<String, dynamic> dr, int index) {
     if (dr.containsKey("verifyStatus") && dr["verifyStatus"] == "No") {
       return const Color(0xFF00FFFF);
-    }
-    if (dr.containsKey("auditedSpots") && dr["auditedSpots"] == null) {
+    } else if (dr.containsKey("auditedSpots") && dr['auditedSpots'] == 0) {
+      return const Color.fromRGBO(255, 150, 150, 1);
+    } else if (dr["bookingno"] == "Unaudited") {
       return const Color.fromRGBO(255, 230, 230, 1);
-    }
-
-    if (index ==
-        bookingData.indexWhere((element) =>
-            element.containsKey("auditedSpots") &&
-            element.containsKey("totalspots") &&
-            element["auditedSpots"] != element["totalspots"] &&
-            (element["auditedSpots"] ?? 0) < (dr["totalspots"] ?? 0))) {
+    } else if ((dr['auditedSpots'] ?? 0) < (dr["totalspots"] ?? 0)) {
       return const Color.fromRGBO(255, 150, 150, 1);
     }
+    // if (index ==
+    //     bookingData.indexWhere((element) =>
+    //         element.containsKey("auditedSpots") &&
+    //         element.containsKey("totalspots") &&
+    //         element["auditedSpots"] != element["totalspots"] &&
+    //         (element["auditedSpots"] ?? 0) < (dr["totalspots"] ?? 0))) {
+    //   return const Color.fromRGBO(255, 150, 150, 1);
+    // }
 
     return Colors.white; // Return null if no color conditions are met.
   }
