@@ -497,6 +497,208 @@ class RosDistributionController extends GetxController {
     int lastSelectedIdx = 0, lastSelectedIdx2nd = 0, lastSelectedIdx3rd = 0;
     bool canRender = true;
 
+    void handleLeftDoubleTap() {
+      // lastSelectedIdx = rowIdx;
+
+      if ((tempModel.value.infoGetFpcCellDoubleClick?.lstFPC?.isNotEmpty ??
+          false)) {
+        LoadingDialog.call();
+        Get.find<ConnectorControl>().POSTMETHOD(
+          api: ApiFactory.RO_DISTRIBUTION_GET_FPC_DOUBLE_CLICK_DATA,
+          fun: (resp) {
+            closeDialogIfOpen();
+            if (resp != null &&
+                resp is Map<String, dynamic> &&
+                resp['info_GetFpcCellDoubleClick'] != null) {
+              tempModel.value = cellModel.ROSCellClickDataModel.fromJson(resp);
+              tempProgramName.value =
+                  tempModel.value.infoGetFpcCellDoubleClick?.programname ?? "";
+              tempFpcTime.value =
+                  tempModel.value.infoGetFpcCellDoubleClick?.fpctime ?? "";
+              tempCommercialCap.value =
+                  tempModel.value.infoGetFpcCellDoubleClick?.commercialCap ??
+                      "";
+              tempBookedDur.value =
+                  tempModel.value.infoGetFpcCellDoubleClick?.bookedduration ??
+                      "";
+              tempBal.value =
+                  tempModel.value.infoGetFpcCellDoubleClick?.balanceDuration ??
+                      "";
+            } else {
+              tempModel.value.infoGetFpcCellDoubleClick?.lstAllocatedSpots
+                  ?.clear();
+              tempModel.value.infoGetFpcCellDoubleClick?.lstUnallocatedSpots
+                  ?.clear();
+              LoadingDialog.showErrorDialog(resp.toString());
+            }
+            tempModel.refresh();
+          },
+          json: {
+            "locationCode": selectedLocation?.key,
+            "channelCode": selectedChannel?.key,
+            "date": DateFormat("yyyy-MM-ddT00:00:00")
+                .format(DateFormat("dd-MM-yyyy").parse(date.text)),
+            "currentRowIndex": lastSelectedIdx,
+            "lstFPC": tempModel.value.infoGetFpcCellDoubleClick?.lstFPC
+                ?.map((e) => e.toJson())
+                .toList(),
+            "lstROSSpots": showDataModel.value.infoShowBucketList?.lstROSSpots
+                    ?.map((e) => e.toJson())
+                    .toList() ??
+                [],
+            "fromDate": DateFormat("yyyy-MM-ddT00:00:00")
+                .format(DateFormat("dd-MM-yyyy").parse(date.text)),
+            "allowMoveSpotbuys": moveSpotbuys.value,
+            "chkMoveSpotBuys": checkBoxes.value[2]['value'],
+            "chkIncludeROS": includeROS.value,
+            "chkOpenDeal": includeOpenDeal.value,
+          },
+        );
+      }
+    }
+
+    void handleDeallocTap() {
+      if (selectedLocation == null || selectedChannel == null) return;
+      LoadingDialog.call();
+      Get.find<ConnectorControl>().POSTMETHOD(
+        api: ApiFactory.RO_DISTRIBUTION_GET_DEALLOCATE_FPC_DATA,
+        fun: (resp) {
+          closeDialogIfOpen();
+          if (resp != null &&
+              resp is Map<String, dynamic> &&
+              resp['info_GetDeallocateFPC'] != null) {
+            tempModel.value = cellModel.ROSCellClickDataModel(
+                infoGetFpcCellDoubleClick:
+                    cellModel.InfoGetFpcCellDoubleClick.fromJson(
+                        resp['info_GetDeallocateFPC']));
+            tempProgramName.value =
+                tempModel.value.infoGetFpcCellDoubleClick?.programname ?? "";
+            tempFpcTime.value =
+                tempModel.value.infoGetFpcCellDoubleClick?.fpctime ?? "";
+            tempCommercialCap.value =
+                tempModel.value.infoGetFpcCellDoubleClick?.commercialCap ?? "";
+            tempBookedDur.value =
+                tempModel.value.infoGetFpcCellDoubleClick?.bookedduration ?? "";
+            tempBal.value =
+                tempModel.value.infoGetFpcCellDoubleClick?.balanceDuration ??
+                    "";
+            // LoadingDialog.callInfoMessage(
+            //     resp['info_GetDeallocateFPC']['message'].toString());
+            if (resp['info_GetDeallocateFPC']['message'] != null &&
+                !resp.toString().contains("Cannot find table 0.")) {
+              LoadingDialog.callInfoMessage(
+                  resp['info_GetDeallocateFPC']['message'].toString());
+            } else {
+              handleLeftDoubleTap();
+            }
+          } else {
+            // tempModel.value.infoGetFpcCellDoubleClick?.lstAllocatedSpots?.clear();
+            // tempModel.value.infoGetFpcCellDoubleClick?.lstUnallocatedSpots?.clear();
+            // LoadingDialog.showErrorDialog(resp.toString());
+            // tempModel.refresh();
+            if (resp.toString().contains("Cannot find table 0.")) {
+              handleLeftDoubleTap();
+            } else {
+              LoadingDialog.showErrorDialog(resp.toString());
+            }
+          }
+        },
+        json: {
+          "currentRowIndex": lastSelectedIdx2nd,
+          "lstFPC": showDataModel.value.infoShowBucketList?.lstFPC
+              ?.map((e) => e.toJson())
+              .toList(),
+          "lstROSSpots": showDataModel.value.infoShowBucketList?.lstROSSpots
+                  ?.map((e) => e.toJson())
+                  .toList() ??
+              [],
+          "lstAllocatedSpots": [
+            tempModel.value.infoGetFpcCellDoubleClick
+                ?.lstAllocatedSpots?[lastSelectedIdx2nd]
+                .toJson()
+          ],
+          // tempModel
+          //         .value.infoGetFpcCellDoubleClick?.lstAllocatedSpots
+          //         ?.map((e) => e.toJson())
+          //         .toList() ??
+          //     [],
+          "fromDate": DateFormat("yyyy-MM-ddT00:00:00")
+              .format(DateFormat("dd-MM-yyyy").parse(date.text)),
+          "allowMoveSpotbuys": moveSpotbuys.value,
+          "chkMoveSpotBuys": moveSpotbuys.value,
+          "chkIncludeROS": includeROS.value,
+          "chkOpenDeal": includeOpenDeal.value,
+        },
+      );
+    }
+
+    handleAllocTap() {
+      if (selectedLocation == null || selectedChannel == null) return;
+      LoadingDialog.call();
+      Get.find<ConnectorControl>().POSTMETHOD(
+        api: ApiFactory.RO_DISTRIBUTION_GET_ALLOCATE_FPC_DATA,
+        fun: (resp) {
+          closeDialogIfOpen();
+          if (resp != null &&
+              resp is Map<String, dynamic> &&
+              resp['info_GetAllocateFPC'] != null) {
+            tempModel.value = cellModel.ROSCellClickDataModel(
+                infoGetFpcCellDoubleClick:
+                    cellModel.InfoGetFpcCellDoubleClick.fromJson(
+                        resp['info_GetAllocateFPC']));
+            tempProgramName.value =
+                tempModel.value.infoGetFpcCellDoubleClick?.programname ?? "";
+            tempFpcTime.value =
+                tempModel.value.infoGetFpcCellDoubleClick?.fpctime ?? "";
+            tempCommercialCap.value =
+                tempModel.value.infoGetFpcCellDoubleClick?.commercialCap ?? "";
+            tempBookedDur.value =
+                tempModel.value.infoGetFpcCellDoubleClick?.bookedduration ?? "";
+            tempBal.value =
+                tempModel.value.infoGetFpcCellDoubleClick?.balanceDuration ??
+                    "";
+            if (resp['info_GetAllocateFPC']['message'] != null) {
+              LoadingDialog.callInfoMessage(
+                  resp['info_GetAllocateFPC']['message'].toString());
+            } else {
+              handleLeftDoubleTap();
+            }
+          } else {
+            // tempModel.value.infoGetFpcCellDoubleClick?.lstAllocatedSpots?.clear();
+            // tempModel.value.infoGetFpcCellDoubleClick?.lstUnallocatedSpots?.clear();
+            LoadingDialog.showErrorDialog(resp.toString());
+            tempModel.refresh();
+          }
+        },
+        json: {
+          "unallocatedSpotsCurrentRowIndex": lastSelectedIdx3rd,
+          "loggedUser": Get.find<MainController>().user?.logincode,
+          "allocPercentVisiable": moveSpotbuys.value,
+          "allocPercentValue": tempAlloc.value,
+          "fpcCurrentRowIndex": lastSelectedIdx,
+          "lstFPC": showDataModel.value.infoShowBucketList?.lstFPC
+                  ?.map((e) => e.toJson())
+                  .toList() ??
+              [],
+          "lstROSSpots": showDataModel.value.infoShowBucketList?.lstROSSpots
+                  ?.map((e) => e.toJson())
+                  .toList() ??
+              [],
+          "lstUnallocatedSpots": tempModel
+                  .value.infoGetFpcCellDoubleClick?.lstUnallocatedSpots
+                  ?.map((e) => e.toJson())
+                  .toList() ??
+              [],
+          "fromDate": DateFormat("yyyy-MM-ddT00:00:00")
+              .format(DateFormat("dd-MM-yyyy").parse(date.text)),
+          "allowMoveSpotbuys": moveSpotbuys.value,
+          "chkMoveSpotBuys": moveSpotbuys.value,
+          "chkIncludeROS": includeROS.value,
+          "chkOpenDeal": includeOpenDeal.value,
+        },
+      );
+    }
+
     showDialog(
         context: Get.context!,
         builder: (_) {
@@ -594,170 +796,11 @@ class RosDistributionController extends GetxController {
                         ),
                         FormButton(
                           btnText: "Allocate",
-                          callback: () {
-                            if (selectedLocation == null ||
-                                selectedChannel == null) return;
-                            LoadingDialog.call();
-                            Get.find<ConnectorControl>().POSTMETHOD(
-                              api: ApiFactory
-                                  .RO_DISTRIBUTION_GET_ALLOCATE_FPC_DATA,
-                              fun: (resp) {
-                                closeDialogIfOpen();
-                                if (resp != null &&
-                                    resp is Map<String, dynamic> &&
-                                    resp['info_GetAllocateFPC'] != null) {
-                                  tempModel.value =
-                                      cellModel.ROSCellClickDataModel(
-                                          infoGetFpcCellDoubleClick: cellModel
-                                                  .InfoGetFpcCellDoubleClick
-                                              .fromJson(
-                                                  resp['info_GetAllocateFPC']));
-                                  tempProgramName.value = tempModel
-                                          .value
-                                          .infoGetFpcCellDoubleClick
-                                          ?.programname ??
-                                      "";
-                                  tempFpcTime.value = tempModel.value
-                                          .infoGetFpcCellDoubleClick?.fpctime ??
-                                      "";
-                                  tempCommercialCap.value = tempModel
-                                          .value
-                                          .infoGetFpcCellDoubleClick
-                                          ?.commercialCap ??
-                                      "";
-                                  tempBookedDur.value = tempModel
-                                          .value
-                                          .infoGetFpcCellDoubleClick
-                                          ?.bookedduration ??
-                                      "";
-                                  tempBal.value = tempModel
-                                          .value
-                                          .infoGetFpcCellDoubleClick
-                                          ?.balanceDuration ??
-                                      "";
-                                } else {
-                                  // tempModel.value.infoGetFpcCellDoubleClick?.lstAllocatedSpots?.clear();
-                                  // tempModel.value.infoGetFpcCellDoubleClick?.lstUnallocatedSpots?.clear();
-                                  LoadingDialog.showErrorDialog(
-                                      resp.toString());
-                                  tempModel.refresh();
-                                }
-                              },
-                              json: {
-                                "unallocatedSpotsCurrentRowIndex":
-                                    lastSelectedIdx3rd,
-                                "loggedUser":
-                                    Get.find<MainController>().user?.logincode,
-                                "allocPercentVisiable": moveSpotbuys.value,
-                                "allocPercentValue": tempAlloc.value,
-                                "fpcCurrentRowIndex": lastSelectedIdx,
-                                "lstFPC": showDataModel
-                                        .value.infoShowBucketList?.lstFPC
-                                        ?.map((e) => e.toJson())
-                                        .toList() ??
-                                    [],
-                                "lstROSSpots": showDataModel
-                                        .value.infoShowBucketList?.lstROSSpots
-                                        ?.map((e) => e.toJson())
-                                        .toList() ??
-                                    [],
-                                "lstUnallocatedSpots": tempModel
-                                        .value
-                                        .infoGetFpcCellDoubleClick
-                                        ?.lstUnallocatedSpots
-                                        ?.map((e) => e.toJson())
-                                        .toList() ??
-                                    [],
-                                "fromDate": DateFormat("yyyy-MM-ddT00:00:00")
-                                    .format(DateFormat("dd-MM-yyyy")
-                                        .parse(date.text)),
-                                "allowMoveSpotbuys": moveSpotbuys.value,
-                                "chkMoveSpotBuys": moveSpotbuys.value,
-                                "chkIncludeROS": includeROS.value,
-                                "chkOpenDeal": includeOpenDeal.value,
-                              },
-                            );
-                          },
+                          callback: handleAllocTap,
                         ),
                         FormButton(
                           btnText: "Deallocate",
-                          callback: () {
-                            if (selectedLocation == null ||
-                                selectedChannel == null) return;
-                            LoadingDialog.call();
-                            Get.find<ConnectorControl>().POSTMETHOD(
-                              api: ApiFactory
-                                  .RO_DISTRIBUTION_GET_DEALLOCATE_FPC_DATA,
-                              fun: (resp) {
-                                closeDialogIfOpen();
-                                if (resp != null &&
-                                    resp is Map<String, dynamic> &&
-                                    resp['info_GetDeallocateFPC'] != null) {
-                                  tempModel.value =
-                                      cellModel.ROSCellClickDataModel(
-                                          infoGetFpcCellDoubleClick: cellModel
-                                                  .InfoGetFpcCellDoubleClick
-                                              .fromJson(resp[
-                                                  'info_GetDeallocateFPC']));
-                                  tempProgramName.value = tempModel
-                                          .value
-                                          .infoGetFpcCellDoubleClick
-                                          ?.programname ??
-                                      "";
-                                  tempFpcTime.value = tempModel.value
-                                          .infoGetFpcCellDoubleClick?.fpctime ??
-                                      "";
-                                  tempCommercialCap.value = tempModel
-                                          .value
-                                          .infoGetFpcCellDoubleClick
-                                          ?.commercialCap ??
-                                      "";
-                                  tempBookedDur.value = tempModel
-                                          .value
-                                          .infoGetFpcCellDoubleClick
-                                          ?.bookedduration ??
-                                      "";
-                                  tempBal.value = tempModel
-                                          .value
-                                          .infoGetFpcCellDoubleClick
-                                          ?.balanceDuration ??
-                                      "";
-                                } else {
-                                  // tempModel.value.infoGetFpcCellDoubleClick?.lstAllocatedSpots?.clear();
-                                  // tempModel.value.infoGetFpcCellDoubleClick?.lstUnallocatedSpots?.clear();
-                                  LoadingDialog.showErrorDialog(
-                                      resp.toString());
-                                  tempModel.refresh();
-                                }
-                              },
-                              json: {
-                                "currentRowIndex": lastSelectedIdx,
-                                "lstFPC": showDataModel
-                                    .value.infoShowBucketList?.lstFPC
-                                    ?.map((e) => e.toJson())
-                                    .toList(),
-                                "lstROSSpots": showDataModel
-                                        .value.infoShowBucketList?.lstROSSpots
-                                        ?.map((e) => e.toJson())
-                                        .toList() ??
-                                    [],
-                                "lstAllocatedSpots": tempModel
-                                        .value
-                                        .infoGetFpcCellDoubleClick
-                                        ?.lstAllocatedSpots
-                                        ?.map((e) => e.toJson())
-                                        .toList() ??
-                                    [],
-                                "fromDate": DateFormat("yyyy-MM-ddT00:00:00")
-                                    .format(DateFormat("dd-MM-yyyy")
-                                        .parse(date.text)),
-                                "allowMoveSpotbuys": moveSpotbuys.value,
-                                "chkMoveSpotBuys": moveSpotbuys.value,
-                                "chkIncludeROS": includeROS.value,
-                                "chkOpenDeal": includeOpenDeal.value,
-                              },
-                            );
-                          },
+                          callback: handleDeallocTap,
                         ),
                         Row(),
                         InputFields.formFieldDisable(
@@ -1012,107 +1055,14 @@ class RosDistributionController extends GetxController {
                                                 ""),
                                         onRowDoubleTap: (row) {
                                           lastSelectedIdx = row.rowIdx;
+                                          lastSelectedIdx2nd = 0;
+                                          lastSelectedIdx3rd = 0;
                                           tempSM1st?.setCurrentCell(
                                               tempSM1st
                                                   ?.getRowByIdx(lastSelectedIdx)
-                                                  ?.cells['locationcode'],
+                                                  ?.cells['fpcTime'],
                                               lastSelectedIdx);
-                                          if ((tempModel
-                                                  .value
-                                                  .infoGetFpcCellDoubleClick
-                                                  ?.lstFPC
-                                                  ?.isNotEmpty ??
-                                              false)) {
-                                            LoadingDialog.call();
-                                            Get.find<ConnectorControl>()
-                                                .POSTMETHOD(
-                                              api: ApiFactory
-                                                  .RO_DISTRIBUTION_GET_FPC_DOUBLE_CLICK_DATA,
-                                              fun: (resp) {
-                                                closeDialogIfOpen();
-                                                if (resp != null &&
-                                                    resp is Map<String,
-                                                        dynamic> &&
-                                                    resp['info_GetFpcCellDoubleClick'] !=
-                                                        null) {
-                                                  tempModel.value = cellModel
-                                                          .ROSCellClickDataModel
-                                                      .fromJson(resp);
-                                                  tempProgramName
-                                                      .value = tempModel
-                                                          .value
-                                                          .infoGetFpcCellDoubleClick
-                                                          ?.programname ??
-                                                      "";
-                                                  tempFpcTime.value = tempModel
-                                                          .value
-                                                          .infoGetFpcCellDoubleClick
-                                                          ?.fpctime ??
-                                                      "";
-                                                  tempCommercialCap
-                                                      .value = tempModel
-                                                          .value
-                                                          .infoGetFpcCellDoubleClick
-                                                          ?.commercialCap ??
-                                                      "";
-                                                  tempBookedDur
-                                                      .value = tempModel
-                                                          .value
-                                                          .infoGetFpcCellDoubleClick
-                                                          ?.bookedduration ??
-                                                      "";
-                                                  tempBal.value = tempModel
-                                                          .value
-                                                          .infoGetFpcCellDoubleClick
-                                                          ?.balanceDuration ??
-                                                      "";
-                                                } else {
-                                                  tempModel
-                                                      .value
-                                                      .infoGetFpcCellDoubleClick
-                                                      ?.lstAllocatedSpots
-                                                      ?.clear();
-                                                  tempModel
-                                                      .value
-                                                      .infoGetFpcCellDoubleClick
-                                                      ?.lstUnallocatedSpots
-                                                      ?.clear();
-                                                  LoadingDialog.showErrorDialog(
-                                                      resp.toString());
-                                                }
-                                                tempModel.refresh();
-                                              },
-                                              json: {
-                                                "currentRowIndex": row.rowIdx,
-                                                "lstFPC": tempModel
-                                                    .value
-                                                    .infoGetFpcCellDoubleClick
-                                                    ?.lstFPC
-                                                    ?.map((e) => e.toJson())
-                                                    .toList(),
-                                                "lstROSSpots": showDataModel
-                                                        .value
-                                                        .infoShowBucketList
-                                                        ?.lstROSSpots
-                                                        ?.map((e) => e.toJson())
-                                                        .toList() ??
-                                                    [],
-                                                "fromDate": DateFormat(
-                                                        "yyyy-MM-ddT00:00:00")
-                                                    .format(
-                                                        DateFormat("dd-MM-yyyy")
-                                                            .parse(date.text)),
-                                                "allowMoveSpotbuys":
-                                                    moveSpotbuys.value,
-                                                "chkMoveSpotBuys": checkBoxes
-                                                    .value[2]['value'],
-                                                "chkIncludeROS":
-                                                    includeROS.value,
-                                                "chkOpenDeal":
-                                                    includeOpenDeal.value,
-                                              },
-                                            );
-                                          }
+                                          handleLeftDoubleTap();
                                         },
                                         witdthSpecificColumn: (userDataSettings
                                             ?.userSetting
@@ -1169,7 +1119,7 @@ class RosDistributionController extends GetxController {
                                                   lastSelectedIdx,
                                                   PlutoMoveDirection.down);
                                         },
-                                        mode: PlutoGridMode.normal,
+                                        mode: PlutoGridMode.selectWithOneTap,
                                       ),
                               );
                             }),
@@ -1246,8 +1196,14 @@ class RosDistributionController extends GetxController {
                                                     tempSM2nd
                                                         ?.getRowByIdx(
                                                             lastSelectedIdx2nd)
-                                                        ?.cells['locationcode'],
+                                                        ?.cells['bookingNumber'],
                                                     lastSelectedIdx2nd);
+                                              },
+                                              mode: PlutoGridMode
+                                                  .selectWithOneTap,
+                                              onSelected: (p0) {
+                                                lastSelectedIdx2nd =
+                                                    p0.rowIdx ?? 0;
                                               },
                                               onload: (sm) {
                                                 tempSM2nd = sm.stateManager;
@@ -1255,8 +1211,13 @@ class RosDistributionController extends GetxController {
                                                     sm.stateManager
                                                         .getRowByIdx(
                                                             lastSelectedIdx2nd)
-                                                        ?.cells['locationcode'],
+                                                        ?.cells['bookingNumber'],
                                                     lastSelectedIdx2nd);
+                                                sm.stateManager
+                                                    .moveCurrentCellByRowIdx(
+                                                        lastSelectedIdx2nd,
+                                                        PlutoMoveDirection
+                                                            .down);
                                               },
                                             ),
                                     );
@@ -1298,13 +1259,19 @@ class RosDistributionController extends GetxController {
                                               formatDate: false,
                                               widthRatio: 220,
                                               hideCode: false,
+                                              mode: PlutoGridMode
+                                                  .selectWithOneTap,
+                                              onSelected: (p0) {
+                                                lastSelectedIdx3rd =
+                                                    p0.rowIdx ?? 0;
+                                              },
                                               onRowDoubleTap: (p0) {
                                                 lastSelectedIdx3rd = p0.rowIdx;
                                                 tempSM3rd?.setCurrentCell(
                                                     tempSM3rd
                                                         ?.getRowByIdx(
                                                             lastSelectedIdx3rd)
-                                                        ?.cells['locationcode'],
+                                                        ?.cells['bookingNumber'],
                                                     lastSelectedIdx3rd);
                                               },
                                               colorCallback: (row) => (row
@@ -1337,8 +1304,13 @@ class RosDistributionController extends GetxController {
                                                     sm.stateManager
                                                         .getRowByIdx(
                                                             lastSelectedIdx3rd)
-                                                        ?.cells['locationcode'],
+                                                        ?.cells['bookingNumber'],
                                                     lastSelectedIdx3rd);
+                                                sm.stateManager
+                                                    .moveCurrentCellByRowIdx(
+                                                        lastSelectedIdx3rd,
+                                                        PlutoMoveDirection
+                                                            .down);
                                               },
                                             ),
                                     );
