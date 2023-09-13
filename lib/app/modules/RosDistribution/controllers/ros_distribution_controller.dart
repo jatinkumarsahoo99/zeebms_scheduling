@@ -632,7 +632,7 @@ class RosDistributionController extends GetxController {
       );
     }
 
-    handleAllocTap() {
+    void handleAllocTap() {
       if (selectedLocation == null || selectedChannel == null) return;
       LoadingDialog.call();
       Get.find<ConnectorControl>().POSTMETHOD(
@@ -1198,6 +1198,7 @@ class RosDistributionController extends GetxController {
                                                             lastSelectedIdx2nd)
                                                         ?.cells['bookingNumber'],
                                                     lastSelectedIdx2nd);
+                                                handleDeallocTap();
                                               },
                                               mode: PlutoGridMode
                                                   .selectWithOneTap,
@@ -1273,6 +1274,7 @@ class RosDistributionController extends GetxController {
                                                             lastSelectedIdx3rd)
                                                         ?.cells['bookingNumber'],
                                                     lastSelectedIdx3rd);
+                                                handleAllocTap();
                                               },
                                               colorCallback: (row) => (row
                                                       .row.cells
