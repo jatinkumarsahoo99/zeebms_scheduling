@@ -321,8 +321,7 @@ class SalesAuditNewController extends GetxController {
       } else if (showError.value == true) {
         gridStateManagerLeft?.setFilter((element) => true);
         gridStateManagerLeft?.setFilter((e) =>
-            e.cells['bookingStatus']?.value.toString().trim().toLowerCase() !=
-            "c");
+            e.cells['bookingStatus']?.value.toString().trim().toLowerCase() != "c");
         gridStateManagerRight?.setFilter((element) => true);
         gridStateManagerLeft?.notifyListeners();
         gridStateManagerRight?.notifyListeners();

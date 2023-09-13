@@ -489,12 +489,12 @@ class CommercialMasterController extends GetxController {
               });
             }
             // secType
-            if (map.containsKey("secType") && map["secType"].length > 0) {
+           /* if (map.containsKey("secType") && map["secType"].length > 0) {
               secType.clear();
               map['secType'].forEach((e) {
-                secType.add(DropDownValue.fromJson1(e));
+                secType.add(DropDownValue.fromJsonDynamic(e,"eventCode","eventName"));
               });
-            }
+            }*/
             if (map.containsKey("revenueType") &&
                 map["revenueType"].length > 0) {
               revenueType.clear();

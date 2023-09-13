@@ -65,7 +65,7 @@ class CommercialMasterView extends StatelessWidget {
                                       child: Wrap(
                                         crossAxisAlignment: WrapCrossAlignment.end,
                                         spacing: Get.width*0.025,
-                                        runSpacing: 10,
+                                        runSpacing: 5,
                                         children: [
                                           InputFields.formField1(
                                             hintTxt: "Caption",
@@ -132,8 +132,7 @@ class CommercialMasterView extends StatelessWidget {
                                                 // controllerX.isListenerActive = true;
                                               },
                                                       "Sec Type",
-                                                      isEnable: controllerX
-                                                          .isEnable,
+                                                      isEnable:(controllerX.secType.isNotEmpty)? true:false,
                                                       .17,
                                                       selected: controllerX
                                                           .selectedSecType?.value,
@@ -394,6 +393,7 @@ class CommercialMasterView extends StatelessWidget {
                                                     .agencyNameController
                                                     .text = value.value ?? "";
                                               }, "Agency", .365,
+                                                  dialogHeight: 200,
                                                   inkWellFocusNode:
                                                       controllerX.agencyFocus,
                                                   isEnable:
