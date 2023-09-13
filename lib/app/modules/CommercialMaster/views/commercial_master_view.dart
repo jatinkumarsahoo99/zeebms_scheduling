@@ -43,6 +43,7 @@ class CommercialMasterView extends StatelessWidget {
               child: FocusTraversalGroup(
                 policy: OrderedTraversalPolicy(),
                 child: Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceAround,
                   children: [
                     GetBuilder<CommercialMasterController>(
                         init: controllerX,
@@ -60,11 +61,11 @@ class CommercialMasterView extends StatelessWidget {
                                     child: Container(
                                       decoration: BoxDecoration(
                                           border: Border.all(color: Colors.grey)),
-                                      padding: const EdgeInsets.all(16),
+                                      padding: const EdgeInsets.all(6),
                                       child: Wrap(
                                         crossAxisAlignment: WrapCrossAlignment.end,
                                         spacing: Get.width*0.025,
-                                        runSpacing: 10,
+                                        runSpacing: 5,
                                         children: [
                                           InputFields.formField1(
                                             hintTxt: "Caption",
@@ -131,8 +132,7 @@ class CommercialMasterView extends StatelessWidget {
                                                 // controllerX.isListenerActive = true;
                                               },
                                                       "Sec Type",
-                                                      isEnable: controllerX
-                                                          .isEnable,
+                                                      isEnable:(controllerX.secType.isNotEmpty)? true:false,
                                                       .17,
                                                       selected: controllerX
                                                           .selectedSecType?.value,
@@ -393,6 +393,7 @@ class CommercialMasterView extends StatelessWidget {
                                                     .agencyNameController
                                                     .text = value.value ?? "";
                                               }, "Agency", .365,
+                                                  dialogHeight: 200,
                                                   inkWellFocusNode:
                                                       controllerX.agencyFocus,
                                                   isEnable:
@@ -441,7 +442,6 @@ class CommercialMasterView extends StatelessWidget {
                             ),
                           );
                         }),
-                    SizedBox(width: 4),
                     Expanded(
                       flex: 8,
                       child: GetBuilder<CommercialMasterController>(

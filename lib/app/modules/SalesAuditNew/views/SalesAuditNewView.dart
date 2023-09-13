@@ -254,6 +254,8 @@ class SalesAuditNewView  extends StatelessWidget  {
                                             hideCode: false,
                                             formatDate: false,
                                             exportFileName: "Sales Audit New",
+                                            csvFormat: true,
+                                            // removeKeysFromFile: ['Booking Status'],
                                             onRowDoubleTap: (PlutoGridOnRowDoubleTapEvent? val){
                                                   print(">>>>>>>>"+val!.rowIdx .toString());
                                                   controller.tapeBtn(leftIndex: val.rowIdx,rightIndex: controller.gridStateManagerRight?.currentRowIdx);
@@ -344,6 +346,7 @@ class SalesAuditNewView  extends StatelessWidget  {
                                                 formatDate: true,
                                                 dateFromat: "dd/MM/yyyy",
                                                 focusNode: controller.rightFocusNode,
+                                                csvFormat: true,
                                                 exportFileName: "Sales Audit New",
                                                 onRowDoubleTap: (PlutoGridOnRowDoubleTapEvent? val){
                                                   print(">>>>>>>>"+val!.row.toString());
@@ -363,8 +366,6 @@ class SalesAuditNewView  extends StatelessWidget  {
                                                   }
                                                   return color;
                                                 },
-
-
                                                 // checkRow: true,
                                                 // checkRowKey: "no",
                                                 mode: PlutoGridMode.selectWithOneTap,
