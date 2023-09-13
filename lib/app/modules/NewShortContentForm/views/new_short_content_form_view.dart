@@ -2,6 +2,7 @@ import 'package:bms_scheduling/app/controller/HomeController.dart';
 import 'package:bms_scheduling/app/modules/CommonSearch/views/common_search_view.dart';
 import 'package:bms_scheduling/widgets/dropdown.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 
 import 'package:get/get.dart';
 
@@ -134,10 +135,14 @@ class NewShortContentFormView extends StatelessWidget {
                     ),
                   ),
                   InputFields.formField1(
-                      hintTxt: "Segment Number",
-                      controller: controller.segment,
-                      width: 0.16,
-                      focusNode: controller.segmentFN),
+                    hintTxt: "Segment Number",
+                    controller: controller.segment,
+                    width: 0.16,
+                    focusNode: controller.segmentFN,
+                    inputformatters: [
+                      FilteringTextInputFormatter.digitsOnly,
+                    ],
+                  ),
                   InputFields.formField1(
                       hintTxt: "House ID",
                       controller: controller.houseId,
