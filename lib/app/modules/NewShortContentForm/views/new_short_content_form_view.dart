@@ -181,7 +181,7 @@ class NewShortContentFormView extends StatelessWidget {
                       hintTxt: "EOM",
                       widthRatio: .155,
                       controller: controller.eom,
-                      textFieldFN: controller.eomFN,
+                      // textFieldFN: controller.eomFN,
                       // isTime: true,
                       paddingLeft: 0,
                       onEditComplete: (val) {
@@ -348,7 +348,8 @@ class NewShortContentFormView extends StatelessWidget {
         );
         break;
       case "Clear":
-        Get.delete<NewShortContentFormController>();
+        // Get.delete<NewShortContentFormController>();
+        controller.clearPage();
         Get.find<HomeController>().clearPage1();
         break;
       default:

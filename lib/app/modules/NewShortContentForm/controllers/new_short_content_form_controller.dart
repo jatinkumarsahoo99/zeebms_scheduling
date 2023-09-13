@@ -100,20 +100,6 @@ class NewShortContentFormController extends GetxController {
     print(">>>>>>>>>" + durationController.value.text);
     print(">>>>>>>>>" + sec.toString());
   }
-  // calculateDuration({bool showDialog = true}) {
-  //   var diff = (Utils.oldBMSConvertToSecondsValue(value: som.text) -
-  //       Utils.oldBMSConvertToSecondsValue(value: eom.text));
-  //   print("diff: $diff");
-  //   if (diff.isNegative && showDialog) {
-  //     eom.clear();
-  //     LoadingDialog.showErrorDialog("EOM should not less than SOM",
-  //         callback: () {
-  //       // eomFN.requestFocus();
-  //     });
-  //   } else {
-  //     duration.text = Utils.convertToTimeFromDouble(value: diff);
-  //   }
-  // }
 
   getChannel(locationCode) {
     Get.find<ConnectorControl>().GETMETHODCALL(
@@ -582,5 +568,25 @@ class NewShortContentFormController extends GetxController {
   @override
   void onClose() {
     super.onClose();
+  }
+
+  clearPage() {
+    som.text = "00:00:00:00";
+    eom.text = "00:00:00:00";
+    duration.value = "00:00:00:00";
+    selectedLocation.value = null;
+    selectedChannel.value = null;
+    selectedType.value = null;
+    selectedCategory.value = null;
+    selectedProgram.value = null;
+    selectedTape.value = null;
+    selectedOrgRep.value = null;
+    txCaption.clear();
+    houseId.clear();
+    startData.clear();
+    endDate.clear();
+    segment.clear();
+    remark.clear();
+    toBeBilled.value = false;
   }
 }
