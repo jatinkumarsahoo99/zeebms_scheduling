@@ -558,7 +558,11 @@ class RosDistributionController extends GetxController {
     }
 
     void handleDeallocTap() {
-      if (selectedLocation == null || selectedChannel == null) return;
+      if (selectedLocation == null ||
+          selectedChannel == null ||
+          (tempModel.value.infoGetFpcCellDoubleClick?.lstAllocatedSpots
+                  ?.isEmpty ??
+              true)) return;
       LoadingDialog.call();
       Get.find<ConnectorControl>().POSTMETHOD(
         api: ApiFactory.RO_DISTRIBUTION_GET_DEALLOCATE_FPC_DATA,
@@ -633,7 +637,11 @@ class RosDistributionController extends GetxController {
     }
 
     void handleAllocTap() {
-      if (selectedLocation == null || selectedChannel == null) return;
+      if (selectedLocation == null ||
+          selectedChannel == null ||
+          (tempModel.value.infoGetFpcCellDoubleClick?.lstUnallocatedSpots
+                  ?.isEmpty ??
+              true)) return;
       LoadingDialog.call();
       Get.find<ConnectorControl>().POSTMETHOD(
         api: ApiFactory.RO_DISTRIBUTION_GET_ALLOCATE_FPC_DATA,
