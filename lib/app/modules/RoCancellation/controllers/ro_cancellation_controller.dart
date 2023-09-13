@@ -20,6 +20,7 @@ import 'package:url_launcher/url_launcher.dart';
 import '../../../controller/ConnectorControl.dart';
 import '../../../controller/HomeController.dart';
 import '../../../data/DropDownValue.dart';
+import '../../../data/user_data_settings_model.dart';
 import '../../CommonDocs/controllers/common_docs_controller.dart';
 import '../../CommonDocs/views/common_docs_view.dart';
 
@@ -28,6 +29,13 @@ class RoCancellationController extends GetxController {
   void onInit() {
     super.onInit();
   }
+
+  fetchUserSetting1() async {
+    userDataSettings = await Get.find<HomeController>().fetchUserSetting2();
+    update(['cancelData']);
+  }
+
+  UserDataSettings? userDataSettings;
 
   PlatformFile? importedFile;
   DateFormat df2 = DateFormat("yyyy-MM-dd");
@@ -72,13 +80,18 @@ class RoCancellationController extends GetxController {
   void onReady() {
     super.onReady();
     getLocation();
+    fetchUserSetting1();
     bookingNumberFocus.addListener(() {
-      if (!bookingNumberFocus.hasFocus && bookingNumberctrl.text != "" && !cancelFetchData) {
+      if (!bookingNumberFocus.hasFocus &&
+          bookingNumberctrl.text != "" &&
+          !cancelFetchData) {
         onBookingNoLeave(bookingNumberctrl.text);
       }
     });
     cancelNumberFocus.addListener(() {
-      if (!cancelNumberFocus.hasFocus && (cancelNumberctrl.text.isNotEmpty && !cancelFetchData) && cancelMonthctrl.text.isNotEmpty) {
+      if (!cancelNumberFocus.hasFocus &&
+          (cancelNumberctrl.text.isNotEmpty && !cancelFetchData) &&
+          cancelMonthctrl.text.isNotEmpty) {
         onCancelNoLeave();
       }
     });
@@ -103,13 +116,16 @@ class RoCancellationController extends GetxController {
           api: ApiFactory.RO_CANCELLATION_LOCATION,
           fun: (data) {
             Get.back();
-            if ((data as Map).containsKey("lstLocation") && data["lstLocation"] is List) {
+            if ((data as Map).containsKey("lstLocation") &&
+                data["lstLocation"] is List) {
               for (var e in data["lstLocation"]) {
-                locations.add(DropDownValue(key: e["locationCode"], value: e["locationName"]));
+                locations.add(DropDownValue(
+                    key: e["locationCode"], value: e["locationName"]));
               }
               locations.refresh();
             } else {
-              LoadingDialog.callErrorMessage1(msg: "Failed To Load Initial Data");
+              LoadingDialog.callErrorMessage1(
+                  msg: "Failed To Load Initial Data");
             }
           });
     } catch (e) {
@@ -126,13 +142,16 @@ class RoCancellationController extends GetxController {
           api: ApiFactory.RO_CANCELLATION_CHANNNEL(locationCode),
           fun: (data) {
             Get.back();
-            if ((data as Map).containsKey("lstChannel") && data["lstChannel"] is List) {
+            if ((data as Map).containsKey("lstChannel") &&
+                data["lstChannel"] is List) {
               for (var e in data["lstChannel"]) {
-                channels.add(DropDownValue(key: e["channelcode"], value: e["channelName"]));
+                channels.add(DropDownValue(
+                    key: e["channelcode"], value: e["channelName"]));
               }
               channels.refresh();
             } else {
-              LoadingDialog.callErrorMessage1(msg: "Failed To Load Initial Data");
+              LoadingDialog.callErrorMessage1(
+                  msg: "Failed To Load Initial Data");
             }
           });
     } catch (e) {
@@ -142,7 +161,7 @@ class RoCancellationController extends GetxController {
 
   onBookingNoLeave(bookingNo) {
     // print("ON BOOKING NUMBER LEAVE CALLED>>>");
-    if(selectedChannel==null||selectedLocation==null){
+    if (selectedChannel == null || selectedLocation == null) {
       return;
     }
     LoadingDialog.call();
@@ -160,11 +179,13 @@ class RoCancellationController extends GetxController {
             Get.back();
             try {
               roCancellationData = RoCancellationData.fromJson(data);
-              if (roCancellationData != null && roCancellationData!.cancellationData != null) {
+              if (roCancellationData != null &&
+                  roCancellationData!.cancellationData != null) {
                 parseCancellationData();
               }
             } catch (e) {
-              LoadingDialog.callErrorMessage1(msg: "Failed To Load Cancellation Data");
+              LoadingDialog.callErrorMessage1(
+                  msg: "Failed To Load Cancellation Data");
             }
           });
     } catch (e) {
@@ -177,7 +198,7 @@ class RoCancellationController extends GetxController {
 
   onCancelNoLeave() {
     // print("ON BOOKING NUMBER LEAVE CALLED>>>");
-    if(selectedLocation==null || selectedChannel==null){
+    if (selectedLocation == null || selectedChannel == null) {
       return;
     }
     LoadingDialog.call();
@@ -223,7 +244,9 @@ class RoCancellationController extends GetxController {
       brandctrl.text = data["brandName"] ?? "";
       agencyctrl.text = data["agencyName"] ?? "";
       if (data['bookingEffectiveDate'] != null) {
-        effDatectrl.text = DateFormat('dd-MM-yyyy').format(DateFormat('yyyy-MM-ddThh:mm:ss').parse(data['bookingEffectiveDate']));
+        effDatectrl.text = DateFormat('dd-MM-yyyy').format(
+            DateFormat('yyyy-MM-ddThh:mm:ss')
+                .parse(data['bookingEffectiveDate']));
       }
       FocusScope.of(Get.context!).requestFocus(selectAllFocus);
       selectAllFocus.requestFocus();
@@ -279,7 +302,8 @@ class RoCancellationController extends GetxController {
       Get.defaultDialog(
         title: "Documents",
         content: CommonDocsView(
-          documentKey: "ROCancellation${selectedLocation?.key ?? ''}${selectedChannel?.key ?? ''}${cancelMonthctrl.text}${cancelNumberctrl.text}",
+          documentKey:
+              "ROCancellation${selectedLocation?.key ?? ''}${selectedChannel?.key ?? ''}${cancelMonthctrl.text}${cancelNumberctrl.text}",
         ),
       ).then((value) {
         Get.delete<CommonDocsController>(tag: "commonDocs");
@@ -294,17 +318,26 @@ class RoCancellationController extends GetxController {
       intTotalAmount.value = 0;
       intTotalValuationAmount.value = 0;
       // roCancellationGridManager!.setFilter((element) => element.checked!);
-      var list = roCancellationData?.cancellationData?.lstBookingNoStatusData?.where((element) => (element.requested ?? false)).toList() ?? [];
+      var list = roCancellationData?.cancellationData?.lstBookingNoStatusData
+              ?.where((element) => (element.requested ?? false))
+              .toList() ??
+          [];
       // print(list.length);
       for (LstBookingNoStatusData element in list) {
-        if (element.cancelNumber == null && (element.cancelNumber?.isEmpty ?? true)) {
+        if (element.cancelNumber == null &&
+            (element.cancelNumber?.isEmpty ?? true)) {
           intTotalCount.value = (intTotalCount.value ?? 0) + 1;
-          intTotalDuration.value = (intTotalDuration.value ?? 0) + (element.tapeDuration ?? 0);
-          intTotalAmount.value = (intTotalAmount.value ?? 0) + (double.parse((element.spotAmount ?? 0).toString())).toDouble();
-          intTotalValuationAmount.value = (intTotalValuationAmount.value ?? 0) + (double.parse((element.valuationAmount ?? 0).toString())).toDouble();
+          intTotalDuration.value =
+              (intTotalDuration.value ?? 0) + (element.tapeDuration ?? 0);
+          intTotalAmount.value = (intTotalAmount.value ?? 0) +
+              (double.parse((element.spotAmount ?? 0).toString())).toDouble();
+          intTotalValuationAmount.value = (intTotalValuationAmount.value ?? 0) +
+              (double.parse((element.valuationAmount ?? 0).toString()))
+                  .toDouble();
         }
       }
-      roCancellationGridManager!.setFilter((element) => element.cells['requested']!.value == 'true');
+      roCancellationGridManager!
+          .setFilter((element) => element.cells['requested']!.value == 'true');
     }
   }
 
@@ -314,8 +347,11 @@ class RoCancellationController extends GetxController {
     } else if (selectedChannel == null) {
       LoadingDialog.showErrorDialog("Please select Channel.");
     } else if (refNumberctrl.text.isEmpty || bookingNumberctrl.text.isEmpty) {
-      LoadingDialog.showErrorDialog("Please enter Reference number and Booking No.");
-    } else if (roCancellationData?.cancellationData?.lstBookingNoStatusData?.isEmpty ?? true) {
+      LoadingDialog.showErrorDialog(
+          "Please enter Reference number and Booking No.");
+    } else if (roCancellationData
+            ?.cancellationData?.lstBookingNoStatusData?.isEmpty ??
+        true) {
       LoadingDialog.showErrorDialog("Please load data.");
     } else {
       LoadingDialog.call();
@@ -326,18 +362,24 @@ class RoCancellationController extends GetxController {
             "channelCode": selectedChannel!.key,
             "cancelMonth": int.tryParse(cancelMonthctrl.text) ?? 0,
             "cancelNumber": int.tryParse(cancelNumberctrl.text) ?? 0,
-            "cancelDate": DateFormat("yyyy-MM-dd").format(DateFormat("dd-MM-yyyy").parse(cancelDatectrl.text)),
+            "cancelDate": DateFormat("yyyy-MM-dd")
+                .format(DateFormat("dd-MM-yyyy").parse(cancelDatectrl.text)),
             "referenceNumber": refNumberctrl.text,
             "bookingnumber": bookingNumberctrl.text,
             "modifiedBy": Get.find<MainController>().user?.logincode,
-            "lstdgvList": roCancellationData!.cancellationData!.lstBookingNoStatusData!.map((e) => e.toJson()).toList()
+            "lstdgvList": roCancellationData!
+                .cancellationData!.lstBookingNoStatusData!
+                .map((e) => e.toJson())
+                .toList()
           },
           fun: (data) {
             Get.back();
             if (data is String) {
               LoadingDialog.callErrorMessage1(msg: data);
             } else if (data is Map && data.containsKey("saveInfo")) {
-              if (data["saveInfo"]["message"].toString().contains("Records saved successfully")) {
+              if (data["saveInfo"]["message"]
+                  .toString()
+                  .contains("Records saved successfully")) {
                 LoadingDialog.callDataSaved(msg: data["saveInfo"]["message"]);
               } else {
                 LoadingDialog.callInfoMessage(data["saveInfo"]["message"]);
@@ -363,14 +405,17 @@ class RoCancellationController extends GetxController {
           Get.back();
 
           try {
-            if (data.toString().contains("Column 'BookingDetailCode' does not belong to table Table1.")) {
+            if (data.toString().contains(
+                "Column 'BookingDetailCode' does not belong to table Table1.")) {
               LoadingDialog.showErrorDialog(data.toString());
             } else {
               List<LstBookingNoStatusData> _lstBookingNoStatusData = [];
               for (var element in data["importExcelResponse"]) {
-                _lstBookingNoStatusData.add(LstBookingNoStatusData.fromJson(element));
+                _lstBookingNoStatusData
+                    .add(LstBookingNoStatusData.fromJson(element));
               }
-              roCancellationData!.cancellationData!.lstBookingNoStatusData = _lstBookingNoStatusData;
+              roCancellationData!.cancellationData!.lstBookingNoStatusData =
+                  _lstBookingNoStatusData;
               update(["cancelData"]);
             }
           } catch (e) {

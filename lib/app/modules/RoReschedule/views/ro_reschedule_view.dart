@@ -16,6 +16,7 @@ import 'package:bms_scheduling/widgets/input_fields.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
+import '../../../data/user_data_settings_model.dart';
 import '../../CommonSearch/views/common_search_view.dart';
 import '../controllers/ro_reschedule_controller.dart';
 
@@ -67,6 +68,7 @@ class RoRescheduleView extends StatelessWidget {
                                 },
                                 "Location",
                                 0.24,
+                                autoFocus: true,
                                 selected: controller.selectedLocation,
                                 isEnable: controller.enableFields.value,
                               ),
@@ -234,6 +236,14 @@ class RoRescheduleView extends StatelessWidget {
                                   return DataGridShowOnlyKeys(
                                     mode: PlutoGridMode.selectWithOneTap,
                                     hideKeys: const [],
+                                    keysWidths: (controller
+                                        .userDataSettings?.userSetting
+                                        ?.firstWhere(
+                                            (element) =>
+                                                element.controlName ==
+                                                "plutoGridStateManager",
+                                            orElse: () => UserSetting())
+                                        .userSettings),
                                     colorCallback: (p0) {
                                       if (controller
                                                   .roRescheduleOnLeaveData!
@@ -340,6 +350,14 @@ class RoRescheduleView extends StatelessWidget {
                                   );
                                 } else {
                                   return DataGridShowOnlyKeys(
+                                    keysWidths: (controller
+                                        .userDataSettings?.userSetting
+                                        ?.firstWhere(
+                                            (element) =>
+                                                element.controlName ==
+                                                "updatedplutoGridStateManager",
+                                            orElse: () => UserSetting())
+                                        .userSettings),
                                     mapData: gridController
                                         .roRescheduleOnLeaveData!.lstdgvUpdated!
                                         .map((e) => e.toJson())
@@ -509,18 +527,24 @@ class RoRescheduleView extends StatelessWidget {
                                   crossAxisAlignment: WrapCrossAlignment.end,
                                   children: [
                                     DropDownField.formDropDown1WidthMap(
-                                        (controller.roRescheduleOnLeaveData
-                                                    ?.lstcmbTapeID ??
-                                                [])
-                                            .map((e) => DropDownValue(
-                                                key: e.commercialCaption,
-                                                value: e.exporttapecode))
-                                            .toList(), (data) {
-                                      controller.chnageTapeIdCap.text =
-                                          data.key!;
-                                    }, "Tape ID", 0.12,
-                                        selected:
-                                            controller.modifySelectedTapeCode),
+                                      (controller.roRescheduleOnLeaveData
+                                                  ?.lstcmbTapeID ??
+                                              [])
+                                          .map((e) => DropDownValue(
+                                              key: e.commercialCaption,
+                                              value: e.exporttapecode))
+                                          .toList(),
+                                      (data) {
+                                        controller.chnageTapeIdCap.text =
+                                            data.key!;
+                                        controller.modifySelectedTapeCode =
+                                            data;
+                                      },
+                                      "Tape ID",
+                                      0.12,
+                                      selected:
+                                          controller.modifySelectedTapeCode,
+                                    ),
                                     InputFields.formField1(
                                         hintTxt: "Seg",
                                         isEnable: false,
@@ -622,6 +646,15 @@ class RoRescheduleView extends StatelessWidget {
       case "Clear":
         Get.delete<RoRescheduleController>();
         Get.find<HomeController>().clearPage1();
+        break;
+      case "Exit":
+        Get.find<HomeController>().postUserGridSetting2(listStateManager: [
+          {"plutoGridStateManager": controller.plutoGridStateManager},
+          {
+            "updatedplutoGridStateManager":
+                controller.updatedplutoGridStateManager
+          },
+        ]);
         break;
       case "Search":
         Get.to(const SearchPage(

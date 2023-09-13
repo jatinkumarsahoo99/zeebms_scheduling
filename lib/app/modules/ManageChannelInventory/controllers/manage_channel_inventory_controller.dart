@@ -1,5 +1,7 @@
 import 'package:bms_scheduling/app/controller/MainController.dart';
 import 'package:bms_scheduling/app/data/PermissionModel.dart';
+import 'package:bms_scheduling/app/providers/extensions/datagrid.dart';
+import 'package:bms_scheduling/widgets/PlutoGrid/pluto_grid.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:intl/intl.dart';
@@ -7,7 +9,9 @@ import 'package:intl/intl.dart';
 import '../../../../widgets/LoadingDialog.dart';
 import '../../../../widgets/PlutoGrid/src/manager/pluto_grid_state_manager.dart';
 import '../../../controller/ConnectorControl.dart';
+import '../../../controller/HomeController.dart';
 import '../../../data/DropDownValue.dart';
+import '../../../data/user_data_settings_model.dart';
 import '../../../providers/ApiFactory.dart';
 import '../../../providers/Utils.dart';
 import '../../../routes/app_pages.dart';
@@ -30,6 +34,7 @@ class ManageChannelInvemtoryController extends GetxController {
   var buttonsList = ["Default", "Save Today", "Save All Days", "Special"];
   var programs = <DropDownValue>[].obs;
   bool madeChanges = false;
+  UserDataSettings? userDataSettings;
 
   @override
   void onInit() {
@@ -42,6 +47,12 @@ class ManageChannelInvemtoryController extends GetxController {
   void onReady() {
     super.onReady();
     getOnLoadData();
+    fetchUserSetting1();
+  }
+
+  fetchUserSetting1() async {
+    userDataSettings = await Get.find<HomeController>().fetchUserSetting2();
+    dataTableList.refresh();
   }
 
   saveSpecial(String fromDate, String toDate, String fromTime, String toTime,
@@ -162,16 +173,24 @@ class ManageChannelInvemtoryController extends GetxController {
     }
   }
 
-  void saveTodayAndAllData(bool fromSaveToday) {
+  Future<void> saveTodayAndAllData(bool fromSaveToday) async {
     if (selectedLocation == null || selectedChannel == null) {
       LoadingDialog.showErrorDialog("Please select Location,Channel.");
     } else if (!madeChanges) {
       LoadingDialog.showErrorDialog("No changes to save");
     } else {
-      stateManager!.setCurrentCell(
-          stateManager!.getRowByIdx(lastSelectedIdx)?.cells['telecastDate'],
-          lastSelectedIdx);
+      // stateManager!.setCurrentCell(
+      //     stateManager!.getRowByIdx(lastSelectedIdx)?.cells['telecastDate'],
+      //     lastSelectedIdx);
       LoadingDialog.call();
+
+      stateManager!.setCurrentCell(
+          stateManager!
+              .getRowByIdx(stateManager!.currentRowIdx)!
+              .cells['episodeDuration'],
+          stateManager!.currentRowIdx!);
+      // stateManager?.moveCurrentCell(PlutoMoveDirection.left, force: true);
+      await Future.delayed(Duration(seconds: 2));
       Get.find<ConnectorControl>().POSTMETHOD(
         api: ApiFactory.MANAGE_CHANNEL_INV_SAVE_TODAY_ALL_DATA,
         fun: (resp) {
@@ -214,6 +233,10 @@ class ManageChannelInvemtoryController extends GetxController {
     dataTableList.clear();
     effectiveDateTC.clear();
     weekDaysTC.clear();
+    // try {
+    //   selectedLocation =
+    //       locationList.firstWhere((element) => element.value == "ASIA");
+    // } catch (e) {}
     selectedLocation = null;
     selectedChannel = null;
     locationList.refresh();
@@ -269,11 +292,14 @@ class ManageChannelInvemtoryController extends GetxController {
                       value: e['locationName'].toString(),
                     ))
                 .toList());
-            if (locationList.isNotEmpty) {
-              selectedLocation = locationList.first;
-              locationList.refresh();
-              handleOnChangedLocation(selectedLocation);
-            }
+            // if (locationList.isNotEmpty) {
+            //   try {
+            //     selectedLocation = locationList
+            //         .firstWhere((element) => element.value == "ASIA");
+            //   } catch (e) {}
+            //   locationList.refresh();
+            //   handleOnChangedLocation(selectedLocation);
+            // }
           } else {
             LoadingDialog.showErrorDialog(resp.toString());
           }
@@ -323,6 +349,10 @@ class ManageChannelInvemtoryController extends GetxController {
   formHandler(btn) {
     if (btn == "Clear") {
       clearPage();
-    } else if (btn == "Save") {}
+    } else if (btn == "Exit") {
+      Get.find<HomeController>().postUserGridSetting2(listStateManager: [
+        {"stateManager": stateManager},
+      ]);
+    }
   }
 }

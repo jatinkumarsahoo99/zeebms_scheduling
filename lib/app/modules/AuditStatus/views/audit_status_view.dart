@@ -41,7 +41,7 @@ class AuditStatusView extends GetView<AuditStatusController> {
                         controller.locations.value, (data) {
                       controller.selectLocation = data;
                       controller.getChannels(data.key);
-                    }, "Location", 0.24),
+                    }, "Location", 0.24, autoFocus: true),
                   ),
                   Obx(
                     () => DropDownField.formDropDown1WidthMap(

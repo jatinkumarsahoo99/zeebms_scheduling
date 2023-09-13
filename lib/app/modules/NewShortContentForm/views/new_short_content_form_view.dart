@@ -84,10 +84,10 @@ class NewShortContentFormView extends StatelessWidget {
                         selected: controller.selectedCategory.value),
                   ),
                   InputFields.formField1(
-                    hintTxt: "Caption",
-                    controller: controller.caption,
-                    width: 0.24,
-                  ),
+                      hintTxt: "Caption",
+                      controller: controller.caption,
+                      width: 0.24,
+                      focusNode: controller.captionFN),
                   InputFields.formField1(
                     hintTxt: "TX Caption",
                     controller: controller.txCaption,
@@ -127,11 +127,10 @@ class NewShortContentFormView extends StatelessWidget {
                     width: 0.16,
                   ),
                   InputFields.formField1(
-                    hintTxt: "House ID",
-                    controller: controller.houseId,
-                    focusNode: controller.houseFocusNode,
-                    width: 0.155,
-                  ),
+                      hintTxt: "House ID",
+                      controller: controller.houseId,
+                      width: 0.155,
+                      focusNode: controller.houseFocusNode),
                   Obx(
                     () => DropDownField.formDropDownSearchAPI2(
                       GlobalKey(),
@@ -165,13 +164,15 @@ class NewShortContentFormView extends StatelessWidget {
                       widthRatio: .155,
                       controller: controller.eom,
                       isTime: true,
+                      textFieldFN: controller.eomFN,
                       paddingLeft: 0),
-                  InputFields.formFieldNumberMask(
-                      hintTxt: "Duration",
-                      widthRatio: .16,
-                      isTime: true,
-                      controller: controller.duration,
-                      paddingLeft: 0),
+                  InputFields.formField1(
+                    hintTxt: "Duration",
+                    controller: controller.duration,
+                    width: .16,
+                    isEnable: false,
+                    padLeft: 0,
+                  ),
                   DateWithThreeTextField(
                     title: "Start Date",
                     mainTextController: controller.startData,
@@ -260,7 +261,7 @@ class NewShortContentFormView extends StatelessWidget {
   btnHandler(name) async {
     switch (name) {
       case "Save":
-        await controller.save();
+        await controller.saveValidate();
 
         break;
       case "Search":

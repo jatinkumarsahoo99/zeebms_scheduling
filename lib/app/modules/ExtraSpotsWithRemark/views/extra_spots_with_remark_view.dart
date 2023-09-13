@@ -52,15 +52,19 @@ class ExtraSpotsWithRemarkView extends GetView<ExtraSpotsWithRemarkController> {
                     title: "From Date",
                     mainTextController: controller.fromDateTC,
                     widthRation: 0.15,
+                    // endDate: DateTime.now(),
                   ),
                   const SizedBox(width: 10),
                   DateWithThreeTextField(
                     title: "To Date",
+                    // startDate: DateTime.now(),
                     mainTextController: controller.toDateTC,
                     widthRation: 0.15,
                   ),
                   const SizedBox(width: 10),
-                  FormButton(btnText: "Generate", callback: controller.handleGenerateButton)
+                  FormButton(
+                      btnText: "Generate",
+                      callback: controller.handleGenerateButton)
                 ],
               ),
 
@@ -77,8 +81,10 @@ class ExtraSpotsWithRemarkView extends GetView<ExtraSpotsWithRemarkController> {
                               ),
                             )
                           : null,
-                      child: controller.dataTableList.isEmpty ? null :
-                      DataGridFromMap(mapData: controller.dataTableList.value),
+                      child: controller.dataTableList.isEmpty
+                          ? null
+                          : DataGridFromMap(
+                              mapData: controller.dataTableList.value),
                     );
                   },
                 ),
@@ -100,7 +106,9 @@ class ExtraSpotsWithRemarkView extends GetView<ExtraSpotsWithRemarkController> {
                             for (var btn in btncontroller.buttons!) ...{
                               FormButtonWrapper(
                                 btnText: btn["name"],
-                                callback: ((Utils.btnAccessHandler(btn['name'], controller.formPermissions!) == null))
+                                callback: ((Utils.btnAccessHandler(btn['name'],
+                                            controller.formPermissions!) ==
+                                        null))
                                     ? null
                                     : () => controller.formHandler(btn['name']),
                               )

@@ -344,10 +344,11 @@ class SalesAuditNotTelecastReportView extends StatelessWidget {
                 flex: 10,
                 // height: 400,
                 child: DataGridFromMap(
-                  showSrNo: false,
+                  // showSrNo: false,
                   onload: (sm) {
                     controllerX.stateManager = sm.stateManager;
                   },
+
                   witdthSpecificColumn: (controller
                       .userDataSettings?.userSetting
                       ?.firstWhere(
@@ -362,7 +363,7 @@ class SalesAuditNotTelecastReportView extends StatelessWidget {
                       .toList())!,
                   // mapData: (controllerX.dataList)!,
                   widthRatio: Get.width / 9 - 1,
-                  hideCode: true,
+                  hideCode: false,
                 ),
               );
             } else {
@@ -384,7 +385,7 @@ class SalesAuditNotTelecastReportView extends StatelessWidget {
                 flex: 10,
                 // height: 400,
                 child: DataGridFromMap(
-                  showSrNo: true,
+                  // showSrNo: true,
                   onload: (sm) {
                     controllerX.stateManager = sm.stateManager;
                   },

@@ -5,6 +5,8 @@ import 'package:flutter/material.dart';
 
 import 'package:get/get.dart';
 
+import '../../../data/user_data_settings_model.dart';
+
 class BookingSummaryView extends GetView<RoBookingController> {
   const BookingSummaryView({Key? key}) : super(key: key);
   @override
@@ -42,6 +44,15 @@ class BookingSummaryView extends GetView<RoBookingController> {
                 decoration: BoxDecoration(
                     border: Border.all(width: 1.0, color: Colors.grey)),
                 child: DataGridShowOnlyKeys(
+                  keysWidths: (controller.userDataSettings?.userSetting
+                      ?.firstWhere(
+                          (element) =>
+                              element.controlName == "bookingSummaryGrid",
+                          orElse: () => UserSetting())
+                      .userSettings),
+                  onload: (sm) {
+                    controller.bookingSummaryGrid = sm.stateManager;
+                  },
                   mapData: controller.savecheckData?.lstdgvbookingSummary
                           ?.map((e) => e.toJson())
                           .toList() ??

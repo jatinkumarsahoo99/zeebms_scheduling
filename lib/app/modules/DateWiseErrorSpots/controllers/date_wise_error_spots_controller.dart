@@ -11,10 +11,9 @@ import '../../../../widgets/Snack.dart';
 import '../../../controller/ConnectorControl.dart';
 import '../../../controller/HomeController.dart';
 import '../../../controller/MainController.dart';
+import '../../../data/user_data_settings_model.dart';
 import '../../../providers/ApiFactory.dart';
 import '../DatewiseErrorSpotsModel.dart';
-
-
 
 class DateWiseErrorSpotsController extends GetxController {
   //TODO: Implement DateWiseErrorSpotsController
@@ -34,27 +33,32 @@ class DateWiseErrorSpotsController extends GetxController {
   RxList<DropDownValue> locationList = RxList([]);
   RxList<DropDownValue> channelList = RxList([]);
 
-
   DropDownValue? selectedLocation;
   DropDownValue? selectedChannel;
   PlutoGridStateManager? gridStateManager;
 
   TextEditingController fromDateController = TextEditingController();
-  TextEditingController toDateController =  TextEditingController();
+  TextEditingController toDateController = TextEditingController();
   DatewiseErrorSpotsModel? datewiseErrorSpotsModel;
   closeDialogIfOpen() {
     if (Get.isDialogOpen ?? false) {
       Get.back();
     }
   }
+
+  UserDataSettings? userDataSettings;
+
   fetchPageLoadData() {
-   LoadingDialog.call();
+    LoadingDialog.call();
     Get.find<ConnectorControl>().GETMETHODCALL(
         api: ApiFactory.DATEWISEERROR_LOAD,
-        fun: ( map) {
+        fun: (map) {
           closeDialogIfOpen();
-          if(map is Map && map.containsKey('dateWiseLoadInfo') &&  map['dateWiseLoadInfo'] != null){
-            if (map['dateWiseLoadInfo'].containsKey("location") && map['dateWiseLoadInfo']['location'] != null &&
+          if (map is Map &&
+              map.containsKey('dateWiseLoadInfo') &&
+              map['dateWiseLoadInfo'] != null) {
+            if (map['dateWiseLoadInfo'].containsKey("location") &&
+                map['dateWiseLoadInfo']['location'] != null &&
                 map['dateWiseLoadInfo']['location'].length > 0) {
               locationList.clear();
               map['dateWiseLoadInfo']['location'].forEach((e) {
@@ -62,7 +66,8 @@ class DateWiseErrorSpotsController extends GetxController {
                     e, "locationCode", "locationName"));
               });
             }
-            if (map['dateWiseLoadInfo'].containsKey("channel") && map['dateWiseLoadInfo']['channel'] != null &&
+            if (map['dateWiseLoadInfo'].containsKey("channel") &&
+                map['dateWiseLoadInfo']['channel'] != null &&
                 map['dateWiseLoadInfo']['channel'].length > 0) {
               channelList.clear();
               map['dateWiseLoadInfo']['channel'].forEach((e) {
@@ -70,9 +75,7 @@ class DateWiseErrorSpotsController extends GetxController {
                     e, "channelcode", "channelname"));
               });
             }
-
           }
-
         });
   }
 
@@ -84,71 +87,78 @@ class DateWiseErrorSpotsController extends GetxController {
     } else if (fromDateController.text == null ||
         fromDateController.text == "") {
       Snack.callError("Please select from date");
-    } else if (toDateController.text == null ||
-        toDateController.text == "") {
+    } else if (toDateController.text == null || toDateController.text == "") {
       Snack.callError("Please select to date");
     } else {
       LoadingDialog.call();
       // print(">>>>date"+dateController.text);
-      DateTime formatdate1 = DateFormat("dd-MM-yyyy").parse(fromDateController.text);
-      String date1 = DateFormat("yyyy-MM-ddTHH:mm:ss").format (formatdate1).toString();
+      DateTime formatdate1 =
+          DateFormat("dd-MM-yyyy").parse(fromDateController.text);
+      String date1 =
+          DateFormat("yyyy-MM-ddTHH:mm:ss").format(formatdate1).toString();
 
-      DateTime formatdate2 = DateFormat("dd-MM-yyyy").parse(toDateController.text);
-      String date2 = DateFormat("yyyy-MM-ddTHH:mm:ss").format (formatdate2).toString();
+      DateTime formatdate2 =
+          DateFormat("dd-MM-yyyy").parse(toDateController.text);
+      String date2 =
+          DateFormat("yyyy-MM-ddTHH:mm:ss").format(formatdate2).toString();
 
       print(">>>>$date1");
 
       // ((Get.find<MainController>().user != null) ? Aes.encrypt(Get.find<MainController>().user?.personnelNo ?? "") : "")
-      Map<String,dynamic> postData = {
-        "locationcode": selectedLocation?.key??"",
-        "channelcode": selectedChannel?.key??"",
+      Map<String, dynamic> postData = {
+        "locationcode": selectedLocation?.key ?? "",
+        "channelcode": selectedChannel?.key ?? "",
         "fromdate": date1,
         "todate": date2,
         "logincode": Get.find<MainController>().user?.logincode ?? ""
-      } ;
-      print(">>>>>>>>"+postData.toString());
+      };
+      print(">>>>>>>>" + postData.toString());
       // LoadingDialog.call();
       Get.find<ConnectorControl>().POSTMETHOD(
           api: ApiFactory.DATEWISEERROR_GENERATE,
           json: postData,
           fun: (map) {
             Get.back();
-            print("response"+jsonEncode(map) .toString());
-            if(map is Map && map.containsKey("datewiseErrorSpots") &&
-                map['datewiseErrorSpots'] != null && map['datewiseErrorSpots'].length >0 ){
-              datewiseErrorSpotsModel = DatewiseErrorSpotsModel.fromJson(map as Map<String,dynamic>);
+            print("response" + jsonEncode(map).toString());
+            if (map is Map &&
+                map.containsKey("datewiseErrorSpots") &&
+                map['datewiseErrorSpots'] != null &&
+                map['datewiseErrorSpots'].length > 0) {
+              datewiseErrorSpotsModel =
+                  DatewiseErrorSpotsModel.fromJson(map as Map<String, dynamic>);
               update(['grid']);
-            }else{
+            } else {
               datewiseErrorSpotsModel = null;
               update(['grid']);
             }
           });
     }
   }
+
   clearAll() {
     Get.delete<DateWiseErrorSpotsController>();
     Get.find<HomeController>().clearPage1();
   }
 
   @override
-  void onInit() {
-    super.onInit();
-  }
-
-  @override
   void onReady() {
     fetchPageLoadData();
     super.onReady();
+    fetchUserSetting1();
   }
 
-  @override
-  void onClose() {
-    super.onClose();
-  }
   formHandler(String string) {
-    if(string == "Clear"){
+    if (string == "Clear") {
       clearAll();
+    } else if (string == "Exit") {
+      Get.find<HomeController>().postUserGridSetting2(listStateManager: [
+        {"gridStateManager": gridStateManager},
+      ]);
     }
   }
-  void increment() => count.value++;
+
+  fetchUserSetting1() async {
+    userDataSettings = await Get.find<HomeController>().fetchUserSetting2();
+    update(['grid']);
+  }
 }

@@ -1,6 +1,7 @@
 import 'package:bms_scheduling/app/controller/ConnectorControl.dart';
 import 'package:bms_scheduling/app/providers/Utils.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:get/get.dart';
 import 'package:intl/intl.dart';
 
@@ -24,7 +25,9 @@ class NewShortContentFormController extends GetxController {
       categoryFocusNode = FocusNode(),
       programFocusNode = FocusNode(),
       tapeFocusNode = FocusNode(),
-      orgFocusNode = FocusNode();
+      orgFocusNode = FocusNode(),
+      eomFN = FocusNode(),
+      captionFN = FocusNode();
   String? typeCode;
 
   Rxn<DropDownValue> selectedLocation = Rxn<DropDownValue>();
@@ -38,9 +41,9 @@ class NewShortContentFormController extends GetxController {
   TextEditingController caption = TextEditingController(),
       txCaption = TextEditingController(),
       houseId = TextEditingController(),
-      som = TextEditingController(),
-      eom = TextEditingController(),
-      duration = TextEditingController(),
+      som = TextEditingController(text: "00:00:00:00"),
+      eom = TextEditingController(text: "00:00:00:00"),
+      duration = TextEditingController(text: "00:00:00:00"),
       startData = TextEditingController(),
       endDate = TextEditingController(),
       segment = TextEditingController(),
@@ -66,6 +69,25 @@ class NewShortContentFormController extends GetxController {
             }
           }
         });
+  }
+
+  calculateDuration({bool showDialog = true}) {
+    print(eom.text);
+    print(som.text);
+    var diff = (Utils.oldBMSConvertToSecondsValue(value: eom.text) -
+        Utils.oldBMSConvertToSecondsValue(value: som.text));
+
+    print("diff: $diff");
+
+    if (diff.isNegative && showDialog) {
+      eom.clear();
+      LoadingDialog.showErrorDialog("EOM should not less than SOM",
+          callback: () {
+        eomFN.requestFocus();
+      });
+    } else {
+      duration.text = Utils.convertToTimeFromDouble(value: diff);
+    }
   }
 
   getChannel(locationCode) {
@@ -300,6 +322,56 @@ class NewShortContentFormController extends GetxController {
         });
   }
 
+  saveValidate() {
+    late DateTime startD, endD;
+    startD = DateFormat("dd-MM-yyyy").parse(startData.text);
+    endD = DateFormat("dd-MM-yyyy").parse(endDate.text);
+    if (selectedLocation.value?.key == null) {
+      LoadingDialog.showErrorDialog("Location cannot be empty.");
+    } else if (selectedChannel.value?.key == null) {
+      LoadingDialog.showErrorDialog("Channel cannot be empty.");
+    } else if (som.text.trim().isEmpty) {
+      LoadingDialog.showErrorDialog("Please enter SOM.");
+    } else if (eom.text.trim().isEmpty || eom.text.trim() == "00:00:00:00") {
+      LoadingDialog.showErrorDialog("Please enter EOM.");
+      eomFN.requestFocus();
+    } else if ((Utils.oldBMSConvertToSecondsValue(value: eom.text) -
+            Utils.oldBMSConvertToSecondsValue(value: som.text))
+        .isNegative) {
+      eom.clear();
+      LoadingDialog.showErrorDialog("EOM should not less than SOM",
+          callback: () {
+        eomFN.requestFocus();
+      });
+    } else if (startD.isAfter(endD)) {
+      LoadingDialog.showErrorDialog("Start date should not more than end date");
+    }
+    // else if (fillerNameCtr.text.trim().isEmpty) {
+    //   LoadingDialog.showErrorDialog("Filler Caption cannot be empty.");
+    // } else if (txCaptionCtr.text.trim().isEmpty) {
+    //   LoadingDialog.showErrorDialog("Export Tape Caption cannot be empty.");
+    // } else if (tapeIDCtr.text.trim().isEmpty) {
+    //   LoadingDialog.showErrorDialog("Export Tape Code cannot be empty.");
+    // } else if (segNoCtrLeft.text.trim().isEmpty) {
+    //   LoadingDialog.showErrorDialog("Segment Number cannot be empty.");
+    // } else if (txNoCtr.text.trim().isEmpty) {
+    //   LoadingDialog.showErrorDialog("House ID cannot be empty.");
+    // }
+    //  else {
+    //   if (fillerCode.isNotEmpty) {
+    //     LoadingDialog.recordExists(
+    //       "Record Already exits!\nDo you want to modify it?",
+    //       () {
+    //         save();
+    //       },
+    //     );
+    //   }
+    else {
+      save();
+    }
+    // }
+  }
+
   save() async {
     var body = {};
     List _durations = duration.text.split(":");
@@ -320,7 +392,7 @@ class NewShortContentFormController extends GetxController {
         "segmentNumber": int.tryParse(segment.text),
         "stillDuration": intDuration,
         "houseId": houseId.text, // Common in (still/Slide/vignetee)
-        "som": som.text, // Common in (still/Slide/vignetee)
+        "som": som.text + ":00", // Common in (still/Slide/vignetee)
         "tapeTypeCode": selectedTape.value?.key, // Common in (still/Slide)
         "dated": DateFormat("yyyy-MM-dd").format(DateFormat("dd-MM-yyyy")
             .parse(startData.text)), // Common in (still/Slide)
@@ -333,7 +405,7 @@ class NewShortContentFormController extends GetxController {
             selectedLocation.value?.key, // Common in (still/Slide/Vignette)
         "channelcode": selectedChannel
             .value?.key, // Common in (still/Slide/vignetteCaption)
-        "eom": eom.text, // Common in (still/Slide/vignetee)
+        "eom": eom.text + ":00", // Common in (still/Slide/vignetee)
         "stillType": selectedCategory.value?.key,
       };
     }
@@ -401,11 +473,9 @@ class NewShortContentFormController extends GetxController {
         fun: (rawdata) {
           Get.back();
           try {
-            if (rawdata is Map &&
-                rawdata.containsKey("onSaveShortCode") &&
-                rawdata["onSaveShortCode"]["result"] != null) {
+            if (rawdata is Map && rawdata.containsKey("onSaveShortCode")) {
               LoadingDialog.callDataSaved(
-                  msg: rawdata["onSaveShortCode"]["result"]["message"]);
+                  msg: rawdata["onSaveShortCode"]["message"]);
               return true;
             } else {
               LoadingDialog.callErrorMessage1(msg: "Save Failed");
@@ -420,6 +490,14 @@ class NewShortContentFormController extends GetxController {
     return true;
   }
 
+  setCaption() {
+    if (caption.text.trim().isNotEmpty) {
+      txCaption.text = caption.text;
+    } else {
+      txCaption.text = "";
+    }
+  }
+
   @override
   void onInit() {
     getInitData();
@@ -427,6 +505,22 @@ class NewShortContentFormController extends GetxController {
       if (!houseFocusNode.hasFocus && houseId.text.isNotEmpty) {
         houseleave();
         retriveRecord();
+      }
+    });
+
+    eomFN = FocusNode(
+      onKeyEvent: (node, event) {
+        if (event.logicalKey == LogicalKeyboardKey.tab &&
+            event is KeyDownEvent) {
+          calculateDuration();
+          return KeyEventResult.ignored;
+        }
+        return KeyEventResult.ignored;
+      },
+    );
+    captionFN.addListener(() {
+      if (!captionFN.hasFocus) {
+        setCaption();
       }
     });
     super.onInit();

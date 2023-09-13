@@ -12,6 +12,7 @@ import 'package:get/get.dart';
 import 'package:intl/intl.dart';
 
 import '../../../data/DropDownValue.dart';
+import '../../../data/user_data_settings_model.dart';
 
 class ProgramView extends StatelessWidget {
   const ProgramView({Key? key}) : super(key: key);
@@ -328,6 +329,13 @@ class ProgramView extends StatelessWidget {
                               force: true,
                               notify: true);
                         },
+                        witdthSpecificColumn: (controller
+                            .userDataSettings?.userSetting
+                            ?.firstWhere(
+                                (element) =>
+                                    element.controlName == "programViewGrid",
+                                orElse: () => UserSetting())
+                            .userSettings),
                         onload: (load) {
                           controller.programViewGrid = load.stateManager;
                         },

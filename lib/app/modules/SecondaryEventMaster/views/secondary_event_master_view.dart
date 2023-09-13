@@ -233,13 +233,21 @@ class SecondaryEventMasterView extends GetView<SecondaryEventMasterController> {
                           ),
                         ),
                         Obx(() {
-                          return InputFields.formFieldDisable(
-                            hintTxt: "Duration",
-                            value: controller.duration.value,
-                            widthRatio: .23,
-                            leftPad: 0,
-                            color: Colors.black,
+                          return InputFields.formField1(
+                            controller: TextEditingController(
+                                text: controller.duration.value),
+                            hintTxt: 'Duration',
+                            isEnable: false,
+                            width: .23,
+                            padLeft: 0,
                           );
+                          // InputFields.formFieldDisable(
+                          //   hintTxt: "Duration",
+                          //   value: controller.duration.value,
+                          //   widthRatio: .23,
+                          //   leftPad: 0,
+                          //   // color: Colors.black,
+                          // );
                         }),
                       ],
                     ),

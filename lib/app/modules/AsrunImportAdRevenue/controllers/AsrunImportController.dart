@@ -275,13 +275,18 @@ class AsrunImportController extends GetxController {
             if (map is Map &&
                 map.containsKey("isCheck") &&
                 map.containsKey("message")) {
-              LoadingDialog.callInfoMessage(
-                  map["message"].toString().split("\n").first, callback: () {
-                LoadingDialog.modify(
-                    "Asrun Missing Do Yount Want To Proceed with Save?", () {
-                  saveAsrun();
-                }, () {}, cancelTitle: "No", deleteTitle: "Yes");
-              });
+              if (map["message"].toString().split("\n").first != "null") {
+                LoadingDialog.callInfoMessage(
+                    map["message"].toString().split("\n").first, callback: () {
+                  LoadingDialog.modify(
+                      "Asrun Missing Do Yount Want To Proceed with Save?", () {
+                    saveAsrun();
+                  }, () {}, cancelTitle: "No", deleteTitle: "Yes");
+                });
+                // saveAsrun();
+              } else {
+                saveAsrun();
+              }
             }
             // if (map is Map && map.containsKey("progMismatch") && map["progMismatch"]["message"] != null) {
             //   LoadingDialog.callInfoMessage(map["progMismatch"]["message"]);
@@ -540,6 +545,46 @@ class AsrunImportController extends GetxController {
             // }
 
             // update(["fpcData"]);
+          }
+        });
+  }
+
+  checkProgramSequence() {
+    Get.find<ConnectorControl>().POSTMETHOD(
+        api: ApiFactory.AsrunImport_CheckProgramSequence,
+        json: {
+          "LocationCode": selectLocation?.key,
+          "ChannelCode": selectChannel?.key,
+          "AsrunDate": selectedDate.text.fromdMyToyMd(),
+          "ModifiedBy": Get.find<MainController>().user?.logincode ?? "",
+          "SaveDt": asrunData
+              ?.map((e) => {
+                    "EventNo": e.eventNumber,
+                    "TelecastDate": e.telecastdate,
+                    "fpctime": e.fpctIme,
+                    "ProgramName": e.programName,
+                    "TelecastTime": e.telecasttime,
+                    "ExportTapeCode": e.tapeId,
+                    "SegmentNumber": e.segmentnumber,
+                    "ExportTapeCaption": e.caption,
+                    "TapeDurationss": e.telecastDuration,
+                    "EventType": e.eventtype,
+                    "BookingNumber": e.bookingnumber,
+                    "BookingDetailcode": e.bookingdetailcode,
+                    "mismatch": int.tryParse(e.isMismatch ?? "")
+                  })
+              .toList(),
+          "IsGFK": checkboxesMap["GFK"]
+        },
+        fun: (map) {
+          if (map is Map && map.containsKey("result")) {
+            Map asrundeatils = map["result"];
+
+            if (map["result"]["isError"]) {
+              LoadingDialog.callErrorMessage1(
+                  msg: map["result"]["errorMessage"]);
+            }
+            checkMissingAsrun();
           }
         });
   }

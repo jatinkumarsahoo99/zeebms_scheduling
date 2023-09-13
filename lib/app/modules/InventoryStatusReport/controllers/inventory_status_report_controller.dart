@@ -9,6 +9,7 @@ import 'package:intl/intl.dart';
 import '../../../controller/HomeController.dart';
 import '../../../data/DropDownValue.dart';
 import '../../../data/PermissionModel.dart';
+import '../../../data/user_data_settings_model.dart';
 import '../../../providers/Utils.dart';
 import '../../../routes/app_pages.dart';
 import '../../SalesAuditNotTelecastReport/ChannelListModel.dart';
@@ -22,13 +23,16 @@ class InventoryStatusReportController extends GetxController {
   DropDownValue? selectedLocation, selectedChannel;
   var locationFN = FocusNode();
   var selectedRadio = "".obs;
-  Rxn<InventoryStatusReportLoadModel?> onLoadModel = Rxn<InventoryStatusReportLoadModel?>();
+  Rxn<InventoryStatusReportLoadModel?> onLoadModel =
+      Rxn<InventoryStatusReportLoadModel?>();
 
   PlutoGridStateManager? stateManager;
+  UserDataSettings? userDataSettings;
 
   @override
   void onInit() {
-    formPermissions = Utils.fetchPermissions1(Routes.INVENTORY_STATUS_REPORT.replaceAll("/", ""));
+    formPermissions = Utils.fetchPermissions1(
+        Routes.INVENTORY_STATUS_REPORT.replaceAll("/", ""));
     super.onInit();
   }
 
@@ -36,24 +40,25 @@ class InventoryStatusReportController extends GetxController {
   void onReady() {
     super.onReady();
     getInitialData();
+    fetchUserSetting1();
   }
 
-  @override
-  void onClose() {
-    super.onClose();
+  fetchUserSetting1() async {
+    userDataSettings = await Get.find<HomeController>().fetchUserSetting2();
+    dataTableList.refresh();
   }
-  clearAll() {
-    Get.delete<InventoryStatusReportController>();
-    Get.find<HomeController>().clearPage1();
-  }
+
   formHandler(btn) {
     if (btn == "Clear") {
-      clearAll();
+      clearPage();
+    } else if (btn == "Exit") {
+      Get.find<HomeController>().postUserGridSetting2(listStateManager: [
+        {"stateManager": stateManager},
+      ]);
     }
   }
 
   hanldeChangedOnAllChannel(bool? val) {
-    print(val);
     channelAllSelected.value = val ?? false;
     var tempChannelList = onLoadModel.value?.info?.channels?.map(
       (e) {
@@ -66,6 +71,10 @@ class InventoryStatusReportController extends GetxController {
   }
 
   clearPage() {
+    // try {
+    //   selectedLocation = onLoadModel.value?.info?.locations
+    //       ?.firstWhere((element) => element.value == "ASIA");
+    // } catch (e) {}
     selectedRadio.value = "";
     channelAllSelected.value = false;
     var tempChannelList = onLoadModel.value?.info?.channels?.map(
@@ -74,9 +83,11 @@ class InventoryStatusReportController extends GetxController {
         return e;
       },
     ).toList();
+
     onLoadModel.value?.info?.channels = tempChannelList ?? [];
     fromDateTC.clear();
     toDateTC.clear();
+    dataTableList.clear();
     onLoadModel.refresh();
     locationFN.requestFocus();
   }
@@ -89,8 +100,11 @@ class InventoryStatusReportController extends GetxController {
         closeDialogIfOpen();
         if (resp != null && resp is Map<String, dynamic>) {
           onLoadModel.value = InventoryStatusReportLoadModel.fromJson(resp);
-          selectedLocation = onLoadModel.value?.info?.locations?[0];
-          onLoadModel.refresh();
+          // try {
+          //   selectedLocation = onLoadModel.value?.info?.locations
+          //       ?.firstWhere((element) => element.value == "ASIA");
+          // } catch (e) {}
+          // onLoadModel.refresh();
         } else {
           LoadingDialog.showErrorDialog(resp.toString());
         }
@@ -117,7 +131,9 @@ class InventoryStatusReportController extends GetxController {
         api: ApiFactory.INVENTORY_STATUS_REPORT_GENERATE,
         fun: (resp) {
           closeDialogIfOpen();
-          if (resp != null && resp is Map<String, dynamic> && resp['generate'] != null) {
+          if (resp != null &&
+              resp is Map<String, dynamic> &&
+              resp['generate'] != null) {
             if ((resp['generate']['lstdetails'] as List<dynamic>).isNotEmpty) {
               dataTableList.clear();
               dataTableList.addAll((resp['generate']['lstdetails']));
@@ -136,11 +152,15 @@ class InventoryStatusReportController extends GetxController {
           }
         },
         json: {
-          "lstchannelCheckbox": onLoadModel.value?.info?.channels?.map((e) => e.toJson()).toList(),
+          "lstchannelCheckbox": onLoadModel.value?.info?.channels
+              ?.map((e) => e.toJson())
+              .toList(),
           "locationcode": selectedLocation?.key,
           "channelCode": "",
-          "fromdate": DateFormat("yyyy-MM-dd").format(DateFormat("dd-MM-yyyy").parse(fromDateTC.text)),
-          "todate": DateFormat("yyyy-MM-dd").format(DateFormat("dd-MM-yyyy").parse(toDateTC.text)),
+          "fromdate": DateFormat("yyyy-MM-dd")
+              .format(DateFormat("dd-MM-yyyy").parse(fromDateTC.text)),
+          "todate": DateFormat("yyyy-MM-dd")
+              .format(DateFormat("dd-MM-yyyy").parse(toDateTC.text)),
           "chk_rdoreport": selectedRadio.value == "Detail (KAM-NON CAM)",
           "chk_rdosummary": selectedRadio.value == "Summary (KAM-NON KAM)",
           "chk_rdooldformat": selectedRadio.value == "Old Format",

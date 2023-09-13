@@ -6,7 +6,7 @@ class BrandMasterRetriveModel {
   BrandMasterRetriveModel.fromJson(Map<String, dynamic> json) {
     if (json['getBrandList'] != null) {
       getBrandList = <GetBrandList>[];
-      json['getBrandList'].forEach((v) {
+      json['getBrandList']['lstbrand'].forEach((v) {
         getBrandList!.add(new GetBrandList.fromJson(v));
       });
     }
@@ -29,7 +29,7 @@ class GetBrandList {
   String? clientName;
   String? clientCode;
   String? productCode;
-  String? Productname;
+  String? productName;
   int? ptCode;
   String? ptName;
   int? pl1;
@@ -41,22 +41,21 @@ class GetBrandList {
 
   GetBrandList(
       {this.brandCode,
-        this.brandName,
-        this.brandShortName,
-        this.separationTime,
-        this.clientName,
-        this.clientCode,
-        this.productCode,
-        this.ptCode,
-        this.ptName,
-        this.pl1,
-        this.level1Name,
-        this.pl2,
-        this.level2Name,
-        this.pl3,
-        this.level3Name,
-        this.Productname
-      });
+      this.brandName,
+      this.brandShortName,
+      this.separationTime,
+      this.clientName,
+      this.clientCode,
+      this.productCode,
+      this.ptCode,
+      this.ptName,
+      this.pl1,
+      this.level1Name,
+      this.pl2,
+      this.level2Name,
+      this.pl3,
+      this.level3Name,
+      this.productName});
 
   GetBrandList.fromJson(Map<String, dynamic> json) {
     brandCode = json['brandCode'];
@@ -74,7 +73,7 @@ class GetBrandList {
     level2Name = json['level2Name'];
     pl3 = json['pl3'];
     level3Name = json['level3Name'];
-    Productname = json['Productname']??"";
+    productName = json['productName'] ?? "";
   }
 
   Map<String, dynamic> toJson() {
@@ -94,7 +93,7 @@ class GetBrandList {
     data['level2Name'] = this.level2Name;
     data['pl3'] = this.pl3;
     data['level3Name'] = this.level3Name;
-    data['Productname'] = this.Productname;
+    data['Productname'] = this.productName;
     return data;
   }
 }

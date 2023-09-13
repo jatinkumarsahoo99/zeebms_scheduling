@@ -12,6 +12,7 @@ import '../../../../widgets/Snack.dart';
 import '../../../controller/ConnectorControl.dart';
 import '../../../controller/HomeController.dart';
 import '../../../controller/MainController.dart';
+import '../../../data/user_data_settings_model.dart';
 import '../../../providers/ApiFactory.dart';
 import '../../CommonDocs/controllers/common_docs_controller.dart';
 import '../../CommonDocs/views/common_docs_view.dart';
@@ -28,7 +29,7 @@ class BrandMasterController extends GetxController {
   var clientDetails = RxList<DropDownValue>();
   DropDownValue? selectedClientDetails;
   DropDownValue? selectedClient;
-  Rxn<DropDownValue>? selectedProduct =Rxn<DropDownValue>(null);
+  Rxn<DropDownValue>? selectedProduct = Rxn<DropDownValue>(null);
 
   FocusNode clientFocus = FocusNode();
   FocusNode productFocus = FocusNode();
@@ -64,6 +65,13 @@ class BrandMasterController extends GetxController {
     Get.find<HomeController>().clearPage1();
   }
 
+  UserDataSettings? userDataSettings;
+
+  fetchUserSetting1() async {
+    userDataSettings = await Get.find<HomeController>().fetchUserSetting2();
+    update(['grid']);
+  }
+
   fetchClient(String client) {
     isFocusNodeActive = false;
     Get.find<ConnectorControl>().GETMETHODCALL(
@@ -71,13 +79,13 @@ class BrandMasterController extends GetxController {
         fun: (map) {
           isFocusNodeActive = false;
           if (map is List && map.isNotEmpty) {
-            List<DropDownValue> dataList =[];
+            List<DropDownValue> dataList = [];
             clientList.clear();
             for (var e in map) {
               dataList.add(
                   DropDownValue.fromJsonDynamic(e, "ClientCode", "ClientName"));
             }
-            clientList .addAll(dataList);
+            clientList.addAll(dataList);
           } else {
             clientList.clear();
           }
@@ -201,8 +209,7 @@ class BrandMasterController extends GetxController {
           // strcode
           if (map is Map &&
               map.containsKey("getBrandList") &&
-              map['getBrandList'] != null &&
-              map['getBrandList'].length > 0) {
+              map['getBrandList'] != null) {
             brandMasterRetriveModel =
                 BrandMasterRetriveModel.fromJson(map as Map<String, dynamic>);
             strcode =
@@ -217,17 +224,17 @@ class BrandMasterController extends GetxController {
             separationTimeController.text =
                 (brandMasterRetriveModel?.getBrandList?[0].separationTime ?? "")
                     .toString();
-            for (var element in masterProductList) {
-              if (element.key.toString().trim() ==
-                  brandMasterRetriveModel?.getBrandList?[0].productCode
-                      .toString()
-                      .trim()) {
-                selectedProduct?.value = DropDownValue(
-                    value: element.value ?? "Product",
-                    key: brandMasterRetriveModel?.getBrandList?[0].productCode);
-                break;
-              }
-            }
+            // for (var element in masterProductList) {
+            //   if (element.key.toString().trim() ==
+            //       brandMasterRetriveModel?.getBrandList?[0].productCode
+            //           .toString()
+            //           .trim()) {
+            //     selectedProduct?.value = DropDownValue(
+            //         value: element.value ?? "Product",
+            //         key: brandMasterRetriveModel?.getBrandList?[0].productCode);
+            //     break;
+            //   }
+            // }
 
             productLevel1Controller.text =
                 (brandMasterRetriveModel?.getBrandList?[0].ptName ?? "")
@@ -241,8 +248,15 @@ class BrandMasterController extends GetxController {
             productLevel4Controller.text =
                 (brandMasterRetriveModel?.getBrandList?[0].level3Name ?? "")
                     .toString();
-
-            // selectedProduct = DropDownValue(value:(brandMasterRetriveModel?.getBrandList?[0].Productname ??"") , key: (brandMasterRetriveModel?.getBrandList?[0].productCode ??""));
+            if (brandMasterRetriveModel?.getBrandList?[0].productName != null &&
+                brandMasterRetriveModel?.getBrandList?[0].productCode != null) {
+              selectedProduct?.value = DropDownValue(
+                  value:
+                      brandMasterRetriveModel?.getBrandList?[0].productName ??
+                          "",
+                  key: (brandMasterRetriveModel?.getBrandList?[0].productCode ??
+                      ""));
+            }
             update(['top']);
           } else {
             strcode = "0";
@@ -421,6 +435,7 @@ class BrandMasterController extends GetxController {
   void onReady() {
     fetchOnLoad();
     super.onReady();
+    fetchUserSetting1();
   }
 
   @override
@@ -437,6 +452,10 @@ class BrandMasterController extends GetxController {
       validateAndSaveRecord();
     } else if (string == "Docs") {
       docs();
+    } else if (string == "Exit") {
+      Get.find<HomeController>().postUserGridSetting2(listStateManager: [
+        {"gridStateManager": gridStateManager},
+      ]);
     } else if (string == "Search") {
       Get.to(
         const SearchPage(

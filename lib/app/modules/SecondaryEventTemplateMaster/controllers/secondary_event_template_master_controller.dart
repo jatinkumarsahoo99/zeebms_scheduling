@@ -14,6 +14,9 @@ import 'package:bms_scheduling/widgets/PlutoGrid/pluto_grid.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
+import '../../../controller/HomeController.dart';
+import '../../../data/user_data_settings_model.dart';
+
 class SecondaryEventTemplateMasterController extends GetxController {
   RxList<DropDownValue> locations = RxList<DropDownValue>();
   RxList<DropDownValue> channels = RxList<DropDownValue>();
@@ -40,6 +43,7 @@ class SecondaryEventTemplateMasterController extends GetxController {
   PlutoGridStateManager? programGrid;
   PlutoGridStateManager? searchGrid;
   List<PermissionModel>? formPermissions;
+  UserDataSettings? userDataSettings;
 
   @override
   void onInit() {
@@ -60,6 +64,17 @@ class SecondaryEventTemplateMasterController extends GetxController {
     });
 
     super.onInit();
+  }
+
+  @override
+  void onReady() {
+    super.onReady();
+    fetchUserSetting1();
+  }
+
+  fetchUserSetting1() async {
+    userDataSettings = await Get.find<HomeController>().fetchUserSetting2();
+    update(['gridData', 'searchGrid']);
   }
 
   calculateRowNo() {
