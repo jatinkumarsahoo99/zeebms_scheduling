@@ -288,9 +288,6 @@ class SearchController extends GetxController {
     if (btnName == "Save") {
       ExportData().exportExcelFromJsonList(searchResult, screenName);
     }
-    if (btnName == "Exit") {
-      Get.back();
-    }
     if (btnName == "Done") {
       Get.back();
       Get.back();
@@ -386,6 +383,10 @@ class SearchController extends GetxController {
   searchResultBtnHandler(btnName) async {
     if (btnName == "Save") {
       ExportData().exportExcelFromJsonList(searchResult, screenName);
+    }
+    if (btnName == "Exit ") {
+      Get.back();
+      Get.back();
     }
     if (btnName == "Done") {
       Get.back();

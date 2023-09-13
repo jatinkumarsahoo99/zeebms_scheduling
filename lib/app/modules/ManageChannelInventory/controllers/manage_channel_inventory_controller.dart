@@ -1,5 +1,6 @@
 import 'package:bms_scheduling/app/controller/MainController.dart';
 import 'package:bms_scheduling/app/data/PermissionModel.dart';
+import 'package:bms_scheduling/app/providers/extensions/datagrid.dart';
 import 'package:bms_scheduling/widgets/PlutoGrid/pluto_grid.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
@@ -182,10 +183,14 @@ class ManageChannelInvemtoryController extends GetxController {
       //     stateManager!.getRowByIdx(lastSelectedIdx)?.cells['telecastDate'],
       //     lastSelectedIdx);
       LoadingDialog.call();
-      if (stateManager?.isEditing ?? false) {
-        stateManager?.moveCurrentCell(PlutoMoveDirection.right);
-        await Future.delayed(Duration(seconds: 2));
-      }
+
+      stateManager!.setCurrentCell(
+          stateManager!
+              .getRowByIdx(stateManager!.currentRowIdx)!
+              .cells['episodeDuration'],
+          stateManager!.currentRowIdx!);
+      // stateManager?.moveCurrentCell(PlutoMoveDirection.left, force: true);
+      await Future.delayed(Duration(seconds: 2));
       Get.find<ConnectorControl>().POSTMETHOD(
         api: ApiFactory.MANAGE_CHANNEL_INV_SAVE_TODAY_ALL_DATA,
         fun: (resp) {
@@ -287,14 +292,14 @@ class ManageChannelInvemtoryController extends GetxController {
                       value: e['locationName'].toString(),
                     ))
                 .toList());
-            if (locationList.isNotEmpty) {
-              try {
-                selectedLocation = locationList
-                    .firstWhere((element) => element.value == "ASIA");
-              } catch (e) {}
-              locationList.refresh();
-              handleOnChangedLocation(selectedLocation);
-            }
+            // if (locationList.isNotEmpty) {
+            //   try {
+            //     selectedLocation = locationList
+            //         .firstWhere((element) => element.value == "ASIA");
+            //   } catch (e) {}
+            //   locationList.refresh();
+            //   handleOnChangedLocation(selectedLocation);
+            // }
           } else {
             LoadingDialog.showErrorDialog(resp.toString());
           }

@@ -209,8 +209,7 @@ class BrandMasterController extends GetxController {
           // strcode
           if (map is Map &&
               map.containsKey("getBrandList") &&
-              map['getBrandList'] != null &&
-              map['getBrandList'].length > 0) {
+              map['getBrandList'] != null) {
             brandMasterRetriveModel =
                 BrandMasterRetriveModel.fromJson(map as Map<String, dynamic>);
             strcode =
