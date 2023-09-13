@@ -379,7 +379,7 @@ class CommercialMasterController extends GetxController {
 
   callSaveApi() {
     LoadingDialog.recordExists(
-        "End Date selected is ${DateFormat('MM/dd/yyyy hh:mm:ss a').format(DateFormat("dd-MM-yyyy").parse(endDateController.text))}. Want to proceed?",
+        "End Date selected is ${DateFormat('dd/MM/yyyy').format(DateFormat("dd-MM-yyyy").parse(endDateController.text))} ${DateFormat('hh:mm:ss').format(DateTime.now())}. Want to proceed?",
         () {
       isEnable = true;
       callSaveBtnApi();

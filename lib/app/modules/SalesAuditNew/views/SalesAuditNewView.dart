@@ -250,12 +250,12 @@ class SalesAuditNewView  extends StatelessWidget  {
                                               border: Border.all(color: Colors.black)),
                                         child:(controller.salesAuditGetRetrieveModel != null)?
                                         (controller.listAsrunLog2.length >0 )?
-                                        DataGridFromMap(
+                                        DataGridFromMap4(
                                             hideCode: false,
                                             formatDate: false,
                                             exportFileName: "Sales Audit New",
                                             csvFormat: true,
-                                            // removeKeysFromFile: ['Booking Status'],
+                                            removeKeysFromFile: ['Booking Status'],
                                             onRowDoubleTap: (PlutoGridOnRowDoubleTapEvent? val){
                                                   print(">>>>>>>>"+val!.rowIdx .toString());
                                                   controller.tapeBtn(leftIndex: val.rowIdx,rightIndex: controller.gridStateManagerRight?.currentRowIdx);
