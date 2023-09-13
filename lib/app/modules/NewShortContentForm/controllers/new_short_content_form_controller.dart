@@ -17,6 +17,9 @@ class NewShortContentFormController extends GetxController {
   var categeroies = RxList<DropDownValue>([]);
   var tapes = RxList<DropDownValue>([]);
   var orgRepeats = RxList<DropDownValue>([]);
+  Rx<TextEditingController> durationController = TextEditingController().obs;
+  RxString duration = RxString("00:00:00:00");
+  num sec = 0;
 
   FocusNode houseFocusNode = FocusNode(),
       locationFocusNode = FocusNode(),
@@ -27,7 +30,9 @@ class NewShortContentFormController extends GetxController {
       tapeFocusNode = FocusNode(),
       orgFocusNode = FocusNode(),
       eomFN = FocusNode(),
-      captionFN = FocusNode();
+      durationFN = FocusNode(),
+      captionFN = FocusNode(),
+      segmentFN = FocusNode();
   String? typeCode;
 
   Rxn<DropDownValue> selectedLocation = Rxn<DropDownValue>();
@@ -43,7 +48,7 @@ class NewShortContentFormController extends GetxController {
       houseId = TextEditingController(),
       som = TextEditingController(text: "00:00:00:00"),
       eom = TextEditingController(text: "00:00:00:00"),
-      duration = TextEditingController(text: "00:00:00:00"),
+      // duration = TextEditingController(text: "00:00:00:00"),
       startData = TextEditingController(),
       endDate = TextEditingController(),
       segment = TextEditingController(),
@@ -71,24 +76,44 @@ class NewShortContentFormController extends GetxController {
         });
   }
 
-  calculateDuration({bool showDialog = true}) {
-    print(eom.text);
-    print(som.text);
-    var diff = (Utils.oldBMSConvertToSecondsValue(value: eom.text) -
-        Utils.oldBMSConvertToSecondsValue(value: som.text));
+  void calculateDuration() {
+    num secondSom = Utils.oldBMSConvertToSecondsValue(value: (som.text));
+    num secondEom = Utils.oldBMSConvertToSecondsValue(value: eom.text);
 
-    print("diff: $diff");
+    if (eom.text.length >= 11) {
+      if ((secondEom - secondSom) < 0) {
+        LoadingDialog.showErrorDialog("EOM should not be less than SOM.",
+            callback: () {
+          eomFN.requestFocus();
+        });
+      } else {
+        durationController.value.text =
+            Utils.convertToTimeFromDouble(value: secondEom - secondSom);
+        duration.value =
+            Utils.convertToTimeFromDouble(value: secondEom - secondSom);
 
-    if (diff.isNegative && showDialog) {
-      eom.clear();
-      LoadingDialog.showErrorDialog("EOM should not less than SOM",
-          callback: () {
-        eomFN.requestFocus();
-      });
-    } else {
-      duration.text = Utils.convertToTimeFromDouble(value: diff);
+        sec = Utils.oldBMSConvertToSecondsValue(
+            value: durationController.value.text);
+      }
     }
+
+    print(">>>>>>>>>" + durationController.value.text);
+    print(">>>>>>>>>" + sec.toString());
   }
+  // calculateDuration({bool showDialog = true}) {
+  //   var diff = (Utils.oldBMSConvertToSecondsValue(value: som.text) -
+  //       Utils.oldBMSConvertToSecondsValue(value: eom.text));
+  //   print("diff: $diff");
+  //   if (diff.isNegative && showDialog) {
+  //     eom.clear();
+  //     LoadingDialog.showErrorDialog("EOM should not less than SOM",
+  //         callback: () {
+  //       // eomFN.requestFocus();
+  //     });
+  //   } else {
+  //     duration.text = Utils.convertToTimeFromDouble(value: diff);
+  //   }
+  // }
 
   getChannel(locationCode) {
     Get.find<ConnectorControl>().GETMETHODCALL(
@@ -188,6 +213,7 @@ class NewShortContentFormController extends GetxController {
             segment.text),
         fun: (rawdata) {
           Map data = rawdata[0];
+
           switch (selectedType.value?.key) {
             //       {
             //     "stillCode": null,
@@ -229,7 +255,7 @@ class NewShortContentFormController extends GetxController {
             // formCode: "ZASTI00001"formName: "Still Master"
             case "ZASTI00001":
               typeCode = data["StillCode"];
-              selectedTape.value = categeroies.firstWhereOrNull((element) =>
+              selectedTape.value = tapes.firstWhereOrNull((element) =>
                   element.key?.toLowerCase() ==
                   (data["TapeTypeCode"] ?? "").toString().toLowerCase());
               caption.text = data["StillCaption"] ?? "";
@@ -237,29 +263,28 @@ class NewShortContentFormController extends GetxController {
               selectedCategory.value = categeroies.firstWhereOrNull((element) =>
                   element.key?.toLowerCase() ==
                   (data["StillType"] ?? "").toString().toLowerCase());
-
               som.text = data["SOM"];
               eom.text = data["EOM"];
-              duration.text = Utils.getDurationSecond(
-                  second: int.tryParse(data["ExportTapeDuration"]
-                          .toString()
-                          .split(".")[0]) ??
+              duration.value = Utils.getDurationSecond(
+                  second: int.tryParse(
+                          data["StillDuration"].toString().split(".")[0]) ??
                       0);
               selectedProgram.value = DropDownValue(
                 key: data["ProgramCode"] ?? "",
                 value: data["ProgramName"] ?? "",
               );
-              remark.text = data["remark"];
-              endDate.text = DateFormat("dd-MM-yyy").format(
-                  DateFormat("dd/MM/yyyy hh:mm:ss").parse(data["KillDate"]));
+              // remark.text = data["remark"];
+              print("DATE: ${data["KillDate"]}");
+
+              endDate.text = DateFormat("dd-MM-yyyy").format(
+                  DateFormat("MM/dd/yyyy hh:mm:ss").parse(data["KillDate"]));
               toBeBilled.value = data["billflag"] == "0";
 
               break;
             //  "formCode": "ZASLI00045", "formName": "Slide Master"
             case "ZASLI00045":
               typeCode = data["SlideCode"];
-
-              selectedTape.value = categeroies.firstWhereOrNull((element) =>
+              selectedTape.value = tapes.firstWhereOrNull((element) =>
                   element.key?.toLowerCase() ==
                   (data["TapeTypeCode"] ?? "").toString().toLowerCase());
 
@@ -274,16 +299,16 @@ class NewShortContentFormController extends GetxController {
               som.text = data["SOM"];
 
               eom.text = data["EOM"] ?? "00:00:00:00";
-              duration.text = Utils.getDurationSecond(
+              duration.value = Utils.getDurationSecond(
                   second: int.tryParse(data["ExportTapeDuration"]
                           .toString()
                           .split(".")[0]) ??
                       0);
-              remark.text = data["remark"];
-              startData.text = DateFormat("dd-MM-yyy").format(
-                  DateFormat("dd/MM/yyyy hh:mm:ss").parse(data["ModifiedOn"]));
+              // remark.text = data["remark"];
+              // startData.text = DateFormat("dd-MM-yyy").format(
+              //     DateFormat("dd/MM/yyyy hh:mm:ss").parse(data["ModifiedOn"]));
               endDate.text = DateFormat("dd-MM-yyy").format(
-                  DateFormat("dd/MM/yyyy hh:mm:ss").parse(data["KillDate"]));
+                  DateFormat("MM/dd/yyyy hh:mm:ss").parse(data["KillDate"]));
               toBeBilled.value = data["billflag"] == "0";
 
               break;
@@ -292,9 +317,9 @@ class NewShortContentFormController extends GetxController {
               typeCode = data["VignetteCode"];
               caption.text = data["VignetteCaption"] ?? "";
               txCaption.text = data["ExportTapeCode"] ?? "";
-              // selectedCategory.value = categeroies.firstWhereOrNull((element) =>
-              //     element.key?.toLowerCase() ==
-              //     (data["SlideType"] ?? "").toLowerCase());
+              selectedCategory.value = tapes.firstWhereOrNull((element) =>
+                  element.key?.toLowerCase() ==
+                  (data["SlideType"] ?? "").toLowerCase());
               selectedOrgRep.value = orgRepeats.firstWhereOrNull((element) =>
                   element.key?.toLowerCase() ==
                   (data["OriginalRepeatCode"] ?? "").toString().toLowerCase());
@@ -304,16 +329,16 @@ class NewShortContentFormController extends GetxController {
               );
               som.text = data["SOM"];
               eom.text = data["EOM"];
-              duration.text = Utils.getDurationSecond(
+              duration.value = Utils.getDurationSecond(
                   second: int.tryParse(
                           data["VignetteDuration"].toString().split(".")[0]) ??
                       0);
               remark.text = data["remarks"];
               startData.text = DateFormat("dd-MM-yyy").format(
-                  DateFormat("dd/MM/yyyy hh:mm:ss").parse(data["StartDate"]));
+                  DateFormat("MM/dd/yyyy hh:mm:ss").parse(data["StartDate"]));
               endDate.text = DateFormat("dd-MM-yyy").format(
-                  DateFormat("dd/MM/yyyy hh:mm:ss").parse(data["KillDate"]));
-              toBeBilled.value = data["billflag"] == "0";
+                  DateFormat("MM/DD/yyyy hh:mm:ss").parse(data["KillDate"]));
+              toBeBilled.value = data["billflag"] == "1";
 
               break;
 
@@ -374,7 +399,7 @@ class NewShortContentFormController extends GetxController {
 
   save() async {
     var body = {};
-    List _durations = duration.text.split(":");
+    List _durations = duration.value.split(":");
     num intDuration = Duration(
             hours: int.parse(_durations[0]),
             minutes: int.parse(_durations[1]),
@@ -392,7 +417,7 @@ class NewShortContentFormController extends GetxController {
         "segmentNumber": int.tryParse(segment.text),
         "stillDuration": intDuration,
         "houseId": houseId.text, // Common in (still/Slide/vignetee)
-        "som": som.text + ":00", // Common in (still/Slide/vignetee)
+        "som": som.text, // Common in (still/Slide/vignetee)
         "tapeTypeCode": selectedTape.value?.key, // Common in (still/Slide)
         "dated": DateFormat("yyyy-MM-dd").format(DateFormat("dd-MM-yyyy")
             .parse(startData.text)), // Common in (still/Slide)
@@ -405,7 +430,7 @@ class NewShortContentFormController extends GetxController {
             selectedLocation.value?.key, // Common in (still/Slide/Vignette)
         "channelcode": selectedChannel
             .value?.key, // Common in (still/Slide/vignetteCaption)
-        "eom": eom.text + ":00", // Common in (still/Slide/vignetee)
+        "eom": eom.text, // Common in (still/Slide/vignetee)
         "stillType": selectedCategory.value?.key,
       };
     }
@@ -478,7 +503,8 @@ class NewShortContentFormController extends GetxController {
                   msg: rawdata["onSaveShortCode"]["message"]);
               return true;
             } else {
-              LoadingDialog.callErrorMessage1(msg: "Save Failed");
+              LoadingDialog.callErrorMessage1(
+                  msg: "Already Exists ${selectedType.value?.value}");
               return false;
             }
           } catch (e) {
@@ -498,21 +524,43 @@ class NewShortContentFormController extends GetxController {
     }
   }
 
+  houseIdValidate() {
+    if (selectedLocation.value?.key == null) {
+      LoadingDialog.showErrorDialog("Location cannot be empty.", callback: () {
+        locationFocusNode.requestFocus();
+      });
+    } else if (selectedChannel.value?.key == null) {
+      LoadingDialog.showErrorDialog("Channel cannot be empty.", callback: () {
+        channelFocusNode.requestFocus();
+      });
+    } else if (selectedType.value?.key == null) {
+      LoadingDialog.showErrorDialog("Type cannot be empty.", callback: () {
+        typeFocusNode.requestFocus();
+      });
+    } else if (segment.text.isEmpty) {
+      LoadingDialog.showErrorDialog("Segment Number cannot be empty.",
+          callback: () {
+        segmentFN.requestFocus();
+      });
+    } else if (houseId.text.isEmpty) {
+      LoadingDialog.showErrorDialog("House ID cannot be empty.", callback: () {
+        houseFocusNode.requestFocus();
+      });
+    } else {
+      houseleave();
+      retriveRecord();
+    }
+  }
+
   @override
   void onInit() {
     getInitData();
-    houseFocusNode.addListener(() {
-      if (!houseFocusNode.hasFocus && houseId.text.isNotEmpty) {
-        houseleave();
-        retriveRecord();
-      }
-    });
 
-    eomFN = FocusNode(
+    houseFocusNode = FocusNode(
       onKeyEvent: (node, event) {
         if (event.logicalKey == LogicalKeyboardKey.tab &&
             event is KeyDownEvent) {
-          calculateDuration();
+          houseIdValidate();
           return KeyEventResult.ignored;
         }
         return KeyEventResult.ignored;

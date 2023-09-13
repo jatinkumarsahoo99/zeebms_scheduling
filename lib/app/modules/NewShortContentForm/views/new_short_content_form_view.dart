@@ -1,4 +1,5 @@
 import 'package:bms_scheduling/app/controller/HomeController.dart';
+import 'package:bms_scheduling/app/modules/CommonSearch/views/common_search_view.dart';
 import 'package:bms_scheduling/widgets/dropdown.dart';
 import 'package:flutter/material.dart';
 
@@ -105,6 +106,10 @@ class NewShortContentFormView extends StatelessWidget {
                       inkWellFocusNode: controller.tapeFocusNode,
                       selected: controller.selectedTape.value,
                       autoFocus: true,
+                      isEnable: controller.selectedType.value?.value ==
+                              "Vignette Master"
+                          ? false
+                          : true,
                     ),
                   ),
                   Obx(
@@ -119,13 +124,20 @@ class NewShortContentFormView extends StatelessWidget {
                       inkWellFocusNode: controller.orgFocusNode,
                       selected: controller.selectedOrgRep.value,
                       autoFocus: true,
+                      isEnable:
+                          controller.selectedType.value?.value == "Still Master"
+                              ? false
+                              : controller.selectedType.value?.value ==
+                                      "Slide Master"
+                                  ? false
+                                  : true,
                     ),
                   ),
                   InputFields.formField1(
-                    hintTxt: "Segment Number",
-                    controller: controller.segment,
-                    width: 0.16,
-                  ),
+                      hintTxt: "Segment Number",
+                      controller: controller.segment,
+                      width: 0.16,
+                      focusNode: controller.segmentFN),
                   InputFields.formField1(
                       hintTxt: "House ID",
                       controller: controller.houseId,
@@ -146,6 +158,11 @@ class NewShortContentFormView extends StatelessWidget {
                       inkwellFocus: controller.programFocusNode,
                       selectedValue: controller.selectedProgram.value,
                       width: Get.width * 0.325,
+                      dialogHeight: 200,
+                      isEnable:
+                          controller.selectedType.value?.value == "Slide Master"
+                              ? false
+                              : true,
                     ),
                   ),
                   // InputFields.formField1(
@@ -154,58 +171,86 @@ class NewShortContentFormView extends StatelessWidget {
                   //   width: 0.325,
                   // ),
                   InputFields.formFieldNumberMask(
-                      hintTxt: "SOM",
-                      widthRatio: .155,
-                      controller: controller.som,
-                      paddingLeft: 0,
-                      isTime: true),
+                    hintTxt: "SOM",
+                    widthRatio: .155,
+                    controller: controller.som,
+                    paddingLeft: 0,
+                    // isTime: true
+                  ),
                   InputFields.formFieldNumberMask(
                       hintTxt: "EOM",
                       widthRatio: .155,
                       controller: controller.eom,
-                      isTime: true,
                       textFieldFN: controller.eomFN,
-                      paddingLeft: 0),
-                  InputFields.formField1(
-                    hintTxt: "Duration",
-                    controller: controller.duration,
-                    width: .16,
-                    isEnable: false,
-                    padLeft: 0,
-                  ),
-                  DateWithThreeTextField(
-                    title: "Start Date",
-                    mainTextController: controller.startData,
-                    widthRation: .155,
+                      // isTime: true,
+                      paddingLeft: 0,
+                      onEditComplete: (val) {
+                        controller.calculateDuration();
+                      }),
+                  Obx(() => InputFields.formFieldDisable(
+                        hintTxt: "Duration",
+                        value: controller.duration.value,
+                        widthRatio: 0.16,
+                      )),
+                  Obx(
+                    () => DateWithThreeTextField(
+                      title: "Start Date",
+                      mainTextController: controller.startData,
+                      widthRation: .155,
+                      isEnable:
+                          controller.selectedType.value?.value == "Still Master"
+                              ? false
+                              : controller.selectedType.value?.value ==
+                                      "Slide Master"
+                                  ? false
+                                  : true,
+                    ),
                   ),
                   DateWithThreeTextField(
                     title: "End Date",
                     mainTextController: controller.endDate,
                     widthRation: .155,
                   ),
-                  SizedBox(
-                    width: Get.width * 0.16,
-                    child: Row(
-                      children: [
-                        Obx(
-                          () => Checkbox(
-                              value: controller.toBeBilled.value,
-                              onChanged: (value) {
-                                controller.toBeBilled.value = value!;
-                              }),
-                        ),
-                        Text(
-                          "To be Billed",
-                          style: TextStyle(fontSize: SizeDefine.labelSize1),
-                        )
-                      ],
-                    ),
+                  Obx(
+                    () => controller.selectedType.value?.value == "Still Master"
+                        ? defaultCheckBox()
+                        : controller.selectedType.value?.value != "Slide Master"
+                            ? SizedBox(
+                                width: Get.width * 0.16,
+                                child: Row(
+                                  children: [
+                                    Obx(
+                                      () => Checkbox(
+                                          value: controller.toBeBilled.value,
+                                          onChanged: (value) {
+                                            controller.toBeBilled.value =
+                                                value!;
+                                          }),
+                                    ),
+                                    Text(
+                                      "To be Billed",
+                                      style: TextStyle(
+                                          fontSize: SizeDefine.labelSize1),
+                                    )
+                                  ],
+                                ),
+                              )
+                            : defaultCheckBox(),
                   ),
 
-                  InputFields.formField1(
-                    hintTxt: "Remarks",
-                    controller: controller.remark,
-                    width: 0.49,
+                  Obx(
+                    () => InputFields.formField1(
+                      hintTxt: "Remarks",
+                      controller: controller.remark,
+                      width: 0.49,
+                      isEnable:
+                          controller.selectedType.value?.value == "Still Master"
+                              ? false
+                              : controller.selectedType.value?.value ==
+                                      "Slide Master"
+                                  ? false
+                                  : true,
+                    ),
                   ),
                 ],
               ),
@@ -258,6 +303,33 @@ class NewShortContentFormView extends StatelessWidget {
     );
   }
 
+  defaultCheckBox() {
+    return Padding(
+      padding: const EdgeInsets.only(bottom: 7, left: 8),
+      child: SizedBox(
+        width: Get.width * 0.16,
+        child: Row(
+          children: [
+            Container(
+              width: 17,
+              height: 17,
+              decoration: BoxDecoration(
+                  border: Border.all(color: Colors.grey, width: 2)),
+            ),
+            const SizedBox(
+              width: 10,
+            ),
+            Text(
+              "To be Billed",
+              style: TextStyle(
+                  fontSize: SizeDefine.labelSize1, color: Colors.grey),
+            )
+          ],
+        ),
+      ),
+    );
+  }
+
   btnHandler(name) async {
     switch (name) {
       case "Save":
@@ -265,6 +337,15 @@ class NewShortContentFormView extends StatelessWidget {
 
         break;
       case "Search":
+        Get.to(
+          const SearchPage(
+            key: Key("New Short Content Form"),
+            screenName: "New Short Content Form",
+            appBarName: "New Short Content Form",
+            strViewName: "bms_view_fillermaster",
+            isAppBarReq: true,
+          ),
+        );
         break;
       case "Clear":
         Get.delete<NewShortContentFormController>();
