@@ -342,7 +342,7 @@ class SalesAuditNewView  extends StatelessWidget  {
                                                 border: Border.all(color: Colors.black)),
                                             child:(controller.salesAuditGetRetrieveModel != null)?
                                             (controller.listAsrunLog1.length >0 )?
-                                            DataGridFromMap(
+                                            DataGridFromMap4(
                                                 hideCode: false,
                                                 formatDate: true,
                                                 dateFromat: "dd/MM/yyyy",
