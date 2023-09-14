@@ -380,6 +380,10 @@ class FillerMasterView extends GetView<FillerMasterController> {
                                         SizedBox(
                                             width: context.width *
                                                 controller.componentWidthRatio),
+                                        Container(
+                                            height: 6,
+                                            width: context.width *
+                                                controller.componentWidthRatio),
                                       ],
                                     ),
                                   ],
