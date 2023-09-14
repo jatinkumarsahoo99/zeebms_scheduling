@@ -154,7 +154,7 @@ class LstAsrunlog2 {
     data['exportTapeCode'] = this.exportTapeCode;
     data['exportTapeCaption'] = this.exportTapeCaption;
     // data['spotamount'] = this.spotamount;
-    data['Spotamount'] = this.spotamount;
+    data['Spotamount'] = double.tryParse((this.spotamount != null && this.spotamount != "")?this.spotamount.toString():"0")??0.00;
     data['tapeDuration'] = this.tapeDuration;
     data['telecastTime'] = this.telecastTime;
     data['dealno'] = this.dealno;
