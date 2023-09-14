@@ -296,14 +296,14 @@ class RoRescheduleView extends StatelessWidget {
                                           load.stateManager;
                                     },
                                     onRowDoubleTap: (tapEvent) {
-                                      controller.dgvGridnRowDoubleTap(
-                                          tapEvent.rowIdx);
                                       controller.plutoGridStateManager
                                           ?.setCurrentCell(
                                               controller.plutoGridStateManager!
                                                   .getRowByIdx(tapEvent.rowIdx)!
                                                   .cells['programName'],
                                               tapEvent.rowIdx);
+                                      controller.dgvGridnRowDoubleTap(
+                                          tapEvent.rowIdx);
                                     },
                                     mapData: gridController
                                         .roRescheduleOnLeaveData!.lstDgvRO!
@@ -314,24 +314,6 @@ class RoRescheduleView extends StatelessWidget {
                                 }
                               }),
                         ),
-                        // Container(
-                        //   width: Get.width * 0.50,
-                        //   padding: EdgeInsets.only(
-                        //     left: Get.width * 0.005,
-                        //   ),
-                        //   child: GetBuilder<RoRescheduleController>(
-                        //       init: controller,
-                        //       id: "dgvGrid",
-                        //       builder: (gridController) {
-                        //         return (gridController.roRescheduleOnLeaveData == null || gridController.roRescheduleOnLeaveData!.lstDgvRO!.isEmpty)
-                        //             ? Container(
-                        //                 child: Container(
-                        //                   decoration: BoxDecoration(border: Border.all(), color: Colors.grey),
-                        //                 ),
-                        //               )
-                        //             : ;
-                        //       }),
-                        // ),
                         const SizedBox(width: 10),
                         //2nd table
                         Expanded(
@@ -468,28 +450,6 @@ class RoRescheduleView extends StatelessWidget {
                                 }
                               }),
                         ),
-                        // Container(
-                        //   width: Get.width * 0.50,
-                        //   padding: EdgeInsets.only(
-                        //     right: Get.width * 0.005,
-                        //   ),
-                        //   child: GetBuilder<RoRescheduleController>(
-                        //       init: controller,
-                        //       id: "updatedgvGrid",
-                        //       builder: (gridController) {
-                        //         return (gridController.roRescheduleOnLeaveData == null ||
-                        //                 gridController.roRescheduleOnLeaveData!.lstdgvUpdated!.isEmpty)
-                        //             ? Container(
-                        //                 child: Container(
-                        //                   decoration: BoxDecoration(border: Border.all(), color: Colors.grey),
-                        //                 ),
-                        //               )
-                        //             : DataGridShowOnlyKeys(
-                        //                 mapData: gridController.roRescheduleOnLeaveData!.lstdgvUpdated!.map((e) => e.toJson()).toList(),
-                        //                 formatDate: false,
-                        //               );
-                        //       }),
-                        // ),
                       ],
                     ),
                   ),
