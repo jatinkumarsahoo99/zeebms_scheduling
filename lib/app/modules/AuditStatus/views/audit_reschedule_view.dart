@@ -13,6 +13,7 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:bms_scheduling/widgets/PlutoGrid/pluto_grid.dart';
 
+import '../../../../widgets/gridFromMap.dart';
 import '../../../controller/HomeController.dart';
 import '../bindings/audi_status_eshowcancel.dart';
 
@@ -183,6 +184,82 @@ class AuditReschdule extends StatelessWidget {
               child: Row(
                 mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                 children: [
+                  // SizedBox(
+                  //   width: Get.width * .38,
+                  //   child: GetBuilder<AuditStatusController>(
+                  //       init: controller,
+                  //       id: "cancelData",
+                  //       builder: (cancelDatactrl) {
+                  //         return Container(
+                  //           child: DataGridShowOnlyKeys(
+                  //               onRowChecked: (rowcheckEvent) {},
+                  //               hideCode: false,
+                  //               exportFileName: "Audit Reschedule",
+                  //               dateFormatKeys: ["auditedon"],
+                  //               hideKeys: [
+                  //                 "channelcode",
+                  //                 "locationcode",
+                  //                 "dealRowNumber"
+                  //               ],
+                  //               rowCheckColor: Colors.white,
+                  //               onload: (loadEvent) {
+                  //                 for (var element in (controller
+                  //                             .auditStatusReschduleDisplay
+                  //                             ?.lstReshedule ??
+                  //                         [])
+                  //                     .where((element) =>
+                  //                         (element.auditStatus ?? false))
+                  //                     .toList()) {}
+                  //                 for (var i = 0;
+                  //                     i <
+                  //                         (controller.auditStatusReschduleDisplay
+                  //                                     ?.lstReshedule ??
+                  //                                 [])
+                  //                             .length;
+                  //                     i++) {
+                  //                   if (controller.auditStatusReschduleDisplay
+                  //                           ?.lstReshedule![i].auditStatus ==
+                  //                       true) {
+                  //                     loadEvent.stateManager.setRowChecked(
+                  //                         loadEvent.stateManager.rows[i], true);
+                  //                   }
+                  //                 }
+                  //               },
+                  //               colorCallback: (rowEvent) {
+                  //                 if (controller
+                  //                         .auditStatusReschduleDisplay
+                  //                         ?.lstReshedule?[rowEvent.rowIdx]
+                  //                         .audited ==
+                  //                     null) {
+                  //                   return Color(0xFF96FF96);
+                  //                 } else if ((controller
+                  //                             .auditStatusReschduleDisplay
+                  //                             ?.lstReshedule?[rowEvent.rowIdx]
+                  //                             .audited ??
+                  //                         0) <
+                  //                     (controller
+                  //                             .auditStatusReschduleDisplay
+                  //                             ?.lstReshedule?[rowEvent.rowIdx]
+                  //                             .totalspots ??
+                  //                         0)) {
+                  //                   return Color(0xFFFF9696);
+                  //                 }
+
+                  //                 return Colors.white;
+                  //               },
+                  //               checkRow: true,
+                  //               checkRowKey: "auditStatus",
+                  //               hideCheckKeysValue: true,
+                  //               actionIcon: Icons.check_box_outlined,
+                  //               mapData: controller.auditStatusReschduleDisplay
+                  //                       ?.lstReshedule
+                  //                       ?.map((e) => e.toJson())
+                  //                       .toList() ??
+                  //                   []),
+                  //         );
+                  //       }),
+                  // ),
+
                   SizedBox(
                     width: Get.width * .38,
                     child: GetBuilder<AuditStatusController>(
@@ -190,17 +267,19 @@ class AuditReschdule extends StatelessWidget {
                         id: "cancelData",
                         builder: (cancelDatactrl) {
                           return Container(
-                            child: DataGridShowOnlyKeys(
-                                onRowChecked: (rowcheckEvent) {},
+                            child: DataGridFromMap3(
+                                // onRowChecked: (rowcheckEvent) {},
                                 hideCode: false,
                                 exportFileName: "Audit Reschedule",
-                                dateFormatKeys: ["auditedon"],
+                                // dateFormatKeys: ["auditedon"],
+                                // enableColumnDoubleTap: ['auditStatus'],
+                                onColumnHeaderDoubleTap: (columnName) {},
                                 hideKeys: [
                                   "channelcode",
                                   "locationcode",
                                   "dealRowNumber"
                                 ],
-                                rowCheckColor: Colors.white,
+                                // rowCheckColor: Colors.white,
                                 onload: (loadEvent) {
                                   for (var element in (controller
                                               .auditStatusReschduleDisplay
@@ -246,13 +325,18 @@ class AuditReschdule extends StatelessWidget {
 
                                   return Colors.white;
                                 },
+                                onEdit: (p0) {},
                                 checkRow: true,
                                 checkRowKey: "auditStatus",
-                                hideCheckKeysValue: true,
-                                actionIcon: Icons.check_box_outlined,
+                                checkBoxColumnKey: ['auditStatus'],
+                                checkBoxColumnNoEditKey: ['auditStatus'],
+                                checkBoxStrComparison: true.toString(),
+                                uncheckCheckBoxStr: false.toString(),
+                                // hideCheckKeysValue: true,
+                                // actionIcon: Icons.check_box_outlined,
                                 mapData: controller.auditStatusReschduleDisplay
                                         ?.lstReshedule
-                                        ?.map((e) => e.toJson())
+                                        ?.map((e) => e.toJson(fromSave: false))
                                         .toList() ??
                                     []),
                           );

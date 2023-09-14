@@ -15,6 +15,7 @@ import 'package:bms_scheduling/widgets/PlutoGridExport/pluto_grid_export.dart'
     as pluto_grid_export;
 
 import '../../widgets/PlutoGridExport/src/pluto_grid_export1.dart';
+import '../../widgets/PlutoGridExport/src/pluto_grid_export2.dart';
 import '../../widgets/Snack.dart';
 import '../../widgets/dropdown.dart';
 import '../../widgets/input_fields.dart';
@@ -30,6 +31,7 @@ class DataGridMenu {
       BuildContext context,
       {String? exportFileName,
       List<SecondaryShowDialogModel>? extraList,
+        List<String>? removeKeysFromFile,
       bool csvFormat = false}) async {
     print(">>>>>csvFormat" + csvFormat.toString());
     clearFilterList() {
@@ -381,6 +383,10 @@ class DataGridMenu {
 
         if (!csvFormat) {
           exportCSV = pluto_grid_export.PlutoGridExport.exportCSV(stateManager);
+        }else if(removeKeysFromFile != null && removeKeysFromFile.isNotEmpty){
+          // PlutoGridExport2 bookingNumber
+          print(">>>>>>>>>>>>>>>>>>>>>>>removeKeysFromFile"+removeKeysFromFile.toString());
+          exportCSV = PlutoGridExport2.exportCSV(stateManager,removeKeysFromFile: removeKeysFromFile);
         } else {
           exportCSV = PlutoGridExport1.exportCSV(stateManager);
         }

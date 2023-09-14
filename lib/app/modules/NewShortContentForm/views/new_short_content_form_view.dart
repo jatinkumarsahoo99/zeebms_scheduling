@@ -2,6 +2,7 @@ import 'package:bms_scheduling/app/controller/HomeController.dart';
 import 'package:bms_scheduling/app/modules/CommonSearch/views/common_search_view.dart';
 import 'package:bms_scheduling/widgets/dropdown.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 
 import 'package:get/get.dart';
 
@@ -76,13 +77,18 @@ class NewShortContentFormView extends StatelessWidget {
                   ),
                   Obx(
                     () => DropDownField.formDropDown1WidthMap(
-                        controller.categeroies.value, (value) {
-                      controller.selectedCategory.value = value;
-                      controller.categoryFocusNode.requestFocus();
-                    }, "Category", .24,
-                        inkWellFocusNode: controller.categoryFocusNode,
-                        autoFocus: true,
-                        selected: controller.selectedCategory.value),
+                      controller.categeroies.value,
+                      (value) {
+                        controller.selectedCategory.value = value;
+                        controller.categoryFocusNode.requestFocus();
+                        print("Key: ${controller.selectedCategory.value!.key}");
+                      },
+                      "Category",
+                      .24,
+                      inkWellFocusNode: controller.categoryFocusNode,
+                      autoFocus: true,
+                      selected: controller.selectedCategory.value,
+                    ),
                   ),
                   InputFields.formField1(
                       hintTxt: "Caption",
@@ -124,6 +130,7 @@ class NewShortContentFormView extends StatelessWidget {
                       inkWellFocusNode: controller.orgFocusNode,
                       selected: controller.selectedOrgRep.value,
                       autoFocus: true,
+                      dialogHeight: 250,
                       isEnable:
                           controller.selectedType.value?.value == "Still Master"
                               ? false
@@ -134,10 +141,14 @@ class NewShortContentFormView extends StatelessWidget {
                     ),
                   ),
                   InputFields.formField1(
-                      hintTxt: "Segment Number",
-                      controller: controller.segment,
-                      width: 0.16,
-                      focusNode: controller.segmentFN),
+                    hintTxt: "Segment Number",
+                    controller: controller.segment,
+                    width: 0.16,
+                    focusNode: controller.segmentFN,
+                    inputformatters: [
+                      FilteringTextInputFormatter.digitsOnly,
+                    ],
+                  ),
                   InputFields.formField1(
                       hintTxt: "House ID",
                       controller: controller.houseId,
@@ -181,7 +192,7 @@ class NewShortContentFormView extends StatelessWidget {
                       hintTxt: "EOM",
                       widthRatio: .155,
                       controller: controller.eom,
-                      textFieldFN: controller.eomFN,
+                      // textFieldFN: controller.eomFN,
                       // isTime: true,
                       paddingLeft: 0,
                       onEditComplete: (val) {
@@ -348,7 +359,8 @@ class NewShortContentFormView extends StatelessWidget {
         );
         break;
       case "Clear":
-        Get.delete<NewShortContentFormController>();
+        // Get.delete<NewShortContentFormController>();
+        controller.clearPage();
         Get.find<HomeController>().clearPage1();
         break;
       default:

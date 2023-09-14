@@ -151,15 +151,17 @@ class FillerMasterView extends GetView<FillerMasterController> {
                                           widthRatio:
                                               controller.componentWidthRatio,
                                           paddingLeft: 0,
-                                          textFieldFN: controller.eomFN,
+                                          // textFieldFN: controller.eomFN,
+                                          onEditComplete: (val) {
+                                            controller.calculateDuration();
+                                          },
                                         ),
-                                        InputFields.formField1(
-                                          controller: controller.durationCtr,
-                                          hintTxt: 'Duration',
-                                          width: controller.componentWidthRatio,
-                                          isEnable: false,
-                                          padLeft: 0,
-                                        ),
+                                        Obx(() => InputFields.formFieldDisable(
+                                              hintTxt: "Duration",
+                                              value: controller.duration.value,
+                                              widthRatio: 0.17,
+                                            )),
+
                                         DropDownField.formDropDown1WidthMap(
                                           controller
                                                   .onloadModel
@@ -376,6 +378,10 @@ class FillerMasterView extends GetView<FillerMasterController> {
                                             width: context.width *
                                                 controller.componentWidthRatio),
                                         SizedBox(
+                                            width: context.width *
+                                                controller.componentWidthRatio),
+                                        Container(
+                                            height: 6,
                                             width: context.width *
                                                 controller.componentWidthRatio),
                                       ],

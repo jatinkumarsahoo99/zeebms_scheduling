@@ -100,20 +100,6 @@ class NewShortContentFormController extends GetxController {
     print(">>>>>>>>>" + durationController.value.text);
     print(">>>>>>>>>" + sec.toString());
   }
-  // calculateDuration({bool showDialog = true}) {
-  //   var diff = (Utils.oldBMSConvertToSecondsValue(value: som.text) -
-  //       Utils.oldBMSConvertToSecondsValue(value: eom.text));
-  //   print("diff: $diff");
-  //   if (diff.isNegative && showDialog) {
-  //     eom.clear();
-  //     LoadingDialog.showErrorDialog("EOM should not less than SOM",
-  //         callback: () {
-  //       // eomFN.requestFocus();
-  //     });
-  //   } else {
-  //     duration.text = Utils.convertToTimeFromDouble(value: diff);
-  //   }
-  // }
 
   getChannel(locationCode) {
     Get.find<ConnectorControl>().GETMETHODCALL(
@@ -260,13 +246,14 @@ class NewShortContentFormController extends GetxController {
                   (data["TapeTypeCode"] ?? "").toString().toLowerCase());
               caption.text = data["StillCaption"] ?? "";
               txCaption.text = data["ExportTapeCode"] ?? "";
+              print(data["Stilltype"]);
               selectedCategory.value = categeroies.firstWhereOrNull((element) =>
                   element.key?.toLowerCase() ==
-                  (data["StillType"] ?? "").toString().toLowerCase());
+                  (data["Stilltype"] ?? "").toString().toLowerCase());
               som.text = data["SOM"];
               eom.text = data["EOM"];
-              duration.value = Utils.getDurationSecond(
-                  second: int.tryParse(
+              duration.value = Utils.convertToTimeFromDouble(
+                  value: int.tryParse(
                           data["StillDuration"].toString().split(".")[0]) ??
                       0);
               selectedProgram.value = DropDownValue(
@@ -291,16 +278,15 @@ class NewShortContentFormController extends GetxController {
               caption.text = data["SlideCaption"] ?? "";
 
               txCaption.text = data["ExportTapeCaption"] ?? "";
-
               selectedCategory.value = categeroies.firstWhereOrNull((element) =>
                   element.key?.toLowerCase() ==
-                  data["SlideType"].toString().toLowerCase());
+                  data["SlideType"].toString().split(" ").first.toLowerCase());
 
               som.text = data["SOM"];
 
               eom.text = data["EOM"] ?? "00:00:00:00";
-              duration.value = Utils.getDurationSecond(
-                  second: int.tryParse(data["ExportTapeDuration"]
+              duration.value = Utils.convertToTimeFromDouble(
+                  value: int.tryParse(data["ExportTapeDuration"]
                           .toString()
                           .split(".")[0]) ??
                       0);
@@ -319,7 +305,7 @@ class NewShortContentFormController extends GetxController {
               txCaption.text = data["ExportTapeCode"] ?? "";
               selectedCategory.value = tapes.firstWhereOrNull((element) =>
                   element.key?.toLowerCase() ==
-                  (data["SlideType"] ?? "").toLowerCase());
+                  (data["Stilltype"] ?? "").toLowerCase());
               selectedOrgRep.value = orgRepeats.firstWhereOrNull((element) =>
                   element.key?.toLowerCase() ==
                   (data["OriginalRepeatCode"] ?? "").toString().toLowerCase());
@@ -329,8 +315,8 @@ class NewShortContentFormController extends GetxController {
               );
               som.text = data["SOM"];
               eom.text = data["EOM"];
-              duration.value = Utils.getDurationSecond(
-                  second: int.tryParse(
+              duration.value = Utils.convertToTimeFromDouble(
+                  value: int.tryParse(
                           data["VignetteDuration"].toString().split(".")[0]) ??
                       0);
               remark.text = data["remarks"];
@@ -414,7 +400,8 @@ class NewShortContentFormController extends GetxController {
         "programCode": selectedProgram.value?.key, // Common in (still/Vignette)
         "exportTapeCaption": houseId.text, // Common in (still/Slide)
         "exportTapeCode": txCaption.text, // Common in (still/Slide)
-        "segmentNumber": int.tryParse(segment.text),
+        "segmentNumber": segment.text,
+        // int.tryParse(segment.text),
         "stillDuration": intDuration,
         "houseId": houseId.text, // Common in (still/Slide/vignetee)
         "som": som.text, // Common in (still/Slide/vignetee)
@@ -470,6 +457,7 @@ class NewShortContentFormController extends GetxController {
         "vignetteCaption": caption.text,
         "vignetteDuration": intDuration,
         "exportTapeCode_VG": txCaption.text,
+        "exportTapeCaption": houseId.text,
         "originalRepeatCode": selectedOrgRep.value?.key,
         "segmentNumber_VG": segment.text,
         "startDate": DateFormat("yyyy-MM-dd")
@@ -488,6 +476,7 @@ class NewShortContentFormController extends GetxController {
         "houseId": houseId.text, // Common in (still/Slide/vignetee)
         "som": som.text, // Common in (still/Slide/vignetee)
         "programCode": selectedProgram.value?.key,
+        "modifiedBy": Get.find<MainController>().user?.logincode,
       };
     }
     LoadingDialog().callwithCancel();
@@ -504,7 +493,7 @@ class NewShortContentFormController extends GetxController {
               return true;
             } else {
               LoadingDialog.callErrorMessage1(
-                  msg: "Already Exists ${selectedType.value?.value}");
+                  msg: "Already Exists in ${selectedType.value?.value}");
               return false;
             }
           } catch (e) {
@@ -518,7 +507,8 @@ class NewShortContentFormController extends GetxController {
 
   setCaption() {
     if (caption.text.trim().isNotEmpty) {
-      txCaption.text = caption.text;
+      txCaption.text = caption.text.toUpperCase();
+      caption.text = caption.text.toUpperCase();
     } else {
       txCaption.text = "";
     }
@@ -582,5 +572,26 @@ class NewShortContentFormController extends GetxController {
   @override
   void onClose() {
     super.onClose();
+  }
+
+  clearPage() {
+    som.text = "00:00:00:00";
+    eom.text = "00:00:00:00";
+    duration.value = "00:00:00:00";
+    selectedLocation.value = null;
+    selectedChannel.value = null;
+    selectedType.value = null;
+    selectedCategory.value = null;
+    selectedProgram.value = null;
+    selectedTape.value = null;
+    selectedOrgRep.value = null;
+    caption.clear();
+    txCaption.clear();
+    houseId.clear();
+    startData.clear();
+    endDate.clear();
+    segment.clear();
+    remark.clear();
+    toBeBilled.value = false;
   }
 }

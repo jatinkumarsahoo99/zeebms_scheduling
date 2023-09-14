@@ -379,7 +379,7 @@ class CommercialMasterController extends GetxController {
 
   callSaveApi() {
     LoadingDialog.recordExists(
-        "End Date selected is ${DateFormat('MM/dd/yyyy hh:mm:ss a').format(DateFormat("dd-MM-yyyy").parse(endDateController.text))}. Want to proceed?",
+        "End Date selected is ${DateFormat('dd/MM/yyyy').format(DateFormat("dd-MM-yyyy").parse(endDateController.text))} ${DateFormat('hh:mm:ss').format(DateTime.now())}. Want to proceed?",
         () {
       isEnable = true;
       callSaveBtnApi();
@@ -489,12 +489,12 @@ class CommercialMasterController extends GetxController {
               });
             }
             // secType
-            if (map.containsKey("secType") && map["secType"].length > 0) {
+           /* if (map.containsKey("secType") && map["secType"].length > 0) {
               secType.clear();
               map['secType'].forEach((e) {
-                secType.add(DropDownValue.fromJson1(e));
+                secType.add(DropDownValue.fromJsonDynamic(e,"eventCode","eventName"));
               });
-            }
+            }*/
             if (map.containsKey("revenueType") &&
                 map["revenueType"].length > 0) {
               revenueType.clear();

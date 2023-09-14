@@ -250,10 +250,12 @@ class SalesAuditNewView  extends StatelessWidget  {
                                               border: Border.all(color: Colors.black)),
                                         child:(controller.salesAuditGetRetrieveModel != null)?
                                         (controller.listAsrunLog2.length >0 )?
-                                        DataGridFromMap(
+                                        DataGridFromMap4(
                                             hideCode: false,
                                             formatDate: false,
                                             exportFileName: "Sales Audit New",
+                                            csvFormat: true,
+                                            removeKeysFromFile: ['Booking Status','bookingStatus'],
                                             onRowDoubleTap: (PlutoGridOnRowDoubleTapEvent? val){
                                                   print(">>>>>>>>"+val!.rowIdx .toString());
                                                   controller.tapeBtn(leftIndex: val.rowIdx,rightIndex: controller.gridStateManagerRight?.currentRowIdx);
@@ -266,7 +268,8 @@ class SalesAuditNewView  extends StatelessWidget  {
                                               }
                                               else if(colorData.row.cells['telecastTime']!.value != "" &&
                                                   colorData.row.cells['telecastTime']!.value != null &&
-                                                  colorData.row.cells['telecastTime']!.value != "null"
+                                                  colorData.row.cells['telecastTime']!.value != "null" &&
+                                                  colorData.row.cells['telecastTime']!.value != " "
                                               ){
                                                 color = Colors.greenAccent;
                                               }
@@ -339,11 +342,12 @@ class SalesAuditNewView  extends StatelessWidget  {
                                                 border: Border.all(color: Colors.black)),
                                             child:(controller.salesAuditGetRetrieveModel != null)?
                                             (controller.listAsrunLog1.length >0 )?
-                                            DataGridFromMap(
+                                            DataGridFromMap4(
                                                 hideCode: false,
                                                 formatDate: true,
                                                 dateFromat: "dd/MM/yyyy",
                                                 focusNode: controller.rightFocusNode,
+                                                csvFormat: true,
                                                 exportFileName: "Sales Audit New",
                                                 onRowDoubleTap: (PlutoGridOnRowDoubleTapEvent? val){
                                                   print(">>>>>>>>"+val!.row.toString());
@@ -355,7 +359,8 @@ class SalesAuditNewView  extends StatelessWidget  {
                                                     color = Color(0xFFD1C4E9);
                                                   }else if(colorData.row.cells['bookingNumber']!.value != "" &&
                                                       colorData.row.cells['bookingNumber']!.value != null &&
-                                                      colorData.row.cells['bookingNumber']!.value != "null"
+                                                      colorData.row.cells['bookingNumber']!.value != "null" &&
+                                                      colorData.row.cells['bookingNumber']!.value != " "
                                                   ){
                                                     color = Colors.greenAccent;
                                                   }else{
@@ -363,8 +368,6 @@ class SalesAuditNewView  extends StatelessWidget  {
                                                   }
                                                   return color;
                                                 },
-
-
                                                 // checkRow: true,
                                                 // checkRowKey: "no",
                                                 mode: PlutoGridMode.selectWithOneTap,

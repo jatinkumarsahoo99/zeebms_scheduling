@@ -47,6 +47,9 @@ class FillerMasterController extends GetxController {
   var channelList = <DropDownValue>[].obs;
   int rightTableSelectedIdx = -1;
   double componentWidthRatio = .17;
+  Rx<TextEditingController> durationController = TextEditingController().obs;
+  RxString duration = RxString("00:00:00:00");
+  num sec = 0;
 
   var startDateCtr = TextEditingController(),
       endDateCtr = TextEditingController(),
@@ -63,7 +66,7 @@ class FillerMasterController extends GetxController {
       txNoCtr = TextEditingController(),
       eomCtr = TextEditingController(text: "00:00:00:00"),
       somCtr = TextEditingController(text: "00:00:00:00"),
-      durationCtr = TextEditingController(text: "00:00:00:00"),
+      // durationCtr = TextEditingController(text: "00:00:00:00"),
       movieNameCtr = TextEditingController(),
       releaseYearCtr = TextEditingController(),
       singerCtr = TextEditingController(),
@@ -91,7 +94,8 @@ class FillerMasterController extends GetxController {
     txNoCtr.text = "AUTO";
     somCtr.text = "00:00:00:00";
     eomCtr.text = "00:00:00:00";
-    durationCtr.clear();
+    // durationCtr.clear();
+    duration.value = "00:00:00:00";
     tcInCtr.text = "00:00:00:00";
     tcOutCtr.text = "00:00:00:00";
     segIDCtr.clear();
@@ -141,20 +145,45 @@ class FillerMasterController extends GetxController {
     addListeneres2();
   }
 
-  calculateDuration({bool showDialog = true}) {
-    var diff = (Utils.oldBMSConvertToSecondsValue(value: eomCtr.text) -
-        Utils.oldBMSConvertToSecondsValue(value: somCtr.text));
+  void calculateDuration() {
+    num secondSom = Utils.oldBMSConvertToSecondsValue(value: (somCtr.text));
+    num secondEom = Utils.oldBMSConvertToSecondsValue(value: eomCtr.text);
 
-    if (diff.isNegative && showDialog) {
-      eomCtr.clear();
-      LoadingDialog.showErrorDialog("EOM should not less than SOM",
-          callback: () {
-        eomFN.requestFocus();
-      });
-    } else {
-      durationCtr.text = Utils.convertToTimeFromDouble(value: diff);
+    if (eomCtr.text.length >= 11) {
+      if ((secondEom - secondSom) < 0) {
+        LoadingDialog.showErrorDialog("EOM should not be less than SOM.",
+            callback: () {
+          eomFN.requestFocus();
+        });
+      } else {
+        durationController.value.text =
+            Utils.convertToTimeFromDouble(value: secondEom - secondSom);
+        duration.value =
+            Utils.convertToTimeFromDouble(value: secondEom - secondSom);
+
+        sec = Utils.oldBMSConvertToSecondsValue(
+            value: durationController.value.text);
+      }
     }
+
+    print(">>>>>>>>>" + durationController.value.text);
+    print(">>>>>>>>>" + sec.toString());
   }
+
+  // calculateDuration({bool showDialog = true}) {
+  //   var diff = (Utils.oldBMSConvertToSecondsValue(value: eomCtr.text) -
+  //       Utils.oldBMSConvertToSecondsValue(value: somCtr.text));
+
+  //   if (diff.isNegative && showDialog) {
+  //     eomCtr.clear();
+  //     LoadingDialog.showErrorDialog("EOM should not less than SOM",
+  //         callback: () {
+  //       eomFN.requestFocus();
+  //     });
+  //   } else {
+  //     durationCtr.text = Utils.convertToTimeFromDouble(value: diff);
+  //   }
+  // }
 
   formHandler(String btnName) {
     if (btnName == "Clear") {
@@ -181,6 +210,7 @@ class FillerMasterController extends GetxController {
   addListeneres2() {
     tapeIDFN.addListener(() {
       if (!tapeIDFN.hasFocus) {
+        tapeIDCtr.text = tapeIDCtr.text.toUpperCase();
         tapeIDLeave();
       }
     });
@@ -192,7 +222,7 @@ class FillerMasterController extends GetxController {
     fillerNameFN.addListener(() async {
       if (!fillerNameFN.hasFocus) {
         if (fillerNameCtr.text.isNotEmpty) {
-          txCaptionCtr.text = fillerNameCtr.text.capitalizeFirst!;
+          txCaptionCtr.text = fillerNameCtr.text.toUpperCase();
           fillerNameCtr.text = fillerNameCtr.text.capitalizeFirst!;
           await retrievRecord(text: fillerNameCtr.text.trim());
           closeDialogIfOpen();
@@ -418,7 +448,7 @@ class FillerMasterController extends GetxController {
             if (tempModel2.eom != null) {
               eomCtr.text = tempModel2.eom.toString();
             }
-            calculateDuration(showDialog: false);
+            calculateDuration();
 
             /// TAPE-TYPE
             var tapeTypeCode = onloadModel
@@ -682,7 +712,7 @@ class FillerMasterController extends GetxController {
         json: {
           "fillerCode": fillerCode,
           "fillerCaption": fillerNameCtr.text,
-          "fillerDuration": Utils.convertToSecond(value: durationCtr.text),
+          "fillerDuration": Utils.convertToSecond(value: duration.value),
           "fillerTypeCode": selectedDropDowns[4]?.key,
           "bannerCode": selectedDropDowns[2]?.key,
           "languageCode": selectedDropDowns[6]?.key,

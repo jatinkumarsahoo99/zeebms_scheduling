@@ -166,14 +166,14 @@ class SalesAuditNewController extends GetxController {
             .toString()
             .trim()) {
       gridStateManagerLeft?.rows[gridStateManagerLeft?.currentRowIdx ?? 0]
-          .cells['telecastTime']?.value = "";
+          .cells['telecastTime']?.value = " ";
       gridStateManagerLeft?.rows[gridStateManagerLeft?.currentRowIdx ?? 0]
           .cells['programCode']?.value = "";
       gridStateManagerLeft?.rows[gridStateManagerLeft?.currentRowIdx ?? 0]
-          .cells['rowNumber']?.value = "";
+          .cells['rowNumber']?.value = " ";
 
       gridStateManagerRight?.rows[gridStateManagerRight?.currentRowIdx ?? 0]
-          .cells['bookingNumber']?.value = "";
+          .cells['bookingNumber']?.value = " ";
       gridStateManagerRight?.rows[gridStateManagerRight?.currentRowIdx ?? 0]
           .cells['bookingDetailCode']?.value = 0;
       gridStateManagerLeft?.notifyListeners();
@@ -187,7 +187,7 @@ class SalesAuditNewController extends GetxController {
         gridStateManagerLeft?.rows[gridStateManagerLeft?.currentRowIdx ?? 0]
             .cells['programCode']?.value = "";
         gridStateManagerLeft?.rows[gridStateManagerLeft?.currentRowIdx ?? 0]
-            .cells['rowNumber']?.value = "";
+            .cells['rowNumber']?.value = " ";
         gridStateManagerLeft?.notifyListeners();
       }, cancel: () {
         Get.back();
@@ -321,8 +321,7 @@ class SalesAuditNewController extends GetxController {
       } else if (showError.value == true) {
         gridStateManagerLeft?.setFilter((element) => true);
         gridStateManagerLeft?.setFilter((e) =>
-            e.cells['bookingStatus']?.value.toString().trim().toLowerCase() !=
-            "c");
+            e.cells['bookingStatus']?.value.toString().trim().toLowerCase() != "c");
         gridStateManagerRight?.setFilter((element) => true);
         gridStateManagerLeft?.notifyListeners();
         gridStateManagerRight?.notifyListeners();
@@ -1101,17 +1100,15 @@ class SalesAuditNewController extends GetxController {
         gridStateManagerRight?.setFilter((element) => true);
 
         gridStateManagerLeft?.setFilter((e) =>
-            (e.cells['telecastTime']?.value == null ||
+            (e.cells['telecastTime']?.value == null || e.cells['telecastTime']?.value == "null" ||
                 e.cells['telecastTime']?.value
                         .toString()
-                        .trim()
                         .toLowerCase() ==
                     ""));
         gridStateManagerRight?.setFilter((e) =>
-            (e.cells['bookingNumber']?.value == null ||
+            (e.cells['bookingNumber']?.value == null || e.cells['bookingNumber']?.value == "null" ||
                 e.cells['bookingNumber']?.value
                         .toString()
-                        .trim()
                         .toLowerCase() ==
                     ""));
         gridStateManagerLeft?.notifyListeners();
@@ -1122,17 +1119,15 @@ class SalesAuditNewController extends GetxController {
         gridStateManagerLeft?.setFilter((e) =>
             (e.cells['bookingStatus']?.value.toString().trim().toLowerCase() !=
                     "c" &&
-                (e.cells['telecastTime']?.value == null ||
+                (e.cells['telecastTime']?.value == null || e.cells['telecastTime']?.value == "null"  ||
                     e.cells['telecastTime']?.value
                             .toString()
-                            .trim()
                             .toLowerCase() ==
                         "")));
         gridStateManagerRight?.setFilter((e) =>
-            (e.cells['bookingNumber']?.value == null ||
+            (e.cells['bookingNumber']?.value == null || e.cells['bookingNumber']?.value == "null"  ||
                 e.cells['bookingNumber']?.value
                         .toString()
-                        .trim()
                         .toLowerCase() ==
                     ""));
         gridStateManagerLeft?.notifyListeners();
@@ -1143,18 +1138,16 @@ class SalesAuditNewController extends GetxController {
         gridStateManagerLeft?.setFilter((e) =>
             (e.cells['bookingStatus']?.value.toString().trim().toLowerCase() !=
                     "e" &&
-                (e.cells['telecastTime']?.value == null ||
+                (e.cells['telecastTime']?.value == null || e.cells['telecastTime']?.value == "null" ||
                     e.cells['telecastTime']?.value
                             .toString()
-                            .trim()
                             .toLowerCase() ==
                         "")));
 
         gridStateManagerRight?.setFilter((e) =>
-            (e.cells['bookingNumber']?.value == null ||
+            (e.cells['bookingNumber']?.value == null || e.cells['bookingNumber']?.value == "null"  ||
                 e.cells['bookingNumber']?.value
                         .toString()
-                        .trim()
                         .toLowerCase() ==
                     ""));
         gridStateManagerLeft?.notifyListeners();
@@ -1167,21 +1160,19 @@ class SalesAuditNewController extends GetxController {
                         "e" &&
                     e.cells['bookingStatus']?.value
                             .toString()
-                            .trim()
                             .toLowerCase() !=
                         "c") &&
-                (e.cells['telecastTime']?.value == null ||
+                (e.cells['telecastTime']?.value == null || e.cells['telecastTime']?.value == "null"  ||
                     e.cells['telecastTime']?.value
                             .toString()
-                            .trim()
                             .toLowerCase() ==
                         "")));
 
         gridStateManagerRight?.setFilter((e) =>
             (e.cells['bookingNumber']?.value == null ||
+                e.cells['bookingNumber']?.value == "null"  ||
                 e.cells['bookingNumber']?.value
                         .toString()
-                        .trim()
                         .toLowerCase() ==
                     ""));
         gridStateManagerLeft?.notifyListeners();
