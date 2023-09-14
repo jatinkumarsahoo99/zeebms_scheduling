@@ -77,13 +77,22 @@ class NewShortContentFormView extends StatelessWidget {
                   ),
                   Obx(
                     () => DropDownField.formDropDown1WidthMap(
-                        controller.categeroies.value, (value) {
-                      controller.selectedCategory.value = value;
-                      controller.categoryFocusNode.requestFocus();
-                    }, "Category", .24,
-                        inkWellFocusNode: controller.categoryFocusNode,
-                        autoFocus: true,
-                        selected: controller.selectedCategory.value),
+                      controller.categeroies.value,
+                      (value) {
+                        controller.selectedCategory.value = value;
+                        controller.categoryFocusNode.requestFocus();
+                        // print("Key: ${controller.selectedCategory.value!.key}");
+                      },
+                      "Category",
+                      .24,
+                      inkWellFocusNode: controller.categoryFocusNode,
+                      autoFocus: true,
+                      selected: controller.selectedCategory.value,
+                      isEnable: controller.selectedType.value?.value ==
+                              "Vignette Master"
+                          ? false
+                          : true,
+                    ),
                   ),
                   InputFields.formField1(
                       hintTxt: "Caption",
@@ -125,6 +134,7 @@ class NewShortContentFormView extends StatelessWidget {
                       inkWellFocusNode: controller.orgFocusNode,
                       selected: controller.selectedOrgRep.value,
                       autoFocus: true,
+                      dialogHeight: 250,
                       isEnable:
                           controller.selectedType.value?.value == "Still Master"
                               ? false
