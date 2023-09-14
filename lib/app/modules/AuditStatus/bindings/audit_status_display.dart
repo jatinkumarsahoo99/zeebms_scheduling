@@ -125,37 +125,69 @@ class LstReshedule {
     programcode = json['programcode'];
   }
 
-  Map<String, dynamic> toJson() {
+  Map<String, dynamic> toJson({bool fromSave = true}) {
     final Map<String, dynamic> data = Map<String, dynamic>();
-    data['auditStatus'] = auditStatus;
-    data['rescheduleNo'] = rescheduleNo;
-    data['audited'] = audited;
-    data['rowNumber'] = rowNumber;
-    data['scheduleDate'] = scheduleDate;
-    data['programName'] = programName;
-    data['startTime'] = startTime;
-    data['endTime'] = endTime;
-    data['tapeCode'] = tapeCode;
-    data['segmentNumber'] = segmentNumber;
-    data['commercialCaption'] = commercialCaption;
-    data['tapeDuration'] = tapeDuration;
-    data['spotAmount'] = spotAmount;
-    data['totalspots'] = totalspots;
-    data['dealNo'] = dealNo;
-    data['dealRowNumber'] = dealRowNumber;
-    data['bookingDetailCode'] = bookingDetailCode;
-    data['spotPositionTypeName'] = spotPositionTypeName;
-    data['positionName'] = positionName;
-    data['breakNumber'] = breakNumber;
-    data['auditedby'] = auditedby;
-    data['auditedon'] = auditedon;
-    data['midPre'] = midPre;
-    data['positionCode'] = positionCode;
-    data['locationCode'] = locationCode;
-    data['channelCode'] = channelCode;
-    data['bookingNumber'] = bookingNumber;
-    data['commercialCode'] = commercialCode;
-    data['programcode'] = programcode;
+    if (fromSave) {
+      data['auditStatus'] = auditStatus;
+      data['rescheduleNo'] = rescheduleNo;
+      data['audited'] = audited;
+      data['rowNumber'] = rowNumber;
+      data['scheduleDate'] = scheduleDate;
+      data['programName'] = programName;
+      data['startTime'] = startTime;
+      data['endTime'] = endTime;
+      data['tapeCode'] = tapeCode;
+      data['segmentNumber'] = segmentNumber;
+      data['commercialCaption'] = commercialCaption;
+      data['tapeDuration'] = tapeDuration;
+      data['spotAmount'] = spotAmount;
+      data['totalspots'] = totalspots;
+      data['dealNo'] = dealNo;
+      data['dealRowNumber'] = dealRowNumber;
+      data['bookingDetailCode'] = bookingDetailCode;
+      data['spotPositionTypeName'] = spotPositionTypeName;
+      data['positionName'] = positionName;
+      data['breakNumber'] = breakNumber;
+      data['auditedby'] = auditedby;
+      data['auditedon'] = auditedon;
+      data['midPre'] = midPre;
+      data['positionCode'] = positionCode;
+      data['locationCode'] = locationCode;
+      data['channelCode'] = channelCode;
+      data['bookingNumber'] = bookingNumber;
+      data['commercialCode'] = commercialCode;
+      data['programcode'] = programcode;
+    } else {
+      data['auditStatus'] = (auditStatus ?? false).toString();
+      data['rescheduleNo'] = rescheduleNo;
+      data['audited'] = audited;
+      data['rowNumber'] = rowNumber;
+      data['scheduleDate'] = scheduleDate;
+      data['programName'] = programName;
+      data['startTime'] = startTime;
+      data['endTime'] = endTime;
+      data['tapeCode'] = tapeCode;
+      data['segmentNumber'] = segmentNumber;
+      data['commercialCaption'] = commercialCaption;
+      data['tapeDuration'] = tapeDuration;
+      data['spotAmount'] = spotAmount;
+      data['totalspots'] = totalspots;
+      data['dealNo'] = dealNo;
+      data['dealRowNumber'] = dealRowNumber;
+      data['bookingDetailCode'] = bookingDetailCode;
+      data['spotPositionTypeName'] = spotPositionTypeName;
+      data['positionName'] = positionName;
+      data['breakNumber'] = breakNumber;
+      data['auditedby'] = auditedby;
+      data['auditedon'] = auditedon;
+      data['midPre'] = midPre;
+      data['positionCode'] = positionCode;
+      data['locationCode'] = locationCode;
+      data['channelCode'] = channelCode;
+      data['bookingNumber'] = bookingNumber;
+      data['commercialCode'] = commercialCode;
+      data['programcode'] = programcode;
+    }
     return data;
   }
 }

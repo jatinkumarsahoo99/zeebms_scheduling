@@ -199,7 +199,7 @@ class DataGridFromMap extends StatelessWidget {
           //     ),
           //   );
           // },
-          type: PlutoColumnType.text() ));
+          type: PlutoColumnType.text()));
     }
     if (showonly != null && showonly!.isNotEmpty) {
       for (var key in showonly!) {
@@ -552,7 +552,7 @@ class DataGridFromMap3 extends StatelessWidget {
     this.actionIcons,
     this.keyMapping,
     this.actionIconKey,
-    this.columnAutoResize = true,
+    this.columnAutoResize = false,
     this.actionOnPress,
     this.onSelected,
     this.checkRowKey = "selected",
@@ -1461,41 +1461,41 @@ class DataGridFromMap5 extends StatelessWidget {
   final bool canShowFilter;
   DataGridFromMap5(
       {Key? key,
-        required this.mapData,
-        this.canShowFilter = true,
-        this.colorCallback,
-        this.showSrNo = true,
-        this.hideCode = true,
-        this.widthRatio,
-        this.showonly,
-        this.enableSort = false,
-        this.onload,
-        this.hideKeys,
-        this.mode,
-        this.editKeys,
-        this.onEdit,
-        this.actionIcon,
-        this.keyMapping,
-        this.actionIconKey,
-        this.columnAutoResize = false,
-        this.actionOnPress,
-        this.onSelected,
-        this.onRowCheck,
-        this.onContextMenuClick,
-        this.checkRowKey = "selected",
-        this.onRowDoubleTap,
-        this.formatDate = true,
-        this.dateFromat = "dd-MM-yyyy",
-        this.onFocusChange,
-        this.checkRow,
-        this.doPasccal = true,
-        this.exportFileName,
-        this.focusNode,
-        this.previousWidgetFN,
-        this.witdthSpecificColumn,
-        this.enableAutoEditing = false,
-        this.removeKeysFromFile,
-        this.csvFormat = false})
+      required this.mapData,
+      this.canShowFilter = true,
+      this.colorCallback,
+      this.showSrNo = true,
+      this.hideCode = true,
+      this.widthRatio,
+      this.showonly,
+      this.enableSort = false,
+      this.onload,
+      this.hideKeys,
+      this.mode,
+      this.editKeys,
+      this.onEdit,
+      this.actionIcon,
+      this.keyMapping,
+      this.actionIconKey,
+      this.columnAutoResize = false,
+      this.actionOnPress,
+      this.onSelected,
+      this.onRowCheck,
+      this.onContextMenuClick,
+      this.checkRowKey = "selected",
+      this.onRowDoubleTap,
+      this.formatDate = true,
+      this.dateFromat = "dd-MM-yyyy",
+      this.onFocusChange,
+      this.checkRow,
+      this.doPasccal = true,
+      this.exportFileName,
+      this.focusNode,
+      this.previousWidgetFN,
+      this.witdthSpecificColumn,
+      this.enableAutoEditing = false,
+      this.removeKeysFromFile,
+      this.csvFormat = false})
       : super(key: key);
   final List mapData;
   bool enableSort;
@@ -1561,7 +1561,7 @@ class DataGridFromMap5 extends StatelessWidget {
           enableContextMenu: false,
           minWidth: 0,
           width: (witdthSpecificColumn != null &&
-              witdthSpecificColumn!.keys.toList().contains('no'))
+                  witdthSpecificColumn!.keys.toList().contains('no'))
               ? witdthSpecificColumn!['no']!
               : Utils.getColumnSize(key: 'no', value: mapData[0][key]),
           enableAutoEditing: false,
@@ -1576,23 +1576,24 @@ class DataGridFromMap5 extends StatelessWidget {
             return GestureDetector(
               onSecondaryTapDown: canShowFilter
                   ? (detail) {
-                if (onContextMenuClick == null) {
-                  rendererContext.stateManager;
-                  DataGridMenu().showGridMenu(
-                      rendererContext.stateManager, detail, context,
-                      exportFileName: exportFileName,
-                      csvFormat: csvFormat ?? false,removeKeysFromFile: removeKeysFromFile);
-                } else {
-                  DataGridMenu().showGridCustomMenu(
-                      rendererContext.stateManager, detail, context,
-                      exportFileName: exportFileName,
-                      onPressedClick: onContextMenuClick,
-                      plutoContext: rendererContext);
-                }
-              }
+                      if (onContextMenuClick == null) {
+                        rendererContext.stateManager;
+                        DataGridMenu().showGridMenu(
+                            rendererContext.stateManager, detail, context,
+                            exportFileName: exportFileName,
+                            csvFormat: csvFormat ?? false,
+                            removeKeysFromFile: removeKeysFromFile);
+                      } else {
+                        DataGridMenu().showGridCustomMenu(
+                            rendererContext.stateManager, detail, context,
+                            exportFileName: exportFileName,
+                            onPressedClick: onContextMenuClick,
+                            plutoContext: rendererContext);
+                      }
+                    }
                   : null,
               child: Container(
-                // height: 25,
+                  // height: 25,
                   height: double.infinity,
                   // width: Utils.getColumnSize1(key: key, value: mapData[0][key]),
                   // padding: EdgeInsets.only(
@@ -1600,7 +1601,7 @@ class DataGridFromMap5 extends StatelessWidget {
                   // ),
                   decoration: BoxDecoration(
                       border:
-                      Border.all(color: Colors.transparent, width: 0.01),
+                          Border.all(color: Colors.transparent, width: 0.01),
                       borderRadius: BorderRadius.circular(1),
                       color: Colors.white),
                   alignment: Alignment.center,
@@ -1642,7 +1643,7 @@ class DataGridFromMap5 extends StatelessWidget {
           //     ),
           //   );
           // },
-          type: PlutoColumnType.text() ));
+          type: PlutoColumnType.text()));
     }
     if (showonly != null && showonly!.isNotEmpty) {
       for (var key in showonly!) {
@@ -1651,15 +1652,15 @@ class DataGridFromMap5 extends StatelessWidget {
               minWidth: 0,
               title: doPasccal
                   ? keyMapping != null
-                  ? keyMapping!.containsKey(key)
-                  ? keyMapping![key]
-                  : key == "fpcCaption"
-                  ? "FPC Caption"
-                  : key.toString().pascalCaseToNormal()
-                  : key.toString().pascalCaseToNormal()
+                      ? keyMapping!.containsKey(key)
+                          ? keyMapping![key]
+                          : key == "fpcCaption"
+                              ? "FPC Caption"
+                              : key.toString().pascalCaseToNormal()
+                      : key.toString().pascalCaseToNormal()
                   : key.toString(),
               enableRowChecked:
-              (checkRow == true && key == checkRowKey) ? true : false,
+                  (checkRow == true && key == checkRowKey) ? true : false,
               renderer: ((rendererContext) {
                 if (actionIconKey != null && key == actionIconKey) {
                   return GestureDetector(
@@ -1675,19 +1676,20 @@ class DataGridFromMap5 extends StatelessWidget {
                   return GestureDetector(
                     onSecondaryTapDown: canShowFilter
                         ? (detail) {
-                      if (onContextMenuClick == null) {
-                        DataGridMenu().showGridMenu(
-                            rendererContext.stateManager, detail, context,
-                            exportFileName: exportFileName,
-                            csvFormat: csvFormat ?? false,removeKeysFromFile: removeKeysFromFile);
-                      } else {
-                        DataGridMenu().showGridCustomMenu(
-                            rendererContext.stateManager, detail, context,
-                            exportFileName: exportFileName,
-                            onPressedClick: onContextMenuClick,
-                            plutoContext: rendererContext);
-                      }
-                    }
+                            if (onContextMenuClick == null) {
+                              DataGridMenu().showGridMenu(
+                                  rendererContext.stateManager, detail, context,
+                                  exportFileName: exportFileName,
+                                  csvFormat: csvFormat ?? false,
+                                  removeKeysFromFile: removeKeysFromFile);
+                            } else {
+                              DataGridMenu().showGridCustomMenu(
+                                  rendererContext.stateManager, detail, context,
+                                  exportFileName: exportFileName,
+                                  onPressedClick: onContextMenuClick,
+                                  plutoContext: rendererContext);
+                            }
+                          }
                         : null,
                     child: Text(
                       (rendererContext.cell.value ?? "").toString(),
@@ -1706,15 +1708,15 @@ class DataGridFromMap5 extends StatelessWidget {
               enableDropToResize: true,
               enableContextMenu: false,
               width: (witdthSpecificColumn != null &&
-                  witdthSpecificColumn!.keys.toList().contains(key))
+                      witdthSpecificColumn!.keys.toList().contains(key))
                   ? witdthSpecificColumn![key]!
                   : Utils.getColumnSize(key: key, value: mapData[0][key]),
               enableAutoEditing: false,
               hide: showonly == null
                   ? (hideKeys != null && hideKeys!.contains(key)) ||
-                  hideCode! &&
-                      key.toString().toLowerCase() != "hourcode" &&
-                      key.toString().toLowerCase().contains("code")
+                      hideCode! &&
+                          key.toString().toLowerCase() != "hourcode" &&
+                          key.toString().toLowerCase().contains("code")
                   : !showonly!.contains(key),
               enableColumnDrag: false,
               field: key,
@@ -1727,15 +1729,15 @@ class DataGridFromMap5 extends StatelessWidget {
             titlePadding: EdgeInsets.only(),
             title: doPasccal
                 ? keyMapping != null
-                ? keyMapping!.containsKey(key)
-                ? keyMapping![key]
-                : key == "fpcCaption"
-                ? "FPC Caption"
-                : key.toString().pascalCaseToNormal()
-                : key.toString().pascalCaseToNormal()
+                    ? keyMapping!.containsKey(key)
+                        ? keyMapping![key]
+                        : key == "fpcCaption"
+                            ? "FPC Caption"
+                            : key.toString().pascalCaseToNormal()
+                    : key.toString().pascalCaseToNormal()
                 : key.toString(),
             enableRowChecked:
-            (checkRow == true && key == checkRowKey) ? true : false,
+                (checkRow == true && key == checkRowKey) ? true : false,
             renderer: ((rendererContext) {
               if (actionIconKey != null) {
                 if (key == actionIconKey) {
@@ -1753,19 +1755,20 @@ class DataGridFromMap5 extends StatelessWidget {
                   return GestureDetector(
                     onSecondaryTapDown: canShowFilter
                         ? (detail) {
-                      if (onContextMenuClick == null) {
-                        DataGridMenu().showGridMenu(
-                            rendererContext.stateManager, detail, context,
-                            exportFileName: exportFileName,
-                            csvFormat: csvFormat ?? false,removeKeysFromFile: removeKeysFromFile);
-                      } else {
-                        DataGridMenu().showGridCustomMenu(
-                            rendererContext.stateManager, detail, context,
-                            exportFileName: exportFileName,
-                            onPressedClick: onContextMenuClick,
-                            plutoContext: rendererContext);
-                      }
-                    }
+                            if (onContextMenuClick == null) {
+                              DataGridMenu().showGridMenu(
+                                  rendererContext.stateManager, detail, context,
+                                  exportFileName: exportFileName,
+                                  csvFormat: csvFormat ?? false,
+                                  removeKeysFromFile: removeKeysFromFile);
+                            } else {
+                              DataGridMenu().showGridCustomMenu(
+                                  rendererContext.stateManager, detail, context,
+                                  exportFileName: exportFileName,
+                                  onPressedClick: onContextMenuClick,
+                                  plutoContext: rendererContext);
+                            }
+                          }
                         : null,
                     child: Text(
                       rendererContext.cell.value.toString(),
@@ -1779,10 +1782,10 @@ class DataGridFromMap5 extends StatelessWidget {
                   );
                 }
               } else if (GetInstance()
-                  .isRegistered<TransmissionLogController>() &&
+                      .isRegistered<TransmissionLogController>() &&
                   Get.find<TransmissionLogController>().tsListData != null &&
                   ((Get.find<TransmissionLogController>().tsListData?.length ??
-                      0) >
+                          0) >
                       0)) {
                 bool isColorRed = false;
                 int intPromoCap =
@@ -1791,35 +1794,35 @@ class DataGridFromMap5 extends StatelessWidget {
                     Get.find<TransmissionLogController>().tsCommercialCap.value;
                 if (key == "promoDuration") {
                   if (num.tryParse(rendererContext
-                      .row.cells["promoDuration"]?.value
-                      .toString() ??
-                      "0")! >
+                              .row.cells["promoDuration"]?.value
+                              .toString() ??
+                          "0")! >
                       intPromoCap / 60.0) {
                     isColorRed = true;
                   }
                 }
                 if (key == "commercialduration") {
                   if (num.tryParse(rendererContext
-                      .row.cells["commercialduration"]?.value
-                      .toString() ??
-                      "0")! >
+                              .row.cells["commercialduration"]?.value
+                              .toString() ??
+                          "0")! >
                       intCommercialCap / 60.0) {
                     isColorRed = true;
                   }
                 }
                 if (key == "totaladd") {
                   if (num.tryParse(rendererContext.row.cells["totaladd"]?.value
-                      .toString() ??
-                      "0")! >
+                              .toString() ??
+                          "0")! >
                       (intCommercialCap + intPromoCap) / 60.0) {
                     isColorRed = true;
                   }
                 }
                 if (key == "Commercial & Promo") {
                   if (num.tryParse(rendererContext
-                      .row.cells["Commercial & Promo"]?.value
-                      .toString() ??
-                      "0")! >
+                              .row.cells["Commercial & Promo"]?.value
+                              .toString() ??
+                          "0")! >
                       (intCommercialCap + intPromoCap) / 60.0) {
                     isColorRed = true;
                   }
@@ -1827,10 +1830,11 @@ class DataGridFromMap5 extends StatelessWidget {
                 return GestureDetector(
                   onSecondaryTapDown: canShowFilter
                       ? (detail) {
-                    DataGridMenu().showGridMenu(
-                        rendererContext.stateManager, detail, context,
-                        csvFormat: csvFormat ?? false,removeKeysFromFile: removeKeysFromFile);
-                  }
+                          DataGridMenu().showGridMenu(
+                              rendererContext.stateManager, detail, context,
+                              csvFormat: csvFormat ?? false,
+                              removeKeysFromFile: removeKeysFromFile);
+                        }
                       : null,
                   child: Container(
                     height: 25,
@@ -1839,7 +1843,7 @@ class DataGridFromMap5 extends StatelessWidget {
                     ),
                     decoration: BoxDecoration(
                       border:
-                      Border.all(color: Colors.transparent, width: 0.01),
+                          Border.all(color: Colors.transparent, width: 0.01),
                       borderRadius: BorderRadius.circular(1),
                       color: isColorRed ? Colors.red : null,
                     ),
@@ -1852,10 +1856,10 @@ class DataGridFromMap5 extends StatelessWidget {
                       style: TextStyle(
                           fontSize: SizeDefine.columnTitleFontSize,
                           fontWeight: rendererContext
-                              .row.cells["modifed"]?.value
-                              .toString()
-                              .toLowerCase() ==
-                              "y"
+                                      .row.cells["modifed"]?.value
+                                      .toString()
+                                      .toLowerCase() ==
+                                  "y"
                               ? FontWeight.bold
                               : FontWeight.normal),
                     ),
@@ -1865,19 +1869,20 @@ class DataGridFromMap5 extends StatelessWidget {
                 return GestureDetector(
                   onSecondaryTapDown: canShowFilter
                       ? (detail) {
-                    if (onContextMenuClick == null) {
-                      DataGridMenu().showGridMenu(
-                          rendererContext.stateManager, detail, context,
-                          exportFileName: exportFileName,
-                          csvFormat: csvFormat ?? false,removeKeysFromFile: removeKeysFromFile);
-                    } else {
-                      DataGridMenu().showGridCustomMenu(
-                          rendererContext.stateManager, detail, context,
-                          exportFileName: exportFileName,
-                          onPressedClick: onContextMenuClick,
-                          plutoContext: rendererContext);
-                    }
-                  }
+                          if (onContextMenuClick == null) {
+                            DataGridMenu().showGridMenu(
+                                rendererContext.stateManager, detail, context,
+                                exportFileName: exportFileName,
+                                csvFormat: csvFormat ?? false,
+                                removeKeysFromFile: removeKeysFromFile);
+                          } else {
+                            DataGridMenu().showGridCustomMenu(
+                                rendererContext.stateManager, detail, context,
+                                exportFileName: exportFileName,
+                                onPressedClick: onContextMenuClick,
+                                plutoContext: rendererContext);
+                          }
+                        }
                       : null,
                   child: Text(
                     rendererContext.cell.value.toString(),
@@ -1897,15 +1902,15 @@ class DataGridFromMap5 extends StatelessWidget {
             enableContextMenu: false,
             minWidth: 0,
             width: (witdthSpecificColumn != null &&
-                witdthSpecificColumn!.keys.toList().contains(key))
+                    witdthSpecificColumn!.keys.toList().contains(key))
                 ? witdthSpecificColumn![key]!
                 : Utils.getColumnSize(key: key, value: mapData[0][key]),
             enableAutoEditing: enableAutoEditing,
             hide: showonly == null
                 ? (hideKeys != null && hideKeys!.contains(key)) ||
-                hideCode! &&
-                    key.toString().toLowerCase() != "hourcode" &&
-                    key.toString().toLowerCase().contains("code")
+                    hideCode! &&
+                        key.toString().toLowerCase() != "hourcode" &&
+                        key.toString().toLowerCase().contains("code")
                 : !showonly!.contains(key),
             enableColumnDrag: false,
             field: key,
@@ -1926,10 +1931,10 @@ class DataGridFromMap5 extends StatelessWidget {
             value: element.key == "selected" || element.value == null
                 ? ""
                 : element.key.toString().toLowerCase().contains("date") &&
-                formatDate!
-                ? DateFormat(dateFromat).format(DateTime.parse(
-                element.value.toString().replaceAll("T", " ")))
-                : element.value.toString(),
+                        formatDate!
+                    ? DateFormat(dateFromat).format(DateTime.parse(
+                        element.value.toString().replaceAll("T", " ")))
+                    : element.value.toString(),
           );
         }
         segRows.add(PlutoRow(cells: cells, sortIdx: i));
