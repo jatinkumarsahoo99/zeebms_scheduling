@@ -252,8 +252,8 @@ class NewShortContentFormController extends GetxController {
                   (data["Stilltype"] ?? "").toString().toLowerCase());
               som.text = data["SOM"];
               eom.text = data["EOM"];
-              duration.value = Utils.getDurationSecond(
-                  second: int.tryParse(
+              duration.value = Utils.convertToTimeFromDouble(
+                  value: int.tryParse(
                           data["StillDuration"].toString().split(".")[0]) ??
                       0);
               selectedProgram.value = DropDownValue(
@@ -285,8 +285,8 @@ class NewShortContentFormController extends GetxController {
               som.text = data["SOM"];
 
               eom.text = data["EOM"] ?? "00:00:00:00";
-              duration.value = Utils.getDurationSecond(
-                  second: int.tryParse(data["ExportTapeDuration"]
+              duration.value = Utils.convertToTimeFromDouble(
+                  value: int.tryParse(data["ExportTapeDuration"]
                           .toString()
                           .split(".")[0]) ??
                       0);
@@ -315,8 +315,8 @@ class NewShortContentFormController extends GetxController {
               );
               som.text = data["SOM"];
               eom.text = data["EOM"];
-              duration.value = Utils.getDurationSecond(
-                  second: int.tryParse(
+              duration.value = Utils.convertToTimeFromDouble(
+                  value: int.tryParse(
                           data["VignetteDuration"].toString().split(".")[0]) ??
                       0);
               remark.text = data["remarks"];

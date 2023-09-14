@@ -448,7 +448,7 @@ class FillerMasterController extends GetxController {
             if (tempModel2.eom != null) {
               eomCtr.text = tempModel2.eom.toString();
             }
-            // calculateDuration(showDialog: false);
+            calculateDuration();
 
             /// TAPE-TYPE
             var tapeTypeCode = onloadModel
