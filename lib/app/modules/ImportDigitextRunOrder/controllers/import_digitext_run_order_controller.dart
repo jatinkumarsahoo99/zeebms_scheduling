@@ -91,6 +91,7 @@ class ImportDigitextRunOrderController extends GetxController {
           api: ApiFactory.IMPORT_DIGITEX_RUN_ORDER_CHANNEL(locationCode),
           fun: (data) {
             if (data is List) {
+              selectedChannel = null;
               channels.value = data
                   .map((e) => DropDownValue(
                       key: e["channelCode"], value: e["channelName"]))
