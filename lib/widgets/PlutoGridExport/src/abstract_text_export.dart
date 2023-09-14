@@ -21,14 +21,16 @@ abstract class AbstractTextExport<T> {
     // visibleColumns(state).map((e) =>   e.title).toList();
     if (removeKeysFromFile != null && removeKeysFromFile.isNotEmpty) {
       for (var value in visibleColumns(state)) {
+        print(">>>>>>>>>>>>>>>value.title"+value.title.toString());
         if (removeKeysFromFile.contains(value.title)) {
           continue;
         }
         data.add(value.title);
       }
-      return data;
+      return [data.join(",")];
     } else {
-      return visibleColumns(state).map((e) => e.title).toList();
+      String data = visibleColumns(state).map((e) => e.title).toList().join(", ");
+      return [data];
     }
   }
 
@@ -66,7 +68,7 @@ abstract class AbstractTextExport<T> {
         : state.refRows.originalList;
 
     for (var plutoRow in rowsToExport) {
-      outputRows.add(mapPlutoRowToList2(state, plutoRow));
+      outputRows.add(mapPlutoRowToList2(state, plutoRow,removeKeysFromFile: removeKeysFromFile));
     }
 
     return outputRows;
@@ -125,7 +127,7 @@ abstract class AbstractTextExport<T> {
           .add(value != null ? column.formattedValueForDisplay(value) : null);
     }
 
-    return serializedRow;
+    return [serializedRow.join(", ")];
   }
 
   List<String?> mapPlutoRowToList1(

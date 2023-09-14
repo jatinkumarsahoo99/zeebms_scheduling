@@ -255,7 +255,7 @@ class SalesAuditNewView  extends StatelessWidget  {
                                             formatDate: false,
                                             exportFileName: "Sales Audit New",
                                             csvFormat: true,
-                                            removeKeysFromFile: ['Booking Status'],
+                                            removeKeysFromFile: ['Booking Status','bookingStatus'],
                                             onRowDoubleTap: (PlutoGridOnRowDoubleTapEvent? val){
                                                   print(">>>>>>>>"+val!.rowIdx .toString());
                                                   controller.tapeBtn(leftIndex: val.rowIdx,rightIndex: controller.gridStateManagerRight?.currentRowIdx);
@@ -268,7 +268,8 @@ class SalesAuditNewView  extends StatelessWidget  {
                                               }
                                               else if(colorData.row.cells['telecastTime']!.value != "" &&
                                                   colorData.row.cells['telecastTime']!.value != null &&
-                                                  colorData.row.cells['telecastTime']!.value != "null"
+                                                  colorData.row.cells['telecastTime']!.value != "null" &&
+                                                  colorData.row.cells['telecastTime']!.value != " "
                                               ){
                                                 color = Colors.greenAccent;
                                               }
@@ -358,7 +359,8 @@ class SalesAuditNewView  extends StatelessWidget  {
                                                     color = Color(0xFFD1C4E9);
                                                   }else if(colorData.row.cells['bookingNumber']!.value != "" &&
                                                       colorData.row.cells['bookingNumber']!.value != null &&
-                                                      colorData.row.cells['bookingNumber']!.value != "null"
+                                                      colorData.row.cells['bookingNumber']!.value != "null" &&
+                                                      colorData.row.cells['bookingNumber']!.value != " "
                                                   ){
                                                     color = Colors.greenAccent;
                                                   }else{
