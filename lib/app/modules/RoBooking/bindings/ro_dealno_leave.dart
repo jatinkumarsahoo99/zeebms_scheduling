@@ -2,7 +2,7 @@ import 'ro_booking_bkg_data.dart';
 
 class RoBookingDealNoLeave {
   int? intPDCReqd;
-  String? message;
+  List<String>? message;
   String? dealFromDate;
   String? dealtoDate;
   String? dealType;
@@ -32,7 +32,11 @@ class RoBookingDealNoLeave {
 
   RoBookingDealNoLeave.fromJson(Map<String, dynamic> json) {
     intPDCReqd = json['intPDCReqd'];
-    message = json['message'];
+    if (json['message'] != null) {
+      message = [];
+      message = json['message'].cast<String>();
+    }
+    // message = json['message'];
     dealFromDate = json['dealFromDate'];
     dealtoDate = json['dealtoDate'];
     dealType = json['dealType'];
@@ -66,7 +70,8 @@ class RoBookingDealNoLeave {
     data['payMode'] = payMode;
     data['maxSpend'] = maxSpend;
     if (lstdgvDealDetails != null) {
-      data['lstdgvDealDetails'] = lstdgvDealDetails!.map((v) => v.toJson()).toList();
+      data['lstdgvDealDetails'] =
+          lstdgvDealDetails!.map((v) => v.toJson()).toList();
     }
     data['lstdgvLinkedDeals'] = lstdgvLinkedDeals;
     data['previousBookedAmount'] = previousBookedAmount;

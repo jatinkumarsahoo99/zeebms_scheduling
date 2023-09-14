@@ -143,7 +143,7 @@ class ImportDigitextRunOrderController extends GetxController {
     } else {
       FilePickerResult? result = await FilePicker.platform.pickFiles(
           type: FileType.custom,
-          initialDirectory: "*08/08/2023 00:00:00*",
+          // initialDirectory: "*08/08/2023 00:00:00*",
           allowedExtensions: ["txt"]);
 
       if (result != null && result.files.single != null) {
@@ -266,7 +266,7 @@ class ImportDigitextRunOrderController extends GetxController {
   }
 
   saveRunOrder() {
-    if (importedFile.value == null) {
+    if (importedFile.value == null || importedFile.value?.bytes == null) {
       LoadingDialog.callErrorMessage1(msg: "Empty path name is legal.");
     } else if (selectedLocation == null || selectedChannel == null) {
       LoadingDialog.callErrorMessage1(msg: "Please Select Location & Channel.");
@@ -274,19 +274,23 @@ class ImportDigitextRunOrderController extends GetxController {
       LoadingDialog.call();
       dio.FormData formData = dio.FormData.fromMap({
         'ImportFile': dio.MultipartFile.fromBytes(
-          importedFile.value!.bytes!.toList(),
-          filename: importedFile.value!.name,
+          importedFile.value?.bytes?.toList() ?? [],
+          filename: importedFile.value?.name ?? '',
         )
       });
 
       Get.find<ConnectorControl>().POSTMETHOD_FORMDATA(
-          api: ApiFactory.IMPORT_DIGITEX_RUN_ORDER_SAVE(selectedLocation!.key,
-              selectedChannel!.key, df2.format(df1.parse(scheduleDate.text))),
+          api: ApiFactory.IMPORT_DIGITEX_RUN_ORDER_SAVE(
+            selectedLocation?.key ?? '',
+            selectedChannel?.key ?? '',
+            DateFormat('yyyy-MM-dd')
+                .format(DateFormat('dd-MM-yyyy').parse(scheduleDate.text)),
+          ),
           json: formData,
           fun: (value) {
             Get.back();
             try {
-              LoadingDialog.callErrorMessage1(msg: value);
+              LoadingDialog.callErrorMessage1(msg: value.toString());
             } catch (e) {
               LoadingDialog.callErrorMessage1(msg: "Failed To Import File");
             }

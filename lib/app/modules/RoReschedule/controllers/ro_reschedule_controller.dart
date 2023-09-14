@@ -361,16 +361,18 @@ class RoRescheduleController extends GetxController {
                                           text: viewDoubleClickData.position),
                                       width: 0.14),
                                   DropDownField.formDropDown1WidthMap(
-                                      List.generate(
-                                          10,
-                                          (index) => DropDownValue(
-                                              value: (index + 1).toString(),
-                                              key: (index + 1).toString())),
-                                      (data) {},
-                                      selected:
-                                          DropDownValue(key: "1", value: "1"),
-                                      "Break",
-                                      0.09),
+                                    List.generate(
+                                        10,
+                                        (index) => DropDownValue(
+                                            value: (index + 1).toString(),
+                                            key: (index + 1).toString())),
+                                    (data) {},
+                                    selected:
+                                        DropDownValue(key: "1", value: "1"),
+                                    "Break",
+                                    0.09,
+                                    isEnable: false,
+                                  ),
                                   InputFields.formField1(
                                       isEnable: false,
                                       hintTxt: "Program",
@@ -729,7 +731,6 @@ class RoRescheduleController extends GetxController {
           if (data is Map && data.containsKey("info_AddSpots")) {
             if (data["info_AddSpots"].containsKey("addspot") &&
                 data["info_AddSpots"]["addspot"]) {
-              print("Parsing lstDgvRO");
               if (data["info_AddSpots"] is Map &&
                   data["info_AddSpots"].containsKey("lstDgvRO") &&
                   (data["info_AddSpots"]["lstDgvRO"] is List)) {
@@ -738,7 +739,6 @@ class RoRescheduleController extends GetxController {
                         .map((e) => LstDgvRO.fromJson(e))
                         .toList();
               }
-              print("Parsing lstTable");
               if (data["info_AddSpots"] is Map &&
                   data["info_AddSpots"].containsKey("lstTable") &&
                   (data["info_AddSpots"]["lstTable"] is List)) {
@@ -747,7 +747,6 @@ class RoRescheduleController extends GetxController {
                         .map((e) => LstTable.fromJson(e))
                         .toList();
               }
-              print("Parsing lstUpdateTable");
               if (data["info_AddSpots"] is Map &&
                   data["info_AddSpots"].containsKey("lstUpdateTable") &&
                   (data["info_AddSpots"]["lstUpdateTable"] is List)) {
@@ -756,8 +755,6 @@ class RoRescheduleController extends GetxController {
                         .map((e) => LstUpdateTable.fromJson(e))
                         .toList();
               }
-              print("Parsing lstdgvUpdated");
-
               if (data["info_AddSpots"] is Map &&
                   data["info_AddSpots"].containsKey("lstdgvUpdated") &&
                   (data["info_AddSpots"]["lstdgvUpdated"] is List)) {
