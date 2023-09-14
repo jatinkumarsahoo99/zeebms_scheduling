@@ -81,17 +81,13 @@ class NewShortContentFormView extends StatelessWidget {
                       (value) {
                         controller.selectedCategory.value = value;
                         controller.categoryFocusNode.requestFocus();
-                        // print("Key: ${controller.selectedCategory.value!.key}");
+                        print("Key: ${controller.selectedCategory.value!.key}");
                       },
                       "Category",
                       .24,
                       inkWellFocusNode: controller.categoryFocusNode,
                       autoFocus: true,
                       selected: controller.selectedCategory.value,
-                      isEnable: controller.selectedType.value?.value ==
-                              "Vignette Master"
-                          ? false
-                          : true,
                     ),
                   ),
                   InputFields.formField1(
