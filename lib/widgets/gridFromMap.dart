@@ -942,7 +942,8 @@ class DataGridFromMap4 extends StatelessWidget {
       this.previousWidgetFN,
       this.witdthSpecificColumn,
       this.csvFormat = false,
-      this.showOnlyCheckBox})
+      this.showOnlyCheckBox,
+      this.removeKeysFromFile})
       : super(key: key);
   final List mapData;
   bool enableSort;
@@ -957,6 +958,7 @@ class DataGridFromMap4 extends StatelessWidget {
   final String? dateFromat;
   final String? exportFileName;
   final List<String>? showonly;
+  final List<String>? removeKeysFromFile;
   final Function(PlutoGridOnRowDoubleTapEvent)? onRowDoubleTap;
   final Function(PlutoGridOnChangedEvent)? onEdit;
   final Function(bool)? onFocusChange;
@@ -1023,7 +1025,8 @@ class DataGridFromMap4 extends StatelessWidget {
                         DataGridMenu().showGridMenu(
                             rendererContext.stateManager, detail, context,
                             exportFileName: exportFileName,
-                            csvFormat: csvFormat ?? false);
+                            csvFormat: csvFormat ?? false,
+                            removeKeysFromFile: removeKeysFromFile);
                       } else {
                         DataGridMenu().showGridCustomMenu(
                             rendererContext.stateManager, detail, context,
@@ -1121,7 +1124,8 @@ class DataGridFromMap4 extends StatelessWidget {
                               DataGridMenu().showGridMenu(
                                   rendererContext.stateManager, detail, context,
                                   exportFileName: exportFileName,
-                                  csvFormat: csvFormat ?? false);
+                                  csvFormat: csvFormat ?? false,
+                                  removeKeysFromFile: removeKeysFromFile);
                             } else {
                               DataGridMenu().showGridCustomMenu(
                                   rendererContext.stateManager, detail, context,
@@ -1195,7 +1199,8 @@ class DataGridFromMap4 extends StatelessWidget {
                               DataGridMenu().showGridMenu(
                                   rendererContext.stateManager, detail, context,
                                   exportFileName: exportFileName,
-                                  csvFormat: csvFormat ?? false);
+                                  csvFormat: csvFormat ?? false,
+                                  removeKeysFromFile: removeKeysFromFile);
                             } else {
                               DataGridMenu().showGridCustomMenu(
                                   rendererContext.stateManager, detail, context,
@@ -1307,7 +1312,8 @@ class DataGridFromMap4 extends StatelessWidget {
                             DataGridMenu().showGridMenu(
                                 rendererContext.stateManager, detail, context,
                                 exportFileName: exportFileName,
-                                csvFormat: csvFormat ?? false);
+                                csvFormat: csvFormat ?? false,
+                                removeKeysFromFile: removeKeysFromFile);
                           } else {
                             DataGridMenu().showGridCustomMenu(
                                 rendererContext.stateManager, detail, context,
@@ -1348,7 +1354,8 @@ class DataGridFromMap4 extends StatelessWidget {
                             DataGridMenu().showGridMenu(
                                 rendererContext.stateManager, detail, context,
                                 exportFileName: exportFileName,
-                                csvFormat: csvFormat ?? false);
+                                csvFormat: csvFormat ?? false,
+                                removeKeysFromFile: removeKeysFromFile);
                           } else {
                             DataGridMenu().showGridCustomMenu(
                                 rendererContext.stateManager, detail, context,
