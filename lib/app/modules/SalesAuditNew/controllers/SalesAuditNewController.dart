@@ -506,10 +506,10 @@ class SalesAuditNewController extends GetxController {
           if (row.cells[key]?.value != null &&
               (row.cells[key]?.value ?? "").toString().trim() != "") {
             rowMap[key] = DateFormat("yyyy-MM-ddT").format(DateTime.now()) +
-                (row.cells[key]?.value ?? "");
+                (row.cells[key]?.value ?? "").toString().trim();
           } else {
             rowMap[key] = DateFormat("yyyy-MM-dd").format(DateTime.now()) +
-                (row.cells[key]?.value ?? "");
+                (row.cells[key]?.value ?? "").toString().trim();
           }
         } else {
           rowMap[key] = row.cells[key]?.value ?? "";
