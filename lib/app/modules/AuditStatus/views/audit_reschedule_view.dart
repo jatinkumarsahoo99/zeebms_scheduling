@@ -272,7 +272,7 @@ class AuditReschdule extends StatelessWidget {
                                 hideCode: false,
                                 exportFileName: "Audit Reschedule",
                                 // dateFormatKeys: ["auditedon"],
-                                enableColumnDoubleTap: ['auditStatus'],
+                                // enableColumnDoubleTap: ['auditStatus'],
                                 onColumnHeaderDoubleTap: (columnName) {},
                                 hideKeys: [
                                   "channelcode",

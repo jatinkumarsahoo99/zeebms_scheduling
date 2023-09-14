@@ -278,10 +278,9 @@ class NewShortContentFormController extends GetxController {
               caption.text = data["SlideCaption"] ?? "";
 
               txCaption.text = data["ExportTapeCaption"] ?? "";
-
               selectedCategory.value = categeroies.firstWhereOrNull((element) =>
                   element.key?.toLowerCase() ==
-                  data["Stilltype"].toString().toLowerCase());
+                  data["SlideType"].toString().split(" ").first.toLowerCase());
 
               som.text = data["SOM"];
 

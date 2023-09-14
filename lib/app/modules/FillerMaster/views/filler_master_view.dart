@@ -159,7 +159,7 @@ class FillerMasterView extends GetView<FillerMasterController> {
                                         Obx(() => InputFields.formFieldDisable(
                                               hintTxt: "Duration",
                                               value: controller.duration.value,
-                                              widthRatio: 0.16,
+                                              widthRatio: 0.17,
                                             )),
 
                                         DropDownField.formDropDown1WidthMap(
