@@ -246,9 +246,10 @@ class NewShortContentFormController extends GetxController {
                   (data["TapeTypeCode"] ?? "").toString().toLowerCase());
               caption.text = data["StillCaption"] ?? "";
               txCaption.text = data["ExportTapeCode"] ?? "";
+              print(data["Stilltype"]);
               selectedCategory.value = categeroies.firstWhereOrNull((element) =>
                   element.key?.toLowerCase() ==
-                  (data["StillType"] ?? "").toString().toLowerCase());
+                  (data["Stilltype"] ?? "").toString().toLowerCase());
               som.text = data["SOM"];
               eom.text = data["EOM"];
               duration.value = Utils.getDurationSecond(
@@ -280,7 +281,7 @@ class NewShortContentFormController extends GetxController {
 
               selectedCategory.value = categeroies.firstWhereOrNull((element) =>
                   element.key?.toLowerCase() ==
-                  data["SlideType"].toString().toLowerCase());
+                  data["Stilltype"].toString().toLowerCase());
 
               som.text = data["SOM"];
 
@@ -305,7 +306,7 @@ class NewShortContentFormController extends GetxController {
               txCaption.text = data["ExportTapeCode"] ?? "";
               selectedCategory.value = tapes.firstWhereOrNull((element) =>
                   element.key?.toLowerCase() ==
-                  (data["SlideType"] ?? "").toLowerCase());
+                  (data["Stilltype"] ?? "").toLowerCase());
               selectedOrgRep.value = orgRepeats.firstWhereOrNull((element) =>
                   element.key?.toLowerCase() ==
                   (data["OriginalRepeatCode"] ?? "").toString().toLowerCase());
@@ -493,7 +494,7 @@ class NewShortContentFormController extends GetxController {
               return true;
             } else {
               LoadingDialog.callErrorMessage1(
-                  msg: "Already Exists ${selectedType.value?.value}");
+                  msg: "Already Exists in ${selectedType.value?.value}");
               return false;
             }
           } catch (e) {
@@ -507,7 +508,8 @@ class NewShortContentFormController extends GetxController {
 
   setCaption() {
     if (caption.text.trim().isNotEmpty) {
-      txCaption.text = caption.text;
+      txCaption.text = caption.text.toUpperCase();
+      caption.text = caption.text.toUpperCase();
     } else {
       txCaption.text = "";
     }
