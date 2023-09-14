@@ -85,7 +85,7 @@ class ImportDigitextRunOrderView extends StatelessWidget {
                         () => DropDownField.formDropDown1WidthMap(
                             controller.channels.value, (value) {
                           controller.selectedChannel = value;
-                          controller.getChannel(value);
+                          // controller.getChannel(value);
                         }, "Channel", 0.18),
                       ),
                       DateWithThreeTextField(
