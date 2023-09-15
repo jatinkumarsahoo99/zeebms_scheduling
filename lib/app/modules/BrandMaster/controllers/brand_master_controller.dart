@@ -35,6 +35,8 @@ class BrandMasterController extends GetxController {
   FocusNode productFocus = FocusNode();
   FocusNode gridFocus = FocusNode();
   FocusNode brandNameFocus = FocusNode();
+  FocusNode brandsShortNameFocus = FocusNode();
+  FocusNode separationTimeFocus = FocusNode();
 
   FocusNode productLevel1Focus = FocusNode();
   FocusNode productLevel2Focus = FocusNode();
@@ -384,6 +386,7 @@ class BrandMasterController extends GetxController {
         json: postData,
         fun: (map) {
           Get.back();
+          // closeDialogIfOpen();
           if (map is Map &&
               map.containsKey("brandMater") &&
               map['brandMater'] != null) {
