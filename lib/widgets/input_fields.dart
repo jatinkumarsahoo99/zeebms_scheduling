@@ -1650,6 +1650,7 @@ class InputFields {
               child: TextFormField(
                 textCapitalization: capital ? TextCapitalization.characters : TextCapitalization.none,
                 validator: validator,
+                // focusNode: FocusNode(),
                 autovalidateMode: AutovalidateMode.onUserInteraction,
                 onChanged: (onchanged != null) ? onchanged : null,
                 textAlignVertical: TextAlignVertical.center,

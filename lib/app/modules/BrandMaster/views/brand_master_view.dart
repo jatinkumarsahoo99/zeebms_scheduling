@@ -109,7 +109,8 @@ class BrandMasterView extends StatelessWidget {
                                               // autoFocus: true,
                                               // isEnable: controllerX.isEnable,
                                               onchanged: (value) {},
-                                              autoFocus: false
+                                              autoFocus: false,
+                                            focusNode: controllerX.brandsShortNameFocus
                                               // autoFocus: true,
                                               ),
                                           SizedBox(
@@ -122,7 +123,7 @@ class BrandMasterView extends StatelessWidget {
                                                 .separationTimeController,
                                             isNegativeReq: false,
                                             width: 0.1,
-                                            fN: FocusNode(),
+                                            fN: controllerX.separationTimeFocus,
                                             // isEnabled: true,
                                           )),
                                         ],
@@ -155,6 +156,7 @@ class BrandMasterView extends StatelessWidget {
                                             selectedValue: controllerX
                                                 .selectedProduct?.value,
                                             autoFocus: false,
+                                            inkwellFocus: controllerX.productFocus
                                             // maxLength: 1
                                           ),
                                           InkWell(
