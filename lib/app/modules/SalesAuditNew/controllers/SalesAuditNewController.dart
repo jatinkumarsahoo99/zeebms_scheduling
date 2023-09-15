@@ -506,10 +506,10 @@ class SalesAuditNewController extends GetxController {
           if (row.cells[key]?.value != null &&
               (row.cells[key]?.value ?? "").toString().trim() != "") {
             rowMap[key] = DateFormat("yyyy-MM-ddT").format(DateTime.now()) +
-                (row.cells[key]?.value ?? "");
+                (row.cells[key]?.value ?? "").toString().trim();
           } else {
             rowMap[key] = DateFormat("yyyy-MM-dd").format(DateTime.now()) +
-                (row.cells[key]?.value ?? "");
+                (row.cells[key]?.value ?? "").toString().trim();
           }
         } else {
           rowMap[key] = row.cells[key]?.value ?? "";
@@ -839,7 +839,7 @@ class SalesAuditNewController extends GetxController {
 
       if (gridStateManagerRight?.rows[rightindex].cells['bookingNumber']?.value !=
           null &&
-          gridStateManagerRight?.rows[rightindex].cells['bookingNumber']?.value !=
+          gridStateManagerRight?.rows[rightindex].cells['bookingNumber']?.value.toString().trim() !=
               "") {
         print("jks1");
         // SetNextRow(rightindex,leftIndex);
@@ -849,7 +849,7 @@ class SalesAuditNewController extends GetxController {
       }
       if (gridStateManagerLeft?.rows[leftIndex].cells['telecastTime']?.value !=
           null &&
-          gridStateManagerLeft?.rows[leftIndex].cells['telecastTime']?.value !=
+          gridStateManagerLeft?.rows[leftIndex].cells['telecastTime']?.value.toString().trim() !=
               "") {
         print("jks2");
         // SetNextRow(rightindex,leftIndex);
@@ -912,7 +912,7 @@ class SalesAuditNewController extends GetxController {
                   .trim() &&
           (gridStateManagerLeft?.rows[leftIndex].cells['dealTime']?.value !=
               null ||
-              gridStateManagerLeft?.rows[leftIndex].cells['dealTime']?.value !=
+              gridStateManagerLeft?.rows[leftIndex].cells['dealTime']?.value.toString().trim() !=
                   "") &&
           gridStateManagerLeft?.rows[leftIndex].cells['scheduleTime']?.value ==
               FPCtime &&

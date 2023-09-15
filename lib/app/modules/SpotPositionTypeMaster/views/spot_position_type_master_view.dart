@@ -41,91 +41,99 @@ class SpotPositionTypeMasterView extends StatelessWidget {
                         SizedBox(
                           height: 15,
                         ),
-                        Wrap(
-                          crossAxisAlignment: WrapCrossAlignment.end,
-                          spacing: Get.width * 0.01,
-                          runSpacing: 10,
-                          children: [
-                            InputFields.formField1(
-                              hintTxt: "Spot Type Pos. Name",
-                              controller: controller.spotPostionName,
-                              focusNode: controller.positionNameFocus,
-                              width: 0.36,
-                                capital: true
-                            ),
-                            InputFields.formField1(
-                              hintTxt: "Spot Type Short Name",
-                              controller: controller.spotShortName,
-                              focusNode: controller.typeShortNameFocus,
-                              width: 0.175,
-                               capital: true,
-                            ),
-                            InputFields.numbers(
-                              hintTxt: "Log Position",
-                              padLeft: 0,
-                              controller: controller.logPosition,
-                              width: 0.175,
-                                isNegativeReq: false
-                            ),
-                            Obx(() => DropDownField.formDropDown1WidthMap(
-                                controller.spots.value,
-                                (value) => {
-                                  controller.selectedSpotInLog.value = value
-                                },
-                                "Spot In Log",
-                                0.175,
-                                dialogHeight: 170,
-                                selected: controller.selectedSpotInLog.value)),
-                            InputFields.numbers(
-                              hintTxt: "Spot Position Premium",
-                              padLeft: 0,
-                              controller: controller.positionPremium,
-                              width: 0.175,
-                              isNegativeReq: false
-                            ),
-                            SizedBox(
-                              width: Get.width * 0.175,
-                              child: Row(
-                                mainAxisAlignment:
-                                    MainAxisAlignment.spaceBetween,
-                                children: [
-                                  Text("Break No Applicable"),
-                                  Obx(
-                                    () => InkWell(
-                                      onTap: () {
-                                        controller.breakNo.value =
-                                            !controller.breakNo.value;
-                                      },
-                                      child: controller.breakNo.value
-                                          ? Icon(Icons.check_box_outlined)
-                                          : Icon(Icons
-                                              .check_box_outline_blank_rounded),
-                                    ),
-                                  )
-                                ],
+                        FocusTraversalGroup(
+                          policy:OrderedTraversalPolicy(),
+                          child: Wrap(
+                            crossAxisAlignment: WrapCrossAlignment.end,
+                            spacing: Get.width * 0.01,
+                            runSpacing: 10,
+                            children: [
+                              InputFields.formField1(
+                                hintTxt: "Spot Type Pos. Name",
+                                controller: controller.spotPostionName,
+                                focusNode: controller.positionNameFocus,
+                                width: 0.36,
+                                  capital: true
                               ),
-                            ),
-                            SizedBox(
-                              width: Get.width * 0.175,
-                              child: Row(
-                                mainAxisAlignment:
-                                    MainAxisAlignment.spaceBetween,
-                                children: [
-                                  Text("Position No Applicable"),
-                                  Obx(() => InkWell(
+                              InputFields.formField1(
+                                hintTxt: "Spot Type Short Name",
+                                controller: controller.spotShortName,
+                                focusNode: controller.typeShortNameFocus,
+                                width: 0.175,
+                                 capital: true,
+                              ),
+                              InputFields.numbersWithMax(
+                                hintTxt: "Log Position",
+                                padLeft: 0,
+                                controller: controller.logPosition,
+                                width: 0.175,
+                                  isNegativeReq: false,
+                                maxVal: 100,
+                                // fN: controller.logPosFocus
+                              ),
+                              Obx(() => DropDownField.formDropDown1WidthMap(
+                                  controller.spots.value,
+                                  (value) => {
+                                    controller.selectedSpotInLog.value = value
+                                  },
+                                  "Spot In Log",
+                                  0.175,
+                                  dialogHeight: 170,
+                                  inkWellFocusNode: controller.spotLogFocus,
+                                  selected: controller.selectedSpotInLog.value)),
+                              InputFields.numbersWithMax(
+                                hintTxt: "Spot Position Premium",
+                                padLeft: 0,
+                                controller: controller.positionPremium,
+                                width: 0.175,
+                                isNegativeReq: false,
+                                // fN: controller.spotPosFocus,
+                                maxVal: 100
+                              ),
+                              SizedBox(
+                                width: Get.width * 0.175,
+                                child: Row(
+                                  mainAxisAlignment:
+                                      MainAxisAlignment.spaceBetween,
+                                  children: [
+                                    Text("Break No Applicable"),
+                                    Obx(
+                                      () => InkWell(
                                         onTap: () {
-                                          controller.positionNo.value =
-                                              !controller.positionNo.value;
+                                          controller.breakNo.value =
+                                              !controller.breakNo.value;
                                         },
-                                        child: controller.positionNo.value
+                                        child: controller.breakNo.value
                                             ? Icon(Icons.check_box_outlined)
                                             : Icon(Icons
                                                 .check_box_outline_blank_rounded),
-                                      ))
-                                ],
+                                      ),
+                                    )
+                                  ],
+                                ),
                               ),
-                            ),
-                          ],
+                              SizedBox(
+                                width: Get.width * 0.175,
+                                child: Row(
+                                  mainAxisAlignment:
+                                      MainAxisAlignment.spaceBetween,
+                                  children: [
+                                    Text("Position No Applicable"),
+                                    Obx(() => InkWell(
+                                          onTap: () {
+                                            controller.positionNo.value =
+                                                !controller.positionNo.value;
+                                          },
+                                          child: controller.positionNo.value
+                                              ? Icon(Icons.check_box_outlined)
+                                              : Icon(Icons
+                                                  .check_box_outline_blank_rounded),
+                                        ))
+                                  ],
+                                ),
+                              ),
+                            ],
+                          ),
                         ),
                         SizedBox(
                           height: 15,

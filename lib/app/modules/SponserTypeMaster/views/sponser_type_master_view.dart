@@ -54,6 +54,7 @@ class SponserTypeMasterView extends StatelessWidget {
                               hintTxt: "Short Name",
                               controller: controller.shortName,
                               width: 0.48,
+                              focusNode: controller.shortNameFocus
                             ),
 
                             InputFields.numbers(
@@ -61,7 +62,7 @@ class SponserTypeMasterView extends StatelessWidget {
                               hintTxt: "Premium",
                               controller: controller.premium,
                               width: 0.235,
-                              isNegativeReq: false
+                              isNegativeReq: false,
                             ),
                             Obx(() => DropDownField.formDropDown1WidthMap([
                                   DropDownValue(key: "M", value: "Multiple"),
@@ -71,7 +72,10 @@ class SponserTypeMasterView extends StatelessWidget {
                             }, "Sponsor Type", 0.235,
                                 dialogHeight: 120,
                                     selected:
-                                        controller.selectedSponser.value)),
+                                        controller.selectedSponser.value,
+                              inkWellFocusNode: controller.sponserTypeFocus
+
+                            )),
                           ],
                         ),
                         SizedBox(

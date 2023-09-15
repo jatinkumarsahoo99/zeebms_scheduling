@@ -293,7 +293,7 @@ class EuropeDropSpotsView extends GetView<EuropeDropSpotsController> {
                   inkWellFocusNode: controller.locationFocus2,
                   // isEnable: controllerX.isEnable.value,
                   searchReq: true,
-                  // selected: controllerX.selectOrgValue,
+                  selected: controller.selectLocation_removeorder,
                 )),
             SizedBox(
               height: 5,
@@ -310,7 +310,7 @@ class EuropeDropSpotsView extends GetView<EuropeDropSpotsController> {
 
                   // isEnable: controllerX.isEnable.value,
                   searchReq: true,
-                  // selected: controllerX.selectOrgValue,
+                  selected: controller.selectChannel_removeorder,
                 )),
             SizedBox(
               height: 5,
@@ -377,7 +377,7 @@ class EuropeDropSpotsView extends GetView<EuropeDropSpotsController> {
                   inkWellFocusNode: controller.locationFocus3,
                   // isEnable: controllerX.isEnable.value,
                   searchReq: true,
-                  // selected: controllerX.selectOrgValue,
+                  selected: controller.selectLocation_deleteRussia,
                 )),
             SizedBox(
               height: 5,
@@ -393,7 +393,7 @@ class EuropeDropSpotsView extends GetView<EuropeDropSpotsController> {
 
                   // isEnable: controllerX.isEnable.value,
                   searchReq: true,
-                  // selected: controllerX.selectOrgValue,
+                  selected: controller.selectChannel_deleteRussia,
                 )),
             SizedBox(
               height: 5,
