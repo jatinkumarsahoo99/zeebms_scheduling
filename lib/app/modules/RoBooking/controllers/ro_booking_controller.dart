@@ -805,15 +805,15 @@ class RoBookingController extends GetxController {
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
                     const Icon(
-                      CupertinoIcons.info,
-                      color: Colors.black,
+                      CupertinoIcons.check_mark_circled_solid,
+                      color: Colors.green,
                       size: 55,
                     ),
                     const SizedBox(height: 20),
                     Text(
                       element.toString(),
                       style: TextStyle(
-                          color: Colors.black,
+                          color: Colors.green,
                           fontSize: SizeDefine.popupTxtSize),
                     )
                   ],
@@ -1268,7 +1268,8 @@ class RoBookingController extends GetxController {
               dealDblClickData?.strAccountCode,
           "locationCode": selectedLocation?.key ?? "",
           "channelCode": selectedChannel?.key,
-          "intSubRevenueTypeCode": "0",
+          "intSubRevenueTypeCode":
+              (dealDblClickData?.intSubRevenueTypeCode ?? 0).toString(),
           "searchContain": searchContain
         },
         fun: (value) {
