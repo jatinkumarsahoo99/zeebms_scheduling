@@ -4,6 +4,7 @@ import 'package:bms_scheduling/app/data/DropDownValue.dart';
 import 'package:bms_scheduling/app/providers/ApiFactory.dart';
 import 'package:bms_scheduling/widgets/LoadingDialog.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:get/get.dart';
 
 import '../../../controller/HomeController.dart';
@@ -22,11 +23,14 @@ class SpotPositionTypeMasterController extends GetxController {
   FocusNode positionNameFocus = FocusNode();
   FocusNode typeShortNameFocus = FocusNode();
   String? spotPositionTypeCode = "";
+  FocusNode logPosFocus = FocusNode();
+  FocusNode spotPosFocus = FocusNode();
+  FocusNode spotLogFocus = FocusNode();
 
   @override
   void onInit() {
     getInitData();
-    positionNameFocus.addListener(() {
+   /* positionNameFocus.addListener(() {
       if ((!positionNameFocus.hasFocus) && spotPostionName.text.isNotEmpty) {
         spotPostionName.text = spotPostionName.text.toUpperCase();
         getData();
@@ -37,7 +41,55 @@ class SpotPositionTypeMasterController extends GetxController {
       if(spotShortName.text.isNotEmpty){
         spotShortName.text = spotShortName.text.toUpperCase();
       }
-    });
+    });*/
+
+    positionNameFocus = FocusNode(
+      onKeyEvent: (node, event) {
+        if (event.logicalKey == LogicalKeyboardKey.tab) {
+          if (spotPostionName.text.isNotEmpty) {
+            spotPostionName.text = spotPostionName.text.toUpperCase();
+            getData();
+          }
+          return KeyEventResult.ignored;
+        }
+        return KeyEventResult.ignored;
+      },
+    );
+
+    typeShortNameFocus = FocusNode(
+      onKeyEvent: (node, event) {
+        if (event.logicalKey == LogicalKeyboardKey.tab) {
+          if(spotShortName.text.isNotEmpty){
+            spotShortName.text = spotShortName.text.toUpperCase();
+          }
+          return KeyEventResult.ignored;
+        }
+        return KeyEventResult.ignored;
+      },
+    );
+
+    logPosFocus = FocusNode(
+      onKeyEvent: (node, event) {
+        if (event.logicalKey == LogicalKeyboardKey.tab) {
+          if((int.tryParse(logPosition.text??"0")??0) > 100){
+            logPosition.text = "100";
+          }
+            return KeyEventResult.ignored;
+        }
+        return KeyEventResult.ignored;
+      },
+    );
+    spotPosFocus = FocusNode(
+      onKeyEvent: (node, event) {
+        if (event.logicalKey == LogicalKeyboardKey.tab) {
+          if((int.tryParse(positionPremium.text??"0")??0) > 100){
+            positionPremium.text = "100";
+          }
+          return KeyEventResult.ignored;
+        }
+        return KeyEventResult.ignored;
+      },
+    );
     super.onInit();
   }
 

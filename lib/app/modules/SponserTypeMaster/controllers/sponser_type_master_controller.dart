@@ -12,6 +12,8 @@ import '../../../controller/HomeController.dart';
 class SponserTypeMasterController extends GetxController {
   //TODO: Implement SponserTypeMasterController
   FocusNode sponserNameFocus = FocusNode();
+  FocusNode sponserTypeFocus = FocusNode();
+  FocusNode shortNameFocus = FocusNode();
   TextEditingController sponserName = TextEditingController(),
       shortName = TextEditingController(),
       premium = TextEditingController(text: "0");

@@ -87,10 +87,12 @@ class EuropeDropSpotsController extends GetxController {
   getInitial() {
     Get.find<ConnectorControl>().GETMETHODCALL(
         api: ApiFactory.EUROPE_DROP_SPOTS_INITIAL(),
-        fun: ( map) {
+        fun: (map) {
           print("Location dta>>>" + jsonEncode(map));
 
-          if(map is Map && map.containsKey('pageLoadInfo')&& map['pageLoadInfo'] != null){
+          if (map is Map &&
+              map.containsKey('pageLoadInfo') &&
+              map['pageLoadInfo'] != null) {
             locationList.clear();
             loc.clear();
             locationCode.clear();
@@ -107,8 +109,6 @@ class EuropeDropSpotsController extends GetxController {
                   e, "locationCode", "locationName"));
             });
           }
-
-
         });
   }
 
@@ -161,27 +161,35 @@ class EuropeDropSpotsController extends GetxController {
   }
 
   postRemoval() {
-    LoadingDialog.call();
-    var postMap = {
-      "locationcode": selectLocation_removeorder?.key ?? "",
-      "channelcode": selectChannel_removeorder?.key ?? "",
-      "filename": selectFile?.key ?? ""
-    };
-    Get.find<ConnectorControl>().POSTMETHOD(
-        api: ApiFactory.EUROPE_DROP_SPOTS_POST_REMOVE_FILE(),
-        json: postMap,
-        fun: (map) {
-          Get.back();
-          if (map is Map &&
-              map.containsKey("remove") &&
-              map["remove"].toString().contains("successfully")) {
-            LoadingDialog.callDataSavedMessage(
-              map["remove"].toString(),
-            );
-          } else {
-            LoadingDialog.callInfoMessage(map.toString());
-          }
-        });
+    if (selectLocation_removeorder == null) {
+      LoadingDialog.showErrorDialog("Please select location");
+    } else if (selectChannel_removeorder == null) {
+      LoadingDialog.showErrorDialog("Please select channel");
+    } else if (selectFile == null) {
+      LoadingDialog.showErrorDialog("Please select file name");
+    } else {
+      LoadingDialog.call();
+      var postMap = {
+        "locationcode": selectLocation_removeorder?.key ?? "",
+        "channelcode": selectChannel_removeorder?.key ?? "",
+        "filename": selectFile?.key ?? ""
+      };
+      Get.find<ConnectorControl>().POSTMETHOD(
+          api: ApiFactory.EUROPE_DROP_SPOTS_POST_REMOVE_FILE(),
+          json: postMap,
+          fun: (map) {
+            Get.back();
+            if (map is Map &&
+                map.containsKey("remove") &&
+                map["remove"].toString().contains("successfully")) {
+              LoadingDialog.callDataSavedMessage(
+                map["remove"].toString(),
+              );
+            } else {
+              LoadingDialog.callInfoMessage(map.toString());
+            }
+          });
+    }
   }
 
   getRunDate1() {
@@ -274,25 +282,33 @@ class EuropeDropSpotsController extends GetxController {
   }
 
   deleteCommercial() {
-    LoadingDialog.call();
-    var postMap = {
-      "locationcode": selectLocation?.key ?? "",
-      "channelcode": selectChannel?.key ?? "",
-      "bookingnumber": toNumber.text
-    };
-    Get.find<ConnectorControl>().POSTMETHOD(
-        api: ApiFactory.EUROPE_DROP_SPOTS_DELETE(),
-        json: postMap,
-        fun: (map) {
-          Get.back();
-          if (map is Map &&
-              map.containsKey("update") &&
-              map["update"].toString().contains("successfully")) {
-            LoadingDialog.callDataSavedMessage(map["update"]);
-          } else {
-            LoadingDialog.callInfoMessage(map.toString());
-          }
-        });
+    if (selectLocation_deleteRussia == null) {
+      LoadingDialog.showErrorDialog("Please select location");
+    } else if (selectChannel_deleteRussia == null) {
+      LoadingDialog.showErrorDialog("Please select channel");
+    } else if (toNumber.text.trim() == "") {
+      LoadingDialog.showErrorDialog("Please enter toNumber");
+    } else {
+      LoadingDialog.call();
+      var postMap = {
+        "locationcode": selectLocation_deleteRussia?.key ?? "",
+        "channelcode": selectChannel_deleteRussia?.key ?? "",
+        "bookingnumber": toNumber.text
+      };
+      Get.find<ConnectorControl>().POSTMETHOD(
+          api: ApiFactory.EUROPE_DROP_SPOTS_DELETE(),
+          json: postMap,
+          fun: (map) {
+            Get.back();
+            if (map is Map &&
+                map.containsKey("update") &&
+                map["update"].toString().contains("successfully")) {
+              LoadingDialog.callDataSavedMessage(map["update"]);
+            } else {
+              LoadingDialog.callInfoMessage(map.toString());
+            }
+          });
+    }
   }
 
   void dropClick() {

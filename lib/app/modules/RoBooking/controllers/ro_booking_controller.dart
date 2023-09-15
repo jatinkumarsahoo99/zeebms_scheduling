@@ -516,6 +516,7 @@ class RoBookingController extends GetxController {
             });
           }
         }
+        currentTab.refresh();
       },
     );
   }
@@ -805,15 +806,15 @@ class RoBookingController extends GetxController {
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
                     const Icon(
-                      CupertinoIcons.info,
-                      color: Colors.black,
+                      CupertinoIcons.check_mark_circled_solid,
+                      color: Colors.green,
                       size: 55,
                     ),
                     const SizedBox(height: 20),
                     Text(
                       element.toString(),
                       style: TextStyle(
-                          color: Colors.black,
+                          color: Colors.green,
                           fontSize: SizeDefine.popupTxtSize),
                     )
                   ],
@@ -837,93 +838,13 @@ class RoBookingController extends GetxController {
                     bottom: 16),
               );
             }
-            // for (var msg in response["info_OnSave"]["message"]) {
-            //   LoadingDialog.callDataSavedMessage(msg, barrierDismissible: false,
-            //       callback: () {
-            //     onBookingNoLeave(
-            //         bookingNumber: response["info_OnSave"]["bookingNumber"]);
-            //   });
-            // }
           } else if (response is String) {
             LoadingDialog.callErrorMessage1(msg: response);
+            editMode = 0;
           }
         });
   }
 
-  // void addToSpotsGrid(List<Map<String, dynamic>> dgvPrograms, List<Map<String, dynamic>> dtSpotsData, List<Map<String, dynamic>> dtDealDetails,
-  //     List<Map<String, dynamic>> dgvSpots,rowIdx) {
-  //   String strProgramName, strTelecastDate, strProgramCode;
-  //   String strStartTime, strEndTime;
-  //   int intSpots, intTotalBookedSpots = 0;
-
-  //   for (int i = 0; i < dgvPrograms.length; i++) {
-  //     if (int.parse(dgvPrograms[i]["bookedspots"].toString()) > 0) {
-  //       strProgramName = dgvPrograms[i]["programname"].toString();
-  //       strTelecastDate = dgvPrograms[i]["telecastdate"].toString();
-  //       strStartTime = dgvPrograms[i]["starttime"].toString();
-  //       strEndTime = dgvPrograms[i]["endtime"].toString();
-  //       intSpots = int.parse(dgvPrograms[i]["bookedspots"].toString());
-  //       intTotalBookedSpots += intSpots;
-  //       strProgramCode = dgvPrograms[i]["programcode"].toString();
-
-  //       dtSpotsData.add({
-  //         "ProgramName": strProgramName,
-  //         "TelecastDate": strTelecastDate,
-  //         "StartTime": strStartTime.toString(),
-  //         "EndTime": strEndTime,
-  //         "Spots": intSpots,
-  //         "TapeId": selectedTapeID!.key,
-  //         "SegNo": selectedSeg!.key,
-  //         "Duration": (bookingTapeSearchData?.lstSearchTapeId?.first.commercialDuration??1) * intSpots,
-  //         "PreMid": selectedPremid!.key,
-  //         "BreakNo": selectedBreak!.key,
-  //         "PositionNo": selectedPosition!.key,
-  //         "Total": 1,
-  //         "TotalSpots": 1* intSpots,
-  //         "DealNo": selectedDeal!.key,
-  //         "DealRowNo": rowIdx,
-  //         "EmptyField": "",
-  //         "Field": "0-0",
-  //         "Caption": bookingTapeSearchData?.lstSearchTapeId?.first.commercialCaption,
-  //         "ProgramCode": strProgramCode,
-  //         "PreMidValue": selectedPremid!.value,
-  //         "PositionNoValue": selectedPosition!.value
-  //       });
-  //     }
-  //   }
-  //   dtSpotsData;
-
-  //   // Updating Deal Grid and DT
-  //   for (int i = 0; i < dtDealDetails.length; i++) {
-  //     if (int.parse(dtDealDetails[i]["recordnumber"]) == rowIdx &&
-  //         dtDealDetails[i]["locationname"] == selectedLocation!.value &&
-  //         dtDealDetails[i]["channelname"] == selectedChannel!.value &&
-  //         dtDealDetails[i]["dealnumber"] == selectedDeal!.key) {
-  //       if (bookingNoLeaveData?.accountCode != "I000100010" && bookingNoLeaveData?.accountCode != "I000100005" && bookingNoLeaveData?.accountCode != "I000100004" && bookingNoLeaveData?.accountCode != "I000100013") {
-  //         dtDealDetails[0][i]["bookedseconds"] =
-  //             int.parse(dtDealDetails[0][i]["bookedseconds"]) + (bookingTapeSearchData?.lstSearchTapeId?.first.commercialDuration??1 * intTotalBookedSpots);
-  //       } else if (bookingNoLeaveData?.accountCode == "I000100010" && int.parse(intSubRevenueTypeCode) == 9) {
-  //         dtDealDetails[i]["bookedseconds"] =
-  //             int.parse(dtDealDetails[i]["bookedseconds"]) + (int.parse(txtDuration.Text) * intTotalBookedSpots);
-  //       } else {
-  //         dtDealDetails[i]["bookedseconds"] = int.parse(dtDealDetails[i]["bookedseconds"]) + intTotalBookedSpots;
-  //       }
-
-  //       dtDealDetails[i]["balanceseconds"] = int.parse(dtDealDetails[i]["seconds"]) - int.parse(dtDealDetails[i]["bookedseconds"]);
-  //       // BalanceSeconds = dtDealDetails[i]["balanceseconds"];
-  //       // dtDealDetails[0].acceptChanges();
-  //       // dgvDealDetail[0] = dtDealDetails;
-  //       // hideDealGridCols();
-  //       break;
-  //     }
-  //   }
-  //   hideRows(dgvDealDetail);
-
-  //   // Set Booked Spots Column to 0
-  //   for (int i = 0; i < dgvPrograms.length; i++) {
-  //     dgvPrograms[i]["bookedspots"] = 0;
-  //   }
-  // }
   spotnotverifiedclick(index) {
     Get.find<ConnectorControl>().POSTMETHOD(
         api: ApiFactory.RO_BOOKING_SPOT_DBL_CLICK,
@@ -977,23 +898,6 @@ class RoBookingController extends GetxController {
           }
         });
   }
-
-  // getSpotsNotVerified(location, channel, month) {
-  //   Get.find<ConnectorControl>().POSTMETHOD(
-  //       api: ApiFactory.RO_BOOKING_GET_SpotsNotVerified,
-  //       json: {
-  //         "locationCode": location,
-  //         "channelCode": channel,
-  //         "bookingMonth": month,
-  //         "loggedUser": Get.find<MainController>().user?.logincode,
-  //       },
-  //       fun: (response) {
-  //         if (response is Map &&
-  //             response.containsKey("info_SpotsNotVerified")) {
-  //           // spotsNotVerifiedData.value = response["info_SpotsNotVerified"];
-  //         }
-  //       });
-  // }
 
   getDisplay() {
     if (selectedLocation == null && selectedChannel == null) {
@@ -1268,7 +1172,8 @@ class RoBookingController extends GetxController {
               dealDblClickData?.strAccountCode,
           "locationCode": selectedLocation?.key ?? "",
           "channelCode": selectedChannel?.key,
-          "intSubRevenueTypeCode": "0",
+          "intSubRevenueTypeCode":
+              (dealDblClickData?.intSubRevenueTypeCode ?? 0).toString(),
           "searchContain": searchContain
         },
         fun: (value) {
@@ -1337,7 +1242,6 @@ class RoBookingController extends GetxController {
                 response["info_OnSaveCheckTapeId"]);
             pagecontroller.jumpToPage(4);
             currentTab.value = "Booking Summary";
-
             LoadingDialog.modify(savecheckData?.message ?? "", () {
               save();
             }, () {
