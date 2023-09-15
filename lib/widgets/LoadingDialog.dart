@@ -518,8 +518,8 @@ class LoadingDialog {
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
           Icon(
-            CupertinoIcons.check_mark_circled_solid,
-            color: Colors.green,
+            CupertinoIcons.info,
+            color: Colors.black,
             size: 55,
           ),
           SizedBox(
@@ -528,7 +528,7 @@ class LoadingDialog {
           Text(
             title,
             style: TextStyle(
-                color: Colors.green, fontSize: SizeDefine.popupTxtSize),
+                color: Colors.black, fontSize: SizeDefine.popupTxtSize),
             textAlign: TextAlign.center,
           )
         ],

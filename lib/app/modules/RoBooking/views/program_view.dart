@@ -3,6 +3,7 @@ import 'package:bms_scheduling/app/modules/RoBooking/views/dummydata.dart';
 import 'package:bms_scheduling/widgets/DateTime/DateWithThreeTextField.dart';
 import 'package:bms_scheduling/widgets/FormButton.dart';
 import 'package:bms_scheduling/widgets/LoadingDialog.dart';
+import 'package:bms_scheduling/widgets/PlutoGrid/src/pluto_grid.dart';
 import 'package:bms_scheduling/widgets/dropdown.dart';
 import 'package:bms_scheduling/widgets/gridFromMap.dart';
 import 'package:bms_scheduling/widgets/input_fields.dart';
@@ -13,6 +14,7 @@ import 'package:intl/intl.dart';
 
 import '../../../data/DropDownValue.dart';
 import '../../../data/user_data_settings_model.dart';
+import '../../../providers/Utils.dart';
 
 class ProgramView extends StatelessWidget {
   const ProgramView({Key? key}) : super(key: key);
@@ -265,53 +267,54 @@ class ProgramView extends StatelessWidget {
                             [],
                         editKeys: ["bookedSpots"],
                         onEdit: (editChnage) {
-                          // num val = num.tryParse(editChnage.value ?? '0') ?? 0;
-                          // if (val > 2) {
-                          //   controller.programViewGrid?.changeCellValue(
-                          //     editChnage.row.cells["bookedSpots"]!,
-                          //     '0',
-                          //     callOnChangedEvent: false,
-                          //     force: true,
-                          //     notify: true,
-                          //   );
-                          //   if (controller
-                          //               .bookingTapeLeaveData?.lstdgvProgram !=
-                          //           null &&
-                          //       (controller.bookingTapeLeaveData
-                          //                   ?.lstdgvProgram ??
-                          //               [])
-                          //           .isNotEmpty) {
+                          // {
+                          //   if (controller.bookingTapeLeaveData != null) {
                           //     controller
-                          //         .bookingTapeLeaveData
-                          //         ?.lstdgvProgram?[editChnage.rowIdx]
-                          //         .bookedSpots = 0;
-                          //   } else {
+                          //             .bookingTapeLeaveData
+                          //             ?.lstdgvProgram?[editChnage.rowIdx]
+                          //             .bookedSpots =
+                          //         int.tryParse(editChnage.value) ?? 0;
+                          //   } else if (controller
+                          //           .dealDblClickData?.lstProgram !=
+                          //       null) {
                           //     controller
-                          //         .dealDblClickData
-                          //         ?.lstProgram?[editChnage.rowIdx]
-                          //         .bookedSpots = 0;
+                          //             .dealDblClickData
+                          //             ?.lstProgram?[editChnage.rowIdx]
+                          //             .bookedSpots =
+                          //         int.tryParse(editChnage.value) ?? 0;
                           //   }
-                          //   LoadingDialog.callInfoMessage(
-                          //     'You cannot book duration greater than slot duration.',
-                          //   );
-                          // } else
-                          if (controller.bookingTapeLeaveData != null) {
-                            controller
-                                    .bookingTapeLeaveData
-                                    ?.lstdgvProgram?[editChnage.rowIdx]
-                                    .bookedSpots =
-                                int.tryParse(editChnage.value) ?? 0;
-                          } else if (controller.dealDblClickData?.lstProgram !=
-                              null) {
+                          // }
+                          if ((controller.dealDblClickData?.lstProgram ?? [])
+                              .isNotEmpty) {
                             controller
                                     .dealDblClickData
                                     ?.lstProgram?[editChnage.rowIdx]
                                     .bookedSpots =
                                 int.tryParse(editChnage.value) ?? 0;
                           }
+
+                          if ((controller.bookingTapeLeaveData?.lstdgvProgram ??
+                                  [])
+                              .isNotEmpty) {
+                            controller
+                                    .bookingTapeLeaveData
+                                    ?.lstdgvProgram?[editChnage.rowIdx]
+                                    .bookedSpots =
+                                int.tryParse(editChnage.value) ?? 0;
+                          }
+                          (canIncreSpots(
+                            controller,
+                            PlutoGridOnRowDoubleTapEvent(
+                                row: controller
+                                    .programViewGrid!.rows[editChnage.rowIdx],
+                                rowIdx: editChnage.rowIdx,
+                                cell: controller
+                                    .programViewGrid!
+                                    .rows[editChnage.rowIdx]
+                                    .cells['bookedSpots']!),
+                          ));
                         },
                         onRowDoubleTap: (dblclick) {
-                          // bool canIncre = true;
                           controller.dealProgramCode = controller
                                   .bookingTapeLeaveData
                                   ?.lstdgvProgram?[dblclick.rowIdx]
@@ -330,94 +333,48 @@ class ProgramView extends StatelessWidget {
                                   .telecastdate ??
                               controller.dealDblClickData
                                   ?.lstProgram?[dblclick.rowIdx].telecastdate;
+                          if (canIncreSpots(controller, dblclick)) {
+                            if (controller
+                                        .bookingTapeLeaveData?.lstdgvProgram !=
+                                    null &&
+                                (controller.bookingTapeLeaveData
+                                            ?.lstdgvProgram ??
+                                        [])
+                                    .isNotEmpty) {
+                              controller
+                                  .bookingTapeLeaveData
+                                  ?.lstdgvProgram?[dblclick.rowIdx]
+                                  .bookedSpots = (controller
+                                          .bookingTapeLeaveData
+                                          ?.lstdgvProgram?[dblclick.rowIdx]
+                                          .bookedSpots ??
+                                      0) +
+                                  1;
+                            }
 
-                          // if (controller.bookingTapeLeaveData?.lstdgvProgram !=
-                          //         null &&
-                          //     (controller.bookingTapeLeaveData?.lstdgvProgram ??
-                          //             [])
-                          //         .isNotEmpty) {
-                          //   if ((controller
-                          //               .bookingTapeLeaveData
-                          //               ?.lstdgvProgram?[dblclick.rowIdx]
-                          //               .bookedSpots ??
-                          //           0) >=
-                          //       2) {
-                          //     controller
-                          //         .bookingTapeLeaveData
-                          //         ?.lstdgvProgram?[dblclick.rowIdx]
-                          //         .bookedSpots = 0;
-                          //     canIncre = false;
-                          //   } else {
-                          //     canIncre = true;
-                          //   }
-                          // } else {
-                          //   if ((controller
-                          //               .dealDblClickData
-                          //               ?.lstProgram?[dblclick.rowIdx]
-                          //               .bookedSpots ??
-                          //           0) >=
-                          //       2) {
-                          //     controller
-                          //         .dealDblClickData
-                          //         ?.lstProgram?[dblclick.rowIdx]
-                          //         .bookedSpots = 0;
-                          //     canIncre = false;
-                          //   } else {
-                          //     canIncre = true;
-                          //   }
-                          // }
-                          if (controller.bookingTapeLeaveData?.lstdgvProgram !=
-                                  null &&
-                              (controller.bookingTapeLeaveData?.lstdgvProgram ??
-                                      [])
-                                  .isNotEmpty) {
-                            controller
-                                .bookingTapeLeaveData
-                                ?.lstdgvProgram?[dblclick.rowIdx]
-                                .bookedSpots = (controller
-                                        .bookingTapeLeaveData
-                                        ?.lstdgvProgram?[dblclick.rowIdx]
-                                        .bookedSpots ??
-                                    0) +
-                                1;
-                          } else {
-                            controller
-                                .dealDblClickData
-                                ?.lstProgram?[dblclick.rowIdx]
-                                .bookedSpots = (controller
-                                        .dealDblClickData
-                                        ?.lstProgram?[dblclick.rowIdx]
-                                        .bookedSpots ??
-                                    0) +
-                                1;
+                            if ((controller.dealDblClickData?.lstProgram ?? [])
+                                .isNotEmpty) {
+                              controller
+                                  .dealDblClickData
+                                  ?.lstProgram?[dblclick.rowIdx]
+                                  .bookedSpots = (controller
+                                          .dealDblClickData
+                                          ?.lstProgram?[dblclick.rowIdx]
+                                          .bookedSpots ??
+                                      0) +
+                                  1;
+                            }
+
+                            controller.programViewGrid?.changeCellValue(
+                              dblclick.row.cells["bookedSpots"]!,
+                              dblclick.cell.value is int
+                                  ? dblclick.cell.value + 1
+                                  : "${(int.tryParse(dblclick.cell.value) ?? 0) + 1}",
+                              callOnChangedEvent: false,
+                              force: true,
+                              notify: true,
+                            );
                           }
-
-                          controller.programViewGrid?.changeCellValue(
-                            dblclick.row.cells["bookedSpots"]!,
-                            dblclick.cell.value is int
-                                ? dblclick.cell.value + 1
-                                : "${(int.tryParse(dblclick.cell.value) ?? 0) + 1}",
-                            callOnChangedEvent: false,
-                            force: true,
-                            notify: true,
-                          );
-                          // if (((controller
-                          //                 .dealDblClickData
-                          //                 ?.lstProgram?[dblclick.rowIdx]
-                          //                 .bookedSpots ??
-                          //             0) <
-                          //         2) ||
-                          //     ((controller
-                          //                 .bookingTapeLeaveData
-                          //                 ?.lstdgvProgram?[dblclick.rowIdx]
-                          //                 .bookedSpots ??
-                          //             0) <
-                          //         2)) {
-
-                          // } else {
-                          //   LoadingDialog.callInfoMessage(
-                          //       'You cannot book duration greater than slot duration.');
-                          // }
                         },
                         witdthSpecificColumn: (controller
                             .userDataSettings?.userSetting
@@ -434,5 +391,62 @@ class ProgramView extends StatelessWidget {
             ],
           );
         });
+  }
+
+  bool canIncreSpots(
+      RoBookingController controller, PlutoGridOnRowDoubleTapEvent dblclick) {
+    bool canIncre = true;
+    var tempduration = (controller.bookingTapeLeaveData?.lstdgvProgram !=
+                null &&
+            (controller.bookingTapeLeaveData?.lstdgvProgram ?? []).isNotEmpty)
+        ? (controller
+            .bookingTapeLeaveData?.lstdgvProgram?[dblclick.rowIdx].bookedSpots)
+        : controller.dealDblClickData?.lstProgram?[dblclick.rowIdx].bookedSpots;
+    if (controller.dealDblClickData?.strAccountCode == "I000100004" &&
+        (tempduration ?? 0) > 1) {
+      var intSlotDurationInSeconds = 0;
+      String startTime =
+          controller.dealDblClickData?.lstProgram?[dblclick.rowIdx].startTime ??
+              '00:00:00';
+      String endTime =
+          controller.dealDblClickData?.lstProgram?[dblclick.rowIdx].endTime ??
+              '00:00:00';
+      if (Utils.convertToSecond(value: startTime) >
+          Utils.convertToSecond(value: endTime)) {
+        intSlotDurationInSeconds = (Utils.convertToSecond(value: endTime) +
+                Utils.convertToSecond(value: '24:00:00')) -
+            Utils.convertToSecond(value: startTime);
+      } else {
+        intSlotDurationInSeconds = Utils.convertToSecond(value: endTime) -
+            Utils.convertToSecond(value: startTime);
+      }
+      var tempDu =
+          (num.tryParse(controller.bookingTapeLeaveData?.duration ?? "0") ??
+                  0) *
+              (tempduration ?? 0);
+      if (tempDu >= intSlotDurationInSeconds) {
+        canIncre = false;
+
+        LoadingDialog.callInfoMessage(
+            "You cannot book duration greater than slot duration.");
+        controller.programViewGrid?.changeCellValue(
+          dblclick.row.cells["bookedSpots"]!,
+          '0',
+          callOnChangedEvent: false,
+          force: true,
+          notify: true,
+        );
+        if ((controller.dealDblClickData?.lstProgram ?? []).isNotEmpty) {
+          controller
+              .dealDblClickData?.lstProgram?[dblclick.rowIdx].bookedSpots = 0;
+        }
+
+        if ((controller.bookingTapeLeaveData?.lstdgvProgram ?? []).isNotEmpty) {
+          controller.bookingTapeLeaveData?.lstdgvProgram?[dblclick.rowIdx]
+              .bookedSpots = 0;
+        }
+      }
+    }
+    return canIncre;
   }
 }

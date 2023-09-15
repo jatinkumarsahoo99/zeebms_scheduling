@@ -125,6 +125,12 @@ class DealView extends GetView<RoBookingController> {
                                       onload: (load) {
                                         gridcontroller.dealViewGrid =
                                             load.stateManager;
+                                        gridcontroller.dealViewGrid?.setFilter(
+                                            (element) =>
+                                                controller
+                                                    .selectedDeal?.value ==
+                                                element.cells['dealNumber']
+                                                    ?.value);
                                         if (gridcontroller
                                                 .dealNoLeaveCurrentRow !=
                                             null) {
