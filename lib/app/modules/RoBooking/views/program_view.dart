@@ -265,36 +265,37 @@ class ProgramView extends StatelessWidget {
                             [],
                         editKeys: ["bookedSpots"],
                         onEdit: (editChnage) {
-                          num val = num.tryParse(editChnage.value ?? '0') ?? 0;
-                          if (val > 2) {
-                            controller.programViewGrid?.changeCellValue(
-                              editChnage.row.cells["bookedSpots"]!,
-                              '0',
-                              callOnChangedEvent: false,
-                              force: true,
-                              notify: true,
-                            );
-                            if (controller
-                                        .bookingTapeLeaveData?.lstdgvProgram !=
-                                    null &&
-                                (controller.bookingTapeLeaveData
-                                            ?.lstdgvProgram ??
-                                        [])
-                                    .isNotEmpty) {
-                              controller
-                                  .bookingTapeLeaveData
-                                  ?.lstdgvProgram?[editChnage.rowIdx]
-                                  .bookedSpots = 0;
-                            } else {
-                              controller
-                                  .dealDblClickData
-                                  ?.lstProgram?[editChnage.rowIdx]
-                                  .bookedSpots = 0;
-                            }
-                            LoadingDialog.callInfoMessage(
-                              'You cannot book duration greater than slot duration.',
-                            );
-                          } else if (controller.bookingTapeLeaveData != null) {
+                          // num val = num.tryParse(editChnage.value ?? '0') ?? 0;
+                          // if (val > 2) {
+                          //   controller.programViewGrid?.changeCellValue(
+                          //     editChnage.row.cells["bookedSpots"]!,
+                          //     '0',
+                          //     callOnChangedEvent: false,
+                          //     force: true,
+                          //     notify: true,
+                          //   );
+                          //   if (controller
+                          //               .bookingTapeLeaveData?.lstdgvProgram !=
+                          //           null &&
+                          //       (controller.bookingTapeLeaveData
+                          //                   ?.lstdgvProgram ??
+                          //               [])
+                          //           .isNotEmpty) {
+                          //     controller
+                          //         .bookingTapeLeaveData
+                          //         ?.lstdgvProgram?[editChnage.rowIdx]
+                          //         .bookedSpots = 0;
+                          //   } else {
+                          //     controller
+                          //         .dealDblClickData
+                          //         ?.lstProgram?[editChnage.rowIdx]
+                          //         .bookedSpots = 0;
+                          //   }
+                          //   LoadingDialog.callInfoMessage(
+                          //     'You cannot book duration greater than slot duration.',
+                          //   );
+                          // } else
+                          if (controller.bookingTapeLeaveData != null) {
                             controller
                                     .bookingTapeLeaveData
                                     ?.lstdgvProgram?[editChnage.rowIdx]
@@ -396,7 +397,7 @@ class ProgramView extends StatelessWidget {
                             dblclick.cell.value is int
                                 ? dblclick.cell.value + 1
                                 : "${(int.tryParse(dblclick.cell.value) ?? 0) + 1}",
-                            callOnChangedEvent: true,
+                            callOnChangedEvent: false,
                             force: true,
                             notify: true,
                           );
