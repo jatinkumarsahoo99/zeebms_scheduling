@@ -59,7 +59,7 @@ class RoBookingAgencyLeaveData {
       });
     }
     if (json['lstPdcChannelList'] != null) {
-      lstPdcList = [];
+      lstPdcChannelList = [];
       json['lstPdcChannelList'].forEach((v) {
         lstPdcChannelList!.add(v);
       });
@@ -118,7 +118,8 @@ class RoBookingAgencyLeaveData {
       data['lstDealNumber'] = lstDealNumber!.map((v) => v.toJson()).toList();
     }
     if (excutiveDetails != null) {
-      data['excutiveDetails'] = excutiveDetails!.map((v) => v.toJson()).toList();
+      data['excutiveDetails'] =
+          excutiveDetails!.map((v) => v.toJson()).toList();
     }
     if (lstExcutive != null) {
       data['lstExcutive'] = lstExcutive!.map((v) => v.toJson()).toList();
@@ -182,7 +183,14 @@ class ExcutiveDetails {
   String? zonecode;
   String? payRouteCode;
 
-  ExcutiveDetails({this.personnelCode, this.personnelname, this.zonename, this.payroutename, this.zoneshortname, this.zonecode, this.payRouteCode});
+  ExcutiveDetails(
+      {this.personnelCode,
+      this.personnelname,
+      this.zonename,
+      this.payroutename,
+      this.zoneshortname,
+      this.zonecode,
+      this.payRouteCode});
 
   ExcutiveDetails.fromJson(Map<String, dynamic> json) {
     personnelCode = json['personnelCode'];

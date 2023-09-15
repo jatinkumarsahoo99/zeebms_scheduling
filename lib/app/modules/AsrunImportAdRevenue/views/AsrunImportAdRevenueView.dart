@@ -124,6 +124,11 @@ class AsrunImportAdRevenueView extends StatelessWidget {
                                   onChanged: (val) {
                                     controller.checkboxesMap
                                         .value[checkbox.key] = val;
+                                    print(controller
+                                        .checkboxesMap.value[checkbox.key]);
+                                    print(controller.checkboxesMap.keys);
+                                    print(
+                                        controller.checkboxesMap.value['GFK']);
                                     controller.checkboxesMap.refresh();
                                   },
                                   materialTapTargetSize:
@@ -418,7 +423,8 @@ class AsrunImportAdRevenueView extends StatelessWidget {
         paste(up: false);
         break;
       case "Import":
-        controller.pickFile();
+        controller.checkGFK();
+        // controller.pickFile();
         break;
       case "Exit":
         Get.find<HomeController>().postUserGridSetting2(listStateManager: [

@@ -62,17 +62,21 @@ class SpotsView extends GetView<RoBookingController> {
               spacing: 5,
               children: [
                 DropDownField.formDropDown1WidthMap(
-                    controller.agencyLeaveData?.lstPdcList
-                            ?.map((e) => DropDownValue(
-                                key: e.chequeId.toString(),
-                                value: e.chequeNo.toString()))
-                            .toList() ??
-                        [],
-                    (value) => {},
-                    "PDC",
-                    0.12,
-                    showMenuInbottom: false,
-                    dialogHeight: 80),
+                  controller.agencyLeaveData?.lstPdcList
+                          ?.map((e) => DropDownValue(
+                              key: e.chequeId.toString(),
+                              value: e.chequeNo.toString()))
+                          .toList() ??
+                      [],
+                  (value) {
+                    controller.selectedPdc = value;
+                  },
+                  "PDC",
+                  0.12,
+                  showMenuInbottom: false,
+                  // dialogHeight: 80,
+                  selected: controller.selectedPdc,
+                ),
                 InputFields.formField1(
                     hintTxt: "Amt",
                     isEnable: false,

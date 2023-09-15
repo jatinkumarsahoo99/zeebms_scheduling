@@ -29,218 +29,222 @@ class ProgramView extends StatelessWidget {
                 policy: ReadingOrderTraversalPolicy(),
                 child: Container(
                   width: Get.width * 0.40,
-                  child: Wrap(
-                    crossAxisAlignment: WrapCrossAlignment.end,
-                    spacing: 05,
-                    runSpacing: 05,
-                    children: [
-                      InputFields.formField1(
-                          // showTitle: false,
-                          hintTxt: "Tape ID",
-                          focusNode: controller.tapeIdFocus,
-                          controller: controller.tapeIDCtrl,
-                          width: 0.06 + (5 / Get.width)),
-                      Obx(
-                        () => DropDownField.formDropDown1WidthMap(
-                            controller.tapeIds.value
-                                .map((e) => DropDownValue(
-                                    key: e["exporttapecode"],
-                                    value: e["commercialcaption"]))
-                                .toList(),
-                            (value) => {
-                                  controller.selectedTapeID = value,
-                                  controller.tapIdLeave(value.key),
-                                },
-                            "",
-                            0.18 - (5 / Get.width),
-                            selected: controller.selectedTapeID,
-                            inkWellFocusNode: controller.tapeIddropdownFocus,
-                            dialogHeight: Get.height * .35,
-                            dialogWidth: Get.width * 0.24),
-                      ),
-                      // DropDownField.formDropDownSearchAPI2(GlobalKey(), context,
-                      //     width: Get.width * 0.12, title: "Tape Id", url: "url", onchanged: (value) {}),
-                      DropDownField.formDropDown1WidthMap(
-                        [
-                          DropDownValue(
-                              key: (1).toString(), value: (1).toString())
-                        ],
-                        (value) => {},
-                        "Seg",
-                        0.03,
-                        selected: controller.selectedSeg,
-                        dialogWidth: Get.width * 0.12,
-                        dialogHeight: Get.height * .35,
-                      ),
-                      InputFields.formField1(
-                          // showTitle: false,
-                          hintTxt: "Duration",
-                          isEnable: false,
-                          controller: TextEditingController(
-                              text:
-                                  (controller.bookingTapeLeaveData?.duration ??
-                                          "")
-                                      .toString()),
-                          width: 0.09 - (5 / Get.width)),
-                      InputFields.formField1(
-                          // showTitle: false,
-                          hintTxt: "Caption",
-                          isEnable: false,
-                          controller: TextEditingController(
-                              text: (controller.bookingTapeLeaveData?.caption ??
-                                      "")
-                                  .toString()),
-                          width: 0.12),
-                      InputFields.formField1(
-                          // showTitle: false,
-                          hintTxt: "Agency Id",
-                          isEnable: false,
-                          controller: TextEditingController(
-                              text:
-                                  (controller.bookingTapeLeaveData?.agencyId ??
-                                          "")
-                                      .toString()),
-                          width: 0.12),
-                      InputFields.formField1(
-                          // showTitle: false,
-                          hintTxt: "Lanaguge",
-                          isEnable: false,
-                          controller: TextEditingController(
-                              text:
-                                  (controller.bookingTapeLeaveData?.language ??
-                                          "")
-                                      .toString()),
-                          width: 0.12),
-                      InputFields.formField1(
-                          // showTitle: false,
-                          hintTxt: "Rev Type",
-                          isEnable: false,
-                          controller: TextEditingController(
-                              text: (controller
-                                          .bookingTapeLeaveData?.tapeRevenue ??
-                                      "")
-                                  .toString()),
-                          width: 0.12),
-                      InputFields.formField1(
-                          // showTitle: false,
-                          hintTxt: "Sub Rev",
-                          isEnable: false,
-                          controller: TextEditingController(
-                              text: (controller.bookingTapeLeaveData
-                                          ?.tapeSubRevenue ??
-                                      "")
-                                  .toString()),
-                          width: 0.12),
-                      InputFields.formField1(
-                          // showTitle: false,
-                          hintTxt: "Camp Peroid",
-                          isEnable: false,
-                          controller: TextEditingController(
-                              text: controller
-                                  .bookingTapeLeaveData?.campStartDate
-                                  ?.split(" ")[0]),
-                          width: 0.12),
-                      InputFields.formField1(
-                          // showTitle: false,
-                          hintTxt: "",
-                          isEnable: false,
-                          controller: TextEditingController(
-                              text: controller.bookingTapeLeaveData?.campEndDate
-                                  ?.split(" ")[0]),
-                          width: 0.12),
-                      DateWithThreeTextField(
-                          isEnable: false,
-                          widthRation: 0.12,
-                          title: "Kill Date",
-                          mainTextController: controller.pgkillDateCtrl),
-                      DropDownField.formDropDown1WidthMap(
-                          controller.roBookingInitData?.lstspotpositiontype
-                                  ?.map((e) => DropDownValue(
-                                      key: (e.spotPositionTypeCode ?? "")
-                                          .toString(),
-                                      value: e.spotPositionTypeName))
-                                  .toList() ??
-                              [],
+                  child: SingleChildScrollView(
+                    child: Wrap(
+                      crossAxisAlignment: WrapCrossAlignment.end,
+                      spacing: 05,
+                      runSpacing: 05,
+                      children: [
+                        InputFields.formField1(
+                            // showTitle: false,
+                            hintTxt: "Tape ID",
+                            focusNode: controller.tapeIdFocus,
+                            controller: controller.tapeIDCtrl,
+                            width: 0.06 + (5 / Get.width)),
+                        Obx(
+                          () => DropDownField.formDropDown1WidthMap(
+                              controller.tapeIds.value
+                                  .map((e) => DropDownValue(
+                                      key: e["exporttapecode"],
+                                      value: e["commercialcaption"]))
+                                  .toList(),
+                              (value) => {
+                                    controller.selectedTapeID = value,
+                                    controller.tapIdLeave(value.key),
+                                  },
+                              "",
+                              0.18 - (5 / Get.width),
+                              selected: controller.selectedTapeID,
+                              inkWellFocusNode: controller.tapeIddropdownFocus,
+                              dialogHeight: Get.height * .35,
+                              dialogWidth: Get.width * 0.24),
+                        ),
+                        // DropDownField.formDropDownSearchAPI2(GlobalKey(), context,
+                        //     width: Get.width * 0.12, title: "Tape Id", url: "url", onchanged: (value) {}),
+                        DropDownField.formDropDown1WidthMap(
+                          [
+                            DropDownValue(
+                                key: (1).toString(), value: (1).toString())
+                          ],
                           (value) => {},
-                          "Pre-Mid",
-                          0.12,
-                          selected: controller.selectedPremid,
-                          isEnable: true),
-                      DropDownField.formDropDown1WidthMap(
-                          controller.roBookingInitData?.lstPosition
-                                  ?.map((e) => DropDownValue(
-                                      key: (e.positioncode ?? "").toString(),
-                                      value: e.column1))
-                                  .toList() ??
-                              [],
-                          (value) => {},
-                          "Position",
-                          0.12,
-                          selected: controller.selectedPosition,
-                          isEnable: true),
-                      DropDownField.formDropDown1WidthMap(
-                          List.generate(
-                              10,
-                              (index) => DropDownValue(
-                                  key: (index + 1).toString(),
-                                  value: (index + 1).toString())),
-                          (value) => {},
-                          "Break",
-                          0.12,
-                          selected: controller.selectedBreak,
-                          isEnable: true),
-                      FormButtonWrapper(
-                        btnText: "Seg",
-                        iconDataM: Icons.segment_rounded,
-                        callback: () {
-                          controller.getSegment(
-                              controller.programViewGrid?.currentRowIdx);
-                        },
-                      ),
-                      InputFields.formField1(
-                          // showTitle: false,
-                          hintTxt: "Rate",
-                          isEnable: false,
-                          controller: TextEditingController(
-                              text: controller.dealDblClickData?.rate ?? ""),
-                          width: 0.12),
-                      InputFields.formField1(
-                          // showTitle: false,
-                          hintTxt: "Total",
-                          isEnable: false,
-                          controller: TextEditingController(
-                              text: controller.bookingTapeLeaveData?.total ??
-                                  controller.dealDblClickData?.total ??
-                                  ""),
-                          width: 0.12),
-                      FormButtonWrapper(
-                        btnText: "Add Spots",
-                        iconDataM: Icons.addchart_rounded,
-                        callback: () {
-                          if (controller.selectedTapeID?.key == null ||
-                              controller.selectedTapeID?.value == null) {
-                            LoadingDialog.callInfoMessage(
-                                "Please select the tape id first and then add spot.");
-                          } else {
-                            controller.addSpot();
-                          }
-                        },
-                      ),
-                      FormButtonWrapper(
-                        btnText: "Deal",
-                        iconDataM: Icons.arrow_back_ios_new_rounded,
-                        callback: () {
-                          controller.pagecontroller.jumpToPage(0);
-                          controller.currentTab.value = "Deal";
-                        },
-                      ),
+                          "Seg",
+                          0.03,
+                          selected: controller.selectedSeg,
+                          dialogWidth: Get.width * 0.12,
+                          dialogHeight: Get.height * .35,
+                        ),
+                        InputFields.formField1(
+                            // showTitle: false,
+                            hintTxt: "Duration",
+                            isEnable: false,
+                            controller: TextEditingController(
+                                text: (controller
+                                            .bookingTapeLeaveData?.duration ??
+                                        "")
+                                    .toString()),
+                            width: 0.09 - (5 / Get.width)),
+                        InputFields.formField1(
+                            // showTitle: false,
+                            hintTxt: "Caption",
+                            isEnable: false,
+                            controller: TextEditingController(
+                                text:
+                                    (controller.bookingTapeLeaveData?.caption ??
+                                            "")
+                                        .toString()),
+                            width: 0.12),
+                        InputFields.formField1(
+                            // showTitle: false,
+                            hintTxt: "Agency Id",
+                            isEnable: false,
+                            controller: TextEditingController(
+                                text: (controller
+                                            .bookingTapeLeaveData?.agencyId ??
+                                        "")
+                                    .toString()),
+                            width: 0.12),
+                        InputFields.formField1(
+                            // showTitle: false,
+                            hintTxt: "Lanaguge",
+                            isEnable: false,
+                            controller: TextEditingController(
+                                text: (controller
+                                            .bookingTapeLeaveData?.language ??
+                                        "")
+                                    .toString()),
+                            width: 0.12),
+                        InputFields.formField1(
+                            // showTitle: false,
+                            hintTxt: "Rev Type",
+                            isEnable: false,
+                            controller: TextEditingController(
+                                text: (controller.bookingTapeLeaveData
+                                            ?.tapeRevenue ??
+                                        "")
+                                    .toString()),
+                            width: 0.12),
+                        InputFields.formField1(
+                            // showTitle: false,
+                            hintTxt: "Sub Rev",
+                            isEnable: false,
+                            controller: TextEditingController(
+                                text: (controller.bookingTapeLeaveData
+                                            ?.tapeSubRevenue ??
+                                        "")
+                                    .toString()),
+                            width: 0.12),
+                        InputFields.formField1(
+                            // showTitle: false,
+                            hintTxt: "Camp Peroid",
+                            isEnable: false,
+                            controller: TextEditingController(
+                                text: controller
+                                    .bookingTapeLeaveData?.campStartDate
+                                    ?.split(" ")[0]),
+                            width: 0.12),
+                        InputFields.formField1(
+                            // showTitle: false,
+                            hintTxt: "",
+                            isEnable: false,
+                            controller: TextEditingController(
+                                text: controller
+                                    .bookingTapeLeaveData?.campEndDate
+                                    ?.split(" ")[0]),
+                            width: 0.12),
+                        DateWithThreeTextField(
+                            isEnable: false,
+                            widthRation: 0.12,
+                            title: "Kill Date",
+                            mainTextController: controller.pgkillDateCtrl),
+                        DropDownField.formDropDown1WidthMap(
+                            controller.roBookingInitData?.lstspotpositiontype
+                                    ?.map((e) => DropDownValue(
+                                        key: (e.spotPositionTypeCode ?? "")
+                                            .toString(),
+                                        value: e.spotPositionTypeName))
+                                    .toList() ??
+                                [],
+                            (value) => {},
+                            "Pre-Mid",
+                            0.12,
+                            selected: controller.selectedPremid,
+                            isEnable: true),
+                        DropDownField.formDropDown1WidthMap(
+                            controller.roBookingInitData?.lstPosition
+                                    ?.map((e) => DropDownValue(
+                                        key: (e.positioncode ?? "").toString(),
+                                        value: e.column1))
+                                    .toList() ??
+                                [],
+                            (value) => {},
+                            "Position",
+                            0.12,
+                            selected: controller.selectedPosition,
+                            isEnable: true),
+                        DropDownField.formDropDown1WidthMap(
+                            List.generate(
+                                10,
+                                (index) => DropDownValue(
+                                    key: (index + 1).toString(),
+                                    value: (index + 1).toString())),
+                            (value) => {},
+                            "Break",
+                            0.12,
+                            selected: controller.selectedBreak,
+                            isEnable: true),
+                        FormButtonWrapper(
+                          btnText: "Seg",
+                          iconDataM: Icons.segment_rounded,
+                          callback: () {
+                            controller.getSegment(
+                                controller.programViewGrid?.currentRowIdx);
+                          },
+                        ),
+                        InputFields.formField1(
+                            // showTitle: false,
+                            hintTxt: "Rate",
+                            isEnable: false,
+                            controller: TextEditingController(
+                                text: controller.dealDblClickData?.rate ?? ""),
+                            width: 0.12),
+                        InputFields.formField1(
+                            // showTitle: false,
+                            hintTxt: "Total",
+                            isEnable: false,
+                            controller: TextEditingController(
+                                text: controller.bookingTapeLeaveData?.total ??
+                                    controller.dealDblClickData?.total ??
+                                    ""),
+                            width: 0.12),
+                        FormButtonWrapper(
+                          btnText: "Add Spots",
+                          iconDataM: Icons.addchart_rounded,
+                          callback: () {
+                            if (controller.selectedTapeID?.key == null ||
+                                controller.selectedTapeID?.value == null) {
+                              LoadingDialog.callInfoMessage(
+                                  "Please select the tape id first and then add spot.");
+                            } else {
+                              controller.addSpot();
+                            }
+                          },
+                        ),
+                        FormButtonWrapper(
+                          btnText: "Deal",
+                          iconDataM: Icons.arrow_back_ios_new_rounded,
+                          callback: () {
+                            controller.pagecontroller.jumpToPage(0);
+                            controller.currentTab.value = "Deal";
+                          },
+                        ),
 
-                      // Row(
-                      //   mainAxisSize: MainAxisSize.min,
-                      //   crossAxisAlignment: CrossAxisAlignment.end,
-                      //   children: [],
-                      // )
-                    ],
+                        // Row(
+                        //   mainAxisSize: MainAxisSize.min,
+                        //   crossAxisAlignment: CrossAxisAlignment.end,
+                        //   children: [],
+                        // )
+                      ],
+                    ),
                   ),
                 ),
               ),
@@ -261,6 +265,36 @@ class ProgramView extends StatelessWidget {
                             [],
                         editKeys: ["bookedSpots"],
                         onEdit: (editChnage) {
+                          // num val = num.tryParse(editChnage.value ?? '0') ?? 0;
+                          // if (val > 2) {
+                          //   controller.programViewGrid?.changeCellValue(
+                          //     editChnage.row.cells["bookedSpots"]!,
+                          //     '0',
+                          //     callOnChangedEvent: false,
+                          //     force: true,
+                          //     notify: true,
+                          //   );
+                          //   if (controller
+                          //               .bookingTapeLeaveData?.lstdgvProgram !=
+                          //           null &&
+                          //       (controller.bookingTapeLeaveData
+                          //                   ?.lstdgvProgram ??
+                          //               [])
+                          //           .isNotEmpty) {
+                          //     controller
+                          //         .bookingTapeLeaveData
+                          //         ?.lstdgvProgram?[editChnage.rowIdx]
+                          //         .bookedSpots = 0;
+                          //   } else {
+                          //     controller
+                          //         .dealDblClickData
+                          //         ?.lstProgram?[editChnage.rowIdx]
+                          //         .bookedSpots = 0;
+                          //   }
+                          //   LoadingDialog.callInfoMessage(
+                          //     'You cannot book duration greater than slot duration.',
+                          //   );
+                          // } else
                           if (controller.bookingTapeLeaveData != null) {
                             controller
                                     .bookingTapeLeaveData
@@ -277,6 +311,7 @@ class ProgramView extends StatelessWidget {
                           }
                         },
                         onRowDoubleTap: (dblclick) {
+                          // bool canIncre = true;
                           controller.dealProgramCode = controller
                                   .bookingTapeLeaveData
                                   ?.lstdgvProgram?[dblclick.rowIdx]
@@ -295,6 +330,42 @@ class ProgramView extends StatelessWidget {
                                   .telecastdate ??
                               controller.dealDblClickData
                                   ?.lstProgram?[dblclick.rowIdx].telecastdate;
+
+                          // if (controller.bookingTapeLeaveData?.lstdgvProgram !=
+                          //         null &&
+                          //     (controller.bookingTapeLeaveData?.lstdgvProgram ??
+                          //             [])
+                          //         .isNotEmpty) {
+                          //   if ((controller
+                          //               .bookingTapeLeaveData
+                          //               ?.lstdgvProgram?[dblclick.rowIdx]
+                          //               .bookedSpots ??
+                          //           0) >=
+                          //       2) {
+                          //     controller
+                          //         .bookingTapeLeaveData
+                          //         ?.lstdgvProgram?[dblclick.rowIdx]
+                          //         .bookedSpots = 0;
+                          //     canIncre = false;
+                          //   } else {
+                          //     canIncre = true;
+                          //   }
+                          // } else {
+                          //   if ((controller
+                          //               .dealDblClickData
+                          //               ?.lstProgram?[dblclick.rowIdx]
+                          //               .bookedSpots ??
+                          //           0) >=
+                          //       2) {
+                          //     controller
+                          //         .dealDblClickData
+                          //         ?.lstProgram?[dblclick.rowIdx]
+                          //         .bookedSpots = 0;
+                          //     canIncre = false;
+                          //   } else {
+                          //     canIncre = true;
+                          //   }
+                          // }
                           if (controller.bookingTapeLeaveData?.lstdgvProgram !=
                                   null &&
                               (controller.bookingTapeLeaveData?.lstdgvProgram ??
@@ -320,14 +391,33 @@ class ProgramView extends StatelessWidget {
                                     0) +
                                 1;
                           }
+
                           controller.programViewGrid?.changeCellValue(
-                              dblclick.row.cells["bookedSpots"]!,
-                              dblclick.cell.value is int
-                                  ? dblclick.cell.value + 1
-                                  : "${(int.tryParse(dblclick.cell.value) ?? 0) + 1}",
-                              callOnChangedEvent: false,
-                              force: true,
-                              notify: true);
+                            dblclick.row.cells["bookedSpots"]!,
+                            dblclick.cell.value is int
+                                ? dblclick.cell.value + 1
+                                : "${(int.tryParse(dblclick.cell.value) ?? 0) + 1}",
+                            callOnChangedEvent: false,
+                            force: true,
+                            notify: true,
+                          );
+                          // if (((controller
+                          //                 .dealDblClickData
+                          //                 ?.lstProgram?[dblclick.rowIdx]
+                          //                 .bookedSpots ??
+                          //             0) <
+                          //         2) ||
+                          //     ((controller
+                          //                 .bookingTapeLeaveData
+                          //                 ?.lstdgvProgram?[dblclick.rowIdx]
+                          //                 .bookedSpots ??
+                          //             0) <
+                          //         2)) {
+
+                          // } else {
+                          //   LoadingDialog.callInfoMessage(
+                          //       'You cannot book duration greater than slot duration.');
+                          // }
                         },
                         witdthSpecificColumn: (controller
                             .userDataSettings?.userSetting

@@ -215,6 +215,7 @@ class LstdgvUpdated {
         scheduleTime = json['scheduleTime'];
       }
     }
+    breaknumber = json['breaknumber'];
     exportTapeCode = json['exportTapeCode'];
     commercialCaption = json['commercialCaption'];
     tapeDuration = json['tapeDuration'];

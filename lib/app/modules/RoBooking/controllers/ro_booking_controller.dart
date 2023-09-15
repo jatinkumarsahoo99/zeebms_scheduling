@@ -29,6 +29,7 @@ import 'package:bms_scheduling/widgets/dropdown.dart';
 import 'package:bms_scheduling/widgets/input_fields.dart';
 import 'package:bms_scheduling/widgets/keepalive.dart';
 import 'package:file_picker/file_picker.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:get/get.dart';
@@ -36,6 +37,7 @@ import 'package:intl/intl.dart';
 
 import '../../../controller/HomeController.dart';
 import '../../../data/user_data_settings_model.dart';
+import '../../../providers/SizeDefine.dart';
 import '../bindings/ro_booking_init_data.dart';
 import '../bindings/ro_booking_save_check.dart';
 
@@ -83,7 +85,7 @@ class RoBookingController extends GetxController {
   RoBookingBrandLeave? bookingBrandLeaveData;
   RoBookingAddSpotData? addSpotData;
 
-  FocusNode bookingNoFocusNode = FocusNode();
+  FocusNode bookingNoFocusNode = FocusNode(), locationFN = FocusNode();
   // var spotsNotVerifiedData = RxList();
   SpotsNotVerifiedClickData? spotsNotVerifiedClickData;
   DropDownValue? selectedLocation;
@@ -208,9 +210,11 @@ class RoBookingController extends GetxController {
   }
 
   getChannel(locId) {
+    LoadingDialog.call();
     Get.find<ConnectorControl>().GETMETHODCALL(
         api: ApiFactory.RO_BOOKING_CHANNNEL(locId),
         fun: (data) {
+          Get.back();
           if (data is Map &&
               data.containsKey("info_LeaveLocationChannelList") &&
               data["info_LeaveLocationChannelList"] is List) {
@@ -369,11 +373,11 @@ class RoBookingController extends GetxController {
     Get.find<ConnectorControl>().POSTMETHOD(
         api: ApiFactory.RO_BOOKING_OnAgencyLeave,
         json: {
-          "Locationname": selectedLocation!.value,
-          "locationCode": selectedLocation!.key,
-          "ChannelCode": selectedChannel!.key,
-          "ChannelName": selectedChannel!.value,
-          "clientCode": selectedClient!.key,
+          "Locationname": selectedLocation?.value,
+          "locationCode": selectedLocation?.key,
+          "ChannelCode": selectedChannel?.key,
+          "ChannelName": selectedChannel?.value,
+          "clientCode": selectedClient?.key,
           "agencyCode": agencyCode,
           "bookingMonth": bookingMonthCtrl.text,
           "bookingnumber": bookingNoCtrl.text,
@@ -384,9 +388,11 @@ class RoBookingController extends GetxController {
           "GSTPlants": ""
         },
         fun: (data) {
-          if (data is Map && data.containsKey("info_AgencyLeave")) {
-            agencyLeaveData =
-                RoBookingAgencyLeaveData.fromJson(data["info_AgencyLeave"]);
+          print("Working");
+          if (data is Map<String, dynamic> &&
+              data.containsKey("info_AgencyLeave")) {
+            agencyLeaveData = RoBookingAgencyLeaveData.fromJson(
+                data["info_AgencyLeave"] as Map<String, dynamic>);
             // selectedDeal = DropDownValue(
             //   key: agencyLeaveData?.lstDealNumber?.first.dealNumber ?? "",
             //   value: agencyLeaveData?.lstDealNumber?.first.dealNumber ?? "",
@@ -407,6 +413,40 @@ class RoBookingController extends GetxController {
                 value: agencyLeaveData?.excutiveDetails?.first.personnelname);
             update(["init"]);
             gstNoCtrl.text = agencyLeaveData?.gstRegNo ?? "";
+            // Get.defaultDialog(
+            //     radius: 05,
+            //     title: "GST Plant",
+            //     confirm: FormButtonWrapper(
+            //       btnText: "Done",
+            //       callback: () {
+            //         Get.back();
+            //       },
+            //     ),
+            //     content: SizedBox(
+            //       height: Get.height / 4,
+            //       width: Get.width / 4,
+            //       child: Column(
+            //         children: [
+            //           DropDownField.formDropDown1WidthMap(
+            //             agencyLeaveData?.lstGstPlants
+            //                     ?.map((e) => DropDownValue(
+            //                         key: e.plantid?.toString(),
+            //                         value: e.column1))
+            //                     .toList() ??
+            //                 [],
+            //             (value) => {selectedGST = value},
+            //             "GST Plant",
+            //             0.20,
+            //             selected: selectedGST,
+            //           ),
+            //           InputFields.formField1(
+            //             hintTxt: "GST Reg#",
+            //             controller: gstNoCtrl,
+            //             width: 0.20,
+            //           )
+            //         ],
+            //       ),
+            //     ));
             // agencyFocus.requestFocus();
             if (showGstPopUp) {
               showGstPopUp = false;
@@ -426,13 +466,16 @@ class RoBookingController extends GetxController {
                       children: [
                         DropDownField.formDropDown1WidthMap(
                           agencyLeaveData?.lstGstPlants
-                              ?.map((e) => DropDownValue(
-                                  key: e.plantid?.toString(), value: e.column1))
-                              .toList(),
+                                  ?.map((e) => DropDownValue(
+                                      key: e.plantid?.toString(),
+                                      value: e.column1))
+                                  .toList() ??
+                              [],
                           (value) => {selectedGST = value},
                           "GST Plant",
                           0.20,
                           selected: selectedGST,
+                          autoFocus: true,
                         ),
                         InputFields.formField1(
                           hintTxt: "GST Reg#",
@@ -622,7 +665,7 @@ class RoBookingController extends GetxController {
           "dealNo": selectedDeal!.key,
           "clientCode": selectedClient!.key
         },
-        fun: (response) {
+        fun: (response) async {
           if (response is Map && response.containsKey("info_LeaveDealNumber")) {
             dealNoLeaveData =
                 RoBookingDealNoLeave.fromJson(response["info_LeaveDealNumber"]);
@@ -639,6 +682,42 @@ class RoBookingController extends GetxController {
                 DateFormat("MM/dd/yyyy")
                     .parse(dealNoLeaveData?.dealFromDate?.split(" ")[0] ?? ""));
             update(["init", "dealGrid"]);
+            for (var element in (dealNoLeaveData?.message ?? <String>[])) {
+              await Get.defaultDialog(
+                title: "",
+                barrierDismissible: true,
+                titleStyle: TextStyle(fontSize: 1),
+                content: Column(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    const Icon(
+                      CupertinoIcons.info,
+                      color: Colors.black,
+                      size: 55,
+                    ),
+                    const SizedBox(height: 20),
+                    Text(
+                      element,
+                      style: TextStyle(
+                          color: Colors.black,
+                          fontSize: SizeDefine.popupTxtSize),
+                    )
+                  ],
+                ),
+                radius: 10,
+                confirm: DailogCloseButton(
+                  autoFocus: true,
+                  callback: () {
+                    Get.back();
+                  },
+                  btnText: "OK",
+                ),
+                contentPadding: EdgeInsets.only(
+                    left: SizeDefine.popupMarginHorizontal,
+                    right: SizeDefine.popupMarginHorizontal,
+                    bottom: 16),
+              );
+            }
           }
         });
   }
@@ -710,21 +789,61 @@ class RoBookingController extends GetxController {
           "revenueType": dealNoLeaveData?.strRevenueTypeCode ??
               bookingNoLeaveData?.revenueType,
           "maxSpend": dealNoLeaveData?.maxSpend ?? bookingNoLeaveData?.maxSpend,
-          "intPDCReqd": 0,
+          "intPDCReqd": selectedPdc == null ? 1 : 0,
           "pdc": selectedPdc?.key,
           "strAccountCode": dealDblClickData?.strAccountCode
         },
-        fun: (response) {
+        fun: (response) async {
           if (response is Map && response.containsKey("info_OnSave")) {
             editMode = 1;
-
-            for (var msg in response["info_OnSave"]["message"]) {
-              LoadingDialog.callDataSavedMessage(msg, barrierDismissible: false,
+            for (var element in response["info_OnSave"]["message"]) {
+              await Get.defaultDialog(
+                title: "",
+                barrierDismissible: true,
+                titleStyle: TextStyle(fontSize: 1),
+                content: Column(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    const Icon(
+                      CupertinoIcons.check_mark_circled_solid,
+                      color: Colors.green,
+                      size: 55,
+                    ),
+                    const SizedBox(height: 20),
+                    Text(
+                      element.toString(),
+                      style: TextStyle(
+                          color: Colors.green,
+                          fontSize: SizeDefine.popupTxtSize),
+                    )
+                  ],
+                ),
+                radius: 10,
+                confirm: DailogCloseButton(
+                  autoFocus: true,
                   callback: () {
-                onBookingNoLeave(
-                    bookingNumber: response["info_OnSave"]["bookingNumber"]);
-              });
+                    Get.back();
+                    if (response["info_OnSave"]["bookingNumber"] != null) {
+                      onBookingNoLeave(
+                          bookingNumber: response["info_OnSave"]
+                              ["bookingNumber"]);
+                    }
+                  },
+                  btnText: "OK",
+                ),
+                contentPadding: EdgeInsets.only(
+                    left: SizeDefine.popupMarginHorizontal,
+                    right: SizeDefine.popupMarginHorizontal,
+                    bottom: 16),
+              );
             }
+            // for (var msg in response["info_OnSave"]["message"]) {
+            //   LoadingDialog.callDataSavedMessage(msg, barrierDismissible: false,
+            //       callback: () {
+            //     onBookingNoLeave(
+            //         bookingNumber: response["info_OnSave"]["bookingNumber"]);
+            //   });
+            // }
           } else if (response is String) {
             LoadingDialog.callErrorMessage1(msg: response);
           }
@@ -990,6 +1109,42 @@ class RoBookingController extends GetxController {
                     bookingNoLeaveData?.dealFromDate?.split(" ")[0] ?? ""));
 
             update(["dealGrid"]);
+            for (var element in (bookingNoLeaveData?.message ?? <String>[])) {
+              Get.defaultDialog(
+                title: "",
+                barrierDismissible: true,
+                titleStyle: TextStyle(fontSize: 1),
+                content: Column(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    const Icon(
+                      CupertinoIcons.info,
+                      color: Colors.black,
+                      size: 55,
+                    ),
+                    const SizedBox(height: 20),
+                    Text(
+                      element.toString(),
+                      style: TextStyle(
+                          color: Colors.black,
+                          fontSize: SizeDefine.popupTxtSize),
+                    )
+                  ],
+                ),
+                radius: 10,
+                confirm: DailogCloseButton(
+                  autoFocus: true,
+                  callback: () {
+                    Get.back();
+                  },
+                  btnText: "OK",
+                ),
+                contentPadding: EdgeInsets.only(
+                    left: SizeDefine.popupMarginHorizontal,
+                    right: SizeDefine.popupMarginHorizontal,
+                    bottom: 16),
+              );
+            }
           }
         });
   }
@@ -1113,7 +1268,8 @@ class RoBookingController extends GetxController {
               dealDblClickData?.strAccountCode,
           "locationCode": selectedLocation?.key ?? "",
           "channelCode": selectedChannel?.key,
-          "intSubRevenueTypeCode": "0",
+          "intSubRevenueTypeCode":
+              (dealDblClickData?.intSubRevenueTypeCode ?? 0).toString(),
           "searchContain": searchContain
         },
         fun: (value) {

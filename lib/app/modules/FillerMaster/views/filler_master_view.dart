@@ -159,7 +159,7 @@ class FillerMasterView extends GetView<FillerMasterController> {
                                         Obx(() => InputFields.formFieldDisable(
                                               hintTxt: "Duration",
                                               value: controller.duration.value,
-                                              widthRatio: 0.16,
+                                              widthRatio: 0.17,
                                             )),
 
                                         DropDownField.formDropDown1WidthMap(
@@ -378,6 +378,10 @@ class FillerMasterView extends GetView<FillerMasterController> {
                                             width: context.width *
                                                 controller.componentWidthRatio),
                                         SizedBox(
+                                            width: context.width *
+                                                controller.componentWidthRatio),
+                                        Container(
+                                            height: 6,
                                             width: context.width *
                                                 controller.componentWidthRatio),
                                       ],

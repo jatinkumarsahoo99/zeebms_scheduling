@@ -86,6 +86,8 @@ class DealView extends GetView<RoBookingController> {
                                   },
                                   hideCode: false,
                                   onRowDoubleTap: (value) {
+                                    controller.dealViewGrid?.setCurrentCell(
+                                        value.cell, value.rowIdx);
                                     gridcontroller
                                             .bookingNoLeaveDealCurrentColumn =
                                         value.cell.column.field;
@@ -140,6 +142,8 @@ class DealView extends GetView<RoBookingController> {
                                         }
                                       },
                                       onRowDoubleTap: (value) {
+                                        controller.dealViewGrid?.setCurrentCell(
+                                            value.cell, value.rowIdx);
                                         gridcontroller
                                                 .dealNoLeaveDealCurrentColumn =
                                             value.cell.column.field;
