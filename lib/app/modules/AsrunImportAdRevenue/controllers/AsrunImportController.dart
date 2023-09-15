@@ -588,4 +588,31 @@ class AsrunImportController extends GetxController {
           }
         });
   }
+
+  checkGFK() {
+    print(checkboxesMap.value['GFK']);
+    Get.find<ConnectorControl>().POSTMETHOD(
+        api: ApiFactory.GFKCheck,
+        json: {
+          "LocationCode": selectLocation?.key,
+          "ChannelCode": selectChannel?.key,
+          "telecastDate": selectedDate.text.fromdMyToyMd(),
+          "checkType": checkboxesMap.value['GFK']
+        },
+        fun: (map) {
+          if (map is Map && map.containsKey("result")) {
+            if (map["result"]["genericMessage"] != null) {
+              LoadingDialog.modify(map["result"]["genericMessage"], () {
+                print("yes");
+                pickFile();
+              }, () {
+                print("no");
+              }, cancelTitle: "No", deleteTitle: "Yes");
+            } else {
+              pickFile();
+            }
+            // checkMissingAsrun();
+          }
+        });
+  }
 }
