@@ -92,7 +92,8 @@ class InventoryStatusReportView
                             // margin: EdgeInsets.only(top: 8),
                             child: Obx(() {
                               return ListView.builder(
-                                controller: ScrollController(),
+                                controller:controller.scrollController ,
+                                shrinkWrap: true,
                                 itemCount: (controller.onLoadModel.value?.info
                                             ?.channels ??
                                         [])
