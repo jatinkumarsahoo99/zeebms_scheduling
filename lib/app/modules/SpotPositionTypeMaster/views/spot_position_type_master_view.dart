@@ -34,11 +34,11 @@ class SpotPositionTypeMasterView extends StatelessWidget {
                       mainAxisSize: MainAxisSize.min,
                       children: [
                         AppBar(
-                          title: Text('Spot Position Type Master'),
+                          title: const Text('Spot Position Type Master'),
                           centerTitle: true,
                           backgroundColor: Colors.deepPurple,
                         ),
-                        SizedBox(
+                        const SizedBox(
                           height: 15,
                         ),
                         Wrap(
@@ -47,42 +47,40 @@ class SpotPositionTypeMasterView extends StatelessWidget {
                           runSpacing: 10,
                           children: [
                             InputFields.formField1(
-                              hintTxt: "Spot Type Pos. Name",
-                              controller: controller.spotPostionName,
-                              focusNode: controller.positionNameFocus,
-                              width: 0.36,
-                                capital: true
-                            ),
+                                hintTxt: "Spot Type Pos. Name",
+                                controller: controller.spotPostionName,
+                                focusNode: controller.positionNameFocus,
+                                width: 0.36,
+                                capital: true),
                             InputFields.formField1(
                               hintTxt: "Spot Type Short Name",
                               controller: controller.spotShortName,
                               focusNode: controller.typeShortNameFocus,
                               width: 0.175,
-                               capital: true,
+                              capital: true,
                             ),
                             InputFields.numbers(
-                              hintTxt: "Log Position",
-                              padLeft: 0,
-                              controller: controller.logPosition,
-                              width: 0.175,
-                                isNegativeReq: false
-                            ),
+                                hintTxt: "Log Position",
+                                padLeft: 0,
+                                controller: controller.logPosition,
+                                width: 0.175,
+                                isNegativeReq: false),
                             Obx(() => DropDownField.formDropDown1WidthMap(
-                                controller.spots.value,
-                                (value) => {
-                                  controller.selectedSpotInLog.value = value
-                                },
-                                "Spot In Log",
-                                0.175,
-                                dialogHeight: 170,
-                                selected: controller.selectedSpotInLog.value)),
+                                  controller.spots.value,
+                                  (value) => {
+                                    controller.selectedSpotInLog.value = value
+                                  },
+                                  "Spot In Log",
+                                  0.175,
+                                  dialogHeight: 170,
+                                  // selected: controller.selectedSpotInLog.value
+                                )),
                             InputFields.numbers(
-                              hintTxt: "Spot Position Premium",
-                              padLeft: 0,
-                              controller: controller.positionPremium,
-                              width: 0.175,
-                              isNegativeReq: false
-                            ),
+                                hintTxt: "Spot Position Premium",
+                                padLeft: 0,
+                                controller: controller.positionPremium,
+                                width: 0.175,
+                                isNegativeReq: false),
                             SizedBox(
                               width: Get.width * 0.175,
                               child: Row(
@@ -130,7 +128,7 @@ class SpotPositionTypeMasterView extends StatelessWidget {
                         SizedBox(
                           height: 15,
                         ),
-                      /*  GetBuilder<HomeController>(
+                        /*  GetBuilder<HomeController>(
                             id: "buttons",
                             init: Get.find<HomeController>(),
                             builder: (btncontroller) {
@@ -173,11 +171,11 @@ class SpotPositionTypeMasterView extends StatelessWidget {
                               init: Get.find<HomeController>(),
                               builder: (controller) {
                                 PermissionModel formPermissions =
-                                Get.find<MainController>()
-                                    .permissionList!
-                                    .lastWhere((element) =>
-                                element.appFormName ==
-                                    "frmSpotPositionTypeMaster");
+                                    Get.find<MainController>()
+                                        .permissionList!
+                                        .lastWhere((element) =>
+                                            element.appFormName ==
+                                            "frmSpotPositionTypeMaster");
                                 if (controller.buttons != null) {
                                   return Wrap(
                                     spacing: 5,
@@ -187,13 +185,15 @@ class SpotPositionTypeMasterView extends StatelessWidget {
                                       for (var btn in controller.buttons!)
                                         FormButtonWrapper(
                                           btnText: btn["name"],
-                                          callback: Utils.btnAccessHandler2(btn['name'],
-                                              controller, formPermissions) ==
-                                              null
+                                          callback: Utils.btnAccessHandler2(
+                                                      btn['name'],
+                                                      controller,
+                                                      formPermissions) ==
+                                                  null
                                               ? null
                                               : () => btnhandler(
-                                            btn['name'],
-                                          ),
+                                                    btn['name'],
+                                                  ),
                                         )
                                     ],
                                   );

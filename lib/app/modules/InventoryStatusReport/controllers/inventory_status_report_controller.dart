@@ -71,6 +71,7 @@ class InventoryStatusReportController extends GetxController {
   }
 
   clearPage() {
+    selectedLocation!.value = "";
     // try {
     //   selectedLocation = onLoadModel.value?.info?.locations
     //       ?.firstWhere((element) => element.value == "ASIA");
