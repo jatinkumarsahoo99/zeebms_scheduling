@@ -1089,6 +1089,7 @@ class ApiFactory {
       "$BASE_URL/api/AsrunImport/AsrunOnImport";
   static String AsrunImport_CheckProgramSequence =
       "$BASE_URL/api/AsrunImport/CheckProgramSequence";
+  static String GFKCheck = "$BASE_URL/api/AsrunImport/GFKCheck";
   ////////////////////////////// Audit Status ////////////////////////////////////////
   static String NewBookingActivityReport_GetLoadLocation =
       "$BASE_URL/api/AsrunImport/GetLoadLocation";
