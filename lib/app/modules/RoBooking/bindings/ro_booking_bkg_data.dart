@@ -1,6 +1,6 @@
 class RoBookingBkgNOLeaveData {
-  int? intEditMode;
-  int? intPDCReqd;
+  num? intEditMode;
+  num? intPDCReqd;
   String? dblOldBookingAmount;
   String? locationCode;
   String? channelcode;
@@ -35,7 +35,7 @@ class RoBookingBkgNOLeaveData {
   List<LstAddInfo>? lstAddInfo;
   String? dealType;
   String? payMode;
-  String? message;
+  List<String>? message;
   List<LstdgvDealDetails>? lstdgvDealDetails;
   String? previousBookedAmount;
   String? previousValAmount;
@@ -180,7 +180,7 @@ class RoBookingBkgNOLeaveData {
     }
     dealType = json['dealType'];
     payMode = json['payMode'];
-    message = json['message'];
+    message = (json['message'] ?? <String>[]).cast<String>();
     if (json['lstdgvDealDetails'] != null) {
       lstdgvDealDetails = <LstdgvDealDetails>[];
       json['lstdgvDealDetails'].forEach((v) {
@@ -385,7 +385,7 @@ class LstBrand {
 class LstAddInfo {
   String? infoname;
   String? infovalue;
-  int? isRequired;
+  num? isRequired;
   String? allowedValues;
 
   LstAddInfo(
@@ -409,8 +409,8 @@ class LstAddInfo {
 }
 
 class LstdgvDealDetails {
-  int? primaryEventCode;
-  int? recordnumber;
+  num? primaryEventCode;
+  num? recordnumber;
   String? networkName;
   String? timeBand;
   String? sponsorTypeName;
@@ -418,22 +418,22 @@ class LstdgvDealDetails {
   String? startTime;
   String? endTime;
   num? rate;
-  int? seconds;
+  num? seconds;
   num? amount;
   num? valuationRate;
-  int? bookedSeconds;
-  int? balanceSeconds;
-  int? sun;
-  int? mon;
-  int? tue;
-  int? wed;
-  int? thu;
-  int? fri;
-  int? sat;
-  int? revFlag;
+  num? bookedSeconds;
+  num? balanceSeconds;
+  num? sun;
+  num? mon;
+  num? tue;
+  num? wed;
+  num? thu;
+  num? fri;
+  num? sat;
+  num? revFlag;
   String? accountName;
   String? eventName;
-  int? spots;
+  num? spots;
   String? paymentModeCaption;
   String? revenueTypeName;
   String? subRevenueTypeName;
@@ -442,11 +442,11 @@ class LstdgvDealDetails {
   String? programCode;
   String? programCategoryCode;
   String? bandcode;
-  int? netcode;
+  num? netcode;
   String? accountCode;
-  int? eventCode;
+  num? eventCode;
   String? revenueTypeCode;
-  int? subrevenuetypecode;
+  num? subrevenuetypecode;
   String? locationname;
   String? channelname;
   String? dealNumber;
@@ -460,8 +460,8 @@ class LstdgvDealDetails {
   num? bookedValuationAmount;
   num? balanceAmount;
   num? balanceValuationAmount;
-  int? countbased;
-  int? baseduration;
+  num? countbased;
+  num? baseduration;
   String? locationcode;
   String? channelcode;
 
@@ -644,7 +644,7 @@ class LstdgvDealDetails {
 class LstMakeGood {
   bool? selectRow;
   String? bookingNumber;
-  int? bookingDetailCode;
+  num? bookingDetailCode;
   String? dealno;
   String? recordNumber;
   String? programName;
@@ -755,17 +755,17 @@ class LstSpots {
   String? telecastDate;
   String? startTime;
   String? endTime;
-  int? spots;
+  num? spots;
   String? tapeId;
-  int? segmentNumber;
-  int? tapeDuration;
+  num? segmentNumber;
+  num? tapeDuration;
   String? spotPositionTypeName;
-  int? breaknumber;
+  num? breaknumber;
   String? positionName;
-  int? ratePer10Sec;
-  int? spotAmount;
+  num? ratePer10Sec;
+  num? spotAmount;
   String? dealNo;
-  int? dealrownumber;
+  num? dealrownumber;
   String? toNo;
   String? schId;
   String? commercialCaption;

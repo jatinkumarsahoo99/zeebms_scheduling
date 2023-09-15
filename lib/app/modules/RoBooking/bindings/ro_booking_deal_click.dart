@@ -73,7 +73,8 @@ class RoBookingDealDblClick {
       });
     }
     strAccountCode = json['strAccountCode'];
-    intSubRevenueTypeCode = json['intSubRevenueTypeCode'];
+    intSubRevenueTypeCode =
+        int.tryParse(json['intSubRevenueTypeCode'].toString());
     revenueType = json['revenueType'];
     preMid = json['preMid'];
     positionNo = json['positionNo'];

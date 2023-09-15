@@ -74,8 +74,10 @@ class RoBookingView extends StatelessWidget {
                                     "Location",
                                     0.11,
                                     selected: controller.selectedLocation,
+                                    inkWellFocusNode: controller.locationFN,
                                     isEnable:
                                         controller.bookingNoLeaveData == null,
+                                    autoFocus: true,
                                   ),
                                 ),
                                 FocusTraversalOrder(
