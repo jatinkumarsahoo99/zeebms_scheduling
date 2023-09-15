@@ -264,6 +264,7 @@ class AsrunImportController extends GetxController {
     if (startTime_.text.isEmpty || asrunData!.isEmpty) {
       LoadingDialog.showErrorDialog("No Data to Save");
     } else {
+      LoadingDialog.call();
       Get.find<ConnectorControl>().POSTMETHOD(
           api: ApiFactory.AsrunImport_CheckMissingAsRun,
           json: {
@@ -272,6 +273,7 @@ class AsrunImportController extends GetxController {
                 asrunData?.map((e) => e.toJson(isSegInt: false)).toList()
           },
           fun: (map) {
+            Get.back();
             if (map is Map &&
                 map.containsKey("isCheck") &&
                 map.containsKey("message")) {
@@ -445,10 +447,11 @@ class AsrunImportController extends GetxController {
   }
 
   importfile(PlatformFile? file) async {
+    print("====hey ${selectedDate.text.fromdMyToyMd()}");
     LoadingDialog.call();
     dio.FormData formData = dio.FormData.fromMap({
       'ChannelCode': selectChannel?.key,
-      'TelecastDate': '05/31/2023',
+      'TelecastDate': selectedDate.text.fromdMyToyMd(),
       'ImportFile': dio.MultipartFile.fromBytes(
         file!.bytes!.toList(),
         filename: file.name,
@@ -492,6 +495,7 @@ class AsrunImportController extends GetxController {
   }
 
   saveAsrun() {
+    LoadingDialog.call();
     Get.find<ConnectorControl>().POSTMETHOD(
         api: ApiFactory.AsrunImport_SaveAsrunDetail,
         json: {
@@ -519,6 +523,7 @@ class AsrunImportController extends GetxController {
           "IsGFK": checkboxesMap["GFK"]
         },
         fun: (map) {
+          Get.back();
           if (map is Map && map.containsKey("asrunDetails")) {
             Map asrundeatils = map["asrunDetails"];
 
@@ -550,6 +555,7 @@ class AsrunImportController extends GetxController {
   }
 
   checkProgramSequence() {
+    LoadingDialog.call();
     Get.find<ConnectorControl>().POSTMETHOD(
         api: ApiFactory.AsrunImport_CheckProgramSequence,
         json: {
@@ -577,14 +583,18 @@ class AsrunImportController extends GetxController {
           "IsGFK": checkboxesMap["GFK"]
         },
         fun: (map) {
+          Get.back();
           if (map is Map && map.containsKey("result")) {
             Map asrundeatils = map["result"];
 
             if (map["result"]["isError"]) {
               LoadingDialog.callErrorMessage1(
-                  msg: map["result"]["errorMessage"]);
+                msg: map["result"]["errorMessage"],
+                callback: () {
+                  checkMissingAsrun();
+                },
+              );
             }
-            checkMissingAsrun();
           }
         });
   }

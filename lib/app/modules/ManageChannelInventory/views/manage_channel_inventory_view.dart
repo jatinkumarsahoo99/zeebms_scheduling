@@ -79,10 +79,9 @@ class ManageChannelInvemtoryView
                   }),
                   const SizedBox(width: 10),
                   InputFields.formField1(
-                    hintTxt: "Weekday",
-                    controller: controller.weekDaysTC,
-                    isEnable: false,
-                  ),
+                      hintTxt: "Weekday",
+                      controller: controller.weekDaysTC,
+                      isEnable: false),
                   const SizedBox(width: 10),
                   FormButton(
                       btnText: "Display",
@@ -147,8 +146,8 @@ class ManageChannelInvemtoryView
                                 event.stateManager.setSelecting(true);
                                 event.stateManager.setCurrentCell(
                                     event.stateManager
-                                        .getRowByIdx(controller.lastSelectedIdx)
-                                        ?.cells['commDuration'],
+                                        .getRowByIdx(0)
+                                        ?.cells['telecastDate'],
                                     controller.lastSelectedIdx);
                               },
                             ),

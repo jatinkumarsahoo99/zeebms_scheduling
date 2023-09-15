@@ -20,7 +20,7 @@ class PromoTypeMasterController extends GetxController {
   String? programTypeCode;
   var promoCategories = <DropDownValue>[].obs;
   DropDownValue? selectedCategory;
-  var isActive = true.obs;
+  var isActive = false.obs;
   @override
   void onInit() {
     promoFocusNode.addListener(() {
@@ -70,27 +70,28 @@ class PromoTypeMasterController extends GetxController {
     } else if (sapCategory.text.trim().isEmpty) {
       LoadingDialog.showErrorDialog("Please enter SAP category.");
     } else {
-      LoadingDialog.call();
-      Get.find<ConnectorControl>().GETMETHODCALL(
-        api: ApiFactory.PROMO_TYPE_MASTER_VALIDATE_SAVE_RECORD(
-            programTypeCode ?? ""),
-        fun: (resp) {
-          Get.back();
-          if (resp != null && resp['result'].toString().contains('Record')) {
-            LoadingDialog.recordExists(
-              resp['result'].toString(),
-              () {
-                saveData();
-              },
-            );
-          } else {
-            LoadingDialog.showErrorDialog(resp.toString());
-          }
-        },
-        failed: (resp) {
-          Get.back();
-        },
-      );
+      if (programTypeCode!.isEmpty) {
+        saveData();
+      } else {
+        LoadingDialog.call();
+        Get.find<ConnectorControl>().POSTMETHOD(
+          api: ApiFactory.PROMO_TYPE_MASTER_VALIDATE_SAVE_RECORD,
+          json: {"promoTypeCode": programTypeCode},
+          fun: (resp) {
+            Get.back();
+            if (resp != null && resp['result'].toString().contains('Record')) {
+              LoadingDialog.recordExists(
+                resp['result'].toString(),
+                () {
+                  saveData();
+                },
+              );
+            } else {
+              LoadingDialog.showErrorDialog(resp.toString());
+            }
+          },
+        );
+      }
     }
   }
 
