@@ -431,10 +431,9 @@ class RoBookingView extends StatelessWidget {
                                                       key: e.personnelCode,
                                                       value: e.personnelName))
                                                   .toList()) ??
-                                              [],
-                                          (value) => {},
-                                          "Executive",
-                                          0.23,
+                                              [], (value) {
+                                        controller.selectedExecutive = value;
+                                      }, "Executive", 0.23,
                                           isEnable:
                                               controller.bookingNoLeaveData ==
                                                   null,
