@@ -377,6 +377,7 @@ class BrandMasterView extends StatelessWidget {
                               (element) =>
                                   element.appFormName == "frmBrandMaster");
                       if (controller.buttons != null) {
+                        print(">>>>>>>button jks"+controller.buttons.toString());
                         return ButtonBar(
                           alignment: MainAxisAlignment.start,
                           mainAxisSize: MainAxisSize.min,
