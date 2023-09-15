@@ -1689,30 +1689,33 @@ class InputFields {
     bool capital = false,
     bool isNegativeReq = true,
     int? maxchar,
-    int ?maxVal = 200,
+    int? maxVal = 200,
     bool? isEnabled,
     FocusNode? fN,
   }) {
     // var data = 0.obs;
-    fN = fN?? FocusNode(
-      onKeyEvent: (node, event) {
-        if (event.logicalKey == LogicalKeyboardKey.tab) {
-          if((int.tryParse(controller.text??"0")??0) > 100){
-            controller.text = "100";
-          }
-          return KeyEventResult.ignored;
-        }
-        return KeyEventResult.ignored;
-      },
-    );
+    fN = fN ??
+        FocusNode(
+          skipTraversal: true,
+          onKeyEvent: (node, event) {
+            if (event.logicalKey == LogicalKeyboardKey.tab) {
+              if ((int.tryParse(controller.text ?? "0") ?? 0) > 100) {
+                controller.text = "100";
+              }
+              return KeyEventResult.ignored;
+            }
+            return KeyEventResult.ignored;
+          },
+        );
     fN.addListener(() {
-      if(fN?.hasFocus == false){
-        if((int.tryParse(controller.text??"0")??0) > 100){
+      if (fN?.hasFocus == false) {
+        if ((int.tryParse(controller.text ?? "0") ?? 0) > 100) {
           controller.text = "100";
         }
       }
     });
-    final iconColor = (isEnabled ?? true) ? Colors.deepPurpleAccent : Colors.grey;
+    final iconColor =
+        (isEnabled ?? true) ? Colors.deepPurpleAccent : Colors.grey;
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
@@ -1737,25 +1740,31 @@ class InputFields {
                   /* controller.text =
                       "${(int.tryParse(controller.text) ?? 1) - 1}";*/
                   if (!isNegativeReq) {
-                    if (int.tryParse(controller.text) != 1 && int.tryParse(controller.text) != 0) {
-                      controller.text = "${(int.tryParse(controller.text) ?? 1) - 1}";
+                    if (int.tryParse(controller.text) != 1 &&
+                        int.tryParse(controller.text) != 0) {
+                      controller.text =
+                          "${(int.tryParse(controller.text) ?? 1) - 1}";
                     }
                   } else {
-                    controller.text = "${(int.tryParse(controller.text) ?? 1) - 1}";
+                    controller.text =
+                        "${(int.tryParse(controller.text) ?? 1) - 1}";
                   }
                 }
                 if (keyEvent.isKeyPressed(LogicalKeyboardKey.arrowUp)) {
-                  if ((int.tryParse(controller.text??"0")??0) < (maxVal??200)) {
-                    controller.text = "${(int.tryParse(controller.text) ?? 0) + 1}";
+                  if ((int.tryParse(controller.text ?? "0") ?? 0) <
+                      (maxVal ?? 200)) {
+                    controller.text =
+                        "${(int.tryParse(controller.text) ?? 0) + 1}";
                   }
-
                 }
               }
             },
             child: AbsorbPointer(
               absorbing: isEnabled ?? false,
               child: TextFormField(
-                textCapitalization: capital ? TextCapitalization.characters : TextCapitalization.none,
+                textCapitalization: capital
+                    ? TextCapitalization.characters
+                    : TextCapitalization.none,
                 validator: validator,
                 // focusNode: FocusNode(),
                 autovalidateMode: AutovalidateMode.onUserInteraction,
@@ -1764,14 +1773,16 @@ class InputFields {
                 keyboardType: TextInputType.datetime,
                 textAlign: TextAlign.left,
                 inputFormatters: [
-                  LengthLimitingTextInputFormatter(maxchar ?? SizeDefine.maxcharlimit),
+                  LengthLimitingTextInputFormatter(
+                      maxchar ?? SizeDefine.maxcharlimit),
                   FilteringTextInputFormatter.digitsOnly,
                 ],
                 enabled: isEnabled ?? true,
                 decoration: InputDecoration(
                   errorBorder: InputBorder.none,
                   contentPadding: const EdgeInsets.only(left: 10),
-                  labelStyle: TextStyle(fontSize: SizeDefine.labelSize, color: Colors.black),
+                  labelStyle: TextStyle(
+                      fontSize: SizeDefine.labelSize, color: Colors.black),
                   border: InputBorder.none,
                   enabledBorder: OutlineInputBorder(
                     borderSide: BorderSide(color: Colors.deepPurpleAccent),
@@ -1787,53 +1798,57 @@ class InputFields {
                   ),
                   suffixIcon: showbtn!
                       ? Row(
-                    mainAxisSize: MainAxisSize.min,
-                    mainAxisAlignment: MainAxisAlignment.start,
-                    children: [
-                      InkWell(
-                        canRequestFocus: isEnabled ?? true,
-                        child: Icon(
-                          Icons.arrow_drop_up_sharp,
-                          size: 25,
-                          color: iconColor,
-                        ),
-                        onTap: () {
-                          if (isEnabled ?? true) {
-                            controller.text = "${(int.tryParse(controller.text) ?? 0) + 1}";
-                            if (onchanged != null) {
-                              onchanged(controller.text);
-                            }
-                          } else {
-                            print("Print tap");
-                          }
-                        },
-                      ),
-                      InkWell(
-                        canRequestFocus: (isEnabled ?? true),
-                        child: Icon(
-                          Icons.arrow_drop_down_sharp,
-                          size: 25,
-                          color: iconColor,
-                        ),
-                        onTap: () {
-                          if (isEnabled ?? true) {
-                            if (!isNegativeReq) {
-                              print("Click on negative>>>" + controller.text);
-                              if (controller.text != "0") {
-                                controller.text = "${(int.tryParse(controller.text) ?? 1) - 1}";
-                                onchanged!(controller.text);
-                              }
-                            } else {
-                              controller.text = "${(int.tryParse(controller.text) ?? 1) - 1}";
-                              onchanged!(controller.text);
-                            }
-                          } else {
-                            print("Print tap");
-                          }
-                        },
-                      ),
-                    ],
-                  )
+                          mainAxisSize: MainAxisSize.min,
+                          mainAxisAlignment: MainAxisAlignment.start,
+                          children: [
+                            InkWell(
+                              canRequestFocus: isEnabled ?? true,
+                              child: Icon(
+                                Icons.arrow_drop_up_sharp,
+                                size: 25,
+                                color: iconColor,
+                              ),
+                              onTap: () {
+                                if (isEnabled ?? true) {
+                                  controller.text =
+                                      "${(int.tryParse(controller.text) ?? 0) + 1}";
+                                  if (onchanged != null) {
+                                    onchanged(controller.text);
+                                  }
+                                } else {
+                                  print("Print tap");
+                                }
+                              },
+                            ),
+                            InkWell(
+                              canRequestFocus: (isEnabled ?? true),
+                              child: Icon(
+                                Icons.arrow_drop_down_sharp,
+                                size: 25,
+                                color: iconColor,
+                              ),
+                              onTap: () {
+                                if (isEnabled ?? true) {
+                                  if (!isNegativeReq) {
+                                    print("Click on negative>>>" +
+                                        controller.text);
+                                    if (controller.text != "0") {
+                                      controller.text =
+                                          "${(int.tryParse(controller.text) ?? 1) - 1}";
+                                      onchanged!(controller.text);
+                                    }
+                                  } else {
+                                    controller.text =
+                                        "${(int.tryParse(controller.text) ?? 1) - 1}";
+                                    onchanged!(controller.text);
+                                  }
+                                } else {
+                                  print("Print tap");
+                                }
+                              },
+                            ),
+                          ],
+                        )
                       : SizedBox(),
                 ),
                 controller: controller,
