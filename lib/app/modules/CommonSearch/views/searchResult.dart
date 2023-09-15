@@ -78,7 +78,7 @@ class SearchResultPage extends StatelessWidget {
                               element["id"].toString() ==
                               controller.selectVarianceId.toString(),
                         )["varianceName"]} _Search_Result",
-                  hideCode: false,
+                  hideCode: false,csvFormat: true,
                   mapData: controller.searchResult!,
                   onload: (event) {
                     event.stateManager.setColumnSizeConfig(

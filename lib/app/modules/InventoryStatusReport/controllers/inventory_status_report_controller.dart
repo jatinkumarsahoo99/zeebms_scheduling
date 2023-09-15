@@ -22,7 +22,7 @@ class InventoryStatusReportController extends GetxController {
   var dataTableList = [].obs;
   var channelAllSelected = false.obs;
   DropDownValue? selectedLocation, selectedChannel;
-  var locationFN = FocusNode();
+  late FocusNode locationFN;
   var selectedRadio = "".obs;
   Rxn<InventoryStatusReportLoadModel?> onLoadModel =
       Rxn<InventoryStatusReportLoadModel?>();
@@ -40,7 +40,7 @@ class InventoryStatusReportController extends GetxController {
       onKeyEvent: (node, event) {
         if (event.logicalKey == LogicalKeyboardKey.tab) {
           scrollController.jumpTo(scrollController.position.maxScrollExtent);
-          return KeyEventResult.ignored;
+          return KeyEventResult.handled;
         }
         return KeyEventResult.ignored;
       },
