@@ -48,7 +48,7 @@ class InventoryStatusReportView
                               inkWellFocusNode: controller.locationFN,
                             );
                           }),
-                          SizedBox(height: 10),
+                          const SizedBox(height: 10),
                           Obx(() {
                             return CheckBoxWidget1(
                               title: "Channel",
@@ -56,7 +56,7 @@ class InventoryStatusReportView
                               onChanged: controller.hanldeChangedOnAllChannel,
                             );
                           }),
-                          SizedBox(height: 10),
+                          const SizedBox(height: 10),
                           // Obx(() {
                           //   return ExcludeFocus(
                           //     excluding: true,
@@ -132,7 +132,7 @@ class InventoryStatusReportView
                                                   .downValue
                                                   ?.value ??
                                               "",
-                                          style: TextStyle(fontSize: 12),
+                                          style: const TextStyle(fontSize: 12),
                                         ),
                                       )
                                     ],
@@ -141,7 +141,7 @@ class InventoryStatusReportView
                               );
                             }),
                           ),
-                          SizedBox(height: 10),
+                          const SizedBox(height: 10),
                           Obx(() {
                             return RadioRow(
                               items: [

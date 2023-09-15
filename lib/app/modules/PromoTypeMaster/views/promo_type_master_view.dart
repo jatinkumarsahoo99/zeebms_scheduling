@@ -64,6 +64,7 @@ class PromoTypeMasterView extends StatelessWidget {
                   hintTxt: "SAP Category",
                   controller: controller.sapCategory,
                   width: 0.41,
+                  maxLen: 10,
                 ),
                 const SizedBox(height: 10),
                 Row(
@@ -125,11 +126,12 @@ class PromoTypeMasterView extends StatelessWidget {
                       id: "buttons",
                       init: Get.find<HomeController>(),
                       builder: (controll) {
-                        PermissionModel formPermissions = Get
-                            .find<MainController>()
-                            .permissionList!
-                            .lastWhere((element) =>
-                        element.appFormName == "frmPromoTypeMaster");
+                        PermissionModel formPermissions =
+                            Get.find<MainController>()
+                                .permissionList!
+                                .lastWhere((element) =>
+                                    element.appFormName ==
+                                    "frmPromoTypeMaster");
                         formPermissions.delete = false;
                         if (controll.buttons != null) {
                           return Wrap(
@@ -140,13 +142,12 @@ class PromoTypeMasterView extends StatelessWidget {
                               for (var btn in controll.buttons!)
                                 FormButtonWrapper(
                                   btnText: btn["name"],
-                                  callback: Utils.btnAccessHandler2(
-                                      btn['name'],
-                                      controll, formPermissions) ==
-                                      null
+                                  callback: Utils.btnAccessHandler2(btn['name'],
+                                              controll, formPermissions) ==
+                                          null
                                       ? null
                                       : () =>
-                                      controller.btnHandler(btn["name"]),
+                                          controller.btnHandler(btn["name"]),
                                 )
                             ],
                           );
@@ -162,6 +163,4 @@ class PromoTypeMasterView extends StatelessWidget {
       ),
     );
   }
-
-  
 }
