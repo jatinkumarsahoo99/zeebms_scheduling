@@ -765,7 +765,7 @@ class RoBookingController extends GetxController {
           "dealNo": selectedDeal?.key,
           "pdcNumber": selectedPdc?.key ?? "",
           "loggedUser": Get.find<MainController>().user?.logincode,
-          "intEditMode": bookingNoLeaveData?.intEditMode ?? editMode,
+          "intEditMode": bookingNoLeaveData?.intEditMode ?? 0,
           "gstPlants": agencyLeaveData?.gstPlants ??
               bookingNoLeaveData?.gstPlants ??
               selectedGST?.key,
@@ -796,55 +796,143 @@ class RoBookingController extends GetxController {
         },
         fun: (response) async {
           if (response is Map && response.containsKey("info_OnSave")) {
-            editMode = 1;
-            for (var element in response["info_OnSave"]["message"]) {
-              await Get.defaultDialog(
-                title: "",
-                barrierDismissible: true,
-                titleStyle: TextStyle(fontSize: 1),
-                content: Column(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
-                    const Icon(
-                      CupertinoIcons.check_mark_circled_solid,
-                      color: Colors.green,
-                      size: 55,
-                    ),
-                    const SizedBox(height: 20),
-                    Text(
-                      element.toString(),
-                      style: TextStyle(
-                          color: Colors.green,
-                          fontSize: SizeDefine.popupTxtSize),
-                    )
-                  ],
-                ),
-                radius: 10,
-                confirm: DailogCloseButton(
-                  autoFocus: true,
-                  callback: () {
-                    Get.back();
-                    if (response["info_OnSave"]["bookingNumber"] != null) {
-                      onBookingNoLeave(
-                          bookingNumber: response["info_OnSave"]
-                              ["bookingNumber"]);
-                    }
-                  },
-                  btnText: "OK",
-                ),
-                contentPadding: EdgeInsets.only(
-                    left: SizeDefine.popupMarginHorizontal,
-                    right: SizeDefine.popupMarginHorizontal,
-                    bottom: 16),
+            // editMode = 1;
+            if (response["info_OnSave"]["message"] != null &&
+                (response["info_OnSave"]["message"] as List<dynamic>)
+                    .isNotEmpty) {
+              LoadingDialog.callInfoMessage(
+                (response["info_OnSave"]["message"] as List<dynamic>).first,
+                callback: () {
+                  if (response["info_OnSave"]["bookingNumber"] != null) {
+                    onBookingNoLeave(
+                        bookingNumber: response["info_OnSave"]
+                            ["bookingNumber"]);
+                  }
+                },
               );
             }
+            // for (var element in response["info_OnSave"]["message"]) {
+            //   await Get.defaultDialog(
+            //     title: "",
+            //     barrierDismissible: true,
+            //     titleStyle: TextStyle(fontSize: 1),
+            //     content: Column(
+            //       mainAxisAlignment: MainAxisAlignment.center,
+            //       children: [
+            //         const Icon(
+            //           CupertinoIcons.check_mark_circled_solid,
+            //           color: Colors.green,
+            //           size: 55,
+            //         ),
+            //         const SizedBox(height: 20),
+            //         Text(
+            //           element.toString(),
+            //           style: TextStyle(
+            //               color: Colors.green,
+            //               fontSize: SizeDefine.popupTxtSize),
+            //         )
+            //       ],
+            //     ),
+            //     radius: 10,
+            //     confirm: DailogCloseButton(
+            //       autoFocus: true,
+            //       callback: () {
+            //         Get.back();
+
+            //         if (response["info_OnSave"]["bookingNumber"] != null) {
+            //           onBookingNoLeave(
+            //               bookingNumber: response["info_OnSave"]
+            //                   ["bookingNumber"]);
+            //         }
+            //       },
+            //       btnText: "OK",
+            //     ),
+            //     contentPadding: EdgeInsets.only(
+            //         left: SizeDefine.popupMarginHorizontal,
+            //         right: SizeDefine.popupMarginHorizontal,
+            //         bottom: 16),
+            //   );
+            // }
           } else if (response is String) {
             LoadingDialog.callErrorMessage1(msg: response);
-            editMode = 0;
           }
         });
   }
 
+  // void addToSpotsGrid(List<Map<String, dynamic>> dgvPrograms, List<Map<String, dynamic>> dtSpotsData, List<Map<String, dynamic>> dtDealDetails,
+  //     List<Map<String, dynamic>> dgvSpots,rowIdx) {
+  //   String strProgramName, strTelecastDate, strProgramCode;
+  //   String strStartTime, strEndTime;
+  //   int intSpots, intTotalBookedSpots = 0;
+
+  //   for (int i = 0; i < dgvPrograms.length; i++) {
+  //     if (int.parse(dgvPrograms[i]["bookedspots"].toString()) > 0) {
+  //       strProgramName = dgvPrograms[i]["programname"].toString();
+  //       strTelecastDate = dgvPrograms[i]["telecastdate"].toString();
+  //       strStartTime = dgvPrograms[i]["starttime"].toString();
+  //       strEndTime = dgvPrograms[i]["endtime"].toString();
+  //       intSpots = int.parse(dgvPrograms[i]["bookedspots"].toString());
+  //       intTotalBookedSpots += intSpots;
+  //       strProgramCode = dgvPrograms[i]["programcode"].toString();
+
+  //       dtSpotsData.add({
+  //         "ProgramName": strProgramName,
+  //         "TelecastDate": strTelecastDate,
+  //         "StartTime": strStartTime.toString(),
+  //         "EndTime": strEndTime,
+  //         "Spots": intSpots,
+  //         "TapeId": selectedTapeID!.key,
+  //         "SegNo": selectedSeg!.key,
+  //         "Duration": (bookingTapeSearchData?.lstSearchTapeId?.first.commercialDuration??1) * intSpots,
+  //         "PreMid": selectedPremid!.key,
+  //         "BreakNo": selectedBreak!.key,
+  //         "PositionNo": selectedPosition!.key,
+  //         "Total": 1,
+  //         "TotalSpots": 1* intSpots,
+  //         "DealNo": selectedDeal!.key,
+  //         "DealRowNo": rowIdx,
+  //         "EmptyField": "",
+  //         "Field": "0-0",
+  //         "Caption": bookingTapeSearchData?.lstSearchTapeId?.first.commercialCaption,
+  //         "ProgramCode": strProgramCode,
+  //         "PreMidValue": selectedPremid!.value,
+  //         "PositionNoValue": selectedPosition!.value
+  //       });
+  //     }
+  //   }
+  //   dtSpotsData;
+
+  //   // Updating Deal Grid and DT
+  //   for (int i = 0; i < dtDealDetails.length; i++) {
+  //     if (int.parse(dtDealDetails[i]["recordnumber"]) == rowIdx &&
+  //         dtDealDetails[i]["locationname"] == selectedLocation!.value &&
+  //         dtDealDetails[i]["channelname"] == selectedChannel!.value &&
+  //         dtDealDetails[i]["dealnumber"] == selectedDeal!.key) {
+  //       if (bookingNoLeaveData?.accountCode != "I000100010" && bookingNoLeaveData?.accountCode != "I000100005" && bookingNoLeaveData?.accountCode != "I000100004" && bookingNoLeaveData?.accountCode != "I000100013") {
+  //         dtDealDetails[0][i]["bookedseconds"] =
+  //             int.parse(dtDealDetails[0][i]["bookedseconds"]) + (bookingTapeSearchData?.lstSearchTapeId?.first.commercialDuration??1 * intTotalBookedSpots);
+  //       } else if (bookingNoLeaveData?.accountCode == "I000100010" && int.parse(intSubRevenueTypeCode) == 9) {
+  //         dtDealDetails[i]["bookedseconds"] =
+  //             int.parse(dtDealDetails[i]["bookedseconds"]) + (int.parse(txtDuration.Text) * intTotalBookedSpots);
+  //       } else {
+  //         dtDealDetails[i]["bookedseconds"] = int.parse(dtDealDetails[i]["bookedseconds"]) + intTotalBookedSpots;
+  //       }
+
+  //       dtDealDetails[i]["balanceseconds"] = int.parse(dtDealDetails[i]["seconds"]) - int.parse(dtDealDetails[i]["bookedseconds"]);
+  //       // BalanceSeconds = dtDealDetails[i]["balanceseconds"];
+  //       // dtDealDetails[0].acceptChanges();
+  //       // dgvDealDetail[0] = dtDealDetails;
+  //       // hideDealGridCols();
+  //       break;
+  //     }
+  //   }
+  //   hideRows(dgvDealDetail);
+
+  //   // Set Booked Spots Column to 0
+  //   for (int i = 0; i < dgvPrograms.length; i++) {
+  //     dgvPrograms[i]["bookedspots"] = 0;
+  //   }
+  // }
   spotnotverifiedclick(index) {
     Get.find<ConnectorControl>().POSTMETHOD(
         api: ApiFactory.RO_BOOKING_SPOT_DBL_CLICK,
@@ -898,6 +986,23 @@ class RoBookingController extends GetxController {
           }
         });
   }
+
+  // getSpotsNotVerified(location, channel, month) {
+  //   Get.find<ConnectorControl>().POSTMETHOD(
+  //       api: ApiFactory.RO_BOOKING_GET_SpotsNotVerified,
+  //       json: {
+  //         "locationCode": location,
+  //         "channelCode": channel,
+  //         "bookingMonth": month,
+  //         "loggedUser": Get.find<MainController>().user?.logincode,
+  //       },
+  //       fun: (response) {
+  //         if (response is Map &&
+  //             response.containsKey("info_SpotsNotVerified")) {
+  //           // spotsNotVerifiedData.value = response["info_SpotsNotVerified"];
+  //         }
+  //       });
+  // }
 
   getDisplay() {
     if (selectedLocation == null && selectedChannel == null) {
@@ -967,32 +1072,54 @@ class RoBookingController extends GetxController {
           "bookingnumber": bookingNumber ?? bookingNoCtrl.text,
           "formname": "frmROBooking"
         },
-        fun: (value) {
+        fun: (value) async {
           if (value is Map && value.containsKey("info_LeaveBookingNumber")) {
             bookingNoLeaveDealCurrentColumn = "";
             bookingNoLeaveDealCurrentRow = null;
             bookingNoLeaveData = RoBookingBkgNOLeaveData.fromJson(
                 value["info_LeaveBookingNumber"]);
+            if (bookingNoLeaveData == null) {
+              LoadingDialog.showErrorDialog("info_LeaveBookingNumber was null");
+              return;
+            }
+            // await Future.delayed(const Duration(seconds: 2));
             selectedClient = DropDownValue(
-                key: bookingNoLeaveData!.lstClientAgency!.first.clientcode,
-                value: bookingNoLeaveData!.lstClientAgency!.first.clientname);
+                key: bookingNoLeaveData?.lstClientAgency?.first.clientcode,
+                value: bookingNoLeaveData?.lstClientAgency?.first.clientname);
             selectedAgnecy = DropDownValue(
-                key: bookingNoLeaveData!.lstAgency!.first.agencycode,
-                value: bookingNoLeaveData!.lstAgency!.first.agencyname);
+                key: bookingNoLeaveData?.lstAgency?.first.agencycode,
+                value: bookingNoLeaveData?.lstAgency?.first.agencyname);
             selectedBrand = DropDownValue(
-                key: bookingNoLeaveData!.lstBrand!.first.brandcode,
-                value: bookingNoLeaveData!.lstBrand!.first.brandname);
+                key: bookingNoLeaveData?.lstBrand?.first.brandcode,
+                value: bookingNoLeaveData?.lstBrand?.first.brandname);
             selectedDeal = DropDownValue(
-                key: bookingNoLeaveData!.lstDealNumber!.first.dealNumber,
-                value: bookingNoLeaveData!.lstDealNumber!.first.dealNumber);
-            selectedExecutive = DropDownValue(
-                key: bookingNoLeaveData!.executiveCode,
-                value: roBookingInitData?.lstExecutives
-                        ?.firstWhereOrNull((element) =>
-                            element.personnelCode ==
-                            bookingNoLeaveData!.executiveCode)
-                        ?.personnelName ??
-                    "");
+                key: bookingNoLeaveData?.lstDealNumber?.first.dealNumber,
+                value: bookingNoLeaveData?.lstDealNumber?.first.dealNumber);
+            try {
+              // selectedExecutive = DropDownValue(
+              //     key: bookingNoLeaveData!.executiveCode,
+              //     value: roBookingInitData?.lstExecutives
+              //             ?.firstWhereOrNull((element) =>
+              //                 element.personnelCode ==
+              //                 bookingNoLeaveData?.executiveCode)
+              //             ?.personnelName ??
+              //         "");
+              try {
+                selectedExecutive = DropDownValue(
+                  key: bookingNoLeaveData!.executiveCode,
+                  value: bookingNoLeaveData?.lstExcutiveDetails
+                      ?.firstWhere((element) =>
+                          element.personnelCode ==
+                          bookingNoLeaveData!.executiveCode)
+                      .personnelname,
+                );
+              } catch (e) {
+                print(e.toString());
+              }
+            } catch (e) {
+              print(e.toString());
+            }
+            print('${selectedExecutive?.key}:${selectedExecutive?.value}');
             update(["init"]);
 
             refNoCtrl.text = bookingNoLeaveData!.bookingReferenceNumber ?? "";
@@ -1005,50 +1132,59 @@ class RoBookingController extends GetxController {
             totAmtCtrl.text = bookingNoLeaveData!.totalAmount ?? "";
             zoneCtrl.text = bookingNoLeaveData!.zonename ?? "";
             maxspendCtrl.text = bookingNoLeaveData!.maxSpend ?? "";
-            dealToCtrl.text = DateFormat("dd-MM-yyyy").format(
-                DateFormat("MM/dd/yyyy").parse(
-                    bookingNoLeaveData?.dealtoDate?.split(" ")[0] ?? ""));
-            dealFromCtrl.text = DateFormat("dd-MM-yyyy").format(
-                DateFormat("MM/dd/yyyy").parse(
-                    bookingNoLeaveData?.dealFromDate?.split(" ")[0] ?? ""));
+            try {
+              dealToCtrl.text = DateFormat("dd-MM-yyyy").format(
+                  DateFormat("dd/MM/yyyy hh:mm:ss")
+                      .parse(bookingNoLeaveData?.dealtoDate ?? ''));
+            } catch (e) {
+              print(e.toString());
+            }
+            try {
+              dealFromCtrl.text = DateFormat("dd-MM-yyyy").format(
+                  DateFormat("dd/MM/yyyy hh:mm:ss")
+                      .parse(bookingNoLeaveData?.dealFromDate ?? ''));
+            } catch (e) {
+              print(e.toString());
+            }
 
             update(["dealGrid"]);
-            for (var element in (bookingNoLeaveData?.message ?? <String>[])) {
-              Get.defaultDialog(
-                title: "",
-                barrierDismissible: true,
-                titleStyle: TextStyle(fontSize: 1),
-                content: Column(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
-                    const Icon(
-                      CupertinoIcons.info,
-                      color: Colors.black,
-                      size: 55,
-                    ),
-                    const SizedBox(height: 20),
-                    Text(
-                      element.toString(),
-                      style: TextStyle(
-                          color: Colors.black,
-                          fontSize: SizeDefine.popupTxtSize),
-                    )
-                  ],
-                ),
-                radius: 10,
-                confirm: DailogCloseButton(
-                  autoFocus: true,
-                  callback: () {
-                    Get.back();
-                  },
-                  btnText: "OK",
-                ),
-                contentPadding: EdgeInsets.only(
-                    left: SizeDefine.popupMarginHorizontal,
-                    right: SizeDefine.popupMarginHorizontal,
-                    bottom: 16),
-              );
-            }
+            // for (var element in (bookingNoLeaveData?.message ?? <String>[])) {
+            //   Get.defaultDialog(
+            //     title: "",
+            //     barrierDismissible: true,
+            //     titleStyle: TextStyle(fontSize: 1),
+            //     content: Column(
+            //       mainAxisAlignment: MainAxisAlignment.center,
+            //       children: [
+            //         const Icon(
+            //           CupertinoIcons.info,
+            //           color: Colors.black,
+            //           size: 55,
+            //         ),
+            //         const SizedBox(height: 20),
+            //         Text(
+            //           element.toString(),
+            //           style: TextStyle(
+            //               color: Colors.black,
+            //               fontSize: SizeDefine.popupTxtSize),
+            //         )
+            //       ],
+            //     ),
+            //     radius: 10,
+            //     confirm: DailogCloseButton(
+            //       autoFocus: true,
+            //       callback: () {
+            //         Get.back();
+            //         locationFN.requestFocus();
+            //       },
+            //       btnText: "OK",
+            //     ),
+            //     contentPadding: EdgeInsets.only(
+            //         left: SizeDefine.popupMarginHorizontal,
+            //         right: SizeDefine.popupMarginHorizontal,
+            //         bottom: 16),
+            //   );
+            // }
           }
         });
   }
