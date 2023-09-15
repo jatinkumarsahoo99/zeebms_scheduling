@@ -390,13 +390,16 @@ class BrandMasterController extends GetxController {
           if (map is Map &&
               map.containsKey("brandMater") &&
               map['brandMater'] != null) {
-            clearAll();
             if (strcode != "0") {
               LoadingDialog.callDataSavedMessage(
-                  "Record is updated successfully.");
+                  "Record is updated successfully.",callback: (){
+                clearAll();
+              });
             } else {
               LoadingDialog.callDataSavedMessage(
-                  "Record is inserted successfully.");
+                  "Record is inserted successfully.",callback: (){
+                clearAll();
+              });
             }
           } else {
             LoadingDialog.showErrorDialog(

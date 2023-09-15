@@ -90,6 +90,12 @@ class CommonDocsView extends GetView<CommonDocsController> {
                                   controller.handleViewDocs(documentKey)),
                           const SizedBox(width: 20),
                           FormButton(
+                              btnText: "Attach Emails",
+                              callback: () {
+
+                              }),
+                          const SizedBox(width: 20),
+                          FormButton(
                               btnText: "Close", callback: () => Get.back()),
                         ],
                       ),

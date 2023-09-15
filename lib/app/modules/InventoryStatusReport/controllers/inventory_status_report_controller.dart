@@ -3,6 +3,7 @@ import 'package:bms_scheduling/app/providers/ApiFactory.dart';
 import 'package:bms_scheduling/widgets/LoadingDialog.dart';
 import 'package:bms_scheduling/widgets/PlutoGrid/src/manager/pluto_grid_state_manager.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:get/get.dart';
 import 'package:intl/intl.dart';
 
@@ -28,11 +29,23 @@ class InventoryStatusReportController extends GetxController {
 
   PlutoGridStateManager? stateManager;
   UserDataSettings? userDataSettings;
-
+  ScrollController scrollController = new ScrollController();
+  FocusScopeNode focusNodeList = FocusScopeNode();
   @override
   void onInit() {
     formPermissions = Utils.fetchPermissions1(
         Routes.INVENTORY_STATUS_REPORT.replaceAll("/", ""));
+
+    locationFN =  FocusNode(
+      onKeyEvent: (node, event) {
+        if (event.logicalKey == LogicalKeyboardKey.tab) {
+          scrollController.jumpTo(scrollController.position.maxScrollExtent);
+          return KeyEventResult.ignored;
+        }
+        return KeyEventResult.ignored;
+      },
+    );
+
     super.onInit();
   }
 
