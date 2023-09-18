@@ -93,7 +93,7 @@ class InventoryStatusReportView
                             child: Obx(() {
                               return ListView.builder(
                                 controller:controller.scrollController ,
-                                shrinkWrap: true,
+                                // shrinkWrap: true,
                                 itemCount: (controller.onLoadModel.value?.info
                                             ?.channels ??
                                         [])
