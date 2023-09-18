@@ -22,15 +22,14 @@ class InventoryStatusReportController extends GetxController {
   var dataTableList = [].obs;
   var channelAllSelected = false.obs;
   DropDownValue? selectedLocation, selectedChannel;
-  late FocusNode locationFN;
+  FocusNode locationFN = FocusNode();
   var selectedRadio = "".obs;
   Rxn<InventoryStatusReportLoadModel?> onLoadModel =
       Rxn<InventoryStatusReportLoadModel?>();
 
   PlutoGridStateManager? stateManager;
   UserDataSettings? userDataSettings;
-  ScrollController scrollController = new ScrollController();
-  FocusScopeNode focusNodeList = FocusScopeNode();
+  ScrollController scrollController = ScrollController();
   @override
   void onInit() {
     formPermissions = Utils.fetchPermissions1(
@@ -40,7 +39,7 @@ class InventoryStatusReportController extends GetxController {
       onKeyEvent: (node, event) {
         if (event.logicalKey == LogicalKeyboardKey.tab) {
           scrollController.jumpTo(scrollController.position.maxScrollExtent);
-          return KeyEventResult.handled;
+          return KeyEventResult.ignored;
         }
         return KeyEventResult.ignored;
       },
