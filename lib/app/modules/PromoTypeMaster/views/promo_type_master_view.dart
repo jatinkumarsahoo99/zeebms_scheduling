@@ -56,6 +56,8 @@ class PromoTypeMasterView extends StatelessWidget {
                       controller: controller.promTypeNameCtrl,
                       focusNode: controller.promoFocusNode,
                       width: 0.2,
+                      capital: true,
+                      inputformatters: [UpperCaseTextFormatter()],
                     ),
                   ],
                 ),
@@ -65,6 +67,8 @@ class PromoTypeMasterView extends StatelessWidget {
                   controller: controller.sapCategory,
                   width: 0.41,
                   maxLen: 10,
+                  inputformatters: [UpperCaseTextFormatter()],
+                  capital: true,
                 ),
                 const SizedBox(height: 10),
                 Row(
