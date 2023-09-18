@@ -17,10 +17,10 @@ class PromoTypeMasterController extends GetxController {
   FocusNode promoFocusNode = FocusNode();
   var trailPromo = RxBool(false);
   var channelSpec = RxBool(false);
-  String? programTypeCode;
+  String programTypeCode = "";
   var promoCategories = <DropDownValue>[].obs;
   DropDownValue? selectedCategory;
-  var isActive = false.obs;
+  var isActive = RxBool(true);
   @override
   void onInit() {
     promoFocusNode.addListener(() {
@@ -63,6 +63,7 @@ class PromoTypeMasterController extends GetxController {
   }
 
   void validateSaveRecord() {
+    // print(programTypeCode!.isEmpty);
     if (selectedCategory == null) {
       LoadingDialog.showErrorDialog("Please select promo category name.");
     } else if (promTypeNameCtrl.text.trim().isEmpty) {
@@ -70,7 +71,7 @@ class PromoTypeMasterController extends GetxController {
     } else if (sapCategory.text.trim().isEmpty) {
       LoadingDialog.showErrorDialog("Please enter SAP category.");
     } else {
-      if (programTypeCode!.isEmpty) {
+      if (programTypeCode.isEmpty) {
         saveData();
       } else {
         LoadingDialog.call();
@@ -112,7 +113,12 @@ class PromoTypeMasterController extends GetxController {
       fun: (data) {
         Get.back();
         if (data is Map && data.containsKey("promomaster")) {
-          LoadingDialog.callDataSaved(msg: data["promomaster"]);
+          LoadingDialog.callDataSaved(
+              msg: data["promomaster"],
+              callback: () {
+                Get.delete<PromoTypeMasterController>();
+                Get.find<HomeController>().clearPage1();
+              });
         } else if (data is String) {
           LoadingDialog.callErrorMessage1(msg: data);
         }
