@@ -288,8 +288,7 @@ class BrandMasterView extends StatelessWidget {
                                                   hideCode: false,
                                                   formatDate: false,
                                                   csvFormat: true,
-                                                  focusNode:
-                                                      controllerX.gridFocus,
+                                                  focusNode: controllerX.gridFocus,
                                                   exportFileName:
                                                       "Brand Master",
                                                   hideKeys: ['clientName'],
@@ -339,22 +338,11 @@ class BrandMasterView extends StatelessWidget {
                                                     controllerX
                                                             .gridStateManager =
                                                         load.stateManager;
-                                                    controllerX.gridStateManager!.setCurrentCell(
-                                                        controllerX
-                                                            .gridStateManager!
-                                                            .getRowByIdx(controllerX
-                                                                .selectedIndex)!
-                                                            .cells['brandName'],
-                                                        controllerX
-                                                            .selectedIndex);
-                                                    controllerX
-                                                        .gridStateManager!
-                                                        .moveCurrentCellByRowIdx(
-                                                            controllerX
-                                                                    .selectedIndex ??
-                                                                0,
-                                                            PlutoMoveDirection
-                                                                .down);
+                                                    load.stateManager.setKeepFocus(false);
+                                                    Future.delayed(const Duration(milliseconds: 200),() {
+                                                      controllerX.brandNameFocus.requestFocus();
+                                                    },);
+
                                                   },
                                                   // colorCallback: (renderC) => Colors.red[200]!,
                                                   mapData: controllerX.clientDetailsAndBrandModel!.clientdtails!.map((e) => e.toJson()).toList())
