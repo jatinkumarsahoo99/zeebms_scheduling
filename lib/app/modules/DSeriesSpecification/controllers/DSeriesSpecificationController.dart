@@ -22,7 +22,7 @@ import '../DSeriesSearchModel.dart';
 
 class DSeriesSpecificationController extends GetxController {
   final count = 0.obs;
-  double widthSize = 0.12;
+  double widthSize = 0.15;
   RxList<DropDownValue> locationList = RxList([]);
   RxList<DropDownValue> channelList = RxList([]);
   RxList<DropDownValue> eventList = RxList([]);
