@@ -28,7 +28,7 @@ class DSeriesSpecificationView extends GetView<DSeriesSpecificationController> {
     return Scaffold(
       body: Center(
         child: SizedBox(
-          width: size.width * .8,
+          width: size.width * .67,
           child: Dialog(
             child: Column(
               mainAxisSize: MainAxisSize.min,
@@ -52,7 +52,7 @@ class DSeriesSpecificationView extends GetView<DSeriesSpecificationController> {
                     }
                     return Padding(
                       padding:
-                          const EdgeInsets.symmetric(vertical: 2, horizontal: 5),
+                          const EdgeInsets.symmetric(vertical: 2, horizontal: 12),
                       child: Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
@@ -202,7 +202,7 @@ class DSeriesSpecificationView extends GetView<DSeriesSpecificationController> {
                                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                                     children: [
                                       Padding(
-                                        padding: const EdgeInsets.only(left: 10, top: 15),
+                                        padding: const EdgeInsets.only(left: 0, top: 15),
                                         child: FormButton(
                                           btnText: "Add",
                                           callback: () {
@@ -213,7 +213,7 @@ class DSeriesSpecificationView extends GetView<DSeriesSpecificationController> {
                                         ),
                                       ),
                                       Padding(
-                                        padding: const EdgeInsets.only(left: 10, top: 15),
+                                        padding: const EdgeInsets.only(left: 0, top: 15),
                                         child: FormButton(
                                           btnText: "Remove",
                                           callback: () {
@@ -249,18 +249,7 @@ class DSeriesSpecificationView extends GetView<DSeriesSpecificationController> {
                     );
                   },
                 ),
-                // Divider(),
-                /* GetBuilder<SegmentController>(
-                    init: controllerX,
-                    id: "segmentDefaultLoad",
-                    builder: (controller) {
-                      return Expanded(
-                          child: */ /*(controller.actualDefaults != null &&
-                                  (controller.actualDefaults?.isNotEmpty)! &&
-                                  controller.tableSegment != null)
-                              ? */ /*
-                              _dataTable2() */ /*: Container()*/ /*);
-                    }),*/
+                SizedBox(height: 2),
                 GetBuilder<DSeriesSpecificationController>(
                     id: "listUpdate",
                     init: controllerX,
@@ -271,7 +260,7 @@ class DSeriesSpecificationView extends GetView<DSeriesSpecificationController> {
                           ((controller.dSeriesModel?.search?.length ?? 0) > 0)) {
                         return Expanded(
                           child: Padding(
-                            padding: const EdgeInsets.symmetric(horizontal: 10,vertical: 0),
+                            padding: const EdgeInsets.symmetric(horizontal: 12,vertical: 0),
                             child: DataGridFromMap4(
                               witdthSpecificColumn: (controllerX
                                   .userDataSettings?.userSetting
@@ -304,18 +293,21 @@ class DSeriesSpecificationView extends GetView<DSeriesSpecificationController> {
                         );
                       } else {
                         return Expanded(
-                          child: Card(
-                            clipBehavior: Clip.hardEdge,
-                            shape: RoundedRectangleBorder(
-                              borderRadius:
-                                  BorderRadius.circular(0), // if you need this
-                              side: BorderSide(
-                                color: Colors.grey.shade300,
-                                width: 1,
+                          child: Padding(
+                            padding: const EdgeInsets.symmetric(horizontal: 8,vertical: 0),
+                            child: Card(
+                              clipBehavior: Clip.hardEdge,
+                              shape: RoundedRectangleBorder(
+                                borderRadius:
+                                    BorderRadius.circular(0), // if you need this
+                                side: BorderSide(
+                                  color: Colors.grey.shade300,
+                                  width: 1,
+                                ),
                               ),
-                            ),
-                            child: Container(
-                              height: Get.height - (4 * kToolbarHeight),
+                              child: Container(
+                                height: Get.height - (4 * kToolbarHeight),
+                              ),
                             ),
                           ),
                         );
