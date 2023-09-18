@@ -202,7 +202,7 @@ class DSeriesSpecificationView extends GetView<DSeriesSpecificationController> {
                                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                                     children: [
                                       Padding(
-                                        padding: const EdgeInsets.only(left: 10, top: 15),
+                                        padding: const EdgeInsets.only(left: 0, top: 15),
                                         child: FormButton(
                                           btnText: "Add",
                                           callback: () {
@@ -213,7 +213,7 @@ class DSeriesSpecificationView extends GetView<DSeriesSpecificationController> {
                                         ),
                                       ),
                                       Padding(
-                                        padding: const EdgeInsets.only(left: 10, top: 15),
+                                        padding: const EdgeInsets.only(left: 0, top: 15),
                                         child: FormButton(
                                           btnText: "Remove",
                                           callback: () {
