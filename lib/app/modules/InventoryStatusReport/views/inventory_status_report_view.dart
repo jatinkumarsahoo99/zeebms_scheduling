@@ -18,7 +18,10 @@ import '../controllers/inventory_status_report_controller.dart';
 
 class InventoryStatusReportView
     extends GetView<InventoryStatusReportController> {
-  const InventoryStatusReportView({Key? key}) : super(key: key);
+   InventoryStatusReportView({Key? key}) : super(key: key);
+
+   @override
+  InventoryStatusReportController controller = Get.put(InventoryStatusReportController());
 
   @override
   Widget build(BuildContext context) {

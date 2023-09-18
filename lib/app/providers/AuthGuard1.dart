@@ -220,7 +220,7 @@ class AuthGuard1 extends StatelessWidget {
               currentWidget = const ExtraSpotsWithRemarkView();
               break;
             case Routes.INVENTORY_STATUS_REPORT:
-              currentWidget = const InventoryStatusReportView();
+              currentWidget =  InventoryStatusReportView();
               break;
             case Routes.MANAGE_CHANNEL_INVENTORY:
               currentWidget = const ManageChannelInvemtoryView();
