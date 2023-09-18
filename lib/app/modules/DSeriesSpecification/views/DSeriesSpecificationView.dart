@@ -32,13 +32,14 @@ class DSeriesSpecificationView extends GetView<DSeriesSpecificationController> {
           child: Dialog(
             child: Column(
               mainAxisSize: MainAxisSize.min,
+              crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 AppBar(
                   title: const Text('D Series Specification'),
                   centerTitle: true,
                   backgroundColor: Colors.deepPurple,
                 ),
-                SizedBox(height: 20),
+                SizedBox(height: 2),
                 GetBuilder<DSeriesSpecificationController>(
                   init: controllerX,
                   id: "updateView",
@@ -51,145 +52,192 @@ class DSeriesSpecificationView extends GetView<DSeriesSpecificationController> {
                     }
                     return Padding(
                       padding:
-                          const EdgeInsets.symmetric(vertical: 8, horizontal: 10),
-                      child: Wrap(
-                        crossAxisAlignment: WrapCrossAlignment.center,
-                        runSpacing: 5,
-                        spacing: 5,
+                          const EdgeInsets.symmetric(vertical: 2, horizontal: 5),
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
-                          Obx(() => DropDownField.formDropDown1WidthMap(
-                                controllerX.locationList.value,
-                                (data) {
-                                  controllerX.selectLocation = data;
-                                  controllerX.getChannel(data.key);
-                                },
-                                "Location",
-                                controllerX.widthSize,
-                                inkWellFocusNode: controllerX.locationFocus,
-                                // isEnable: controllerX.isEnable.value,
-                                searchReq: true,
-                                selected: controllerX.selectLocation,
-                                autoFocus: true
-                              )),
 
-                          Obx(() => DropDownField.formDropDown1WidthMap(
-                                controllerX.channelList.value,
-                                (data) {
-                                  controllerX.selectChannel = data;
-                                  controllerX.getChannelLeave();
-                                },
-                                "Channel",
-                                controllerX.widthSize,
-                                inkWellFocusNode: controllerX.channelFocus,
-                                // isEnable: controllerX.isEnable.value,
-                                searchReq: true,
-                                selected: controllerX.selectChannel,
-                              )),
-                          Obx(() => DropDownField.formDropDown1WidthMap(
-                                controllerX.eventList.value,
-                                (data) {
-                                  controllerX.selectEvent?.value = data;
-                                  controllerX.getEventLeave(data.key ?? "");
-                                },
-                                "Event",
-                                controllerX.widthSize,
-                                inkWellFocusNode: controllerX.eventFocus,
-                                // isEnable: controllerX.isEnable.value,
-                                searchReq: true,
-                                selected: controllerX.selectEvent?.value,
-                              )),
-                          FittedBox(
+                          SizedBox(
+                            width:size.width*0.5,
                             child: Row(
+                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
                               children: [
-                                Obx(() => Padding(
-                                      padding: const EdgeInsets.only(top: 15.0),
-                                      child: Checkbox(
-                                        value: controllerX.chckLastSegment.value,
-                                        onChanged: (val) {
-                                          controllerX.chckLastSegment.value = val!;
-                                          controllerX.chckLastSegment.refresh();
-                                        },
-                                        materialTapTargetSize:
-                                            MaterialTapTargetSize.shrinkWrap,
+                                Obx(() => DropDownField.formDropDown1WidthMap(
+                                    controllerX.locationList.value,
+                                        (data) {
+                                      controllerX.selectLocation = data;
+                                      controllerX.getChannel(data.key);
+                                    },
+                                    "Location",
+                                    controllerX.widthSize,
+                                    inkWellFocusNode: controllerX.locationFocus,
+                                    // isEnable: controllerX.isEnable.value,
+                                    searchReq: true,
+                                    selected: controllerX.selectLocation,
+                                    autoFocus: true,
+                                )),
+
+                                Obx(() => DropDownField.formDropDown1WidthMap(
+                                  controllerX.channelList.value,
+                                      (data) {
+                                    controllerX.selectChannel = data;
+                                    controllerX.getChannelLeave();
+                                  },
+                                  "Channel",
+                                  controllerX.widthSize,
+                                  inkWellFocusNode: controllerX.channelFocus,
+                                  // isEnable: controllerX.isEnable.value,
+                                  searchReq: true,
+                                  selected: controllerX.selectChannel,
+                                )),
+
+                                Obx(() => DropDownField.formDropDown1WidthMap(
+                                  controllerX.eventList.value,
+                                      (data) {
+                                    controllerX.selectEvent?.value = data;
+                                    controllerX.getEventLeave(data.key ?? "");
+                                  },
+                                  "Event",
+                                  controllerX.widthSize,
+                                  inkWellFocusNode: controllerX.eventFocus,
+                                  // isEnable: controllerX.isEnable.value,
+                                  searchReq: true,
+                                  selected: controllerX.selectEvent?.value,
+                                )),
+                              ],
+                            ),
+                          ),
+                          SizedBox(
+                            width:size.width*0.5,
+                            child: Row(
+                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                              children: [
+                                SizedBox(
+                                  width:size.width*0.145,
+                                  child: Row(
+                                    children: [
+                                      Obx(() => Padding(
+                                        padding: const EdgeInsets.only(top: 10.0,left: 0),
+                                        child: Checkbox(
+                                          value: controllerX.chckLastSegment.value,
+                                          onChanged: (val) {
+                                            controllerX.chckLastSegment.value = val!;
+                                            controllerX.chckLastSegment.refresh();
+                                          },
+                                          materialTapTargetSize:
+                                          MaterialTapTargetSize.shrinkWrap,
+                                        ),
+                                      )),
+                                      Padding(
+                                        padding:
+                                        const EdgeInsets.only(top: 10.0, left: 0),
+                                        child: Text(
+                                          "Last Segment",
+                                          style:
+                                          TextStyle(fontSize: SizeDefine.labelSize1),
+                                        ),
                                       ),
-                                    )),
-                                Padding(
-                                  padding:
-                                      const EdgeInsets.only(top: 15.0, left: 5),
-                                  child: Text(
-                                    "Last Segment",
-                                    style:
-                                        TextStyle(fontSize: SizeDefine.labelSize1),
+                                    ],
                                   ),
+                                ),
+                                InputFields.numbers(
+                                  hintTxt: "From",
+                                  inputformatters: [
+                                    FilteringTextInputFormatter.allow(RegExp(r'[0-9]')),
+                                  ],
+                                  controller: controllerX.from_,
+                                  onchanged: (v) {},
+                                  padLeft: 5,
+                                  isNegativeReq: false,
+                                  width: controllerX.widthSize,
+                                ),
+
+                                /// Part NO#
+                                InputFields.numbers3(
+                                  hintTxt: "To",
+                                  controller: controllerX.to_,
+                                  padLeft: 0,
+                                  inputformatters: [
+                                    FilteringTextInputFormatter.allow(RegExp(r'[0-9]')),
+                                  ],
+                                  onchanged: (v) {},
+                                  isNegativeReq: false,
+                                  width: controllerX.widthSize,
+                                  // fN: controllerX.partNoFocus,
                                 ),
                               ],
                             ),
                           ),
-                          InputFields.numbers(
-                            hintTxt: "From",
-                            inputformatters: [
-                              FilteringTextInputFormatter.allow(RegExp(r'[0-9]')),
-                            ],
-                            controller: controllerX.from_,
-                            onchanged: (v) {},
-                            padLeft: 5,
-                            isNegativeReq: false,
-                            width: controllerX.widthSize,
-                          ),
+                          SizedBox(
+                            width:size.width*0.5,
+                            child: Row(
+                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                              children: [
+                                /// Part NO#
+                                InputFields.formField1Width(
+                                  hintTxt: "Value",
+                                  paddingLeft: 0,
+                                  controller: controllerX.value_,
+                                  widthRatio: controllerX.widthSize,
+                                  // fN: controllerX.partNoFocus,
+                                ),
+                                InputFields.formField1Width(
+                                  hintTxt: "Desc",
+                                  paddingLeft: 0,
+                                  controller: controllerX.desc_,
+                                  widthRatio: controllerX.widthSize,
+                                  // fN: controllerX.partNoFocus,
+                                ),
 
-                          /// Part NO#
-                          InputFields.numbers3(
-                            hintTxt: "To",
-                            controller: controllerX.to_,
-                            padLeft: 0,
-                            inputformatters: [
-                              FilteringTextInputFormatter.allow(RegExp(r'[0-9]')),
-                            ],
-                            onchanged: (v) {},
-                            isNegativeReq: false,
-                            width: controllerX.widthSize,
-                            // fN: controllerX.partNoFocus,
-                          ),
+                                /// Add Btn
+                                SizedBox(
+                                  width: size.width*0.15,
+                                  child: Row(
+                                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                    children: [
+                                      Padding(
+                                        padding: const EdgeInsets.only(left: 10, top: 15),
+                                        child: FormButton(
+                                          btnText: "Add",
+                                          callback: () {
+                                            controllerX.btnAdd_Click();
+                                            // controllerX.addTable();
+                                          },
+                                          showIcon: true,
+                                        ),
+                                      ),
+                                      Padding(
+                                        padding: const EdgeInsets.only(left: 10, top: 15),
+                                        child: FormButton(
+                                          btnText: "Remove",
+                                          callback: () {
+                                            controllerX.btnRemove_Click();
+                                            // controllerX.addTable();
+                                          },
+                                          showIcon: true,
+                                        ),
+                                      ),
+                                    ],
+                                  ),
+                                ),
 
-                          /// Part NO#
-                          InputFields.formField1Width(
-                            hintTxt: "Value",
-                            paddingLeft: 0,
-                            controller: controllerX.value_,
-                            widthRatio: controllerX.widthSize,
-                            // fN: controllerX.partNoFocus,
-                          ),
-                          InputFields.formField1Width(
-                            hintTxt: "Desc",
-                            paddingLeft: 0,
-                            controller: controllerX.desc_,
-                            widthRatio: controllerX.widthSize,
-                            // fN: controllerX.partNoFocus,
-                          ),
-
-                          /// Add Btn
-                          Padding(
-                            padding: const EdgeInsets.only(left: 10, top: 15),
-                            child: FormButton(
-                              btnText: "Add",
-                              callback: () {
-                                controllerX.btnAdd_Click();
-                                // controllerX.addTable();
-                              },
-                              showIcon: true,
+                              ],
                             ),
                           ),
-                          Padding(
-                            padding: const EdgeInsets.only(left: 10, top: 15),
-                            child: FormButton(
-                              btnText: "Remove",
-                              callback: () {
-                                controllerX.btnRemove_Click();
-                                // controllerX.addTable();
-                              },
-                              showIcon: true,
-                            ),
-                          ),
+
+                         /* Wrap(
+                            crossAxisAlignment: WrapCrossAlignment.start,
+                            alignment:WrapAlignment.start,
+                            runSpacing: 5,
+                            spacing: 5,runAlignment:WrapAlignment.start ,
+                            children: [
+
+
+
+
+
+                            ],
+                          ),*/
                         ],
                       ),
                     );
@@ -217,7 +265,7 @@ class DSeriesSpecificationView extends GetView<DSeriesSpecificationController> {
                           ((controller.dSeriesModel?.search?.length ?? 0) > 0)) {
                         return Expanded(
                           child: Padding(
-                            padding: const EdgeInsets.symmetric(horizontal: 10),
+                            padding: const EdgeInsets.symmetric(horizontal: 10,vertical: 0),
                             child: DataGridFromMap4(
                               witdthSpecificColumn: (controllerX
                                   .userDataSettings?.userSetting
@@ -299,7 +347,7 @@ class DSeriesSpecificationView extends GetView<DSeriesSpecificationController> {
                         return Container();
                       }
                     }),
-                const SizedBox(height: 5),
+                const SizedBox(height: 3),
               ],
             ),
           ),
