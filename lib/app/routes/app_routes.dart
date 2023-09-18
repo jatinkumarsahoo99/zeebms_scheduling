@@ -101,6 +101,7 @@ abstract class RoutesList {
     _Paths.SECONDARY_EVENT_TEMPLATE_MASTER,
     _Paths.LOG_CONVERT,
     _Paths.MATERIAL_ID_SEARCH,
+    _Paths.INVENTORY_STATUS_REPORT,
   ];
 }
 
