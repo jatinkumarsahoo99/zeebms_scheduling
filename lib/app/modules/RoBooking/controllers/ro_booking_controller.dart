@@ -516,6 +516,7 @@ class RoBookingController extends GetxController {
             });
           }
         }
+        currentTab.refresh();
       },
     );
   }
@@ -764,7 +765,7 @@ class RoBookingController extends GetxController {
           "dealNo": selectedDeal?.key,
           "pdcNumber": selectedPdc?.key ?? "",
           "loggedUser": Get.find<MainController>().user?.logincode,
-          "intEditMode": bookingNoLeaveData?.intEditMode ?? editMode,
+          "intEditMode": bookingNoLeaveData?.intEditMode ?? 0,
           "gstPlants": agencyLeaveData?.gstPlants ??
               bookingNoLeaveData?.gstPlants ??
               selectedGST?.key,
@@ -795,54 +796,62 @@ class RoBookingController extends GetxController {
         },
         fun: (response) async {
           if (response is Map && response.containsKey("info_OnSave")) {
-            editMode = 1;
-            for (var element in response["info_OnSave"]["message"]) {
-              await Get.defaultDialog(
-                title: "",
-                barrierDismissible: true,
-                titleStyle: TextStyle(fontSize: 1),
-                content: Column(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
-                    const Icon(
-                      CupertinoIcons.check_mark_circled_solid,
-                      color: Colors.green,
-                      size: 55,
-                    ),
-                    const SizedBox(height: 20),
-                    Text(
-                      element.toString(),
-                      style: TextStyle(
-                          color: Colors.green,
-                          fontSize: SizeDefine.popupTxtSize),
-                    )
-                  ],
-                ),
-                radius: 10,
-                confirm: DailogCloseButton(
-                  autoFocus: true,
-                  callback: () {
-                    Get.back();
-                    if (response["info_OnSave"]["bookingNumber"] != null) {
-                      onBookingNoLeave(
-                          bookingNumber: response["info_OnSave"]
-                              ["bookingNumber"]);
-                    }
-                  },
-                  btnText: "OK",
-                ),
-                contentPadding: EdgeInsets.only(
-                    left: SizeDefine.popupMarginHorizontal,
-                    right: SizeDefine.popupMarginHorizontal,
-                    bottom: 16),
+            // editMode = 1;
+            if (response["info_OnSave"]["message"] != null &&
+                (response["info_OnSave"]["message"] as List<dynamic>)
+                    .isNotEmpty) {
+              LoadingDialog.callInfoMessage(
+                (response["info_OnSave"]["message"] as List<dynamic>).first,
+                callback: () {
+                  if (response["info_OnSave"]["bookingNumber"] != null) {
+                    onBookingNoLeave(
+                        bookingNumber: response["info_OnSave"]
+                            ["bookingNumber"]);
+                  }
+                },
               );
             }
-            // for (var msg in response["info_OnSave"]["message"]) {
-            //   LoadingDialog.callDataSavedMessage(msg, barrierDismissible: false,
+            // for (var element in response["info_OnSave"]["message"]) {
+            //   await Get.defaultDialog(
+            //     title: "",
+            //     barrierDismissible: true,
+            //     titleStyle: TextStyle(fontSize: 1),
+            //     content: Column(
+            //       mainAxisAlignment: MainAxisAlignment.center,
+            //       children: [
+            //         const Icon(
+            //           CupertinoIcons.check_mark_circled_solid,
+            //           color: Colors.green,
+            //           size: 55,
+            //         ),
+            //         const SizedBox(height: 20),
+            //         Text(
+            //           element.toString(),
+            //           style: TextStyle(
+            //               color: Colors.green,
+            //               fontSize: SizeDefine.popupTxtSize),
+            //         )
+            //       ],
+            //     ),
+            //     radius: 10,
+            //     confirm: DailogCloseButton(
+            //       autoFocus: true,
             //       callback: () {
-            //     onBookingNoLeave(
-            //         bookingNumber: response["info_OnSave"]["bookingNumber"]);
-            //   });
+            //         Get.back();
+
+            //         if (response["info_OnSave"]["bookingNumber"] != null) {
+            //           onBookingNoLeave(
+            //               bookingNumber: response["info_OnSave"]
+            //                   ["bookingNumber"]);
+            //         }
+            //       },
+            //       btnText: "OK",
+            //     ),
+            //     contentPadding: EdgeInsets.only(
+            //         left: SizeDefine.popupMarginHorizontal,
+            //         right: SizeDefine.popupMarginHorizontal,
+            //         bottom: 16),
+            //   );
             // }
           } else if (response is String) {
             LoadingDialog.callErrorMessage1(msg: response);
@@ -1063,32 +1072,54 @@ class RoBookingController extends GetxController {
           "bookingnumber": bookingNumber ?? bookingNoCtrl.text,
           "formname": "frmROBooking"
         },
-        fun: (value) {
+        fun: (value) async {
           if (value is Map && value.containsKey("info_LeaveBookingNumber")) {
             bookingNoLeaveDealCurrentColumn = "";
             bookingNoLeaveDealCurrentRow = null;
             bookingNoLeaveData = RoBookingBkgNOLeaveData.fromJson(
                 value["info_LeaveBookingNumber"]);
+            if (bookingNoLeaveData == null) {
+              LoadingDialog.showErrorDialog("info_LeaveBookingNumber was null");
+              return;
+            }
+            // await Future.delayed(const Duration(seconds: 2));
             selectedClient = DropDownValue(
-                key: bookingNoLeaveData!.lstClientAgency!.first.clientcode,
-                value: bookingNoLeaveData!.lstClientAgency!.first.clientname);
+                key: bookingNoLeaveData?.lstClientAgency?.first.clientcode,
+                value: bookingNoLeaveData?.lstClientAgency?.first.clientname);
             selectedAgnecy = DropDownValue(
-                key: bookingNoLeaveData!.lstAgency!.first.agencycode,
-                value: bookingNoLeaveData!.lstAgency!.first.agencyname);
+                key: bookingNoLeaveData?.lstAgency?.first.agencycode,
+                value: bookingNoLeaveData?.lstAgency?.first.agencyname);
             selectedBrand = DropDownValue(
-                key: bookingNoLeaveData!.lstBrand!.first.brandcode,
-                value: bookingNoLeaveData!.lstBrand!.first.brandname);
+                key: bookingNoLeaveData?.lstBrand?.first.brandcode,
+                value: bookingNoLeaveData?.lstBrand?.first.brandname);
             selectedDeal = DropDownValue(
-                key: bookingNoLeaveData!.lstDealNumber!.first.dealNumber,
-                value: bookingNoLeaveData!.lstDealNumber!.first.dealNumber);
-            selectedExecutive = DropDownValue(
-                key: bookingNoLeaveData!.executiveCode,
-                value: roBookingInitData?.lstExecutives
-                        ?.firstWhereOrNull((element) =>
-                            element.personnelCode ==
-                            bookingNoLeaveData!.executiveCode)
-                        ?.personnelName ??
-                    "");
+                key: bookingNoLeaveData?.lstDealNumber?.first.dealNumber,
+                value: bookingNoLeaveData?.lstDealNumber?.first.dealNumber);
+            try {
+              // selectedExecutive = DropDownValue(
+              //     key: bookingNoLeaveData!.executiveCode,
+              //     value: roBookingInitData?.lstExecutives
+              //             ?.firstWhereOrNull((element) =>
+              //                 element.personnelCode ==
+              //                 bookingNoLeaveData?.executiveCode)
+              //             ?.personnelName ??
+              //         "");
+              try {
+                selectedExecutive = DropDownValue(
+                  key: bookingNoLeaveData!.executiveCode,
+                  value: bookingNoLeaveData?.lstExcutiveDetails
+                      ?.firstWhere((element) =>
+                          element.personnelCode ==
+                          bookingNoLeaveData!.executiveCode)
+                      .personnelname,
+                );
+              } catch (e) {
+                print(e.toString());
+              }
+            } catch (e) {
+              print(e.toString());
+            }
+            print('${selectedExecutive?.key}:${selectedExecutive?.value}');
             update(["init"]);
 
             refNoCtrl.text = bookingNoLeaveData!.bookingReferenceNumber ?? "";
@@ -1101,50 +1132,59 @@ class RoBookingController extends GetxController {
             totAmtCtrl.text = bookingNoLeaveData!.totalAmount ?? "";
             zoneCtrl.text = bookingNoLeaveData!.zonename ?? "";
             maxspendCtrl.text = bookingNoLeaveData!.maxSpend ?? "";
-            dealToCtrl.text = DateFormat("dd-MM-yyyy").format(
-                DateFormat("MM/dd/yyyy").parse(
-                    bookingNoLeaveData?.dealtoDate?.split(" ")[0] ?? ""));
-            dealFromCtrl.text = DateFormat("dd-MM-yyyy").format(
-                DateFormat("MM/dd/yyyy").parse(
-                    bookingNoLeaveData?.dealFromDate?.split(" ")[0] ?? ""));
+            try {
+              dealToCtrl.text = DateFormat("dd-MM-yyyy").format(
+                  DateFormat("dd/MM/yyyy hh:mm:ss")
+                      .parse(bookingNoLeaveData?.dealtoDate ?? ''));
+            } catch (e) {
+              print(e.toString());
+            }
+            try {
+              dealFromCtrl.text = DateFormat("dd-MM-yyyy").format(
+                  DateFormat("dd/MM/yyyy hh:mm:ss")
+                      .parse(bookingNoLeaveData?.dealFromDate ?? ''));
+            } catch (e) {
+              print(e.toString());
+            }
 
             update(["dealGrid"]);
-            for (var element in (bookingNoLeaveData?.message ?? <String>[])) {
-              Get.defaultDialog(
-                title: "",
-                barrierDismissible: true,
-                titleStyle: TextStyle(fontSize: 1),
-                content: Column(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
-                    const Icon(
-                      CupertinoIcons.info,
-                      color: Colors.black,
-                      size: 55,
-                    ),
-                    const SizedBox(height: 20),
-                    Text(
-                      element.toString(),
-                      style: TextStyle(
-                          color: Colors.black,
-                          fontSize: SizeDefine.popupTxtSize),
-                    )
-                  ],
-                ),
-                radius: 10,
-                confirm: DailogCloseButton(
-                  autoFocus: true,
-                  callback: () {
-                    Get.back();
-                  },
-                  btnText: "OK",
-                ),
-                contentPadding: EdgeInsets.only(
-                    left: SizeDefine.popupMarginHorizontal,
-                    right: SizeDefine.popupMarginHorizontal,
-                    bottom: 16),
-              );
-            }
+            // for (var element in (bookingNoLeaveData?.message ?? <String>[])) {
+            //   Get.defaultDialog(
+            //     title: "",
+            //     barrierDismissible: true,
+            //     titleStyle: TextStyle(fontSize: 1),
+            //     content: Column(
+            //       mainAxisAlignment: MainAxisAlignment.center,
+            //       children: [
+            //         const Icon(
+            //           CupertinoIcons.info,
+            //           color: Colors.black,
+            //           size: 55,
+            //         ),
+            //         const SizedBox(height: 20),
+            //         Text(
+            //           element.toString(),
+            //           style: TextStyle(
+            //               color: Colors.black,
+            //               fontSize: SizeDefine.popupTxtSize),
+            //         )
+            //       ],
+            //     ),
+            //     radius: 10,
+            //     confirm: DailogCloseButton(
+            //       autoFocus: true,
+            //       callback: () {
+            //         Get.back();
+            //         locationFN.requestFocus();
+            //       },
+            //       btnText: "OK",
+            //     ),
+            //     contentPadding: EdgeInsets.only(
+            //         left: SizeDefine.popupMarginHorizontal,
+            //         right: SizeDefine.popupMarginHorizontal,
+            //         bottom: 16),
+            //   );
+            // }
           }
         });
   }
@@ -1338,7 +1378,6 @@ class RoBookingController extends GetxController {
                 response["info_OnSaveCheckTapeId"]);
             pagecontroller.jumpToPage(4);
             currentTab.value = "Booking Summary";
-
             LoadingDialog.modify(savecheckData?.message ?? "", () {
               save();
             }, () {

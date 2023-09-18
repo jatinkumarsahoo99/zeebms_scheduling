@@ -371,7 +371,9 @@ class LoadingDialog {
         autoFocus: true,
         callback: () {
           Get.back();
-          callback!();
+          if (callback != null) {
+            callback();
+          }
         },
         btnText: "OK",
       ),
@@ -493,7 +495,9 @@ class LoadingDialog {
           autoFocus: true,
           callback: () {
             Get.back();
-            confirm!();
+            if (confirm != null) {
+              confirm();
+            }
           },
           btnText: deleteTitle ?? "Yes"),
       /*cancel: MaterialButton(
@@ -518,8 +522,8 @@ class LoadingDialog {
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
           Icon(
-            CupertinoIcons.check_mark_circled_solid,
-            color: Colors.green,
+            CupertinoIcons.info,
+            color: Colors.black,
             size: 55,
           ),
           SizedBox(
@@ -528,7 +532,7 @@ class LoadingDialog {
           Text(
             title,
             style: TextStyle(
-                color: Colors.green, fontSize: SizeDefine.popupTxtSize),
+                color: Colors.black, fontSize: SizeDefine.popupTxtSize),
             textAlign: TextAlign.center,
           )
         ],
@@ -557,7 +561,9 @@ class LoadingDialog {
           autoFocus: true,
           callback: () {
             Get.back();
-            confirm!();
+            if (confirm != null) {
+              confirm();
+            }
           },
           btnText: deleteTitle ?? "Delete"),
       contentPadding: EdgeInsets.only(

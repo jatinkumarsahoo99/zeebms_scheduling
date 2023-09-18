@@ -240,6 +240,9 @@ class NewShortContentFormController extends GetxController {
 
             // formCode: "ZASTI00001"formName: "Still Master"
             case "ZASTI00001":
+              // selectedChannel.value = channels.firstWhereOrNull((element) =>
+              //     element.key?.toLowerCase() ==
+              //     (data["ChannelCode"] ?? "").toLowerCase());
               typeCode = data["StillCode"];
               selectedTape.value = tapes.firstWhereOrNull((element) =>
                   element.key?.toLowerCase() ==
@@ -270,6 +273,9 @@ class NewShortContentFormController extends GetxController {
               break;
             //  "formCode": "ZASLI00045", "formName": "Slide Master"
             case "ZASLI00045":
+              // selectedChannel.value = channels.firstWhereOrNull((element) =>
+              //     element.key?.toLowerCase() ==
+              //     (data["ChannelCode"] ?? "").toLowerCase());
               typeCode = data["SlideCode"];
               selectedTape.value = tapes.firstWhereOrNull((element) =>
                   element.key?.toLowerCase() ==
@@ -300,6 +306,9 @@ class NewShortContentFormController extends GetxController {
               break;
             // "formCode": "ZADAT00117", "formName": "Vignette Master"
             case "ZADAT00117":
+              selectedChannel.value = channels.firstWhereOrNull((element) =>
+                  element.key?.toLowerCase() ==
+                  (data["ChannelCode"] ?? "").toLowerCase());
               typeCode = data["VignetteCode"];
               caption.text = data["VignetteCaption"] ?? "";
               txCaption.text = data["ExportTapeCode"] ?? "";
@@ -456,10 +465,10 @@ class NewShortContentFormController extends GetxController {
         "vignetteCode": typeCode,
         "vignetteCaption": caption.text,
         "vignetteDuration": intDuration,
-        "exportTapeCode_VG": txCaption.text,
-        "exportTapeCaption": houseId.text,
+        "exportTapeCode_VG": houseId.text,
+        "exportTapeCaption": txCaption.text,
         "originalRepeatCode": selectedOrgRep.value?.key,
-        "segmentNumber_VG": segment.text,
+        "segmentNumber_VG": int.parse(segment.text),
         "startDate": DateFormat("yyyy-MM-dd")
             .format(DateFormat("dd-MM-yyyy").parse(startData.text)),
         "remarks": remark.text,
@@ -489,7 +498,10 @@ class NewShortContentFormController extends GetxController {
           try {
             if (rawdata is Map && rawdata.containsKey("onSaveShortCode")) {
               LoadingDialog.callDataSaved(
-                  msg: rawdata["onSaveShortCode"]["message"]);
+                  msg: rawdata["onSaveShortCode"]["message"],
+                  callback: () {
+                    clearPage();
+                  });
               return true;
             } else {
               LoadingDialog.callErrorMessage1(
