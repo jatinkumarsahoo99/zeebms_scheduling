@@ -98,7 +98,8 @@ class DSeriesSpecificationView extends GetView<DSeriesSpecificationController> {
                                   child: Checkbox(
                                     value: controller.chckLastSegment.value,
                                     onChanged: (val) {
-                                      controller.chckLastSegment.value = val!;
+                                      controllerX.chckLastSegment.value = val!;
+                                      controllerX.chckLastSegment.refresh();
                                     },
                                     materialTapTargetSize:
                                         MaterialTapTargetSize.shrinkWrap,

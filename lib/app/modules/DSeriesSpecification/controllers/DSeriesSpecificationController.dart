@@ -92,11 +92,15 @@ class DSeriesSpecificationController extends GetxController {
         api: ApiFactory.DSERIES_SPECIFICATION_CHANNEL_LEAVE(
             selectLocation?.key ?? "", selectChannel?.key ?? ""),
         fun: (map) {
+          stateManager = null;
           print("DSERIES_SPECIFICATION_CHANNEL_LEAVE>>>" + jsonEncode(map));
           if (map is Map &&
               map.containsKey("search") &&
               map["search"] != null) {
             dSeriesModel = DSeriesModel.fromJson(map as Map<String, dynamic>);
+            update(["listUpdate"]);
+          }else{
+            dSeriesModel = null;
             update(["listUpdate"]);
           }
         });
