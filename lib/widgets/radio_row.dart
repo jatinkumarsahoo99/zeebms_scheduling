@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 
+import '../app/providers/SizeDefine.dart';
+
 class RadioRow extends StatefulWidget {
   final List items;
   final String groupValue;
@@ -69,6 +71,8 @@ class _RadioRowState extends State<RadioRow> {
                                 false
                             ? Colors.grey
                             : Colors.black,
+                        fontSize: SizeDefine.labelSize1,
+                        fontWeight: FontWeight.w500,
                       ),
                     ),
                   ],

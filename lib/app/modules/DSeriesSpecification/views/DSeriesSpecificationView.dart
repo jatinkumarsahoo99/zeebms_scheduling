@@ -61,6 +61,7 @@ class DSeriesSpecificationView extends GetView<DSeriesSpecificationController> {
                             // isEnable: controllerX.isEnable.value,
                             searchReq: true,
                             selected: controllerX.selectLocation,
+                            autoFocus: true
                           )),
 
                       Obx(() => DropDownField.formDropDown1WidthMap(
