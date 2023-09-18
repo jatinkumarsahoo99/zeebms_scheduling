@@ -108,6 +108,9 @@ class DSeriesSpecificationView extends GetView<DSeriesSpecificationController> {
                             ),
                           ),
                           SizedBox(
+                            height: 2,
+                          ),
+                          SizedBox(
                             width:size.width*0.5,
                             child: Row(
                               mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -167,6 +170,9 @@ class DSeriesSpecificationView extends GetView<DSeriesSpecificationController> {
                                 ),
                               ],
                             ),
+                          ),
+                          SizedBox(
+                            height: 2,
                           ),
                           SizedBox(
                             width:size.width*0.5,
