@@ -147,7 +147,12 @@ class DSeriesSpecificationController extends GetxController {
     if (stateManager != null) {
       stateManager?.insertRows((stateManager?.rows.length)! - 1, [rowData]);
     } else {
-      stateManager?.insertRows(0, [rowData]);
+      dSeriesModel = DSeriesModel(search: [Search(dataValue: value_.text,
+          description: desc_.text,endPosition:int.tryParse(to_.text),
+          eventType:selectEvent?.value?.key,isLastSegment:chckLastSegment.value,
+          startPosition:int.tryParse(from_.text) )]);
+          update(["listUpdate"]);
+      // stateManager?.insertRows(0, [rowData]);
     }
     stateManager?.notifyListeners();
   }
