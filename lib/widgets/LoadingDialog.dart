@@ -371,7 +371,9 @@ class LoadingDialog {
         autoFocus: true,
         callback: () {
           Get.back();
-          callback!();
+          if (callback != null) {
+            callback();
+          }
         },
         btnText: "OK",
       ),
@@ -493,7 +495,9 @@ class LoadingDialog {
           autoFocus: true,
           callback: () {
             Get.back();
-            confirm!();
+            if (confirm != null) {
+              confirm();
+            }
           },
           btnText: deleteTitle ?? "Yes"),
       /*cancel: MaterialButton(
@@ -557,7 +561,9 @@ class LoadingDialog {
           autoFocus: true,
           callback: () {
             Get.back();
-            confirm!();
+            if (confirm != null) {
+              confirm();
+            }
           },
           btnText: deleteTitle ?? "Delete"),
       contentPadding: EdgeInsets.only(

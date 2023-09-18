@@ -40,6 +40,7 @@ class RoBookingBkgNOLeaveData {
   String? previousBookedAmount;
   String? previousValAmount;
   List<LstMakeGood>? lstMakeGood;
+  List<LstExcutiveDetails>? lstExcutiveDetails;
   List<LstSpots>? lstSpots;
   List? lstPdcList;
   String? pdcID;
@@ -195,6 +196,12 @@ class RoBookingBkgNOLeaveData {
         lstMakeGood!.add(LstMakeGood.fromJson(v));
       });
     }
+    if (json['lstExcutiveDetails'] != null) {
+      lstExcutiveDetails = <LstExcutiveDetails>[];
+      json['lstExcutiveDetails'].forEach((v) {
+        lstExcutiveDetails!.add(LstExcutiveDetails.fromJson(v));
+      });
+    }
     if (json['lstSpots'] != null) {
       lstSpots = <LstSpots>[];
       json['lstSpots'].forEach((v) {
@@ -340,6 +347,47 @@ class LstDealNumber {
     final Map<String, dynamic> data = <String, dynamic>{};
     data['dealNumber'] = dealNumber;
     data['dealNumber2'] = dealNumber2;
+    return data;
+  }
+}
+
+class LstExcutiveDetails {
+  String? personnelCode;
+  String? personnelname;
+  String? zonename;
+  String? payroutename;
+  String? zoneshortname;
+  String? zonecode;
+  String? payRouteCode;
+
+  LstExcutiveDetails(
+      {this.personnelCode,
+      this.personnelname,
+      this.zonename,
+      this.payroutename,
+      this.zoneshortname,
+      this.zonecode,
+      this.payRouteCode});
+
+  LstExcutiveDetails.fromJson(Map<String, dynamic> json) {
+    personnelCode = json['personnelCode'];
+    personnelname = json['personnelname'];
+    zonename = json['zonename'];
+    payroutename = json['payroutename'];
+    zoneshortname = json['zoneshortname'];
+    zonecode = json['zonecode'];
+    payRouteCode = json['payRouteCode'];
+  }
+
+  Map<String, dynamic> toJson() {
+    final Map<String, dynamic> data = new Map<String, dynamic>();
+    data['personnelCode'] = this.personnelCode;
+    data['personnelname'] = this.personnelname;
+    data['zonename'] = this.zonename;
+    data['payroutename'] = this.payroutename;
+    data['zoneshortname'] = this.zoneshortname;
+    data['zonecode'] = this.zonecode;
+    data['payRouteCode'] = this.payRouteCode;
     return data;
   }
 }

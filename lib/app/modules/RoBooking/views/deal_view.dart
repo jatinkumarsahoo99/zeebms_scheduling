@@ -8,6 +8,7 @@ import 'package:get/get.dart';
 import 'package:intl/intl.dart';
 
 import '../../../../widgets/DateTime/DateWithThreeTextField.dart';
+import '../../../../widgets/PlutoGrid/src/pluto_grid.dart';
 import '../../../data/user_data_settings_model.dart';
 import 'dummydata.dart';
 
@@ -163,6 +164,7 @@ class DealView extends GetView<RoBookingController> {
                                             value.rowIdx);
                                       },
                                       hideCode: false,
+                                      mode: PlutoGridMode.selectWithOneTap,
                                     )
                                   : Container(
                                       decoration: BoxDecoration(
