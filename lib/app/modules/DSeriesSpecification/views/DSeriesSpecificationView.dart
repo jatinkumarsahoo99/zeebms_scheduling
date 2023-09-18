@@ -96,9 +96,10 @@ class DSeriesSpecificationView extends GetView<DSeriesSpecificationController> {
                             Obx(() => Padding(
                                   padding: const EdgeInsets.only(top: 15.0),
                                   child: Checkbox(
-                                    value: controller.chckLastSegment.value,
+                                    value: controllerX.chckLastSegment.value,
                                     onChanged: (val) {
-                                      controller.chckLastSegment.value = val!;
+                                      controllerX.chckLastSegment.value = val!;
+                                      controllerX.chckLastSegment.refresh();
                                     },
                                     materialTapTargetSize:
                                         MaterialTapTargetSize.shrinkWrap,
