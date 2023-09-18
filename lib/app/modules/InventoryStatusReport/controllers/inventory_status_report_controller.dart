@@ -79,7 +79,7 @@ class InventoryStatusReportController extends GetxController {
       },
     ).toList();
     onLoadModel.value?.info?.channels = tempChannelList ?? [];
-    onLoadModel.refresh();
+    update(['listData']);
   }
 
   clearPage() {
