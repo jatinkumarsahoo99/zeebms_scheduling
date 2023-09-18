@@ -20,7 +20,7 @@ class PromoTypeMasterController extends GetxController {
   String programTypeCode = "";
   var promoCategories = <DropDownValue>[].obs;
   DropDownValue? selectedCategory;
-  var isActive = RxBool(true);
+  var isActive = true.obs;
   @override
   void onInit() {
     promoFocusNode.addListener(() {
@@ -44,7 +44,8 @@ class PromoTypeMasterController extends GetxController {
               programTypeCode = data["promomaster"][0]["promoTypeCode"];
             }
             promTypeNameCtrl.text = data["promomaster"][0]["promoTypeName"];
-            sapCategory.text = data["promomaster"][0]["sapCategory"];
+            sapCategory.text =
+                data["promomaster"][0]["sapCategory"].toString().toUpperCase();
             if (data["promomaster"][0]["channelSpecific"]
                     .toString()
                     .toLowerCase() ==
@@ -116,8 +117,7 @@ class PromoTypeMasterController extends GetxController {
           LoadingDialog.callDataSaved(
               msg: data["promomaster"],
               callback: () {
-                Get.delete<PromoTypeMasterController>();
-                Get.find<HomeController>().clearPage1();
+                clear();
               });
         } else if (data is String) {
           LoadingDialog.callErrorMessage1(msg: data);
@@ -132,8 +132,9 @@ class PromoTypeMasterController extends GetxController {
         null;
         break;
       case "Clear":
-        Get.delete<PromoTypeMasterController>();
-        Get.find<HomeController>().clearPage1();
+        clear();
+        // Get.delete<PromoTypeMasterController>();
+        // Get.find<HomeController>().clearPage1();
         break;
       case "Save":
         validateSaveRecord();
@@ -180,5 +181,15 @@ class PromoTypeMasterController extends GetxController {
         Get.back();
       },
     );
+  }
+
+  clear() {
+    promoCategories.value.clear();
+    promTypeNameCtrl.clear();
+    sapCategory.clear();
+    isActive.value = false;
+    trailPromo.value = false;
+    channelSpec.value = false;
+    getCategory();
   }
 }
