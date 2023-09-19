@@ -10,8 +10,13 @@ import 'package:get/get.dart';
 import 'package:intl/intl.dart';
 import 'package:bms_scheduling/widgets/PlutoGrid/pluto_grid.dart';
 
+import '../../../../widgets/DateTime/DateWithThreeTextField.dart';
+import '../../../../widgets/DateTime/TimeWithThreeTextField.dart';
+import '../../../../widgets/FormButton.dart';
+import '../../../../widgets/gridFromMap.dart';
 import '../../../controller/HomeController.dart';
 import '../../../data/user_data_settings_model.dart';
+import '../../../providers/Utils.dart';
 import '../models/cancel_wo_model.dart';
 import '../models/non_fpc_wo_dt.dart';
 import '../models/wo_aspdfpc_model.dart';
@@ -518,6 +523,186 @@ class MamWorkOrdersController extends GetxController {
     nonFPCTelDate.text = getCurrentDateTime;
   }
 
+  multiPleSegmentsDialog() {
+    if (!nonFPCWOReleaseTXID) {
+      return;
+    }
+
+    if (nonFPCSelectedBMSProgram == null) {
+      LoadingDialog.showErrorDialog("Please select BMS program.");
+    } else if (nonFPCFromEpi.text.isEmpty) {
+      LoadingDialog.showErrorDialog("Please enter from episode.");
+    } else if (nonFPCToEpi.text.isEmpty) {
+      LoadingDialog.showErrorDialog("Please enter to episode.");
+    } else if (nonFPCEpiSegments.text.isEmpty) {
+      LoadingDialog.showErrorDialog("Please enter to episode segs.");
+    } else if (nonFPCFromEpi.text == nonFPCToEpi.text) {
+      handleReleaseWoNonFpcTelecastTypeOnChanged();
+    } else {
+      if (nonFPCTxID.text.isEmpty) {
+        nonFPCTxID.text = "AUTOID";
+      }
+      final dateCtr = TextEditingController();
+      final timeCtr = TextEditingController();
+      var segmentsList = <LstEpisodeDetails>[].obs;
+      var epsNo = "".obs, exportTapeCode = "AUTOID".obs;
+      PlutoGridStateManager? gridSM;
+      var selectedRowIdx = 0.obs;
+      var isLoading = true;
+      try {
+        Get.find<ConnectorControl>().GETMETHODCALL(
+          api: ApiFactory.MAM_WORK_ORDER_NON_FPC_SegmentsPerEps(
+              nonFPCEpiSegments.text),
+          fun: (resp) {
+            if (resp != null &&
+                resp is Map<String, dynamic> &&
+                resp['infoMaxEpisodeNoGap'] != null) {
+              Get.find<ConnectorControl>().GETMETHODCALL(
+                api: ApiFactory
+                    .MAM_WORK_ORDER_NON_FPC_GETSEGMENTSOn_TELECAST_LEAVE(
+                  nonFPCWOReleaseTXID,
+                  nonFPCSelectedBMSProgram?.key ?? '',
+                  nonFPCSelectedTelecasteType?.key ?? '',
+                  nonFPCFromEpi.text,
+                  nonFPCToEpi.text,
+                  resp['infoMaxEpisodeNoGap'].toString(),
+                  nonFPCTxID.text,
+                  nonFPCEpiSegments.text,
+                ),
+                fun: (resp) {
+                  isLoading = false;
+                  segmentsList.refresh();
+                  if (resp != null && resp is Map<String, dynamic>) {
+                    var tempModel =
+                        ReleaseWoNonFPCMultipleSegmensModel.fromJson(resp);
+                    segmentsList.value =
+                        tempModel.infoLeaveTelecast?.lstEpisodeDetails ?? [];
+                  }
+                },
+              );
+            } else {
+              isLoading = false;
+              segmentsList.refresh();
+            }
+          },
+        );
+      } catch (e) {}
+      Get.defaultDialog(
+        confirm: FormButton(
+          btnText: 'Save Eps info.',
+          callback: () {},
+        ),
+        cancel: FormButton(
+          btnText: 'Cancel',
+          callback: () {
+            Get.back();
+          },
+        ),
+        title: "Multiple Segments",
+        content: SizedBox(
+          width: Get.width * .55,
+          height: Get.height * .6,
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              Wrap(
+                spacing: 10,
+                runSpacing: 5,
+                // runAlignment: WrapAlignment.end,
+                crossAxisAlignment: WrapCrossAlignment.end,
+                children: [
+                  DateWithThreeTextField(
+                      title: 'Telecast Date', mainTextController: dateCtr),
+                  TimeWithThreeTextField(
+                      title: 'Telecast Time', mainTextController: timeCtr),
+                  FormButton(btnText: "Update"),
+                  Row(),
+                  Row(
+                    mainAxisSize: MainAxisSize.min,
+                    children: [
+                      Text(
+                        'Eps No: ',
+                        style: TextStyle(
+                            fontWeight: FontWeight.w700, fontSize: 13),
+                      ),
+                      SizedBox(width: 5),
+                      Obx(() {
+                        return Text(
+                          epsNo.value,
+                          style: TextStyle(fontSize: 11),
+                        );
+                      }),
+                    ],
+                  ),
+                  Row(
+                    mainAxisSize: MainAxisSize.min,
+                    children: [
+                      Text(
+                        'Export Tape Code: ',
+                        style: TextStyle(
+                            fontWeight: FontWeight.w700, fontSize: 13),
+                      ),
+                      SizedBox(width: 5),
+                      Obx(() {
+                        return Text(
+                          exportTapeCode.value,
+                          style: TextStyle(fontSize: 11),
+                        );
+                      }),
+                    ],
+                  ),
+                  Row(
+                    mainAxisSize: MainAxisSize.min,
+                    children: [
+                      Text(
+                        'Selected Row No: ',
+                        style: TextStyle(
+                            fontWeight: FontWeight.w700, fontSize: 13),
+                      ),
+                      SizedBox(width: 5),
+                      Obx(() {
+                        return Text(
+                          (selectedRowIdx.value + 1).toString(),
+                          style: TextStyle(fontSize: 11),
+                        );
+                      }),
+                    ],
+                  ),
+                ],
+              ),
+              Expanded(
+                child: Obx(() {
+                  return Container(
+                    margin: const EdgeInsets.symmetric(vertical: 10),
+                    decoration: segmentsList.value.isEmpty
+                        ? BoxDecoration(border: Border.all(color: Colors.grey))
+                        : null,
+                    child: (segmentsList.isEmpty)
+                        ? isLoading
+                            ? const Center(child: CircularProgressIndicator())
+                            : null
+                        : DataGridFromMap(
+                            mapData: segmentsList.value
+                                .map((e) => e.toJson())
+                                .toList(),
+                            mode: PlutoGridMode.selectWithOneTap,
+                            onload: (sm) {
+                              gridSM = sm.stateManager;
+                            },
+                            onSelected: (event) {
+                              selectedRowIdx.value = event.rowIdx ?? 0;
+                            },
+                          ),
+                  );
+                }),
+              )
+            ],
+          ),
+        ),
+      );
+    }
+  }
+
   handleNONFPCLocationChanged(DropDownValue? val) {
     nonFPCSelectedLoc = val;
     if (val != null) {
@@ -550,22 +735,22 @@ class MamWorkOrdersController extends GetxController {
     }
   }
 
-  handleReleaseWoNonFpcTelecastTypeOnChanged(DropDownValue value) {
-    nonFPCSelectedTelecasteType = value;
-    if (nonFPCSelectedBMSProgram == null) {
-      LoadingDialog.showErrorDialog("Please select BMS program.");
-    } else if (nonFPCFromEpi.text.isEmpty) {
-      LoadingDialog.showErrorDialog("Please enter from episode.");
-    } else if (nonFPCToEpi.text.isEmpty) {
-      LoadingDialog.showErrorDialog("Please enter to episode.");
-    } else if (nonFPCEpiSegments.text.isEmpty) {
-      LoadingDialog.showErrorDialog("Please enter to episode segs.");
-    } else {
-      LoadingDialog.call();
+  handleReleaseWoNonFpcTelecastTypeOnChanged() {
+    // if (nonFPCSelectedBMSProgram == null) {
+    //   LoadingDialog.showErrorDialog("Please select BMS program.");
+    // } else if (nonFPCFromEpi.text.isEmpty) {
+    //   LoadingDialog.showErrorDialog("Please enter from episode.");
+    // } else if (nonFPCToEpi.text.isEmpty) {
+    //   LoadingDialog.showErrorDialog("Please enter to episode.");
+    // } else if (nonFPCEpiSegments.text.isEmpty) {
+    //   LoadingDialog.showErrorDialog("Please enter to episode segs.");
+    // } else
+    {
+      // LoadingDialog.call();
       Get.find<ConnectorControl>().POSTMETHOD(
         api: ApiFactory.MAM_WORK_ORDER_NON_FPC_GETTXID,
         fun: (resp) {
-          Get.back();
+          // Get.back();
           if (resp != null &&
               resp is Map<String, dynamic> &&
               resp['txId'] != null) {

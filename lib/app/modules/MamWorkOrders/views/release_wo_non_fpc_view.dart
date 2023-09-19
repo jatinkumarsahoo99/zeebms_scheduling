@@ -141,10 +141,16 @@ class ReleaseWoNonFpcView extends GetView {
               ),
               DropDownField.formDropDown1WidthMap(
                 controller.onloadData.value.lstcboTelecastType ?? [],
-                controller.handleReleaseWoNonFpcTelecastTypeOnChanged,
+                // controller.handleReleaseWoNonFpcTelecastTypeOnChanged,
+                (val) => controller.nonFPCSelectedTelecasteType = val,
                 "Telecast Type",
                 0.1775,
                 selected: controller.nonFPCSelectedTelecasteType,
+                onFocusChange: (hasFocus) {
+                  if (!hasFocus) {
+                    controller.multiPleSegmentsDialog();
+                  }
+                },
               ),
               SizedBox(
                 width: Get.width * 0.30,
@@ -224,15 +230,40 @@ class ReleaseWoNonFpcView extends GetView {
                         "requireApproval",
                         "release",
                       ],
-                      checkBoxStrComparison: true.toString(),
-                      uncheckCheckBoxStr: false.toString(),
-                      hideCode: false,
-                      checkBoxColumnNoEditKey: const [
+
+                      actionIconKey: ['release'],
+                      checkBoxColumnNoEditKey: [
                         "segmented",
                         "timeCodeRequired",
                         "requireApproval",
-                        "release",
                       ],
+                      onEdit: (event) {
+                        controller.nonFPCDataTableList[event.rowIdx].release =
+                            (event.value == "true");
+                      },
+                      actionOnPress: (position, isSpaceCalled) {
+                        if (isSpaceCalled) {
+                          controller.woNonFPCSM?.changeCellValue(
+                            controller.woNonFPCSM!
+                                .getRowByIdx(position.rowIdx)!
+                                .cells['release']!,
+                            (!(controller.nonFPCDataTableList[position.rowIdx!]
+                                        .release ??
+                                    false))
+                                .toString(),
+                            force: true,
+                          );
+                        }
+                      },
+                      checkBoxStrComparison: true.toString(),
+                      uncheckCheckBoxStr: false.toString(),
+                      hideCode: false,
+                      // checkBoxColumnNoEditKey: const [
+                      //   "segmented",
+                      //   "timeCodeRequired",
+                      //   "requireApproval",
+                      //   "release",
+                      // ],
                       onload: (sm) => controller.woNonFPCSM = sm.stateManager,
                       enableColumnDoubleTap: ["release"],
                       onColumnHeaderDoubleTap:

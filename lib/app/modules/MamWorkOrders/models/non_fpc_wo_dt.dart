@@ -50,8 +50,10 @@ class NonFPCWOModel {
       data['vendorCode'] = vendorCode.toString();
       data['languageCode'] = languageCode.toString();
       data['segmented'] = segmented == true ? 1.toString() : 0.toString();
-      data['timeCodeRequired'] = timeCodeRequired == true ? 1.toString() : 0.toString();
-      data['requireApproval'] = requireApproval == true ? 1.toString() : 0.toString();
+      data['timeCodeRequired'] =
+          timeCodeRequired == true ? 1.toString() : 0.toString();
+      data['requireApproval'] =
+          requireApproval == true ? 1.toString() : 0.toString();
     } else {
       data['release'] = release.toString();
       data['contentTypeName'] = contentTypeName;
@@ -66,6 +68,82 @@ class NonFPCWOModel {
       data['vendorCode'] = vendorCode;
       data['languageCode'] = languageCode;
     }
+    return data;
+  }
+}
+
+class ReleaseWoNonFPCMultipleSegmensModel {
+  InfoLeaveTelecast? infoLeaveTelecast;
+
+  ReleaseWoNonFPCMultipleSegmensModel({this.infoLeaveTelecast});
+
+  ReleaseWoNonFPCMultipleSegmensModel.fromJson(Map<String, dynamic> json) {
+    infoLeaveTelecast = json['infoLeaveTelecast'] != null
+        ? InfoLeaveTelecast.fromJson(json['infoLeaveTelecast'])
+        : null;
+  }
+
+  Map<String, dynamic> toJson() {
+    final Map<String, dynamic> data = Map<String, dynamic>();
+    if (this.infoLeaveTelecast != null) {
+      data['infoLeaveTelecast'] = this.infoLeaveTelecast!.toJson();
+    }
+    return data;
+  }
+}
+
+class InfoLeaveTelecast {
+  String? message;
+  String? txId;
+  List<LstEpisodeDetails>? lstEpisodeDetails;
+
+  InfoLeaveTelecast({this.message, this.txId, this.lstEpisodeDetails});
+
+  InfoLeaveTelecast.fromJson(Map<String, dynamic> json) {
+    message = json['message'];
+    txId = json['txId'];
+    if (json['lstEpisodeDetails'] != null) {
+      lstEpisodeDetails = <LstEpisodeDetails>[];
+      json['lstEpisodeDetails'].forEach((v) {
+        lstEpisodeDetails!.add(LstEpisodeDetails.fromJson(v));
+      });
+    }
+  }
+
+  Map<String, dynamic> toJson() {
+    final Map<String, dynamic> data = Map<String, dynamic>();
+    data['message'] = this.message;
+    data['txId'] = this.txId;
+    if (this.lstEpisodeDetails != null) {
+      data['lstEpisodeDetails'] =
+          this.lstEpisodeDetails!.map((v) => v.toJson()).toList();
+    }
+    return data;
+  }
+}
+
+class LstEpisodeDetails {
+  int? epsNo;
+  String? telecastDate;
+  String? telecastTime;
+  String? exportTapeCode;
+
+  LstEpisodeDetails(
+      {this.epsNo, this.telecastDate, this.telecastTime, this.exportTapeCode});
+
+  LstEpisodeDetails.fromJson(Map<String, dynamic> json) {
+    epsNo = json['epsNo'];
+    telecastDate = json['telecastDate'];
+    telecastTime = json['telecastTime'];
+    exportTapeCode = json['exportTapeCode'];
+  }
+
+  Map<String, dynamic> toJson() {
+    final Map<String, dynamic> data = Map<String, dynamic>();
+    data['epsNo'] = this.epsNo;
+    data['telecastDate'] = this.telecastDate;
+    data['telecastTime'] = this.telecastTime;
+    data['exportTapeCode'] = this.exportTapeCode;
     return data;
   }
 }
