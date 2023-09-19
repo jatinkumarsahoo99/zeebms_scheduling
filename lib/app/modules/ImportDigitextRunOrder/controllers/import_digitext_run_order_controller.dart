@@ -6,6 +6,7 @@ import 'package:bms_scheduling/widgets/LoadingDialog.dart';
 import 'package:dio/dio.dart' as dio;
 import 'package:file_picker/file_picker.dart';
 import 'package:flutter/cupertino.dart';
+import 'package:flutter/services.dart';
 import 'package:get/get.dart';
 import 'package:intl/intl.dart';
 import 'package:bms_scheduling/widgets/PlutoGrid/pluto_grid.dart';
@@ -123,8 +124,12 @@ class ImportDigitextRunOrderController extends GetxController {
             fun: (data) {
               if (data != null) {
                 String value = data;
-                Utils.copyToClipboard(value);
-                pickFile();
+                // Utils.copyToClipboard(value);
+                print("Copy Value: $value");
+                Clipboard.setData(ClipboardData(text: value)).then((values) {
+                  print(value);
+                  pickFile();
+                });
               } else {
                 LoadingDialog.callErrorMessage1(
                     msg: "Failed To Load Initial Data");
