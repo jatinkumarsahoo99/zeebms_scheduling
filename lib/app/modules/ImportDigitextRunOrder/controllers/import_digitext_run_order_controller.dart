@@ -124,7 +124,6 @@ class ImportDigitextRunOrderController extends GetxController {
               if (data != null) {
                 String value = data;
                 Utils.copyToClipboard(value);
-                LoadingDialog.callErrorMessage1(msg: value);
                 pickFile();
               } else {
                 LoadingDialog.callErrorMessage1(
