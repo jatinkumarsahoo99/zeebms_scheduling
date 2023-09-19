@@ -41,6 +41,7 @@ class ImportDigitextRunOrderController extends GetxController {
   PlutoGridStateManager? agencyGridStateManager;
   final count = 0.obs;
   var allowSave = RxBool(true);
+  final pickFileName = "".obs;
 
   @override
   void onInit() {
@@ -124,10 +125,10 @@ class ImportDigitextRunOrderController extends GetxController {
             fun: (data) {
               if (data != null) {
                 String value = data;
-                // copyData.Clipboard.setData(copyData.ClipboardData(text: value));
-                //  Utils.copyToClipboard(value);
                 print("Copy Value: $value");
                 Utils.copyToClipboardHack(value);
+                var fileName = value.replaceAll('*', '');
+                pickFileName.value = fileName + ".txt";
                 pickFile();
               } else {
                 LoadingDialog.callErrorMessage1(
@@ -180,11 +181,15 @@ class ImportDigitextRunOrderController extends GetxController {
           type: FileType.custom,
           // initialDirectory: "*08/08/2023 00:00:00*",
           allowedExtensions: ["txt"]);
-
       if (result != null && result.files.single != null) {
         importedFile.value = result.files.single;
         fileController.text = result.files.single.name;
-        importfile();
+        var fName = result.files[0].name;
+        if (fName == pickFileName.value) {
+          importfile();
+        } else {
+          LoadingDialog.callErrorMessage1(msg: "Wrong file selected.");
+        }
       } else {
         // User canceled the pic5ker
       }
