@@ -1,6 +1,7 @@
 import 'package:bms_scheduling/app/controller/ConnectorControl.dart';
 import 'package:bms_scheduling/app/modules/ImportDigitextRunOrder/bindings/digitex_run_order_data.dart';
 import 'package:bms_scheduling/app/providers/ApiFactory.dart';
+import 'package:bms_scheduling/app/providers/Utils.dart';
 import 'package:bms_scheduling/widgets/LoadingDialog.dart';
 import 'package:dio/dio.dart' as dio;
 import 'package:file_picker/file_picker.dart';
@@ -103,6 +104,35 @@ class ImportDigitextRunOrderController extends GetxController {
           });
     } catch (e) {
       LoadingDialog.callErrorMessage1(msg: "Failed To Load Initial Data");
+    }
+  }
+
+  getfileName() {
+    if (selectedLocation == null || selectedChannel == null) {
+      LoadingDialog.callErrorMessage1(msg: "Please Select Location & Channel.");
+    } else {
+      try {
+        Get.find<ConnectorControl>().GETMETHODCALL(
+            api: ApiFactory.IMPORT_DIGITEX_RUN_ORDER_FILE_FORMAT(
+              selectedLocation?.key ?? '',
+              selectedChannel?.key ?? '',
+              DateFormat('yyyy-MM-dd').format(
+                DateFormat('dd-MM-yyyy').parse(scheduleDate.text),
+              ),
+            ),
+            fun: (data) {
+              if (data != null) {
+                print(data);
+                Utils.copyToClipboard(data);
+                pickFile();
+              } else {
+                LoadingDialog.callErrorMessage1(
+                    msg: "Failed To Load Initial Data");
+              }
+            });
+      } catch (e) {
+        LoadingDialog.callErrorMessage1(msg: "Failed To Load Initial Data");
+      }
     }
   }
 
