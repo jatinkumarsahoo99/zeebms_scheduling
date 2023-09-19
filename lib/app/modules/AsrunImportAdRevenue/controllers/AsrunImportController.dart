@@ -440,6 +440,9 @@ class AsrunImportController extends GetxController {
     FilePickerResult? result = await FilePicker.platform.pickFiles();
 
     if (result != null && result.files.single != null) {
+      var fName = result.files[0].name;
+      var extantion = "." + fName.split(".").last;
+      print(extantion);
       importfile(result.files[0]);
     } else {
       // User canceled the pic5ker
