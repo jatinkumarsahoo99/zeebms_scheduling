@@ -106,6 +106,29 @@ class ImportDigitextRunOrderController extends GetxController {
     }
   }
 
+  getfileName() {
+    try {
+      Get.find<ConnectorControl>().GETMETHODCALL(
+          api: ApiFactory.IMPORT_DIGITEX_RUN_ORDER_FILE_FORMAT(
+            selectedLocation?.key ?? '',
+            selectedChannel?.key ?? '',
+            DateFormat('yyyy-MM-dd').format(
+              DateFormat('dd-MM-yyyy').parse(scheduleDate.text),
+            ),
+          ),
+          fun: (data) {
+            if (data != null) {
+              print(data);
+            } else {
+              LoadingDialog.callErrorMessage1(
+                  msg: "Failed To Load Initial Data");
+            }
+          });
+    } catch (e) {
+      LoadingDialog.callErrorMessage1(msg: "Failed To Load Initial Data");
+    }
+  }
+
   importfile() {
     LoadingDialog.call();
     dio.FormData formData = dio.FormData.fromMap({
