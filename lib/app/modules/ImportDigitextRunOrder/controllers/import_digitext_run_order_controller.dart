@@ -124,12 +124,9 @@ class ImportDigitextRunOrderController extends GetxController {
             fun: (data) {
               if (data != null) {
                 String value = data;
-                // Utils.copyToClipboard(value);
+                Utils.copyToClipboard(value);
                 print("Copy Value: $value");
-                Clipboard.setData(ClipboardData(text: value)).then((values) {
-                  print(value);
-                  pickFile();
-                });
+                pickFile();
               } else {
                 LoadingDialog.callErrorMessage1(
                     msg: "Failed To Load Initial Data");

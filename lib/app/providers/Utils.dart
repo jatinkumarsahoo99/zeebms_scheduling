@@ -4,7 +4,7 @@ import 'package:bms_scheduling/app/providers/ApiFactory.dart';
 
 // import 'package:data_table_2/data_table_2.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart' as clipboardData;
+import 'package:flutter/services.dart';
 import 'package:get/get.dart';
 import 'package:get/get_core/src/get_main.dart';
 import 'package:intl/intl.dart';
@@ -30,9 +30,8 @@ class Utils {
         : formatter;
   }
 
-  static copyToClipboard(String val) async {
-    await clipboardData.Clipboard.setData(
-        clipboardData.ClipboardData(text: val));
+  static copyToClipboard(String val) {
+    Clipboard.setData(ClipboardData(text: val));
   }
 
   static String getMMDDYYYYFromDDMMYYYYInString(String ddMMYYYY) {
