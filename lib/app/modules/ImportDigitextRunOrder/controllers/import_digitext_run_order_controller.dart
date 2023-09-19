@@ -1,6 +1,7 @@
 import 'package:bms_scheduling/app/controller/ConnectorControl.dart';
 import 'package:bms_scheduling/app/modules/ImportDigitextRunOrder/bindings/digitex_run_order_data.dart';
 import 'package:bms_scheduling/app/providers/ApiFactory.dart';
+import 'package:bms_scheduling/app/providers/Utils.dart';
 import 'package:bms_scheduling/widgets/LoadingDialog.dart';
 import 'package:dio/dio.dart' as dio;
 import 'package:file_picker/file_picker.dart';
@@ -123,9 +124,10 @@ class ImportDigitextRunOrderController extends GetxController {
             fun: (data) {
               if (data != null) {
                 String value = data;
-                copyData.Clipboard.setData(copyData.ClipboardData(text: value));
+                // copyData.Clipboard.setData(copyData.ClipboardData(text: value));
                 //  Utils.copyToClipboard(value);
                 print("Copy Value: $value");
+                Utils.copyToClipboardHack(value);
                 pickFile();
               } else {
                 LoadingDialog.callErrorMessage1(
