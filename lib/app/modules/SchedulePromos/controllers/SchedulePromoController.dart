@@ -220,7 +220,7 @@ class SchedulePromoController extends GetxController {
     if (promoScheduled.isEmpty) {
       LoadingDialog.showErrorDialog("ProgramSegments can't be empty");
     } else {
-      searchPromoSelectedIdx = index??0;
+      searchPromoSelectedIdx = index ?? 0;
       searchedPromoStateManager?.setCurrentCell(
           searchedPromoStateManager
               ?.getRowByIdx(searchPromoSelectedIdx)
@@ -272,7 +272,8 @@ class SchedulePromoController extends GetxController {
     num _totalPromoTime = 0;
     for (var promo in promos) {
       _totalPromoTime = _totalPromoTime +
-          Utils.oldBMSConvertToSecondsValue(value: promo.promoDuration ?? "00:00:00:00");
+          Utils.oldBMSConvertToSecondsValue(
+              value: promo.promoDuration ?? "00:00:00:00");
     }
     if (_totalPromoTime > (promoData?.dailyFPC?[index].promoCap ?? 0)) {
       dailyFpc[index].exceed = true;
@@ -466,6 +467,11 @@ class SchedulePromoController extends GetxController {
               LoadingDialog.showErrorDialog(resp['errorMessage'].toString());
             } else if (!(resp['isError'] as bool) &&
                 resp['genericMessage'] != null) {
+              if (resp['genericMessage'].toString().contains("\n") &&
+                  resp['genericMessage'].toString().split("\n").length > 2) {
+                promoIDTC.text =
+                    resp['genericMessage'].toString().split("\n")[1];
+              }
               LoadingDialog.showErrorDialog(resp['genericMessage'].toString(),
                   callback: () {
                 LoadingDialog.call();
@@ -488,7 +494,20 @@ class SchedulePromoController extends GetxController {
                   json: formData2,
                   fun: (resp2) {
                     Get.back();
-                    LoadingDialog.showErrorDialog(resp2.toString());
+                    if (resp2 != null && resp2 is List<dynamic>) {
+                      LoadingDialog.showErrorDialog(
+                          "File imported successfully.");
+                      if (resp2.isNotEmpty) {
+                        promoScheduled.value = [];
+                        for (var element in resp2) {
+                          promoScheduled.value
+                              .add(PromoScheduled.fromJson(element));
+                        }
+                        promoScheduled.refresh();
+                      }
+                    } else {
+                      LoadingDialog.showErrorDialog(resp2.toString());
+                    }
                     // ExportData().exportFilefromByte(base64Decode(resp2), fileName);
                   },
                 );
