@@ -43,30 +43,34 @@ class NonFPCWOModel {
 
   Map<String, dynamic> toJson({bool fromSave = false}) {
     final Map<String, dynamic> data = <String, dynamic>{};
-    if (fromSave) {
-      data['release'] = release == true ? 0 : 1;
-      data['contentTypeId'] = contentTypeId.toString();
-      data['contentFormatId'] = contentFormatId.toString();
-      data['vendorCode'] = vendorCode.toString();
-      data['languageCode'] = languageCode.toString();
-      data['segmented'] = segmented == true ? 1.toString() : 0.toString();
-      data['timeCodeRequired'] =
-          timeCodeRequired == true ? 1.toString() : 0.toString();
-      data['requireApproval'] =
-          requireApproval == true ? 1.toString() : 0.toString();
-    } else {
-      data['release'] = release.toString();
-      data['contentTypeName'] = contentTypeName;
-      data['contentFormat'] = contentFormat;
-      data['vendor'] = vendor;
-      data['languageName'] = languageName;
-      data['segmented'] = segmented.toString();
-      data['timeCodeRequired'] = timeCodeRequired.toString();
-      data['requireApproval'] = requireApproval.toString();
-      data['contentTypeId'] = contentTypeId;
-      data['contentFormatId'] = contentFormatId;
-      data['vendorCode'] = vendorCode;
-      data['languageCode'] = languageCode;
+    try {
+      if (fromSave) {
+        data['release'] = release == true ? 0 : 1;
+        data['contentTypeId'] = contentTypeId.toString();
+        data['contentFormatId'] = contentFormatId.toString();
+        data['vendorCode'] = vendorCode.toString();
+        data['languageCode'] = languageCode.toString();
+        data['segmented'] = segmented == true ? 1.toString() : 0.toString();
+        data['timeCodeRequired'] =
+            timeCodeRequired == true ? 1.toString() : 0.toString();
+        data['requireApproval'] =
+            requireApproval == true ? 1.toString() : 0.toString();
+      } else {
+        data['release'] = release.toString();
+        data['contentTypeName'] = contentTypeName;
+        data['contentFormat'] = contentFormat;
+        data['vendor'] = vendor;
+        data['languageName'] = languageName;
+        data['segmented'] = segmented.toString();
+        data['timeCodeRequired'] = timeCodeRequired.toString();
+        data['requireApproval'] = requireApproval.toString();
+        data['contentTypeId'] = contentTypeId;
+        data['contentFormatId'] = contentFormatId;
+        data['vendorCode'] = vendorCode;
+        data['languageCode'] = languageCode;
+      }
+    } catch (e) {
+      print(e.toString());
     }
     return data;
   }
