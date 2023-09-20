@@ -892,6 +892,7 @@ class MamWorkOrdersController extends GetxController {
             if (resp is Map<String, dynamic> &&
                 resp['program_Response']['lstProgram'] != null &&
                 resp['program_Response']['lstProgram'] is List<dynamic>) {
+              nonFPCDataTableList.clear();
               var list =
                   (resp['program_Response']['lstProgram'] as List<dynamic>)
                       .map((e) => NonFPCWOModel.fromJson(e))
