@@ -498,10 +498,12 @@ class SchedulePromoController extends GetxController {
                       LoadingDialog.showErrorDialog(
                           "File imported successfully.");
                       if (resp2.isNotEmpty) {
-                        dailyFpc.value = [];
+                        promoScheduled.value = [];
                         for (var element in resp2) {
-                          dailyFpc.value.add(DailyFPC.fromJson(element));
+                          promoScheduled.value
+                              .add(PromoScheduled.fromJson(element));
                         }
+                        promoScheduled.refresh();
                       }
                     } else {
                       LoadingDialog.showErrorDialog(resp2.toString());
