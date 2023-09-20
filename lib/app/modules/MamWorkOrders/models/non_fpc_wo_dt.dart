@@ -85,8 +85,8 @@ class ReleaseWoNonFPCMultipleSegmensModel {
 
   Map<String, dynamic> toJson() {
     final Map<String, dynamic> data = Map<String, dynamic>();
-    if (this.infoLeaveTelecast != null) {
-      data['infoLeaveTelecast'] = this.infoLeaveTelecast!.toJson();
+    if (infoLeaveTelecast != null) {
+      data['infoLeaveTelecast'] = infoLeaveTelecast!.toJson();
     }
     return data;
   }
@@ -95,12 +95,14 @@ class ReleaseWoNonFPCMultipleSegmensModel {
 class InfoLeaveTelecast {
   String? message;
   String? txId;
+  bool? bMET;
   List<LstEpisodeDetails>? lstEpisodeDetails;
 
   InfoLeaveTelecast({this.message, this.txId, this.lstEpisodeDetails});
 
   InfoLeaveTelecast.fromJson(Map<String, dynamic> json) {
     message = json['message'];
+    bMET = json['bMET'];
     txId = json['txId'];
     if (json['lstEpisodeDetails'] != null) {
       lstEpisodeDetails = <LstEpisodeDetails>[];
@@ -112,11 +114,11 @@ class InfoLeaveTelecast {
 
   Map<String, dynamic> toJson() {
     final Map<String, dynamic> data = Map<String, dynamic>();
-    data['message'] = this.message;
-    data['txId'] = this.txId;
-    if (this.lstEpisodeDetails != null) {
+    data['message'] = message;
+    data['txId'] = txId;
+    if (lstEpisodeDetails != null) {
       data['lstEpisodeDetails'] =
-          this.lstEpisodeDetails!.map((v) => v.toJson()).toList();
+          lstEpisodeDetails!.map((v) => v.toJson()).toList();
     }
     return data;
   }
@@ -140,10 +142,10 @@ class LstEpisodeDetails {
 
   Map<String, dynamic> toJson() {
     final Map<String, dynamic> data = Map<String, dynamic>();
-    data['epsNo'] = this.epsNo;
-    data['telecastDate'] = this.telecastDate;
-    data['telecastTime'] = this.telecastTime;
-    data['exportTapeCode'] = this.exportTapeCode;
+    data['epsNo'] = epsNo;
+    data['telecastDate'] = telecastDate;
+    data['telecastTime'] = telecastTime;
+    data['exportTapeCode'] = exportTapeCode;
     return data;
   }
 }

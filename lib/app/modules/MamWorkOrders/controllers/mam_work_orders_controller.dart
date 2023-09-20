@@ -44,6 +44,7 @@ class MamWorkOrdersController extends GetxController {
   ///
   /// Release WO NON FPC Varaibles START
   var nonFPCWOTypeFN = FocusNode();
+  bool? bMET;
   PlutoGridStateManager? woNonFPCSM;
   bool nonFPCEnableAll = false;
   var nonFPCChannelList = <DropDownValue>[].obs;
@@ -63,6 +64,8 @@ class MamWorkOrdersController extends GetxController {
       nonFPCTelDate = TextEditingController(),
       nonFPCTelTime = TextEditingController(text: "00:00:00");
   var nonFPCDataTableList = <NonFPCWOModel>[].obs;
+  var segmentsList = <LstEpisodeDetails>[].obs;
+
   // Release WO NON FPC Varaibles END
   ///
   ///
@@ -502,6 +505,7 @@ class MamWorkOrdersController extends GetxController {
   ///
   //////////////////////////////////////// RELEASE WO NON FPC FUNCTIONALITY START//////////////////////////////////////////
   clearReleaseWONonFPCPage() async {
+    segmentsList.value = [];
     woNonFPCSM = null;
     nonFPCSelectedWorkOrderType = null;
     nonFPCSelectedLoc = null;
@@ -544,53 +548,94 @@ class MamWorkOrdersController extends GetxController {
       }
       final dateCtr = TextEditingController();
       final timeCtr = TextEditingController();
-      var segmentsList = <LstEpisodeDetails>[].obs;
+      segmentsList.value = [];
       var epsNo = "".obs, exportTapeCode = "AUTOID".obs;
       PlutoGridStateManager? gridSM;
       var selectedRowIdx = 0.obs;
       var isLoading = true;
+
+      handleSelectTap(int rowIdx) {
+        selectedRowIdx.value = rowIdx;
+        dateCtr.text = DateFormat("dd-MM-yyyy").format(
+            DateFormat('yyyy-MM-ddThh:mm:ss')
+                .parse(segmentsList[selectedRowIdx.value].telecastDate ?? ""));
+        timeCtr.text = segmentsList[selectedRowIdx.value].telecastTime ?? "";
+        epsNo.value =
+            (segmentsList[selectedRowIdx.value].epsNo ?? '').toString();
+
+        exportTapeCode.value =
+            (segmentsList[selectedRowIdx.value].exportTapeCode ?? '')
+                .toString();
+      }
+
       try {
+        // Get.find<ConnectorControl>().GETMETHODCALL(
+        //   api: ApiFactory.MAM_WORK_ORDER_NON_FPC_SegmentsPerEps(
+        //       nonFPCEpiSegments.text),
+        //   fun: (resp) {
+        //     if (resp != null &&
+        //         resp is Map<String, dynamic> &&
+        //         resp['infoMaxEpisodeNoGap'] != null) {
+        //       Get.find<ConnectorControl>().GETMETHODCALL(
+        //         api: ApiFactory
+        //             .MAM_WORK_ORDER_NON_FPC_GETSEGMENTSOn_TELECAST_LEAVE(
+        //           nonFPCWOReleaseTXID,
+        //           nonFPCSelectedBMSProgram?.key ?? '',
+        //           nonFPCSelectedTelecasteType?.key ?? '',
+        //           nonFPCFromEpi.text,
+        //           nonFPCToEpi.text,
+        //           onloadData.value.nMaxEpsGap.toString(),
+        //           nonFPCTxID.text,
+        //           nonFPCEpiSegments.text,
+        //         ),
+        //         fun: (resp) {
+        //           if (resp != null && resp is Map<String, dynamic>) {
+        //             segmentsList.value =
+        //                 ReleaseWoNonFPCMultipleSegmensModel.fromJson(resp)
+        //                         .infoLeaveTelecast
+        //                         ?.lstEpisodeDetails ??
+        //                     [];
+        //           }
+        //           isLoading = false;
+        //           segmentsList.refresh();
+        //         },
+        //       );
+        //     } else {
+        //       isLoading = false;
+        //       segmentsList.refresh();
+        //     }
+        // },
+        // );
         Get.find<ConnectorControl>().GETMETHODCALL(
-          api: ApiFactory.MAM_WORK_ORDER_NON_FPC_SegmentsPerEps(
-              nonFPCEpiSegments.text),
+          api: ApiFactory.MAM_WORK_ORDER_NON_FPC_GETSEGMENTSOn_TELECAST_LEAVE(
+            nonFPCWOReleaseTXID,
+            nonFPCSelectedBMSProgram?.key ?? '',
+            nonFPCSelectedTelecasteType?.key ?? '',
+            nonFPCFromEpi.text,
+            nonFPCToEpi.text,
+            onloadData.value.nMaxEpsGap.toString(),
+            nonFPCTxID.text,
+            nonFPCEpiSegments.text,
+          ),
           fun: (resp) {
-            if (resp != null &&
-                resp is Map<String, dynamic> &&
-                resp['infoMaxEpisodeNoGap'] != null) {
-              Get.find<ConnectorControl>().GETMETHODCALL(
-                api: ApiFactory
-                    .MAM_WORK_ORDER_NON_FPC_GETSEGMENTSOn_TELECAST_LEAVE(
-                  nonFPCWOReleaseTXID,
-                  nonFPCSelectedBMSProgram?.key ?? '',
-                  nonFPCSelectedTelecasteType?.key ?? '',
-                  nonFPCFromEpi.text,
-                  nonFPCToEpi.text,
-                  resp['infoMaxEpisodeNoGap'].toString(),
-                  nonFPCTxID.text,
-                  nonFPCEpiSegments.text,
-                ),
-                fun: (resp) {
-                  isLoading = false;
-                  segmentsList.refresh();
-                  if (resp != null && resp is Map<String, dynamic>) {
-                    var tempModel =
-                        ReleaseWoNonFPCMultipleSegmensModel.fromJson(resp);
-                    segmentsList.value =
-                        tempModel.infoLeaveTelecast?.lstEpisodeDetails ?? [];
-                  }
-                },
-              );
-            } else {
-              isLoading = false;
-              segmentsList.refresh();
+            if (resp != null && resp is Map<String, dynamic>) {
+              var tempModel =
+                  ReleaseWoNonFPCMultipleSegmensModel.fromJson(resp);
+              segmentsList.value =
+                  tempModel.infoLeaveTelecast?.lstEpisodeDetails ?? [];
+              bMET = tempModel.infoLeaveTelecast?.bMET;
             }
+            isLoading = false;
+            segmentsList.refresh();
           },
         );
       } catch (e) {}
       Get.defaultDialog(
         confirm: FormButton(
           btnText: 'Save Eps info.',
-          callback: () {},
+          callback: () {
+            Get.back();
+          },
         ),
         cancel: FormButton(
           btnText: 'Cancel',
@@ -615,7 +660,17 @@ class MamWorkOrdersController extends GetxController {
                       title: 'Telecast Date', mainTextController: dateCtr),
                   TimeWithThreeTextField(
                       title: 'Telecast Time', mainTextController: timeCtr),
-                  FormButton(btnText: "Update"),
+                  FormButton(
+                    btnText: "Update",
+                    callback: () {
+                      segmentsList[selectedRowIdx.value].telecastTime =
+                          timeCtr.text;
+                      segmentsList[selectedRowIdx.value].telecastDate =
+                          DateFormat('yyyy-MM-ddT00:00:00').format(
+                              DateFormat('dd-MM-yyyy').parse(dateCtr.text));
+                      segmentsList.refresh();
+                    },
+                  ),
                   Row(),
                   Row(
                     mainAxisSize: MainAxisSize.min,
@@ -686,11 +741,23 @@ class MamWorkOrdersController extends GetxController {
                                 .map((e) => e.toJson())
                                 .toList(),
                             mode: PlutoGridMode.selectWithOneTap,
+                            hideCode: false,
+                            columnAutoResize: true,
                             onload: (sm) {
                               gridSM = sm.stateManager;
+                              gridSM?.setCurrentCell(
+                                  sm.stateManager
+                                      .getRowByIdx(selectedRowIdx.value)!
+                                      .cells['telecastDate'],
+                                  selectedRowIdx.value);
+                              handleSelectTap(selectedRowIdx.value);
                             },
                             onSelected: (event) {
-                              selectedRowIdx.value = event.rowIdx ?? 0;
+                              handleSelectTap(event.rowIdx ?? 0);
+                            },
+                            onRowDoubleTap: (event) {
+                              handleSelectTap(event.rowIdx);
+                              gridSM?.setCurrentCell(event.cell, event.rowIdx);
                             },
                           ),
                   );
@@ -872,11 +939,44 @@ class MamWorkOrdersController extends GetxController {
     } else {
       var from = num.tryParse(nonFPCFromEpi.text) ?? 0;
       var to = num.tryParse(nonFPCToEpi.text) ?? 0;
-      if (from == 0 && to == 0 || from > to) {
+      if ((from == 0 && to == 0 || from > to) && nonFPCWOReleaseTXID) {
         LoadingDialog.showErrorDialog(
             "From and To Episode No cannot be zero and To Episode No should be greater than From Episode No.");
+      } else if (nonFPCWOReleaseTXID && (nonFPCTxID.text.trim().isEmpty)) {
+        LoadingDialog.showErrorDialog("Tx id can't be blank.");
       } else {
         try {
+          if (nonFPCWOReleaseTXID) {
+            bool foundDublicateVal = false;
+            if (segmentsList.isEmpty) {
+              foundDublicateVal = true;
+            }
+
+            for (var i = 0; i < segmentsList.length; i++) {
+              for (var j = 0; j < segmentsList.length; j++) {
+                if (i < j) {
+                  if (segmentsList[i].telecastDate ==
+                          segmentsList[j].telecastDate ||
+                      segmentsList[i].telecastTime ==
+                          segmentsList[j].telecastTime) {
+                    foundDublicateVal = true;
+                    break;
+                  }
+                }
+              }
+            }
+            if (nonFPCTelTime.text == "00:00:00" &&
+                nonFPCFromEpi.text == nonFPCToEpi.text) {
+              LoadingDialog.showErrorDialog("Please enter Telecast Time");
+              return;
+            }
+            if (foundDublicateVal) {
+              LoadingDialog.showErrorDialog(
+                  "While releasing work order with TX Id, TelecastDate and TelecastTime should not be same per Exporttapecode.");
+
+              return;
+            }
+          }
           LoadingDialog.call();
           await Get.find<ConnectorControl>().POSTMETHOD(
             api: ApiFactory.MAM_WORK_ORDER_NON_FPC_SAVE_DATA,
@@ -892,6 +992,7 @@ class MamWorkOrdersController extends GetxController {
                       callback: () {
                         clearPage();
                       });
+                  // nonFPCTxID
                 } else {
                   LoadingDialog.showErrorDialog(
                       resp['program_Response']['strMessage'].toString());
@@ -920,11 +1021,15 @@ class MamWorkOrdersController extends GetxController {
               "bmsProgramCode": nonFPCSelectedBMSProgram?.key,
               "episodeSegCount": nonFPCEpiSegments.text,
               "exportTapeCode": nonFPCTxID.text.trim(),
+              "telecastTypeCode": nonFPCSelectedTelecasteType?.key,
               "loggedUser": Get.find<MainController>().user?.logincode,
               "chkQuality": nonFPCQualityHD,
+              "bMET": bMET,
               "lstGetProgram": nonFPCDataTableList
                   .map((element) => element.toJson(fromSave: true))
                   .toList(),
+              "lstEpisodeDetails":
+                  segmentsList.map((element) => element.toJson()).toList(),
             },
           );
         } catch (e) {
