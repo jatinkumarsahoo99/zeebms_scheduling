@@ -240,14 +240,16 @@ class SchedulePromoView extends StatelessWidget {
                                   Expanded(
                                     child: Obx(() {
                                       return Container(
-                                        decoration: controller
-                                                .promoScheduled.value.isEmpty
+                                        decoration: controller.promoScheduled
+                                                    .value.isEmpty ||
+                                                !controller.canRefresh
                                             ? BoxDecoration(
                                                 border: Border.all(
                                                     color: Colors.grey))
                                             : null,
-                                        child: controller
-                                                .promoScheduled.value.isEmpty
+                                        child: controller.promoScheduled.value
+                                                    .isEmpty ||
+                                                !controller.canRefresh
                                             ? null
                                             : DataGridShowOnlyKeys(
                                                 keysWidths: (controller
@@ -308,10 +310,11 @@ class SchedulePromoView extends StatelessWidget {
                                                     print("Key Pressed");
                                                     if (event is KeyDownEvent &&
                                                         (event.logicalKey ==
-                                                            LogicalKeyboardKey
-                                                                .delete || event.logicalKey ==
-                                                            LogicalKeyboardKey
-                                                                .backspace)) {
+                                                                LogicalKeyboardKey
+                                                                    .delete ||
+                                                            event.logicalKey ==
+                                                                LogicalKeyboardKey
+                                                                    .backspace)) {
                                                       print("Delete Pressed");
                                                       if (controller
                                                               .scheduledPromoStateManager
@@ -369,7 +372,7 @@ class SchedulePromoView extends StatelessWidget {
                                                       }
                                                       return KeyEventResult
                                                           .handled;
-                                                    }else {
+                                                    } else {
                                                       return KeyEventResult
                                                           .ignored;
                                                     }
@@ -492,8 +495,9 @@ class SchedulePromoView extends StatelessWidget {
                                     children: [
                                       Expanded(
                                         child: Padding(
-                                          padding:
-                                              const EdgeInsets.only(top: 5.0),
+                                          padding: const EdgeInsets.only(
+                                            top: 5.0,
+                                          ),
                                           child: InputFields.formField1Width(
                                             widthRatio:
                                                 (Get.width * 0.2) / 2 + 7,
@@ -572,7 +576,11 @@ class SchedulePromoView extends StatelessWidget {
                                                                 .controlName ==
                                                             "searchedPromoStateManager",
                                                         orElse: () =>
-                                                            UserSetting(userSettings: {"eventType":40}))
+                                                            UserSetting(
+                                                                userSettings: {
+                                                                  "eventType":
+                                                                      40
+                                                                }))
                                                     .userSettings),
                                                 mapData: controller
                                                     .searchPromos.value,
@@ -588,13 +596,17 @@ class SchedulePromoView extends StatelessWidget {
                                                       .setSelectingMode(
                                                           PlutoGridSelectingMode
                                                               .cell);
-                                                  if(controller
-                                                      .searchPromos.value.isNotEmpty) {
+                                                  if (controller.searchPromos
+                                                      .value.isNotEmpty) {
                                                     event.stateManager
                                                         .setCurrentCell(
-                                                        event.stateManager
-                                                            .rows[0].cells
-                                                            .values.first, 0);
+                                                            event
+                                                                .stateManager
+                                                                .rows[0]
+                                                                .cells
+                                                                .values
+                                                                .first,
+                                                            0);
                                                   }
                                                   event.stateManager
                                                       .setSelecting(true);

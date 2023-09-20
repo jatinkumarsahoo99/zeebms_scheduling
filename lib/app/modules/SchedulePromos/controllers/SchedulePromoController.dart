@@ -41,6 +41,7 @@ class SchedulePromoController extends GetxController {
       fpcSelectedCol = "",
       searchPromoSelectedCol = "";
   var rightCount = "00:00:00:00".obs;
+  var canRefresh = true;
   // var mainData = {};
   PromoModel? promoData;
   var availableTC = TextEditingController(),
@@ -495,19 +496,30 @@ class SchedulePromoController extends GetxController {
                   fun: (resp2) {
                     Get.back();
                     if (resp2 != null && resp2 is List<dynamic>) {
-                      LoadingDialog.showErrorDialog(
-                          "File imported successfully.");
+                      LoadingDialog.callDataSaved(
+                          msg: "File imported successfully.");
                       if (resp2.isNotEmpty) {
                         promoScheduled.value = [];
                         for (var element in resp2) {
                           promoScheduled.value
                               .add(PromoScheduled.fromJson(element));
                         }
-                        promoScheduled.refresh();
+                        // handleDoubleTapInLeft1stTable(
+                        //     fpcSelectedIdx, "startTime");
+                        // canRefresh = false;
+                        // promoScheduled.refresh();
+                        // canRefresh = true;
                       }
                     } else {
                       LoadingDialog.showErrorDialog(resp2.toString());
                     }
+                    canRefresh = false;
+
+                    promoScheduled.refresh();
+                    Future.delayed(Duration(seconds: 2)).then((value) {
+                      canRefresh = true;
+                    });
+
                     // ExportData().exportFilefromByte(base64Decode(resp2), fileName);
                   },
                 );
