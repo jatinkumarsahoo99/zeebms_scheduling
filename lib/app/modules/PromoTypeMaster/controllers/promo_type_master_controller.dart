@@ -17,10 +17,10 @@ class PromoTypeMasterController extends GetxController {
   FocusNode promoFocusNode = FocusNode();
   var trailPromo = RxBool(false);
   var channelSpec = RxBool(false);
-  String? programTypeCode;
+  String programTypeCode = "";
   var promoCategories = <DropDownValue>[].obs;
   DropDownValue? selectedCategory;
-  var isActive = false.obs;
+  var isActive = true.obs;
   @override
   void onInit() {
     promoFocusNode.addListener(() {
@@ -44,7 +44,8 @@ class PromoTypeMasterController extends GetxController {
               programTypeCode = data["promomaster"][0]["promoTypeCode"];
             }
             promTypeNameCtrl.text = data["promomaster"][0]["promoTypeName"];
-            sapCategory.text = data["promomaster"][0]["sapCategory"];
+            sapCategory.text =
+                data["promomaster"][0]["sapCategory"].toString().toUpperCase();
             if (data["promomaster"][0]["channelSpecific"]
                     .toString()
                     .toLowerCase() ==
@@ -63,6 +64,7 @@ class PromoTypeMasterController extends GetxController {
   }
 
   void validateSaveRecord() {
+    // print(programTypeCode!.isEmpty);
     if (selectedCategory == null) {
       LoadingDialog.showErrorDialog("Please select promo category name.");
     } else if (promTypeNameCtrl.text.trim().isEmpty) {
@@ -70,7 +72,7 @@ class PromoTypeMasterController extends GetxController {
     } else if (sapCategory.text.trim().isEmpty) {
       LoadingDialog.showErrorDialog("Please enter SAP category.");
     } else {
-      if (programTypeCode!.isEmpty) {
+      if (programTypeCode.isEmpty) {
         saveData();
       } else {
         LoadingDialog.call();
@@ -112,7 +114,11 @@ class PromoTypeMasterController extends GetxController {
       fun: (data) {
         Get.back();
         if (data is Map && data.containsKey("promomaster")) {
-          LoadingDialog.callDataSaved(msg: data["promomaster"]);
+          LoadingDialog.callDataSaved(
+              msg: data["promomaster"],
+              callback: () {
+                clear();
+              });
         } else if (data is String) {
           LoadingDialog.callErrorMessage1(msg: data);
         }
@@ -126,8 +132,9 @@ class PromoTypeMasterController extends GetxController {
         null;
         break;
       case "Clear":
-        Get.delete<PromoTypeMasterController>();
-        Get.find<HomeController>().clearPage1();
+        clear();
+        // Get.delete<PromoTypeMasterController>();
+        // Get.find<HomeController>().clearPage1();
         break;
       case "Save":
         validateSaveRecord();
@@ -174,5 +181,15 @@ class PromoTypeMasterController extends GetxController {
         Get.back();
       },
     );
+  }
+
+  clear() {
+    promoCategories.value.clear();
+    promTypeNameCtrl.clear();
+    sapCategory.clear();
+    isActive.value = false;
+    trailPromo.value = false;
+    channelSpec.value = false;
+    getCategory();
   }
 }

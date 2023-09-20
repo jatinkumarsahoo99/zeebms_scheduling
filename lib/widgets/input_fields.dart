@@ -706,6 +706,7 @@ class InputFields {
     required double widthRatio,
     double? height,
     double? paddingLeft,
+    double? padding,
     bool capital = false,
     bool? isEnable,
     int? maxLen,
@@ -765,7 +766,9 @@ class InputFields {
             decoration: InputDecoration(
                 errorBorder: InputBorder.none,
                 // hintText: "dd/MM/yyyy",
-                contentPadding: const EdgeInsets.only(left: 10),
+                contentPadding: const EdgeInsets.only(
+                  left: 10,
+                ),
                 // labelText: hintTxt,
                 counterText: "",
                 labelStyle: TextStyle(

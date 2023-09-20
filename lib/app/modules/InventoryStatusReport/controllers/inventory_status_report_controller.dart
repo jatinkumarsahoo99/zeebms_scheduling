@@ -22,29 +22,28 @@ class InventoryStatusReportController extends GetxController {
   var dataTableList = [].obs;
   var channelAllSelected = false.obs;
   DropDownValue? selectedLocation, selectedChannel;
-  late FocusNode locationFN;
+  FocusNode locationFN = FocusNode();
   var selectedRadio = "".obs;
   Rxn<InventoryStatusReportLoadModel?> onLoadModel =
       Rxn<InventoryStatusReportLoadModel?>();
 
   PlutoGridStateManager? stateManager;
   UserDataSettings? userDataSettings;
-  ScrollController scrollController = new ScrollController();
-  FocusScopeNode focusNodeList = FocusScopeNode();
+  ScrollController scrollController = ScrollController();
   @override
   void onInit() {
     formPermissions = Utils.fetchPermissions1(
         Routes.INVENTORY_STATUS_REPORT.replaceAll("/", ""));
 
-    locationFN =  FocusNode(
+ /*   locationFN =  FocusNode(
       onKeyEvent: (node, event) {
         if (event.logicalKey == LogicalKeyboardKey.tab) {
           scrollController.jumpTo(scrollController.position.maxScrollExtent);
-          return KeyEventResult.handled;
+          return KeyEventResult.ignored;
         }
         return KeyEventResult.ignored;
       },
-    );
+    );*/
 
     super.onInit();
   }
@@ -80,30 +79,12 @@ class InventoryStatusReportController extends GetxController {
       },
     ).toList();
     onLoadModel.value?.info?.channels = tempChannelList ?? [];
-    onLoadModel.refresh();
+    update(['listData']);
   }
 
   clearPage() {
-    selectedLocation!.value = "";
-    // try {
-    //   selectedLocation = onLoadModel.value?.info?.locations
-    //       ?.firstWhere((element) => element.value == "ASIA");
-    // } catch (e) {}
-    selectedRadio.value = "";
-    channelAllSelected.value = false;
-    var tempChannelList = onLoadModel.value?.info?.channels?.map(
-      (e) {
-        e.isSelected = false;
-        return e;
-      },
-    ).toList();
-
-    onLoadModel.value?.info?.channels = tempChannelList ?? [];
-    fromDateTC.clear();
-    toDateTC.clear();
-    dataTableList.clear();
-    onLoadModel.refresh();
-    locationFN.requestFocus();
+    Get.delete<InventoryStatusReportController>();
+    Get.find<HomeController>().clearPage1();
   }
 
   void getInitialData() {
@@ -114,6 +95,7 @@ class InventoryStatusReportController extends GetxController {
         closeDialogIfOpen();
         if (resp != null && resp is Map<String, dynamic>) {
           onLoadModel.value = InventoryStatusReportLoadModel.fromJson(resp);
+          update(["listData"]);
           // try {
           //   selectedLocation = onLoadModel.value?.info?.locations
           //       ?.firstWhere((element) => element.value == "ASIA");

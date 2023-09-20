@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 
+import '../app/providers/SizeDefine.dart';
+
 class CheckBoxWidget1 extends StatelessWidget {
   final String title;
   bool value;
@@ -60,7 +62,8 @@ class CheckBoxWidget1 extends StatelessWidget {
               title,
               style: TextStyle(
                 color: isEnable ? Colors.black : Colors.grey,
-                fontSize: 13,
+                fontSize: SizeDefine.labelSize1,
+                fontWeight: FontWeight.w500,
               ),
             )
           }

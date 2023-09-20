@@ -683,7 +683,7 @@ class DataGridMenu {
                                           } else {
                                             stateManager.moveScrollByRow(
                                                 PlutoMoveDirection.down,
-                                                _slecetedRow.sortIdx);
+                                                _slecetedRow.sortIdx+10);
                                           }
                                           stateManager.setKeepFocus(false);
                                           stateManager.setCurrentCell(
