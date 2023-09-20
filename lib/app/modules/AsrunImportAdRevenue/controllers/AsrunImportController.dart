@@ -2,6 +2,7 @@ import 'package:bms_scheduling/app/controller/HomeController.dart';
 import 'package:bms_scheduling/app/modules/AsrunImportAdRevenue/bindings/arun_data.dart';
 import 'package:bms_scheduling/app/modules/AsrunImportAdRevenue/bindings/asrun_fpc_data.dart';
 import 'package:bms_scheduling/app/providers/ExportData.dart';
+import 'package:bms_scheduling/app/providers/Utils.dart';
 import 'package:bms_scheduling/app/providers/extensions/string_extensions.dart';
 import 'package:bms_scheduling/widgets/LoadingDialog.dart';
 import 'package:bms_scheduling/widgets/PlutoGrid/pluto_grid.dart';
@@ -21,6 +22,7 @@ class AsrunImportController extends GetxController {
   var locations = RxList<DropDownValue>();
   var channels = RxList<DropDownValue>([]);
   RxBool isEnable = RxBool(true);
+  final pickFileName = "".obs;
 
   //input controllers
   DropDownValue? selectLocation;
@@ -438,11 +440,7 @@ class AsrunImportController extends GetxController {
 
   pickFile() async {
     FilePickerResult? result = await FilePicker.platform.pickFiles();
-
     if (result != null && result.files.single != null) {
-      var fName = result.files[0].name;
-      var extantion = "." + fName.split(".").last;
-      print(extantion);
       importfile(result.files[0]);
     } else {
       // User canceled the pic5ker
@@ -450,7 +448,6 @@ class AsrunImportController extends GetxController {
   }
 
   importfile(PlatformFile? file) async {
-    print("====hey ${selectedDate.text.fromdMyToyMd()}");
     LoadingDialog.call();
     dio.FormData formData = dio.FormData.fromMap({
       'ChannelCode': selectChannel?.key,
@@ -617,15 +614,39 @@ class AsrunImportController extends GetxController {
             if (map["result"]["genericMessage"] != null) {
               LoadingDialog.modify(map["result"]["genericMessage"], () {
                 print("yes");
-                pickFile();
+                getfileName();
               }, () {
                 print("no");
               }, cancelTitle: "No", deleteTitle: "Yes");
             } else {
-              pickFile();
+              getfileName();
             }
             // checkMissingAsrun();
           }
         });
+  }
+
+  getfileName() {
+    try {
+      Get.find<ConnectorControl>().GETMETHODCALL(
+          api: ApiFactory.AsrunImport_FileFormat(
+            selectLocation?.key ?? '',
+            selectChannel?.key ?? '',
+            selectedDate.text.fromdMyToyMd(),
+          ),
+          fun: (data) {
+            if (data != null) {
+              String value = data['result'];
+              print("Copy Value: $value");
+              Utils.copyToClipboardHack(value);
+              pickFile();
+            } else {
+              LoadingDialog.callErrorMessage1(
+                  msg: "Failed To Load Initial Data");
+            }
+          });
+    } catch (e) {
+      LoadingDialog.callErrorMessage1(msg: "Failed To Load Initial Data");
+    }
   }
 }
