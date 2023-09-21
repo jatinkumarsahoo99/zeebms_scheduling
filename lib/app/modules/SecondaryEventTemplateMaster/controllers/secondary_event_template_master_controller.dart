@@ -34,6 +34,7 @@ class SecondaryEventTemplateMasterController extends GetxController {
       locFocusNode = FocusNode(),
       programFocusNode = FocusNode();
   RxBool enableFields = RxBool(true);
+
   List<SecondaryEventTemplateMasterProgram> gridPrograms = [];
   SecondaryEventTemplateMasterProgram? copiedProgram;
 
@@ -156,28 +157,33 @@ class SecondaryEventTemplateMasterController extends GetxController {
   }
 
   getProgramLeave() {
-    LoadingDialog.call();
-    Get.find<ConnectorControl>().GETMETHODCALL(
-        api: ApiFactory.SecondaryEventTemplateMasterGetProgramLeave(
-            selectedLocation?.key,
-            selectedChannel?.key,
-            selectedProgram.value?.key),
-        fun: (data) {
-          Get.back();
-          if (data is Map && data.containsKey("getprogram")) {
-            gridPrograms = [];
-            for (var program in data["getprogram"]) {
-              gridPrograms
-                  .add(SecondaryEventTemplateMasterProgram.fromJson(program));
+    if (selectedLocation == null || selectedChannel == null) {
+      LoadingDialog.callErrorMessage1(msg: "Please Select Location & Channel.");
+    } else {
+      LoadingDialog.call();
+
+      Get.find<ConnectorControl>().GETMETHODCALL(
+          api: ApiFactory.SecondaryEventTemplateMasterGetProgramLeave(
+              selectedLocation?.key,
+              selectedChannel?.key,
+              selectedProgram.value?.key),
+          fun: (data) {
+            Get.back();
+            if (data is Map && data.containsKey("getprogram")) {
+              gridPrograms = [];
+              for (var program in data["getprogram"]) {
+                gridPrograms
+                    .add(SecondaryEventTemplateMasterProgram.fromJson(program));
+              }
+              programFocusNode.nextFocus();
+              Future.delayed(Duration(milliseconds: 100)).then((value) {
+                programFocusNode.requestFocus();
+              });
+              enableFields.value = false;
+              update(["gridData"]);
             }
-            programFocusNode.nextFocus();
-            Future.delayed(Duration(milliseconds: 100)).then((value) {
-              programFocusNode.requestFocus();
-            });
-            enableFields.value = false;
-            update(["gridData"]);
-          }
-        });
+          });
+    }
   }
 
   postFastSearch() {
