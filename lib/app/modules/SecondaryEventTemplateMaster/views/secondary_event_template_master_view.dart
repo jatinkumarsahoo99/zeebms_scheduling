@@ -112,6 +112,33 @@ class SecondaryEventTemplateMasterView extends StatelessWidget {
                   FormButtonWrapper(
                     btnText: "Copy From",
                     callback: () {
+                      Get.defaultDialog(
+                          title: "Copy",
+                          content: DropDownField.formDropDownSearchAPI2(
+                            GlobalKey(),
+                            context,
+                            title: "Program",
+                            isEnable: true,
+                            url: ApiFactory
+                                .SecondaryEventTemplateMasterProgSearch,
+                            parseKeyForKey: "ProgramCode",
+                            parseKeyForValue: "ProgramName",
+                            onchanged: (data) {
+                              controller.selectedProgram.value = data;
+                            },
+                            dialogHeight: 150,
+                            autoFocus: true,
+                            selectedValue: controller.selectedProgram.value,
+                            inkwellFocus: controller.programFocusNode,
+                          ),
+                          cancel: FormButton(
+                            btnText: "Copy",
+                            callback: () {
+                              controller.getProgramLeave();
+                              Get.back();
+                            },
+                            showIcon: false,
+                          ));
                       // Get.defaultDialog(
                       //   title: "Documents",
                       //   content: CommonDocsView(
