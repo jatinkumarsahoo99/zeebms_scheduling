@@ -15,6 +15,12 @@ import 'app/providers/theme.dart';
 import 'app/routes/app_pages.dart';
 
 void main() async {
+  ErrorWidget.builder = (de) {
+    return Container(
+      alignment: Alignment.center,
+      child: Text(de.exceptionAsString()),
+    );
+  };
   WidgetsFlutterBinding.ensureInitialized();
   FlutterError.onError = (FlutterErrorDetails details) {
     FlutterError.presentError(details);
