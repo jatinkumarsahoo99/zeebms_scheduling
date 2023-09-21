@@ -70,7 +70,7 @@ class NonFPCWOModel {
         data['languageCode'] = languageCode;
       }
     } catch (e) {
-      print(e.toString());
+      print("Exception From MAM Model:$e");
     }
     return data;
   }
