@@ -864,15 +864,24 @@ class MamWorkOrdersController extends GetxController {
             if (resp is Map<String, dynamic> &&
                 resp.containsKey("dtBMSPrograms") &&
                 resp['dtBMSPrograms'] != null) {
-              nonFPCSelectedRMSProgram.value = DropDownValue(
-                key: resp['dtBMSPrograms']['lstProgramMaster'][0]
-                        ['rmsProgramCode']
-                    .toString(),
-                value: resp['dtBMSPrograms']['lstProgramMaster'][0]
-                        ['rmsProgramName']
-                    .toString(),
-              );
-              handleNONFPCRMSOnChanged(nonFPCSelectedRMSProgram.value);
+              DropDownValue? val;
+              try {
+                val = DropDownValue(
+                  key: resp['dtBMSPrograms']['lstProgramMaster'][0]
+                          ['rmsProgramCode']
+                      .toString(),
+                  value: resp['dtBMSPrograms']['lstProgramMaster'][0]
+                          ['rmsProgramName']
+                      .toString(),
+                );
+              } catch (e) {
+                print("Exception while binding RMS Programming $e");
+                LoadingDialog.showErrorDialog(e.toString());
+              }
+              if (val != null) {
+                nonFPCSelectedRMSProgram.value = val;
+                handleNONFPCRMSOnChanged(nonFPCSelectedRMSProgram.value);
+              }
             } else {
               LoadingDialog.showErrorDialog(resp.toString());
             }
