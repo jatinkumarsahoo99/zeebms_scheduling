@@ -28,6 +28,7 @@ class ImportDigitextRunOrderController extends GetxController {
   DateFormat df1 = DateFormat("dd-MMM-yyyy");
   DateFormat df2 = DateFormat("yyyy-MM-dd");
   var selectedradiofilter = "Missing Clients".obs;
+
   RxList<DropDownValue> locations = <DropDownValue>[].obs;
   RxList<DropDownValue> channels = <DropDownValue>[].obs;
   TextEditingController scheduleDate = TextEditingController();
@@ -163,6 +164,10 @@ class ImportDigitextRunOrderController extends GetxController {
                 digitexRunOrderData!.message!.isNotEmpty) {
               LoadingDialog.callErrorMessage1(
                   msg: digitexRunOrderData!.message!);
+              if (digitexRunOrderData!.message!
+                  .contains("\nData already imported\nSave is disabled")) {
+                allowSave.value = false;
+              }
             }
           } catch (e) {
             LoadingDialog.callErrorMessage1(msg: "Failed To Import File");
