@@ -207,83 +207,91 @@ class ReleaseWoNonFpcView extends GetView {
             );
           }),
           // Divider(height: 10),
+          // Spacer(),
 
           /// data table
-          Expanded(
-            child: Obx(
-              () {
-                return Container(
-                  decoration: controller.nonFPCDataTableList.value.isEmpty
-                      ? BoxDecoration(border: Border.all(color: Colors.grey))
-                      : null,
-                  child: controller.nonFPCDataTableList.value.isEmpty
-                      ? null
-                      : DataGridFromMap3(
-                          witdthSpecificColumn: (controller
-                              .userDataSettings?.userSetting
-                              ?.firstWhere(
-                                  (element) =>
-                                      element.controlName == "woNonFPCSM",
-                                  orElse: () => UserSetting())
-                              .userSettings),
-                          mapData: controller.nonFPCDataTableList.value
-                              .map((e) => e.toJson())
-                              .toList(),
-                          formatDate: false,
-                          checkBoxColumnKey: const [
-                            "segmented",
-                            "timeCodeRequired",
-                            "requireApproval",
-                            "release",
-                          ],
+          // Expanded(
+          //   child:
+          GetBuilder(
+              init: controller,
+              builder: (_) {
+                return Obx(
+                  () {
+                    return Container(
+                      height: MediaQuery.of(context).size.height * .5,
+                      decoration: controller.nonFPCDataTableList.value.isEmpty
+                          ? BoxDecoration(
+                              border: Border.all(color: Colors.grey))
+                          : null,
+                      child: controller.nonFPCDataTableList.value.isEmpty
+                          ? null
+                          : DataGridFromMap3(
+                              witdthSpecificColumn: (controller
+                                  .userDataSettings?.userSetting
+                                  ?.firstWhere(
+                                      (element) =>
+                                          element.controlName == "woNonFPCSM",
+                                      orElse: () => UserSetting())
+                                  .userSettings),
+                              mapData: controller.nonFPCDataTableList.value
+                                  .map((e) => e.toJson())
+                                  .toList(),
+                              formatDate: false,
+                              checkBoxColumnKey: const [
+                                "segmented",
+                                "timeCodeRequired",
+                                "requireApproval",
+                                "release",
+                              ],
 
-                          actionIconKey: ['release'],
-                          checkBoxColumnNoEditKey: [
-                            "segmented",
-                            "timeCodeRequired",
-                            "requireApproval",
-                          ],
-                          onEdit: (event) {
-                            controller.nonFPCDataTableList[event.rowIdx]
-                                .release = (event.value == "true");
-                          },
-                          actionOnPress: (position, isSpaceCalled) {
-                            if (isSpaceCalled) {
-                              controller.woNonFPCSM?.changeCellValue(
-                                controller.woNonFPCSM!
-                                    .getRowByIdx(position.rowIdx)!
-                                    .cells['release']!,
-                                (!(controller
-                                            .nonFPCDataTableList[
-                                                position.rowIdx!]
-                                            .release ??
-                                        false))
-                                    .toString(),
-                                force: true,
-                              );
-                            }
-                          },
-                          checkBoxStrComparison: true.toString(),
-                          uncheckCheckBoxStr: false.toString(),
-                          hideCode: false,
-                          // checkBoxColumnNoEditKey: const [
-                          //   "segmented",
-                          //   "timeCodeRequired",
-                          //   "requireApproval",
-                          //   "release",
-                          // ],
-                          onload: (sm) {
-                            controller.woNonFPCSM = sm.stateManager;
-                          },
-                          enableColumnDoubleTap: ["release"],
-                          onColumnHeaderDoubleTap:
-                              controller.handleColumTapNonFPCWO,
-                        ),
+                              actionIconKey: ['release'],
+                              checkBoxColumnNoEditKey: [
+                                "segmented",
+                                "timeCodeRequired",
+                                "requireApproval",
+                              ],
+                              onEdit: (event) {
+                                controller.nonFPCDataTableList[event.rowIdx]
+                                    .release = (event.value == "true");
+                              },
+                              actionOnPress: (position, isSpaceCalled) {
+                                if (isSpaceCalled) {
+                                  controller.woNonFPCSM?.changeCellValue(
+                                    controller.woNonFPCSM!
+                                        .getRowByIdx(position.rowIdx)!
+                                        .cells['release']!,
+                                    (!(controller
+                                                .nonFPCDataTableList[
+                                                    position.rowIdx!]
+                                                .release ??
+                                            false))
+                                        .toString(),
+                                    force: true,
+                                  );
+                                }
+                              },
+                              checkBoxStrComparison: true.toString(),
+                              uncheckCheckBoxStr: false.toString(),
+                              hideCode: false,
+                              // checkBoxColumnNoEditKey: const [
+                              //   "segmented",
+                              //   "timeCodeRequired",
+                              //   "requireApproval",
+                              //   "release",
+                              // ],
+                              onload: (sm) {
+                                controller.woNonFPCSM = sm.stateManager;
+                              },
+                              enableColumnDoubleTap: ["release"],
+                              onColumnHeaderDoubleTap:
+                                  controller.handleColumTapNonFPCWO,
+                            ),
+                    );
+                  },
                 );
-              },
-            ),
-          ),
-          SizedBox(height: 5),
+              }),
+          // ),
+          // Spacer(),
 
           /// save btn
           Align(
