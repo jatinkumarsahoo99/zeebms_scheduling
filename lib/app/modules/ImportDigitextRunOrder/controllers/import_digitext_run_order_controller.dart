@@ -162,12 +162,14 @@ class ImportDigitextRunOrderController extends GetxController {
             }
             if (digitexRunOrderData!.message != null &&
                 digitexRunOrderData!.message!.isNotEmpty) {
-              LoadingDialog.callErrorMessage1(
-                  msg: digitexRunOrderData!.message!);
               if (digitexRunOrderData!.message!
                   .contains("\nData already imported\nSave is disabled")) {
                 allowSave.value = false;
+                debugPrint(
+                    "MSG: ${digitexRunOrderData!.message!.contains("\nData already imported\nSave is disabled")}");
               }
+              LoadingDialog.callErrorMessage1(
+                  msg: digitexRunOrderData!.message!);
             }
           } catch (e) {
             LoadingDialog.callErrorMessage1(msg: "Failed To Import File");
