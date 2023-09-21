@@ -301,7 +301,7 @@ class CommercialMasterView extends StatelessWidget {
                                                 controllerX.clientDetails.clear();
                                               }
                                             },
-                                            autoFocus: true,
+                                            autoFocus: false,
                                           ),
                                           Obx(() =>
                                               DropDownField.formDropDown1WidthMap(
@@ -334,6 +334,7 @@ class CommercialMasterView extends StatelessWidget {
                                                       isEnable:
                                                           controllerX.isEnable,
                                                       autoFocus: false,
+                                              inkWellFocusNode: controllerX.brandFocus,
                                                       selected: controllerX
                                                           .selectedBrandType?.value)),
                                           InputFields.formField1(
@@ -381,6 +382,7 @@ class CommercialMasterView extends StatelessWidget {
                                               // controllerX.isListenerActive = true;
                                             },
                                             autoFocus: false,
+                                            focusNode: controllerX.agencyNameFocus
                                           ),
                                           Obx(() =>
                                               DropDownField.formDropDown1WidthMap(
@@ -424,7 +426,8 @@ class CommercialMasterView extends StatelessWidget {
                                               width: 0.17,
                                               isEnable:
                                                   controllerX.isEnable,
-                                              autoFocus: false
+                                              autoFocus: false,
+
                                               /*  onchanged: (val){
                                             controllerX.fetchCommercialTapeMasterData(
                                             "",
@@ -472,6 +475,7 @@ class CommercialMasterView extends StatelessWidget {
                                               controllerX.selectedEvent = val;
                                             },
                                             title: 'Event',
+                                            customInData:"result",
                                             url: ApiFactory
                                                 .COMMERCIAL_MASTER_GETLEVENT,
                                             parseKeyForKey: "eventid",
