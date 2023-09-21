@@ -28,6 +28,7 @@ class ImportDigitextRunOrderController extends GetxController {
   DateFormat df1 = DateFormat("dd-MMM-yyyy");
   DateFormat df2 = DateFormat("yyyy-MM-dd");
   var selectedradiofilter = "Missing Clients".obs;
+
   RxList<DropDownValue> locations = <DropDownValue>[].obs;
   RxList<DropDownValue> channels = <DropDownValue>[].obs;
   TextEditingController scheduleDate = TextEditingController();
@@ -161,6 +162,12 @@ class ImportDigitextRunOrderController extends GetxController {
             }
             if (digitexRunOrderData!.message != null &&
                 digitexRunOrderData!.message!.isNotEmpty) {
+              if (digitexRunOrderData!.message!
+                  .contains("\nData already imported\nSave is disabled")) {
+                allowSave.value = false;
+                debugPrint(
+                    "MSG: ${digitexRunOrderData!.message!.contains("\nData already imported\nSave is disabled")}");
+              }
               LoadingDialog.callErrorMessage1(
                   msg: digitexRunOrderData!.message!);
             }
