@@ -219,13 +219,13 @@ class ReleaseWoNonFpcView extends GetView {
                   child: controller.nonFPCDataTableList.value.isEmpty
                       ? null
                       : DataGridFromMap3(
-                          witdthSpecificColumn: (controller
-                              .userDataSettings?.userSetting
-                              ?.firstWhere(
-                                  (element) =>
-                                      element.controlName == "woNonFPCSM",
-                                  orElse: () => UserSetting())
-                              .userSettings),
+                          // witdthSpecificColumn: (controller
+                          //     .userDataSettings?.userSetting
+                          //     ?.firstWhere(
+                          //         (element) =>
+                          //             element.controlName == "woNonFPCSM",
+                          //         orElse: () => UserSetting())
+                          //     .userSettings),
                           mapData: controller.nonFPCDataTableList.value
                               .map((e) => e.toJson())
                               .toList(),
@@ -263,8 +263,8 @@ class ReleaseWoNonFpcView extends GetView {
                               );
                             }
                           },
-                          checkBoxStrComparison: true.toString(),
-                          uncheckCheckBoxStr: false.toString(),
+                          checkBoxStrComparison: "true",
+                          uncheckCheckBoxStr: "false",
                           hideCode: false,
                           // checkBoxColumnNoEditKey: const [
                           //   "segmented",
