@@ -863,15 +863,18 @@ class MamWorkOrdersController extends GetxController {
             closeDialogIfOpen();
             if (resp is Map<String, dynamic> &&
                 resp.containsKey("dtBMSPrograms") &&
-                resp['dtBMSPrograms'] != null) {
+                resp['dtBMSPrograms'] != null &&
+                resp['dtBMSPrograms']['lstProgramMaster'] != null) {
               DropDownValue? val;
               try {
                 val = DropDownValue(
-                  key: resp['dtBMSPrograms']['lstProgramMaster'][0]
-                          ['rmsProgramCode']
+                  key: (resp['dtBMSPrograms']['lstProgramMaster'][0]
+                              ['rmsProgramCode'] ??
+                          '')
                       .toString(),
-                  value: resp['dtBMSPrograms']['lstProgramMaster'][0]
-                          ['rmsProgramName']
+                  value: (resp['dtBMSPrograms']['lstProgramMaster'][0]
+                              ['rmsProgramName'] ??
+                          '')
                       .toString(),
                 );
               } catch (e) {
@@ -902,17 +905,22 @@ class MamWorkOrdersController extends GetxController {
         LoadingDialog.call();
         await Get.find<ConnectorControl>().POSTMETHOD(
           api: ApiFactory.MAM_WORK_ORDER_NON_FPC_GET_DATA,
-          fun: (resp) {
+          fun: (resp) async {
             closeDialogIfOpen();
             if (resp is Map<String, dynamic> &&
                 resp['program_Response']['lstProgram'] != null &&
                 resp['program_Response']['lstProgram'] is List<dynamic>) {
               nonFPCDataTableList.clear();
-              var list =
+              // var list =
+              //     (resp['program_Response']['lstProgram'] as List<dynamic>)
+              //         .map((e) => NonFPCWOModel.fromJson(e))
+              //         .toList();
+              await Future.delayed(Duration(seconds: 1));
+              nonFPCDataTableList.addAll(
                   (resp['program_Response']['lstProgram'] as List<dynamic>)
                       .map((e) => NonFPCWOModel.fromJson(e))
-                      .toList();
-              nonFPCDataTableList.addAll(list);
+                      .toList());
+              nonFPCDataTableList.refresh();
               if (nonFPCDataTableList.isEmpty) {
                 LoadingDialog.showErrorDialog("Data not found");
               }
