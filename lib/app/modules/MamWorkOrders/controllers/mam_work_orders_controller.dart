@@ -915,7 +915,7 @@ class MamWorkOrdersController extends GetxController {
               //     (resp['program_Response']['lstProgram'] as List<dynamic>)
               //         .map((e) => NonFPCWOModel.fromJson(e))
               //         .toList();
-              await Future.delayed(Duration(seconds: 1));
+              // await Future.delayed(Duration(seconds: 1));
               nonFPCDataTableList.addAll(
                   (resp['program_Response']['lstProgram'] as List<dynamic>)
                       .map((e) => NonFPCWOModel.fromJson(e))
