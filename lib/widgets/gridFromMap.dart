@@ -536,7 +536,7 @@ class DataGridFromMap extends StatelessWidget {
 
 class DataGridFromMap3 extends StatelessWidget {
   DataGridFromMap3({
-    Key? key,
+    Key? widgetKey,
     required this.mapData,
     this.colorCallback,
     this.showSrNo = true,
@@ -581,7 +581,7 @@ class DataGridFromMap3 extends StatelessWidget {
     this.logicalKeyboardKey,
     this.keyBoardButtonPressed,
     this.witdthSpecificColumn,
-  }) : super(key: key);
+  }) : super(key: widgetKey);
   final Map<String, double>? witdthSpecificColumn;
 
   final List<SecondaryShowDialogModel>? secondaryExtraDialogList;
@@ -645,8 +645,8 @@ class DataGridFromMap3 extends StatelessWidget {
             minWidth: 0,
             width: (witdthSpecificColumn != null &&
                     witdthSpecificColumn!.keys.toList().contains('no'))
-                ? witdthSpecificColumn![key]!
-                : Utils.getColumnSize(key: 'no', value: mapData[0][key]),
+                ? witdthSpecificColumn!['no']!
+                : Utils.getColumnSize(key: 'no', value: '1'),
             enableRowChecked: false,
             readOnly: true,
             enableSorting: enableSort,
@@ -667,19 +667,13 @@ class DataGridFromMap3 extends StatelessWidget {
                       }
                     : null,
                 child: Container(
-                    // height: 25,
                     height: double.infinity,
-                    // width: Utils.getColumnSize1(key: key, value: mapData[0][key]),
-                    // padding: EdgeInsets.only(
-                    //   left:
-                    // ),
                     decoration: BoxDecoration(
                         border:
                             Border.all(color: Colors.transparent, width: 0.01),
                         borderRadius: BorderRadius.circular(1),
                         color: Colors.white),
                     alignment: Alignment.center,
-                    // color: (key == "epsNo" || key == "tapeid" || key == "status") ? ColorData.cellColor(rendererContext.row.cells[key]?.value, key) : null,
                     child: Text(
                       (rendererContext.rowIdx + 1).toString(),
                       maxLines: 1,
@@ -690,9 +684,9 @@ class DataGridFromMap3 extends StatelessWidget {
                     )),
               );
             }),
-            hide: hideCode! &&
-                key.toString().toLowerCase() != "hourcode" &&
-                key.toString().toLowerCase().contains("code"),
+            // hide: hideCode! &&
+            //     key.toString().toLowerCase() != "hourcode" &&
+            //     key.toString().toLowerCase().contains("code"),
             enableColumnDrag: false,
             field: "no",
             type: PlutoColumnType.text()));
