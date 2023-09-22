@@ -754,17 +754,18 @@ class CommercialMasterController extends GetxController {
         api: ApiFactory.COMMERCIAL_MASTER_GET_AGENCYDETAILS,
         json: postData,
         fun: (map) {
-          print("map>>>" + map.toString());
-          if (map is List && map.isNotEmpty) {
+          // print("map>>>" + map.toString());
+          if (map is Map && map.containsKey("result") && map['result'] != null) {
             agencyDetails.clear();
-            for (var e in map) {
-              agencyDetails.add(
-                  DropDownValue.fromJsonDynamic(e, "agencyCode", "agencyName"));
+            for (var e in map['result']) {
+              agencyDetails.add(DropDownValue.fromJsonDynamic(e, "agencyCode", "agencyName"));
             }
+            // agencyDetails.refresh();
           } else {
             // agencyDetailsMaster
             agencyDetails.clear();
             agencyDetails.addAll(agencyDetailsMaster);
+            // agencyDetails.refresh();
           }
         });
   }
