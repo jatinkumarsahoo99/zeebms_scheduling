@@ -426,20 +426,20 @@ class CommercialMasterController extends GetxController {
         json: commercialTapeMasterPostData.toJson(),
         fun: (map) {
           Get.back();
-          if (map is Map && map.containsKey("isError")) {
-            if (map['isError'] == false) {
+          if (map is Map && map.containsKey("result") && map['result'].containsKey("isError")) {
+            if (map['result']['isError'] == false) {
               LoadingDialog.callDataSavedMessage(
                   map['genericMessage'] ?? "Record Saved Successfully",
                   callback: () {
                 // clearAll();
               });
-              if (map.containsKey('saveModel') &&
-                  map['saveModel'] != null &&
-                  map['saveModel'].length > 0) {
-                txNoController.text = map['saveModel'][0]['houseid'];
+              if (map['result'].containsKey('saveModel') &&
+                  map['result']['saveModel'] != null &&
+                  map['result']['saveModel'].length > 0) {
+                txNoController.text = map['result']['saveModel'][0]['houseid'];
                 tapeIdController.value.text =
-                    map['saveModel'][0]['exportTapecode'];
-                commercialCode = map['saveModel'][0]['commercialCode'];
+                    map['result']['saveModel'][0]['exportTapecode'];
+                commercialCode = map['result']['saveModel'][0]['commercialCode'];
               }
             } else {
               // Get.back();
