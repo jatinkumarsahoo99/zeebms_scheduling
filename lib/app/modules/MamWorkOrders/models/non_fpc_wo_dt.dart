@@ -57,17 +57,17 @@ class NonFPCWOModel {
             requireApproval == true ? 1.toString() : 0.toString();
       } else {
         data['release'] = (release ?? false).toString();
-        data['contentTypeName'] = contentTypeName;
-        data['contentFormat'] = contentFormat;
-        data['vendor'] = vendor;
-        data['languageName'] = languageName;
+        data['contentTypeName'] = contentTypeName ?? '';
+        data['contentFormat'] = contentFormat ?? '';
+        data['vendor'] = vendor ?? '';
+        data['languageName'] = languageName ?? '';
         data['segmented'] = (segmented ?? false).toString();
         data['timeCodeRequired'] = (timeCodeRequired ?? false).toString();
         data['requireApproval'] = (requireApproval ?? false).toString();
-        data['contentTypeId'] = contentTypeId;
-        data['contentFormatId'] = contentFormatId;
-        data['vendorCode'] = vendorCode;
-        data['languageCode'] = languageCode;
+        data['contentTypeId'] = contentTypeId ?? '';
+        data['contentFormatId'] = contentFormatId ?? '';
+        data['vendorCode'] = vendorCode ?? '';
+        data['languageCode'] = languageCode ?? '';
       }
     } catch (e) {
       print("Exception From MAM Model:$e");
