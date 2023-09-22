@@ -284,6 +284,10 @@ class ApiFactory {
           locationCode, channelCode, date) =>
       "$BASE_URL/api/ImportDigitexRunOrder/SaveRunOrder?LocationCode=$locationCode&ChannelCode=$channelCode&BookingDate=$date";
 
+  static String IMPORT_DIGITEX_RUN_ORDER_FILE_FORMAT(
+          locationCode, channelCode, date) =>
+      "$BASE_URL/api/ImportDigitexRunOrder/FileFormat?LocationCode=$locationCode&ChannelCode=$channelCode&Date=$date";
+
 //////////////// Filler: UI:VISHAL GORE, API: INDRESH ///////////////
   static String FILLER_LOCATION = "$BASE_URL/api/FillerScheduling/GetLocations";
   static String FILLER_SAVE = "$BASE_URL/api/FillerScheduling/GetLocations";
@@ -374,6 +378,19 @@ class ApiFactory {
 
   static String get MAM_WORK_ORDER_NON_FPC_GETTXID =>
       "$BASE_URL/api/MAMWorkOrder/GetTxId";
+  static String MAM_WORK_ORDER_NON_FPC_SegmentsPerEps(String nMaxEpsGap) =>
+      "$BASE_URL/api/MAMWorkOrder/GetMaxEpisodeNoGap?nMaxEpsGap=$nMaxEpsGap";
+  static String MAM_WORK_ORDER_NON_FPC_GETSEGMENTSOn_TELECAST_LEAVE(
+    bool chkWithTXId,
+    String BMSPrograms,
+    String TelecastType,
+    String FromEpiNo,
+    String ToEpiNo,
+    String nMaxEpsGap,
+    String TXId,
+    String SegmentsPerEps,
+  ) =>
+      "$BASE_URL/api/MAMWorkOrder/GetTelecastType?chkWithTXId=$chkWithTXId&BMSPrograms=$BMSPrograms&TelecastType=$TelecastType&FromEpiNo=$FromEpiNo&ToEpiNo=$ToEpiNo&nMaxEpsGap=$nMaxEpsGap&TXId=$TXId&SegmentsPerEps=$SegmentsPerEps";
 
   static String get MAM_WORK_ORDER_NON_FPC_RMS_SEARCH =>
       "$BASE_URL/api/MAMWorkOrder/OnLoadcboProgram?Search=";
@@ -1090,6 +1107,8 @@ class ApiFactory {
   static String AsrunImport_CheckProgramSequence =
       "$BASE_URL/api/AsrunImport/CheckProgramSequence";
   static String GFKCheck = "$BASE_URL/api/AsrunImport/GFKCheck";
+  static String AsrunImport_FileFormat(locationCode, channelCode, date) =>
+      "$BASE_URL/api/AsrunImport/FileFormat?LocationCode=$locationCode&ChannelCode=$channelCode&LogDate=$date";
   ////////////////////////////// Audit Status ////////////////////////////////////////
   static String NewBookingActivityReport_GetLoadLocation =
       "$BASE_URL/api/AsrunImport/GetLoadLocation";

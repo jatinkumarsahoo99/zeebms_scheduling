@@ -1,10 +1,12 @@
 import 'package:bms_scheduling/app/controller/ConnectorControl.dart';
 import 'package:bms_scheduling/app/modules/ImportDigitextRunOrder/bindings/digitex_run_order_data.dart';
 import 'package:bms_scheduling/app/providers/ApiFactory.dart';
+import 'package:bms_scheduling/app/providers/Utils.dart';
 import 'package:bms_scheduling/widgets/LoadingDialog.dart';
 import 'package:dio/dio.dart' as dio;
 import 'package:file_picker/file_picker.dart';
 import 'package:flutter/cupertino.dart';
+import 'package:flutter/services.dart' as copyData;
 import 'package:get/get.dart';
 import 'package:intl/intl.dart';
 import 'package:bms_scheduling/widgets/PlutoGrid/pluto_grid.dart';
@@ -26,6 +28,7 @@ class ImportDigitextRunOrderController extends GetxController {
   DateFormat df1 = DateFormat("dd-MMM-yyyy");
   DateFormat df2 = DateFormat("yyyy-MM-dd");
   var selectedradiofilter = "Missing Clients".obs;
+
   RxList<DropDownValue> locations = <DropDownValue>[].obs;
   RxList<DropDownValue> channels = <DropDownValue>[].obs;
   TextEditingController scheduleDate = TextEditingController();
@@ -106,6 +109,36 @@ class ImportDigitextRunOrderController extends GetxController {
     }
   }
 
+  getfileName() {
+    if (selectedLocation == null || selectedChannel == null) {
+      LoadingDialog.callErrorMessage1(msg: "Please Select Location & Channel.");
+    } else {
+      try {
+        Get.find<ConnectorControl>().GETMETHODCALL(
+            api: ApiFactory.IMPORT_DIGITEX_RUN_ORDER_FILE_FORMAT(
+              selectedLocation?.key ?? '',
+              selectedChannel?.key ?? '',
+              DateFormat('yyyy-MM-dd').format(
+                DateFormat('dd-MM-yyyy').parse(scheduleDate.text),
+              ),
+            ),
+            fun: (data) {
+              if (data != null) {
+                String value = data;
+                print("Copy Value: $value");
+                Utils.copyToClipboardHack(value);
+                pickFile();
+              } else {
+                LoadingDialog.callErrorMessage1(
+                    msg: "Failed To Load Initial Data");
+              }
+            });
+      } catch (e) {
+        LoadingDialog.callErrorMessage1(msg: "Failed To Load Initial Data");
+      }
+    }
+  }
+
   importfile() {
     LoadingDialog.call();
     dio.FormData formData = dio.FormData.fromMap({
@@ -129,6 +162,12 @@ class ImportDigitextRunOrderController extends GetxController {
             }
             if (digitexRunOrderData!.message != null &&
                 digitexRunOrderData!.message!.isNotEmpty) {
+              if (digitexRunOrderData!.message!
+                  .contains("\nData already imported\nSave is disabled")) {
+                allowSave.value = false;
+                debugPrint(
+                    "MSG: ${digitexRunOrderData!.message!.contains("\nData already imported\nSave is disabled")}");
+              }
               LoadingDialog.callErrorMessage1(
                   msg: digitexRunOrderData!.message!);
             }
@@ -146,7 +185,6 @@ class ImportDigitextRunOrderController extends GetxController {
           type: FileType.custom,
           // initialDirectory: "*08/08/2023 00:00:00*",
           allowedExtensions: ["txt"]);
-
       if (result != null && result.files.single != null) {
         importedFile.value = result.files.single;
         fileController.text = result.files.single.name;

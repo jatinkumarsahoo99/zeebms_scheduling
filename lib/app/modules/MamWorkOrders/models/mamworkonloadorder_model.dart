@@ -13,6 +13,7 @@ class MAMWORKORDERONLOADMODEL {
   List<DropDownValue>? lstcboWOTypeFPC;
   List<DropDownValue>? lstcboWOTypeCancelWO;
   bool? btnSave;
+  num? nMaxEpsGap;
 
   MAMWORKORDERONLOADMODEL(
       {this.lstcboLocation,
@@ -29,6 +30,7 @@ class MAMWORKORDERONLOADMODEL {
       this.btnSave});
 
   MAMWORKORDERONLOADMODEL.fromJson(Map<String, dynamic> json) {
+    nMaxEpsGap = json['nMaxEpsGap'];
     if (json['lstcboLocation'] != null) {
       lstcboLocation = <DropDownValue>[];
       json['lstcboLocation'].forEach((v) {
@@ -56,39 +58,56 @@ class MAMWORKORDERONLOADMODEL {
     if (json['lstcboTelecastType'] != null) {
       lstcboTelecastType = <DropDownValue>[];
       json['lstcboTelecastType'].forEach((v) {
-        lstcboTelecastType!.add(DropDownValue.fromJson({"key": v['telecastTypeCode'].toString(), "value": v['telecastTypeName'].toString()}));
+        lstcboTelecastType!.add(DropDownValue.fromJson({
+          "key": v['telecastTypeCode'].toString(),
+          "value": v['telecastTypeName'].toString()
+        }));
       });
     }
     if (json['lstcboTelecastTypeWOCanc'] != null) {
       lstcboTelecastTypeWOCanc = <DropDownValue>[];
       json['lstcboTelecastTypeWOCanc'].forEach((v) {
-        lstcboTelecastTypeWOCanc!.add(DropDownValue.fromJson({"key": v['telecastTypeCode'].toString(), "value": v['telecastTypeName'].toString()}));
+        lstcboTelecastTypeWOCanc!.add(DropDownValue.fromJson({
+          "key": v['telecastTypeCode'].toString(),
+          "value": v['telecastTypeName'].toString()
+        }));
       });
     }
     if (json['lstcboTelecastTypeWOHistory'] != null) {
       lstcboTelecastTypeWOHistory = <DropDownValue>[];
       json['lstcboTelecastTypeWOHistory'].forEach((v) {
-        lstcboTelecastTypeWOHistory!
-            .add(DropDownValue.fromJson({"key": v['telecastTypeCode'].toString(), "value": v['telecastTypeName'].toString()}));
+        lstcboTelecastTypeWOHistory!.add(DropDownValue.fromJson({
+          "key": v['telecastTypeCode'].toString(),
+          "value": v['telecastTypeName'].toString()
+        }));
       });
     }
     chkQuality = json['chkQuality'];
     if (json['lstcboWorkOrderType'] != null) {
       lstcboWorkOrderType = <DropDownValue>[];
       json['lstcboWorkOrderType'].forEach((v) {
-        lstcboWorkOrderType!.add(DropDownValue.fromJson({"key": v['workFlowId'].toString(), "value": v['workFlowName'].toString()}));
+        lstcboWorkOrderType!.add(DropDownValue.fromJson({
+          "key": v['workFlowId'].toString(),
+          "value": v['workFlowName'].toString()
+        }));
       });
     }
     if (json['lstcboWOTypeFPC'] != null) {
       lstcboWOTypeFPC = <DropDownValue>[];
       json['lstcboWOTypeFPC'].forEach((v) {
-        lstcboWOTypeFPC!.add(DropDownValue.fromJson({"key": v['workFlowId'].toString(), "value": v['workFlowName'].toString()}));
+        lstcboWOTypeFPC!.add(DropDownValue.fromJson({
+          "key": v['workFlowId'].toString(),
+          "value": v['workFlowName'].toString()
+        }));
       });
     }
     if (json['lstcboWOTypeCancelWO'] != null) {
       lstcboWOTypeCancelWO = <DropDownValue>[];
       json['lstcboWOTypeCancelWO'].forEach((v) {
-        lstcboWOTypeCancelWO!.add(DropDownValue.fromJson({"key": v['workFlowId'].toString(), "value": v['workFlowName'].toString()}));
+        lstcboWOTypeCancelWO!.add(DropDownValue.fromJson({
+          "key": v['workFlowId'].toString(),
+          "value": v['workFlowName'].toString()
+        }));
       });
     }
     btnSave = json['btnSave'];
