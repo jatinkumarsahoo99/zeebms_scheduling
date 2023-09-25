@@ -227,8 +227,9 @@ class AsrunImportController extends GetxController {
               "TeleCastTime":
                   asrunData?[gridStateManager!.currentRowIdx!].telecasttime,
               "Tapeid": asrunData?[gridStateManager!.currentRowIdx!].tapeId,
-              "SegmentNumber":
-                  asrunData?[gridStateManager!.currentRowIdx!].segmentnumber,
+              "SegmentNumber": asrunData?[gridStateManager!.currentRowIdx!]
+                  .segmentnumber
+                  .toString(),
               "caption": asrunData?[gridStateManager!.currentRowIdx!].caption,
               "TelecastDuration":
                   asrunData?[gridStateManager!.currentRowIdx!].telecastDuration,
