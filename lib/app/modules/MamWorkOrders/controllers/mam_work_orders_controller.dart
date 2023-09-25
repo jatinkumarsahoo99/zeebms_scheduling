@@ -356,8 +356,14 @@ class MamWorkOrdersController extends GetxController {
         api: ApiFactory.MAM_WORK_ORDER_WO_CANCEL_CANCEL_DATA,
         fun: (resp) {
           closeDialogIfOpen();
-          if (resp != null && resp is Map<String, dynamic>) {
-            LoadingDialog.callDataSaved(msg: resp.toString());
+          if (resp != null &&
+              resp is Map<String, dynamic> &&
+              resp['program_Response'] != null &&
+              resp['program_Response']['strMessage'] != null) {
+            for (var element in resp['program_Response']['strMessage']) {
+              LoadingDialog.callDataSaved(msg: element.toString());
+            }
+            // LoadingDialog.callDataSaved(msg: resp.toString());
           } else {
             LoadingDialog.showErrorDialog(resp.toString());
           }
@@ -857,16 +863,28 @@ class MamWorkOrdersController extends GetxController {
             closeDialogIfOpen();
             if (resp is Map<String, dynamic> &&
                 resp.containsKey("dtBMSPrograms") &&
-                resp['dtBMSPrograms'] != null) {
-              nonFPCSelectedRMSProgram.value = DropDownValue(
-                key: resp['dtBMSPrograms']['lstProgramMaster'][0]
-                        ['rmsProgramCode']
-                    .toString(),
-                value: resp['dtBMSPrograms']['lstProgramMaster'][0]
-                        ['rmsProgramName']
-                    .toString(),
-              );
-              handleNONFPCRMSOnChanged(nonFPCSelectedRMSProgram.value);
+                resp['dtBMSPrograms'] != null &&
+                resp['dtBMSPrograms']['lstProgramMaster'] != null) {
+              DropDownValue? val;
+              try {
+                val = DropDownValue(
+                  key: (resp['dtBMSPrograms']['lstProgramMaster'][0]
+                              ['rmsProgramCode'] ??
+                          '')
+                      .toString(),
+                  value: (resp['dtBMSPrograms']['lstProgramMaster'][0]
+                              ['rmsProgramName'] ??
+                          '')
+                      .toString(),
+                );
+              } catch (e) {
+                print("Exception while binding RMS Programming $e");
+                LoadingDialog.showErrorDialog(e.toString());
+              }
+              if (val != null) {
+                nonFPCSelectedRMSProgram.value = val;
+                handleNONFPCRMSOnChanged(nonFPCSelectedRMSProgram.value);
+              }
             } else {
               LoadingDialog.showErrorDialog(resp.toString());
             }
@@ -887,17 +905,22 @@ class MamWorkOrdersController extends GetxController {
         LoadingDialog.call();
         await Get.find<ConnectorControl>().POSTMETHOD(
           api: ApiFactory.MAM_WORK_ORDER_NON_FPC_GET_DATA,
-          fun: (resp) {
+          fun: (resp) async {
             closeDialogIfOpen();
             if (resp is Map<String, dynamic> &&
                 resp['program_Response']['lstProgram'] != null &&
                 resp['program_Response']['lstProgram'] is List<dynamic>) {
               nonFPCDataTableList.clear();
-              var list =
+              // var list =
+              //     (resp['program_Response']['lstProgram'] as List<dynamic>)
+              //         .map((e) => NonFPCWOModel.fromJson(e))
+              //         .toList();
+              // await Future.delayed(Duration(seconds: 1));
+              nonFPCDataTableList.addAll(
                   (resp['program_Response']['lstProgram'] as List<dynamic>)
                       .map((e) => NonFPCWOModel.fromJson(e))
-                      .toList();
-              nonFPCDataTableList.addAll(list);
+                      .toList());
+              nonFPCDataTableList.refresh();
               if (nonFPCDataTableList.isEmpty) {
                 LoadingDialog.showErrorDialog("Data not found");
               }
@@ -986,15 +1009,23 @@ class MamWorkOrdersController extends GetxController {
               if (resp != null &&
                   resp is Map<String, dynamic> &&
                   resp['program_Response'] != null) {
-                if (resp['program_Response']['strMessage'].toString() ==
-                    'MAYAM tasks created successfully.') {
-                  LoadingDialog.callDataSaved(
-                      msg: resp['program_Response']['strMessage'].toString(),
-                      callback: () {
-                        clearPage();
-                      });
-                  // nonFPCTxID
-                } else {
+                if (resp['program_Response']['strMessage'] is List<String> &&
+                    (resp['program_Response']['strMessage'] as List<dynamic>)
+                        .isNotEmpty) {
+                  for (var element in resp['program_Response']['strMessage']) {
+                    LoadingDialog.callDataSaved(msg: element.toString());
+                  }
+                }
+                // if (resp['program_Response']['strMessage'].toString() ==
+                //     'MAYAM tasks created successfully.') {
+                //   LoadingDialog.callDataSaved(
+                //       msg: resp['program_Response']['strMessage'].toString(),
+                //       callback: () {
+                //         clearPage();
+                //       });
+                // nonFPCTxID
+                // }
+                else {
                   LoadingDialog.showErrorDialog(
                       resp['program_Response']['strMessage'].toString());
                 }
@@ -1025,7 +1056,7 @@ class MamWorkOrdersController extends GetxController {
               "telecastTypeCode": nonFPCSelectedTelecasteType?.key,
               "loggedUser": Get.find<MainController>().user?.logincode,
               "chkQuality": nonFPCQualityHD,
-              "bMET": bMET,
+              "bMET": bMET ?? false,
               "lstGetProgram": nonFPCDataTableList
                   .map((element) => element.toJson(fromSave: true))
                   .toList(),

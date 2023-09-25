@@ -15,6 +15,7 @@ import 'app/providers/theme.dart';
 import 'app/routes/app_pages.dart';
 
 void main() async {
+  // if wanted to see what was the exception while widget is rendering added by [Nitish]
   ErrorWidget.builder = (de) {
     return Container(
       alignment: Alignment.center,
