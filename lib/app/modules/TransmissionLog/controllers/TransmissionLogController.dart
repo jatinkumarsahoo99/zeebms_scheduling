@@ -3137,7 +3137,7 @@ class TransmissionLogController extends GetxController {
   }
 
   void btnSave_Click() async {
-    if(gridStateManager!=null) {
+    if (gridStateManager != null) {
       gridStateManager?.clearCurrentSelecting();
     }
     try {
@@ -3643,7 +3643,7 @@ class TransmissionLogController extends GetxController {
             // tblLog.FirstDisplayedScrollingRowIndex = int.tryParse(dr.cells['rownumber']?.value??"")! - 10;
             // tblLog.Rows[dr['rownumber']].Selected = true;
             gridStateManager?.moveScrollByRow(PlutoMoveDirection.down,
-                int.tryParse(dr.cells['rownumber']?.value ?? "")!+10);
+                int.tryParse(dr.cells['rownumber']?.value ?? "")! + 10);
 
             // gridStateManager?.setCurrentCell(dr.cells["no"], int.tryParse(dr.cells['rownumber']?.value ?? "")!);
             gridStateManager?.toggleSelectingRow(
@@ -3658,7 +3658,7 @@ class TransmissionLogController extends GetxController {
             // tblLog.FirstDisplayedScrollingRowIndex = dr['rownumber'] - 10;
             // tblLog.Rows[dr['rownumber']].Selected = true;
             gridStateManager?.moveScrollByRow(PlutoMoveDirection.down,
-                int.tryParse(dr.cells['rownumber']?.value ?? "")!+10);
+                int.tryParse(dr.cells['rownumber']?.value ?? "")! + 10);
             // gridStateManager?.setCurrentCell(dr.cells["no"], int.tryParse(dr.cells['rownumber']?.value ?? "")!);
             gridStateManager?.toggleSelectingRow(
                 int.tryParse(dr.cells['rownumber']?.value ?? "")!);
@@ -3706,14 +3706,26 @@ class TransmissionLogController extends GetxController {
           }
           print("List of product is>>" + strAllowBackToBackProducts.toString());
           try {
+            bool isFirst = false;
             for (var dr in (gridStateManager?.rows)!) {
               if (dr.cells['productName']?.value == lastProduct) {
                 if (dr.cells['productName']?.value != '') {
                   if (!strAllowBackToBackProducts
                       .contains(dr.cells['productName']?.value + ',')) {
                     // tblLog.FirstDisplayedScrollingRowIndex = dr['rownumber'] - 10;
-                    gridStateManager?.moveScrollByRow(PlutoMoveDirection.down,
-                        int.tryParse(dr.cells['rownumber']?.value ?? "")! + 10);
+                    print(
+                        "checkBackToBackProducts() Focus row is: ${dr.cells['rownumber']?.value.toString()}");
+                    if (!isFirst) {
+                      isFirst = true;
+                      gridStateManager?.moveScrollByRow(
+                          PlutoMoveDirection.up,
+                          int.tryParse(dr.cells['rownumber']?.value ?? "")! -
+                              10);
+                    }else {
+                      gridStateManager?.moveScrollByRow(PlutoMoveDirection.down,
+                          int.tryParse(dr.cells['rownumber']?.value ?? "")! +
+                              10);
+                    }
 
                     if (int.tryParse(dr.cells['rownumber']?.value)! > 0) {
                       // tblLog.Rows[dr['rownumber']].Selected = true;
