@@ -149,16 +149,13 @@ class ReleaseWoNonFpcView extends GetView {
                   "Telecast Type",
                   0.1775,
                   selected: controller.nonFPCSelectedTelecasteType,
-                  inkWellFocusNode: controller.telecasteTypeFN,
-                  // onFocusChange: (hasFocus) {
-                  //   print(hasFocus);
-                  //   if (!hasFocus) {
-                  //     controller.canRetriveData = true;
-                  //   }
-                  //   Future.delayed(Duration(seconds: 2)).then((value) {
-                  //     controller.canRetriveData = false;
-                  //   });
-                  // },
+                  // inkWellFocusNode: controller.telecasteTypeFN,
+                  onFocusChange: (hasFocus) {
+                    print(hasFocus);
+                    if (!hasFocus) {
+                      controller.multiPleSegmentsDialog();
+                    }
+                  },
                 ),
                 SizedBox(
                   width: Get.width * 0.30,

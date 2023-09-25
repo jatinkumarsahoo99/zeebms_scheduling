@@ -940,6 +940,7 @@ class RoBookingController extends GetxController {
         json: {
           "locationCode": selectedLocation?.key,
           "locationName": selectedLocation?.value,
+          "IntEditMode": bookingNoLeaveData?.intEditMode ?? 1,
           "channelCode": selectedChannel?.key,
           "channelName": selectedChannel?.value,
           "loggedUser": Get.find<MainController>().user?.logincode,
