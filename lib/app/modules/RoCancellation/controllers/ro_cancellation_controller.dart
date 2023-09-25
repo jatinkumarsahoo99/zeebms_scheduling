@@ -380,7 +380,12 @@ class RoCancellationController extends GetxController {
               if (data["saveInfo"]["message"]
                   .toString()
                   .contains("Records saved successfully")) {
-                LoadingDialog.callDataSaved(msg: data["saveInfo"]["message"]);
+                LoadingDialog.callDataSaved(
+                    msg: data["saveInfo"]["message"],
+                    callback: () {
+                      Get.delete<RoCancellationController>();
+                      Get.find<HomeController>().clearPage1();
+                    });
               } else {
                 LoadingDialog.callInfoMessage(data["saveInfo"]["message"]);
               }

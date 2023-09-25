@@ -149,11 +149,16 @@ class ReleaseWoNonFpcView extends GetView {
                   "Telecast Type",
                   0.1775,
                   selected: controller.nonFPCSelectedTelecasteType,
-                  onFocusChange: (hasFocus) {
-                    if (!hasFocus) {
-                      controller.multiPleSegmentsDialog();
-                    }
-                  },
+                  inkWellFocusNode: controller.telecasteTypeFN,
+                  // onFocusChange: (hasFocus) {
+                  //   print(hasFocus);
+                  //   if (!hasFocus) {
+                  //     controller.canRetriveData = true;
+                  //   }
+                  //   Future.delayed(Duration(seconds: 2)).then((value) {
+                  //     controller.canRetriveData = false;
+                  //   });
+                  // },
                 ),
                 SizedBox(
                   width: Get.width * 0.30,
@@ -284,6 +289,13 @@ class ReleaseWoNonFpcView extends GetView {
           SizedBox(height: 5),
 
           /// save btn
+          Align(
+            alignment: Alignment.topLeft,
+            child: FormButtonWrapper(
+              btnText: "Add/Modify Multi-Eps. info.",
+              callback: controller.multiPleSegmentsDialog,
+            ),
+          ),
           Align(
             alignment: Alignment.topRight,
             child: FormButtonWrapper(

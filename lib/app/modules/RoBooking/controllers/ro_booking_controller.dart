@@ -800,8 +800,9 @@ class RoBookingController extends GetxController {
             if (response["info_OnSave"]["message"] != null &&
                 (response["info_OnSave"]["message"] as List<dynamic>)
                     .isNotEmpty) {
-              LoadingDialog.callInfoMessage(
-                (response["info_OnSave"]["message"] as List<dynamic>).first,
+              LoadingDialog.callDataSaved(
+                msg:
+                    (response["info_OnSave"]["message"] as List<dynamic>).first,
                 callback: () {
                   if (response["info_OnSave"]["bookingNumber"] != null) {
                     onBookingNoLeave(
