@@ -217,37 +217,40 @@ class AsrunImportController extends GetxController {
           "MarkBookedCommercials": checkboxesMap["Mark Slot"],
           "exposureProgramUpdate": checkboxesMap["Don't Update Exposure"],
           "ReverseAsRunOrder": false,
-          "ForMarkCommercial": false,
-          "TemptableList": [
-            {
-              "EventNumber":
-                  asrunData?[gridStateManager!.currentRowIdx!].eventNumber,
-              "TelecastDate":
-                  asrunData?[gridStateManager!.currentRowIdx!].telecastdate,
-              "TeleCastTime":
-                  asrunData?[gridStateManager!.currentRowIdx!].telecasttime,
-              "Tapeid": asrunData?[gridStateManager!.currentRowIdx!].tapeId,
-              "SegmentNumber": asrunData?[gridStateManager!.currentRowIdx!]
-                  .segmentnumber
-                  .toString(),
-              "caption": asrunData?[gridStateManager!.currentRowIdx!].caption,
-              "TelecastDuration":
-                  asrunData?[gridStateManager!.currentRowIdx!].telecastDuration,
-              "EventType":
-                  asrunData?[gridStateManager!.currentRowIdx!].eventtype,
-              "FPCtime": asrunData?[gridStateManager!.currentRowIdx!].fpctIme,
-              "ProgramCode":
-                  asrunData?[gridStateManager!.currentRowIdx!].programCode,
-              "BookingNumber":
-                  asrunData?[gridStateManager!.currentRowIdx!].bookingnumber,
-              "BookingDetailcode": (asrunData?[gridStateManager!.currentRowIdx!]
-                          .bookingdetailcode ??
-                      "")
-                  .toString(),
-              "CommercialCode": "",
-              "ReconKey": ""
-            }
-          ]
+          "ForMarkCommercial": true,
+          "startTime": startTime_.text,
+          "TemptableList":
+              asrunData?.map((e) => e.toJson(isSegInt: false)).toList()
+          //  [
+          //   {
+          //     "EventNumber":
+          //         asrunData?[gridStateManager!.currentRowIdx!].eventNumber,
+          //     "TelecastDate":
+          //         asrunData?[gridStateManager!.currentRowIdx!].telecastdate,
+          //     "TeleCastTime":
+          //         asrunData?[gridStateManager!.currentRowIdx!].telecasttime,
+          //     "Tapeid": asrunData?[gridStateManager!.currentRowIdx!].tapeId,
+          //     "SegmentNumber": asrunData?[gridStateManager!.currentRowIdx!]
+          //         .segmentnumber
+          //         .toString(),
+          //     "caption": asrunData?[gridStateManager!.currentRowIdx!].caption,
+          //     "TelecastDuration":
+          //         asrunData?[gridStateManager!.currentRowIdx!].telecastDuration,
+          //     "EventType":
+          //         asrunData?[gridStateManager!.currentRowIdx!].eventtype,
+          //     "FPCtime": asrunData?[gridStateManager!.currentRowIdx!].fpctIme,
+          //     "ProgramCode":
+          //         asrunData?[gridStateManager!.currentRowIdx!].programCode,
+          //     "BookingNumber":
+          //         asrunData?[gridStateManager!.currentRowIdx!].bookingnumber,
+          //     "BookingDetailcode": (asrunData?[gridStateManager!.currentRowIdx!]
+          //                 .bookingdetailcode ??
+          //             "")
+          //         .toString(),
+          //     "CommercialCode": "",
+          //     "ReconKey": ""
+          //   }
+          // ]
         },
         fun: (map) {
           if (map is Map &&
@@ -362,7 +365,7 @@ class AsrunImportController extends GetxController {
         json: {
           "programName": programName,
           "fpcTime": fpcTime,
-          "programCode": programName,
+          "programCode": programCode,
           "LocationCode": selectLocation?.key,
           "Channelcode": selectChannel?.key,
           "ObjProgList": [
@@ -404,7 +407,7 @@ class AsrunImportController extends GetxController {
             //     asrunData!.add(AsRunData.fromJson(v));
             //   });
             // }
-
+            print("object");
             update(["fpcData"]);
           }
         });
@@ -587,12 +590,18 @@ class AsrunImportController extends GetxController {
           Get.back();
           if (map is Map && map.containsKey("result")) {
             Map asrundeatils = map["result"];
-
             if (map["result"]["isError"]) {
-              LoadingDialog.callErrorMessage1(
-                msg: map["result"]["errorMessage"],
-                callback: () {
+              LoadingDialog.modify(
+                map["result"]["errorMessage"],
+                cancelTitle: "No",
+                deleteTitle: "Yes",
+                () {
+                  print("yes");
                   checkMissingAsrun();
+                },
+                () {
+                  print("no");
+                  Get.back();
                 },
               );
             }

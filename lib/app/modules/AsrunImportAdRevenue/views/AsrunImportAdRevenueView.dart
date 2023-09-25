@@ -185,6 +185,11 @@ class AsrunImportAdRevenueView extends StatelessWidget {
                               .setSelectingMode(PlutoGridSelectingMode.row);
 
                           controller.gridStateManager = loadevent.stateManager;
+                          loadevent.stateManager.setCurrentCell(
+                              loadevent.stateManager
+                                  .getRowByIdx(0)
+                                  ?.cells['eventNumber'],
+                              controller.selectedIndex);
 
                           // if (controller.selectedIndex != null) {
                           //   loadevent.stateManager.moveScrollByRow(PlutoMoveDirection.down, controller.selectedIndex);
@@ -446,6 +451,7 @@ class AsrunImportAdRevenueView extends StatelessWidget {
   showSwap() {
     controller.drgabbleDialog.value = Card(
       shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(5)),
+      margin: EdgeInsets.all(2),
       child: Container(
         height: Get.height * .35,
         width: Get.width * .40,
@@ -464,23 +470,25 @@ class AsrunImportAdRevenueView extends StatelessWidget {
                         btnText: "...",
                         showIcon: false,
                         callback: () {
-                          print(
-                              controller.gridStateManager!.currentRow!.sortIdx);
+                          // print(
+                          //     controller.gridStateManager!.currentRow!.sortIdx);
                           if (controller.gridStateManager?.currentRow != null) {
                             if (controller
                                     .asrunData?[controller
                                         .gridStateManager!.currentRow!.sortIdx]
                                     .eventtype
-                                    ?.toLowerCase() !=
-                                "c") {
-                              LoadingDialog.callInfoMessage(
-                                  "Only Commericial Events Are Allowed for Swap");
-                            } else {
+                                    .toString()
+                                    .toUpperCase() ==
+                                "C ") {
                               controller.fromSwap.value = controller.asrunData?[
                                   controller
                                       .gridStateManager!.currentRow!.sortIdx];
                               controller.fromSwapIndex = controller
                                   .gridStateManager!.currentRow!.sortIdx;
+                              print("2. ${controller.fromSwapIndex}");
+                            } else {
+                              LoadingDialog.callInfoMessage(
+                                  "Only Commericial Events Are Allowed for Swap");
                             }
                           }
                         }),
@@ -525,7 +533,7 @@ class AsrunImportAdRevenueView extends StatelessWidget {
                                       .gridStateManager!.currentRow!.sortIdx]
                                   .eventtype
                                   ?.toLowerCase() !=
-                              "c") {
+                              "c ") {
                             LoadingDialog.callInfoMessage(
                                 "Only Commericial Events Are Allowed for Swap");
                           } else if (controller
@@ -541,6 +549,7 @@ class AsrunImportAdRevenueView extends StatelessWidget {
                                     .gridStateManager!.currentRow!.sortIdx];
                             controller.toSwapIndex = controller
                                 .gridStateManager!.currentRow!.sortIdx;
+                            print("2. ${controller.toSwapIndex}");
                           }
                         }
                       },
@@ -568,15 +577,15 @@ class AsrunImportAdRevenueView extends StatelessWidget {
                                 .toString()))
                   ],
                 )),
-            SizedBox(
-              height: 5,
-            ),
+            const SizedBox(height: 10),
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceEvenly,
               children: [
                 FormButtonWrapper(
                   btnText: "Swap",
                   callback: () {
+                    print("Swap");
+
                     int? fromIndex = controller.asrunData?.indexWhere(
                         (element) =>
                             controller.fromSwap.value?.eventNumber ==
@@ -584,13 +593,18 @@ class AsrunImportAdRevenueView extends StatelessWidget {
                     int? toIndex = controller.asrunData?.indexWhere((element) =>
                         controller.toSwap.value?.eventNumber ==
                         element.eventNumber);
-
                     var from = controller.fromSwap.value;
                     var to = controller.toSwap.value;
+
+                    print("object");
                     PlutoRow fromRow =
                         controller.gridStateManager!.rows[fromIndex!];
                     PlutoRow toRow =
                         controller.gridStateManager!.rows[toIndex!];
+                    print("from row: $fromRow");
+                    print("to row: $toRow");
+                    print("from: $from");
+                    print("to: $to");
                     controller.asrunData?[fromIndex].bookingnumber =
                         to?.bookingnumber;
                     controller.gridStateManager?.changeCellValue(
@@ -694,7 +708,8 @@ class AsrunImportAdRevenueView extends StatelessWidget {
                   },
                 ),
               ],
-            )
+            ),
+            const SizedBox(height: 10)
           ],
         ),
       ),
@@ -817,6 +832,8 @@ class AsrunImportAdRevenueView extends StatelessWidget {
         btnText: "Verify",
         showIcon: false,
         callback: () {
+          int index = controller.gridStateManager!.currentRow!.sortIdx;
+          controller.asrunData?[index].fpctIme = fpcTime.text;
           controller.manualUpdateFPCTime(selectedProgram?.value,
               selectedProgram?.key, fpcTime.text, asrunData);
         },

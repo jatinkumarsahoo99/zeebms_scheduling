@@ -94,7 +94,7 @@ class SpotPriorityController extends GetxController {
               selectChannel?.value?.key ?? "", frmDate.text, toDate.text),
           fun: (Map<String, dynamic> map) {
             Get.back();
-            if (map.containsKey("showDetails")) {
+            if (map.containsKey("showDetails") && map["showDetails"].containsKey("lstbookingdetail") && map["showDetails"]["lstbookingdetail"]!=null) {
               spotPriorityModel =
                   SpotPriorityModel.fromJson(map["showDetails"]);
               update(["spotPriorityList"]);
