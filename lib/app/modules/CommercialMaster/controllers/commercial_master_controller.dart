@@ -761,21 +761,28 @@ class CommercialMasterController extends GetxController {
       "AgencyName": data,
       "clientCode": selectedClientDetails?.value?.key ?? "",
     };
+    LoadingDialog.call();
     Get.find<ConnectorControl>().POSTMETHOD(
         api: ApiFactory.COMMERCIAL_MASTER_GET_AGENCYDETAILS,
         json: postData,
         fun: (map) {
+          Get.back();
+          agencyFocus.requestFocus();
           // print("map>>>" + map.toString());
           if (map is Map && map.containsKey("result") && map['result'] != null) {
             agencyDetails.clear();
+            List<DropDownValue> dataList = [];
             for (var e in map['result']) {
-              agencyDetails.add(DropDownValue.fromJsonDynamic(e, "agencyCode", "agencyName"));
+              dataList.add(DropDownValue.fromJsonDynamic(e, "agencyCode", "agencyName"));
             }
+            agencyDetails.addAll(dataList);
+            agencyDetails.refresh();
             // agencyDetails.refresh();
           } else {
             // agencyDetailsMaster
             agencyDetails.clear();
             agencyDetails.addAll(agencyDetailsMaster);
+            agencyDetails.refresh();
             // agencyDetails.refresh();
           }
         });
