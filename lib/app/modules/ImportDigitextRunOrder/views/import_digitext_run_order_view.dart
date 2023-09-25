@@ -96,7 +96,7 @@ class ImportDigitextRunOrderView extends StatelessWidget {
                         btnText: "Load",
                         iconDataM: Icons.upload_file_rounded,
                         callback: () {
-                          controller.pickFile();
+                          controller.getfileName();
                         },
                       ),
                       InputFields.formField1(

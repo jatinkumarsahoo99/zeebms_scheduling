@@ -284,6 +284,10 @@ class ApiFactory {
           locationCode, channelCode, date) =>
       "$BASE_URL/api/ImportDigitexRunOrder/SaveRunOrder?LocationCode=$locationCode&ChannelCode=$channelCode&BookingDate=$date";
 
+  static String IMPORT_DIGITEX_RUN_ORDER_FILE_FORMAT(
+          locationCode, channelCode, date) =>
+      "$BASE_URL/api/ImportDigitexRunOrder/FileFormat?LocationCode=$locationCode&ChannelCode=$channelCode&Date=$date";
+
 //////////////// Filler: UI:VISHAL GORE, API: INDRESH ///////////////
   static String FILLER_LOCATION = "$BASE_URL/api/FillerScheduling/GetLocations";
   static String FILLER_SAVE = "$BASE_URL/api/FillerScheduling/GetLocations";
@@ -1046,8 +1050,8 @@ class ApiFactory {
       "$BASE_URL/api/PromoTypeMaster/PostValidateAndSaveRecord";
   static String get PROMO_TYPE_MASTER_GET_CATEGORY =>
       "$BASE_URL/api/PromoTypeMaster/GetPromoCategory";
-  static String PROMO_TYPE_MASTER_VALIDATE_SAVE_RECORD(String promoCode) =>
-      "$BASE_URL/api/PromoTypeMaster/ValidationPopUp?promoTypeCode=$promoCode";
+  static String PROMO_TYPE_MASTER_VALIDATE_SAVE_RECORD =
+      "$BASE_URL/api/PromoTypeMaster/ValidationPopUp";
 
   //////////////////////////////// ASRUN IMPORT /////////////////////////////////
   static String AsrunImport_GetLoadLocation =
@@ -1090,6 +1094,8 @@ class ApiFactory {
   static String AsrunImport_CheckProgramSequence =
       "$BASE_URL/api/AsrunImport/CheckProgramSequence";
   static String GFKCheck = "$BASE_URL/api/AsrunImport/GFKCheck";
+  static String AsrunImport_FileFormat(locationCode, channelCode, date) =>
+      "$BASE_URL/api/AsrunImport/FileFormat?LocationCode=$locationCode&ChannelCode=$channelCode&LogDate=$date";
   ////////////////////////////// Audit Status ////////////////////////////////////////
   static String NewBookingActivityReport_GetLoadLocation =
       "$BASE_URL/api/AsrunImport/GetLoadLocation";

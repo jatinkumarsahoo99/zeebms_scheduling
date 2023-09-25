@@ -4,6 +4,7 @@ import 'package:bms_scheduling/app/providers/ApiFactory.dart';
 
 // import 'package:data_table_2/data_table_2.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:get/get.dart';
 import 'package:get/get_core/src/get_main.dart';
 import 'package:intl/intl.dart';
@@ -27,6 +28,22 @@ class Utils {
     return (isStringRequired != null && isStringRequired)
         ? formatter.toString()
         : formatter;
+  }
+
+  static bool copyToClipboardHack(String text) {
+    final textarea = html.TextAreaElement();
+    html.document.body?.append(textarea);
+    textarea.style.border = '0';
+    textarea.style.margin = '0';
+    textarea.style.padding = '0';
+    textarea.style.opacity = '0';
+    textarea.style.position = 'absolute';
+    textarea.readOnly = true;
+    textarea.value = text;
+    textarea.select();
+    final result = html.document.execCommand('copy');
+    textarea.remove();
+    return result;
   }
 
   static String getMMDDYYYYFromDDMMYYYYInString(String ddMMYYYY) {

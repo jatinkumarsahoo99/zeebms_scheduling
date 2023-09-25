@@ -3,6 +3,7 @@ import 'package:bms_scheduling/app/data/PermissionModel.dart';
 import 'package:bms_scheduling/app/providers/extensions/datagrid.dart';
 import 'package:bms_scheduling/widgets/PlutoGrid/pluto_grid.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:get/get.dart';
 import 'package:intl/intl.dart';
 
@@ -176,7 +177,7 @@ class ManageChannelInvemtoryController extends GetxController {
   Future<void> saveTodayAndAllData(bool fromSaveToday) async {
     if (selectedLocation == null || selectedChannel == null) {
       LoadingDialog.showErrorDialog("Please select Location,Channel.");
-    } else if (!madeChanges) {
+    } else if (madeChanges) {
       LoadingDialog.showErrorDialog("No changes to save");
     } else {
       // stateManager!.setCurrentCell(
