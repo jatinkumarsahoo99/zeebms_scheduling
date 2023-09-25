@@ -52,7 +52,8 @@ class DataGridFromMapTransmissionLog extends StatelessWidget {
   final Function(PlutoGridOnRowDoubleTapEvent)? onRowDoubleTap;
   final Function(PlutoGridOnRowsMovedEvent)? onRowsMoved;
   final Function(PlutoGridOnChangedEvent)? onChanged;
-  final Function(DataGridMenuItem, int, PlutoColumnRendererContext)? onContextMenuClick;
+  final Function(DataGridMenuItem, int, PlutoColumnRendererContext)?
+      onContextMenuClick;
   final List? hideKeys;
   final String? exportFileName;
   final Function(PlutoGridOnSelectedEvent)? onSelected;
@@ -86,6 +87,242 @@ class DataGridFromMapTransmissionLog extends StatelessWidget {
             // print("On rendererContext called");
 
             return GestureDetector(
+                onSecondaryTapDown: (detail) {
+                  if (onContextMenuClick == null) {
+                    DataGridMenu().showGridMenu(
+                        rendererContext.stateManager, detail, context,
+                        exportFileName: exportFileName);
+                  } else {
+                    DataGridMenu().showGridCustomTransmissionLog(
+                        rendererContext.stateManager, detail, context,
+                        exportFileName: exportFileName,
+                        onPressedClick: onContextMenuClick,
+                        plutoContext: rendererContext);
+                  }
+                },
+                child: Container(
+                    // height: 25,
+                    height: 20,
+                    // width: Utils.getColumnSize1(key: key, value: mapData[0][key]),
+                    padding: EdgeInsets.only(
+                      left: 6,
+                    ),
+                    decoration: BoxDecoration(
+                        border:
+                            Border.all(color: Colors.transparent, width: 0.01),
+                        borderRadius: BorderRadius.circular(1),
+                        color: Colors.white),
+                    alignment: Alignment.centerLeft,
+                    // color: (key == "epsNo" || key == "tapeid" || key == "status") ? ColorData.cellColor(rendererContext.row.cells[key]?.value, key) : null,
+                    child: Text(
+                      (rendererContext.rowIdx + 1).toString(),
+                      maxLines: 1,
+                      overflow: TextOverflow.ellipsis,
+                      style: TextStyle(
+                        fontSize: SizeDefine.columnTitleFontSize,
+                      ),
+                    )));
+          }),
+          enableAutoEditing: false,
+          // enableRowDrag: true,
+          hide: hideCode! &&
+              key.toString().toLowerCase() != "hourcode" &&
+              key.toString().toLowerCase().contains("code"),
+          enableColumnDrag: false,
+          field: "no",
+          type: PlutoColumnType.text()));
+    }
+
+    for (var key in mapData[0].keys) {
+      segColumn.add(PlutoColumn(
+          cellPadding: EdgeInsets.zero,
+          title: key == "fpcCaption"
+              ? "FPC Caption"
+              : key.toString().pascalCaseToNormal(),
+          enableRowChecked: false,
+          readOnly: true,
+          // backgroundColor: Colors.red,
+          renderer: ((rendererContext) {
+            // print(">>>>>>Render called");
+
+            bool isBold = false;
+            bool isBlank = false;
+            Map<String, PlutoCell> cells = rendererContext.row.cells;
+
+            if (key == "transmissionTime" &&
+                (cells["eventType"]?.value.toString().trim().toLowerCase() ==
+                    "p")) {
+              var strFPCTime =
+                  (((cells["fpCtime"]?.value) ?? "00:00:00").toString());
+              var intFPCTime =
+                  Utils.oldBMSConvertToSecondsValue(value: strFPCTime);
+              var strTransmissionTime =
+                  (((cells["transmissionTime"]?.value) ?? "00:00:00")
+                      .toString());
+              var intTransmissionTime =
+                  Utils.oldBMSConvertToSecondsValue(value: strTransmissionTime);
+              if ((((intTransmissionTime - intFPCTime)).abs() >
+                  Get.find<TransmissionLogController>()
+                      .maxProgramStarttimeDiff
+                      .value)) {
+                isBold = true;
+                print("eventType Index is>> " +
+                    rendererContext.rowIdx.toString() +
+                    " ////" +
+                    isBold.toString());
+              }
+            }
+
+            // Checking Same product back to back
+            if (key == "productName" &&
+                (cells["productName"]?.value != null &&
+                    cells["productName"]?.value != "")) {
+              String currentProduct = cells["productName"]?.value;
+              if (rendererContext.rowIdx <
+                  ((rendererContext.stateManager.rows.length)! - 2)) {
+                if (((currentProduct ==
+                        (rendererContext
+                            .stateManager
+                            .rows[(rendererContext.rowIdx + 1)]
+                            .cells["productName"]
+                            ?.value)) ||
+                    ((currentProduct ==
+                        rendererContext
+                            .stateManager
+                            .rows[(rendererContext.rowIdx + 2)]
+                            .cells["productName"]
+                            ?.value)))) {
+                  isBold = true;
+                  // print("productname Index is>> "+rendererContext.rowIdx.toString()+" ////"+isBold.toString());
+                }
+              }
+            }
+            // Checking Same product back to back
+            if (key == "fpCtime" &&
+                (cells["fpCtime"]?.value != null &&
+                    cells["fpCtime"]?.value != "") &&
+                rendererContext.rowIdx != 0) {
+              if (rendererContext
+                      .stateManager
+                      .rows[(rendererContext.rowIdx - 1)]
+                      .cells["fpCtime"]
+                      ?.value ==
+                  rendererContext.stateManager.rows[(rendererContext.rowIdx)]
+                      .cells["fpCtime"]?.value) {
+                isBlank = true;
+                // print("productname Index is>> "+rendererContext.rowIdx.toString()+" ////"+isBold.toString());
+              }
+            }
+
+            // Checking Same Tape back to back
+            if (key == "exportTapeCode") {
+              String? currentTape;
+              if (((cells["eventType"]?.value ?? "" + "")
+                      .toString()
+                      .trim()
+                      .toLowerCase() ==
+                  "c")) {
+                currentTape = (cells["exportTapeCode"]?.value + "");
+              } else {
+                currentTape = "";
+              }
+              if (currentTape != "") {
+                if (rendererContext.rowIdx <
+                    ((rendererContext.stateManager.rows.length)! - 2)) {
+                  if ((((currentTape ==
+                          (rendererContext
+                                  .stateManager
+                                  .rows[(rendererContext.rowIdx + 1)]
+                                  .cells["exportTapeCode"]
+                                  ?.value) +
+                              "")) ||
+                      ((currentTape ==
+                          (rendererContext
+                                  .stateManager
+                                  .rows[(rendererContext.rowIdx + 2)]
+                                  .cells["exportTapeCode"]
+                                  ?.value) +
+                              "")))) {
+                    isBold = true;
+                    print("exportTapeCode Index is>> " +
+                        rendererContext.rowIdx.toString() +
+                        " ////" +
+                        isBold.toString());
+                  }
+                }
+              }
+            }
+
+            // Checking PRoduct Group back to back
+            if (key == "productGroup" &&
+                (cells["productGroup"]?.value != null &&
+                    cells["productGroup"]?.value != "")) {
+              String currentProductGrp = cells["productGroup"]?.value;
+              if (rendererContext.rowIdx <
+                  ((rendererContext.stateManager.rows.length)! - 2)) {
+                if ((((currentProductGrp ==
+                        (rendererContext
+                                .stateManager
+                                .rows[(rendererContext.rowIdx + 1)]
+                                .cells["productGroup"]
+                                ?.value) +
+                            "")) ||
+                    ((currentProductGrp ==
+                        (rendererContext
+                                .stateManager
+                                .rows[(rendererContext.rowIdx + 2)]
+                                .cells["productGroup"]
+                                ?.value) +
+                            "")))) {
+                  isBold = true;
+                  print("productGroup Index is>> " +
+                      rendererContext.rowIdx.toString() +
+                      " ////" +
+                      isBold.toString());
+                }
+              }
+            }
+
+            // Checking PRoduct Group back to back
+            if (key == "RosTimeBand" &&
+                (cells["rosTimeBand"]?.value != null &&
+                    cells["rosTimeBand"]?.value != "")) {
+              List<String>? ros =
+                  cells["rosTimeBand"]?.value.toString().split("-");
+              String rosStart = (ros![0] + ":00");
+              String rosEnd = (ros[1] + ":00");
+              String midRosEnd;
+              String midRosStart;
+              if ((rosStart.compareTo(rosEnd) == 1)) {
+                midRosEnd = "23:59:59";
+                midRosStart = "00:00:00";
+              } else {
+                midRosEnd = rosEnd;
+                midRosStart = rosEnd;
+              }
+              String? txTime =
+                  cells["transmissionTime"]?.value.toString().substring(0, 8);
+
+              if ((((txTime?.compareTo(rosStart) == 1) &&
+                      (midRosEnd.compareTo(txTime!) == 1)) ||
+                  ((txTime?.compareTo(midRosStart) == 1) &&
+                      (midRosEnd.compareTo(txTime!) == 1)))) {
+                if ((((txTime.compareTo(rosStart) == 1) &&
+                        (midRosEnd.compareTo(txTime) == 1)) ||
+                    ((txTime.compareTo(midRosStart) == 1) &&
+                        (midRosEnd.compareTo(txTime) == 1)))) {
+                } else {
+                  isBold = true;
+                  print("RosTimeBand Index is>> " +
+                      rendererContext.rowIdx.toString() +
+                      " ////" +
+                      isBold.toString());
+                }
+              }
+            }
+
+            //print("Final Index is>> "+rendererContext.rowIdx.toString()+" ////"+isBold.toString());
+            return GestureDetector(
               onSecondaryTapDown: (detail) {
                 if (onContextMenuClick == null) {
                   DataGridMenu().showGridMenu(
@@ -107,261 +344,43 @@ class DataGridFromMapTransmissionLog extends StatelessWidget {
                   left: 6,
                 ),
                 decoration: BoxDecoration(
-                  border: Border.all(color: Colors.transparent,width: 0.01),
+                  border: Border.all(color: Colors.transparent, width: 0.01),
                   borderRadius: BorderRadius.circular(1),
-                  color: Colors.white
                 ),
                 alignment: Alignment.centerLeft,
                 // color: (key == "epsNo" || key == "tapeid" || key == "status") ? ColorData.cellColor(rendererContext.row.cells[key]?.value, key) : null,
                 child: Text(
-                  (rendererContext.rowIdx + 1).toString(),
+                  (rendererContext.stateManager.currentRowIdx!=rendererContext.rowIdx && isBlank) ? "" : rendererContext.cell.value.toString(),
                   maxLines: 1,
                   overflow: TextOverflow.ellipsis,
                   style: TextStyle(
                     fontSize: SizeDefine.columnTitleFontSize,
+                    // color: isBold?Colors.white:Colors.black,
+                    fontWeight: isBold ? FontWeight.w800 : FontWeight.normal,
+                  ),
                 ),
-              )
-            ));
+              ),
+            );
           }),
+          enableSorting: enableSort,
+          enableRowDrag:
+              draggableKeys != null ? draggableKeys!.contains(key) : false,
+          enableEditingMode: false,
+          enableDropToResize: true,
+          enableContextMenu: false,
+          width: Utils.getRowWidth(key: key, value: mapData[0][key]),
+          minWidth: 5,
           enableAutoEditing: false,
-          // enableRowDrag: true,
-          hide: hideCode! &&
-              key.toString().toLowerCase() != "hourcode" &&
-              key.toString().toLowerCase().contains("code"),
+          hide: showonly == null
+              ? (hideKeys != null && hideKeys!.contains(key)) ||
+                  hideCode! &&
+                      key.toString().toLowerCase() != "hourcode" &&
+                      key.toString().toLowerCase().contains("code")
+              : !showonly!.contains(key),
           enableColumnDrag: false,
-          field: "no",
+          field: key,
           type: PlutoColumnType.text()));
     }
-
-      for (var key in mapData[0].keys) {
-        segColumn.add(PlutoColumn(
-            cellPadding: EdgeInsets.zero,
-            title: key == "fpcCaption"
-                ? "FPC Caption"
-                : key.toString().pascalCaseToNormal(),
-            enableRowChecked: false,
-            readOnly: true,
-            // backgroundColor: Colors.red,
-            renderer: ((rendererContext) {
-              // print(">>>>>>Render called");
-
-              bool isBold = false;
-              Map<String, PlutoCell> cells = rendererContext.row.cells;
-
-              if (key == "transmissionTime" &&
-                  (cells["eventType"]?.value.toString().trim().toLowerCase() ==
-                      "p")) {
-                var strFPCTime =
-                    (((cells["fpCtime"]?.value) ?? "00:00:00").toString());
-                var intFPCTime =
-                    Utils.oldBMSConvertToSecondsValue(value: strFPCTime);
-                var strTransmissionTime =
-                    (((cells["transmissionTime"]?.value) ?? "00:00:00")
-                        .toString());
-                var intTransmissionTime = Utils.oldBMSConvertToSecondsValue(
-                    value: strTransmissionTime);
-                if ((((intTransmissionTime - intFPCTime)).abs() >
-                    Get.find<TransmissionLogController>()
-                        .maxProgramStarttimeDiff.value)) {
-                  isBold = true;
-                  print("eventType Index is>> " +
-                      rendererContext.rowIdx.toString() +
-                      " ////" +
-                      isBold.toString());
-                }
-              }
-
-              // Checking Same product back to back
-              if (key == "productName" &&
-                  (cells["productName"]?.value != null &&
-                      cells["productName"]?.value != "")) {
-                String currentProduct = cells["productName"]?.value;
-                if (rendererContext.rowIdx <
-                    ((rendererContext.stateManager.rows.length)! - 2)) {
-                  if (((currentProduct ==
-                          (rendererContext
-                              .stateManager
-                              .rows[(rendererContext.rowIdx + 1)]
-                              .cells["productName"]
-                              ?.value)) ||
-                      ((currentProduct ==
-                          rendererContext
-                              .stateManager
-                              .rows[(rendererContext.rowIdx + 2)]
-                              .cells["productName"]
-                              ?.value)))) {
-                    isBold = true;
-                    // print("productname Index is>> "+rendererContext.rowIdx.toString()+" ////"+isBold.toString());
-                  }
-                }
-              }
-
-              // Checking Same Tape back to back
-              if (key == "exportTapeCode") {
-                String? currentTape;
-                if (((cells["eventType"]?.value ?? "" + "")
-                        .toString()
-                        .trim()
-                        .toLowerCase() ==
-                    "c")) {
-                  currentTape = (cells["exportTapeCode"]?.value + "");
-                } else {
-                  currentTape = "";
-                }
-                if (currentTape != "") {
-                  if (rendererContext.rowIdx <
-                      ((rendererContext.stateManager.rows.length)! - 2)) {
-                    if ((((currentTape ==
-                            (rendererContext
-                                    .stateManager
-                                    .rows[(rendererContext.rowIdx + 1)]
-                                    .cells["exportTapeCode"]
-                                    ?.value) +
-                                "")) ||
-                        ((currentTape ==
-                            (rendererContext
-                                    .stateManager
-                                    .rows[(rendererContext.rowIdx + 2)]
-                                    .cells["exportTapeCode"]
-                                    ?.value) +
-                                "")))) {
-                      isBold = true;
-                      print("exportTapeCode Index is>> " +
-                          rendererContext.rowIdx.toString() +
-                          " ////" +
-                          isBold.toString());
-                    }
-                  }
-                }
-              }
-
-              // Checking PRoduct Group back to back
-              if (key == "productGroup" &&
-                  (cells["productGroup"]?.value != null &&
-                      cells["productGroup"]?.value != "")) {
-                String currentProductGrp = cells["productGroup"]?.value;
-                if (rendererContext.rowIdx <
-                    ((rendererContext.stateManager.rows.length)! - 2)) {
-                  if ((((currentProductGrp ==
-                          (rendererContext
-                                  .stateManager
-                                  .rows[(rendererContext.rowIdx + 1)]
-                                  .cells["productGroup"]
-                                  ?.value) +
-                              "")) ||
-                      ((currentProductGrp ==
-                          (rendererContext
-                                  .stateManager
-                                  .rows[(rendererContext.rowIdx + 2)]
-                                  .cells["productGroup"]
-                                  ?.value) +
-                              "")))) {
-                    isBold = true;
-                    print("productGroup Index is>> " +
-                        rendererContext.rowIdx.toString() +
-                        " ////" +
-                        isBold.toString());
-                  }
-                }
-              }
-
-              // Checking PRoduct Group back to back
-              if (key == "RosTimeBand" &&
-                  (cells["rosTimeBand"]?.value != null &&
-                      cells["rosTimeBand"]?.value != "")) {
-                List<String>? ros =
-                    cells["rosTimeBand"]?.value.toString().split("-");
-                String rosStart = (ros![0] + ":00");
-                String rosEnd = (ros[1] + ":00");
-                String midRosEnd;
-                String midRosStart;
-                if ((rosStart.compareTo(rosEnd) == 1)) {
-                  midRosEnd = "23:59:59";
-                  midRosStart = "00:00:00";
-                } else {
-                  midRosEnd = rosEnd;
-                  midRosStart = rosEnd;
-                }
-                String? txTime =
-                    cells["transmissionTime"]?.value.toString().substring(0, 8);
-
-                if ((((txTime?.compareTo(rosStart) == 1) &&
-                        (midRosEnd.compareTo(txTime!) == 1)) ||
-                    ((txTime?.compareTo(midRosStart) == 1) &&
-                        (midRosEnd.compareTo(txTime!) == 1)))) {
-                  if ((((txTime.compareTo(rosStart) == 1) &&
-                          (midRosEnd.compareTo(txTime) == 1)) ||
-                      ((txTime.compareTo(midRosStart) == 1) &&
-                          (midRosEnd.compareTo(txTime) == 1)))) {
-                  } else {
-                    isBold = true;
-                    print("RosTimeBand Index is>> " +
-                        rendererContext.rowIdx.toString() +
-                        " ////" +
-                        isBold.toString());
-                  }
-                }
-              }
-
-              //print("Final Index is>> "+rendererContext.rowIdx.toString()+" ////"+isBold.toString());
-              return GestureDetector(
-                  onSecondaryTapDown: (detail) {
-                if (onContextMenuClick == null) {
-                  DataGridMenu().showGridMenu(
-                      rendererContext.stateManager, detail, context,
-                      exportFileName: exportFileName);
-                } else {
-                  DataGridMenu().showGridCustomTransmissionLog(
-                      rendererContext.stateManager, detail, context,
-                      exportFileName: exportFileName,
-                      onPressedClick: onContextMenuClick,
-                      plutoContext: rendererContext);
-                }
-              },
-                child: Container(
-                  // height: 25,
-                  height: 20,
-                  // width: Utils.getColumnSize1(key: key, value: mapData[0][key]),
-                  padding: EdgeInsets.only(
-                    left: 6,
-                  ),
-                  decoration: BoxDecoration(
-                    border: Border.all(color: Colors.transparent,width: 0.01),
-                    borderRadius: BorderRadius.circular(1),
-                  ),
-                  alignment: Alignment.centerLeft,
-                  // color: (key == "epsNo" || key == "tapeid" || key == "status") ? ColorData.cellColor(rendererContext.row.cells[key]?.value, key) : null,
-                  child: Text(
-                    rendererContext.cell.value.toString(),
-                    maxLines: 1,
-                    overflow: TextOverflow.ellipsis,
-                    style: TextStyle(
-                        fontSize: SizeDefine.columnTitleFontSize,
-                        // color: isBold?Colors.white:Colors.black,
-                        fontWeight:
-                            isBold ? FontWeight.w800 : FontWeight.normal,),
-                  ),
-                ),
-              );
-            }),
-            enableSorting: enableSort,
-            enableRowDrag: draggableKeys!=null?draggableKeys!.contains(key):false,
-            enableEditingMode: false,
-            enableDropToResize: true,
-            enableContextMenu: false,
-            width: Utils.getRowWidth(key: key, value: mapData[0][key]),
-            minWidth: 5,
-            enableAutoEditing: false,
-            hide: showonly == null
-                ? (hideKeys != null && hideKeys!.contains(key)) ||
-                    hideCode! &&
-                        key.toString().toLowerCase() != "hourcode" &&
-                        key.toString().toLowerCase().contains("code")
-                : !showonly!.contains(key),
-            enableColumnDrag: false,
-            field: key,
-            type: PlutoColumnType.text()));
-      }
 
     for (var i = 0; i < mapData.length; i++) {
       Map row = mapData[i];
@@ -388,7 +407,6 @@ class DataGridFromMapTransmissionLog extends StatelessWidget {
       }
     }
 
-
     return Scaffold(
       key: _globalKey,
       body: Focus(
@@ -398,7 +416,8 @@ class DataGridFromMapTransmissionLog extends StatelessWidget {
         child: PlutoGrid(
             // mode: mode ?? PlutoGridMode.normal,
             mode: PlutoGridMode.normal,
-            configuration: plutoGridConfigurationTransmisionLog(focusNode: _focusNode),
+            configuration:
+                plutoGridConfigurationTransmisionLog(focusNode: _focusNode),
             // configuration: const PlutoGridConfiguration(),
             rowColorCallback: colorCallback,
             onLoaded: onload,
@@ -442,7 +461,7 @@ class DataGridFromMapTransmissionLog extends StatelessWidget {
     );
   }
 
- /* Future<PlutoLazyPaginationResponse> fetch(
+/* Future<PlutoLazyPaginationResponse> fetch(
       PlutoLazyPaginationRequest request,stateManager,segRows
       ) async {
     List<PlutoRow> tempList = segRows;
@@ -486,5 +505,4 @@ class DataGridFromMapTransmissionLog extends StatelessWidget {
       rows: fetchedRows.toList(),
     ));
   }*/
-
 }

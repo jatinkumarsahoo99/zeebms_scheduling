@@ -6,6 +6,7 @@ import 'package:bms_scheduling/app/modules/MamWorkOrders/models/re_push_model.da
 import 'package:bms_scheduling/app/providers/ApiFactory.dart';
 import 'package:bms_scheduling/widgets/LoadingDialog.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:get/get.dart';
 import 'package:intl/intl.dart';
 import 'package:bms_scheduling/widgets/PlutoGrid/pluto_grid.dart';
@@ -82,6 +83,8 @@ class MamWorkOrdersController extends GetxController {
   var woAPDFPCTelecateDateTC = TextEditingController();
   var woAsPerDailyFPCWOTFN = FocusNode();
   var woASPDFPCModel = WOAPDFPCModel().obs;
+  // var telecasteTypeFN = FocusNode();
+  bool canRetriveData = false;
   bool woAsPerDFPCEnableAll = false, woAsPerDFPCSwapToHDSD = true;
   // WO AS PER DAILY DAILY FPC VARAIBLES END
   ///
@@ -534,7 +537,7 @@ class MamWorkOrdersController extends GetxController {
   }
 
   multiPleSegmentsDialog() {
-    if (!nonFPCWOReleaseTXID) {
+    if (!nonFPCWOReleaseTXID || nonFPCSelectedTelecasteType == null) {
       return;
     }
 
@@ -1294,6 +1297,14 @@ class MamWorkOrdersController extends GetxController {
     super.onReady();
     initalizeAPI();
     fetchUserSetting1();
+    // telecasteTypeFN.onKey = (node, event) {
+    //   if (event.logicalKey == LogicalKeyboardKey.tab) {
+    //     if (!event.isShiftPressed) {
+    //       multiPleSegmentsDialog();
+    //     }
+    //   }
+    //   return KeyEventResult.ignored;
+    // };
   }
 
   fetchUserSetting1() async {
