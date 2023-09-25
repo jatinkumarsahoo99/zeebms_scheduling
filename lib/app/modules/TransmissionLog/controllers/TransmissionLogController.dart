@@ -168,34 +168,67 @@ class TransmissionLogController extends GetxController {
       dialogTitle: "Select import file",
       type: FileType.custom,
     );
-    print("Called>>>");
-    LoadingDialog.call();
-    if (result != null && result.files.single != null) {
-      Uint8List? fileBytes = result.files.first.bytes;
-      String fileContent = String.fromCharCodes(fileBytes!);
-      // print(fileContent);
-      Map<String, dynamic> mapData = jsonDecode(fileContent);
-      transmissionLog = TransmissionLogModel.fromJson(mapData);
-      if (transmissionLog != null &&
-          transmissionLog?.loadSavedLogOutput != null &&
-          transmissionLog?.loadSavedLogOutput?.lstTransmissionLog != null &&
-          ((transmissionLog?.loadSavedLogOutput?.lstTransmissionLog?.length ??
-                  0) !=
-              0)) {
-        startTime_.text = transmissionLog
-                ?.loadSavedLogOutput?.lstTransmissionLog![0].transmissionTime ??
-            "";
-        isEnable.value = false;
-        isFetch.value = true;
-        update(["transmissionList"]);
-        colorGrid(true);
-        Get.back();
+    if (listColor.value.length > 0) {
+      LoadingDialog.call();
+      if (result != null && result.files.single != null) {
+        Uint8List? fileBytes = result.files.first.bytes;
+        String fileContent = String.fromCharCodes(fileBytes!);
+        // print(fileContent);
+        Map<String, dynamic> mapData = jsonDecode(fileContent);
+        transmissionLog = TransmissionLogModel.fromJson(mapData);
+        if (transmissionLog != null &&
+            transmissionLog?.loadSavedLogOutput != null &&
+            transmissionLog?.loadSavedLogOutput?.lstTransmissionLog != null &&
+            ((transmissionLog?.loadSavedLogOutput?.lstTransmissionLog?.length ??
+                    0) !=
+                0)) {
+          startTime_.text = transmissionLog?.loadSavedLogOutput
+                  ?.lstTransmissionLog![0].transmissionTime ??
+              "";
+          isEnable.value = false;
+          isFetch.value = true;
+          update(["transmissionList"]);
+          colorGrid(true);
+          Get.back();
+        } else {
+          Get.back();
+          LoadingDialog.callInfoMessage("No Data Found");
+        }
       } else {
         Get.back();
-        LoadingDialog.callInfoMessage("No Data Found");
       }
     } else {
-      Get.back();
+      getColorList(function: () {
+        LoadingDialog.call();
+        if (result != null && result.files.single != null) {
+          Uint8List? fileBytes = result.files.first.bytes;
+          String fileContent = String.fromCharCodes(fileBytes!);
+          // print(fileContent);
+          Map<String, dynamic> mapData = jsonDecode(fileContent);
+          transmissionLog = TransmissionLogModel.fromJson(mapData);
+          if (transmissionLog != null &&
+              transmissionLog?.loadSavedLogOutput != null &&
+              transmissionLog?.loadSavedLogOutput?.lstTransmissionLog != null &&
+              ((transmissionLog
+                          ?.loadSavedLogOutput?.lstTransmissionLog?.length ??
+                      0) !=
+                  0)) {
+            startTime_.text = transmissionLog?.loadSavedLogOutput
+                    ?.lstTransmissionLog![0].transmissionTime ??
+                "";
+            isEnable.value = false;
+            isFetch.value = true;
+            update(["transmissionList"]);
+            colorGrid(true);
+            Get.back();
+          } else {
+            Get.back();
+            LoadingDialog.callInfoMessage("No Data Found");
+          }
+        } else {
+          Get.back();
+        }
+      });
     }
   }
 
@@ -3104,6 +3137,9 @@ class TransmissionLogController extends GetxController {
   }
 
   void btnSave_Click() async {
+    if(gridStateManager!=null) {
+      gridStateManager?.clearCurrentSelecting();
+    }
     try {
       // gridStateManager.myDataGridRowFilter(true, false);
       colorGrid(false);
@@ -3607,7 +3643,7 @@ class TransmissionLogController extends GetxController {
             // tblLog.FirstDisplayedScrollingRowIndex = int.tryParse(dr.cells['rownumber']?.value??"")! - 10;
             // tblLog.Rows[dr['rownumber']].Selected = true;
             gridStateManager?.moveScrollByRow(PlutoMoveDirection.down,
-                int.tryParse(dr.cells['rownumber']?.value ?? "")!);
+                int.tryParse(dr.cells['rownumber']?.value ?? "")!+10);
 
             // gridStateManager?.setCurrentCell(dr.cells["no"], int.tryParse(dr.cells['rownumber']?.value ?? "")!);
             gridStateManager?.toggleSelectingRow(
@@ -3622,7 +3658,7 @@ class TransmissionLogController extends GetxController {
             // tblLog.FirstDisplayedScrollingRowIndex = dr['rownumber'] - 10;
             // tblLog.Rows[dr['rownumber']].Selected = true;
             gridStateManager?.moveScrollByRow(PlutoMoveDirection.down,
-                int.tryParse(dr.cells['rownumber']?.value ?? ""));
+                int.tryParse(dr.cells['rownumber']?.value ?? "")!+10);
             // gridStateManager?.setCurrentCell(dr.cells["no"], int.tryParse(dr.cells['rownumber']?.value ?? "")!);
             gridStateManager?.toggleSelectingRow(
                 int.tryParse(dr.cells['rownumber']?.value ?? "")!);
@@ -3677,7 +3713,7 @@ class TransmissionLogController extends GetxController {
                       .contains(dr.cells['productName']?.value + ',')) {
                     // tblLog.FirstDisplayedScrollingRowIndex = dr['rownumber'] - 10;
                     gridStateManager?.moveScrollByRow(PlutoMoveDirection.down,
-                        int.tryParse(dr.cells['rownumber']?.value ?? "")! - 10);
+                        int.tryParse(dr.cells['rownumber']?.value ?? "")! + 10);
 
                     if (int.tryParse(dr.cells['rownumber']?.value)! > 0) {
                       // tblLog.Rows[dr['rownumber']].Selected = true;
@@ -3729,7 +3765,7 @@ class TransmissionLogController extends GetxController {
           if (dr.cells['productGroup']?.value != '') {
             // tblLog.FirstDisplayedScrollingRowIndex = dr['rownumber'] - 10;
             gridStateManager?.moveScrollByRow(PlutoMoveDirection.down,
-                int.tryParse(dr.cells['rownumber']?.value ?? "")! - 10);
+                int.tryParse(dr.cells['rownumber']?.value ?? "")! + 10);
             if (int.tryParse(dr.cells['rownumber']?.value)! > 0) {
               // tblLog.Rows[dr['rownumber']].Selected = true;
               gridStateManager?.setCurrentCell(dr.cells["no"],

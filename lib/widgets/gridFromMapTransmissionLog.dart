@@ -350,7 +350,7 @@ class DataGridFromMapTransmissionLog extends StatelessWidget {
                 alignment: Alignment.centerLeft,
                 // color: (key == "epsNo" || key == "tapeid" || key == "status") ? ColorData.cellColor(rendererContext.row.cells[key]?.value, key) : null,
                 child: Text(
-                  isBlank ? "" : rendererContext.cell.value.toString(),
+                  (rendererContext.stateManager.currentRowIdx!=rendererContext.rowIdx && isBlank) ? "" : rendererContext.cell.value.toString(),
                   maxLines: 1,
                   overflow: TextOverflow.ellipsis,
                   style: TextStyle(
