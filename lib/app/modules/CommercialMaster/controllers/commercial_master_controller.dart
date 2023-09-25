@@ -102,6 +102,7 @@ class CommercialMasterController extends GetxController {
   FocusNode clientFocus = FocusNode();
   FocusNode brandFocus = FocusNode();
   FocusNode agencyFocus = FocusNode();
+  FocusNode agencyIdFocus = FocusNode();
   FocusNode agencyNameFocus = FocusNode();
   FocusNode eventFocus = FocusNode();
 
@@ -190,6 +191,16 @@ class CommercialMasterController extends GetxController {
       onKeyEvent: (node, event) {
         if (event.logicalKey == LogicalKeyboardKey.tab) {
           validateTxNo1("", tapeIdController.value.text, segController.text);
+          return KeyEventResult.ignored;
+        }
+        return KeyEventResult.ignored;
+      },
+    );
+
+    agencyNameFocus = FocusNode(
+      onKeyEvent: (node, event) {
+        if (event.logicalKey == LogicalKeyboardKey.tab) {
+          getAgencyDetails(agencyNameController.text);
           return KeyEventResult.ignored;
         }
         return KeyEventResult.ignored;

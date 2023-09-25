@@ -375,8 +375,8 @@ class SalesAuditNewController extends GetxController {
 
             listAsrunLog2.clear();
             listAsrunLog1.clear();
-            masterListAsrunLog2.clear();
-            masterListAsrunLog1.clear();
+            masterListAsrunLog2.clear() ;
+            masterListAsrunLog1.clear() ;
             if (map is Map &&
                 map.containsKey('gettables') &&
                 map['gettables'] != null) {
@@ -394,14 +394,14 @@ class SalesAuditNewController extends GetxController {
                   map['gettables']['lstAsrunlog1'].length > 0) {
                 listAsrunLog1.addAll(salesAuditGetRetrieveModel!
                     .gettables!.lstAsrunlog1 as Iterable<LstAsrunlog1>);
-                masterListAsrunLog1.addAll(listAsrunLog1);
+                masterListAsrunLog1.addAll(listAsrunLog1) ;
               }
               if (map['gettables']['lstAsrunlog2'] != null &&
                   map['gettables']['lstAsrunlog2'] != "null" &&
                   map['gettables']['lstAsrunlog2'].length > 0) {
                 listAsrunLog2.addAll(salesAuditGetRetrieveModel!
                     .gettables!.lstAsrunlog2 as Iterable<LstAsrunlog2>);
-                masterListAsrunLog2.addAll(listAsrunLog2);
+                masterListAsrunLog2.addAll(listAsrunLog2) ;
               }
               update(['leftOne', 'text', 'rightOne']);
             } else {
