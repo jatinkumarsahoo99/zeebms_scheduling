@@ -102,6 +102,7 @@ class CommercialMasterController extends GetxController {
   FocusNode clientFocus = FocusNode();
   FocusNode brandFocus = FocusNode();
   FocusNode agencyFocus = FocusNode();
+  FocusNode agencyIdFocus = FocusNode();
   FocusNode agencyNameFocus = FocusNode();
   FocusNode eventFocus = FocusNode();
 
@@ -190,6 +191,16 @@ class CommercialMasterController extends GetxController {
       onKeyEvent: (node, event) {
         if (event.logicalKey == LogicalKeyboardKey.tab) {
           validateTxNo1("", tapeIdController.value.text, segController.text);
+          return KeyEventResult.ignored;
+        }
+        return KeyEventResult.ignored;
+      },
+    );
+
+    agencyNameFocus = FocusNode(
+      onKeyEvent: (node, event) {
+        if (event.logicalKey == LogicalKeyboardKey.tab) {
+          getAgencyDetails(agencyNameController.text);
           return KeyEventResult.ignored;
         }
         return KeyEventResult.ignored;
@@ -750,21 +761,28 @@ class CommercialMasterController extends GetxController {
       "AgencyName": data,
       "clientCode": selectedClientDetails?.value?.key ?? "",
     };
+    LoadingDialog.call();
     Get.find<ConnectorControl>().POSTMETHOD(
         api: ApiFactory.COMMERCIAL_MASTER_GET_AGENCYDETAILS,
         json: postData,
         fun: (map) {
+          Get.back();
+          agencyFocus.requestFocus();
           // print("map>>>" + map.toString());
           if (map is Map && map.containsKey("result") && map['result'] != null) {
             agencyDetails.clear();
+            List<DropDownValue> dataList = [];
             for (var e in map['result']) {
-              agencyDetails.add(DropDownValue.fromJsonDynamic(e, "agencyCode", "agencyName"));
+              dataList.add(DropDownValue.fromJsonDynamic(e, "agencyCode", "agencyName"));
             }
+            agencyDetails.addAll(dataList);
+            agencyDetails.refresh();
             // agencyDetails.refresh();
           } else {
             // agencyDetailsMaster
             agencyDetails.clear();
             agencyDetails.addAll(agencyDetailsMaster);
+            agencyDetails.refresh();
             // agencyDetails.refresh();
           }
         });
