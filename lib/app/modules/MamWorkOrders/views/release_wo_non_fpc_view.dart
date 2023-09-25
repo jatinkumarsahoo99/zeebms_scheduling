@@ -149,7 +149,9 @@ class ReleaseWoNonFpcView extends GetView {
                   "Telecast Type",
                   0.1775,
                   selected: controller.nonFPCSelectedTelecasteType,
+                  // inkWellFocusNode: controller.telecasteTypeFN,
                   onFocusChange: (hasFocus) {
+                    print(hasFocus);
                     if (!hasFocus) {
                       controller.multiPleSegmentsDialog();
                     }
@@ -284,6 +286,13 @@ class ReleaseWoNonFpcView extends GetView {
           SizedBox(height: 5),
 
           /// save btn
+          Align(
+            alignment: Alignment.topLeft,
+            child: FormButtonWrapper(
+              btnText: "Add/Modify Multi-Eps. info.",
+              callback: controller.multiPleSegmentsDialog,
+            ),
+          ),
           Align(
             alignment: Alignment.topRight,
             child: FormButtonWrapper(

@@ -77,6 +77,8 @@ class SpotNotVerifiedView extends GetView<RoBookingController> {
                             .toList(),
                         formatDate: false,
                         onRowDoubleTap: (rowEvent) {
+                          controller.spotNotVerifiedGrid
+                              ?.setCurrentCell(rowEvent.cell, rowEvent.rowIdx);
                           controller.spotnotverifiedclick(rowEvent.rowIdx);
                         },
                         onload: (sm) {

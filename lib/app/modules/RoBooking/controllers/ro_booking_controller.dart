@@ -800,8 +800,9 @@ class RoBookingController extends GetxController {
             if (response["info_OnSave"]["message"] != null &&
                 (response["info_OnSave"]["message"] as List<dynamic>)
                     .isNotEmpty) {
-              LoadingDialog.callInfoMessage(
-                (response["info_OnSave"]["message"] as List<dynamic>).first,
+              LoadingDialog.callDataSaved(
+                msg:
+                    (response["info_OnSave"]["message"] as List<dynamic>).first,
                 callback: () {
                   if (response["info_OnSave"]["bookingNumber"] != null) {
                     onBookingNoLeave(
@@ -939,6 +940,7 @@ class RoBookingController extends GetxController {
         json: {
           "locationCode": selectedLocation?.key,
           "locationName": selectedLocation?.value,
+          "IntEditMode": bookingNoLeaveData?.intEditMode ?? 1,
           "channelCode": selectedChannel?.key,
           "channelName": selectedChannel?.value,
           "loggedUser": Get.find<MainController>().user?.logincode,
