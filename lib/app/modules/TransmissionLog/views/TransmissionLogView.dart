@@ -51,12 +51,29 @@ class TransmissionLogView extends StatelessWidget {
         body: RawKeyboardListener(
           focusNode: new FocusNode(),
           onKey: (RawKeyEvent raw) {
-            // print("RAw is.>>>" + raw.toString());
+            print("RAw is.>>>" + raw.toString());
             if (raw.isControlPressed && raw.character?.toLowerCase() == "c") {
               if (controller.gridStateManager != null &&
                   controller.gridStateManager?.currentCell != null) {
                 Clipboard.setData(new ClipboardData(
                     text: controller.gridStateManager?.currentCell?.value));
+              }
+            }
+
+            if (raw is RawKeyDownEvent && raw.character?.toLowerCase() == "y") {
+              if (controller.completerDialog != null &&
+                  controller.dialogWidget != null) {
+                controller.dialogWidget = null;
+                controller.canDialogShow.value = false;
+                controller.completerDialog?.complete(true);
+              }
+            }
+            if (raw is RawKeyDownEvent && raw.character?.toLowerCase() == "n") {
+              if (controller.completerDialog != null &&
+                  controller.dialogWidget != null) {
+                controller.dialogWidget = null;
+                controller.canDialogShow.value = false;
+                controller.completerDialog?.complete(false);
               }
             }
             switch (raw.logicalKey.keyLabel) {
