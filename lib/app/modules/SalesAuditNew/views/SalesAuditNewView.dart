@@ -1,6 +1,7 @@
 import 'dart:convert';
 
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 
 import 'package:get/get.dart';
 
@@ -31,6 +32,12 @@ class SalesAuditNewView  extends StatelessWidget  {
         focusNode: new FocusNode(),
         onKey: (RawKeyEvent raw) {
           print("RAw is.>>>" + raw.toString());
+          /*if(raw is RawKeyDownEvent && raw.isControlPressed && raw.character?.toLowerCase()=="c"){
+           print(">>>>>>>>>>>>>>>currentSelectingPosition"+
+               (controller.gridStateManagerLeft?.currentSelectingPosition).toString());
+           print(">>>>>>>>>>>>>>>currentSelectingRows"+
+               ( controller.gridStateManagerLeft?.currentSelectingRows).toString());
+          }*/
           switch (raw.logicalKey.keyLabel) {
             case "F5":
               controller.markError(controller.gridStateManagerLeft?.currentRowIdx??0);
@@ -273,7 +280,7 @@ class SalesAuditNewView  extends StatelessWidget  {
                                               ){
                                                 color = Colors.greenAccent;
                                               }
-                                              else if(colorData.row.cells['bookingStatus']!.value == "E"){
+                                              else if(colorData.row.cells['bookingStatus']!.value.toString().toLowerCase() == "e"){
                                                 color = Colors.redAccent;
                                               }else{
                                                 color = Colors.white;
@@ -284,6 +291,11 @@ class SalesAuditNewView  extends StatelessWidget  {
                                             // checkRow: true,
                                             // checkRowKey: "no",
                                             mode: PlutoGridMode.normal,
+                                            editKeys: const ["remarks"],
+                                            onEdit: (PlutoGridOnChangedEvent ev){
+
+
+                                            },
 
                                             onSelected: (PlutoGridOnSelectedEvent? val ){
                                                  // print("singlr click"+val!.row!.toJson().toString());
@@ -318,8 +330,7 @@ class SalesAuditNewView  extends StatelessWidget  {
                                               controller.gridStateManagerLeft?.setCurrentCell(controller.gridStateManagerLeft?.
                                               getRowByIdx(controller.selectedIndex)?.cells['exportTapeCode'],
                                                   controller.selectedIndex);
-                                              controller.gridStateManagerLeft?.moveCurrentCellByRowIdx(controller.selectedIndex??0,
-                                                  PlutoMoveDirection.down);
+                                              controller.gridStateManagerLeft?.moveCurrentCellByRowIdx(controller.selectedIndex??0, PlutoMoveDirection.down);
                                               load.stateManager.notifyListeners();
                                             },
                                             enableSort: true,
@@ -346,6 +357,7 @@ class SalesAuditNewView  extends StatelessWidget  {
                                             DataGridFromMap4(
                                                 hideCode: false,
                                                 formatDate: true,
+                                                enableSort: true,
                                                 dateFromat: "dd/MM/yyyy",
                                                 focusNode: controller.rightFocusNode,
                                                 csvFormat: true,
@@ -371,7 +383,7 @@ class SalesAuditNewView  extends StatelessWidget  {
                                                 },
                                                 // checkRow: true,
                                                 // checkRowKey: "no",
-                                                mode: PlutoGridMode.selectWithOneTap,
+                                                mode: PlutoGridMode.normal,
                                                 hideKeys: ['programCode','rownumber','bookingDetailCode'],
                                                 onSelected: (PlutoGridOnSelectedEvent? val ){
                                                   // print("singlr click"+val!.row!.toJson().toString());
