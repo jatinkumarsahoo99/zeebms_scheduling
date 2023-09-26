@@ -2669,22 +2669,23 @@ class TransmissionLogView extends StatelessWidget {
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
           FormButtonWrapper(
-            btnText: "Close",
-            showIcon: false,
-            callback: () {
-              Navigator.pop(context);
-            },
-          ),
-          SizedBox(
-            width: 5,
-          ),
-          FormButtonWrapper(
             btnText: "Export",
             showIcon: false,
             callback: () {
               controller.btnExportClick(controller.selectExportType.value);
             },
           ),
+          SizedBox(
+            width: 5,
+          ),
+          FormButtonWrapper(
+            btnText: "Close",
+            showIcon: false,
+            callback: () {
+              Navigator.pop(context);
+            },
+          ),
+
         ],
       ),
       radius: 10,
