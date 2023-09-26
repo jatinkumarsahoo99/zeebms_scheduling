@@ -31,8 +31,8 @@ class SalesAuditNewView  extends StatelessWidget  {
 
         focusNode: new FocusNode(),
         onKey: (RawKeyEvent raw) {
-          print("RAw is.>>>" + raw.toString());
-          /*if(raw is RawKeyDownEvent && raw.isControlPressed && raw.character?.toLowerCase()=="c"){
+          /*print("RAw is.>>>" + raw.toString());
+          if(raw is RawKeyDownEvent && raw.isControlPressed && raw.character?.toLowerCase() =="c"){
            print(">>>>>>>>>>>>>>>currentSelectingPosition"+
                (controller.gridStateManagerLeft?.currentSelectingPosition).toString());
            print(">>>>>>>>>>>>>>>currentSelectingRows"+
@@ -280,7 +280,7 @@ class SalesAuditNewView  extends StatelessWidget  {
                                               ){
                                                 color = Colors.greenAccent;
                                               }
-                                              else if(colorData.row.cells['bookingStatus']!.value.toString().toLowerCase() == "e"){
+                                              else if(colorData.row.cells['bookingStatus']!.value.toString().toLowerCase().trim() == "e"){
                                                 color = Colors.redAccent;
                                               }else{
                                                 color = Colors.white;
