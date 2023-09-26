@@ -574,28 +574,31 @@ class CommercialMasterController extends GetxController {
   }
 
   getSecType(String key, {int? keyName}) {
-    Get.find<ConnectorControl>().GETMETHODCALL(
-        api: ApiFactory.COMMERCIAL_MASTER_GETSECTYPE + key,
-        fun: (map) {
-          if (map is List && map.isNotEmpty) {
-            secType.clear();
-            for (var e in map) {
-              secType.add(
-                  DropDownValue.fromJsonDynamic(e, "eventCode", "eventName"));
-            }
-            if (keyName != null) {
-              for (var element in secType) {
-                if (element.key.toString().trim() ==
-                    keyName.toString().trim()) {
-                  selectedSecType?.value = DropDownValue(
-                      key: element.key.toString(), value: element.value ?? "");
-                  selectedSecType?.refresh();
-                  break;
+    if(key != null && key.toString().trim() !=""){
+      Get.find<ConnectorControl>().GETMETHODCALL(
+          api: ApiFactory.COMMERCIAL_MASTER_GETSECTYPE + key,
+          fun: (map) {
+            if (map is List && map.isNotEmpty) {
+              secType.clear();
+              for (var e in map) {
+                secType.add(
+                    DropDownValue.fromJsonDynamic(e, "eventCode", "eventName"));
+              }
+              if (keyName != null) {
+                for (var element in secType) {
+                  if (element.key.toString().trim() ==
+                      keyName.toString().trim()) {
+                    selectedSecType?.value = DropDownValue(
+                        key: element.key.toString(), value: element.value ?? "");
+                    selectedSecType?.refresh();
+                    break;
+                  }
                 }
               }
             }
-          }
-        });
+          });
+    }
+
   }
 
   getClientDetails(String clientName) {
@@ -615,61 +618,64 @@ class CommercialMasterController extends GetxController {
 
   getAgencyBrandType(String clientCode,
       {String? agName, String? agKey, String? braName, String? braKey}) {
-    try {
-      Get.find<ConnectorControl>().GETMETHODCALL(
-          api: ApiFactory.COMMERCIAL_MASTER_GETAGENCYBRAND + clientCode,
-          fun: (map) {
-            if (map is Map &&
-                map.containsKey("result") &&
-                map['result'] != null) {
-              agencyDetails.clear();
-              agencyDetailsMaster.clear();
-              brandType.clear();
-              selectedBrandType = Rxn<DropDownValue>(null);
-              selectedAgencyDetails = Rxn<DropDownValue>(null);
-              agencyNameController.text = "";
-              if (map['result'].containsKey('agencyType') &&
-                  map['result']['agencyType'].length > 0) {
+    if(clientCode != null && clientCode.toString().trim() != ""){
+      try {
+        Get.find<ConnectorControl>().GETMETHODCALL(
+            api: ApiFactory.COMMERCIAL_MASTER_GETAGENCYBRAND + clientCode,
+            fun: (map) {
+              if (map is Map &&
+                  map.containsKey("result") &&
+                  map['result'] != null) {
                 agencyDetails.clear();
                 agencyDetailsMaster.clear();
-                map['result']['agencyType'].forEach((e) {
-                  agencyDetails.add(DropDownValue.fromJsonDynamic(
-                      e, "agencyCode", "agencyName"));
-                  agencyDetailsMaster.add(DropDownValue.fromJsonDynamic(
-                      e, "agencyCode", "agencyName"));
-                });
-                agencyDetails.refresh();
-                agencyDetailsMaster.refresh();
-              }
-              if (agKey != null &&
-                  agName != null &&
-                  agKey.trim() != "" &&
-                  agName.trim() != "") {
-                selectedAgencyDetails?.value =
-                    DropDownValue(value: agName, key: agKey);
-                agencyNameController.text = agName;
-                selectedAgencyDetails?.refresh();
-              }
-              if (map['result'].containsKey('brandType') &&
-                  map['result']['brandType'].length > 0) {
                 brandType.clear();
-                map['result']['brandType'].forEach((e) {
-                  brandType.add(DropDownValue.fromJsonDynamic(
-                      e, "brandCode", "brandName"));
-                });
-                brandType.refresh();
+                selectedBrandType = Rxn<DropDownValue>(null);
+                selectedAgencyDetails = Rxn<DropDownValue>(null);
+                agencyNameController.text = "";
+                if (map['result'].containsKey('agencyType') &&
+                    map['result']['agencyType'].length > 0) {
+                  agencyDetails.clear();
+                  agencyDetailsMaster.clear();
+                  map['result']['agencyType'].forEach((e) {
+                    agencyDetails.add(DropDownValue.fromJsonDynamic(
+                        e, "agencyCode", "agencyName"));
+                    agencyDetailsMaster.add(DropDownValue.fromJsonDynamic(
+                        e, "agencyCode", "agencyName"));
+                  });
+                  agencyDetails.refresh();
+                  agencyDetailsMaster.refresh();
+                }
+                if (agKey != null &&
+                    agName != null &&
+                    agKey.trim() != "" &&
+                    agName.trim() != "") {
+                  selectedAgencyDetails?.value =
+                      DropDownValue(value: agName, key: agKey);
+                  agencyNameController.text = agName;
+                  selectedAgencyDetails?.refresh();
+                }
+                if (map['result'].containsKey('brandType') &&
+                    map['result']['brandType'].length > 0) {
+                  brandType.clear();
+                  map['result']['brandType'].forEach((e) {
+                    brandType.add(DropDownValue.fromJsonDynamic(
+                        e, "brandCode", "brandName"));
+                  });
+                  brandType.refresh();
+                }
+                if (braKey != null &&
+                    braName != null &&
+                    braKey.trim() != "" &&
+                    braName.trim() != "") {
+                  selectedBrandType?.value =
+                      DropDownValue(value: braName, key: braKey);
+                  selectedBrandType?.refresh();
+                }
               }
-              if (braKey != null &&
-                  braName != null &&
-                  braKey.trim() != "" &&
-                  braName.trim() != "") {
-                selectedBrandType?.value =
-                    DropDownValue(value: braName, key: braKey);
-                selectedBrandType?.refresh();
-              }
-            }
-          });
-    } catch (e) {}
+            });
+      } catch (e) {}
+    }
+
   }
 
   getLevelDetails(String brandCode) {
