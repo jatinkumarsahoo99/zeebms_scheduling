@@ -185,7 +185,7 @@ class PromoMasterView extends GetView<PromoMasterController> {
                                                     );
                                                   }),
                                               InputFields.formField1(
-                                                hintTxt: "Blan Tape ID",
+                                                hintTxt: "Blank Tape ID",
                                                 controller: controller.blankTapeIDCtr,
                                                 width: controller.componentWidthRatio,
                                                 padLeft: 0,
