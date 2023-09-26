@@ -5,6 +5,7 @@ import 'package:bms_scheduling/app/modules/MamWorkOrders/models/mamworkonloadord
 import 'package:bms_scheduling/app/modules/MamWorkOrders/models/re_push_model.dart';
 import 'package:bms_scheduling/app/providers/ApiFactory.dart';
 import 'package:bms_scheduling/widgets/LoadingDialog.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:get/get.dart';
@@ -17,6 +18,7 @@ import '../../../../widgets/FormButton.dart';
 import '../../../../widgets/gridFromMap.dart';
 import '../../../controller/HomeController.dart';
 import '../../../data/user_data_settings_model.dart';
+import '../../../providers/SizeDefine.dart';
 import '../../../providers/Utils.dart';
 import '../models/cancel_wo_model.dart';
 import '../models/non_fpc_wo_dt.dart';
@@ -56,7 +58,7 @@ class MamWorkOrdersController extends GetxController {
       nonFPCSelectedBMSProgram,
       nonFPCSelectedTelecasteType;
   bool nonFPCQualityHD = true,
-      nonFPCAutoTC = false,
+      // nonFPCAutoTC = false,
       nonFPCWOReleaseTXID = false;
   var nonFPCFromEpi = TextEditingController(),
       nonFPCToEpi = TextEditingController(),
@@ -363,9 +365,10 @@ class MamWorkOrdersController extends GetxController {
               resp is Map<String, dynamic> &&
               resp['program_Response'] != null &&
               resp['program_Response']['strMessage'] != null) {
-            for (var element in resp['program_Response']['strMessage']) {
-              LoadingDialog.callDataSaved(msg: element.toString());
-            }
+            // for (var element in resp['program_Response']['strMessage']) {
+            //   LoadingDialog.callDataSaved(msg: element.toString());
+            // }
+            showMsgDialogSuccess(resp['program_Response']['strMessage']);
             // LoadingDialog.callDataSaved(msg: resp.toString());
           } else {
             LoadingDialog.showErrorDialog(resp.toString());
@@ -488,11 +491,12 @@ class MamWorkOrdersController extends GetxController {
         if (resp != null &&
             resp is Map<String, dynamic> &&
             resp['dtRepush_WorkOrder']['message'] != null) {
-          LoadingDialog.callDataSaved(
-              msg: resp['dtRepush_WorkOrder']['message'].toString(),
-              callback: () {
-                clearPage();
-              });
+          showMsgDialogSuccess(resp['dtRepush_WorkOrder']['message']);
+          // LoadingDialog.callDataSaved(
+          //     msg: resp['dtRepush_WorkOrder']['message'].toString(),
+          //     callback: () {
+          //       clearPage();
+          //     });
         } else {
           LoadingDialog.showErrorDialog(resp.toString());
         }
@@ -523,7 +527,7 @@ class MamWorkOrdersController extends GetxController {
     nonFPCSelectedRMSProgram.value = DropDownValue();
     nonFPCSelectedTelecasteType = null;
     nonFPCQualityHD = false;
-    nonFPCAutoTC = false;
+    // nonFPCAutoTC = false;
     nonFPCWOReleaseTXID = false;
     onloadData.refresh();
     nonFPCChannelList.clear();
@@ -536,7 +540,7 @@ class MamWorkOrdersController extends GetxController {
     nonFPCTelDate.text = getCurrentDateTime;
   }
 
-  multiPleSegmentsDialog() {
+  multiPleSegmentsDialog({bool fromBtnClick = false}) {
     if (!nonFPCWOReleaseTXID || nonFPCSelectedTelecasteType == null) {
       return;
     }
@@ -557,7 +561,7 @@ class MamWorkOrdersController extends GetxController {
       }
       final dateCtr = TextEditingController();
       final timeCtr = TextEditingController();
-      segmentsList.value = [];
+
       var epsNo = "".obs, exportTapeCode = "AUTOID".obs;
       PlutoGridStateManager? gridSM;
       var selectedRowIdx = 0.obs;
@@ -577,68 +581,41 @@ class MamWorkOrdersController extends GetxController {
                 .toString();
       }
 
-      try {
-        // Get.find<ConnectorControl>().GETMETHODCALL(
-        //   api: ApiFactory.MAM_WORK_ORDER_NON_FPC_SegmentsPerEps(
-        //       nonFPCEpiSegments.text),
-        //   fun: (resp) {
-        //     if (resp != null &&
-        //         resp is Map<String, dynamic> &&
-        //         resp['infoMaxEpisodeNoGap'] != null) {
-        //       Get.find<ConnectorControl>().GETMETHODCALL(
-        //         api: ApiFactory
-        //             .MAM_WORK_ORDER_NON_FPC_GETSEGMENTSOn_TELECAST_LEAVE(
-        //           nonFPCWOReleaseTXID,
-        //           nonFPCSelectedBMSProgram?.key ?? '',
-        //           nonFPCSelectedTelecasteType?.key ?? '',
-        //           nonFPCFromEpi.text,
-        //           nonFPCToEpi.text,
-        //           onloadData.value.nMaxEpsGap.toString(),
-        //           nonFPCTxID.text,
-        //           nonFPCEpiSegments.text,
-        //         ),
-        //         fun: (resp) {
-        //           if (resp != null && resp is Map<String, dynamic>) {
-        //             segmentsList.value =
-        //                 ReleaseWoNonFPCMultipleSegmensModel.fromJson(resp)
-        //                         .infoLeaveTelecast
-        //                         ?.lstEpisodeDetails ??
-        //                     [];
-        //           }
-        //           isLoading = false;
-        //           segmentsList.refresh();
-        //         },
-        //       );
-        //     } else {
-        //       isLoading = false;
-        //       segmentsList.refresh();
-        //     }
-        // },
-        // );
-        Get.find<ConnectorControl>().GETMETHODCALL(
-          api: ApiFactory.MAM_WORK_ORDER_NON_FPC_GETSEGMENTSOn_TELECAST_LEAVE(
-            nonFPCWOReleaseTXID,
-            nonFPCSelectedBMSProgram?.key ?? '',
-            nonFPCSelectedTelecasteType?.key ?? '',
-            nonFPCFromEpi.text,
-            nonFPCToEpi.text,
-            onloadData.value.nMaxEpsGap.toString(),
-            nonFPCTxID.text,
-            nonFPCEpiSegments.text,
-          ),
-          fun: (resp) {
-            if (resp != null && resp is Map<String, dynamic>) {
-              var tempModel =
-                  ReleaseWoNonFPCMultipleSegmensModel.fromJson(resp);
-              segmentsList.value =
-                  tempModel.infoLeaveTelecast?.lstEpisodeDetails ?? [];
-              bMET = tempModel.infoLeaveTelecast?.bMET;
-            }
-            isLoading = false;
-            segmentsList.refresh();
-          },
-        );
-      } catch (e) {}
+      if (!fromBtnClick) {
+        segmentsList.value = [];
+        try {
+          Get.find<ConnectorControl>().GETMETHODCALL(
+            api: ApiFactory.MAM_WORK_ORDER_NON_FPC_GETSEGMENTSOn_TELECAST_LEAVE(
+              nonFPCWOReleaseTXID,
+              nonFPCSelectedBMSProgram?.key ?? '',
+              nonFPCSelectedTelecasteType?.key ?? '',
+              nonFPCFromEpi.text,
+              nonFPCToEpi.text,
+              onloadData.value.nMaxEpsGap.toString(),
+              nonFPCTxID.text,
+              nonFPCEpiSegments.text,
+            ),
+            fun: (resp) {
+              if (resp != null && resp is Map<String, dynamic>) {
+                var tempModel =
+                    ReleaseWoNonFPCMultipleSegmensModel.fromJson(resp);
+                segmentsList.value =
+                    tempModel.infoLeaveTelecast?.lstEpisodeDetails ?? [];
+                bMET = tempModel.infoLeaveTelecast?.bMET;
+              }
+              isLoading = false;
+              segmentsList.refresh();
+            },
+          );
+        } catch (e) {
+          isLoading = false;
+          segmentsList.refresh();
+        }
+      } else {
+        isLoading = false;
+        segmentsList.refresh();
+      }
+
       Get.defaultDialog(
         confirm: FormButton(
           btnText: 'Save Eps info.',
@@ -677,6 +654,9 @@ class MamWorkOrdersController extends GetxController {
                       segmentsList[selectedRowIdx.value].telecastDate =
                           DateFormat('yyyy-MM-ddT00:00:00').format(
                               DateFormat('dd-MM-yyyy').parse(dateCtr.text));
+                      // dateCtr.clear();
+                      // timeCtr.clear();
+                      // timeCtr.text = '00:00:00';
                       segmentsList.refresh();
                     },
                   ),
@@ -982,10 +962,8 @@ class MamWorkOrdersController extends GetxController {
             for (var i = 0; i < segmentsList.length; i++) {
               for (var j = 0; j < segmentsList.length; j++) {
                 if (i < j) {
-                  if (segmentsList[i].telecastDate ==
-                          segmentsList[j].telecastDate ||
-                      segmentsList[i].telecastTime ==
-                          segmentsList[j].telecastTime) {
+                  if (segmentsList[i].telecastTime ==
+                      segmentsList[j].telecastTime) {
                     foundDublicateVal = true;
                     break;
                   }
@@ -1007,17 +985,54 @@ class MamWorkOrdersController extends GetxController {
           LoadingDialog.call();
           await Get.find<ConnectorControl>().POSTMETHOD(
             api: ApiFactory.MAM_WORK_ORDER_NON_FPC_SAVE_DATA,
-            fun: (resp) {
+            fun: (resp) async {
               closeDialogIfOpen();
               if (resp != null &&
                   resp is Map<String, dynamic> &&
                   resp['program_Response'] != null) {
-                if (resp['program_Response']['strMessage'] is List<String> &&
-                    (resp['program_Response']['strMessage'] as List<dynamic>)
-                        .isNotEmpty) {
-                  for (var element in resp['program_Response']['strMessage']) {
-                    LoadingDialog.callDataSaved(msg: element.toString());
-                  }
+                if (resp['program_Response']['strMessage'] != null) {
+                  showMsgDialogSuccess(resp['program_Response']['strMessage']);
+                  // for (var element in resp['program_Response']['strMessage']) {
+                  //   await Get.defaultDialog(
+                  //     title: "",
+                  //     titleStyle: TextStyle(fontSize: 1),
+                  //     content: Column(
+                  //       mainAxisAlignment: MainAxisAlignment.center,
+                  //       children: [
+                  //         const Icon(
+                  //           CupertinoIcons.check_mark_circled_solid,
+                  //           color: Colors.green,
+                  //           size: 55,
+                  //         ),
+                  //         SizedBox(
+                  //           height: 20,
+                  //         ),
+                  //         Text(
+                  //           element.toString(),
+                  //           style: TextStyle(
+                  //               color: Colors.green,
+                  //               fontSize: SizeDefine.popupTxtSize),
+                  //         )
+                  //       ],
+                  //     ),
+                  //     radius: 10,
+                  //     confirm: DailogCloseButton(
+                  //       autoFocus: true,
+                  //       callback: () {
+                  //         Get.back();
+                  //       },
+                  //       btnText: "Ok",
+                  //       iconDataM: Icons.done,
+                  //     ),
+                  //     contentPadding: EdgeInsets.only(
+                  //         left: SizeDefine.popupMarginHorizontal,
+                  //         right: SizeDefine.popupMarginHorizontal,
+                  //         bottom: 16),
+                  //   );
+                  // }
+                } else {
+                  LoadingDialog.showErrorDialog(
+                      resp['program_Response']['strMessage'].toString());
                 }
                 // if (resp['program_Response']['strMessage'].toString() ==
                 //     'MAYAM tasks created successfully.') {
@@ -1028,10 +1043,6 @@ class MamWorkOrdersController extends GetxController {
                 //       });
                 // nonFPCTxID
                 // }
-                else {
-                  LoadingDialog.showErrorDialog(
-                      resp['program_Response']['strMessage'].toString());
-                }
               } else {
                 LoadingDialog.showErrorDialog(resp.toString());
               }
@@ -1201,6 +1212,21 @@ class MamWorkOrdersController extends GetxController {
         msgList.removeAt(0);
         showMsgDialog(msgList);
       });
+    }
+  }
+
+  showMsgDialogSuccess(List<dynamic> msgList) {
+    msgList = msgList.reversed.toList();
+    if (msgList.isNotEmpty) {
+      LoadingDialog.callDataSaved(
+          msg: msgList.last,
+          callback: () {
+            msgList.removeLast();
+            showMsgDialogSuccess(msgList);
+          });
+    } else {
+      print("showMsgDialogSuccess");
+      return;
     }
   }
 
