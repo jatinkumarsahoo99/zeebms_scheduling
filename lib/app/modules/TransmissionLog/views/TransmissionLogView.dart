@@ -2,6 +2,7 @@ import 'dart:convert';
 import 'package:bms_scheduling/widgets/LoadingDialog.dart';
 import 'package:bms_scheduling/widgets/radio_row.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:get/get.dart';
 import 'package:bms_scheduling/widgets/PlutoGrid/pluto_grid.dart';
 import 'package:intl/intl.dart';
@@ -50,7 +51,31 @@ class TransmissionLogView extends StatelessWidget {
         body: RawKeyboardListener(
           focusNode: new FocusNode(),
           onKey: (RawKeyEvent raw) {
-            // print("RAw is.>>>" + raw.toString());
+            print("RAw is.>>>" + raw.toString());
+            if (raw.isControlPressed && raw.character?.toLowerCase() == "c") {
+              if (controller.gridStateManager != null &&
+                  controller.gridStateManager?.currentCell != null) {
+                Clipboard.setData(new ClipboardData(
+                    text: controller.gridStateManager?.currentCell?.value));
+              }
+            }
+
+            if (raw is RawKeyDownEvent && raw.character?.toLowerCase() == "y") {
+              if (controller.completerDialog != null &&
+                  controller.dialogWidget != null) {
+                controller.dialogWidget = null;
+                controller.canDialogShow.value = false;
+                controller.completerDialog?.complete(true);
+              }
+            }
+            if (raw is RawKeyDownEvent && raw.character?.toLowerCase() == "n") {
+              if (controller.completerDialog != null &&
+                  controller.dialogWidget != null) {
+                controller.dialogWidget = null;
+                controller.canDialogShow.value = false;
+                controller.completerDialog?.complete(false);
+              }
+            }
             switch (raw.logicalKey.keyLabel) {
               case "F3":
                 if (controller.gridStateManager != null) {
@@ -819,8 +844,9 @@ class TransmissionLogView extends StatelessWidget {
                               ? DataGridFromMap(
                                   hideCode: false,
                                   formatDate: false,
-                                  onload: (PlutoGridOnLoadedEvent load){
-                                    load.stateManager.setColumnSizeConfig(PlutoGridColumnSizeConfig(
+                                  onload: (PlutoGridOnLoadedEvent load) {
+                                    load.stateManager.setColumnSizeConfig(
+                                        PlutoGridColumnSizeConfig(
                                       resizeMode: PlutoResizeMode.normal,
                                       autoSizeMode: PlutoAutoSizeMode.scale,
                                     ));
@@ -1482,7 +1508,7 @@ class TransmissionLogView extends StatelessWidget {
   }
 
   showInsertDialog2() {
-    controller.initialOffset.value=2;
+    controller.initialOffset.value = 2;
     controller.dialogWidget = Material(
       color: Colors.white,
       child: SizedBox(
@@ -2184,7 +2210,7 @@ class TransmissionLogView extends StatelessWidget {
     controller.selectTapeSegmentDialog = null;
     controller.segmentList = null;
     controller.selectProgramSegment = null;
-    controller.initialOffset.value=2;
+    controller.initialOffset.value = 2;
     controller.dialogWidget = Material(
       color: Colors.white,
       child: SizedBox(
@@ -2242,25 +2268,25 @@ class TransmissionLogView extends StatelessWidget {
                                 init: controller,
                                 builder: (controller) =>
                                     DropDownField.formDropDownSearchAPI2(
-                                      GlobalKey(),
-                                      context,
-                                      title: "Program",
-                                      onchanged: (DropDownValue? value) async {
-                                        controller.selectProgramSegment = value;
-                                        // selectedProgramId.text = value?.key ?? "";
-                                        // selectedProgram.text = value?.value ?? "";
-                                        // selectProgram = value;
-                                        // await controller.getDataAfterProgLoad(controller.selectedLocationId.text, controller.selectedChannelId.text, value!.key);
-                                      },
-                                      url: ApiFactory
-                                          .TRANSMISSION_LOG_SEGMENT_PROGRAM_SEARCH(),
-                                      width: MediaQuery.of(context).size.width * .2,
-                                      // selectedValue: selectProgram,
-                                      widthofDialog: 350,
-                                      dialogHeight: Get.height * .65,
-                                      parseKeyForKey: "ProgramCode",
-                                      parseKeyForValue: "ProgramName",
-                                    ),
+                                  GlobalKey(),
+                                  context,
+                                  title: "Program",
+                                  onchanged: (DropDownValue? value) async {
+                                    controller.selectProgramSegment = value;
+                                    // selectedProgramId.text = value?.key ?? "";
+                                    // selectedProgram.text = value?.value ?? "";
+                                    // selectProgram = value;
+                                    // await controller.getDataAfterProgLoad(controller.selectedLocationId.text, controller.selectedChannelId.text, value!.key);
+                                  },
+                                  url: ApiFactory
+                                      .TRANSMISSION_LOG_SEGMENT_PROGRAM_SEARCH(),
+                                  width: MediaQuery.of(context).size.width * .2,
+                                  // selectedValue: selectProgram,
+                                  widthofDialog: 350,
+                                  dialogHeight: Get.height * .65,
+                                  parseKeyForKey: "ProgramCode",
+                                  parseKeyForValue: "ProgramName",
+                                ),
                               ),
                               Focus(
                                 onFocusChange: (focus) {
@@ -2275,7 +2301,8 @@ class TransmissionLogView extends StatelessWidget {
                                   onchanged: (val) {
 // controller.getEpisodeLeaveSegment();
                                   },
-                                  controller: controller.txtSegment_epNo..text = "0",
+                                  controller: controller.txtSegment_epNo
+                                    ..text = "0",
                                   isNegativeReq: false,
                                   width: 0.12,
                                 ),
@@ -2297,9 +2324,9 @@ class TransmissionLogView extends StatelessWidget {
                                 width: 10,
                               ),
                               Obx(
-                                    () => DropDownField.formDropDown1WidthMap(
+                                () => DropDownField.formDropDown1WidthMap(
                                   controller.listTapeDetailsSegment?.value,
-                                      (value) {
+                                  (value) {
                                     controller.selectTapeSegmentDialog = value;
                                     // controller.selectedLocationId.text = value.key!;
                                     // controller.selectedLocationName.text = value.value!;
@@ -2318,7 +2345,8 @@ class TransmissionLogView extends StatelessWidget {
                                 width: 10,
                               ),
                               Padding(
-                                padding: const EdgeInsets.only(top: 15.0, left: 10),
+                                padding:
+                                    const EdgeInsets.only(top: 15.0, left: 10),
                                 child: FormButtonWrapper(
                                   btnText: "Search",
                                   showIcon: false,
@@ -2328,7 +2356,8 @@ class TransmissionLogView extends StatelessWidget {
                                 ),
                               ),
                               Padding(
-                                padding: const EdgeInsets.only(top: 15.0, left: 10),
+                                padding:
+                                    const EdgeInsets.only(top: 15.0, left: 10),
                                 child: FormButtonWrapper(
                                   btnText: "Add",
                                   showIcon: false,
@@ -2353,17 +2382,19 @@ class TransmissionLogView extends StatelessWidget {
                                   height: Get.height * 0.6,
                                   child: (controller.segmentList != null)
                                       ? DataGridFromMap(
-                                      hideCode: false,
-                                      formatDate: false,
-                                      onload: (PlutoGridOnLoadedEvent load) {
-                                        controller.tblSegement = load.stateManager;
-                                      },
-                                      // colorCallback: (renderC) => Colors.red[200]!,
-                                      mapData: (controller.segmentList!))
-                                  // _dataTable3()
+                                          hideCode: false,
+                                          formatDate: false,
+                                          onload:
+                                              (PlutoGridOnLoadedEvent load) {
+                                            controller.tblSegement =
+                                                load.stateManager;
+                                          },
+                                          // colorCallback: (renderC) => Colors.red[200]!,
+                                          mapData: (controller.segmentList!))
+                                      // _dataTable3()
                                       : const WarningBox(
-                                      text:
-                                      'Enter Location, Channel & Date to get the Break Definitions'),
+                                          text:
+                                              'Enter Location, Channel & Date to get the Break Definitions'),
                                 );
                               })
                         ],

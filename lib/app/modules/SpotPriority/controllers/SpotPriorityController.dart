@@ -99,6 +99,8 @@ class SpotPriorityController extends GetxController {
                   SpotPriorityModel.fromJson(map["showDetails"]);
               update(["spotPriorityList"]);
             } else {
+              spotPriorityModel=null;
+              update(["spotPriorityList"]);
               Snack.callError("No Data Found");
             }
           });

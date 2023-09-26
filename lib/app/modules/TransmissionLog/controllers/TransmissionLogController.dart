@@ -146,6 +146,7 @@ class TransmissionLogController extends GetxController {
   var canDialogShow = false.obs;
   Widget? dialogWidget;
   Rxn<int> initialOffset = Rxn<int>(null);
+  Completer<bool>? completerDialog;
 
   @override
   void onInit() {
@@ -3610,6 +3611,7 @@ class TransmissionLogController extends GetxController {
     // print("Length is>> "+(rosTimeBandList?.length??0).toString());
     if ((rosTimeBandList?.length ?? 0) > 0) {
       // var _dt = dt.AsEnumerable().where((x) => x.Field<String>('rostimeband').trim() != '').toList().copyToDataTable();
+      bool isFirst = true;
       for (int i = 0; i < (rosTimeBandList?.length ?? 0); i++) {
         PlutoRow dr = rosTimeBandList![i];
         RosTimeBand = dr.cells['rosTimeBand']?.value ?? "";
@@ -3635,6 +3637,8 @@ class TransmissionLogController extends GetxController {
           MidStart = RosEndTime;
         }
 
+
+
         if ((Telecasttime > RosStartTime && Telecasttime < Midend) ||
             (Telecasttime > MidStart && Telecasttime < RosEndTime)) {
           // do nothing
@@ -3657,8 +3661,15 @@ class TransmissionLogController extends GetxController {
           } else {
             // tblLog.FirstDisplayedScrollingRowIndex = dr['rownumber'] - 10;
             // tblLog.Rows[dr['rownumber']].Selected = true;
-            gridStateManager?.moveScrollByRow(PlutoMoveDirection.down,
-                int.tryParse(dr.cells['rownumber']?.value ?? "")! + 10);
+
+            if (isFirst) {
+              isFirst = false;
+              gridStateManager?.moveScrollByRow(PlutoMoveDirection.up,
+                  int.tryParse(dr.cells['rownumber']?.value ?? "")! - 10);
+            } else {
+              gridStateManager?.moveScrollByRow(PlutoMoveDirection.down,
+                  int.tryParse(dr.cells['rownumber']?.value ?? "")! + 10);
+            }
             // gridStateManager?.setCurrentCell(dr.cells["no"], int.tryParse(dr.cells['rownumber']?.value ?? "")!);
             gridStateManager?.toggleSelectingRow(
                 int.tryParse(dr.cells['rownumber']?.value ?? "")!);
@@ -3721,8 +3732,9 @@ class TransmissionLogController extends GetxController {
                           PlutoMoveDirection.up,
                           int.tryParse(dr.cells['rownumber']?.value ?? "")! -
                               10);
-                    }else {
-                      gridStateManager?.moveScrollByRow(PlutoMoveDirection.down,
+                    } else {
+                      gridStateManager?.moveScrollByRow(
+                          PlutoMoveDirection.down,
                           int.tryParse(dr.cells['rownumber']?.value ?? "")! +
                               10);
                     }
@@ -3838,7 +3850,8 @@ class TransmissionLogController extends GetxController {
 
   Future<bool>? showDialogForYesNo1(String title) {
     initialOffset.value = 1;
-    Completer<bool> completer = Completer<bool>();
+    completerDialog = Completer<bool>();
+    // Completer<bool> completer = Completer<bool>();
     dialogWidget = Material(
       color: Colors.white,
       child: Padding(
@@ -3870,7 +3883,8 @@ class TransmissionLogController extends GetxController {
                   callback: () {
                     dialogWidget = null;
                     canDialogShow.value = false;
-                    completer.complete(true);
+                    // completer.complete(true);
+                    completerDialog?.complete(true);
                   },
                 ),
                 SizedBox(
@@ -3881,7 +3895,8 @@ class TransmissionLogController extends GetxController {
                   callback: () {
                     dialogWidget = null;
                     canDialogShow.value = false;
-                    completer.complete(false);
+                    // completer.complete(false);
+                    completerDialog?.complete(false);
                   },
                 ),
               ],
@@ -3903,7 +3918,8 @@ class TransmissionLogController extends GetxController {
         // return false;
       },
     );*/
-    return completer.future;
+    // return completer.future;
+    return completerDialog?.future;
   }
 
   callInfoDialog(String title) {
