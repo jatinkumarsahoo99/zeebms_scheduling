@@ -883,8 +883,8 @@ class AsrunImportAdRevenueView extends StatelessWidget {
   }
 
   showVerifyDialog(AsRunData asrunData) {
-    TextEditingController fpcTime = TextEditingController(
-        text: asrunData.fpctIme ?? asrunData.telecasttime);
+    TextEditingController fpcTime =
+        TextEditingController(text: asrunData.telecasttime);
     DropDownValue? selectedProgram =
         DropDownValue(key: asrunData.programCode, value: asrunData.programName);
     return Get.defaultDialog(
@@ -909,7 +909,7 @@ class AsrunImportAdRevenueView extends StatelessWidget {
               width: Get.width * 0.45,
               // padding: const EdgeInsets.only()
             ),
-            SizedBox(
+            const SizedBox(
               height: 10,
             ),
             Container(
@@ -927,16 +927,16 @@ class AsrunImportAdRevenueView extends StatelessWidget {
                   InputFields.formFieldNumberMask(
                       isEnable: false,
                       hintTxt: "From",
-                      controller: TextEditingController(
-                          text: asrunData.fpctIme ?? asrunData.telecasttime),
+                      controller:
+                          TextEditingController(text: asrunData.telecasttime),
                       widthRatio: 0.12,
                       isTime: true,
                       paddingLeft: 0),
                   InputFields.formFieldNumberMask(
                       isEnable: false,
                       hintTxt: "To",
-                      controller: TextEditingController(
-                          text: asrunData.fpctIme ?? asrunData.telecasttime),
+                      controller:
+                          TextEditingController(text: asrunData.telecasttime),
                       widthRatio: 0.12,
                       isTime: true,
                       paddingLeft: 0),

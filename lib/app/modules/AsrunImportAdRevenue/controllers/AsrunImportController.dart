@@ -125,9 +125,11 @@ class AsrunImportController extends GetxController {
   }
 
   getChannels(String locationCode) {
+    LoadingDialog.call();
     Get.find<ConnectorControl>().GETMETHODCALL(
         api: ApiFactory.AsrunImport_GetLocationSelect(locationCode),
         fun: (Map map) {
+          Get.back();
           channels.clear();
           map["locationSelect"].forEach((e) {
             channels.add(
