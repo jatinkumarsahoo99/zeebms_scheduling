@@ -491,12 +491,12 @@ class MamWorkOrdersController extends GetxController {
         if (resp != null &&
             resp is Map<String, dynamic> &&
             resp['dtRepush_WorkOrder']['message'] != null) {
-          showMsgDialogSuccess(resp['dtRepush_WorkOrder']['message']);
-          // LoadingDialog.callDataSaved(
-          //     msg: resp['dtRepush_WorkOrder']['message'].toString(),
-          //     callback: () {
-          //       clearPage();
-          //     });
+          // showMsgDialogSuccess(resp['dtRepush_WorkOrder']['message']);
+          LoadingDialog.callDataSaved(
+              msg: resp['dtRepush_WorkOrder']['message'].toString(),
+              callback: () {
+                clearPage();
+              });
         } else {
           LoadingDialog.showErrorDialog(resp.toString());
         }
