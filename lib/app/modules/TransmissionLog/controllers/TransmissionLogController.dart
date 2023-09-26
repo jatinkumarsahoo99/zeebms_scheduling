@@ -1097,6 +1097,7 @@ class TransmissionLogController extends GetxController {
 
   void btnFastInsert_Add_Click() {
     // addEventToUndo();
+    _download();
     try {
       int row;
       // int eventdurat;
@@ -1175,7 +1176,7 @@ class TransmissionLogController extends GetxController {
                 value: num.tryParse(dr.cells["duration"]?.value) ?? 0),
             dr.cells["som"]?.value,
             dr.cells["promoTypeCode"]?.value,
-            dr.cells["segmentNumber"]?.value.toString() ?? "");
+            dr.cells["segmentNumber"]?.value.toString() ?? "",dontSave: true);
 
         // Adding Tags for promos
         // GoTo hell
@@ -1205,7 +1206,7 @@ class TransmissionLogController extends GetxController {
                           filterList[0].promoDuration.toString() ?? "0")!),
                   filterList![0].som!,
                   filterList![0].promoTypeCode ?? "",
-                  filterList![0].segmentNumber.toString());
+                  filterList![0].segmentNumber.toString(),dontSave: true);
               // UnSelectAllRows(gridStateManager ?);
               // gridStateManager?.rows[row - 1].selected = true;
               // gridStateManager?.currentCell = gridStateManager?.selectedRows[0].cells[1];
@@ -1219,6 +1220,9 @@ class TransmissionLogController extends GetxController {
         // hell:
         // ColorGrid();
         blnMultipleGLs = true;
+      }
+      if (noOfRows != 0) {
+        _download();
       }
     } catch (e) {
       print("Error found in btnFastInsert_Add_Click()" + e.toString());
@@ -1461,7 +1465,7 @@ class TransmissionLogController extends GetxController {
       String Tapeduration,
       String SOM,
       String Promotypecode,
-      String BreakNumber) {
+      String BreakNumber,{bool? dontSave}) {
     int intRowIndex = gridStateManager?.currentRowIdx ?? 0;
     int InsertRow =
         int.tryParse(gridStateManager?.currentRow?.cells["rownumber"]?.value) ??
@@ -1536,7 +1540,7 @@ class TransmissionLogController extends GetxController {
     print(">>>.Insert row is>>" + InsertRow.toString());
     gridStateManager?.insertRows(InsertRow + 1, [rowData]);
     // dt.acceptChanges();
-    colorGrid(false);
+    colorGrid(false, dontSaveFile1: dontSave);
     // gridStateManager?.firstDisplayedScrollingRowIndex = intCurrentRowIndex[3];
     /* if (EventType == "GL" && blnMultipleGLs) {
       gridStateManager?.rows[intRowIndex - 1].selected = true;
@@ -2716,7 +2720,7 @@ class TransmissionLogController extends GetxController {
     return 0;
   }
 
-  void colorGrid(bool dontSavefile, {Function? fun}) {
+  void colorGrid(bool dontSavefile, {Function? fun, bool? dontSaveFile1}) {
     print("Called once" + dontSavefile.toString());
     try {
       if ((gridStateManager?.rows.length == 0)) {
@@ -2726,7 +2730,10 @@ class TransmissionLogController extends GetxController {
       if (!dontSavefile) {
         calculateTransmissionTime();
         updateRowNumber();
-        _download();
+        if (dontSaveFile1 != null && dontSaveFile1) {
+        } else {
+          _download();
+        }
       }
     } catch (ex) {
     } finally {
@@ -3110,9 +3117,9 @@ class TransmissionLogController extends GetxController {
   }
 
   void _download() async {
-    if (kDebugMode) {
+    /*if (kDebugMode) {
       return;
-    }
+    }*/
     List<Map<String, dynamic>>? list =
         gridStateManager?.rows.map((e) => e.toJson()).toList();
     var map = {
@@ -3636,8 +3643,6 @@ class TransmissionLogController extends GetxController {
           Midend = RosEndTime;
           MidStart = RosEndTime;
         }
-
-
 
         if ((Telecasttime > RosStartTime && Telecasttime < Midend) ||
             (Telecasttime > MidStart && Telecasttime < RosEndTime)) {
