@@ -176,13 +176,13 @@ class ReleaseWoNonFpcView extends GetView {
                           },
                         );
                       }),
-                      CheckBoxWidget1(
-                        title: "Auto TC",
-                        value: controller.nonFPCAutoTC,
-                        onChanged: (val) {
-                          controller.nonFPCAutoTC = val ?? false;
-                        },
-                      ),
+                      // CheckBoxWidget1(
+                      //   title: "Auto TC",
+                      //   value: controller.nonFPCAutoTC,
+                      //   onChanged: (val) {
+                      //     controller.nonFPCAutoTC = val ?? false;
+                      //   },
+                      // ),
                       InputFields.formField1(
                           hintTxt: "TX Id",
                           isEnable: controller.nonFPCWOReleaseTXID,
@@ -286,20 +286,21 @@ class ReleaseWoNonFpcView extends GetView {
           SizedBox(height: 5),
 
           /// save btn
-          Align(
-            alignment: Alignment.topLeft,
-            child: FormButtonWrapper(
-              btnText: "Add/Modify Multi-Eps. info.",
-              callback: controller.multiPleSegmentsDialog,
-            ),
+          Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            crossAxisAlignment: CrossAxisAlignment.end,
+            children: [
+              FormButtonWrapper(
+                btnText: "Add/Modify Multi-Eps. info.",
+                callback: () =>
+                    controller.multiPleSegmentsDialog(fromBtnClick: true),
+              ),
+              FormButtonWrapper(
+                btnText: "Save WO",
+                callback: controller.handleOnSaveNonFPCWO,
+              )
+            ],
           ),
-          Align(
-            alignment: Alignment.topRight,
-            child: FormButtonWrapper(
-              btnText: "Save WO",
-              callback: controller.handleOnSaveNonFPCWO,
-            ),
-          )
         ],
       ),
     );
