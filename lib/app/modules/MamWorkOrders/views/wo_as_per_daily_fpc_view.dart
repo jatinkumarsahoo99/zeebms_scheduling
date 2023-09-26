@@ -93,6 +93,17 @@ class WoAsPerDailyFpcView extends GetView {
                             onColumnHeaderDoubleTap:
                                 controller.aPDFPCOnColumnDoubleTap,
                             mode: PlutoGridMode.normal,
+                            onRowDoubleTap: (event) {
+                              controller.woAsPerDailyFPCSMFirst
+                                  ?.setCurrentCell(event.cell, event.rowIdx);
+                              var newVal = (event.cell.value ?? "HD") == "HD"
+                                  ? "SD"
+                                  : "HD";
+                              controller.woASPDFPCModel.value.programResponse
+                                  ?.dailyFpc?[event.rowIdx].quality = newVal;
+                              controller.woAsPerDailyFPCSMFirst
+                                  ?.changeCellValue(event.cell, newVal);
+                            },
                             witdthSpecificColumn: (controller
                                 .userDataSettings?.userSetting
                                 ?.firstWhere(
