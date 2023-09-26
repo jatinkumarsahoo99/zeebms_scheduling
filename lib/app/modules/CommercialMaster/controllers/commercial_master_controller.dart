@@ -379,7 +379,7 @@ class CommercialMasterController extends GetxController {
         duration.value.text == "") {
       Snack.callError("Please enter duration.");
     } else if (selectedTapeType == null) {
-      Snack.callError("Please enter tape duration.");
+      Snack.callError("Please enter tape type.");
     } else if (selectedBrandType?.value == null) {
       Snack.callError("Please select brand");
     } else if (selectedAgencyDetails?.value == null) {
