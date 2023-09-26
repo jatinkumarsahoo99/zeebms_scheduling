@@ -3117,9 +3117,9 @@ class TransmissionLogController extends GetxController {
   }
 
   void _download() async {
-    /*if (kDebugMode) {
+    if (kDebugMode) {
       return;
-    }*/
+    }
     List<Map<String, dynamic>>? list =
         gridStateManager?.rows.map((e) => e.toJson()).toList();
     var map = {
