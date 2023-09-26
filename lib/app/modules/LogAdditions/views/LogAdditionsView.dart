@@ -60,7 +60,7 @@ class LogAdditionsView extends GetView<LogAdditionsController> {
                             0.12,
                             isEnable: controllerX.isEnable.value,
                             selected: controllerX.selectLocation,
-                            autoFocus: true,
+                            // autoFocus: true,
                             dialogWidth: 330,
                             dialogHeight: Get.height * .7,
                           ),
@@ -72,12 +72,13 @@ class LogAdditionsView extends GetView<LogAdditionsController> {
                             controllerX.channels.value,
                             (value) {
                               controllerX.selectChannel.value = value;
+                              // FocusScope.of(context).nextFocus();
                             },
                             "Channel",
                             0.12,
                             isEnable: controllerX.isEnable.value,
                             selected: controllerX.selectChannel.value,
-                            autoFocus: false,
+                            // autoFocus: false,
                             dialogWidth: 330,
                             dialogHeight: Get.height * .7,
                           ),
@@ -192,12 +193,13 @@ class LogAdditionsView extends GetView<LogAdditionsController> {
                             controllerX.additions.value,
                             (value) {
                               controllerX.selectAdditions.value = value;
+                              FocusScope.of(context).nextFocus();
                             },
                             "Additions",
                             0.12,
                             // isEnable: controllerX.isEnable.value,
                             selected: controllerX.selectAdditions.value,
-                            autoFocus: true,
+                            // autoFocus: true,
                             dialogWidth: 200,
                             dialogHeight: Get.height * .3,
                           ),
