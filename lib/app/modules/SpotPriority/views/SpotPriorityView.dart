@@ -153,8 +153,8 @@ class SpotPriorityView extends GetView<SpotPriorityController> {
                   // width: Get.width,
                   // height: Get.height * .33,
                   child: (controllerX.spotPriorityModel != null &&
-                          (controllerX.spotPriorityModel?.lstbookingdetail
-                              ?.isNotEmpty)!)
+                          (controllerX.spotPriorityModel?.lstbookingdetail!=null && (controllerX.spotPriorityModel?.lstbookingdetail
+                              ?.isNotEmpty)!))
                       ? DataGridFromMap(
                           witdthSpecificColumn: (controller
                               .userDataSettings?.userSetting

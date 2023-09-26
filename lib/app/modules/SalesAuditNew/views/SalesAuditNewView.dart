@@ -318,7 +318,8 @@ class SalesAuditNewView  extends StatelessWidget  {
                                               controller.gridStateManagerLeft?.setCurrentCell(controller.gridStateManagerLeft?.
                                               getRowByIdx(controller.selectedIndex)?.cells['exportTapeCode'],
                                                   controller.selectedIndex);
-                                              controller.gridStateManagerLeft?.moveCurrentCellByRowIdx(controller.selectedIndex??0, PlutoMoveDirection.down);
+                                              controller.gridStateManagerLeft?.moveCurrentCellByRowIdx(controller.selectedIndex??0,
+                                                  PlutoMoveDirection.down);
                                               load.stateManager.notifyListeners();
                                             },
                                             enableSort: true,

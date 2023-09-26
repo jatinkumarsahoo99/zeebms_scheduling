@@ -146,6 +146,7 @@ class TransmissionLogController extends GetxController {
   var canDialogShow = false.obs;
   Widget? dialogWidget;
   Rxn<int> initialOffset = Rxn<int>(null);
+  Completer<bool>? completerDialog;
 
   @override
   void onInit() {
@@ -168,34 +169,67 @@ class TransmissionLogController extends GetxController {
       dialogTitle: "Select import file",
       type: FileType.custom,
     );
-    print("Called>>>");
-    LoadingDialog.call();
-    if (result != null && result.files.single != null) {
-      Uint8List? fileBytes = result.files.first.bytes;
-      String fileContent = String.fromCharCodes(fileBytes!);
-      // print(fileContent);
-      Map<String, dynamic> mapData = jsonDecode(fileContent);
-      transmissionLog = TransmissionLogModel.fromJson(mapData);
-      if (transmissionLog != null &&
-          transmissionLog?.loadSavedLogOutput != null &&
-          transmissionLog?.loadSavedLogOutput?.lstTransmissionLog != null &&
-          ((transmissionLog?.loadSavedLogOutput?.lstTransmissionLog?.length ??
-                  0) !=
-              0)) {
-        startTime_.text = transmissionLog
-                ?.loadSavedLogOutput?.lstTransmissionLog![0].transmissionTime ??
-            "";
-        isEnable.value = false;
-        isFetch.value = true;
-        update(["transmissionList"]);
-        colorGrid(true);
-        Get.back();
+    if (listColor.value.length > 0) {
+      LoadingDialog.call();
+      if (result != null && result.files.single != null) {
+        Uint8List? fileBytes = result.files.first.bytes;
+        String fileContent = String.fromCharCodes(fileBytes!);
+        // print(fileContent);
+        Map<String, dynamic> mapData = jsonDecode(fileContent);
+        transmissionLog = TransmissionLogModel.fromJson(mapData);
+        if (transmissionLog != null &&
+            transmissionLog?.loadSavedLogOutput != null &&
+            transmissionLog?.loadSavedLogOutput?.lstTransmissionLog != null &&
+            ((transmissionLog?.loadSavedLogOutput?.lstTransmissionLog?.length ??
+                    0) !=
+                0)) {
+          startTime_.text = transmissionLog?.loadSavedLogOutput
+                  ?.lstTransmissionLog![0].transmissionTime ??
+              "";
+          isEnable.value = false;
+          isFetch.value = true;
+          update(["transmissionList"]);
+          colorGrid(true);
+          Get.back();
+        } else {
+          Get.back();
+          LoadingDialog.callInfoMessage("No Data Found");
+        }
       } else {
         Get.back();
-        LoadingDialog.callInfoMessage("No Data Found");
       }
     } else {
-      Get.back();
+      getColorList(function: () {
+        LoadingDialog.call();
+        if (result != null && result.files.single != null) {
+          Uint8List? fileBytes = result.files.first.bytes;
+          String fileContent = String.fromCharCodes(fileBytes!);
+          // print(fileContent);
+          Map<String, dynamic> mapData = jsonDecode(fileContent);
+          transmissionLog = TransmissionLogModel.fromJson(mapData);
+          if (transmissionLog != null &&
+              transmissionLog?.loadSavedLogOutput != null &&
+              transmissionLog?.loadSavedLogOutput?.lstTransmissionLog != null &&
+              ((transmissionLog
+                          ?.loadSavedLogOutput?.lstTransmissionLog?.length ??
+                      0) !=
+                  0)) {
+            startTime_.text = transmissionLog?.loadSavedLogOutput
+                    ?.lstTransmissionLog![0].transmissionTime ??
+                "";
+            isEnable.value = false;
+            isFetch.value = true;
+            update(["transmissionList"]);
+            colorGrid(true);
+            Get.back();
+          } else {
+            Get.back();
+            LoadingDialog.callInfoMessage("No Data Found");
+          }
+        } else {
+          Get.back();
+        }
+      });
     }
   }
 
@@ -3104,6 +3138,9 @@ class TransmissionLogController extends GetxController {
   }
 
   void btnSave_Click() async {
+    if (gridStateManager != null) {
+      gridStateManager?.clearCurrentSelecting();
+    }
     try {
       // gridStateManager.myDataGridRowFilter(true, false);
       colorGrid(false);
@@ -3574,6 +3611,7 @@ class TransmissionLogController extends GetxController {
     // print("Length is>> "+(rosTimeBandList?.length??0).toString());
     if ((rosTimeBandList?.length ?? 0) > 0) {
       // var _dt = dt.AsEnumerable().where((x) => x.Field<String>('rostimeband').trim() != '').toList().copyToDataTable();
+      bool isFirst = true;
       for (int i = 0; i < (rosTimeBandList?.length ?? 0); i++) {
         PlutoRow dr = rosTimeBandList![i];
         RosTimeBand = dr.cells['rosTimeBand']?.value ?? "";
@@ -3599,6 +3637,8 @@ class TransmissionLogController extends GetxController {
           MidStart = RosEndTime;
         }
 
+
+
         if ((Telecasttime > RosStartTime && Telecasttime < Midend) ||
             (Telecasttime > MidStart && Telecasttime < RosEndTime)) {
           // do nothing
@@ -3607,7 +3647,7 @@ class TransmissionLogController extends GetxController {
             // tblLog.FirstDisplayedScrollingRowIndex = int.tryParse(dr.cells['rownumber']?.value??"")! - 10;
             // tblLog.Rows[dr['rownumber']].Selected = true;
             gridStateManager?.moveScrollByRow(PlutoMoveDirection.down,
-                int.tryParse(dr.cells['rownumber']?.value ?? "")!);
+                int.tryParse(dr.cells['rownumber']?.value ?? "")! + 10);
 
             // gridStateManager?.setCurrentCell(dr.cells["no"], int.tryParse(dr.cells['rownumber']?.value ?? "")!);
             gridStateManager?.toggleSelectingRow(
@@ -3621,8 +3661,15 @@ class TransmissionLogController extends GetxController {
           } else {
             // tblLog.FirstDisplayedScrollingRowIndex = dr['rownumber'] - 10;
             // tblLog.Rows[dr['rownumber']].Selected = true;
-            gridStateManager?.moveScrollByRow(PlutoMoveDirection.down,
-                int.tryParse(dr.cells['rownumber']?.value ?? ""));
+
+            if (isFirst) {
+              isFirst = false;
+              gridStateManager?.moveScrollByRow(PlutoMoveDirection.up,
+                  int.tryParse(dr.cells['rownumber']?.value ?? "")! - 10);
+            } else {
+              gridStateManager?.moveScrollByRow(PlutoMoveDirection.down,
+                  int.tryParse(dr.cells['rownumber']?.value ?? "")! + 10);
+            }
             // gridStateManager?.setCurrentCell(dr.cells["no"], int.tryParse(dr.cells['rownumber']?.value ?? "")!);
             gridStateManager?.toggleSelectingRow(
                 int.tryParse(dr.cells['rownumber']?.value ?? "")!);
@@ -3670,14 +3717,27 @@ class TransmissionLogController extends GetxController {
           }
           print("List of product is>>" + strAllowBackToBackProducts.toString());
           try {
+            bool isFirst = false;
             for (var dr in (gridStateManager?.rows)!) {
               if (dr.cells['productName']?.value == lastProduct) {
                 if (dr.cells['productName']?.value != '') {
                   if (!strAllowBackToBackProducts
                       .contains(dr.cells['productName']?.value + ',')) {
                     // tblLog.FirstDisplayedScrollingRowIndex = dr['rownumber'] - 10;
-                    gridStateManager?.moveScrollByRow(PlutoMoveDirection.down,
-                        int.tryParse(dr.cells['rownumber']?.value ?? "")! - 10);
+                    print(
+                        "checkBackToBackProducts() Focus row is: ${dr.cells['rownumber']?.value.toString()}");
+                    if (!isFirst) {
+                      isFirst = true;
+                      gridStateManager?.moveScrollByRow(
+                          PlutoMoveDirection.up,
+                          int.tryParse(dr.cells['rownumber']?.value ?? "")! -
+                              10);
+                    } else {
+                      gridStateManager?.moveScrollByRow(
+                          PlutoMoveDirection.down,
+                          int.tryParse(dr.cells['rownumber']?.value ?? "")! +
+                              10);
+                    }
 
                     if (int.tryParse(dr.cells['rownumber']?.value)! > 0) {
                       // tblLog.Rows[dr['rownumber']].Selected = true;
@@ -3729,7 +3789,7 @@ class TransmissionLogController extends GetxController {
           if (dr.cells['productGroup']?.value != '') {
             // tblLog.FirstDisplayedScrollingRowIndex = dr['rownumber'] - 10;
             gridStateManager?.moveScrollByRow(PlutoMoveDirection.down,
-                int.tryParse(dr.cells['rownumber']?.value ?? "")! - 10);
+                int.tryParse(dr.cells['rownumber']?.value ?? "")! + 10);
             if (int.tryParse(dr.cells['rownumber']?.value)! > 0) {
               // tblLog.Rows[dr['rownumber']].Selected = true;
               gridStateManager?.setCurrentCell(dr.cells["no"],
@@ -3790,7 +3850,8 @@ class TransmissionLogController extends GetxController {
 
   Future<bool>? showDialogForYesNo1(String title) {
     initialOffset.value = 1;
-    Completer<bool> completer = Completer<bool>();
+    completerDialog = Completer<bool>();
+    // Completer<bool> completer = Completer<bool>();
     dialogWidget = Material(
       color: Colors.white,
       child: Padding(
@@ -3822,7 +3883,8 @@ class TransmissionLogController extends GetxController {
                   callback: () {
                     dialogWidget = null;
                     canDialogShow.value = false;
-                    completer.complete(true);
+                    // completer.complete(true);
+                    completerDialog?.complete(true);
                   },
                 ),
                 SizedBox(
@@ -3833,7 +3895,8 @@ class TransmissionLogController extends GetxController {
                   callback: () {
                     dialogWidget = null;
                     canDialogShow.value = false;
-                    completer.complete(false);
+                    // completer.complete(false);
+                    completerDialog?.complete(false);
                   },
                 ),
               ],
@@ -3855,7 +3918,8 @@ class TransmissionLogController extends GetxController {
         // return false;
       },
     );*/
-    return completer.future;
+    // return completer.future;
+    return completerDialog?.future;
   }
 
   callInfoDialog(String title) {
