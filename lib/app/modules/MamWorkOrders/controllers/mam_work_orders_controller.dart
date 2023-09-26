@@ -986,12 +986,13 @@ class MamWorkOrdersController extends GetxController {
               if (resp != null &&
                   resp is Map<String, dynamic> &&
                   resp['program_Response'] != null) {
-                if (resp['program_Response']['strMessage'] is List<String> &&
-                    (resp['program_Response']['strMessage'] as List<dynamic>)
-                        .isNotEmpty) {
+                if (resp['program_Response']['strMessage'] != null) {
                   for (var element in resp['program_Response']['strMessage']) {
                     LoadingDialog.callDataSaved(msg: element.toString());
                   }
+                } else {
+                  LoadingDialog.showErrorDialog(
+                      resp['program_Response']['strMessage'].toString());
                 }
                 // if (resp['program_Response']['strMessage'].toString() ==
                 //     'MAYAM tasks created successfully.') {
@@ -1002,10 +1003,6 @@ class MamWorkOrdersController extends GetxController {
                 //       });
                 // nonFPCTxID
                 // }
-                else {
-                  LoadingDialog.showErrorDialog(
-                      resp['program_Response']['strMessage'].toString());
-                }
               } else {
                 LoadingDialog.showErrorDialog(resp.toString());
               }
