@@ -372,18 +372,12 @@ class CommercialMasterController extends GetxController {
       Snack.callError("Please select tape type.");
     } else if (selectedCensorShipType == null) {
       Snack.callError("Please select censorship type.");
-    }
-    else if (somController.text == "") {
+    } else if (somController.text == "") {
       Snack.callError("Please enter SOM.");
-    }
-    /*else if (eomController.text == "00:00:00:00" ||
-        eomController.text == "") {
-      Snack.callError("Please enter EOM.");
-    }*/
-    else if (duration.value.text == "00:00:00:00" ||
+    } else if (duration.value.text == "00:00:00:00" ||
         duration.value.text == "") {
       Snack.callError("Please enter duration.");
-    }  else if (selectedClientDetails?.value == null) {
+    } else if (selectedClientDetails?.value == null) {
       Snack.callError("Please select client");
     } else if (selectedBrandType?.value == null) {
       Snack.callError("Please select brand");

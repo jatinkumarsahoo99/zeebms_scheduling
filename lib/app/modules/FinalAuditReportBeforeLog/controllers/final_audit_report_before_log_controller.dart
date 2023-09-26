@@ -133,7 +133,14 @@ class FinalAuditReportBeforeLogController extends GetxController {
                 resp['genrateclick'] != null &&
                 (resp['genrateclick'] is List<dynamic>)) {
               dataTBList.clear();
-              dataTBList.addAll((resp['genrateclick'] as List<dynamic>));
+              var dataTBListNew = <dynamic>[].obs;
+              dataTBListNew.addAll((resp['genrateclick'] as List<dynamic>));
+              for (var element in dataTBListNew) {
+                if(element['transmissionTime'] == "00:00:00"){
+                  element['transmissionTime']="";
+                }
+              }
+              dataTBList.addAll(dataTBListNew);
               if (dataTBList.isEmpty) {
                 LoadingDialog.showErrorDialog("No data found.");
               }
