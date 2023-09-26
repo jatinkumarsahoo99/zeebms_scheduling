@@ -123,6 +123,15 @@ class FillerMasterController extends GetxController {
   @override
   void onInit() {
     selectedDropDowns = List.generate(20, (index) => null);
+
+    formPermissions =
+        Utils.fetchPermissions1(Routes.FILLER_MASTER.replaceAll("/", ""));
+    super.onInit();
+  }
+
+  @override
+  void onReady() {
+    super.onReady();
     eomFN = FocusNode(
       onKeyEvent: (node, event) {
         if (event.logicalKey == LogicalKeyboardKey.tab &&
@@ -133,14 +142,6 @@ class FillerMasterController extends GetxController {
         return KeyEventResult.ignored;
       },
     );
-    formPermissions =
-        Utils.fetchPermissions1(Routes.FILLER_MASTER.replaceAll("/", ""));
-    super.onInit();
-  }
-
-  @override
-  void onReady() {
-    super.onReady();
     onLoadData();
     addListeneres2();
   }
@@ -208,27 +209,59 @@ class FillerMasterController extends GetxController {
   }
 
   addListeneres2() {
-    tapeIDFN.addListener(() {
-      if (!tapeIDFN.hasFocus) {
-        tapeIDCtr.text = tapeIDCtr.text.toUpperCase();
-        tapeIDLeave();
-      }
-    });
-    segNoFN.addListener(() {
-      if (!segNoFN.hasFocus && !Get.isDialogOpen!) {
-        segNoLeftLeave();
-      }
-    });
-    fillerNameFN.addListener(() async {
-      if (!fillerNameFN.hasFocus) {
-        if (fillerNameCtr.text.isNotEmpty) {
-          txCaptionCtr.text = fillerNameCtr.text.toUpperCase();
-          fillerNameCtr.text = fillerNameCtr.text.capitalizeFirst!;
-          await retrievRecord(text: fillerNameCtr.text.trim());
-          closeDialogIfOpen();
+    tapeIDFN.onKey = (node, event) {
+      if (event.logicalKey == LogicalKeyboardKey.tab) {
+        if (!event.isShiftPressed) {
+          tapeIDCtr.text = tapeIDCtr.text.toUpperCase();
+          tapeIDLeave();
         }
       }
-    });
+      return KeyEventResult.ignored;
+    };
+    // tapeIDFN.addListener(() {
+    //   if (!tapeIDFN.hasFocus) {
+    //     tapeIDCtr.text = tapeIDCtr.text.toUpperCase();
+    //     tapeIDLeave();
+    //   }
+    // });
+    segNoFN.onKey = (node, event) {
+      if (event.logicalKey == LogicalKeyboardKey.tab) {
+        if (!event.isShiftPressed) {
+          segNoLeftLeave();
+        }
+      }
+      return KeyEventResult.ignored;
+    };
+    // segNoFN.addListener(() {
+    //   if (!segNoFN.hasFocus && !Get.isDialogOpen!) {
+    //     segNoLeftLeave();
+    //   }
+    // });
+
+    fillerNameFN.onKey = (node, event) {
+      if (event.logicalKey == LogicalKeyboardKey.tab) {
+        if (!event.isShiftPressed) {
+          if (fillerNameCtr.text.isNotEmpty) {
+            txCaptionCtr.text = fillerNameCtr.text.toUpperCase();
+            fillerNameCtr.text = fillerNameCtr.text.capitalizeFirst!;
+            retrievRecord(text: fillerNameCtr.text.trim()).then((val) {
+              closeDialogIfOpen();
+            });
+          }
+        }
+      }
+      return KeyEventResult.ignored;
+    };
+    // fillerNameFN.addListener(() async {
+    //   if (!fillerNameFN.hasFocus) {
+    //     if (fillerNameCtr.text.isNotEmpty) {
+    //       txCaptionCtr.text = fillerNameCtr.text.toUpperCase();
+    //       fillerNameCtr.text = fillerNameCtr.text.capitalizeFirst!;
+    //       await retrievRecord(text: fillerNameCtr.text.trim());
+    //       closeDialogIfOpen();
+    //     }
+    //   }
+    // });
   }
 
   setCartNo() async {
@@ -348,7 +381,7 @@ class FillerMasterController extends GetxController {
     }
   }
 
-  retrievRecord(
+  Future<void> retrievRecord(
       {String text = "",
       String code = "",
       String tapeCode = "",
