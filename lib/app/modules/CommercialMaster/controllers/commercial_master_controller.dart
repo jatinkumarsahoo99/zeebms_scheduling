@@ -456,7 +456,7 @@ class CommercialMasterController extends GetxController {
                     map['result']['saveModel'][0]['commercialCode'];
               }
               LoadingDialog.callDataSavedMessage(
-                  map['genericMessage'] ?? "Record Saved Successfully",
+                  (map['result']['genericMessage'] )?? "Record Saved Successfully",
                   callback: () {
                 if (map['result'].containsKey('saveModel') &&
                     map['result']['saveModel'] != null &&
