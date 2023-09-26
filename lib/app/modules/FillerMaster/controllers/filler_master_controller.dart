@@ -704,7 +704,10 @@ class FillerMasterController extends GetxController {
                   .toString()
                   .contains("successfully")) {
             LoadingDialog.callDataSaved(
-                msg: resp['saveRecord']['strMessage'].toString());
+                msg: resp['saveRecord']['strMessage'].toString(),
+                callback: () {
+                  clearPage();
+                });
           } else {
             LoadingDialog.showErrorDialog(resp.toString());
           }

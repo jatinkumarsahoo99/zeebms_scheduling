@@ -255,10 +255,12 @@ class NewShortContentFormController extends GetxController {
                   (data["Stilltype"] ?? "").toString().toLowerCase());
               som.text = data["SOM"];
               eom.text = data["EOM"];
-              duration.value = Utils.convertToTimeFromDouble(
-                  value: int.tryParse(
-                          data["StillDuration"].toString().split(".")[0]) ??
-                      0);
+              calculateDuration();
+
+              // duration.value = Utils.convertToTimeFromDouble(
+              //     value: int.tryParse(
+              //             data["StillDuration"].toString().split(".")[0]) ??
+              //         0);
               selectedProgram.value = DropDownValue(
                 key: data["ProgramCode"] ?? "",
                 value: data["ProgramName"] ?? "",
@@ -291,11 +293,13 @@ class NewShortContentFormController extends GetxController {
               som.text = data["SOM"];
 
               eom.text = data["EOM"] ?? "00:00:00:00";
-              duration.value = Utils.convertToTimeFromDouble(
-                  value: int.tryParse(data["ExportTapeDuration"]
-                          .toString()
-                          .split(".")[0]) ??
-                      0);
+              calculateDuration();
+              // duration.value =
+              //  Utils.convertToTimeFromDouble(
+              //     value: int.tryParse(data["ExportTapeDuration"]
+              //             .toString()
+              //             .split(".")[0]) ??
+              //         0);
               // remark.text = data["remark"];
               // startData.text = DateFormat("dd-MM-yyy").format(
               //     DateFormat("dd/MM/yyyy hh:mm:ss").parse(data["ModifiedOn"]));
@@ -324,10 +328,12 @@ class NewShortContentFormController extends GetxController {
               );
               som.text = data["SOM"];
               eom.text = data["EOM"];
-              duration.value = Utils.convertToTimeFromDouble(
-                  value: int.tryParse(
-                          data["VignetteDuration"].toString().split(".")[0]) ??
-                      0);
+              calculateDuration();
+
+              // duration.value = Utils.convertToTimeFromDouble(
+              //     value: int.tryParse(
+              //             data["VignetteDuration"].toString().split(".")[0]) ??
+              //         0);
               remark.text = data["remarks"];
               startData.text = DateFormat("dd-MM-yyy").format(
                   DateFormat("MM/dd/yyyy hh:mm:ss").parse(data["StartDate"]));

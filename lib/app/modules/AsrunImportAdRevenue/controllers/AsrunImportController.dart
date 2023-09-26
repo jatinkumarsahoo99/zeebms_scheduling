@@ -32,6 +32,8 @@ class AsrunImportController extends GetxController {
   PlutoGridStateManager? gridStateManager;
   PlutoGridStateManager? fpcGridStateManager;
   int? selectedFPCindex;
+
+  int? fromIdx, toIdx, realFromIdx, realToIdx;
   RxList<Map> checkboxes = RxList<Map>([
     {"name": "FPC", "value": false},
     {"name": "Mark Slot", "value": false},
@@ -123,9 +125,11 @@ class AsrunImportController extends GetxController {
   }
 
   getChannels(String locationCode) {
+    LoadingDialog.call();
     Get.find<ConnectorControl>().GETMETHODCALL(
         api: ApiFactory.AsrunImport_GetLocationSelect(locationCode),
         fun: (Map map) {
+          Get.back();
           channels.clear();
           map["locationSelect"].forEach((e) {
             channels.add(
@@ -146,8 +150,11 @@ class AsrunImportController extends GetxController {
 
             if (map['asRunData']["lstAsrunData"] != null) {
               asrunData = <AsRunData>[];
+              int i = 0;
               map['asRunData']["lstAsrunData"].forEach((v) {
+                v['rowNo'] = i;
                 asrunData!.add(AsRunData.fromJson(v));
+                i++;
               });
             }
             startTime_.text = map['asRunData']["startTime"];

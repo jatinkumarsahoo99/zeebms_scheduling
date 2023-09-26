@@ -374,9 +374,9 @@ class CommercialMasterController extends GetxController {
     else if (duration.value.text == "00:00:00:00" ||
         duration.value.text == "") {
       Snack.callError("Please enter duration.");
-    } else if (selectedBrandType == null) {
+    } else if (selectedBrandType?.value == null) {
       Snack.callError("Please select brand");
-    } else if (selectedAgencyDetails == null) {
+    } else if (selectedAgencyDetails?.value == null) {
       Snack.callError("Please select Agency.");
     } else if ((commercialCode != "0" && commercialCode != "")) {
       LoadingDialog.recordExists("Do you want to modify it?", () {
