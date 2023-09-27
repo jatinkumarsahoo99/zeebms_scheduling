@@ -27,7 +27,9 @@ class LogAdditionsController extends GetxController {
   //input controllers
   DropDownValue? selectLocation;
   Rxn<DropDownValue> selectChannel = Rxn<DropDownValue>(null);
+  DropDownValue? selectChannel1;
   Rxn<DropDownValue> selectAdditions = Rxn<DropDownValue>(null);
+  DropDownValue? selectAdditions1;
 
   // DropDownValue? selectAdditions;
   PlutoGridStateManager? gridStateManager;
@@ -267,6 +269,7 @@ class LogAdditionsController extends GetxController {
                     v["name"].toString().trim()) {
                   selectAdditions.value =
                       DropDownValue.fromJsonDynamic(v, "value", "name");
+                  selectAdditions1=DropDownValue.fromJsonDynamic(v, "value", "name");
                 }
               });
             }
