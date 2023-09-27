@@ -132,16 +132,7 @@ class FillerMasterController extends GetxController {
   @override
   void onReady() {
     super.onReady();
-    eomFN = FocusNode(
-      onKeyEvent: (node, event) {
-        if (event.logicalKey == LogicalKeyboardKey.tab &&
-            event is KeyDownEvent) {
-          calculateDuration();
-          return KeyEventResult.ignored;
-        }
-        return KeyEventResult.ignored;
-      },
-    );
+
     onLoadData();
     addListeneres2();
   }
@@ -209,6 +200,18 @@ class FillerMasterController extends GetxController {
   }
 
   addListeneres2() {
+    fillerNameFN.onKey = (node, event) {
+      if (event.logicalKey == LogicalKeyboardKey.tab && !event.isShiftPressed) {
+        if (fillerNameCtr.text.isNotEmpty) {
+          txCaptionCtr.text = fillerNameCtr.text.toUpperCase();
+          fillerNameCtr.text = fillerNameCtr.text.capitalizeFirst!;
+          retrievRecord(text: fillerNameCtr.text.trim()).then((val) {
+            closeDialogIfOpen();
+          });
+        }
+      }
+      return KeyEventResult.ignored;
+    };
     tapeIDFN.onKey = (node, event) {
       if (event.logicalKey == LogicalKeyboardKey.tab) {
         if (!event.isShiftPressed) {
@@ -218,12 +221,6 @@ class FillerMasterController extends GetxController {
       }
       return KeyEventResult.ignored;
     };
-    // tapeIDFN.addListener(() {
-    //   if (!tapeIDFN.hasFocus) {
-    //     tapeIDCtr.text = tapeIDCtr.text.toUpperCase();
-    //     tapeIDLeave();
-    //   }
-    // });
     segNoFN.onKey = (node, event) {
       if (event.logicalKey == LogicalKeyboardKey.tab) {
         if (!event.isShiftPressed) {
@@ -232,36 +229,12 @@ class FillerMasterController extends GetxController {
       }
       return KeyEventResult.ignored;
     };
-    // segNoFN.addListener(() {
-    //   if (!segNoFN.hasFocus && !Get.isDialogOpen!) {
-    //     segNoLeftLeave();
-    //   }
-    // });
-
-    fillerNameFN.onKey = (node, event) {
-      if (event.logicalKey == LogicalKeyboardKey.tab) {
-        if (!event.isShiftPressed) {
-          if (fillerNameCtr.text.isNotEmpty) {
-            txCaptionCtr.text = fillerNameCtr.text.toUpperCase();
-            fillerNameCtr.text = fillerNameCtr.text.capitalizeFirst!;
-            retrievRecord(text: fillerNameCtr.text.trim()).then((val) {
-              closeDialogIfOpen();
-            });
-          }
-        }
+    eomFN.onKey = (node, event) {
+      if (event.logicalKey == LogicalKeyboardKey.tab && !event.isShiftPressed) {
+        calculateDuration();
       }
       return KeyEventResult.ignored;
     };
-    // fillerNameFN.addListener(() async {
-    //   if (!fillerNameFN.hasFocus) {
-    //     if (fillerNameCtr.text.isNotEmpty) {
-    //       txCaptionCtr.text = fillerNameCtr.text.toUpperCase();
-    //       fillerNameCtr.text = fillerNameCtr.text.capitalizeFirst!;
-    //       await retrievRecord(text: fillerNameCtr.text.trim());
-    //       closeDialogIfOpen();
-    //     }
-    //   }
-    // });
   }
 
   setCartNo() async {
