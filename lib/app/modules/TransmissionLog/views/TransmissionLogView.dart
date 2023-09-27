@@ -52,9 +52,11 @@ class TransmissionLogView extends StatelessWidget {
           focusNode: new FocusNode(),
           onKey: (RawKeyEvent raw) {
             print("RAw is.>>>" + raw.toString());
-            if (raw.isControlPressed && raw.character?.toLowerCase() == "c") {
+            if (raw is RawKeyDownEvent && raw.isControlPressed && raw.character?.toLowerCase() == "c") {
+              print("Copy Pressed Ctrl + c ");
               if (controller.gridStateManager != null &&
                   controller.gridStateManager?.currentCell != null) {
+                print("Copy Pressed in clipboard ");
                 Clipboard.setData(new ClipboardData(
                     text: controller.gridStateManager?.currentCell?.value));
               }
