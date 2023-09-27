@@ -53,6 +53,7 @@ class LogAdditionsView extends GetView<LogAdditionsController> {
                             (value) {
                               controllerX.selectLocation = value;
                               controllerX.selectChannel.value = null;
+                              controllerX.selectChannel1 = null;
                               controllerX.getChannels(
                                   controllerX.selectLocation?.key ?? "");
                             },
@@ -72,12 +73,13 @@ class LogAdditionsView extends GetView<LogAdditionsController> {
                             controllerX.channels.value,
                             (value) {
                               controllerX.selectChannel.value = value;
+                              controllerX.selectChannel1 = value;
                               // FocusScope.of(context).nextFocus();
                             },
                             "Channel",
                             0.12,
                             isEnable: controllerX.isEnable.value,
-                            selected: controllerX.selectChannel.value,
+                            selected: controllerX.selectChannel1,
                             // autoFocus: false,
                             dialogWidth: 330,
                             dialogHeight: Get.height * .7,
@@ -193,12 +195,13 @@ class LogAdditionsView extends GetView<LogAdditionsController> {
                             controllerX.additions.value,
                             (value) {
                               controllerX.selectAdditions.value = value;
-                              FocusScope.of(context).nextFocus();
+                              controllerX.selectAdditions1=value;
+                              // FocusScope.of(context).nextFocus();
                             },
                             "Additions",
                             0.12,
                             // isEnable: controllerX.isEnable.value,
-                            selected: controllerX.selectAdditions.value,
+                            selected: controllerX.selectAdditions1,
                             // autoFocus: true,
                             dialogWidth: 200,
                             dialogHeight: Get.height * .3,
