@@ -143,7 +143,7 @@ class CommercialMasterView extends StatelessWidget {
                                                       isEnable: (controllerX
                                                               .secType
                                                               .isNotEmpty)
-                                                          ? true
+                                                          ? controllerX.isEnable
                                                           : false,
                                                       .17,
                                                       selected: controllerX
@@ -421,6 +421,8 @@ class CommercialMasterView extends StatelessWidget {
                                             mainTextController:
                                                 controllerX.endDateController,
                                             widthRation: .17,
+                                            // isEnable: controllerX.isEnable,
+                                            // intailDate: DateTime.now().add(const Duration(days:3650 )),
                                             isEnable: controllerX.isEnable,
                                           ),
                                           DateWithThreeTextField(
@@ -494,6 +496,7 @@ class CommercialMasterView extends StatelessWidget {
                                             selectedValue:
                                                 controllerX.selectedEvent,
                                             autoFocus: false,
+                                            isEnable: controllerX.isEnable
                                             // maxLength: 1
                                           );
                                         },
@@ -527,6 +530,7 @@ class CommercialMasterView extends StatelessWidget {
                                               controller:
                                                   controllerX.tcOutController,
                                               widthRatio: 0.11,
+                                              isEnable: controllerX.isEnable,
                                               // isTime: true,
                                               // isEnable: controller.isEnable.value,
                                               paddingLeft: 0),
