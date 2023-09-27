@@ -111,6 +111,8 @@ class CommercialMasterView extends StatelessWidget {
                                                 controllerX
                                                         .selectedRevenueType =
                                                     value;
+                                                controllerX.selectedSecType = Rxn<DropDownValue>(null);
+                                                controllerX.selectedSecType?.refresh();
                                                 controllerX.getSecType(
                                                     controllerX
                                                             .selectedRevenueType
