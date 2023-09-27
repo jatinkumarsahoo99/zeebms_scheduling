@@ -161,9 +161,11 @@ class ManageChannelInvemtoryController extends GetxController {
     if ((num.tryParse(counterTC.text) ?? 0) <= 0) {
       LoadingDialog.showErrorDialog("Enter commercial duration.");
     } else if (dataTableList.isNotEmpty) {
-      madeChanges = true;
+      // madeChanges = true;
+
       for (var i = 0; i < dataTableList.length; i++) {
         if (dataTableList[i].episodeDuration != null) {
+          dataTableList[i].madeChanges = true;
           dataTableList[i].commDuration =
               (dataTableList[i].episodeDuration ?? 0) *
                   (num.tryParse(counterTC.text) ?? 0) /
@@ -175,7 +177,7 @@ class ManageChannelInvemtoryController extends GetxController {
   }
 
   Future<void> saveTodayAndAllData(bool fromSaveToday) async {
-    print(stateManager?.isEditing);
+    // print(stateManager?.isEditing);
     if (stateManager?.isEditing ?? false) {
       LoadingDialog.call();
       stateManager?.moveCurrentCell(PlutoMoveDirection.left, force: true);
