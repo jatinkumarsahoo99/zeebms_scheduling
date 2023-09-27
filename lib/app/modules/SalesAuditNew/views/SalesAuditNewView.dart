@@ -52,20 +52,20 @@ class SalesAuditNewView  extends StatelessWidget  {
               controller.markError(controller.gridStateManagerLeft?.currentRowIdx??0);
               break;
             case "F3":
-              if(controller.gridStateManagerLeft?.hasFocus == true &&
-                  ((controller.gridStateManagerLeft?.currentColumn?.title??"").toString().trim().toLowerCase() == "remarks")){
+              if(controller.gridStateManagerLeft?.hasFocus == true){
                 print(">>>>>>>>>>>>currentCell data"+(controller.gridStateManagerLeft?.currentColumn?.title).toString());
-                Clipboard.setData( ClipboardData(
-                    text: controller.gridStateManagerLeft?.currentCell?.value));
-                // Utils.copyToClipboardHack(text)
+                // Clipboard.setData( ClipboardData(text: controller.gridStateManagerLeft?.currentCell?.value));
+                Utils.copyToClipboardHack( controller.gridStateManagerLeft?.currentCell?.value);
               }
               break;
-            case "F4":
-              if(controller.gridStateManagerLeft?.hasFocus == true &&
-                  ((controller.gridStateManagerLeft?.currentColumn?.title??"").toString().trim().toLowerCase() == "remarks")){
+            case "F6":
+              if(controller.gridStateManagerLeft?.hasFocus == true ){
                 print(">>>>>>>>>>>>currentCell data"+(controller.gridStateManagerLeft?.currentColumn?.title).toString());
-                ClipboardData? data = await Clipboard.getData('text/plain');
-                print(">>>>>>>>>>Clipboard"+(data?.text).toString());
+                String? data = await Utils.pasteFromClipboardHack();
+                controller.gridStateManagerLeft?.rows[controller.gridStateManagerLeft?.currentRowIdx??0].
+                cells['Remarks']?.value = data;
+                controller.gridStateManagerLeft?.notifyListeners();
+                print(">>>>>>>>>>Clipboard"+(data).toString());
 
               }
               break;
