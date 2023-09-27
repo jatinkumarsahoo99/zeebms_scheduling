@@ -22,6 +22,7 @@ import 'package:bms_scheduling/app/modules/SalesAuditExtraSpotsReport/views/sale
 import 'package:bms_scheduling/app/modules/SalesAuditNotTelecastReport/views/SalesAuditNotTelecastReportView.dart';
 import 'package:bms_scheduling/app/modules/material_id_search/views/material_id_search_view.dart';
 import 'package:bms_scheduling/app/modules/SchedulePromos/views/SchedulePromoView.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import '../../widgets/LoadingScreen.dart';
@@ -56,11 +57,75 @@ import '../modules/home/views/home_view.dart';
 import '../modules/slide/views/slide_view.dart';
 import '../routes/app_pages.dart';
 
-class AuthGuard1 extends StatelessWidget {
+import 'dart:html' as w;
+
+class AuthGuard1 extends StatefulWidget {
   final String childName;
 
   AuthGuard1({required this.childName}) {
     assert(this.childName != null);
+  }
+
+  @override
+  State<AuthGuard1> createState() => _AuthGuard1State();
+}
+
+class _AuthGuard1State extends State<AuthGuard1> with WidgetsBindingObserver {
+  @override
+  void initState() {
+    print("Auth guard init");
+    super.initState();
+    if (kIsWeb) {
+      w.window.addEventListener('focus', onFocus);
+      w.window.addEventListener('blur', onBlur);
+    } else {
+      WidgetsBinding.instance.addObserver(this);
+    }
+  }
+
+  @override
+  void dispose() {
+    print("Auth guard dispose");
+    if (kIsWeb) {
+      w.window.removeEventListener('focus', onFocus);
+      w.window.removeEventListener('blur', onBlur);
+    } else {
+      WidgetsBinding.instance.removeObserver(this);
+    }
+    super.dispose();
+  }
+
+  void onFocus(w.Event e) {
+    didChangeAppLifecycleState(AppLifecycleState.resumed);
+  }
+
+  void onBlur(w.Event e) {
+    didChangeAppLifecycleState(AppLifecycleState.paused);
+  }
+
+  @override
+  void didChangeAppLifecycleState(AppLifecycleState state) {
+    switch (state) {
+      case AppLifecycleState.resumed:
+        // --
+        print('Resumed');
+        FocusScope.of(Get.context!).unfocus();
+
+        break;
+      case AppLifecycleState.inactive:
+        // --
+        print('Inactive');
+        break;
+      case AppLifecycleState.paused:
+        // --
+        print('Paused');
+        FocusScope.of(Get.context!).unfocus();
+        break;
+      case AppLifecycleState.detached:
+        // --
+        print('Detached');
+        break;
+    }
   }
 
   Widget? currentWidget;
@@ -77,7 +142,7 @@ class AuthGuard1 extends StatelessWidget {
       builder: (controller) {
         print("Login value>>" + controller.loginVal.value.toString());
         if (controller.loginVal.value == 1) {
-          switch (childName) {
+          switch (widget.childName) {
             case Routes.HOME:
               currentWidget = HomeView();
               break;
@@ -220,7 +285,7 @@ class AuthGuard1 extends StatelessWidget {
               currentWidget = const ExtraSpotsWithRemarkView();
               break;
             case Routes.INVENTORY_STATUS_REPORT:
-              currentWidget =  InventoryStatusReportView();
+              currentWidget = InventoryStatusReportView();
               break;
             case Routes.MANAGE_CHANNEL_INVENTORY:
               currentWidget = const ManageChannelInvemtoryView();
