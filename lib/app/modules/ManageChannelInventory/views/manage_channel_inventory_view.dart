@@ -116,7 +116,16 @@ class ManageChannelInvemtoryView
                                   controller.dataTableList[row.rowIdx]
                                           .commDuration =
                                       num.tryParse(row.value.toString());
-                                  controller.madeChanges = true;
+                                  // controller.madeChanges = true;
+                                  controller.dataTableList[row.rowIdx]
+                                      .madeChanges = true;
+                                  if (controller.dataTableList[row.rowIdx]
+                                          .commDuration ==
+                                      controller.dataTableList[row.rowIdx]
+                                          .realCommDuration) {
+                                    controller.dataTableList[row.rowIdx]
+                                        .madeChanges = false;
+                                  }
                                 } else {
                                   controller.stateManager?.changeCellValue(
                                     controller.stateManager!
@@ -126,6 +135,8 @@ class ManageChannelInvemtoryView
                                         .dataTableList[row.rowIdx].commDuration
                                         .toString(),
                                   );
+                                  controller.dataTableList[row.rowIdx]
+                                      .madeChanges = false;
                                 }
                               },
                               mode: PlutoGridMode.normal,

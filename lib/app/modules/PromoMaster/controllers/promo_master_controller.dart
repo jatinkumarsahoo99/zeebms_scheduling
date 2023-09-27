@@ -198,7 +198,7 @@ class PromoMasterController extends GetxController {
     } else if (selectedDropDowns[1] == null) {
       LoadingDialog.showErrorDialog("Please select company.");
     } else if (selectedDropDowns[2] == null) {
-      LoadingDialog.showErrorDialog("Please select Short location.");
+      LoadingDialog.showErrorDialog("Please select location.");
     } else if (selectedDropDowns[3] == null) {
       LoadingDialog.showErrorDialog("Please select Channel.");
     } else if (selectedDropDowns[4] == null) {
