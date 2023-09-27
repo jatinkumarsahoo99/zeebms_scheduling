@@ -39,7 +39,7 @@ class PromoMasterController extends GetxController {
   /// 2=>location
   /// 3=>channel
   /// 4=>promo type
-  /// 5=>blank tape id down side
+  /// 5=>P-Type
   /// 6=>program
   /// 7=>tag detail
   /// 8=>org/repeat
@@ -124,27 +124,58 @@ class PromoMasterController extends GetxController {
     //   }
     //   return KeyEventResult.ignored;
     // };
-    captionFN.addListener(() {
-      if (!captionFN.hasFocus) {
-        captionLeave();
+    captionFN.onKey = (node, event) {
+      if (event.logicalKey == LogicalKeyboardKey.tab) {
+        if (!event.isShiftPressed) {
+          captionLeave();
+        }
       }
-    });
-
-    tapeIDFN.addListener(() {
-      if (!tapeIDFN.hasFocus) {
-        tapeIdLeave();
+      return KeyEventResult.ignored;
+    };
+    // captionFN.addListener(() {
+    //   if (!captionFN.hasFocus) {
+    //     captionLeave();
+    //   }
+    // });
+    tapeIDFN.onKey = (node, event) {
+      if (event.logicalKey == LogicalKeyboardKey.tab) {
+        if (!event.isShiftPressed) {
+          tapeIdLeave();
+        }
       }
-    });
-    txNoFN.addListener(() {
-      if (!txNoFN.hasFocus && !Get.isDialogOpen!) {
-        txNoLeave();
+      return KeyEventResult.ignored;
+    };
+    // tapeIDFN.addListener(() {
+    //   if (!tapeIDFN.hasFocus) {
+    //     tapeIdLeave();
+    //   }
+    // });
+    txNoFN.onKey = (node, event) {
+      if (event.logicalKey == LogicalKeyboardKey.tab) {
+        if (!event.isShiftPressed) {
+          txNoLeave();
+        }
       }
-    });
-    blanktapeIdFN.addListener(() {
-      if (!blanktapeIdFN.hasFocus) {
-        onleaveBlankTapeID();
+      return KeyEventResult.ignored;
+    };
+    // txNoFN.addListener(() {
+    //   if (!txNoFN.hasFocus && !Get.isDialogOpen!) {
+    //     txNoLeave();
+    //   }
+    // });
+    blanktapeIdFN.onKey = (node, event) {
+      if (event.logicalKey == LogicalKeyboardKey.tab) {
+        if (!event.isShiftPressed) {
+          onleaveBlankTapeID();
+        }
       }
-    });
+      return KeyEventResult.ignored;
+    };
+    // blanktapeIdFN.addListener(() {
+    //   if (!blanktapeIdFN.hasFocus) {
+    //     onleaveBlankTapeID();
+    //   }
+    // });
     eomFN.addListener(() {
       if (!eomFN.hasFocus) {
         calculateDuration();
@@ -167,7 +198,7 @@ class PromoMasterController extends GetxController {
     } else if (selectedDropDowns[1] == null) {
       LoadingDialog.showErrorDialog("Please select company.");
     } else if (selectedDropDowns[2] == null) {
-      LoadingDialog.showErrorDialog("Please select Short location.");
+      LoadingDialog.showErrorDialog("Please select location.");
     } else if (selectedDropDowns[3] == null) {
       LoadingDialog.showErrorDialog("Please select Channel.");
     } else if (selectedDropDowns[4] == null) {
@@ -175,7 +206,7 @@ class PromoMasterController extends GetxController {
     } else if (txNoCtr.text.isEmpty) {
       LoadingDialog.showErrorDialog("Please enter cart no.");
     } else if (selectedDropDowns[9] == null) {
-      LoadingDialog.showErrorDialog("Please select Promo type.");
+      LoadingDialog.showErrorDialog("Please select billing.");
     } else if (selectedDropDowns[10] == null) {
       LoadingDialog.showErrorDialog("Please select tape type.");
     } else if (tapeIDCtr.text.isEmpty) {
