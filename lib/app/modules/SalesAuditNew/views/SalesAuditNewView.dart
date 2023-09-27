@@ -69,7 +69,7 @@ class SalesAuditNewView  extends StatelessWidget  {
                 print(">>>>>>>>>>Clipboard"+(data).toString());
                 print(">>>>>>>>>>Clipboard Index"+(controller.gridStateManagerLeft?.currentRowIdx).toString());
                 print(">>>>>>>>>>Clipboard value"+(controller.gridStateManagerLeft?.rows[(controller.gridStateManagerLeft?.currentRowIdx)??0].
-                cells['Remarks']?.value).toString());
+                cells['remarks']?.value).toString());
               }
               break;
           }
