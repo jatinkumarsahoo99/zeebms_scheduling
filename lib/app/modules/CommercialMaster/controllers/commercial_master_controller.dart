@@ -19,6 +19,7 @@ import '../../../../widgets/Snack.dart';
 import '../../../controller/ConnectorControl.dart';
 import '../../../controller/MainController.dart';
 import '../../../data/DropDownValue.dart';
+import '../../../data/PermissionModel.dart';
 import '../../../data/user_data_settings_model.dart';
 import '../../../providers/ApiFactory.dart';
 import '../../../providers/Utils.dart';
@@ -77,7 +78,9 @@ class CommercialMasterController extends GetxController {
   TextEditingController agencyNameController = TextEditingController();
   TextEditingController clockIdController = TextEditingController();
 
-  TextEditingController endDateController = TextEditingController();
+  TextEditingController endDateController = TextEditingController(text: DateFormat("dd-MM-yyyy").
+  format ( DateTime.now().
+  add(Duration(days: 3653))));
   TextEditingController dispatchDateController = TextEditingController();
 
   Rx<TextEditingController> duration = TextEditingController().obs;
@@ -124,9 +127,10 @@ class CommercialMasterController extends GetxController {
     text = text.replaceAll("'", "`");
     return text;
   }
-
+  PermissionModel? formPermissions ;
   @override
   void onInit() {
+
     duration.value.text = "00:00:00:00";
     segController.text = '1';
     getAllDropDownList();
@@ -267,6 +271,11 @@ class CommercialMasterController extends GetxController {
         isListenerActive = true;
       }
     });*/
+
+    formPermissions = Get.find<MainController>()
+        .permissionList!
+        .lastWhere((element) =>
+    element.appFormName == "frmCommercialMaster");
 
     super.onInit();
   }
@@ -969,8 +978,16 @@ class CommercialMasterController extends GetxController {
                 braKey: commercialTapeMasterData?.brandCode,
                 braName: commercialTapeMasterData?.brandName);
 
-            isEnable = true;
-            isEnableSelective = false;
+            // isEnable = true;
+            // isEnableSelective = false;
+            // print(">>>>>>>>>>>>>>>>>>>permission"+(formPermissions?.backDated).toString());
+            if(formPermissions?.backDated == true){
+              isEnable = true;
+              isEnableSelective = false;
+            }else{
+              isEnable = false;
+              isEnableSelective = false;
+            }
 
             update(['updateLeft', 'eventTable']);
             clockIdFocus.nextFocus();
