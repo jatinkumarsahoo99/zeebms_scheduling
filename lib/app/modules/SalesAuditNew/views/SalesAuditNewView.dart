@@ -24,6 +24,7 @@ import '../controllers/SalesAuditNewController.dart';
 class SalesAuditNewView  extends StatelessWidget  {
 
   SalesAuditNewController controller = Get.put<SalesAuditNewController>(SalesAuditNewController());
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -31,16 +32,31 @@ class SalesAuditNewView  extends StatelessWidget  {
 
         focusNode: new FocusNode(),
         onKey: (RawKeyEvent raw) {
-          /*print("RAw is.>>>" + raw.toString());
-          if(raw is RawKeyDownEvent && raw.isControlPressed && raw.character?.toLowerCase() =="c"){
-           print(">>>>>>>>>>>>>>>currentSelectingPosition"+
-               (controller.gridStateManagerLeft?.currentSelectingPosition).toString());
-           print(">>>>>>>>>>>>>>>currentSelectingRows"+
-               ( controller.gridStateManagerLeft?.currentSelectingRows).toString());
+          print("RAw is.>>>" + raw.toString());
+         /* if(raw is RawKeyDownEvent && raw.isControlPressed && raw.character?.toLowerCase() =="c"){
+            if(controller.gridStateManagerLeft?.hasFocus == true){
+              print(">>>>>>>>>>>>>>>gridStateManagerLeft"+
+                  (controller.gridStateManagerLeft?.currentSelectingPosition?.columnIdx).toString());
+              print(">>>>>>>>>>>>>>>gridStateManagerLeft"+
+                  ( controller.gridStateManagerLeft?.currentSelectingRows).toString());
+            }if(controller.gridStateManagerRight?.hasFocus == true){
+              print(">>>>>>>>>>>>>>>gridStateManagerRight"+
+                  (controller.gridStateManagerRight?.currentSelectingPosition).toString());
+              print(">>>>>>>>>>>>>>>gridStateManagerRight"+
+                  ( controller.gridStateManagerRight?.currentSelectingRows).toString());
+            }
+
           }*/
+
           switch (raw.logicalKey.keyLabel) {
             case "F5":
               controller.markError(controller.gridStateManagerLeft?.currentRowIdx??0);
+              break;
+            case "F3":
+              if(controller.gridStateManagerLeft?.hasFocus == true){
+                print(">>>>>>>>>>>>currentCell data"+(controller.gridStateManagerLeft?.currentCell).toString());
+
+              }
               break;
           }
         },
@@ -290,7 +306,7 @@ class SalesAuditNewView  extends StatelessWidget  {
 
                                             // checkRow: true,
                                             // checkRowKey: "no",
-                                            mode: PlutoGridMode.normal,
+                                            mode: PlutoGridMode.select,
                                             editKeys: const ["remarks"],
                                             onEdit: (PlutoGridOnChangedEvent ev){
 
