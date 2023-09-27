@@ -393,10 +393,18 @@ class CommercialMasterController extends GetxController {
     } else if (selectedAgencyDetails?.value == null) {
       Snack.callError("Please select Agency.");
     } else if ((commercialCode != "0" && commercialCode != "")) {
-      LoadingDialog.recordExists("Do you want to modify it?", () {
-        isEnable = true;
+      LoadingDialog.recordExists("Record Already exist!\nDo you want to modify it?", () {
         callSaveApi();
-        update(['updateLeft']);
+        if(formPermissions?.backDated == true){
+          isEnable = true;
+          isEnableSelective = false;
+          update(['updateLeft', 'eventTable']);
+        }else{
+          isEnable = false;
+          isEnableSelective = false;
+          update(['updateLeft', 'eventTable']);
+        }
+
       });
     } else {
       callSaveApi();
@@ -407,9 +415,17 @@ class CommercialMasterController extends GetxController {
     LoadingDialog.recordExists(
         "End Date selected is ${DateFormat('dd/MM/yyyy').format(DateFormat("dd-MM-yyyy").parse(endDateController.text))} ${DateFormat('hh:mm:ss').format(DateTime.now())}. Want to proceed?",
         () {
-      isEnable = true;
-      callSaveBtnApi();
-      update(['updateLeft']);
+          callSaveBtnApi();
+          if(formPermissions?.backDated == true){
+            isEnable = true;
+            isEnableSelective = false;
+            update(['updateLeft', 'eventTable']);
+          }else{
+            isEnable = false;
+            isEnableSelective = false;
+            update(['updateLeft', 'eventTable']);
+          }
+
     });
   }
 
@@ -463,22 +479,18 @@ class CommercialMasterController extends GetxController {
                     map['result']['saveModel'][0]['exportTapecode'];
                 commercialCode =
                     map['result']['saveModel'][0]['commercialCode'];
+                if(formPermissions?.backDated == true){
+                  isEnable = true;
+                  isEnableSelective = false;
+                  update(['updateLeft', 'eventTable']);
+                }else{
+                  isEnable = false;
+                  isEnableSelective = false;
+                  update(['updateLeft', 'eventTable']);
+                }
               }
               LoadingDialog.callDataSavedMessage(
-                  (map['result']['genericMessage'] )?? "Record Saved Successfully",
-                  callback: () {
-                if (map['result'].containsKey('saveModel') &&
-                    map['result']['saveModel'] != null &&
-                    map['result']['saveModel'].length > 0) {
-                  txNoController.text =
-                      map['result']['saveModel'][0]['houseid'];
-                  tapeIdController.value.text =
-                      map['result']['saveModel'][0]['exportTapecode'];
-                  commercialCode =
-                      map['result']['saveModel'][0]['commercialCode'];
-                }
-                // clearAll();
-              });
+                  (map['result']['genericMessage'] )?? "Record Saved Successfully",);
             } else {
               // Get.back();
               LoadingDialog.showErrorDialog(
