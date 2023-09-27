@@ -123,16 +123,7 @@ class FillerMasterController extends GetxController {
   @override
   void onInit() {
     selectedDropDowns = List.generate(20, (index) => null);
-    eomFN = FocusNode(
-      onKeyEvent: (node, event) {
-        if (event.logicalKey == LogicalKeyboardKey.tab &&
-            event is KeyDownEvent) {
-          calculateDuration();
-          return KeyEventResult.ignored;
-        }
-        return KeyEventResult.ignored;
-      },
-    );
+
     formPermissions =
         Utils.fetchPermissions1(Routes.FILLER_MASTER.replaceAll("/", ""));
     super.onInit();
@@ -141,6 +132,7 @@ class FillerMasterController extends GetxController {
   @override
   void onReady() {
     super.onReady();
+
     onLoadData();
     addListeneres2();
   }
@@ -208,27 +200,41 @@ class FillerMasterController extends GetxController {
   }
 
   addListeneres2() {
-    tapeIDFN.addListener(() {
-      if (!tapeIDFN.hasFocus) {
-        tapeIDCtr.text = tapeIDCtr.text.toUpperCase();
-        tapeIDLeave();
-      }
-    });
-    segNoFN.addListener(() {
-      if (!segNoFN.hasFocus && !Get.isDialogOpen!) {
-        segNoLeftLeave();
-      }
-    });
-    fillerNameFN.addListener(() async {
-      if (!fillerNameFN.hasFocus) {
+    fillerNameFN.onKey = (node, event) {
+      if (event.logicalKey == LogicalKeyboardKey.tab && !event.isShiftPressed) {
         if (fillerNameCtr.text.isNotEmpty) {
           txCaptionCtr.text = fillerNameCtr.text.toUpperCase();
           fillerNameCtr.text = fillerNameCtr.text.capitalizeFirst!;
-          await retrievRecord(text: fillerNameCtr.text.trim());
-          closeDialogIfOpen();
+          retrievRecord(text: fillerNameCtr.text.trim()).then((val) {
+            closeDialogIfOpen();
+          });
         }
       }
-    });
+      return KeyEventResult.ignored;
+    };
+    tapeIDFN.onKey = (node, event) {
+      if (event.logicalKey == LogicalKeyboardKey.tab) {
+        if (!event.isShiftPressed) {
+          tapeIDCtr.text = tapeIDCtr.text.toUpperCase();
+          tapeIDLeave();
+        }
+      }
+      return KeyEventResult.ignored;
+    };
+    segNoFN.onKey = (node, event) {
+      if (event.logicalKey == LogicalKeyboardKey.tab) {
+        if (!event.isShiftPressed) {
+          segNoLeftLeave();
+        }
+      }
+      return KeyEventResult.ignored;
+    };
+    eomFN.onKey = (node, event) {
+      if (event.logicalKey == LogicalKeyboardKey.tab && !event.isShiftPressed) {
+        calculateDuration();
+      }
+      return KeyEventResult.ignored;
+    };
   }
 
   setCartNo() async {
@@ -348,7 +354,7 @@ class FillerMasterController extends GetxController {
     }
   }
 
-  retrievRecord(
+  Future<void> retrievRecord(
       {String text = "",
       String code = "",
       String tapeCode = "",
