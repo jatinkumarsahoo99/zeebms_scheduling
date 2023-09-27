@@ -105,6 +105,7 @@ class ManageChannelInvemtoryView
                       child: controller.dataTableList.value.isEmpty
                           ? null
                           : DataGridFromMap(
+                              columnAutoResize: true,
                               enableAutoEditing: true,
                               mapData: controller.dataTableList.value
                                   .map((e) => e.toJson())
