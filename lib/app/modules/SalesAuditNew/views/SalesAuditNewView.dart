@@ -62,7 +62,7 @@ class SalesAuditNewView  extends StatelessWidget  {
               if(controller.gridStateManagerLeft?.hasFocus == true ){
                 print(">>>>>>>>>>>>currentCell data"+(controller.gridStateManagerLeft?.currentColumn?.title).toString());
                 String? data = await Utils.pasteFromClipboardHack();
-                controller.gridStateManagerLeft?.rows[controller.gridStateManagerLeft?.currentRowIdx??0].
+                controller.gridStateManagerLeft?.rows[(controller.gridStateManagerLeft?.currentRowIdx)??0].
                 cells['Remarks']?.value = data;
                 controller.gridStateManagerLeft?.notifyListeners();
                 print(">>>>>>>>>>Clipboard"+(data).toString());
