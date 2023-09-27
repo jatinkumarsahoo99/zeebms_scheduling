@@ -30,9 +30,9 @@ class SalesAuditNewView  extends StatelessWidget  {
     return Scaffold(
       body: RawKeyboardListener(
 
-        focusNode: new FocusNode(),
-        onKey: (RawKeyEvent raw) {
-          print("RAw is.>>>" + raw.toString());
+        focusNode: FocusNode(),
+        onKey: (RawKeyEvent raw) async {
+          // print("RAw is.>>>" + raw.toString());
          /* if(raw is RawKeyDownEvent && raw.isControlPressed && raw.character?.toLowerCase() =="c"){
             if(controller.gridStateManagerLeft?.hasFocus == true){
               print(">>>>>>>>>>>>>>>gridStateManagerLeft"+
@@ -47,14 +47,25 @@ class SalesAuditNewView  extends StatelessWidget  {
             }
 
           }*/
-
           switch (raw.logicalKey.keyLabel) {
             case "F5":
               controller.markError(controller.gridStateManagerLeft?.currentRowIdx??0);
               break;
             case "F3":
-              if(controller.gridStateManagerLeft?.hasFocus == true){
-                print(">>>>>>>>>>>>currentCell data"+(controller.gridStateManagerLeft?.currentCell).toString());
+              if(controller.gridStateManagerLeft?.hasFocus == true &&
+                  ((controller.gridStateManagerLeft?.currentColumn?.title??"").toString().trim().toLowerCase() == "remarks")){
+                print(">>>>>>>>>>>>currentCell data"+(controller.gridStateManagerLeft?.currentColumn?.title).toString());
+                Clipboard.setData( ClipboardData(
+                    text: controller.gridStateManagerLeft?.currentCell?.value));
+
+              }
+              break;
+            case "F4":
+              if(controller.gridStateManagerLeft?.hasFocus == true &&
+                  ((controller.gridStateManagerLeft?.currentColumn?.title??"").toString().trim().toLowerCase() == "remarks")){
+                print(">>>>>>>>>>>>currentCell data"+(controller.gridStateManagerLeft?.currentColumn?.title).toString());
+                ClipboardData? data = await Clipboard.getData(Clipboard.kTextPlain);
+                print(">>>>>>>>>>Clipboard"+(data?.text).toString());
 
               }
               break;
@@ -306,7 +317,7 @@ class SalesAuditNewView  extends StatelessWidget  {
 
                                             // checkRow: true,
                                             // checkRowKey: "no",
-                                            mode: PlutoGridMode.select,
+                                            mode: PlutoGridMode.normal,
                                             editKeys: const ["remarks"],
                                             onEdit: (PlutoGridOnChangedEvent ev){
 
