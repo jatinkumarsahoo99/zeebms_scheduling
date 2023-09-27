@@ -395,15 +395,16 @@ class CommercialMasterController extends GetxController {
     } else if ((commercialCode != "0" && commercialCode != "")) {
       LoadingDialog.recordExists("Record Already exist!\nDo you want to modify it?", () {
         callSaveApi();
-        if(formPermissions?.backDated == true){
+       /* if(formPermissions?.backDated == true){
           isEnable = true;
           isEnableSelective = false;
           update(['updateLeft', 'eventTable']);
-        }else{
+        }
+        else{
           isEnable = false;
           isEnableSelective = false;
           update(['updateLeft', 'eventTable']);
-        }
+        }*/
 
       });
     } else {
@@ -416,7 +417,7 @@ class CommercialMasterController extends GetxController {
         "End Date selected is ${DateFormat('dd/MM/yyyy').format(DateFormat("dd-MM-yyyy").parse(endDateController.text))} ${DateFormat('hh:mm:ss').format(DateTime.now())}. Want to proceed?",
         () {
           callSaveBtnApi();
-          if(formPermissions?.backDated == true){
+         /* if(formPermissions?.backDated == true){
             isEnable = true;
             isEnableSelective = false;
             update(['updateLeft', 'eventTable']);
@@ -424,7 +425,7 @@ class CommercialMasterController extends GetxController {
             isEnable = false;
             isEnableSelective = false;
             update(['updateLeft', 'eventTable']);
-          }
+          }*/
 
     });
   }
@@ -479,15 +480,16 @@ class CommercialMasterController extends GetxController {
                     map['result']['saveModel'][0]['exportTapecode'];
                 commercialCode =
                     map['result']['saveModel'][0]['commercialCode'];
-                if(formPermissions?.backDated == true){
+               /* if(formPermissions?.backDated == true){
                   isEnable = true;
                   isEnableSelective = false;
                   update(['updateLeft', 'eventTable']);
-                }else{
+                }
+                else{
                   isEnable = false;
                   isEnableSelective = false;
                   update(['updateLeft', 'eventTable']);
-                }
+                }*/
               }
               LoadingDialog.callDataSavedMessage(
                   (map['result']['genericMessage'] )?? "Record Saved Successfully",);

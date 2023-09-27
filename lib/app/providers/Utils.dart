@@ -45,6 +45,18 @@ class Utils {
     textarea.remove();
     return result;
   }
+  static Future<String> pasteFromClipboardHack() async {
+    // Request access to the clipboard
+    try {
+      // Request access to the clipboard
+      final clipboardText = await html.window.navigator.clipboard?.readText();
+      return clipboardText??"";
+    } catch (error) {
+      // Handle any errors, such as clipboard permissions denied
+      print('Error reading clipboard: $error');
+      return ''; // Return an empty string or null if you prefer
+    }
+  }
 
   static String getMMDDYYYYFromDDMMYYYYInString(String ddMMYYYY) {
     return DateFormat("MM/dd/yyyy")

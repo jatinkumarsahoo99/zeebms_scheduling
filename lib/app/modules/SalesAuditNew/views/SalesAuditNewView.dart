@@ -57,7 +57,7 @@ class SalesAuditNewView  extends StatelessWidget  {
                 print(">>>>>>>>>>>>currentCell data"+(controller.gridStateManagerLeft?.currentColumn?.title).toString());
                 Clipboard.setData( ClipboardData(
                     text: controller.gridStateManagerLeft?.currentCell?.value));
-
+                // Utils.copyToClipboardHack(text)
               }
               break;
             case "F4":
