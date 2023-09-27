@@ -611,5 +611,6 @@ class NewShortContentFormController extends GetxController {
     segment.clear();
     remark.clear();
     toBeBilled.value = false;
+    typeCode = null;
   }
 }
