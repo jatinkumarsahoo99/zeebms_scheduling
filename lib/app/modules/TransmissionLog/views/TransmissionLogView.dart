@@ -57,8 +57,9 @@ class TransmissionLogView extends StatelessWidget {
               if (controller.gridStateManager != null &&
                   controller.gridStateManager?.currentCell != null) {
                 print("Copy Pressed in clipboard ");
-                Clipboard.setData(new ClipboardData(
-                    text: controller.gridStateManager?.currentCell?.value));
+                /*Clipboard.setData(new ClipboardData(
+                    text: controller.gridStateManager?.currentCell?.value));*/
+                Utils.copyToClipboardHack(controller.gridStateManager?.currentCell?.value);
               }
             }
 
