@@ -635,14 +635,7 @@ class PlutoGridActionCopyValues extends PlutoGridShortcutAction {
     if (stateManager.isEditing == true) {
       return;
     }
-    bool sta = await Utils.checkClipboardPermission();
-    if (sta == true) {
-      Utils.copyToClipboardHack(stateManager.currentSelectingText);
-    } else {
-      LoadingDialog.showErrorDialog(
-          "please give permission to clipboard on chrome browser");
-    }
-
+    Utils.copyToClipboardHack(stateManager.currentSelectingText);
     // Clipboard.setData(ClipboardData(text: stateManager.currentSelectingText));
   }
 }
