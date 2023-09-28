@@ -57,19 +57,22 @@ class SalesAuditNewView  extends StatelessWidget  {
                 print(">>>>>>>>>>>>currentCell data"+(controller.gridStateManagerLeft?.currentRow).toString());
                 // Clipboard.setData( ClipboardData(text: controller.gridStateManagerLeft?.currentCell?.value));
                 Utils.copyToClipboardHack( controller.gridStateManagerLeft?.currentCell?.value);
+                controller.f3Data =controller.gridStateManagerLeft?.currentCell?.value??"";
+                // controller.sharedPref?.save("f3", controller.gridStateManagerLeft?.currentCell?.value??"");
 
               }
               break;
             case "F4":
               if(controller.gridStateManagerLeft?.hasFocus == true ){
-                bool sta = await Utils.checkClipboardPermission();
-                print(">>>>>>>>>>"+sta.toString());
+                // bool sta = await Utils.checkClipboardPermission();
+                // print(">>>>>>>>>>"+sta.toString());
                 print(">>>>>>>>>>>>currentCell data"+(controller.gridStateManagerLeft?.currentColumn?.title).toString());
-                String? data = await Utils.pasteFromClipboardHack();
+                // String? data = await Utils.pasteFromClipboardHack();
+                // String? data = controller.sharedPref?.read("f3");
                 controller.gridStateManagerLeft?.rows[(controller.gridStateManagerLeft?.currentRowIdx)??0].
-                cells['remarks']?.value = data;
+                cells['remarks']?.value = controller.f3Data;
                 controller.gridStateManagerLeft?.notifyListeners();
-                print(">>>>>>>>>>Clipboard"+(data).toString());
+                print(">>>>>>>>>>Clipboard"+(controller.f3Data).toString());
                 print(">>>>>>>>>>Clipboard Index"+(controller.gridStateManagerLeft?.currentRowIdx).toString());
                 print(">>>>>>>>>>Clipboard value"+(controller.gridStateManagerLeft?.rows[(controller.gridStateManagerLeft?.currentRowIdx)??0].
                 cells['remarks']?.value).toString());
