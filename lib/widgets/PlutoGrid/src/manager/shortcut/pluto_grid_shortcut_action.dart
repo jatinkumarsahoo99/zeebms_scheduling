@@ -1,6 +1,8 @@
 import 'package:flutter/services.dart';
 import 'package:bms_scheduling/widgets/PlutoGrid/pluto_grid.dart';
 
+import '../../../../../app/providers/Utils.dart';
+
 /// Define the action by implementing the [execute] method
 /// as an action that can be mapped to a shortcut key.
 ///
@@ -632,8 +634,8 @@ class PlutoGridActionCopyValues extends PlutoGridShortcutAction {
     if (stateManager.isEditing == true) {
       return;
     }
-
-    Clipboard.setData(ClipboardData(text: stateManager.currentSelectingText));
+    Utils.copyToClipboardHack(stateManager.currentSelectingText);
+    // Clipboard.setData(ClipboardData(text: stateManager.currentSelectingText));
   }
 }
 
