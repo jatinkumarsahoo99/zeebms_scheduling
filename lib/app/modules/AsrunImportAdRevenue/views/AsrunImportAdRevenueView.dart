@@ -87,7 +87,7 @@ class AsrunImportAdRevenueView extends StatelessWidget {
                       widthRation: 0.09,
                       isEnable: controller.isEnable.value,
                       onFocusChange: (data) async {
-                        LoadingDialog.call(barrierDismissible: false);
+                        LoadingDialog.call();
                         await controller.loadAsrunData();
                         await controller.loadviewFPCData();
                         Get.back();
@@ -232,7 +232,7 @@ class AsrunImportAdRevenueView extends StatelessWidget {
                           }
                         },
                         hideCode: false,
-                        hideKeys: [
+                        hideKeys: const [
                           "backColor",
                           "foreColor",
                           "vtr",
@@ -297,8 +297,8 @@ class AsrunImportAdRevenueView extends StatelessWidget {
                 });*/
                 if (btncontroller.asurunImportButtoons != null) {
                   return Card(
-                      margin: EdgeInsets.fromLTRB(4, 4, 4, 0),
-                      shape: RoundedRectangleBorder(
+                      margin: const EdgeInsets.fromLTRB(4, 4, 4, 0),
+                      shape: const RoundedRectangleBorder(
                         borderRadius: BorderRadius.only(
                             topLeft: Radius.circular(10),
                             topRight: Radius.circular(10)),
@@ -335,13 +335,46 @@ class AsrunImportAdRevenueView extends StatelessWidget {
                                   InkWell(
                                     child: const Icon(Icons.arrow_upward),
                                     onTap: () {
+                                      // print(controller.gridStateManager!
+                                      //     .currentCell!.value);
+                                      // // if (controller.gridStateManager!
+                                      // //         .currentCell!.value ==
+                                      // //     0) {
+                                      // //   print("false");
+                                      // // }
+                                      // controller.selectedFPCindex = 0;
+                                      // // controller
+                                      // //     .gridStateManager!.rows.length;
+                                      // int? nextRowIndex;
+                                      // print(controller.selectedFPCindex);
+                                      // if (controller.selectedFPCindex == 0) {
+                                      //   print("hey 1");
+                                      //   print(controller
+                                      //       .gridStateManager!.rows.length);
+                                      //   nextRowIndex = controller
+                                      //           .gridStateManager!.rows.length -
+                                      //       1;
+                                      //   print(nextRowIndex);
+                                      // } else {
+                                      //   print("hey 2");
+                                      //   nextRowIndex =
+                                      //       ((controller.selectedFPCindex!) -
+                                      //           1);
+                                      //   print(nextRowIndex);
+                                      // }
+
+                                      print(controller.selectedFPCindex);
                                       if (controller.selectedFPCindex == 0) {
+                                        print("hey 1");
                                         controller.selectedFPCindex = controller
                                             .gridStateManager?.rows.length;
+                                        print(controller.selectedFPCindex);
                                       } else {
+                                        print("hey 2");
                                         controller.selectedFPCindex =
                                             (controller.selectedFPCindex ?? 1) -
                                                 1;
+                                        print(controller.selectedFPCindex);
                                       }
                                       controller.filterMainGrid(controller
                                               .viewFPCData?[
@@ -349,6 +382,7 @@ class AsrunImportAdRevenueView extends StatelessWidget {
                                                       0]
                                               .starttime ??
                                           "");
+                                      // controller.filterAsrunUpDown(true);
                                     },
                                   ),
                                   InkWell(
@@ -370,6 +404,7 @@ class AsrunImportAdRevenueView extends StatelessWidget {
                                                       0]
                                               .starttime ??
                                           "");
+                                      // controller.filterAsrunUpDown(false);
                                     },
                                   ),
                                 ],
