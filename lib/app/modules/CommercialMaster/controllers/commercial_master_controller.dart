@@ -19,6 +19,7 @@ import '../../../../widgets/Snack.dart';
 import '../../../controller/ConnectorControl.dart';
 import '../../../controller/MainController.dart';
 import '../../../data/DropDownValue.dart';
+import '../../../data/PermissionModel.dart';
 import '../../../data/user_data_settings_model.dart';
 import '../../../providers/ApiFactory.dart';
 import '../../../providers/Utils.dart';
@@ -77,7 +78,9 @@ class CommercialMasterController extends GetxController {
   TextEditingController agencyNameController = TextEditingController();
   TextEditingController clockIdController = TextEditingController();
 
-  TextEditingController endDateController = TextEditingController();
+  TextEditingController endDateController = TextEditingController(text: DateFormat("dd-MM-yyyy").
+  format ( DateTime.now().
+  add(Duration(days: 3653))));
   TextEditingController dispatchDateController = TextEditingController();
 
   Rx<TextEditingController> duration = TextEditingController().obs;
@@ -124,9 +127,10 @@ class CommercialMasterController extends GetxController {
     text = text.replaceAll("'", "`");
     return text;
   }
-
+  PermissionModel? formPermissions ;
   @override
   void onInit() {
+
     duration.value.text = "00:00:00:00";
     segController.text = '1';
     getAllDropDownList();
@@ -268,6 +272,11 @@ class CommercialMasterController extends GetxController {
       }
     });*/
 
+    formPermissions = Get.find<MainController>()
+        .permissionList!
+        .lastWhere((element) =>
+    element.appFormName == "frmCommercialMaster");
+
     super.onInit();
   }
 
@@ -384,10 +393,19 @@ class CommercialMasterController extends GetxController {
     } else if (selectedAgencyDetails?.value == null) {
       Snack.callError("Please select Agency.");
     } else if ((commercialCode != "0" && commercialCode != "")) {
-      LoadingDialog.recordExists("Do you want to modify it?", () {
-        isEnable = true;
+      LoadingDialog.recordExists("Record Already exist!\nDo you want to modify it?", () {
         callSaveApi();
-        update(['updateLeft']);
+       /* if(formPermissions?.backDated == true){
+          isEnable = true;
+          isEnableSelective = false;
+          update(['updateLeft', 'eventTable']);
+        }
+        else{
+          isEnable = false;
+          isEnableSelective = false;
+          update(['updateLeft', 'eventTable']);
+        }*/
+
       });
     } else {
       callSaveApi();
@@ -398,9 +416,17 @@ class CommercialMasterController extends GetxController {
     LoadingDialog.recordExists(
         "End Date selected is ${DateFormat('dd/MM/yyyy').format(DateFormat("dd-MM-yyyy").parse(endDateController.text))} ${DateFormat('hh:mm:ss').format(DateTime.now())}. Want to proceed?",
         () {
-      isEnable = true;
-      callSaveBtnApi();
-      update(['updateLeft']);
+          callSaveBtnApi();
+         /* if(formPermissions?.backDated == true){
+            isEnable = true;
+            isEnableSelective = false;
+            update(['updateLeft', 'eventTable']);
+          }else{
+            isEnable = false;
+            isEnableSelective = false;
+            update(['updateLeft', 'eventTable']);
+          }*/
+
     });
   }
 
@@ -454,22 +480,19 @@ class CommercialMasterController extends GetxController {
                     map['result']['saveModel'][0]['exportTapecode'];
                 commercialCode =
                     map['result']['saveModel'][0]['commercialCode'];
+               /* if(formPermissions?.backDated == true){
+                  isEnable = true;
+                  isEnableSelective = false;
+                  update(['updateLeft', 'eventTable']);
+                }
+                else{
+                  isEnable = false;
+                  isEnableSelective = false;
+                  update(['updateLeft', 'eventTable']);
+                }*/
               }
               LoadingDialog.callDataSavedMessage(
-                  (map['result']['genericMessage'] )?? "Record Saved Successfully",
-                  callback: () {
-                if (map['result'].containsKey('saveModel') &&
-                    map['result']['saveModel'] != null &&
-                    map['result']['saveModel'].length > 0) {
-                  txNoController.text =
-                      map['result']['saveModel'][0]['houseid'];
-                  tapeIdController.value.text =
-                      map['result']['saveModel'][0]['exportTapecode'];
-                  commercialCode =
-                      map['result']['saveModel'][0]['commercialCode'];
-                }
-                // clearAll();
-              });
+                  (map['result']['genericMessage'] )?? "Record Saved Successfully",);
             } else {
               // Get.back();
               LoadingDialog.showErrorDialog(
@@ -969,8 +992,16 @@ class CommercialMasterController extends GetxController {
                 braKey: commercialTapeMasterData?.brandCode,
                 braName: commercialTapeMasterData?.brandName);
 
-            isEnable = true;
-            isEnableSelective = false;
+            // isEnable = true;
+            // isEnableSelective = false;
+            // print(">>>>>>>>>>>>>>>>>>>permission"+(formPermissions?.backDated).toString());
+            if(formPermissions?.backDated == true){
+              isEnable = true;
+              isEnableSelective = false;
+            }else{
+              isEnable = false;
+              isEnableSelective = false;
+            }
 
             update(['updateLeft', 'eventTable']);
             clockIdFocus.nextFocus();

@@ -17,10 +17,11 @@ class ManageChannelInventory {
   String? programTypeName;
   String? originalRepeatName;
   num? episodeDuration;
-  num? commDuration;
+  num? commDuration, realCommDuration;
   String? locationCode;
   String? channelCode;
   String? programCode;
+  bool? madeChanges;
 
   ManageChannelInventory.fromJson(Map<String, dynamic> json) {
     telecastDate = json['telecastDate'];
@@ -30,6 +31,7 @@ class ManageChannelInventory {
     originalRepeatName = json['originalRepeatName'];
     episodeDuration = json['episodeDuration'];
     commDuration = json['commDuration'];
+    realCommDuration = json['commDuration'];
     locationCode = json['locationCode'];
     channelCode = json['channelCode'];
     programCode = json['programCode'];

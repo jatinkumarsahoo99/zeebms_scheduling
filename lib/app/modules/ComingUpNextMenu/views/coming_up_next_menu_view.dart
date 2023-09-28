@@ -121,6 +121,7 @@ class ComingUpNextMenuView extends StatelessWidget {
                                           InputFields.numbers3(
                                               hintTxt: "Seg No.",
                                               padLeft: 0,
+                                              isNegativeReq: false,
                                               controller: controllerX
                                                   .segNoController,
                                               width: 0.11,

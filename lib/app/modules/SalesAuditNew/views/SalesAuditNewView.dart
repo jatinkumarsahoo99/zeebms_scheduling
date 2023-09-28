@@ -9,6 +9,7 @@ import '../../../../widgets/DateTime/DateWithThreeTextField.dart';
 import '../../../../widgets/FormButton.dart';
 import '../../../../widgets/LoadingDialog.dart';
 import '../../../../widgets/PlutoGrid/src/helper/pluto_move_direction.dart';
+import '../../../../widgets/PlutoGrid/src/manager/pluto_grid_state_manager.dart';
 import '../../../../widgets/PlutoGrid/src/pluto_grid.dart';
 import '../../../../widgets/Snack.dart';
 import '../../../../widgets/dropdown.dart';
@@ -24,23 +25,57 @@ import '../controllers/SalesAuditNewController.dart';
 class SalesAuditNewView  extends StatelessWidget  {
 
   SalesAuditNewController controller = Get.put<SalesAuditNewController>(SalesAuditNewController());
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       body: RawKeyboardListener(
 
-        focusNode: new FocusNode(),
-        onKey: (RawKeyEvent raw) {
-          /*print("RAw is.>>>" + raw.toString());
-          if(raw is RawKeyDownEvent && raw.isControlPressed && raw.character?.toLowerCase() =="c"){
-           print(">>>>>>>>>>>>>>>currentSelectingPosition"+
-               (controller.gridStateManagerLeft?.currentSelectingPosition).toString());
-           print(">>>>>>>>>>>>>>>currentSelectingRows"+
-               ( controller.gridStateManagerLeft?.currentSelectingRows).toString());
+        focusNode: FocusNode(),
+        onKey: (RawKeyEvent raw) async {
+          // print("RAw is.>>>" + raw.toString());
+         /* if(raw is RawKeyDownEvent && raw.isControlPressed && raw.character?.toLowerCase() =="c"){
+            if(controller.gridStateManagerLeft?.hasFocus == true){
+              print(">>>>>>>>>>>>>>>gridStateManagerLeft"+
+                  (controller.gridStateManagerLeft?.currentSelectingPosition?.columnIdx).toString());
+              print(">>>>>>>>>>>>>>>gridStateManagerLeft"+
+                  ( controller.gridStateManagerLeft?.currentSelectingRows).toString());
+            }if(controller.gridStateManagerRight?.hasFocus == true){
+              print(">>>>>>>>>>>>>>>gridStateManagerRight"+
+                  (controller.gridStateManagerRight?.currentSelectingPosition).toString());
+              print(">>>>>>>>>>>>>>>gridStateManagerRight"+
+                  ( controller.gridStateManagerRight?.currentSelectingRows).toString());
+            }
+
           }*/
           switch (raw.logicalKey.keyLabel) {
             case "F5":
               controller.markError(controller.gridStateManagerLeft?.currentRowIdx??0);
+              break;
+            case "F3":
+              if(controller.gridStateManagerLeft?.hasFocus == true){
+                print(">>>>>>>>>>>>currentCell data"+(controller.gridStateManagerLeft?.currentRow).toString());
+                // Clipboard.setData( ClipboardData(text: controller.gridStateManagerLeft?.currentCell?.value));
+                controller.f3Data =controller.gridStateManagerLeft?.currentCell?.value??"";
+                // Utils.copyToClipboardHack( controller.gridStateManagerLeft?.currentCell?.value);
+                // controller.sharedPref?.save("f3", controller.gridStateManagerLeft?.currentCell?.value??"");
+              }
+              break;
+            case "F4":
+              if(controller.gridStateManagerLeft?.hasFocus == true ){
+                // bool sta = await Utils.checkClipboardPermission();
+                // print(">>>>>>>>>>"+sta.toString());
+                print(">>>>>>>>>>>>currentCell data"+(controller.gridStateManagerLeft?.currentColumn?.title).toString());
+                // String? data = await Utils.pasteFromClipboardHack();
+                // String? data = controller.sharedPref?.read("f3");
+                controller.gridStateManagerLeft?.rows[(controller.gridStateManagerLeft?.currentRowIdx)??0].
+                cells['remarks']?.value = controller.f3Data;
+                controller.gridStateManagerLeft?.notifyListeners();
+                print(">>>>>>>>>>Clipboard"+(controller.f3Data).toString());
+                print(">>>>>>>>>>Clipboard Index"+(controller.gridStateManagerLeft?.currentRowIdx).toString());
+                print(">>>>>>>>>>Clipboard value"+(controller.gridStateManagerLeft?.rows[(controller.gridStateManagerLeft?.currentRowIdx)??0].
+                cells['remarks']?.value).toString());
+              }
               break;
           }
         },
@@ -332,6 +367,20 @@ class SalesAuditNewView  extends StatelessWidget  {
                                                   controller.selectedIndex);
                                               controller.gridStateManagerLeft?.moveCurrentCellByRowIdx(controller.selectedIndex??0, PlutoMoveDirection.down);
                                               load.stateManager.notifyListeners();
+                                              load.stateManager.setSelectingMode(
+                                                  PlutoGridSelectingMode.cell);
+
+                                              controller
+                                                  .gridStateManagerLeft!
+                                                  .gridFocusNode
+                                                  .onKeyEvent = (node, event) {
+                                                print("Key is : ${event.logicalKey.keyLabel.toLowerCase()}");
+                                                if(event.logicalKey.keyLabel.toLowerCase()=="f4"){
+                                                  return KeyEventResult.handled;
+                                                }else{
+                                                  return KeyEventResult.ignored;
+                                                }
+                                              };
                                             },
                                             enableSort: true,
                                             // colorCallback: (renderC) => Colors.red[200]!,
@@ -406,6 +455,8 @@ class SalesAuditNewView  extends StatelessWidget  {
                                                       controller.selectedRightIndex);
                                                   controller.gridStateManagerRight?.moveCurrentCellByRowIdx(controller.selectedRightIndex??0,
                                                       PlutoMoveDirection.down);
+                                                  load.stateManager.setSelectingMode(
+                                                      PlutoGridSelectingMode.cell);
 
                                                   /*controller.tblFastInsert =
                                                                 load.stateManager;*/

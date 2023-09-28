@@ -23,6 +23,7 @@ import '../../../controller/MainController.dart';
 import '../../../data/user_data_settings_model.dart';
 import '../../../providers/ApiFactory.dart';
 import '../../../providers/ExportData.dart';
+import '../../../providers/SharedPref.dart';
 import '../../CommonDocs/controllers/common_docs_controller.dart';
 import '../../CommonDocs/views/common_docs_view.dart';
 import '../SalesAuditGetRetrieveModel.dart';
@@ -33,6 +34,8 @@ class SalesAuditNewController extends GetxController {
   var isStandby = RxBool(false);
   // var showError = RxBool(false);
   // var isStandby = RxBool(false);
+
+
   final count = 0.obs;
   RxList<DropDownValue> list = RxList([]);
 
@@ -61,6 +64,7 @@ class SalesAuditNewController extends GetxController {
   bool rightTblFocus = false;
   FocusNode locationNode = FocusNode();
   FocusNode channelNode = FocusNode();
+  String f3Data = "";
 
   fetchPageLoadData() {
     LoadingDialog.call();

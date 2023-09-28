@@ -161,9 +161,11 @@ class ManageChannelInvemtoryController extends GetxController {
     if ((num.tryParse(counterTC.text) ?? 0) <= 0) {
       LoadingDialog.showErrorDialog("Enter commercial duration.");
     } else if (dataTableList.isNotEmpty) {
-      madeChanges = true;
+      // madeChanges = true;
+
       for (var i = 0; i < dataTableList.length; i++) {
         if (dataTableList[i].episodeDuration != null) {
+          dataTableList[i].madeChanges = true;
           dataTableList[i].commDuration =
               (dataTableList[i].episodeDuration ?? 0) *
                   (num.tryParse(counterTC.text) ?? 0) /
@@ -175,23 +177,27 @@ class ManageChannelInvemtoryController extends GetxController {
   }
 
   Future<void> saveTodayAndAllData(bool fromSaveToday) async {
+    // print(stateManager?.isEditing);
+    if (stateManager?.isEditing ?? false) {
+      LoadingDialog.call();
+      stateManager?.moveCurrentCell(PlutoMoveDirection.left, force: true);
+      await Future.delayed(const Duration(seconds: 1));
+      Get.back();
+    }
     if (selectedLocation == null || selectedChannel == null) {
       LoadingDialog.showErrorDialog("Please select Location,Channel.");
-    } else if (madeChanges) {
+    } else if (!dataTableList.any((element) => element.madeChanges ?? false)) {
       LoadingDialog.showErrorDialog("No changes to save");
     } else {
-      // stateManager!.setCurrentCell(
-      //     stateManager!.getRowByIdx(lastSelectedIdx)?.cells['telecastDate'],
-      //     lastSelectedIdx);
       LoadingDialog.call();
-
-      stateManager!.setCurrentCell(
-          stateManager!
-              .getRowByIdx(stateManager!.currentRowIdx)!
-              .cells['episodeDuration'],
-          stateManager!.currentRowIdx!);
+      // stateManager!.setCurrentCell(
+      // stateManager!
+      //     .getRowByIdx(stateManager!.currentRowIdx)!
+      //     .cells['episodeDuration'],
+      // stateManager!.currentRowIdx!);
       // stateManager?.moveCurrentCell(PlutoMoveDirection.left, force: true);
-      await Future.delayed(Duration(seconds: 2));
+      // await Future.delayed(Duration(seconds: 2));
+
       Get.find<ConnectorControl>().POSTMETHOD(
         api: ApiFactory.MANAGE_CHANNEL_INV_SAVE_TODAY_ALL_DATA,
         fun: (resp) {

@@ -30,7 +30,7 @@ class Utils {
         : formatter;
   }
 
-  static bool copyToClipboardHack(String text) {
+  static Future<bool> copyToClipboardHack(String text) async {
     final textarea = html.TextAreaElement();
     html.document.body?.append(textarea);
     textarea.style.border = '0';
@@ -43,7 +43,49 @@ class Utils {
     textarea.select();
     final result = html.document.execCommand('copy');
     textarea.remove();
+    await html.window.navigator.clipboard?.writeText(text);
     return result;
+  }
+  static Future<String> pasteFromClipboardHack() async {
+    // Request access to the clipboard
+    try {
+      // Request access to the clipboard
+      final clipboardText = await html.window.navigator.clipboard?.readText();
+      return clipboardText??"";
+    } catch (error) {
+      // Handle any errors, such as clipboard permissions denied
+      print('Error reading clipboard: $error');
+      return ''; // Return an empty string or null if you prefer
+    }
+  }
+
+  static Future<bool> checkClipboardPermission() async {
+    final queryOpts = {'name': 'clipboard-read', 'allowWithoutGesture': false};
+    final permissionStatus = await html.window.navigator.permissions?.query(queryOpts);
+
+    if (permissionStatus?.state == 'granted') {
+      // Permission is already granted
+      return true;
+    } else if (permissionStatus?.state == 'prompt') {
+      // Permission is not granted, but it can be requested
+      final result = await requestClipboardPermission();
+      return result;
+    } else {
+      // Permission is denied
+      return false;
+    }
+  }
+
+  static Future<bool> requestClipboardPermission() async {
+    try {
+      final result = await html.window.navigator.clipboard?.readText();
+      // If clipboard access was successful, permission is granted
+      return true;
+    } catch (error) {
+      // Handle any errors, such as clipboard permissions denied
+      print('Error reading clipboard: $error');
+      return false; // Permission is denied
+    }
   }
 
   static String getMMDDYYYYFromDDMMYYYYInString(String ddMMYYYY) {
