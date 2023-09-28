@@ -56,10 +56,9 @@ class SalesAuditNewView  extends StatelessWidget  {
               if(controller.gridStateManagerLeft?.hasFocus == true){
                 print(">>>>>>>>>>>>currentCell data"+(controller.gridStateManagerLeft?.currentRow).toString());
                 // Clipboard.setData( ClipboardData(text: controller.gridStateManagerLeft?.currentCell?.value));
-                Utils.copyToClipboardHack( controller.gridStateManagerLeft?.currentCell?.value);
                 controller.f3Data =controller.gridStateManagerLeft?.currentCell?.value??"";
+                // Utils.copyToClipboardHack( controller.gridStateManagerLeft?.currentCell?.value);
                 // controller.sharedPref?.save("f3", controller.gridStateManagerLeft?.currentCell?.value??"");
-
               }
               break;
             case "F4":
