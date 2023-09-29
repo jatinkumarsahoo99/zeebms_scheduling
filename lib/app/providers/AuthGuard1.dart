@@ -59,74 +59,74 @@ import '../routes/app_pages.dart';
 
 import 'dart:html' as w;
 
-class AuthGuard1 extends StatefulWidget {
+class AuthGuard1 extends StatelessWidget {
   final String childName;
 
   AuthGuard1({required this.childName}) {
     assert(this.childName != null);
   }
 
-  @override
-  State<AuthGuard1> createState() => _AuthGuard1State();
-}
+//   @override
+//   State<AuthGuard1> createState() => _AuthGuard1State();
+// }
 
-class _AuthGuard1State extends State<AuthGuard1> with WidgetsBindingObserver {
-  @override
-  void initState() {
-    print("Auth guard init");
-    super.initState();
-    if (kIsWeb) {
-      w.window.addEventListener('focus', onFocus);
-      w.window.addEventListener('blur', onBlur);
-    } else {
-      WidgetsBinding.instance.addObserver(this);
-    }
-  }
+// class _AuthGuard1State extends State<AuthGuard1> with WidgetsBindingObserver {
+//   @override
+//   void initState() {
+//     print("Auth guard init");
+//     super.initState();
+//     if (kIsWeb) {
+//       w.window.addEventListener('focus', onFocus);
+//       w.window.addEventListener('blur', onBlur);
+//     } else {
+//       WidgetsBinding.instance.addObserver(this);
+//     }
+//   }
 
-  @override
-  void dispose() {
-    print("Auth guard dispose");
-    if (kIsWeb) {
-      w.window.removeEventListener('focus', onFocus);
-      w.window.removeEventListener('blur', onBlur);
-    } else {
-      WidgetsBinding.instance.removeObserver(this);
-    }
-    super.dispose();
-  }
+//   @override
+//   void dispose() {
+//     print("Auth guard dispose");
+//     if (kIsWeb) {
+//       w.window.removeEventListener('focus', onFocus);
+//       w.window.removeEventListener('blur', onBlur);
+//     } else {
+//       WidgetsBinding.instance.removeObserver(this);
+//     }
+//     super.dispose();
+//   }
 
-  void onFocus(w.Event e) {
-    didChangeAppLifecycleState(AppLifecycleState.resumed);
-  }
+//   void onFocus(w.Event e) {
+//     didChangeAppLifecycleState(AppLifecycleState.resumed);
+//   }
 
-  void onBlur(w.Event e) {
-    didChangeAppLifecycleState(AppLifecycleState.paused);
-  }
+//   void onBlur(w.Event e) {
+//     didChangeAppLifecycleState(AppLifecycleState.paused);
+//   }
 
-  @override
-  void didChangeAppLifecycleState(AppLifecycleState state) {
-    switch (state) {
-      case AppLifecycleState.resumed:
-        // --
-        print('Resumed');
-        FocusScope.of(Get.context!).unfocus();
+//   @override
+//   void didChangeAppLifecycleState(AppLifecycleState state) {
+//     switch (state) {
+//       case AppLifecycleState.resumed:
+//         // --
+//         print('Resumed');
+//         FocusScope.of(Get.context!).unfocus();
 
-        break;
-      case AppLifecycleState.inactive:
-        // --
-        print('Inactive');
-        break;
-      case AppLifecycleState.paused:
-        // --
-        print('Paused');
-        FocusScope.of(Get.context!).unfocus();
-        break;
-      case AppLifecycleState.detached:
-        // --
-        print('Detached');
-        break;
-    }
-  }
+//         break;
+//       case AppLifecycleState.inactive:
+//         // --
+//         print('Inactive');
+//         break;
+//       case AppLifecycleState.paused:
+//         // --
+//         print('Paused');
+//         FocusScope.of(Get.context!).unfocus();
+//         break;
+//       case AppLifecycleState.detached:
+//         // --
+//         print('Detached');
+//         break;
+//     }
+//   }
 
   Widget? currentWidget;
 
@@ -142,7 +142,7 @@ class _AuthGuard1State extends State<AuthGuard1> with WidgetsBindingObserver {
       builder: (controller) {
         print("Login value>>" + controller.loginVal.value.toString());
         if (controller.loginVal.value == 1) {
-          switch (widget.childName) {
+          switch (childName) {
             case Routes.HOME:
               currentWidget = HomeView();
               break;
