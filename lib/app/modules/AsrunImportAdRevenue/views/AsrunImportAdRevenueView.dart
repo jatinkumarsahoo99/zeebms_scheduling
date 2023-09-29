@@ -335,67 +335,34 @@ class AsrunImportAdRevenueView extends StatelessWidget {
                                   InkWell(
                                     child: const Icon(Icons.arrow_upward),
                                     onTap: () {
-                                      // print(controller.gridStateManager!
-                                      //     .currentCell!.value);
-                                      // // if (controller.gridStateManager!
-                                      // //         .currentCell!.value ==
-                                      // //     0) {
-                                      // //   print("false");
-                                      // // }
-                                      // controller.selectedFPCindex = 0;
-                                      // // controller
-                                      // //     .gridStateManager!.rows.length;
-                                      // int? nextRowIndex;
-                                      // print(controller.selectedFPCindex);
-                                      // if (controller.selectedFPCindex == 0) {
-                                      //   print("hey 1");
-                                      //   print(controller
-                                      //       .gridStateManager!.rows.length);
-                                      //   nextRowIndex = controller
-                                      //           .gridStateManager!.rows.length -
-                                      //       1;
-                                      //   print(nextRowIndex);
-                                      // } else {
-                                      //   print("hey 2");
-                                      //   nextRowIndex =
-                                      //       ((controller.selectedFPCindex!) -
-                                      //           1);
-                                      //   print(nextRowIndex);
-                                      // }
-
-                                      print(controller.selectedFPCindex);
-                                      if (controller.selectedFPCindex == 0) {
-                                        print("hey 1");
-                                        controller.selectedFPCindex = controller
-                                            .gridStateManager?.rows.length;
-                                        print(controller.selectedFPCindex);
-                                      } else {
-                                        print("hey 2");
+                                      if (controller.selectedFPCindex == null ||
+                                          controller.selectedFPCindex == 0) {
                                         controller.selectedFPCindex =
-                                            (controller.selectedFPCindex ?? 1) -
-                                                1;
-                                        print(controller.selectedFPCindex);
+                                            controller.viewFPCData!.length - 1;
+                                      } else {
+                                        controller.selectedFPCindex =
+                                            controller.selectedFPCindex! - 1;
                                       }
+
                                       controller.filterMainGrid(controller
                                               .viewFPCData?[
                                                   controller.selectedFPCindex ??
                                                       0]
                                               .starttime ??
                                           "");
-                                      // controller.filterAsrunUpDown(true);
                                     },
                                   ),
                                   InkWell(
                                     child: const Icon(Icons.arrow_downward),
                                     onTap: () {
-                                      if (controller
-                                              .gridStateManager?.rows.length ==
-                                          controller.selectedFPCindex) {
-                                        controller.selectedFPCindex = 0;
-                                      } else {
+                                      if (controller.selectedFPCindex == null ||
+                                          controller.selectedFPCindex == 0) {
                                         controller.selectedFPCindex =
                                             (controller.selectedFPCindex ?? 0) +
                                                 1;
+                                      } else {
+                                        controller.selectedFPCindex =
+                                            controller.selectedFPCindex! + 1;
                                       }
 
                                       controller.filterMainGrid(controller
