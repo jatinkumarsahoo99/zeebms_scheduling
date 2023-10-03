@@ -360,18 +360,19 @@ class AsrunImportAdRevenueView extends StatelessWidget {
                                         controller.selectedFPCindex =
                                             (controller.selectedFPCindex ?? 0) +
                                                 1;
+                                      } else if (controller.selectedFPCindex ==
+                                          controller.viewFPCData!.length - 1) {
+                                        controller.selectedFPCindex = 0;
                                       } else {
                                         controller.selectedFPCindex =
                                             controller.selectedFPCindex! + 1;
                                       }
-
                                       controller.filterMainGrid(controller
                                               .viewFPCData?[
                                                   controller.selectedFPCindex ??
                                                       0]
                                               .starttime ??
                                           "");
-                                      // controller.filterAsrunUpDown(false);
                                     },
                                   ),
                                 ],
