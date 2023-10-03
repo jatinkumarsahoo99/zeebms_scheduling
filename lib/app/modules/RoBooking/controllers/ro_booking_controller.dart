@@ -790,7 +790,8 @@ class RoBookingController extends GetxController {
           "revenueType": dealNoLeaveData?.strRevenueTypeCode ??
               bookingNoLeaveData?.revenueType,
           "maxSpend": dealNoLeaveData?.maxSpend ?? bookingNoLeaveData?.maxSpend,
-          "intPDCReqd": selectedPdc == null ? 1 : 0,
+          // "intPDCReqd": selectedPdc == null ? 1 : 0,
+          "intPDCReqd": bookingNoLeaveData?.intPDCReqd ?? 0,
           "pdc": selectedPdc?.key,
           "strAccountCode": dealDblClickData?.strAccountCode
         },
