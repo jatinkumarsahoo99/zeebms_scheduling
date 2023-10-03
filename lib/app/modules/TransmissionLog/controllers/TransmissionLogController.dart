@@ -17,6 +17,7 @@ import '../../../../widgets/FormButton.dart';
 import '../../../../widgets/Snack.dart';
 import '../../../controller/ConnectorControl.dart';
 import '../../../data/DropDownValue.dart';
+import '../../../data/user_data_settings_model.dart';
 import '../../../providers/ApiFactory.dart';
 import '../../../providers/SizeDefine.dart';
 import '../../../providers/Utils.dart';
@@ -148,8 +149,11 @@ class TransmissionLogController extends GetxController {
   Rxn<int> initialOffset = Rxn<int>(null);
   Completer<bool>? completerDialog;
 
+  UserDataSettings? userDataSettings;
+
   @override
   void onInit() {
+    fetchUserGridSetting();
     super.onInit();
     getLocations();
     startTime_focus.addListener(() {
@@ -161,6 +165,10 @@ class TransmissionLogController extends GetxController {
         colorGrid(false);
       }
     });
+  }
+
+  fetchUserGridSetting() async {
+    userDataSettings = await Get.find<HomeController>().fetchUserSetting2();
   }
 
   pickFile() async {
