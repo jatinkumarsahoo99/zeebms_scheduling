@@ -744,7 +744,7 @@ class TransmissionLogView extends StatelessWidget {
           {"dgvTimeStateManager": controller.dgvTimeStateManager},
           {"tblFastInsert": controller.tblFastInsert},
           {"tblSegement": controller.tblSegement},
-        ]);
+        ],formName: "frmTransmissionlog");
         break;
       case "Save":
         controller.btnSave_Click();
