@@ -213,33 +213,6 @@ class AsrunImportController extends GetxController {
     }
   }
 
-  void filterAsrunUpDown(bool directionUp) {
-    if (asrunData != null &&
-        asrunData!.isNotEmpty &&
-        gridStateManager != null &&
-        gridStateManager!.currentRowIdx != null) {
-      int cruntRowIndex = gridStateManager!.currentRowIdx!;
-      late int nextRowIndex;
-
-      if (directionUp) {
-        if (cruntRowIndex == 0) {
-          nextRowIndex = asrunData!.length - 1;
-        } else {
-          nextRowIndex = cruntRowIndex - 1;
-        }
-      } else {
-        if (cruntRowIndex == asrunData!.length - 1) {
-          nextRowIndex = 0;
-        } else {
-          nextRowIndex = cruntRowIndex + 1;
-        }
-      }
-      var cell = gridStateManager!.getRowByIdx(nextRowIndex)!.cells['fpctIme'];
-      gridStateManager!.setCurrentCell(cell, nextRowIndex);
-      filterMainGrid(cell!.value.toString());
-    }
-  }
-
   saveTempDetails() {
     Get.find<ConnectorControl>().POSTMETHOD(
         api: ApiFactory.AsrunImport_SaveTempDetail,
