@@ -110,8 +110,9 @@ class AsRunData {
     data['ch'] = ch;
     data['eventtype'] = eventtype;
     data['bookingnumber'] = bookingnumber;
-    data['bookingdetailcode'] =
-        isSegInt ? bookingdetailcode : bookingdetailcode.toString();
+    data['bookingdetailcode'] = isSegInt
+        ? bookingdetailcode
+        : (bookingdetailcode == null ? null : bookingdetailcode.toString());
     data['scheduletime'] = scheduletime;
     data['scheduledProgram'] = scheduledProgram;
     data['rosBand'] = rosBand;
