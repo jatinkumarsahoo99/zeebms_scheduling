@@ -14,6 +14,8 @@ import '../app/providers/Utils.dart';
 import '../app/styles/theme.dart';
 
 class DataGridFromMapTransmissionLog extends StatelessWidget {
+  final Map<String, double>? witdthSpecificColumn;
+
   DataGridFromMapTransmissionLog(
       {Key? key,
       required this.mapData,
@@ -36,6 +38,7 @@ class DataGridFromMapTransmissionLog extends StatelessWidget {
       this.onChanged,
       this.onContextMenuClick,
       this.onRowDoubleTap,
+      this.witdthSpecificColumn,
       this.formatDate = true,
       this.dateFromat = "dd-MM-yyyy",
       this.onFocusChange})
@@ -350,7 +353,11 @@ class DataGridFromMapTransmissionLog extends StatelessWidget {
                 alignment: Alignment.centerLeft,
                 // color: (key == "epsNo" || key == "tapeid" || key == "status") ? ColorData.cellColor(rendererContext.row.cells[key]?.value, key) : null,
                 child: Text(
-                  (rendererContext.stateManager.currentRowIdx!=rendererContext.rowIdx && isBlank) ? "" : rendererContext.cell.value.toString(),
+                  (rendererContext.stateManager.currentRowIdx !=
+                              rendererContext.rowIdx &&
+                          isBlank)
+                      ? ""
+                      : rendererContext.cell.value.toString(),
                   maxLines: 1,
                   overflow: TextOverflow.ellipsis,
                   style: TextStyle(
@@ -368,7 +375,11 @@ class DataGridFromMapTransmissionLog extends StatelessWidget {
           enableEditingMode: false,
           enableDropToResize: true,
           enableContextMenu: false,
-          width: Utils.getRowWidth(key: key, value: mapData[0][key]),
+          // width: Utils.getRowWidth(key: key, value: mapData[0][key]),
+          width: (witdthSpecificColumn != null &&
+              witdthSpecificColumn!.keys.toList().contains(key))
+              ? witdthSpecificColumn![key]!
+              : Utils.getColumnSize(key: key, value: mapData[0][key]),
           minWidth: 5,
           enableAutoEditing: false,
           hide: showonly == null
