@@ -160,7 +160,7 @@ class HomeController extends GetxController {
             }
             data.add(
               UserSetting(
-                formName: (formName?.replaceAll(' ', ' ')) ??
+                formName: (formName?.replaceAll(' ', '')) ??
                     Get.find<MainController>().formName.replaceAll(" ", ""),
                 controlName: key,
                 userSettings: singleMap,

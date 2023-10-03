@@ -168,7 +168,7 @@ class TransmissionLogController extends GetxController {
   }
 
   fetchUserGridSetting() async {
-    userDataSettings = await Get.find<HomeController>().fetchUserSetting2();
+    userDataSettings = await Get.find<HomeController>().fetchUserSetting2(formName: "frmTransmissionlog");
   }
 
   pickFile() async {
