@@ -212,14 +212,14 @@ class FpcMismatchView extends GetView<FpcMismatchController> {
                             const SizedBox(
                               width: 8,
                             ),
-                            Container(
+                            /*Container(
                               width: 2,
                               height: 35,
                               color: Colors.grey,
                             ),
                             const SizedBox(
                               width: 8,
-                            ),
+                            ),*/
                           ],
                         ),
                       ),
@@ -293,7 +293,7 @@ class FpcMismatchView extends GetView<FpcMismatchController> {
                                     ),
                           ),
                         SizedBox(
-                          width: 80,
+                          width: 100,
                         ),
                         FormButtonWrapper(
                           btnText: "  Mark Error  ",
