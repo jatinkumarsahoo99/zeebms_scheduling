@@ -43,6 +43,7 @@ ThemeData primaryThemeData = ThemeData(
 
 PlutoGridConfiguration plutoGridConfiguration({
   Function? actionOnPress,
+  Function(int, bool)? spaceOnPress,
   String? actionKey,
   double rowHeight = 35,
   bool autoScale = false,
@@ -60,7 +61,8 @@ PlutoGridConfiguration plutoGridConfiguration({
                 CustomTabKeyAction(focusNode, previousWidgetFN),
             LogicalKeySet(LogicalKeyboardKey.shift, LogicalKeyboardKey.tab):
                 CustomTabKeyAction(focusNode, previousWidgetFN),
-            LogicalKeySet(LogicalKeyboardKey.space): CustomSpaceKeyAction(),
+            LogicalKeySet(LogicalKeyboardKey.space):
+                CustomSpaceKeyAction1(spaceOnPress: spaceOnPress),
             // You can override the enter key behavior as below.
             LogicalKeySet(LogicalKeyboardKey.enter): CustomEnterKeyAction(
                 actionOnPress: actionOnPress, actionKey: actionKey),
@@ -227,8 +229,10 @@ class CustomEnterKeyAction extends PlutoGridShortcutAction {
     this.actionOnPress,
     this.actionKey,
   });
+
   final Function? actionOnPress;
   final String? actionKey;
+
   @override
   void execute({
     required PlutoKeyManagerEvent keyEvent,
@@ -244,6 +248,7 @@ class CustomEnterKeyAction extends PlutoGridShortcutAction {
 class CustomKeyActionOnKeyboard extends PlutoGridShortcutAction {
   Function() actionOnPressKeyboard;
   LogicalKeyboardKey logicalKeyboardKey;
+
   CustomKeyActionOnKeyboard(
       this.actionOnPressKeyboard, this.logicalKeyboardKey);
 
@@ -263,9 +268,11 @@ class CustomKeyAction2 extends PlutoGridShortcutAction {
     this.actionKey,
     required this.isSpace,
   });
+
   final Function(PlutoGridCellPosition index, bool isSpace)? actionOnPress;
   final List<String?>? actionKey;
   final bool isSpace;
+
   @override
   void execute({
     required PlutoKeyManagerEvent keyEvent,
@@ -294,10 +301,36 @@ class CustomSpaceKeyAction extends PlutoGridShortcutAction {
   }
 }
 
+class CustomSpaceKeyAction1 extends PlutoGridShortcutAction {
+  CustomSpaceKeyAction1({
+    this.spaceOnPress,
+  });
+
+  final Function(int rowIndex, bool isSelect)? spaceOnPress;
+
+  @override
+  void execute({
+    required PlutoKeyManagerEvent keyEvent,
+    required PlutoGridStateManager stateManager,
+  }) {
+    if (stateManager.currentCell!.column.enableRowChecked == true) {
+      stateManager.setRowChecked(stateManager.currentCell!.row,
+          !stateManager.currentCell!.row.checked!,
+          notify: true);
+      if (spaceOnPress != null) {
+        spaceOnPress!(stateManager.currentRowIdx!,
+            stateManager.currentCell!.row.checked!);
+      }
+    }
+  }
+}
+
 class CustomTabKeyAction extends PlutoGridShortcutAction {
   final FocusNode focusNode;
   FocusNode? previousWidgetFN;
+
   CustomTabKeyAction(this.focusNode, this.previousWidgetFN);
+
   @override
   void execute({
     required PlutoKeyManagerEvent keyEvent,
