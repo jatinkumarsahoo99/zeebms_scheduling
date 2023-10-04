@@ -3,7 +3,9 @@ part of 'app_pages.dart';
 
 abstract class Routes {
   Routes._();
+
   static const HOME = _Paths.HOME;
+
   // static List<String> listRoutes = [];
   static const TRANSMISSION_LOG = _Paths.TRANSMISSION_LOG;
   static const LOG_ADDITIONS = _Paths.LOG_ADDITIONS;
@@ -62,10 +64,13 @@ abstract class Routes {
   static const D_SERIES_SPECIFICATION = _Paths.D_SERIES_SPECIFICATION;
   static const EUROPE_RUNNING_ORDER_STATUS = _Paths.EUROPE_RUNNING_ORDER_STATUS;
   static const EUROPE_DROP_SPOTS = _Paths.EUROPE_DROP_SPOTS;
+  static const DROPPED_SPOTS = _Paths.DROPPED_SPOTS;
+  static const DAILY_FPC_STATUS = _Paths.DAILY_FPC_STATUS;
 }
 
 abstract class RoutesList {
   RoutesList._();
+
   static List<String> listRoutes = [
     _Paths.HOME,
     _Paths.TRANSMISSION_LOG,
@@ -102,11 +107,14 @@ abstract class RoutesList {
     _Paths.LOG_CONVERT,
     _Paths.MATERIAL_ID_SEARCH,
     _Paths.INVENTORY_STATUS_REPORT,
+    _Paths.DROPPED_SPOTS,
+    _Paths.DAILY_FPC_STATUS,
   ];
 }
 
 abstract class _Paths {
   _Paths._();
+
   static const HOME = '/home';
   static const TRANSMISSION_LOG = '/frmTransmissionlog';
   static const LOG_ADDITIONS = '/frmAdditions';
@@ -163,4 +171,6 @@ abstract class _Paths {
   static const CREATIVE_TAG_ON = '/frmCreativeTagOnLink';
   static const EUROPE_RUNNING_ORDER_STATUS = '/Robookingotherrevenues';
   static const EUROPE_DROP_SPOTS = '/RorescheduleOtherrevune';
+  static const DROPPED_SPOTS = '/frmsearchingKKBMS_View_DroppedSpots';
+  static const DAILY_FPC_STATUS = '/frmsearchingKKBms_View_DailyFpc';
 }

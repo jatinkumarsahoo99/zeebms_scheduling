@@ -1,6 +1,5 @@
 import 'package:flutter/foundation.dart';
 import 'package:get/get.dart';
-
 import '../modules/AsrunImportAdRevenue/bindings/asrun_import_binding.dart';
 import '../modules/AuditStatus/bindings/audit_status_binding.dart';
 import '../modules/BrandMaster/bindings/brand_master_binding.dart';
@@ -43,7 +42,6 @@ import '../modules/SpotPositionTypeMaster/bindings/spot_position_type_master_bin
 import '../modules/SpotPriority/bindings/spot_priority_binding.dart';
 import '../modules/StillMaster/bindings/still_master_binding.dart';
 import '../modules/TransmissionLog/bindings/transmission_log_binding.dart';
-import '../modules/commercial/bindings/commercial_binding.dart';
 import '../modules/filler/bindings/filler_binding.dart';
 import '../modules/material_id_search/bindings/material_id_search_binding.dart';
 import '../modules/slide/bindings/slide_binding.dart';
@@ -56,7 +54,7 @@ class AppPages {
 
   static const INITIAL = kReleaseMode
       ? Routes.HOME
-      : "${Routes.RO_BOOKING}?personalNo=e7ScQlP7tXxBxRizIrkQIA%3D%3D&loginCode=scL134pM4e0EQtJCjv7r5Q%3D%3D&formName=ZdPOC%2BHl3hRJzHSclM%2B5m3sWVw1wpLPmNEvejYUOFLU%3D";
+      : "${Routes.ROS_DISTRIBUTION}?personalNo=e7ScQlP7tXxBxRizIrkQIA%3D%3D&loginCode=scL134pM4e0EQtJCjv7r5Q%3D%3D&formName=ZdPOC%2BHl3hRJzHSclM%2B5m3sWVw1wpLPmNEvejYUOFLU%3D";
 
   static final routes = [
     GetPage(
@@ -72,6 +70,14 @@ class AppPages {
     GetPage(
       name: _Paths.NEW_SHORT_CONTENT_FORM,
       page: () => AuthGuard1(childName: _Paths.NEW_SHORT_CONTENT_FORM),
+    ),
+    GetPage(
+      name: _Paths.DAILY_FPC_STATUS,
+      page: () => AuthGuard1(childName: _Paths.DAILY_FPC_STATUS),
+    ),
+    GetPage(
+      name: _Paths.DROPPED_SPOTS,
+      page: () => AuthGuard1(childName: _Paths.DROPPED_SPOTS),
     ),
     GetPage(
       name: _Paths.TRANSMISSION_LOG,
