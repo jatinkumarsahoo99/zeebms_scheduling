@@ -76,7 +76,7 @@ class DataGridFromMap1 extends StatelessWidget {
           enableEditingMode: false,
           enableDropToResize: true,
           enableContextMenu: false,
-          minWidth: 0,
+          minWidth: 5,
           width: (witdthSpecificColumn != null &&
                   witdthSpecificColumn!.keys.toList().contains('no'))
               ? witdthSpecificColumn!['no']!
@@ -118,7 +118,7 @@ class DataGridFromMap1 extends StatelessWidget {
       for (var key in showonly!) {
         if ((mapData[0] as Map).containsKey(key)) {
           segColumn.add(PlutoColumn(
-              minWidth: 0,
+              minWidth: 5,
               width: (witdthSpecificColumn != null &&
                       witdthSpecificColumn!.keys.toList().contains(key))
                   ? witdthSpecificColumn![key]!
@@ -190,7 +190,7 @@ class DataGridFromMap1 extends StatelessWidget {
     } else {
       for (var key in mapData[0].keys) {
         segColumn.add(PlutoColumn(
-            minWidth: 0,
+            minWidth: 5,
             width: (witdthSpecificColumn != null &&
                     witdthSpecificColumn!.keys.toList().contains(key))
                 ? witdthSpecificColumn![key]!
