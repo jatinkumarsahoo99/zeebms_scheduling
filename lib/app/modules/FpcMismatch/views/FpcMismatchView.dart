@@ -36,7 +36,7 @@ class FpcMismatchView extends GetView<FpcMismatchController> {
           {"fpcMaster": controller.stateManager},
           {"programTable": controller.programTable},
         ]);
-        Get.delete<FpcMismatchController>();
+        // Get.delete<FpcMismatchController>();
         break;
       case "Refresh":
         // controllerX.fetchMismatchAll();
