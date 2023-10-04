@@ -38,6 +38,7 @@ import '../modules/ComingUpMenu/views/coming_up_menu_view.dart';
 import '../modules/ComingUpNextMenu/views/coming_up_next_menu_view.dart';
 import '../modules/ComingUpTomorrowMenu/views/coming_up_tomorrow_menu_view.dart';
 import '../modules/CommercialMaster/views/commercial_master_view.dart';
+import '../modules/CommonSearch/views/common_search_view.dart';
 import '../modules/CreativeTagOn/views/creative_tag_on_view.dart';
 import '../modules/DSeriesSpecification/views/DSeriesSpecificationView.dart';
 import '../modules/DateWiseErrorSpots/views/date_wise_error_spots_view.dart';
@@ -303,6 +304,18 @@ class _AuthGuard1State extends State<AuthGuard1> with WidgetsBindingObserver {
               break;
             case Routes.EUROPE_DROP_SPOTS:
               currentWidget = EuropeDropSpotsView();
+              break;
+            case Routes.DROPPED_SPOTS:
+              currentWidget = SearchPage(
+                  key: const Key("DroppedSpot"),
+                  screenName: "Dropped Spot",
+                  strViewName: "BMS_View_DroppedSpots");
+              break;
+            case Routes.DAILY_FPC_STATUS:
+              currentWidget = SearchPage(
+                  key: const Key("DailyFpcStatus"),
+                  screenName: "Daily Fpc Status",
+                  strViewName: "Bms_View_DailyFpc");
               break;
             default:
               currentWidget = const NoDataFoundPage();
