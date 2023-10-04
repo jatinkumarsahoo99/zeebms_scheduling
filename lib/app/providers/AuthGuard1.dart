@@ -111,7 +111,8 @@ class _AuthGuard1State extends State<AuthGuard1> with WidgetsBindingObserver {
       case AppLifecycleState.resumed:
         // --
         print('Resumed');
-        FocusScope.of(Get.context!).unfocus();
+        Get.focusScope?.requestFocus();
+        // FocusScope.of(Get.context!).requestFocus();
 
         break;
       case AppLifecycleState.inactive:
@@ -121,7 +122,8 @@ class _AuthGuard1State extends State<AuthGuard1> with WidgetsBindingObserver {
       case AppLifecycleState.paused:
         // --
         print('Paused');
-        FocusScope.of(Get.context!).unfocus();
+        // FocusScope.of(Get.context!).unfocus();
+        Get.focusScope?.unfocus();
         break;
       case AppLifecycleState.detached:
         // --
