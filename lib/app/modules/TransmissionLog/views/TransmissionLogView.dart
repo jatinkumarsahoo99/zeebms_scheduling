@@ -19,6 +19,7 @@ import '../../../controller/HomeController.dart';
 import '../../../controller/MainController.dart';
 import '../../../data/DropDownValue.dart';
 import '../../../data/PermissionModel.dart';
+import '../../../data/user_data_settings_model.dart';
 import '../../../providers/ApiFactory.dart';
 import '../../../providers/DataGridMenu.dart';
 import '../../../providers/SizeDefine.dart';
@@ -36,30 +37,33 @@ class TransmissionLogView extends StatelessWidget {
   Widget build(BuildContext context) {
     return LayoutBuilder(builder: (context, constraints) {
       Offset centerOffset =
-          Offset(constraints.maxWidth / 2, constraints.maxHeight / 2);
+      Offset(constraints.maxWidth / 2, constraints.maxHeight / 2);
 
       return Scaffold(
         key: rebuildKey,
         floatingActionButton: Obx(() {
           return controller.canDialogShow.value
               ? DraggableFab(
-                  initPosition: controller.getOffSetValue(constraints),
-                  child: controller.dialogWidget!,
-                )
+            initPosition: controller.getOffSetValue(constraints),
+            child: controller.dialogWidget!,
+          )
               : SizedBox();
         }),
         body: RawKeyboardListener(
           focusNode: new FocusNode(),
           onKey: (RawKeyEvent raw) {
             print("RAw is.>>>" + raw.toString());
-            if (raw is RawKeyDownEvent && raw.isControlPressed && raw.character?.toLowerCase() == "c") {
+            if (raw is RawKeyDownEvent &&
+                raw.isControlPressed &&
+                raw.character?.toLowerCase() == "c") {
               print("Copy Pressed Ctrl + c ");
               if (controller.gridStateManager != null &&
                   controller.gridStateManager?.currentCell != null) {
                 print("Copy Pressed in clipboard ");
                 /*Clipboard.setData(new ClipboardData(
                     text: controller.gridStateManager?.currentCell?.value));*/
-                Utils.copyToClipboardHack(controller.gridStateManager?.currentCell?.value);
+                Utils.copyToClipboardHack(
+                    controller.gridStateManager?.currentCell?.value);
               }
             }
 
@@ -123,84 +127,91 @@ class TransmissionLogView extends StatelessWidget {
                           spacing: 5,
                           children: [
                             Obx(
-                              () => DropDownField.formDropDown1WidthMap(
-                                controller.locations.value,
-                                (value) {
-                                  controller.selectLocation = value;
-                                  controller.getChannels(
-                                      controller.selectLocation?.key ?? "");
-                                },
-                                "Location",
-                                0.12,
-                                isEnable: controller.isEnable.value,
-                                selected: controller.selectLocation,
-                                autoFocus: true,
-                                // dialogWidth: 330,
-                                dialogHeight: Get.height * .7,
-                              ),
+                                  () =>
+                                  DropDownField.formDropDown1WidthMap(
+                                    controller.locations.value,
+                                        (value) {
+                                      controller.selectLocation = value;
+                                      controller.getChannels(
+                                          controller.selectLocation?.key ?? "");
+                                    },
+                                    "Location",
+                                    0.12,
+                                    isEnable: controller.isEnable.value,
+                                    selected: controller.selectLocation,
+                                    autoFocus: true,
+                                    // dialogWidth: 330,
+                                    dialogHeight: Get.height * .7,
+                                  ),
                             ),
 
                             /// channel
                             Obx(
-                              () => DropDownField.formDropDown1WidthMap(
-                                controller.channels.value,
-                                (value) {
-                                  controller.selectChannel = value;
-                                  controller.getChannelFocusOut();
-                                },
-                                "Channel",
-                                0.12,
-                                isEnable: controller.isEnable.value,
-                                selected: controller.selectChannel,
-                                autoFocus: true,
-                                // dialogWidth: 330,
-                                dialogHeight: Get.height * .7,
-                              ),
+                                  () =>
+                                  DropDownField.formDropDown1WidthMap(
+                                    controller.channels.value,
+                                        (value) {
+                                      controller.selectChannel = value;
+                                      controller.getChannelFocusOut();
+                                    },
+                                    "Channel",
+                                    0.12,
+                                    isEnable: controller.isEnable.value,
+                                    selected: controller.selectChannel,
+                                    autoFocus: true,
+                                    // dialogWidth: 330,
+                                    dialogHeight: Get.height * .7,
+                                  ),
                             ),
                             SizedBox(
                               width: Get.width * 0.079,
                               child: Row(
                                 children: [
                                   SizedBox(width: 5),
-                                  Obx(() => Padding(
+                                  Obx(() =>
+                                      Padding(
                                         padding:
-                                            const EdgeInsets.only(top: 15.0),
+                                        const EdgeInsets.only(top: 15.0),
                                         child: Checkbox(
                                           value: controller.isStandby.value,
                                           onChanged: controller.isEnable.value
                                               ? (val) {
-                                                  controller.isStandby.value =
-                                                      val!;
-                                                }
+                                            controller.isStandby.value =
+                                            val!;
+                                          }
                                               : null,
                                           materialTapTargetSize:
-                                              MaterialTapTargetSize.shrinkWrap,
+                                          MaterialTapTargetSize.shrinkWrap,
                                         ),
                                       )),
                                   Obx(
-                                    () => Padding(
-                                        padding: const EdgeInsets.only(
-                                            top: 15.0, left: 5),
-                                        child: Text(
-                                          "Standby Log",
-                                          style: TextStyle(
-                                              fontSize: SizeDefine.labelSize1,
-                                              color: controller.isEnable.value
-                                                  ? Colors.black
-                                                  : Colors.grey),
-                                        )),
+                                        () =>
+                                        Padding(
+                                            padding: const EdgeInsets.only(
+                                                top: 15.0, left: 5),
+                                            child: Text(
+                                              "Standby Log",
+                                              style: TextStyle(
+                                                  fontSize: SizeDefine
+                                                      .labelSize1,
+                                                  color: controller.isEnable
+                                                      .value
+                                                      ? Colors.black
+                                                      : Colors.grey),
+                                            )),
                                   ),
                                 ],
                               ),
                             ),
                             Obx(
-                              () => DateWithThreeTextField(
-                                title: "Schedule Date",
-                                splitType: "-",
-                                widthRation: 0.12,
-                                isEnable: controller.isEnable.value,
-                                onFocusChange: (data) {
-                                  /* DateTime date = DateFormat("dd-MM-yyyy").parse(data);
+                                  () =>
+                                  DateWithThreeTextField(
+                                    title: "Schedule Date",
+                                    splitType: "-",
+                                    widthRation: 0.12,
+                                    isEnable: controller.isEnable.value,
+                                    onFocusChange: (data) {
+                                      /* DateTime date = DateFormat("dd-MM-yyyy").parse(data);
                                 print("Focus date is>>>" + date.toString());
                                 bool valDate = date.isBefore(DateTime.now());
                                 bool isSameDate = DateUtils.isSameDay(date, DateTime.now());
@@ -215,9 +226,9 @@ class TransmissionLogView extends StatelessWidget {
                                 }
                                 Get.find<HomeController>().update(["transButtons"]);
                                 print("Called when focus changed");*/
-                                },
-                                mainTextController: controller.selectedDate,
-                              ),
+                                    },
+                                    mainTextController: controller.selectedDate,
+                                  ),
                             ),
                             Padding(
                               padding: const EdgeInsets.only(
@@ -252,18 +263,19 @@ class TransmissionLogView extends StatelessWidget {
                               child: Row(
                                 children: [
                                   SizedBox(width: 5),
-                                  Obx(() => Padding(
+                                  Obx(() =>
+                                      Padding(
                                         padding:
-                                            const EdgeInsets.only(top: 15.0),
+                                        const EdgeInsets.only(top: 15.0),
                                         child: Checkbox(
                                           value:
-                                              controller.chkTxCommercial.value,
+                                          controller.chkTxCommercial.value,
                                           onChanged: (val) {
                                             controller.chkTxCommercial.value =
-                                                val!;
+                                            val!;
                                           },
                                           materialTapTargetSize:
-                                              MaterialTapTargetSize.shrinkWrap,
+                                          MaterialTapTargetSize.shrinkWrap,
                                         ),
                                       )),
                                   Padding(
@@ -278,7 +290,8 @@ class TransmissionLogView extends StatelessWidget {
                                 ],
                               ),
                             ),
-                            Obx(() => Padding(
+                            Obx(() =>
+                                Padding(
                                   padding: const EdgeInsets.only(
                                     top: 15.0,
                                   ),
@@ -305,134 +318,148 @@ class TransmissionLogView extends StatelessWidget {
                       // width: Get.width,
                       // height: Get.height * .33,
                       child: (controller.transmissionLog != null &&
-                              controller.transmissionLog?.loadSavedLogOutput !=
-                                  null &&
-                              controller.transmissionLog?.loadSavedLogOutput
-                                      ?.lstTransmissionLog !=
-                                  null &&
-                              (controller.transmissionLog?.loadSavedLogOutput
-                                  ?.lstTransmissionLog?.isNotEmpty)!)
+                          controller.transmissionLog?.loadSavedLogOutput !=
+                              null &&
+                          controller.transmissionLog?.loadSavedLogOutput
+                              ?.lstTransmissionLog !=
+                              null &&
+                          (controller.transmissionLog?.loadSavedLogOutput
+                              ?.lstTransmissionLog?.isNotEmpty)!)
                           ? DataGridFromMapTransmissionLog(
-                              /*onFocusChange: (value) {
+                        /*onFocusChange: (value) {
                               controller.gridStateManager!
                                   .setGridMode(PlutoGridMode.selectWithOneTap);
                               controller.selectedPlutoGridMode =
                                   PlutoGridMode.selectWithOneTap;
                             },*/
-                              hideCode: false,
-                              draggableKeys: ["transmissionTime"],
-                              colorCallback: (PlutoRowColorContext colorData) {
-                                PlutoRow currentRow = colorData
-                                    .stateManager.rows[colorData.rowIdx];
-                                ColorDataModel? data =
-                                    Get.find<TransmissionLogController>()
-                                        .getMatchWithKey(currentRow
-                                                .cells["eventType"]?.value ??
-                                            "");
-                                Color color = Colors.white;
-                                if (controller
-                                        .gridStateManager?.currentRowIdx ==
-                                    colorData.rowIdx) {
-                                  return Color(0xFFD1C4E9);
-                                }
+                          witdthSpecificColumn: (controller
+                              .userDataSettings?.userSetting
+                              ?.firstWhere((element) =>
+                          element.controlName == "gridStateManager",
+                              orElse: () => UserSetting())
+                              .userSettings),
+                          hideCode: false,
+                          draggableKeys: ["transmissionTime"],
+                          colorCallback: (PlutoRowColorContext colorData) {
+                            PlutoRow currentRow = colorData
+                                .stateManager.rows[colorData.rowIdx];
+                            ColorDataModel? data =
+                            Get.find<TransmissionLogController>()
+                                .getMatchWithKey(currentRow
+                                .cells["eventType"]?.value ??
+                                "");
+                            Color color = Colors.white;
+                            if (controller
+                                .gridStateManager?.currentRowIdx ==
+                                colorData.rowIdx) {
+                              return Color(0xFFD1C4E9);
+                            }
 
-                                if (data != null) {
-                                  // print("Index is>> ${colorData.rowIdx.toString()} >>>> ${data.backColor}");
-                                  /*print(
+                            if (data != null) {
+                              // print("Index is>> ${colorData.rowIdx.toString()} >>>> ${data.backColor}");
+                              /*print(
                                     ">>>>>Color code is>>>>Index is>${colorData.rowIdx.toString()}" +
                                         ">>>>>>" +
                                         data.backColor.toString());*/
-                                  color =
-                                      Color(int.parse('0x${data.backColor}'));
-                                }
-                                if (currentRow.cells["productName"]?.value !=
-                                        null &&
-                                    currentRow.cells["productName"]?.value !=
-                                        "") {
-                                  String strPriority = ((currentRow
-                                              .cells["bookingNumber"]?.value
-                                              .toString()
-                                              .trim() ??
-                                          "") +
-                                      (currentRow
-                                              .cells["bookingdetailcode"]?.value
-                                              .toString()
-                                              .trim() ??
-                                          ""));
-                                  if (strPriority != null &&
-                                      strPriority != "") {
-                                    ColorDataModel? data1 =
-                                        Get.find<TransmissionLogController>()
-                                            .getMatchWithKey(strPriority);
-                                    if (data1 != null) {
-                                      /*print(
+                              color =
+                                  Color(int.parse('0x${data.backColor}'));
+                            }
+                            if (currentRow.cells["productName"]?.value !=
+                                null &&
+                                currentRow.cells["productName"]?.value !=
+                                    "") {
+                              String strPriority = ((currentRow
+                                  .cells["bookingNumber"]?.value
+                                  .toString()
+                                  .trim() ??
+                                  "") +
+                                  (currentRow
+                                      .cells["bookingdetailcode"]?.value
+                                      .toString()
+                                      .trim() ??
+                                      ""));
+                              if (strPriority != null &&
+                                  strPriority != "") {
+                                ColorDataModel? data1 =
+                                Get.find<TransmissionLogController>()
+                                    .getMatchWithKey(strPriority);
+                                if (data1 != null) {
+                                  /*print(
                                         ">>>>>Color code is>>>>Index is>${colorData.rowIdx.toString()}" +
                                             ">>>>>>" +
                                             data1.backColor.toString());*/
-                                      color = Color(
-                                          int.parse('0x${data1.backColor}'));
-                                    }
-                                  }
+                                  color = Color(
+                                      int.parse('0x${data1.backColor}'));
                                 }
-                                return color;
-                              },
-                              onload: (loadevent) {
-                                controller.gridStateManager =
-                                    loadevent.stateManager;
-                                loadevent.stateManager
-                                    .setGridMode(PlutoGridMode.normal);
-                                // loadevent.stateManager.setSelecting(true);
-                                loadevent.stateManager.setSelectingMode(
-                                    PlutoGridSelectingMode.row);
-                                if (controller.isFetch.value) {
-                                  controller.isFetch.value = false;
-                                  controller.colorGrid(false);
-                                  controller.logSaved = true;
-                                  loadevent.stateManager.setCurrentCell(
-                                      loadevent
-                                          .stateManager.rows[0].cells["no"],
-                                      0);
-                                }
-                                if (controller.selectedIndex != null) {
-                                  loadevent.stateManager.moveScrollByRow(
-                                      PlutoMoveDirection.down,
-                                      controller.selectedIndex);
-                                  loadevent.stateManager.setCurrentCell(
-                                      loadevent
-                                          .stateManager
-                                          .rows[controller.selectedIndex!]
-                                          .cells
-                                          .entries
-                                          .first
-                                          .value,
-                                      controller.selectedIndex);
-                                }
-                              },
-                              formatDate: false,
-                              hideKeys: ["foreColor", "backColor", "modifed"],
-                              showSrNo: true,
-                              // mode: PlutoGridMode.selectWithOneTap,
+                              }
+                            }
+                            return color;
+                          },
+                          onload: (loadevent) {
+                            controller.gridStateManager =
+                                loadevent.stateManager;
+                            loadevent.stateManager
+                                .setGridMode(PlutoGridMode.normal);
+                            // loadevent.stateManager.setSelecting(true);
+                            loadevent.stateManager.setSelectingMode(
+                                PlutoGridSelectingMode.row);
+                            if (controller.isFetch.value) {
+                              controller.isFetch.value = false;
+                              controller.colorGrid(false);
+                              controller.logSaved = true;
+                              loadevent.stateManager.setCurrentCell(
+                                  loadevent
+                                      .stateManager.rows[0].cells["no"],
+                                  0);
+                            }
+                            if (controller.selectedIndex != null) {
+                              loadevent.stateManager.moveScrollByRow(
+                                  PlutoMoveDirection.down,
+                                  controller.selectedIndex);
+                              loadevent.stateManager.setCurrentCell(
+                                  loadevent
+                                      .stateManager
+                                      .rows[controller.selectedIndex!]
+                                      .cells
+                                      .entries
+                                      .first
+                                      .value,
+                                  controller.selectedIndex);
+                            }
+                          },
+                          formatDate: false,
+                          hideKeys: ["foreColor", "backColor", "modifed"],
+                          showSrNo: true,
+                          // mode: PlutoGridMode.selectWithOneTap,
 
-                              onSelected: (PlutoGridOnSelectedEvent event) {
-                                event.selectedRows?.forEach((element) {
-                                  print("On Print select" +
-                                      jsonEncode(element.toJson()));
-                                });
-                              },
-                              onChanged: (PlutoGridOnChangedEvent event) {
-                                print(
-                                    "On changed called>>>>" + event.toString());
-                              },
-                              /*colorCallback: (PlutoRowColorContext plutoContext) {
+                          onSelected: (PlutoGridOnSelectedEvent event) {
+                            event.selectedRows?.forEach((element) {
+                              print("On Print select" +
+                                  jsonEncode(element.toJson()));
+                            });
+                          },
+                          onChanged: (PlutoGridOnChangedEvent event) {
+                            print(
+                                "On changed called>>>>" + event.toString());
+                          },
+                          /*colorCallback: (PlutoRowColorContext plutoContext) {
                               return Color(int.parse(
                                   '0x${controller.transmissionLog?.loadSavedLogOutput?.lstTransmissionLog![plutoContext.rowIdx].backColor}'));
                             },*/
-                              onContextMenuClick: (DataGridMenuItem itemType,
-                                  int index, renderContext) {
-                                switch (itemType) {
-                                  case DataGridMenuItem.delete:
-                                    LoadingDialog.recordExists(
-                                        "Want to delete selected record?\nEvent type: ${renderContext.row.cells["eventType"]?.value ?? ""}\nDuration: ${renderContext.row.cells["tapeduration"]?.value ?? ""}\nExportTapeCode: ${renderContext.row.cells["exportTapeCode"]?.value ?? ""}\nExportTapeCaption: ${renderContext.row.cells["exportTapeCaption"]?.value ?? ""}",
+                          onContextMenuClick: (DataGridMenuItem itemType,
+                              int index, renderContext) {
+                            switch (itemType) {
+                              case DataGridMenuItem.delete:
+                                LoadingDialog.recordExists(
+                                    "Want to delete selected record?\nEvent type: ${renderContext
+                                        .row.cells["eventType"]?.value ??
+                                        ""}\nDuration: ${renderContext.row
+                                        .cells["tapeduration"]?.value ??
+                                        ""}\nExportTapeCode: ${renderContext.row
+                                        .cells["exportTapeCode"]?.value ??
+                                        ""}\nExportTapeCaption: ${renderContext
+                                        .row.cells["exportTapeCaption"]
+                                        ?.value ?? ""}",
                                         () {
                                       controller.addEventToUndo();
                                       controller.gridStateManager
@@ -440,32 +467,32 @@ class TransmissionLogView extends StatelessWidget {
                                       controller.colorGrid(false);
                                     });
 
-                                    break;
-                                  case DataGridMenuItem.verifyTime:
-                                    controller.checkVerifyTime();
-                                    break;
-                                  case DataGridMenuItem.clearpaste:
-                                    controller.copyRow = null;
-                                    break;
-                                  case DataGridMenuItem.freezeColumn:
-                                    renderContext.stateManager
-                                        .toggleFrozenColumn(
-                                            renderContext.column,
-                                            PlutoColumnFrozen.start);
-                                    // renderContext.column.frozen=PlutoColumnFrozen.start;
-                                    break;
-                                  case DataGridMenuItem.unFreezeColumn:
-                                    renderContext.stateManager
-                                        .toggleFrozenColumn(
-                                            renderContext.column,
-                                            PlutoColumnFrozen.none);
-                                    // renderContext.column.frozen=PlutoColumnFrozen.none;
-                                    break;
+                                break;
+                              case DataGridMenuItem.verifyTime:
+                                controller.checkVerifyTime();
+                                break;
+                              case DataGridMenuItem.clearpaste:
+                                controller.copyRow = null;
+                                break;
+                              case DataGridMenuItem.freezeColumn:
+                                renderContext.stateManager
+                                    .toggleFrozenColumn(
+                                    renderContext.column,
+                                    PlutoColumnFrozen.start);
+                                // renderContext.column.frozen=PlutoColumnFrozen.start;
+                                break;
+                              case DataGridMenuItem.unFreezeColumn:
+                                renderContext.stateManager
+                                    .toggleFrozenColumn(
+                                    renderContext.column,
+                                    PlutoColumnFrozen.none);
+                                // renderContext.column.frozen=PlutoColumnFrozen.none;
+                                break;
 
-                                  case DataGridMenuItem.cut:
-                                    controller.cutCopy(
-                                        isCut: true, row: renderContext.row);
-                                    /*controller.lastSelectOption = "cut";
+                              case DataGridMenuItem.cut:
+                                controller.cutCopy(
+                                    isCut: true, row: renderContext.row);
+                                /*controller.lastSelectOption = "cut";
                                   controller.copyRow = renderContext.row;
                                   print("On Print cut index is>>>" +
                                       index.toString());
@@ -475,11 +502,11 @@ class TransmissionLogView extends StatelessWidget {
                                         ">>>>" +
                                         value.value.toString());
                                   });*/
-                                    break;
-                                  case DataGridMenuItem.copy:
-                                    controller.cutCopy(
-                                        isCut: false, row: renderContext.row);
-                                    /*controller.lastSelectOption = "copy";
+                                break;
+                              case DataGridMenuItem.copy:
+                                controller.cutCopy(
+                                    isCut: false, row: renderContext.row);
+                                /*controller.lastSelectOption = "copy";
                                   controller.copyRow = renderContext.row;
                                   // print("On Print moved" + jsonEncode(renderContext.row.));
                                   print("On Print copy index is>>>" +
@@ -490,19 +517,19 @@ class TransmissionLogView extends StatelessWidget {
                                         ">>>>" +
                                         value.value.toString());
                                   });*/
-                                    break;
-                                  case DataGridMenuItem.fixedEvent:
-                                    controller.fixedEvent(index);
-                                    break;
-                                  case DataGridMenuItem.rescheduleSpots:
-                                    showRescheduleDialog(Get.context);
-                                    break;
-                                  case DataGridMenuItem.removeMarkError:
-                                    controller.btn_markError_Click(index);
-                                    break;
-                                  case DataGridMenuItem.paste:
-                                    controller.paste(index);
-                                    /*if (controller.lastSelectOption != null &&
+                                break;
+                              case DataGridMenuItem.fixedEvent:
+                                controller.fixedEvent(index);
+                                break;
+                              case DataGridMenuItem.rescheduleSpots:
+                                showRescheduleDialog(Get.context);
+                                break;
+                              case DataGridMenuItem.removeMarkError:
+                                controller.btn_markError_Click(index);
+                                break;
+                              case DataGridMenuItem.paste:
+                                controller.paste(index);
+                                /*if (controller.lastSelectOption != null &&
                                       controller.copyRow != null) {
                                     switch (controller.lastSelectOption) {
                                       case "cut":
@@ -529,58 +556,58 @@ class TransmissionLogView extends StatelessWidget {
                                     LoadingDialog.callInfoMessage(
                                         "Nothing is selected");
                                   }*/
-                                    break;
-                                }
-                              },
-                              onRowsMoved:
-                                  (PlutoGridOnRowsMovedEvent onRowMoved) {
-                                controller.isRowFilter.value = true;
-                                print("Index is>>" + onRowMoved.idx.toString());
-                                print("On Print moved" +
-                                    jsonEncode(
-                                        onRowMoved.rows[0].cells.toString()));
+                                break;
+                            }
+                          },
+                          onRowsMoved:
+                              (PlutoGridOnRowsMovedEvent onRowMoved) {
+                            controller.isRowFilter.value = true;
+                            print("Index is>>" + onRowMoved.idx.toString());
+                            print("On Print moved" +
+                                jsonEncode(
+                                    onRowMoved.rows[0].cells.toString()));
 
-                                // print("Index is>>" + onRowMoved.idx.toString());
-                                // Map map = onRowMoved.rows[0].cells;
-                                // print("On Print moved" +
-                                //     jsonEncode(
-                                //         onRowMoved.rows[0].cells.toString()));
-                                // int? val = int.tryParse((onRowMoved
-                                //     .rows[0].cells["Episode Dur"]?.value
-                                //     .toString())!)!;
-                                // // print("After On select>>" + data.toString());
-                                // for (int i = (onRowMoved.idx) ?? 0; i >= 0; i--) {
-                                //   print("On Print moved" + i.toString());
-                                //   print("On select>>" +
-                                //       map["Episode Dur"].value.toString());
-                                //
-                                //   print("On Print moved cell>>>" +
-                                //       jsonEncode(controller.gridStateManager
-                                //           ?.rows[i].cells["Episode Dur"]?.value
-                                //           .toString()));
-                                //
-                                //   controller.gridStateManager?.rows[i]
-                                //           .cells["Episode Dur"] =
-                                //       PlutoCell(value: val - (i - onRowMoved.idx));
-                                // }
-                                // controller.gridStateManager?.notifyListeners();
-                              },
-                              mode: controller.selectedPlutoGridMode,
-                              widthRatio: (Get.width / 11.4),
-                              mapData: (controller.transmissionLog
-                                  ?.loadSavedLogOutput?.lstTransmissionLog!
-                                  .map((e) => e.toJson())
-                                  .toList())!)
+                            // print("Index is>>" + onRowMoved.idx.toString());
+                            // Map map = onRowMoved.rows[0].cells;
+                            // print("On Print moved" +
+                            //     jsonEncode(
+                            //         onRowMoved.rows[0].cells.toString()));
+                            // int? val = int.tryParse((onRowMoved
+                            //     .rows[0].cells["Episode Dur"]?.value
+                            //     .toString())!)!;
+                            // // print("After On select>>" + data.toString());
+                            // for (int i = (onRowMoved.idx) ?? 0; i >= 0; i--) {
+                            //   print("On Print moved" + i.toString());
+                            //   print("On select>>" +
+                            //       map["Episode Dur"].value.toString());
+                            //
+                            //   print("On Print moved cell>>>" +
+                            //       jsonEncode(controller.gridStateManager
+                            //           ?.rows[i].cells["Episode Dur"]?.value
+                            //           .toString()));
+                            //
+                            //   controller.gridStateManager?.rows[i]
+                            //           .cells["Episode Dur"] =
+                            //       PlutoCell(value: val - (i - onRowMoved.idx));
+                            // }
+                            // controller.gridStateManager?.notifyListeners();
+                          },
+                          mode: controller.selectedPlutoGridMode,
+                          widthRatio: (Get.width / 11.4),
+                          mapData: (controller.transmissionLog
+                              ?.loadSavedLogOutput?.lstTransmissionLog!
+                              .map((e) => e.toJson())
+                              .toList())!)
                           : Container(
-                              // height: Get.height * .33,
-                              // width: Get.width,
-                              decoration: BoxDecoration(
-                                border: Border.all(
-                                  color: Colors.grey.shade400,
-                                  width: 1,
-                                ),
-                              ),
-                            ),
+                        // height: Get.height * .33,
+                        // width: Get.width,
+                        decoration: BoxDecoration(
+                          border: Border.all(
+                            color: Colors.grey.shade400,
+                            width: 1,
+                          ),
+                        ),
+                      ),
                     );
                   },
                 ),
@@ -590,9 +617,10 @@ class TransmissionLogView extends StatelessWidget {
                     init: Get.find<HomeController>(),
                     builder: (controller) {
                       PermissionModel formPermissions =
-                          Get.find<MainController>()
-                              .permissionList!
-                              .lastWhere((element) {
+                      Get
+                          .find<MainController>()
+                          .permissionList!
+                          .lastWhere((element) {
                         return element.appFormName ==
                             Routes.TRANSMISSION_LOG.replaceAll("/", "");
                       });
@@ -615,17 +643,18 @@ class TransmissionLogView extends StatelessWidget {
                                   btnText: btn["name"],
                                   showIcon: false,
                                   callback:
-                                      (Get.find<TransmissionLogController>()
-                                                  .isBackDated &&
-                                              btn['name'] == "Save")
-                                          ? null
-                                          : Utils.btnAccessHandler2(
-                                                      btn['name'],
-                                                      controller,
-                                                      formPermissions) ==
-                                                  null
-                                              ? null
-                                              : () => formHandler(btn['name']),
+                                  (Get
+                                      .find<TransmissionLogController>()
+                                      .isBackDated &&
+                                      btn['name'] == "Save")
+                                      ? null
+                                      : Utils.btnAccessHandler2(
+                                      btn['name'],
+                                      controller,
+                                      formPermissions) ==
+                                      null
+                                      ? null
+                                      : () => formHandler(btn['name']),
                                 ),
                               IconButton(
                                 onPressed: () {
@@ -665,6 +694,18 @@ class TransmissionLogView extends StatelessWidget {
                                     :*/
                                     () => formHandler("CL"),
                               ),
+                              FormButtonWrapper1(
+                                btnText: "Exit",
+                                showIcon: false,
+                                isEnabled: true,
+                                callback: /*btn["name"] != "Delete" &&
+                                        Utils.btnAccessHandler2(btn['name'],
+                                                controller, formPermissions) ==
+                                            null
+                                    ? null
+                                    :*/
+                                    () => formHandler("Exit"),
+                              ),
                             ],
                           ),
                         );
@@ -695,6 +736,16 @@ class TransmissionLogView extends StatelessWidget {
       case "Next Time":
         controller.selectNextProgramClockHour();
         break;
+      case "Exit":
+        Get.find<HomeController>().postUserGridSetting2(listStateManager: [
+          {"gridStateManager": controller.gridStateManager},
+          {"gridStateManagerCommercial": controller.gridStateManagerCommercial},
+          {"dgvCommercialsStateManager": controller.dgvCommercialsStateManager},
+          {"dgvTimeStateManager": controller.dgvTimeStateManager},
+          {"tblFastInsert": controller.tblFastInsert},
+          {"tblSegement": controller.tblSegement},
+        ],formName: "frmTransmissionlog");
+        break;
       case "Save":
         controller.btnSave_Click();
         break;
@@ -717,8 +768,8 @@ class TransmissionLogView extends StatelessWidget {
         });
         break;
       case "Segments":
-        // controller.getEventListForInsert(function: () {
-        // showSegmentDialog(Get.context);
+      // controller.getEventListForInsert(function: () {
+      // showSegmentDialog(Get.context);
         showSegmentDialog2(Get.context);
         // });
         break;
@@ -764,10 +815,10 @@ class TransmissionLogView extends StatelessWidget {
         } else {
           LoadingDialog.recordExists(
             "Do you want to auto this log?",
-            () {
+                () {
               LoadingDialog.recordExists(
                   "Do you want to add promos?",
-                  () {
+                      () {
                     controller.isAutoClick.value = true;
                     controller.callAuto(true);
                   },
@@ -843,33 +894,33 @@ class TransmissionLogView extends StatelessWidget {
                           width: Get.width * 0.85,
                           height: Get.height * 0.6,
                           child: (controller.tsListData != null &&
-                                  (controller.tsListData?.length ?? 0) > 0)
+                              (controller.tsListData?.length ?? 0) > 0)
                               ? DataGridFromMap(
-                                  hideCode: false,
-                                  formatDate: false,
-                                  onload: (PlutoGridOnLoadedEvent load) {
-                                    load.stateManager.setColumnSizeConfig(
-                                        PlutoGridColumnSizeConfig(
+                              hideCode: false,
+                              formatDate: false,
+                              onload: (PlutoGridOnLoadedEvent load) {
+                                load.stateManager.setColumnSizeConfig(
+                                    PlutoGridColumnSizeConfig(
                                       resizeMode: PlutoResizeMode.normal,
                                       autoSizeMode: PlutoAutoSizeMode.scale,
                                     ));
-                                  },
-                                  onRowDoubleTap:
-                                      (PlutoGridOnRowDoubleTapEvent? tap) {
-                                    // datechange
-                                    // hour
-                                    controller.dataGridRowFilter(
-                                      matchValue: tap
-                                              ?.row.cells["hourCode"]?.value
-                                              .toString() ??
-                                          "",
-                                      filterKey: 'datechange',
-                                    );
-                                  },
-                                  mapData: controller.tsListData!)
+                              },
+                              onRowDoubleTap:
+                                  (PlutoGridOnRowDoubleTapEvent? tap) {
+                                // datechange
+                                // hour
+                                controller.dataGridRowFilter(
+                                  matchValue: tap
+                                      ?.row.cells["hourCode"]?.value
+                                      .toString() ??
+                                      "",
+                                  filterKey: 'datechange',
+                                );
+                              },
+                              mapData: controller.tsListData!)
                               : const WarningBox(
-                                  text:
-                                      'Enter Location, Channel & Date to get the Break Definitions'),
+                              text:
+                              'Enter Location, Channel & Date to get the Break Definitions'),
                         );
                       })
                 ],
@@ -913,7 +964,7 @@ class TransmissionLogView extends StatelessWidget {
                     children: [
                       DropDownField.formDropDown1WidthMap(
                         model?.timelist?.toList(),
-                        (value) {
+                            (value) {
                           controller.selectTimeForCommercial = value;
                           // controller.dataGridRowFilter(
                           //   matchValue: value.value ?? "",
@@ -945,8 +996,8 @@ class TransmissionLogView extends StatelessWidget {
                             }
                             controller.dataGridRowFilterCommercial(
                               matchValue:
-                                  controller.selectTimeForCommercial?.value ??
-                                      "",
+                              controller.selectTimeForCommercial?.value ??
+                                  "",
                               filterKey: 'scheduletime',
                             );
                           },
@@ -966,32 +1017,40 @@ class TransmissionLogView extends StatelessWidget {
                           width: Get.width * 0.8,
                           height: 300,
                           child: (model != null &&
-                                  model.lstListLoggedCommercials != null &&
-                                  model.lstListLoggedCommercials?.length != 0)
+                              model.lstListLoggedCommercials != null &&
+                              model.lstListLoggedCommercials?.length != 0)
                               ? DataGridFromMap(
-                                  hideCode: false,
-                                  formatDate: false,
-                                  onload: (PlutoGridOnLoadedEvent load) {
-                                    controller.gridStateManagerCommercial =
-                                        load.stateManager;
-                                    controller.gridStateManager?.setCurrentCell(
-                                        controller.gridStateManager?.rows[0]
-                                            .cells["no"],
-                                        0);
-                                  },
-                                  onRowDoubleTap:
-                                      (PlutoGridOnRowDoubleTapEvent? event) {
-                                    controller.tblCommercials_CellDoubleClick(
-                                        event?.rowIdx ?? 0);
-                                  },
-                                  // colorCallback: (renderC) => Colors.red[200]!,
-                                  mapData: (model.lstListLoggedCommercials
-                                      ?.map((e) => e.toJson())
-                                      .toList())!)
-                              // _dataTable3()
+                              hideCode: false,
+                              formatDate: false,
+                              onload: (PlutoGridOnLoadedEvent load) {
+                                controller.gridStateManagerCommercial =
+                                    load.stateManager;
+                                controller.gridStateManager?.setCurrentCell(
+                                    controller.gridStateManager?.rows[0]
+                                        .cells["no"],
+                                    0);
+                              },
+                              witdthSpecificColumn: (controller
+                                  .userDataSettings?.userSetting
+                                  ?.firstWhere(
+                                      (element) =>
+                                  element.controlName ==
+                                      "gridStateManagerCommercial",
+                                  orElse: () => UserSetting())
+                                  .userSettings),
+                              onRowDoubleTap:
+                                  (PlutoGridOnRowDoubleTapEvent? event) {
+                                controller.tblCommercials_CellDoubleClick(
+                                    event?.rowIdx ?? 0);
+                              },
+                              // colorCallback: (renderC) => Colors.red[200]!,
+                              mapData: (model.lstListLoggedCommercials
+                                  ?.map((e) => e.toJson())
+                                  .toList())!)
+                          // _dataTable3()
                               : const WarningBox(
-                                  text:
-                                      'Enter Location, Channel & Date to get the Break Definitions'),
+                              text:
+                              'Enter Location, Channel & Date to get the Break Definitions'),
                         );
                       })
                 ],
@@ -1043,22 +1102,23 @@ class TransmissionLogView extends StatelessWidget {
                   Row(
                     children: [
                       Obx(
-                        () => DropDownField.formDropDown1WidthMap(
-                          controller.listEventsinInsert.value,
-                          (value) {
-                            controller.selectEvent = value;
-                            // controller.selectedLocationId.text = value.key!;
-                            // controller.selectedLocationName.text = value.value!;
-                            // controller.getChannelsBasedOnLocation(value.key!);
-                          },
-                          "Event",
-                          0.13,
-                          // isEnable: controller.isEnable.value,
-                          // selected: controller.selectLocation,
-                          autoFocus: true,
-                          // dialogWidth: 330,
-                          dialogHeight: Get.height * .7,
-                        ),
+                            () =>
+                            DropDownField.formDropDown1WidthMap(
+                              controller.listEventsinInsert.value,
+                                  (value) {
+                                controller.selectEvent = value;
+                                // controller.selectedLocationId.text = value.key!;
+                                // controller.selectedLocationName.text = value.value!;
+                                // controller.getChannelsBasedOnLocation(value.key!);
+                              },
+                              "Event",
+                              0.13,
+                              // isEnable: controller.isEnable.value,
+                              // selected: controller.selectLocation,
+                              autoFocus: true,
+                              // dialogWidth: 330,
+                              dialogHeight: Get.height * .7,
+                            ),
                       ),
                       SizedBox(
                         width: 10,
@@ -1087,25 +1147,26 @@ class TransmissionLogView extends StatelessWidget {
                           children: [
                             SizedBox(width: 5),
                             Obx(
-                              () => Padding(
-                                padding: const EdgeInsets.only(top: 15.0),
-                                child: Checkbox(
-                                  value: controller.isMy.value,
-                                  onChanged: (val) {
-                                    controller.isMy.value = val!;
-                                  },
-                                  materialTapTargetSize:
+                                  () =>
+                                  Padding(
+                                    padding: const EdgeInsets.only(top: 15.0),
+                                    child: Checkbox(
+                                      value: controller.isMy.value,
+                                      onChanged: (val) {
+                                        controller.isMy.value = val!;
+                                      },
+                                      materialTapTargetSize:
                                       MaterialTapTargetSize.shrinkWrap,
-                                ),
-                              ),
+                                    ),
+                                  ),
                             ),
                             Padding(
                               padding:
-                                  const EdgeInsets.only(top: 15.0, left: 5),
+                              const EdgeInsets.only(top: 15.0, left: 5),
                               child: Text(
                                 "My",
                                 style:
-                                    TextStyle(fontSize: SizeDefine.labelSize1),
+                                TextStyle(fontSize: SizeDefine.labelSize1),
                               ),
                             ),
                           ],
@@ -1124,7 +1185,7 @@ class TransmissionLogView extends StatelessWidget {
                               controller.getBtnInsertSearchClick(
                                   isMine: controller.isMy.value,
                                   eventType:
-                                      controller.selectEvent?.value ?? "",
+                                  controller.selectEvent?.value ?? "",
                                   txId: controller.txId_.text,
                                   txCaption: controller.txCaption_.text);
                             }
@@ -1150,7 +1211,8 @@ class TransmissionLogView extends StatelessWidget {
                         child: Row(
                           children: [
                             SizedBox(width: 5),
-                            Obx(() => Padding(
+                            Obx(() =>
+                                Padding(
                                   padding: const EdgeInsets.only(top: 15.0),
                                   child: Checkbox(
                                     value: controller.isInsertAfter.value,
@@ -1158,16 +1220,16 @@ class TransmissionLogView extends StatelessWidget {
                                       controller.isInsertAfter.value = val!;
                                     },
                                     materialTapTargetSize:
-                                        MaterialTapTargetSize.shrinkWrap,
+                                    MaterialTapTargetSize.shrinkWrap,
                                   ),
                                 )),
                             Padding(
                               padding:
-                                  const EdgeInsets.only(top: 15.0, left: 5),
+                              const EdgeInsets.only(top: 15.0, left: 5),
                               child: Text(
                                 "Insert After",
                                 style:
-                                    TextStyle(fontSize: SizeDefine.labelSize1),
+                                TextStyle(fontSize: SizeDefine.labelSize1),
                               ),
                             ),
                           ],
@@ -1198,69 +1260,69 @@ class TransmissionLogView extends StatelessWidget {
                           width: Get.width * 0.8,
                           height: Get.height * 0.47,
                           child: (controller.inserSearchModel != null &&
-                                  controller.inserSearchModel
-                                          ?.lstListMyEventData !=
-                                      null &&
-                                  controller
-                                          .inserSearchModel
-                                          ?.lstListMyEventData
-                                          ?.lstListMyEventClips !=
-                                      null &&
-                                  (controller
-                                              .inserSearchModel
-                                              ?.lstListMyEventData
-                                              ?.lstListMyEventClips
-                                              ?.length ??
-                                          0) >
-                                      0)
+                              controller.inserSearchModel
+                                  ?.lstListMyEventData !=
+                                  null &&
+                              controller
+                                  .inserSearchModel
+                                  ?.lstListMyEventData
+                                  ?.lstListMyEventClips !=
+                                  null &&
+                              (controller
+                                  .inserSearchModel
+                                  ?.lstListMyEventData
+                                  ?.lstListMyEventClips
+                                  ?.length ??
+                                  0) >
+                                  0)
                               ? DataGridFromMap(
-                                  hideCode: false,
-                                  formatDate: false,
-                                  // checkRow: true,
-                                  showSrNo: false,
-                                  mode: PlutoGridMode.normal,
-                                  // checkRowKey: "eventtype",
-                                  onload: (PlutoGridOnLoadedEvent load) {
-                                    controller.tblFastInsert =
-                                        load.stateManager;
-                                    load.stateManager
-                                        .setGridMode(PlutoGridMode.normal);
-                                    load.stateManager.setSelectingMode(
-                                        PlutoGridSelectingMode.row);
-                                    // load.stateManager.setSelecting(true);
-                                    load.stateManager.toggleSelectingRow(0);
-                                  },
-                                  // colorCallback: (renderC) => Colors.red[200]!,
-                                  onRowDoubleTap:
-                                      (PlutoGridOnRowDoubleTapEvent tap) {
-                                    // controller.tblFastInsert?.unCheckedRows;
-                                    /* controller.tblFastInsert
+                              hideCode: false,
+                              formatDate: false,
+                              // checkRow: true,
+                              showSrNo: false,
+                              mode: PlutoGridMode.normal,
+                              // checkRowKey: "eventtype",
+                              onload: (PlutoGridOnLoadedEvent load) {
+                                controller.tblFastInsert =
+                                    load.stateManager;
+                                load.stateManager
+                                    .setGridMode(PlutoGridMode.normal);
+                                load.stateManager.setSelectingMode(
+                                    PlutoGridSelectingMode.row);
+                                // load.stateManager.setSelecting(true);
+                                load.stateManager.toggleSelectingRow(0);
+                              },
+                              // colorCallback: (renderC) => Colors.red[200]!,
+                              onRowDoubleTap:
+                                  (PlutoGridOnRowDoubleTapEvent tap) {
+                                // controller.tblFastInsert?.unCheckedRows;
+                                /* controller.tblFastInsert
                                         ?.setRowChecked(tap.row, true);*/
-                                    // controller.tblFastInsert
-                                    //     ?.setCurrentCell(tap.cell, tap.rowIdx);
-                                    LoadingDialog.call();
-                                    Future.delayed(Duration(seconds: 2), () {
-                                      controller
-                                          .btnFastInsert_Add_Click1(tap.rowIdx);
-                                    });
-                                  },
-                                  colorCallback: (colorData) {
-                                    if (controller
-                                            .tblFastInsert?.currentRowIdx ==
-                                        colorData.rowIdx) {
-                                      return Color(0xFFD1C4E9);
-                                    } else {
-                                      return Colors.white;
-                                    }
-                                  },
-                                  mapData: (controller.inserSearchModel
-                                      ?.lstListMyEventData?.lstListMyEventClips!
-                                      .map((e) => e.toJson())
-                                      .toList())!)
-                              // _dataTable3()
+                                // controller.tblFastInsert
+                                //     ?.setCurrentCell(tap.cell, tap.rowIdx);
+                                LoadingDialog.call();
+                                Future.delayed(Duration(seconds: 2), () {
+                                  controller
+                                      .btnFastInsert_Add_Click1(tap.rowIdx);
+                                });
+                              },
+                              colorCallback: (colorData) {
+                                if (controller
+                                    .tblFastInsert?.currentRowIdx ==
+                                    colorData.rowIdx) {
+                                  return Color(0xFFD1C4E9);
+                                } else {
+                                  return Colors.white;
+                                }
+                              },
+                              mapData: (controller.inserSearchModel
+                                  ?.lstListMyEventData?.lstListMyEventClips!
+                                  .map((e) => e.toJson())
+                                  .toList())!)
+                          // _dataTable3()
                               : const WarningBox(
-                                  text:
-                                      'Enter Location, Channel & Date to get the Break Definitions'),
+                              text:
+                              'Enter Location, Channel & Date to get the Break Definitions'),
                         );
                       }),
                   Padding(
@@ -1326,7 +1388,8 @@ class TransmissionLogView extends StatelessWidget {
                         child: Row(
                           children: [
                             SizedBox(width: 5),
-                            Obx(() => Padding(
+                            Obx(() =>
+                                Padding(
                                   padding: const EdgeInsets.only(top: 15.0),
                                   child: Checkbox(
                                     value: controller.isAllDayReplace.value,
@@ -1334,16 +1397,16 @@ class TransmissionLogView extends StatelessWidget {
                                       controller.isAllDayReplace.value = val!;
                                     },
                                     materialTapTargetSize:
-                                        MaterialTapTargetSize.shrinkWrap,
+                                    MaterialTapTargetSize.shrinkWrap,
                                   ),
                                 )),
                             Padding(
                               padding:
-                                  const EdgeInsets.only(top: 15.0, left: 5),
+                              const EdgeInsets.only(top: 15.0, left: 5),
                               child: Text(
                                 "All day",
                                 style:
-                                    TextStyle(fontSize: SizeDefine.labelSize1),
+                                TextStyle(fontSize: SizeDefine.labelSize1),
                               ),
                             ),
                           ],
@@ -1401,14 +1464,14 @@ class TransmissionLogView extends StatelessWidget {
                           showIcon: false,
                           callback: () {
                             controller.fromReplaceInsert_.text = controller
-                                    .gridStateManager
-                                    ?.currentRow
-                                    ?.cells["transmissionTime"]
-                                    ?.value ??
+                                .gridStateManager
+                                ?.currentRow
+                                ?.cells["transmissionTime"]
+                                ?.value ??
                                 "";
                             controller.fromReplaceIndexInsert_.text = controller
-                                    .gridStateManager?.currentRowIdx
-                                    .toString() ??
+                                .gridStateManager?.currentRowIdx
+                                .toString() ??
                                 "";
                           },
                         ),
@@ -1453,20 +1516,20 @@ class TransmissionLogView extends StatelessWidget {
                       ),*/
                       Padding(
                         padding:
-                            const EdgeInsets.only(top: 15.0, right: 5, left: 5),
+                        const EdgeInsets.only(top: 15.0, right: 5, left: 5),
                         child: FormButtonWrapper1(
                           btnText: "",
                           showIcon: false,
                           callback: () {
                             controller.toReplaceInsert_.text = controller
-                                    .gridStateManager
-                                    ?.currentRow
-                                    ?.cells["transmissionTime"]
-                                    ?.value ??
+                                .gridStateManager
+                                ?.currentRow
+                                ?.cells["transmissionTime"]
+                                ?.value ??
                                 "";
                             controller.toReplaceIndexInsert_.text = controller
-                                    .gridStateManager?.currentRowIdx
-                                    .toString() ??
+                                .gridStateManager?.currentRowIdx
+                                .toString() ??
                                 "";
                           },
                         ),
@@ -1563,22 +1626,23 @@ class TransmissionLogView extends StatelessWidget {
                         Row(
                           children: [
                             Obx(
-                              () => DropDownField.formDropDown1WidthMap(
-                                controller.listEventsinInsert.value,
-                                (value) {
-                                  controller.selectEvent = value;
-                                  // controller.selectedLocationId.text = value.key!;
-                                  // controller.selectedLocationName.text = value.value!;
-                                  // controller.getChannelsBasedOnLocation(value.key!);
-                                },
-                                "Event",
-                                0.13,
-                                // isEnable: controller.isEnable.value,
-                                // selected: controller.selectLocation,
-                                autoFocus: true,
-                                // dialogWidth: 330,
-                                dialogHeight: Get.height * .7,
-                              ),
+                                  () =>
+                                  DropDownField.formDropDown1WidthMap(
+                                    controller.listEventsinInsert.value,
+                                        (value) {
+                                      controller.selectEvent = value;
+                                      // controller.selectedLocationId.text = value.key!;
+                                      // controller.selectedLocationName.text = value.value!;
+                                      // controller.getChannelsBasedOnLocation(value.key!);
+                                    },
+                                    "Event",
+                                    0.13,
+                                    // isEnable: controller.isEnable.value,
+                                    // selected: controller.selectLocation,
+                                    autoFocus: true,
+                                    // dialogWidth: 330,
+                                    dialogHeight: Get.height * .7,
+                                  ),
                             ),
                             SizedBox(
                               width: 10,
@@ -1607,17 +1671,19 @@ class TransmissionLogView extends StatelessWidget {
                                 children: [
                                   SizedBox(width: 5),
                                   Obx(
-                                    () => Padding(
-                                      padding: const EdgeInsets.only(top: 15.0),
-                                      child: Checkbox(
-                                        value: controller.isMy.value,
-                                        onChanged: (val) {
-                                          controller.isMy.value = val!;
-                                        },
-                                        materialTapTargetSize:
+                                        () =>
+                                        Padding(
+                                          padding: const EdgeInsets.only(
+                                              top: 15.0),
+                                          child: Checkbox(
+                                            value: controller.isMy.value,
+                                            onChanged: (val) {
+                                              controller.isMy.value = val!;
+                                            },
+                                            materialTapTargetSize:
                                             MaterialTapTargetSize.shrinkWrap,
-                                      ),
-                                    ),
+                                          ),
+                                        ),
                                   ),
                                   Padding(
                                     padding: const EdgeInsets.only(
@@ -1633,7 +1699,7 @@ class TransmissionLogView extends StatelessWidget {
                             ),
                             Padding(
                               padding:
-                                  const EdgeInsets.only(top: 15.0, left: 10),
+                              const EdgeInsets.only(top: 15.0, left: 10),
                               child: FormButtonWrapper1(
                                 btnText: "Search",
                                 showIcon: false,
@@ -1645,7 +1711,7 @@ class TransmissionLogView extends StatelessWidget {
                                     controller.getBtnInsertSearchClick(
                                         isMine: controller.isMy.value,
                                         eventType:
-                                            controller.selectEvent?.value ?? "",
+                                        controller.selectEvent?.value ?? "",
                                         txId: controller.txId_.text,
                                         txCaption: controller.txCaption_.text);
                                   }
@@ -1654,7 +1720,7 @@ class TransmissionLogView extends StatelessWidget {
                             ),
                             Padding(
                               padding:
-                                  const EdgeInsets.only(top: 15.0, left: 10),
+                              const EdgeInsets.only(top: 15.0, left: 10),
                               child: FormButtonWrapper1(
                                 btnText: "Add",
                                 showIcon: false,
@@ -1672,17 +1738,18 @@ class TransmissionLogView extends StatelessWidget {
                               child: Row(
                                 children: [
                                   SizedBox(width: 5),
-                                  Obx(() => Padding(
+                                  Obx(() =>
+                                      Padding(
                                         padding:
-                                            const EdgeInsets.only(top: 15.0),
+                                        const EdgeInsets.only(top: 15.0),
                                         child: Checkbox(
                                           value: controller.isInsertAfter.value,
                                           onChanged: (val) {
                                             controller.isInsertAfter.value =
-                                                val!;
+                                            val!;
                                           },
                                           materialTapTargetSize:
-                                              MaterialTapTargetSize.shrinkWrap,
+                                          MaterialTapTargetSize.shrinkWrap,
                                         ),
                                       )),
                                   Padding(
@@ -1722,73 +1789,81 @@ class TransmissionLogView extends StatelessWidget {
                                 width: Get.width * 0.8,
                                 height: Get.height * 0.47,
                                 child: (controller.inserSearchModel != null &&
-                                        controller.inserSearchModel
-                                                ?.lstListMyEventData !=
-                                            null &&
-                                        controller
-                                                .inserSearchModel
-                                                ?.lstListMyEventData
-                                                ?.lstListMyEventClips !=
-                                            null &&
-                                        (controller
-                                                    .inserSearchModel
-                                                    ?.lstListMyEventData
-                                                    ?.lstListMyEventClips
-                                                    ?.length ??
-                                                0) >
-                                            0)
+                                    controller.inserSearchModel
+                                        ?.lstListMyEventData !=
+                                        null &&
+                                    controller
+                                        .inserSearchModel
+                                        ?.lstListMyEventData
+                                        ?.lstListMyEventClips !=
+                                        null &&
+                                    (controller
+                                        .inserSearchModel
+                                        ?.lstListMyEventData
+                                        ?.lstListMyEventClips
+                                        ?.length ??
+                                        0) >
+                                        0)
                                     ? DataGridFromMap(
-                                        hideCode: false,
-                                        formatDate: false,
-                                        // checkRow: true,
-                                        showSrNo: false,
-                                        mode: PlutoGridMode.normal,
-                                        // checkRowKey: "eventtype",
-                                        onload: (PlutoGridOnLoadedEvent load) {
-                                          controller.tblFastInsert =
-                                              load.stateManager;
-                                          load.stateManager.setGridMode(
-                                              PlutoGridMode.normal);
-                                          load.stateManager.setSelectingMode(
-                                              PlutoGridSelectingMode.row);
-                                          // load.stateManager.setSelecting(true);
-                                          load.stateManager
-                                              .toggleSelectingRow(0);
-                                        },
-                                        // colorCallback: (renderC) => Colors.red[200]!,
-                                        onRowDoubleTap:
-                                            (PlutoGridOnRowDoubleTapEvent tap) {
-                                          // controller.tblFastInsert?.unCheckedRows;
-                                          /* controller.tblFastInsert
+                                    hideCode: false,
+                                    formatDate: false,
+                                    // checkRow: true,
+                                    showSrNo: false,
+                                    mode: PlutoGridMode.normal,
+                                    // checkRowKey: "eventtype",
+                                    onload: (PlutoGridOnLoadedEvent load) {
+                                      controller.tblFastInsert =
+                                          load.stateManager;
+                                      load.stateManager.setGridMode(
+                                          PlutoGridMode.normal);
+                                      load.stateManager.setSelectingMode(
+                                          PlutoGridSelectingMode.row);
+                                      // load.stateManager.setSelecting(true);
+                                      load.stateManager
+                                          .toggleSelectingRow(0);
+                                    },
+                                    witdthSpecificColumn: (controller
+                                        .userDataSettings?.userSetting
+                                        ?.firstWhere(
+                                            (element) =>
+                                        element.controlName ==
+                                            "tblFastInsert",
+                                        orElse: () => UserSetting())
+                                        .userSettings),
+                                    // colorCallback: (renderC) => Colors.red[200]!,
+                                    onRowDoubleTap:
+                                        (PlutoGridOnRowDoubleTapEvent tap) {
+                                      // controller.tblFastInsert?.unCheckedRows;
+                                      /* controller.tblFastInsert
                                               ?.setRowChecked(tap.row, true);*/
-                                          // controller.tblFastInsert
-                                          //     ?.setCurrentCell(tap.cell, tap.rowIdx);
-                                          LoadingDialog.call();
-                                          Future.delayed(Duration(seconds: 2),
+                                      // controller.tblFastInsert
+                                      //     ?.setCurrentCell(tap.cell, tap.rowIdx);
+                                      LoadingDialog.call();
+                                      Future.delayed(Duration(seconds: 2),
                                               () {
                                             controller.btnFastInsert_Add_Click1(
                                                 tap.rowIdx);
                                           });
-                                        },
-                                        colorCallback: (colorData) {
-                                          if (controller.tblFastInsert
-                                                  ?.currentRowIdx ==
-                                              colorData.rowIdx) {
-                                            return Color(0xFFD1C4E9);
-                                          } else {
-                                            return Colors.white;
-                                          }
-                                        },
-                                        mapData: (controller
-                                            .inserSearchModel
-                                            ?.lstListMyEventData
-                                            ?.lstListMyEventClips!
-                                            .map((e) => e.toJson())
-                                            .toList())!)
-                                    // _dataTable3()
+                                    },
+                                    colorCallback: (colorData) {
+                                      if (controller.tblFastInsert
+                                          ?.currentRowIdx ==
+                                          colorData.rowIdx) {
+                                        return Color(0xFFD1C4E9);
+                                      } else {
+                                        return Colors.white;
+                                      }
+                                    },
+                                    mapData: (controller
+                                        .inserSearchModel
+                                        ?.lstListMyEventData
+                                        ?.lstListMyEventClips!
+                                        .map((e) => e.toJson())
+                                        .toList())!)
+                                // _dataTable3()
                                     : const WarningBox(
-                                        text:
-                                            'Enter Location, Channel & Date to get the Break Definitions'),
+                                    text:
+                                    'Enter Location, Channel & Date to get the Break Definitions'),
                               );
                             }),
                         Padding(
@@ -1854,18 +1929,19 @@ class TransmissionLogView extends StatelessWidget {
                               child: Row(
                                 children: [
                                   SizedBox(width: 5),
-                                  Obx(() => Padding(
+                                  Obx(() =>
+                                      Padding(
                                         padding:
-                                            const EdgeInsets.only(top: 15.0),
+                                        const EdgeInsets.only(top: 15.0),
                                         child: Checkbox(
                                           value:
-                                              controller.isAllDayReplace.value,
+                                          controller.isAllDayReplace.value,
                                           onChanged: (val) {
                                             controller.isAllDayReplace.value =
-                                                val!;
+                                            val!;
                                           },
                                           materialTapTargetSize:
-                                              MaterialTapTargetSize.shrinkWrap,
+                                          MaterialTapTargetSize.shrinkWrap,
                                         ),
                                       )),
                                   Padding(
@@ -1927,21 +2003,21 @@ class TransmissionLogView extends StatelessWidget {
                             ),*/
                             Padding(
                               padding:
-                                  const EdgeInsets.only(top: 15.0, right: 5),
+                              const EdgeInsets.only(top: 15.0, right: 5),
                               child: FormButtonWrapper1(
                                 btnText: "",
                                 showIcon: false,
                                 callback: () {
                                   controller.fromReplaceInsert_.text =
                                       controller
-                                              .gridStateManager
-                                              ?.currentRow
-                                              ?.cells["transmissionTime"]
-                                              ?.value ??
+                                          .gridStateManager
+                                          ?.currentRow
+                                          ?.cells["transmissionTime"]
+                                          ?.value ??
                                           "";
                                   controller.fromReplaceIndexInsert_.text =
                                       controller.gridStateManager?.currentRowIdx
-                                              .toString() ??
+                                          .toString() ??
                                           "";
                                 },
                               ),
@@ -1992,14 +2068,14 @@ class TransmissionLogView extends StatelessWidget {
                                 showIcon: false,
                                 callback: () {
                                   controller.toReplaceInsert_.text = controller
-                                          .gridStateManager
-                                          ?.currentRow
-                                          ?.cells["transmissionTime"]
-                                          ?.value ??
+                                      .gridStateManager
+                                      ?.currentRow
+                                      ?.cells["transmissionTime"]
+                                      ?.value ??
                                       "";
                                   controller.toReplaceIndexInsert_.text =
                                       controller.gridStateManager?.currentRowIdx
-                                              .toString() ??
+                                          .toString() ??
                                           "";
                                 },
                               ),
@@ -2067,25 +2143,28 @@ class TransmissionLogView extends StatelessWidget {
                         init: controller,
                         builder: (controller) =>
                             DropDownField.formDropDownSearchAPI2(
-                          GlobalKey(),
-                          context,
-                          title: "Program",
-                          onchanged: (DropDownValue? value) async {
-                            controller.selectProgramSegment = value;
-                            // selectedProgramId.text = value?.key ?? "";
-                            // selectedProgram.text = value?.value ?? "";
-                            // selectProgram = value;
-                            // await controller.getDataAfterProgLoad(controller.selectedLocationId.text, controller.selectedChannelId.text, value!.key);
-                          },
-                          url: ApiFactory
-                              .TRANSMISSION_LOG_SEGMENT_PROGRAM_SEARCH(),
-                          width: MediaQuery.of(context).size.width * .2,
-                          // selectedValue: selectProgram,
-                          widthofDialog: 350,
-                          dialogHeight: Get.height * .65,
-                          parseKeyForKey: "ProgramCode",
-                          parseKeyForValue: "ProgramName",
-                        ),
+                              GlobalKey(),
+                              context,
+                              title: "Program",
+                              onchanged: (DropDownValue? value) async {
+                                controller.selectProgramSegment = value;
+                                // selectedProgramId.text = value?.key ?? "";
+                                // selectedProgram.text = value?.value ?? "";
+                                // selectProgram = value;
+                                // await controller.getDataAfterProgLoad(controller.selectedLocationId.text, controller.selectedChannelId.text, value!.key);
+                              },
+                              url: ApiFactory
+                                  .TRANSMISSION_LOG_SEGMENT_PROGRAM_SEARCH(),
+                              width: MediaQuery
+                                  .of(context)
+                                  .size
+                                  .width * .2,
+                              // selectedValue: selectProgram,
+                              widthofDialog: 350,
+                              dialogHeight: Get.height * .65,
+                              parseKeyForKey: "ProgramCode",
+                              parseKeyForValue: "ProgramName",
+                            ),
                       ),
                       Focus(
                         onFocusChange: (focus) {
@@ -2122,22 +2201,23 @@ class TransmissionLogView extends StatelessWidget {
                         width: 10,
                       ),
                       Obx(
-                        () => DropDownField.formDropDown1WidthMap(
-                          controller.listTapeDetailsSegment?.value,
-                          (value) {
-                            controller.selectTapeSegmentDialog = value;
-                            // controller.selectedLocationId.text = value.key!;
-                            // controller.selectedLocationName.text = value.value!;
-                            // controller.getChannelsBasedOnLocation(value.key!);
-                          },
-                          "Tape",
-                          0.12,
-                          // isEnable: controller.isEnable.value,
-                          selected: controller.selectTapeSegmentDialog,
-                          autoFocus: true,
-                          // dialogWidth: 330,
-                          dialogHeight: Get.height * .7,
-                        ),
+                            () =>
+                            DropDownField.formDropDown1WidthMap(
+                              controller.listTapeDetailsSegment?.value,
+                                  (value) {
+                                controller.selectTapeSegmentDialog = value;
+                                // controller.selectedLocationId.text = value.key!;
+                                // controller.selectedLocationName.text = value.value!;
+                                // controller.getChannelsBasedOnLocation(value.key!);
+                              },
+                              "Tape",
+                              0.12,
+                              // isEnable: controller.isEnable.value,
+                              selected: controller.selectTapeSegmentDialog,
+                              autoFocus: true,
+                              // dialogWidth: 330,
+                              dialogHeight: Get.height * .7,
+                            ),
                       ),
                       SizedBox(
                         width: 10,
@@ -2178,17 +2258,25 @@ class TransmissionLogView extends StatelessWidget {
                           height: Get.height * 0.6,
                           child: (controller.segmentList != null)
                               ? DataGridFromMap(
-                                  hideCode: false,
-                                  formatDate: false,
-                                  onload: (PlutoGridOnLoadedEvent load) {
-                                    controller.tblSegement = load.stateManager;
-                                  },
-                                  // colorCallback: (renderC) => Colors.red[200]!,
-                                  mapData: (controller.segmentList!))
-                              // _dataTable3()
+                              hideCode: false,
+                              formatDate: false,
+                              onload: (PlutoGridOnLoadedEvent load) {
+                                controller.tblSegement = load.stateManager;
+                              },
+                              witdthSpecificColumn: (controller
+                                  .userDataSettings?.userSetting
+                                  ?.firstWhere(
+                                      (element) =>
+                                  element.controlName ==
+                                      "tblSegement",
+                                  orElse: () => UserSetting())
+                                  .userSettings),
+                              // colorCallback: (renderC) => Colors.red[200]!,
+                              mapData: (controller.segmentList!))
+                          // _dataTable3()
                               : const WarningBox(
-                                  text:
-                                      'Enter Location, Channel & Date to get the Break Definitions'),
+                              text:
+                              'Enter Location, Channel & Date to get the Break Definitions'),
                         );
                       })
                 ],
@@ -2271,25 +2359,28 @@ class TransmissionLogView extends StatelessWidget {
                                 init: controller,
                                 builder: (controller) =>
                                     DropDownField.formDropDownSearchAPI2(
-                                  GlobalKey(),
-                                  context,
-                                  title: "Program",
-                                  onchanged: (DropDownValue? value) async {
-                                    controller.selectProgramSegment = value;
-                                    // selectedProgramId.text = value?.key ?? "";
-                                    // selectedProgram.text = value?.value ?? "";
-                                    // selectProgram = value;
-                                    // await controller.getDataAfterProgLoad(controller.selectedLocationId.text, controller.selectedChannelId.text, value!.key);
-                                  },
-                                  url: ApiFactory
-                                      .TRANSMISSION_LOG_SEGMENT_PROGRAM_SEARCH(),
-                                  width: MediaQuery.of(context).size.width * .2,
-                                  // selectedValue: selectProgram,
-                                  widthofDialog: 350,
-                                  dialogHeight: Get.height * .65,
-                                  parseKeyForKey: "ProgramCode",
-                                  parseKeyForValue: "ProgramName",
-                                ),
+                                      GlobalKey(),
+                                      context,
+                                      title: "Program",
+                                      onchanged: (DropDownValue? value) async {
+                                        controller.selectProgramSegment = value;
+                                        // selectedProgramId.text = value?.key ?? "";
+                                        // selectedProgram.text = value?.value ?? "";
+                                        // selectProgram = value;
+                                        // await controller.getDataAfterProgLoad(controller.selectedLocationId.text, controller.selectedChannelId.text, value!.key);
+                                      },
+                                      url: ApiFactory
+                                          .TRANSMISSION_LOG_SEGMENT_PROGRAM_SEARCH(),
+                                      width: MediaQuery
+                                          .of(context)
+                                          .size
+                                          .width * .2,
+                                      // selectedValue: selectProgram,
+                                      widthofDialog: 350,
+                                      dialogHeight: Get.height * .65,
+                                      parseKeyForKey: "ProgramCode",
+                                      parseKeyForValue: "ProgramName",
+                                    ),
                               ),
                               Focus(
                                 onFocusChange: (focus) {
@@ -2327,29 +2418,32 @@ class TransmissionLogView extends StatelessWidget {
                                 width: 10,
                               ),
                               Obx(
-                                () => DropDownField.formDropDown1WidthMap(
-                                  controller.listTapeDetailsSegment?.value,
-                                  (value) {
-                                    controller.selectTapeSegmentDialog = value;
-                                    // controller.selectedLocationId.text = value.key!;
-                                    // controller.selectedLocationName.text = value.value!;
-                                    // controller.getChannelsBasedOnLocation(value.key!);
-                                  },
-                                  "Tape",
-                                  0.12,
-                                  // isEnable: controller.isEnable.value,
-                                  selected: controller.selectTapeSegmentDialog,
-                                  autoFocus: true,
-                                  // dialogWidth: 330,
-                                  dialogHeight: Get.height * .7,
-                                ),
+                                    () =>
+                                    DropDownField.formDropDown1WidthMap(
+                                      controller.listTapeDetailsSegment?.value,
+                                          (value) {
+                                        controller.selectTapeSegmentDialog =
+                                            value;
+                                        // controller.selectedLocationId.text = value.key!;
+                                        // controller.selectedLocationName.text = value.value!;
+                                        // controller.getChannelsBasedOnLocation(value.key!);
+                                      },
+                                      "Tape",
+                                      0.12,
+                                      // isEnable: controller.isEnable.value,
+                                      selected: controller
+                                          .selectTapeSegmentDialog,
+                                      autoFocus: true,
+                                      // dialogWidth: 330,
+                                      dialogHeight: Get.height * .7,
+                                    ),
                               ),
                               SizedBox(
                                 width: 10,
                               ),
                               Padding(
                                 padding:
-                                    const EdgeInsets.only(top: 15.0, left: 10),
+                                const EdgeInsets.only(top: 15.0, left: 10),
                                 child: FormButtonWrapper(
                                   btnText: "Search",
                                   showIcon: false,
@@ -2360,7 +2454,7 @@ class TransmissionLogView extends StatelessWidget {
                               ),
                               Padding(
                                 padding:
-                                    const EdgeInsets.only(top: 15.0, left: 10),
+                                const EdgeInsets.only(top: 15.0, left: 10),
                                 child: FormButtonWrapper(
                                   btnText: "Add",
                                   showIcon: false,
@@ -2385,19 +2479,19 @@ class TransmissionLogView extends StatelessWidget {
                                   height: Get.height * 0.6,
                                   child: (controller.segmentList != null)
                                       ? DataGridFromMap(
-                                          hideCode: false,
-                                          formatDate: false,
-                                          onload:
-                                              (PlutoGridOnLoadedEvent load) {
-                                            controller.tblSegement =
-                                                load.stateManager;
-                                          },
-                                          // colorCallback: (renderC) => Colors.red[200]!,
-                                          mapData: (controller.segmentList!))
-                                      // _dataTable3()
+                                      hideCode: false,
+                                      formatDate: false,
+                                      onload:
+                                          (PlutoGridOnLoadedEvent load) {
+                                        controller.tblSegement =
+                                            load.stateManager;
+                                      },
+                                      // colorCallback: (renderC) => Colors.red[200]!,
+                                      mapData: (controller.segmentList!))
+                                  // _dataTable3()
                                       : const WarningBox(
-                                          text:
-                                              'Enter Location, Channel & Date to get the Break Definitions'),
+                                      text:
+                                      'Enter Location, Channel & Date to get the Break Definitions'),
                                 );
                               })
                         ],
@@ -2439,7 +2533,8 @@ class TransmissionLogView extends StatelessWidget {
                       padLeft: 0,
                       isEnable: false,
                       controller: controller.txId_Change),
-                  Obx(() => Padding(
+                  Obx(() =>
+                      Padding(
                         padding: EdgeInsets.only(top: 3),
                         child: InputFields.formFieldNumberMask(
                             hintTxt: "Duration",
@@ -2449,7 +2544,8 @@ class TransmissionLogView extends StatelessWidget {
                             isEnable: controller.visibleChangeDuration.value,
                             paddingLeft: 0),
                       )),
-                  Obx(() => Padding(
+                  Obx(() =>
+                      Padding(
                         padding: EdgeInsets.only(top: 3),
                         child: InputFields.formFieldNumberMask(
                             hintTxt: "OffSet",
@@ -2459,7 +2555,8 @@ class TransmissionLogView extends StatelessWidget {
                             isEnable: controller.visibleChangeOffset.value,
                             paddingLeft: 0),
                       )),
-                  Obx(() => Padding(
+                  Obx(() =>
+                      Padding(
                         padding: EdgeInsets.only(top: 3),
                         child: InputFields.formFieldNumberMask(
                             hintTxt: "FPC Time",
@@ -2477,7 +2574,8 @@ class TransmissionLogView extends StatelessWidget {
                         child: Row(
                           children: [
                             SizedBox(width: 5),
-                            Obx(() => Padding(
+                            Obx(() =>
+                                Padding(
                                   padding: const EdgeInsets.only(top: 15.0),
                                   child: Checkbox(
                                     value: controller.isAllByChange.value,
@@ -2485,16 +2583,16 @@ class TransmissionLogView extends StatelessWidget {
                                       controller.isAllByChange.value = val!;
                                     },
                                     materialTapTargetSize:
-                                        MaterialTapTargetSize.shrinkWrap,
+                                    MaterialTapTargetSize.shrinkWrap,
                                   ),
                                 )),
                             Padding(
                               padding:
-                                  const EdgeInsets.only(top: 15.0, left: 5),
+                              const EdgeInsets.only(top: 15.0, left: 5),
                               child: Text(
                                 "All",
                                 style:
-                                    TextStyle(fontSize: SizeDefine.labelSize1),
+                                TextStyle(fontSize: SizeDefine.labelSize1),
                               ),
                             ),
                           ],
@@ -2550,16 +2648,17 @@ class TransmissionLogView extends StatelessWidget {
                 crossAxisAlignment: CrossAxisAlignment.center,
                 children: <Widget>[
                   Obx(
-                    () => Padding(
-                      padding: EdgeInsets.only(top: 3),
-                      child: InputFields.formFieldNumberMask(
-                          hintTxt: "Duration",
-                          controller: controller.duration_change,
-                          widthRatio: 0.2,
-                          // isTime: true,
-                          isEnable: controller.visibleChangeDuration.value,
-                          paddingLeft: 0),
-                    ),
+                        () =>
+                        Padding(
+                          padding: EdgeInsets.only(top: 3),
+                          child: InputFields.formFieldNumberMask(
+                              hintTxt: "Duration",
+                              controller: controller.duration_change,
+                              widthRatio: 0.2,
+                              // isTime: true,
+                              isEnable: controller.visibleChangeDuration.value,
+                              paddingLeft: 0),
+                        ),
                   ),
                   SizedBox(
                     width: Get.width * 0.2,
@@ -2570,7 +2669,8 @@ class TransmissionLogView extends StatelessWidget {
                           child: Row(
                             children: [
                               SizedBox(width: 5),
-                              Obx(() => Padding(
+                              Obx(() =>
+                                  Padding(
                                     padding: const EdgeInsets.only(top: 15.0),
                                     child: Checkbox(
                                       value: controller.isPartialLog.value,
@@ -2578,12 +2678,12 @@ class TransmissionLogView extends StatelessWidget {
                                         controller.isPartialLog.value = val!;
                                       },
                                       materialTapTargetSize:
-                                          MaterialTapTargetSize.shrinkWrap,
+                                      MaterialTapTargetSize.shrinkWrap,
                                     ),
                                   )),
                               Padding(
                                 padding:
-                                    const EdgeInsets.only(top: 15.0, left: 5),
+                                const EdgeInsets.only(top: 15.0, left: 5),
                                 child: Text(
                                   "Partial Log",
                                   style: TextStyle(
@@ -2605,9 +2705,9 @@ class TransmissionLogView extends StatelessWidget {
                       children: [
                         DropDownField.formDropDown1WidthMap(
                           controller
-                                  .exportFPCTime?.resFPCTime?.lstFPCFromTime ??
+                              .exportFPCTime?.resFPCTime?.lstFPCFromTime ??
                               [],
-                          (value) {
+                              (value) {
                             controller.selectExportFpcFrom = value;
                           },
                           "FPC From",
@@ -2623,7 +2723,7 @@ class TransmissionLogView extends StatelessWidget {
                         DropDownField.formDropDown1WidthMap(
                           controller.exportFPCTime?.resFPCTime?.lstFPCToTime ??
                               [],
-                          (value) {
+                              (value) {
                             controller.selectExportFpcTo = value;
                             controller.getChannelFocusOut();
                           },
@@ -2639,28 +2739,29 @@ class TransmissionLogView extends StatelessWidget {
                     ),
                   ),
                   Obx(
-                    () => RadioColumn(
-                      items: const [
-                        "Excel",
-                        "Excel - Old",
-                        "Excel - NEWS",
-                        "VizRT",
-                        "D Series",
-                        "ADC -lst",
-                        "Grass Valley",
-                        "ADC Noida",
-                        "Commercial Replace",
-                        "Videocon GV",
-                        "Playbox",
-                        "Eventz (Dubai)",
-                        "ITX",
-                      ],
-                      groupValue: controller.selectExportType.value ?? "",
-                      onchange: (val) {
-                        print("Response>>>" + val);
-                        controller.selectExportType.value = val;
-                      },
-                    ),
+                        () =>
+                        RadioColumn(
+                          items: const [
+                            "Excel",
+                            "Excel - Old",
+                            "Excel - NEWS",
+                            "VizRT",
+                            "D Series",
+                            "ADC -lst",
+                            "Grass Valley",
+                            "ADC Noida",
+                            "Commercial Replace",
+                            "Videocon GV",
+                            "Playbox",
+                            "Eventz (Dubai)",
+                            "ITX",
+                          ],
+                          groupValue: controller.selectExportType.value ?? "",
+                          onchange: (val) {
+                            print("Response>>>" + val);
+                            controller.selectExportType.value = val;
+                          },
+                        ),
                   ),
                 ],
               ),
@@ -2688,7 +2789,6 @@ class TransmissionLogView extends StatelessWidget {
               Navigator.pop(context);
             },
           ),
-
         ],
       ),
       radius: 10,
@@ -2814,39 +2914,41 @@ class TransmissionLogView extends StatelessWidget {
                 crossAxisAlignment: CrossAxisAlignment.center,
                 children: <Widget>[
                   Obx(
-                    () => DropDownField.formDropDown1WidthMap(
-                      controller.locations.value,
-                      (value) {
-                        controller.selectLocationCopyLog = value;
-                        controller.getChannels(
-                            controller.selectLocationCopyLog?.key ?? "");
-                      },
-                      "Location",
-                      0.12,
-                      // isEnable: controller.isEnable.value,
-                      selected: controller.selectLocationCopyLog,
-                      autoFocus: true,
-                      // dialogWidth: 330,
-                      dialogHeight: Get.height * .4,
-                    ),
+                        () =>
+                        DropDownField.formDropDown1WidthMap(
+                          controller.locations.value,
+                              (value) {
+                            controller.selectLocationCopyLog = value;
+                            controller.getChannels(
+                                controller.selectLocationCopyLog?.key ?? "");
+                          },
+                          "Location",
+                          0.12,
+                          // isEnable: controller.isEnable.value,
+                          selected: controller.selectLocationCopyLog,
+                          autoFocus: true,
+                          // dialogWidth: 330,
+                          dialogHeight: Get.height * .4,
+                        ),
                   ),
 
                   /// channel
                   Obx(
-                    () => DropDownField.formDropDown1WidthMap(
-                      controller.channels.value,
-                      (value) {
-                        controller.selectChannelCopyLog = value;
-                        controller.getChannelFocusOut();
-                      },
-                      "Channel",
-                      0.12,
-                      // isEnable: controller.isEnable.value,
-                      selected: controller.selectChannelCopyLog,
-                      autoFocus: true,
-                      // dialogWidth: 330,
-                      dialogHeight: Get.height * .4,
-                    ),
+                        () =>
+                        DropDownField.formDropDown1WidthMap(
+                          controller.channels.value,
+                              (value) {
+                            controller.selectChannelCopyLog = value;
+                            controller.getChannelFocusOut();
+                          },
+                          "Channel",
+                          0.12,
+                          // isEnable: controller.isEnable.value,
+                          selected: controller.selectChannelCopyLog,
+                          autoFocus: true,
+                          // dialogWidth: 330,
+                          dialogHeight: Get.height * .4,
+                        ),
                   ),
                   SizedBox(
                     height: 15,
@@ -2937,29 +3039,37 @@ class TransmissionLogView extends StatelessWidget {
                               height: Get.height * 0.53,
                               child: (controller.transmissionLog != null)
                                   ? DataGridFromMap(
-                                      hideCode: false,
-                                      formatDate: false,
-                                      onload: (PlutoGridOnLoadedEvent ev) {
-                                        controller.dgvCommercialsStateManager =
-                                            ev.stateManager;
-                                      },
-                                      mode: PlutoGridMode.select,
-                                      onSelected:
-                                          (PlutoGridOnSelectedEvent onSelect) {
-                                        controller
-                                            .dgvCommercialsCellDoubleClick(
-                                                onSelect.rowIdx!);
-                                      },
-                                      /*colorCallback: (renderC) =>
+                                  hideCode: false,
+                                  formatDate: false,
+                                  onload: (PlutoGridOnLoadedEvent ev) {
+                                    controller.dgvCommercialsStateManager =
+                                        ev.stateManager;
+                                  },
+                                  mode: PlutoGridMode.select,
+                                  witdthSpecificColumn: (controller
+                                      .userDataSettings?.userSetting
+                                      ?.firstWhere(
+                                          (element) =>
+                                      element.controlName ==
+                                          "dgvCommercialsStateManager",
+                                      orElse: () => UserSetting())
+                                      .userSettings),
+                                  onSelected:
+                                      (PlutoGridOnSelectedEvent onSelect) {
+                                    controller
+                                        .dgvCommercialsCellDoubleClick(
+                                        onSelect.rowIdx!);
+                                  },
+                                  /*colorCallback: (renderC) =>
                                           Colors.red[200]!,*/
-                                      mapData: (controller.verifyListModel
-                                          ?.lstCheckTimeBetweenCommercials!
-                                          .map((e) => e.toJson())
-                                          .toList())!)
-                                  // _dataTable3()
+                                  mapData: (controller.verifyListModel
+                                      ?.lstCheckTimeBetweenCommercials!
+                                      .map((e) => e.toJson())
+                                      .toList())!)
+                              // _dataTable3()
                                   : const WarningBox(
-                                      text:
-                                          'Enter Location, Channel & Date to get the Break Definitions'),
+                                  text:
+                                  'Enter Location, Channel & Date to get the Break Definitions'),
                             );
                           }),
                       GetBuilder<TransmissionLogController>(
@@ -2971,38 +3081,46 @@ class TransmissionLogView extends StatelessWidget {
                               width: Get.width * 0.3,
                               height: Get.height * 0.53,
                               child: (controller.listFilterVerify != null &&
-                                      ((controller.listFilterVerify?.length ??
-                                              0) >
-                                          0))
+                                  ((controller.listFilterVerify?.length ??
+                                      0) >
+                                      0))
                                   ? DataGridFromMap(
-                                      hideCode: false,
-                                      showonly: ["transmissionTime"],
-                                      formatDate: false,
-                                      onload: (PlutoGridOnLoadedEvent event) {
-                                        controller.dgvTimeStateManager =
-                                            event.stateManager;
-                                      },
-                                      showSrNo: false,
-                                      mode: PlutoGridMode.select,
-                                      onSelected:
-                                          (PlutoGridOnSelectedEvent onSelect) {
-                                        controller.dgvTimeCellDoubleClick(
-                                            onSelect.rowIdx!);
-                                      },
-                                      mapData: (controller.listFilterVerify
-                                          ?.map((e) => e.toJson())
-                                          .toList())!)
-                                  // _dataTable3()
+                                  hideCode: false,
+                                  showonly: ["transmissionTime"],
+                                  formatDate: false,
+                                  witdthSpecificColumn: (controller
+                                      .userDataSettings?.userSetting
+                                      ?.firstWhere(
+                                          (element) =>
+                                      element.controlName ==
+                                          "dgvTimeStateManager",
+                                      orElse: () => UserSetting())
+                                      .userSettings),
+                                  onload: (PlutoGridOnLoadedEvent event) {
+                                    controller.dgvTimeStateManager =
+                                        event.stateManager;
+                                  },
+                                  showSrNo: false,
+                                  mode: PlutoGridMode.select,
+                                  onSelected:
+                                      (PlutoGridOnSelectedEvent onSelect) {
+                                    controller.dgvTimeCellDoubleClick(
+                                        onSelect.rowIdx!);
+                                  },
+                                  mapData: (controller.listFilterVerify
+                                      ?.map((e) => e.toJson())
+                                      .toList())!)
+                              // _dataTable3()
                                   : Container(
-                                      width: Get.width * 0.3,
-                                      height: Get.height * 0.53,
-                                      decoration: BoxDecoration(
-                                        border: Border.all(
-                                          color: Colors.grey.shade400,
-                                          width: 1,
-                                        ),
-                                      ),
-                                    ),
+                                width: Get.width * 0.3,
+                                height: Get.height * 0.53,
+                                decoration: BoxDecoration(
+                                  border: Border.all(
+                                    color: Colors.grey.shade400,
+                                    width: 1,
+                                  ),
+                                ),
+                              ),
                             );
                           }),
                     ],
@@ -3056,27 +3174,28 @@ class TransmissionLogView extends StatelessWidget {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: <Widget>[
                   Obx(
-                    () => RadioRow(
-                      items: const ["Tape", "Product", "Brand"],
-                      groupValue: controller.verifyType.value ?? "",
-                      onchange: (val) {
-                        print("Response>>>" + val);
-                        controller.verifyType.value = val;
-                        switch (val) {
-                          case "Tape":
-                            controller.selectAa = "lstTypeTape";
-                            break;
-                          case "Product":
-                            controller.selectAa = "lstTypeProduct";
-                            break;
-                          case "Brand":
-                            controller.selectAa = "lstTypeBrand";
-                            break;
-                        }
-                        // controller.filterAaList();
-                        controller.postPivotLog();
-                      },
-                    ),
+                        () =>
+                        RadioRow(
+                          items: const ["Tape", "Product", "Brand"],
+                          groupValue: controller.verifyType.value ?? "",
+                          onchange: (val) {
+                            print("Response>>>" + val);
+                            controller.verifyType.value = val;
+                            switch (val) {
+                              case "Tape":
+                                controller.selectAa = "lstTypeTape";
+                                break;
+                              case "Product":
+                                controller.selectAa = "lstTypeProduct";
+                                break;
+                              case "Brand":
+                                controller.selectAa = "lstTypeBrand";
+                                break;
+                            }
+                            // controller.filterAaList();
+                            controller.postPivotLog();
+                          },
+                        ),
                   ),
                   SizedBox(
                     height: 15,
@@ -3090,21 +3209,21 @@ class TransmissionLogView extends StatelessWidget {
                           width: Get.width * 0.7,
                           height: Get.height * 0.5,
                           child: (controller.listVerification != null &&
-                                  (controller.listVerification?.length ?? 0) >
-                                      0)
+                              (controller.listVerification?.length ?? 0) >
+                                  0)
                               ? DataGridFromMap(
-                                  hideCode: false,
-                                  formatDate: false,
-                                  // showonly: [
-                                  //   controller.selectAa ?? "",
-                                  //   "bookingNumber"
-                                  // ],
-                                  // colorCallback: (renderC) => Colors.red[200]!,
-                                  mapData: (controller.listVerification!))
-                              // _dataTable3()
+                              hideCode: false,
+                              formatDate: false,
+                              // showonly: [
+                              //   controller.selectAa ?? "",
+                              //   "bookingNumber"
+                              // ],
+                              // colorCallback: (renderC) => Colors.red[200]!,
+                              mapData: (controller.listVerification!))
+                          // _dataTable3()
                               : const WarningBox(
-                                  text:
-                                      'Enter Location, Channel & Date to get the Break Definitions'),
+                              text:
+                              'Enter Location, Channel & Date to get the Break Definitions'),
                         );
                       }),
                 ],
