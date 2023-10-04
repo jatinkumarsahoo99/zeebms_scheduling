@@ -250,7 +250,7 @@ class ApiFactory {
           bool checkStandBy,
           bool checkIgnore) =>
       BASE_URL +
-      "/api/Additions/GetShowDetails?Locationcode=${locDetail.key}&locationName=${Uri.encodeComponent(locDetail.value??"")}&channelcode=${chnlDetails.key}&channelName=${Uri.encodeComponent(chnlDetails.value??"")}&logdate=$date&optPrimary=$isPrimary&chkStandby=$checkStandBy&chkIgnore=$checkIgnore";
+      "/api/Additions/GetShowDetails?Locationcode=${locDetail.key}&locationName=${Uri.encodeComponent(locDetail.value ?? "")}&channelcode=${chnlDetails.key}&channelName=${Uri.encodeComponent(chnlDetails.value ?? "")}&logdate=$date&optPrimary=$isPrimary&chkStandby=$checkStandBy&chkIgnore=$checkIgnore";
 
   static String LOG_ADDITION_GET_ADDITIONS(
           DropDownValue locDetail, DropDownValue chnlDetails, String date) =>
