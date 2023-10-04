@@ -48,6 +48,10 @@ class LogAdditionsController extends GetxController {
   // RxString logAddionName = RxString("Addition");
 
   UserDataSettings? userDataSettings;
+  FocusNode primaryFocus = FocusNode();
+  FocusNode secondaryFocus = FocusNode();
+  FocusNode standByFocus = FocusNode();
+  FocusNode ignoreSpotFocus = FocusNode();
 
   @override
   void onReady() {
@@ -62,6 +66,24 @@ class LogAdditionsController extends GetxController {
 
   @override
   void onInit() {
+   /* primaryFocus.addListener(() {
+      if (primaryFocus.hasFocus) {
+        FocusScope.of(Get.context!).requestFocus(primaryFocus);
+        gridStateManager?.setKeepFocus(false);
+      }
+    });
+    secondaryFocus.addListener(() {
+      if (secondaryFocus.hasFocus) {
+        FocusScope.of(Get.context!).requestFocus(secondaryFocus);
+        gridStateManager?.setKeepFocus(false);
+      }
+    });
+    standByFocus.addListener(() {
+      if (standByFocus.hasFocus) {
+        FocusScope.of(Get.context!).requestFocus(standByFocus);
+        gridStateManager?.setKeepFocus(false);
+      }
+    });*/
     getLocations();
     super.onInit();
   }
@@ -269,7 +291,8 @@ class LogAdditionsController extends GetxController {
                     v["name"].toString().trim()) {
                   selectAdditions.value =
                       DropDownValue.fromJsonDynamic(v, "value", "name");
-                  selectAdditions1=DropDownValue.fromJsonDynamic(v, "value", "name");
+                  selectAdditions1 =
+                      DropDownValue.fromJsonDynamic(v, "value", "name");
                 }
               });
             }
