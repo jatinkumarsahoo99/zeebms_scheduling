@@ -1105,7 +1105,7 @@ class ApiFactory {
       "$BASE_URL/api/AsrunImport/FileFormat?LocationCode=$locationCode&ChannelCode=$channelCode&LogDate=$date";
   ////////////////////////////// Audit Status ////////////////////////////////////////
   static String NewBookingActivityReport_GetLoadLocation =
-      "$BASE_URL/api/AsrunImport/GetLoadLocation";
+      "$BASE_URL/api/NewBookingActivityReport/location";
   static String NewBookingActivityReport_cbolocationLeave(
           String locationCode) =>
       "$BASE_URL/api/NewBookingActivityReport/cbolocation_Leave?LocationCode=$locationCode";

@@ -51,7 +51,7 @@ class AuditStatusController extends GetxController {
         api: ApiFactory.NewBookingActivityReport_GetLoadLocation,
         fun: (Map map) {
           locations.clear();
-          map["location"].forEach((e) {
+          map["locations"].forEach((e) {
             locations.add(DropDownValue.fromJson1(e));
           });
         });

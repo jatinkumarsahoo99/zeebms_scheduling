@@ -72,6 +72,14 @@ class AppPages {
       page: () => AuthGuard1(childName: _Paths.NEW_SHORT_CONTENT_FORM),
     ),
     GetPage(
+      name: _Paths.DAILY_FPC_STATUS,
+      page: () => AuthGuard1(childName: _Paths.DAILY_FPC_STATUS),
+    ),
+    GetPage(
+      name: _Paths.DROPPED_SPOTS,
+      page: () => AuthGuard1(childName: _Paths.DROPPED_SPOTS),
+    ),
+    GetPage(
       name: _Paths.TRANSMISSION_LOG,
       page: () => AuthGuard1(childName: _Paths.TRANSMISSION_LOG),
       binding: TransmissionLogBinding(),

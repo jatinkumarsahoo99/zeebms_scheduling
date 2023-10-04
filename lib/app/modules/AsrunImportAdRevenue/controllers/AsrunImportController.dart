@@ -76,7 +76,7 @@ class AsrunImportController extends GetxController {
   List<AsrunImportModel>? transmissionLogList = List.generate(
       100,
       (index) =>
-          new AsrunImportModel(episodeDuration: (index + 1), status: "data1"));
+          AsrunImportModel(episodeDuration: (index + 1), status: "data1"));
   PlutoGridMode selectedPlutoGridMode = PlutoGridMode.selectWithOneTap;
   int? selectedIndex;
   RxnString verifyType = RxnString();
@@ -618,6 +618,8 @@ class AsrunImportController extends GetxController {
                   Get.back();
                 },
               );
+            } else {
+              checkMissingAsrun();
             }
           }
         });

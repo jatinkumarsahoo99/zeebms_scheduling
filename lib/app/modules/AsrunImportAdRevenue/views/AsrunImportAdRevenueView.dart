@@ -32,7 +32,7 @@ class AsrunImportAdRevenueView extends StatelessWidget {
           ? DraggableFab(
               child: controller.drgabbleDialog.value!,
             )
-          : SizedBox()),
+          : const SizedBox()),
       backgroundColor: Colors.grey[50],
       body: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
@@ -40,7 +40,7 @@ class AsrunImportAdRevenueView extends StatelessWidget {
           Card(
             child: Container(
               width: Get.width,
-              padding: EdgeInsets.all(4),
+              padding: const EdgeInsets.all(4),
               child: Wrap(
                 crossAxisAlignment: WrapCrossAlignment.center,
                 runSpacing: 5,
@@ -454,7 +454,7 @@ class AsrunImportAdRevenueView extends StatelessWidget {
   showSwap() {
     controller.drgabbleDialog.value = Card(
       shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(5)),
-      margin: EdgeInsets.all(2),
+      margin: const EdgeInsets.all(2),
       child: Container(
         height: Get.height * .35,
         width: Get.width * .40,
@@ -475,7 +475,6 @@ class AsrunImportAdRevenueView extends StatelessWidget {
                         callback: () {
                           // print(
                           //     controller.gridStateManager!.currentRow!.sortIdx);
-
                           if (controller.gridStateManager?.currentRow != null) {
                             if (controller
                                     .asrunData?[controller
@@ -606,13 +605,13 @@ class AsrunImportAdRevenueView extends StatelessWidget {
                         "Real From Idx:$fromIndex Real To Idx:$toIndex\nFrom Idx:${controller.fromIdx} To Idx:${controller.toIdx}");
 
                     AsRunData replaceData(AsRunData from, AsRunData to) {
-                      from.bookingnumber = to.bookingnumber;
-                      from.scheduletime = to.scheduletime;
-                      from.scheduledProgram = to.scheduledProgram;
-                      from.rosBand = to.rosBand;
+                      from.bookingnumber = to.bookingnumber ?? "";
+                      from.scheduletime = to.scheduletime ?? "";
+                      from.scheduledProgram = to.scheduledProgram ?? "";
+                      from.rosBand = to.rosBand ?? "";
                       from.bookingdetailcode = to.bookingdetailcode;
-                      from.isMismatch = to.isMismatch;
-                      from.tapeDuration = to.tapeDuration;
+                      from.isMismatch = to.isMismatch ?? "";
+                      from.tapeDuration = to.tapeDuration ?? "";
                       return from;
                     }
 
@@ -625,9 +624,9 @@ class AsrunImportAdRevenueView extends StatelessWidget {
 
                     var realToModel = replaceData(
                       AsRunData.fromJson(
-                          controller.asrunData![toIndex!].toJson()),
+                          controller.asrunData![toIndex].toJson()),
                       AsRunData.fromJson(
-                          controller.asrunData![fromIndex!].toJson()),
+                          controller.asrunData![fromIndex].toJson()),
                     );
 
                     print(realFromModel.toJson());
@@ -694,7 +693,7 @@ class AsrunImportAdRevenueView extends StatelessWidget {
                             ? ""
                             : "1",
                         force: true);
-                    controller.asrunData?[fromIndex!].tapeDuration =
+                    controller.asrunData?[fromIndex].tapeDuration =
                         controller.asrunData![fromIndex].tapeDuration;
                     controller.gridStateManager?.changeCellValue(
                         controller
@@ -1025,7 +1024,7 @@ class AsrunImportAdRevenueView extends StatelessWidget {
                     ),
                   );
                 }),
-            SizedBox(height: 10),
+            const SizedBox(height: 10),
             Row(
               mainAxisAlignment: MainAxisAlignment.center,
               crossAxisAlignment: CrossAxisAlignment.center,
@@ -1037,7 +1036,7 @@ class AsrunImportAdRevenueView extends StatelessWidget {
                     controller.updateFPCTime();
                   },
                 ),
-                SizedBox(width: 10),
+                const SizedBox(width: 10),
                 FormButtonWrapper(
                   btnText: "Filter",
                   showIcon: false,
@@ -1050,7 +1049,7 @@ class AsrunImportAdRevenueView extends StatelessWidget {
                 )
               ],
             ),
-            SizedBox(height: 10)
+            const SizedBox(height: 10)
           ],
         ),
       ),
