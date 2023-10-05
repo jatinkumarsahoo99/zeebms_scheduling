@@ -77,6 +77,7 @@ abstract class Routes {
   static const CUE_TONE_BREAK_DURATION = _Paths.CUE_TONE_BREAK_DURATION;
   static const DATEWISE_COMMERCIAL_LOG = _Paths.DATEWISE_COMMERCIAL_LOG;
   static const DEAL_UTILIZATION = _Paths.DEAL_UTILIZATION;
+  static const MOVIE_SCHEDULE_REPORT = _Paths.MOVIE_SCHEDULE_REPORT;
 }
 
 abstract class RoutesList {
@@ -131,6 +132,7 @@ abstract class RoutesList {
     _Paths.CUE_TONE_BREAK_DURATION,
     _Paths.DATEWISE_COMMERCIAL_LOG,
     _Paths.DEAL_UTILIZATION,
+    _Paths.MOVIE_SCHEDULE_REPORT,
 
 
   ];
@@ -206,4 +208,5 @@ abstract class _Paths {
   static const CUE_TONE_BREAK_DURATION = '/frmsearchingKKBMS_CueToneBreakDuration';
   static const DATEWISE_COMMERCIAL_LOG = '/frmsearchingKKBMS_Commerciallog';
   static const DEAL_UTILIZATION = '/frmsearchingKKBMS_view_DealUtil';
+  static const MOVIE_SCHEDULE_REPORT = '/frmsearchingKKFPC_MovieListing';
 }
