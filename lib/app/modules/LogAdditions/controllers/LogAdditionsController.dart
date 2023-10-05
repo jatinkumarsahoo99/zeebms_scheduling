@@ -23,6 +23,11 @@ class LogAdditionsController extends GetxController {
   var channels = RxList<DropDownValue>([]);
   var additions = RxList<DropDownValue>([]);
   RxBool isEnable = RxBool(true);
+  var locationFN = FocusNode(),
+      primaryFN = FocusNode(),
+      secondaryFN = FocusNode(),
+      standbyLogFN = FocusNode(),
+      ignoreSportsFN = FocusNode();
 
   //input controllers
   DropDownValue? selectLocation;
@@ -269,7 +274,8 @@ class LogAdditionsController extends GetxController {
                     v["name"].toString().trim()) {
                   selectAdditions.value =
                       DropDownValue.fromJsonDynamic(v, "value", "name");
-                  selectAdditions1=DropDownValue.fromJsonDynamic(v, "value", "name");
+                  selectAdditions1 =
+                      DropDownValue.fromJsonDynamic(v, "value", "name");
                 }
               });
             }
