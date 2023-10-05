@@ -32,9 +32,9 @@ class CommercialView extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return GetBuilder<CommercialController>(
-        init: CommercialController(),
+        init: controller,
         id: "initData",
-        builder: (controller) {
+        builder: (_) {
           return Scaffold(
             body: FocusTraversalGroup(
               policy: OrderedTraversalPolicy(),
@@ -86,16 +86,18 @@ class CommercialView extends StatelessWidget {
                                   ),
                                 ),
                                 const SizedBox(width: 15),
-                                DateWithThreeTextField(
-                                  title: "From Date",
-                                  mainTextController: controller.date_,
-                                  widthRation: controller.widthSize,
-                                  startDate:
-                                      (controller.formPermissions?.backDated ??
-                                              false)
-                                          ? null
-                                          : DateTime.now(),
-                                ),
+                                Obx(() {
+                                  return DateWithThreeTextField(
+                                    title: "From Date",
+                                    mainTextController: controller.date_,
+                                    widthRation: controller.widthSize,
+                                    startDate: (controller.formPermissions.value
+                                                ?.backDated ??
+                                            false)
+                                        ? null
+                                        : DateTime.now(),
+                                  );
+                                }),
                                 const SizedBox(
                                   width: 20,
                                 ),
@@ -195,13 +197,6 @@ class CommercialView extends StatelessWidget {
                             id: "buttons",
                             init: Get.find<HomeController>(),
                             builder: (btcontroller) {
-                              controller.formPermissions =
-                                  Get.find<MainController>()
-                                      .permissionList!
-                                      .lastWhere((element) {
-                                return element.appFormName ==
-                                    "frmCommercialScheduling";
-                              });
                               if (btcontroller.buttons != null) {
                                 return ButtonBar(
                                   alignment: MainAxisAlignment.start,
