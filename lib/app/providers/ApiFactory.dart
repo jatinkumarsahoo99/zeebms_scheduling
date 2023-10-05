@@ -700,8 +700,6 @@ class ApiFactory {
       "$BASE_URL/api/RosDistribution/GetView";
   static String get RO_DISTRIBUTION_GET_EMPTY_DATA =>
       "$BASE_URL/api/RosDistribution/GetEmptyList";
-  static String get RO_DISTRIBUTION_GET_UN_DATA =>
-      "$BASE_URL/api/RosDistribution/GetUnalloacted";
   static String get RO_DISTRIBUTION_GET_SERVICE_DATA =>
       "$BASE_URL/api/RosDistribution/GetServices";
   static String get RO_DISTRIBUTION_GET_ALLOCATION_DATA =>
@@ -710,8 +708,6 @@ class ApiFactory {
       "$BASE_URL/api/RosDistribution/GetRollback";
   static String get RO_DISTRIBUTION_GET_FPC_DOUBLE_CLICK_DATA =>
       "$BASE_URL/api/RosDistribution/GetFpcCellDoubleClick";
-  static String get RO_DISTRIBUTION_GET_OPENDEAL_FILTER_DATA =>
-      "$BASE_URL/api/RosDistribution/GetOpenDealFilter";
   static String get RO_DISTRIBUTION_GET_ALLOCATE_FPC_DATA =>
       "$BASE_URL/api/RosDistribution/GetAllocateFPC";
   static String get RO_DISTRIBUTION_GET_DEALLOCATE_FPC_DATA =>
@@ -719,8 +715,6 @@ class ApiFactory {
   static String get RO_DISTRIBUTION_GET_INCLUDE_ROS_FILTER_FPC_DATA =>
       "$BASE_URL/api/RosDistribution/GetIncludeROSFilter";
   static String get RO_DISTRIBUTION_GET_OPEN_DEAL_FILTER_FPC_DATA =>
-      "$BASE_URL/api/RosDistribution/GetOpenDealFilter";
-  static String get RO_DISTRIBUTION_GET_MOVE_SPOT_FILTER_FPC_DATA =>
       "$BASE_URL/api/RosDistribution/GetOpenDealFilter";
 
   static String RO_DISTRIBUTION_GET_CHANNEL(String locId) =>

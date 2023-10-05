@@ -31,7 +31,7 @@ class DataGridMenu {
       BuildContext context,
       {String? exportFileName,
       List<SecondaryShowDialogModel>? extraList,
-        List<String>? removeKeysFromFile,
+      List<String>? removeKeysFromFile,
       bool csvFormat = false}) async {
     print(">>>>>csvFormat" + csvFormat.toString());
     clearFilterList() {
@@ -71,14 +71,17 @@ class DataGridMenu {
       stateManager.setFilter((element) => _filterRows.contains(element));
     }
 
-    customFilter(PlutoGridStateManager stateManager,{String? selectedColumn}) {
+    customFilter(PlutoGridStateManager stateManager, {String? selectedColumn}) {
       List _allValues = [];
       var _selectedValues = RxList([]);
       print("1st foucus Added");
       if (stateManager.currentCell == null &&
           ((stateManager.rows.length ?? 0) > 0)) {
         stateManager.setCurrentCell(
-            (selectedColumn!=null?(stateManager.rows[0].cells[selectedColumn]):(stateManager.rows[0].cells.values.first)), 0);
+            (selectedColumn != null
+                ? (stateManager.rows[0].cells[selectedColumn])
+                : (stateManager.rows[0].cells.values.first)),
+            0);
       }
       if (stateManager.currentCell != null) {
         _allValues = stateManager.rows
@@ -120,7 +123,9 @@ class DataGridMenu {
                             child: Padding(
                               padding: const EdgeInsets.all(8),
                               child: Text(
-                                _allValues[index]==""?"BLANK":_allValues[index],
+                                _allValues[index] == ""
+                                    ? "BLANK"
+                                    : _allValues[index],
                                 style:
                                     _selectedValues.contains(_allValues[index])
                                         ? TextStyle(
@@ -383,10 +388,13 @@ class DataGridMenu {
 
         if (!csvFormat) {
           exportCSV = pluto_grid_export.PlutoGridExport.exportCSV(stateManager);
-        }else if(removeKeysFromFile != null && removeKeysFromFile.isNotEmpty){
+        } else if (removeKeysFromFile != null &&
+            removeKeysFromFile.isNotEmpty) {
           // PlutoGridExport2 bookingNumber
-          print(">>>>>>>>>>>>>>>>>>>>>>>removeKeysFromFile"+removeKeysFromFile.toString());
-          exportCSV = PlutoGridExport2.exportCSV(stateManager,removeKeysFromFile: removeKeysFromFile);
+          print(">>>>>>>>>>>>>>>>>>>>>>>removeKeysFromFile" +
+              removeKeysFromFile.toString());
+          exportCSV = PlutoGridExport2.exportCSV(stateManager,
+              removeKeysFromFile: removeKeysFromFile);
         } else {
           exportCSV = PlutoGridExport1.exportCSV(stateManager);
         }
@@ -421,10 +429,21 @@ class DataGridMenu {
         );
         break;
       case DataGridMenuItem.find:
+
         // ignore: use_build_context_synchronously
         showBottomSheet(
             context: context,
             builder: (context) {
+              var forFN = FocusNode();
+              WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
+                stateManager.gridFocusNode.unfocus();
+                forFN.requestFocus();
+              });
+
+              // Future.delayed(Duration(seconds: 1)).then((value) {
+              // stateManager.gridFocusNode.unfocus();
+              // forFN.requestFocus();
+              // });
               var _selectedColumn = stateManager.currentColumn?.field ?? "";
               DropDownValue _preselectedColumn = DropDownValue(
                   key: stateManager.currentColumn?.field ?? "",
@@ -497,10 +516,12 @@ class DataGridMenu {
                                 ),
                                 const SizedBox(width: 5),
                                 InputFields.formField1(
-                                    hintTxt: "For",
-                                    controller: _findctrl,
-                                    width: 0.15,
-                                    showTitle: false),
+                                  hintTxt: "For",
+                                  controller: _findctrl,
+                                  width: 0.15,
+                                  focusNode: forFN,
+                                  showTitle: false,
+                                ),
                               ],
                             ),
                           ),
@@ -683,7 +704,7 @@ class DataGridMenu {
                                           } else {
                                             stateManager.moveScrollByRow(
                                                 PlutoMoveDirection.down,
-                                                _slecetedRow.sortIdx+10);
+                                                _slecetedRow.sortIdx + 10);
                                           }
                                           stateManager.setKeepFocus(false);
                                           stateManager.setCurrentCell(
@@ -775,7 +796,8 @@ class DataGridMenu {
                                 SizedBox(width: 15),
                                 ElevatedButton(
                                     onPressed: () {
-                                      customFilter(stateManager,selectedColumn: _selectedColumn);
+                                      customFilter(stateManager,
+                                          selectedColumn: _selectedColumn);
                                     },
                                     child: Text("CF")),
                               ],
@@ -1209,11 +1231,16 @@ class DataGridMenu {
         );
         break;
       case DataGridMenuItem.find:
-       
+
         // ignore: use_build_context_synchronously
         showBottomSheet(
             context: context,
             builder: (context) {
+              var forFN = FocusNode();
+              WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
+                stateManager.gridFocusNode.unfocus();
+                forFN.requestFocus();
+              });
               var _selectedColumn = stateManager.currentColumn?.field ?? "";
               DropDownValue _preselectedColumn = DropDownValue(
                   key: stateManager.currentColumn?.field ?? "",
@@ -1289,6 +1316,7 @@ class DataGridMenu {
                                     hintTxt: "For",
                                     controller: _findctrl,
                                     width: 0.15,
+                                    focusNode: forFN,
                                     showTitle: false),
                               ],
                             ),
@@ -2041,11 +2069,16 @@ class DataGridMenu {
         );
         break;
       case DataGridMenuItem.find:
-       
+
         // ignore: use_build_context_synchronously
         showBottomSheet(
             context: context,
             builder: (context) {
+              var forFN = FocusNode();
+              WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
+                stateManager.gridFocusNode.unfocus();
+                forFN.requestFocus();
+              });
               var _selectedColumn = stateManager.currentColumn?.field ?? "";
               DropDownValue _preselectedColumn = DropDownValue(
                   key: stateManager.currentColumn?.field ?? "",
@@ -2121,6 +2154,7 @@ class DataGridMenu {
                                     hintTxt: "For",
                                     controller: _findctrl,
                                     width: 0.15,
+                                    focusNode: forFN,
                                     showTitle: false),
                               ],
                             ),
@@ -2196,7 +2230,7 @@ class DataGridMenu {
                                                 (element.cells[_selectedColumn]!.value.toString().toLowerCase().trim() ==
                                                         _findctrl.text.toLowerCase().trim() &&
                                                     (element.sortIdx > _index)));
-                                        
+
                                         if (_slecetedRow == null) {
                                           stateManager.resetScrollToZero();
 

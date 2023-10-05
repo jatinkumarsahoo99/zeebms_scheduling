@@ -234,7 +234,7 @@ class RoRescheduleView extends StatelessWidget {
                                   );
                                 } else {
                                   return DataGridShowOnlyKeys(
-                                    mode: PlutoGridMode.selectWithOneTap,
+                                    // mode: PlutoGridMode.selectWithOneTap,
                                     hideKeys: const [],
                                     keysWidths: (controller
                                         .userDataSettings?.userSetting
@@ -245,6 +245,12 @@ class RoRescheduleView extends StatelessWidget {
                                             orElse: () => UserSetting())
                                         .userSettings),
                                     colorCallback: (p0) {
+                                      if (p0.row.cells.containsValue(controller
+                                              .plutoGridStateManager
+                                              ?.currentCell ??
+                                          false)) {
+                                        return Colors.deepPurple.shade200;
+                                      }
                                       if (controller
                                                   .roRescheduleOnLeaveData!
                                                   .lstDgvRO![p0.rowIdx]
@@ -292,10 +298,14 @@ class RoRescheduleView extends StatelessWidget {
                                       controller.closeModify();
                                     },
                                     onload: (load) {
+                                      // load.stateManager.setSelecting(true);
+                                      load.stateManager.setSelectingMode(
+                                          PlutoGridSelectingMode.row);
                                       controller.plutoGridStateManager =
                                           load.stateManager;
                                     },
                                     onRowDoubleTap: (tapEvent) {
+                                      controller.closeModify();
                                       controller.plutoGridStateManager
                                           ?.setCurrentCell(
                                               controller.plutoGridStateManager!
@@ -346,6 +356,12 @@ class RoRescheduleView extends StatelessWidget {
                                                 "updatedplutoGridStateManager",
                                             orElse: () => UserSetting())
                                         .userSettings),
+                                    colorCallback: (row) => (row.row.cells
+                                            .containsValue(controller
+                                                .updatedplutoGridStateManager
+                                                ?.currentCell))
+                                        ? Colors.deepPurple.shade200
+                                        : Colors.white,
                                     mapData: gridController
                                         .roRescheduleOnLeaveData!.lstdgvUpdated!
                                         .map((e) => e.toJson())
@@ -442,6 +458,8 @@ class RoRescheduleView extends StatelessWidget {
                                       })
                                     ],
                                     onload: (loadEvent) {
+                                      loadEvent.stateManager.setSelectingMode(
+                                          PlutoGridSelectingMode.row);
                                       controller.updatedplutoGridStateManager =
                                           loadEvent.stateManager;
                                     },
@@ -557,10 +575,9 @@ class RoRescheduleView extends StatelessWidget {
                       .lastWhere((element) {
                     return element.appFormName == "frmSegmentsDetails";
                   });*/
-                      PermissionModel formPermissions =
-                          Get.find<MainController>()
-                              .permissionList!
-                              .lastWhere((element) {
+                      controller.formPermissions = Get.find<MainController>()
+                          .permissionList!
+                          .lastWhere((element) {
                         return element.appFormName == "frmROBooking";
                       });
 
@@ -585,8 +602,10 @@ class RoRescheduleView extends StatelessWidget {
                                 FormButtonWrapper(
                                   btnText: btn["name"],
                                   // isEnabled: btn['isDisabled'],
-                                  callback: Utils.btnAccessHandler2(btn['name'],
-                                              btncontroller, formPermissions) ==
+                                  callback: Utils.btnAccessHandler2(
+                                              btn['name'],
+                                              btncontroller,
+                                              controller.formPermissions!) ==
                                           null
                                       ? null
                                       : () => btnHandler(btn['name']),

@@ -38,6 +38,7 @@ class DataGridFromMap extends StatelessWidget {
       this.actionIconKey,
       this.columnAutoResize = false,
       this.actionOnPress,
+      this.spaceOnPress,
       this.onSelected,
       this.onRowCheck,
       this.onContextMenuClick,
@@ -81,6 +82,7 @@ class DataGridFromMap extends StatelessWidget {
   final bool columnAutoResize;
   final List<String>? editKeys;
   final Function? actionOnPress;
+  final Function(int,bool)? spaceOnPress;
   final bool doPasccal;
   final bool? csvFormat;
   Color Function(PlutoRowColorContext)? colorCallback;
@@ -452,7 +454,7 @@ class DataGridFromMap extends StatelessWidget {
             enableEditingMode: editKeys != null && editKeys!.contains(key),
             enableDropToResize: true,
             enableContextMenu: false,
-            minWidth: 0,
+            minWidth: 5,
             width: (witdthSpecificColumn != null &&
                     witdthSpecificColumn!.keys.toList().contains(key))
                 ? witdthSpecificColumn![key]!
@@ -507,6 +509,7 @@ class DataGridFromMap extends StatelessWidget {
             configuration: plutoGridConfiguration(
               focusNode: focusNode!,
               autoScale: columnAutoResize,
+              spaceOnPress: spaceOnPress,
               actionOnPress: actionOnPress,
               actionKey: actionIconKey,
               previousWidgetFN: previousWidgetFN,
