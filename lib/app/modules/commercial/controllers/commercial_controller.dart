@@ -11,6 +11,7 @@ import '../../../../widgets/Snack.dart';
 import '../../../controller/ConnectorControl.dart';
 import '../../../controller/HomeController.dart';
 import '../../../data/DropDownValue.dart';
+import '../../../data/PermissionModel.dart';
 import '../../../data/user_data_settings_model.dart';
 import '../../../providers/ApiFactory.dart';
 import '../../../providers/Utils.dart';
@@ -35,6 +36,7 @@ class CommercialController extends GetxController {
   DropDownValue? selectedChannel;
   DropDownValue? selectedLocation;
   FocusNode insertAfterFN = FocusNode();
+  PermissionModel? formPermissions;
 
   var selectedIndex = RxInt(0);
   RxBool isEnable = RxBool(true);
