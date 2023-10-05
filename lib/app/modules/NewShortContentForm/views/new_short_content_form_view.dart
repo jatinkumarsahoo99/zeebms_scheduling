@@ -71,7 +71,7 @@ class NewShortContentFormView extends StatelessWidget {
                         controller.selectedType.value = value;
                         controller.tapeFocusNode.requestFocus();
                         controller.typeleave(value.key);
-                      }, "Type", .155,
+                      }, "Type", 0.16,
                           inkWellFocusNode: controller.typeFocusNode,
                           autoFocus: true,
                           selected: controller.selectedType.value),
@@ -100,7 +100,7 @@ class NewShortContentFormView extends StatelessWidget {
                     InputFields.formField1(
                       hintTxt: "TX Caption",
                       controller: controller.txCaption,
-                      width: .155,
+                      width: 0.16,
                     ),
                     Obx(
                       () => DropDownField.formDropDown1WidthMap(
