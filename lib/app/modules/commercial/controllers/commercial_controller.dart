@@ -10,6 +10,7 @@ import '../../../../widgets/LoadingDialog.dart';
 import '../../../../widgets/Snack.dart';
 import '../../../controller/ConnectorControl.dart';
 import '../../../controller/HomeController.dart';
+import '../../../controller/MainController.dart';
 import '../../../data/DropDownValue.dart';
 import '../../../data/PermissionModel.dart';
 import '../../../data/user_data_settings_model.dart';
@@ -36,7 +37,7 @@ class CommercialController extends GetxController {
   DropDownValue? selectedChannel;
   DropDownValue? selectedLocation;
   FocusNode insertAfterFN = FocusNode();
-  PermissionModel? formPermissions;
+  var formPermissions = Rxn<PermissionModel?>();
 
   var selectedIndex = RxInt(0);
   RxBool isEnable = RxBool(true);
@@ -116,6 +117,17 @@ class CommercialController extends GetxController {
         return KeyEventResult.ignored;
       }
     };
+  }
+
+  @override
+  void onReady() {
+    super.onReady();
+    formPermissions.value =
+        Get.find<MainController>().permissionList!.lastWhere((element) {
+      return element.appFormName == "frmCommercialScheduling";
+    });
+
+    print(formPermissions.toJson() ?? "null Form Permission");
   }
 
   var locationFN = FocusNode();
