@@ -504,7 +504,7 @@ class SchedulePromoView extends StatelessWidget {
                                             paddingLeft: 5,
                                             hintTxt: "Promo Id",
                                             controller: controller.promoIDTC,
-                                            maxLen: 10,
+                                            maxLen: 999999,
                                           ),
                                         ),
                                       ),
@@ -566,8 +566,8 @@ class SchedulePromoView extends StatelessWidget {
                                         child: controller
                                                 .searchPromos.value.isEmpty
                                             ? null
-                                            : DataGridShowOnlyKeys(
-                                                keysWidths: (controller
+                                            : DataGridFromMap(
+                                                witdthSpecificColumn: (controller
                                                     .userDataSettings
                                                     ?.userSetting
                                                     ?.firstWhere(
@@ -589,13 +589,12 @@ class SchedulePromoView extends StatelessWidget {
                                                         row.rowIdx,
                                                         row.cell.column.field),
                                                 onload: (event) {
-                                                  controller
-                                                          .searchedPromoStateManager =
-                                                      event.stateManager;
+                                                  event.stateManager
+                                                      .setSelecting(false);
                                                   event.stateManager
                                                       .setSelectingMode(
                                                           PlutoGridSelectingMode
-                                                              .cell);
+                                                              .row);
                                                   if (controller.searchPromos
                                                       .value.isNotEmpty) {
                                                     event.stateManager
@@ -608,25 +607,38 @@ class SchedulePromoView extends StatelessWidget {
                                                                 .first,
                                                             0);
                                                   }
-                                                  event.stateManager
-                                                      .setSelecting(true);
+                                                  // event.stateManager
+                                                  //     .setSelecting(true);
                                                   if (controller
                                                       .searchPromoSelectedCol
                                                       .isNotEmpty) {
-                                                    controller
-                                                        .searchedPromoStateManager
-                                                        ?.setCurrentCell(
+                                                    event.stateManager.setCurrentCell(
+                                                        event.stateManager
+                                                                .getRowByIdx(
+                                                                    controller
+                                                                        .searchPromoSelectedIdx)
+                                                                ?.cells[
                                                             controller
-                                                                    .searchedPromoStateManager
-                                                                    ?.getRowByIdx(
-                                                                        controller
-                                                                            .searchPromoSelectedIdx)
-                                                                    ?.cells[
-                                                                controller
-                                                                    .schedulePromoSelectedCol],
-                                                            controller
-                                                                .searchPromoSelectedIdx);
+                                                                .schedulePromoSelectedCol],
+                                                        controller
+                                                            .searchPromoSelectedIdx);
                                                   }
+                                                  if (controller.promoIDTC.text
+                                                      .trim()
+                                                      .isNotEmpty) {
+                                                    event.stateManager
+                                                        .setCurrentSelectingRowsByRange(
+                                                            0,
+                                                            event
+                                                                    .stateManager
+                                                                    .refRows
+                                                                    .length -
+                                                                1,
+                                                            notify: true);
+                                                  }
+                                                  controller
+                                                          .searchedPromoStateManager =
+                                                      event.stateManager;
                                                 },
                                                 colorCallback: (row) => (row
                                                         .row.cells
@@ -635,14 +647,13 @@ class SchedulePromoView extends StatelessWidget {
                                                             ?.currentCell))
                                                     ? Colors.deepPurple.shade200
                                                     : Colors.white,
-                                                mode: PlutoGridMode
-                                                    .selectWithOneTap,
-                                                onSelected: (row) => controller
-                                                    .handleOnSelectRightTable(
-                                                        row.rowIdx ?? 0,
-                                                        row.cell?.column
-                                                                .field ??
-                                                            "caption"),
+                                                mode: PlutoGridMode.normal,
+                                                // onSelected: (row) => controller
+                                                //     .handleOnSelectRightTable(
+                                                //         row.rowIdx ?? 0,
+                                                //         row.cell?.column
+                                                //                 .field ??
+                                                //             "caption"),
                                               ),
                                       );
                                     }),
