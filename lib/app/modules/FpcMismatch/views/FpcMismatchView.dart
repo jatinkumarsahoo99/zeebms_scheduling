@@ -90,6 +90,7 @@ class FpcMismatchView extends GetView<FpcMismatchController> {
                                 // autoFocus: true,
                                 dialogWidth: 300,
                                 dialogHeight: Get.height * .7,
+                                inkWellFocusNode: controllerX.locationFocus
                               ),
                         ),
                         SizedBox(
