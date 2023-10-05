@@ -41,6 +41,7 @@ class FpcMismatchController extends GetxController {
 
   SelectButton? selectButton;
   RxBool hideKeysAllowed = RxBool(false);
+  FocusNode locationFocus=FocusNode();
 
   @override
   void onInit() {
@@ -78,15 +79,18 @@ class FpcMismatchController extends GetxController {
   }
 
   fetchChannel() {
+    LoadingDialog.call();
     Get.find<ConnectorControl>().GETMETHODCALL(
       api: ApiFactory.FPC_MISMATCH_CHANNEL(
           Get.find<MainController>().user?.logincode ?? "",
           selectedLocation?.key ?? ""),
       fun: (List list) {
+        Get.back();
         list.forEach((element) {
           channelList?.add(new DropDownValue(
               key: element["channelCode"], value: element["channelName"]));
         });
+        locationFocus.requestFocus();
         update(["initialData"]);
       },
     );
