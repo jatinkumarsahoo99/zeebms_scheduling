@@ -33,8 +33,8 @@ class FpcMismatchView extends GetView<FpcMismatchController> {
         break;
       case "Exit":
         Get.find<HomeController>().postUserGridSetting2(listStateManager: [
-          {"fpcMaster": controller.stateManager},
-          {"programTable": controller.programTable},
+          {"fpcMaster": controllerX.stateManager},
+          {"programTable": controllerX.programTable},
         ]);
         // Get.delete<FpcMismatchController>();
         break;
