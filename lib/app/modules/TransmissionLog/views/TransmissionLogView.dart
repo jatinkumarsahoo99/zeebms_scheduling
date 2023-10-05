@@ -642,7 +642,7 @@ class TransmissionLogView extends StatelessWidget {
                                 FormButtonWrapper1(
                                   btnText: btn["name"],
                                   showIcon: false,
-                                  width: Get.width/23,
+                                  width: Get.width / 23,
                                   callback:
                                   (Get
                                       .find<TransmissionLogController>()
@@ -673,7 +673,7 @@ class TransmissionLogView extends StatelessWidget {
                               ),
                               FormButtonWrapper1(
                                 btnText: "Aa",
-                                width: Get.width/23,
+                                width: Get.width / 23,
                                 // isEnabled: btn['isDisabled'],
                                 callback:
                                     () => formHandler("Aa"),
@@ -681,14 +681,14 @@ class TransmissionLogView extends StatelessWidget {
                               FormButtonWrapper1(
                                 btnText: "CL",
                                 showIcon: false,
-                                width: Get.width/23,
+                                width: Get.width / 23,
                                 callback:
                                     () => formHandler("CL"),
                               ),
                               FormButtonWrapper1(
                                 btnText: "Exit",
                                 showIcon: false,
-                                width: Get.width/23,
+                                width: Get.width / 23,
                                 callback:
                                     () => formHandler("Exit"),
                               ),
