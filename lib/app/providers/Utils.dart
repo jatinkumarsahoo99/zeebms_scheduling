@@ -93,6 +93,16 @@ class Utils {
         .format(DateFormat('dd-MM-yyyy').parse(ddMMYYYY));
   }
 
+  static String getDDMMYYYYFromYYYYMMDDInString(String? YYYYMMdd) {
+    if(YYYYMMdd != null && YYYYMMdd.trim() != ""){
+      return DateFormat("dd/MM/yyyy")
+          .format(DateFormat('yyyy-MM-dd').parse(YYYYMMdd));
+    }else{
+      return "";
+    }
+
+  }
+
   static toDateFormat1(String date, {bool? isStringRequired}) {
     final DateTime formatter =
         DateFormat("yyyy-MM-dd\'T\'HH:mm:ss.SSS").parse(date);

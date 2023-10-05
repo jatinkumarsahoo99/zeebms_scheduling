@@ -1,3 +1,5 @@
+import 'package:bms_scheduling/app/providers/Utils.dart';
+
 class SalesAuditNotTRLstChannelModel {
   Generate? generate;
 
@@ -215,7 +217,7 @@ class LsterrorModel {
     data['agency'] = agency;
     data['brand'] = brand;
     data['schDate'] =
-        (schDate?.contains('T') ?? false) ? schDate!.split('T')[0] : schDate;
+      Utils.getDDMMYYYYFromYYYYMMDDInString(  (schDate?.contains('T') ?? false) ? schDate!.split('T')[0] : schDate);
     data['schTime'] = schTime;
     data['sendtolog'] = sendtolog;
     data['program'] = program;
@@ -231,3 +233,5 @@ class LsterrorModel {
     return data;
   }
 }
+
+
