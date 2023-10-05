@@ -73,6 +73,10 @@ class AppPages {
     ),
     ////////////////////////////////
     GetPage(
+      name: _Paths.MOVIE_SCHEDULE_REPORT,
+      page: () => AuthGuard1(childName: _Paths.MOVIE_SCHEDULE_REPORT),
+    ),
+    GetPage(
       name: _Paths.GENERATE_BOOKING_ACTIVITY,
       page: () => AuthGuard1(childName: _Paths.GENERATE_BOOKING_ACTIVITY),
     ),
@@ -86,7 +90,8 @@ class AppPages {
     ),
     GetPage(
       name: _Paths.TELECAST_SPOTS_WITH_PROGRAM_INFO,
-      page: () => AuthGuard1(childName: _Paths.TELECAST_SPOTS_WITH_PROGRAM_INFO),
+      page: () =>
+          AuthGuard1(childName: _Paths.TELECAST_SPOTS_WITH_PROGRAM_INFO),
     ),
     GetPage(
       name: _Paths.TRANSMISSION_LOG_SEARCH,
