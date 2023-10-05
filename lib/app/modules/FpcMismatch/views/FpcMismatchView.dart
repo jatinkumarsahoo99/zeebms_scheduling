@@ -33,10 +33,10 @@ class FpcMismatchView extends GetView<FpcMismatchController> {
         break;
       case "Exit":
         Get.find<HomeController>().postUserGridSetting2(listStateManager: [
-          {"fpcMaster": controller.stateManager},
-          {"programTable": controller.programTable},
+          {"fpcMaster": controllerX.stateManager},
+          {"programTable": controllerX.programTable},
         ]);
-        Get.delete<FpcMismatchController>();
+        // Get.delete<FpcMismatchController>();
         break;
       case "Refresh":
         // controllerX.fetchMismatchAll();
@@ -84,7 +84,7 @@ class FpcMismatchView extends GetView<FpcMismatchController> {
                           controllerX.widthSize,
                           // isEnable: controllerX.isEnable.value,
                           selected: controllerX.selectedLocation,
-                          autoFocus: true,
+                          // autoFocus: true,
                           dialogWidth: 300,
                           dialogHeight: Get.height * .7,
                         ),
@@ -103,7 +103,7 @@ class FpcMismatchView extends GetView<FpcMismatchController> {
                           controllerX.widthSize,
                           // isEnable: controllerX.isEnable.value,
                           selected: controllerX.selectedChannel,
-                          autoFocus: true,
+                          // autoFocus: true,
                           dialogWidth: 300,
                           dialogHeight: Get.height * .7,
                         ),
@@ -212,35 +212,14 @@ class FpcMismatchView extends GetView<FpcMismatchController> {
                             const SizedBox(
                               width: 8,
                             ),
-                            Container(
+                            /*Container(
                               width: 2,
                               height: 35,
                               color: Colors.grey,
                             ),
                             const SizedBox(
                               width: 8,
-                            ),
-                            FormButton2(
-                              btnText: "  Mark Error  ",
-                              callback: () {
-                                controllerX.saveMarkError();
-                                // controllerX.fetchMismatch();
-                                // controllerX.fetchProgram();
-                              },
-                              showIcon: false,
-                            ),
-                            const SizedBox(
-                              width: 10,
-                            ),
-                            FormButton2(
-                              btnText: "  Undo Error  ",
-                              callback: () {
-                                controllerX.saveUndoMarkError();
-                                // controllerX.fetchMismatchError();
-                                // controllerX.fetchProgram();
-                              },
-                              showIcon: false,
-                            ),
+                            ),*/
                           ],
                         ),
                       ),
@@ -312,7 +291,28 @@ class FpcMismatchView extends GetView<FpcMismatchController> {
                                 : () => formHandler(
                                       btn['name'],
                                     ),
-                          )
+                          ),
+                        SizedBox(
+                          width: 100,
+                        ),
+                        FormButtonWrapper(
+                          btnText: "  Mark Error  ",
+                          callback: () {
+                            controllerX.saveMarkError();
+                            // controllerX.fetchMismatch();
+                            // controllerX.fetchProgram();
+                          },
+                          showIcon: false,
+                        ),
+                        FormButtonWrapper(
+                          btnText: "  Undo Error  ",
+                          callback: () {
+                            controllerX.saveUndoMarkError();
+                            // controllerX.fetchMismatchError();
+                            // controllerX.fetchProgram();
+                          },
+                          showIcon: false,
+                        ),
                       ],
                     );
                   }
@@ -357,6 +357,7 @@ class FpcMismatchView extends GetView<FpcMismatchController> {
                   // load.stateManager.
                 },
                 onRowCheck: (PlutoGridOnRowCheckedEvent onRowCheckedEvent) {
+                  print("ROW checked");
                   if (onRowCheckedEvent.isRow) {
                     controllerX.dataList![onRowCheckedEvent.rowIdx!]
                         .selectItem = onRowCheckedEvent.isChecked;
@@ -365,6 +366,13 @@ class FpcMismatchView extends GetView<FpcMismatchController> {
                       element.selectItem = onRowCheckedEvent.isChecked;
                     });
                   }
+                },
+                spaceOnPress: (int rowIndex, bool isSelect) {
+                  print("Space ROW checked");
+                  controllerX.dataList![rowIndex].selectItem = isSelect;
+                },
+                onEdit: (PlutoGridOnChangedEvent event) {
+                  print("Space ROW checked");
                 },
                 colorCallback: (PlutoRowColorContext plutoContext) {
                   switch (controllerX.selectButton) {
@@ -378,7 +386,8 @@ class FpcMismatchView extends GetView<FpcMismatchController> {
                                   .toLowerCase() ==
                               "e") {
                         return Colors.red;
-                      } /*else if (plutoContext
+                      }
+                      /*else if (plutoContext
                                   .row.cells["bookingstatus"]?.value !=
                               null &&
                           plutoContext.row.cells["bookingstatus"]?.value
@@ -386,7 +395,8 @@ class FpcMismatchView extends GetView<FpcMismatchController> {
                                   .toLowerCase() ==
                               "b") {
                         return Colors.yellow;
-                      }*/ else {
+                      }*/
+                      else {
                         return Colors.white;
                       }
                     case SelectButton.DisplayMismatch:

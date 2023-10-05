@@ -1,6 +1,5 @@
 import 'package:flutter/foundation.dart';
 import 'package:get/get.dart';
-
 import '../modules/AsrunImportAdRevenue/bindings/asrun_import_binding.dart';
 import '../modules/AuditStatus/bindings/audit_status_binding.dart';
 import '../modules/BrandMaster/bindings/brand_master_binding.dart';
@@ -43,7 +42,6 @@ import '../modules/SpotPositionTypeMaster/bindings/spot_position_type_master_bin
 import '../modules/SpotPriority/bindings/spot_priority_binding.dart';
 import '../modules/StillMaster/bindings/still_master_binding.dart';
 import '../modules/TransmissionLog/bindings/transmission_log_binding.dart';
-import '../modules/commercial/bindings/commercial_binding.dart';
 import '../modules/filler/bindings/filler_binding.dart';
 import '../modules/material_id_search/bindings/material_id_search_binding.dart';
 import '../modules/slide/bindings/slide_binding.dart';
@@ -56,7 +54,7 @@ class AppPages {
 
   static const INITIAL = kReleaseMode
       ? Routes.HOME
-      : "${Routes.SALES_AUDIT_NEW}?personalNo=e7ScQlP7tXxBxRizIrkQIA%3D%3D&loginCode=scL134pM4e0EQtJCjv7r5Q%3D%3D&formName=ZdPOC%2BHl3hRJzHSclM%2B5m3sWVw1wpLPmNEvejYUOFLU%3D";
+      : "${Routes.SCHEDULE_PROMO}?personalNo=e7ScQlP7tXxBxRizIrkQIA%3D%3D&loginCode=scL134pM4e0EQtJCjv7r5Q%3D%3D&formName=ZdPOC%2BHl3hRJzHSclM%2B5m3sWVw1wpLPmNEvejYUOFLU%3D";
 
   static final routes = [
     GetPage(
@@ -72,6 +70,56 @@ class AppPages {
     GetPage(
       name: _Paths.NEW_SHORT_CONTENT_FORM,
       page: () => AuthGuard1(childName: _Paths.NEW_SHORT_CONTENT_FORM),
+    ),
+    ////////////////////////////////
+    GetPage(
+      name: _Paths.GENERATE_BOOKING_ACTIVITY,
+      page: () => AuthGuard1(childName: _Paths.GENERATE_BOOKING_ACTIVITY),
+    ),
+    GetPage(
+      name: _Paths.PERIODIC_DEAL_UTILIZATION,
+      page: () => AuthGuard1(childName: _Paths.PERIODIC_DEAL_UTILIZATION),
+    ),
+    GetPage(
+      name: _Paths.SPOT_DISTRIBUTION,
+      page: () => AuthGuard1(childName: _Paths.SPOT_DISTRIBUTION),
+    ),
+    GetPage(
+      name: _Paths.TELECAST_SPOTS_WITH_PROGRAM_INFO,
+      page: () => AuthGuard1(childName: _Paths.TELECAST_SPOTS_WITH_PROGRAM_INFO),
+    ),
+    GetPage(
+      name: _Paths.TRANSMISSION_LOG_SEARCH,
+      page: () => AuthGuard1(childName: _Paths.TRANSMISSION_LOG_SEARCH),
+    ),
+    GetPage(
+      name: _Paths.VIDEOCON_LOG,
+      page: () => AuthGuard1(childName: _Paths.VIDEOCON_LOG),
+    ),
+    GetPage(
+      name: _Paths.ASRUN_SEARCH_REPORT,
+      page: () => AuthGuard1(childName: _Paths.ASRUN_SEARCH_REPORT),
+    ),
+    GetPage(
+      name: _Paths.CUE_TONE_BREAK_DURATION,
+      page: () => AuthGuard1(childName: _Paths.CUE_TONE_BREAK_DURATION),
+    ),
+    GetPage(
+      name: _Paths.DATEWISE_COMMERCIAL_LOG,
+      page: () => AuthGuard1(childName: _Paths.DATEWISE_COMMERCIAL_LOG),
+    ),
+    GetPage(
+      name: _Paths.DEAL_UTILIZATION,
+      page: () => AuthGuard1(childName: _Paths.DEAL_UTILIZATION),
+    ),
+    //////////////////////////////////
+    GetPage(
+      name: _Paths.DAILY_FPC_STATUS,
+      page: () => AuthGuard1(childName: _Paths.DAILY_FPC_STATUS),
+    ),
+    GetPage(
+      name: _Paths.DROPPED_SPOTS,
+      page: () => AuthGuard1(childName: _Paths.DROPPED_SPOTS),
     ),
     GetPage(
       name: _Paths.TRANSMISSION_LOG,

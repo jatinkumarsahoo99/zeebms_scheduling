@@ -24,6 +24,7 @@ import 'package:bms_scheduling/widgets/PlutoGrid/pluto_grid.dart';
 
 import '../../../controller/HomeController.dart';
 import '../../../data/DropDownValue.dart';
+import '../../../data/PermissionModel.dart';
 import '../../../data/user_data_settings_model.dart';
 import '../../CommonDocs/controllers/common_docs_controller.dart';
 import '../../CommonDocs/views/common_docs_view.dart';
@@ -54,6 +55,7 @@ class RoRescheduleController extends GetxController {
       zoneCtrl = TextEditingController();
   ReschedulngInitData? reschedulngInitData;
   var changeTapeId = RxBool(false);
+  PermissionModel? formPermissions;
   // RoRescheduleBookingNumberLeaveData? rescheduleBookingNumberLeaveData;
   RORescheduleOnLeaveData? roRescheduleOnLeaveData;
   FocusNode toNumberFocus = FocusNode();
@@ -257,6 +259,19 @@ class RoRescheduleController extends GetxController {
           "grey") {
       } else {
         print("ON ROW DOUBLE TAP CALLED>>>");
+        if (selectedLocation == null) {
+          LoadingDialog.callInfoMessage("Please select Location.");
+          return;
+        } else if (selectedChannel == null) {
+          LoadingDialog.callInfoMessage("Please select Channel.");
+          return;
+        } else if (roRescheduleOnLeaveData == null) {
+          LoadingDialog.callInfoMessage("List can't be empty");
+          return;
+        } else if (roRescheduleOnLeaveData!.lstDgvRO!.length < index) {
+          LoadingDialog.callInfoMessage("Please select again row.");
+          return;
+        }
         try {
           LoadingDialog.call();
           Get.find<ConnectorControl>().POSTMETHOD(
@@ -265,7 +280,7 @@ class RoRescheduleController extends GetxController {
                 "locationCode": selectedLocation!.key!,
                 "channelCode": selectedChannel!.key!,
                 "BookingNumber": tonumberCtrl.text,
-                "BackDated": true,
+                "BackDated": formPermissions?.backDated ?? false,
                 "effectivedate": DateFormat("yyyy-MM-dd")
                     .format(DateFormat("dd-MM-yyyy").parse(effDateCtrl.text)),
                 "dealNumber": roRescheduleOnLeaveData!.dealno,
@@ -416,8 +431,8 @@ class RoRescheduleController extends GetxController {
                                       hintTxt: "Cmp Prod",
                                       controller: TextEditingController(
                                           text: DateFormat("dd-MM-yyyy").format(
-                                              DateFormat("MM/dd/yyyy HH:mm:ss")
-                                                  .parse(viewDoubleClickData
+                                              DateFormat("MM/dd/yyyy").parse(
+                                                  viewDoubleClickData
                                                       .campStartDate!))),
                                       width: 0.115),
                                   InputFields.formField1(
@@ -425,8 +440,8 @@ class RoRescheduleController extends GetxController {
                                       hintTxt: "",
                                       controller: TextEditingController(
                                           text: DateFormat("dd-MM-yyyy").format(
-                                              DateFormat("MM/dd/yyyy HH:mm:ss")
-                                                  .parse(viewDoubleClickData
+                                              DateFormat("MM/dd/yyyy").parse(
+                                                  viewDoubleClickData
                                                       .campEndDate!))),
                                       width: 0.115),
                                   FormButtonWrapper(
@@ -604,6 +619,24 @@ class RoRescheduleController extends GetxController {
   }
 
   modify() {
+    var lstDgvRO = [];
+
+    plutoGridStateManager?.currentSelectingRows.forEach((element) {
+      lstDgvRO
+          .add(roRescheduleOnLeaveData!.lstDgvRO![element.sortIdx].toJson());
+    });
+    if (plutoGridStateManager != null &&
+        plutoGridStateManager!.currentCell != null &&
+        lstDgvRO.isEmpty &&
+        plutoGridStateManager!.currentRowIdx != null) {
+      lstDgvRO.add(roRescheduleOnLeaveData!
+          .lstDgvRO![plutoGridStateManager!.currentRowIdx!]
+          .toJson());
+    }
+    if (lstDgvRO.isEmpty) {
+      LoadingDialog.callInfoMessage("Please select Row.");
+      return;
+    }
     Get.find<ConnectorControl>().POSTMETHOD(
         api: ApiFactory.RO_RESCHEDULE_MODIFY,
         json: {
@@ -618,11 +651,7 @@ class RoRescheduleController extends GetxController {
           "lstUpdateTable": roRescheduleOnLeaveData!.lstUpdateTable!
               .map((e) => e.toJson())
               .toList(),
-          "lstDgvRO": [
-            roRescheduleOnLeaveData!
-                .lstDgvRO![plutoGridStateManager!.currentCell!.row.sortIdx]
-                .toJson()
-          ]
+          "lstDgvRO": lstDgvRO,
         },
         fun: (data) {
           if (data is Map && data.containsKey("info_Modify")) {
@@ -882,6 +911,7 @@ class RoRescheduleController extends GetxController {
         var map = element.toJson();
         lstdgvUpdated.add(map);
       }
+      LoadingDialog.call();
       Get.find<ConnectorControl>().POSTMETHOD(
           api: ApiFactory.RO_RESCHEDULE_SAVE,
           json: {
@@ -907,6 +937,7 @@ class RoRescheduleController extends GetxController {
             "LstdgvUpdated": lstdgvUpdated
           },
           fun: (rawdata) {
+            Get.back();
             if (rawdata is Map && rawdata.containsKey("info_Save")) {
               LoadingDialog.callDataSaved(
                   msg: rawdata["info_Save"]["strMessage"],

@@ -1,3 +1,9 @@
+import 'dart:html' as w;
+
+import 'package:flutter/foundation.dart';
+import 'package:flutter/material.dart';
+import 'package:get/get.dart';
+
 import 'package:bms_scheduling/app/controller/MainController.dart';
 import 'package:bms_scheduling/app/modules/EventSecondary/views/event_secondary_view.dart';
 import 'package:bms_scheduling/app/modules/FillerMaster/views/filler_master_view.dart';
@@ -10,21 +16,19 @@ import 'package:bms_scheduling/app/modules/MamWorkOrders/views/mam_work_orders_v
 import 'package:bms_scheduling/app/modules/PromoTypeMaster/views/promo_type_master_view.dart';
 import 'package:bms_scheduling/app/modules/RoBooking/views/ro_booking_view.dart';
 import 'package:bms_scheduling/app/modules/RoCancellation/views/ro_cancellation_view.dart';
+import 'package:bms_scheduling/app/modules/RoReschedule/views/ro_reschedule_view.dart';
+import 'package:bms_scheduling/app/modules/RosDistribution/views/ros_distribution_view.dart';
+import 'package:bms_scheduling/app/modules/SalesAuditExtraSpotsReport/views/sales_audit_extra_spots_report_view.dart';
+import 'package:bms_scheduling/app/modules/SalesAuditNotTelecastReport/views/SalesAuditNotTelecastReportView.dart';
+import 'package:bms_scheduling/app/modules/SchedulePromos/views/SchedulePromoView.dart';
 import 'package:bms_scheduling/app/modules/SecondaryEventMaster/views/secondary_event_master_view.dart';
 import 'package:bms_scheduling/app/modules/SecondaryEventTemplateMaster/views/secondary_event_template_master_view.dart';
 import 'package:bms_scheduling/app/modules/SponserTypeMaster/views/sponser_type_master_view.dart';
 import 'package:bms_scheduling/app/modules/SpotPositionTypeMaster/views/spot_position_type_master_view.dart';
 import 'package:bms_scheduling/app/modules/commercial/views/commercial_view.dart';
 import 'package:bms_scheduling/app/modules/filler/views/filler_view.dart';
-import 'package:bms_scheduling/app/modules/RoReschedule/views/ro_reschedule_view.dart';
-import 'package:bms_scheduling/app/modules/RosDistribution/views/ros_distribution_view.dart';
-import 'package:bms_scheduling/app/modules/SalesAuditExtraSpotsReport/views/sales_audit_extra_spots_report_view.dart';
-import 'package:bms_scheduling/app/modules/SalesAuditNotTelecastReport/views/SalesAuditNotTelecastReportView.dart';
 import 'package:bms_scheduling/app/modules/material_id_search/views/material_id_search_view.dart';
-import 'package:bms_scheduling/app/modules/SchedulePromos/views/SchedulePromoView.dart';
-import 'package:flutter/foundation.dart';
-import 'package:flutter/material.dart';
-import 'package:get/get.dart';
+
 import '../../widgets/LoadingScreen.dart';
 import '../../widgets/NoDataFoundPage.dart';
 import '../modules/AsrunImportAdRevenue/views/AsrunImportAdRevenueView.dart';
@@ -34,17 +38,18 @@ import '../modules/ComingUpMenu/views/coming_up_menu_view.dart';
 import '../modules/ComingUpNextMenu/views/coming_up_next_menu_view.dart';
 import '../modules/ComingUpTomorrowMenu/views/coming_up_tomorrow_menu_view.dart';
 import '../modules/CommercialMaster/views/commercial_master_view.dart';
-import '../modules/LanguageMaster/views/language_master_view.dart';
-import '../modules/ManageChannelInventory/views/manage_channel_inventory_view.dart';
-import '../modules/ExtraSpotsWithRemark/views/extra_spots_with_remark_view.dart';
-import '../modules/InventoryStatusReport/views/inventory_status_report_view.dart';
-import '../modules/DSeriesSpecification/views/DSeriesSpecificationView.dart';
+import '../modules/CommonSearch/views/common_search_view.dart';
 import '../modules/CreativeTagOn/views/creative_tag_on_view.dart';
+import '../modules/DSeriesSpecification/views/DSeriesSpecificationView.dart';
 import '../modules/DateWiseErrorSpots/views/date_wise_error_spots_view.dart';
 import '../modules/DateWiseFillerReport/views/date_wise_filler_report_view.dart';
 import '../modules/EuropeCommercialImportStatus/views/EuropeCommercialImportStatusView.dart';
 import '../modules/EuropeDropSpots/views/EuropeDropSpotsView.dart';
+import '../modules/ExtraSpotsWithRemark/views/extra_spots_with_remark_view.dart';
+import '../modules/InventoryStatusReport/views/inventory_status_report_view.dart';
+import '../modules/LanguageMaster/views/language_master_view.dart';
 import '../modules/LogAdditions/views/LogAdditionsView.dart';
+import '../modules/ManageChannelInventory/views/manage_channel_inventory_view.dart';
 import '../modules/NewShortContentForm/views/new_short_content_form_view.dart';
 import '../modules/PromoMaster/views/promo_master_view.dart';
 import '../modules/ROImport/views/r_o_import_view.dart';
@@ -56,8 +61,6 @@ import '../modules/TransmissionLog/views/TransmissionLogView.dart';
 import '../modules/home/views/home_view.dart';
 import '../modules/slide/views/slide_view.dart';
 import '../routes/app_pages.dart';
-
-import 'dart:html' as w;
 
 class AuthGuard1 extends StatefulWidget {
   final String childName;
@@ -109,7 +112,8 @@ class _AuthGuard1State extends State<AuthGuard1> with WidgetsBindingObserver {
       case AppLifecycleState.resumed:
         // --
         print('Resumed');
-        FocusScope.of(Get.context!).unfocus();
+        Get.focusScope?.requestFocus();
+        // FocusScope.of(Get.context!).requestFocus();
 
         break;
       case AppLifecycleState.inactive:
@@ -119,7 +123,8 @@ class _AuthGuard1State extends State<AuthGuard1> with WidgetsBindingObserver {
       case AppLifecycleState.paused:
         // --
         print('Paused');
-        FocusScope.of(Get.context!).unfocus();
+        // FocusScope.of(Get.context!).unfocus();
+        Get.focusScope?.unfocus();
         break;
       case AppLifecycleState.detached:
         // --
@@ -302,6 +307,80 @@ class _AuthGuard1State extends State<AuthGuard1> with WidgetsBindingObserver {
             case Routes.EUROPE_DROP_SPOTS:
               currentWidget = EuropeDropSpotsView();
               break;
+            case Routes.DROPPED_SPOTS:
+              currentWidget = SearchPage(
+                  key: const Key("DroppedSpot"),
+                  screenName: "Dropped Spot",
+                  strViewName: "BMS_View_DroppedSpots");
+              break;
+            case Routes.DAILY_FPC_STATUS:
+              currentWidget = SearchPage(
+                  key: const Key("DailyFpcStatus"),
+                  screenName: "Daily Fpc Status",
+                  strViewName: "Bms_View_DailyFpc");
+              break;
+            ////////////////////////////////////
+            case Routes.GENERATE_BOOKING_ACTIVITY:
+              currentWidget = SearchPage(
+                  key: const Key("GENERATE_BOOKING_ACTIVITY"),
+                  screenName: "Generate Booking Activity",
+                  strViewName: "BMS_view_BookingDetail");
+              break;
+            case Routes.PERIODIC_DEAL_UTILIZATION:
+              currentWidget = SearchPage(
+                  key: const Key("PERIODIC_DEAL_UTILIZATION"),
+                  screenName: "Periodic Deal Utilization",
+                  strViewName: "BMS_DealUtilPeriodic");
+              break;
+            case Routes.SPOT_DISTRIBUTION:
+              currentWidget = SearchPage(
+                  key: const Key("SPOT_DISTRIBUTION"),
+                  screenName: "Spot Distribution",
+                  strViewName: "Bms_rpt_ShowRosBucket");
+              break;
+            case Routes.TELECAST_SPOTS_WITH_PROGRAM_INFO:
+              currentWidget = SearchPage(
+                  key: const Key("TELECAST_SPOTS_WITH_PROGRAM_INFO"),
+                  screenName: "Teleacast Spots With Program Info",
+                  strViewName: "BMS_BreakTimeWithprogram");
+              break;
+            case Routes.TRANSMISSION_LOG_SEARCH:
+              currentWidget = SearchPage(
+                  key: const Key("TRANSMISSION_LOG_SEARCH"),
+                  screenName: "Transmission Log Search",
+                  strViewName: "BMS_VTransmissionLog");
+              break;
+            case Routes.VIDEOCON_LOG:
+              currentWidget = SearchPage(
+                  key: const Key("VIDEOCON_LOG"),
+                  screenName: "Videocon Log",
+                  strViewName: "Dish_VideoconLog");
+              break;
+            case Routes.ASRUN_SEARCH_REPORT:
+              currentWidget = SearchPage(
+                  key: const Key("ASRUN_SEARCH_REPORT"),
+                  screenName: "Asrun Search Report",
+                  strViewName: "bms_view_asrunsearch");
+              break;
+            case Routes.CUE_TONE_BREAK_DURATION:
+              currentWidget = SearchPage(
+                  key: const Key("CUE_TONE_BREAK_DURATION"),
+                  screenName: "Cue Tone Break Duration",
+                  strViewName: "BMS_CueToneBreakDuration");
+              break;
+            case Routes.DATEWISE_COMMERCIAL_LOG:
+              currentWidget = SearchPage(
+                  key: const Key("DATEWISE_COMMERCIAL_LOG"),
+                  screenName: "Datewise Commercial Log",
+                  strViewName: "BMS_Commerciallog");
+              break;
+            case Routes.DEAL_UTILIZATION:
+              currentWidget = SearchPage(
+                  key: const Key("DEAL_UTILIZATION"),
+                  screenName: "Deal Utilization",
+                  strViewName: "BMS_view_DealUtil");
+              break;
+            ///////////////////////////
             default:
               currentWidget = const NoDataFoundPage();
           }

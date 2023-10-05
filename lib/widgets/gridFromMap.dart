@@ -38,6 +38,7 @@ class DataGridFromMap extends StatelessWidget {
       this.actionIconKey,
       this.columnAutoResize = false,
       this.actionOnPress,
+      this.spaceOnPress,
       this.onSelected,
       this.onRowCheck,
       this.onContextMenuClick,
@@ -81,6 +82,7 @@ class DataGridFromMap extends StatelessWidget {
   final bool columnAutoResize;
   final List<String>? editKeys;
   final Function? actionOnPress;
+  final Function(int,bool)? spaceOnPress;
   final bool doPasccal;
   final bool? csvFormat;
   Color Function(PlutoRowColorContext)? colorCallback;
@@ -116,7 +118,7 @@ class DataGridFromMap extends StatelessWidget {
           enableRowDrag: false,
           enableDropToResize: true,
           enableContextMenu: false,
-          minWidth: 0,
+          minWidth: 5,
           width: (witdthSpecificColumn != null &&
                   witdthSpecificColumn!.keys.toList().contains('no'))
               ? witdthSpecificColumn!['no']!
@@ -205,7 +207,7 @@ class DataGridFromMap extends StatelessWidget {
       for (var key in showonly!) {
         if ((mapData[0] as Map).containsKey(key)) {
           segColumn.add(PlutoColumn(
-              minWidth: 0,
+              minWidth: 5,
               title: doPasccal
                   ? keyMapping != null
                       ? keyMapping!.containsKey(key)
@@ -452,7 +454,7 @@ class DataGridFromMap extends StatelessWidget {
             enableEditingMode: editKeys != null && editKeys!.contains(key),
             enableDropToResize: true,
             enableContextMenu: false,
-            minWidth: 0,
+            minWidth: 5,
             width: (witdthSpecificColumn != null &&
                     witdthSpecificColumn!.keys.toList().contains(key))
                 ? witdthSpecificColumn![key]!
@@ -507,6 +509,7 @@ class DataGridFromMap extends StatelessWidget {
             configuration: plutoGridConfiguration(
               focusNode: focusNode!,
               autoScale: columnAutoResize,
+              spaceOnPress: spaceOnPress,
               actionOnPress: actionOnPress,
               actionKey: actionIconKey,
               previousWidgetFN: previousWidgetFN,
@@ -642,7 +645,7 @@ class DataGridFromMap3 extends StatelessWidget {
       if (showSrNo!) {
         segColumn.add(PlutoColumn(
             title: "No.",
-            minWidth: 0,
+            minWidth: 5,
             width: (witdthSpecificColumn != null &&
                     witdthSpecificColumn!.keys.toList().contains('no'))
                 ? witdthSpecificColumn!['no']!
@@ -695,7 +698,7 @@ class DataGridFromMap3 extends StatelessWidget {
       /// addidng columns
       for (var key in mapData[0].keys) {
         segColumn.add(PlutoColumn(
-            minWidth: 0,
+            minWidth: 5,
             width: (witdthSpecificColumn != null &&
                     witdthSpecificColumn!.keys.toList().contains(key))
                 ? witdthSpecificColumn![key]!
@@ -1093,7 +1096,7 @@ class DataGridFromMap4 extends StatelessWidget {
       for (var key in showonly!) {
         if ((mapData[0] as Map).containsKey(key)) {
           segColumn.add(PlutoColumn(
-              minWidth: 0,
+              minWidth: 5,
               title: doPasccal
                   ? keyMapping != null
                       ? keyMapping!.containsKey(key)
@@ -1381,7 +1384,7 @@ class DataGridFromMap4 extends StatelessWidget {
             enableEditingMode: editKeys != null && editKeys!.contains(key),
             enableDropToResize: true,
             enableContextMenu: false,
-            minWidth: 0,
+            minWidth: 5,
             width: (witdthSpecificColumn != null &&
                     witdthSpecificColumn!.keys.toList().contains(key))
                 ? witdthSpecificColumn![key]!
@@ -1566,7 +1569,7 @@ class DataGridFromMap5 extends StatelessWidget {
           enableRowDrag: false,
           enableDropToResize: true,
           enableContextMenu: false,
-          minWidth: 0,
+          minWidth: 5,
           width: (witdthSpecificColumn != null &&
                   witdthSpecificColumn!.keys.toList().contains('no'))
               ? witdthSpecificColumn!['no']!
@@ -1656,7 +1659,7 @@ class DataGridFromMap5 extends StatelessWidget {
       for (var key in showonly!) {
         if ((mapData[0] as Map).containsKey(key)) {
           segColumn.add(PlutoColumn(
-              minWidth: 0,
+              minWidth: 5,
               title: doPasccal
                   ? keyMapping != null
                       ? keyMapping!.containsKey(key)
@@ -1907,7 +1910,7 @@ class DataGridFromMap5 extends StatelessWidget {
             enableEditingMode: editKeys != null && editKeys!.contains(key),
             enableDropToResize: true,
             enableContextMenu: false,
-            minWidth: 0,
+            minWidth: 5,
             width: (witdthSpecificColumn != null &&
                     witdthSpecificColumn!.keys.toList().contains(key))
                 ? witdthSpecificColumn![key]!

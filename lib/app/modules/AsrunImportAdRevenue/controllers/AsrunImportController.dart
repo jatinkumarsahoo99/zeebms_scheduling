@@ -76,7 +76,7 @@ class AsrunImportController extends GetxController {
   List<AsrunImportModel>? transmissionLogList = List.generate(
       100,
       (index) =>
-          new AsrunImportModel(episodeDuration: (index + 1), status: "data1"));
+          AsrunImportModel(episodeDuration: (index + 1), status: "data1"));
   PlutoGridMode selectedPlutoGridMode = PlutoGridMode.selectWithOneTap;
   int? selectedIndex;
   RxnString verifyType = RxnString();
@@ -431,9 +431,16 @@ class AsrunImportController extends GetxController {
         if ((row.cells["isMismatch"]?.value.toString() ?? "") == "1") {
           gridStateManager?.setCurrentCell(
               row.cells["isMismatch"], row.sortIdx);
-          gridStateManager?.moveScrollByRow(
-              PlutoMoveDirection.down, row.sortIdx);
-          gridStateManager?.scrollByDirection(PlutoMoveDirection.down, 20);
+          gridStateManager?.scrollByDirection(PlutoMoveDirection.down, 0);
+          gridStateManager!.moveScrollByColumn(
+              PlutoMoveDirection.right,
+              gridStateManager?.columns.indexWhere(
+                  (element) => element == gridStateManager!.currentColumn));
+          gridStateManager!.moveScrollByRow(
+              PlutoMoveDirection.down,
+              gridStateManager?.rows.indexWhere(
+                  (element) => element == gridStateManager!.currentRow));
+
           rowFound = true;
           break;
         }
@@ -611,6 +618,8 @@ class AsrunImportController extends GetxController {
                   Get.back();
                 },
               );
+            } else {
+              checkMissingAsrun();
             }
           }
         });

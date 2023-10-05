@@ -226,7 +226,7 @@ class SecondaryEventMasterView extends GetView<SecondaryEventMasterController> {
                                 hintTxt: "EOM",
                                 controller: controller.eomTC,
                                 widthRatio: .11,
-                                textFieldFN: controller.eomFN,
+                                // textFieldFN: controller.eomFN,
                                 paddingLeft: 0,
                               ),
                             ],

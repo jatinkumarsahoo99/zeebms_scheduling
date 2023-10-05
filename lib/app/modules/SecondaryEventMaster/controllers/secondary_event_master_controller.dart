@@ -218,7 +218,7 @@ class SecondaryEventMasterController extends GetxController {
     });
     eomFN.addListener(() {
       if (!eomFN.hasFocus) {
-        calculateDuration();
+        // calculateDuration();
         // try {
         //   num diff = (Utils.oldBMSConvertToSecondsValue(value: eomTC.text) -
         //       Utils.oldBMSConvertToSecondsValue(value: somTC.text));
@@ -299,15 +299,18 @@ class SecondaryEventMasterController extends GetxController {
   saveData() {
     if (selectedLoc == null || selectedChannel == null) {
       LoadingDialog.showErrorDialog("Please select Location,Channel");
-    } else if (eomTC.text == "00:00:00:00") {
-      LoadingDialog.showErrorDialog("Please enter EOM", callback: () {
-        eomFN.requestFocus();
-      });
-    } else if (duration.value == "00:00:00:00") {
-      LoadingDialog.showErrorDialog("Please enter duration.", callback: () {
-        eomFN.requestFocus();
-      });
-    } else {
+    }
+    //  else if (eomTC.text == "00:00:00:00") {
+    //   LoadingDialog.showErrorDialog("Please enter EOM", callback: () {
+    //     eomFN.requestFocus();
+    //   });
+    // }
+    //  else if (duration.value == "00:00:00:00") {
+    //   LoadingDialog.showErrorDialog("Please enter duration.", callback: () {
+    //     eomFN.requestFocus();
+    //   });
+    // }
+    else {
       LoadingDialog.call();
       Get.find<ConnectorControl>().POSTMETHOD(
         api: ApiFactory.SECONDARY_EVENT_MASTER_SAVE_DATA,

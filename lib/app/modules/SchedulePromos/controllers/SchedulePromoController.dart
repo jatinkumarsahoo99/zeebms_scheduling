@@ -217,11 +217,13 @@ class SchedulePromoController extends GetxController {
     calcaulateExceed(index);
   }
 
-  handleDoubleTapInRightTable(int? index, String col) {
+  Future<void> handleDoubleTapInRightTable(int? index, String col,
+      {bool updateUI = true}) async {
     if (promoScheduled.isEmpty) {
       LoadingDialog.showErrorDialog("ProgramSegments can't be empty");
     } else {
       searchPromoSelectedIdx = index ?? 0;
+      handleOnSelectRightTable(searchPromoSelectedIdx, col);
       searchedPromoStateManager?.setCurrentCell(
           searchedPromoStateManager
               ?.getRowByIdx(searchPromoSelectedIdx)
@@ -253,7 +255,9 @@ class SchedulePromoController extends GetxController {
       }
       promoScheduled.insert(schedulePromoSelectedIdx + 1, insertModel);
       schedulePromoSelectedIdx = schedulePromoSelectedIdx + 1;
-      promoScheduled.refresh();
+      if (updateUI) {
+        promoScheduled.refresh();
+      }
       scheduledTC.text = Utils.convertToTimeFromDouble(
           value: (Utils.oldBMSConvertToSecondsValue(value: scheduledTC.text)) +
               (tempRightModel['duration'] ?? 0));
@@ -324,8 +328,27 @@ class SchedulePromoController extends GetxController {
     }
   }
 
-  void handleAddTap() {
-    handleDoubleTapInRightTable(searchPromoSelectedIdx, searchPromoSelectedCol);
+  Future<void> handleAddTap() async {
+    if (searchedPromoStateManager?.currentRow?.cells == null) {
+      LoadingDialog.callInfoMessage("Please select Promo Row.");
+      return;
+    }
+    print(searchedPromoStateManager!.currentSelectingRows.length);
+    if (searchedPromoStateManager?.currentSelectingRows == null ||
+        (searchedPromoStateManager?.currentSelectingRows.isEmpty ?? true)) {
+      searchPromoSelectedIdx = searchedPromoStateManager!.currentRow!.sortIdx;
+      handleDoubleTapInRightTable(
+          searchPromoSelectedIdx, searchPromoSelectedCol);
+    } else {
+      for (var element in searchedPromoStateManager!.currentSelectingRows) {
+        searchPromoSelectedIdx = element.sortIdx;
+        await handleDoubleTapInRightTable(
+            searchPromoSelectedIdx, searchPromoSelectedCol,
+            updateUI:
+                searchedPromoStateManager!.currentSelectingRows.last.sortIdx ==
+                    element.sortIdx);
+      }
+    }
   }
 
   void handleSearchTap() {
@@ -351,7 +374,7 @@ class SchedulePromoController extends GetxController {
         "telecastDate": DateFormat("yyyy-MM-dd")
             .format(DateFormat("dd-MM-yyyy").parse(fromdateTC.text)),
         "mine": myEnabled.value,
-        "txID": promoIDTC.text,
+        "txID": promoIDTC.text.replaceAll(" ", ","),
         "caption": promoCaptionTC.text,
       },
     );

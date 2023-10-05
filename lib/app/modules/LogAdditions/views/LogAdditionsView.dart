@@ -61,7 +61,8 @@ class LogAdditionsView extends GetView<LogAdditionsController> {
                             0.12,
                             isEnable: controllerX.isEnable.value,
                             selected: controllerX.selectLocation,
-                            // autoFocus: true,
+                            autoFocus: true,
+                            inkWellFocusNode: controllerX.locationFN,
                             dialogWidth: 330,
                             dialogHeight: Get.height * .7,
                           ),
@@ -102,8 +103,12 @@ class LogAdditionsView extends GetView<LogAdditionsController> {
                           padding: const EdgeInsets.only(top: 15.0),
                           child: Radio<String>(
                               value: "Primary",
+                              focusNode: controllerX.primaryFN,
                               groupValue: controllerX.verifyType.value,
                               onChanged: (value) {
+                                controllerX.gridStateManager?.gridFocusNode
+                                    .unfocus();
+                                controllerX.primaryFN.requestFocus();
                                 controllerX.verifyType.value = value;
                                 controllerX.update(["updateView"]);
                               }),
@@ -116,8 +121,12 @@ class LogAdditionsView extends GetView<LogAdditionsController> {
                           padding: const EdgeInsets.only(top: 15.0),
                           child: Radio<String>(
                               value: "Secondary",
+                              focusNode: controllerX.secondaryFN,
                               groupValue: controllerX.verifyType.value,
                               onChanged: (value) {
+                                controllerX.gridStateManager?.gridFocusNode
+                                    .unfocus();
+                                controllerX.secondaryFN.requestFocus();
                                 controllerX.verifyType.value = value;
                                 controllerX.update(["updateView"]);
                               }),
@@ -134,8 +143,13 @@ class LogAdditionsView extends GetView<LogAdditionsController> {
                               Obx(() => Padding(
                                     padding: const EdgeInsets.only(top: 15.0),
                                     child: Checkbox(
+                                      focusNode: controllerX.standbyLogFN,
                                       value: controllerX.isStandby.value,
                                       onChanged: (val) {
+                                        controllerX
+                                            .gridStateManager?.gridFocusNode
+                                            .unfocus();
+                                        controllerX.standbyLogFN.requestFocus();
                                         controllerX.isStandby.value = val!;
                                       },
                                       materialTapTargetSize:
@@ -161,8 +175,14 @@ class LogAdditionsView extends GetView<LogAdditionsController> {
                               Obx(() => Padding(
                                     padding: const EdgeInsets.only(top: 15.0),
                                     child: Checkbox(
+                                      focusNode: controllerX.ignoreSportsFN,
                                       value: controllerX.isIgnoreSpot.value,
                                       onChanged: (val) {
+                                        controllerX
+                                            .gridStateManager?.gridFocusNode
+                                            .unfocus();
+                                        controllerX.ignoreSportsFN
+                                            .requestFocus();
                                         controllerX.isIgnoreSpot.value = val!;
                                       },
                                       materialTapTargetSize:
@@ -195,7 +215,7 @@ class LogAdditionsView extends GetView<LogAdditionsController> {
                             controllerX.additions.value,
                             (value) {
                               controllerX.selectAdditions.value = value;
-                              controllerX.selectAdditions1=value;
+                              controllerX.selectAdditions1 = value;
                               // FocusScope.of(context).nextFocus();
                             },
                             "Additions",
@@ -292,6 +312,7 @@ class LogAdditionsView extends GetView<LogAdditionsController> {
                           onload: (loadevent) {
                             controllerX.gridStateManager =
                                 loadevent.stateManager;
+                            loadevent.stateManager.setKeepFocus(false);
                           },
                           showSrNo: true,
                           hideCode: false,

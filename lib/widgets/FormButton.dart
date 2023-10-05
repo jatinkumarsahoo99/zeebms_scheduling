@@ -49,6 +49,7 @@ class FormButtonWrapper extends StatelessWidget {
     );
   }
 }
+
 class FormButtonWrapper1 extends StatelessWidget {
   final String btnText;
   final VoidCallback? callback;
@@ -96,7 +97,13 @@ class FormButton extends StatelessWidget {
   final bool showIcon;
 
   const FormButton(
-      {Key? key, required this.btnText, this.callback, this.isEnabled, this.focusNode, this.showIcon = true, this.iconDataM})
+      {Key? key,
+      required this.btnText,
+      this.callback,
+      this.isEnabled,
+      this.focusNode,
+      this.showIcon = true,
+      this.iconDataM})
       : super(key: key);
 
   @override
@@ -157,8 +164,8 @@ class FormButton extends StatelessWidget {
       iconData = Icons.settings_suggest;
     } else if (btnText.toLowerCase() == "execute") {
       iconData = Icons.start;
-    } else
-    if (btnText.toLowerCase() == "ok" || btnText.toLowerCase() == "done") {
+    } else if (btnText.toLowerCase() == "ok" ||
+        btnText.toLowerCase() == "done") {
       iconData = Icons.done;
     } else if (btnText.toLowerCase() == "show programs") {
       iconData = Icons.remove_red_eye;
@@ -264,6 +271,7 @@ class FormButton extends StatelessWidget {
     // }
   }
 }
+
 class FormButton2 extends StatelessWidget {
   final String btnText;
   final VoidCallback? callback;
@@ -273,7 +281,13 @@ class FormButton2 extends StatelessWidget {
   final bool showIcon;
 
   const FormButton2(
-      {Key? key, required this.btnText, this.callback, this.isEnabled, this.focusNode, this.showIcon = true, this.iconDataM})
+      {Key? key,
+      required this.btnText,
+      this.callback,
+      this.isEnabled,
+      this.focusNode,
+      this.showIcon = true,
+      this.iconDataM})
       : super(key: key);
 
   @override
@@ -334,8 +348,8 @@ class FormButton2 extends StatelessWidget {
       iconData = Icons.settings_suggest;
     } else if (btnText.toLowerCase() == "execute") {
       iconData = Icons.start;
-    } else
-    if (btnText.toLowerCase() == "ok" || btnText.toLowerCase() == "done") {
+    } else if (btnText.toLowerCase() == "ok" ||
+        btnText.toLowerCase() == "done") {
       iconData = Icons.done;
     } else if (btnText.toLowerCase() == "show programs") {
       iconData = Icons.remove_red_eye;
@@ -368,28 +382,31 @@ class FormButton2 extends StatelessWidget {
           overlayColor: MaterialStateProperty.all(
             Colors.deepPurple[900],
           ),
-          padding: MaterialStateProperty.all(
-              EdgeInsets.symmetric(horizontal: 10,)
-          ),
+          padding: MaterialStateProperty.all(EdgeInsets.symmetric(
+            horizontal: 2,
+          )),
           alignment: Alignment.center),
       onPressed: (isEnabled ?? true)
           ? (btnText == "Exit")
-          ? () {
-        LoadingDialog.callExitForm(() {
-          if (html.window.location.href.contains("loginCode")) {
-            Utils.callJSToExit(param: "exit|${Utils.getFormName()}");
-            callback!();
-          } else {
-            Get.back();
-          }
-        });
-      }
-          : callback
+              ? () {
+                  if (callback != null) {
+                    callback!();
+                  }
+                  LoadingDialog.callExitForm(() {
+                    if (html.window.location.href.contains("loginCode")) {
+                      Utils.callJSToExit(param: "exit|${Utils.getFormName()}");
+                      callback!();
+                    } else {
+                      Get.back();
+                    }
+                  });
+                }
+              : callback
           : null,
       // icon: showIcon ? Icon(iconData, size: 16) : Container(),
       child: Text(btnText.trim(),
           style: TextStyle(
-            fontSize: SizeDefine.fontSizeButton,
+            fontSize: SizeDefine.fontSizeButton-1,
           ),
           textAlign: TextAlign.center),
     );
@@ -452,8 +469,15 @@ class FormButton3 extends StatelessWidget {
   final bool showIcon;
   final Color? color;
 
-   FormButton3(
-      {Key? key, required this.btnText, this.callback, this.isEnabled, this.focusNode, this.showIcon = true, this.iconDataM, this.color})
+  FormButton3(
+      {Key? key,
+      required this.btnText,
+      this.callback,
+      this.isEnabled,
+      this.focusNode,
+      this.showIcon = true,
+      this.iconDataM,
+      this.color})
       : super(key: key);
 
   @override
@@ -461,7 +485,8 @@ class FormButton3 extends StatelessWidget {
     var iconData;
     if (btnText.toLowerCase() == "save") {
       iconData = Icons.save;
-    } else if (btnText.toLowerCase() == "delete" || btnText.toLowerCase() == "delete variance") {
+    } else if (btnText.toLowerCase() == "delete" ||
+        btnText.toLowerCase() == "delete variance") {
       iconData = Icons.delete;
     } else if (btnText.toLowerCase() == "verify") {
       iconData = Icons.verified_rounded;
@@ -513,8 +538,8 @@ class FormButton3 extends StatelessWidget {
       iconData = Icons.settings_suggest;
     } else if (btnText.toLowerCase() == "execute") {
       iconData = Icons.start;
-    } else
-    if (btnText.toLowerCase() == "ok" || btnText.toLowerCase() == "done") {
+    } else if (btnText.toLowerCase() == "ok" ||
+        btnText.toLowerCase() == "done") {
       iconData = Icons.done;
     } else if (btnText.toLowerCase() == "show programs") {
       iconData = Icons.remove_red_eye;
@@ -547,26 +572,25 @@ class FormButton3 extends StatelessWidget {
           overlayColor: MaterialStateProperty.all(
             Colors.deepPurple[900],
           ),
-          padding: MaterialStateProperty.all(
-              EdgeInsets.symmetric(horizontal: 10,)
-          ),
-          backgroundColor: MaterialStateProperty.all(
-              color ?? Colors.deepPurple[900]
-          ),
+          padding: MaterialStateProperty.all(EdgeInsets.symmetric(
+            horizontal: 10,
+          )),
+          backgroundColor:
+              MaterialStateProperty.all(color ?? Colors.deepPurple[900]),
           alignment: Alignment.center),
       onPressed: (isEnabled ?? true)
           ? (btnText == "Exit")
-          ? () {
-        LoadingDialog.callExitForm(() {
-          if (html.window.location.href.contains("loginCode")) {
-            Utils.callJSToExit(param: "exit|${Utils.getFormName()}");
-            callback!();
-          } else {
-            Get.back();
-          }
-        });
-      }
-          : callback
+              ? () {
+                  LoadingDialog.callExitForm(() {
+                    if (html.window.location.href.contains("loginCode")) {
+                      Utils.callJSToExit(param: "exit|${Utils.getFormName()}");
+                      callback!();
+                    } else {
+                      Get.back();
+                    }
+                  });
+                }
+              : callback
           : null,
       // icon: showIcon ? Icon(iconData, size: 16) : Container(),
       child: Text(btnText.trim(),
@@ -634,7 +658,13 @@ class DailogCloseButton extends StatefulWidget {
   final IconData? iconDataM;
 
   const DailogCloseButton(
-      {Key? key, required this.btnText, this.callback, this.isEnabled, this.focusNode, this.autoFocus = false, this.iconDataM})
+      {Key? key,
+      required this.btnText,
+      this.callback,
+      this.isEnabled,
+      this.focusNode,
+      this.autoFocus = false,
+      this.iconDataM})
       : super(key: key);
 
   @override
@@ -707,24 +737,24 @@ class _DailogCloseButtonState extends State<DailogCloseButton> {
       focusNode: widget.focusNode,
       onPressed: (widget.isEnabled ?? true)
           ? (widget.btnText == "Exit")
-          ? () {
-        LoadingDialog.callExitForm(() {
-          if (html.window.location.href.contains("dashboard")) {
-            // Get.find<HomeController>().updateDarwerSelection(0, "0", "0");
-            // Get.find<HomeController>().updateDarwerSelection(0, "0", "0");
-            // Get.find<HomeController>()..selectChild1.value = null;
-            if (kIsWeb) {
-              SystemChrome.setApplicationSwitcherDescription(
-                ApplicationSwitcherDescription(label: "Zee BMS"),
-              );
-            }
-            widget.callback!();
-          } else {
-            Get.back();
-          }
-        });
-      }
-          : widget.callback
+              ? () {
+                  LoadingDialog.callExitForm(() {
+                    if (html.window.location.href.contains("dashboard")) {
+                      // Get.find<HomeController>().updateDarwerSelection(0, "0", "0");
+                      // Get.find<HomeController>().updateDarwerSelection(0, "0", "0");
+                      // Get.find<HomeController>()..selectChild1.value = null;
+                      if (kIsWeb) {
+                        SystemChrome.setApplicationSwitcherDescription(
+                          ApplicationSwitcherDescription(label: "Zee BMS"),
+                        );
+                      }
+                      widget.callback!();
+                    } else {
+                      Get.back();
+                    }
+                  });
+                }
+              : widget.callback
           : null,
       icon: Icon(iconData, size: 16),
       autofocus: widget.autoFocus,
@@ -737,14 +767,14 @@ class _DailogCloseButtonState extends State<DailogCloseButton> {
       return ElevatedButton(
         onPressed: (widget.isEnabled ?? true)
             ? (widget.btnText == "Exit")
-            ? () {
-          LoadingDialog.callExitForm(() {
-            // Get.find<HomeController>().updateDarwerSelection(0, "0", "0");
-            // Get.find<HomeController>()..selectChild1.value = null;
-            widget.callback!();
-          });
-        }
-            : widget.callback
+                ? () {
+                    LoadingDialog.callExitForm(() {
+                      // Get.find<HomeController>().updateDarwerSelection(0, "0", "0");
+                      // Get.find<HomeController>()..selectChild1.value = null;
+                      widget.callback!();
+                    });
+                  }
+                : widget.callback
             : null,
         // icon: ,
         child: Text(
@@ -760,18 +790,18 @@ class _DailogCloseButtonState extends State<DailogCloseButton> {
       return IconButton(
         onPressed: (widget.isEnabled ?? true)
             ? (widget.btnText == "Exit")
-            ? () {
-          LoadingDialog.callExitForm(() {
-            // Get.find<HomeController>().updateDarwerSelection(0, "0", "0");
-            // Get.find<HomeController>()..selectChild1.value = null;
-            widget.callback!();
-          });
-        }
-            : widget.callback
+                ? () {
+                    LoadingDialog.callExitForm(() {
+                      // Get.find<HomeController>().updateDarwerSelection(0, "0", "0");
+                      // Get.find<HomeController>()..selectChild1.value = null;
+                      widget.callback!();
+                    });
+                  }
+                : widget.callback
             : null,
         icon: Icon(iconData),
-        color: (widget.isEnabled ?? true) ? Colors.deepPurpleAccent : Colors
-            .grey,
+        color:
+            (widget.isEnabled ?? true) ? Colors.deepPurpleAccent : Colors.grey,
         tooltip: widget.btnText,
         disabledColor: Colors.grey,
       );
@@ -793,12 +823,12 @@ class FormButton1 extends StatelessWidget {
     return ElevatedButton(
       onPressed: (btnText == "Exit")
           ? () {
-        LoadingDialog.callExitForm(() {
-          // Get.find<HomeController>().updateDarwerSelection(0, "0", "0");
-          // Get.find<HomeController>()..selectChild1.value = null;
-          callback!();
-        });
-      }
+              LoadingDialog.callExitForm(() {
+                // Get.find<HomeController>().updateDarwerSelection(0, "0", "0");
+                // Get.find<HomeController>()..selectChild1.value = null;
+                callback!();
+              });
+            }
           : callback,
       child: Text(
         btnText,
