@@ -642,6 +642,7 @@ class TransmissionLogView extends StatelessWidget {
                                 FormButtonWrapper1(
                                   btnText: btn["name"],
                                   showIcon: false,
+                                  width: Get.width / 23,
                                   callback:
                                   (Get
                                       .find<TransmissionLogController>()
@@ -661,49 +662,34 @@ class TransmissionLogView extends StatelessWidget {
                                   this.controller.btnUp_Click1();
                                 },
                                 icon: Icon(Icons.arrow_upward),
-                                padding: EdgeInsets.symmetric(horizontal: 8.0),
+                                padding: EdgeInsets.symmetric(horizontal: 3.0),
                               ),
                               IconButton(
                                 onPressed: () {
                                   this.controller.btnDown_Click1();
                                 },
                                 icon: Icon(Icons.arrow_downward),
-                                padding: EdgeInsets.symmetric(horizontal: 8.0),
+                                padding: EdgeInsets.symmetric(horizontal: 3.0),
                               ),
                               FormButtonWrapper1(
                                 btnText: "Aa",
-                                showIcon: false,
+                                width: Get.width / 23,
                                 // isEnabled: btn['isDisabled'],
-                                callback: /*btn["name"] != "Delete" &&
-                                        Utils.btnAccessHandler2(btn['name'],
-                                                controller, formPermissions) ==
-                                            null
-                                    ? null
-                                    :*/
+                                callback:
                                     () => formHandler("Aa"),
                               ),
                               FormButtonWrapper1(
                                 btnText: "CL",
                                 showIcon: false,
-                                isEnabled: true,
-                                callback: /*btn["name"] != "Delete" &&
-                                        Utils.btnAccessHandler2(btn['name'],
-                                                controller, formPermissions) ==
-                                            null
-                                    ? null
-                                    :*/
+                                width: Get.width / 23,
+                                callback:
                                     () => formHandler("CL"),
                               ),
                               FormButtonWrapper1(
                                 btnText: "Exit",
                                 showIcon: false,
-                                isEnabled: true,
-                                callback: /*btn["name"] != "Delete" &&
-                                        Utils.btnAccessHandler2(btn['name'],
-                                                controller, formPermissions) ==
-                                            null
-                                    ? null
-                                    :*/
+                                width: Get.width / 23,
+                                callback:
                                     () => formHandler("Exit"),
                               ),
                             ],
@@ -744,7 +730,7 @@ class TransmissionLogView extends StatelessWidget {
           {"dgvTimeStateManager": controller.dgvTimeStateManager},
           {"tblFastInsert": controller.tblFastInsert},
           {"tblSegement": controller.tblSegement},
-        ],formName: "frmTransmissionlog");
+        ], formName: "frmTransmissionlog");
         break;
       case "Save":
         controller.btnSave_Click();

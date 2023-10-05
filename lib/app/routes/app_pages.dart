@@ -54,7 +54,7 @@ class AppPages {
 
   static const INITIAL = kReleaseMode
       ? Routes.HOME
-      : "${Routes.LOG_ADDITIONS}?personalNo=e7ScQlP7tXxBxRizIrkQIA%3D%3D&loginCode=scL134pM4e0EQtJCjv7r5Q%3D%3D&formName=ZdPOC%2BHl3hRJzHSclM%2B5m3sWVw1wpLPmNEvejYUOFLU%3D";
+      : "${Routes.SALES_AUDIT_NOT_TELECAST_REPORT}?personalNo=e7ScQlP7tXxBxRizIrkQIA%3D%3D&loginCode=scL134pM4e0EQtJCjv7r5Q%3D%3D&formName=ZdPOC%2BHl3hRJzHSclM%2B5m3sWVw1wpLPmNEvejYUOFLU%3D";
 
   static final routes = [
     GetPage(
@@ -71,6 +71,48 @@ class AppPages {
       name: _Paths.NEW_SHORT_CONTENT_FORM,
       page: () => AuthGuard1(childName: _Paths.NEW_SHORT_CONTENT_FORM),
     ),
+    ////////////////////////////////
+    GetPage(
+      name: _Paths.GENERATE_BOOKING_ACTIVITY,
+      page: () => AuthGuard1(childName: _Paths.GENERATE_BOOKING_ACTIVITY),
+    ),
+    GetPage(
+      name: _Paths.PERIODIC_DEAL_UTILIZATION,
+      page: () => AuthGuard1(childName: _Paths.PERIODIC_DEAL_UTILIZATION),
+    ),
+    GetPage(
+      name: _Paths.SPOT_DISTRIBUTION,
+      page: () => AuthGuard1(childName: _Paths.SPOT_DISTRIBUTION),
+    ),
+    GetPage(
+      name: _Paths.TELECAST_SPOTS_WITH_PROGRAM_INFO,
+      page: () => AuthGuard1(childName: _Paths.TELECAST_SPOTS_WITH_PROGRAM_INFO),
+    ),
+    GetPage(
+      name: _Paths.TRANSMISSION_LOG_SEARCH,
+      page: () => AuthGuard1(childName: _Paths.TRANSMISSION_LOG_SEARCH),
+    ),
+    GetPage(
+      name: _Paths.VIDEOCON_LOG,
+      page: () => AuthGuard1(childName: _Paths.VIDEOCON_LOG),
+    ),
+    GetPage(
+      name: _Paths.ASRUN_SEARCH_REPORT,
+      page: () => AuthGuard1(childName: _Paths.ASRUN_SEARCH_REPORT),
+    ),
+    GetPage(
+      name: _Paths.CUE_TONE_BREAK_DURATION,
+      page: () => AuthGuard1(childName: _Paths.CUE_TONE_BREAK_DURATION),
+    ),
+    GetPage(
+      name: _Paths.DATEWISE_COMMERCIAL_LOG,
+      page: () => AuthGuard1(childName: _Paths.DATEWISE_COMMERCIAL_LOG),
+    ),
+    GetPage(
+      name: _Paths.DEAL_UTILIZATION,
+      page: () => AuthGuard1(childName: _Paths.DEAL_UTILIZATION),
+    ),
+    //////////////////////////////////
     GetPage(
       name: _Paths.DAILY_FPC_STATUS,
       page: () => AuthGuard1(childName: _Paths.DAILY_FPC_STATUS),
