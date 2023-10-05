@@ -76,7 +76,7 @@ class AsrunImportController extends GetxController {
   List<AsrunImportModel>? transmissionLogList = List.generate(
       100,
       (index) =>
-          new AsrunImportModel(episodeDuration: (index + 1), status: "data1"));
+          AsrunImportModel(episodeDuration: (index + 1), status: "data1"));
   PlutoGridMode selectedPlutoGridMode = PlutoGridMode.selectWithOneTap;
   int? selectedIndex;
   RxnString verifyType = RxnString();
@@ -210,33 +210,6 @@ class AsrunImportController extends GetxController {
     if (fpcTime.isNotEmpty) {
       gridStateManager?.setFilter(
           (element) => element.cells["fpctIme"]?.value.toString() == fpcTime);
-    }
-  }
-
-  void filterAsrunUpDown(bool directionUp) {
-    if (asrunData != null &&
-        asrunData!.isNotEmpty &&
-        gridStateManager != null &&
-        gridStateManager!.currentRowIdx != null) {
-      int cruntRowIndex = gridStateManager!.currentRowIdx!;
-      late int nextRowIndex;
-
-      if (directionUp) {
-        if (cruntRowIndex == 0) {
-          nextRowIndex = asrunData!.length - 1;
-        } else {
-          nextRowIndex = cruntRowIndex - 1;
-        }
-      } else {
-        if (cruntRowIndex == asrunData!.length - 1) {
-          nextRowIndex = 0;
-        } else {
-          nextRowIndex = cruntRowIndex + 1;
-        }
-      }
-      var cell = gridStateManager!.getRowByIdx(nextRowIndex)!.cells['fpctIme'];
-      gridStateManager!.setCurrentCell(cell, nextRowIndex);
-      filterMainGrid(cell!.value.toString());
     }
   }
 
@@ -645,6 +618,8 @@ class AsrunImportController extends GetxController {
                   Get.back();
                 },
               );
+            } else {
+              checkMissingAsrun();
             }
           }
         });

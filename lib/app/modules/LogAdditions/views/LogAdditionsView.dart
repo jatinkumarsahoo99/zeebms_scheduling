@@ -61,7 +61,8 @@ class LogAdditionsView extends GetView<LogAdditionsController> {
                             0.12,
                             isEnable: controllerX.isEnable.value,
                             selected: controllerX.selectLocation,
-                            // autoFocus: true,
+                            autoFocus: true,
+                            inkWellFocusNode: controllerX.locationFN,
                             dialogWidth: 330,
                             dialogHeight: Get.height * .7,
                           ),
@@ -101,14 +102,16 @@ class LogAdditionsView extends GetView<LogAdditionsController> {
                         Padding(
                           padding: const EdgeInsets.only(top: 15.0),
                           child: Radio<String>(
-                            value: "Primary",
-                            groupValue: controllerX.verifyType.value,
-                            onChanged: (value) {
-                              controllerX.verifyType.value = value;
-                              controllerX.update(["updateView"]);
-                            },
-                            focusNode: controllerX.primaryFocus,
-                          ),
+                              value: "Primary",
+                              focusNode: controllerX.primaryFN,
+                              groupValue: controllerX.verifyType.value,
+                              onChanged: (value) {
+                                controllerX.gridStateManager?.gridFocusNode
+                                    .unfocus();
+                                controllerX.primaryFN.requestFocus();
+                                controllerX.verifyType.value = value;
+                                controllerX.update(["updateView"]);
+                              }),
                         ),
                         const Padding(
                           padding: EdgeInsets.only(top: 15.0),
@@ -118,9 +121,12 @@ class LogAdditionsView extends GetView<LogAdditionsController> {
                           padding: const EdgeInsets.only(top: 15.0),
                           child: Radio<String>(
                               value: "Secondary",
+                              focusNode: controllerX.secondaryFN,
                               groupValue: controllerX.verifyType.value,
-                              focusNode: controllerX.secondaryFocus,
                               onChanged: (value) {
+                                controllerX.gridStateManager?.gridFocusNode
+                                    .unfocus();
+                                controllerX.secondaryFN.requestFocus();
                                 controllerX.verifyType.value = value;
                                 controllerX.update(["updateView"]);
                               }),
@@ -137,11 +143,15 @@ class LogAdditionsView extends GetView<LogAdditionsController> {
                               Obx(() => Padding(
                                     padding: const EdgeInsets.only(top: 15.0),
                                     child: Checkbox(
+                                      focusNode: controllerX.standbyLogFN,
                                       value: controllerX.isStandby.value,
                                       onChanged: (val) {
+                                        controllerX
+                                            .gridStateManager?.gridFocusNode
+                                            .unfocus();
+                                        controllerX.standbyLogFN.requestFocus();
                                         controllerX.isStandby.value = val!;
                                       },
-                                      focusNode: controllerX.standByFocus,
                                       materialTapTargetSize:
                                           MaterialTapTargetSize.shrinkWrap,
                                     ),
@@ -165,11 +175,16 @@ class LogAdditionsView extends GetView<LogAdditionsController> {
                               Obx(() => Padding(
                                     padding: const EdgeInsets.only(top: 15.0),
                                     child: Checkbox(
+                                      focusNode: controllerX.ignoreSportsFN,
                                       value: controllerX.isIgnoreSpot.value,
                                       onChanged: (val) {
+                                        controllerX
+                                            .gridStateManager?.gridFocusNode
+                                            .unfocus();
+                                        controllerX.ignoreSportsFN
+                                            .requestFocus();
                                         controllerX.isIgnoreSpot.value = val!;
                                       },
-                                      focusNode: controllerX.ignoreSpotFocus,
                                       materialTapTargetSize:
                                           MaterialTapTargetSize.shrinkWrap,
                                     ),
