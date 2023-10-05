@@ -115,11 +115,9 @@ class PlutoGridShortcut {
     // Set editing
     LogicalKeySet(LogicalKeyboardKey.f2): const PlutoGridActionSetEditing(),
     // Focus to column filter
-    LogicalKeySet(LogicalKeyboardKey.f3):
-        const PlutoGridActionFocusToColumnFilter(),
+    // LogicalKeySet(LogicalKeyboardKey.f3): const PlutoGridActionFocusToColumnFilter(),
     // Toggle column sort
-    LogicalKeySet(LogicalKeyboardKey.f4):
-        const PlutoGridActionToggleColumnSort(),
+    // LogicalKeySet(LogicalKeyboardKey.f4):const PlutoGridActionToggleColumnSort(),
     // Copy the values of cells
     LogicalKeySet(LogicalKeyboardKey.control, LogicalKeyboardKey.keyC):
         const PlutoGridActionCopyValues(),

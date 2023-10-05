@@ -95,7 +95,11 @@ PlutoGridConfiguration plutoGridConfiguration({
         ),
         tabKeyAction: PlutoGridTabKeyAction.moveToNextOnEdge,
         scrollbar: const PlutoGridScrollbarConfig(
-            draggableScrollbar: true, isAlwaysShown: true, hoverWidth: 15));
+          draggableScrollbar: true,
+          isAlwaysShown: true,
+          hoverWidth: 15,
+          scrollbarThickness: 6,
+        ));
 
 PlutoGridConfiguration plutoGridConfigurationTransmisionLog({
   Function? actionOnPress,

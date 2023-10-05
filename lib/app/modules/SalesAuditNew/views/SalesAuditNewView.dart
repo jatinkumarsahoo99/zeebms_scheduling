@@ -33,48 +33,35 @@ class SalesAuditNewView  extends StatelessWidget  {
 
         focusNode: FocusNode(),
         onKey: (RawKeyEvent raw) async {
-          // print("RAw is.>>>" + raw.toString());
-         /* if(raw is RawKeyDownEvent && raw.isControlPressed && raw.character?.toLowerCase() =="c"){
-            if(controller.gridStateManagerLeft?.hasFocus == true){
-              print(">>>>>>>>>>>>>>>gridStateManagerLeft"+
-                  (controller.gridStateManagerLeft?.currentSelectingPosition?.columnIdx).toString());
-              print(">>>>>>>>>>>>>>>gridStateManagerLeft"+
-                  ( controller.gridStateManagerLeft?.currentSelectingRows).toString());
-            }if(controller.gridStateManagerRight?.hasFocus == true){
-              print(">>>>>>>>>>>>>>>gridStateManagerRight"+
-                  (controller.gridStateManagerRight?.currentSelectingPosition).toString());
-              print(">>>>>>>>>>>>>>>gridStateManagerRight"+
-                  ( controller.gridStateManagerRight?.currentSelectingRows).toString());
-            }
-
-          }*/
           switch (raw.logicalKey.keyLabel) {
             case "F5":
               controller.markError(controller.gridStateManagerLeft?.currentRowIdx??0);
               break;
             case "F3":
               if(controller.gridStateManagerLeft?.hasFocus == true){
-                print(">>>>>>>>>>>>currentCell data"+(controller.gridStateManagerLeft?.currentRow).toString());
+                // print(">>>>>>>>>>>>currentCell data"+(controller.gridStateManagerLeft?.currentRow).toString());
                 // Clipboard.setData( ClipboardData(text: controller.gridStateManagerLeft?.currentCell?.value));
                 controller.f3Data =controller.gridStateManagerLeft?.currentCell?.value??"";
                 // Utils.copyToClipboardHack( controller.gridStateManagerLeft?.currentCell?.value);
                 // controller.sharedPref?.save("f3", controller.gridStateManagerLeft?.currentCell?.value??"");
+              }else if(controller.gridStateManagerRight?.hasFocus == true){
+                controller.f3Data =controller.gridStateManagerRight?.currentCell?.value??"";
               }
               break;
             case "F4":
               if(controller.gridStateManagerLeft?.hasFocus == true ){
                 // bool sta = await Utils.checkClipboardPermission();
                 // print(">>>>>>>>>>"+sta.toString());
-                print(">>>>>>>>>>>>currentCell data"+(controller.gridStateManagerLeft?.currentColumn?.title).toString());
+                // print(">>>>>>>>>>>>currentCell data"+(controller.gridStateManagerLeft?.currentColumn?.title).toString());
                 // String? data = await Utils.pasteFromClipboardHack();
                 // String? data = controller.sharedPref?.read("f3");
                 controller.gridStateManagerLeft?.rows[(controller.gridStateManagerLeft?.currentRowIdx)??0].
                 cells['remarks']?.value = controller.f3Data;
                 controller.gridStateManagerLeft?.notifyListeners();
-                print(">>>>>>>>>>Clipboard"+(controller.f3Data).toString());
-                print(">>>>>>>>>>Clipboard Index"+(controller.gridStateManagerLeft?.currentRowIdx).toString());
-                print(">>>>>>>>>>Clipboard value"+(controller.gridStateManagerLeft?.rows[(controller.gridStateManagerLeft?.currentRowIdx)??0].
-                cells['remarks']?.value).toString());
+              }else if(controller.gridStateManagerRight?.hasFocus == true){
+                controller.gridStateManagerRight?.rows[(controller.gridStateManagerRight?.currentRowIdx)??0].
+                cells['remark']?.value = controller.f3Data;
+                controller.gridStateManagerRight?.notifyListeners();
               }
               break;
           }
@@ -370,17 +357,24 @@ class SalesAuditNewView  extends StatelessWidget  {
                                               load.stateManager.setSelectingMode(
                                                   PlutoGridSelectingMode.cell);
 
-                                              controller
+                                              /*controller
                                                   .gridStateManagerLeft!
                                                   .gridFocusNode
                                                   .onKeyEvent = (node, event) {
                                                 print("Key is : ${event.logicalKey.keyLabel.toLowerCase()}");
                                                 if(event.logicalKey.keyLabel.toLowerCase()=="f4"){
+                                                  controller.gridStateManagerLeft?.rows[(controller.gridStateManagerLeft?.currentRowIdx)??0].
+                                                  cells['remarks']?.value = controller.f3Data;
+                                                  controller.gridStateManagerLeft?.notifyListeners();
+                                                  return KeyEventResult.handled;
+                                                }
+                                                else if(event.logicalKey.keyLabel.toLowerCase()=="f3"){
+                                                  controller.f3Data =controller.gridStateManagerLeft?.currentCell?.value??"";
                                                   return KeyEventResult.handled;
                                                 }else{
                                                   return KeyEventResult.ignored;
                                                 }
-                                              };
+                                              };*/
                                             },
                                             enableSort: true,
                                             // colorCallback: (renderC) => Colors.red[200]!,
@@ -414,6 +408,11 @@ class SalesAuditNewView  extends StatelessWidget  {
                                                 onRowDoubleTap: (PlutoGridOnRowDoubleTapEvent? val){
                                                   print(">>>>>>>>"+val!.row.toString());
                                                   controller.tapeBtn(leftIndex: controller.gridStateManagerLeft?.currentRowIdx,rightIndex: val.rowIdx);
+                                                },
+                                                editKeys: const ["remark"],
+                                                onEdit: (PlutoGridOnChangedEvent ev){
+
+
                                                 },
                                                 colorCallback: (PlutoRowColorContext colorData){
                                                   Color color = Colors.white;
@@ -458,8 +457,17 @@ class SalesAuditNewView  extends StatelessWidget  {
                                                   load.stateManager.setSelectingMode(
                                                       PlutoGridSelectingMode.cell);
 
-                                                  /*controller.tblFastInsert =
-                                                                load.stateManager;*/
+                                                      /*controller
+                                                  .gridStateManagerLeft!
+                                                  .gridFocusNode
+                                                  .onKeyEvent = (node, event) {
+                                                print("Key is : ${event.logicalKey.keyLabel.toLowerCase()}");
+                                                if(event.logicalKey.keyLabel.toLowerCase()=="f4"){
+                                                  return KeyEventResult.handled;
+                                                }else{
+                                                  return KeyEventResult.ignored;
+                                                }
+                                              };*/
                                                 },
                                                 // colorCallback: (renderC) => Colors.red[200]!,
                                                 mapData:controller.listAsrunLog1.map((e) =>
