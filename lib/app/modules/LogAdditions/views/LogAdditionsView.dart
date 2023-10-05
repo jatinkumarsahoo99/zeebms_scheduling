@@ -312,6 +312,7 @@ class LogAdditionsView extends GetView<LogAdditionsController> {
                           onload: (loadevent) {
                             controllerX.gridStateManager =
                                 loadevent.stateManager;
+                            loadevent.stateManager.setKeepFocus(false);
                           },
                           showSrNo: true,
                           hideCode: false,
