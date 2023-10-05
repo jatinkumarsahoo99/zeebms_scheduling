@@ -319,6 +319,68 @@ class _AuthGuard1State extends State<AuthGuard1> with WidgetsBindingObserver {
                   screenName: "Daily Fpc Status",
                   strViewName: "Bms_View_DailyFpc");
               break;
+            ////////////////////////////////////
+            case Routes.GENERATE_BOOKING_ACTIVITY:
+              currentWidget = SearchPage(
+                  key: const Key("GENERATE_BOOKING_ACTIVITY"),
+                  screenName: "Generate Booking Activity",
+                  strViewName: "BMS_view_BookingDetail");
+              break;
+            case Routes.PERIODIC_DEAL_UTILIZATION:
+              currentWidget = SearchPage(
+                  key: const Key("PERIODIC_DEAL_UTILIZATION"),
+                  screenName: "Periodic Deal Utilization",
+                  strViewName: "BMS_DealUtilPeriodic");
+              break;
+            case Routes.SPOT_DISTRIBUTION:
+              currentWidget = SearchPage(
+                  key: const Key("SPOT_DISTRIBUTION"),
+                  screenName: "Spot Distribution",
+                  strViewName: "Bms_rpt_ShowRosBucket");
+              break;
+            case Routes.TELECAST_SPOTS_WITH_PROGRAM_INFO:
+              currentWidget = SearchPage(
+                  key: const Key("TELECAST_SPOTS_WITH_PROGRAM_INFO"),
+                  screenName: "Teleacast Spots With Program Info",
+                  strViewName: "BMS_BreakTimeWithprogram");
+              break;
+            case Routes.TRANSMISSION_LOG_SEARCH:
+              currentWidget = SearchPage(
+                  key: const Key("TRANSMISSION_LOG_SEARCH"),
+                  screenName: "Transmission Log Search",
+                  strViewName: "BMS_VTransmissionLog");
+              break;
+            case Routes.VIDEOCON_LOG:
+              currentWidget = SearchPage(
+                  key: const Key("VIDEOCON_LOG"),
+                  screenName: "Videocon Log",
+                  strViewName: "Dish_VideoconLog");
+              break;
+            case Routes.ASRUN_SEARCH_REPORT:
+              currentWidget = SearchPage(
+                  key: const Key("ASRUN_SEARCH_REPORT"),
+                  screenName: "Asrun Search Report",
+                  strViewName: "bms_view_asrunsearch");
+              break;
+            case Routes.CUE_TONE_BREAK_DURATION:
+              currentWidget = SearchPage(
+                  key: const Key("CUE_TONE_BREAK_DURATION"),
+                  screenName: "Cue Tone Break Duration",
+                  strViewName: "BMS_CueToneBreakDuration");
+              break;
+            case Routes.DATEWISE_COMMERCIAL_LOG:
+              currentWidget = SearchPage(
+                  key: const Key("DATEWISE_COMMERCIAL_LOG"),
+                  screenName: "Datewise Commercial Log",
+                  strViewName: "BMS_Commerciallog");
+              break;
+            case Routes.DEAL_UTILIZATION:
+              currentWidget = SearchPage(
+                  key: const Key("DEAL_UTILIZATION"),
+                  screenName: "Deal Utilization",
+                  strViewName: "BMS_view_DealUtil");
+              break;
+            ///////////////////////////
             default:
               currentWidget = const NoDataFoundPage();
           }
