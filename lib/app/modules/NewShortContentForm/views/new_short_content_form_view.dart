@@ -34,236 +34,241 @@ class NewShortContentFormView extends StatelessWidget {
               const SizedBox(
                 height: 10,
               ),
-              Wrap(
-                crossAxisAlignment: WrapCrossAlignment.end,
-                runSpacing: 10,
-                spacing: Get.width * 0.01,
-                children: [
-                  Obx(
-                    () => DropDownField.formDropDown1WidthMap(
-                      controller.locations.value,
-                      (value) {
-                        controller.getChannel(value.key);
-                        controller.selectedLocation.value = value;
-                        controller.locationFocusNode.requestFocus();
-                      },
-                      "Location",
-                      .24,
-                      inkWellFocusNode: controller.locationFocusNode,
-                      selected: controller.selectedLocation.value,
-                      autoFocus: true,
-                    ),
-                  ),
-                  Obx(
-                    () => DropDownField.formDropDown1WidthMap(
-                        controller.channels.value, (value) {
-                      controller.selectedChannel.value = value;
-                      controller.channelFocusNode.requestFocus();
-                    }, "Channel", .24,
+              SingleChildScrollView(
+                child: Wrap(
+                  crossAxisAlignment: WrapCrossAlignment.end,
+                  runSpacing: 10,
+                  spacing: Get.width * 0.01,
+                  children: [
+                    Obx(
+                      () => DropDownField.formDropDown1WidthMap(
+                        controller.locations.value,
+                        (value) {
+                          controller.getChannel(value.key);
+                          controller.selectedLocation.value = value;
+                          controller.locationFocusNode.requestFocus();
+                        },
+                        "Location",
+                        .155,
+                        inkWellFocusNode: controller.locationFocusNode,
+                        selected: controller.selectedLocation.value,
                         autoFocus: true,
-                        inkWellFocusNode: controller.channelFocusNode,
-                        selected: controller.selectedChannel.value),
-                  ),
-                  Obx(
-                    () => DropDownField.formDropDown1WidthMap(
-                        controller.types.value, (value) {
-                      controller.selectedType.value = value;
-                      controller.tapeFocusNode.requestFocus();
-                      controller.typeleave(value.key);
-                    }, "Type", .24,
-                        inkWellFocusNode: controller.typeFocusNode,
-                        autoFocus: true,
-                        selected: controller.selectedType.value),
-                  ),
-                  Obx(
-                    () => DropDownField.formDropDown1WidthMap(
-                      controller.categeroies.value,
-                      (value) {
-                        controller.selectedCategory.value = value;
-                        controller.categoryFocusNode.requestFocus();
-                        print("Key: ${controller.selectedCategory.value!.key}");
-                      },
-                      "Category",
-                      .24,
-                      inkWellFocusNode: controller.categoryFocusNode,
-                      autoFocus: true,
-                      selected: controller.selectedCategory.value,
+                      ),
                     ),
-                  ),
-                  InputFields.formField1(
-                      hintTxt: "Caption",
-                      controller: controller.caption,
-                      width: 0.24,
-                      focusNode: controller.captionFN),
-                  InputFields.formField1(
-                    hintTxt: "TX Caption",
-                    controller: controller.txCaption,
-                    width: 0.24,
-                  ),
-                  Obx(
-                    () => DropDownField.formDropDown1WidthMap(
-                      controller.tapes.value,
-                      (value) {
-                        controller.selectedTape.value = value;
+                    Obx(
+                      () => DropDownField.formDropDown1WidthMap(
+                          controller.channels.value, (value) {
+                        controller.selectedChannel.value = value;
+                        controller.channelFocusNode.requestFocus();
+                      }, "Channel", .155,
+                          autoFocus: true,
+                          inkWellFocusNode: controller.channelFocusNode,
+                          selected: controller.selectedChannel.value),
+                    ),
+                    Obx(
+                      () => DropDownField.formDropDown1WidthMap(
+                          controller.types.value, (value) {
+                        controller.selectedType.value = value;
                         controller.tapeFocusNode.requestFocus();
-                      },
-                      "Tape",
-                      .155,
-                      inkWellFocusNode: controller.tapeFocusNode,
-                      selected: controller.selectedTape.value,
-                      autoFocus: true,
-                      isEnable: controller.selectedType.value?.value ==
-                              "Vignette Master"
-                          ? false
-                          : true,
+                        controller.typeleave(value.key);
+                      }, "Type", .155,
+                          inkWellFocusNode: controller.typeFocusNode,
+                          autoFocus: true,
+                          selected: controller.selectedType.value),
                     ),
-                  ),
-                  Obx(
-                    () => DropDownField.formDropDown1WidthMap(
-                      controller.orgRepeats.value,
-                      (value) {
-                        controller.selectedOrgRep.value = value;
-                        controller.orgFocusNode.requestFocus();
-                      },
-                      "Org / Repeat",
-                      .155,
-                      inkWellFocusNode: controller.orgFocusNode,
-                      selected: controller.selectedOrgRep.value,
-                      autoFocus: true,
-                      dialogHeight: 250,
-                      isEnable:
-                          controller.selectedType.value?.value == "Still Master"
-                              ? false
-                              : controller.selectedType.value?.value ==
-                                      "Slide Master"
-                                  ? false
-                                  : true,
+                    Obx(
+                      () => DropDownField.formDropDown1WidthMap(
+                        controller.categeroies.value,
+                        (value) {
+                          controller.selectedCategory.value = value;
+                          controller.categoryFocusNode.requestFocus();
+                          print(
+                              "Key: ${controller.selectedCategory.value!.key}");
+                        },
+                        "Category",
+                        .155,
+                        inkWellFocusNode: controller.categoryFocusNode,
+                        autoFocus: true,
+                        selected: controller.selectedCategory.value,
+                      ),
                     ),
-                  ),
-                  InputFields.formField1(
-                    hintTxt: "Segment Number",
-                    controller: controller.segment,
-                    width: 0.16,
-                    focusNode: controller.segmentFN,
-                    inputformatters: [
-                      FilteringTextInputFormatter.digitsOnly,
-                    ],
-                  ),
-                  InputFields.formField1(
-                      hintTxt: "House ID",
-                      controller: controller.houseId,
-                      width: 0.155,
-                      focusNode: controller.houseFocusNode),
-                  Obx(
-                    () => DropDownField.formDropDownSearchAPI2(
-                      GlobalKey(),
-                      context,
-                      title: "Program",
-                      parseKeyForKey: "ProgramCode",
-                      parseKeyForValue: "ProgramName",
-                      url: ApiFactory.NEW_SHORT_CONTENT_Program_Search,
-                      onchanged: (value) {
-                        controller.selectedProgram.value = value;
-                        controller.programFocusNode.requestFocus();
-                      },
-                      inkwellFocus: controller.programFocusNode,
-                      selectedValue: controller.selectedProgram.value,
-                      width: Get.width * 0.325,
-                      dialogHeight: 200,
-                      isEnable:
-                          controller.selectedType.value?.value == "Slide Master"
-                              ? false
-                              : true,
+                    InputFields.formField1(
+                        hintTxt: "Caption",
+                        controller: controller.caption,
+                        width: .155,
+                        focusNode: controller.captionFN),
+                    InputFields.formField1(
+                      hintTxt: "TX Caption",
+                      controller: controller.txCaption,
+                      width: .155,
                     ),
-                  ),
-                  // InputFields.formField1(
-                  //   hintTxt: "Program",
-                  //   controller: TextEditingController(),
-                  //   width: 0.325,
-                  // ),
-                  InputFields.formFieldNumberMask(
-                    hintTxt: "SOM",
-                    widthRatio: .155,
-                    controller: controller.som,
-                    paddingLeft: 0,
-                    // isTime: true
-                  ),
-                  InputFields.formFieldNumberMask(
-                      hintTxt: "EOM",
+                    Obx(
+                      () => DropDownField.formDropDown1WidthMap(
+                        controller.tapes.value,
+                        (value) {
+                          controller.selectedTape.value = value;
+                          controller.tapeFocusNode.requestFocus();
+                        },
+                        "Tape",
+                        .155,
+                        inkWellFocusNode: controller.tapeFocusNode,
+                        selected: controller.selectedTape.value,
+                        autoFocus: true,
+                        isEnable: controller.selectedType.value?.value ==
+                                "Vignette Master"
+                            ? false
+                            : true,
+                      ),
+                    ),
+                    Obx(
+                      () => DropDownField.formDropDown1WidthMap(
+                        controller.orgRepeats.value,
+                        (value) {
+                          controller.selectedOrgRep.value = value;
+                          controller.orgFocusNode.requestFocus();
+                        },
+                        "Org / Repeat",
+                        .155,
+                        inkWellFocusNode: controller.orgFocusNode,
+                        selected: controller.selectedOrgRep.value,
+                        autoFocus: true,
+                        dialogHeight: 250,
+                        isEnable: controller.selectedType.value?.value ==
+                                "Still Master"
+                            ? false
+                            : controller.selectedType.value?.value ==
+                                    "Slide Master"
+                                ? false
+                                : true,
+                      ),
+                    ),
+                    InputFields.formField1(
+                      hintTxt: "Segment Number",
+                      controller: controller.segment,
+                      width: 0.16,
+                      focusNode: controller.segmentFN,
+                      inputformatters: [
+                        FilteringTextInputFormatter.digitsOnly,
+                      ],
+                    ),
+                    InputFields.formField1(
+                        hintTxt: "House ID",
+                        controller: controller.houseId,
+                        width: 0.155,
+                        focusNode: controller.houseFocusNode),
+                    Obx(
+                      () => DropDownField.formDropDownSearchAPI2(
+                        GlobalKey(),
+                        context,
+                        title: "Program",
+                        parseKeyForKey: "ProgramCode",
+                        parseKeyForValue: "ProgramName",
+                        url: ApiFactory.NEW_SHORT_CONTENT_Program_Search,
+                        onchanged: (value) {
+                          controller.selectedProgram.value = value;
+                          controller.programFocusNode.requestFocus();
+                        },
+                        inkwellFocus: controller.programFocusNode,
+                        selectedValue: controller.selectedProgram.value,
+                        width: Get.width * 0.325,
+                        dialogHeight: 200,
+                        isEnable: controller.selectedType.value?.value ==
+                                "Slide Master"
+                            ? false
+                            : true,
+                      ),
+                    ),
+                    // InputFields.formField1(
+                    //   hintTxt: "Program",
+                    //   controller: TextEditingController(),
+                    //   width: 0.325,
+                    // ),
+                    InputFields.formFieldNumberMask(
+                      hintTxt: "SOM",
                       widthRatio: .155,
-                      controller: controller.eom,
-                      // textFieldFN: controller.eomFN,
-                      // isTime: true,
+                      controller: controller.som,
                       paddingLeft: 0,
-                      onEditComplete: (val) {
-                        controller.calculateDuration();
-                      }),
-                  Obx(() => InputFields.formFieldDisable(
-                        hintTxt: "Duration",
-                        value: controller.duration.value,
-                        widthRatio: 0.16,
-                      )),
-                  Obx(
-                    () => DateWithThreeTextField(
-                      title: "Start Date",
-                      mainTextController: controller.startData,
+                      // isTime: true
+                    ),
+                    InputFields.formFieldNumberMask(
+                        hintTxt: "EOM",
+                        widthRatio: .155,
+                        controller: controller.eom,
+                        // textFieldFN: controller.eomFN,
+                        // isTime: true,
+                        paddingLeft: 0,
+                        onEditComplete: (val) {
+                          controller.calculateDuration();
+                        }),
+                    Obx(() => InputFields.formFieldDisable(
+                          hintTxt: "Duration",
+                          value: controller.duration.value,
+                          widthRatio: 0.16,
+                        )),
+                    Obx(
+                      () => DateWithThreeTextField(
+                        title: "Start Date",
+                        mainTextController: controller.startData,
+                        widthRation: .155,
+                        isEnable: controller.selectedType.value?.value ==
+                                "Still Master"
+                            ? false
+                            : controller.selectedType.value?.value ==
+                                    "Slide Master"
+                                ? false
+                                : true,
+                      ),
+                    ),
+                    DateWithThreeTextField(
+                      title: "End Date",
+                      mainTextController: controller.endDate,
                       widthRation: .155,
-                      isEnable:
-                          controller.selectedType.value?.value == "Still Master"
-                              ? false
-                              : controller.selectedType.value?.value ==
-                                      "Slide Master"
-                                  ? false
-                                  : true,
                     ),
-                  ),
-                  DateWithThreeTextField(
-                    title: "End Date",
-                    mainTextController: controller.endDate,
-                    widthRation: .155,
-                  ),
-                  Obx(
-                    () => controller.selectedType.value?.value == "Still Master"
-                        ? defaultCheckBox()
-                        : controller.selectedType.value?.value != "Slide Master"
-                            ? SizedBox(
-                                width: Get.width * 0.16,
-                                child: Row(
-                                  children: [
-                                    Obx(
-                                      () => Checkbox(
-                                          value: controller.toBeBilled.value,
-                                          onChanged: (value) {
-                                            controller.toBeBilled.value =
-                                                value!;
-                                          }),
-                                    ),
-                                    Text(
-                                      "To be Billed",
-                                      style: TextStyle(
-                                          fontSize: SizeDefine.labelSize1),
-                                    )
-                                  ],
-                                ),
-                              )
-                            : defaultCheckBox(),
-                  ),
+                    Obx(
+                      () => controller.selectedType.value?.value ==
+                              "Still Master"
+                          ? defaultCheckBox()
+                          : controller.selectedType.value?.value !=
+                                  "Slide Master"
+                              ? SizedBox(
+                                  width: Get.width * 0.16,
+                                  child: Row(
+                                    children: [
+                                      Obx(
+                                        () => Checkbox(
+                                            value: controller.toBeBilled.value,
+                                            onChanged: (value) {
+                                              controller.toBeBilled.value =
+                                                  value!;
+                                            }),
+                                      ),
+                                      Text(
+                                        "To be Billed",
+                                        style: TextStyle(
+                                            fontSize: SizeDefine.labelSize1),
+                                      )
+                                    ],
+                                  ),
+                                )
+                              : defaultCheckBox(),
+                    ),
 
-                  Obx(
-                    () => InputFields.formField1(
-                      hintTxt: "Remarks",
-                      controller: controller.remark,
-                      width: 0.49,
-                      isEnable:
-                          controller.selectedType.value?.value == "Still Master"
-                              ? false
-                              : controller.selectedType.value?.value ==
-                                      "Slide Master"
-                                  ? false
-                                  : true,
+                    Obx(
+                      () => InputFields.formField1(
+                        hintTxt: "Remarks",
+                        controller: controller.remark,
+                        width: 0.49,
+                        isEnable: controller.selectedType.value?.value ==
+                                "Still Master"
+                            ? false
+                            : controller.selectedType.value?.value ==
+                                    "Slide Master"
+                                ? false
+                                : true,
+                      ),
                     ),
-                  ),
-                ],
+                  ],
+                ),
               ),
               const SizedBox(
                 height: 10,

@@ -383,7 +383,7 @@ class FormButton2 extends StatelessWidget {
             Colors.deepPurple[900],
           ),
           padding: MaterialStateProperty.all(EdgeInsets.symmetric(
-            horizontal: 10,
+            horizontal: 2,
           )),
           alignment: Alignment.center),
       onPressed: (isEnabled ?? true)
@@ -406,7 +406,7 @@ class FormButton2 extends StatelessWidget {
       // icon: showIcon ? Icon(iconData, size: 16) : Container(),
       child: Text(btnText.trim(),
           style: TextStyle(
-            fontSize: SizeDefine.fontSizeButton,
+            fontSize: SizeDefine.fontSizeButton-1,
           ),
           textAlign: TextAlign.center),
     );
