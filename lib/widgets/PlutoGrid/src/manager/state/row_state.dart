@@ -1,4 +1,5 @@
 import 'package:bms_scheduling/app/modules/TransmissionLog/controllers/TransmissionLogController.dart';
+import 'package:bms_scheduling/app/modules/commercial/controllers/commercial_controller.dart';
 import 'package:collection/collection.dart';
 import 'package:flutter/material.dart';
 import 'package:bms_scheduling/widgets/PlutoGrid/pluto_grid.dart';
@@ -414,6 +415,42 @@ mixin RowState implements IPlutoGridState {
 
     if (Get.isRegistered<TransmissionLogController>()) {
       Get.find<TransmissionLogController>()
+          .beforeCallDraggble(refRows.originalList, indexToMove, rows, () {
+        if (indexToMove! + rows.length > refRows.length) {
+          indexToMove = refRows.length - rows.length;
+        }
+
+        if (isPaginated &&
+            page > 1 &&
+            indexToMove! + pageRangeFrom > refRows.originalLength - 1) {
+          indexToMove = refRows.originalLength - 1;
+        }
+
+        final Set<Key> removeKeys = Set.from(rows.map((e) => e.key));
+
+        refRows.removeWhereFromOriginal((e) => removeKeys.contains(e.key));
+
+        refRows.insertAll(indexToMove!, rows);
+
+        int sortIdx = 0;
+
+        for (var element in refRows.originalList) {
+          element.sortIdx = sortIdx++;
+        }
+
+        updateCurrentCellPosition(notify: false);
+
+        if (onRowsMoved != null) {
+          onRowsMoved!(PlutoGridOnRowsMovedEvent(
+            idx: indexToMove!,
+            rows: rows,
+          ));
+        }
+
+        notifyListeners(notify, moveRowsByIndex.hashCode);
+      });
+    } else if (Get.isRegistered<CommercialController>()) {
+      Get.find<CommercialController>()
           .beforeCallDraggble(refRows.originalList, indexToMove, rows, () {
         if (indexToMove! + rows.length > refRows.length) {
           indexToMove = refRows.length - rows.length;
