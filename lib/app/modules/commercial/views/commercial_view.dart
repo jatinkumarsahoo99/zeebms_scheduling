@@ -496,30 +496,12 @@ class CommercialView extends StatelessWidget {
                     "pDailyFPC",
                     "pProgramMaster"
                   ],
-                  colorCallback: (PlutoRowColorContext plutoContext) {
-                    try {
-                      if ((plutoContext.row.cells.containsValue(
-                          controller.gridStateManager?.currentCell))) {
-                        return Colors.deepPurple.shade200;
-                      } else {
-                        return controller.colorSort(controller
-                            .showCommercialDetailsList![plutoContext.rowIdx]
-                            .eventType
-                            .toString());
-                      }
-                    } catch (e) {
-                      return Colors.white;
-                    }
-                  },
                   onRowDoubleTap: (event) {
                     controller.selectedDDIndex = event.rowIdx;
                     print("onRowDoubleTap");
                   },
                   onSelected: (PlutoGridOnSelectedEvent event) {
-                    // E
-                    // if (controller.lastSelectedIdxSchd != (controller.selectedDDIndex ?? 0)) {
-                    //   controller.lastSelectedIdxSchd = controller.selectedDDIndex ?? 0;
-                    // }
+                    print("onSelected called");
                     if (controller
                         .showCommercialDetailsList![
                             controller.lastSelectedIdxSchd]
@@ -552,32 +534,61 @@ class CommercialView extends StatelessWidget {
                         notify: true,
                       );
                     }
+                  },
+                  colorCallback: (PlutoRowColorContext plutoContext) {
+                    try {
+                      if ((plutoContext.row.cells.containsValue(
+                          controller.gridStateManager?.currentCell))) {
+                        return Colors.deepPurple.shade200;
+                      } else {
+                        // return controller.colorSort(controller
+                        //     .showCommercialDetailsList![plutoContext.rowIdx]
+                        //     .eventType
+                        //     .toString());
 
-                    //
+                        return controller.colorSort(plutoContext
+                                .row.cells['eventType']?.value
+                                .toString() ??
+                            "S");
+                      }
+                    } catch (e) {
+                      print("Exception: returning WHITE color ${e.toString()}");
+                      return Colors.white;
+                    }
                   },
                   onRowsMoved: (PlutoGridOnRowsMovedEvent onRowMoved) {
-                    // controller.selectedDDIndex = onRowMoved.idx;
-
+                    print(
+                        "onRowMoved= ${onRowMoved.idx} ${onRowMoved.rows.first.sortIdx} ${controller.selectedDDIndex}");
                     try {
                       if (controller.gridStateManager?.rows[onRowMoved.idx]
                               .cells['eventType']?.value
                               .toString()
                               .trim() ==
                           "S") {
+                        // controller.gridStateManager?.setCurrentCell(
+                        //     controller.gridStateManager
+                        //         ?.getRowByIdx(onRowMoved.idx)
+                        //         ?.cells['eventType'],
+                        //     onRowMoved.idx);
+
                         // var newRow = controller.gridStateManager?.currentRow;
+
                         // controller.gridStateManager?.removeCurrentRow();
+
                         // controller.gridStateManager?.insertRows(
                         //     controller.selectedDDIndex!, [newRow!]);
+
                         // controller.gridStateManager?.notifyListeners(true,
                         //     controller.gridStateManager?.insertRows.hashCode);
+
+                        // controller.gridStateManager?.setCurrentCell(
+                        //     controller.gridStateManager
+                        //         ?.getRowByIdx(controller.selectedDDIndex ?? 0)
+                        //         ?.cells['eventType'],
+                        //     controller.selectedDDIndex ?? 0);
+
                         LoadingDialog.showErrorDialog(
-                            "You cannot move selected segment", callback: () {
-                          // controller.gridStateManager?.setCurrentCell(
-                          //     controller.gridStateManager
-                          //         ?.getRowByIdx(controller.selectedDDIndex)
-                          //         ?.cells['eventType'],
-                          //     controller.selectedDDIndex ?? 0);
-                        });
+                            "You cannot move selected segment");
                       } else {
                         int? rownumber = int.tryParse(controller
                                 .gridStateManager
@@ -586,6 +597,7 @@ class CommercialView extends StatelessWidget {
                                 ?.value
                                 .toString() ??
                             "0");
+
                         int? moveRowNumber = controller
                             .showCommercialDetailsList?[onRowMoved.idx]
                             .rownumber;
@@ -636,24 +648,27 @@ class CommercialView extends StatelessWidget {
                           controller
                               .mainCommercialShowDetailsList?[i].rownumber = i;
                         }
-
                         // var newRow = controller.gridStateManager?.currentRow;
-                        // controller.gridStateManager?.removeCurrentRow();
+                        // controller.gridStateManager?.notifyListeners(
+                        //     true,
+                        //     controller
+                        //         .gridStateManager!.moveRowsByIndex.hashCode);
                         // controller.gridStateManager?.insertRows(
                         //     onRowMoved.idx, [onRowMoved.rows[onRowMoved.idx]]);
                         // controller.gridStateManager?.notifyListeners(true,
                         //     controller.gridStateManager?.insertRows.hashCode);
-                        // controller.selectedDDIndex = onRowMoved.idx;
+
+                        controller.selectedDDIndex = onRowMoved.idx;
                       }
                     } catch (e) {
                       LoadingDialog.showErrorDialog(e.toString());
                     }
-                    controller.selectedDDIndex = onRowMoved.idx;
-                    if (controller.canshowFilterList) {
-                      controller.showSelectedProgramList();
-                    } else {
-                      controller.showTabList();
-                    }
+                    // controller.selectedDDIndex = onRowMoved.idx;
+                    // if (controller.canshowFilterList) {
+                    //   controller.showSelectedProgramList();
+                    // } else {
+                    //   controller.showTabList();
+                    // }
                   },
                   mode: PlutoGridMode.selectWithOneTap,
                   mapData: controller.showCommercialDetailsList!.value

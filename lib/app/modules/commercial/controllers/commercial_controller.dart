@@ -188,6 +188,29 @@ class CommercialController extends GetxController {
         });
   }
 
+  beforeCallDraggble(List<PlutoRow> allList, indexToMove,
+      List<PlutoRow> rowMoved, Function function) {
+    if (rowMoved.isNotEmpty &&
+        rowMoved.first.cells['eventType']?.value.toString().trim() == 'S') {
+      gridStateManager?.setCurrentCell(
+          rowMoved.first.cells['eventType'], rowMoved.first.sortIdx);
+      LoadingDialog.showErrorDialog("You cannot move selected segment");
+    } else {
+      // var tempList = <CommercialShowOnTabModel?>[];
+      // for (var i = 0; i < (mainCommercialShowDetailsList?.length ?? 0); i++) {
+      //   if (mainCommercialShowDetailsList?[i].bStatus == "B") {
+      //     tempList.add(mainCommercialShowDetailsList?[i]);
+      //   }
+      // }
+      // var eventType = tempList[indexToMove]?.eventType;
+      // showCommercialDetailsList?[indexToMove].eventType = "S";
+      // commercialProgramList?.insert(indexToMove, commercialProgramList![2]);
+      // gridStateManager?.insertRows(rowMoved.first.sortIdx, rowMoved);
+
+      function();
+    }
+  }
+
   getChannel(locationCode) {
     LoadingDialog.call();
     try {
@@ -791,9 +814,8 @@ class CommercialController extends GetxController {
         color = Color(int.parse('0xffa9fd77'));
         break;
       default:
-        Colors.white;
+        color = Colors.white;
     }
-
     return color;
   }
 
