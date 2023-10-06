@@ -380,6 +380,12 @@ class _AuthGuard1State extends State<AuthGuard1> with WidgetsBindingObserver {
                   screenName: "Deal Utilization",
                   strViewName: "BMS_view_DealUtil");
               break;
+            case Routes.MOVIE_SCHEDULE_REPORT:
+              currentWidget = SearchPage(
+                  key: const Key("MOVIE_SCHEDULE_REPORT"),
+                  screenName: "Movie Schedule Report",
+                  strViewName: "FPC_MovieListing");
+              break;
             ///////////////////////////
             default:
               currentWidget = const NoDataFoundPage();

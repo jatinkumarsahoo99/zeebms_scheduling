@@ -73,6 +73,10 @@ class AppPages {
     ),
     ////////////////////////////////
     GetPage(
+      name: _Paths.MOVIE_SCHEDULE_REPORT,
+      page: () => AuthGuard1(childName: _Paths.MOVIE_SCHEDULE_REPORT),
+    ),
+    GetPage(
       name: _Paths.GENERATE_BOOKING_ACTIVITY,
       page: () => AuthGuard1(childName: _Paths.GENERATE_BOOKING_ACTIVITY),
     ),
