@@ -39,74 +39,88 @@ class TransmissionLogView extends StatelessWidget {
       Offset centerOffset =
       Offset(constraints.maxWidth / 2, constraints.maxHeight / 2);
 
-      return Scaffold(
-        key: rebuildKey,
-        floatingActionButton: Obx(() {
-          return controller.canDialogShow.value
-              ? DraggableFab(
-            initPosition: controller.getOffSetValue(constraints),
-            child: controller.dialogWidget!,
-          )
-              : SizedBox();
-        }),
-        body: RawKeyboardListener(
-          focusNode: new FocusNode(),
-          onKey: (RawKeyEvent raw) {
-            print("RAw is.>>>" + raw.toString());
-            if (raw is RawKeyDownEvent &&
-                raw.isControlPressed &&
-                raw.character?.toLowerCase() == "c") {
-              print("Copy Pressed Ctrl + c ");
-              if (controller.gridStateManager != null &&
-                  controller.gridStateManager?.currentCell != null) {
-                print("Copy Pressed in clipboard ");
-                /*Clipboard.setData(new ClipboardData(
-                    text: controller.gridStateManager?.currentCell?.value));*/
-                Utils.copyToClipboardHack(
-                    controller.gridStateManager?.currentCell?.value);
+      return RawKeyboardListener(
+        focusNode: new FocusNode(),
+        onKey: (RawKeyEvent raw) {
+          controller.keyBoardHander(raw);
+          /*if (raw is RawKeyDownEvent &&
+                  raw.isControlPressed &&
+                  raw.character?.toLowerCase() == "c") {
+                print("Copy Pressed Ctrl + c ");
+                if (controller.gridStateManager != null &&
+                    controller.gridStateManager?.currentCell != null) {
+                  print("Copy Pressed in clipboard ");
+                  */ /*Clipboard.setData(new ClipboardData(
+                      text: controller.gridStateManager?.currentCell?.value));*/ /*
+                  Utils.copyToClipboardHack(
+                      controller.gridStateManager?.currentCell?.value);
+                }
               }
-            }
 
-            if (raw is RawKeyDownEvent && raw.character?.toLowerCase() == "y") {
-              if (controller.completerDialog != null &&
-                  controller.dialogWidget != null) {
-                controller.dialogWidget = null;
-                controller.canDialogShow.value = false;
-                controller.completerDialog?.complete(true);
-              }
-            }
-            if (raw is RawKeyDownEvent && raw.character?.toLowerCase() == "n") {
-              if (controller.completerDialog != null &&
-                  controller.dialogWidget != null) {
-                controller.dialogWidget = null;
-                controller.canDialogShow.value = false;
-                controller.completerDialog?.complete(false);
-              }
-            }
-            switch (raw.logicalKey.keyLabel) {
-              case "F3":
-                if (controller.gridStateManager != null) {
-                  controller.cutCopy(
-                      isCut: false,
-                      row: controller.gridStateManager?.currentRow);
+              if (raw is RawKeyDownEvent &&
+                  raw.isControlPressed &&
+                  raw.character?.toLowerCase() == "c") {
+                print("Copy Pressed Ctrl + c ");
+                if (controller.gridStateManager != null &&
+                    controller.gridStateManager?.currentCell != null) {
+                  print("Copy Pressed in clipboard ");
+                  */ /*Clipboard.setData(new ClipboardData(
+                      text: controller.gridStateManager?.currentCell?.value));*/ /*
+                  Utils.copyToClipboardHack(
+                      controller.gridStateManager?.currentCell?.value);
                 }
-                break;
-              case "F2":
-                if (controller.gridStateManager != null) {
-                  controller.cutCopy(
-                      isCut: true,
-                      row: controller.gridStateManager?.currentRow);
+              }
+
+              if (raw is RawKeyDownEvent && raw.character?.toLowerCase() == "y") {
+                if (controller.completerDialog != null &&
+                    controller.dialogWidget != null) {
+                  controller.dialogWidget = null;
+                  controller.canDialogShow.value = false;
+                  controller.completerDialog?.complete(true);
                 }
-                break;
-              case "F4":
-                controller.paste(controller.gridStateManager?.currentRowIdx);
-                break;
-              case "F5":
-                controller.checkVerifyTime();
-                break;
-            }
-          },
-          child: SizedBox(
+              }
+              if (raw is RawKeyDownEvent && raw.character?.toLowerCase() == "n") {
+                if (controller.completerDialog != null &&
+                    controller.dialogWidget != null) {
+                  controller.dialogWidget = null;
+                  controller.canDialogShow.value = false;
+                  controller.completerDialog?.complete(false);
+                }
+              }
+              switch (raw.logicalKey.keyLabel) {
+                case "F3":
+                  if (controller.gridStateManager != null) {
+                    controller.cutCopy(
+                        isCut: false,
+                        row: controller.gridStateManager?.currentRow);
+                  }
+                  break;
+                case "F2":
+                  if (controller.gridStateManager != null) {
+                    controller.cutCopy(
+                        isCut: true,
+                        row: controller.gridStateManager?.currentRow);
+                  }
+                  break;
+                case "F4":
+                  controller.paste(controller.gridStateManager?.currentRowIdx);
+                  break;
+                case "F5":
+                  controller.checkVerifyTime();
+                  break;
+              }*/
+        },
+        child: Scaffold(
+          key: rebuildKey,
+          floatingActionButton: Obx(() {
+            return controller.canDialogShow.value
+                ? DraggableFab(
+              initPosition: controller.getOffSetValue(constraints),
+              child: controller.dialogWidget!,
+            )
+                : SizedBox();
+          }),
+          body: SizedBox(
             height: double.maxFinite,
             width: double.maxFinite,
             child: Column(
@@ -1564,7 +1578,7 @@ class TransmissionLogView extends StatelessWidget {
     controller.dialogWidget = Material(
       color: Colors.white,
       child: SizedBox(
-        width: Get.width * 0.85,
+        width: Get.width * 0.45,
         child: Column(
           children: [
             Container(
@@ -1599,497 +1613,498 @@ class TransmissionLogView extends StatelessWidget {
                 ],
               ),
             ),
-            SingleChildScrollView(
-              child: SizedBox(
-                height: Get.height * 0.75,
-                child: SingleChildScrollView(
-                  child: SizedBox(
-                    width: Get.width * 0.85,
-                    // height: Get.he,
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: <Widget>[
-                        Row(
-                          children: [
-                            Obx(
-                                  () =>
-                                  DropDownField.formDropDown1WidthMap(
-                                    controller.listEventsinInsert.value,
-                                        (value) {
-                                      controller.selectEvent = value;
-                                      // controller.selectedLocationId.text = value.key!;
-                                      // controller.selectedLocationName.text = value.value!;
-                                      // controller.getChannelsBasedOnLocation(value.key!);
-                                    },
-                                    "Event",
-                                    0.13,
-                                    // isEnable: controller.isEnable.value,
-                                    // selected: controller.selectLocation,
-                                    autoFocus: true,
-                                    // dialogWidth: 330,
-                                    dialogHeight: Get.height * .7,
-                                  ),
-                            ),
-                            SizedBox(
-                              width: 10,
-                            ),
-                            InputFields.formField1(
-                                width: 0.13,
-                                onchanged: (value) {},
-                                hintTxt: "TX Caption",
-                                margin: true,
-                                controller: controller.txCaption_),
-                            SizedBox(
-                              width: 10,
-                            ),
-                            InputFields.formField1(
-                                width: 0.13,
-                                onchanged: (value) {},
-                                hintTxt: "TX Id",
-                                margin: true,
-                                controller: controller.txId_),
-                            SizedBox(
-                              width: 10,
-                            ),
-                            SizedBox(
-                              width: Get.width * 0.05,
-                              child: Row(
-                                children: [
-                                  SizedBox(width: 5),
-                                  Obx(
-                                        () =>
-                                        Padding(
-                                          padding: const EdgeInsets.only(
-                                              top: 15.0),
-                                          child: Checkbox(
-                                            value: controller.isMy.value,
-                                            onChanged: (val) {
-                                              controller.isMy.value = val!;
-                                            },
-                                            materialTapTargetSize:
-                                            MaterialTapTargetSize.shrinkWrap,
-                                          ),
-                                        ),
-                                  ),
-                                  Padding(
-                                    padding: const EdgeInsets.only(
-                                        top: 15.0, left: 5),
-                                    child: Text(
-                                      "My",
-                                      style: TextStyle(
-                                          fontSize: SizeDefine.labelSize1),
-                                    ),
-                                  ),
-                                ],
-                              ),
-                            ),
-                            Padding(
-                              padding:
-                              const EdgeInsets.only(top: 15.0, left: 10),
-                              child: FormButtonWrapper1(
-                                btnText: "Search",
-                                showIcon: false,
-                                callback: () {
-                                  if (controller.selectEvent == null) {
-                                    LoadingDialog.showErrorDialog(
-                                        "Please select event");
-                                  } else {
-                                    controller.getBtnInsertSearchClick(
-                                        isMine: controller.isMy.value,
-                                        eventType:
-                                        controller.selectEvent?.value ?? "",
-                                        txId: controller.txId_.text,
-                                        txCaption: controller.txCaption_.text);
-                                  }
-                                },
-                              ),
-                            ),
-                            Padding(
-                              padding:
-                              const EdgeInsets.only(top: 15.0, left: 10),
-                              child: FormButtonWrapper1(
-                                btnText: "Add",
-                                showIcon: false,
-                                callback: () {
-                                  // LoadingDialog.call();
-                                  // controller.btnFastInsert_Add_Click();
-                                  LoadingDialog.call();
-                                  Future.delayed(Duration(seconds: 1), () {
-                                    controller.btnFastInsert_Add_Click();
-                                  });
-                                },
-                              ),
-                            ),
-                            FittedBox(
-                              child: Row(
-                                children: [
-                                  SizedBox(width: 5),
-                                  Obx(() =>
+            SizedBox(
+              height: Get.height * 0.75,
+              child: SingleChildScrollView(
+                child: SizedBox(
+                  width: Get.width * 0.45,
+                  // height: Get.he,
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: <Widget>[
+                      Wrap(
+                        crossAxisAlignment: WrapCrossAlignment.center,
+                        runSpacing: 1,
+                        spacing: 1,
+                        children: [
+                          Obx(
+                                () =>
+                                DropDownField.formDropDown1WidthMap(
+                                  controller.listEventsinInsert.value,
+                                      (value) {
+                                    controller.selectEvent = value;
+                                    // controller.selectedLocationId.text = value.key!;
+                                    // controller.selectedLocationName.text = value.value!;
+                                    // controller.getChannelsBasedOnLocation(value.key!);
+                                  },
+                                  "Event",
+                                  0.13,
+                                  // isEnable: controller.isEnable.value,
+                                  // selected: controller.selectLocation,
+                                  autoFocus: true,
+                                  // dialogWidth: 330,
+                                  dialogHeight: Get.height * .7,
+                                ),
+                          ),
+                          SizedBox(
+                            width: 10,
+                          ),
+                          InputFields.formField1(
+                              width: 0.13,
+                              onchanged: (value) {},
+                              hintTxt: "TX Caption",
+                              margin: true,
+                              controller: controller.txCaption_),
+                          SizedBox(
+                            width: 10,
+                          ),
+                          InputFields.formField1(
+                              width: 0.13,
+                              onchanged: (value) {},
+                              hintTxt: "TX Id",
+                              margin: true,
+                              controller: controller.txId_),
+                          SizedBox(
+                            width: 10,
+                          ),
+                          SizedBox(
+                            width: Get.width * 0.05,
+                            child: Row(
+                              children: [
+                                SizedBox(width: 5),
+                                Obx(
+                                      () =>
                                       Padding(
-                                        padding:
-                                        const EdgeInsets.only(top: 15.0),
+                                        padding: const EdgeInsets.only(
+                                            top: 15.0),
                                         child: Checkbox(
-                                          value: controller.isInsertAfter.value,
+                                          value: controller.isMy.value,
                                           onChanged: (val) {
-                                            controller.isInsertAfter.value =
-                                            val!;
+                                            controller.isMy.value = val!;
                                           },
                                           materialTapTargetSize:
                                           MaterialTapTargetSize.shrinkWrap,
                                         ),
-                                      )),
-                                  Padding(
-                                    padding: const EdgeInsets.only(
-                                        top: 15.0, left: 5),
-                                    child: Text(
-                                      "Insert After",
-                                      style: TextStyle(
-                                          fontSize: SizeDefine.labelSize1),
-                                    ),
-                                  ),
-                                ],
-                              ),
-                            ),
-                            SizedBox(
-                              width: 10,
-                            ),
-                            InputFields.formFieldNumberMask(
-                                hintTxt: "",
-                                controller: controller.insertDuration_
-                                  ..text = "00:00:00:00",
-                                widthRatio: 0.13,
-                                isTime: false,
-                                isEnable: false,
-                                paddingLeft: 0),
-                          ],
-                        ),
-                        SizedBox(
-                          height: 15,
-                        ),
-                        GetBuilder<TransmissionLogController>(
-                            id: "insertList",
-                            init: controller,
-                            builder: (controller) {
-                              return SizedBox(
-                                // width: 500,
-                                width: Get.width * 0.8,
-                                height: Get.height * 0.47,
-                                child: (controller.inserSearchModel != null &&
-                                    controller.inserSearchModel
-                                        ?.lstListMyEventData !=
-                                        null &&
-                                    controller
-                                        .inserSearchModel
-                                        ?.lstListMyEventData
-                                        ?.lstListMyEventClips !=
-                                        null &&
-                                    (controller
-                                        .inserSearchModel
-                                        ?.lstListMyEventData
-                                        ?.lstListMyEventClips
-                                        ?.length ??
-                                        0) >
-                                        0)
-                                    ? DataGridFromMap(
-                                    hideCode: false,
-                                    formatDate: false,
-                                    // checkRow: true,
-                                    showSrNo: false,
-                                    mode: PlutoGridMode.normal,
-                                    // checkRowKey: "eventtype",
-                                    onload: (PlutoGridOnLoadedEvent load) {
-                                      controller.tblFastInsert =
-                                          load.stateManager;
-                                      load.stateManager.setGridMode(
-                                          PlutoGridMode.normal);
-                                      load.stateManager.setSelectingMode(
-                                          PlutoGridSelectingMode.row);
-                                      // load.stateManager.setSelecting(true);
-                                      load.stateManager
-                                          .toggleSelectingRow(0);
-                                    },
-                                    witdthSpecificColumn: (controller
-                                        .userDataSettings?.userSetting
-                                        ?.firstWhere(
-                                            (element) =>
-                                        element.controlName ==
-                                            "tblFastInsert",
-                                        orElse: () => UserSetting())
-                                        .userSettings),
-                                    // colorCallback: (renderC) => Colors.red[200]!,
-                                    onRowDoubleTap:
-                                        (PlutoGridOnRowDoubleTapEvent tap) {
-                                      // controller.tblFastInsert?.unCheckedRows;
-                                      /* controller.tblFastInsert
-                                              ?.setRowChecked(tap.row, true);*/
-                                      // controller.tblFastInsert
-                                      //     ?.setCurrentCell(tap.cell, tap.rowIdx);
-                                      LoadingDialog.call();
-                                      Future.delayed(Duration(seconds: 2),
-                                              () {
-                                            controller.btnFastInsert_Add_Click1(
-                                                tap.rowIdx);
-                                          });
-                                    },
-                                    colorCallback: (colorData) {
-                                      if (controller.tblFastInsert
-                                          ?.currentRowIdx ==
-                                          colorData.rowIdx) {
-                                        return Color(0xFFD1C4E9);
-                                      } else {
-                                        return Colors.white;
-                                      }
-                                    },
-                                    mapData: (controller
-                                        .inserSearchModel
-                                        ?.lstListMyEventData
-                                        ?.lstListMyEventClips!
-                                        .map((e) => e.toJson())
-                                        .toList())!)
-                                // _dataTable3()
-                                    : const WarningBox(
-                                    text:
-                                    'Enter Location, Channel & Date to get the Break Definitions'),
-                              );
-                            }),
-                        Padding(
-                          padding: const EdgeInsets.only(
-                              left: 5, right: 16, bottom: 4, top: 8),
-                          child: Row(
-                            mainAxisAlignment: MainAxisAlignment.center,
-                            children: const [
-                              Text(
-                                "Replace",
-                                style: TextStyle(fontSize: 13),
-                              ),
-                              Expanded(
-                                child: Padding(
-                                  padding: EdgeInsets.only(left: 16),
-                                  child: Divider(
-                                    height: 1,
+                                      ),
+                                ),
+                                Padding(
+                                  padding: const EdgeInsets.only(
+                                      top: 15.0, left: 5),
+                                  child: Text(
+                                    "My",
+                                    style: TextStyle(
+                                        fontSize: SizeDefine.labelSize1),
                                   ),
                                 ),
-                              ),
-                            ],
+                              ],
+                            ),
                           ),
-                        ),
-                        Row(
-                          children: [
-                            InputFields.formField1(
-                                width: 0.1,
-                                onchanged: (value) {},
-                                hintTxt: "TX Id",
-                                margin: true,
-                                controller: controller.txReplaceTxId_),
-                            SizedBox(
-                              width: 10,
+                          Padding(
+                            padding:
+                            const EdgeInsets.only(top: 15.0, left: 10),
+                            child: FormButtonWrapper1(
+                              btnText: "Search",
+                              showIcon: false,
+                              callback: () {
+                                if (controller.selectEvent == null) {
+                                  LoadingDialog.showErrorDialog(
+                                      "Please select event");
+                                } else {
+                                  controller.getBtnInsertSearchClick(
+                                      isMine: controller.isMy.value,
+                                      eventType:
+                                      controller.selectEvent?.value ?? "",
+                                      txId: controller.txId_.text,
+                                      txCaption: controller.txCaption_.text);
+                                }
+                              },
                             ),
-                            InputFields.formField1(
-                                width: 0.05,
-                                onchanged: (value) {},
-                                hintTxt: "",
-                                isEnable: false,
-                                margin: true,
-                                controller: controller.txReplaceSegment_),
-                            SizedBox(
-                              width: 10,
+                          ),
+                          Padding(
+                            padding:
+                            const EdgeInsets.only(top: 15.0, left: 10),
+                            child: FormButtonWrapper1(
+                              btnText: "Add",
+                              showIcon: false,
+                              callback: () {
+                                // LoadingDialog.call();
+                                // controller.btnFastInsert_Add_Click();
+                                LoadingDialog.call();
+                                Future.delayed(Duration(seconds: 1), () {
+                                  controller.btnFastInsert_Add_Click();
+                                });
+                              },
                             ),
-                            InputFields.formFieldNumberMask(
-                                hintTxt: "Duration",
-                                controller: controller.replaceDuration,
-                                widthRatio: 0.1,
-                                isTime: true,
-                                paddingLeft: 0),
-                            SizedBox(
-                              width: 10,
-                            ),
-                            InputFields.formField1(
-                                width: 0.05,
-                                onchanged: (value) {},
-                                hintTxt: "",
-                                isEnable: false,
-                                margin: true,
-                                controller: controller.txReplaceEvent_),
-                            SizedBox(width: 5),
-                            FittedBox(
-                              child: Row(
-                                children: [
-                                  SizedBox(width: 5),
-                                  Obx(() =>
-                                      Padding(
-                                        padding:
-                                        const EdgeInsets.only(top: 15.0),
-                                        child: Checkbox(
-                                          value:
-                                          controller.isAllDayReplace.value,
-                                          onChanged: (val) {
-                                            controller.isAllDayReplace.value =
-                                            val!;
-                                          },
-                                          materialTapTargetSize:
-                                          MaterialTapTargetSize.shrinkWrap,
-                                        ),
-                                      )),
-                                  Padding(
-                                    padding: const EdgeInsets.only(
-                                        top: 15.0, left: 5),
-                                    child: Text(
-                                      "All day",
-                                      style: TextStyle(
-                                          fontSize: SizeDefine.labelSize1),
-                                    ),
+                          ),
+                          FittedBox(
+                            child: Row(
+                              children: [
+                                SizedBox(width: 5),
+                                Obx(() =>
+                                    Padding(
+                                      padding:
+                                      const EdgeInsets.only(top: 15.0),
+                                      child: Checkbox(
+                                        value: controller.isInsertAfter.value,
+                                        onChanged: (val) {
+                                          controller.isInsertAfter.value =
+                                          val!;
+                                        },
+                                        materialTapTargetSize:
+                                        MaterialTapTargetSize.shrinkWrap,
+                                      ),
+                                    )),
+                                Padding(
+                                  padding: const EdgeInsets.only(
+                                      top: 15.0, left: 5),
+                                  child: Text(
+                                    "Insert After",
+                                    style: TextStyle(
+                                        fontSize: SizeDefine.labelSize1),
                                   ),
-                                ],
+                                ),
+                              ],
+                            ),
+                          ),
+                          SizedBox(
+                            width: 10,
+                          ),
+                          InputFields.formFieldNumberMask(
+                              hintTxt: "",
+                              controller: controller.insertDuration_
+                                ..text = "00:00:00:00",
+                              widthRatio: 0.13,
+                              isTime: false,
+                              isEnable: false,
+                              paddingLeft: 0),
+                        ],
+                      ),
+                      SizedBox(
+                        height: 15,
+                      ),
+                      GetBuilder<TransmissionLogController>(
+                          id: "insertList",
+                          init: controller,
+                          builder: (controller) {
+                            return SizedBox(
+                              // width: 500,
+                              width: Get.width * 0.45,
+                              height: Get.height * 0.43,
+                              child: (controller.inserSearchModel != null &&
+                                  controller.inserSearchModel
+                                      ?.lstListMyEventData !=
+                                      null &&
+                                  controller
+                                      .inserSearchModel
+                                      ?.lstListMyEventData
+                                      ?.lstListMyEventClips !=
+                                      null &&
+                                  (controller
+                                      .inserSearchModel
+                                      ?.lstListMyEventData
+                                      ?.lstListMyEventClips
+                                      ?.length ??
+                                      0) >
+                                      0)
+                                  ? DataGridFromMap(
+                                  hideCode: false,
+                                  formatDate: false,
+                                  // checkRow: true,
+                                  showSrNo: false,
+                                  mode: PlutoGridMode.normal,
+                                  // checkRowKey: "eventtype",
+                                  onload: (PlutoGridOnLoadedEvent load) {
+                                    controller.tblFastInsert =
+                                        load.stateManager;
+                                    load.stateManager.setGridMode(
+                                        PlutoGridMode.normal);
+                                    load.stateManager.setSelectingMode(
+                                        PlutoGridSelectingMode.row);
+                                    // load.stateManager.setSelecting(true);
+                                    load.stateManager
+                                        .toggleSelectingRow(0);
+                                  },
+                                  witdthSpecificColumn: (controller
+                                      .userDataSettings?.userSetting
+                                      ?.firstWhere(
+                                          (element) =>
+                                      element.controlName ==
+                                          "tblFastInsert",
+                                      orElse: () => UserSetting())
+                                      .userSettings),
+                                  // colorCallback: (renderC) => Colors.red[200]!,
+                                  onRowDoubleTap:
+                                      (PlutoGridOnRowDoubleTapEvent tap) {
+                                    // controller.tblFastInsert?.unCheckedRows;
+                                    /* controller.tblFastInsert
+                                            ?.setRowChecked(tap.row, true);*/
+                                    // controller.tblFastInsert
+                                    //     ?.setCurrentCell(tap.cell, tap.rowIdx);
+                                    LoadingDialog.call();
+                                    Future.delayed(Duration(seconds: 2),
+                                            () {
+                                          controller.btnFastInsert_Add_Click1(
+                                              tap.rowIdx);
+                                        });
+                                  },
+                                  colorCallback: (colorData) {
+                                    if (controller.tblFastInsert
+                                        ?.currentRowIdx ==
+                                        colorData.rowIdx) {
+                                      return Color(0xFFD1C4E9);
+                                    } else {
+                                      return Colors.white;
+                                    }
+                                  },
+                                  mapData: (controller
+                                      .inserSearchModel
+                                      ?.lstListMyEventData
+                                      ?.lstListMyEventClips!
+                                      .map((e) => e.toJson())
+                                      .toList())!)
+                              // _dataTable3()
+                                  : const WarningBox(
+                                  text:
+                                  'Enter Location, Channel & Date to get the Break Definitions'),
+                            );
+                          }),
+                      Padding(
+                        padding: const EdgeInsets.only(
+                            left: 5, right: 16, bottom: 4, top: 8),
+                        child: Row(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: const [
+                            Text(
+                              "Replace",
+                              style: TextStyle(fontSize: 13),
+                            ),
+                            Expanded(
+                              child: Padding(
+                                padding: EdgeInsets.only(left: 16),
+                                child: Divider(
+                                  height: 1,
+                                ),
                               ),
                             ),
-                            SizedBox(width: 5),
-                            InputFields.formFieldNumberMask(
-                                hintTxt: "From",
-                                controller: controller.fromReplaceInsert_,
-                                widthRatio: 0.1,
-                                isTime: true,
-                                isEnable: false,
-                                paddingLeft: 0),
-                            SizedBox(width: 10),
-                            /*FormButtonWrapper(
+                          ],
+                        ),
+                      ),
+                      Wrap(
+                        children: [
+                          InputFields.formField1(
+                              width: 0.1,
+                              onchanged: (value) {},
+                              hintTxt: "TX Id",
+                              margin: true,
+                              controller: controller.txReplaceTxId_),
+                          SizedBox(
+                            width: 10,
+                          ),
+                          InputFields.formField1(
+                              width: 0.05,
+                              onchanged: (value) {},
+                              hintTxt: "",
+                              isEnable: false,
+                              margin: true,
+                              controller: controller.txReplaceSegment_),
+                          SizedBox(
+                            width: 10,
+                          ),
+                          InputFields.formFieldNumberMask(
+                              hintTxt: "Duration",
+                              controller: controller.replaceDuration,
+                              widthRatio: 0.1,
+                              isTime: true,
+                              paddingLeft: 0),
+                          SizedBox(
+                            width: 10,
+                          ),
+                          InputFields.formField1(
+                              width: 0.05,
+                              onchanged: (value) {},
+                              hintTxt: "",
+                              isEnable: false,
+                              margin: true,
+                              controller: controller.txReplaceEvent_),
+                          SizedBox(width: 5),
+                          FittedBox(
+                            child: Row(
+                              children: [
+                                SizedBox(width: 5),
+                                Obx(() =>
+                                    Padding(
+                                      padding:
+                                      const EdgeInsets.only(top: 15.0),
+                                      child: Checkbox(
+                                        value:
+                                        controller.isAllDayReplace.value,
+                                        onChanged: (val) {
+                                          controller.isAllDayReplace.value =
+                                          val!;
+                                        },
+                                        materialTapTargetSize:
+                                        MaterialTapTargetSize.shrinkWrap,
+                                      ),
+                                    )),
+                                Padding(
+                                  padding: const EdgeInsets.only(
+                                      top: 15.0, left: 5),
+                                  child: Text(
+                                    "All day",
+                                    style: TextStyle(
+                                        fontSize: SizeDefine.labelSize1),
+                                  ),
+                                ),
+                              ],
+                            ),
+                          ),
+                          SizedBox(width: 5),
+                          InputFields.formFieldNumberMask(
+                              hintTxt: "From",
+                              controller: controller.fromReplaceInsert_,
+                              widthRatio: 0.1,
+                              isTime: true,
+                              isEnable: false,
+                              paddingLeft: 0),
+                          SizedBox(width: 10),
+                          /*FormButtonWrapper(
+                            btnText: "",
+                            showIcon: false,
+                            callback: () {
+                              controller.fromReplaceInsert_.text = controller.gridStateManager?.currentRow?.cells["transmissionTime"]?.value ?? "";
+                              controller.fromReplaceIndexInsert_.text = controller.gridStateManager?.currentRowIdx.toString()??"";
+                            },
+                          ),*/
+                          /*Padding(
+                            padding: const EdgeInsets.only(top: 15.0, right: 5),
+                            child: ElevatedButton(
+                              style: ButtonStyle(
+                                  overlayColor: MaterialStateProperty.all(
+                                    Colors.deepPurple[900],
+                                  ),
+                                  alignment: Alignment.center),
+                              onPressed: () {
+                                controller.fromReplaceInsert_.text = controller
+                                        .gridStateManager
+                                        ?.currentRow
+                                        ?.cells["transmissionTime"]
+                                        ?.value ??
+                                    "";
+                                controller.fromReplaceIndexInsert_.text = controller
+                                        .gridStateManager?.currentRowIdx
+                                        .toString() ??
+                                    "";
+                              },
+                              // icon: showIcon ? Icon(iconData, size: 16) : Container(),
+                              child: Text("",
+                                  style: TextStyle(
+                                    fontSize: SizeDefine.fontSizeButton,
+                                  ),
+                                  textAlign: TextAlign.center),
+                            ),
+                          ),*/
+                          Padding(
+                            padding:
+                            const EdgeInsets.only(top: 15.0, right: 5),
+                            child: FormButtonWrapper1(
                               btnText: "",
                               showIcon: false,
                               callback: () {
-                                controller.fromReplaceInsert_.text = controller.gridStateManager?.currentRow?.cells["transmissionTime"]?.value ?? "";
-                                controller.fromReplaceIndexInsert_.text = controller.gridStateManager?.currentRowIdx.toString()??"";
+                                controller.fromReplaceInsert_.text =
+                                    controller
+                                        .gridStateManager
+                                        ?.currentRow
+                                        ?.cells["transmissionTime"]
+                                        ?.value ??
+                                        "";
+                                controller.fromReplaceIndexInsert_.text =
+                                    controller.gridStateManager?.currentRowIdx
+                                        .toString() ??
+                                        "";
                               },
-                            ),*/
-                            /*Padding(
-                              padding: const EdgeInsets.only(top: 15.0, right: 5),
-                              child: ElevatedButton(
-                                style: ButtonStyle(
-                                    overlayColor: MaterialStateProperty.all(
-                                      Colors.deepPurple[900],
-                                    ),
-                                    alignment: Alignment.center),
-                                onPressed: () {
-                                  controller.fromReplaceInsert_.text = controller
-                                          .gridStateManager
-                                          ?.currentRow
-                                          ?.cells["transmissionTime"]
-                                          ?.value ??
-                                      "";
-                                  controller.fromReplaceIndexInsert_.text = controller
-                                          .gridStateManager?.currentRowIdx
-                                          .toString() ??
-                                      "";
-                                },
-                                // icon: showIcon ? Icon(iconData, size: 16) : Container(),
-                                child: Text("",
-                                    style: TextStyle(
-                                      fontSize: SizeDefine.fontSizeButton,
-                                    ),
-                                    textAlign: TextAlign.center),
-                              ),
-                            ),*/
-                            Padding(
-                              padding:
-                              const EdgeInsets.only(top: 15.0, right: 5),
-                              child: FormButtonWrapper1(
-                                btnText: "",
-                                showIcon: false,
-                                callback: () {
-                                  controller.fromReplaceInsert_.text =
-                                      controller
-                                          .gridStateManager
-                                          ?.currentRow
-                                          ?.cells["transmissionTime"]
-                                          ?.value ??
-                                          "";
-                                  controller.fromReplaceIndexInsert_.text =
-                                      controller.gridStateManager?.currentRowIdx
-                                          .toString() ??
-                                          "";
-                                },
-                              ),
                             ),
-                            InputFields.formFieldNumberMask(
-                                hintTxt: "To",
-                                controller: controller.toReplaceInsert_,
-                                widthRatio: 0.1,
-                                isTime: true,
-                                isEnable: false,
-                                paddingLeft: 0),
-                            /* Padding(
-                              padding:
-                                  const EdgeInsets.only(top: 15.0, right: 5, left: 5),
-                              child: ElevatedButton(
-                                style: ButtonStyle(
-                                    overlayColor: MaterialStateProperty.all(
-                                      Colors.deepPurple[900],
-                                    ),padding: MaterialStateProperty.all(
-                                      EdgeInsets.symmetric(horizontal: 5,vertical: 5)
-                                    ),
-                                    alignment: Alignment.center),
-                                onPressed: () {
-                                  controller.toReplaceInsert_.text = controller
-                                          .gridStateManager
-                                          ?.currentRow
-                                          ?.cells["transmissionTime"]
-                                          ?.value ??
-                                      "";
-                                  controller.toReplaceIndexInsert_.text = controller
-                                          .gridStateManager?.currentRowIdx
-                                          .toString() ??
-                                      "";
-                                },
-                                // icon: showIcon ? Icon(iconData, size: 16) : Container(),
-                                child: Text("",
-                                    style: TextStyle(
-                                      fontSize: SizeDefine.fontSizeButton,
-                                    ),
-                                    textAlign: TextAlign.center),
-                              ),
-                            ),*/
-                            Padding(
-                              padding: const EdgeInsets.only(
-                                  top: 15.0, right: 5, left: 5),
-                              child: FormButtonWrapper1(
-                                btnText: "",
-                                showIcon: false,
-                                callback: () {
-                                  controller.toReplaceInsert_.text = controller
-                                      .gridStateManager
-                                      ?.currentRow
-                                      ?.cells["transmissionTime"]
-                                      ?.value ??
-                                      "";
-                                  controller.toReplaceIndexInsert_.text =
-                                      controller.gridStateManager?.currentRowIdx
-                                          .toString() ??
-                                          "";
-                                },
-                              ),
+                          ),
+                          InputFields.formFieldNumberMask(
+                              hintTxt: "To",
+                              controller: controller.toReplaceInsert_,
+                              widthRatio: 0.1,
+                              isTime: true,
+                              isEnable: false,
+                              paddingLeft: 0),
+                          /* Padding(
+                            padding:
+                                const EdgeInsets.only(top: 15.0, right: 5, left: 5),
+                            child: ElevatedButton(
+                              style: ButtonStyle(
+                                  overlayColor: MaterialStateProperty.all(
+                                    Colors.deepPurple[900],
+                                  ),padding: MaterialStateProperty.all(
+                                    EdgeInsets.symmetric(horizontal: 5,vertical: 5)
+                                  ),
+                                  alignment: Alignment.center),
+                              onPressed: () {
+                                controller.toReplaceInsert_.text = controller
+                                        .gridStateManager
+                                        ?.currentRow
+                                        ?.cells["transmissionTime"]
+                                        ?.value ??
+                                    "";
+                                controller.toReplaceIndexInsert_.text = controller
+                                        .gridStateManager?.currentRowIdx
+                                        .toString() ??
+                                    "";
+                              },
+                              // icon: showIcon ? Icon(iconData, size: 16) : Container(),
+                              child: Text("",
+                                  style: TextStyle(
+                                    fontSize: SizeDefine.fontSizeButton,
+                                  ),
+                                  textAlign: TextAlign.center),
                             ),
-                            Padding(
-                              padding: const EdgeInsets.only(left: 10, top: 15),
-                              child: FormButtonWrapper1(
-                                btnText: "Get Event",
-                                showIcon: false,
-                                callback: () {
-                                  controller.btnReplace_GetEvent_Click();
-                                },
-                              ),
+                          ),*/
+                          Padding(
+                            padding: const EdgeInsets.only(
+                                top: 15.0, right: 5, left: 5),
+                            child: FormButtonWrapper1(
+                              btnText: "",
+                              showIcon: false,
+                              callback: () {
+                                controller.toReplaceInsert_.text = controller
+                                    .gridStateManager
+                                    ?.currentRow
+                                    ?.cells["transmissionTime"]
+                                    ?.value ??
+                                    "";
+                                controller.toReplaceIndexInsert_.text =
+                                    controller.gridStateManager?.currentRowIdx
+                                        .toString() ??
+                                        "";
+                              },
                             ),
-                            Padding(
-                              padding: const EdgeInsets.only(left: 10, top: 15),
-                              child: FormButtonWrapper1(
-                                btnText: "Replace",
-                                showIcon: false,
-                                callback: () {
-                                  controller.btnReplace_Click();
-                                },
-                              ),
+                          ),
+                          Padding(
+                            padding: const EdgeInsets.only(left: 10, top: 15),
+                            child: FormButtonWrapper1(
+                              btnText: "Get Event",
+                              showIcon: false,
+                              callback: () {
+                                controller.btnReplace_GetEvent_Click();
+                              },
                             ),
-                          ],
-                        )
-                      ],
-                    ),
+                          ),
+                          Padding(
+                            padding: const EdgeInsets.only(left: 10, top: 15),
+                            child: FormButtonWrapper1(
+                              btnText: "Replace",
+                              showIcon: false,
+                              callback: () {
+                                controller.btnReplace_Click();
+                              },
+                            ),
+                          ),
+                        ],
+                      )
+                    ],
                   ),
                 ),
               ),
