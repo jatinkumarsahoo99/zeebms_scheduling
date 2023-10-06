@@ -2282,12 +2282,23 @@ class TransmissionLogController extends GetxController {
     } else if (gridStateManager == null) {
       Snack.callError("Table is not set");
     } else {
-      var sendData = {
-        "lstTblLog": [
-          gridStateManager?.currentRow
-              ?.toJson1(stringConverterKeys: ["datechange", "tapeduration"])
-        ]
-      };
+      var sendData;
+      if ((gridStateManager?.currentSelectingRows.length ?? 0) > 0) {
+        sendData = {
+          "lstTblLog": gridStateManager?.currentSelectingRows
+              .map((e) => e
+                  .toJson1(stringConverterKeys: ["datechange", "tapeduration"]))
+              .toList()
+        };
+      } else {
+        sendData = {
+          "lstTblLog": [
+            gridStateManager?.currentRow
+                ?.toJson1(stringConverterKeys: ["datechange", "tapeduration"])
+          ]
+        };
+      }
+
       LoadingDialog.call();
       Get.find<ConnectorControl>().POSTMETHOD(
           api: ApiFactory.TRANSMISSION_LOG_POST_VERIFY(),
