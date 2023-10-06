@@ -196,6 +196,7 @@ class CommercialController extends GetxController {
           rowMoved.first.cells['eventType'], rowMoved.first.sortIdx);
       LoadingDialog.showErrorDialog("You cannot move selected segment");
     } else {
+      // print(indexToMove);
       // var tempList = <CommercialShowOnTabModel?>[];
       // for (var i = 0; i < (mainCommercialShowDetailsList?.length ?? 0); i++) {
       //   if (mainCommercialShowDetailsList?[i].bStatus == "B") {
