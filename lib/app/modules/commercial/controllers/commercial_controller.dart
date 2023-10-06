@@ -68,8 +68,8 @@ class CommercialController extends GetxController {
   List<CommercialProgramModel>? commercialProgramList = [];
   RxList<CommercialShowOnTabModel>? showCommercialDetailsList =
       <CommercialShowOnTabModel>[].obs;
-  RxList<CommercialShowOnTabModel>? mainCommercialShowDetailsList =
-      <CommercialShowOnTabModel>[].obs;
+  List<CommercialShowOnTabModel>? mainCommercialShowDetailsList =
+      <CommercialShowOnTabModel>[];
 
   /////////////Pluto Grid////////////
   // PlutoGridStateManager? stateManager;
