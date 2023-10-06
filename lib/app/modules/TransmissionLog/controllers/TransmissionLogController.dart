@@ -10,6 +10,7 @@ import 'package:file_picker/file_picker.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:get/get.dart';
 import 'package:bms_scheduling/widgets/PlutoGrid/pluto_grid.dart';
 import 'package:intl/intl.dart';
@@ -168,7 +169,8 @@ class TransmissionLogController extends GetxController {
   }
 
   fetchUserGridSetting() async {
-    userDataSettings = await Get.find<HomeController>().fetchUserSetting2(formName: "frmTransmissionlog");
+    userDataSettings = await Get.find<HomeController>()
+        .fetchUserSetting2(formName: "frmTransmissionlog");
   }
 
   pickFile() async {
@@ -1184,7 +1186,8 @@ class TransmissionLogController extends GetxController {
                 value: num.tryParse(dr.cells["duration"]?.value) ?? 0),
             dr.cells["som"]?.value,
             dr.cells["promoTypeCode"]?.value,
-            dr.cells["segmentNumber"]?.value.toString() ?? "",dontSave: true);
+            dr.cells["segmentNumber"]?.value.toString() ?? "",
+            dontSave: true);
 
         // Adding Tags for promos
         // GoTo hell
@@ -1214,7 +1217,8 @@ class TransmissionLogController extends GetxController {
                           filterList[0].promoDuration.toString() ?? "0")!),
                   filterList![0].som!,
                   filterList![0].promoTypeCode ?? "",
-                  filterList![0].segmentNumber.toString(),dontSave: true);
+                  filterList![0].segmentNumber.toString(),
+                  dontSave: true);
               // UnSelectAllRows(gridStateManager ?);
               // gridStateManager?.rows[row - 1].selected = true;
               // gridStateManager?.currentCell = gridStateManager?.selectedRows[0].cells[1];
@@ -1473,7 +1477,8 @@ class TransmissionLogController extends GetxController {
       String Tapeduration,
       String SOM,
       String Promotypecode,
-      String BreakNumber,{bool? dontSave}) {
+      String BreakNumber,
+      {bool? dontSave}) {
     int intRowIndex = gridStateManager?.currentRowIdx ?? 0;
     int InsertRow =
         int.tryParse(gridStateManager?.currentRow?.cells["rownumber"]?.value) ??
@@ -2277,15 +2282,13 @@ class TransmissionLogController extends GetxController {
     } else if (gridStateManager == null) {
       Snack.callError("Table is not set");
     } else {
-      LoadingDialog.call();
       var sendData = {
-        // "lstgridStateManager": gridStateManager?.rows.map((e) => e.toJson1(stringConverterKeys: ["datechange",""])).toList()
         "lstTblLog": [
           gridStateManager?.currentRow
               ?.toJson1(stringConverterKeys: ["datechange", "tapeduration"])
         ]
       };
-
+      LoadingDialog.call();
       Get.find<ConnectorControl>().POSTMETHOD(
           api: ApiFactory.TRANSMISSION_LOG_POST_VERIFY(),
           json: sendData,
@@ -3977,5 +3980,83 @@ class TransmissionLogController extends GetxController {
       ),
     );
     canDialogShow.value = true;
+  }
+
+  keyBoardHander(RawKeyEvent raw) {
+    print("RAw is.>>>" + raw.toString());
+    if (raw is RawKeyDownEvent &&
+        raw.isControlPressed &&
+        raw.character?.toLowerCase() == "c") {
+      print("Copy Pressed Ctrl + c ");
+      if (gridStateManager != null && gridStateManager?.currentCell != null) {
+        print("Copy Pressed in clipboard ");
+        /*Clipboard.setData(new ClipboardData(
+                    text: controller.gridStateManager?.currentCell?.value));*/
+        Utils.copyToClipboardHack(gridStateManager?.currentCell?.value);
+      }
+    }
+
+    if (raw is RawKeyDownEvent &&
+        raw.isControlPressed &&
+        raw.logicalKey == LogicalKeyboardKey.arrowUp) {
+      print("ARROW UP");
+      if (gridStateManager != null && gridStateManager?.currentCell != null) {
+        gridStateManager?.setCurrentCell((gridStateManager?.currentCell), 0);
+        gridStateManager?.moveSelectingCellByRowIdx(1, PlutoMoveDirection.up);
+      }
+    }
+
+    if (raw is RawKeyDownEvent &&
+        raw.isControlPressed &&
+        raw.logicalKey == LogicalKeyboardKey.arrowDown) {
+      print("ARROW DOWN");
+      if (gridStateManager != null && gridStateManager?.currentCell != null) {
+        gridStateManager?.setCurrentCell((gridStateManager?.currentCell),
+            (gridStateManager?.refRows.length ?? 0));
+        gridStateManager?.moveSelectingCellByRowIdx(
+            (gridStateManager?.refRows.length ?? 0), PlutoMoveDirection.down);
+      }
+    }
+
+    if (raw is RawKeyDownEvent && raw.logicalKey == LogicalKeyboardKey.escape) {
+      print("Escape call");
+      if (dialogWidget != null) {
+        dialogWidget = null;
+        canDialogShow.value = false;
+      }
+    }
+
+    if (raw is RawKeyDownEvent && raw.character?.toLowerCase() == "y") {
+      if (completerDialog != null && dialogWidget != null) {
+        dialogWidget = null;
+        canDialogShow.value = false;
+        completerDialog?.complete(true);
+      }
+    }
+    if (raw is RawKeyDownEvent && raw.character?.toLowerCase() == "n") {
+      if (completerDialog != null && dialogWidget != null) {
+        dialogWidget = null;
+        canDialogShow.value = false;
+        completerDialog?.complete(false);
+      }
+    }
+    switch (raw.logicalKey.keyLabel) {
+      case "F3":
+        if (gridStateManager != null) {
+          cutCopy(isCut: false, row: gridStateManager?.currentRow);
+        }
+        break;
+      case "F2":
+        if (gridStateManager != null) {
+          cutCopy(isCut: true, row: gridStateManager?.currentRow);
+        }
+        break;
+      case "F4":
+        paste(gridStateManager?.currentRowIdx);
+        break;
+      case "F5":
+        checkVerifyTime();
+        break;
+    }
   }
 }
