@@ -380,7 +380,7 @@ class DataGridFromMapTransmissionLog extends StatelessWidget {
               witdthSpecificColumn!.keys.toList().contains(key))
               ? witdthSpecificColumn![key]!
               : Utils.getColumnSize(key: key, value: mapData[0][key]),
-          minWidth: 5,
+          minWidth: 15,
           enableAutoEditing: false,
           hide: showonly == null
               ? (hideKeys != null && hideKeys!.contains(key)) ||
