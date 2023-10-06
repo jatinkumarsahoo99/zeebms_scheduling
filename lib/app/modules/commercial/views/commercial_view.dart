@@ -552,12 +552,9 @@ class CommercialView extends StatelessWidget {
                     }
                   },
                   onRowsMoved: (PlutoGridOnRowsMovedEvent onRowMoved) {
+                    // LoadingDialog.call();
                     try {
-                      controller.gridStateManager?.setCurrentCell(
-                          controller.gridStateManager
-                              ?.getRowByIdx(onRowMoved.idx)
-                              ?.cells['fpcTime'],
-                          onRowMoved.idx);
+                      // fpcTime
 
                       int? fromRowNumber;
                       int? toRowNumberPreviousRow;
@@ -576,8 +573,8 @@ class CommercialView extends StatelessWidget {
                           .cells['rownumber']
                           ?.value);
 
-                      print(
-                          "From Row Number: $fromRowNumber   To Row Number:$toRowNumberPreviousRow");
+                      // print(
+                      //     "From Row Number: $fromRowNumber   To Row Number:$toRowNumberPreviousRow");
 
                       for (var i = 0;
                           i <
@@ -590,20 +587,53 @@ class CommercialView extends StatelessWidget {
                               .cells['rownumber']!,
                           i.toString(),
                           callOnChangedEvent: false,
-                          force: false,
+                          force: true,
                           notify: false,
                         );
                       }
 
-                      // var removeObject = controller
-                      //     .mainCommercialShowDetailsList
-                      //     ?.removeAt(fromRowNumber!);
+                      var removeObject = controller
+                          .mainCommercialShowDetailsList
+                          ?.removeAt(fromRowNumber!);
 
-                      // controller.mainCommercialShowDetailsList!
-                      //     .insert(toRowNumberPreviousRow!, removeObject!);
+                      if (removeObject != null) {
+                        removeObject.breakNumber = controller
+                            .mainCommercialShowDetailsList?[
+                                toRowNumberPreviousRow!]
+                            .breakNumber;
+                        removeObject.fpcTime2 = controller
+                            .mainCommercialShowDetailsList?[
+                                toRowNumberPreviousRow!]
+                            .fpcTime2;
+                        removeObject.fpcTime = controller
+                            .mainCommercialShowDetailsList?[
+                                toRowNumberPreviousRow!]
+                            .fpcTime;
+                        controller.mainCommercialShowDetailsList!
+                            .insert(toRowNumberPreviousRow! + 1, removeObject);
+                      }
+
+                      for (var i = 0;
+                          i <
+                              (controller
+                                      .mainCommercialShowDetailsList?.length ??
+                                  0);
+                          i++) {
+                        controller.mainCommercialShowDetailsList?[i].rownumber =
+                            i;
+                      }
+                      // print("Loop is done.");
+
+                      controller.gridStateManager?.setCurrentCell(
+                          controller.gridStateManager
+                              ?.getRowByIdx(onRowMoved.idx)
+                              ?.cells['eventType'],
+                          onRowMoved.idx);
                     } catch (e) {
+                      // Get.back();
                       LoadingDialog.showErrorDialog(e.toString());
                     }
+                    // Get.back();
                     // controller.selectedDDIndex = onRowMoved.idx;
                     // if (controller.canshowFilterList) {
                     //   controller.showSelectedProgramList();
