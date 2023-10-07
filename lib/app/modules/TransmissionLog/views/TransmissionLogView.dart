@@ -304,18 +304,38 @@ class TransmissionLogView extends StatelessWidget {
                                 ],
                               ),
                             ),
-                            Obx(() =>
-                                Padding(
-                                  padding: const EdgeInsets.only(
-                                    top: 15.0,
-                                  ),
-                                  child: Text(
-                                    controller.lastSavedLoggedUser.value ?? "",
-                                    style: TextStyle(
-                                        fontSize: SizeDefine.labelSize1,
-                                        fontWeight: FontWeight.w600),
-                                  ),
-                                ))
+                            Row(
+                              children: [
+                                Obx(() =>
+                                    Padding(
+                                      padding: const EdgeInsets.only(
+                                        top: 15.0,
+                                      ),
+                                      child: Text(
+                                        controller.lastSavedLoggedUser.value ??
+                                            "",
+                                        style: TextStyle(
+                                            fontSize: SizeDefine.labelSize1,
+                                            fontWeight: FontWeight.w600),
+                                      ),
+                                    )),
+                                Obx(() =>
+                                    Padding(
+                                      padding: const EdgeInsets.only(
+                                        top: 15.0,
+                                      ),
+                                      child: Text(
+                                        controller
+                                            .calculateSelectTranmissionTime
+                                            .value ??
+                                            "",
+                                        style: TextStyle(
+                                            fontSize: SizeDefine.labelSize1,
+                                            fontWeight: FontWeight.w600),
+                                      ),
+                                    )),
+                              ],
+                            ),
                           ],
                         ),
                       ),
@@ -447,6 +467,7 @@ class TransmissionLogView extends StatelessWidget {
                           // mode: PlutoGridMode.selectWithOneTap,
 
                           onSelected: (PlutoGridOnSelectedEvent event) {
+                            print("On Print select 1");
                             event.selectedRows?.forEach((element) {
                               print("On Print select" +
                                   jsonEncode(element.toJson()));
@@ -464,7 +485,8 @@ class TransmissionLogView extends StatelessWidget {
                               int index, renderContext) {
                             switch (itemType) {
                               case DataGridMenuItem.delete:
-                                LoadingDialog.recordExists(
+                                controller.deleteMultiple();
+                                /*LoadingDialog.recordExists(
                                     "Want to delete selected record?\nEvent type: ${renderContext
                                         .row.cells["eventType"]?.value ??
                                         ""}\nDuration: ${renderContext.row
@@ -479,7 +501,7 @@ class TransmissionLogView extends StatelessWidget {
                                       controller.gridStateManager
                                           ?.removeCurrentRow();
                                       controller.colorGrid(false);
-                                    });
+                                    });*/
 
                                 break;
                               case DataGridMenuItem.verifyTime:
@@ -689,22 +711,19 @@ class TransmissionLogView extends StatelessWidget {
                                 btnText: "Aa",
                                 width: Get.width / 23,
                                 // isEnabled: btn['isDisabled'],
-                                callback:
-                                    () => formHandler("Aa"),
+                                callback: () => formHandler("Aa"),
                               ),
                               FormButtonWrapper1(
                                 btnText: "CL",
                                 showIcon: false,
                                 width: Get.width / 23,
-                                callback:
-                                    () => formHandler("CL"),
+                                callback: () => formHandler("CL"),
                               ),
                               FormButtonWrapper1(
                                 btnText: "Exit",
                                 showIcon: false,
                                 width: Get.width / 23,
-                                callback:
-                                    () => formHandler("Exit"),
+                                callback: () => formHandler("Exit"),
                               ),
                             ],
                           ),
@@ -1688,8 +1707,8 @@ class TransmissionLogView extends StatelessWidget {
                                       ),
                                 ),
                                 Padding(
-                                  padding: const EdgeInsets.only(
-                                      top: 15.0, left: 5),
+                                  padding:
+                                  const EdgeInsets.only(top: 15.0, left: 5),
                                   child: Text(
                                     "My",
                                     style: TextStyle(
@@ -1700,8 +1719,7 @@ class TransmissionLogView extends StatelessWidget {
                             ),
                           ),
                           Padding(
-                            padding:
-                            const EdgeInsets.only(top: 15.0, left: 10),
+                            padding: const EdgeInsets.only(top: 15.0, left: 10),
                             child: FormButtonWrapper1(
                               btnText: "Search",
                               showIcon: false,
@@ -1721,8 +1739,7 @@ class TransmissionLogView extends StatelessWidget {
                             ),
                           ),
                           Padding(
-                            padding:
-                            const EdgeInsets.only(top: 15.0, left: 10),
+                            padding: const EdgeInsets.only(top: 15.0, left: 10),
                             child: FormButtonWrapper1(
                               btnText: "Add",
                               showIcon: false,
@@ -1742,21 +1759,19 @@ class TransmissionLogView extends StatelessWidget {
                                 SizedBox(width: 5),
                                 Obx(() =>
                                     Padding(
-                                      padding:
-                                      const EdgeInsets.only(top: 15.0),
+                                      padding: const EdgeInsets.only(top: 15.0),
                                       child: Checkbox(
                                         value: controller.isInsertAfter.value,
                                         onChanged: (val) {
-                                          controller.isInsertAfter.value =
-                                          val!;
+                                          controller.isInsertAfter.value = val!;
                                         },
                                         materialTapTargetSize:
                                         MaterialTapTargetSize.shrinkWrap,
                                       ),
                                     )),
                                 Padding(
-                                  padding: const EdgeInsets.only(
-                                      top: 15.0, left: 5),
+                                  padding:
+                                  const EdgeInsets.only(top: 15.0, left: 5),
                                   child: Text(
                                     "Insert After",
                                     style: TextStyle(
@@ -1816,20 +1831,17 @@ class TransmissionLogView extends StatelessWidget {
                                   onload: (PlutoGridOnLoadedEvent load) {
                                     controller.tblFastInsert =
                                         load.stateManager;
-                                    load.stateManager.setGridMode(
-                                        PlutoGridMode.normal);
+                                    load.stateManager
+                                        .setGridMode(PlutoGridMode.normal);
                                     load.stateManager.setSelectingMode(
                                         PlutoGridSelectingMode.row);
                                     // load.stateManager.setSelecting(true);
-                                    load.stateManager
-                                        .toggleSelectingRow(0);
+                                    load.stateManager.toggleSelectingRow(0);
                                   },
                                   witdthSpecificColumn: (controller
                                       .userDataSettings?.userSetting
-                                      ?.firstWhere(
-                                          (element) =>
-                                      element.controlName ==
-                                          "tblFastInsert",
+                                      ?.firstWhere((element) =>
+                                  element.controlName == "tblFastInsert",
                                       orElse: () => UserSetting())
                                       .userSettings),
                                   // colorCallback: (renderC) => Colors.red[200]!,
@@ -1848,8 +1860,8 @@ class TransmissionLogView extends StatelessWidget {
                                         });
                                   },
                                   colorCallback: (colorData) {
-                                    if (controller.tblFastInsert
-                                        ?.currentRowIdx ==
+                                    if (controller
+                                        .tblFastInsert?.currentRowIdx ==
                                         colorData.rowIdx) {
                                       return Color(0xFFD1C4E9);
                                     } else {
@@ -1864,8 +1876,7 @@ class TransmissionLogView extends StatelessWidget {
                                       .toList())!)
                               // _dataTable3()
                                   : const WarningBox(
-                                  text:
-                                  'Enter Location, Channel & Date to get the Break Definitions'),
+                                  text: 'Enter Location, Channel & Date to get the Break Definitions'),
                             );
                           }),
                       Padding(
@@ -1933,11 +1944,9 @@ class TransmissionLogView extends StatelessWidget {
                                 SizedBox(width: 5),
                                 Obx(() =>
                                     Padding(
-                                      padding:
-                                      const EdgeInsets.only(top: 15.0),
+                                      padding: const EdgeInsets.only(top: 15.0),
                                       child: Checkbox(
-                                        value:
-                                        controller.isAllDayReplace.value,
+                                        value: controller.isAllDayReplace.value,
                                         onChanged: (val) {
                                           controller.isAllDayReplace.value =
                                           val!;
@@ -1947,8 +1956,8 @@ class TransmissionLogView extends StatelessWidget {
                                       ),
                                     )),
                                 Padding(
-                                  padding: const EdgeInsets.only(
-                                      top: 15.0, left: 5),
+                                  padding:
+                                  const EdgeInsets.only(top: 15.0, left: 5),
                                   child: Text(
                                     "All day",
                                     style: TextStyle(
@@ -2004,19 +2013,17 @@ class TransmissionLogView extends StatelessWidget {
                             ),
                           ),*/
                           Padding(
-                            padding:
-                            const EdgeInsets.only(top: 15.0, right: 5),
+                            padding: const EdgeInsets.only(top: 15.0, right: 5),
                             child: FormButtonWrapper1(
                               btnText: "",
                               showIcon: false,
                               callback: () {
-                                controller.fromReplaceInsert_.text =
-                                    controller
-                                        .gridStateManager
-                                        ?.currentRow
-                                        ?.cells["transmissionTime"]
-                                        ?.value ??
-                                        "";
+                                controller.fromReplaceInsert_.text = controller
+                                    .gridStateManager
+                                    ?.currentRow
+                                    ?.cells["transmissionTime"]
+                                    ?.value ??
+                                    "";
                                 controller.fromReplaceIndexInsert_.text =
                                     controller.gridStateManager?.currentRowIdx
                                         .toString() ??

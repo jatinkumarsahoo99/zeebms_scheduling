@@ -117,7 +117,7 @@ class TransmissionLogController extends GetxController {
   RxList<DropDownValue>? listTapeDetailsSegment = RxList([]);
 
   TransmissionLogModel? transmissionLog;
-  PlutoGridMode selectedPlutoGridMode = PlutoGridMode.normal;
+  PlutoGridMode selectedPlutoGridMode = PlutoGridMode.multiSelect;
   int? selectedIndex;
   RxnString verifyType = RxnString();
   RxList<DropDownValue> listLocation = RxList([]);
@@ -151,6 +151,7 @@ class TransmissionLogController extends GetxController {
   Completer<bool>? completerDialog;
 
   UserDataSettings? userDataSettings;
+  RxnString calculateSelectTranmissionTime = RxnString(null);
 
   @override
   void onInit() {
@@ -4005,69 +4006,104 @@ class TransmissionLogController extends GetxController {
                     text: controller.gridStateManager?.currentCell?.value));*/
         Utils.copyToClipboardHack(gridStateManager?.currentCell?.value);
       }
-    }
-
-    if (raw is RawKeyDownEvent &&
+    } else if (raw is RawKeyDownEvent &&
         raw.isControlPressed &&
         raw.logicalKey == LogicalKeyboardKey.arrowUp) {
       print("ARROW UP");
       if (gridStateManager != null && gridStateManager?.currentCell != null) {
         gridStateManager?.setCurrentCell((gridStateManager?.currentCell), 0);
-        gridStateManager?.moveSelectingCellByRowIdx(1, PlutoMoveDirection.up);
+        // gridStateManager?.moveSelectingCellByRowIdx(1, PlutoMoveDirection.up);
+        gridStateManager?.moveScrollByRow(PlutoMoveDirection.up, 0);
       }
-    }
-
-    if (raw is RawKeyDownEvent &&
+    } else if (raw is RawKeyDownEvent &&
         raw.isControlPressed &&
         raw.logicalKey == LogicalKeyboardKey.arrowDown) {
       print("ARROW DOWN");
       if (gridStateManager != null && gridStateManager?.currentCell != null) {
         gridStateManager?.setCurrentCell((gridStateManager?.currentCell),
             (gridStateManager?.refRows.length ?? 0));
-        gridStateManager?.moveSelectingCellByRowIdx(
-            (gridStateManager?.refRows.length ?? 0), PlutoMoveDirection.down);
+        // gridStateManager?.moveSelectingCellByRowIdx((gridStateManager?.refRows.length ?? 0), PlutoMoveDirection.down);
+        gridStateManager?.moveScrollByRow(
+            PlutoMoveDirection.down, (gridStateManager?.refRows.length ?? 0));
       }
-    }
-
-    if (raw is RawKeyDownEvent && raw.logicalKey == LogicalKeyboardKey.escape) {
+    } else if (raw is RawKeyDownEvent &&
+        raw.logicalKey == LogicalKeyboardKey.escape) {
       print("Escape call");
       if (dialogWidget != null) {
         dialogWidget = null;
         canDialogShow.value = false;
       }
-    }
-
-    if (raw is RawKeyDownEvent && raw.character?.toLowerCase() == "y") {
+    } else if (raw is RawKeyDownEvent &&
+        raw.logicalKey == LogicalKeyboardKey.escape) {
+      print("Escape call");
+      if (dialogWidget != null) {
+        dialogWidget = null;
+        canDialogShow.value = false;
+      }
+    } else if (raw is RawKeyDownEvent &&
+        raw.logicalKey == LogicalKeyboardKey.delete) {
+      print("Escape call");
+      deleteMultiple();
+    } else if (raw is RawKeyDownEvent && raw.character?.toLowerCase() == "y") {
       if (completerDialog != null && dialogWidget != null) {
         dialogWidget = null;
         canDialogShow.value = false;
         completerDialog?.complete(true);
       }
-    }
-    if (raw is RawKeyDownEvent && raw.character?.toLowerCase() == "n") {
+    } else if (raw is RawKeyDownEvent && raw.character?.toLowerCase() == "n") {
       if (completerDialog != null && dialogWidget != null) {
         dialogWidget = null;
         canDialogShow.value = false;
         completerDialog?.complete(false);
       }
+    } else {
+      switch (raw.logicalKey.keyLabel) {
+        case "F3":
+          if (gridStateManager != null) {
+            cutCopy(isCut: false, row: gridStateManager?.currentRow);
+          }
+          break;
+        case "F2":
+          if (gridStateManager != null) {
+            cutCopy(isCut: true, row: gridStateManager?.currentRow);
+          }
+          break;
+        case "F4":
+          paste(gridStateManager?.currentRowIdx);
+          break;
+        case "F5":
+          checkVerifyTime();
+          break;
+      }
     }
-    switch (raw.logicalKey.keyLabel) {
-      case "F3":
-        if (gridStateManager != null) {
-          cutCopy(isCut: false, row: gridStateManager?.currentRow);
+  }
+
+  deleteMultiple() async {
+    if ((gridStateManager?.currentSelectingRows.length ?? 0) > 0) {
+      for (int i = 0;
+          i < (gridStateManager?.currentSelectingRows.length ?? 0);
+          i++) {
+        PlutoRow? row = gridStateManager?.currentSelectingRows[i];
+        bool? isYes = await showDialogForYesNo1(
+            "Want to delete selected record?\nEvent type: ${row?.cells["eventType"]?.value ?? ""}\nDuration: ${row?.cells["tapeduration"]?.value ?? ""}\nExportTapeCode: ${row?.cells["exportTapeCode"]?.value ?? ""}\nExportTapeCaption: ${row?.cells["exportTapeCaption"]?.value ?? ""}");
+        if (isYes ?? false) {
+          addEventToUndo();
+          gridStateManager?.removeRows([row!]);
         }
-        break;
-      case "F2":
-        if (gridStateManager != null) {
-          cutCopy(isCut: true, row: gridStateManager?.currentRow);
+      }
+      colorGrid(false);
+    } else {
+      if (gridStateManager?.currentRow != null) {
+        bool? isYes = await showDialogForYesNo1(
+            "Want to delete selected record?\nEvent type: ${gridStateManager?.currentRow?.cells["eventType"]?.value ?? ""}\nDuration: ${gridStateManager?.currentRow?.cells["tapeduration"]?.value ?? ""}\nExportTapeCode: ${gridStateManager?.currentRow?.cells["exportTapeCode"]?.value ?? ""}\nExportTapeCaption: ${gridStateManager?.currentRow?.cells["exportTapeCaption"]?.value ?? ""}");
+        if (isYes ?? false) {
+          addEventToUndo();
+          gridStateManager?.removeCurrentRow();
+          colorGrid(false);
         }
-        break;
-      case "F4":
-        paste(gridStateManager?.currentRowIdx);
-        break;
-      case "F5":
-        checkVerifyTime();
-        break;
+      } else {
+        LoadingDialog.callInfoMessage("Nothing is selected");
+      }
     }
   }
 }
