@@ -304,38 +304,20 @@ class TransmissionLogView extends StatelessWidget {
                                 ],
                               ),
                             ),
-                            Row(
-                              children: [
-                                Obx(() =>
-                                    Padding(
-                                      padding: const EdgeInsets.only(
-                                        top: 15.0,
-                                      ),
-                                      child: Text(
-                                        controller.lastSavedLoggedUser.value ??
-                                            "",
-                                        style: TextStyle(
-                                            fontSize: SizeDefine.labelSize1,
-                                            fontWeight: FontWeight.w600),
-                                      ),
-                                    )),
-                                Obx(() =>
-                                    Padding(
-                                      padding: const EdgeInsets.only(
-                                        top: 15.0,
-                                      ),
-                                      child: Text(
-                                        controller
-                                            .calculateSelectTranmissionTime
-                                            .value ??
-                                            "",
-                                        style: TextStyle(
-                                            fontSize: SizeDefine.labelSize1,
-                                            fontWeight: FontWeight.w600),
-                                      ),
-                                    )),
-                              ],
-                            ),
+                            Obx(() =>
+                                Padding(
+                                  padding: const EdgeInsets.only(
+                                    top: 15.0,
+                                  ),
+                                  child: Text(
+                                    controller.lastSavedLoggedUser.value ??
+                                        "",
+                                    style: TextStyle(
+                                        fontSize: SizeDefine.labelSize1,
+                                        fontWeight: FontWeight.w600),
+                                  ),
+                                )),
+
                           ],
                         ),
                       ),
