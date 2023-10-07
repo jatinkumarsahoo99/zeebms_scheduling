@@ -117,7 +117,7 @@ class TransmissionLogController extends GetxController {
   RxList<DropDownValue>? listTapeDetailsSegment = RxList([]);
 
   TransmissionLogModel? transmissionLog;
-  PlutoGridMode selectedPlutoGridMode = PlutoGridMode.normal;
+  PlutoGridMode selectedPlutoGridMode = PlutoGridMode.multiSelect;
   int? selectedIndex;
   RxnString verifyType = RxnString();
   RxList<DropDownValue> listLocation = RxList([]);
