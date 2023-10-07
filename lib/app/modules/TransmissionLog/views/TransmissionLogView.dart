@@ -464,7 +464,8 @@ class TransmissionLogView extends StatelessWidget {
                               int index, renderContext) {
                             switch (itemType) {
                               case DataGridMenuItem.delete:
-                                LoadingDialog.recordExists(
+                                controller.deleteMultiple();
+                                /*LoadingDialog.recordExists(
                                     "Want to delete selected record?\nEvent type: ${renderContext
                                         .row.cells["eventType"]?.value ??
                                         ""}\nDuration: ${renderContext.row
@@ -479,7 +480,7 @@ class TransmissionLogView extends StatelessWidget {
                                       controller.gridStateManager
                                           ?.removeCurrentRow();
                                       controller.colorGrid(false);
-                                    });
+                                    });*/
 
                                 break;
                               case DataGridMenuItem.verifyTime:
