@@ -26,6 +26,7 @@ class MaterialIdSearchView extends GetView<MaterialIdSearchController> {
                   hintTxt: "Material ID",
                   controller: controller.tapeIdCode,
                   width: 0.12,
+                  autoFocus: true,
                 ),
                 InputFields.formField1(
                   hintTxt: "Program Name",
@@ -49,7 +50,7 @@ class MaterialIdSearchView extends GetView<MaterialIdSearchController> {
           Obx(() => Expanded(
                 child: Container(
                   padding: const EdgeInsets.all(8.0),
-                  child: DataGridShowOnlyKeys(mapData: controller.data.value,hideCode: false),
+                  child: DataGridShowOnlyKeys(mapData: controller.data.value, hideCode: false),
                 ),
               ))
         ],
