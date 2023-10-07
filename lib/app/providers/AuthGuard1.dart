@@ -62,10 +62,12 @@ import '../modules/home/views/home_view.dart';
 import '../modules/slide/views/slide_view.dart';
 import '../routes/app_pages.dart';
 
-class AuthGuard1 extends StatefulWidget {
+class AuthGuard1 extends StatelessWidget {
   final String childName;
-
   AuthGuard1({required this.childName}) {
+    assert(this.childName != null);
+  }
+  /*AuthGuard1({required this.childName}) {
     assert(this.childName != null);
   }
 
@@ -131,7 +133,7 @@ class _AuthGuard1State extends State<AuthGuard1> with WidgetsBindingObserver {
         // print('Detached');
         break;
     }
-  }
+  }*/
 
   Widget? currentWidget;
 
@@ -147,7 +149,8 @@ class _AuthGuard1State extends State<AuthGuard1> with WidgetsBindingObserver {
       builder: (controller) {
         print("Login value>>" + controller.loginVal.value.toString());
         if (controller.loginVal.value == 1) {
-          switch (widget.childName) {
+          // switch (widget.childName) {
+          switch (childName) {
             case Routes.HOME:
               currentWidget = HomeView();
               break;
