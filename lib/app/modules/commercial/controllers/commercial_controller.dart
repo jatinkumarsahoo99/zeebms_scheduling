@@ -24,6 +24,7 @@ class CommercialController extends GetxController {
   // int? tabIndex = 0;
   // int selectIndex = 0;
   int? selectedDDIndex;
+  double previousScrollOffset = 0;
 
   List<Map<String, double>>? userGridSetting1 = [];
 
@@ -133,6 +134,7 @@ class CommercialController extends GetxController {
   var locationFN = FocusNode();
   int lastSelectedIdxSchd = 0;
   void clear() {
+    previousScrollOffset = 0;
     lastSelectedIdxSchd = 0;
     changeFpcTaped = false;
     exportTapeCodeSelected = null;

@@ -470,9 +470,13 @@ class CommercialView extends StatelessWidget {
                             .getRowByIdx(controller.selectedDDIndex)
                             ?.cells['eventType'],
                         controller.selectedDDIndex ?? 0);
-                    controller.gridStateManager?.moveCurrentCellByRowIdx(
-                        controller.selectedDDIndex ?? 0,
-                        PlutoMoveDirection.down);
+                    // controller.gridStateManager?.moveCurrentCellByRowIdx(
+                    //     controller.selectedDDIndex ?? 0,
+                    //     PlutoMoveDirection.down);
+                    controller.gridStateManager?.scroll.vertical?.animateTo(
+                        controller.previousScrollOffset,
+                        curve: Curves.linear,
+                        duration: Duration(milliseconds: 2));
                   },
                   showSrNo: true,
                   hideKeys: ["fpcTime"],
@@ -499,9 +503,13 @@ class CommercialView extends StatelessWidget {
                   onRowDoubleTap: (event) {
                     controller.selectedDDIndex = event.rowIdx;
                     print("onRowDoubleTap");
+                    controller.previousScrollOffset =
+                        controller.gridStateManager!.scroll.verticalOffset;
                   },
                   onSelected: (PlutoGridOnSelectedEvent event) {
                     print("onSelected called");
+                    controller.previousScrollOffset =
+                        controller.gridStateManager!.scroll.verticalOffset;
                     if (controller
                         .showCommercialDetailsList![
                             controller.lastSelectedIdxSchd]
@@ -552,94 +560,169 @@ class CommercialView extends StatelessWidget {
                     }
                   },
                   onRowsMoved: (PlutoGridOnRowsMovedEvent onRowMoved) {
-                    // LoadingDialog.call();
+                    // try {
+                    //   // fpcTime
+                    //   controller.gridStateManager?.setCurrentCell(
+                    //       controller.gridStateManager
+                    //           ?.getRowByIdx(onRowMoved.idx)
+                    //           ?.cells['eventType'],
+                    //       onRowMoved.idx);
+
+                    //   int? fromRowNumber;
+                    //   int? toRowNumberPreviousRow;
+
+                    //   fromRowNumber = controller.showCommercialDetailsList
+                    //       ?.firstWhere((element) =>
+                    //           element.rownumber ==
+                    //           int.tryParse(onRowMoved
+                    //               .rows.first.cells['rownumber']?.value))
+                    //       .rownumber;
+
+                    //   // toRowNumberPreviousRow = int.tryParse(controller
+                    //   //     .gridStateManager!
+                    //   //     .refRows[
+                    //   //         (onRowMoved.idx == 0) ? 0 : onRowMoved.idx - 1]
+                    //   //     .cells['rownumber']
+                    //   //     ?.value);
+
+                    //   // for (var i = 0;
+                    //   //     i <
+                    //   //         (controller.gridStateManager?.refRows.length ??
+                    //   //             0);
+                    //   //     i++) {
+                    //   //   controller.gridStateManager?.changeCellValue(
+                    //   //     controller.gridStateManager!
+                    //   //         .getRowByIdx(i)!
+                    //   //         .cells['rownumber']!,
+                    //   //     i.toString(),
+                    //   //     callOnChangedEvent: false,
+                    //   //     force: true,
+                    //   //     notify: false,
+                    //   //   );
+                    //   // }
+
+                    //   toRowNumberPreviousRow = int.tryParse(controller
+                    //       .gridStateManager!
+                    //       .refRows[onRowMoved.idx]
+                    //       .cells['rownumber']
+                    //       ?.value);
+
+                    //   print(
+                    //       "From Row Number: $fromRowNumber   To Row Number:${toRowNumberPreviousRow!}");
+
+                    //   var removeObject = controller
+                    //       .mainCommercialShowDetailsList
+                    //       ?.removeAt(fromRowNumber!);
+
+                    //   if (removeObject != null) {
+                    //     var tempPreviousRow = toRowNumberPreviousRow == 0
+                    //         ? toRowNumberPreviousRow + 1
+                    //         : toRowNumberPreviousRow - 1;
+                    //     removeObject.breakNumber = controller
+                    //         .mainCommercialShowDetailsList?[tempPreviousRow]
+                    //         .breakNumber;
+                    //     removeObject.fpcTime2 = controller
+                    //         .mainCommercialShowDetailsList?[tempPreviousRow]
+                    //         .fpcTime2;
+                    //     removeObject.fpcTime = controller
+                    //         .mainCommercialShowDetailsList?[tempPreviousRow]
+                    //         .fpcTime;
+
+                    //     controller.mainCommercialShowDetailsList!
+                    //         .insert(toRowNumberPreviousRow, removeObject);
+                    //   }
+
+                    //   for (var i = 0;
+                    //       i <
+                    //           (controller
+                    //                   .mainCommercialShowDetailsList?.length ??
+                    //               0);
+                    //       i++) {
+                    //     controller.mainCommercialShowDetailsList?[i].rownumber =
+                    //         i;
+                    //   }
+                    //   print("Loop is done.");
+                    // } catch (e) {
+                    //   LoadingDialog.showErrorDialog(e.toString());
+                    // }
+
+                    controller.previousScrollOffset =
+                        controller.gridStateManager!.scroll.verticalOffset;
+
                     try {
-                      // fpcTime
+                      if (controller.gridStateManager?.rows[onRowMoved.idx]
+                              .cells['eventType']?.value
+                              .toString()
+                              .trim() ==
+                          "S") {
+                      } else {
+                        int? rownumber = int.tryParse(controller
+                                .gridStateManager
+                                ?.rows[onRowMoved.idx]
+                                .cells['rownumber']
+                                ?.value
+                                .toString() ??
+                            "0");
+                        int? moveRowNumber = controller
+                            .showCommercialDetailsList?[onRowMoved.idx]
+                            .rownumber;
 
-                      int? fromRowNumber;
-                      int? toRowNumberPreviousRow;
+                        int? oldIdx, newIdx;
+                        for (var i = 0;
+                            i <
+                                (controller.mainCommercialShowDetailsList
+                                        ?.length ??
+                                    0);
+                            i++) {
+                          if (controller.mainCommercialShowDetailsList?[i]
+                                  .rownumber ==
+                              rownumber) {
+                            oldIdx = i;
+                          }
+                          if (controller.mainCommercialShowDetailsList?[i]
+                                  .rownumber ==
+                              moveRowNumber) {
+                            newIdx = i;
+                          }
+                        }
+                        if (oldIdx != null && newIdx != null) {
+                          var removedObject = controller
+                              .mainCommercialShowDetailsList
+                              ?.removeAt(oldIdx);
+                          if (removedObject != null) {
+                            removedObject.breakNumber = controller
+                                .mainCommercialShowDetailsList?[newIdx - 1]
+                                .breakNumber;
+                            removedObject.fpcTime2 = controller
+                                .mainCommercialShowDetailsList?[newIdx - 1]
+                                .fpcTime2;
+                            removedObject.fpcTime = controller
+                                .mainCommercialShowDetailsList?[newIdx - 1]
+                                .fpcTime;
+                            controller.mainCommercialShowDetailsList
+                                ?.insert(newIdx, removedObject);
+                          }
+                        }
 
-                      fromRowNumber = controller.showCommercialDetailsList
-                          ?.firstWhere((element) =>
-                              element.rownumber ==
-                              int.tryParse(onRowMoved
-                                  .rows.first.cells['rownumber']?.value))
-                          .rownumber;
-
-                      toRowNumberPreviousRow = int.tryParse(controller
-                          .gridStateManager!
-                          .refRows[
-                              (onRowMoved.idx == 0) ? 0 : onRowMoved.idx - 1]
-                          .cells['rownumber']
-                          ?.value);
-
-                      // print(
-                      //     "From Row Number: $fromRowNumber   To Row Number:$toRowNumberPreviousRow");
-
-                      for (var i = 0;
-                          i <
-                              (controller.gridStateManager?.refRows.length ??
-                                  0);
-                          i++) {
-                        controller.gridStateManager?.changeCellValue(
-                          controller.gridStateManager!
-                              .getRowByIdx(i)!
-                              .cells['rownumber']!,
-                          i.toString(),
-                          callOnChangedEvent: false,
-                          force: true,
-                          notify: false,
-                        );
+                        for (var i = 0;
+                            i <
+                                (controller.mainCommercialShowDetailsList
+                                        ?.length ??
+                                    0);
+                            i++) {
+                          controller
+                              .mainCommercialShowDetailsList?[i].rownumber = i;
+                        }
                       }
-
-                      var removeObject = controller
-                          .mainCommercialShowDetailsList
-                          ?.removeAt(fromRowNumber!);
-
-                      if (removeObject != null) {
-                        removeObject.breakNumber = controller
-                            .mainCommercialShowDetailsList?[
-                                toRowNumberPreviousRow!]
-                            .breakNumber;
-                        removeObject.fpcTime2 = controller
-                            .mainCommercialShowDetailsList?[
-                                toRowNumberPreviousRow!]
-                            .fpcTime2;
-                        removeObject.fpcTime = controller
-                            .mainCommercialShowDetailsList?[
-                                toRowNumberPreviousRow!]
-                            .fpcTime;
-                        controller.mainCommercialShowDetailsList!
-                            .insert(toRowNumberPreviousRow! + 1, removeObject);
-                      }
-
-                      for (var i = 0;
-                          i <
-                              (controller
-                                      .mainCommercialShowDetailsList?.length ??
-                                  0);
-                          i++) {
-                        controller.mainCommercialShowDetailsList?[i].rownumber =
-                            i;
-                      }
-                      // print("Loop is done.");
-
-                      controller.gridStateManager?.setCurrentCell(
-                          controller.gridStateManager
-                              ?.getRowByIdx(onRowMoved.idx)
-                              ?.cells['eventType'],
-                          onRowMoved.idx);
                     } catch (e) {
-                      // Get.back();
                       LoadingDialog.showErrorDialog(e.toString());
                     }
-                    // Get.back();
-                    // controller.selectedDDIndex = onRowMoved.idx;
-                    // if (controller.canshowFilterList) {
-                    //   controller.showSelectedProgramList();
-                    // } else {
-                    //   controller.showTabList();
-                    // }
+                    controller.selectedDDIndex = onRowMoved.idx;
+                    if (controller.canshowFilterList) {
+                      controller.showSelectedProgramList();
+                    } else {
+                      controller.showTabList();
+                    }
                   },
                   mode: PlutoGridMode.selectWithOneTap,
                   mapData: controller.showCommercialDetailsList!.value
