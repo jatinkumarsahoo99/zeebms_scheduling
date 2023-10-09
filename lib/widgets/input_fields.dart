@@ -31,6 +31,8 @@ import '../app/providers/Utils.dart';
 import 'InputFormatters/input_formatters.dart';
 import 'dart:js' as js;
 
+import 'LoadingDialog.dart';
+
 /// Uppercase text formater
 class WithoutUpperCase extends TextInputFormatter {
   @override
@@ -141,7 +143,17 @@ class InputFields {
               enabled: isEnable ?? true,
               maxLength: maxLen ?? 25,
               autovalidateMode: AutovalidateMode.onUserInteraction,
-              onChanged: (onchanged != null) ? onchanged : null,
+              // onChanged: (onchanged != null) ? onchanged : null,
+              onChanged: (val) {
+                if (onchanged != null) {
+                  onchanged(val);
+                }
+                if (val.contains(RegExp(r'<[^>]*>')) ?? false) {
+                  // return 'Please enter a valid input.';
+                  LoadingDialog.showErrorDialog("Please enter a valid input");
+                  controller.text = "";
+                }
+              },
               textAlignVertical: TextAlignVertical.center,
               keyboardType: TextInputType.datetime,
               textAlign: TextAlign.left,
@@ -246,7 +258,17 @@ class InputFields {
             enabled: isEnable ?? true,
             maxLength: maxLen ?? 25,
             autovalidateMode: AutovalidateMode.onUserInteraction,
-            onChanged: (onchanged != null) ? onchanged : null,
+            // onChanged: (onchanged != null) ? onchanged : null,
+            onChanged: (val) {
+              if (onchanged != null) {
+                onchanged(val);
+              }
+              if (val.contains(RegExp(r'<[^>]*>')) ?? false) {
+                // return 'Please enter a valid input.';
+                LoadingDialog.showErrorDialog("Please enter a valid input");
+                controller.text = "";
+              }
+            },
             textAlignVertical: TextAlignVertical.center,
             keyboardType: TextInputType.datetime,
             textAlign: TextAlign.left,
@@ -385,7 +407,17 @@ class InputFields {
             enabled: isEnable ?? true,
             maxLength: maxLen ?? 25,
             autovalidateMode: AutovalidateMode.onUserInteraction,
-            onChanged: (onchanged != null) ? onchanged : null,
+            // onChanged: (onchanged != null) ? onchanged : null,
+            onChanged: (val) {
+              if (onchanged != null) {
+                onchanged(val);
+              }
+              if (val.contains(RegExp(r'<[^>]*>')) ?? false) {
+                // return 'Please enter a valid input.';
+                LoadingDialog.showErrorDialog("Please enter a valid input");
+                controller.text = "";
+              }
+            },
             textAlignVertical: TextAlignVertical.center,
             keyboardType: TextInputType.datetime,
             textAlign: TextAlign.left,
@@ -502,7 +534,17 @@ class InputFields {
             maxLength: maxLen ?? 25,
             validator: validator,
             autovalidateMode: AutovalidateMode.onUserInteraction,
-            onChanged: (onchanged != null) ? onchanged : null,
+            // onChanged: (onchanged != null) ? onchanged : null,
+            onChanged: (val) {
+              if (onchanged != null) {
+                onchanged(val);
+              }
+              if (val.contains(RegExp(r'<[^>]*>')) ?? false) {
+                // return 'Please enter a valid input.';
+                LoadingDialog.showErrorDialog("Please enter a valid input");
+                controller.text = "";
+              }
+            },
             textAlignVertical: TextAlignVertical.center,
             keyboardType: TextInputType.datetime,
             textAlign: TextAlign.left,
@@ -665,6 +707,11 @@ class InputFields {
               if (onChange != null) {
                 onChange(val);
               }
+              if (val.contains(RegExp(r'<[^>]*>')) ?? false) {
+                // return 'Please enter a valid input.';
+                LoadingDialog.showErrorDialog("Please enter a valid input");
+                controller.text = "";
+              }
             },
             decoration: InputDecoration(
                 errorBorder: InputBorder.none,
@@ -762,6 +809,11 @@ class InputFields {
               if (onChange != null) {
                 onChange(val);
               }
+              if (val.contains(RegExp(r'<[^>]*>')) ?? false) {
+                // return 'Please enter a valid input.';
+                LoadingDialog.showErrorDialog("Please enter a valid input");
+                controller.text = "";
+              }
             },
             decoration: InputDecoration(
                 errorBorder: InputBorder.none,
@@ -853,6 +905,11 @@ class InputFields {
             onChanged: (val) {
               if (onChange != null) {
                 onChange(val);
+              }
+              if (val.contains(RegExp(r'<[^>]*>')) ?? false) {
+                // return 'Please enter a valid input.';
+                LoadingDialog.showErrorDialog("Please enter a valid input");
+                controller.text = "";
               }
             },
             decoration: InputDecoration(
@@ -2440,7 +2497,17 @@ class InputFields {
 
           width: Get.width * widthRatio,
           child: TextFormField(
-            onChanged: onchanged,
+            // onChanged: onchanged,
+            onChanged: (val) {
+              if (onchanged != null) {
+                onchanged(val);
+              }
+              if (val.contains(RegExp(r'<[^>]*>')) ?? false) {
+                // return 'Please enter a valid input.';
+                LoadingDialog.showErrorDialog("Please enter a valid input");
+                controller.text = "";
+              }
+            },
             // textAlignVertical: TextAlignVertical.center,
             // textAlign: TextAlign.left,
             minLines: minlines,
@@ -2859,6 +2926,7 @@ class InputFields {
             style: TextStyle(fontSize: 12, color: Colors.grey.shade600),
             onChanged: (v) {
               onChange!(v);
+
             },
             inputFormatters: [
               LengthLimitingTextInputFormatter(
