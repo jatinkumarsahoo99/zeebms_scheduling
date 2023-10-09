@@ -117,7 +117,7 @@ class TransmissionLogController extends GetxController {
   RxList<DropDownValue>? listTapeDetailsSegment = RxList([]);
 
   TransmissionLogModel? transmissionLog;
-  PlutoGridMode selectedPlutoGridMode = PlutoGridMode.multiSelect;
+  PlutoGridMode selectedPlutoGridMode = PlutoGridMode.normal;
   int? selectedIndex;
   RxnString verifyType = RxnString();
   RxList<DropDownValue> listLocation = RxList([]);
@@ -4034,15 +4034,8 @@ class TransmissionLogController extends GetxController {
         canDialogShow.value = false;
       }
     } else if (raw is RawKeyDownEvent &&
-        raw.logicalKey == LogicalKeyboardKey.escape) {
-      print("Escape call");
-      if (dialogWidget != null) {
-        dialogWidget = null;
-        canDialogShow.value = false;
-      }
-    } else if (raw is RawKeyDownEvent &&
         raw.logicalKey == LogicalKeyboardKey.delete) {
-      print("Escape call");
+      print("Delete call");
       deleteMultiple();
     } else if (raw is RawKeyDownEvent && raw.character?.toLowerCase() == "y") {
       if (completerDialog != null && dialogWidget != null) {
@@ -4080,6 +4073,8 @@ class TransmissionLogController extends GetxController {
 
   deleteMultiple() async {
     if ((gridStateManager?.currentSelectingRows.length ?? 0) > 0) {
+      print("Multiple select");
+      List<PlutoRow> deletRows = [];
       for (int i = 0;
           i < (gridStateManager?.currentSelectingRows.length ?? 0);
           i++) {
@@ -4087,12 +4082,17 @@ class TransmissionLogController extends GetxController {
         bool? isYes = await showDialogForYesNo1(
             "Want to delete selected record?\nEvent type: ${row?.cells["eventType"]?.value ?? ""}\nDuration: ${row?.cells["tapeduration"]?.value ?? ""}\nExportTapeCode: ${row?.cells["exportTapeCode"]?.value ?? ""}\nExportTapeCaption: ${row?.cells["exportTapeCaption"]?.value ?? ""}");
         if (isYes ?? false) {
-          addEventToUndo();
-          gridStateManager?.removeRows([row!]);
+          deletRows.add(row!);
+          // gridStateManager?.removeRows([row!]);
         }
       }
-      colorGrid(false);
+      if (deletRows.length > 0) {
+        gridStateManager?.removeRows(deletRows);
+        addEventToUndo();
+        colorGrid(false);
+      }
     } else {
+      print("Single select");
       if (gridStateManager?.currentRow != null) {
         bool? isYes = await showDialogForYesNo1(
             "Want to delete selected record?\nEvent type: ${gridStateManager?.currentRow?.cells["eventType"]?.value ?? ""}\nDuration: ${gridStateManager?.currentRow?.cells["tapeduration"]?.value ?? ""}\nExportTapeCode: ${gridStateManager?.currentRow?.cells["exportTapeCode"]?.value ?? ""}\nExportTapeCaption: ${gridStateManager?.currentRow?.cells["exportTapeCaption"]?.value ?? ""}");
