@@ -316,7 +316,7 @@ class TransmissionLogView extends StatelessWidget {
                                         fontSize: SizeDefine.labelSize1,
                                         fontWeight: FontWeight.w600),
                                   ),
-                                )),
+                                ),),
 
                           ],
                         ),
@@ -1615,7 +1615,7 @@ class TransmissionLogView extends StatelessWidget {
               ),
             ),
             SizedBox(
-              height: Get.height * 0.75,
+              height: Get.height * 0.84,
               child: SingleChildScrollView(
                 child: SizedBox(
                   width: Get.width * 0.45,
