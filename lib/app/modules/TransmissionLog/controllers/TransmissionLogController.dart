@@ -142,6 +142,7 @@ class TransmissionLogController extends GetxController {
 
   ExportFPCTimeModel? exportFPCTime;
   RxString lastSavedLoggedUser = RxString("");
+  RxString transmissionTime = RxString("00:00:00:00");
   bool isBackDated = false;
   List<PlutoRow> listCutCopy = [];
 
@@ -4104,6 +4105,29 @@ class TransmissionLogController extends GetxController {
       } else {
         LoadingDialog.callInfoMessage("Nothing is selected");
       }
+    }
+  }
+
+  calculateTotalTransmissionTime() {
+    print("Total transmission time called");
+    if (gridStateManager == null) {
+      return;
+    }
+    if ((gridStateManager?.currentSelectingRows.length ?? 0) > 0) {
+      num? totalTransmissionTime = 0;
+      gridStateManager?.currentSelectingRows.forEach((element) {
+        totalTransmissionTime = totalTransmissionTime! +
+            Utils.oldBMSConvertToSecondsValue(
+                value: element.cells["tapeduration"]?.value.toString() ?? "");
+      });
+      transmissionTime.value =
+          Utils.convertToTimeFromDouble(value: totalTransmissionTime!);
+    } else {
+      transmissionTime.value = Utils.convertToTimeFromDouble(
+          value: Utils.oldBMSConvertToSecondsValue(
+              value: gridStateManager?.currentRow?.cells["tapeduration"]?.value
+                      .toString() ??
+                  "")!);
     }
   }
 }

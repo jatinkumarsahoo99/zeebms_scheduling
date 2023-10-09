@@ -310,11 +310,14 @@ class TransmissionLogView extends StatelessWidget {
                                     top: 15.0,
                                   ),
                                   child: Text(
-                                    controller.lastSavedLoggedUser.value ??
-                                        "",
+                                    (controller.lastSavedLoggedUser.value ??
+                                        "") + " \n" +
+                                        (controller.transmissionTime.value ??
+                                            ""),
                                     style: TextStyle(
                                         fontSize: SizeDefine.labelSize1,
                                         fontWeight: FontWeight.w600),
+                                    textAlign: TextAlign.start,
                                   ),
                                 ),),
 
@@ -416,6 +419,9 @@ class TransmissionLogView extends StatelessWidget {
                                 loadevent.stateManager;
                             loadevent.stateManager
                                 .setGridMode(PlutoGridMode.normal);
+                            loadevent.stateManager.onSelectCellCallback = () {
+                              controller.calculateTotalTransmissionTime();
+                            };
                             // loadevent.stateManager.setSelecting(true);
                             loadevent.stateManager.setSelectingMode(
                                 PlutoGridSelectingMode.row);
