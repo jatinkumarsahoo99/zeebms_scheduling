@@ -155,6 +155,8 @@ class PlutoGridStateChangeNotifier extends PlutoChangeNotifier
   @override
   final GlobalKey gridKey;
 
+  Function()? onSelectCellCallback;
+
   void _initialize() {
     PlutoGridStateManager.initializeRows(
       refColumns.originalList,

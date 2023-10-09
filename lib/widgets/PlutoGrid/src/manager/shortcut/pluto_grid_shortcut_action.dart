@@ -225,6 +225,9 @@ class PlutoGridActionMoveSelectedCellFocusByPage
     rowIdx += direction.isUp ? -moveCount : moveCount;
 
     stateManager.moveSelectingCellByRowIdx(rowIdx, direction);
+    if (stateManager.onSelectCellCallback != null) {
+      stateManager.onSelectCellCallback!();
+    }
   }
 }
 
