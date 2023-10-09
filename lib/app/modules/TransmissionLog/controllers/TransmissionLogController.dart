@@ -3997,6 +3997,7 @@ class TransmissionLogController extends GetxController {
 
   keyBoardHander(RawKeyEvent raw) {
     print("RAw is.>>>" + raw.toString());
+    if (gridStateManager == null) return;
     if (raw is RawKeyDownEvent &&
         raw.isControlPressed &&
         raw.character?.toLowerCase() == "c") {
@@ -4053,14 +4054,15 @@ class TransmissionLogController extends GetxController {
     } else {
       switch (raw.logicalKey.keyLabel) {
         case "F3":
-          if (gridStateManager != null) {
-            cutCopy(isCut: false, row: gridStateManager?.currentRow);
-          }
+          // cutCopy(isCut: false, row: gridStateManager?.currentRow);
+          cutCopy1(
+            isCut: false,
+          );
           break;
         case "F2":
-          if (gridStateManager != null) {
-            cutCopy(isCut: true, row: gridStateManager?.currentRow);
-          }
+          cutCopy1(
+            isCut: true,
+          );
           break;
         case "F4":
           paste(gridStateManager?.currentRowIdx);
