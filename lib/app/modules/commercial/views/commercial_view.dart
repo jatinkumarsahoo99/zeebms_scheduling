@@ -560,91 +560,54 @@ class CommercialView extends StatelessWidget {
                     }
                   },
                   onRowsMoved: (PlutoGridOnRowsMovedEvent onRowMoved) {
-                    // try {
-                    //   // fpcTime
+                    // int foundIdx = -1;
+                    //   int rowNumber = int.tryParse(
+                    //           onRowMoved.rows.first.cells['rownumber']?.value ??
+                    //               -1) ??
+                    //       -1;
+                    //   for (var i = 0;
+                    //       i < (controller.mainCommercialShowDetailsList!.length);
+                    //       i++) {
+                    //     if (rowNumber ==
+                    //         controller
+                    //             .mainCommercialShowDetailsList![i].rownumber) {
+                    //       foundIdx = i;
+                    //       break;
+                    //     }
+                    //   }
+
+                    //   var removeObject = controller.mainCommercialShowDetailsList!
+                    //       .removeAt(foundIdx);
+
+                    //   int toIdx = -1;
+
+                    //   var toRowNumberPreviousRowOrNextRow = int.tryParse(
+                    //       controller
+                    //           .gridStateManager!
+                    //           .refRows[(onRowMoved.idx == 0)
+                    //               ? onRowMoved.idx + 1
+                    //               : onRowMoved.idx - 1]
+                    //           .cells['rownumber']
+                    //           ?.value);
+
+                    //   toIdx = controller.mainCommercialShowDetailsList!
+                    //       .indexWhere((element) =>
+                    //           element.rownumber ==
+                    //           toRowNumberPreviousRowOrNextRow);
+
+                    //   controller.mainCommercialShowDetailsList
+                    //       ?.insert(toIdx, removeObject);
+
                     //   controller.gridStateManager?.setCurrentCell(
                     //       controller.gridStateManager
                     //           ?.getRowByIdx(onRowMoved.idx)
                     //           ?.cells['eventType'],
                     //       onRowMoved.idx);
+                    //   controller.previousScrollOffset =
+                    //       controller.gridStateManager!.scroll.verticalOffset;
+                    //   controller.selectedDDIndex = onRowMoved.idx;
 
-                    //   int? fromRowNumber;
-                    //   int? toRowNumberPreviousRow;
-
-                    //   fromRowNumber = controller.showCommercialDetailsList
-                    //       ?.firstWhere((element) =>
-                    //           element.rownumber ==
-                    //           int.tryParse(onRowMoved
-                    //               .rows.first.cells['rownumber']?.value))
-                    //       .rownumber;
-
-                    //   // toRowNumberPreviousRow = int.tryParse(controller
-                    //   //     .gridStateManager!
-                    //   //     .refRows[
-                    //   //         (onRowMoved.idx == 0) ? 0 : onRowMoved.idx - 1]
-                    //   //     .cells['rownumber']
-                    //   //     ?.value);
-
-                    //   // for (var i = 0;
-                    //   //     i <
-                    //   //         (controller.gridStateManager?.refRows.length ??
-                    //   //             0);
-                    //   //     i++) {
-                    //   //   controller.gridStateManager?.changeCellValue(
-                    //   //     controller.gridStateManager!
-                    //   //         .getRowByIdx(i)!
-                    //   //         .cells['rownumber']!,
-                    //   //     i.toString(),
-                    //   //     callOnChangedEvent: false,
-                    //   //     force: true,
-                    //   //     notify: false,
-                    //   //   );
-                    //   // }
-
-                    //   toRowNumberPreviousRow = int.tryParse(controller
-                    //       .gridStateManager!
-                    //       .refRows[onRowMoved.idx]
-                    //       .cells['rownumber']
-                    //       ?.value);
-
-                    //   print(
-                    //       "From Row Number: $fromRowNumber   To Row Number:${toRowNumberPreviousRow!}");
-
-                    //   var removeObject = controller
-                    //       .mainCommercialShowDetailsList
-                    //       ?.removeAt(fromRowNumber!);
-
-                    //   if (removeObject != null) {
-                    //     var tempPreviousRow = toRowNumberPreviousRow == 0
-                    //         ? toRowNumberPreviousRow + 1
-                    //         : toRowNumberPreviousRow - 1;
-                    //     removeObject.breakNumber = controller
-                    //         .mainCommercialShowDetailsList?[tempPreviousRow]
-                    //         .breakNumber;
-                    //     removeObject.fpcTime2 = controller
-                    //         .mainCommercialShowDetailsList?[tempPreviousRow]
-                    //         .fpcTime2;
-                    //     removeObject.fpcTime = controller
-                    //         .mainCommercialShowDetailsList?[tempPreviousRow]
-                    //         .fpcTime;
-
-                    //     controller.mainCommercialShowDetailsList!
-                    //         .insert(toRowNumberPreviousRow, removeObject);
-                    //   }
-
-                    //   for (var i = 0;
-                    //       i <
-                    //           (controller
-                    //                   .mainCommercialShowDetailsList?.length ??
-                    //               0);
-                    //       i++) {
-                    //     controller.mainCommercialShowDetailsList?[i].rownumber =
-                    //         i;
-                    //   }
-                    //   print("Loop is done.");
-                    // } catch (e) {
-                    //   LoadingDialog.showErrorDialog(e.toString());
-                    // }
+                    //// ---------- Working code
 
                     controller.previousScrollOffset =
                         controller.gridStateManager!.scroll.verticalOffset;

@@ -43,6 +43,11 @@ class PlutoGridCellGestureEvent extends PlutoGridEvent {
   }
 
   void _onTapUp(PlutoGridStateManager stateManager) {
+    if (stateManager.onSelectCellCallback != null) {
+      WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
+        stateManager.onSelectCellCallback!();
+      });
+    }
     if (_setKeepFocusAndCurrentCell(stateManager)) {
       return;
     } else if (stateManager.isSelectingInteraction()) {
