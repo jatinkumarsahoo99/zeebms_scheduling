@@ -1,3 +1,5 @@
+import 'dart:math';
+
 import 'package:bms_scheduling/app/controller/ConnectorControl.dart';
 import 'package:bms_scheduling/app/controller/MainController.dart';
 import 'package:bms_scheduling/app/data/DropDownValue.dart';
@@ -322,8 +324,11 @@ class MamWorkOrdersController extends GetxController {
               resp['program_Response'] != null &&
               resp['program_Response']['lstWoCancel'] != null) {
             cwoDataTableList.clear();
+            int i = 0;
             for (var element in resp['program_Response']['lstWoCancel']) {
+              element['rownumber'] = i;
               cwoDataTableList.add(CancelWOModel.fromJson(element));
+              i++;
             }
             cwoDataTableList.refresh();
             if (cwoDataTableList.isEmpty) {
@@ -386,17 +391,35 @@ class MamWorkOrdersController extends GetxController {
     }
   }
 
-  cancelWOViewDataTableDoubleTap(String columnName) {
-    cwoisEnableAll = !cwoisEnableAll;
-    cwoDataTableList.value = cwoDataTableList.map((element) {
-      element.cancelWO = cwoisEnableAll;
-      return element;
-    }).toList();
-  }
+  // cancelWOViewDataTableDoubleTap(String columnName) {
+  //   cwoisEnableAll = !cwoisEnableAll;
+  //   cwoDataTableList.value = cwoDataTableList.map((element) {
+  //     element.cancelWO = cwoisEnableAll;
+  //     return element;
+  //   }).toList();
+  // }
 
   cancelWOViewDataTableEdit(PlutoGridOnChangedEvent event) {
     cwoDataTableList[event.rowIdx].cancelWO =
         event.value.toString().toLowerCase() == "true";
+  }
+
+  cancelWOViewDataTableDoubleTap(PlutoGridOnRowDoubleTapEvent event) {
+    cwoSM?.setCurrentCell(event.cell, event.rowIdx);
+    if (cwoSM != null && event.cell.column.field == "woId") {
+      int rowNumber = int.tryParse(event.row.cells['rownumber']?.value) ?? -1;
+      if (rowNumber != -1) {
+        bool val = cwoDataTableList[rowNumber].cancelWO ?? false;
+        for (var i = 0; i < (cwoDataTableList.length); i++) {
+          if (cwoDataTableList[rowNumber].ep == cwoDataTableList[i].ep) {
+            cwoDataTableList[rowNumber].cancelWO = !val;
+            cwoSM!.changeCellValue(
+                cwoSM!.getRowByIdx(i)!.cells['cancelWO']!, (!val).toString(),
+                force: true, callOnChangedEvent: false, notify: true);
+          }
+        }
+      }
+    }
   }
 
   //////////////////////////////////////// CANCEL WO FUNCTIONALITY END//////////////////////////////////////////
@@ -559,33 +582,11 @@ class MamWorkOrdersController extends GetxController {
       if (nonFPCTxID.text.isEmpty) {
         nonFPCTxID.text = "AUTOID";
       }
-      final dateCtr = TextEditingController();
-      final timeCtr = TextEditingController();
-
-      var epsNo = "".obs, exportTapeCode = "AUTOID".obs;
-      PlutoGridStateManager? gridSM;
-      var selectedRowIdx = 0.obs;
       var isLoading = true;
-
       var textEditingControllersDate = <TextEditingController>[];
       var textEditingControllersTime = <TextEditingController>[];
-
-      // handleSelectTap(int rowIdx) {
-      //   selectedRowIdx.value = rowIdx;
-      //   dateCtr.text = DateFormat("dd-MM-yyyy").format(
-      //       DateFormat('yyyy-MM-ddThh:mm:ss')
-      //           .parse(segmentsList[selectedRowIdx.value].telecastDate ?? ""));
-      //   timeCtr.text = segmentsList[selectedRowIdx.value].telecastTime ?? "";
-      //   epsNo.value =
-      //       (segmentsList[selectedRowIdx.value].epsNo ?? '').toString();
-      //   exportTapeCode.value =
-      //       (segmentsList[selectedRowIdx.value].exportTapeCode ?? '')
-      //           .toString();
-      // }
-
       if (!fromBtnClick) {
         segmentsList.value = [];
-
         try {
           Get.find<ConnectorControl>().GETMETHODCALL(
             api: ApiFactory.MAM_WORK_ORDER_NON_FPC_GETSEGMENTSOn_TELECAST_LEAVE(
@@ -636,8 +637,6 @@ class MamWorkOrdersController extends GetxController {
               .add(TextEditingController(text: segmentsList[i].telecastDate));
           textEditingControllersTime
               .add(TextEditingController(text: segmentsList[i].telecastTime));
-          // segmentsList[i].telecastDate = textEditingControllersDate[i].text;
-          // segmentsList[i].telecastTime = textEditingControllersTime[i].text;
         }
         isLoading = false;
         segmentsList.refresh();
@@ -660,150 +659,67 @@ class MamWorkOrdersController extends GetxController {
         content: SizedBox(
           width: Get.width * .55,
           height: Get.height * .6,
-          child: Column(
-            mainAxisSize: MainAxisSize.min,
-            children: [
-              // Wrap(
-              //   spacing: 10,
-              //   runSpacing: 5,
-              //   // runAlignment: WrapAlignment.end,
-              //   crossAxisAlignment: WrapCrossAlignment.end,
-              //   children: [
-              //     DateWithThreeTextField(
-              //         title: 'Telecast Date', mainTextController: dateCtr),
-              //     TimeWithThreeTextField(
-              //         title: 'Telecast Time', mainTextController: timeCtr),
-              //     FormButton(
-              //       btnText: "Update",
-              //       callback: () {
-              //         segmentsList[selectedRowIdx.value].telecastTime =
-              //             timeCtr.text;
-              //         segmentsList[selectedRowIdx.value].telecastDate =
-              //             DateFormat('yyyy-MM-ddT00:00:00').format(
-              //                 DateFormat('dd-MM-yyyy').parse(dateCtr.text));
-              //         // dateCtr.clear();
-              //         // timeCtr.clear();
-              //         // timeCtr.text = '00:00:00';
-              //         segmentsList.refresh();
-              //       },
-              //     ),
-              //     Row(),
-              //     Row(
-              //       mainAxisSize: MainAxisSize.min,
-              //       children: [
-              //         Text(
-              //           'Eps No: ',
-              //           style: TextStyle(
-              //               fontWeight: FontWeight.w700, fontSize: 13),
-              //         ),
-              //         SizedBox(width: 5),
-              //         Obx(() {
-              //           return Text(
-              //             epsNo.value,
-              //             style: TextStyle(fontSize: 11),
-              //           );
-              //         }),
-              //       ],
-              //     ),
-              //     Row(
-              //       mainAxisSize: MainAxisSize.min,
-              //       children: [
-              //         Text(
-              //           'Export Tape Code: ',
-              //           style: TextStyle(
-              //               fontWeight: FontWeight.w700, fontSize: 13),
-              //         ),
-              //         SizedBox(width: 5),
-              //         Obx(() {
-              //           return Text(
-              //             exportTapeCode.value,
-              //             style: TextStyle(fontSize: 11),
-              //           );
-              //         }),
-              //       ],
-              //     ),
-              //     Row(
-              //       mainAxisSize: MainAxisSize.min,
-              //       children: [
-              //         Text(
-              //           'Selected Row No: ',
-              //           style: TextStyle(
-              //               fontWeight: FontWeight.w700, fontSize: 13),
-              //         ),
-              //         SizedBox(width: 5),
-              //         Obx(() {
-              //           return Text(
-              //             (selectedRowIdx.value + 1).toString(),
-              //             style: TextStyle(fontSize: 11),
-              //           );
-              //         }),
-              //       ],
-              //     ),
-              //   ],
-              // ),
-
-              Expanded(
-                child: Obx(() {
-                  return Container(
-                    margin: const EdgeInsets.symmetric(vertical: 10),
-                    decoration: segmentsList.value.isEmpty
-                        ? BoxDecoration(border: Border.all(color: Colors.grey))
-                        : null,
-                    child: (segmentsList.isEmpty)
-                        ? isLoading
-                            ? const Center(child: CircularProgressIndicator())
-                            : null
-                        : DataGridFromMap3(
-                            rowHeight: 35,
-                            customWidgetInRenderContext: {
-                              "telecastDate": (renderContext) {
-                                return DateWithThreeTextField(
-                                  title: "",
-                                  widthRation: .1,
-                                  mainTextController:
-                                      textEditingControllersDate[
-                                          renderContext.rowIdx],
-                                  hideTitle: true,
-                                );
-                              },
-                              "telecastTime": (renderContext) {
-                                return TimeWithThreeTextField(
-                                  title: "",
-                                  widthRation: .1,
-                                  mainTextController:
-                                      textEditingControllersTime[
-                                          renderContext.rowIdx],
-                                  hideTitle: true,
-                                );
-                              },
-                            },
-                            mapData: segmentsList.value
-                                .map((e) => e.toJson())
-                                .toList(),
-                            mode: PlutoGridMode.selectWithOneTap,
-                            hideCode: false,
-                            columnAutoResize: true,
-                            // onload: (sm) {
-                            //   // gridSM = sm.stateManager;
-                            //   // gridSM?.setCurrentCell(
-                            //   //     sm.stateManager
-                            //   //         .getRowByIdx(selectedRowIdx.value)!
-                            //   //         .cells['telecastDate'],
-                            //   //     selectedRowIdx.value);
-                            //   // handleSelectTap(selectedRowIdx.value);
-                            // },
-                            // onSelected: (event) {
-                            //   // handleSelectTap(event.rowIdx ?? 0);
-                            // },
-                            // onRowDoubleTap: (event) {
-                            //   // handleSelectTap(event.rowIdx);
-                            //   // gridSM?.setCurrentCell(event.cell, event.rowIdx);
-                            // },
-                          ),
-                  );
-                }),
-              )
-            ],
+          child: Expanded(
+            child: Obx(() {
+              return Container(
+                margin: const EdgeInsets.symmetric(vertical: 10),
+                decoration: segmentsList.value.isEmpty
+                    ? BoxDecoration(border: Border.all(color: Colors.grey))
+                    : null,
+                child: (segmentsList.isEmpty)
+                    ? isLoading
+                        ? const Center(child: CircularProgressIndicator())
+                        : null
+                    : DataGridFromMap3(
+                        rowHeight: 35,
+                        editKeys: ['telecastDate', 'telecastTime'],
+                        customWidgetInRenderContext: {
+                          "telecastDate": (renderContext) {
+                            return DateWithThreeTextField(
+                              title: "",
+                              widthRation: .1,
+                              isEnable: true,
+                              mainTextController: textEditingControllersDate[
+                                  renderContext.rowIdx],
+                              hideTitle: true,
+                            );
+                          },
+                          "telecastTime": (renderContext) {
+                            return TimeWithThreeTextField(
+                              title: "",
+                              widthRation: .1,
+                              isEnable: true,
+                              mainTextController: textEditingControllersTime[
+                                  renderContext.rowIdx],
+                              hideTitle: true,
+                            );
+                          },
+                        },
+                        mapData:
+                            segmentsList.value.map((e) => e.toJson()).toList(),
+                        mode: PlutoGridMode.selectWithOneTap,
+                        hideCode: false,
+                        columnAutoResize: true,
+                        onload: (sm) {
+                          // sm.stateManager.setEditing(true);
+                          // gridSM = sm.stateManager;
+                          // gridSM?.setCurrentCell(
+                          //     sm.stateManager
+                          //         .getRowByIdx(selectedRowIdx.value)!
+                          //         .cells['telecastDate'],
+                          //     selectedRowIdx.value);
+                          // handleSelectTap(selectedRowIdx.value);
+                        },
+                        // onSelected: (event) {
+                        //   // handleSelectTap(event.rowIdx ?? 0);
+                        // },
+                        // onRowDoubleTap: (event) {
+                        //   // handleSelectTap(event.rowIdx);
+                        //   // gridSM?.setCurrentCell(event.cell, event.rowIdx);
+                        // },
+                      ),
+              );
+            }),
           ),
         ),
       ).then((value) {
@@ -859,6 +775,11 @@ class MamWorkOrdersController extends GetxController {
     // } else
     {
       // LoadingDialog.call();
+      if (!nonFPCWOReleaseTXID) {
+        print("Check box is not check adding AUTOID");
+        nonFPCTxID.text = "AUTOID";
+        return;
+      }
       Get.find<ConnectorControl>().POSTMETHOD(
         api: ApiFactory.MAM_WORK_ORDER_NON_FPC_GETTXID,
         fun: (resp) {
@@ -1011,9 +932,9 @@ class MamWorkOrdersController extends GetxController {
         try {
           if (nonFPCWOReleaseTXID) {
             bool foundDublicateVal = false;
-            if (segmentsList.isEmpty) {
-              foundDublicateVal = true;
-            }
+            // if (segmentsList.isEmpty) {
+            //   foundDublicateVal = true;
+            // }
 
             for (var i = 0; i < segmentsList.length; i++) {
               for (var j = 0; j < segmentsList.length; j++) {
@@ -1047,7 +968,18 @@ class MamWorkOrdersController extends GetxController {
                   resp is Map<String, dynamic> &&
                   resp['program_Response'] != null) {
                 if (resp['program_Response']['strMessage'] != null) {
-                  showMsgDialogSuccess(resp['program_Response']['strMessage']);
+                  showMsgDialogSuccess2(resp['program_Response']['strMessage'],
+                      () {
+                    Future.delayed(Duration(milliseconds: 400)).then((value) {
+                      multiPleSegmentsDialog();
+                      Future.delayed(const Duration(milliseconds: 800))
+                          .then((value) {
+                        nonFPCWOReleaseTXID = false;
+                        onloadData.refresh();
+                      });
+                    });
+                  });
+
                   // for (var element in resp['program_Response']['strMessage']) {
                   //   await Get.defaultDialog(
                   //     title: "",
@@ -1279,10 +1211,28 @@ class MamWorkOrdersController extends GetxController {
           msg: msgList.last,
           callback: () {
             msgList.removeLast();
+            print(msgList.length);
             showMsgDialogSuccess(msgList);
           });
     } else {
       print("showMsgDialogSuccess");
+      return;
+    }
+  }
+
+  showMsgDialogSuccess2(List<dynamic> msgList, Function() callBack) {
+    msgList = msgList.reversed.toList();
+    if (msgList.isNotEmpty) {
+      LoadingDialog.callDataSaved(
+          msg: msgList.last,
+          callback: () {
+            msgList.removeLast();
+            if (msgList.isEmpty) {
+              callBack();
+            }
+            showMsgDialogSuccess2(msgList, callBack);
+          });
+    } else {
       return;
     }
   }
