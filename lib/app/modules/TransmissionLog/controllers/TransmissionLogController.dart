@@ -752,18 +752,39 @@ class TransmissionLogController extends GetxController {
       "no": PlutoCell(value: 0),
     });
     return rowData;
-    // if (insertRowId == 0) insertRowId = -1;
-    // gridStateManager.rows.insertAt(dr, InsertRow + 1);
-    print("Row val=>>" + insertRowId.toString());
-    // gridStateManager?.appendNewRows();
-    gridStateManager?.insertRows(0, [rowData]);
-    // gridStateManager?.insertRows(insertRowId, [dr]);
-    // dt.acceptChanges();
-    colorGrid(false);
-    // UnSelectAllRows(gridStateManager);
-    // gridStateManager.firstDisplayedScrollingRowIndex = intCurrentRowIndex[3];
-    // gridStateManager.rows[intRowIndex].selected = true;
-    // gridStateManager.currentCell = gridStateManager.rows[intRowIndex].cells[1];
+  }
+
+
+  PlutoRow insertReplicatePlutoRow(
+      {required PlutoRow row}) {
+    PlutoRow rowData = PlutoRow(cells: {
+      "fpCtime": PlutoCell(value: row.cells["fpCtime"]?.value),
+      "transmissionTime": PlutoCell(value: row.cells["transmissionTime"]?.value),
+      "exportTapeCode": PlutoCell(value: row.cells["exportTapeCode"]?.value),
+      "exportTapeCaption": PlutoCell(value: row.cells["exportTapeCaption"]?.value),
+      "tapeduration": PlutoCell(value: row.cells["tapeduration"]?.value),
+      "som": PlutoCell(value: row.cells["som"]?.value),
+      "breakNumber": PlutoCell(value: row.cells["breakNumber"]?.value),
+      "episodeNumber": PlutoCell(value: row.cells["episodeNumber"]?.value),
+      "breakEvent": PlutoCell(value: row.cells["breakEvent"]?.value),
+      "rownumber": PlutoCell(value: row.cells["rownumber"]?.value),
+      "eventType": PlutoCell(value: row.cells["eventType"]?.value),
+      "bookingNumber": PlutoCell(value: row.cells["bookingNumber"]?.value),
+      "bookingdetailcode": PlutoCell(value: row.cells["bookingdetailcode"]?.value),
+      "scheduleTime": PlutoCell(value: row.cells["scheduleTime"]?.value),
+      "productName": PlutoCell(value: row.cells["productName"]?.value),
+      "rosTimeBand": PlutoCell(value: row.cells["rosTimeBand"]?.value),
+      "client": PlutoCell(value: row.cells["client"]?.value),
+      "promoTypecode": PlutoCell(value: row.cells["promoTypecode"]?.value),
+      "datechange": PlutoCell(value: row.cells["datechange"]?.value),
+      "productGroup": PlutoCell(value: row.cells["productGroup"]?.value),
+      "longCaption": PlutoCell(value: row.cells["longCaption"]?.value),
+      "productname_Font": PlutoCell(value: row.cells["productname_Font"]?.value),
+      "exporttapecode_Font": PlutoCell(value: row.cells["exporttapecode_Font"]?.value),
+      "rosTimeBand_Font": PlutoCell(value: row.cells["rosTimeBand_Font"]?.value),
+      "no": PlutoCell(value: 0),
+    });
+    return rowData;
   }
 
   Future<void> btnReplace_Click() async {
@@ -1953,6 +1974,95 @@ class TransmissionLogController extends GetxController {
   }
 
   void paste2({int rowIndex = 0, Function? fun}) {
+    if (listCutCopy.length == 0) return;
+
+    int intFirstRow;
+    int intFirstRowdisplayIndex;
+    List<PlutoRow> dt = (gridStateManager?.rows)!;
+
+    if (rowIndex > 0) {
+      intCurrentRowIndex[0] = rowIndex;
+    } else {
+      intCurrentRowIndex[0] = gridStateManager?.currentRow?.sortIdx ?? 0;
+    }
+
+    intCurrentRowIndex[1] = int.tryParse(gridStateManager
+                ?.rows[intCurrentRowIndex[0]].cells["rownumber"]?.value ??
+            "0") ??
+        0;
+    intCurrentRowIndex[2] = int.tryParse(gridStateManager
+                ?.rows[intCurrentRowIndex[0]].cells["rownumber"]?.value ??
+            "0") ??
+        0;
+    // intCurrentRowIndex[3] = gridStateManager.firstDisplayedScrollingRowIndex;
+
+    if (lastSelectCutCopyOption != "") {
+      if (lastSelectCutCopyOption == "cut") {
+        if (listCutCopy.any((row) =>
+            (int.tryParse(row.cells["rownumber"]?.value ?? "0") ?? 0) ==
+            intCurrentRowIndex[2])) {
+          return;
+        }
+      }
+
+      addEventToUndo();
+      String strFPCTime;
+      if (intCurrentRowIndex[0] > 1) {
+        strFPCTime = gridStateManager
+            ?.rows[intCurrentRowIndex[0] - 1].cells["fpCtime"]?.value;
+      } else {
+        strFPCTime = gridStateManager?.rows[0].cells["fpCtime"]?.value;
+      }
+
+      if (lastSelectCutCopyOption == "cut") {
+        for (PlutoRow dr in listCutCopy) {
+          int intRowNumber =
+              int.tryParse(dr.cells["rownumber"]?.value ?? "0") ?? 0;
+          PlutoRow? query = dt.firstWhereOrNull((row) =>
+              (int.tryParse(row.cells["rownumber"]?.value)!) == intRowNumber);
+          if (query != null) {
+            gridStateManager?.removeRows([query]);
+          }
+        }
+      }
+
+      for (PlutoRow ddr in listCutCopy) {
+        PlutoRow dr = insertReplicatePlutoRow(row: ddr);
+        dr.cells["fpCtime"]?.value = strFPCTime;
+
+        if (lastSelectCutCopyOption == "cut") {
+          if ((int.tryParse(dr.cells["rownumber"]?.value ?? "") ?? 0) <
+              intCurrentRowIndex[0]) {
+            intFirstRowdisplayIndex =
+                intCurrentRowIndex[0] - listCutCopy.length;
+            gridStateManager?.insertRows(intFirstRowdisplayIndex, [dr]);
+            intCurrentRowIndex[1] = intFirstRowdisplayIndex;
+          } else {
+            intFirstRowdisplayIndex = intCurrentRowIndex[0];
+            gridStateManager?.insertRows(intFirstRowdisplayIndex, [dr]);
+            // dt.rows.insert(intFirstRowdisplayIndex, dr);
+          }
+        } else {
+          intFirstRowdisplayIndex = intCurrentRowIndex[0];
+          gridStateManager?.insertRows(intFirstRowdisplayIndex, [dr]);
+          // dt.rows.insert(intFirstRowdisplayIndex, dr);
+        }
+      }
+      if (fun != null) {
+        fun();
+      }
+      // dt.acceptChanges();
+
+      if (lastSelectCutCopyOption == "cut") {
+        listCutCopy.clear();
+        lastSelectCutCopyOption = "";
+      }
+    } else {
+      print("There is nothing to paste!");
+    }
+  }
+
+  void paste3({int rowIndex = 0, Function? fun}) {
     if (listCutCopy.length == 0) return;
 
     int intFirstRow;
@@ -4065,7 +4175,12 @@ class TransmissionLogController extends GetxController {
           );
           break;
         case "F4":
-          paste(gridStateManager?.currentRowIdx);
+          // paste(gridStateManager?.currentRowIdx);
+          paste2(
+              rowIndex: (gridStateManager?.currentRowIdx ?? 0),
+              fun: () {
+                colorGrid(false);
+              });
           break;
         case "F5":
           checkVerifyTime();
