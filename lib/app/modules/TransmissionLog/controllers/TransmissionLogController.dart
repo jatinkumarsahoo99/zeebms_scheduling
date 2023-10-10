@@ -601,7 +601,7 @@ class TransmissionLogController extends GetxController {
             selectedDate.text,
             isMine,
             eventType,
-            txId,
+            txId.replaceAll(" ", ","),
             txCaption),
         fun: (map) {
           Get.back();
