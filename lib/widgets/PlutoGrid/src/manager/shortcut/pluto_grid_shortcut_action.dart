@@ -88,10 +88,19 @@ class PlutoGridActionMoveCellFocus extends PlutoGridShortcutAction {
 
     if (stateManager.currentCell == null) {
       stateManager.setCurrentCell(stateManager.firstCell, 0);
+      if (stateManager.onSelectCellCallback != null &&
+          (direction.isUp || direction.isDown)) {
+        stateManager.onSelectCellCallback!();
+      }
       return;
     }
 
     stateManager.moveCurrentCell(direction, force: force);
+
+    if (stateManager.onSelectCellCallback != null &&
+        (direction.isUp || direction.isDown)) {
+      stateManager.onSelectCellCallback!();
+    }
   }
 }
 
@@ -108,13 +117,16 @@ class PlutoGridActionMoveSelectedCellFocus extends PlutoGridShortcutAction {
     required PlutoKeyManagerEvent keyEvent,
     required PlutoGridStateManager stateManager,
   }) {
-    if (stateManager.onSelectCellCallback != null) {
+    if (stateManager.onSelectCellCallback != null &&
+        stateManager.isEditing == true) {
       stateManager.onSelectCellCallback!();
     }
     if (stateManager.isEditing == true) return;
 
     stateManager.moveSelectingCell(direction);
-    if (stateManager.onSelectCellCallback != null) {
+
+    if (stateManager.onSelectCellCallback != null &&
+        (direction.isDown || direction.isUp)) {
       stateManager.onSelectCellCallback!();
     }
   }
@@ -176,11 +188,10 @@ class PlutoGridActionMoveCellFocusByPage extends PlutoGridShortcutAction {
         rowIdx += direction.isUp ? -moveCount : moveCount;
 
         stateManager.moveCurrentCellByRowIdx(rowIdx, direction);
-
+        if (stateManager.onSelectCellCallback != null) {
+          stateManager.onSelectCellCallback!();
+        }
         break;
-    }
-    if (stateManager.onSelectCellCallback != null) {
-      stateManager.onSelectCellCallback!();
     }
   }
 
@@ -222,7 +233,7 @@ class PlutoGridActionMoveSelectedCellFocusByPage
     required PlutoKeyManagerEvent keyEvent,
     required PlutoGridStateManager stateManager,
   }) {
-    if (stateManager.onSelectCellCallback != null) {
+    if (stateManager.onSelectCellCallback != null && direction.horizontal) {
       stateManager.onSelectCellCallback!();
     }
     if (direction.horizontal) return;

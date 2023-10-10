@@ -34,7 +34,9 @@ class ReleaseWoNonFpcView extends GetView {
               children: [
                 DropDownField.formDropDown1WidthMap(
                   controller.onloadData.value.lstcboWorkOrderType ?? [],
-                  (value) => controller.nonFPCSelectedWorkOrderType = value,
+                  (value) {
+                    controller.nonFPCSelectedWorkOrderType = value;
+                  },
                   "Work Order Type",
                   0.24,
                   autoFocus: true,
@@ -151,7 +153,6 @@ class ReleaseWoNonFpcView extends GetView {
                   selected: controller.nonFPCSelectedTelecasteType,
                   inkWellFocusNode: controller.telecasteTypeFN,
                   onFocusChange: (hasFocus) {
-                    print(hasFocus);
                     controller.canRetriveData = hasFocus;
                   },
                   dropdownOpen: (dropDownOpen) {

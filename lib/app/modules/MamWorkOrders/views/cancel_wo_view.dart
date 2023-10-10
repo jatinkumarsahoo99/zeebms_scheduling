@@ -146,13 +146,16 @@ class CancelWoView extends GetView {
                       mapData: controller.cwoDataTableList
                           .map((e) => e.toJson())
                           .toList(),
+                      hideKeys: ['rownumber'],
                       checkBoxStrComparison: true.toString(),
                       uncheckCheckBoxStr: false.toString(),
                       checkBoxColumnKey: ['cancelWO'],
-                      onEdit: controller.cancelWOViewDataTableEdit,
-                      onColumnHeaderDoubleTap:
-                          controller.cancelWOViewDataTableDoubleTap,
-                      enableColumnDoubleTap: ['cancelWO'],
+                      checkBoxColumnNoEditKey: ['cancelWO'],
+                      onRowDoubleTap: controller.cancelWOViewDataTableDoubleTap,
+                      // onEdit: controller.cancelWOViewDataTableEdit,
+                      // onColumnHeaderDoubleTap:
+                      //     controller.cancelWOViewDataTableDoubleTap,
+                      // enableColumnDoubleTap: ['cancelWO'],
                       mode: PlutoGridMode.selectWithOneTap,
                     );
             },
