@@ -142,7 +142,7 @@ class TransmissionLogController extends GetxController {
 
   ExportFPCTimeModel? exportFPCTime;
   RxString lastSavedLoggedUser = RxString("");
-  RxString transmissionTime = RxString("00:00:00:00");
+  RxString totalTransTime = RxString("00:00:00:00");
   bool isBackDated = false;
   List<PlutoRow> listCutCopy = [];
 
@@ -152,7 +152,6 @@ class TransmissionLogController extends GetxController {
   Completer<bool>? completerDialog;
 
   UserDataSettings? userDataSettings;
-  RxnString calculateSelectTranmissionTime = RxnString(null);
 
   @override
   void onInit() {
@@ -602,7 +601,7 @@ class TransmissionLogController extends GetxController {
             selectedDate.text,
             isMine,
             eventType,
-            txId,
+            txId.replaceAll(" ", ","),
             txCaption),
         fun: (map) {
           Get.back();
@@ -2069,7 +2068,6 @@ class TransmissionLogController extends GetxController {
   void paste3({int rowIndex = 0, Function? fun}) {
     if (listCutCopy.length == 0) return;
 
-    int intFirstRow;
     int intFirstRowdisplayIndex;
     List<PlutoRow> dt = (gridStateManager?.rows)!;
 
@@ -2098,7 +2096,7 @@ class TransmissionLogController extends GetxController {
         }
       }
 
-      addEventToUndo();
+
       String strFPCTime;
       if (intCurrentRowIndex[0] > 1) {
         strFPCTime = gridStateManager
@@ -2120,7 +2118,7 @@ class TransmissionLogController extends GetxController {
       }
 
       for (PlutoRow ddr in listCutCopy) {
-        PlutoRow dr = ddr;
+        PlutoRow dr = insertReplicatePlutoRow(row: ddr);
         dr.cells["fpCtime"]?.value = strFPCTime;
 
         if (lastSelectCutCopyOption == "cut") {
@@ -2141,6 +2139,7 @@ class TransmissionLogController extends GetxController {
           // dt.rows.insert(intFirstRowdisplayIndex, dr);
         }
       }
+      addEventToUndo();
       if (fun != null) {
         fun();
       }
@@ -4166,29 +4165,31 @@ class TransmissionLogController extends GetxController {
         completerDialog?.complete(false);
       }
     } else {
-      switch (raw.logicalKey.keyLabel) {
-        case "F3":
+      if(raw is RawKeyDownEvent) {
+        switch (raw.logicalKey.keyLabel) {
+          case "F3":
           // cutCopy(isCut: false, row: gridStateManager?.currentRow);
-          cutCopy1(
-            isCut: false,
-          );
-          break;
-        case "F2":
-          cutCopy1(
-            isCut: true,
-          );
-          break;
-        case "F4":
+            cutCopy1(
+              isCut: false,
+            );
+            break;
+          case "F2":
+            cutCopy1(
+              isCut: true,
+            );
+            break;
+          case "F4":
           // paste(gridStateManager?.currentRowIdx);
-          paste2(
-              rowIndex: (gridStateManager?.currentRowIdx ?? 0),
-              fun: () {
-                colorGrid(false);
-              });
-          break;
-        case "F5":
-          checkVerifyTime();
-          break;
+            paste2(
+                rowIndex: (gridStateManager?.currentRowIdx ?? 0),
+                fun: () {
+                  colorGrid(false);
+                });
+            break;
+          case "F5":
+            checkVerifyTime();
+            break;
+        }
       }
     }
   }
@@ -4198,13 +4199,11 @@ class TransmissionLogController extends GetxController {
       print("Multiple select");
       List<PlutoRow> deletRows = [];
       List<PlutoRow>? selectedRows = gridStateManager?.currentSelectingRows;
-      for (int i = 0;
-          i < (selectedRows?.length ?? 0);
-          i++) {
+      for (int i = 0; i < (selectedRows?.length ?? 0); i++) {
         PlutoRow? row = selectedRows![i];
         bool? isYes = await showDialogForYesNo1(
             "Want to delete selected record?\nEvent type: ${row?.cells["eventType"]?.value ?? ""}\nDuration: ${row?.cells["tapeduration"]?.value ?? ""}\nExportTapeCode: ${row?.cells["exportTapeCode"]?.value ?? ""}\nExportTapeCaption: ${row?.cells["exportTapeCaption"]?.value ?? ""}");
-       /* print("Start id is>>" + (selectedRows?.first.cells["no"]?.value.toString() ?? ""));
+        /* print("Start id is>>" + (selectedRows?.first.cells["no"]?.value.toString() ?? ""));
         print("End id is>>" + (selectedRows?.last.cells["no"]?.value.toString() ?? ""));
         gridStateManager?.setCurrentSelectingRowsByRange(
             selectedRows?.first.cells["no"]?.value, selectedRows?.last.cells["no"]?.value);*/
@@ -4248,10 +4247,10 @@ class TransmissionLogController extends GetxController {
             Utils.oldBMSConvertToSecondsValue(
                 value: element.cells["tapeduration"]?.value.toString() ?? "");
       });
-      transmissionTime.value =
+      totalTransTime.value =
           Utils.convertToTimeFromDouble(value: totalTransmissionTime!);
     } else {
-      transmissionTime.value = Utils.convertToTimeFromDouble(
+      totalTransTime.value = Utils.convertToTimeFromDouble(
           value: Utils.oldBMSConvertToSecondsValue(
               value: gridStateManager?.currentRow?.cells["tapeduration"]?.value
                       .toString() ??
