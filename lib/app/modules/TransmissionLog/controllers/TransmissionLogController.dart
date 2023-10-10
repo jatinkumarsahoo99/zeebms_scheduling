@@ -754,14 +754,14 @@ class TransmissionLogController extends GetxController {
     return rowData;
   }
 
-
-  PlutoRow insertReplicatePlutoRow(
-      {required PlutoRow row}) {
+  PlutoRow insertReplicatePlutoRow({required PlutoRow row}) {
     PlutoRow rowData = PlutoRow(cells: {
       "fpCtime": PlutoCell(value: row.cells["fpCtime"]?.value),
-      "transmissionTime": PlutoCell(value: row.cells["transmissionTime"]?.value),
+      "transmissionTime":
+          PlutoCell(value: row.cells["transmissionTime"]?.value),
       "exportTapeCode": PlutoCell(value: row.cells["exportTapeCode"]?.value),
-      "exportTapeCaption": PlutoCell(value: row.cells["exportTapeCaption"]?.value),
+      "exportTapeCaption":
+          PlutoCell(value: row.cells["exportTapeCaption"]?.value),
       "tapeduration": PlutoCell(value: row.cells["tapeduration"]?.value),
       "som": PlutoCell(value: row.cells["som"]?.value),
       "breakNumber": PlutoCell(value: row.cells["breakNumber"]?.value),
@@ -770,7 +770,8 @@ class TransmissionLogController extends GetxController {
       "rownumber": PlutoCell(value: row.cells["rownumber"]?.value),
       "eventType": PlutoCell(value: row.cells["eventType"]?.value),
       "bookingNumber": PlutoCell(value: row.cells["bookingNumber"]?.value),
-      "bookingdetailcode": PlutoCell(value: row.cells["bookingdetailcode"]?.value),
+      "bookingdetailcode":
+          PlutoCell(value: row.cells["bookingdetailcode"]?.value),
       "scheduleTime": PlutoCell(value: row.cells["scheduleTime"]?.value),
       "productName": PlutoCell(value: row.cells["productName"]?.value),
       "rosTimeBand": PlutoCell(value: row.cells["rosTimeBand"]?.value),
@@ -779,9 +780,12 @@ class TransmissionLogController extends GetxController {
       "datechange": PlutoCell(value: row.cells["datechange"]?.value),
       "productGroup": PlutoCell(value: row.cells["productGroup"]?.value),
       "longCaption": PlutoCell(value: row.cells["longCaption"]?.value),
-      "productname_Font": PlutoCell(value: row.cells["productname_Font"]?.value),
-      "exporttapecode_Font": PlutoCell(value: row.cells["exporttapecode_Font"]?.value),
-      "rosTimeBand_Font": PlutoCell(value: row.cells["rosTimeBand_Font"]?.value),
+      "productname_Font":
+          PlutoCell(value: row.cells["productname_Font"]?.value),
+      "exporttapecode_Font":
+          PlutoCell(value: row.cells["exporttapecode_Font"]?.value),
+      "rosTimeBand_Font":
+          PlutoCell(value: row.cells["rosTimeBand_Font"]?.value),
       "no": PlutoCell(value: 0),
     });
     return rowData;
@@ -4193,17 +4197,24 @@ class TransmissionLogController extends GetxController {
     if ((gridStateManager?.currentSelectingRows.length ?? 0) > 0) {
       print("Multiple select");
       List<PlutoRow> deletRows = [];
+      List<PlutoRow>? selectedRows = gridStateManager?.currentSelectingRows;
       for (int i = 0;
           i < (gridStateManager?.currentSelectingRows.length ?? 0);
           i++) {
         PlutoRow? row = gridStateManager?.currentSelectingRows[i];
         bool? isYes = await showDialogForYesNo1(
             "Want to delete selected record?\nEvent type: ${row?.cells["eventType"]?.value ?? ""}\nDuration: ${row?.cells["tapeduration"]?.value ?? ""}\nExportTapeCode: ${row?.cells["exportTapeCode"]?.value ?? ""}\nExportTapeCaption: ${row?.cells["exportTapeCaption"]?.value ?? ""}");
+       /* print("Start id is>>" + (selectedRows?.first.cells["no"]?.value.toString() ?? ""));
+        print("End id is>>" + (selectedRows?.last.cells["no"]?.value.toString() ?? ""));
+        gridStateManager?.setCurrentSelectingRowsByRange(
+            selectedRows?.first.cells["no"]?.value, selectedRows?.last.cells["no"]?.value);*/
         if (isYes ?? false) {
           deletRows.add(row!);
           // gridStateManager?.removeRows([row!]);
         }
+        // gridStateManager?.setCurrentSelectingRowsByRange(selectedRows?.first.sortIdx, selectedRows?.last.sortIdx);
       }
+
       if (deletRows.length > 0) {
         gridStateManager?.removeRows(deletRows);
         addEventToUndo();
