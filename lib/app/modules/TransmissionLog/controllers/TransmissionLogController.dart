@@ -4199,9 +4199,9 @@ class TransmissionLogController extends GetxController {
       List<PlutoRow> deletRows = [];
       List<PlutoRow>? selectedRows = gridStateManager?.currentSelectingRows;
       for (int i = 0;
-          i < (gridStateManager?.currentSelectingRows.length ?? 0);
+          i < (selectedRows?.length ?? 0);
           i++) {
-        PlutoRow? row = gridStateManager?.currentSelectingRows[i];
+        PlutoRow? row = selectedRows![i];
         bool? isYes = await showDialogForYesNo1(
             "Want to delete selected record?\nEvent type: ${row?.cells["eventType"]?.value ?? ""}\nDuration: ${row?.cells["tapeduration"]?.value ?? ""}\nExportTapeCode: ${row?.cells["exportTapeCode"]?.value ?? ""}\nExportTapeCaption: ${row?.cells["exportTapeCaption"]?.value ?? ""}");
        /* print("Start id is>>" + (selectedRows?.first.cells["no"]?.value.toString() ?? ""));
