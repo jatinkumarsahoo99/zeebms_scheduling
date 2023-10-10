@@ -41,8 +41,8 @@ class CancelWOModel {
     ep = json['ep'];
     telecastType = json['telecastType'];
     tapeId = json['tapeId'];
-    telecastDate = json['telecastDate'];
-    telecastTime = json['telecastTime'];
+    telecastDate = json['telDate'];
+    telecastTime = json['telTime'];
     epiSegCnt = json['epiSegCnt'];
     woId = json['woId'];
   }
@@ -72,7 +72,7 @@ class CancelWOModel {
       data['location'] = location;
       data['channel'] = channel;
       data['program'] = program;
-      data['ep'] = ep ?? '';
+      data['ep#'] = ep ?? '';
       data['telecastType'] = telecastType;
       data['tapeId'] = tapeId;
       data['telecastDate'] = telecastDate ?? '';

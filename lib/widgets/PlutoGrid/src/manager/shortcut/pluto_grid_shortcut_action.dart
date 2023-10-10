@@ -108,9 +108,15 @@ class PlutoGridActionMoveSelectedCellFocus extends PlutoGridShortcutAction {
     required PlutoKeyManagerEvent keyEvent,
     required PlutoGridStateManager stateManager,
   }) {
+    if (stateManager.onSelectCellCallback != null) {
+      stateManager.onSelectCellCallback!();
+    }
     if (stateManager.isEditing == true) return;
 
     stateManager.moveSelectingCell(direction);
+    if (stateManager.onSelectCellCallback != null) {
+      stateManager.onSelectCellCallback!();
+    }
   }
 }
 
@@ -173,6 +179,9 @@ class PlutoGridActionMoveCellFocusByPage extends PlutoGridShortcutAction {
 
         break;
     }
+    if (stateManager.onSelectCellCallback != null) {
+      stateManager.onSelectCellCallback!();
+    }
   }
 
   void _restoreCurrentCellPosition({
@@ -213,6 +222,9 @@ class PlutoGridActionMoveSelectedCellFocusByPage
     required PlutoKeyManagerEvent keyEvent,
     required PlutoGridStateManager stateManager,
   }) {
+    if (stateManager.onSelectCellCallback != null) {
+      stateManager.onSelectCellCallback!();
+    }
     if (direction.horizontal) return;
 
     final int moveCount =

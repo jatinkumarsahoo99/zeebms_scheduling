@@ -10,7 +10,7 @@ class DateWithThreeTextField extends StatefulWidget {
   final int day, month, year;
   final bool monthWithFullName;
   final TextEditingController mainTextController;
-  final bool isEnable;
+  final bool isEnable, hideTitle;
   final double widthRation;
   final void Function(String date)? onFocusChange;
   final DateTime? startDate, endDate, intailDate;
@@ -28,6 +28,7 @@ class DateWithThreeTextField extends StatefulWidget {
     this.widthRation = .15,
     this.onFocusChange,
     this.startDate,
+    this.hideTitle = false,
     this.endDate,
     this.formatting = "yyyy/MM/dd",
     this.intailDate,
@@ -129,16 +130,18 @@ class _DateWithThreeTextFieldState extends State<DateWithThreeTextField> {
       mainAxisSize: MainAxisSize.min,
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        /// TITLE
-        Text(
-          widget.title,
-          style: TextStyle(
-            fontSize: SizeDefine.labelSize1,
-            color: Colors.black,
-            fontWeight: FontWeight.w500,
+        if (!widget.hideTitle) ...{
+          /// TITLE
+          Text(
+            widget.title,
+            style: TextStyle(
+              fontSize: SizeDefine.labelSize1,
+              color: Colors.black,
+              fontWeight: FontWeight.w500,
+            ),
           ),
-        ),
-        const SizedBox(height: 5),
+          const SizedBox(height: 5),
+        },
 
         /// BOX
         Container(

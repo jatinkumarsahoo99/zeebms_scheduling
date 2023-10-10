@@ -82,7 +82,7 @@ class DataGridFromMap extends StatelessWidget {
   final bool columnAutoResize;
   final List<String>? editKeys;
   final Function? actionOnPress;
-  final Function(int,bool)? spaceOnPress;
+  final Function(int, bool)? spaceOnPress;
   final bool doPasccal;
   final bool? csvFormat;
   Color Function(PlutoRowColorContext)? colorCallback;
@@ -584,6 +584,8 @@ class DataGridFromMap3 extends StatelessWidget {
     this.logicalKeyboardKey,
     this.keyBoardButtonPressed,
     this.witdthSpecificColumn,
+    this.customWidgetInRenderContext,
+    this.rowHeight = 25,
   }) : super(key: widgetKey);
   final Map<String, double>? witdthSpecificColumn;
 
@@ -632,6 +634,10 @@ class DataGridFromMap3 extends StatelessWidget {
   final void Function(String columnName)? onColumnHeaderDoubleTap;
   PlutoColumnSort sort;
   FocusNode? focusNode;
+  double rowHeight;
+
+  final Map<String, Widget Function(PlutoColumnRendererContext renderContext)>?
+      customWidgetInRenderContext;
 
   @override
   Widget build(BuildContext context) {
@@ -769,44 +775,50 @@ class DataGridFromMap3 extends StatelessWidget {
                       }
                     }
                   },
-                  child: Row(
-                    mainAxisSize: MainAxisSize.max,
-                    children: [
-                      Icon(
-                        ((showTitleInCheckBox != null &&
+                  child: (customWidgetInRenderContext != null &&
+                          customWidgetInRenderContext!.containsKey(key))
+                      ? customWidgetInRenderContext![key]!(rendererContext)
+                      : Row(
+                          mainAxisSize: MainAxisSize.max,
+                          children: [
+                            Icon(
+                              ((showTitleInCheckBox != null &&
+                                              showTitleInCheckBox!.isNotEmpty)
+                                          ? mapData[rendererContext.rowIdx][key]
+                                              ['key']
+                                          : rendererContext.cell.value
+                                              .toString()) ==
+                                      checkBoxStrComparison
+                                  ? Icons.check_box
+                                  : Icons.check_box_outline_blank,
+                              color: ((showTitleInCheckBox != null &&
+                                              showTitleInCheckBox!.isNotEmpty)
+                                          ? mapData[rendererContext.rowIdx][key]
+                                              ['key']
+                                          : rendererContext.cell.value
+                                              .toString()) ==
+                                      checkBoxStrComparison
+                                  ? Colors.deepPurpleAccent
+                                  : Colors.grey,
+                            ),
+                            if (showTitleInCheckBox != null &&
+                                showTitleInCheckBox!.isNotEmpty &&
+                                showTitleInCheckBox!.contains(key)) ...{
+                              const SizedBox(width: 5),
+                              Text(
+                                (showTitleInCheckBox != null &&
                                         showTitleInCheckBox!.isNotEmpty)
                                     ? mapData[rendererContext.rowIdx][key]
-                                        ['key']
-                                    : rendererContext.cell.value.toString()) ==
-                                checkBoxStrComparison
-                            ? Icons.check_box
-                            : Icons.check_box_outline_blank,
-                        color: ((showTitleInCheckBox != null &&
-                                        showTitleInCheckBox!.isNotEmpty)
-                                    ? mapData[rendererContext.rowIdx][key]
-                                        ['key']
-                                    : rendererContext.cell.value.toString()) ==
-                                checkBoxStrComparison
-                            ? Colors.deepPurpleAccent
-                            : Colors.grey,
-                      ),
-                      if (showTitleInCheckBox != null &&
-                          showTitleInCheckBox!.isNotEmpty &&
-                          showTitleInCheckBox!.contains(key)) ...{
-                        const SizedBox(width: 5),
-                        Text(
-                          (showTitleInCheckBox != null &&
-                                  showTitleInCheckBox!.isNotEmpty)
-                              ? mapData[rendererContext.rowIdx][key]['value']
-                              : mapData[rendererContext.rowIdx][key],
-                          style: TextStyle(
-                            fontSize: SizeDefine.columnTitleFontSize,
-                          ),
-                          maxLines: 1,
+                                        ['value']
+                                    : mapData[rendererContext.rowIdx][key],
+                                style: TextStyle(
+                                  fontSize: SizeDefine.columnTitleFontSize,
+                                ),
+                                maxLines: 1,
+                              ),
+                            },
+                          ],
                         ),
-                      },
-                    ],
-                  ),
                 );
               } else {
                 return GestureDetector(
@@ -818,13 +830,16 @@ class DataGridFromMap3 extends StatelessWidget {
                               extraList: secondaryExtraDialogList);
                         }
                       : null,
-                  child: Text(
-                    rendererContext.cell.value.toString(),
-                    maxLines: 1,
-                    style: TextStyle(
-                      fontSize: SizeDefine.columnTitleFontSize,
-                    ),
-                  ),
+                  child: (customWidgetInRenderContext != null &&
+                          customWidgetInRenderContext!.containsKey(key))
+                      ? customWidgetInRenderContext![key]!(rendererContext)
+                      : Text(
+                          rendererContext.cell.value.toString(),
+                          maxLines: 1,
+                          style: TextStyle(
+                            fontSize: SizeDefine.columnTitleFontSize,
+                          ),
+                        ),
                 );
               }
             }),
@@ -885,7 +900,7 @@ class DataGridFromMap3 extends StatelessWidget {
               previousWidgetFN: previousWidgetFN,
               actionOnPressKeyboard: keyBoardButtonPressed,
               logicalKeyboardKey: logicalKeyboardKey,
-              rowHeight: 25,
+              rowHeight: rowHeight,
             ).copyWith(style: gridStyle),
             rowColorCallback: colorCallback,
             onLoaded: (load) {
