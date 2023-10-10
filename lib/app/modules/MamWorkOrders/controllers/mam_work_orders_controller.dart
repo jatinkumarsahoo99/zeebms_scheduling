@@ -85,8 +85,8 @@ class MamWorkOrdersController extends GetxController {
   var woAPDFPCTelecateDateTC = TextEditingController();
   var woAsPerDailyFPCWOTFN = FocusNode();
   var woASPDFPCModel = WOAPDFPCModel().obs;
-  // var telecasteTypeFN = FocusNode();
-  bool canRetriveData = false;
+  var telecasteTypeFN = FocusNode();
+  bool canRetriveData = true;
   bool woAsPerDFPCEnableAll = false, woAsPerDFPCSwapToHDSD = true;
   // WO AS PER DAILY DAILY FPC VARAIBLES END
   ///
@@ -567,22 +567,25 @@ class MamWorkOrdersController extends GetxController {
       var selectedRowIdx = 0.obs;
       var isLoading = true;
 
-      handleSelectTap(int rowIdx) {
-        selectedRowIdx.value = rowIdx;
-        dateCtr.text = DateFormat("dd-MM-yyyy").format(
-            DateFormat('yyyy-MM-ddThh:mm:ss')
-                .parse(segmentsList[selectedRowIdx.value].telecastDate ?? ""));
-        timeCtr.text = segmentsList[selectedRowIdx.value].telecastTime ?? "";
-        epsNo.value =
-            (segmentsList[selectedRowIdx.value].epsNo ?? '').toString();
+      var textEditingControllersDate = <TextEditingController>[];
+      var textEditingControllersTime = <TextEditingController>[];
 
-        exportTapeCode.value =
-            (segmentsList[selectedRowIdx.value].exportTapeCode ?? '')
-                .toString();
-      }
+      // handleSelectTap(int rowIdx) {
+      //   selectedRowIdx.value = rowIdx;
+      //   dateCtr.text = DateFormat("dd-MM-yyyy").format(
+      //       DateFormat('yyyy-MM-ddThh:mm:ss')
+      //           .parse(segmentsList[selectedRowIdx.value].telecastDate ?? ""));
+      //   timeCtr.text = segmentsList[selectedRowIdx.value].telecastTime ?? "";
+      //   epsNo.value =
+      //       (segmentsList[selectedRowIdx.value].epsNo ?? '').toString();
+      //   exportTapeCode.value =
+      //       (segmentsList[selectedRowIdx.value].exportTapeCode ?? '')
+      //           .toString();
+      // }
 
       if (!fromBtnClick) {
         segmentsList.value = [];
+
         try {
           Get.find<ConnectorControl>().GETMETHODCALL(
             api: ApiFactory.MAM_WORK_ORDER_NON_FPC_GETSEGMENTSOn_TELECAST_LEAVE(
@@ -601,6 +604,20 @@ class MamWorkOrdersController extends GetxController {
                     ReleaseWoNonFPCMultipleSegmensModel.fromJson(resp);
                 segmentsList.value =
                     tempModel.infoLeaveTelecast?.lstEpisodeDetails ?? [];
+                textEditingControllersDate = [];
+                textEditingControllersTime = [];
+                for (var i = 0;
+                    i <
+                        (tempModel.infoLeaveTelecast?.lstEpisodeDetails ?? [])
+                            .length;
+                    i++) {
+                  textEditingControllersDate.add(TextEditingController(
+                      text: tempModel.infoLeaveTelecast!.lstEpisodeDetails![i]
+                          .telecastDate));
+                  textEditingControllersTime.add(TextEditingController(
+                      text: tempModel.infoLeaveTelecast!.lstEpisodeDetails![i]
+                          .telecastTime));
+                }
                 bMET = tempModel.infoLeaveTelecast?.bMET;
               }
               isLoading = false;
@@ -612,6 +629,16 @@ class MamWorkOrdersController extends GetxController {
           segmentsList.refresh();
         }
       } else {
+        textEditingControllersDate = [];
+        textEditingControllersTime = [];
+        for (var i = 0; i < (segmentsList).length; i++) {
+          textEditingControllersDate
+              .add(TextEditingController(text: segmentsList[i].telecastDate));
+          textEditingControllersTime
+              .add(TextEditingController(text: segmentsList[i].telecastTime));
+          // segmentsList[i].telecastDate = textEditingControllersDate[i].text;
+          // segmentsList[i].telecastTime = textEditingControllersTime[i].text;
+        }
         isLoading = false;
         segmentsList.refresh();
       }
@@ -636,84 +663,85 @@ class MamWorkOrdersController extends GetxController {
           child: Column(
             mainAxisSize: MainAxisSize.min,
             children: [
-              Wrap(
-                spacing: 10,
-                runSpacing: 5,
-                // runAlignment: WrapAlignment.end,
-                crossAxisAlignment: WrapCrossAlignment.end,
-                children: [
-                  DateWithThreeTextField(
-                      title: 'Telecast Date', mainTextController: dateCtr),
-                  TimeWithThreeTextField(
-                      title: 'Telecast Time', mainTextController: timeCtr),
-                  FormButton(
-                    btnText: "Update",
-                    callback: () {
-                      segmentsList[selectedRowIdx.value].telecastTime =
-                          timeCtr.text;
-                      segmentsList[selectedRowIdx.value].telecastDate =
-                          DateFormat('yyyy-MM-ddT00:00:00').format(
-                              DateFormat('dd-MM-yyyy').parse(dateCtr.text));
-                      // dateCtr.clear();
-                      // timeCtr.clear();
-                      // timeCtr.text = '00:00:00';
-                      segmentsList.refresh();
-                    },
-                  ),
-                  Row(),
-                  Row(
-                    mainAxisSize: MainAxisSize.min,
-                    children: [
-                      Text(
-                        'Eps No: ',
-                        style: TextStyle(
-                            fontWeight: FontWeight.w700, fontSize: 13),
-                      ),
-                      SizedBox(width: 5),
-                      Obx(() {
-                        return Text(
-                          epsNo.value,
-                          style: TextStyle(fontSize: 11),
-                        );
-                      }),
-                    ],
-                  ),
-                  Row(
-                    mainAxisSize: MainAxisSize.min,
-                    children: [
-                      Text(
-                        'Export Tape Code: ',
-                        style: TextStyle(
-                            fontWeight: FontWeight.w700, fontSize: 13),
-                      ),
-                      SizedBox(width: 5),
-                      Obx(() {
-                        return Text(
-                          exportTapeCode.value,
-                          style: TextStyle(fontSize: 11),
-                        );
-                      }),
-                    ],
-                  ),
-                  Row(
-                    mainAxisSize: MainAxisSize.min,
-                    children: [
-                      Text(
-                        'Selected Row No: ',
-                        style: TextStyle(
-                            fontWeight: FontWeight.w700, fontSize: 13),
-                      ),
-                      SizedBox(width: 5),
-                      Obx(() {
-                        return Text(
-                          (selectedRowIdx.value + 1).toString(),
-                          style: TextStyle(fontSize: 11),
-                        );
-                      }),
-                    ],
-                  ),
-                ],
-              ),
+              // Wrap(
+              //   spacing: 10,
+              //   runSpacing: 5,
+              //   // runAlignment: WrapAlignment.end,
+              //   crossAxisAlignment: WrapCrossAlignment.end,
+              //   children: [
+              //     DateWithThreeTextField(
+              //         title: 'Telecast Date', mainTextController: dateCtr),
+              //     TimeWithThreeTextField(
+              //         title: 'Telecast Time', mainTextController: timeCtr),
+              //     FormButton(
+              //       btnText: "Update",
+              //       callback: () {
+              //         segmentsList[selectedRowIdx.value].telecastTime =
+              //             timeCtr.text;
+              //         segmentsList[selectedRowIdx.value].telecastDate =
+              //             DateFormat('yyyy-MM-ddT00:00:00').format(
+              //                 DateFormat('dd-MM-yyyy').parse(dateCtr.text));
+              //         // dateCtr.clear();
+              //         // timeCtr.clear();
+              //         // timeCtr.text = '00:00:00';
+              //         segmentsList.refresh();
+              //       },
+              //     ),
+              //     Row(),
+              //     Row(
+              //       mainAxisSize: MainAxisSize.min,
+              //       children: [
+              //         Text(
+              //           'Eps No: ',
+              //           style: TextStyle(
+              //               fontWeight: FontWeight.w700, fontSize: 13),
+              //         ),
+              //         SizedBox(width: 5),
+              //         Obx(() {
+              //           return Text(
+              //             epsNo.value,
+              //             style: TextStyle(fontSize: 11),
+              //           );
+              //         }),
+              //       ],
+              //     ),
+              //     Row(
+              //       mainAxisSize: MainAxisSize.min,
+              //       children: [
+              //         Text(
+              //           'Export Tape Code: ',
+              //           style: TextStyle(
+              //               fontWeight: FontWeight.w700, fontSize: 13),
+              //         ),
+              //         SizedBox(width: 5),
+              //         Obx(() {
+              //           return Text(
+              //             exportTapeCode.value,
+              //             style: TextStyle(fontSize: 11),
+              //           );
+              //         }),
+              //       ],
+              //     ),
+              //     Row(
+              //       mainAxisSize: MainAxisSize.min,
+              //       children: [
+              //         Text(
+              //           'Selected Row No: ',
+              //           style: TextStyle(
+              //               fontWeight: FontWeight.w700, fontSize: 13),
+              //         ),
+              //         SizedBox(width: 5),
+              //         Obx(() {
+              //           return Text(
+              //             (selectedRowIdx.value + 1).toString(),
+              //             style: TextStyle(fontSize: 11),
+              //           );
+              //         }),
+              //       ],
+              //     ),
+              //   ],
+              // ),
+
               Expanded(
                 child: Obx(() {
                   return Container(
@@ -725,29 +753,52 @@ class MamWorkOrdersController extends GetxController {
                         ? isLoading
                             ? const Center(child: CircularProgressIndicator())
                             : null
-                        : DataGridFromMap(
+                        : DataGridFromMap3(
+                            rowHeight: 35,
+                            customWidgetInRenderContext: {
+                              "telecastDate": (renderContext) {
+                                return DateWithThreeTextField(
+                                  title: "",
+                                  widthRation: .1,
+                                  mainTextController:
+                                      textEditingControllersDate[
+                                          renderContext.rowIdx],
+                                  hideTitle: true,
+                                );
+                              },
+                              "telecastTime": (renderContext) {
+                                return TimeWithThreeTextField(
+                                  title: "",
+                                  widthRation: .1,
+                                  mainTextController:
+                                      textEditingControllersTime[
+                                          renderContext.rowIdx],
+                                  hideTitle: true,
+                                );
+                              },
+                            },
                             mapData: segmentsList.value
                                 .map((e) => e.toJson())
                                 .toList(),
                             mode: PlutoGridMode.selectWithOneTap,
                             hideCode: false,
                             columnAutoResize: true,
-                            onload: (sm) {
-                              gridSM = sm.stateManager;
-                              gridSM?.setCurrentCell(
-                                  sm.stateManager
-                                      .getRowByIdx(selectedRowIdx.value)!
-                                      .cells['telecastDate'],
-                                  selectedRowIdx.value);
-                              handleSelectTap(selectedRowIdx.value);
-                            },
-                            onSelected: (event) {
-                              handleSelectTap(event.rowIdx ?? 0);
-                            },
-                            onRowDoubleTap: (event) {
-                              handleSelectTap(event.rowIdx);
-                              gridSM?.setCurrentCell(event.cell, event.rowIdx);
-                            },
+                            // onload: (sm) {
+                            //   // gridSM = sm.stateManager;
+                            //   // gridSM?.setCurrentCell(
+                            //   //     sm.stateManager
+                            //   //         .getRowByIdx(selectedRowIdx.value)!
+                            //   //         .cells['telecastDate'],
+                            //   //     selectedRowIdx.value);
+                            //   // handleSelectTap(selectedRowIdx.value);
+                            // },
+                            // onSelected: (event) {
+                            //   // handleSelectTap(event.rowIdx ?? 0);
+                            // },
+                            // onRowDoubleTap: (event) {
+                            //   // handleSelectTap(event.rowIdx);
+                            //   // gridSM?.setCurrentCell(event.cell, event.rowIdx);
+                            // },
                           ),
                   );
                 }),
@@ -755,7 +806,12 @@ class MamWorkOrdersController extends GetxController {
             ],
           ),
         ),
-      );
+      ).then((value) {
+        for (var i = 0; i < (segmentsList).length; i++) {
+          segmentsList[i].telecastDate = textEditingControllersDate[i].text;
+          segmentsList[i].telecastTime = textEditingControllersTime[i].text;
+        }
+      });
     }
   }
 
@@ -1074,8 +1130,9 @@ class MamWorkOrdersController extends GetxController {
               "lstGetProgram": nonFPCDataTableList
                   .map((element) => element.toJson(fromSave: true))
                   .toList(),
-              "lstEpisodeDetails":
-                  segmentsList.map((element) => element.toJson()).toList(),
+              "lstEpisodeDetails": segmentsList
+                  .map((element) => element.toJson(fromSave: true))
+                  .toList(),
             },
           );
         } catch (e) {
@@ -1323,6 +1380,20 @@ class MamWorkOrdersController extends GetxController {
     super.onReady();
     initalizeAPI();
     fetchUserSetting1();
+
+    telecasteTypeFN.onKey = (node, event) {
+      if (LogicalKeyboardKey.tab == event.logicalKey) {
+        if (!event.isShiftPressed) {
+          Future.delayed(Duration(milliseconds: 100)).then((value) {
+            if (!canRetriveData) {
+              canRetriveData = true;
+              multiPleSegmentsDialog();
+            }
+          });
+        }
+      }
+      return KeyEventResult.ignored;
+    };
     // telecasteTypeFN.onKey = (node, event) {
     //   if (event.logicalKey == LogicalKeyboardKey.tab) {
     //     if (!event.isShiftPressed) {
