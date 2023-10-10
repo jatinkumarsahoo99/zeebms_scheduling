@@ -304,7 +304,7 @@ class TransmissionLogView extends StatelessWidget {
                                 child: Text(
                                   (controller.lastSavedLoggedUser.value ?? "") +
                                       " \n" +
-                                      (controller.transmissionTime.value ?? ""),
+                                      " Transmission Time: "+(controller.totalTransTime.value ?? ""),
                                   style: TextStyle(
                                       fontSize: SizeDefine.labelSize1,
                                       fontWeight: FontWeight.w600),
@@ -529,7 +529,7 @@ class TransmissionLogView extends StatelessWidget {
                                     break;
                                   case DataGridMenuItem.paste:
                                     // controller.paste(index);
-                                    controller.paste2(
+                                    controller.paste3(
                                         rowIndex: index,
                                         fun: () {
                                           controller.colorGrid(false);
