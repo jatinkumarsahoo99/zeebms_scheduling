@@ -40,7 +40,8 @@ var context_path = "";
    res.setHeader('Access-Control-Allow-Origin', "*");
 
    // Request methods you wish to allow
-   res.setHeader('Access-Control-Allow-Methods', 'GET, POST, PUT, OPTIONS, PATCH, DELETE');
+//   res.setHeader('Access-Control-Allow-Methods', 'GET, POST, PUT, OPTIONS, PATCH, DELETE');
+   res.setHeader('Access-Control-Allow-Methods', 'GET, POST, DELETE');
 
    // Request headers you wish to allow
    res.setHeader('Access-Control-Allow-Headers', 'content-type,access_token');
