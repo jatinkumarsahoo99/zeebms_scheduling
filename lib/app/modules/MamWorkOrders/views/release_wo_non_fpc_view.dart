@@ -194,11 +194,12 @@ class ReleaseWoNonFpcView extends GetView {
                   ),
                 ),
                 DateWithThreeTextField(
-                    title: "Tel Date",
-                    widthRation: 0.148,
-                    mainTextController: controller.nonFPCTelDate,
-                    endDate: DateTime.now(),
-                    isEnable: controller.nonFPCWOReleaseTXID),
+                  title: "Tel Date",
+                  widthRation: 0.148,
+                  mainTextController: controller.nonFPCTelDate,
+                  // endDate: DateTime.now(),
+                  isEnable: controller.nonFPCWOReleaseTXID,
+                ),
                 TimeWithThreeTextField(
                   mainTextController: controller.nonFPCTelTime,
                   title: "Tel Time",

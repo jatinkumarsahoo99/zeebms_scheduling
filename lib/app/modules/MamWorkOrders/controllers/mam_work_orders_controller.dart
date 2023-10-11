@@ -659,32 +659,32 @@ class MamWorkOrdersController extends GetxController {
         content: SizedBox(
           width: Get.width * .55,
           height: Get.height * .6,
-          child: Expanded(
-            child: Obx(() {
-              return Container(
-                margin: const EdgeInsets.symmetric(vertical: 10),
-                decoration: segmentsList.value.isEmpty
-                    ? BoxDecoration(border: Border.all(color: Colors.grey))
-                    : null,
-                child: (segmentsList.isEmpty)
-                    ? isLoading
-                        ? const Center(child: CircularProgressIndicator())
-                        : null
-                    : DataGridFromMap3(
-                        rowHeight: 35,
-                        editKeys: ['telecastDate', 'telecastTime'],
-                        customWidgetInRenderContext: {
-                          "telecastDate": (renderContext) {
-                            return DateWithThreeTextField(
-                              title: "",
-                              widthRation: .1,
-                              isEnable: true,
-                              mainTextController: textEditingControllersDate[
-                                  renderContext.rowIdx],
-                              hideTitle: true,
-                            );
-                          },
-                          "telecastTime": (renderContext) {
+          child: Obx(() {
+            return Container(
+              margin: const EdgeInsets.symmetric(vertical: 10),
+              decoration: segmentsList.value.isEmpty
+                  ? BoxDecoration(border: Border.all(color: Colors.grey))
+                  : null,
+              child: (segmentsList.isEmpty)
+                  ? isLoading
+                      ? const Center(child: CircularProgressIndicator())
+                      : null
+                  : DataGridFromMap3(
+                      rowHeight: 35,
+                      // editKeys: ['telecastDate', 'telecastTime'],
+                      customWidgetInRenderContext: {
+                        "telecastDate": (renderContext) {
+                          return DateWithThreeTextField(
+                            title: "",
+                            widthRation: .1,
+                            isEnable: true,
+                            mainTextController: textEditingControllersDate[
+                                renderContext.rowIdx],
+                            hideTitle: true,
+                          );
+                        },
+                        "telecastTime": (renderContext) {
+                          return StatefulBuilder(builder: (context, re) {
                             return TimeWithThreeTextField(
                               title: "",
                               widthRation: .1,
@@ -693,34 +693,34 @@ class MamWorkOrdersController extends GetxController {
                                   renderContext.rowIdx],
                               hideTitle: true,
                             );
-                          },
+                          });
                         },
-                        mapData:
-                            segmentsList.value.map((e) => e.toJson()).toList(),
-                        mode: PlutoGridMode.selectWithOneTap,
-                        hideCode: false,
-                        columnAutoResize: true,
-                        onload: (sm) {
-                          // sm.stateManager.setEditing(true);
-                          // gridSM = sm.stateManager;
-                          // gridSM?.setCurrentCell(
-                          //     sm.stateManager
-                          //         .getRowByIdx(selectedRowIdx.value)!
-                          //         .cells['telecastDate'],
-                          //     selectedRowIdx.value);
-                          // handleSelectTap(selectedRowIdx.value);
-                        },
-                        // onSelected: (event) {
-                        //   // handleSelectTap(event.rowIdx ?? 0);
-                        // },
-                        // onRowDoubleTap: (event) {
-                        //   // handleSelectTap(event.rowIdx);
-                        //   // gridSM?.setCurrentCell(event.cell, event.rowIdx);
-                        // },
-                      ),
-              );
-            }),
-          ),
+                      },
+                      mapData:
+                          segmentsList.value.map((e) => e.toJson()).toList(),
+                      mode: PlutoGridMode.selectWithOneTap,
+                      hideCode: false,
+                      columnAutoResize: true,
+                      onload: (sm) {
+                        // sm.stateManager.setEditing(true);
+                        // gridSM = sm.stateManager;
+                        // gridSM?.setCurrentCell(
+                        //     sm.stateManager
+                        //         .getRowByIdx(selectedRowIdx.value)!
+                        //         .cells['telecastDate'],
+                        //     selectedRowIdx.value);
+                        // handleSelectTap(selectedRowIdx.value);
+                      },
+                      // onSelected: (event) {
+                      //   // handleSelectTap(event.rowIdx ?? 0);
+                      // },
+                      // onRowDoubleTap: (event) {
+                      //   // handleSelectTap(event.rowIdx);
+                      //   // gridSM?.setCurrentCell(event.cell, event.rowIdx);
+                      // },
+                    ),
+            );
+          }),
         ),
       ).then((value) {
         for (var i = 0; i < (segmentsList).length; i++) {
@@ -1344,14 +1344,6 @@ class MamWorkOrdersController extends GetxController {
       }
       return KeyEventResult.ignored;
     };
-    // telecasteTypeFN.onKey = (node, event) {
-    //   if (event.logicalKey == LogicalKeyboardKey.tab) {
-    //     if (!event.isShiftPressed) {
-    //       multiPleSegmentsDialog();
-    //     }
-    //   }
-    //   return KeyEventResult.ignored;
-    // };
   }
 
   fetchUserSetting1() async {
