@@ -361,7 +361,8 @@ class TransmissionLogView extends StatelessWidget {
                                 if (controller
                                         .gridStateManager?.currentRowIdx ==
                                     colorData.rowIdx) {
-                                  return Color(0xFFD1C4E9);
+                                  // return Color(0xFFD1C4E9);
+                                  return Colors.blue[900]!;
                                 }
 
                                 if (data != null) {

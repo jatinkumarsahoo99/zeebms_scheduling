@@ -156,6 +156,7 @@ class TransmissionLogController extends GetxController {
   @override
   void onInit() {
     fetchUserGridSetting();
+    _download1();
     super.onInit();
     getLocations();
     startTime_focus.addListener(() {
@@ -1978,7 +1979,7 @@ class TransmissionLogController extends GetxController {
 
   void paste2({int rowIndex = 0, Function? fun}) {
     if (listCutCopy.length == 0) return;
-
+    rowIndex=rowIndex-1;
     int intFirstRow;
     int intFirstRowdisplayIndex;
     List<PlutoRow> dt = (gridStateManager?.rows)!;
@@ -2067,7 +2068,7 @@ class TransmissionLogController extends GetxController {
 
   void paste3({int rowIndex = 0, Function? fun}) {
     if (listCutCopy.length == 0) return;
-
+    rowIndex=rowIndex-1;
     int intFirstRowdisplayIndex;
     List<PlutoRow> dt = (gridStateManager?.rows)!;
 
@@ -2095,7 +2096,6 @@ class TransmissionLogController extends GetxController {
           return;
         }
       }
-
 
       String strFPCTime;
       if (intCurrentRowIndex[0] > 1) {
@@ -3254,7 +3254,7 @@ class TransmissionLogController extends GetxController {
   }
 
   void _download() async {
-    if (kDebugMode) {
+    /*if (kDebugMode) {
       return;
     }
     List<Map<String, dynamic>>? list =
@@ -3262,23 +3262,45 @@ class TransmissionLogController extends GetxController {
     var map = {
       "loadSavedLogOutput": {"lstTransmissionLog": list}
     };
-    /*String data = await jsonEncode(
-        gridStateManager?.rows.map((e) => e.toJson()).toList());*/
-    // final stream = await Stream.fromIterable(data!.codeUnits);
-    // download(stream, 'hello.txt');
-    // final FileSystemAccessHandle? handle = await html.window.();
-    // if (handle != null) {
-    // Permission granted, continue with folder creation
-    // } else {
-    // Permission denied, handle accordingly
-    // }
-
     List<String> dateSplit = selectedDate.text.split("-");
-
     String filename =
         "${selectLocation?.value ?? ""}${selectChannel?.value}${dateSplit[2]}${dateSplit[1]}${dateSplit[0]}.json";
 
-    ExportData().exportFilefromString(jsonEncode(map), filename);
+    ExportData().exportFilefromString(jsonEncode(map), filename);*/
+  }
+
+  void _download1() async {
+
+    if (kDebugMode) {
+      return;
+    }
+    if (gridStateManager == null) {
+      return;
+    }
+    Timer.periodic(Duration(seconds: 10), (timer) {
+      List<Map<String, dynamic>>? list =
+          gridStateManager?.rows.map((e) => e.toJson()).toList();
+      var map = {
+        "loadSavedLogOutput": {"lstTransmissionLog": list}
+      };
+      /*String data = await jsonEncode(
+        gridStateManager?.rows.map((e) => e.toJson()).toList());*/
+      // final stream = await Stream.fromIterable(data!.codeUnits);
+      // download(stream, 'hello.txt');
+      // final FileSystemAccessHandle? handle = await html.window.();
+      // if (handle != null) {
+      // Permission granted, continue with folder creation
+      // } else {
+      // Permission denied, handle accordingly
+      // }
+
+      List<String> dateSplit = selectedDate.text.split("-");
+
+      String filename =
+          "${selectLocation?.value ?? ""}${selectChannel?.value}${dateSplit[2]}${dateSplit[1]}${dateSplit[0]}.json";
+
+      ExportData().exportFilefromString(jsonEncode(map), filename);
+    });
   }
 
   void btnSave_Click() async {
@@ -4165,10 +4187,10 @@ class TransmissionLogController extends GetxController {
         completerDialog?.complete(false);
       }
     } else {
-      if(raw is RawKeyDownEvent) {
+      if (raw is RawKeyDownEvent) {
         switch (raw.logicalKey.keyLabel) {
           case "F3":
-          // cutCopy(isCut: false, row: gridStateManager?.currentRow);
+            // cutCopy(isCut: false, row: gridStateManager?.currentRow);
             cutCopy1(
               isCut: false,
             );
@@ -4179,7 +4201,7 @@ class TransmissionLogController extends GetxController {
             );
             break;
           case "F4":
-          // paste(gridStateManager?.currentRowIdx);
+            // paste(gridStateManager?.currentRowIdx);
             paste2(
                 rowIndex: (gridStateManager?.currentRowIdx ?? 0),
                 fun: () {

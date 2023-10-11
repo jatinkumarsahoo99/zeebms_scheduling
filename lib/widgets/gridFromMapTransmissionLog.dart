@@ -362,7 +362,11 @@ class DataGridFromMapTransmissionLog extends StatelessWidget {
                   overflow: TextOverflow.ellipsis,
                   style: TextStyle(
                     fontSize: SizeDefine.columnTitleFontSize,
-                    // color: isBold?Colors.white:Colors.black,
+                    /*color: (rendererContext.stateManager.currentSelectingRows
+                            .contains(rendererContext.rowIdx) || rendererContext.stateManager.currentRowIdx ==
+                        rendererContext.rowIdx)
+                        ? Colors.white
+                        : Colors.black,*/
                     fontWeight: isBold ? FontWeight.w800 : FontWeight.normal,
                   ),
                 ),
@@ -377,7 +381,7 @@ class DataGridFromMapTransmissionLog extends StatelessWidget {
           enableContextMenu: false,
           // width: Utils.getRowWidth(key: key, value: mapData[0][key]),
           width: (witdthSpecificColumn != null &&
-              witdthSpecificColumn!.keys.toList().contains(key))
+                  witdthSpecificColumn!.keys.toList().contains(key))
               ? witdthSpecificColumn![key]!
               : Utils.getColumnSize(key: key, value: mapData[0][key]),
           minWidth: 15,
@@ -390,6 +394,7 @@ class DataGridFromMapTransmissionLog extends StatelessWidget {
               : !showonly!.contains(key),
           enableColumnDrag: false,
           field: key,
+          // backgroundColor: (key.toString()=="fpCtime")?Colors.transparent:Colors.white,
           type: PlutoColumnType.text()));
     }
 
