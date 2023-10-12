@@ -814,7 +814,7 @@ class TransmissionLogController extends GetxController {
       isYes ??= false;
       if (isYes) {
         fromRow = 0;
-        toRow = gridStateManager?.rows.length ?? 0 - 1;
+        toRow = (gridStateManager?.rows.length ?? 0) - 1;
       } else {
         return;
       }
@@ -831,17 +831,17 @@ class TransmissionLogController extends GetxController {
     }
 
     for (int row = fromRow; row <= toRow; row++) {
-      if (gridStateManager?.rows[row].cells["exportTapeCode"]?.value ==
+      if ((gridStateManager?.rows[row].cells["exportTapeCode"]?.value ==
               txReplaceTxId_.text &&
           (gridStateManager?.rows[row].cells["eventType"]?.value
                       .toString()
                       .trim() ==
-                  txReplaceEvent_.text.trim() ||
-              ["a", "w", "o", "t", "i"].contains(gridStateManager
+                  txReplaceEvent_.text.trim()) ||
+              (["a", "w", "o", "t", "i"].contains(gridStateManager
                   ?.rows[row].cells["eventType"]?.value
                   .toString()
                   .trim()
-                  .toLowerCase()))) {
+                  .toLowerCase())))) {
         replaceCount++;
         gridStateManager?.rows[row].cells["exportTapeCode"]?.value =
             tblFastInsert?.rows[i].cells["txId"]?.value;
@@ -867,8 +867,10 @@ class TransmissionLogController extends GetxController {
       }
     }
 
-    colorGrid(false);
-    LoadingDialog.callInfoMessage('$replaceCount replacements made');
+
+    LoadingDialog.callInfoMessage('$replaceCount replacements made',callback: (){
+      colorGrid(false);
+    });
   }
 
   void btnExportClick(type) async {
