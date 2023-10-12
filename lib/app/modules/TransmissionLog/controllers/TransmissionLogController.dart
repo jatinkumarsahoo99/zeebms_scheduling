@@ -3278,7 +3278,7 @@ class TransmissionLogController extends GetxController {
     if (gridStateManager == null) {
       return;
     }
-    Timer.periodic(Duration(seconds: 10), (timer) {
+    Timer.periodic(Duration(minutes: 5), (timer) {
       List<Map<String, dynamic>>? list =
           gridStateManager?.rows.map((e) => e.toJson()).toList();
       var map = {
