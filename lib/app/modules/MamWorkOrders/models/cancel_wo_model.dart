@@ -1,4 +1,5 @@
 class CancelWOModel {
+  int? rowNumber;
   bool? cancelWO;
   String? contentType;
   String? vendor;
@@ -32,6 +33,7 @@ class CancelWOModel {
 
   CancelWOModel.fromJson(Map<String, dynamic> json) {
     cancelWO = json['cancelWO'];
+    rowNumber = json['rownumber'];
     contentType = json['contentType'];
     vendor = json['vendor'];
     language = json['language'];
@@ -65,7 +67,8 @@ class CancelWOModel {
       data['epiSegCnt'] = epiSegCnt;
       data['woId'] = woId;
     } else {
-      data['cancelWO'] = cancelWO.toString();
+      data['rownumber'] = (rowNumber ?? -1).toString();
+      data['cancelWO'] = (cancelWO ?? false).toString();
       data['contentType'] = contentType;
       data['vendor'] = vendor;
       data['language'] = language;

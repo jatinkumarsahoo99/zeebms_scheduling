@@ -112,52 +112,53 @@ PlutoGridConfiguration plutoGridConfigurationTransmisionLog({
   FocusNode? previousWidgetFN,
 }) =>
     PlutoGridConfiguration.dark(
-        shortcut: PlutoGridShortcut(
-          actions: {
-            // This is a Map with basic shortcut keys and actions set.
-            ...PlutoGridShortcut.defaultActions,
+      shortcut: PlutoGridShortcut(
+        actions: {
+          // This is a Map with basic shortcut keys and actions set.
+          ...PlutoGridShortcut.defaultActions,
 
-            LogicalKeySet(LogicalKeyboardKey.tab):
-                CustomTabKeyAction(focusNode, previousWidgetFN),
-            LogicalKeySet(LogicalKeyboardKey.shift, LogicalKeyboardKey.tab):
-                CustomTabKeyAction(focusNode, previousWidgetFN),
-            LogicalKeySet(LogicalKeyboardKey.space): CustomSpaceKeyAction(),
-            // You can override the enter key behavior as below.
-            LogicalKeySet(LogicalKeyboardKey.enter): CustomEnterKeyAction(
-                actionOnPress: actionOnPress, actionKey: actionKey),
-          },
+          LogicalKeySet(LogicalKeyboardKey.tab):
+              CustomTabKeyAction(focusNode, previousWidgetFN),
+          LogicalKeySet(LogicalKeyboardKey.shift, LogicalKeyboardKey.tab):
+              CustomTabKeyAction(focusNode, previousWidgetFN),
+          LogicalKeySet(LogicalKeyboardKey.space): CustomSpaceKeyAction(),
+          // You can override the enter key behavior as below.
+          LogicalKeySet(LogicalKeyboardKey.enter): CustomEnterKeyAction(
+              actionOnPress: actionOnPress, actionKey: actionKey),
+        },
+      ),
+      columnSize: PlutoGridColumnSizeConfig(
+        resizeMode: PlutoResizeMode.normal,
+        autoSizeMode:
+            autoScale ? PlutoAutoSizeMode.scale : PlutoAutoSizeMode.none,
+      ),
+      style: PlutoGridStyleConfig(
+        rowHeight: 20,
+        columnHeight: 25,
+        defaultCellPadding: const EdgeInsets.all(0),
+        enableCellBorderHorizontal: true,
+        gridBorderColor: Colors.deepPurpleAccent,
+        activatedBorderColor: Colors.deepPurple,
+        inactivatedBorderColor: Colors.deepPurple[100]!,
+        cellColorInEditState: Colors.deepPurple[100]!,
+        activatedColor: Colors.blue[700]!,
+        checkedColor: checkColor!,
+        gridBorderRadius: BorderRadius.circular(0),
+        enableColumnBorderHorizontal: false,
+        enableCellBorderVertical: true,
+        enableGridBorderShadow: false,
+        cellTextStyle: TextStyle(
+          fontSize: SizeDefine.columnTitleFontSize,
         ),
-        columnSize: PlutoGridColumnSizeConfig(
-          resizeMode: PlutoResizeMode.normal,
-          autoSizeMode:
-              autoScale ? PlutoAutoSizeMode.scale : PlutoAutoSizeMode.none,
-        ),
-        style: PlutoGridStyleConfig(
-            rowHeight: 20,
-            columnHeight: 25,
-            defaultCellPadding: const EdgeInsets.all(0),
-            enableCellBorderHorizontal: true,
-            gridBorderColor: Colors.black,
-            activatedBorderColor: Color(0xFF2979FF),
-            inactivatedBorderColor: Color(0xFF2979FF),
-            cellColorInEditState: Color(0xFF2979FF),
-            activatedColor: Color(0xFF2979FF),
-            borderColor: Colors.black,
-            checkedColor: checkColor!,
-            gridBorderRadius: BorderRadius.circular(0),
-            enableColumnBorderHorizontal: false,
-            enableCellBorderVertical: true,
-            enableGridBorderShadow: false,
-            cellTextStyle: TextStyle(
-              fontSize: SizeDefine.columnTitleFontSize,
-            ),
-            columnTextStyle: TextStyle(
-                fontSize: SizeDefine.columnTitleFontSize,
-                fontWeight: FontWeight.bold)),
-        enterKeyAction: PlutoGridEnterKeyAction.none,
-        tabKeyAction: PlutoGridTabKeyAction.moveToNextOnEdge,
-        scrollbar: const PlutoGridScrollbarConfig(
-            draggableScrollbar: true, isAlwaysShown: true, hoverWidth: 15));
+        columnTextStyle: TextStyle(
+            fontSize: SizeDefine.columnTitleFontSize,
+            fontWeight: FontWeight.bold),
+      ),
+      enterKeyAction: PlutoGridEnterKeyAction.none,
+      tabKeyAction: PlutoGridTabKeyAction.moveToNextOnEdge,
+      scrollbar: const PlutoGridScrollbarConfig(
+          draggableScrollbar: true, isAlwaysShown: true, hoverWidth: 15),
+    );
 
 PlutoGridConfiguration plutoGridConfiguration2({
   Function(PlutoGridCellPosition index, bool isSpace)? actionOnPress,
