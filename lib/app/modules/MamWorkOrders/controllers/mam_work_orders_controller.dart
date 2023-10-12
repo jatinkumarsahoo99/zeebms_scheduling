@@ -564,16 +564,22 @@ class MamWorkOrdersController extends GetxController {
   }
 
   multiPleSegmentsDialog({bool fromBtnClick = false}) {
-    if (!nonFPCWOReleaseTXID || nonFPCSelectedTelecasteType == null) {
-      return;
-    }
-
-    if (nonFPCSelectedBMSProgram == null) {
+    if (nonFPCSelectedWorkOrderType == null) {
+      LoadingDialog.showErrorDialog("Please select work order type.");
+    } else if (nonFPCSelectedLoc == null) {
+      LoadingDialog.showErrorDialog("Please select Location.");
+    } else if (nonFPCSelectedChannel == null) {
+      LoadingDialog.showErrorDialog("Please select Channel.");
+    } else if (nonFPCSelectedBMSProgram == null) {
       LoadingDialog.showErrorDialog("Please select BMS program.");
+    } else if (nonFPCSelectedRMSProgram.value.key == null) {
+      LoadingDialog.showErrorDialog("Please select RMS program.");
     } else if (nonFPCFromEpi.text.isEmpty) {
       LoadingDialog.showErrorDialog("Please enter from episode.");
     } else if (nonFPCToEpi.text.isEmpty) {
       LoadingDialog.showErrorDialog("Please enter to episode.");
+    } else if (nonFPCSelectedTelecasteType == null) {
+      LoadingDialog.showErrorDialog("Please select Telecast Type");
     } else if (nonFPCEpiSegments.text.isEmpty) {
       LoadingDialog.showErrorDialog("Please enter to episode segs.");
     } else if (nonFPCFromEpi.text == nonFPCToEpi.text) {
@@ -582,6 +588,11 @@ class MamWorkOrdersController extends GetxController {
       if (nonFPCTxID.text.isEmpty) {
         nonFPCTxID.text = "AUTOID";
       }
+
+      if (!nonFPCWOReleaseTXID) {
+        return;
+      }
+
       var isLoading = true;
       var textEditingControllersDate = <TextEditingController>[];
       var textEditingControllersTime = <TextEditingController>[];
@@ -764,43 +775,28 @@ class MamWorkOrdersController extends GetxController {
   }
 
   handleReleaseWoNonFpcTelecastTypeOnChanged() {
-    // if (nonFPCSelectedBMSProgram == null) {
-    //   LoadingDialog.showErrorDialog("Please select BMS program.");
-    // } else if (nonFPCFromEpi.text.isEmpty) {
-    //   LoadingDialog.showErrorDialog("Please enter from episode.");
-    // } else if (nonFPCToEpi.text.isEmpty) {
-    //   LoadingDialog.showErrorDialog("Please enter to episode.");
-    // } else if (nonFPCEpiSegments.text.isEmpty) {
-    //   LoadingDialog.showErrorDialog("Please enter to episode segs.");
-    // } else
-    {
-      // LoadingDialog.call();
-      if (!nonFPCWOReleaseTXID) {
-        print("Check box is not check adding AUTOID");
-        nonFPCTxID.text = "AUTOID";
-        return;
-      }
-      Get.find<ConnectorControl>().POSTMETHOD(
-        api: ApiFactory.MAM_WORK_ORDER_NON_FPC_GETTXID,
-        fun: (resp) {
-          // Get.back();
-          if (resp != null &&
-              resp is Map<String, dynamic> &&
-              resp['txId'] != null) {
-            nonFPCTxID.text = resp['txId'].toString();
-          }
-        },
-        json: {
-          "bmsProgram": nonFPCSelectedBMSProgram?.key,
-          "fromEpisodeNumber": nonFPCFromEpi.text,
-          "toEpisodeNumber": nonFPCToEpi.text,
-          "telecastTypeId": nonFPCSelectedTelecasteType?.key,
-          "istxid": nonFPCWOReleaseTXID,
-          "txId": nonFPCTxID.text,
-          "segmentsPerEps": nonFPCEpiSegments.text,
-        },
-      );
+    if (nonFPCTxID.text.trim().isEmpty) {
+      nonFPCTxID.text = "AUTOID";
     }
+    Get.find<ConnectorControl>().POSTMETHOD(
+      api: ApiFactory.MAM_WORK_ORDER_NON_FPC_GETTXID,
+      fun: (resp) {
+        if (resp != null &&
+            resp is Map<String, dynamic> &&
+            resp['txId'] != null) {
+          nonFPCTxID.text = resp['txId'].toString();
+        }
+      },
+      json: {
+        "bmsProgram": nonFPCSelectedBMSProgram?.key,
+        "fromEpisodeNumber": nonFPCFromEpi.text,
+        "toEpisodeNumber": nonFPCToEpi.text,
+        "telecastTypeId": nonFPCSelectedTelecasteType?.key,
+        "istxid": nonFPCWOReleaseTXID,
+        "txId": nonFPCTxID.text,
+        "segmentsPerEps": nonFPCEpiSegments.text,
+      },
+    );
   }
 
   handleNONFPCBMSOnChanged(DropDownValue? val) async {
@@ -905,6 +901,8 @@ class MamWorkOrdersController extends GetxController {
   }
 
   Future<void> handleOnSaveNonFPCWO() async {
+    var from = num.tryParse(nonFPCFromEpi.text) ?? 0; //1
+    var to = num.tryParse(nonFPCToEpi.text) ?? 0; //2
     if (nonFPCSelectedWorkOrderType == null) {
       LoadingDialog.showErrorDialog("Please select work order type");
     } else if (nonFPCSelectedLoc == null) {
@@ -917,162 +915,112 @@ class MamWorkOrdersController extends GetxController {
       LoadingDialog.showErrorDialog("Please select RMS program");
     } else if (nonFPCSelectedTelecasteType == null) {
       LoadingDialog.showErrorDialog("Please select telecaste type");
-    } else if (nonFPCFromEpi.text.isEmpty || nonFPCToEpi.text.isEmpty) {
+    } else if (nonFPCFromEpi.text.isEmpty ||
+        nonFPCToEpi.text.isEmpty ||
+        (from > to) ||
+        (from == 0 || to == 0)) {
       LoadingDialog.showErrorDialog(
           "Input string was not in a correct format.");
+    } else if (from == to && (nonFPCTxID.text.trim().isEmpty)) {
+      LoadingDialog.showErrorDialog("Tx id can't be blank.");
+    } else if (from == to && nonFPCTelTime.text == "00:00:00") {
+      LoadingDialog.showErrorDialog("Telecast Time should not be blank.");
+    } else if ((from != to &&
+        nonFPCWOReleaseTXID &&
+        validateMultipleEpisodeSave())) {
+      LoadingDialog.showErrorDialog(
+          "While releasing work order with TX Id, TelecastDate and TelecastTime should not be same per Exporttapecode.");
     } else {
-      var from = num.tryParse(nonFPCFromEpi.text) ?? 0;
-      var to = num.tryParse(nonFPCToEpi.text) ?? 0;
-      if ((from == 0 && to == 0 || from > to) && nonFPCWOReleaseTXID) {
-        LoadingDialog.showErrorDialog(
-            "From and To Episode No cannot be zero and To Episode No should be greater than From Episode No.");
-      } else if (nonFPCWOReleaseTXID && (nonFPCTxID.text.trim().isEmpty)) {
-        LoadingDialog.showErrorDialog("Tx id can't be blank.");
-      } else {
-        try {
-          if (nonFPCWOReleaseTXID) {
-            bool foundDublicateVal = false;
-            // if (segmentsList.isEmpty) {
-            //   foundDublicateVal = true;
-            // }
+      if (from != to &&
+          ((to - from) != 0) &&
+          (to - from <= (onloadData.value.nMaxEpsGap ?? 0))) {
+        bMET = true;
+      }
 
-            for (var i = 0; i < segmentsList.length; i++) {
-              for (var j = 0; j < segmentsList.length; j++) {
-                if (i < j) {
-                  if (segmentsList[i].telecastTime ==
-                      segmentsList[j].telecastTime) {
-                    foundDublicateVal = true;
-                    break;
-                  }
-                }
-              }
-            }
-            if (nonFPCTelTime.text == "00:00:00" &&
-                nonFPCFromEpi.text == nonFPCToEpi.text) {
-              LoadingDialog.showErrorDialog("Please enter Telecast Time");
-              return;
-            }
-            if (foundDublicateVal) {
-              LoadingDialog.showErrorDialog(
-                  "While releasing work order with TX Id, TelecastDate and TelecastTime should not be same per Exporttapecode.");
-
-              return;
-            }
-          }
-          LoadingDialog.call();
-          await Get.find<ConnectorControl>().POSTMETHOD(
-            api: ApiFactory.MAM_WORK_ORDER_NON_FPC_SAVE_DATA,
-            fun: (resp) async {
-              closeDialogIfOpen();
-              if (resp != null &&
-                  resp is Map<String, dynamic> &&
-                  resp['program_Response'] != null) {
-                if (resp['program_Response']['strMessage'] != null) {
-                  showMsgDialogSuccess2(resp['program_Response']['strMessage'],
-                      () {
-                    Future.delayed(Duration(milliseconds: 400)).then((value) {
-                      multiPleSegmentsDialog();
-                      Future.delayed(const Duration(milliseconds: 800))
-                          .then((value) {
-                        nonFPCWOReleaseTXID = false;
-                        onloadData.refresh();
-                      });
+      try {
+        LoadingDialog.call();
+        await Get.find<ConnectorControl>().POSTMETHOD(
+          api: ApiFactory.MAM_WORK_ORDER_NON_FPC_SAVE_DATA,
+          fun: (resp) async {
+            closeDialogIfOpen();
+            if (resp != null &&
+                resp is Map<String, dynamic> &&
+                resp['program_Response'] != null) {
+              if (resp['program_Response']['strMessage'] != null) {
+                showMsgDialogSuccess2(resp['program_Response']['strMessage'],
+                    () {
+                  Future.delayed(Duration(milliseconds: 400)).then((value) {
+                    multiPleSegmentsDialog();
+                    Future.delayed(const Duration(milliseconds: 800))
+                        .then((value) {
+                      nonFPCWOReleaseTXID = false;
+                      onloadData.refresh();
                     });
                   });
-
-                  // for (var element in resp['program_Response']['strMessage']) {
-                  //   await Get.defaultDialog(
-                  //     title: "",
-                  //     titleStyle: TextStyle(fontSize: 1),
-                  //     content: Column(
-                  //       mainAxisAlignment: MainAxisAlignment.center,
-                  //       children: [
-                  //         const Icon(
-                  //           CupertinoIcons.check_mark_circled_solid,
-                  //           color: Colors.green,
-                  //           size: 55,
-                  //         ),
-                  //         SizedBox(
-                  //           height: 20,
-                  //         ),
-                  //         Text(
-                  //           element.toString(),
-                  //           style: TextStyle(
-                  //               color: Colors.green,
-                  //               fontSize: SizeDefine.popupTxtSize),
-                  //         )
-                  //       ],
-                  //     ),
-                  //     radius: 10,
-                  //     confirm: DailogCloseButton(
-                  //       autoFocus: true,
-                  //       callback: () {
-                  //         Get.back();
-                  //       },
-                  //       btnText: "Ok",
-                  //       iconDataM: Icons.done,
-                  //     ),
-                  //     contentPadding: EdgeInsets.only(
-                  //         left: SizeDefine.popupMarginHorizontal,
-                  //         right: SizeDefine.popupMarginHorizontal,
-                  //         bottom: 16),
-                  //   );
-                  // }
-                } else {
-                  LoadingDialog.showErrorDialog(
-                      resp['program_Response']['strMessage'].toString());
-                }
-                // if (resp['program_Response']['strMessage'].toString() ==
-                //     'MAYAM tasks created successfully.') {
-                //   LoadingDialog.callDataSaved(
-                //       msg: resp['program_Response']['strMessage'].toString(),
-                //       callback: () {
-                //         clearPage();
-                //       });
-                // nonFPCTxID
-                // }
+                });
               } else {
-                LoadingDialog.showErrorDialog(resp.toString());
+                LoadingDialog.showErrorDialog(
+                    resp['program_Response']['strMessage'].toString());
               }
-            },
-            json: {
-              "chkWithTXId": nonFPCWOReleaseTXID,
-              "txId": nonFPCTxID.text.trim(),
-              "fromEpisodeNumber": num.tryParse(nonFPCFromEpi.text.trim()),
-              "toEpisodeNumber": num.tryParse(nonFPCToEpi.text.trim()),
-              "telecastDate": DateFormat("yyyy-MM-dd").format(
-                  DateFormat('dd-MM-yyyy')
-                      .parse(nonFPCTelDate.text)), // dd-MM-yyyy
-              "telecastTime": nonFPCTelTime.text, // 00:00:00
-              "workflowId": nonFPCSelectedWorkOrderType?.key,
-              "LocationName": nonFPCSelectedLoc?.value,
-              "ChannelName": nonFPCSelectedChannel?.value,
-              "ProgramName": nonFPCSelectedRMSProgram.value.value,
-              "locationCode": nonFPCSelectedLoc?.key,
-              "channelCode": nonFPCSelectedChannel?.key,
-              "programCode": nonFPCSelectedRMSProgram.value.key,
-              "originalRepeatCode": nonFPCSelectedTelecasteType?.key,
-              "bmsProgramCode": nonFPCSelectedBMSProgram?.key,
-              "episodeSegCount": nonFPCEpiSegments.text,
-              "exportTapeCode": nonFPCTxID.text.trim(),
-              "telecastTypeCode": nonFPCSelectedTelecasteType?.key,
-              "loggedUser": Get.find<MainController>().user?.logincode,
-              "chkQuality": nonFPCQualityHD,
-              "bMET": bMET ?? false,
-              "lstGetProgram": nonFPCDataTableList
-                  .map((element) => element.toJson(fromSave: true))
-                  .toList(),
-              "lstEpisodeDetails": segmentsList
-                  .map((element) => element.toJson(fromSave: true))
-                  .toList(),
-            },
-          );
-        } catch (e) {
-          closeDialogIfOpen();
-          LoadingDialog.showErrorDialog(e.toString());
+            } else {
+              LoadingDialog.showErrorDialog(resp.toString());
+            }
+          },
+          json: {
+            "chkWithTXId": nonFPCWOReleaseTXID,
+            "txId": nonFPCTxID.text.trim(),
+            "fromEpisodeNumber": num.tryParse(nonFPCFromEpi.text.trim()),
+            "toEpisodeNumber": num.tryParse(nonFPCToEpi.text.trim()),
+            "telecastDate": DateFormat("yyyy-MM-dd").format(
+                DateFormat('dd-MM-yyyy')
+                    .parse(nonFPCTelDate.text)), // dd-MM-yyyy
+            "telecastTime": nonFPCTelTime.text, // 00:00:00
+            "workflowId": nonFPCSelectedWorkOrderType?.key,
+            "LocationName": nonFPCSelectedLoc?.value,
+            "ChannelName": nonFPCSelectedChannel?.value,
+            "ProgramName": nonFPCSelectedRMSProgram.value.value,
+            "locationCode": nonFPCSelectedLoc?.key,
+            "channelCode": nonFPCSelectedChannel?.key,
+            "programCode": nonFPCSelectedRMSProgram.value.key,
+            "originalRepeatCode": nonFPCSelectedTelecasteType?.key,
+            "bmsProgramCode": nonFPCSelectedBMSProgram?.key,
+            "episodeSegCount": nonFPCEpiSegments.text,
+            "exportTapeCode": nonFPCTxID.text.trim(),
+            "telecastTypeCode": nonFPCSelectedTelecasteType?.key,
+            "loggedUser": Get.find<MainController>().user?.logincode,
+            "chkQuality": nonFPCQualityHD,
+            "bMET": bMET ?? false,
+            // "bMET": !(nonFPCFromEpi.text == nonFPCToEpi.text),
+            "lstGetProgram": nonFPCDataTableList
+                .map((element) => element.toJson(fromSave: true))
+                .toList(),
+            "lstEpisodeDetails": segmentsList
+                .map((element) => element.toJson(fromSave: true))
+                .toList(),
+          },
+        );
+      } catch (e) {
+        closeDialogIfOpen();
+        LoadingDialog.showErrorDialog(e.toString());
+      }
+    }
+  }
+
+  bool validateMultipleEpisodeSave() {
+    bool foundDublicateVal = false;
+
+    for (var i = 0; i < segmentsList.length; i++) {
+      for (var j = 0; j < segmentsList.length; j++) {
+        if (i < j) {
+          if (segmentsList[i].telecastTime == segmentsList[j].telecastTime) {
+            foundDublicateVal = true;
+            break;
+          }
         }
       }
     }
+
+    return foundDublicateVal;
   }
 
   handleColumTapNonFPCWO(String columnName) {

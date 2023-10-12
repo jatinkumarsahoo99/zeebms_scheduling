@@ -41,10 +41,12 @@ class DataGridFromMapTransmissionLog extends StatelessWidget {
       this.witdthSpecificColumn,
       this.formatDate = true,
       this.dateFromat = "dd-MM-yyyy",
+      this.cellColorCallback,
       this.onFocusChange})
       : super(key: key);
   final List mapData;
   bool enableSort;
+  final Color Function(PlutoCellColorContext)? cellColorCallback;
   final bool? showSrNo;
   final bool? hideCode;
   final PlutoGridMode? mode;
@@ -442,6 +444,7 @@ class DataGridFromMapTransmissionLog extends StatelessWidget {
             onRowsMoved: onRowsMoved,
             onChanged: onChanged,
             onSelected: onSelected,
+            cellColorCallback: cellColorCallback,
             /*createFooter: (stateManager) {
               return PlutoLazyPagination(
                 // Determine the first page.

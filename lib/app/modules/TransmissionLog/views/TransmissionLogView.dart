@@ -304,7 +304,8 @@ class TransmissionLogView extends StatelessWidget {
                                 child: Text(
                                   (controller.lastSavedLoggedUser.value ?? "") +
                                       " \n" +
-                                      " Transmission Time: "+(controller.totalTransTime.value ?? ""),
+                                      " Transmission Time: " +
+                                      (controller.totalTransTime.value ?? ""),
                                   style: TextStyle(
                                       fontSize: SizeDefine.labelSize1,
                                       fontWeight: FontWeight.w600),
@@ -336,12 +337,6 @@ class TransmissionLogView extends StatelessWidget {
                               (controller.transmissionLog?.loadSavedLogOutput
                                   ?.lstTransmissionLog?.isNotEmpty)!)
                           ? DataGridFromMapTransmissionLog(
-                              /*onFocusChange: (value) {
-                              controller.gridStateManager!
-                                  .setGridMode(PlutoGridMode.selectWithOneTap);
-                              controller.selectedPlutoGridMode =
-                                  PlutoGridMode.selectWithOneTap;
-                            },*/
                               witdthSpecificColumn: (controller
                                   .userDataSettings?.userSetting
                                   ?.firstWhere((element) => element.controlName == "gridStateManager",
@@ -349,6 +344,50 @@ class TransmissionLogView extends StatelessWidget {
                                   .userSettings),
                               hideCode: false,
                               draggableKeys: ["transmissionTime"],
+                              cellColorCallback: (cell) {
+                                if (cell.cell.column.field != "fpCtime") {
+                                  return Colors.blue.shade700;
+                                } else {
+                                  PlutoRow currentRow =
+                                      cell.stateManager.rows[cell.rowIdx];
+                                  ColorDataModel? data =
+                                      Get.find<TransmissionLogController>()
+                                          .getMatchWithKey(currentRow
+                                                  .cells["eventType"]?.value ??
+                                              "");
+                                  Color color = Colors.white;
+                                  if (data != null) {
+                                    color =
+                                        Color(int.parse('0x${data.backColor}'));
+                                  }
+                                  if (currentRow.cells["productName"]?.value !=
+                                          null &&
+                                      currentRow.cells["productName"]?.value !=
+                                          "") {
+                                    String strPriority = ((currentRow
+                                                .cells["bookingNumber"]?.value
+                                                .toString()
+                                                .trim() ??
+                                            "") +
+                                        (currentRow.cells["bookingdetailcode"]
+                                                ?.value
+                                                .toString()
+                                                .trim() ??
+                                            ""));
+                                    if (strPriority != null &&
+                                        strPriority != "") {
+                                      ColorDataModel? data1 =
+                                          Get.find<TransmissionLogController>()
+                                              .getMatchWithKey(strPriority);
+                                      if (data1 != null) {
+                                        color = Color(
+                                            int.parse('0x${data1.backColor}'));
+                                      }
+                                    }
+                                  }
+                                  return color;
+                                }
+                              },
                               colorCallback: (PlutoRowColorContext colorData) {
                                 PlutoRow currentRow = colorData
                                     .stateManager.rows[colorData.rowIdx];
@@ -358,20 +397,8 @@ class TransmissionLogView extends StatelessWidget {
                                                 .cells["eventType"]?.value ??
                                             "");
                                 Color color = Colors.white;
-                                if (controller
-                                        .gridStateManager?.currentRowIdx ==
-                                    colorData.rowIdx) {
-                                  // return Color(0xFFD1C4E9);
-                                  // return Colors.blue[900]!;
-                                  return Colors.yellow[900]!;
-                                }
 
                                 if (data != null) {
-                                  // print("Index is>> ${colorData.rowIdx.toString()} >>>> ${data.backColor}");
-                                  /*print(
-                                    ">>>>>Color code is>>>>Index is>${colorData.rowIdx.toString()}" +
-                                        ">>>>>>" +
-                                        data.backColor.toString());*/
                                   color =
                                       Color(int.parse('0x${data.backColor}'));
                                 }
