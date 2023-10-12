@@ -376,8 +376,8 @@ class DataGridFromMapTransmissionLog extends StatelessWidget {
             );
           }),
           enableSorting: enableSort,
-          enableRowDrag:
-              draggableKeys != null ? draggableKeys!.contains(key) : false,
+          // enableRowDrag: draggableKeys != null ? draggableKeys!.contains(key) : false,
+          enableRowDrag: true,
           enableEditingMode: false,
           enableDropToResize: true,
           enableContextMenu: false,
