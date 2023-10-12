@@ -832,16 +832,16 @@ class TransmissionLogController extends GetxController {
 
     for (int row = fromRow; row <= toRow; row++) {
       if ((gridStateManager?.rows[row].cells["exportTapeCode"]?.value ==
-              txReplaceTxId_.text &&
-          (gridStateManager?.rows[row].cells["eventType"]?.value
+                  txReplaceTxId_.text &&
+              (gridStateManager?.rows[row].cells["eventType"]?.value
                       .toString()
                       .trim() ==
                   txReplaceEvent_.text.trim()) ||
-              (["a", "w", "o", "t", "i"].contains(gridStateManager
-                  ?.rows[row].cells["eventType"]?.value
-                  .toString()
-                  .trim()
-                  .toLowerCase())))) {
+          (["a", "w", "o", "t", "i"].contains(gridStateManager
+              ?.rows[row].cells["eventType"]?.value
+              .toString()
+              .trim()
+              .toLowerCase())))) {
         replaceCount++;
         gridStateManager?.rows[row].cells["exportTapeCode"]?.value =
             tblFastInsert?.rows[i].cells["txId"]?.value;
@@ -867,9 +867,9 @@ class TransmissionLogController extends GetxController {
       }
     }
 
-
-    LoadingDialog.callInfoMessage('$replaceCount replacements made',callback: (){
-      colorGrid(false);
+    LoadingDialog.callInfoMessage('$replaceCount replacements made',
+        callback: () {
+      if (replaceCount != 0) colorGrid(false);
     });
   }
 
@@ -1981,7 +1981,7 @@ class TransmissionLogController extends GetxController {
 
   void paste2({int rowIndex = 0, Function? fun}) {
     if (listCutCopy.length == 0) return;
-    rowIndex=rowIndex-1;
+    rowIndex = rowIndex - 1;
     int intFirstRow;
     int intFirstRowdisplayIndex;
     List<PlutoRow> dt = (gridStateManager?.rows)!;
@@ -2070,7 +2070,7 @@ class TransmissionLogController extends GetxController {
 
   void paste3({int rowIndex = 0, Function? fun}) {
     if (listCutCopy.length == 0) return;
-    rowIndex=rowIndex-1;
+    rowIndex = rowIndex - 1;
     int intFirstRowdisplayIndex;
     List<PlutoRow> dt = (gridStateManager?.rows)!;
 
@@ -3272,7 +3272,6 @@ class TransmissionLogController extends GetxController {
   }
 
   void _download1() async {
-
     if (kDebugMode) {
       return;
     }
