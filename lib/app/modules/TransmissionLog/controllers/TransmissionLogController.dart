@@ -3389,12 +3389,12 @@ class TransmissionLogController extends GetxController {
     // if (kDebugMode) {
     //   return;
     // }
-    if (gridStateManager == null) {
-      return;
-    }
+
     Timer.periodic(Duration(seconds: 5), (timer) {
       print("Download called");
-      downloadForce();
+      if (gridStateManager != null) {
+        downloadForce();
+      }
     });
   }
 
