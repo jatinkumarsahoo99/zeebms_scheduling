@@ -460,6 +460,7 @@ class TransmissionLogView extends StatelessWidget {
                                       loadevent
                                           .stateManager.rows[0].cells["no"],
                                       0);
+                                  controller.downloadForce();
                                 }
                                 if (controller.selectedIndex != null) {
                                   loadevent.stateManager.moveScrollByRow(
