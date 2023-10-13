@@ -143,7 +143,8 @@ PlutoGridConfiguration plutoGridConfigurationTransmisionLog({
         cellColorInEditState: Color(0xFF2979FF)!,
         activatedColor: Color(0xFF2979FF)!,
         checkedColor: checkColor!,
-        borderColor: Colors.black,
+        // borderColor: Colors.black,
+
         gridBorderRadius: BorderRadius.circular(0),
         enableColumnBorderHorizontal: false,
         enableCellBorderVertical: true,

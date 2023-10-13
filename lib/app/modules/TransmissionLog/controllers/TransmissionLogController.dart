@@ -1981,7 +1981,7 @@ class TransmissionLogController extends GetxController {
 
   void paste2({int rowIndex = 0, Function? fun}) {
     if (listCutCopy.length == 0) return;
-    rowIndex = rowIndex - 1;
+    // rowIndex = rowIndex - 1;
     int intFirstRow;
     int intFirstRowdisplayIndex;
     List<PlutoRow> dt = (gridStateManager?.rows)!;
@@ -2033,7 +2033,8 @@ class TransmissionLogController extends GetxController {
       }
 
       for (PlutoRow ddr in listCutCopy) {
-        PlutoRow dr = insertReplicatePlutoRow(row: ddr);
+        // PlutoRow dr = insertReplicatePlutoRow(row: ddr);
+        PlutoRow dr = ddr;
         dr.cells["fpCtime"]?.value = strFPCTime;
 
         if (lastSelectCutCopyOption == "cut") {
@@ -2070,7 +2071,7 @@ class TransmissionLogController extends GetxController {
 
   void paste3({int rowIndex = 0, Function? fun}) {
     if (listCutCopy.length == 0) return;
-    rowIndex = rowIndex - 1;
+    // rowIndex = rowIndex - 1;
     int intFirstRowdisplayIndex;
     List<PlutoRow> dt = (gridStateManager?.rows)!;
 
@@ -3205,6 +3206,88 @@ class TransmissionLogController extends GetxController {
     }
   }
 
+  cutCopy2({required bool isCut, Function? fun}) {
+    print("Its cutCopy1() method");
+    listCutCopy = [];
+    if (isCut) {
+      lastSelectCutCopyOption = "cut";
+      // var strAllowedEvent = "PR,PC,F,I,A,W,VP,GL,C,CL";
+      List<String> strAllowedEvent = [
+        "PR",
+        "PC",
+        "F",
+        "I",
+        "A",
+        "W",
+        "VP",
+        "GL",
+        "C",
+        "CL"
+      ];
+      print("Total length of selecting row is>>>" +
+          (gridStateManager?.currentSelectingRows?.length.toString() ?? ""));
+      if ((gridStateManager?.currentSelectingRows.length ?? 0) > 0) {
+        gridStateManager?.currentSelectingRows.forEach((element) {
+          if (strAllowedEvent.contains(element?.cells["eventType"]?.value
+                  .toString()
+                  .trim()
+                  .toUpperCase() ??
+              "")) {
+            listCutCopy.add(element);
+          }
+        });
+      } else {
+        if (strAllowedEvent.contains(gridStateManager
+                ?.currentRow?.cells["eventType"]?.value
+                .toString()
+                .trim()
+                .toUpperCase() ??
+            "")) {
+          listCutCopy.add((gridStateManager?.currentRow)!);
+        }
+      }
+      listCutCopy = listCutCopy.reversed.toList();
+      print("Cut length is>>" + listCutCopy.length.toString());
+      if (listCutCopy.length > 0) {
+        print("Cutt");
+        // copyRow = row;
+        if (fun != null) {
+          fun();
+        }
+      } else {
+        LoadingDialog.callInfoMessage("We couldn't cut this row");
+      }
+    } else {
+      lastSelectCutCopyOption = "copy";
+      List<String> strAllowedEvent = [
+        "PR",
+        "PC",
+        "F",
+        "I",
+        "A",
+        "W",
+        "VP",
+        "GL"
+      ];
+      gridStateManager?.currentSelectingRows.forEach((element) {
+        if (strAllowedEvent.contains(
+            element.cells["eventType"]?.value.toString().trim().toUpperCase() ??
+                "")) {
+          listCutCopy.add(element);
+        }
+      });
+      if (listCutCopy.length > 0) {
+        print("Cutt");
+        // copyRow = row;
+        if (fun != null) {
+          fun();
+        }
+      } else {
+        LoadingDialog.callInfoMessage("We couldn't cut this row");
+      }
+    }
+  }
+
   paste(index, {Function? fun}) {
     if (lastSelectCutCopyOption != null && copyRow != null) {
       addEventToUndo();
@@ -4192,12 +4275,12 @@ class TransmissionLogController extends GetxController {
         switch (raw.logicalKey.keyLabel) {
           case "F3":
             // cutCopy(isCut: false, row: gridStateManager?.currentRow);
-            cutCopy1(
+            cutCopy2(
               isCut: false,
             );
             break;
           case "F2":
-            cutCopy1(
+            cutCopy2(
               isCut: true,
             );
             break;
