@@ -543,14 +543,14 @@ class TransmissionLogView extends StatelessWidget {
                                   case DataGridMenuItem.cut:
                                     // controller.cutCopy(
                                     //     isCut: true, row: renderContext.row);
-                                    controller.cutCopy1(
+                                    controller.cutCopy2(
                                       isCut: true,
                                     );
                                     break;
                                   case DataGridMenuItem.copy:
                                     // controller.cutCopy(
                                     //     isCut: false, row: renderContext.row);
-                                    controller.cutCopy1(
+                                    controller.cutCopy2(
                                       isCut: false,
                                     );
                                     break;
