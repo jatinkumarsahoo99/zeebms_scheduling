@@ -304,7 +304,8 @@ class TransmissionLogView extends StatelessWidget {
                                 child: Text(
                                   (controller.lastSavedLoggedUser.value ?? "") +
                                       " \n" +
-                                      " Transmission Time: "+(controller.totalTransTime.value ?? ""),
+                                      " Transmission Time: " +
+                                      (controller.totalTransTime.value ?? ""),
                                   style: TextStyle(
                                       fontSize: SizeDefine.labelSize1,
                                       fontWeight: FontWeight.w600),
@@ -601,11 +602,14 @@ class TransmissionLogView extends StatelessWidget {
                               },
                               onRowsMoved:
                                   (PlutoGridOnRowsMovedEvent onRowMoved) {
+                                // controller.gridStateManager.setCurrentSelectingRowsByRange(from, to)
+                                // controller.gridStateManager
+                                //     ?.clearCurrentSelecting();
                                 controller.isRowFilter.value = true;
-                                print("Index is>>" + onRowMoved.idx.toString());
-                                print("On Print moved" +
-                                    jsonEncode(
-                                        onRowMoved.rows[0].cells.toString()));
+                                // print("Index is>>" + onRowMoved.idx.toString());
+                                // print("On Print moved" +
+                                //     jsonEncode(
+                                //         onRowMoved.rows[0].cells.toString()));
 
                                 // print("Index is>>" + onRowMoved.idx.toString());
                                 // Map map = onRowMoved.rows[0].cells;
