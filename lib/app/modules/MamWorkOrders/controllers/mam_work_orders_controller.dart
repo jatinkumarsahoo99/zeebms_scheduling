@@ -412,7 +412,7 @@ class MamWorkOrdersController extends GetxController {
         bool val = cwoDataTableList[rowNumber].cancelWO ?? false;
         for (var i = 0; i < (cwoDataTableList.length); i++) {
           if (cwoDataTableList[rowNumber].ep == cwoDataTableList[i].ep) {
-            cwoDataTableList[rowNumber].cancelWO = !val;
+            cwoDataTableList[i].cancelWO = !val;
             cwoSM!.changeCellValue(
                 cwoSM!.getRowByIdx(i)!.cells['cancelWO']!, (!val).toString(),
                 force: true, callOnChangedEvent: false, notify: true);
@@ -563,7 +563,7 @@ class MamWorkOrdersController extends GetxController {
     nonFPCTelDate.text = getCurrentDateTime;
   }
 
-  multiPleSegmentsDialog({bool fromBtnClick = false}) {
+  multiPleSegmentsDialog({bool fromBtnClick = false, bool fromSave = false}) {
     if (nonFPCSelectedWorkOrderType == null) {
       LoadingDialog.showErrorDialog("Please select work order type.");
     } else if (nonFPCSelectedLoc == null) {
@@ -588,8 +588,7 @@ class MamWorkOrdersController extends GetxController {
       if (nonFPCTxID.text.isEmpty) {
         nonFPCTxID.text = "AUTOID";
       }
-
-      if (!nonFPCWOReleaseTXID) {
+      if (nonFPCFromEpi.text == nonFPCToEpi.text) {
         return;
       }
 
@@ -651,6 +650,10 @@ class MamWorkOrdersController extends GetxController {
         }
         isLoading = false;
         segmentsList.refresh();
+      }
+
+      if (fromSave) {
+        return;
       }
 
       Get.defaultDialog(
@@ -950,7 +953,7 @@ class MamWorkOrdersController extends GetxController {
                 showMsgDialogSuccess2(resp['program_Response']['strMessage'],
                     () {
                   Future.delayed(Duration(milliseconds: 400)).then((value) {
-                    multiPleSegmentsDialog();
+                    multiPleSegmentsDialog(fromSave: true);
                     Future.delayed(const Duration(milliseconds: 800))
                         .then((value) {
                       nonFPCWOReleaseTXID = false;
@@ -1370,9 +1373,10 @@ class MamWorkOrdersController extends GetxController {
     await clearWORepushPage();
     await clearWOAsperDailyFPCPage();
     await clearReleaseWONonFPCPage();
+    selectedTab.value = "Release WO Non FPC";
     onloadData.refresh();
-    // selectedTab.value = "Release WO Non FPC";
-    // pageController.animateToPage(0, duration: const Duration(milliseconds: 200), curve: Curves.linear);
+    pageController.animateToPage(0,
+        duration: const Duration(milliseconds: 200), curve: Curves.linear);
     nonFPCWOTypeFN.requestFocus();
   }
 

@@ -221,20 +221,20 @@ class _CellContainerState extends PlutoStateWithChange<_CellContainer> {
     required Color cellColorInReadOnlyState,
     required PlutoGridSelectingMode selectingMode,
   }) {
-    if (!hasFocus) {
-      return gridBackgroundColor;
-    }
-
-    if (!isEditing) {
-      return selectingMode.isRow ? activatedColor : null;
-    }
-
     if (stateManager.cellColorCallback != null && _isCurrentRowSelected()) {
       return stateManager.cellColorCallback!(PlutoCellColorContext(
           row: widget.row,
           cell: widget.cell,
           rowIdx: widget.rowIdx,
           stateManager: stateManager));
+    }
+
+    if (!hasFocus) {
+      return gridBackgroundColor;
+    }
+
+    if (!isEditing) {
+      return selectingMode.isRow ? activatedColor : null;
     }
 
     return readOnly == true ? cellColorInReadOnlyState : cellColorInEditState;
@@ -277,7 +277,13 @@ class _CellContainerState extends PlutoStateWithChange<_CellContainer> {
       );
     } else if (isSelectedCell) {
       return BoxDecoration(
-        color: activatedColor,
+        color: stateManager.cellColorCallback != null && _isCurrentRowSelected()
+            ? stateManager.cellColorCallback!(PlutoCellColorContext(
+                row: widget.row,
+                cell: widget.cell,
+                rowIdx: widget.rowIdx,
+                stateManager: stateManager))
+            : activatedColor,
         border: Border.all(
           color: hasFocus ? activatedBorderColor : inactivatedBorderColor,
           width: 1,
@@ -307,15 +313,17 @@ class _CellContainerState extends PlutoStateWithChange<_CellContainer> {
   }
 
   _isCurrentRowSelected() {
+    // print("IS row contain ${stateManager.currentRowIdx == widget.rowIdx}");
     if (stateManager.cellColorCallback == null) return false;
     var selectedIdx = [];
     if (stateManager.currentSelectingRows.isEmpty) {
-      selectedIdx.add(stateManager.currentRowIdx);
+      selectedIdx.add(stateManager.currentRow?.sortIdx);
     } else {
       selectedIdx.addAll(
           stateManager.currentSelectingRows.map((e) => e.sortIdx).toList());
     }
-    if (selectedIdx.contains(widget.rowIdx)) {
+
+    if (selectedIdx.contains(widget.row.sortIdx)) {
       return true;
     } else {
       return false;

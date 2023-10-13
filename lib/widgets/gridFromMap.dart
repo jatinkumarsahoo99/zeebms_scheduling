@@ -762,6 +762,8 @@ class DataGridFromMap3 extends StatelessWidget {
                           callOnChangedEvent: true,
                           notify: true,
                         );
+                        rendererContext.stateManager.setCurrentCell(
+                            rendererContext.cell, rendererContext.rowIdx);
                       } else {
                         rendererContext.stateManager.changeCellValue(
                           rendererContext.cell,
@@ -772,6 +774,8 @@ class DataGridFromMap3 extends StatelessWidget {
                           callOnChangedEvent: true,
                           notify: true,
                         );
+                        rendererContext.stateManager.setCurrentCell(
+                            rendererContext.cell, rendererContext.rowIdx);
                       }
                     }
                   },
