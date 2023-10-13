@@ -304,8 +304,7 @@ class TransmissionLogView extends StatelessWidget {
                                 child: Text(
                                   (controller.lastSavedLoggedUser.value ?? "") +
                                       " \n" +
-                                      " Transmission Time: " +
-                                      (controller.totalTransTime.value ?? ""),
+                                      " Transmission Time: "+(controller.totalTransTime.value ?? ""),
                                   style: TextStyle(
                                       fontSize: SizeDefine.labelSize1,
                                       fontWeight: FontWeight.w600),
@@ -397,6 +396,13 @@ class TransmissionLogView extends StatelessWidget {
                                                 .cells["eventType"]?.value ??
                                             "");
                                 Color color = Colors.white;
+                                if (controller
+                                        .gridStateManager?.currentRowIdx ==
+                                    colorData.rowIdx) {
+                                  return Color(0xFF2979FF);
+                                  // return Colors.blue[900]!;
+                                  // return Colors.blueAccent;
+                                }
 
                                 if (data != null) {
                                   color =
