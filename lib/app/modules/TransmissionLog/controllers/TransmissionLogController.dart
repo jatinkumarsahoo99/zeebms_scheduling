@@ -3390,7 +3390,7 @@ class TransmissionLogController extends GetxController {
     //   return;
     // }
 
-    Timer.periodic(Duration(seconds: 5), (timer) {
+    Timer.periodic(Duration(minutes: 5), (timer) {
       print("Download called");
       if (gridStateManager != null) {
         downloadForce();
