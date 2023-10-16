@@ -78,7 +78,9 @@ class CancelWOModel {
       data['ep#'] = ep ?? '';
       data['telecastType'] = telecastType;
       data['tapeId'] = tapeId;
-      data['telecastDate'] = telecastDate ?? '';
+      data['telecastDate'] = (telecastDate ?? '').contains("T")
+          ? telecastDate?.split("T")[0]
+          : (telecastDate ?? '');
       data['telecastTime'] = telecastTime ?? '';
       data['epiSegCnt'] = epiSegCnt;
       data['woId'] = woId;
