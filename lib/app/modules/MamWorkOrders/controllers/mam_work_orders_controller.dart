@@ -685,7 +685,7 @@ class MamWorkOrdersController extends GetxController {
                       : null
                   : DataGridFromMap3(
                       rowHeight: 35,
-                      // editKeys: ['telecastDate', 'telecastTime'],
+                      editKeys: ['telecastDate', 'telecastTime'],
                       customWidgetInRenderContext: {
                         "telecastDate": (renderContext) {
                           return DateWithThreeTextField(
