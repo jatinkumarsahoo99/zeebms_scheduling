@@ -15,7 +15,9 @@ import 'package:intl/intl.dart';
 import 'package:bms_scheduling/widgets/PlutoGrid/pluto_grid.dart';
 
 import '../../../../widgets/DateTime/DateWithThreeTextField.dart';
+import '../../../../widgets/DateTime/DateWithThreeTextField1.dart';
 import '../../../../widgets/DateTime/TimeWithThreeTextField.dart';
+import '../../../../widgets/DateTime/TimeWithThreeTextField1.dart';
 import '../../../../widgets/FormButton.dart';
 import '../../../../widgets/gridFromMap.dart';
 import '../../../controller/HomeController.dart';
@@ -685,10 +687,10 @@ class MamWorkOrdersController extends GetxController {
                       : null
                   : DataGridFromMap3(
                       rowHeight: 35,
-                      // editKeys: ['telecastDate', 'telecastTime'],
+                      editKeys: ['telecastDate', 'telecastTime'],
                       customWidgetInRenderContext: {
                         "telecastDate": (renderContext) {
-                          return DateWithThreeTextField(
+                          return DateWithThreeTextField1(
                             title: "",
                             widthRation: .1,
                             isEnable: true,
@@ -699,7 +701,7 @@ class MamWorkOrdersController extends GetxController {
                         },
                         "telecastTime": (renderContext) {
                           return StatefulBuilder(builder: (context, re) {
-                            return TimeWithThreeTextField(
+                            return TimeWithThreeTextField1(
                               title: "",
                               widthRation: .1,
                               isEnable: true,
