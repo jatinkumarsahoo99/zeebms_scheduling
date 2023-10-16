@@ -156,8 +156,8 @@ class TransmissionLogController extends GetxController {
   @override
   void onInit() {
     fetchUserGridSetting();
-    _download1();
     super.onInit();
+    _download1();
     getLocations();
     startTime_focus.addListener(() {
       if (!startTime_focus.hasFocus) {
@@ -169,6 +169,7 @@ class TransmissionLogController extends GetxController {
       }
     });
   }
+
 
   fetchUserGridSetting() async {
     userDataSettings = await Get.find<HomeController>()
@@ -1981,7 +1982,7 @@ class TransmissionLogController extends GetxController {
 
   void paste2({int rowIndex = 0, Function? fun}) {
     if (listCutCopy.length == 0) return;
-    rowIndex = rowIndex - 1;
+    // rowIndex = rowIndex - 1;
     int intFirstRow;
     int intFirstRowdisplayIndex;
     List<PlutoRow> dt = (gridStateManager?.rows)!;
@@ -2033,7 +2034,8 @@ class TransmissionLogController extends GetxController {
       }
 
       for (PlutoRow ddr in listCutCopy) {
-        PlutoRow dr = insertReplicatePlutoRow(row: ddr);
+        // PlutoRow dr = insertReplicatePlutoRow(row: ddr);
+        PlutoRow dr = ddr;
         dr.cells["fpCtime"]?.value = strFPCTime;
 
         if (lastSelectCutCopyOption == "cut") {
@@ -2070,7 +2072,7 @@ class TransmissionLogController extends GetxController {
 
   void paste3({int rowIndex = 0, Function? fun}) {
     if (listCutCopy.length == 0) return;
-    rowIndex = rowIndex - 1;
+    // rowIndex = rowIndex - 1;
     int intFirstRowdisplayIndex;
     List<PlutoRow> dt = (gridStateManager?.rows)!;
 
@@ -3205,6 +3207,103 @@ class TransmissionLogController extends GetxController {
     }
   }
 
+  cutCopy2({required bool isCut, Function? fun}) {
+    print("Its cutCopy1() method");
+    listCutCopy = [];
+    if (isCut) {
+      lastSelectCutCopyOption = "cut";
+      // var strAllowedEvent = "PR,PC,F,I,A,W,VP,GL,C,CL";
+      List<String> strAllowedEvent = [
+        "PR",
+        "PC",
+        "F",
+        "I",
+        "L",
+        "A",
+        "W",
+        "VP",
+        "GL",
+        "C",
+        "CL"
+      ];
+      print("Total length of selecting row is>>>" +
+          (gridStateManager?.currentSelectingRows?.length.toString() ?? ""));
+      if ((gridStateManager?.currentSelectingRows.length ?? 0) > 0) {
+        gridStateManager?.currentSelectingRows.forEach((element) {
+          if (strAllowedEvent.contains(element?.cells["eventType"]?.value
+                  .toString()
+                  .trim()
+                  .toUpperCase() ??
+              "")) {
+            listCutCopy.add(element);
+          }
+        });
+      } else {
+        if (strAllowedEvent.contains(gridStateManager
+                ?.currentRow?.cells["eventType"]?.value
+                .toString()
+                .trim()
+                .toUpperCase() ??
+            "")) {
+          listCutCopy.add((gridStateManager?.currentRow)!);
+        }
+      }
+      listCutCopy = listCutCopy.reversed.toList();
+      print("Cut length is>>" + listCutCopy.length.toString());
+      if (listCutCopy.length > 0) {
+        print("Cutt");
+        // copyRow = row;
+        if (fun != null) {
+          fun();
+        }
+      } else {
+        LoadingDialog.callInfoMessage("We couldn't cut this row");
+      }
+    } else {
+      lastSelectCutCopyOption = "copy";
+      List<String> strAllowedEvent = [
+        "PR",
+        "PC",
+        "F",
+        "I",
+        "L",
+        "A",
+        "W",
+        "VP",
+        "GL"
+      ];
+      if ((gridStateManager?.currentSelectingRows.length ?? 0) > 0) {
+        gridStateManager?.currentSelectingRows.forEach((element) {
+          if (strAllowedEvent.contains(element.cells["eventType"]?.value
+                  .toString()
+                  .trim()
+                  .toUpperCase() ??
+              "")) {
+            listCutCopy.add(element);
+          }
+        });
+      } else {
+        if (strAllowedEvent.contains(gridStateManager
+                ?.currentRow?.cells["eventType"]?.value
+                .toString()
+                .trim()
+                .toUpperCase() ??
+            "")) {
+          listCutCopy.add((gridStateManager?.currentRow)!);
+        }
+      }
+      if (listCutCopy.length > 0) {
+        print("Copy");
+        // copyRow = row;
+        if (fun != null) {
+          fun();
+        }
+      } else {
+        LoadingDialog.callInfoMessage("We couldn't copy this row");
+      }
+    }
+  }
+
   paste(index, {Function? fun}) {
     if (lastSelectCutCopyOption != null && copyRow != null) {
       addEventToUndo();
@@ -3270,37 +3369,32 @@ class TransmissionLogController extends GetxController {
 
     ExportData().exportFilefromString(jsonEncode(map), filename);*/
   }
+  void downloadForce() async {
+    // if (kDebugMode) {
+    //   return;
+    // }
+    List<Map<String, dynamic>>? list =
+        gridStateManager?.rows.map((e) => e.toJson()).toList();
+    var map = {
+      "loadSavedLogOutput": {"lstTransmissionLog": list}
+    };
+    List<String> dateSplit = selectedDate.text.split("-");
+    String filename =
+        "${selectLocation?.value ?? ""}${selectChannel?.value}${dateSplit[2]}${dateSplit[1]}${dateSplit[0]}.json";
 
-  void _download1() async {
-    if (kDebugMode) {
-      return;
-    }
-    if (gridStateManager == null) {
-      return;
-    }
+    ExportData().exportFilefromString(jsonEncode(map), filename);
+  }
+
+   _download1() {
+    // if (kDebugMode) {
+    //   return;
+    // }
+
     Timer.periodic(Duration(minutes: 5), (timer) {
-      List<Map<String, dynamic>>? list =
-          gridStateManager?.rows.map((e) => e.toJson()).toList();
-      var map = {
-        "loadSavedLogOutput": {"lstTransmissionLog": list}
-      };
-      /*String data = await jsonEncode(
-        gridStateManager?.rows.map((e) => e.toJson()).toList());*/
-      // final stream = await Stream.fromIterable(data!.codeUnits);
-      // download(stream, 'hello.txt');
-      // final FileSystemAccessHandle? handle = await html.window.();
-      // if (handle != null) {
-      // Permission granted, continue with folder creation
-      // } else {
-      // Permission denied, handle accordingly
-      // }
-
-      List<String> dateSplit = selectedDate.text.split("-");
-
-      String filename =
-          "${selectLocation?.value ?? ""}${selectChannel?.value}${dateSplit[2]}${dateSplit[1]}${dateSplit[0]}.json";
-
-      ExportData().exportFilefromString(jsonEncode(map), filename);
+      print("Download called");
+      if (gridStateManager != null) {
+        downloadForce();
+      }
     });
   }
 
@@ -4192,12 +4286,12 @@ class TransmissionLogController extends GetxController {
         switch (raw.logicalKey.keyLabel) {
           case "F3":
             // cutCopy(isCut: false, row: gridStateManager?.currentRow);
-            cutCopy1(
+            cutCopy2(
               isCut: false,
             );
             break;
           case "F2":
-            cutCopy1(
+            cutCopy2(
               isCut: true,
             );
             break;
