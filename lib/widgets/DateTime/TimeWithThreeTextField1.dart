@@ -9,6 +9,7 @@ import '../PlutoGrid/src/helper/pluto_debounce.dart';
 import '../PlutoGrid/src/helper/pluto_key_manager_event.dart';
 import '../PlutoGrid/src/manager/pluto_grid_state_manager.dart';
 
+///// Dont used this widget its only for MAM Work order pluto grid widget
 class TimeWithThreeTextField1 extends StatefulWidget {
   final String title, splitType;
   final int hour, minutes, second, frame;
@@ -83,7 +84,7 @@ class _DateTimeWithThreeTextFieldState extends State<TimeWithThreeTextField1> {
     focus[2].addListener(() {
       if (focus[2].hasFocus) {
         widget.stateManager?.setCurrentCell(
-            widget.stateManager?.rows[widget.rowIdx!].cells["telecastDate"],
+            widget.stateManager?.rows[widget.rowIdx!].cells["telecastTime"],
             widget.rowIdx!);
       }
     });
