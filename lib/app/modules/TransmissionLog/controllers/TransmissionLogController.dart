@@ -170,7 +170,6 @@ class TransmissionLogController extends GetxController {
     });
   }
 
-
   fetchUserGridSetting() async {
     userDataSettings = await Get.find<HomeController>()
         .fetchUserSetting2(formName: "frmTransmissionlog");
@@ -2331,6 +2330,63 @@ class TransmissionLogController extends GetxController {
     }
   }
 
+  btn_markError_ClickMultiple(index) {
+    List<PlutoRow>? selectedRow = gridStateManager?.currentSelectingRows;
+    bool? allGood = false;
+    for (int i = 0; i < (selectedRow?.length ?? 0); i++) {
+      if (["c", "cl"].contains(selectedRow![i].cells["eventType"]?.value
+          .toString()
+          .trim()
+          .toLowerCase())) {
+        allGood = true;
+      } else {
+        allGood = false;
+        LoadingDialog.callInfoMessage(
+            "You can't remove and mark as error to event type other than C & CL");
+        break;
+      }
+    }
+    if (allGood ?? false) {
+      LoadingDialog.recordExists(
+          "Want to remove and mark as error these ${selectedRow?.length ?? 0} data?",
+          () {
+        List<bool> isSucess = [];
+        LoadingDialog.call();
+        selectedRow?.forEach((element) {
+          String bookNo = element.cells["bookingNumber"]?.value;
+          String bookCode = element.cells["bookingdetailcode"]?.value;
+          String eventType = element.cells["eventType"]?.value;
+          if (selectLocation != null && selectChannel != null) {
+            Get.find<ConnectorControl>().GETMETHODCALL(
+                api: ApiFactory.TRANSMISSION_LOG_MARK_AS_ERROR(
+                    selectLocation?.key ?? "",
+                    selectChannel?.key ?? "",
+                    bookNo,
+                    bookCode,
+                    selectedDate.text,
+                    eventType),
+                fun: (map) {
+                  if (map is Map) {
+                    isSucess.add(true);
+                    if (isSucess.length == selectedRow.length) {
+                      Get.back();
+                      addEventToUndo();
+                      gridStateManager
+                          ?.removeRows(selectedRow);
+                      colorGrid(false);
+                    }
+                  } else {}
+                });
+          }
+        });
+
+        // addEventToUndo();
+        // gridStateManager?.removeRows([(gridStateManager?.rows[index])!]);
+        // colorGrid(false);
+      }, deleteCancel: "No", deleteTitle: "Yes");
+    }
+  }
+
   getEventListForInsert({required Function function}) {
     if ((listEventsinInsert.value.length ?? 0) > 0) {
       function();
@@ -3218,7 +3274,7 @@ class TransmissionLogController extends GetxController {
         "PC",
         "F",
         "I",
-        "L",
+        // "L",
         "A",
         "W",
         "VP",
@@ -3266,7 +3322,7 @@ class TransmissionLogController extends GetxController {
         "PC",
         "F",
         "I",
-        "L",
+        // "L",
         "A",
         "W",
         "VP",
@@ -3369,6 +3425,7 @@ class TransmissionLogController extends GetxController {
 
     ExportData().exportFilefromString(jsonEncode(map), filename);*/
   }
+
   void downloadForce() async {
     // if (kDebugMode) {
     //   return;
@@ -3385,7 +3442,7 @@ class TransmissionLogController extends GetxController {
     ExportData().exportFilefromString(jsonEncode(map), filename);
   }
 
-   _download1() {
+  _download1() {
     // if (kDebugMode) {
     //   return;
     // }

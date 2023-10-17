@@ -562,7 +562,11 @@ class TransmissionLogView extends StatelessWidget {
                                     showRescheduleDialog(Get.context);
                                     break;
                                   case DataGridMenuItem.removeMarkError:
-                                    controller.btn_markError_Click(index);
+                                    if ((controller.gridStateManager?.currentSelectingRows.length ?? 0) > 0) {
+                                      controller.btn_markError_ClickMultiple(index);
+                                    } else {
+                                      controller.btn_markError_Click(index);
+                                    }
                                     break;
                                   case DataGridMenuItem.paste:
                                     // controller.paste(index);
