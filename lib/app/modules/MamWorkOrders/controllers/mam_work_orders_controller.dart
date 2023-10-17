@@ -92,6 +92,7 @@ class MamWorkOrdersController extends GetxController {
   var telecasteTypeFN = FocusNode();
   bool canRetriveData = true;
   bool woAsPerDFPCEnableAll = false, woAsPerDFPCSwapToHDSD = true;
+
   // WO AS PER DAILY DAILY FPC VARAIBLES END
   ///
   ///
@@ -103,6 +104,7 @@ class MamWorkOrdersController extends GetxController {
   var rePushModel = REPushModel().obs;
   bool canEnableRePush = false;
   PlutoGridStateManager? woRepushSM;
+
   // WO RE-PUSH varaibles end
   ///
   ///
@@ -125,6 +127,7 @@ class MamWorkOrdersController extends GetxController {
       cwoTelDTTo = TextEditingController();
   var cWOtelDate = true.obs;
   bool cwoisEnableAll = false;
+
   // Cancel WO varaibles end
   ///
   ///
@@ -691,13 +694,16 @@ class MamWorkOrdersController extends GetxController {
                       editKeys: ['telecastDate', 'telecastTime'],
 
                       customWidgetInRenderContext: {
-                        "telecastDate": (renderContext) {
+                        "telecastDate":
+                            (PlutoColumnRendererContext renderContext) {
                           return DateWithThreeTextField1(
                             title: "",
                             widthRation: .1,
                             isEnable: true,
+                            rowIdx: renderContext.rowIdx,
                             mainTextController: textEditingControllersDate[
                                 renderContext.rowIdx],
+                            stateManager: renderContext.stateManager,
                             hideTitle: true,
                           );
                         },
@@ -707,9 +713,11 @@ class MamWorkOrdersController extends GetxController {
                               title: "",
                               widthRation: .1,
                               isEnable: true,
+                              rowIdx: renderContext.rowIdx,
                               mainTextController: textEditingControllersTime[
                                   renderContext.rowIdx],
                               hideTitle: true,
+                              stateManager: renderContext.stateManager,
                             );
                           });
                         },
@@ -1043,6 +1051,7 @@ class MamWorkOrdersController extends GetxController {
       },
     ).toList();
   }
+
   ////////////////////////////////////////// RELEASE WO NON FPC FUNCTIONALITY END//////////////////////////////////////////
   ///
   ///
@@ -1391,5 +1400,5 @@ class MamWorkOrdersController extends GetxController {
   String get getCurrentDateTime =>
       "${DateTime.now().day}-${DateTime.now().month}-${DateTime.now().year}";
 
-  //////////////////////////////// COMMON FUNCTION ON THIS FORM END///////////////////////////////////////////////////
+//////////////////////////////// COMMON FUNCTION ON THIS FORM END///////////////////////////////////////////////////
 }
