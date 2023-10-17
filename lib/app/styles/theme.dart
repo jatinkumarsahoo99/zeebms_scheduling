@@ -100,7 +100,10 @@ PlutoGridConfiguration plutoGridConfiguration({
           draggableScrollbar: true,
           isAlwaysShown: true,
           hoverWidth: 15,
-          scrollbarThickness: 6,
+          scrollbarThickness: 15,
+          scrollbarThicknessWhileDragging: 15,
+          scrollbarRadius: Radius.circular(8),
+          scrollbarRadiusWhileDragging: Radius.circular(8),
         ));
 
 PlutoGridConfiguration plutoGridConfigurationTransmisionLog({
@@ -158,8 +161,15 @@ PlutoGridConfiguration plutoGridConfigurationTransmisionLog({
       ),
       enterKeyAction: PlutoGridEnterKeyAction.none,
       tabKeyAction: PlutoGridTabKeyAction.moveToNextOnEdge,
-      scrollbar: const PlutoGridScrollbarConfig(
-          draggableScrollbar: true, isAlwaysShown: true, hoverWidth: 15),
+      scrollbar: PlutoGridScrollbarConfig(
+        draggableScrollbar: true,
+        isAlwaysShown: true,
+        hoverWidth: 15,
+        scrollbarThickness: 15,
+        scrollbarThicknessWhileDragging: 15,
+        scrollbarRadius: Radius.circular(8),
+        scrollbarRadiusWhileDragging: Radius.circular(8),
+      ),
     );
 
 PlutoGridConfiguration plutoGridConfiguration2({
@@ -227,7 +237,13 @@ PlutoGridConfiguration plutoGridConfiguration2({
         enterKeyAction: PlutoGridEnterKeyAction.none,
         tabKeyAction: PlutoGridTabKeyAction.moveToNextOnEdge,
         scrollbar: const PlutoGridScrollbarConfig(
-            draggableScrollbar: true, isAlwaysShown: true, hoverWidth: 15));
+          draggableScrollbar: true,
+          isAlwaysShown: true,
+          hoverWidth: 15,
+          scrollbarThickness: 15,
+          scrollbarThicknessWhileDragging: 15,
+          scrollbarRadius: Radius.circular(8),
+          scrollbarRadiusWhileDragging: Radius.circular(8),));
 
 // Create a new class that inherits from PlutoGridShortcutAction
 // If the execute method is implemented,
