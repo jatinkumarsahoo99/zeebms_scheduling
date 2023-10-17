@@ -596,6 +596,7 @@ class MamWorkOrdersController extends GetxController {
       if (nonFPCFromEpi.text == nonFPCToEpi.text) {
         return;
       }
+      PlutoGridStateManager? gridSM;
 
       var isLoading = true;
       var textEditingControllersDate = <TextEditingController>[];
@@ -691,6 +692,7 @@ class MamWorkOrdersController extends GetxController {
                   : DataGridFromMap3(
                       rowHeight: 35,
                       editKeys: ['telecastDate', 'telecastTime'],
+
                       customWidgetInRenderContext: {
                         "telecastDate":
                             (PlutoColumnRendererContext renderContext) {
@@ -720,6 +722,10 @@ class MamWorkOrdersController extends GetxController {
                           });
                         },
                       },
+                      colorCallback: (row) =>
+                          (row.row.cells.containsValue(gridSM?.currentCell))
+                              ? Colors.deepPurple.shade200
+                              : Colors.white,
                       mapData:
                           segmentsList.value.map((e) => e.toJson()).toList(),
                       mode: PlutoGridMode.selectWithOneTap,
@@ -727,7 +733,7 @@ class MamWorkOrdersController extends GetxController {
                       columnAutoResize: true,
                       onload: (sm) {
                         // sm.stateManager.setEditing(true);
-                        // gridSM = sm.stateManager;
+                        gridSM = sm.stateManager;
                         // gridSM?.setCurrentCell(
                         //     sm.stateManager
                         //         .getRowByIdx(selectedRowIdx.value)!

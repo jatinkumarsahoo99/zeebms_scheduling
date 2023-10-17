@@ -1,3 +1,5 @@
+import 'package:intl/intl.dart';
+
 class CancelWOModel {
   int? rowNumber;
   bool? cancelWO;
@@ -49,6 +51,13 @@ class CancelWOModel {
     woId = json['woId'];
   }
 
+  parsedDate(String? dateTime) {
+    return (dateTime ?? '').contains("T")
+        ? DateFormat("dd-MM-yyyy")
+            .format(DateFormat("yyyy-MM-ddThh:mm:ss").parse(dateTime!))
+        : (dateTime ?? '');
+  }
+
   Map<String, dynamic> toJson({bool fromSave = false}) {
     final Map<String, dynamic> data = <String, dynamic>{};
     if (fromSave) {
@@ -78,9 +87,7 @@ class CancelWOModel {
       data['ep#'] = ep ?? '';
       data['telecastType'] = telecastType;
       data['tapeId'] = tapeId;
-      data['telecastDate'] = (telecastDate ?? '').contains("T")
-          ? telecastDate?.split("T")[0]
-          : (telecastDate ?? '');
+      data['telecastDate'] = parsedDate(telecastDate);
       data['telecastTime'] = telecastTime ?? '';
       data['epiSegCnt'] = epiSegCnt;
       data['woId'] = woId;
