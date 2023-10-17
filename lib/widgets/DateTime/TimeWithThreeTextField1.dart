@@ -83,7 +83,7 @@ class _DateTimeWithThreeTextFieldState extends State<TimeWithThreeTextField1> {
     focus[2].addListener(() {
       if (focus[2].hasFocus) {
         widget.stateManager?.setCurrentCell(
-            widget.stateManager?.rows[widget.rowIdx!].cells["telecastDate"],
+            widget.stateManager?.rows[widget.rowIdx!].cells["telecastTime"],
             widget.rowIdx!);
       }
     });
