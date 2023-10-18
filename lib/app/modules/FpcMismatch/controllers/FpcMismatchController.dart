@@ -397,6 +397,7 @@ class FpcMismatchController extends GetxController {
       if (element.cells["fpcTime"]?.value ==
           stateManager?.currentRow?.cells["fpcTime"]?.value) {
         stateManager?.setRowChecked(element, select);
+        dataList![element.sortIdx].selectItem = select;
       }
     });
     stateManager?.notifyListeners();
