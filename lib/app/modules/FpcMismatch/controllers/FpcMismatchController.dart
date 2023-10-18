@@ -41,7 +41,7 @@ class FpcMismatchController extends GetxController {
 
   SelectButton? selectButton;
   RxBool hideKeysAllowed = RxBool(false);
-  FocusNode locationFocus=FocusNode();
+  FocusNode locationFocus = FocusNode();
 
   @override
   void onInit() {
@@ -389,6 +389,17 @@ class FpcMismatchController extends GetxController {
     update(["fpcMaster"]);
     // programTable.notifyListeners();
     update(["programTable"]);
+  }
+
+  void selectCurrentSelectFpcTime(bool select) {
+    if (stateManager == null || stateManager?.currentRow == null) return;
+    stateManager?.rows.forEach((element) {
+      if (element.cells["fpcTime"]?.value ==
+          stateManager?.currentRow?.cells["fpcTime"]?.value) {
+        stateManager?.setRowChecked(element, select);
+      }
+    });
+    stateManager?.notifyListeners();
   }
 }
 

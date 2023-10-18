@@ -3427,9 +3427,9 @@ class TransmissionLogController extends GetxController {
   }
 
   void downloadForce() async {
-    // if (kDebugMode) {
-    //   return;
-    // }
+    if (kDebugMode) {
+      return;
+    }
     List<Map<String, dynamic>>? list =
         gridStateManager?.rows.map((e) => e.toJson()).toList();
     var map = {
