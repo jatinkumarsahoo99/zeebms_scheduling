@@ -449,7 +449,6 @@ class TransmissionLogView extends StatelessWidget {
                                     () {
                                   controller.calculateTotalTransmissionTime();
                                 };
-                                // loadevent.stateManager.setSelecting(true);
                                 loadevent.stateManager.setSelectingMode(
                                     PlutoGridSelectingMode.row);
                                 if (controller.isFetch.value) {
@@ -476,6 +475,36 @@ class TransmissionLogView extends StatelessWidget {
                                           .value,
                                       controller.selectedIndex);
                                 }
+
+
+
+                                /////////////19 Oct 23 : By Sanjaya ///////////
+                                loadevent.stateManager
+                                    .setSelecting(true);
+                                loadevent.stateManager
+                                    .gridFocusNode
+                                    .addListener(() {
+                                  if (!loadevent
+                                      .stateManager
+                                      .gridFocusNode
+                                      .hasFocus) {
+                                    if (loadevent
+                                        .stateManager
+                                        .currentSelectingRows
+                                        .isEmpty &&
+                                        loadevent.stateManager
+                                            .currentCell !=
+                                            null) {
+                                      loadevent.stateManager
+                                          .toggleSelectingRow(
+                                          loadevent
+                                              .stateManager
+                                              .currentRowIdx);
+                                    }
+                                    loadevent.stateManager
+                                        .clearCurrentCell();
+                                  }
+                                });
                               },
                               formatDate: false,
                               hideKeys: ["foreColor", "backColor", "modifed"],

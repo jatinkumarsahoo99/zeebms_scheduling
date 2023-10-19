@@ -152,6 +152,9 @@ class TransmissionLogController extends GetxController {
   Completer<bool>? completerDialog;
 
   UserDataSettings? userDataSettings;
+  int startVisibleRow = 0;
+  int endVisibleRow = 0;
+  List<PlutoRow> deletedSegmentData=[];
 
   @override
   void onInit() {
@@ -2334,7 +2337,9 @@ class TransmissionLogController extends GetxController {
     List<PlutoRow>? selectedRow = gridStateManager?.currentSelectingRows;
     bool? allGood = false;
     for (int i = 0; i < (selectedRow?.length ?? 0); i++) {
-      if (["c", "cl"].contains(selectedRow![i].cells["eventType"]?.value
+      if (["c", "cl"].contains(selectedRow![i]
+          .cells["eventType"]
+          ?.value
           .toString()
           .trim()
           .toLowerCase())) {
@@ -2371,8 +2376,7 @@ class TransmissionLogController extends GetxController {
                     if (isSucess.length == selectedRow.length) {
                       Get.back();
                       addEventToUndo();
-                      gridStateManager
-                          ?.removeRows(selectedRow);
+                      gridStateManager?.removeRows(selectedRow);
                       colorGrid(false);
                     }
                   } else {}
@@ -2401,6 +2405,10 @@ class TransmissionLogController extends GetxController {
           map["lstFastInsertEventType"].forEach((e) {
             listEventsinInsert.add(DropDownValue(key: e, value: e));
           });
+          listEventsinInsert.removeWhere((element) => [
+                "cross channel promo",
+                "high priority promo"
+              ].contains(element.value.toString().trim().toLowerCase()));
           function();
         });
   }
@@ -3962,12 +3970,21 @@ class TransmissionLogController extends GetxController {
           if (seconds == 0) {
             // tblLog.FirstDisplayedScrollingRowIndex = int.tryParse(dr.cells['rownumber']?.value??"")! - 10;
             // tblLog.Rows[dr['rownumber']].Selected = true;
-            gridStateManager?.moveScrollByRow(PlutoMoveDirection.down,
-                int.tryParse(dr.cells['rownumber']?.value ?? "")! + 10);
-
-            // gridStateManager?.setCurrentCell(dr.cells["no"], int.tryParse(dr.cells['rownumber']?.value ?? "")!);
-            gridStateManager?.toggleSelectingRow(
+            gridStateManager?.setCurrentCell(dr.cells["no"],
                 int.tryParse(dr.cells['rownumber']?.value ?? "")!);
+            gridStateManager?.moveScrollByRow(
+                (startVisibleRow >
+                        (int.tryParse(dr.cells['rownumber']?.value ?? "")!))
+                    ? PlutoMoveDirection.up
+                    : PlutoMoveDirection.down,
+                int.tryParse(dr.cells['rownumber']?.value ?? "")! +
+                    ((startVisibleRow >
+                            (int.tryParse(dr.cells['rownumber']?.value ?? "")!))
+                        ? (-10)
+                        : (10)));
+
+            // gridStateManager?.toggleSelectingRow(
+            //     int.tryParse(dr.cells['rownumber']?.value ?? "")!);
             // LoadingDialog.callInfoMessage("Ros spot outside contracted timeband!\nUnable to proceed with save");
             callInfoDialog(
                 "Ros spot outside contracted timeband!\nUnable to proceed with save");
@@ -4382,6 +4399,9 @@ class TransmissionLogController extends GetxController {
         gridStateManager?.setCurrentSelectingRowsByRange(
             selectedRows?.first.cells["no"]?.value, selectedRows?.last.cells["no"]?.value);*/
         if (isYes ?? false) {
+          if(row?.cells["eventType"]?.value.toString().trim().toLowerCase()=="s"){
+            deletedSegmentData.add((row));
+          }
           deletRows.add(row!);
           // gridStateManager?.removeRows([row!]);
         }
@@ -4399,6 +4419,9 @@ class TransmissionLogController extends GetxController {
         bool? isYes = await showDialogForYesNo1(
             "Want to delete selected record?\nEvent type: ${gridStateManager?.currentRow?.cells["eventType"]?.value ?? ""}\nDuration: ${gridStateManager?.currentRow?.cells["tapeduration"]?.value ?? ""}\nExportTapeCode: ${gridStateManager?.currentRow?.cells["exportTapeCode"]?.value ?? ""}\nExportTapeCaption: ${gridStateManager?.currentRow?.cells["exportTapeCaption"]?.value ?? ""}");
         if (isYes ?? false) {
+          if(gridStateManager?.currentRow?.cells["eventType"]?.value.toString().trim().toLowerCase()=="s"){
+            deletedSegmentData.add((gridStateManager?.currentRow)!);
+          }
           addEventToUndo();
           gridStateManager?.removeCurrentRow();
           colorGrid(false);
@@ -4430,5 +4453,13 @@ class TransmissionLogController extends GetxController {
                       .toString() ??
                   "")!);
     }
+  }
+
+  findVisibleRows(double scrollPosition) {
+    final rowHeight = 20; // Calculate the row height;
+    startVisibleRow = (scrollPosition / rowHeight).floor();
+    endVisibleRow = ((scrollPosition + (Get.height - 200)) / rowHeight).ceil();
+    print("Start screen : ${startVisibleRow.toString()}");
+    print("End screen : ${endVisibleRow.toString()}");
   }
 }

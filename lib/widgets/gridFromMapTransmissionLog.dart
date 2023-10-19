@@ -431,51 +431,62 @@ class DataGridFromMapTransmissionLog extends StatelessWidget {
         autofocus: false,
         focusNode: _focusNode,
         onFocusChange: onFocusChange,
-        child: PlutoGrid(
-            // mode: mode ?? PlutoGridMode.normal,
-            mode: PlutoGridMode.normal,
-            configuration:
-                plutoGridConfigurationTransmisionLog(focusNode: _focusNode),
-            // configuration: const PlutoGridConfiguration(),
-            rowColorCallback: colorCallback,
-            onLoaded: onload,
-            columns: segColumn,
-            onRowDoubleTap: onRowDoubleTap,
-            onRowsMoved: onRowsMoved,
-            onChanged: onChanged,
-            onSelected: onSelected,
-            cellColorCallback: cellColorCallback,
-            /*createFooter: (stateManager) {
-              return PlutoLazyPagination(
-                // Determine the first page.
-                // Default is 1.
-                initialPage: 1,
+        child: NotificationListener<ScrollNotification>(
+          onNotification: (notification) {
+            if (notification is ScrollUpdateNotification) {
+              // Handle scroll updates here
+              final scrollPosition = notification.metrics.pixels;
+              Get.find<TransmissionLogController>().findVisibleRows(scrollPosition);
+              // Do something with the visible rows
+            }
+            return false;
+          },
+          child: PlutoGrid(
+              // mode: mode ?? PlutoGridMode.normal,
+              mode: PlutoGridMode.normal,
+              configuration:
+                  plutoGridConfigurationTransmisionLog(focusNode: _focusNode),
+              // configuration: const PlutoGridConfiguration(),
+              rowColorCallback: colorCallback,
+              onLoaded: onload,
+              columns: segColumn,
+              onRowDoubleTap: onRowDoubleTap,
+              onRowsMoved: onRowsMoved,
+              onChanged: onChanged,
+              onSelected: onSelected,
+              cellColorCallback: cellColorCallback,
+              /*createFooter: (stateManager) {
+                return PlutoLazyPagination(
+                  // Determine the first page.
+                  // Default is 1.
+                  initialPage: 1,
 
-                // First call the fetch function to determine whether to load the page.
-                // Default is true.
-                initialFetch: true,
+                  // First call the fetch function to determine whether to load the page.
+                  // Default is true.
+                  initialFetch: true,
 
-                // Decide whether sorting will be handled by the server.
-                // If false, handle sorting on the client side.
-                // Default is true.
-                fetchWithSorting: true,
+                  // Decide whether sorting will be handled by the server.
+                  // If false, handle sorting on the client side.
+                  // Default is true.
+                  fetchWithSorting: true,
 
-                // Decide whether filtering is handled by the server.
-                // If false, handle filtering on the client side.
-                // Default is true.
-                fetchWithFiltering: true,
+                  // Decide whether filtering is handled by the server.
+                  // If false, handle filtering on the client side.
+                  // Default is true.
+                  fetchWithFiltering: true,
 
-                // Determines the page size to move to the previous and next page buttons.
-                // Default value is null. In this case,
-                // it moves as many as the number of page buttons visible on the screen.
-                pageSizeToMove: null,
-                fetch: (contextData){
-                  return fetch(contextData,stateManager,segRows);
-                },
-                stateManager: stateManager,
-              );
-            },*/
-            rows: segRows),
+                  // Determines the page size to move to the previous and next page buttons.
+                  // Default value is null. In this case,
+                  // it moves as many as the number of page buttons visible on the screen.
+                  pageSizeToMove: null,
+                  fetch: (contextData){
+                    return fetch(contextData,stateManager,segRows);
+                  },
+                  stateManager: stateManager,
+                );
+              },*/
+              rows: segRows),
+        ),
       ),
     );
   }
