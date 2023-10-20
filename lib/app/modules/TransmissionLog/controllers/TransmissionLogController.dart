@@ -154,7 +154,7 @@ class TransmissionLogController extends GetxController {
   UserDataSettings? userDataSettings;
   int startVisibleRow = 0;
   int endVisibleRow = 0;
-  List<PlutoRow> deletedSegmentData=[];
+  List<PlutoRow> deletedSegmentData = [];
 
   @override
   void onInit() {
@@ -3473,6 +3473,14 @@ class TransmissionLogController extends GetxController {
       // dt = gridStateManager.dataSource;
 
       // gridStateManager.currentCell = null;
+      if ((deletedSegmentData.length) > 0) {
+        bool? proceedFurther = await showDialogForYesNo(
+            "${deletedSegmentData.length} segment deleted.\nDo you want to proceed further?");
+        if (!(proceedFurther!)) {
+          return;
+        }
+      }
+
       bool? checkPromo = await checkPromoTags();
       if (!(checkPromo!)) {
         return;
@@ -4399,7 +4407,8 @@ class TransmissionLogController extends GetxController {
         gridStateManager?.setCurrentSelectingRowsByRange(
             selectedRows?.first.cells["no"]?.value, selectedRows?.last.cells["no"]?.value);*/
         if (isYes ?? false) {
-          if(row?.cells["eventType"]?.value.toString().trim().toLowerCase()=="s"){
+          if (row?.cells["eventType"]?.value.toString().trim().toLowerCase() ==
+              "s") {
             deletedSegmentData.add((row));
           }
           deletRows.add(row!);
@@ -4419,7 +4428,11 @@ class TransmissionLogController extends GetxController {
         bool? isYes = await showDialogForYesNo1(
             "Want to delete selected record?\nEvent type: ${gridStateManager?.currentRow?.cells["eventType"]?.value ?? ""}\nDuration: ${gridStateManager?.currentRow?.cells["tapeduration"]?.value ?? ""}\nExportTapeCode: ${gridStateManager?.currentRow?.cells["exportTapeCode"]?.value ?? ""}\nExportTapeCaption: ${gridStateManager?.currentRow?.cells["exportTapeCaption"]?.value ?? ""}");
         if (isYes ?? false) {
-          if(gridStateManager?.currentRow?.cells["eventType"]?.value.toString().trim().toLowerCase()=="s"){
+          if (gridStateManager?.currentRow?.cells["eventType"]?.value
+                  .toString()
+                  .trim()
+                  .toLowerCase() ==
+              "s") {
             deletedSegmentData.add((gridStateManager?.currentRow)!);
           }
           addEventToUndo();
