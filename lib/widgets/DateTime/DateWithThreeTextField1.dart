@@ -9,6 +9,8 @@ import '../PlutoGrid/src/helper/pluto_debounce.dart';
 import '../PlutoGrid/src/helper/pluto_key_manager_event.dart';
 import '../PlutoGrid/src/manager/pluto_grid_state_manager.dart';
 
+
+///// Dont used this widget its only for MAM Work order pluto grid widget
 class DateWithThreeTextField1 extends StatefulWidget {
   final String title, splitType;
   final int day, month, year;
@@ -21,6 +23,8 @@ class DateWithThreeTextField1 extends StatefulWidget {
   final void Function(String date)? onFocusChange;
   final DateTime? startDate, endDate, intailDate;
   final String formatting;
+  final int? rowIdx;
+
   const DateWithThreeTextField1({
     Key? key,
     required this.title,
@@ -38,12 +42,14 @@ class DateWithThreeTextField1 extends StatefulWidget {
     this.startDate,
     this.hideTitle = false,
     this.endDate,
+    this.rowIdx,
     this.formatting = "yyyy/MM/dd",
     this.intailDate,
   }) : super(key: key);
 
   @override
-  State<DateWithThreeTextField1> createState() => _DateWithThreeTextField1State();
+  State<DateWithThreeTextField1> createState() =>
+      _DateWithThreeTextField1State();
 }
 
 class _DateWithThreeTextField1State extends State<DateWithThreeTextField1> {
@@ -69,6 +75,7 @@ class _DateWithThreeTextField1State extends State<DateWithThreeTextField1> {
     "November",
     "December"
   ];
+
   bool isLeapYearFun(int year) =>
       (year % 4 == 0) && ((year % 100 != 0) || (year % 400 == 0));
   List<int> maxDays = [];
@@ -76,7 +83,11 @@ class _DateWithThreeTextField1State extends State<DateWithThreeTextField1> {
   @override
   void initState() {
     selectedDateTime = widget.intailDate;
-    focus = List.generate(3, (index) => FocusNode(onKey: _handleOnKey));
+    focus = List.generate(
+        3,
+        (index) => FocusNode(
+              onKey: _handleOnKey,
+            ));
     textCtr = List.generate(3, (index) => TextEditingController());
     maxDays = [
       31,
@@ -105,8 +116,26 @@ class _DateWithThreeTextField1State extends State<DateWithThreeTextField1> {
         });
       });
     });
+    focus[0].addListener(() {
+      if(focus[0].hasFocus){
+        widget.stateManager?.setCurrentCell(
+            widget.stateManager?.rows[widget.rowIdx!].cells["telecastDate"],
+            widget.rowIdx!);
+      }
+    }); focus[1].addListener(() {
+      if(focus[1].hasFocus){
+        widget.stateManager?.setCurrentCell(
+            widget.stateManager?.rows[widget.rowIdx!].cells["telecastDate"],
+            widget.rowIdx!);
+      }
+    }); focus[2].addListener(() {
+      if(focus[2].hasFocus){
+        widget.stateManager?.setCurrentCell(
+            widget.stateManager?.rows[widget.rowIdx!].cells["telecastDate"],
+            widget.rowIdx!);
+      }
+    });
   }
-
 
   KeyEventResult _handleOnKey(FocusNode node, RawKeyEvent event) {
     var keyManager = PlutoKeyManagerEvent(
@@ -116,6 +145,11 @@ class _DateWithThreeTextField1State extends State<DateWithThreeTextField1> {
     if (keyManager.isKeyUpEvent) {
       return KeyEventResult.handled;
     }
+    /*if (node.hasFocus) {
+      widget.stateManager?.setCurrentCell(
+          widget.stateManager?.rows[widget.rowIdx!].cells["telecastDate"],
+          widget.rowIdx!);
+    }*/
 
     final skip = !(keyManager.isVertical ||
         _moveHorizontal(keyManager) ||
@@ -138,7 +172,7 @@ class _DateWithThreeTextField1State extends State<DateWithThreeTextField1> {
       return KeyEventResult.handled;
     }
 
-   /* // 엔터키는 그리드 포커스 핸들러로 전파 한다.
+    /* // 엔터키는 그리드 포커스 핸들러로 전파 한다.
     if (keyManager.isEnter) {
       _handleOnComplete();
       return KeyEventResult.ignored;
@@ -152,19 +186,14 @@ class _DateWithThreeTextField1State extends State<DateWithThreeTextField1> {
     // KeyManager 로 이벤트 처리를 위임 한다.
     widget.stateManager?.keyManager!.subject.add(keyManager);
 
-
     // 모든 이벤트를 처리 하고 이벤트 전파를 중단한다.
     return KeyEventResult.handled;
   }
-
-
-
 
   bool _moveHorizontal(PlutoKeyManagerEvent keyManager) {
     if (!keyManager.isHorizontal) {
       return false;
     }
-
 
     final selection = widget.mainTextController.selection;
 
@@ -184,7 +213,6 @@ class _DateWithThreeTextField1State extends State<DateWithThreeTextField1> {
 
     return false;
   }
-
 
   @override
   void dispose() {

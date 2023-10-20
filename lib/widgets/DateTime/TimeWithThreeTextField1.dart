@@ -9,6 +9,7 @@ import '../PlutoGrid/src/helper/pluto_debounce.dart';
 import '../PlutoGrid/src/helper/pluto_key_manager_event.dart';
 import '../PlutoGrid/src/manager/pluto_grid_state_manager.dart';
 
+///// Dont used this widget its only for MAM Work order pluto grid widget
 class TimeWithThreeTextField1 extends StatefulWidget {
   final String title, splitType;
   final int hour, minutes, second, frame;
@@ -18,6 +19,8 @@ class TimeWithThreeTextField1 extends StatefulWidget {
   final double widthRation;
   final void Function(String time)? onFocusChange;
   final PlutoGridStateManager? stateManager;
+  final int? rowIdx;
+
   const TimeWithThreeTextField1({
     Key? key,
     required this.title,
@@ -29,6 +32,7 @@ class TimeWithThreeTextField1 extends StatefulWidget {
     this.frame = 30,
     this.isTime = true,
     this.stateManager,
+    this.rowIdx,
     this.isEnable = true,
     this.hideTitle = false,
     this.widthRation = .15,
@@ -48,7 +52,8 @@ class _DateTimeWithThreeTextFieldState extends State<TimeWithThreeTextField1> {
 
   @override
   void initState() {
-    focus = List.generate(widget.isTime ? 3 : 4, (index) => FocusNode(onKey: _handleOnKey));
+    focus = List.generate(
+        widget.isTime ? 3 : 4, (index) => FocusNode(onKey: _handleOnKey));
     if (widget.mainTextController.text.isEmpty) {
       textCtr = List.generate(
           widget.isTime ? 3 : 4, (index) => TextEditingController(text: "00"));
@@ -62,6 +67,27 @@ class _DateTimeWithThreeTextFieldState extends State<TimeWithThreeTextField1> {
     }
     super.initState();
     handleOnFocusChange();
+    focus[0].addListener(() {
+      if (focus[0].hasFocus) {
+        widget.stateManager?.setCurrentCell(
+            widget.stateManager?.rows[widget.rowIdx!].cells["telecastTime"],
+            widget.rowIdx!);
+      }
+    });
+    focus[1].addListener(() {
+      if (focus[1].hasFocus) {
+        widget.stateManager?.setCurrentCell(
+            widget.stateManager?.rows[widget.rowIdx!].cells["telecastTime"],
+            widget.rowIdx!);
+      }
+    });
+    focus[2].addListener(() {
+      if (focus[2].hasFocus) {
+        widget.stateManager?.setCurrentCell(
+            widget.stateManager?.rows[widget.rowIdx!].cells["telecastTime"],
+            widget.rowIdx!);
+      }
+    });
   }
 
   // var tempFocus = FocusNode();
@@ -116,19 +142,14 @@ class _DateTimeWithThreeTextFieldState extends State<TimeWithThreeTextField1> {
     // KeyManager 로 이벤트 처리를 위임 한다.
     widget.stateManager?.keyManager!.subject.add(keyManager);
 
-
     // 모든 이벤트를 처리 하고 이벤트 전파를 중단한다.
     return KeyEventResult.handled;
   }
-
-
-
 
   bool _moveHorizontal(PlutoKeyManagerEvent keyManager) {
     if (!keyManager.isHorizontal) {
       return false;
     }
-
 
     final selection = widget.mainTextController.selection;
 
@@ -148,7 +169,6 @@ class _DateTimeWithThreeTextFieldState extends State<TimeWithThreeTextField1> {
 
     return false;
   }
-
 
   @override
   Widget build(BuildContext context) {
