@@ -64,7 +64,7 @@ class FillerView extends GetView<FillerController> {
                       isEnable: controller.isEnable.value,
                       onFocusChange: (data) => controller.fetchFPCDetails(),
                       mainTextController: controller.date_,
-                      startDate: DateTime.now(),
+                      // startDate: DateTime.now(),
                     ),
                   ),
                   const SizedBox(width: 20),
