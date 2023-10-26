@@ -173,7 +173,6 @@ class TransmissionLogController extends GetxController {
     });
   }
 
-
   fetchUserGridSetting() async {
     userDataSettings = await Get.find<HomeController>()
         .fetchUserSetting2(formName: "frmTransmissionlog");
@@ -1158,6 +1157,10 @@ class TransmissionLogController extends GetxController {
         return "GetWriteExcelevzrt";
       case "ITX":
         return "GetExportITX";
+      case "Multichoice (SA)":
+        return "GetExportMultichoice";
+      case "AMAGI":
+        return "GetExportAmagi";
     }
   }
 
@@ -3395,6 +3398,7 @@ class TransmissionLogController extends GetxController {
 
     ExportData().exportFilefromString(jsonEncode(map), filename);*/
   }
+
   void downloadForce() async {
     if (kDebugMode) {
       return;
@@ -3411,7 +3415,7 @@ class TransmissionLogController extends GetxController {
     ExportData().exportFilefromString(jsonEncode(map), filename);
   }
 
-   _download1() {
+  _download1() {
     // if (kDebugMode) {
     //   return;
     // }

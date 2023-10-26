@@ -535,7 +535,7 @@ class ApiFactory {
       "$BASE_URL/api/Transmissionlog/GetExportAmagi?locationcode=$locId&channelcode=$chnlId&txtDate=$txtDt&filename=$fileName";
   static String TRANSMISSION_LOG_MULTICHOICE(
       String locId, String chnlId, String txtDt, String fileName) =>
-      "$BASE_URL/api/Transmissionlog//GetExportMultichoice?locationcode=$locId&channelcode=$chnlId&txtDate=$txtDt&filename=$fileName";
+      "$BASE_URL/api/Transmissionlog/GetExportMultichoice?locationcode=$locId&channelcode=$chnlId&txtDate=$txtDt&filename=$fileName";
 
   static String TRANSMISSION_LOG_SEARCH_INSERT(
           String locId,
