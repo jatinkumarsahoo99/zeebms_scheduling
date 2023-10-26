@@ -910,6 +910,29 @@ class TransmissionLogController extends GetxController {
 
   void logWrite(String fileName, String type, bool isSecondary) async {
     switch (type) {
+      case "Multichoice (SA)":
+        LoadingDialog.call();
+        Get.find<ConnectorControl>().GETMETHODCALL(
+            api: ApiFactory.TRANSMISSION_LOG_MULTICHOICE(
+                selectLocation?.key ?? "",
+                selectChannel?.key ?? "",
+                selectedDate.text,
+                fileName),
+            fun: (map) {
+              Get.back();
+              ExportData().exportFilefromBase64(map, fileName);
+            });
+        break;
+      case "AMAGI":
+        LoadingDialog.call();
+        Get.find<ConnectorControl>().GETMETHODCALL(
+            api: ApiFactory.TRANSMISSION_LOG_AMAGI(selectLocation?.key ?? "",
+                selectChannel?.key ?? "", selectedDate.text, fileName),
+            fun: (map) {
+              Get.back();
+              ExportData().exportFilefromBase64(map, fileName);
+            });
+        break;
       case "Excel":
         LoadingDialog.call();
         Get.find<ConnectorControl>().GETMETHODCALL(
