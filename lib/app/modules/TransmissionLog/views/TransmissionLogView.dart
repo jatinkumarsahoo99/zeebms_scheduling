@@ -2758,6 +2758,8 @@ class TransmissionLogView extends StatelessWidget {
                         "Playbox",
                         "Eventz (Dubai)",
                         "ITX",
+                        "Multichoice (SA)",
+                        "AMAGI",
                       ],
                       groupValue: controller.selectExportType.value ?? "",
                       onchange: (val) {
