@@ -212,6 +212,21 @@ class ReleaseWoNonFpcView extends GetView {
             );
           }),
           // Divider(height: 10),
+          GetBuilder(
+              id: 'selectAll',
+              init: controller,
+              builder: (_) {
+                return Align(
+                  alignment: Alignment.topLeft,
+                  child: CheckBoxWidget1(
+                    title: "Select All",
+                    value: controller.nonFPCEnableAll,
+                    onChanged: (val) {
+                      controller.handleColumTapNonFPCWO();
+                    },
+                  ),
+                );
+              }),
           Expanded(
             child: Obx(
               () {
@@ -279,8 +294,8 @@ class ReleaseWoNonFpcView extends GetView {
                             controller.woNonFPCSM = sm.stateManager;
                           },
                           enableColumnDoubleTap: ["release"],
-                          onColumnHeaderDoubleTap:
-                              controller.handleColumTapNonFPCWO,
+                          onColumnHeaderDoubleTap: (a) =>
+                              controller.handleColumTapNonFPCWO(),
                         ),
                 );
               },

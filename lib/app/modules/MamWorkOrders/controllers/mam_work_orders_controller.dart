@@ -1042,8 +1042,13 @@ class MamWorkOrdersController extends GetxController {
     return foundDublicateVal;
   }
 
-  handleColumTapNonFPCWO(String columnName) {
+  handleColumTapNonFPCWO() {
+    if (nonFPCDataTableList.isEmpty) {
+      update(['selectAll']);
+      return;
+    }
     nonFPCEnableAll = !nonFPCEnableAll;
+    update(['selectAll']);
     nonFPCDataTableList.value = nonFPCDataTableList.map(
       (element) {
         element.release = nonFPCEnableAll;
