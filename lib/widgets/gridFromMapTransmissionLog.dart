@@ -377,7 +377,7 @@ class DataGridFromMapTransmissionLog extends StatelessWidget {
           }),
           enableSorting: enableSort,
           // enableRowDrag: draggableKeys != null ? draggableKeys!.contains(key) : false,
-          enableRowDrag: true,
+          enableRowDrag: key != "fpCtime" ? true : false,
           enableEditingMode: false,
           enableDropToResize: true,
           enableContextMenu: false,
