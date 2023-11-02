@@ -150,73 +150,76 @@ class SearchPage extends StatelessWidget {
                               child: GetBuilder<SearchController>(
                                 id: "searchGrid",
                                 init: controller,
-                                builder: (controller) => DataTable2(
-                                  horizontalMargin: 0,
-                                  showBottomBorder: true,
-                                  columnSpacing: 3,
-                                  dataRowHeight: 30,
-                                  headingRowHeight: 35,
-                                  bottomMargin: 30,
-                                  showCheckboxColumn: false,
-                                  sortAscending: true,
+                                builder: (controller) => RawKeyboardListener(
+                                  focusNode: controller.gridFN,
+                                  child: DataTable2(
+                                    horizontalMargin: 0,
+                                    showBottomBorder: true,
+                                    columnSpacing: 3,
+                                    dataRowHeight: 30,
+                                    headingRowHeight: 35,
+                                    bottomMargin: 30,
+                                    showCheckboxColumn: false,
+                                    sortAscending: true,
 
-                                  columns: controller.searchGridColumns,
-                                  // columns: [
-                                  //   for (var column in controller
-                                  //       .grid!.variances![0]
-                                  //       .toJson()
-                                  //       .keys)
-                                  //     DataColumn2(
-                                  //       size: ColumnSize.M,
-                                  //       label: Center(
-                                  //         child: Text(
-                                  //           column.capitalizeFirst!,
-                                  //           textAlign: TextAlign.center,
-                                  //           style: TextStyle(
-                                  //               color: Colors.black,
-                                  //               fontWeight: FontWeight.bold,
-                                  //               fontSize: 12),
-                                  //         ),
-                                  //       ),
-                                  //     ),
-                                  // ],
-                                  rows: controller.searchQuery == ""
-                                      ? controller.searchGridRows
-                                      : controller.filterSearchGridRows,
-                                  // rows: List<DataRow2>.generate(
-                                  //     controller.grid!.variances!.length,
-                                  //     (index) {
-                                  //   var filter = controller
-                                  //       .grid!.variances![index]
-                                  //       .toJson();
-                                  //   return DataRow2(
-                                  //       onTap: () {},
-                                  //       onSelectChanged: (value) {
-                                  //         controller.grid!.variances![index]
-                                  //             .selected = value;
-                                  //         controller.update(["searchParam"]);
-                                  //       },
-                                  //       selected: controller
-                                  //           .grid!.variances![index].selected!,
-                                  //       cells: [
-                                  //         for (var value in filter.values)
-                                  //           DataCell(Center(
-                                  //             child: value is bool
-                                  //                 ? Checkbox(
-                                  //                     value: value,
-                                  //                     onChanged: (value) {
-                                  //                       controller
-                                  //                           .grid!
-                                  //                           .variances![index]
-                                  //                           .selected = value;
-                                  //                       controller.update(
-                                  //                           ["searchParam"]);
-                                  //                     })
-                                  //                 : Text(value.toString()),
-                                  //           ))
-                                  //       ]);
-                                  // })
-                                  //
+                                    columns: controller.searchGridColumns,
+                                    // columns: [
+                                    //   for (var column in controller
+                                    //       .grid!.variances![0]
+                                    //       .toJson()
+                                    //       .keys)
+                                    //     DataColumn2(
+                                    //       size: ColumnSize.M,
+                                    //       label: Center(
+                                    //         child: Text(
+                                    //           column.capitalizeFirst!,
+                                    //           textAlign: TextAlign.center,
+                                    //           style: TextStyle(
+                                    //               color: Colors.black,
+                                    //               fontWeight: FontWeight.bold,
+                                    //               fontSize: 12),
+                                    //         ),
+                                    //       ),
+                                    //     ),
+                                    // ],
+                                    rows: controller.searchQuery == ""
+                                        ? controller.searchGridRows
+                                        : controller.filterSearchGridRows,
+                                    // rows: List<DataRow2>.generate(
+                                    //     controller.grid!.variances!.length,
+                                    //     (index) {
+                                    //   var filter = controller
+                                    //       .grid!.variances![index]
+                                    //       .toJson();
+                                    //   return DataRow2(
+                                    //       onTap: () {},
+                                    //       onSelectChanged: (value) {
+                                    //         controller.grid!.variances![index]
+                                    //             .selected = value;
+                                    //         controller.update(["searchParam"]);
+                                    //       },
+                                    //       selected: controller
+                                    //           .grid!.variances![index].selected!,
+                                    //       cells: [
+                                    //         for (var value in filter.values)
+                                    //           DataCell(Center(
+                                    //             child: value is bool
+                                    //                 ? Checkbox(
+                                    //                     value: value,
+                                    //                     onChanged: (value) {
+                                    //                       controller
+                                    //                           .grid!
+                                    //                           .variances![index]
+                                    //                           .selected = value;
+                                    //                       controller.update(
+                                    //                           ["searchParam"]);
+                                    //                     })
+                                    //                 : Text(value.toString()),
+                                    //           ))
+                                    //       ]);
+                                    // })
+                                    //
+                                  ),
                                 ),
                               ),
                             ),
