@@ -29,6 +29,7 @@ import '../views/searchResult.dart';
 
 class SearchController extends GetxController {
   SearchController(this.strViewName, this.screenName, {this.isPopUp = false});
+
   final String screenName;
   final String strViewName;
   final bool? isPopUp;
@@ -46,6 +47,7 @@ class SearchController extends GetxController {
   /////// MASTER SEARCH DAILOG //////
   var masterDialogList = RxList();
   var checknotcheck = RxBool(false);
+
   //////////////////////////////////
   var addsum = RxBool(false);
   List<DataColumn2> searchGridColumns = [];
@@ -54,11 +56,33 @@ class SearchController extends GetxController {
   List varainace = [];
   int? selectVarianceId;
   String searchQuery = "";
+  FocusNode gridFN = FocusNode();
 
   @override
   void onInit() {
     getInitialData();
     super.onInit();
+  }
+
+  @override
+  void onReady() {
+    super.onReady();
+    gridFN.onKey = (node, event) {
+      if (event is RawKeyDownEvent &&
+          event.logicalKey == LogicalKeyboardKey.arrowDown) {
+        gridFN.nextFocus();
+        gridFN.nextFocus();
+        gridFN.nextFocus();
+        return KeyEventResult.ignored;
+      } else if (event is RawKeyDownEvent &&
+          event.logicalKey == LogicalKeyboardKey.arrowUp) {
+        gridFN.previousFocus();
+        gridFN.previousFocus();
+        gridFN.previousFocus();
+        return KeyEventResult.ignored;
+      }
+      return KeyEventResult.ignored;
+    };
   }
 
   parsePivotTemplate(String templateString) {
