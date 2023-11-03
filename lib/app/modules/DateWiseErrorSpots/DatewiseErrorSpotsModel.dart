@@ -52,29 +52,29 @@ class DatewiseErrorSpots {
 
   DatewiseErrorSpots(
       {this.bookingNumber,
-        this.bookingDetailCode,
-        this.dealNumber,
-        this.recordnumber,
-        this.programName,
-        this.scheduleDate,
-        this.scheduleTime,
-        this.startTime,
-        this.endtime,
-        this.clientName,
-        this.agencyName,
-        this.bookingReferenceNumber,
-        this.brandname,
-        this.tapeid,
-        this.commercialCaption,
-        this.tapeDuration,
-        this.spotAmount,
-        this.er,
-        this.zonename,
-        this.executivename,
-        this.spotAmount1,
-        this.valAmount,
-        this.accountname,
-        this.reason});
+      this.bookingDetailCode,
+      this.dealNumber,
+      this.recordnumber,
+      this.programName,
+      this.scheduleDate,
+      this.scheduleTime,
+      this.startTime,
+      this.endtime,
+      this.clientName,
+      this.agencyName,
+      this.bookingReferenceNumber,
+      this.brandname,
+      this.tapeid,
+      this.commercialCaption,
+      this.tapeDuration,
+      this.spotAmount,
+      this.er,
+      this.zonename,
+      this.executivename,
+      this.spotAmount1,
+      this.valAmount,
+      this.accountname,
+      this.reason});
 
   DatewiseErrorSpots.fromJson(Map<String, dynamic> json) {
     bookingNumber = json['bookingNumber'];
@@ -93,44 +93,72 @@ class DatewiseErrorSpots {
     tapeid = json['tapeid'];
     commercialCaption = json['commercialCaption'];
     tapeDuration = json['tapeDuration'];
-    spotAmount =  convertDes((json['spotAmount']??0).toString()) ;
+    spotAmount = convertDes((json['spotAmount'] ?? 0).toString());
     /*double.parse((json['spotAmount'] != null &&
         json['spotAmount'] != "" )?json['spotAmount'].toString():"0").toStringAsFixed(2)*/
-    er =  convertDes((json['er']??0).toString(),des: 9);
+    er = convertDes((json['er'] ?? 0).toString(), des: 9);
     zonename = json['zonename'];
     executivename = json['executivename'];
-    spotAmount1 =  convertDes((json['spotAmount1']??0).toString());
+    spotAmount1 = convertDes((json['spotAmount1'] ?? 0).toString());
     valAmount = json['valAmount'];
     accountname = json['accountname'];
     reason = json['reason'];
   }
 
-  Map<String, dynamic> toJson() {
+  Map<String, dynamic> toJson({bool fromSave = false}) {
     final Map<String, dynamic> data = new Map<String, dynamic>();
-    data['bookingNumber'] = this.bookingNumber;
-    data['bookingDetailCode'] = this.bookingDetailCode;
-    data['dealNumber'] = this.dealNumber;
-    data['recordnumber'] = this.recordnumber;
-    data['programName'] = this.programName;
-    data['scheduleDate'] = convertDateFormat(scheduleDate);
-    data['scheduleTime'] =  this.scheduleTime;
-    data['startTime'] = this.startTime;
-    data['endtime'] = this.endtime;
-    data['clientName'] = this.clientName;
-    data['agencyName'] = this.agencyName;
-    data['bookingReferenceNumber'] = this.bookingReferenceNumber;
-    data['brandname'] = this.brandname;
-    data['tapeid'] = this.tapeid;
-    data['commercialCaption'] = this.commercialCaption;
-    data['tapeDuration'] = this.tapeDuration;
-    data['spotAmount'] = this.spotAmount;
-    data['er'] = this.er;
-    data['zonename'] = this.zonename;
-    data['executivename'] = this.executivename;
-    data['spotAmount1'] = this.spotAmount1;
-    data['valAmount'] = this.valAmount;
-    data['accountname'] = this.accountname;
-    data['reason'] = this.reason;
+    if (fromSave) {
+      data['bookingNumber'] = this.bookingNumber;
+      data['bookingDetailCode'] = this.bookingDetailCode;
+      data['dealNumber'] = this.dealNumber;
+      data['recordnumber'] = this.recordnumber;
+      data['programName'] = this.programName;
+      data['scheduleDate'] = this.scheduleDate;
+      data['scheduleTime'] = this.scheduleTime;
+      data['startTime'] = this.startTime;
+      data['endtime'] = this.endtime;
+      data['clientName'] = this.clientName;
+      data['agencyName'] = this.agencyName;
+      data['bookingReferenceNumber'] = this.bookingReferenceNumber;
+      data['brandname'] = this.brandname;
+      data['tapeid'] = this.tapeid;
+      data['commercialCaption'] = this.commercialCaption;
+      data['tapeDuration'] = this.tapeDuration;
+      data['spotAmount'] = this.spotAmount;
+      data['er'] = this.er;
+      data['zonename'] = this.zonename;
+      data['executivename'] = this.executivename;
+      data['spotAmount1'] = this.spotAmount1;
+      data['valAmount'] = this.valAmount;
+      data['accountname'] = this.accountname;
+      data['reason'] = this.reason;
+    } else {
+      data['bookingNumber'] = this.bookingNumber;
+      data['bookingDetailCode'] = this.bookingDetailCode;
+      data['dealNumber'] = this.dealNumber;
+      data['recordnumber'] = this.recordnumber;
+      data['programName'] = this.programName;
+      data['scheduleDate'] = convertDateFormat(scheduleDate);
+      data['scheduleTime'] = this.scheduleTime;
+      data['startTime'] = this.startTime;
+      data['endtime'] = this.endtime;
+      data['clientName'] = this.clientName;
+      data['agencyName'] = this.agencyName;
+      data['bookingReferenceNumber'] = this.bookingReferenceNumber;
+      data['brandname'] = this.brandname;
+      data['tapeid'] = this.tapeid;
+      data['commercialCaption'] = this.commercialCaption;
+      data['tapeDuration'] = this.tapeDuration;
+      data['spotAmount'] = this.spotAmount;
+      data['er'] = this.er;
+      data['zonename'] = this.zonename;
+      data['executivename'] = this.executivename;
+      data['spotAmount1'] = this.spotAmount1;
+      data['valAmount'] = this.valAmount;
+      data['accountname'] = this.accountname;
+      data['reason'] = this.reason;
+    }
+
     return data;
   }
 
@@ -163,19 +191,18 @@ class DatewiseErrorSpots {
     return data;
   }
 
-  String convertDateFormat(String? date){
-    if(date != null && date != ""){
-      return DateFormat("M/dd/yyyy").format(DateFormat("yyyy-MM-ddTHH:mm:ss").parse(date));
+  String convertDateFormat(String? date) {
+    if (date != null && date != "") {
+      return DateFormat("M/dd/yyyy")
+          .format(DateFormat("yyyy-MM-ddTHH:mm:ss").parse(date));
     }
     return "";
   }
 
-  String convertDes(String? time,{int des = 2}){
-    if(time != null && time != ""){
+  String convertDes(String? time, {int des = 2}) {
+    if (time != null && time != "") {
       return double.parse(time.toString()).toStringAsFixed(des);
     }
     return "";
   }
-
 }
-
