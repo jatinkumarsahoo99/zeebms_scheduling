@@ -981,14 +981,14 @@ class SearchController extends GetxController {
         rowvariance.tableName != "") {
       var allselect = RxBool(false);
       if (rowvariance.searchCriteria != "") {
-        var tempser = rowvariance.searchCriteria!
-            .replaceAll("In ('", "")
+        var tempser = rowvariance.searchCriteria
+            ?.replaceAll("In ('", "")
             .replaceAll("Not In('", "")
             .replaceAll(")", "")
             .replaceAll("'", "")
             .split(",");
         List tempmaster = [];
-        for (var element in tempser) {
+        for (var element in (tempser ?? [])) {
           tempmaster.add({"name": element, "selected": true});
         }
         masterDialogList.addAll(tempmaster);
