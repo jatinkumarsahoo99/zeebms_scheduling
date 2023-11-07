@@ -963,6 +963,7 @@ class MamWorkOrdersController extends GetxController {
           fun: (resp) async {
             closeDialogIfOpen();
             if (resp != null &&
+                resp.toString().contains("MAYAM tasks created successfully.") &&
                 resp is Map<String, dynamic> &&
                 resp['program_Response'] != null) {
               if (resp['program_Response']['strMessage'] != null) {
@@ -977,10 +978,10 @@ class MamWorkOrdersController extends GetxController {
                     });
                   });
                 });
-              } else {
-                LoadingDialog.showErrorDialog(
-                    resp['program_Response']['strMessage'].toString());
               }
+            } else if (resp.toString().contains("strMessage") &&
+                resp['program_Response']['strMessage'] != null) {
+              showMsgDialogError(resp['program_Response']['strMessage'], () {});
             } else {
               LoadingDialog.showErrorDialog(resp.toString());
             }
@@ -1204,6 +1205,23 @@ class MamWorkOrdersController extends GetxController {
               callBack();
             }
             showMsgDialogSuccess2(msgList, callBack);
+          });
+    } else {
+      return;
+    }
+  }
+
+  showMsgDialogError(List<dynamic> msgList, Function() callBack) {
+    msgList = msgList.reversed.toList();
+    if (msgList.isNotEmpty) {
+      LoadingDialog.callDataSaved(
+          msg: msgList.last,
+          callback: () {
+            msgList.removeLast();
+            if (msgList.isEmpty) {
+              callBack();
+            }
+            showMsgDialogError(msgList, callBack);
           });
     } else {
       return;
