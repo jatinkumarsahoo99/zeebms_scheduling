@@ -2360,6 +2360,64 @@ class TransmissionLogController extends GetxController {
     }
   }
 
+  btn_markError_ClickMultiple(index) {
+    List<PlutoRow>? selectedRow = gridStateManager?.currentSelectingRows;
+    bool? allGood = false;
+    for (int i = 0; i < (selectedRow?.length ?? 0); i++) {
+      if (["c", "cl"].contains(selectedRow![i]
+          .cells["eventType"]
+          ?.value
+          .toString()
+          .trim()
+          .toLowerCase())) {
+        allGood = true;
+      } else {
+        allGood = false;
+        LoadingDialog.callInfoMessage(
+            "You can't remove and mark as error to event type other than C & CL");
+        break;
+      }
+    }
+    if (allGood ?? false) {
+      LoadingDialog.recordExists(
+          "Want to remove and mark as error these ${selectedRow?.length ?? 0} data?",
+          () {
+        List<bool> isSucess = [];
+        LoadingDialog.call();
+        selectedRow?.forEach((element) {
+          String bookNo = element.cells["bookingNumber"]?.value;
+          String bookCode = element.cells["bookingdetailcode"]?.value;
+          String eventType = element.cells["eventType"]?.value;
+          if (selectLocation != null && selectChannel != null) {
+            Get.find<ConnectorControl>().GETMETHODCALL(
+                api: ApiFactory.TRANSMISSION_LOG_MARK_AS_ERROR(
+                    selectLocation?.key ?? "",
+                    selectChannel?.key ?? "",
+                    bookNo,
+                    bookCode,
+                    selectedDate.text,
+                    eventType),
+                fun: (map) {
+                  if (map is Map) {
+                    isSucess.add(true);
+                    if (isSucess.length == selectedRow.length) {
+                      Get.back();
+                      addEventToUndo();
+                      gridStateManager?.removeRows(selectedRow);
+                      colorGrid(false);
+                    }
+                  } else {}
+                });
+          }
+        });
+
+        // addEventToUndo();
+        // gridStateManager?.removeRows([(gridStateManager?.rows[index])!]);
+        // colorGrid(false);
+      }, deleteCancel: "No", deleteTitle: "Yes");
+    }
+  }
+
   getEventListForInsert({required Function function}) {
     if ((listEventsinInsert.value.length ?? 0) > 0) {
       function();
@@ -2374,6 +2432,10 @@ class TransmissionLogController extends GetxController {
           map["lstFastInsertEventType"].forEach((e) {
             listEventsinInsert.add(DropDownValue(key: e, value: e));
           });
+          listEventsinInsert.removeWhere((element) => [
+                "cross channel promo",
+                "high priority promo"
+              ].contains(element.value.toString().trim().toLowerCase()));
           function();
         });
   }
@@ -3438,6 +3500,14 @@ class TransmissionLogController extends GetxController {
       // dt = gridStateManager.dataSource;
 
       // gridStateManager.currentCell = null;
+      if ((deletedSegmentData.length) > 0) {
+        bool? proceedFurther = await showDialogForYesNo(
+            "${deletedSegmentData.length} segment deleted.\nDo you want to proceed further?");
+        if (!(proceedFurther!)) {
+          return;
+        }
+      }
+
       bool? checkPromo = await checkPromoTags();
       if (!(checkPromo!)) {
         return;
