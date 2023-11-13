@@ -70,7 +70,8 @@ abstract class Routes {
   static const GENERATE_BOOKING_ACTIVITY = _Paths.GENERATE_BOOKING_ACTIVITY;
   static const PERIODIC_DEAL_UTILIZATION = _Paths.PERIODIC_DEAL_UTILIZATION;
   static const SPOT_DISTRIBUTION = _Paths.SPOT_DISTRIBUTION;
-  static const TELECAST_SPOTS_WITH_PROGRAM_INFO = _Paths.TELECAST_SPOTS_WITH_PROGRAM_INFO;
+  static const TELECAST_SPOTS_WITH_PROGRAM_INFO =
+      _Paths.TELECAST_SPOTS_WITH_PROGRAM_INFO;
   static const TRANSMISSION_LOG_SEARCH = _Paths.TRANSMISSION_LOG_SEARCH;
   static const VIDEOCON_LOG = _Paths.VIDEOCON_LOG;
   static const ASRUN_SEARCH_REPORT = _Paths.ASRUN_SEARCH_REPORT;
@@ -78,6 +79,7 @@ abstract class Routes {
   static const DATEWISE_COMMERCIAL_LOG = _Paths.DATEWISE_COMMERCIAL_LOG;
   static const DEAL_UTILIZATION = _Paths.DEAL_UTILIZATION;
   static const MOVIE_SCHEDULE_REPORT = _Paths.MOVIE_SCHEDULE_REPORT;
+  static const SHORT_CONTENT_BULK_IMPORT = _Paths.SHORT_CONTENT_BULK_IMPORT;
 }
 
 abstract class RoutesList {
@@ -121,7 +123,6 @@ abstract class RoutesList {
     _Paths.INVENTORY_STATUS_REPORT,
     _Paths.DROPPED_SPOTS,
     _Paths.DAILY_FPC_STATUS,
-
     _Paths.GENERATE_BOOKING_ACTIVITY,
     _Paths.PERIODIC_DEAL_UTILIZATION,
     _Paths.SPOT_DISTRIBUTION,
@@ -133,8 +134,6 @@ abstract class RoutesList {
     _Paths.DATEWISE_COMMERCIAL_LOG,
     _Paths.DEAL_UTILIZATION,
     _Paths.MOVIE_SCHEDULE_REPORT,
-
-
   ];
 }
 
@@ -156,11 +155,13 @@ abstract class _Paths {
   static const RO_RESCHEDULE = '/frmRoReschedule';
   static const ROS_DISTRIBUTION = '/FrmRosDistribution';
   static const FINAL_AUDIT_REPORT_BEFORE_LOG = '/frmFinalAuditReport';
-  static const FINAL_AUDIT_REPORT_AFTER_TELECAST = '/frmFinalAuditreportasrunlog';
+  static const FINAL_AUDIT_REPORT_AFTER_TELECAST =
+      '/frmFinalAuditreportasrunlog';
   static const AUDIT_STATUS = '/frmNewBookingActivityReport';
   static const ASRUN_IMPORT_AD_REVENUE = '/frmAsrunImport';
   static const SALES_AUDIT_NOT_TELECAST_REPORT = '/frmsalesauditnottelecast';
-  static const SALES_AUDIT_EXTRA_SPOTS_REPORT = '/frmsalesauditextraspotsreport';
+  static const SALES_AUDIT_EXTRA_SPOTS_REPORT =
+      '/frmsalesauditextraspotsreport';
   static const SALES_AUDIT_NEW = '/TransmissionLog';
   static const SLIDE_MASTER = '/frmSlideMaster';
   static const STILL_MASTER = '/frmStillMaster';
@@ -198,15 +199,20 @@ abstract class _Paths {
   static const DROPPED_SPOTS = '/frmsearchingKKBMS_View_DroppedSpots';
   static const DAILY_FPC_STATUS = '/frmsearchingKKBms_View_DailyFpc';
 
-  static const GENERATE_BOOKING_ACTIVITY = '/frmSearchingKKBMS_view_BookingDetail';
-  static const PERIODIC_DEAL_UTILIZATION = '/frmsearchingKKBMS_DealUtilPeriodic';
+  static const GENERATE_BOOKING_ACTIVITY =
+      '/frmSearchingKKBMS_view_BookingDetail';
+  static const PERIODIC_DEAL_UTILIZATION =
+      '/frmsearchingKKBMS_DealUtilPeriodic';
   static const SPOT_DISTRIBUTION = '/frmsearchingKKBms_rpt_ShowRosBucket';
-  static const TELECAST_SPOTS_WITH_PROGRAM_INFO = '/frmsearchingKKBMS_BreakTimeWithprogram';
+  static const TELECAST_SPOTS_WITH_PROGRAM_INFO =
+      '/frmsearchingKKBMS_BreakTimeWithprogram';
   static const TRANSMISSION_LOG_SEARCH = '/frmsearchingKKBMS_VTransmissionLog';
   static const VIDEOCON_LOG = '/frmsearchingKKDish_VideoconLog';
   static const ASRUN_SEARCH_REPORT = '/frmsearchingKKbms_view_asrunsearch';
-  static const CUE_TONE_BREAK_DURATION = '/frmsearchingKKBMS_CueToneBreakDuration';
+  static const CUE_TONE_BREAK_DURATION =
+      '/frmsearchingKKBMS_CueToneBreakDuration';
   static const DATEWISE_COMMERCIAL_LOG = '/frmsearchingKKBMS_Commerciallog';
   static const DEAL_UTILIZATION = '/frmsearchingKKBMS_view_DealUtil';
   static const MOVIE_SCHEDULE_REPORT = '/frmsearchingKKFPC_MovieListing';
+  static const SHORT_CONTENT_BULK_IMPORT = '/short-content-bulk-import';
 }

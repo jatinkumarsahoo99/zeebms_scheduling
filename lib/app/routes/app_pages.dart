@@ -1,5 +1,7 @@
 import 'package:flutter/foundation.dart';
+
 import 'package:get/get.dart';
+
 import '../modules/AsrunImportAdRevenue/bindings/asrun_import_binding.dart';
 import '../modules/AuditStatus/bindings/audit_status_binding.dart';
 import '../modules/BrandMaster/bindings/brand_master_binding.dart';
@@ -36,6 +38,8 @@ import '../modules/SalesAuditExtraSpotsReport/bindings/sales_audit_extra_spots_r
 import '../modules/SalesAuditNew/bindings/sales_audit_new_binding.dart';
 import '../modules/SalesAuditNotTelecastReport/bindings/sales_audit_not_telecast_report_binding.dart';
 import '../modules/SecondaryEventMaster/bindings/secondary_event_master_binding.dart';
+import '../modules/ShortContentBulkImport/bindings/short_content_bulk_import_binding.dart';
+import '../modules/ShortContentBulkImport/views/short_content_bulk_import_view.dart';
 import '../modules/SlideMaster/bindings/slide_master_binding.dart';
 import '../modules/SponserTypeMaster/bindings/sponser_type_master_binding.dart';
 import '../modules/SpotPositionTypeMaster/bindings/spot_position_type_master_binding.dart';
@@ -54,7 +58,7 @@ class AppPages {
 
   static const INITIAL = kReleaseMode
       ? Routes.HOME
-      : "${Routes.TRANSMISSION_LOG}?personalNo=e7ScQlP7tXxBxRizIrkQIA%3D%3D&loginCode=scL134pM4e0EQtJCjv7r5Q%3D%3D&formName=ZdPOC%2BHl3hRJzHSclM%2B5m3sWVw1wpLPmNEvejYUOFLU%3D";
+      : "${Routes.SHORT_CONTENT_BULK_IMPORT}?personalNo=e7ScQlP7tXxBxRizIrkQIA%3D%3D&loginCode=scL134pM4e0EQtJCjv7r5Q%3D%3D&formName=ZdPOC%2BHl3hRJzHSclM%2B5m3sWVw1wpLPmNEvejYUOFLU%3D";
 
   static final routes = [
     GetPage(
@@ -399,5 +403,10 @@ class AppPages {
     //   binding: TestPageBinding(),
     //   page: () => TestPageView(),
     // )
+    GetPage(
+      name: _Paths.SHORT_CONTENT_BULK_IMPORT,
+      page: () => const ShortContentBulkImportView(),
+      // binding: ShortContentBulkImportBinding(),
+    ),
   ];
 }
