@@ -134,6 +134,7 @@ abstract class RoutesList {
     _Paths.DATEWISE_COMMERCIAL_LOG,
     _Paths.DEAL_UTILIZATION,
     _Paths.MOVIE_SCHEDULE_REPORT,
+    _Paths.SHORT_CONTENT_BULK_IMPORT,
   ];
 }
 
@@ -214,5 +215,5 @@ abstract class _Paths {
   static const DATEWISE_COMMERCIAL_LOG = '/frmsearchingKKBMS_Commerciallog';
   static const DEAL_UTILIZATION = '/frmsearchingKKBMS_view_DealUtil';
   static const MOVIE_SCHEDULE_REPORT = '/frmsearchingKKFPC_MovieListing';
-  static const SHORT_CONTENT_BULK_IMPORT = '/short-content-bulk-import';
+  static const SHORT_CONTENT_BULK_IMPORT = '/frmshortformcontentbulkentry';
 }

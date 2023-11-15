@@ -406,6 +406,7 @@ class AppPages {
     GetPage(
       name: _Paths.SHORT_CONTENT_BULK_IMPORT,
       page: () => AuthGuard1(childName: _Paths.SHORT_CONTENT_BULK_IMPORT),
+      // page: () => const ShortContentBulkImportView(),
     ),
   ];
 }

@@ -1,3 +1,4 @@
+import 'package:bms_scheduling/app/controller/HomeController.dart';
 import 'package:flutter/material.dart';
 
 import 'package:get/get.dart';
@@ -26,12 +27,16 @@ class ShortContentBulkImportView extends StatelessWidget {
                   spacing: 10,
                   runSpacing: 10,
                   children: [
-                    DropDownField.formDropDown1WidthMap(
-                      [],
-                      (p0) => null,
-                      "Master",
-                      .15,
-                    ),
+                    Obx(() {
+                      return DropDownField.formDropDown1WidthMap(
+                        controller.masters.value,
+                        (val) => controller.selectedMaster = val,
+                        "Master",
+                        .15,
+                        autoFocus: true,
+                        inkWellFocusNode: controller.masterFN,
+                      );
+                    }),
                     Obx(() {
                       return Visibility(
                         visible: controller.selectedFile.value != null,
@@ -48,38 +53,107 @@ class ShortContentBulkImportView extends StatelessWidget {
                           btnText: controller.selectedFile.value == null
                               ? "Select File"
                               : "Upload",
-                          callback: controller.pickFile,
+                          callback: controller.handleUploadORSelectClick,
                           iconDataM: Icons.upload_file,
                         );
+                      },
+                    ),
+                    FormButton(
+                      btnText: "Clear",
+                      callback: () {
+                        Get.delete<ShortContentBulkImportController>();
+                        Get.find<HomeController>().clearPage1();
                       },
                     )
                   ],
                 ),
                 const SizedBox(height: 10),
                 Expanded(
-                  child: DataGridFromMap3(
-                    rowHeight: 35,
-                    witdthSpecificColumn: {
-                      'Download': 50,
-                    },
-                    columnAutoResize: true,
-                    mapData: controller.assestFiles.map((e) {
-                      return {"File Name": e, "Download": ""};
-                    }).toList(),
-                    customWidgetInRenderContext: {
-                      "Download": (renderContext) {
-                        return FormButton(
-                          btnText: "Download",
-                          iconDataM: Icons.download,
-                          callback: () {
-                            controller.saveFileFromAssest(
-                                renderContext.row.cells['File Name']?.value);
+                  child: Row(
+                    children: [
+                      Expanded(
+                        flex: 3,
+                        child: Obx(() {
+                          return DataGridFromMap3(
+                            mapData: controller.responseList.value,
+                            formatDate: false,
+                          );
+                        }),
+                      ),
+                      const SizedBox(width: 15),
+                      Expanded(
+                        child: Obx(
+                          () {
+                            return ListView.builder(
+                              itemCount: controller.masters.value.length,
+                              itemBuilder: (context, index) {
+                                return Container(
+                                  padding: const EdgeInsets.all(10),
+                                  margin: const EdgeInsets.all(10),
+                                  decoration: const BoxDecoration(
+                                    color: Colors.white,
+                                    borderRadius: BorderRadius.all(
+                                      Radius.circular(10),
+                                    ),
+                                    boxShadow: [
+                                      BoxShadow(
+                                        color: Color(0xffDDDDDD),
+                                        blurRadius: 6.0,
+                                        spreadRadius: 2.0,
+                                        offset: Offset(0.0, 0.0),
+                                      )
+                                    ],
+                                  ),
+                                  child: Row(
+                                    children: [
+                                      Expanded(
+                                          child: Text(controller
+                                              .masters[index].value
+                                              .toString())),
+                                      const SizedBox(width: 10),
+                                      IconButton(
+                                          onPressed: () {
+                                            controller.saveFileFromAssest(
+                                              controller.masters[index].value
+                                                  .toString(),
+                                            );
+                                          },
+                                          icon: const Icon(Icons.download))
+                                    ],
+                                  ),
+                                );
+                              },
+                            );
                           },
-                        );
-                      },
-                    },
+                        ),
+                      ),
+                    ],
                   ),
-                ),
+                )
+                // Expanded(
+                //   child: DataGridFromMap3(
+                //     rowHeight: 35,
+                //     witdthSpecificColumn: {
+                //       'Download': 50,
+                //     },
+                //     columnAutoResize: true,
+                //     mapData: controller.assestFiles.map((e) {
+                //       return {"File Name": e, "Download": ""};
+                //     }).toList(),
+                //     customWidgetInRenderContext: {
+                //       "Download": (renderContext) {
+                //         return FormButton(
+                //           btnText: "Download",
+                //           iconDataM: Icons.download,
+                //           callback: () {
+                //             controller.saveFileFromAssest(
+                //                 renderContext.row.cells['File Name']?.value);
+                //           },
+                //         );
+                //       },
+                //     },
+                //   ),
+                // ),
               ],
             ),
           );
