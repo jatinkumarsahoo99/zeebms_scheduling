@@ -715,11 +715,13 @@ class FillerMasterController extends GetxController {
             //       // clearPage();
             //     });
             // tapeIDCtr.text = resp['saveRecord']['tapeID'].toString();
-            var msg = resp['saveRecords']['strMessage'].toString();
+            var msg = resp['saveRecord']['strMessage'].toString();
             if (msg.contains('inserted')) {
               msg =
-                  "${resp['saveRecords']['strMessage']}\nID: (${resp['saveRecords']['tapeID']})";
-              tapeIDCtr.text = resp['saveRecords']['tapeID'].toString();
+                  "${resp['saveRecord']['strMessage']}\nID: (${resp['saveRecord']['tapeID']})";
+              if (resp['saveRecord']['tapeID'] != null) {
+                tapeIDCtr.text = resp['saveRecord']['tapeID'].toString();
+              }
             }
             LoadingDialog.callDataSaved(msg: msg);
           } else {

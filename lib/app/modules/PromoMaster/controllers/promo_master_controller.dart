@@ -250,7 +250,9 @@ class PromoMasterController extends GetxController {
           if (msg.contains('inserted')) {
             msg =
                 "${resp['saveRecords']['strMessage']}\nID: (${resp['saveRecords']['tapeID']})";
-            tapeIDCtr.text = resp['saveRecords']['tapeID'].toString();
+            if (resp['saveRecords']['tapeID'] != null) {
+              tapeIDCtr.text = resp['saveRecords']['tapeID'].toString();
+            }
           }
           LoadingDialog.callDataSaved(msg: msg);
         } else {
