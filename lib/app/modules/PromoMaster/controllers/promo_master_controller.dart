@@ -71,9 +71,9 @@ class PromoMasterController extends GetxController {
       blankTapeIDCtr = TextEditingController(),
       captionCtr = TextEditingController(),
       txCaptionCtr = TextEditingController(),
-      tapeIDCtr = TextEditingController(),
+      tapeIDCtr = TextEditingController(text: "AUTOID"),
       segNoCtr = TextEditingController(text: "1"),
-      txNoCtr = TextEditingController(),
+      txNoCtr = TextEditingController(text: ""),
       eomCtr = TextEditingController(text: "00:00:00:00"),
       somCtr = TextEditingController(text: "00:00:00:00"),
       durationCtr = TextEditingController(text: "00:00:00:00");
@@ -250,6 +250,7 @@ class PromoMasterController extends GetxController {
           if (msg.contains('inserted')) {
             msg =
                 "${resp['saveRecords']['strMessage']}\nID: (${resp['saveRecords']['tapeID']})";
+            tapeIDCtr.text = resp['saveRecords']['tapeID'].toString();
           }
           LoadingDialog.callDataSaved(msg: msg);
         } else {
@@ -341,8 +342,8 @@ class PromoMasterController extends GetxController {
     endDateCtr.clear();
     copyCtr.clear();
     txCaptionCtr.clear();
-    tapeIDCtr.text = "AUTO";
-    txNoCtr.text = "AUTO";
+    tapeIDCtr.text = "AUTOID";
+    txNoCtr.text = "AUTOID";
     somCtr.text = "00:00:00:00";
     eomCtr.text = "00:00:00:00";
     durationCtr.clear();
@@ -448,7 +449,7 @@ class PromoMasterController extends GetxController {
         },
       );
     } else {
-      txNoCtr.text = "AUTO";
+      txNoCtr.text = "AUTOID";
     }
 
     if (txNoCtr.text.trim().isNotEmpty &&
@@ -709,8 +710,8 @@ class PromoMasterController extends GetxController {
   Future<void> handleCopyTap() async {
     await retrieveRecord(
         "", "", copyCtr.text, (int.tryParse(segNoCtr.text) ?? 0), "");
-    tapeIDCtr.text = "AUTO";
-    txNoCtr.text = "AUTO";
+    tapeIDCtr.text = "AUTOID";
+    txNoCtr.text = "AUTOID";
     segHash.value = 1;
     segNoCtr.text = 1.toString();
     var now = DateTime.now();
