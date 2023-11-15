@@ -709,12 +709,19 @@ class FillerMasterController extends GetxController {
               resp['saveRecord']['strMessage']
                   .toString()
                   .contains("successfully")) {
-            LoadingDialog.callDataSaved(
-                msg: resp['saveRecord']['strMessage'].toString(),
-                callback: () {
-                  // clearPage();
-                });
-            tapeIDCtr.text = resp['saveRecord']['tapeID'].toString();
+            // LoadingDialog.callDataSaved(
+            //     msg: resp['saveRecord']['strMessage'].toString(),
+            //     callback: () {
+            //       // clearPage();
+            //     });
+            // tapeIDCtr.text = resp['saveRecord']['tapeID'].toString();
+            var msg = resp['saveRecords']['strMessage'].toString();
+            if (msg.contains('inserted')) {
+              msg =
+                  "${resp['saveRecords']['strMessage']}\nID: (${resp['saveRecords']['tapeID']})";
+              tapeIDCtr.text = resp['saveRecords']['tapeID'].toString();
+            }
+            LoadingDialog.callDataSaved(msg: msg);
           } else {
             LoadingDialog.showErrorDialog(resp.toString());
           }
