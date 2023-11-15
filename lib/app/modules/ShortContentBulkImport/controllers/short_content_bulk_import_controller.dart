@@ -64,11 +64,12 @@ class ShortContentBulkImportController extends GetxController {
   }
 
   saveFileFromAssest(String fileName) async {
+    fileName = fileName.trim();
     if (masters.any((element) => element.value == fileName)) {
       try {
         ByteData data = await rootBundle.load("assets/files/$fileName.xlsx");
         Uint8List contentBytes = data.buffer.asUint8List();
-        FileSaver().saveFile(name: fileName, bytes: contentBytes);
+        FileSaver().saveFile(name: fileName, bytes: contentBytes, ext: '.xlsx');
       } catch (e) {
         LoadingDialog.showErrorDialog(e.toString());
       }
