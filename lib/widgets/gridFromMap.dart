@@ -641,6 +641,11 @@ class DataGridFromMap3 extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    if (mapData.isEmpty) {
+      return Container(
+        decoration: BoxDecoration(border: Border.all(color: Colors.grey)),
+      );
+    }
     List<PlutoColumn> segColumn = [];
 
     focusNode ??= FocusNode();
