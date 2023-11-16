@@ -72,7 +72,7 @@ class ShortContentBulkImportView extends StatelessWidget {
                   child: Row(
                     children: [
                       Expanded(
-                        flex: 3,
+                        flex: 4,
                         child: Obx(() {
                           return DataGridFromMap3(
                             mapData: controller.responseList.value,
@@ -89,7 +89,7 @@ class ShortContentBulkImportView extends StatelessWidget {
                               itemBuilder: (context, index) {
                                 return Container(
                                   padding: const EdgeInsets.all(10),
-                                  margin: const EdgeInsets.all(10),
+                                  margin: const EdgeInsets.all(5),
                                   decoration: const BoxDecoration(
                                     color: Colors.white,
                                     borderRadius: BorderRadius.all(
@@ -112,6 +112,7 @@ class ShortContentBulkImportView extends StatelessWidget {
                                               .toString())),
                                       const SizedBox(width: 10),
                                       IconButton(
+                                          padding: EdgeInsets.zero,
                                           onPressed: () {
                                             controller.saveFileFromAssest(
                                               controller.masters[index].value
