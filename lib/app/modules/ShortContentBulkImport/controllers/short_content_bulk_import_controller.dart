@@ -53,9 +53,13 @@ class ShortContentBulkImportController extends GetxController {
         json: formData,
         fun: (resp) {
           Get.back();
-          if (resp != null && resp['result'] != null) {
-            responseList.value = resp['result'];
-          } else {
+          try {
+            if (resp != null && resp['result'] != null) {
+              responseList.value = resp['result'];
+            } else {
+              LoadingDialog.showErrorDialog(resp.toString());
+            }
+          } catch (e) {
             LoadingDialog.showErrorDialog(resp.toString());
           }
         },
