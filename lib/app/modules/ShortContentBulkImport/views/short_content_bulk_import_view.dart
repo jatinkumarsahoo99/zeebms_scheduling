@@ -61,8 +61,12 @@ class ShortContentBulkImportView extends StatelessWidget {
                     FormButton(
                       btnText: "Clear",
                       callback: () {
+                        controller.selectedMaster = null;
+                        controller.masters.refresh();
+                        controller.responseList.clear();
+                        controller.masterFN.requestFocus();
                         // Get.delete<ShortContentBulkImportController>();
-                        Get.find<HomeController>().clearPage1();
+                        // Get.find<HomeController>().clearPage1();
                       },
                     )
                   ],
