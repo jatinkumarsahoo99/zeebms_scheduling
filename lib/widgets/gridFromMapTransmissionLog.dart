@@ -41,10 +41,12 @@ class DataGridFromMapTransmissionLog extends StatelessWidget {
       this.witdthSpecificColumn,
       this.formatDate = true,
       this.dateFromat = "dd-MM-yyyy",
+      this.cellColorCallback,
       this.onFocusChange})
       : super(key: key);
   final List mapData;
   bool enableSort;
+  final Color Function(PlutoCellColorContext)? cellColorCallback;
   final bool? showSrNo;
   final bool? hideCode;
   final PlutoGridMode? mode;
@@ -362,7 +364,11 @@ class DataGridFromMapTransmissionLog extends StatelessWidget {
                   overflow: TextOverflow.ellipsis,
                   style: TextStyle(
                     fontSize: SizeDefine.columnTitleFontSize,
-                    // color: isBold?Colors.white:Colors.black,
+                    /*color: (rendererContext.stateManager.currentSelectingRows
+                            .contains(rendererContext.rowIdx) || rendererContext.stateManager.currentRowIdx ==
+                        rendererContext.rowIdx)
+                        ? Colors.white
+                        : Colors.black,*/
                     fontWeight: isBold ? FontWeight.w800 : FontWeight.normal,
                   ),
                 ),
@@ -370,17 +376,17 @@ class DataGridFromMapTransmissionLog extends StatelessWidget {
             );
           }),
           enableSorting: enableSort,
-          enableRowDrag:
-              draggableKeys != null ? draggableKeys!.contains(key) : false,
+          // enableRowDrag: draggableKeys != null ? draggableKeys!.contains(key) : false,
+          enableRowDrag: key != "fpCtime" ? true : false,
           enableEditingMode: false,
           enableDropToResize: true,
           enableContextMenu: false,
           // width: Utils.getRowWidth(key: key, value: mapData[0][key]),
           width: (witdthSpecificColumn != null &&
-              witdthSpecificColumn!.keys.toList().contains(key))
+                  witdthSpecificColumn!.keys.toList().contains(key))
               ? witdthSpecificColumn![key]!
               : Utils.getColumnSize(key: key, value: mapData[0][key]),
-          minWidth: 5,
+          minWidth: 15,
           enableAutoEditing: false,
           hide: showonly == null
               ? (hideKeys != null && hideKeys!.contains(key)) ||
@@ -390,6 +396,7 @@ class DataGridFromMapTransmissionLog extends StatelessWidget {
               : !showonly!.contains(key),
           enableColumnDrag: false,
           field: key,
+          // backgroundColor: (key.toString()=="fpCtime")?Colors.transparent:Colors.white,
           type: PlutoColumnType.text()));
     }
 
@@ -424,50 +431,62 @@ class DataGridFromMapTransmissionLog extends StatelessWidget {
         autofocus: false,
         focusNode: _focusNode,
         onFocusChange: onFocusChange,
-        child: PlutoGrid(
-            // mode: mode ?? PlutoGridMode.normal,
-            mode: PlutoGridMode.normal,
-            configuration:
-                plutoGridConfigurationTransmisionLog(focusNode: _focusNode),
-            // configuration: const PlutoGridConfiguration(),
-            rowColorCallback: colorCallback,
-            onLoaded: onload,
-            columns: segColumn,
-            onRowDoubleTap: onRowDoubleTap,
-            onRowsMoved: onRowsMoved,
-            onChanged: onChanged,
-            onSelected: onSelected,
-            /*createFooter: (stateManager) {
-              return PlutoLazyPagination(
-                // Determine the first page.
-                // Default is 1.
-                initialPage: 1,
+        child: NotificationListener<ScrollNotification>(
+          onNotification: (notification) {
+            if (notification is ScrollUpdateNotification) {
+              // Handle scroll updates here
+              final scrollPosition = notification.metrics.pixels;
+              Get.find<TransmissionLogController>().findVisibleRows(scrollPosition);
+              // Do something with the visible rows
+            }
+            return false;
+          },
+          child: PlutoGrid(
+              // mode: mode ?? PlutoGridMode.normal,
+              mode: PlutoGridMode.normal,
+              configuration:
+                  plutoGridConfigurationTransmisionLog(focusNode: _focusNode),
+              // configuration: const PlutoGridConfiguration(),
+              rowColorCallback: colorCallback,
+              onLoaded: onload,
+              columns: segColumn,
+              onRowDoubleTap: onRowDoubleTap,
+              onRowsMoved: onRowsMoved,
+              onChanged: onChanged,
+              onSelected: onSelected,
+              cellColorCallback: cellColorCallback,
+              /*createFooter: (stateManager) {
+                return PlutoLazyPagination(
+                  // Determine the first page.
+                  // Default is 1.
+                  initialPage: 1,
 
-                // First call the fetch function to determine whether to load the page.
-                // Default is true.
-                initialFetch: true,
+                  // First call the fetch function to determine whether to load the page.
+                  // Default is true.
+                  initialFetch: true,
 
-                // Decide whether sorting will be handled by the server.
-                // If false, handle sorting on the client side.
-                // Default is true.
-                fetchWithSorting: true,
+                  // Decide whether sorting will be handled by the server.
+                  // If false, handle sorting on the client side.
+                  // Default is true.
+                  fetchWithSorting: true,
 
-                // Decide whether filtering is handled by the server.
-                // If false, handle filtering on the client side.
-                // Default is true.
-                fetchWithFiltering: true,
+                  // Decide whether filtering is handled by the server.
+                  // If false, handle filtering on the client side.
+                  // Default is true.
+                  fetchWithFiltering: true,
 
-                // Determines the page size to move to the previous and next page buttons.
-                // Default value is null. In this case,
-                // it moves as many as the number of page buttons visible on the screen.
-                pageSizeToMove: null,
-                fetch: (contextData){
-                  return fetch(contextData,stateManager,segRows);
-                },
-                stateManager: stateManager,
-              );
-            },*/
-            rows: segRows),
+                  // Determines the page size to move to the previous and next page buttons.
+                  // Default value is null. In this case,
+                  // it moves as many as the number of page buttons visible on the screen.
+                  pageSizeToMove: null,
+                  fetch: (contextData){
+                    return fetch(contextData,stateManager,segRows);
+                  },
+                  stateManager: stateManager,
+                );
+              },*/
+              rows: segRows),
+        ),
       ),
     );
   }

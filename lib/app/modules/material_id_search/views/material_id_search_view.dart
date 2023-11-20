@@ -6,10 +6,12 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
 import '../../../../widgets/DataGridShowOnly.dart';
+import '../../../controller/HomeController.dart';
 import '../controllers/material_id_search_controller.dart';
 
 class MaterialIdSearchView extends GetView<MaterialIdSearchController> {
   const MaterialIdSearchView({Key? key}) : super(key: key);
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -26,6 +28,7 @@ class MaterialIdSearchView extends GetView<MaterialIdSearchController> {
                   hintTxt: "Material ID",
                   controller: controller.tapeIdCode,
                   width: 0.12,
+                  autoFocus: true,
                 ),
                 InputFields.formField1(
                   hintTxt: "Program Name",
@@ -42,14 +45,22 @@ class MaterialIdSearchView extends GetView<MaterialIdSearchController> {
                   callback: () {
                     controller.getData();
                   },
-                )
+                ),
+                FormButtonWrapper(
+                  btnText: "Clear",
+                  callback: () {
+                    Get.delete<MaterialIdSearchController>();
+                    Get.find<HomeController>().clearPage1();
+                  },
+                ),
               ],
             ),
           ),
           Obx(() => Expanded(
                 child: Container(
                   padding: const EdgeInsets.all(8.0),
-                  child: DataGridShowOnlyKeys(mapData: controller.data.value,hideCode: false),
+                  child: DataGridShowOnlyKeys(
+                      mapData: controller.data.value, hideCode: false),
                 ),
               ))
         ],

@@ -10,7 +10,9 @@ import '../../../../widgets/LoadingDialog.dart';
 import '../../../../widgets/Snack.dart';
 import '../../../controller/ConnectorControl.dart';
 import '../../../controller/HomeController.dart';
+import '../../../controller/MainController.dart';
 import '../../../data/DropDownValue.dart';
+import '../../../data/PermissionModel.dart';
 import '../../../data/user_data_settings_model.dart';
 import '../../../providers/ApiFactory.dart';
 import '../../../providers/Utils.dart';
@@ -22,6 +24,7 @@ class CommercialController extends GetxController {
   // int? tabIndex = 0;
   // int selectIndex = 0;
   int? selectedDDIndex;
+  double previousScrollOffset = 0;
 
   List<Map<String, double>>? userGridSetting1 = [];
 
@@ -35,6 +38,7 @@ class CommercialController extends GetxController {
   DropDownValue? selectedChannel;
   DropDownValue? selectedLocation;
   FocusNode insertAfterFN = FocusNode();
+  var formPermissions = Rxn<PermissionModel?>();
 
   var selectedIndex = RxInt(0);
   RxBool isEnable = RxBool(true);
@@ -65,8 +69,8 @@ class CommercialController extends GetxController {
   List<CommercialProgramModel>? commercialProgramList = [];
   RxList<CommercialShowOnTabModel>? showCommercialDetailsList =
       <CommercialShowOnTabModel>[].obs;
-  RxList<CommercialShowOnTabModel>? mainCommercialShowDetailsList =
-      <CommercialShowOnTabModel>[].obs;
+  List<CommercialShowOnTabModel>? mainCommercialShowDetailsList =
+      <CommercialShowOnTabModel>[];
 
   /////////////Pluto Grid////////////
   // PlutoGridStateManager? stateManager;
@@ -116,9 +120,21 @@ class CommercialController extends GetxController {
     };
   }
 
+  @override
+  void onReady() {
+    super.onReady();
+    formPermissions.value =
+        Get.find<MainController>().permissionList!.lastWhere((element) {
+      return element.appFormName == "frmCommercialScheduling";
+    });
+
+    print(formPermissions.toJson() ?? "null Form Permission");
+  }
+
   var locationFN = FocusNode();
   int lastSelectedIdxSchd = 0;
   void clear() {
+    previousScrollOffset = 0;
     lastSelectedIdxSchd = 0;
     changeFpcTaped = false;
     exportTapeCodeSelected = null;
@@ -172,6 +188,30 @@ class CommercialController extends GetxController {
             locations.add(DropDownValue.fromJson1(e));
           });
         });
+  }
+
+  beforeCallDraggble(List<PlutoRow> allList, indexToMove,
+      List<PlutoRow> rowMoved, Function function) {
+    if (rowMoved.isNotEmpty &&
+        rowMoved.first.cells['eventType']?.value.toString().trim() == 'S') {
+      gridStateManager?.setCurrentCell(
+          rowMoved.first.cells['eventType'], rowMoved.first.sortIdx);
+      LoadingDialog.showErrorDialog("You cannot move selected segment");
+    } else {
+      // print(indexToMove);
+      // var tempList = <CommercialShowOnTabModel?>[];
+      // for (var i = 0; i < (mainCommercialShowDetailsList?.length ?? 0); i++) {
+      //   if (mainCommercialShowDetailsList?[i].bStatus == "B") {
+      //     tempList.add(mainCommercialShowDetailsList?[i]);
+      //   }
+      // }
+      // var eventType = tempList[indexToMove]?.eventType;
+      // showCommercialDetailsList?[indexToMove].eventType = "S";
+      // commercialProgramList?.insert(indexToMove, commercialProgramList![2]);
+      // gridStateManager?.insertRows(rowMoved.first.sortIdx, rowMoved);
+
+      function();
+    }
   }
 
   getChannel(locationCode) {
@@ -777,9 +817,8 @@ class CommercialController extends GetxController {
         color = Color(int.parse('0xffa9fd77'));
         break;
       default:
-        Colors.white;
+        color = Colors.white;
     }
-
     return color;
   }
 

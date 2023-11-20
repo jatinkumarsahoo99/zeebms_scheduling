@@ -34,7 +34,9 @@ class ReleaseWoNonFpcView extends GetView {
               children: [
                 DropDownField.formDropDown1WidthMap(
                   controller.onloadData.value.lstcboWorkOrderType ?? [],
-                  (value) => controller.nonFPCSelectedWorkOrderType = value,
+                  (value) {
+                    controller.nonFPCSelectedWorkOrderType = value;
+                  },
                   "Work Order Type",
                   0.24,
                   autoFocus: true,
@@ -149,12 +151,12 @@ class ReleaseWoNonFpcView extends GetView {
                   "Telecast Type",
                   0.1775,
                   selected: controller.nonFPCSelectedTelecasteType,
-                  // inkWellFocusNode: controller.telecasteTypeFN,
+                  inkWellFocusNode: controller.telecasteTypeFN,
                   onFocusChange: (hasFocus) {
-                    print(hasFocus);
-                    if (!hasFocus) {
-                      controller.multiPleSegmentsDialog();
-                    }
+                    controller.canRetriveData = hasFocus;
+                  },
+                  dropdownOpen: (dropDownOpen) {
+                    controller.canRetriveData = dropDownOpen;
                   },
                 ),
                 SizedBox(
@@ -192,11 +194,12 @@ class ReleaseWoNonFpcView extends GetView {
                   ),
                 ),
                 DateWithThreeTextField(
-                    title: "Tel Date",
-                    widthRation: 0.148,
-                    mainTextController: controller.nonFPCTelDate,
-                    endDate: DateTime.now(),
-                    isEnable: controller.nonFPCWOReleaseTXID),
+                  title: "Tel Date",
+                  widthRation: 0.148,
+                  mainTextController: controller.nonFPCTelDate,
+                  startDate: DateTime.now(),
+                  isEnable: controller.nonFPCWOReleaseTXID,
+                ),
                 TimeWithThreeTextField(
                   mainTextController: controller.nonFPCTelTime,
                   title: "Tel Time",
@@ -209,6 +212,21 @@ class ReleaseWoNonFpcView extends GetView {
             );
           }),
           // Divider(height: 10),
+          GetBuilder(
+              id: 'selectAll',
+              init: controller,
+              builder: (_) {
+                return Align(
+                  alignment: Alignment.topLeft,
+                  child: CheckBoxWidget1(
+                    title: "Select All",
+                    value: controller.nonFPCEnableAll,
+                    onChanged: (val) {
+                      controller.handleColumTapNonFPCWO();
+                    },
+                  ),
+                );
+              }),
           Expanded(
             child: Obx(
               () {
@@ -276,8 +294,8 @@ class ReleaseWoNonFpcView extends GetView {
                             controller.woNonFPCSM = sm.stateManager;
                           },
                           enableColumnDoubleTap: ["release"],
-                          onColumnHeaderDoubleTap:
-                              controller.handleColumTapNonFPCWO,
+                          onColumnHeaderDoubleTap: (a) =>
+                              controller.handleColumTapNonFPCWO(),
                         ),
                 );
               },

@@ -1,3 +1,5 @@
+import 'package:intl/intl.dart';
+
 class NonFPCWOModel {
   bool? release;
   String? contentTypeName;
@@ -139,17 +141,28 @@ class LstEpisodeDetails {
 
   LstEpisodeDetails.fromJson(Map<String, dynamic> json) {
     epsNo = json['epsNo'];
-    telecastDate = json['telecastDate'];
+    if (json['telecastDate'] != null) {
+      telecastDate = DateFormat("dd-MM-yyyy").format(DateFormat("yyyy-MM-dd")
+          .parse(json['telecastDate'].toString().split("T")[0]));
+    }
     telecastTime = json['telecastTime'];
     exportTapeCode = json['exportTapeCode'];
   }
 
-  Map<String, dynamic> toJson() {
+  Map<String, dynamic> toJson({bool fromSave = false}) {
     final Map<String, dynamic> data = Map<String, dynamic>();
-    data['epsNo'] = epsNo;
-    data['telecastDate'] = telecastDate;
-    data['telecastTime'] = telecastTime;
-    data['exportTapeCode'] = exportTapeCode;
+    if (fromSave) {
+      data['epsNo'] = epsNo;
+      data['telecastDate'] = DateFormat('yyyy-MM-ddT00:00:00').format(
+          DateFormat("dd-MM-yyyy").parse(telecastDate!)); //dd-MM-yyyyT00:00:00
+      data['telecastTime'] = telecastTime; //00:00:00
+      data['exportTapeCode'] = exportTapeCode;
+    } else {
+      data['epsNo'] = epsNo;
+      data['telecastDate'] = telecastDate; //dd-MM-yyyyT00:00:00
+      data['telecastTime'] = telecastTime; //00:00:00
+      data['exportTapeCode'] = exportTapeCode;
+    }
     return data;
   }
 }

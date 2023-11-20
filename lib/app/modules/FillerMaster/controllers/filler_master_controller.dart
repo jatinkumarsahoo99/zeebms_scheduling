@@ -60,7 +60,7 @@ class FillerMasterController extends GetxController {
       tcInCtr = TextEditingController(text: "00:00:00:00"),
       tcOutCtr = TextEditingController(text: "00:00:00:00"),
       txCaptionCtr = TextEditingController(),
-      tapeIDCtr = TextEditingController(),
+      tapeIDCtr = TextEditingController(text: "AUTOID"),
       segNoCtrLeft = TextEditingController(text: "1"),
       segIDCtr = TextEditingController(),
       txNoCtr = TextEditingController(),
@@ -89,9 +89,9 @@ class FillerMasterController extends GetxController {
     segNoCtrRight.text = "1";
     fillerNameCtr.clear();
     txCaptionCtr.clear();
-    tapeIDCtr.text = "AUTO";
+    tapeIDCtr.text = "AUTOID";
     segNoCtrLeft.text = "1";
-    txNoCtr.text = "AUTO";
+    txNoCtr.text = "AUTOID";
     somCtr.text = "00:00:00:00";
     eomCtr.text = "00:00:00:00";
     // durationCtr.clear();
@@ -319,7 +319,7 @@ class FillerMasterController extends GetxController {
         },
       );
     } else {
-      tapeIDCtr.text = "AUTO";
+      tapeIDCtr.text = "AUTOID";
     }
   }
 
@@ -709,11 +709,20 @@ class FillerMasterController extends GetxController {
               resp['saveRecord']['strMessage']
                   .toString()
                   .contains("successfully")) {
-            LoadingDialog.callDataSaved(
-                msg: resp['saveRecord']['strMessage'].toString(),
-                callback: () {
-                  clearPage();
-                });
+            // LoadingDialog.callDataSaved(
+            //     msg: resp['saveRecord']['strMessage'].toString(),
+            //     callback: () {
+            //       // clearPage();
+            //     });
+            // tapeIDCtr.text = resp['saveRecord']['tapeID'].toString();
+            var msg = resp['saveRecord']['strMessage'].toString();
+            if (resp['saveRecord']['tapeID'] != null) {
+              tapeIDCtr.text = resp['saveRecord']['tapeID'].toString();
+              msg =
+                  "${resp['saveRecord']['strMessage']}\nID: (${resp['saveRecord']['tapeID']})";
+            }
+            // if (msg.contains('inserted')) {}
+            LoadingDialog.callDataSaved(msg: msg);
           } else {
             LoadingDialog.showErrorDialog(resp.toString());
           }
@@ -789,8 +798,8 @@ class FillerMasterController extends GetxController {
       segNo: segNoCtrRight.text.trim(),
       fromCopy: true,
     );
-    tapeIDCtr.text = "AUTO";
-    txNoCtr.text = "AUTO";
+    tapeIDCtr.text = "AUTOID";
+    txNoCtr.text = "AUTOID";
     segNoCtrLeft.text = "1";
     var now = DateTime.now();
     // DateFormat("yyyyMMdd").format(now);;

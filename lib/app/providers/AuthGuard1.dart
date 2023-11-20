@@ -54,6 +54,7 @@ import '../modules/NewShortContentForm/views/new_short_content_form_view.dart';
 import '../modules/PromoMaster/views/promo_master_view.dart';
 import '../modules/ROImport/views/r_o_import_view.dart';
 import '../modules/SalesAuditNew/views/SalesAuditNewView.dart';
+import '../modules/ShortContentBulkImport/views/short_content_bulk_import_view.dart';
 import '../modules/SlideMaster/views/slide_master_view.dart';
 import '../modules/SpotPriority/views/SpotPriorityView.dart';
 import '../modules/StillMaster/views/still_master_view.dart';
@@ -118,7 +119,7 @@ class _AuthGuard1State extends State<AuthGuard1> with WidgetsBindingObserver {
         break;
       case AppLifecycleState.inactive:
         // --
-        print('Inactive');
+        // print('Inactive');
         break;
       case AppLifecycleState.paused:
         // --
@@ -128,7 +129,7 @@ class _AuthGuard1State extends State<AuthGuard1> with WidgetsBindingObserver {
         break;
       case AppLifecycleState.detached:
         // --
-        print('Detached');
+        // print('Detached');
         break;
     }
   }
@@ -150,6 +151,9 @@ class _AuthGuard1State extends State<AuthGuard1> with WidgetsBindingObserver {
           switch (widget.childName) {
             case Routes.HOME:
               currentWidget = HomeView();
+              break;
+            case Routes.SHORT_CONTENT_BULK_IMPORT:
+              currentWidget = ShortContentBulkImportView();
               break;
             case Routes.SLIDE:
               currentWidget = SlideView();
@@ -379,6 +383,12 @@ class _AuthGuard1State extends State<AuthGuard1> with WidgetsBindingObserver {
                   key: const Key("DEAL_UTILIZATION"),
                   screenName: "Deal Utilization",
                   strViewName: "BMS_view_DealUtil");
+              break;
+            case Routes.MOVIE_SCHEDULE_REPORT:
+              currentWidget = SearchPage(
+                  key: const Key("MOVIE_SCHEDULE_REPORT"),
+                  screenName: "Movie Schedule Report",
+                  strViewName: "FPC_MovieListing");
               break;
             ///////////////////////////
             default:

@@ -530,6 +530,13 @@ class ApiFactory {
   static String TRANSMISSION_LOG_POST_VERIFY() =>
       "$BASE_URL/api/Transmissionlog/PostVerifyTime";
 
+  static String TRANSMISSION_LOG_AMAGI(
+          String locId, String chnlId, String txtDt, String fileName) =>
+      "$BASE_URL/api/Transmissionlog/GetExportAmagi?locationcode=$locId&channelcode=$chnlId&txtDate=$txtDt&filename=$fileName";
+  static String TRANSMISSION_LOG_MULTICHOICE(
+          String locId, String chnlId, String txtDt, String fileName) =>
+      "$BASE_URL/api/Transmissionlog/GetExportMultichoice?locationcode=$locId&channelcode=$chnlId&txtDate=$txtDt&filename=$fileName";
+
   static String TRANSMISSION_LOG_SEARCH_INSERT(
           String locId,
           String channelId,
@@ -1394,6 +1401,20 @@ class ApiFactory {
       BASE_URL + "/api/DatewiseFillerReport/GetGenrate";
 
   /////////////////////////////////////// DateWiseErrorSpots ////////////////////////////
+  ///
+  ///
+  ///
+  ///
+  ///
+  ///
+  ////////////////////////////////////////// SHORT CONTENT BULK IMPORT ////////////////////////////
+
+  static String SHORT_CONTENT_BULK_IMPORT_ON_LOAD =
+      BASE_URL + "/api/CommercialAutoId/ContentType";
+  static String SHORT_CONTENT_BULK_IMPORT_UPLOAD_FILE =
+      BASE_URL + "/api/CommercialAutoId/AutoIdExcel";
+
+  /////////////////////////////////////// SHORT CONTENT BULK IMPORT ////////////////////////////
   static String DATEWISEERROR_LOAD =
       BASE_URL + "/api/DatewiseErrorSpots/GetInit";
   static String DATEWISEERROR_GENERATE =

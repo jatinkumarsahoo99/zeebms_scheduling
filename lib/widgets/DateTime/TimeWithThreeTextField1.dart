@@ -1,11 +1,16 @@
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:get/get.dart';
 
 import '../../app/providers/SizeDefine.dart';
 import '../LabelTextStyle.dart';
+import '../PlutoGrid/src/helper/pluto_debounce.dart';
+import '../PlutoGrid/src/helper/pluto_key_manager_event.dart';
+import '../PlutoGrid/src/manager/pluto_grid_state_manager.dart';
 
-class TimeWithThreeTextField extends StatefulWidget {
+///// Dont used this widget its only for MAM Work order pluto grid widget
+class TimeWithThreeTextField1 extends StatefulWidget {
   final String title, splitType;
   final int hour, minutes, second, frame;
   final bool isTime, hideTitle;
@@ -13,7 +18,10 @@ class TimeWithThreeTextField extends StatefulWidget {
   final bool isEnable;
   final double widthRation;
   final void Function(String time)? onFocusChange;
-  const TimeWithThreeTextField({
+  final PlutoGridStateManager? stateManager;
+  final int? rowIdx;
+
+  const TimeWithThreeTextField1({
     Key? key,
     required this.title,
     required this.mainTextController,
@@ -23,6 +31,8 @@ class TimeWithThreeTextField extends StatefulWidget {
     this.second = 59,
     this.frame = 30,
     this.isTime = true,
+    this.stateManager,
+    this.rowIdx,
     this.isEnable = true,
     this.hideTitle = false,
     this.widthRation = .15,
@@ -30,18 +40,20 @@ class TimeWithThreeTextField extends StatefulWidget {
   }) : super(key: key);
 
   @override
-  State<TimeWithThreeTextField> createState() =>
+  State<TimeWithThreeTextField1> createState() =>
       _DateTimeWithThreeTextFieldState();
 }
 
-class _DateTimeWithThreeTextFieldState extends State<TimeWithThreeTextField> {
+class _DateTimeWithThreeTextFieldState extends State<TimeWithThreeTextField1> {
   late List<TextEditingController> textCtr;
   late List<FocusNode> focus;
   var iconFocusNode = FocusNode();
+  final PlutoDebounceByHashCode _debounce = PlutoDebounceByHashCode();
 
   @override
   void initState() {
-    focus = List.generate(widget.isTime ? 3 : 4, (index) => FocusNode());
+    focus = List.generate(
+        widget.isTime ? 3 : 4, (index) => FocusNode(onKey: _handleOnKey));
     if (widget.mainTextController.text.isEmpty) {
       textCtr = List.generate(
           widget.isTime ? 3 : 4, (index) => TextEditingController(text: "00"));
@@ -55,6 +67,27 @@ class _DateTimeWithThreeTextFieldState extends State<TimeWithThreeTextField> {
     }
     super.initState();
     handleOnFocusChange();
+    focus[0].addListener(() {
+      if (focus[0].hasFocus) {
+        widget.stateManager?.setCurrentCell(
+            widget.stateManager?.rows[widget.rowIdx!].cells["telecastTime"],
+            widget.rowIdx!);
+      }
+    });
+    focus[1].addListener(() {
+      if (focus[1].hasFocus) {
+        widget.stateManager?.setCurrentCell(
+            widget.stateManager?.rows[widget.rowIdx!].cells["telecastTime"],
+            widget.rowIdx!);
+      }
+    });
+    focus[2].addListener(() {
+      if (focus[2].hasFocus) {
+        widget.stateManager?.setCurrentCell(
+            widget.stateManager?.rows[widget.rowIdx!].cells["telecastTime"],
+            widget.rowIdx!);
+      }
+    });
   }
 
   // var tempFocus = FocusNode();
@@ -63,6 +96,78 @@ class _DateTimeWithThreeTextFieldState extends State<TimeWithThreeTextField> {
   void dispose() {
     super.dispose();
     removeFocusListener();
+  }
+
+  KeyEventResult _handleOnKey(FocusNode node, RawKeyEvent event) {
+    var keyManager = PlutoKeyManagerEvent(
+      focusNode: node,
+      event: event,
+    );
+    if (keyManager.isKeyUpEvent) {
+      return KeyEventResult.handled;
+    }
+
+    final skip = !(keyManager.isVertical ||
+        _moveHorizontal(keyManager) ||
+        keyManager.isEsc ||
+        keyManager.isTab ||
+        keyManager.isF3 ||
+        keyManager.isEnter);
+
+    // 이동 및 엔터키, 수정불가 셀의 좌우 이동을 제외한 문자열 입력 등의 키 입력은 텍스트 필드로 전파 한다.
+    if (skip) {
+      return (widget.stateManager?.keyManager?.eventResult.skip(
+        KeyEventResult.ignored,
+      ))!;
+    }
+
+    if (_debounce.isDebounced(
+      hashCode: widget.mainTextController.text.hashCode,
+      ignore: !kIsWeb,
+    )) {
+      return KeyEventResult.handled;
+    }
+
+    /* // 엔터키는 그리드 포커스 핸들러로 전파 한다.
+    if (keyManager.isEnter) {
+      _handleOnComplete();
+      return KeyEventResult.ignored;
+    }
+
+    // ESC 는 편집된 문자열을 원래 문자열로 돌이킨다.
+    if (keyManager.isEsc) {
+      _restoreText();
+    }*/
+
+    // KeyManager 로 이벤트 처리를 위임 한다.
+    widget.stateManager?.keyManager!.subject.add(keyManager);
+
+    // 모든 이벤트를 처리 하고 이벤트 전파를 중단한다.
+    return KeyEventResult.handled;
+  }
+
+  bool _moveHorizontal(PlutoKeyManagerEvent keyManager) {
+    if (!keyManager.isHorizontal) {
+      return false;
+    }
+
+    final selection = widget.mainTextController.selection;
+
+    if (selection.baseOffset != selection.extentOffset) {
+      return false;
+    }
+
+    if (selection.baseOffset == 0 && keyManager.isLeft) {
+      return true;
+    }
+
+    final textLength = widget.mainTextController.text.length;
+
+    if (selection.baseOffset == textLength && keyManager.isRight) {
+      return true;
+    }
+
+    return false;
   }
 
   @override

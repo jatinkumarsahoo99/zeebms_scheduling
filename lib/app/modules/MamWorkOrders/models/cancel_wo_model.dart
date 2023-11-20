@@ -1,4 +1,7 @@
+import 'package:intl/intl.dart';
+
 class CancelWOModel {
+  int? rowNumber;
   bool? cancelWO;
   String? contentType;
   String? vendor;
@@ -32,6 +35,7 @@ class CancelWOModel {
 
   CancelWOModel.fromJson(Map<String, dynamic> json) {
     cancelWO = json['cancelWO'];
+    rowNumber = json['rownumber'];
     contentType = json['contentType'];
     vendor = json['vendor'];
     language = json['language'];
@@ -41,10 +45,17 @@ class CancelWOModel {
     ep = json['ep'];
     telecastType = json['telecastType'];
     tapeId = json['tapeId'];
-    telecastDate = json['telecastDate'];
-    telecastTime = json['telecastTime'];
+    telecastDate = json['telDate'];
+    telecastTime = json['telTime'];
     epiSegCnt = json['epiSegCnt'];
     woId = json['woId'];
+  }
+
+  parsedDate(String? dateTime) {
+    return (dateTime ?? '').contains("T")
+        ? DateFormat("dd-MM-yyyy")
+            .format(DateFormat("yyyy-MM-ddThh:mm:ss").parse(dateTime!))
+        : (dateTime ?? '');
   }
 
   Map<String, dynamic> toJson({bool fromSave = false}) {
@@ -65,17 +76,18 @@ class CancelWOModel {
       data['epiSegCnt'] = epiSegCnt;
       data['woId'] = woId;
     } else {
-      data['cancelWO'] = cancelWO.toString();
+      data['rownumber'] = (rowNumber ?? -1).toString();
+      data['cancelWO'] = (cancelWO ?? false).toString();
       data['contentType'] = contentType;
       data['vendor'] = vendor;
       data['language'] = language;
       data['location'] = location;
       data['channel'] = channel;
       data['program'] = program;
-      data['ep'] = ep ?? '';
+      data['ep#'] = ep ?? '';
       data['telecastType'] = telecastType;
       data['tapeId'] = tapeId;
-      data['telecastDate'] = telecastDate ?? '';
+      data['telecastDate'] = parsedDate(telecastDate);
       data['telecastTime'] = telecastTime ?? '';
       data['epiSegCnt'] = epiSegCnt;
       data['woId'] = woId;

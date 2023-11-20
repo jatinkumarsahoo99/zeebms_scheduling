@@ -1781,6 +1781,12 @@ class DataGridMenu {
             child: Text('Find', style: TextStyle(fontSize: 11)),
           ),
           const PopupMenuItem<DataGridMenuItem>(
+            value: DataGridMenuItem.rescheduleSpots,
+            height: 25,
+            enabled: true,
+            child: Text('Reschedule Spots', style: TextStyle(fontSize: 11)),
+          ),
+          const PopupMenuItem<DataGridMenuItem>(
             value: DataGridMenuItem.selectedfilter,
             height: 25,
             enabled: true,
@@ -1936,12 +1942,7 @@ class DataGridMenu {
             child:
                 Text('Remove & Mark as Error', style: TextStyle(fontSize: 11)),
           ),
-          const PopupMenuItem<DataGridMenuItem>(
-            value: DataGridMenuItem.rescheduleSpots,
-            height: 25,
-            enabled: true,
-            child: Text('Reschedule Spots', style: TextStyle(fontSize: 11)),
-          ),
+
         ]);
     if (onPressedClick != null) {
       print("Selected index is>>>" + plutoContext.rowIdx.toString());

@@ -14,6 +14,7 @@ import '../../../../widgets/dropdown.dart';
 import '../../../../widgets/gridFromMap.dart';
 import '../../../../widgets/gridFromMap1.dart';
 import '../../../controller/HomeController.dart';
+import '../../../controller/MainController.dart';
 import '../../../data/user_data_settings_model.dart';
 import '../../../providers/ApiFactory.dart';
 import '../../../providers/SizeDefine.dart';
@@ -31,9 +32,9 @@ class CommercialView extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return GetBuilder<CommercialController>(
-        init: CommercialController(),
+        init: controller,
         id: "initData",
-        builder: (controller) {
+        builder: (_) {
           return Scaffold(
             body: FocusTraversalGroup(
               policy: OrderedTraversalPolicy(),
@@ -85,12 +86,18 @@ class CommercialView extends StatelessWidget {
                                   ),
                                 ),
                                 const SizedBox(width: 15),
-                                DateWithThreeTextField(
-                                  title: "From Date",
-                                  mainTextController: controller.date_,
-                                  widthRation: controller.widthSize,
-                                  startDate: DateTime.now(),
-                                ),
+                                Obx(() {
+                                  return DateWithThreeTextField(
+                                    title: "From Date",
+                                    mainTextController: controller.date_,
+                                    widthRation: controller.widthSize,
+                                    startDate: (controller.formPermissions.value
+                                                ?.backDated ??
+                                            false)
+                                        ? null
+                                        : DateTime.now(),
+                                  );
+                                }),
                                 const SizedBox(
                                   width: 20,
                                 ),
@@ -401,7 +408,7 @@ class CommercialView extends StatelessWidget {
               onRowDoubleTap: (plutoGrid) async {
                 controller.canshowFilterList = true;
                 controller.programCodeSelected = controller
-                    .commercialProgramList![plutoGrid.rowIdx!].programcode;
+                    .commercialProgramList![plutoGrid.rowIdx].programcode;
                 controller.lastProgramSelectedIdx = plutoGrid.rowIdx;
                 controller.sm?.setCurrentCell(
                     controller.sm
@@ -463,9 +470,13 @@ class CommercialView extends StatelessWidget {
                             .getRowByIdx(controller.selectedDDIndex)
                             ?.cells['eventType'],
                         controller.selectedDDIndex ?? 0);
-                    controller.gridStateManager?.moveCurrentCellByRowIdx(
-                        controller.selectedDDIndex ?? 0,
-                        PlutoMoveDirection.down);
+                    // controller.gridStateManager?.moveCurrentCellByRowIdx(
+                    //     controller.selectedDDIndex ?? 0,
+                    //     PlutoMoveDirection.down);
+                    controller.gridStateManager?.scroll.vertical?.animateTo(
+                        controller.previousScrollOffset,
+                        curve: Curves.linear,
+                        duration: Duration(milliseconds: 2));
                   },
                   showSrNo: true,
                   hideKeys: ["fpcTime"],
@@ -489,30 +500,16 @@ class CommercialView extends StatelessWidget {
                     "pDailyFPC",
                     "pProgramMaster"
                   ],
-                  colorCallback: (PlutoRowColorContext plutoContext) {
-                    try {
-                      if ((plutoContext.row.cells.containsValue(
-                          controller.gridStateManager?.currentCell))) {
-                        return Colors.deepPurple.shade200;
-                      } else {
-                        return controller.colorSort(controller
-                            .showCommercialDetailsList![plutoContext.rowIdx]
-                            .eventType
-                            .toString());
-                      }
-                    } catch (e) {
-                      return Colors.white;
-                    }
-                  },
                   onRowDoubleTap: (event) {
                     controller.selectedDDIndex = event.rowIdx;
                     print("onRowDoubleTap");
+                    controller.previousScrollOffset =
+                        controller.gridStateManager!.scroll.verticalOffset;
                   },
                   onSelected: (PlutoGridOnSelectedEvent event) {
-                    // E
-                    // if (controller.lastSelectedIdxSchd != (controller.selectedDDIndex ?? 0)) {
-                    //   controller.lastSelectedIdxSchd = controller.selectedDDIndex ?? 0;
-                    // }
+                    print("onSelected called");
+                    controller.previousScrollOffset =
+                        controller.gridStateManager!.scroll.verticalOffset;
                     if (controller
                         .showCommercialDetailsList![
                             controller.lastSelectedIdxSchd]
@@ -545,11 +542,75 @@ class CommercialView extends StatelessWidget {
                         notify: true,
                       );
                     }
-
-                    //
+                  },
+                  colorCallback: (PlutoRowColorContext plutoContext) {
+                    try {
+                      if ((plutoContext.row.cells.containsValue(
+                          controller.gridStateManager?.currentCell))) {
+                        return Colors.deepPurple.shade200;
+                      } else {
+                        return controller.colorSort(plutoContext
+                                .row.cells['eventType']?.value
+                                .toString() ??
+                            "S");
+                      }
+                    } catch (e) {
+                      print("Exception: returning WHITE color ${e.toString()}");
+                      return Colors.white;
+                    }
                   },
                   onRowsMoved: (PlutoGridOnRowsMovedEvent onRowMoved) {
-                    // controller.selectedDDIndex = onRowMoved.idx;
+                    // int foundIdx = -1;
+                    //   int rowNumber = int.tryParse(
+                    //           onRowMoved.rows.first.cells['rownumber']?.value ??
+                    //               -1) ??
+                    //       -1;
+                    //   for (var i = 0;
+                    //       i < (controller.mainCommercialShowDetailsList!.length);
+                    //       i++) {
+                    //     if (rowNumber ==
+                    //         controller
+                    //             .mainCommercialShowDetailsList![i].rownumber) {
+                    //       foundIdx = i;
+                    //       break;
+                    //     }
+                    //   }
+
+                    //   var removeObject = controller.mainCommercialShowDetailsList!
+                    //       .removeAt(foundIdx);
+
+                    //   int toIdx = -1;
+
+                    //   var toRowNumberPreviousRowOrNextRow = int.tryParse(
+                    //       controller
+                    //           .gridStateManager!
+                    //           .refRows[(onRowMoved.idx == 0)
+                    //               ? onRowMoved.idx + 1
+                    //               : onRowMoved.idx - 1]
+                    //           .cells['rownumber']
+                    //           ?.value);
+
+                    //   toIdx = controller.mainCommercialShowDetailsList!
+                    //       .indexWhere((element) =>
+                    //           element.rownumber ==
+                    //           toRowNumberPreviousRowOrNextRow);
+
+                    //   controller.mainCommercialShowDetailsList
+                    //       ?.insert(toIdx, removeObject);
+
+                    //   controller.gridStateManager?.setCurrentCell(
+                    //       controller.gridStateManager
+                    //           ?.getRowByIdx(onRowMoved.idx)
+                    //           ?.cells['eventType'],
+                    //       onRowMoved.idx);
+                    //   controller.previousScrollOffset =
+                    //       controller.gridStateManager!.scroll.verticalOffset;
+                    //   controller.selectedDDIndex = onRowMoved.idx;
+
+                    //// ---------- Working code
+
+                    controller.previousScrollOffset =
+                        controller.gridStateManager!.scroll.verticalOffset;
 
                     try {
                       if (controller.gridStateManager?.rows[onRowMoved.idx]
@@ -557,20 +618,6 @@ class CommercialView extends StatelessWidget {
                               .toString()
                               .trim() ==
                           "S") {
-                        // var newRow = controller.gridStateManager?.currentRow;
-                        // controller.gridStateManager?.removeCurrentRow();
-                        // controller.gridStateManager?.insertRows(
-                        //     controller.selectedDDIndex!, [newRow!]);
-                        // controller.gridStateManager?.notifyListeners(true,
-                        //     controller.gridStateManager?.insertRows.hashCode);
-                        LoadingDialog.showErrorDialog(
-                            "You cannot move selected segment", callback: () {
-                          // controller.gridStateManager?.setCurrentCell(
-                          //     controller.gridStateManager
-                          //         ?.getRowByIdx(controller.selectedDDIndex)
-                          //         ?.cells['eventType'],
-                          //     controller.selectedDDIndex ?? 0);
-                        });
                       } else {
                         int? rownumber = int.tryParse(controller
                                 .gridStateManager
@@ -629,14 +676,6 @@ class CommercialView extends StatelessWidget {
                           controller
                               .mainCommercialShowDetailsList?[i].rownumber = i;
                         }
-
-                        // var newRow = controller.gridStateManager?.currentRow;
-                        // controller.gridStateManager?.removeCurrentRow();
-                        // controller.gridStateManager?.insertRows(
-                        //     onRowMoved.idx, [onRowMoved.rows[onRowMoved.idx]]);
-                        // controller.gridStateManager?.notifyListeners(true,
-                        //     controller.gridStateManager?.insertRows.hashCode);
-                        // controller.selectedDDIndex = onRowMoved.idx;
                       }
                     } catch (e) {
                       LoadingDialog.showErrorDialog(e.toString());

@@ -1,21 +1,31 @@
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:get/get.dart';
 import 'package:intl/intl.dart';
 
 import '../../app/providers/SizeDefine.dart';
+import '../PlutoGrid/src/helper/pluto_debounce.dart';
+import '../PlutoGrid/src/helper/pluto_key_manager_event.dart';
+import '../PlutoGrid/src/manager/pluto_grid_state_manager.dart';
 
-class DateWithThreeTextField extends StatefulWidget {
+
+///// Dont used this widget its only for MAM Work order pluto grid widget
+class DateWithThreeTextField1 extends StatefulWidget {
   final String title, splitType;
   final int day, month, year;
   final bool monthWithFullName;
   final TextEditingController mainTextController;
   final bool isEnable, hideTitle;
+  final PlutoGridStateManager? stateManager;
+  final FocusNode? focusNode;
   final double widthRation;
   final void Function(String date)? onFocusChange;
   final DateTime? startDate, endDate, intailDate;
   final String formatting;
-  const DateWithThreeTextField({
+  final int? rowIdx;
+
+  const DateWithThreeTextField1({
     Key? key,
     required this.title,
     required this.mainTextController,
@@ -27,24 +37,28 @@ class DateWithThreeTextField extends StatefulWidget {
     this.isEnable = true,
     this.widthRation = .15,
     this.onFocusChange,
+    this.stateManager,
+    this.focusNode,
     this.startDate,
     this.hideTitle = false,
     this.endDate,
+    this.rowIdx,
     this.formatting = "yyyy/MM/dd",
     this.intailDate,
   }) : super(key: key);
 
   @override
-  State<DateWithThreeTextField> createState() => _DateWithThreeTextFieldState();
+  State<DateWithThreeTextField1> createState() =>
+      _DateWithThreeTextField1State();
 }
 
-class _DateWithThreeTextFieldState extends State<DateWithThreeTextField> {
+class _DateWithThreeTextField1State extends State<DateWithThreeTextField1> {
   late List<TextEditingController> textCtr;
   late List<FocusNode> focus;
   var iconFocusNode = FocusNode();
   DateTime? selectedDateTime;
   String originalDate = "";
-
+  final PlutoDebounceByHashCode _debounce = PlutoDebounceByHashCode();
   DateTime? dateTime;
   late DateFormat requireFormatDateStr;
   List<String> months = [
@@ -61,6 +75,7 @@ class _DateWithThreeTextFieldState extends State<DateWithThreeTextField> {
     "November",
     "December"
   ];
+
   bool isLeapYearFun(int year) =>
       (year % 4 == 0) && ((year % 100 != 0) || (year % 400 == 0));
   List<int> maxDays = [];
@@ -68,7 +83,11 @@ class _DateWithThreeTextFieldState extends State<DateWithThreeTextField> {
   @override
   void initState() {
     selectedDateTime = widget.intailDate;
-    focus = List.generate(3, (index) => FocusNode());
+    focus = List.generate(
+        3,
+        (index) => FocusNode(
+              onKey: _handleOnKey,
+            ));
     textCtr = List.generate(3, (index) => TextEditingController());
     maxDays = [
       31,
@@ -97,6 +116,102 @@ class _DateWithThreeTextFieldState extends State<DateWithThreeTextField> {
         });
       });
     });
+    focus[0].addListener(() {
+      if(focus[0].hasFocus){
+        widget.stateManager?.setCurrentCell(
+            widget.stateManager?.rows[widget.rowIdx!].cells["telecastDate"],
+            widget.rowIdx!);
+      }
+    }); focus[1].addListener(() {
+      if(focus[1].hasFocus){
+        widget.stateManager?.setCurrentCell(
+            widget.stateManager?.rows[widget.rowIdx!].cells["telecastDate"],
+            widget.rowIdx!);
+      }
+    }); focus[2].addListener(() {
+      if(focus[2].hasFocus){
+        widget.stateManager?.setCurrentCell(
+            widget.stateManager?.rows[widget.rowIdx!].cells["telecastDate"],
+            widget.rowIdx!);
+      }
+    });
+  }
+
+  KeyEventResult _handleOnKey(FocusNode node, RawKeyEvent event) {
+    var keyManager = PlutoKeyManagerEvent(
+      focusNode: node,
+      event: event,
+    );
+    if (keyManager.isKeyUpEvent) {
+      return KeyEventResult.handled;
+    }
+    /*if (node.hasFocus) {
+      widget.stateManager?.setCurrentCell(
+          widget.stateManager?.rows[widget.rowIdx!].cells["telecastDate"],
+          widget.rowIdx!);
+    }*/
+
+    final skip = !(keyManager.isVertical ||
+        _moveHorizontal(keyManager) ||
+        keyManager.isEsc ||
+        keyManager.isTab ||
+        keyManager.isF3 ||
+        keyManager.isEnter);
+
+    // 이동 및 엔터키, 수정불가 셀의 좌우 이동을 제외한 문자열 입력 등의 키 입력은 텍스트 필드로 전파 한다.
+    if (skip) {
+      return (widget.stateManager?.keyManager?.eventResult.skip(
+        KeyEventResult.ignored,
+      ))!;
+    }
+
+    if (_debounce.isDebounced(
+      hashCode: widget.mainTextController.text.hashCode,
+      ignore: !kIsWeb,
+    )) {
+      return KeyEventResult.handled;
+    }
+
+    /* // 엔터키는 그리드 포커스 핸들러로 전파 한다.
+    if (keyManager.isEnter) {
+      _handleOnComplete();
+      return KeyEventResult.ignored;
+    }
+
+    // ESC 는 편집된 문자열을 원래 문자열로 돌이킨다.
+    if (keyManager.isEsc) {
+      _restoreText();
+    }*/
+
+    // KeyManager 로 이벤트 처리를 위임 한다.
+    widget.stateManager?.keyManager!.subject.add(keyManager);
+
+    // 모든 이벤트를 처리 하고 이벤트 전파를 중단한다.
+    return KeyEventResult.handled;
+  }
+
+  bool _moveHorizontal(PlutoKeyManagerEvent keyManager) {
+    if (!keyManager.isHorizontal) {
+      return false;
+    }
+
+    final selection = widget.mainTextController.selection;
+
+    if (selection.baseOffset != selection.extentOffset) {
+      return false;
+    }
+
+    if (selection.baseOffset == 0 && keyManager.isLeft) {
+      return true;
+    }
+
+    final textLength = widget.mainTextController.text.length;
+
+    if (selection.baseOffset == textLength && keyManager.isRight) {
+      return true;
+    }
+
+    return false;
   }
 
   @override

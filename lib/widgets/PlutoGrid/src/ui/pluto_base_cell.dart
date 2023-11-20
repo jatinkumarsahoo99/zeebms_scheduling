@@ -3,7 +3,8 @@ import 'package:bms_scheduling/widgets/PlutoGrid/pluto_grid.dart';
 
 import 'ui.dart';
 
-class PlutoBaseCell extends StatelessWidget implements PlutoVisibilityLayoutChild {
+class PlutoBaseCell extends StatelessWidget
+    implements PlutoVisibilityLayoutChild {
   final PlutoCell cell;
 
   final PlutoColumn column;
@@ -97,7 +98,9 @@ class PlutoBaseCell extends StatelessWidget implements PlutoVisibilityLayoutChil
   }
 
   void Function(TapDownDetails details)? _onSecondaryTapOrNull() {
-    return stateManager.onRowSecondaryTap == null ? null : _handleOnSecondaryTap;
+    return stateManager.onRowSecondaryTap == null
+        ? null
+        : _handleOnSecondaryTap;
   }
 
   @override
@@ -117,7 +120,8 @@ class PlutoBaseCell extends StatelessWidget implements PlutoVisibilityLayoutChil
         rowIdx: rowIdx,
         row: row,
         column: column,
-        cellPadding: column.cellPadding ?? stateManager.configuration.style.defaultCellPadding,
+        cellPadding: column.cellPadding ??
+            stateManager.configuration.style.defaultCellPadding,
         stateManager: stateManager,
         child: _Cell(
           stateManager: stateManager,
@@ -191,7 +195,8 @@ class _CellContainerState extends PlutoStateWithChange<_CellContainer> {
           widget.column,
           widget.rowIdx,
         ),
-        isGroupedRowCell: stateManager.enabledRowGroups && stateManager.rowGroupDelegate!.isExpandableCell(widget.cell),
+        isGroupedRowCell: stateManager.enabledRowGroups &&
+            stateManager.rowGroupDelegate!.isExpandableCell(widget.cell),
         enableCellVerticalBorder: style.enableCellBorderVertical,
         borderColor: style.borderColor,
         activatedBorderColor: style.activatedBorderColor,
@@ -216,6 +221,14 @@ class _CellContainerState extends PlutoStateWithChange<_CellContainer> {
     required Color cellColorInReadOnlyState,
     required PlutoGridSelectingMode selectingMode,
   }) {
+    if (stateManager.cellColorCallback != null && _isCurrentRowSelected()) {
+      return stateManager.cellColorCallback!(PlutoCellColorContext(
+          row: widget.row,
+          cell: widget.cell,
+          rowIdx: widget.rowIdx,
+          stateManager: stateManager));
+    }
+
     if (!hasFocus) {
       return gridBackgroundColor;
     }
@@ -251,7 +264,7 @@ class _CellContainerState extends PlutoStateWithChange<_CellContainer> {
           hasFocus: hasFocus,
           isEditing: isEditing,
           readOnly: readOnly,
-          gridBackgroundColor: Colors.deepPurple[200]!,
+          gridBackgroundColor: gridBackgroundColor,
           activatedColor: activatedColor,
           cellColorInReadOnlyState: cellColorInReadOnlyState,
           cellColorInEditState: cellColorInEditState,
@@ -264,7 +277,13 @@ class _CellContainerState extends PlutoStateWithChange<_CellContainer> {
       );
     } else if (isSelectedCell) {
       return BoxDecoration(
-        color: activatedColor,
+        color: stateManager.cellColorCallback != null && _isCurrentRowSelected()
+            ? stateManager.cellColorCallback!(PlutoCellColorContext(
+                row: widget.row,
+                cell: widget.cell,
+                rowIdx: widget.rowIdx,
+                stateManager: stateManager))
+            : activatedColor,
         border: Border.all(
           color: hasFocus ? activatedBorderColor : inactivatedBorderColor,
           width: 1,
@@ -272,7 +291,15 @@ class _CellContainerState extends PlutoStateWithChange<_CellContainer> {
       );
     } else {
       return BoxDecoration(
-        color: isGroupedRowCell ? cellColorGroupedRow : null,
+        color: stateManager.cellColorCallback != null && _isCurrentRowSelected()
+            ? stateManager.cellColorCallback!(PlutoCellColorContext(
+                row: widget.row,
+                cell: widget.cell,
+                rowIdx: widget.rowIdx,
+                stateManager: stateManager))
+            : isGroupedRowCell
+                ? cellColorGroupedRow
+                : null,
         border: enableCellVerticalBorder
             ? BorderDirectional(
                 end: BorderSide(
@@ -282,6 +309,24 @@ class _CellContainerState extends PlutoStateWithChange<_CellContainer> {
               )
             : null,
       );
+    }
+  }
+
+  _isCurrentRowSelected() {
+    // print("IS row contain ${stateManager.currentRowIdx == widget.rowIdx}");
+    if (stateManager.cellColorCallback == null) return false;
+    var selectedIdx = [];
+    if (stateManager.currentSelectingRows.isEmpty) {
+      selectedIdx.add(stateManager.currentRow?.sortIdx);
+    } else {
+      selectedIdx.addAll(
+          stateManager.currentSelectingRows.map((e) => e.sortIdx).toList());
+    }
+
+    if (selectedIdx.contains(widget.row.sortIdx)) {
+      return true;
+    } else {
+      return false;
     }
   }
 

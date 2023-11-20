@@ -41,6 +41,7 @@ class FpcMismatchController extends GetxController {
 
   SelectButton? selectButton;
   RxBool hideKeysAllowed = RxBool(false);
+  FocusNode locationFocus = FocusNode();
 
   @override
   void onInit() {
@@ -78,15 +79,18 @@ class FpcMismatchController extends GetxController {
   }
 
   fetchChannel() {
+    LoadingDialog.call();
     Get.find<ConnectorControl>().GETMETHODCALL(
       api: ApiFactory.FPC_MISMATCH_CHANNEL(
           Get.find<MainController>().user?.logincode ?? "",
           selectedLocation?.key ?? ""),
       fun: (List list) {
+        Get.back();
         list.forEach((element) {
           channelList?.add(new DropDownValue(
               key: element["channelCode"], value: element["channelName"]));
         });
+        locationFocus.requestFocus();
         update(["initialData"]);
       },
     );
@@ -385,6 +389,18 @@ class FpcMismatchController extends GetxController {
     update(["fpcMaster"]);
     // programTable.notifyListeners();
     update(["programTable"]);
+  }
+
+  void selectCurrentSelectFpcTime(bool select) {
+    if (stateManager == null || stateManager?.currentRow == null) return;
+    stateManager?.rows.forEach((element) {
+      if (element.cells["fpcTime"]?.value ==
+          stateManager?.currentRow?.cells["fpcTime"]?.value) {
+        stateManager?.setRowChecked(element, select);
+        dataList![element.sortIdx].selectItem = select;
+      }
+    });
+    stateManager?.notifyListeners();
   }
 }
 
