@@ -9,11 +9,19 @@ import '../../../providers/Utils.dart';
 import '../controllers/search_controller.dart';
 
 class SearchResultPage extends StatelessWidget {
-  const SearchResultPage(
-      {Key? key, required this.controller, required this.appFormName})
-      : super(key: key);
+  const SearchResultPage({
+    Key? key,
+    required this.controller,
+    required this.appFormName,
+    this.actionableSearch = false,
+    this.actionableMap,
+    this.dialogClose,
+  }) : super(key: key);
   final SearchController controller;
+  final void Function(dynamic)? dialogClose;
   final String appFormName;
+  final bool actionableSearch;
+  final Map<String, void Function(String value)>? actionableMap;
 
   @override
   Widget build(BuildContext context) {
@@ -38,12 +46,13 @@ class SearchResultPage extends StatelessWidget {
           field: column,
           type: PlutoColumnType.text()));
     }
+    PlutoGridStateManager? sm;
 
     List<PlutoRow> rows = [];
     for (var row in controller.searchResult!) {
       Map<String, PlutoCell> cells = {};
       for (var value in (row as Map).entries) {
-        cells[value.key] = PlutoCell(value: (value.value ?? "").toString());
+        cells[value.key] = PlutoCell(value: value.value ?? "");
       }
       rows.add(PlutoRow(cells: cells));
     }
@@ -55,9 +64,17 @@ class SearchResultPage extends StatelessWidget {
           backgroundColor: Colors.white,
           elevation: 4,
           leading: IconButton(
-              icon: Icon(Icons.arrow_back_ios_new_rounded, color: Colors.black),
+              icon: Icon(
+                  dialogClose != null
+                      ? Icons.close
+                      : Icons.arrow_back_ios_new_rounded,
+                  color: Colors.black),
               onPressed: () {
-                Get.back();
+                if (dialogClose != null) {
+                  dialogClose!(null);
+                } else {
+                  Get.back();
+                }
               }),
         ),
         // floatingActionButtonLocation: FloatingActionButtonLocation.centerDocked,
@@ -68,33 +85,56 @@ class SearchResultPage extends StatelessWidget {
               child: Container(
                 width: Get.width * 2,
                 padding:
-                    const EdgeInsets.only(bottom: 8, top: 8, left: 8, right: 8),
+                const EdgeInsets.only(bottom: 8, top: 8, left: 8, right: 8),
                 child: DataGridFromMap(
-                  columnAutoResize:
-                      (controller.searchResult!.length > 5) ? false : true,
+                  columnAutoResize: false,
+                  // columnAutoResize:
+                  //     (controller.searchResult!.length > 5) ? false : true,
                   exportFileName:
-                      "${controller.screenName}_${controller.selectVarianceId == null ? "" : controller.varainace.firstWhere(
-                          (element) =>
-                              element["id"].toString() ==
-                              controller.selectVarianceId.toString(),
-                        )["varianceName"]} _Search_Result",
-                  hideCode: false,csvFormat: true,
+                  "${controller.screenName}_${controller.selectVarianceId == null ? "" : controller.varainace.firstWhere(
+                        (element) =>
+                    element["id"].toString() ==
+                        controller.selectVarianceId.toString(),
+                  )["varianceName"]} _Search_Result",
+                  hideCode: false,
                   mapData: controller.searchResult!,
+                  doPasccal: false,
                   onload: (event) {
-                    event.stateManager.setColumnSizeConfig(
-                        PlutoGridColumnSizeConfig(
-                            autoSizeMode: PlutoAutoSizeMode.none,
-                            resizeMode: PlutoResizeMode.normal));
+                    sm = event.stateManager;
+                    for (var element in event.stateManager.refColumns) {
+                      event.stateManager.autoFitColumn(context, element);
+                    }
+                    // event.stateManager.setColumnSizeConfig(
+                    //     PlutoGridColumnSizeConfig(
+                    //         autoSizeMode: PlutoAutoSizeMode.none,
+                    //         resizeMode: PlutoResizeMode.normal));
                   },
                   mode: PlutoGridMode.select,
+                  colorCallback: (row) => sm?.currentRow == row.row
+                      ? Colors.deepPurple.shade100
+                      : Colors.white,
                   onRowDoubleTap: (plutoEvent) {
                     if (appFormName == "BMS_view_programmaster") {
                       String val = controller.searchResult![plutoEvent.rowIdx]
-                          ["ProgramName"];
+                      ["ProgramName"];
                       print("Tapped Called>> is>>" +
                           val.toString().replaceAll("\"", ""));
                       // Get.to(ProgramMasterPage(appBarReq: true,searchProgramName:"Meet",key: Key("ProgramMaster"),));
                       Get.toNamed("/programMaster?progName=" + val.toString());
+                    }
+                    if (actionableSearch) {
+                      if (actionableMap
+                          ?.containsKey(plutoEvent.cell.column.field) ??
+                          false) {
+                        // if (actionableMap != null && actionableMap!.containsKey()) {
+                        actionableMap![plutoEvent.cell.column.field]!(
+                            plutoEvent.cell.value ?? "");
+                        // }
+                      }
+                    }
+                    if (dialogClose != null) {
+                      sm?.setCurrentCell(plutoEvent.cell, plutoEvent.rowIdx);
+                      dialogClose!(plutoEvent.row);
                     }
                   },
                 ),
@@ -113,7 +153,13 @@ class SearchResultPage extends StatelessWidget {
                 alignment: MainAxisAlignment.start,
                 mainAxisSize: MainAxisSize.min,
                 children: [
-                  for (var btn in ["Save", "Pivot", "Refresh", "Done", "Exit "])
+                  for (var btn in [
+                    "Save",
+                    "Pivot",
+                    "Refresh",
+                    "Done",
+                    (dialogClose != null ? "Exit " : "Exit")
+                  ])
                     FormButtonWrapper(
                       btnText: btn,
                       callback: () => {controller.searchResultBtnHandler(btn)},
