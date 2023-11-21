@@ -655,6 +655,8 @@ class ConnectorControl extends GetConnect {
         updateToken(() {
           POSTMETHOD_FORMDATA(api: api, json: json, fun: fun, timeout: timeout);
         });
+      } else if (e.response?.statusCode == 503) {
+        fun("Server timeout error");
       } else {
         switch (e.type) {
           case DioErrorType.connectionTimeout:
