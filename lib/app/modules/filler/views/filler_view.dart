@@ -577,15 +577,14 @@ class FillerView extends GetView<FillerController> {
                             ],
                           ),
                           Expanded(
-                            child: Obx(() {
-                              return Container(
-                                decoration: /*controller
+                            child: Container(
+                              decoration: /*controller
                                     .searchPromos.value.isEmpty
                                     ? */
-                                    BoxDecoration(
-                                        border: Border.all(
-                                            color: Colors.grey)) /*: null*/,
-                                /* child: controller
+                                  BoxDecoration(
+                                      border: Border.all(
+                                          color: Colors.grey)) /*: null*/,
+                              /* child: controller
                                     .searchPromos.value.isEmpty
                                     ? null
                                     : DataGridFromMap(
@@ -677,8 +676,7 @@ class FillerView extends GetView<FillerController> {
                                   //                 .field ??
                                   //             "caption"),
                                 ),*/
-                              );
-                            }),
+                            ),
                           ),
                         ],
                       ),
