@@ -21,7 +21,7 @@ class FinalAuditReportBeforeLogView
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: ColorData.scaffoldBg,
+      // backgroundColor: ColorData.scaffoldBg,
       body: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
