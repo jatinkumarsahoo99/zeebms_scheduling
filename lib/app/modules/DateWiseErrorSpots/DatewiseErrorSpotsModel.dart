@@ -165,7 +165,7 @@ class DatewiseErrorSpots {
 
   String convertDateFormat(String? date){
     if(date != null && date != ""){
-      return DateFormat("M/dd/yyyy").format(DateFormat("yyyy-MM-ddTHH:mm:ss").parse(date));
+      return DateFormat("dd/MM/yyyy").format(DateFormat("yyyy-MM-ddTHH:mm:ss").parse(date));
     }
     return "";
   }
