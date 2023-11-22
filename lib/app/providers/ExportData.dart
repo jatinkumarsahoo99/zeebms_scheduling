@@ -24,8 +24,8 @@ class ExportData {
       excel.setDefaultSheet(screenName);
       sheetObject.appendRow((jsonList![0]).keys.toList());
       for (var element in jsonList!) {
-        sheetObject.appendRow((element as Map).values.toList());
-       /* Map data = {};
+        // sheetObject.appendRow((element as Map).values.toList());
+        Map data = {};
         element.forEach((key, value) {
           if (value != null) {
             try {
@@ -38,7 +38,7 @@ class ExportData {
             data[key] = value;
           }
         });
-        sheetObject.appendRow((data as Map).values.toList());*/
+        sheetObject.appendRow((data as Map).values.toList());
       }
 
       var value = excel.encode()!;
