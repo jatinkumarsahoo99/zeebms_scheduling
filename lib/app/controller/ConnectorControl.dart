@@ -666,10 +666,15 @@ class ConnectorControl extends GetConnect {
           case DioErrorType.sendTimeout:
           case DioErrorType.receiveTimeout:
           case DioErrorType.unknown:
-            fun(failedMap);
+          case DioErrorType.connectionError:
+            fun("Server timeout. Please try again later");
             break;
           case DioErrorType.badResponse:
             fun(e.response?.data);
+            break;
+          default:
+            fun("Server timeout. Please try again later");
+            break;
         }
       }
     }
