@@ -115,7 +115,7 @@ class FillerMasterView extends GetView<FillerMasterController> {
                                           controller: controller.tapeIDCtr,
                                           width: controller.componentWidthRatio,
                                           focusNode: controller.tapeIDFN,
-                                          maxLen: 10,
+                                          // maxLen: 10,
                                           padLeft: 0,
                                         ),
                                         // SizedBox(width: 20),

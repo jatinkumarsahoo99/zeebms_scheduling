@@ -13,13 +13,13 @@ ENV ANDROID_SDK_ROOT /Android/sdk
 RUN mkdir -p .android && touch .android/repositories.cfg
 
 # Set up Android SDK
-WORKDIR /Android
-RUN wget -O sdk-tools.zip https://dl.google.com/android/repository/sdk-tools-linux-4333796.zip
-RUN unzip sdk-tools.zip && rm sdk-tools.zip
-RUN mv tools /Android/sdk/tools
-RUN cd /Android/sdk/tools/bin && yes | ./sdkmanager --licenses
-RUN cd /Android/sdk/tools/bin && ./sdkmanager "build-tools;29.0.2" "patcher;v4" "platform-tools" "platforms;android-29" "sources;android-29"
-ENV PATH "$PATH:/Android/sdk/platform-tools"
+#WORKDIR /Android
+#RUN wget -O sdk-tools.zip https://dl.google.com/android/repository/sdk-tools-linux-4333796.zip
+#RUN unzip sdk-tools.zip && rm sdk-tools.zip
+#RUN mv tools /Android/sdk/tools
+#RUN cd /Android/sdk/tools/bin && yes | ./sdkmanager --licenses
+#RUN cd /Android/sdk/tools/bin && ./sdkmanager "build-tools;29.0.2" "patcher;v4" "platform-tools" "platforms;android-29" "sources;android-29"
+#ENV PATH "$PATH:/Android/sdk/platform-tools"
 
 # Download Flutter SDK
 RUN mkdir /flutter-home

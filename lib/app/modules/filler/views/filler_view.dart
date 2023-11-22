@@ -64,7 +64,7 @@ class FillerView extends GetView<FillerController> {
                       isEnable: controller.isEnable.value,
                       onFocusChange: (data) => controller.fetchFPCDetails(),
                       mainTextController: controller.date_,
-                      // startDate: DateTime.now(),
+                      startDate: DateTime.now(),
                     ),
                   ),
                   const SizedBox(width: 20),
@@ -100,7 +100,7 @@ class FillerView extends GetView<FillerController> {
                                         "Location",
                                         0.15,
                                         autoFocus: true,
-                                        height: 130,
+                                        height: 200,
                                         selected:
                                             controller.selectedImportLocation,
                                       ),
@@ -116,7 +116,7 @@ class FillerView extends GetView<FillerController> {
                                         "Channel",
                                         0.15,
                                         // dialogHeight: Get.height * .7,
-                                        height: 130,
+                                        height: 200,
                                         selected:
                                             controller.selectedImportChannel,
                                       ),
@@ -318,6 +318,7 @@ class FillerView extends GetView<FillerController> {
                             InputFields.formField1(
                               width: 0.12,
                               padLeft: 5,
+
                               hintTxt: "Tape ID",
                               controller: controller.tapeId_,
                               focusNode: controller.tapeIDFocusNode,
@@ -330,7 +331,7 @@ class FillerView extends GetView<FillerController> {
                               //         value.toString());
                               //   }
                               // },
-                              maxLen: 10,
+                              // maxLen: 10,
                             ),
 
                             /// SEG NO

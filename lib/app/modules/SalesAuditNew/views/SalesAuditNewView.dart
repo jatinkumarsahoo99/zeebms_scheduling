@@ -564,6 +564,8 @@ class SalesAuditNewView  extends StatelessWidget  {
                                controller.gridStateManagerLeft?.rows[controller.gridStateManagerLeft?.
                                currentRowIdx??0].cells['rowNumber']?.value = 0;
                                controller.gridStateManagerLeft?.notifyListeners();
+                               controller.gridStateManagerLeft?.setCurrentCell(controller.gridStateManagerLeft?.rows[controller.gridStateManagerLeft?.currentRowIdx??0].cells["auditedOn"], (controller.gridStateManagerLeft?.currentRowIdx??0));
+                               controller.gridStateManagerLeft?.moveCurrentCell(PlutoMoveDirection.right);
                               },
                             ),
                             FormButtonWrapper(

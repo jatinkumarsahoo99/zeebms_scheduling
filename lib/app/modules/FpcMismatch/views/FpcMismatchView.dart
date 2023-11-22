@@ -70,48 +70,43 @@ class FpcMismatchView extends GetView<FpcMismatchController> {
               id: "initialData",
               builder: (control) {
                 print("List data>>>" + controllerX.locationList.toString());
-                if(controllerX.locationList?.value!=null && (controllerX.locationList?.value.isNotEmpty??false)) {
+                if (controllerX.locationList?.value != null &&
+                    (controllerX.locationList?.value.isNotEmpty ?? false)) {
                   return Padding(
                     padding: const EdgeInsets.only(left: 18.0, top: 10),
                     child: Row(
                       children: [
                         Obx(
-                              () =>
-                              DropDownField.formDropDown1WidthMap(
-                                controllerX.locationList?.value ?? [],
-                                    (value) {
-                                  controllerX.selectedLocation = value;
-                                  controllerX.fetchChannel();
-                                },
-                                "Location",
-                                controllerX.widthSize,
-                                // isEnable: controllerX.isEnable.value,
-                                selected: controllerX.selectedLocation,
-                                // autoFocus: true,
-                                dialogWidth: 300,
-                                dialogHeight: Get.height * .7,
-                                inkWellFocusNode: controllerX.locationFocus
-                              ),
+                          () => DropDownField.formDropDown1WidthMap(
+                              controllerX.locationList?.value ?? [], (value) {
+                            controllerX.selectedLocation = value;
+                            controllerX.fetchChannel();
+                          }, "Location", controllerX.widthSize,
+                              // isEnable: controllerX.isEnable.value,
+                              selected: controllerX.selectedLocation,
+                              // autoFocus: true,
+                              dialogWidth: 300,
+                              dialogHeight: Get.height * .7,
+                              inkWellFocusNode: controllerX.locationFocus),
                         ),
                         SizedBox(
                           width: 5,
                         ),
                         Obx(
-                              () =>
-                              DropDownField.formDropDown1WidthMap(
-                                controllerX.channelList?.value ?? [],
-                                    (value) {
-                                  controllerX.selectedChannel = value;
-                                  print("Value is>>>" + value.toString());
-                                },
-                                "Channel",
-                                controllerX.widthSize,
-                                // isEnable: controllerX.isEnable.value,
-                                selected: controllerX.selectedChannel,
-                                // autoFocus: true,
-                                dialogWidth: 300,
-                                dialogHeight: Get.height * .7,
-                              ),
+                          () => DropDownField.formDropDown1WidthMap(
+                            controllerX.channelList?.value ?? [],
+                            (value) {
+                              controllerX.selectedChannel = value;
+                              print("Value is>>>" + value.toString());
+                            },
+                            "Channel",
+                            controllerX.widthSize,
+                            // isEnable: controllerX.isEnable.value,
+                            selected: controllerX.selectedChannel,
+                            // autoFocus: true,
+                            dialogWidth: 300,
+                            dialogHeight: Get.height * .7,
+                          ),
                         ),
                         /*  DateWidget.dateStartDtEndDt3(context, "As On Date",
                           (data) {
@@ -163,16 +158,16 @@ class FpcMismatchView extends GetView<FpcMismatchController> {
                                         btnText: "  Display Mismatch  ",
                                         callback: () {
                                           controllerX.hideKeysAllowed.value =
-                                          false;
+                                              false;
                                           controllerX.fetchMismatch();
                                           controllerX.fetchProgram();
                                         },
                                         showIcon: controllerX.selectButton ==
-                                            SelectButton.DisplayMismatch
+                                                SelectButton.DisplayMismatch
                                             ? true
                                             : false,
                                         iconDataM:
-                                        Icons.check_circle_outline_sharp,
+                                            Icons.check_circle_outline_sharp,
                                       ),
                                       const SizedBox(
                                         width: 10,
@@ -181,16 +176,16 @@ class FpcMismatchView extends GetView<FpcMismatchController> {
                                         btnText: "  Display Error  ",
                                         callback: () {
                                           controllerX.hideKeysAllowed.value =
-                                          false;
+                                              false;
                                           controllerX.fetchMismatchError();
                                           controllerX.fetchProgram();
                                         },
                                         showIcon: controllerX.selectButton ==
-                                            SelectButton.DisplayError
+                                                SelectButton.DisplayError
                                             ? true
                                             : false,
                                         iconDataM:
-                                        Icons.check_circle_outline_sharp,
+                                            Icons.check_circle_outline_sharp,
                                       ),
                                       const SizedBox(
                                         width: 10,
@@ -199,16 +194,16 @@ class FpcMismatchView extends GetView<FpcMismatchController> {
                                         btnText: "  Display All  ",
                                         callback: () {
                                           controllerX.hideKeysAllowed.value =
-                                          true;
+                                              true;
                                           controllerX.fetchMismatchAll();
                                           controllerX.fetchProgram();
                                         },
                                         showIcon: controllerX.selectButton ==
-                                            SelectButton.DisplayAll
+                                                SelectButton.DisplayAll
                                             ? true
                                             : false,
                                         iconDataM:
-                                        Icons.check_circle_outline_sharp,
+                                            Icons.check_circle_outline_sharp,
                                       ),
                                     ],
                                   );
@@ -217,21 +212,40 @@ class FpcMismatchView extends GetView<FpcMismatchController> {
                               const SizedBox(
                                 width: 8,
                               ),
-                              /*Container(
-                              width: 2,
-                              height: 35,
-                              color: Colors.grey,
-                            ),
-                            const SizedBox(
-                              width: 8,
-                            ),*/
+                              Container(
+                                width: 2,
+                                height: 35,
+                                color: Colors.grey,
+                              ),
+                              const SizedBox(
+                                width: 8,
+                              ),
+                              FormButton(
+                                  btnText: "  Select All Fpc Time  ",
+                                  callback: () {
+                                    controllerX
+                                        .selectCurrentSelectFpcTime(true);
+                                  },
+                                  showIcon: true,
+                                  iconDataM: Icons.check_box),
+                              const SizedBox(
+                                width: 10,
+                              ),
+                              FormButton(
+                                  btnText: "  Unselect All Fpc Time  ",
+                                  callback: () {
+                                    controllerX
+                                        .selectCurrentSelectFpcTime(false);
+                                  },
+                                  showIcon: true,
+                                  iconDataM: Icons.check_box_outline_blank),
                             ],
                           ),
                         ),
                       ],
                     ),
                   );
-                }else{
+                } else {
                   return SizedBox(
                       width: Get.width,
                       height: Get.height * 0.2,
@@ -386,6 +400,10 @@ class FpcMismatchView extends GetView<FpcMismatchController> {
                   print("Space ROW checked");
                 },
                 colorCallback: (PlutoRowColorContext plutoContext) {
+                  if ((plutoContext.row.cells
+                      .containsValue(controller.stateManager?.currentCell))) {
+                    return Colors.deepPurple.shade100;
+                  }
                   switch (controllerX.selectButton) {
                     case SelectButton.DisplayError:
                       return Colors.red;
@@ -472,6 +490,14 @@ class FpcMismatchView extends GetView<FpcMismatchController> {
                 showSrNo: true,
                 onload: (sm) {
                   controllerX.programTable = sm.stateManager;
+                },
+                colorCallback: (plutoContext) {
+                  if ((plutoContext.row.cells
+                      .containsValue(controller.programTable?.currentCell))) {
+                    return Colors.deepPurple.shade100;
+                  } else {
+                    return Colors.white;
+                  }
                 },
                 mapData: (controllerX.programList
                     ?.map((e) => e.toJson1())
