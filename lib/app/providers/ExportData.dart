@@ -25,6 +25,20 @@ class ExportData {
       sheetObject.appendRow((jsonList![0]).keys.toList());
       for (var element in jsonList!) {
         sheetObject.appendRow((element as Map).values.toList());
+        Map data = {};
+        element.forEach((key, value) {
+          if (value != null) {
+            try {
+              num v = num.parse(value!);
+              data[key] = v;
+            } catch (e) {
+              data[key] = value;
+            }
+          } else {
+            data[key] = value;
+          }
+        });
+        sheetObject.appendRow((data as Map).values.toList());
       }
 
       var value = excel.encode()!;
