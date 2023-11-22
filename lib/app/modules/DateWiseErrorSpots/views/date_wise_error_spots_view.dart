@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 
 import 'package:get/get.dart';
+import 'package:intl/intl.dart';
 
 import '../../../../widgets/DateTime/DateWithThreeTextField.dart';
 import '../../../../widgets/FormButton.dart';
@@ -140,8 +141,17 @@ class DateWiseErrorSpotsView extends StatelessWidget {
                                         mapData: controllerX
                                             .datewiseErrorSpotsModel!
                                             .datewiseErrorSpots!
-                                            .map((e) => e.toJson())
-                                            .toList())
+                                            .map((e) {
+                                          if (e.scheduleDate != null) {
+                                            e.scheduleDate =
+                                                DateFormat("dd-MM-yyyy").format(
+                                                    DateFormat('yyyy-MM-dd')
+                                                        .parse(e.scheduleDate
+                                                            .toString()));
+                                          }
+
+                                          return e.toJson(fromSave: true);
+                                        }).toList())
                                     : Container()
                                 : Container());
                       }),

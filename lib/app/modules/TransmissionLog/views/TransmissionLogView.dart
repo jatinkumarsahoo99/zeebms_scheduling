@@ -477,7 +477,7 @@ class TransmissionLogView extends StatelessWidget {
                                 }
 
 
-
+/*
                                 /////////////19 Oct 23 : By Sanjaya ///////////
                                 loadevent.stateManager
                                     .setSelecting(true);
@@ -505,6 +505,8 @@ class TransmissionLogView extends StatelessWidget {
                                         .clearCurrentCell();
                                   }
                                 });
+                                ////////End////////
+                                */
                               },
                               formatDate: false,
                               hideKeys: ["foreColor", "backColor", "modifed"],
