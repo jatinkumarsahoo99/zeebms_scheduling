@@ -122,6 +122,10 @@ class DateWiseErrorSpotsView extends StatelessWidget {
                                         // checkRow: true,
                                         // checkRowKey: "no",
                                         mode: PlutoGridMode.selectWithOneTap,
+                                        colorCallback: (row) =>
+                                            (row.row.cells.containsValue(controllerX.gridStateManager?.currentCell))
+                                                ? Colors.deepPurple.shade200
+                                                : Colors.white,
                                         onSelected:
                                             (PlutoGridOnSelectedEvent? val) {},
                                         onload: (PlutoGridOnLoadedEvent load) {
@@ -130,10 +134,7 @@ class DateWiseErrorSpotsView extends StatelessWidget {
                                         },
                                         witdthSpecificColumn: (controllerX
                                             .userDataSettings?.userSetting
-                                            ?.firstWhere(
-                                                (element) =>
-                                                    element.controlName ==
-                                                    "gridStateManager",
+                                            ?.firstWhere((element) => element.controlName == "gridStateManager",
                                                 orElse: () => UserSetting())
                                             .userSettings),
                                         // colorCallback: (renderC) => Colors.red[200]!,

@@ -107,18 +107,13 @@ class DateWiseFillerReportView extends StatelessWidget {
                           decoration: BoxDecoration(
                               border: Border.all(color: Colors.grey)),
                           child: (controllerX.dateWiseFillerModel != null)
-                              ? (controllerX.dateWiseFillerModel!
-                                              .datewiseErrorSpots !=
-                                          null &&
+                              ? (controllerX.dateWiseFillerModel!.datewiseErrorSpots != null &&
                                       controllerX.dateWiseFillerModel!
                                           .datewiseErrorSpots!.isNotEmpty)
                                   ? DataGridFromMap(
                                       witdthSpecificColumn: (controllerX
                                           .userDataSettings?.userSetting
-                                          ?.firstWhere(
-                                              (element) =>
-                                                  element.controlName ==
-                                                  "dateWiseReportGSM",
+                                          ?.firstWhere((element) => element.controlName == "dateWiseReportGSM",
                                               orElse: () => UserSetting())
                                           .userSettings),
                                       hideCode: false,
@@ -128,6 +123,12 @@ class DateWiseFillerReportView extends StatelessWidget {
                                       // checkRow: true,
                                       // checkRowKey: "no",
                                       mode: PlutoGridMode.selectWithOneTap,
+                                      colorCallback: (row) => (row.row.cells
+                                              .containsValue(controllerX
+                                                  .dateWiseReportGSM
+                                                  ?.currentCell))
+                                          ? Colors.deepPurple.shade200
+                                          : Colors.white,
                                       onSelected:
                                           (PlutoGridOnSelectedEvent? val) {},
                                       onload: (PlutoGridOnLoadedEvent load) {
