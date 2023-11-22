@@ -765,7 +765,8 @@ class SearchController extends GetxController {
               Get.back();
               if (json is String) {
                 LoadingDialog.showErrorDialog(json);
-              } else {
+              }
+              else {
                 searchPivotResult = json;
                 if (dialogClose != null) {
                   dialogClose!(null);

@@ -273,6 +273,10 @@ class DSeriesSpecificationView extends GetView<DSeriesSpecificationController> {
                                   ?.map((e) => e.toJson())
                                   .toList())!,
                               widthRatio: (Get.width / 9) + 5,
+                              colorCallback: (row) =>
+                              (row.row.cells.containsValue(controllerX.stateManager?.currentCell))
+                                  ? Colors.deepPurple.shade200
+                                  : Colors.white,
                               showSrNo: true,
                               csvFormat: true,
                               showOnlyCheckBox: true,
