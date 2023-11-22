@@ -722,9 +722,15 @@ class FillerMasterController extends GetxController {
                   "${resp['saveRecord']['strMessage']}\nID: (${resp['saveRecord']['tapeID']})";
             }
             // if (msg.contains('inserted')) {}
-            LoadingDialog.callDataSaved(msg: msg);
+            LoadingDialog.callDataSaved(
+                msg: msg,
+                callback: () {
+                  clearPage();
+                });
           } else {
-            LoadingDialog.showErrorDialog(resp.toString());
+            LoadingDialog.showErrorDialog(resp.toString(), callback: () {
+              clearPage();
+            });
           }
         },
         json: {
