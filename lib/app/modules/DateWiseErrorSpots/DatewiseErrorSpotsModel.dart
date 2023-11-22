@@ -105,32 +105,62 @@ class DatewiseErrorSpots {
     reason = json['reason'];
   }
 
-  Map<String, dynamic> toJson() {
+
+
+  Map<String, dynamic> toJson({bool fromSave = false}) {
     final Map<String, dynamic> data = new Map<String, dynamic>();
-    data['bookingNumber'] = this.bookingNumber;
-    data['bookingDetailCode'] = this.bookingDetailCode;
-    data['dealNumber'] = this.dealNumber;
-    data['recordnumber'] = this.recordnumber;
-    data['programName'] = this.programName;
-    data['scheduleDate'] = convertDateFormat(scheduleDate);
-    data['scheduleTime'] =  this.scheduleTime;
-    data['startTime'] = this.startTime;
-    data['endtime'] = this.endtime;
-    data['clientName'] = this.clientName;
-    data['agencyName'] = this.agencyName;
-    data['bookingReferenceNumber'] = this.bookingReferenceNumber;
-    data['brandname'] = this.brandname;
-    data['tapeid'] = this.tapeid;
-    data['commercialCaption'] = this.commercialCaption;
-    data['tapeDuration'] = this.tapeDuration;
-    data['spotAmount'] = this.spotAmount;
-    data['er'] = this.er;
-    data['zonename'] = this.zonename;
-    data['executivename'] = this.executivename;
-    data['spotAmount1'] = this.spotAmount1;
-    data['valAmount'] = this.valAmount;
-    data['accountname'] = this.accountname;
-    data['reason'] = this.reason;
+    if (fromSave) {
+      data['bookingNumber'] = this.bookingNumber;
+      data['bookingDetailCode'] = this.bookingDetailCode;
+      data['dealNumber'] = this.dealNumber;
+      data['recordnumber'] = this.recordnumber;
+      data['programName'] = this.programName;
+      data['scheduleDate'] = this.scheduleDate;
+      data['scheduleTime'] = this.scheduleTime;
+      data['startTime'] = this.startTime;
+      data['endtime'] = this.endtime;
+      data['clientName'] = this.clientName;
+      data['agencyName'] = this.agencyName;
+      data['bookingReferenceNumber'] = this.bookingReferenceNumber;
+      data['brandname'] = this.brandname;
+      data['tapeid'] = this.tapeid;
+      data['commercialCaption'] = this.commercialCaption;
+      data['tapeDuration'] = this.tapeDuration;
+      data['spotAmount'] = this.spotAmount;
+      data['er'] = this.er;
+      data['zonename'] = this.zonename;
+      data['executivename'] = this.executivename;
+      data['spotAmount1'] = this.spotAmount1;
+      data['valAmount'] = this.valAmount;
+      data['accountname'] = this.accountname;
+      data['reason'] = this.reason;
+    } else {
+      data['bookingNumber'] = this.bookingNumber;
+      data['bookingDetailCode'] = this.bookingDetailCode;
+      data['dealNumber'] = this.dealNumber;
+      data['recordnumber'] = this.recordnumber;
+      data['programName'] = this.programName;
+      data['scheduleDate'] = convertDateFormat(scheduleDate);
+      data['scheduleTime'] = this.scheduleTime;
+      data['startTime'] = this.startTime;
+      data['endtime'] = this.endtime;
+      data['clientName'] = this.clientName;
+      data['agencyName'] = this.agencyName;
+      data['bookingReferenceNumber'] = this.bookingReferenceNumber;
+      data['brandname'] = this.brandname;
+      data['tapeid'] = this.tapeid;
+      data['commercialCaption'] = this.commercialCaption;
+      data['tapeDuration'] = this.tapeDuration;
+      data['spotAmount'] = this.spotAmount;
+      data['er'] = this.er;
+      data['zonename'] = this.zonename;
+      data['executivename'] = this.executivename;
+      data['spotAmount1'] = this.spotAmount1;
+      data['valAmount'] = this.valAmount;
+      data['accountname'] = this.accountname;
+      data['reason'] = this.reason;
+    }
+
     return data;
   }
 
