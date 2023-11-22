@@ -111,6 +111,7 @@ class SearchResultPage extends StatelessWidget {
                     //         autoSizeMode: PlutoAutoSizeMode.none,
                     //         resizeMode: PlutoResizeMode.normal));
                   },
+
                   mode: PlutoGridMode.normal,
                   colorCallback: (row) => sm?.currentRow == row.row
                       ? Colors.deepPurple.shade100
