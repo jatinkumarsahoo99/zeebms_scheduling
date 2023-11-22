@@ -637,6 +637,8 @@ class ConnectorControl extends GetConnect {
         }
       } else if (response.statusCode == 417) {
         fun(response.data);
+      }else if (response.statusCode == 504) {
+        fun("Server timeout. Please try again later");
       } else {
         print("Message is: >>1");
         fun(failedMap);
@@ -664,10 +666,15 @@ class ConnectorControl extends GetConnect {
           case DioErrorType.sendTimeout:
           case DioErrorType.receiveTimeout:
           case DioErrorType.unknown:
-            fun(failedMap);
+          case DioErrorType.connectionError:
+            fun("Server timeout. Please try again later");
             break;
           case DioErrorType.badResponse:
             fun(e.response?.data);
+            break;
+          default:
+            fun("Server timeout. Please try again later");
+            break;
         }
       }
     }
