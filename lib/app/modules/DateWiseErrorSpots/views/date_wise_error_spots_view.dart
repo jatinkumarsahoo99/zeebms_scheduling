@@ -142,13 +142,13 @@ class DateWiseErrorSpotsView extends StatelessWidget {
                                             .datewiseErrorSpotsModel!
                                             .datewiseErrorSpots!
                                             .map((e) {
-                                          if (e.scheduleDate != null) {
+                                          /*if (e.scheduleDate != null) {
                                             e.scheduleDate =
                                                 DateFormat("dd-MM-yyyy").format(
                                                     DateFormat('yyyy-MM-dd')
                                                         .parse(e.scheduleDate
                                                             .toString()));
-                                          }
+                                          }*/
 
                                           return e.toJson(fromSave: true);
                                         }).toList())

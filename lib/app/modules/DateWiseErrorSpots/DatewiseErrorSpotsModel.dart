@@ -115,7 +115,7 @@ class DatewiseErrorSpots {
       data['dealNumber'] = this.dealNumber;
       data['recordnumber'] = this.recordnumber;
       data['programName'] = this.programName;
-      data['scheduleDate'] = this.scheduleDate;
+      data['scheduleDate'] = convertDateFormat(scheduleDate);
       data['scheduleTime'] = this.scheduleTime;
       data['startTime'] = this.startTime;
       data['endtime'] = this.endtime;
@@ -194,10 +194,15 @@ class DatewiseErrorSpots {
   }
 
   String convertDateFormat(String? date){
-    if(date != null && date != ""){
-      return DateFormat("dd/MM/yyyy").format(DateFormat("yyyy-MM-ddTHH:mm:ss").parse(date));
+    try{
+      if(date != null && date != ""){
+        return DateFormat("dd/MM/yyyy").format(DateFormat("yyyy-MM-ddTHH:mm:ss").parse(date));
+      }
+      return (date??"");
+    }catch(e){
+      return (date??"");
     }
-    return "";
+
   }
 
   String convertDes(String? time,{int des = 2}){

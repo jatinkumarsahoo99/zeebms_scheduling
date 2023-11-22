@@ -119,7 +119,7 @@ class DateWiseErrorSpotsController extends GetxController {
           json: postData,
           fun: (map) {
             Get.back();
-            print("response" + jsonEncode(map).toString());
+            // print("response" + jsonEncode(map).toString());
             if (map is Map &&
                 map.containsKey("datewiseErrorSpots") &&
                 map['datewiseErrorSpots'] != null &&
