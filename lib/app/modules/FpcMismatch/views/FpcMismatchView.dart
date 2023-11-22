@@ -223,7 +223,8 @@ class FpcMismatchView extends GetView<FpcMismatchController> {
                               FormButton(
                                   btnText: "  Select All Fpc Time  ",
                                   callback: () {
-                                    controllerX.selectCurrentSelectFpcTime(true);
+                                    controllerX
+                                        .selectCurrentSelectFpcTime(true);
                                   },
                                   showIcon: true,
                                   iconDataM: Icons.check_box),
@@ -233,7 +234,8 @@ class FpcMismatchView extends GetView<FpcMismatchController> {
                               FormButton(
                                   btnText: "  Unselect All Fpc Time  ",
                                   callback: () {
-                                    controllerX.selectCurrentSelectFpcTime(false);
+                                    controllerX
+                                        .selectCurrentSelectFpcTime(false);
                                   },
                                   showIcon: true,
                                   iconDataM: Icons.check_box_outline_blank),
@@ -398,6 +400,10 @@ class FpcMismatchView extends GetView<FpcMismatchController> {
                   print("Space ROW checked");
                 },
                 colorCallback: (PlutoRowColorContext plutoContext) {
+                  if ((plutoContext.row.cells
+                      .containsValue(controller.stateManager?.currentCell))) {
+                    return Colors.deepPurple.shade100;
+                  }
                   switch (controllerX.selectButton) {
                     case SelectButton.DisplayError:
                       return Colors.red;
@@ -484,6 +490,14 @@ class FpcMismatchView extends GetView<FpcMismatchController> {
                 showSrNo: true,
                 onload: (sm) {
                   controllerX.programTable = sm.stateManager;
+                },
+                colorCallback: (plutoContext) {
+                  if ((plutoContext.row.cells
+                      .containsValue(controller.programTable?.currentCell))) {
+                    return Colors.deepPurple.shade100;
+                  } else {
+                    return Colors.white;
+                  }
                 },
                 mapData: (controllerX.programList
                     ?.map((e) => e.toJson1())

@@ -88,6 +88,7 @@ class SearchResultPage extends StatelessWidget {
                 const EdgeInsets.only(bottom: 8, top: 8, left: 8, right: 8),
                 child: DataGridFromMap(
                   columnAutoResize: false,
+                  // showSrNo: false,
                   // columnAutoResize:
                   //     (controller.searchResult!.length > 5) ? false : true,
                   exportFileName:

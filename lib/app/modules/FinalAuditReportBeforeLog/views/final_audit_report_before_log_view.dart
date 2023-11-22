@@ -21,7 +21,7 @@ class FinalAuditReportBeforeLogView
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: ColorData.scaffoldBg,
+      // backgroundColor: ColorData.scaffoldBg,
       body: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
@@ -118,7 +118,7 @@ class FinalAuditReportBeforeLogView
 
           /// bottom common buttons
           Padding(
-            padding: const EdgeInsets.only(top: 10, left: 10),
+            padding: const EdgeInsets.only(top: 10, left: 10,bottom: 10),
             child: GetBuilder<HomeController>(
                 id: "buttons",
                 init: Get.find<HomeController>(),

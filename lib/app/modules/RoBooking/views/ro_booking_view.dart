@@ -37,7 +37,7 @@ class RoBookingView extends StatelessWidget {
           return Center(child: CircularProgressIndicator());
         }
         return Scaffold(
-          backgroundColor: Colors.grey[50],
+          // backgroundColor: Colors.grey[50],
           body: SizedBox(
             width: MediaQuery.of(context).size.width,
             height: MediaQuery.of(context).size.height,
