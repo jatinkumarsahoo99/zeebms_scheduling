@@ -2063,8 +2063,8 @@ class TransmissionLogController extends GetxController {
       }
 
       for (PlutoRow ddr in listCutCopy) {
-        // PlutoRow dr = insertReplicatePlutoRow(row: ddr);
-        PlutoRow dr = ddr;
+        PlutoRow dr = insertReplicatePlutoRow(row: ddr);
+        // PlutoRow dr = ddr;
         dr.cells["fpCtime"]?.value = strFPCTime;
 
         if (lastSelectCutCopyOption == "cut") {
