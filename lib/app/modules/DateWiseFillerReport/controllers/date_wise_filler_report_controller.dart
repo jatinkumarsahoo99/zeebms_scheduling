@@ -64,7 +64,7 @@ class DateWiseFillerReportController extends GetxController {
           closeDialogIfOpen();
           if (map is Map) {
             // pageLoadInfo
-            if(map.containsKey("pageLoadInfo") & map['pageLoadInfo'] != null){
+            if(map.containsKey("pageLoadInfo") && map['pageLoadInfo'] != null){
               if (map['pageLoadInfo'].containsKey("location") &&
                   map['pageLoadInfo']['location'] != null &&
                   map['pageLoadInfo']['location'].length > 0) {

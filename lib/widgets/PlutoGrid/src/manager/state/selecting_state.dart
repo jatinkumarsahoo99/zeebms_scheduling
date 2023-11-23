@@ -626,9 +626,17 @@ mixin SelectingState implements IPlutoGridState {
     final columnIndexes = columnIndexesByShowFrozen;
 
     List<String> rowText = [];
+    List<String> columnHeaderText = [];
+    for (int i = 0; i < columnIndexes.length; i += 1) {
+      final String field = refColumns[columnIndexes[i]].field;
+      columnHeaderText.add(field);
+    }
+    rowText.add(columnHeaderText.join('\t'));
 
     for (final row in currentSelectingRows) {
       List<String> columnText = [];
+
+
 
       for (int i = 0; i < columnIndexes.length; i += 1) {
         final String field = refColumns[columnIndexes[i]].field;
@@ -658,6 +666,14 @@ mixin SelectingState implements IPlutoGridState {
 
     int rowEndIdx =
         max(currentCellPosition!.rowIdx!, currentSelectingPosition!.rowIdx!);
+    List<String> columnHeaderText = [];
+
+    for (int i = columnStartIdx; i < columnEndIdx; i += 1) {
+      final String field = refColumns[columnIndexes[i]].field;
+      columnHeaderText.add(field);
+    }
+
+    rowText.add(columnHeaderText.join('\t'));
 
     for (int i = rowStartIdx; i <= rowEndIdx; i += 1) {
       List<String> columnText = [];

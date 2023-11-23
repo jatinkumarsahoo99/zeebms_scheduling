@@ -88,7 +88,7 @@ class SearchResultPage extends StatelessWidget {
                 const EdgeInsets.only(bottom: 8, top: 8, left: 8, right: 8),
                 child: DataGridFromMap(
                   columnAutoResize: false,
-                  showSrNo: false,
+                  // showSrNo: false,
                   // columnAutoResize:
                   //     (controller.searchResult!.length > 5) ? false : true,
                   exportFileName:
@@ -105,12 +105,15 @@ class SearchResultPage extends StatelessWidget {
                     for (var element in event.stateManager.refColumns) {
                       event.stateManager.autoFitColumn(context, element);
                     }
+                    event.stateManager.setSelectingMode(
+                        PlutoGridSelectingMode.cell);
                     // event.stateManager.setColumnSizeConfig(
                     //     PlutoGridColumnSizeConfig(
                     //         autoSizeMode: PlutoAutoSizeMode.none,
                     //         resizeMode: PlutoResizeMode.normal));
                   },
-                  mode: PlutoGridMode.select,
+
+                  mode: PlutoGridMode.normal,
                   colorCallback: (row) => sm?.currentRow == row.row
                       ? Colors.deepPurple.shade100
                       : Colors.white,

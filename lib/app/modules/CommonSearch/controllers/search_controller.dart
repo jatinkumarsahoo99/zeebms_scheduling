@@ -765,7 +765,8 @@ class SearchController extends GetxController {
               Get.back();
               if (json is String) {
                 LoadingDialog.showErrorDialog(json);
-              } else {
+              }
+              else {
                 searchPivotResult = json;
                 if (dialogClose != null) {
                   dialogClose!(null);
@@ -851,7 +852,7 @@ class SearchController extends GetxController {
     } catch (e) {
       Get.back();
       // Snack.callError("Something Went Wrong");
-      LoadingDialog.showErrorDialog("Something Went Wrong");
+      LoadingDialog.showErrorDialog("Server timeout. Please try again later");
     }
   }
 
