@@ -223,6 +223,7 @@ class RoRescheduleController extends GetxController {
           fun: (data) {
             if (data is Map<String, dynamic> &&
                 data.containsKey("info_OnLeaveSchedulingNo")) {
+              canSave = false;
               roRescheduleOnLeaveData = RORescheduleOnLeaveData.fromJson(
                   data["info_OnLeaveSchedulingNo"]);
               agencyCtrl.text = roRescheduleOnLeaveData!.agencyname!;
@@ -238,7 +239,7 @@ class RoRescheduleController extends GetxController {
                   roRescheduleOnLeaveData!.bookingEffectiveDate!));
               // enableFields.value = false;
               update(["dgvGrid", "updatedgvGrid"]);
-              canSave = false;
+
               // branCtrl.text = rescheduleBookingNumberLeaveData!.infoLeaveBookingNumber!.brandname!;
               // branCtrl.text = rescheduleBookingNumberLeaveData!.infoLeaveBookingNumber!.brandname!;
             }
