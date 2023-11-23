@@ -218,22 +218,22 @@ class SecondaryEventMasterController extends GetxController {
     });
     eomFN.addListener(() {
       if (!eomFN.hasFocus) {
-        // calculateDuration();
-        // try {
-        //   num diff = (Utils.oldBMSConvertToSecondsValue(value: eomTC.text) -
-        //       Utils.oldBMSConvertToSecondsValue(value: somTC.text));
-        //   if (diff.isNegative) {
-        //     eomTC.clear();
-        //     LoadingDialog.showErrorDialog("EOM should not less than SOM",
-        //         callback: () {
-        //       eomFN.requestFocus();
-        //     });
-        //   } else {
-        //     duration.value = Utils.convertToTimeFromDouble(value: diff);
-        //   }
-        // } catch (e) {
-        //   print(e.toString());
-        // }
+        calculateDuration();
+        try {
+          num diff = (Utils.oldBMSConvertToSecondsValue(value: eomTC.text) -
+              Utils.oldBMSConvertToSecondsValue(value: somTC.text));
+          if (diff.isNegative) {
+            // eomTC.clear();
+            // LoadingDialog.showErrorDialog("EOM should not less than SOM",
+            //     callback: () {
+            //   eomFN.requestFocus();
+            // });
+          } else {
+            duration.value = Utils.convertToTimeFromDouble(value: diff);
+          }
+        } catch (e) {
+          print(e.toString());
+        }
       }
     });
   }
