@@ -58,7 +58,7 @@ class AppPages {
 
   static const INITIAL = kReleaseMode
       ? Routes.HOME
-      : "${Routes.DATE_WISE_ERROR_SPOTS}?personalNo=%2F7i0zDr%2FLpXNOAIr8lUluw%3D%3D&loginCode=1BWIoBKeDl7qDSAAhxvXsQ%3D%3D&formName=S7L9jUZEAuls7DR9pWhhGw%3D%3D";
+      : "${Routes.TRANSMISSION_LOG}?personalNo=%2F7i0zDr%2FLpXNOAIr8lUluw%3D%3D&loginCode=1BWIoBKeDl7qDSAAhxvXsQ%3D%3D&formName=S7L9jUZEAuls7DR9pWhhGw%3D%3D";
 
   static final routes = [
     GetPage(

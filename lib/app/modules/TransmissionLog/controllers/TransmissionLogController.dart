@@ -4341,7 +4341,20 @@ class TransmissionLogController extends GetxController {
         raw.isControlPressed &&
         raw.character?.toLowerCase() == "c") {
       print("Copy Pressed Ctrl + c ");
-      if (gridStateManager != null && gridStateManager?.currentCell != null) {
+      if (gridStateManager != null &&
+          ((gridStateManager?.currentSelectingRows.length ?? 0) > 0)) {
+        String value = "";
+        gridStateManager?.currentSelectingRows.forEach((element) {
+          value =
+              "$value${element.cells[gridStateManager?.currentCell?.column.field]?.value}\n";
+        });
+        print(">>>>>>>>valueJKS"+value.toString());
+        print(">>>>>>>>valueJKS"+(gridStateManager?.currentCell?.column.field).toString());
+        print(">>>>>>>>valueJKS"+(gridStateManager?.currentSelectingRows.length ).toString());
+        Utils.copyToClipboardHack(gridStateManager?.currentSelectingText??"");
+      }
+      else if (gridStateManager != null &&
+          gridStateManager?.currentCell != null) {
         print("Copy Pressed in clipboard ");
         /*Clipboard.setData(new ClipboardData(
                     text: controller.gridStateManager?.currentCell?.value));*/
