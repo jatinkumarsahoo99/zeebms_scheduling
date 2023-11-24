@@ -23,7 +23,6 @@ class AuditStatusView extends GetView<AuditStatusController> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: ColorData.scaffoldBg,
       body: Column(
         children: [
           Card(
@@ -90,7 +89,10 @@ class AuditStatusView extends GetView<AuditStatusController> {
                 init: controller,
                 builder: (gridcontroller) {
                   return gridcontroller.bookingData.isEmpty
-                      ? Container()
+                      ? Container(
+                          decoration: BoxDecoration(
+                              border: Border.all(color: Colors.grey)),
+                        )
                       : DataGridShowOnlyKeys(
                           keysWidths: (controller.userDataSettings?.userSetting
                               ?.firstWhere(

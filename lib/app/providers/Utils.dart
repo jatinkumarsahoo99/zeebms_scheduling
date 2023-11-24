@@ -1,6 +1,7 @@
 import 'dart:convert';
 import 'dart:developer';
 import 'package:bms_scheduling/app/providers/ApiFactory.dart';
+import 'package:flutter/foundation.dart';
 
 // import 'package:data_table_2/data_table_2.dart';
 import 'package:flutter/material.dart';
@@ -31,27 +32,32 @@ class Utils {
   }
 
   static Future<bool> copyToClipboardHack(String text) async {
-    final textarea = html.TextAreaElement();
-    html.document.body?.append(textarea);
-    textarea.style.border = '0';
-    textarea.style.margin = '0';
-    textarea.style.padding = '0';
-    textarea.style.opacity = '0';
-    textarea.style.position = 'absolute';
-    textarea.readOnly = true;
-    textarea.value = text;
-    textarea.select();
-    final result = html.document.execCommand('copy');
-    textarea.remove();
-    await html.window.navigator.clipboard?.writeText(text);
-    return result;
+    if (kIsWeb) {
+      final textarea = html.TextAreaElement();
+      html.document.body?.append(textarea);
+      textarea.style.border = '0';
+      textarea.style.margin = '0';
+      textarea.style.padding = '0';
+      textarea.style.opacity = '0';
+      textarea.style.position = 'absolute';
+      textarea.readOnly = true;
+      textarea.value = text;
+      textarea.select();
+      html.document.execCommand('copy');
+      textarea.remove();
+      await html.window.navigator.clipboard?.writeText(text);
+    } else {
+      await Clipboard.setData(ClipboardData(text: text));
+    }
+    return true;
   }
+
   static Future<String> pasteFromClipboardHack() async {
     // Request access to the clipboard
     try {
       // Request access to the clipboard
       final clipboardText = await html.window.navigator.clipboard?.readText();
-      return clipboardText??"";
+      return clipboardText ?? "";
     } catch (error) {
       // Handle any errors, such as clipboard permissions denied
       print('Error reading clipboard: $error');
@@ -61,7 +67,8 @@ class Utils {
 
   static Future<bool> checkClipboardPermission() async {
     final queryOpts = {'name': 'clipboard-read', 'allowWithoutGesture': false};
-    final permissionStatus = await html.window.navigator.permissions?.query(queryOpts);
+    final permissionStatus =
+        await html.window.navigator.permissions?.query(queryOpts);
 
     if (permissionStatus?.state == 'granted') {
       // Permission is already granted
@@ -94,13 +101,12 @@ class Utils {
   }
 
   static String getDDMMYYYYFromYYYYMMDDInString(String? YYYYMMdd) {
-    if(YYYYMMdd != null && YYYYMMdd.trim() != ""){
+    if (YYYYMMdd != null && YYYYMMdd.trim() != "") {
       return DateFormat("dd/MM/yyyy")
           .format(DateFormat('yyyy-MM-dd').parse(YYYYMMdd));
-    }else{
+    } else {
       return "";
     }
-
   }
 
   static toDateFormat1(String date, {bool? isStringRequired}) {

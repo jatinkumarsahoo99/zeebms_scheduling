@@ -91,8 +91,6 @@ class RoRescheduleController extends GetxController {
   @override
   void onReady() {
     loadinitData().then((value) {
-      print("init done");
-      print(value);
       toNumberFocus.addListener(() {
         if (!toNumberFocus.hasFocus && tonumberCtrl.text.isNotEmpty) {
           fetchToData();
@@ -225,6 +223,7 @@ class RoRescheduleController extends GetxController {
           fun: (data) {
             if (data is Map<String, dynamic> &&
                 data.containsKey("info_OnLeaveSchedulingNo")) {
+              canSave = false;
               roRescheduleOnLeaveData = RORescheduleOnLeaveData.fromJson(
                   data["info_OnLeaveSchedulingNo"]);
               agencyCtrl.text = roRescheduleOnLeaveData!.agencyname!;
@@ -240,6 +239,7 @@ class RoRescheduleController extends GetxController {
                   roRescheduleOnLeaveData!.bookingEffectiveDate!));
               // enableFields.value = false;
               update(["dgvGrid", "updatedgvGrid"]);
+
               // branCtrl.text = rescheduleBookingNumberLeaveData!.infoLeaveBookingNumber!.brandname!;
               // branCtrl.text = rescheduleBookingNumberLeaveData!.infoLeaveBookingNumber!.brandname!;
             }
@@ -247,8 +247,6 @@ class RoRescheduleController extends GetxController {
     } catch (e) {
       LoadingDialog.callErrorMessage1(msg: "Failed To Load  Data");
     }
-
-    print("ON BOOKING NUMBER LEAVE END>>>");
   }
 
   dgvGridnRowDoubleTap(index) {

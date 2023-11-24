@@ -131,41 +131,55 @@ class SpotsView extends GetView<RoBookingController> {
                   iconDataM: Icons.delete_outline_rounded,
                   btnText: "Del Spot Row",
                   callback: () {
-                    if (controller.spotViewGrid?.currentCell != null) {
-                      if (controller
-                                  .addSpotData
-                                  ?.lstSpots?[
-                                      controller.spotViewGrid!.currentRowIdx!]
-                                  .toNo ==
+                    if (controller.spotViewGrid?.currentRow != null) {
+                      print(controller
+                          .spotViewGrid?.currentRow?.cells['toNo']?.value);
+                      if (controller.spotViewGrid?.currentRow?.cells['toNo']
+                                  ?.value ==
                               null ||
-                          (controller
-                                  .addSpotData
-                                  ?.lstSpots?[
-                                      controller.spotViewGrid!.currentRowIdx!]
-                                  .toNo
-                                  ?.isEmpty ??
-                              true) ||
-                          (controller
-                                      .addSpotData
-                                      ?.lstSpots?[controller
-                                          .spotViewGrid!.currentRowIdx!]
-                                      .toNo ??
+                          (controller.spotViewGrid?.currentRow?.cells['toNo']
+                                      ?.value ??
                                   "") ==
-                              "") {
+                              "" ||
+                          controller.spotViewGrid?.currentRow?.cells['toNo']
+                                  ?.value ==
+                              "0") {
+                        LoadingDialog.modify("Want to delete row?", () {
+                          //yess
+                          if (controller.addSpotData != null &&
+                              controller.addSpotData?.lstSpots != null) {
+                            print(1);
+                            controller.addSpotData?.lstSpots?.removeAt(
+                                controller.spotViewGrid!.currentRowIdx!);
+                          } else if (controller.bookingNoLeaveData != null &&
+                              controller.bookingNoLeaveData?.lstSpots != null) {
+                            print(2);
+                            controller.bookingNoLeaveData?.lstSpots?.removeAt(
+                                controller.spotViewGrid!.currentRowIdx!);
+                            var spot = int.parse(controller.totSpotCtrl.text) -
+                                int.parse(controller.spotViewGrid?.currentRow
+                                    ?.cells['spots']?.value);
+                            controller.totSpotCtrl.text = spot.toString();
+
+                            var dur = int.parse(controller.totDurCtrl.text) -
+                                int.parse(controller.spotViewGrid?.currentRow
+                                    ?.cells['tapeDuration']?.value);
+                            controller.totDurCtrl.text = dur.toString();
+
+                            var amt = double.parse(controller.totAmtCtrl.text) -
+                                double.parse(controller.spotViewGrid?.currentRow
+                                    ?.cells['spotAmount']?.value);
+                            controller.totAmtCtrl.text = amt.toString();
+                          }
+                          controller.spotViewGrid?.removeRows(
+                              [controller.spotViewGrid!.currentRow!]);
+                        }, () {
+                          //no
+                          Get.back();
+                        });
+                      } else {
                         LoadingDialog.showErrorDialog(
                             "Spot is already audited cannot remove the row.");
-                      } else {
-                        if (controller.addSpotData != null &&
-                            controller.addSpotData?.lstSpots != null) {
-                          controller.addSpotData?.lstSpots?.removeAt(
-                              controller.spotViewGrid!.currentRowIdx!);
-                        } else if (controller.bookingNoLeaveData != null &&
-                            controller.bookingNoLeaveData?.lstSpots != null) {
-                          controller.bookingNoLeaveData?.lstSpots?.removeAt(
-                              controller.spotViewGrid!.currentRowIdx!);
-                        }
-                        controller.spotViewGrid?.removeRows(
-                            [controller.spotViewGrid!.currentRow!]);
                       }
                     }
                   },

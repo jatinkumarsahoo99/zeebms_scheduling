@@ -42,7 +42,7 @@ class TransmissionLogView extends StatelessWidget {
       return RawKeyboardListener(
         focusNode: new FocusNode(),
         onKey: (RawKeyEvent raw) {
-          controller.keyBoardHander(raw);
+          controller.keyBoardHander(raw,context);
           /*if (raw is RawKeyDownEvent &&
                   raw.isControlPressed &&
                   raw.character?.toLowerCase() == "c") {
@@ -407,7 +407,7 @@ class TransmissionLogView extends StatelessWidget {
 
                                 if (data != null) {
                                   color =
-                                      Color(int.parse('0x${data.backColor}'));
+                                      Color(int.parse('0x${data.backColor??"ffffffff"}'));
                                 }
                                 if (currentRow.cells["productName"]?.value !=
                                         null &&
@@ -1714,12 +1714,21 @@ class TransmissionLogView extends StatelessWidget {
                           SizedBox(
                             width: 10,
                           ),
-                          InputFields.formField1(
+                          /*InputFields.formField1(
                               width: 0.13,
                               onchanged: (value) {},
                               hintTxt: "TX Id",
                               margin: true,
-                              controller: controller.txId_),
+                              // maxLines: 2000,
+                              maxLen: 999999,
+                              controller: controller.txId_),*/
+                          InputFields.formField1Width(
+                            widthRatio: 0.13,
+                            paddingLeft: 5,
+                            hintTxt: "TX Id",
+                            controller: controller.txId_,
+                            maxLen: 999999,
+                          ),
                           SizedBox(
                             width: 10,
                           ),

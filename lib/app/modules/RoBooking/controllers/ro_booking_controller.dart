@@ -228,9 +228,9 @@ class RoBookingController extends GetxController {
         });
   }
 
-  effDtLeave() {
+  effDtLeave() async {
     if (selectedLocation != null && selectedChannel != null) {
-      Get.find<ConnectorControl>().GETMETHODCALL(
+      await Get.find<ConnectorControl>().GETMETHODCALL(
           api: ApiFactory.RO_BOOKING_EFFDT_LEAVE(selectedLocation!.key!,
               selectedChannel!.key!, fpcEffectiveDateCtrl.text.fromdMyToyMd()),
           fun: (dataMap) {
@@ -670,6 +670,13 @@ class RoBookingController extends GetxController {
           if (response is Map && response.containsKey("info_LeaveDealNumber")) {
             dealNoLeaveData =
                 RoBookingDealNoLeave.fromJson(response["info_LeaveDealNumber"]);
+            dealNoLeaveData!.lstdgvDealDetails =
+                dealNoLeaveData!.lstdgvDealDetails!.where((e) {
+              var result = selectedDeal?.value == e.dealNumber.toString() &&
+                  selectedLocation?.value == e.locationname.toString() &&
+                  selectedChannel?.value == e.channelname.toString();
+              return result;
+            }).toList();
             payModeCtrl.text = dealNoLeaveData?.payMode ?? "";
             dealTypeCtrl.text = dealNoLeaveData?.dealType ?? "";
             maxspendCtrl.text = dealNoLeaveData?.maxSpend ?? 0.toString();
@@ -1062,9 +1069,12 @@ class RoBookingController extends GetxController {
     }
   }
 
-  onBookingNoLeave({String? bookingNumber}) {
+  onBookingNoLeave({String? bookingNumber}) async {
     if (bookingMonthCtrl.text.isEmpty) {
-      return;
+      await effDtLeave();
+      if (bookingMonthCtrl.text.isEmpty) {
+        return;
+      }
     }
     Get.find<ConnectorControl>().POSTMETHOD(
         api: ApiFactory.RO_BOOKING_BOOKING_NO_LEAVE,
@@ -1081,6 +1091,13 @@ class RoBookingController extends GetxController {
             bookingNoLeaveDealCurrentRow = null;
             bookingNoLeaveData = RoBookingBkgNOLeaveData.fromJson(
                 value["info_LeaveBookingNumber"]);
+            bookingNoLeaveData!.lstdgvDealDetails =
+                bookingNoLeaveData!.lstdgvDealDetails!.where((e) {
+              var result = selectedDeal?.value == e.dealNumber.toString() &&
+                  selectedLocation?.value == e.locationname.toString() &&
+                  selectedChannel?.value == e.channelname.toString();
+              return result;
+            }).toList();
             if (bookingNoLeaveData == null) {
               LoadingDialog.showErrorDialog("info_LeaveBookingNumber was null");
               return;
@@ -1137,20 +1154,23 @@ class RoBookingController extends GetxController {
             maxspendCtrl.text = bookingNoLeaveData!.maxSpend ?? "";
             try {
               dealToCtrl.text = DateFormat("dd-MM-yyyy").format(
-                  DateFormat("dd/MM/yyyy hh:mm:ss")
+                  DateFormat("MM/dd/yyyy hh:mm:ss")
                       .parse(bookingNoLeaveData?.dealtoDate ?? ''));
             } catch (e) {
               print(e.toString());
             }
             try {
               dealFromCtrl.text = DateFormat("dd-MM-yyyy").format(
-                  DateFormat("dd/MM/yyyy hh:mm:ss")
+                  DateFormat("MM/dd/yyyy hh:mm:ss")
                       .parse(bookingNoLeaveData?.dealFromDate ?? ''));
             } catch (e) {
               print(e.toString());
             }
 
             update(["dealGrid"]);
+            // if (selectedClient != null) {
+            //   clientLeave(selectedClient!.key);
+            // }
             // for (var element in (bookingNoLeaveData?.message ?? <String>[])) {
             //   Get.defaultDialog(
             //     title: "",
