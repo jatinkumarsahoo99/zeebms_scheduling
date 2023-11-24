@@ -42,7 +42,7 @@ class TransmissionLogView extends StatelessWidget {
       return RawKeyboardListener(
         focusNode: new FocusNode(),
         onKey: (RawKeyEvent raw) {
-          controller.keyBoardHander(raw);
+          controller.keyBoardHander(raw,context);
           /*if (raw is RawKeyDownEvent &&
                   raw.isControlPressed &&
                   raw.character?.toLowerCase() == "c") {
