@@ -146,6 +146,7 @@ class SpotsView extends GetView<RoBookingController> {
                               "0") {
                         LoadingDialog.modify("Want to delete row?", () {
                           //yess
+
                           if (controller.addSpotData != null &&
                               controller.addSpotData?.lstSpots != null) {
                             print(1);
@@ -196,51 +197,50 @@ class SpotsView extends GetView<RoBookingController> {
                                       controller.bookingNoLeaveData
                                               ?.accountCode !=
                                           'I000100004') {
-                                    data.bookedSeconds = data.bookedSeconds ??
-                                        0 -
-                                            (num.tryParse(controller
-                                                        .spotViewGrid
-                                                        ?.currentRow
-                                                        ?.cells['tapeDuration']
-                                                        ?.value
-                                                        .toString() ??
-                                                    "0") ??
-                                                0);
-                                    data.balanceSeconds = data.seconds ??
-                                        0 - (data.bookedSeconds ?? 0);
+                                    data.bookedSeconds = int.parse(
+                                            data.bookedSeconds.toString()) -
+                                        int.parse(controller
+                                            .spotViewGrid
+                                            ?.currentRow
+                                            ?.cells['tapeDuration']
+                                            ?.value);
+                                    data.balanceSeconds =
+                                        int.parse(data.seconds.toString()) -
+                                            int.parse(
+                                                data.bookedSeconds.toString());
                                     controller.bookingNoLeaveData!
                                         .lstdgvDealDetails![i] = data;
                                   } else if (controller.bookingNoLeaveData
                                               ?.accountCode !=
                                           'I000100010' &&
                                       data.subrevenuetypecode == 9) {
-                                    data.bookedSeconds = data.bookedSeconds ??
-                                        0 -
-                                            (num.tryParse(controller
-                                                        .spotViewGrid
-                                                        ?.currentRow
-                                                        ?.cells['tapeDuration']
-                                                        ?.value
-                                                        .toString() ??
-                                                    "0") ??
-                                                0);
-                                    data.balanceSeconds = data.seconds ??
-                                        0 - (data.bookedSeconds ?? 0);
+                                    data.bookedSeconds = int.parse(
+                                            data.bookedSeconds.toString()) -
+                                        int.parse(controller
+                                            .spotViewGrid
+                                            ?.currentRow
+                                            ?.cells['tapeDuration']
+                                            ?.value);
+
+                                    data.balanceSeconds =
+                                        int.parse(data.seconds.toString()) -
+                                            int.parse(
+                                                data.bookedSeconds.toString());
                                     controller.bookingNoLeaveData!
                                         .lstdgvDealDetails![i] = data;
                                   } else {
-                                    data.bookedSeconds = data.bookedSeconds ??
-                                        0 -
-                                            (num.tryParse(controller
-                                                        .spotViewGrid
-                                                        ?.currentRow
-                                                        ?.cells['tapeDuration']
-                                                        ?.value
-                                                        .toString() ??
-                                                    "0") ??
-                                                0);
-                                    data.balanceSeconds = data.seconds ??
-                                        0 - (data.bookedSeconds ?? 0);
+                                    data.bookedSeconds = int.parse(
+                                            data.bookedSeconds.toString()) -
+                                        int.parse(controller
+                                            .spotViewGrid
+                                            ?.currentRow
+                                            ?.cells['spots']
+                                            ?.value);
+
+                                    data.balanceSeconds =
+                                        int.parse(data.seconds.toString()) -
+                                            int.parse(
+                                                data.bookedSeconds.toString());
                                     controller.bookingNoLeaveData!
                                         .lstdgvDealDetails![i] = data;
                                   }
