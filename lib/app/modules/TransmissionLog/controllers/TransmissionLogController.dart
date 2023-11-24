@@ -607,7 +607,7 @@ class TransmissionLogController extends GetxController {
             selectedDate.text,
             isMine,
             eventType,
-            txId.replaceAll(" ", ","),
+            txId.replaceAll("\n", ","),
             txCaption),
         fun: (map) {
           Get.back();
@@ -4573,7 +4573,7 @@ class TransmissionLogController extends GetxController {
       for (int i = 0; i < (selectedRows?.length ?? 0); i++) {
         PlutoRow? row = selectedRows![i];
         if(["PR","F"].contains(row.cells["eventType"]?.value.toString().trim())){
-          deletRows.add(row!);
+          deletRows.add(row);
         }else {
           bool? isYes = await showDialogForYesNo1(
               "Want to delete selected record?\nEvent type: ${row
@@ -4593,7 +4593,7 @@ class TransmissionLogController extends GetxController {
                 "s") {
               deletedSegmentData.add((row));
             }
-            deletRows.add(row!);
+            deletRows.add(row);
             // gridStateManager?.removeRows([row!]);
           }
         }
