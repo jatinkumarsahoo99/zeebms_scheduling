@@ -3872,9 +3872,9 @@ class TransmissionLogController extends GetxController {
             .toLowerCase())) {
           // gridStateManager.firstDisplayedScrollingRowIndex = i - 12;
           gridStateManager?.moveScrollByRow(
-              PlutoMoveDirection.down, (row?.sortIdx)! - 12);
+              PlutoMoveDirection.down, int.tryParse(row?.cells["rownumber"]?.value));
           // tblLog.rows[i].selected = true;
-          gridStateManager?.setCurrentCell(row?.cells["no"], row?.sortIdx);
+          gridStateManager?.setCurrentCell(row?.cells["no"], int.tryParse(row?.cells["rownumber"]?.value));
           LoadingDialog.callInfoMessage(
               "Lost secondary event!\nUnable to proceed");
           // logMessage(tblLog.rows[i - 1].cells["rownumber"].value, "Lost secondary event!\nUnable to proceed", "");

@@ -289,7 +289,7 @@ class DataGridFromMapTransmissionLog extends StatelessWidget {
             }
 
             // Checking PRoduct Group back to back
-            if (key == "RosTimeBand" &&
+            if (key == "rosTimeBand" &&
                 (cells["rosTimeBand"]?.value != null &&
                     cells["rosTimeBand"]?.value != "")) {
               List<String>? ros =
@@ -308,7 +308,7 @@ class DataGridFromMapTransmissionLog extends StatelessWidget {
               String? txTime =
                   cells["transmissionTime"]?.value.toString().substring(0, 8);
 
-              if ((((txTime?.compareTo(rosStart) == 1) &&
+              /*if ((((txTime?.compareTo(rosStart) == 1) &&
                       (midRosEnd.compareTo(txTime!) == 1)) ||
                   ((txTime?.compareTo(midRosStart) == 1) &&
                       (midRosEnd.compareTo(txTime!) == 1)))) {
@@ -323,6 +323,17 @@ class DataGridFromMapTransmissionLog extends StatelessWidget {
                       " ////" +
                       isBold.toString());
                 }
+              }*/
+              if (((txTime?.compareTo(rosStart) ?? 0) > 0 &&
+                      (txTime?.compareTo(midRosEnd) ?? 0) < 0) ||
+                  ((txTime?.compareTo(midRosStart) ?? 0) > 0 &&
+                      (txTime?.compareTo(midRosEnd) ?? 0) < 0)) {
+              } else {
+                isBold = true;
+                print("RosTimeBand Index is>> " +
+                    rendererContext.rowIdx.toString() +
+                    " ////" +
+                    isBold.toString());
               }
             }
 
@@ -369,7 +380,7 @@ class DataGridFromMapTransmissionLog extends StatelessWidget {
                         rendererContext.rowIdx)
                         ? Colors.white
                         : Colors.black,*/
-                    fontWeight: isBold ? FontWeight.w800 : FontWeight.normal,
+                    fontWeight: isBold ? FontWeight.w900 : FontWeight.normal,
                   ),
                 ),
               ),
