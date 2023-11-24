@@ -4,6 +4,28 @@ import 'package:bms_scheduling/widgets/PlutoGrid/pluto_grid.dart';
 import '../../../app/data/data_grid_props.dart';
 
 extension GridManagerExtension on PlutoGridStateManager {
+  String selectValueFromRow(List<PlutoRow>? rows) {
+    if (rows == null || rows.isEmpty) {
+      return '';
+    }
+    final columnIndexes = columnIndexesByShowFrozen;
+    List<String> rowText = [];
+
+    for (final row in rows) {
+      List<String> columnText = [];
+
+      for (int i = 0; i < columnIndexes.length; i += 1) {
+        final String field = refColumns[columnIndexes[i]].field;
+
+        columnText.add(row.cells[field]!.value.toString());
+      }
+
+      rowText.add(columnText.join('\t'));
+    }
+
+    return rowText.join('\n');
+  }
+
   toJson() {
     List data = [];
     for (var row in rows) {

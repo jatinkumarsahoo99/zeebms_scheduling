@@ -4,6 +4,7 @@ import 'package:flutter/services.dart';
 import 'package:bms_scheduling/widgets/PlutoGrid/pluto_grid.dart';
 
 import '../providers/SizeDefine.dart';
+import '../providers/Utils.dart';
 
 ThemeData primaryThemeData = ThemeData(
   focusColor: Colors.deepPurple[200],
@@ -56,7 +57,8 @@ PlutoGridConfiguration plutoGridConfiguration({
           actions: {
             // This is a Map with basic shortcut keys and actions set.
             ...PlutoGridShortcut.defaultActions,
-
+            LogicalKeySet(LogicalKeyboardKey.control, LogicalKeyboardKey.keyC):
+                CopyValueFromDataTable(),
             LogicalKeySet(LogicalKeyboardKey.tab):
                 CustomTabKeyAction(focusNode, previousWidgetFN),
             LogicalKeySet(LogicalKeyboardKey.shift, LogicalKeyboardKey.tab):
@@ -119,7 +121,8 @@ PlutoGridConfiguration plutoGridConfigurationTransmisionLog({
         actions: {
           // This is a Map with basic shortcut keys and actions set.
           ...PlutoGridShortcut.defaultActions,
-
+          LogicalKeySet(LogicalKeyboardKey.control, LogicalKeyboardKey.keyC):
+              CopyValueFromDataTable(),
           LogicalKeySet(LogicalKeyboardKey.tab):
               CustomTabKeyAction(focusNode, previousWidgetFN),
           LogicalKeySet(LogicalKeyboardKey.shift, LogicalKeyboardKey.tab):
@@ -187,6 +190,8 @@ PlutoGridConfiguration plutoGridConfiguration2({
           actions: {
             // This is a Map with basic shortcut keys and actions set.
             ...PlutoGridShortcut.defaultActions,
+            LogicalKeySet(LogicalKeyboardKey.control, LogicalKeyboardKey.keyC):
+                CopyValueFromDataTable(),
             LogicalKeySet(LogicalKeyboardKey.shift, LogicalKeyboardKey.tab):
                 CustomTabKeyAction(focusNode, previousWidgetFN),
             LogicalKeySet(LogicalKeyboardKey.tab):
@@ -243,11 +248,40 @@ PlutoGridConfiguration plutoGridConfiguration2({
           scrollbarThickness: 15,
           scrollbarThicknessWhileDragging: 15,
           scrollbarRadius: Radius.circular(8),
-          scrollbarRadiusWhileDragging: Radius.circular(8),));
+          scrollbarRadiusWhileDragging: Radius.circular(8),
+        ));
 
 // Create a new class that inherits from PlutoGridShortcutAction
 // If the execute method is implemented,
 // the implemented method is executed when the enter key is pressed.
+class CopyValueFromDataTable extends PlutoGridShortcutAction {
+  @override
+  void execute(
+      {required PlutoKeyManagerEvent keyEvent,
+      required PlutoGridStateManager stateManager}) {
+    if (stateManager.isEditing == true) {
+      return;
+    }
+    print('''
+Current Column Name:${stateManager.currentColumnField}\n
+Selecting rows lentgh:${stateManager.currentSelectingRows.length}\n
+Selectig currentSelectingPositionList Lentgh:${stateManager.currentSelectingPositionList.length}\n
+Selecting Mode Name:${stateManager.selectingMode.name}
+''');
+    if (stateManager.currentSelectingPositionList.isEmpty &&
+        stateManager.currentSelectingRows.isEmpty &&
+        stateManager.currentColumnField == "no" &&
+        stateManager.currentRow != null) {
+      print("copying one row");
+      Utils.copyToClipboardHack(
+          stateManager.selectValueFromRow([stateManager.currentRow!]));
+    } else {
+      print("copying cells");
+      Utils.copyToClipboardHack(stateManager.currentSelectingText);
+    }
+  }
+}
+
 class CustomEnterKeyAction extends PlutoGridShortcutAction {
   CustomEnterKeyAction({
     this.actionOnPress,
