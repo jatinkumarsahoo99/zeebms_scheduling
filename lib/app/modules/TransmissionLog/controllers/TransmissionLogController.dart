@@ -4531,24 +4531,30 @@ class TransmissionLogController extends GetxController {
       List<PlutoRow>? selectedRows = gridStateManager?.currentSelectingRows;
       for (int i = 0; i < (selectedRows?.length ?? 0); i++) {
         PlutoRow? row = selectedRows![i];
-        bool? isYes = await showDialogForYesNo1(
-            "Want to delete selected record?\nEvent type: ${row
-                ?.cells["eventType"]?.value ?? ""}\nDuration: ${row
-                ?.cells["tapeduration"]?.value ?? ""}\nExportTapeCode: ${row
-                ?.cells["exportTapeCode"]?.value ??
-                ""}\nExportTapeCaption: ${row?.cells["exportTapeCaption"]
-                ?.value ?? ""}");
-        /* print("Start id is>>" + (selectedRows?.first.cells["no"]?.value.toString() ?? ""));
+        if(["PR","F"].contains(row.cells["eventType"]?.value.toString().trim())){
+          deletRows.add(row!);
+        }else {
+          bool? isYes = await showDialogForYesNo1(
+              "Want to delete selected record?\nEvent type: ${row
+                  .cells["eventType"]?.value ?? ""}\nDuration: ${row
+                  .cells["tapeduration"]?.value ?? ""}\nExportTapeCode: ${row
+                  .cells["exportTapeCode"]?.value ??
+                  ""}\nExportTapeCaption: ${row.cells["exportTapeCaption"]
+                  ?.value ?? ""}");
+          /* print("Start id is>>" + (selectedRows?.first.cells["no"]?.value.toString() ?? ""));
         print("End id is>>" + (selectedRows?.last.cells["no"]?.value.toString() ?? ""));
         gridStateManager?.setCurrentSelectingRowsByRange(
             selectedRows?.first.cells["no"]?.value, selectedRows?.last.cells["no"]?.value);*/
-        if (isYes ?? false) {
-          if (row?.cells["eventType"]?.value.toString().trim().toLowerCase() ==
-              "s") {
-            deletedSegmentData.add((row));
+          if (isYes ?? false) {
+            if (row.cells["eventType"]?.value.toString()
+                .trim()
+                .toLowerCase() ==
+                "s") {
+              deletedSegmentData.add((row));
+            }
+            deletRows.add(row!);
+            // gridStateManager?.removeRows([row!]);
           }
-          deletRows.add(row!);
-          // gridStateManager?.removeRows([row!]);
         }
         // gridStateManager?.setCurrentSelectingRowsByRange(selectedRows?.first.sortIdx, selectedRows?.last.sortIdx);
       }
@@ -4561,26 +4567,32 @@ class TransmissionLogController extends GetxController {
     } else {
       print("Single select");
       if (gridStateManager?.currentRow != null) {
-        bool? isYes = await showDialogForYesNo1(
-            "Want to delete selected record?\nEvent type: ${gridStateManager
-                ?.currentRow?.cells["eventType"]?.value ??
-                ""}\nDuration: ${gridStateManager?.currentRow
-                ?.cells["tapeduration"]?.value ??
-                ""}\nExportTapeCode: ${gridStateManager?.currentRow
-                ?.cells["exportTapeCode"]?.value ??
-                ""}\nExportTapeCaption: ${gridStateManager?.currentRow
-                ?.cells["exportTapeCaption"]?.value ?? ""}");
-        if (isYes ?? false) {
-          if (gridStateManager?.currentRow?.cells["eventType"]?.value
-              .toString()
-              .trim()
-              .toLowerCase() ==
-              "s") {
-            deletedSegmentData.add((gridStateManager?.currentRow)!);
-          }
+        if(["PR","F"].contains(gridStateManager?.currentRow?.cells["eventType"]?.value.toString().trim())){
           addEventToUndo();
           gridStateManager?.removeCurrentRow();
           colorGrid(false);
+        }else {
+          bool? isYes = await showDialogForYesNo1(
+              "Want to delete selected record?\nEvent type: ${gridStateManager
+                  ?.currentRow?.cells["eventType"]?.value ??
+                  ""}\nDuration: ${gridStateManager?.currentRow
+                  ?.cells["tapeduration"]?.value ??
+                  ""}\nExportTapeCode: ${gridStateManager?.currentRow
+                  ?.cells["exportTapeCode"]?.value ??
+                  ""}\nExportTapeCaption: ${gridStateManager?.currentRow
+                  ?.cells["exportTapeCaption"]?.value ?? ""}");
+          if (isYes ?? false) {
+            if (gridStateManager?.currentRow?.cells["eventType"]?.value
+                .toString()
+                .trim()
+                .toLowerCase() ==
+                "s") {
+              deletedSegmentData.add((gridStateManager?.currentRow)!);
+            }
+            addEventToUndo();
+            gridStateManager?.removeCurrentRow();
+            colorGrid(false);
+          }
         }
       } else {
         LoadingDialog.callInfoMessage("Nothing is selected");
