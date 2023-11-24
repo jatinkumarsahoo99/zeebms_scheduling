@@ -220,6 +220,8 @@ class RoBookingView extends StatelessWidget {
                                           : controller.clients.value,
                                       (value) {
                                         controller.selectedClient = value;
+                                        controller.clientLeave(
+                                            controller.selectedClient!.key);
                                       },
                                       "Client",
                                       0.23,
@@ -268,10 +270,11 @@ class RoBookingView extends StatelessWidget {
                                   order: NumericFocusOrder(8),
                                   child: Obx(
                                     () => DropDownField.formDropDown1WidthMap(
-                                        controller.agencies.value,
-                                        (value) => {},
-                                        "Agency",
-                                        0.23,
+                                        controller.agencies.value, (value) {
+                                      controller.selectedAgnecy = value;
+                                      controller.agencyLeave(
+                                          controller.selectedAgnecy!.key);
+                                    }, "Agency", 0.23,
                                         isEnable:
                                             controller.bookingNoLeaveData ==
                                                 null,
@@ -642,7 +645,7 @@ class RoBookingView extends StatelessWidget {
                     return btncontroller.buttons == null
                         ? Container()
                         : Card(
-                            margin: EdgeInsets.fromLTRB(4, 4, 4, 0),
+                            margin: const EdgeInsets.fromLTRB(4, 4, 4, 0),
                             shape: RoundedRectangleBorder(
                               borderRadius: BorderRadius.only(
                                   topLeft: Radius.circular(10),

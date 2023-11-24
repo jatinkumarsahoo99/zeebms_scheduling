@@ -99,6 +99,7 @@ class AuditStatusController extends GetxController {
           fun: (map) {
             Get.back();
             if (map is Map && map.containsKey("inFo_Show")) {
+              bookingData.clear();
               if (map["inFo_Show"]["lstAdditions"] != null) {
                 bookingData = map["inFo_Show"]["lstAdditions"];
               } else if (map["inFo_Show"]["lstReSchedule"] != null) {
@@ -352,7 +353,7 @@ class AuditStatusController extends GetxController {
                           ),
                         ],
                       ),
-                      SizedBox(
+                      const SizedBox(
                         height: 5,
                       ),
                       Expanded(
