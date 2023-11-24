@@ -1680,7 +1680,7 @@ class TransmissionLogView extends StatelessWidget {
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: <Widget>[
                       Wrap(
-                        crossAxisAlignment: WrapCrossAlignment.center,
+                        crossAxisAlignment: WrapCrossAlignment.start,
                         runSpacing: 1,
                         spacing: 1,
                         children: [
@@ -1722,12 +1722,13 @@ class TransmissionLogView extends StatelessWidget {
                               // maxLines: 2000,
                               maxLen: 999999,
                               controller: controller.txId_),*/
-                          InputFields.formField1Width(
-                            widthRatio: 0.13,
+                          InputFields.formField1WidthBox(
+                            widthRatio: 0.16,
                             paddingLeft: 5,
                             hintTxt: "TX Id",
                             controller: controller.txId_,
                             maxLen: 999999,
+                            height: 70,
                           ),
                           SizedBox(
                             width: 10,

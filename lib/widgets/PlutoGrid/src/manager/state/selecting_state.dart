@@ -35,6 +35,8 @@ abstract class ISelectingState {
   /// Preserves the structure of the cells selected by the tabs and the enter key.
   String get currentSelectingText;
 
+  String get currentSelectingTextWithHeader;
+
   /// Change Multi-Select Status.
   void setSelecting(bool flag, {bool notify = true});
 
@@ -149,6 +151,27 @@ mixin SelectingState implements IPlutoGridState {
       return _selectingTextFromSelectingRows();
     } else if (fromSelectingPosition) {
       return _selectingTextFromSelectingPosition();
+    } else if (fromCurrentCell) {
+      return _selectingTextFromCurrentCell();
+    }
+
+    return '';
+  }
+
+  @override
+  String get currentSelectingTextWithHeader {
+    final bool fromSelectingRows =
+        selectingMode.isRow && currentSelectingRows.isNotEmpty;
+
+    final bool fromSelectingPosition =
+        currentCellPosition != null && currentSelectingPosition != null;
+
+    final bool fromCurrentCell = currentCellPosition != null;
+
+    if (fromSelectingRows) {
+      return _selectingTextFromSelectingRowsWithHeader();
+    } else if (fromSelectingPosition) {
+      return _selectingTextFromSelectingPositionWithHeader();
     } else if (fromCurrentCell) {
       return _selectingTextFromCurrentCell();
     }
@@ -626,18 +649,9 @@ mixin SelectingState implements IPlutoGridState {
     final columnIndexes = columnIndexesByShowFrozen;
 
     List<String> rowText = [];
-    List<String> columnHeaderText = [];
-    for (int i = 0; i < columnIndexes.length; i += 1) {
-      final String field = refColumns[columnIndexes[i]].field;
-      columnHeaderText.add(field);
-    }
-    rowText.add(columnHeaderText.join('\t'));
 
     for (final row in currentSelectingRows) {
       List<String> columnText = [];
-
-
-
       for (int i = 0; i < columnIndexes.length; i += 1) {
         final String field = refColumns[columnIndexes[i]].field;
 
@@ -668,7 +682,75 @@ mixin SelectingState implements IPlutoGridState {
         max(currentCellPosition!.rowIdx!, currentSelectingPosition!.rowIdx!);
     List<String> columnHeaderText = [];
 
-    for (int i = columnStartIdx; i < columnEndIdx; i += 1) {
+    for (int i = columnStartIdx; i <= columnEndIdx; i += 1) {
+      final String field = refColumns[columnIndexes[i]].field;
+      columnHeaderText.add(field);
+    }
+
+    rowText.add(columnHeaderText.join('\t'));
+
+    for (int i = rowStartIdx; i <= rowEndIdx; i += 1) {
+      List<String> columnText = [];
+
+      for (int j = columnStartIdx; j <= columnEndIdx; j += 1) {
+        final String field = refColumns[columnIndexes[j]].field;
+
+        columnText.add(refRows[i].cells[field]!.value.toString());
+      }
+
+      rowText.add(columnText.join('\t'));
+    }
+
+    return rowText.join('\n');
+  }
+
+  String _selectingTextFromSelectingRowsWithHeader() {
+    final columnIndexes = columnIndexesByShowFrozen;
+
+    List<String> rowText = [];
+    List<String> columnHeaderText = [];
+    for (int i = 0; i < columnIndexes.length; i += 1) {
+      final String field = refColumns[columnIndexes[i]].field;
+      columnHeaderText.add(field);
+    }
+    rowText.add(columnHeaderText.join('\t'));
+
+    for (final row in currentSelectingRows) {
+      List<String> columnText = [];
+
+
+
+      for (int i = 0; i < columnIndexes.length; i += 1) {
+        final String field = refColumns[columnIndexes[i]].field;
+
+        columnText.add(row.cells[field]!.value.toString());
+      }
+
+      rowText.add(columnText.join('\t'));
+    }
+
+    return rowText.join('\n');
+  }
+
+  String _selectingTextFromSelectingPositionWithHeader() {
+    final columnIndexes = columnIndexesByShowFrozen;
+
+    List<String> rowText = [];
+
+    int columnStartIdx = min(
+        currentCellPosition!.columnIdx!, currentSelectingPosition!.columnIdx!);
+
+    int columnEndIdx = max(
+        currentCellPosition!.columnIdx!, currentSelectingPosition!.columnIdx!);
+
+    int rowStartIdx =
+    min(currentCellPosition!.rowIdx!, currentSelectingPosition!.rowIdx!);
+
+    int rowEndIdx =
+    max(currentCellPosition!.rowIdx!, currentSelectingPosition!.rowIdx!);
+    List<String> columnHeaderText = [];
+
+    for (int i = columnStartIdx; i <= columnEndIdx; i += 1) {
       final String field = refColumns[columnIndexes[i]].field;
       columnHeaderText.add(field);
     }
