@@ -63,7 +63,7 @@ class CommercialView extends StatelessWidget {
                                       controller.getChannel(value.key);
                                     },
                                     "Location",
-                                    0.15,
+                                    0.12,
                                     isEnable: controller.isEnable.value,
                                     selected: controller.selectedLocation,
                                     autoFocus: true,
@@ -72,7 +72,7 @@ class CommercialView extends StatelessWidget {
                                     inkWellFocusNode: controller.locationFN,
                                   ),
                                 ),
-                                const SizedBox(width: 18),
+                                const SizedBox(width: 15),
                                 Obx(
                                   () => DropDownField.formDropDown1WidthMap(
                                     controller.channels.value,
@@ -85,7 +85,7 @@ class CommercialView extends StatelessWidget {
                                     selected: controller.selectedChannel,
                                   ),
                                 ),
-                                const SizedBox(width: 30),
+                                const SizedBox(width: 15),
                                 Obx(() {
                                   return DateWithThreeTextField(
                                     title: "From Date",
@@ -180,11 +180,10 @@ class CommercialView extends StatelessWidget {
                                       init: CommercialController(),
                                       id: "reports",
                                       builder: (controller) {
-                                        return schedulingView(context);
-                                        // return Padding(
-                                        //   padding: const EdgeInsets.all(2.0),
-                                        //   child: tabView(context),
-                                        // );
+                                        return Padding(
+                                          padding: const EdgeInsets.all(2.0),
+                                          child: tabView(context),
+                                        );
                                       }),
                                 ),
                               ),
