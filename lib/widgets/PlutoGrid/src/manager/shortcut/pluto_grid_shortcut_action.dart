@@ -661,7 +661,7 @@ class PlutoGridActionCopyValues extends PlutoGridShortcutAction {
     if (stateManager.isEditing == true) {
       return;
     }
-    Utils.copyToClipboardHack(stateManager.currentSelectingText);
+    Utils.copyToClipboardHack(stateManager.currentSelectingTextWithHeader);
     // Clipboard.setData(ClipboardData(text: stateManager.currentSelectingText));
   }
 }

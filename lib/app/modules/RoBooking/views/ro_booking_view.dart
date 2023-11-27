@@ -87,6 +87,7 @@ class RoBookingView extends StatelessWidget {
                                       controller.channels.value,
                                       (value) {
                                         controller.selectedChannel = value;
+                                        controller.effDtLeave();
                                       },
                                       "Channel",
                                       0.23,
