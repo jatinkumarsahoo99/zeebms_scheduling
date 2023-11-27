@@ -607,7 +607,7 @@ class TransmissionLogController extends GetxController {
             selectedDate.text,
             isMine,
             eventType,
-            txId.replaceAll(" ", ","),
+            txId.replaceAll("\n", ","),
             txCaption),
         fun: (map) {
           Get.back();
@@ -3872,9 +3872,9 @@ class TransmissionLogController extends GetxController {
             .toLowerCase())) {
           // gridStateManager.firstDisplayedScrollingRowIndex = i - 12;
           gridStateManager?.moveScrollByRow(
-              PlutoMoveDirection.down, (row?.sortIdx)! - 12);
+              PlutoMoveDirection.down, int.tryParse(row?.cells["rownumber"]?.value));
           // tblLog.rows[i].selected = true;
-          gridStateManager?.setCurrentCell(row?.cells["no"], row?.sortIdx);
+          gridStateManager?.setCurrentCell(row?.cells["no"], int.tryParse(row?.cells["rownumber"]?.value));
           LoadingDialog.callInfoMessage(
               "Lost secondary event!\nUnable to proceed");
           // logMessage(tblLog.rows[i - 1].cells["rownumber"].value, "Lost secondary event!\nUnable to proceed", "");
@@ -4436,17 +4436,58 @@ class TransmissionLogController extends GetxController {
   keyBoardHander(RawKeyEvent raw,BuildContext context) {
     print("RAw is.>>>" + raw.toString());
     if (gridStateManager == null) return;
+
     if (raw is RawKeyDownEvent &&
-        raw.isControlPressed &&
+        raw.isShiftPressed &&
         raw.character?.toLowerCase() == "c") {
       print("Copy Pressed Ctrl + c ");
-      if (gridStateManager != null && gridStateManager?.currentCell != null) {
+      if (gridStateManager != null &&
+          ((gridStateManager?.currentSelectingRows.length ?? 0) > 0)) {
+        // String value = "";
+        // gridStateManager?.currentSelectingRows.forEach((element) {
+        //   value =
+        //       "$value${element.cells[gridStateManager?.currentCell?.column.field]?.value}\n";
+        // });
+        // print(">>>>>>>>valueJKS"+value.toString());
+        // print(">>>>>>>>valueJKS"+(gridStateManager?.currentCell?.column.field).toString());
+        // print(">>>>>>>>valueJKS"+(gridStateManager?.currentSelectingRows.length ).toString());
+        Utils.copyToClipboardHack(gridStateManager?.currentSelectingText??"");
+      }
+      else if (gridStateManager != null &&
+          gridStateManager?.currentCell != null) {
         print("Copy Pressed in clipboard ");
         /*Clipboard.setData(new ClipboardData(
                     text: controller.gridStateManager?.currentCell?.value));*/
         Utils.copyToClipboardHack(gridStateManager?.currentCell?.value);
       }
-    } else if (raw is RawKeyDownEvent &&
+    }
+
+     else if(raw is RawKeyDownEvent &&
+        raw.isControlPressed &&
+        raw.character?.toLowerCase() == "c"){
+       print("cntrl + shift + c");
+      if (gridStateManager != null &&
+          ((gridStateManager?.currentSelectingRows.length ?? 0) > 0)) {
+        String value = "";
+        gridStateManager?.currentSelectingRows.forEach((element) {
+          value =
+          "$value${element.cells[gridStateManager?.currentCell?.column.field]?.value}\n";
+        });
+        print(">>>>>>>>valueJKS"+value.toString());
+        print(">>>>>>>>valueJKS"+(gridStateManager?.currentCell?.column.field).toString());
+        print(">>>>>>>>valueJKS"+(gridStateManager?.currentSelectingRows.length ).toString());
+        Utils.copyToClipboardHack(value);
+      }
+      else if (gridStateManager != null &&
+          gridStateManager?.currentCell != null) {
+        print("Copy Pressed in clipboard ");
+        /*Clipboard.setData(new ClipboardData(
+                    text: controller.gridStateManager?.currentCell?.value));*/
+        Utils.copyToClipboardHack(gridStateManager?.currentCell?.value);
+      }
+    }
+
+     else if (raw is RawKeyDownEvent &&
         raw.isControlPressed &&
         raw.character?.toLowerCase() == "f") {
       print("Find Pressed");
@@ -4532,7 +4573,7 @@ class TransmissionLogController extends GetxController {
       for (int i = 0; i < (selectedRows?.length ?? 0); i++) {
         PlutoRow? row = selectedRows![i];
         if(["PR","F"].contains(row.cells["eventType"]?.value.toString().trim())){
-          deletRows.add(row!);
+          deletRows.add(row);
         }else {
           bool? isYes = await showDialogForYesNo1(
               "Want to delete selected record?\nEvent type: ${row
@@ -4552,7 +4593,7 @@ class TransmissionLogController extends GetxController {
                 "s") {
               deletedSegmentData.add((row));
             }
-            deletRows.add(row!);
+            deletRows.add(row);
             // gridStateManager?.removeRows([row!]);
           }
         }

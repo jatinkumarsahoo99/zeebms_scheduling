@@ -25,60 +25,57 @@ class AuditStatusView extends GetView<AuditStatusController> {
     return Scaffold(
       body: Column(
         children: [
-          Card(
-            child: Container(
-              padding: EdgeInsets.all(8),
-              width: Get.width,
-              child: Wrap(
-                crossAxisAlignment: WrapCrossAlignment.end,
-                spacing: 10,
-                // buttonHeight: 20,
-                alignment: WrapAlignment.start,
-                children: [
-                  Obx(
-                    () => DropDownField.formDropDown1WidthMap(
-                        controller.locations.value, (data) {
-                      controller.selectLocation = data;
-                      controller.getChannels(data.key);
-                    }, "Location", 0.24, autoFocus: true),
-                  ),
-                  Obx(
-                    () => DropDownField.formDropDown1WidthMap(
-                        controller.channels.value, (data) {
-                      controller.selectChannel = data;
-                    }, "Channel", 0.24),
-                  ),
-                  DateWithThreeTextField(
-                      title: "Date.",
-                      widthRation: 0.12,
-                      mainTextController: controller.dateController),
-                  Obx(() => Row(
-                        mainAxisSize: MainAxisSize.min,
-                        crossAxisAlignment: CrossAxisAlignment.end,
-                        children: controller.auditTypes
-                            .map((e) => Row(
-                                  mainAxisSize: MainAxisSize.min,
-                                  children: [
-                                    Radio(
-                                        value: e,
-                                        groupValue:
-                                            controller.currentType.value,
-                                        onChanged: (value) {
-                                          controller.currentType.value = e;
-                                        }),
-                                    Text(e)
-                                  ],
-                                ))
-                            .toList(),
-                      )),
-                  FormButtonWrapper(
-                    btnText: "Show",
-                    callback: () {
-                      controller.showBtnData();
-                    },
-                  )
-                ],
-              ),
+          Container(
+            padding: EdgeInsets.all(8),
+            width: Get.width,
+            child: Wrap(
+              crossAxisAlignment: WrapCrossAlignment.end,
+              spacing: 10,
+              // buttonHeight: 20,
+              alignment: WrapAlignment.start,
+              children: [
+                Obx(
+                  () => DropDownField.formDropDown1WidthMap(
+                      controller.locations.value, (data) {
+                    controller.selectLocation = data;
+                    controller.getChannels(data.key);
+                  }, "Location", 0.24, autoFocus: true),
+                ),
+                Obx(
+                  () => DropDownField.formDropDown1WidthMap(
+                      controller.channels.value, (data) {
+                    controller.selectChannel = data;
+                  }, "Channel", 0.24),
+                ),
+                DateWithThreeTextField(
+                    title: "Date.",
+                    widthRation: 0.12,
+                    mainTextController: controller.dateController),
+                Obx(() => Row(
+                      mainAxisSize: MainAxisSize.min,
+                      crossAxisAlignment: CrossAxisAlignment.end,
+                      children: controller.auditTypes
+                          .map((e) => Row(
+                                mainAxisSize: MainAxisSize.min,
+                                children: [
+                                  Radio(
+                                      value: e,
+                                      groupValue: controller.currentType.value,
+                                      onChanged: (value) {
+                                        controller.currentType.value = e;
+                                      }),
+                                  Text(e)
+                                ],
+                              ))
+                          .toList(),
+                    )),
+                FormButtonWrapper(
+                  btnText: "Show",
+                  callback: () {
+                    controller.showBtnData();
+                  },
+                )
+              ],
             ),
           ),
           Expanded(
