@@ -180,10 +180,11 @@ class CommercialView extends StatelessWidget {
                                       init: CommercialController(),
                                       id: "reports",
                                       builder: (controller) {
-                                        return Padding(
-                                          padding: const EdgeInsets.all(2.0),
-                                          child: tabView(context),
-                                        );
+                                        return schedulingView(context);
+                                        // return Padding(
+                                        //   padding: const EdgeInsets.all(2.0),
+                                        //   child: tabView(context),
+                                        // );
                                       }),
                                 ),
                               ),
