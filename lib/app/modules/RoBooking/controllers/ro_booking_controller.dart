@@ -269,6 +269,9 @@ class RoBookingController extends GetxController {
             }
             agencies.value = _agencies;
             selectedAgnecy = agencies.value.first;
+            if (agencies.length == 1) {
+              agencyLeave(agencies[0].key);
+            }
           }
         });
   }
@@ -1341,6 +1344,14 @@ class RoBookingController extends GetxController {
               value["info_GetTapeLost"].containsKey("lstTape") &&
               value["info_GetTapeLost"]["lstTape"] is List) {
             tapeIds.value = value["info_GetTapeLost"]["lstTape"];
+            selectedTapeID = null;
+            if (tapeIds.length == 1) {
+              selectedTapeID = DropDownValue(
+                  key: tapeIds[0]['exporttapecode'],
+                  value: tapeIds[0]['commercialcaption']);
+
+              tapIdLeave(tapeIds[0]['exporttapecode']);
+            }
           }
         });
   }
