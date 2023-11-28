@@ -17,7 +17,9 @@ import 'package:bms_scheduling/widgets/PlutoGrid/pluto_grid.dart';
 import 'package:intl/intl.dart';
 import '../../../../widgets/FormButton.dart';
 import '../../../../widgets/Snack.dart';
+import '../../../../widgets/WarningBox.dart';
 import '../../../../widgets/dropdown.dart';
+import '../../../../widgets/gridFromMap.dart';
 import '../../../../widgets/input_fields.dart';
 import '../../../controller/ConnectorControl.dart';
 import '../../../data/DropDownValue.dart';
@@ -68,6 +70,7 @@ class TransmissionLogController extends GetxController {
   PlutoGridStateManager? gridStateManagerCommercial;
   PlutoGridStateManager? dgvCommercialsStateManager;
   PlutoGridStateManager? dgvTimeStateManager;
+  PlutoGridStateManager? deleteSegment;
   PlutoGridStateManager? tblFastInsert;
   PlutoGridStateManager? tblSegement;
   InsertSearchModel? inserSearchModel;
@@ -4774,5 +4777,196 @@ class TransmissionLogController extends GetxController {
               icon: Icon(Icons.done),
               label: Text("Filter")),
         ]);
+  }
+
+
+  Future<bool>? showDeletedSegmentDialog() {
+    Completer<bool> completer = Completer();
+    initialOffset.value = 2;
+    dialogWidget = Material(
+      color: Colors.white,
+      child: SizedBox(
+        width: Get.width * 0.45,
+        child: Column(
+          children: [
+            Container(
+              height: 30,
+              color: Colors.grey[200],
+              child: Stack(
+                fit: StackFit.expand,
+                // alignment: Alignment.center,
+                children: [
+                  Align(
+                    alignment: Alignment.center,
+                    child: Text(
+                      'Deleted Segments',
+                      style: TextStyle(
+                        fontWeight: FontWeight.w600,
+                        color: Colors.black,
+                        fontSize: 20,
+                      ),
+                    ),
+                  ),
+                  Align(
+                    alignment: Alignment.topRight,
+                    child: Padding(
+                      padding: const EdgeInsets.only(bottom: 8.0, top: 0),
+                      child: InkWell(
+                        onTap: () {
+                          dialogWidget = null;
+                          canDialogShow.value = false;
+                        },
+                        child: Icon(
+                          Icons.close,
+                        ),
+                      ),
+                    ),
+                  ),
+                ],
+              ),
+            ),
+            SizedBox(
+              height: Get.height * 0.64,
+              child: SingleChildScrollView(
+                child: SizedBox(
+                  width: Get.width * 0.45,
+                  // height: Get.he,
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.center,
+                    children: <Widget>[
+                      SizedBox(
+                        height: 15,
+                      ),
+                      const Text(
+                        "Below segments are deleted. Are your sure you want to proceed further?",
+                        style: TextStyle(
+                            fontWeight: FontWeight.w600, fontSize: 18),
+                      ),
+                      SizedBox(
+                        height: 15,
+                      ),
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                          DailogCloseButton(
+                              autoFocus: false,
+                              callback: () {
+                                dialogWidget = null;
+                                canDialogShow.value = false;
+                                completer.complete(false);
+                              },
+                              btnText: "No"),
+                          SizedBox(
+                            width: 20,
+                          ),
+                          DailogCloseButton(
+                              autoFocus: false,
+                              callback: () {
+                                dialogWidget = null;
+                                canDialogShow.value = false;
+                                completer.complete(true);
+                              },
+                              btnText: "Yes"),
+                        ],
+                      ),
+                      SizedBox(
+                        height: 20,
+                      ),
+                      GetBuilder<TransmissionLogController>(
+                          id: "deleteList",
+                          init: this,
+                          builder: (controller) {
+                            return SizedBox(
+                              // width: 500,
+                              width: Get.width * 0.45,
+                              height: Get.height * 0.37,
+                              child: (deletedSegmentData != null &&
+                                  deletedSegmentData.length > 0)
+                                  ? DataGridFromMap(
+                                  hideCode: false,
+                                  formatDate: false,
+                                  // checkRow: true,
+                                  showSrNo: false,
+                                  mode: PlutoGridMode.normal,
+                                  // checkRowKey: "eventtype",
+                                  onload: (PlutoGridOnLoadedEvent load) {
+                                    deleteSegment =
+                                        load.stateManager;
+                                    load.stateManager
+                                        .setGridMode(PlutoGridMode.normal);
+                                    load.stateManager.setSelectingMode(
+                                        PlutoGridSelectingMode.row);
+                                    // load.stateManager.setSelecting(true);
+                                    load.stateManager.toggleSelectingRow(0);
+                                  },
+                                  witdthSpecificColumn: (controller
+                                      .userDataSettings?.userSetting
+                                      ?.firstWhere(
+                                          (element) =>
+                                      element.controlName ==
+                                          "deletedSegmentData",
+                                      orElse: () => UserSetting())
+                                      .userSettings),
+                                  // colorCallback: (renderC) => Colors.red[200]!,
+                                  onRowDoubleTap:
+                                      (PlutoGridOnRowDoubleTapEvent tap) {
+                                    gridStateManager?.insertRows(
+                                        int.tryParse(tap
+                                            .row
+                                            .cells["rownumber"]
+                                            ?.value) ??
+                                            0,
+                                        [tap.row]);
+                                    deleteSegment
+                                        ?.removeCurrentRow();
+                                    deletedSegmentData
+                                        .removeAt(tap.rowIdx);
+                                    gridStateManager?.setCurrentCell(gridStateManager?.rows[int.tryParse(tap
+                                        .row
+                                        .cells["rownumber"]
+                                        ?.value) ??
+                                        0].cells["no"], int.tryParse(tap
+                                        .row
+                                        .cells["rownumber"]
+                                        ?.value) ??
+                                        0);
+                                    deleteSegment
+                                        ?.gridFocusNode.requestFocus();
+                                    update(["deleteList"]);
+                                  },
+                                  colorCallback: (colorData) {
+                                    if (controller
+                                        .deleteSegment?.currentRowIdx ==
+                                        colorData.rowIdx) {
+                                      return Color(0xFFD1C4E9);
+                                    } else {
+                                      return Colors.transparent;
+                                    }
+                                  },
+                                  mapData: (controller.deletedSegmentData
+                                      .map((e) => e.toJson())
+                                      .toList()))
+                              // _dataTable3()
+                                  : const WarningBox(
+                                  text:
+                                  'Enter Location, Channel & Date to get the Break Definitions'),
+                            );
+                          }),
+                      Padding(
+                        padding: const EdgeInsets.all(18.0),
+                        child: Text(
+                            "Info: If you want to undo deleted row then you need to double tap on it. It will again add where you deleted it"),
+                      )
+                    ],
+                  ),
+                ),
+              ),
+            ),
+          ],
+        ),
+      ),
+    );
+    canDialogShow.value = true;
+    return completer.future;
   }
 }
