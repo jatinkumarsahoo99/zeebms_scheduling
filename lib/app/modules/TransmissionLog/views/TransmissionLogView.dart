@@ -479,7 +479,6 @@ class TransmissionLogView extends StatelessWidget {
                                       controller.selectedIndex);
                                 }
 
-
 /*
                                 /////////////19 Oct 23 : By Sanjaya ///////////
                                 loadevent.stateManager
@@ -805,6 +804,7 @@ class TransmissionLogView extends StatelessWidget {
           {"gridStateManager": controller.gridStateManager},
           {"gridStateManagerCommercial": controller.gridStateManagerCommercial},
           {"dgvCommercialsStateManager": controller.dgvCommercialsStateManager},
+          {"deleteSegment": controller.deleteSegment},
           {"dgvTimeStateManager": controller.dgvTimeStateManager},
           {"tblFastInsert": controller.tblFastInsert},
           {"tblSegement": controller.tblSegement},
