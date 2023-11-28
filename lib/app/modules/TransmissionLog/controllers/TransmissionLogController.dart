@@ -3590,9 +3590,11 @@ class TransmissionLogController extends GetxController {
 
       // gridStateManager.currentCell = null;
       if ((deletedSegmentData.length) > 0) {
-        bool? proceedFurther = await showDialogForYesNo(
+        /*bool? proceedFurther = await showDialogForYesNo(
             "${deletedSegmentData
-                .length} segment deleted.\nDo you want to proceed further?");
+                .length} segment deleted.\nDo you want to proceed further?"); */
+        bool? proceedFurther = await showDeletedSegmentDialog();
+
         if (!(proceedFurther!)) {
           return;
         }
