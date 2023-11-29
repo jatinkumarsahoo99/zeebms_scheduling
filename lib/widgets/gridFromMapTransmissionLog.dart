@@ -20,6 +20,7 @@ class DataGridFromMapTransmissionLog extends StatelessWidget {
       {Key? key,
       required this.mapData,
       this.colorCallback,
+      this.onContextReturn,
       this.showSrNo = false,
       this.hideCode = true,
       this.widthRatio,
@@ -62,16 +63,25 @@ class DataGridFromMapTransmissionLog extends StatelessWidget {
   final List? hideKeys;
   final String? exportFileName;
   final Function(PlutoGridOnSelectedEvent)? onSelected;
+  final Function(BuildContext)? onContextReturn;
   final double? widthRatio;
   final IconData? actionIcon;
   final String? actionIconKey;
   final Function? actionOnPress;
+
+  // final Function? onFindPress;
   Color Function(PlutoRowColorContext)? colorCallback;
   Function(PlutoGridOnLoadedEvent)? onload;
   List<String>? draggableKeys;
 
+  DataGridMenu gridMenu = DataGridMenu();
+
   @override
   Widget build(BuildContext context) {
+    if (onContextReturn != null) {
+      onContextReturn!(context);
+    }
+
     FocusNode _focusNode = FocusNode();
     GlobalKey _globalKey = GlobalKey();
     List<PlutoColumn> segColumn = [];
@@ -447,7 +457,8 @@ class DataGridFromMapTransmissionLog extends StatelessWidget {
             if (notification is ScrollUpdateNotification) {
               // Handle scroll updates here
               final scrollPosition = notification.metrics.pixels;
-              Get.find<TransmissionLogController>().findVisibleRows(scrollPosition);
+              Get.find<TransmissionLogController>()
+                  .findVisibleRows(scrollPosition);
               // Do something with the visible rows
             }
             return false;

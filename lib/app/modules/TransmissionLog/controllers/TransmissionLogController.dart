@@ -4,6 +4,7 @@ import 'dart:html' as html;
 import 'dart:io' as io;
 import 'dart:typed_data';
 import 'package:bms_scheduling/app/controller/HomeController.dart';
+import 'package:bms_scheduling/app/providers/DataGridMenu.dart';
 import 'package:bms_scheduling/app/providers/ExportData.dart';
 import 'package:bms_scheduling/widgets/LoadingDialog.dart';
 import 'package:file_picker/file_picker.dart';
@@ -16,7 +17,9 @@ import 'package:bms_scheduling/widgets/PlutoGrid/pluto_grid.dart';
 import 'package:intl/intl.dart';
 import '../../../../widgets/FormButton.dart';
 import '../../../../widgets/Snack.dart';
+import '../../../../widgets/WarningBox.dart';
 import '../../../../widgets/dropdown.dart';
+import '../../../../widgets/gridFromMap.dart';
 import '../../../../widgets/input_fields.dart';
 import '../../../controller/ConnectorControl.dart';
 import '../../../data/DropDownValue.dart';
@@ -67,6 +70,7 @@ class TransmissionLogController extends GetxController {
   PlutoGridStateManager? gridStateManagerCommercial;
   PlutoGridStateManager? dgvCommercialsStateManager;
   PlutoGridStateManager? dgvTimeStateManager;
+  PlutoGridStateManager? deleteSegment;
   PlutoGridStateManager? tblFastInsert;
   PlutoGridStateManager? tblSegement;
   InsertSearchModel? inserSearchModel;
@@ -157,6 +161,7 @@ class TransmissionLogController extends GetxController {
   int startVisibleRow = 0;
   int endVisibleRow = 0;
   List<PlutoRow> deletedSegmentData = [];
+  BuildContext? contextGrid;
 
   @override
   void onInit() {
@@ -3585,9 +3590,11 @@ class TransmissionLogController extends GetxController {
 
       // gridStateManager.currentCell = null;
       if ((deletedSegmentData.length) > 0) {
-        bool? proceedFurther = await showDialogForYesNo(
+        /*bool? proceedFurther = await showDialogForYesNo(
             "${deletedSegmentData
-                .length} segment deleted.\nDo you want to proceed further?");
+                .length} segment deleted.\nDo you want to proceed further?"); */
+        bool? proceedFurther = await showDeletedSegmentDialog();
+
         if (!(proceedFurther!)) {
           return;
         }
@@ -4309,7 +4316,7 @@ class TransmissionLogController extends GetxController {
         return Offset(
             (constraints.maxWidth / 3) + 30, constraints.maxHeight / 3);
       case 2:
-        return Offset(Get.width * 0.09, Get.height * 0.12);
+        return Offset(Get.width * 0.27, Get.height * 0.10);
       default:
         return null;
     }
@@ -4491,7 +4498,8 @@ class TransmissionLogController extends GetxController {
         raw.isControlPressed &&
         raw.character?.toLowerCase() == "f") {
       print("Find Pressed");
-      findCall(context);
+      // findCall(context);
+      DataGridMenu().showGridTransmissionLogFindOption(gridStateManager!,contextGrid!);
     } else if (raw is RawKeyDownEvent &&
         raw.isControlPressed &&
         raw.logicalKey == LogicalKeyboardKey.arrowUp) {
@@ -4673,407 +4681,7 @@ class TransmissionLogController extends GetxController {
   }
 
 
-  findCall(context) {
-    print("Called find");
-    showModalBottomSheet(
-        context: context,
-        builder: (context) {
-          var forFN = FocusNode();
-          WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
-            gridStateManager?.gridFocusNode.unfocus();
-            forFN.requestFocus();
-          });
-          var _selectedColumn = gridStateManager?.currentColumn?.field ?? "";
-          DropDownValue _preselectedColumn = DropDownValue(
-              key: gridStateManager?.currentColumn?.field ?? "",
-              value: gridStateManager?.currentColumn?.title ?? "");
-          TextEditingController _findctrl = TextEditingController();
-          var _almost = RxBool(true);
-          var _fromstart = RxBool(false);
-          int _index = gridStateManager?.currentRowIdx ?? 0;
-          return Card(
-            child: Padding(
-              padding: EdgeInsets.zero,
-              child: Container(
-                width: Get.width,
-                height: 50,
-                child: FocusTraversalGroup(
-                  policy: OrderedTraversalPolicy(),
-                  child: Row(
-                    // mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                    mainAxisSize: MainAxisSize.min,
-                    crossAxisAlignment: CrossAxisAlignment.end,
-                    children: [
-                      FocusTraversalOrder(
-                        order: NumericFocusOrder(1),
-                        child: Row(
-                          children: [
-                            Text(
-                              "Column",
-                              // style: TextStyle(
-                              //   fontSize: SizeDefine.labelSize1,
-                              //   color: Colors.black,
-                              //   fontWeight: FontWeight.w500,
-                              // ),
-                            ),
-                            const SizedBox(width: 5),
-                            DropDownField.formDropDown1WidthMap(
-                              gridStateManager?.columns
-                                  .map((e) =>
-                                  DropDownValue(
-                                      key: e.field, value: e.title))
-                                  .toList(),
-                                  (value) {
-                                _selectedColumn = value.key!;
-                                _preselectedColumn = value;
-                              },
-                              "Column",
-                              0.15,
-                              selected: _preselectedColumn,
-                              // context,
-                              showtitle: false,
-                            ),
-                          ],
-                        ),
-                      ),
-                      SizedBox(width: 15),
-                      FocusTraversalOrder(
-                        order: NumericFocusOrder(2),
-                        child: Row(
-                          // crossAxisAlignment: CrossAxisAlignment.center,
-                          // mainAxisAlignment: MainAxisAlignment.center,
-                          children: [
-                            Padding(
-                              padding: const EdgeInsets.only(top: 24),
-                              child: Text(
-                                "For",
-                                // style: TextStyle(
-                                //   fontSize: SizeDefine.labelSize1,
-                                //   color: Colors.black,
-                                //   fontWeight: FontWeight.w500,
-                                // ),
-                              ),
-                            ),
-                            const SizedBox(width: 5),
-                            InputFields.formField1(
-                                hintTxt: "For",
-                                controller: _findctrl,
-                                width: 0.15,
-                                focusNode: forFN,
-                                showTitle: false),
-                          ],
-                        ),
-                      ),
-                      SizedBox(width: 15),
-                      FocusTraversalOrder(
-                          order: NumericFocusOrder(3),
-                          child: Row(
-                            crossAxisAlignment: CrossAxisAlignment.center,
-                            // mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                            mainAxisSize: MainAxisSize.max,
-                            children: [
-                              InkWell(
-                                  onTap: () {
-                                    _almost.value = !_almost.value;
-                                  },
-                                  child: Obx(
-                                        () =>
-                                        Icon(_almost.value
-                                            ? Icons.check_box_outlined
-                                            : Icons
-                                            .check_box_outline_blank_rounded),
-                                  )),
-                              Text("Almost"),
-                            ],
-                          )),
-                      const SizedBox(width: 5),
-                      FocusTraversalOrder(
-                          order: NumericFocusOrder(4),
-                          child: Row(
-                            crossAxisAlignment: CrossAxisAlignment.center,
-                            // mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                            mainAxisSize: MainAxisSize.max,
-                            children: [
-                              InkWell(
-                                  onTap: () {
-                                    _fromstart.value = !_fromstart.value;
-                                  },
-                                  child: Obx(
-                                        () =>
-                                        Icon(_fromstart.value
-                                            ? Icons.check_box_outlined
-                                            : Icons
-                                            .check_box_outline_blank_rounded),
-                                  )),
-                              Text("From Start")
-                            ],
-                          )),
-                      const SizedBox(width: 15),
-                      Transform.scale(
-                        scale: .85,
-                        child: Row(
-                          children: [
-                            ElevatedButton.icon(
-                                label: Text(""),
-                                onPressed: () {
-                                  if (_findctrl.text != "" &&
-                                      _selectedColumn != "") {
-                                    if (_fromstart.value) {
-                                      _index = -1;
-                                    }
-                                    var _slecetedRow = _almost.value
-                                        ? gridStateManager?.rows
-                                        .firstWhereOrNull(
-                                            (element) =>
-                                        (element
-                                            .cells[_selectedColumn]!
-                                            .value
-                                            .toString()
-                                            .toLowerCase()
-                                            .trim()
-                                            .contains(_findctrl.text
-                                            .toLowerCase()
-                                            .trim()) &&
-                                            (element.sortIdx > _index)))
-                                        : gridStateManager?.rows
-                                        .firstWhereOrNull((element) =>
-                                    (element.cells[_selectedColumn]!.value
-                                        .toString().toLowerCase().trim() ==
-                                        _findctrl.text.toLowerCase().trim() &&
-                                        (element.sortIdx > _index)));
 
-                                    if (_slecetedRow == null) {
-                                      gridStateManager?.resetScrollToZero();
-
-                                      Get.defaultDialog(
-                                          content: Text(
-                                              "You Have reach the end !\nDo u want to restart?"),
-                                          actions: [
-                                            ElevatedButton.icon(
-                                                onPressed: () {
-                                                  _index = 0;
-                                                  gridStateManager
-                                                      ?.resetScrollToZero();
-                                                  Get.back();
-                                                  var _slecetedRow = _almost
-                                                      .value
-                                                      ? gridStateManager?.rows
-                                                      .firstWhereOrNull((
-                                                      element) =>
-                                                  (element
-                                                      .cells[
-                                                  _selectedColumn]!
-                                                      .value
-                                                      .toString()
-                                                      .toLowerCase()
-                                                      .trim()
-                                                      .contains(_findctrl.text
-                                                      .toLowerCase()
-                                                      .trim()) &&
-                                                      (_index == 0 ||
-                                                          element.sortIdx >
-                                                              (_index ??
-                                                                  0))))
-                                                      : gridStateManager?.rows
-                                                      .firstWhere((element) =>
-                                                  (element
-                                                      .cells[_selectedColumn]!
-                                                      .value.toString()
-                                                      .toLowerCase()
-                                                      .trim() == _findctrl.text
-                                                      .toLowerCase().trim() &&
-                                                      (_index == 0 ||
-                                                          element.sortIdx >
-                                                              (_index ?? 0))));
-                                                  print(_slecetedRow!
-                                                      .cells[
-                                                  _selectedColumn]!
-                                                      .value
-                                                      .toString() +
-                                                      _slecetedRow
-                                                          .cells[
-                                                      _selectedColumn]!
-                                                          .value
-                                                          .runtimeType
-                                                          .toString());
-                                                  _index =
-                                                      _slecetedRow.sortIdx;
-                                                  gridStateManager
-                                                      ?.resetScrollToZero();
-
-                                                  gridStateManager
-                                                      ?.moveScrollByRow(
-                                                      PlutoMoveDirection
-                                                          .down,
-                                                      _slecetedRow
-                                                          .sortIdx -
-                                                          1);
-
-                                                  gridStateManager
-                                                      ?.setKeepFocus(false);
-                                                  // for (var element in stateManager
-                                                  //     .rows) {
-                                                  //   stateManager
-                                                  //       .setRowChecked(
-                                                  //       element, false,
-                                                  //       notify: false);
-                                                  // }
-                                                  // stateManager
-                                                  //     .setRowChecked(
-                                                  //     _slecetedRow, true,
-                                                  //     notify: true);
-                                                  gridStateManager
-                                                      ?.setCurrentCell(
-                                                      _slecetedRow.cells[
-                                                      _selectedColumn],
-                                                      _slecetedRow.sortIdx);
-                                                },
-                                                icon: Icon(Icons.done),
-                                                label: Text("YES")),
-                                            ElevatedButton.icon(
-                                                onPressed: () {
-                                                  Get.back();
-                                                },
-                                                icon: Icon(Icons.clear),
-                                                label: Text("NO")),
-                                          ]);
-                                    } else {
-                                      if (_fromstart.value) {
-                                        _fromstart.value = false;
-                                      }
-                                      _index = _slecetedRow.sortIdx;
-                                      gridStateManager?.resetScrollToZero();
-                                      if (_index <= 10) {
-                                        gridStateManager?.moveScrollByRow(
-                                            PlutoMoveDirection.up,
-                                            _slecetedRow.sortIdx);
-                                      } else {
-                                        gridStateManager?.moveScrollByRow(
-                                            PlutoMoveDirection.down,
-                                            _slecetedRow.sortIdx);
-                                      }
-                                      gridStateManager?.setKeepFocus(false);
-                                      gridStateManager?.setCurrentCell(
-                                          _slecetedRow
-                                              .cells[_selectedColumn],
-                                          _slecetedRow.sortIdx);
-                                      // print(_slecetedRow
-                                      //         .cells[_selectedColumn]!.value
-                                      //         .toString() +
-                                      //     _slecetedRow
-                                      //         .cells[_selectedColumn]!
-                                      //         .value
-                                      //         .runtimeType
-                                      //         .toString());
-                                      // print("Index selected is>>" +
-                                      //     _slecetedRow.sortIdx.toString());
-                                      // if (_slecetedRow.sortIdx == 0) {
-                                      //   _index = 1;
-                                      // } else {
-                                      //   _index = _slecetedRow.sortIdx;
-                                      // }
-
-                                      // stateManager.resetScrollToZero();
-                                      // stateManager.moveScrollByRow(
-                                      //     PlutoMoveDirection.down,
-                                      //     _slecetedRow.sortIdx);
-                                      // stateManager.setKeepFocus(false);
-                                      // for (var element in stateManager
-                                      //     .rows) {
-                                      //   stateManager.setRowChecked(
-                                      //       element, false, notify: false);
-                                      // }
-                                      // stateManager.setRowChecked(
-                                      //     _slecetedRow, true, notify: true);
-                                      // if (stateManager.currentRow != null &&
-                                      //     stateManager
-                                      //             .currentRow?.sortIdx ==
-                                      //         0 &&
-                                      //     _slecetedRow.sortIdx == 2) {
-                                      //   stateManager.setCurrentCell(
-                                      //       stateManager
-                                      //           .getRowByIdx(
-                                      //               _slecetedRow.sortIdx -
-                                      //                   1)
-                                      //           ?.cells[_selectedColumn],
-                                      //       _slecetedRow.sortIdx - 1);
-                                      // } else {
-                                      //   stateManager.setCurrentCell(
-                                      //       _slecetedRow
-                                      //           .cells[_selectedColumn],
-                                      //       _slecetedRow.sortIdx);
-                                      // }
-                                    }
-                                  }
-                                },
-                                icon: Icon(Icons
-                                    .keyboard_double_arrow_right_rounded)),
-                            SizedBox(width: 15),
-                            ElevatedButton.icon(
-                                label: Text(""),
-                                onPressed: () {
-                                  // for (var element in stateManager
-                                  //     .rows) {
-                                  //   stateManager
-                                  //       .setRowChecked(
-                                  //       element, false,
-                                  //       notify: false);
-                                  // }
-                                  Navigator.pop(context);
-                                },
-                                icon: Icon(Icons.clear_outlined)),
-                            SizedBox(width: 15),
-                            ElevatedButton(
-                                onPressed: () {
-                                  gridStateManager?.setFilter((element) =>
-                                  gridStateManager?.currentCell == null
-                                      ? true
-                                      : element
-                                      .cells[gridStateManager?.currentCell!
-                                      .column
-                                      .field]!
-                                      .value ==
-                                      gridStateManager?.currentCell!.value);
-                                },
-                                child: Text("FS")),
-                            SizedBox(width: 15),
-                            ElevatedButton(
-                                onPressed: () {
-                                  gridStateManager?.setFilter((element) =>
-                                  gridStateManager?.currentCell == null
-                                      ? true
-                                      : element
-                                      .cells[gridStateManager?.currentCell!
-                                      .column
-                                      .field]!
-                                      .value !=
-                                      gridStateManager?.currentCell!.value);
-                                },
-                                child: Text("XF")),
-                            SizedBox(width: 15),
-                            ElevatedButton(
-                                onPressed: () {
-                                  gridStateManager?.setFilter((
-                                      element) => true);
-                                },
-                                child: Text("RF")),
-                            SizedBox(width: 15),
-                            ElevatedButton(
-                                onPressed: () {
-                                  customFilter(gridStateManager!);
-                                },
-                                child: Text("CF")),
-                          ],
-                        ),
-                      ),
-                    ],
-                  ),
-                ),
-              ),
-            ),
-          );
-        });
-  }
 
   customFilter(PlutoGridStateManager stateManager) {
     List _allValues = [];
@@ -5171,5 +4779,196 @@ class TransmissionLogController extends GetxController {
               icon: Icon(Icons.done),
               label: Text("Filter")),
         ]);
+  }
+
+
+  Future<bool>? showDeletedSegmentDialog() {
+    Completer<bool> completer = Completer();
+    initialOffset.value = 2;
+    dialogWidget = Material(
+      color: Colors.white,
+      child: SizedBox(
+        width: Get.width * 0.45,
+        child: Column(
+          children: [
+            Container(
+              height: 30,
+              color: Colors.grey[200],
+              child: Stack(
+                fit: StackFit.expand,
+                // alignment: Alignment.center,
+                children: [
+                  Align(
+                    alignment: Alignment.center,
+                    child: Text(
+                      'Deleted Segments',
+                      style: TextStyle(
+                        fontWeight: FontWeight.w600,
+                        color: Colors.black,
+                        fontSize: 20,
+                      ),
+                    ),
+                  ),
+                  Align(
+                    alignment: Alignment.topRight,
+                    child: Padding(
+                      padding: const EdgeInsets.only(bottom: 8.0, top: 0),
+                      child: InkWell(
+                        onTap: () {
+                          dialogWidget = null;
+                          canDialogShow.value = false;
+                        },
+                        child: Icon(
+                          Icons.close,
+                        ),
+                      ),
+                    ),
+                  ),
+                ],
+              ),
+            ),
+            SizedBox(
+              height: Get.height * 0.64,
+              child: SingleChildScrollView(
+                child: SizedBox(
+                  width: Get.width * 0.45,
+                  // height: Get.he,
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.center,
+                    children: <Widget>[
+                      SizedBox(
+                        height: 15,
+                      ),
+                      const Text(
+                        "Below segments are deleted. Are your sure you want to proceed further?",
+                        style: TextStyle(
+                            fontWeight: FontWeight.w600, fontSize: 18),
+                      ),
+                      SizedBox(
+                        height: 15,
+                      ),
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                          DailogCloseButton(
+                              autoFocus: false,
+                              callback: () {
+                                dialogWidget = null;
+                                canDialogShow.value = false;
+                                completer.complete(false);
+                              },
+                              btnText: "No"),
+                          SizedBox(
+                            width: 20,
+                          ),
+                          DailogCloseButton(
+                              autoFocus: false,
+                              callback: () {
+                                dialogWidget = null;
+                                canDialogShow.value = false;
+                                completer.complete(true);
+                              },
+                              btnText: "Yes"),
+                        ],
+                      ),
+                      SizedBox(
+                        height: 20,
+                      ),
+                      GetBuilder<TransmissionLogController>(
+                          id: "deleteList",
+                          init: this,
+                          builder: (controller) {
+                            return SizedBox(
+                              // width: 500,
+                              width: Get.width * 0.45,
+                              height: Get.height * 0.37,
+                              child: (deletedSegmentData != null &&
+                                  deletedSegmentData.length > 0)
+                                  ? DataGridFromMap(
+                                  hideCode: false,
+                                  formatDate: false,
+                                  // checkRow: true,
+                                  showSrNo: false,
+                                  mode: PlutoGridMode.normal,
+                                  // checkRowKey: "eventtype",
+                                  onload: (PlutoGridOnLoadedEvent load) {
+                                    deleteSegment =
+                                        load.stateManager;
+                                    load.stateManager
+                                        .setGridMode(PlutoGridMode.normal);
+                                    load.stateManager.setSelectingMode(
+                                        PlutoGridSelectingMode.row);
+                                    // load.stateManager.setSelecting(true);
+                                    load.stateManager.toggleSelectingRow(0);
+                                  },
+                                  witdthSpecificColumn: (controller
+                                      .userDataSettings?.userSetting
+                                      ?.firstWhere(
+                                          (element) =>
+                                      element.controlName ==
+                                          "deletedSegmentData",
+                                      orElse: () => UserSetting())
+                                      .userSettings),
+                                  // colorCallback: (renderC) => Colors.red[200]!,
+                                  onRowDoubleTap:
+                                      (PlutoGridOnRowDoubleTapEvent tap) {
+                                    gridStateManager?.insertRows(
+                                        int.tryParse(tap
+                                            .row
+                                            .cells["rownumber"]
+                                            ?.value) ??
+                                            0,
+                                        [tap.row]);
+                                    deleteSegment
+                                        ?.removeCurrentRow();
+                                    deletedSegmentData
+                                        .removeAt(tap.rowIdx);
+                                    gridStateManager?.setCurrentCell(gridStateManager?.rows[int.tryParse(tap
+                                        .row
+                                        .cells["rownumber"]
+                                        ?.value) ??
+                                        0].cells["no"], int.tryParse(tap
+                                        .row
+                                        .cells["rownumber"]
+                                        ?.value) ??
+                                        0);
+                                    deleteSegment
+                                        ?.gridFocusNode.requestFocus();
+                                    update(["deleteList"]);
+                                  },
+                                  colorCallback: (colorData) {
+                                    if (controller
+                                        .deleteSegment?.currentRowIdx ==
+                                        colorData.rowIdx) {
+                                      return Color(0xFFD1C4E9);
+                                    } else {
+                                      return Colors.transparent;
+                                    }
+                                  },
+                                  mapData: (controller.deletedSegmentData
+                                      .map((e) => e.toJson())
+                                      .toList()))
+                              // _dataTable3()
+                                  : const WarningBox(
+                                  text:
+                                  'Enter Location, Channel & Date to get the Break Definitions'),
+                            );
+                          }),
+                      Padding(
+                        padding: const EdgeInsets.all(18.0),
+                        child: Text(
+                            "Info: If you want to undo deleted row then you need to double tap on it. It will again add where you deleted it"),
+                      )
+                    ],
+                  ),
+                ),
+              ),
+            ),
+          ],
+        ),
+      ),
+    );
+    canDialogShow.value = true;
+    return completer.future;
   }
 }

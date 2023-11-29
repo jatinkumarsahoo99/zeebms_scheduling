@@ -955,6 +955,7 @@ class InputFields {
     required double widthRatio,
     double? height,
     double? paddingLeft,
+    double? paddingTop,
     Function? onEditComplete,
     // Function? onChange,
     // FocusNode? focusNode,
@@ -962,6 +963,7 @@ class InputFields {
     Function(String)? onchanged,
     bool isTime = false,
     bool isEnable = true,
+    bool isTitleReq = true,
     FocusNode? textFieldFN,
   }) {
     if (controller.text.isEmpty) {
@@ -974,6 +976,8 @@ class InputFields {
           controller,
           widthRatio: widthRatio,
           isTime: isTime,
+          titleReq: isTitleReq,
+          paddingTop: paddingTop ?? 15,
           isEnable: isEnable,
           textFieldFN: textFieldFN,
           onFocusChange: (time) {
@@ -1209,6 +1213,8 @@ class InputFields {
     double widthRatio = .4,
     void Function(String time)? onFocusChange,
     bool isTime = true,
+    bool titleReq = true,
+    double? paddingTop,
     FocusNode? textFieldFN,
   }) {
     bool backSpaceEnter = false;
@@ -1364,7 +1370,9 @@ class InputFields {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            Text(title, style: TextStyle(color: textColor, fontSize: 10)),
+            titleReq
+                ? Text(title, style: TextStyle(color: textColor, fontSize: 10))
+                : SizedBox.shrink(),
             // LabelText.style(
             //     hint: title, txtColor: isEnable ? Colors.black : Colors.grey),
             const SizedBox(height: 5),
@@ -1383,7 +1391,8 @@ class InputFields {
                   focusedBorder: border,
                   counter: null,
                   counterText: "",
-                  contentPadding: EdgeInsets.only(left: 10, top: 15, bottom: 5),
+                  contentPadding: EdgeInsets.only(
+                      left: 10, top: paddingTop ?? 15, bottom: 5),
                 ),
                 cursorColor: Colors.deepPurpleAccent,
                 onChanged: (value) {
@@ -2926,7 +2935,6 @@ class InputFields {
             style: TextStyle(fontSize: 12, color: Colors.grey.shade600),
             onChanged: (v) {
               onChange!(v);
-
             },
             inputFormatters: [
               LengthLimitingTextInputFormatter(

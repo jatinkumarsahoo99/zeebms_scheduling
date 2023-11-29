@@ -2462,6 +2462,509 @@ class DataGridMenu {
         break;
     }
   }
+
+
+  showGridTransmissionLogFindOption(PlutoGridStateManager stateManager,
+      BuildContext context) async {
+    customFilter(PlutoGridStateManager stateManager) {
+      List _allValues = [];
+      var _selectedValues = RxList([]);
+      print("1st foucus Added");
+      if (stateManager.currentCell == null &&
+          ((stateManager.rows.length ?? 0) > 0)) {
+        stateManager.setCurrentCell(
+            (stateManager.rows[0].cells.values.first), 0);
+      }
+      if (stateManager.currentCell != null) {
+        _allValues = stateManager.rows
+            .map((e) =>
+            e.cells[stateManager.currentCell!.column.field]!.value
+                .toString())
+            .toSet()
+            .toList();
+      }
+      Get.defaultDialog(
+          title: "Custom Filter",
+          content: SizedBox(
+            width: Get.width / 2,
+            height: Get.height / 2,
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Text(stateManager.currentColumn?.title ?? "null"),
+                const SizedBox(height: 5),
+                Expanded(
+                  child: ListView.builder(
+                    controller: ScrollController(),
+                    shrinkWrap: true,
+                    itemBuilder: ((context, index) {
+                      return Obx(
+                            () =>
+                            Card(
+                              color: _selectedValues.contains(_allValues[index])
+                                  ? Colors.deepPurple
+                                  : Colors.white,
+                              child: InkWell(
+                                focusColor: Colors.deepPurple[200],
+                                canRequestFocus: true,
+                                onTap: () {
+                                  if (_selectedValues.contains(
+                                      _allValues[index])) {
+                                    _selectedValues.remove(_allValues[index]);
+                                  } else {
+                                    _selectedValues.add(_allValues[index]);
+                                  }
+                                },
+                                child: Padding(
+                                  padding: const EdgeInsets.all(8),
+                                  child: Text(
+                                    _allValues[index],
+                                    style:
+                                    _selectedValues.contains(_allValues[index])
+                                        ? TextStyle(
+                                        fontWeight: FontWeight.bold,
+                                        fontSize: 12,
+                                        color: Colors.white)
+                                        : TextStyle(
+                                      fontSize: 12,
+                                    ),
+                                  ),
+                                ),
+                              ),
+                            ),
+                      );
+                    }),
+                    itemCount: _allValues.length,
+                  ),
+                ),
+              ],
+            ),
+          ),
+          actions: [
+            ElevatedButton.icon(
+                onPressed: () {
+                  Get.back();
+                },
+                icon: Icon(Icons.clear_rounded),
+                label: Text("Cancel")),
+            ElevatedButton.icon(
+                onPressed: () {
+                  stateManager.setFilter((element) =>
+                      _selectedValues.any(
+                              (value) =>
+                          value ==
+                              element.cells[stateManager.currentCell!.column
+                                  .field]!
+                                  .value
+                                  .toString()));
+                  Get.back();
+                },
+                icon: Icon(Icons.done),
+                label: Text("Filter")),
+          ]);
+    }
+
+
+    showBottomSheet(
+        context: context,
+        builder: (context) {
+          var forFN = FocusNode();
+          /*WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
+            stateManager.gridFocusNode.unfocus();
+            forFN.requestFocus();
+          });*/
+          var _selectedColumn = stateManager.currentColumn?.field ?? "";
+          DropDownValue _preselectedColumn = DropDownValue(
+              key: stateManager.currentColumn?.field ?? "",
+              value: stateManager.currentColumn?.title ?? "");
+          TextEditingController _findctrl = TextEditingController();
+          var _almost = RxBool(true);
+          var _fromstart = RxBool(false);
+          int _index = stateManager.currentRowIdx ?? 0;
+          return Card(
+            child: Padding(
+              padding: EdgeInsets.zero,
+              child: Container(
+                width: Get.width,
+                height: 50,
+                child: FocusTraversalGroup(
+                  policy: OrderedTraversalPolicy(),
+                  child: Row(
+                    // mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                    mainAxisSize: MainAxisSize.min,
+                    crossAxisAlignment: CrossAxisAlignment.end,
+                    children: [
+                      FocusTraversalOrder(
+                        order: NumericFocusOrder(1),
+                        child: Row(
+                          children: [
+                            Text(
+                              "Column",
+                              // style: TextStyle(
+                              //   fontSize: SizeDefine.labelSize1,
+                              //   color: Colors.black,
+                              //   fontWeight: FontWeight.w500,
+                              // ),
+                            ),
+                            const SizedBox(width: 5),
+                            DropDownField.formDropDown1WidthMap(
+                              stateManager.columns
+                                  .map((e) =>
+                                  DropDownValue(
+                                      key: e.field, value: e.title))
+                                  .toList(),
+                                  (value) {
+                                _selectedColumn = value.key!;
+                                _preselectedColumn = value;
+                              },
+                              "Column",
+                              0.15,
+                              selected: _preselectedColumn,
+                              // context,
+                              showtitle: false,
+                            ),
+                          ],
+                        ),
+                      ),
+                      SizedBox(width: 15),
+                      FocusTraversalOrder(
+                        order: NumericFocusOrder(2),
+                        child: Row(
+                          // crossAxisAlignment: CrossAxisAlignment.center,
+                          // mainAxisAlignment: MainAxisAlignment.center,
+                          children: [
+                            Padding(
+                              padding: const EdgeInsets.only(top: 24),
+                              child: Text(
+                                "For",
+                                // style: TextStyle(
+                                //   fontSize: SizeDefine.labelSize1,
+                                //   color: Colors.black,
+                                //   fontWeight: FontWeight.w500,
+                                // ),
+                              ),
+                            ),
+                            const SizedBox(width: 5),
+                            InputFields.formField1(
+                                hintTxt: "For",
+                                controller: _findctrl,
+                                width: 0.15,
+                                focusNode: forFN,
+                                showTitle: false),
+                          ],
+                        ),
+                      ),
+                      SizedBox(width: 15),
+                      FocusTraversalOrder(
+                          order: NumericFocusOrder(3),
+                          child: Row(
+                            crossAxisAlignment: CrossAxisAlignment.center,
+                            // mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                            mainAxisSize: MainAxisSize.max,
+                            children: [
+                              InkWell(
+                                  onTap: () {
+                                    _almost.value = !_almost.value;
+                                  },
+                                  child: Obx(
+                                        () =>
+                                        Icon(_almost.value
+                                            ? Icons.check_box_outlined
+                                            : Icons
+                                            .check_box_outline_blank_rounded),
+                                  )),
+                              Text("Almost"),
+                            ],
+                          )),
+                      const SizedBox(width: 5),
+                      FocusTraversalOrder(
+                          order: NumericFocusOrder(4),
+                          child: Row(
+                            crossAxisAlignment: CrossAxisAlignment.center,
+                            // mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                            mainAxisSize: MainAxisSize.max,
+                            children: [
+                              InkWell(
+                                  onTap: () {
+                                    _fromstart.value = !_fromstart.value;
+                                  },
+                                  child: Obx(
+                                        () =>
+                                        Icon(_fromstart.value
+                                            ? Icons.check_box_outlined
+                                            : Icons
+                                            .check_box_outline_blank_rounded),
+                                  )),
+                              Text("From Start")
+                            ],
+                          )),
+                      const SizedBox(width: 15),
+                      Transform.scale(
+                        scale: .85,
+                        child: Row(
+                          children: [
+                            ElevatedButton.icon(
+                                label: Text(""),
+                                onPressed: () {
+                                  if (_findctrl.text != "" &&
+                                      _selectedColumn != "") {
+                                    if (_fromstart.value) {
+                                      _index = -1;
+                                    }
+                                    var _slecetedRow = _almost.value
+                                        ? stateManager.rows.firstWhereOrNull(
+                                            (element) =>
+                                        (element
+                                            .cells[_selectedColumn]!
+                                            .value
+                                            .toString()
+                                            .toLowerCase()
+                                            .trim()
+                                            .contains(_findctrl.text
+                                            .toLowerCase()
+                                            .trim()) &&
+                                            (element.sortIdx > _index)))
+                                        : stateManager.rows.firstWhereOrNull((
+                                        element) =>
+                                    (element.cells[_selectedColumn]!.value
+                                        .toString().toLowerCase().trim() ==
+                                        _findctrl.text.toLowerCase().trim() &&
+                                        (element.sortIdx > _index)));
+
+                                    if (_slecetedRow == null) {
+                                      stateManager.resetScrollToZero();
+
+                                      Get.defaultDialog(
+                                          content: Text(
+                                              "You Have reach the end !\nDo u want to restart?"),
+                                          actions: [
+                                            ElevatedButton.icon(
+                                                onPressed: () {
+                                                  _index = 0;
+                                                  stateManager
+                                                      .resetScrollToZero();
+                                                  Get.back();
+                                                  var _slecetedRow = _almost
+                                                      .value
+                                                      ? stateManager.rows
+                                                      .firstWhereOrNull((
+                                                      element) =>
+                                                  (element
+                                                      .cells[
+                                                  _selectedColumn]!
+                                                      .value
+                                                      .toString()
+                                                      .toLowerCase()
+                                                      .trim()
+                                                      .contains(_findctrl.text
+                                                      .toLowerCase()
+                                                      .trim()) &&
+                                                      (_index == 0 ||
+                                                          element.sortIdx >
+                                                              (_index ??
+                                                                  0))))
+                                                      : stateManager.rows
+                                                      .firstWhere((element) =>
+                                                  (element
+                                                      .cells[_selectedColumn]!
+                                                      .value.toString()
+                                                      .toLowerCase()
+                                                      .trim() == _findctrl.text
+                                                      .toLowerCase().trim() &&
+                                                      (_index == 0 ||
+                                                          element.sortIdx >
+                                                              (_index ?? 0))));
+                                                  print(_slecetedRow!
+                                                      .cells[
+                                                  _selectedColumn]!
+                                                      .value
+                                                      .toString() +
+                                                      _slecetedRow
+                                                          .cells[
+                                                      _selectedColumn]!
+                                                          .value
+                                                          .runtimeType
+                                                          .toString());
+                                                  _index =
+                                                      _slecetedRow.sortIdx;
+                                                  stateManager
+                                                      .resetScrollToZero();
+
+                                                  stateManager
+                                                      .moveScrollByRow(
+                                                      PlutoMoveDirection
+                                                          .down,
+                                                      _slecetedRow
+                                                          .sortIdx -
+                                                          1);
+
+                                                  stateManager
+                                                      .setKeepFocus(false);
+                                                  // for (var element in stateManager
+                                                  //     .rows) {
+                                                  //   stateManager
+                                                  //       .setRowChecked(
+                                                  //       element, false,
+                                                  //       notify: false);
+                                                  // }
+                                                  // stateManager
+                                                  //     .setRowChecked(
+                                                  //     _slecetedRow, true,
+                                                  //     notify: true);
+                                                  stateManager.setCurrentCell(
+                                                      _slecetedRow.cells[
+                                                      _selectedColumn],
+                                                      _slecetedRow.sortIdx);
+                                                },
+                                                icon: Icon(Icons.done),
+                                                label: Text("YES")),
+                                            ElevatedButton.icon(
+                                                onPressed: () {
+                                                  Get.back();
+                                                },
+                                                icon: Icon(Icons.clear),
+                                                label: Text("NO")),
+                                          ]);
+                                    } else {
+                                      if (_fromstart.value) {
+                                        _fromstart.value = false;
+                                      }
+                                      _index = _slecetedRow.sortIdx;
+                                      stateManager.resetScrollToZero();
+                                      if (_index <= 10) {
+                                        stateManager.moveScrollByRow(
+                                            PlutoMoveDirection.up,
+                                            _slecetedRow.sortIdx);
+                                      } else {
+                                        stateManager.moveScrollByRow(
+                                            PlutoMoveDirection.down,
+                                            _slecetedRow.sortIdx);
+                                      }
+                                      stateManager.setKeepFocus(false);
+                                      stateManager.setCurrentCell(
+                                          _slecetedRow
+                                              .cells[_selectedColumn],
+                                          _slecetedRow.sortIdx);
+                                      // print(_slecetedRow
+                                      //         .cells[_selectedColumn]!.value
+                                      //         .toString() +
+                                      //     _slecetedRow
+                                      //         .cells[_selectedColumn]!
+                                      //         .value
+                                      //         .runtimeType
+                                      //         .toString());
+                                      // print("Index selected is>>" +
+                                      //     _slecetedRow.sortIdx.toString());
+                                      // if (_slecetedRow.sortIdx == 0) {
+                                      //   _index = 1;
+                                      // } else {
+                                      //   _index = _slecetedRow.sortIdx;
+                                      // }
+
+                                      // stateManager.resetScrollToZero();
+                                      // stateManager.moveScrollByRow(
+                                      //     PlutoMoveDirection.down,
+                                      //     _slecetedRow.sortIdx);
+                                      // stateManager.setKeepFocus(false);
+                                      // for (var element in stateManager
+                                      //     .rows) {
+                                      //   stateManager.setRowChecked(
+                                      //       element, false, notify: false);
+                                      // }
+                                      // stateManager.setRowChecked(
+                                      //     _slecetedRow, true, notify: true);
+                                      // if (stateManager.currentRow != null &&
+                                      //     stateManager
+                                      //             .currentRow?.sortIdx ==
+                                      //         0 &&
+                                      //     _slecetedRow.sortIdx == 2) {
+                                      //   stateManager.setCurrentCell(
+                                      //       stateManager
+                                      //           .getRowByIdx(
+                                      //               _slecetedRow.sortIdx -
+                                      //                   1)
+                                      //           ?.cells[_selectedColumn],
+                                      //       _slecetedRow.sortIdx - 1);
+                                      // } else {
+                                      //   stateManager.setCurrentCell(
+                                      //       _slecetedRow
+                                      //           .cells[_selectedColumn],
+                                      //       _slecetedRow.sortIdx);
+                                      // }
+                                    }
+                                  }
+                                },
+                                icon: Icon(Icons
+                                    .keyboard_double_arrow_right_rounded)),
+                            SizedBox(width: 15),
+                            ElevatedButton.icon(
+                                label: Text(""),
+                                onPressed: () {
+                                  // for (var element in stateManager
+                                  //     .rows) {
+                                  //   stateManager
+                                  //       .setRowChecked(
+                                  //       element, false,
+                                  //       notify: false);
+                                  // }
+                                  Navigator.pop(context);
+                                },
+                                icon: Icon(Icons.clear_outlined)),
+                            SizedBox(width: 15),
+                            ElevatedButton(
+                                onPressed: () {
+                                  stateManager.setFilter((element) =>
+                                  stateManager.currentCell == null
+                                      ? true
+                                      : element
+                                      .cells[stateManager
+                                      .currentCell!
+                                      .column
+                                      .field]!
+                                      .value ==
+                                      stateManager
+                                          .currentCell!.value);
+                                },
+                                child: Text("FS")),
+                            SizedBox(width: 15),
+                            ElevatedButton(
+                                onPressed: () {
+                                  stateManager.setFilter((element) =>
+                                  stateManager.currentCell == null
+                                      ? true
+                                      : element
+                                      .cells[stateManager
+                                      .currentCell!
+                                      .column
+                                      .field]!
+                                      .value !=
+                                      stateManager
+                                          .currentCell!.value);
+                                },
+                                child: Text("XF")),
+                            SizedBox(width: 15),
+                            ElevatedButton(
+                                onPressed: () {
+                                  stateManager.setFilter((element) => true);
+                                },
+                                child: Text("RF")),
+                            SizedBox(width: 15),
+                            ElevatedButton(
+                                onPressed: () {
+                                  customFilter(stateManager);
+                                },
+                                child: Text("CF")),
+                          ],
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+              ),
+            ),
+          );
+        });
+  }
 }
 
 enum DataGridMenuItem {
