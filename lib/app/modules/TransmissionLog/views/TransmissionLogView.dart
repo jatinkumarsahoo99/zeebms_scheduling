@@ -343,10 +343,13 @@ class TransmissionLogView extends StatelessWidget {
                                       orElse: () => UserSetting())
                                   .userSettings),
                               hideCode: false,
+                              onContextReturn: (context1) {
+                                controller.contextGrid = context1;
+                              },
                               draggableKeys: ["transmissionTime"],
                               cellColorCallback: (cell) {
                                 if (cell.cell.column.field != "fpCtime") {
-                                  return Colors.blue.shade700;
+                                  return Color(0xFF2979FF);
                                 } else {
                                   PlutoRow currentRow =
                                       cell.stateManager.rows[cell.rowIdx];
@@ -475,7 +478,6 @@ class TransmissionLogView extends StatelessWidget {
                                           .value,
                                       controller.selectedIndex);
                                 }
-
 
 /*
                                 /////////////19 Oct 23 : By Sanjaya ///////////
@@ -802,6 +804,7 @@ class TransmissionLogView extends StatelessWidget {
           {"gridStateManager": controller.gridStateManager},
           {"gridStateManagerCommercial": controller.gridStateManagerCommercial},
           {"dgvCommercialsStateManager": controller.dgvCommercialsStateManager},
+          {"deleteSegment": controller.deleteSegment},
           {"dgvTimeStateManager": controller.dgvTimeStateManager},
           {"tblFastInsert": controller.tblFastInsert},
           {"tblSegement": controller.tblSegement},
@@ -1658,13 +1661,17 @@ class TransmissionLogView extends StatelessWidget {
                   ),
                   Align(
                     alignment: Alignment.topRight,
-                    child: IconButton(
-                      splashRadius: 20,
-                      onPressed: () {
-                        controller.dialogWidget = null;
-                        controller.canDialogShow.value = false;
-                      },
-                      icon: const Icon(Icons.close),
+                    child: Padding(
+                      padding: const EdgeInsets.only(bottom: 8.0, top: 0),
+                      child: InkWell(
+                        onTap: () {
+                          controller.dialogWidget = null;
+                          controller.canDialogShow.value = false;
+                        },
+                        child: Icon(
+                          Icons.close,
+                        ),
+                      ),
                     ),
                   ),
                 ],
@@ -1680,33 +1687,37 @@ class TransmissionLogView extends StatelessWidget {
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: <Widget>[
                       Wrap(
-                        crossAxisAlignment: WrapCrossAlignment.center,
+                        crossAxisAlignment: WrapCrossAlignment.start,
                         runSpacing: 1,
                         spacing: 1,
                         children: [
                           Obx(
-                            () => DropDownField.formDropDown1WidthMap(
-                              controller.listEventsinInsert.value,
-                              (value) {
-                                controller.selectEvent = value;
-                                // controller.selectedLocationId.text = value.key!;
-                                // controller.selectedLocationName.text = value.value!;
-                                // controller.getChannelsBasedOnLocation(value.key!);
-                              },
-                              "Event",
-                              0.13,
-                              // isEnable: controller.isEnable.value,
-                              // selected: controller.selectLocation,
-                              autoFocus: true,
-                              // dialogWidth: 330,
-                              dialogHeight: Get.height * .7,
+                            () => Padding(
+                              padding: const EdgeInsets.only(left: 3.0),
+                              child: DropDownField.formDropDown1WidthMap(
+                                controller.listEventsinInsert.value,
+                                (value) {
+                                  controller.selectEvent = value;
+                                  // controller.selectedLocationId.text = value.key!;
+                                  // controller.selectedLocationName.text = value.value!;
+                                  // controller.getChannelsBasedOnLocation(value.key!);
+                                },
+                                "Event",
+                                0.19,
+
+                                // isEnable: controller.isEnable.value,
+                                // selected: controller.selectLocation,
+                                autoFocus: true,
+                                // dialogWidth: 330,
+                                dialogHeight: Get.height * .7,
+                              ),
                             ),
                           ),
                           SizedBox(
-                            width: 10,
+                            width: 5,
                           ),
                           InputFields.formField1(
-                              width: 0.13,
+                              width: 0.246,
                               onchanged: (value) {},
                               hintTxt: "TX Caption",
                               margin: true,
@@ -1722,12 +1733,13 @@ class TransmissionLogView extends StatelessWidget {
                               // maxLines: 2000,
                               maxLen: 999999,
                               controller: controller.txId_),*/
-                          InputFields.formField1Width(
-                            widthRatio: 0.13,
+                          InputFields.formField1WidthBox(
+                            widthRatio: 0.44,
                             paddingLeft: 5,
                             hintTxt: "TX Id",
                             controller: controller.txId_,
                             maxLen: 999999,
+                            height: 50,
                           ),
                           SizedBox(
                             width: 10,
@@ -1739,7 +1751,7 @@ class TransmissionLogView extends StatelessWidget {
                                 SizedBox(width: 5),
                                 Obx(
                                   () => Padding(
-                                    padding: const EdgeInsets.only(top: 15.0),
+                                    padding: const EdgeInsets.only(top: 7.0),
                                     child: Checkbox(
                                       value: controller.isMy.value,
                                       onChanged: (val) {
@@ -1752,7 +1764,7 @@ class TransmissionLogView extends StatelessWidget {
                                 ),
                                 Padding(
                                   padding:
-                                      const EdgeInsets.only(top: 15.0, left: 5),
+                                      const EdgeInsets.only(top: 7.0, left: 5),
                                   child: Text(
                                     "My",
                                     style: TextStyle(
@@ -1763,7 +1775,7 @@ class TransmissionLogView extends StatelessWidget {
                             ),
                           ),
                           Padding(
-                            padding: const EdgeInsets.only(top: 15.0, left: 10),
+                            padding: const EdgeInsets.only(top: 10.0, left: 10),
                             child: FormButtonWrapper1(
                               btnText: "Search",
                               showIcon: false,
@@ -1783,7 +1795,7 @@ class TransmissionLogView extends StatelessWidget {
                             ),
                           ),
                           Padding(
-                            padding: const EdgeInsets.only(top: 15.0, left: 10),
+                            padding: const EdgeInsets.only(top: 10.0, left: 10),
                             child: FormButtonWrapper1(
                               btnText: "Add",
                               showIcon: false,
@@ -1802,7 +1814,7 @@ class TransmissionLogView extends StatelessWidget {
                               children: [
                                 SizedBox(width: 5),
                                 Obx(() => Padding(
-                                      padding: const EdgeInsets.only(top: 15.0),
+                                      padding: const EdgeInsets.only(top: 7.0),
                                       child: Checkbox(
                                         value: controller.isInsertAfter.value,
                                         onChanged: (val) {
@@ -1814,7 +1826,7 @@ class TransmissionLogView extends StatelessWidget {
                                     )),
                                 Padding(
                                   padding:
-                                      const EdgeInsets.only(top: 15.0, left: 5),
+                                      const EdgeInsets.only(top: 7.0, left: 5),
                                   child: Text(
                                     "Insert After",
                                     style: TextStyle(
@@ -1825,16 +1837,21 @@ class TransmissionLogView extends StatelessWidget {
                             ),
                           ),
                           SizedBox(
-                            width: 10,
+                            width: 140,
                           ),
-                          InputFields.formFieldNumberMask(
-                              hintTxt: "",
-                              controller: controller.insertDuration_
-                                ..text = "00:00:00:00",
-                              widthRatio: 0.13,
-                              isTime: false,
-                              isEnable: false,
-                              paddingLeft: 0),
+                          Padding(
+                            padding: EdgeInsets.only(top: 7),
+                            child: InputFields.formFieldNumberMask(
+                                hintTxt: "",
+                                controller: controller.insertDuration_
+                                  ..text = "00:00:00:00",
+                                widthRatio: 0.13,
+                                isTime: false,
+                                isTitleReq: false,
+                                // paddingTop: 40,
+                                isEnable: false,
+                                paddingLeft: 0),
+                          ),
                         ],
                       ),
                       SizedBox(
@@ -1847,7 +1864,7 @@ class TransmissionLogView extends StatelessWidget {
                             return SizedBox(
                               // width: 500,
                               width: Get.width * 0.45,
-                              height: Get.height * 0.43,
+                              height: Get.height * 0.39,
                               child: (controller.inserSearchModel != null &&
                                       controller.inserSearchModel?.lstListMyEventData !=
                                           null &&
@@ -1942,6 +1959,9 @@ class TransmissionLogView extends StatelessWidget {
                       ),
                       Wrap(
                         children: [
+                          SizedBox(
+                            width: 5,
+                          ),
                           InputFields.formField1(
                               width: 0.1,
                               onchanged: (value) {},
@@ -2006,14 +2026,14 @@ class TransmissionLogView extends StatelessWidget {
                               ],
                             ),
                           ),
-                          SizedBox(width: 5),
+                          SizedBox(width: 10),
                           InputFields.formFieldNumberMask(
                               hintTxt: "From",
                               controller: controller.fromReplaceInsert_,
                               widthRatio: 0.1,
                               isTime: true,
                               isEnable: false,
-                              paddingLeft: 0),
+                              paddingLeft: 7),
                           SizedBox(width: 10),
                           /*FormButtonWrapper(
                             btnText: "",

@@ -20,6 +20,7 @@ class DataGridFromMapTransmissionLog extends StatelessWidget {
       {Key? key,
       required this.mapData,
       this.colorCallback,
+      this.onContextReturn,
       this.showSrNo = false,
       this.hideCode = true,
       this.widthRatio,
@@ -62,16 +63,25 @@ class DataGridFromMapTransmissionLog extends StatelessWidget {
   final List? hideKeys;
   final String? exportFileName;
   final Function(PlutoGridOnSelectedEvent)? onSelected;
+  final Function(BuildContext)? onContextReturn;
   final double? widthRatio;
   final IconData? actionIcon;
   final String? actionIconKey;
   final Function? actionOnPress;
+
+  // final Function? onFindPress;
   Color Function(PlutoRowColorContext)? colorCallback;
   Function(PlutoGridOnLoadedEvent)? onload;
   List<String>? draggableKeys;
 
+  DataGridMenu gridMenu = DataGridMenu();
+
   @override
   Widget build(BuildContext context) {
+    if (onContextReturn != null) {
+      onContextReturn!(context);
+    }
+
     FocusNode _focusNode = FocusNode();
     GlobalKey _globalKey = GlobalKey();
     List<PlutoColumn> segColumn = [];
@@ -289,7 +299,7 @@ class DataGridFromMapTransmissionLog extends StatelessWidget {
             }
 
             // Checking PRoduct Group back to back
-            if (key == "RosTimeBand" &&
+            if (key == "rosTimeBand" &&
                 (cells["rosTimeBand"]?.value != null &&
                     cells["rosTimeBand"]?.value != "")) {
               List<String>? ros =
@@ -308,7 +318,7 @@ class DataGridFromMapTransmissionLog extends StatelessWidget {
               String? txTime =
                   cells["transmissionTime"]?.value.toString().substring(0, 8);
 
-              if ((((txTime?.compareTo(rosStart) == 1) &&
+              /*if ((((txTime?.compareTo(rosStart) == 1) &&
                       (midRosEnd.compareTo(txTime!) == 1)) ||
                   ((txTime?.compareTo(midRosStart) == 1) &&
                       (midRosEnd.compareTo(txTime!) == 1)))) {
@@ -323,6 +333,17 @@ class DataGridFromMapTransmissionLog extends StatelessWidget {
                       " ////" +
                       isBold.toString());
                 }
+              }*/
+              if (((txTime?.compareTo(rosStart) ?? 0) > 0 &&
+                      (txTime?.compareTo(midRosEnd) ?? 0) < 0) ||
+                  ((txTime?.compareTo(midRosStart) ?? 0) > 0 &&
+                      (txTime?.compareTo(midRosEnd) ?? 0) < 0)) {
+              } else {
+                isBold = true;
+                print("RosTimeBand Index is>> " +
+                    rendererContext.rowIdx.toString() +
+                    " ////" +
+                    isBold.toString());
               }
             }
 
@@ -369,7 +390,7 @@ class DataGridFromMapTransmissionLog extends StatelessWidget {
                         rendererContext.rowIdx)
                         ? Colors.white
                         : Colors.black,*/
-                    fontWeight: isBold ? FontWeight.w800 : FontWeight.normal,
+                    fontWeight: isBold ? FontWeight.w900 : FontWeight.normal,
                   ),
                 ),
               ),
@@ -436,7 +457,8 @@ class DataGridFromMapTransmissionLog extends StatelessWidget {
             if (notification is ScrollUpdateNotification) {
               // Handle scroll updates here
               final scrollPosition = notification.metrics.pixels;
-              Get.find<TransmissionLogController>().findVisibleRows(scrollPosition);
+              Get.find<TransmissionLogController>()
+                  .findVisibleRows(scrollPosition);
               // Do something with the visible rows
             }
             return false;
