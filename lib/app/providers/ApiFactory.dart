@@ -1457,7 +1457,7 @@ class ApiFactory {
   static String NEW_SHORT_CONTENT_SAVE = "$BASE_URL/api/ShortCode/SaveRecords";
   static String NEW_SHORT_CONTENT_RETRIEVE(
           locationCode, channelCode, formCode, houseId, segmentNumber) =>
-      "$BASE_URL/api/ShortCode/GetRetrivedRecords?LocationCode=$locationCode&ChannelCode=$channelCode&FormCode=$formCode&HouseId=$houseId&SegmentNumber=$segmentNumber";
+      "$BASE_URL/api/ShortCode/GetRetrivedRecords?LocationCode=$locationCode&ChannelCode=$channelCode&SSVName=$formCode&HouseId=$houseId&SegmentNumber=$segmentNumber";
 
   ////////////////////////////////////////////////////////////////////////////////////////
 }

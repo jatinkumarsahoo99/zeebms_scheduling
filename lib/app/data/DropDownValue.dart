@@ -1,6 +1,5 @@
 class DropDownValue {
   String? value;
-
   String? key;
 
   DropDownValue({this.value, this.key});
@@ -11,11 +10,12 @@ class DropDownValue {
   }
 
   DropDownValue.fromJson1(Map<String, dynamic> json) {
-    value = (json['locationName']?? json['name'] ) .toString();
-    key = (json['locationCode'] ?? json['code'] ) .toString();
+    value = (json['locationName'] ?? json['name']).toString();
+    key = (json['locationCode'] ?? json['code']).toString();
   }
 
-  DropDownValue.fromJsonDynamic(Map<String, dynamic> json, String keyData, String name) {
+  DropDownValue.fromJsonDynamic(
+      Map<String, dynamic> json, String keyData, String name) {
     value = json[name].toString();
     key = json[keyData].toString();
   }

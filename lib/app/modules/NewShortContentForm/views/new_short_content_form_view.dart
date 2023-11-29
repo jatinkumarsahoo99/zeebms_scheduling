@@ -60,33 +60,35 @@ class NewShortContentFormView extends StatelessWidget {
                           controller.channels.value, (value) {
                         controller.selectedChannel.value = value;
                         controller.channelFocusNode.requestFocus();
-                      }, "Channel", .155,
+                      }, "Channel", 0.16,
                           autoFocus: true,
                           inkWellFocusNode: controller.channelFocusNode,
                           selected: controller.selectedChannel.value),
                     ),
-                    Obx(
-                      () => DropDownField.formDropDown1WidthMap(
-                          controller.types.value, (value) {
-                        controller.selectedType.value = value;
-                        controller.tapeFocusNode.requestFocus();
-                        controller.typeleave(value.key);
-                      }, "Type", 0.16,
-                          inkWellFocusNode: controller.typeFocusNode,
-                          autoFocus: true,
-                          selected: controller.selectedType.value),
-                    ),
+                    // Obx(
+                    //   () => DropDownField.formDropDown1WidthMap(
+                    //       controller.types.value, (value) {
+                    //     controller.selectedType.value = value;
+                    //     controller.tapeFocusNode.requestFocus();
+                    //     controller.typeleave(value.key);
+                    //   }, "Type", 0.16,
+                    //       inkWellFocusNode: controller.typeFocusNode,
+                    //       autoFocus: true,
+                    //       selected: controller.selectedType.value),
+                    // ),
                     Obx(
                       () => DropDownField.formDropDown1WidthMap(
                         controller.categeroies.value,
                         (value) {
                           controller.selectedCategory.value = value;
                           controller.categoryFocusNode.requestFocus();
+                          controller.typeleave(value.key);
+                          selectedId(value.value);
                           print(
                               "Key: ${controller.selectedCategory.value!.key}");
                         },
                         "Category",
-                        .155,
+                        0.16,
                         inkWellFocusNode: controller.categoryFocusNode,
                         autoFocus: true,
                         selected: controller.selectedCategory.value,
@@ -110,12 +112,12 @@ class NewShortContentFormView extends StatelessWidget {
                           controller.tapeFocusNode.requestFocus();
                         },
                         "Tape",
-                        .155,
+                        0.16,
                         inkWellFocusNode: controller.tapeFocusNode,
                         selected: controller.selectedTape.value,
                         autoFocus: true,
-                        isEnable: controller.selectedType.value?.value ==
-                                "Vignette Master"
+                        isEnable: controller.selectedCategory.value?.key ==
+                                "VIGNETTE MASTER"
                             ? false
                             : true,
                       ),
@@ -133,11 +135,11 @@ class NewShortContentFormView extends StatelessWidget {
                         selected: controller.selectedOrgRep.value,
                         autoFocus: true,
                         dialogHeight: 250,
-                        isEnable: controller.selectedType.value?.value ==
-                                "Still Master"
+                        isEnable: controller.selectedCategory.value?.key ==
+                                "STILL MASTER"
                             ? false
-                            : controller.selectedType.value?.value ==
-                                    "Slide Master"
+                            : controller.selectedCategory.value?.key ==
+                                    "SLIDE MASTER"
                                 ? false
                                 : true,
                       ),
@@ -154,7 +156,7 @@ class NewShortContentFormView extends StatelessWidget {
                     InputFields.formField1(
                         hintTxt: "House ID",
                         controller: controller.houseId,
-                        width: 0.155,
+                        width: 0.16,
                         focusNode: controller.houseFocusNode),
                     Obx(
                       () => DropDownField.formDropDownSearchAPI2(
@@ -172,8 +174,8 @@ class NewShortContentFormView extends StatelessWidget {
                         selectedValue: controller.selectedProgram.value,
                         width: Get.width * 0.325,
                         dialogHeight: 200,
-                        isEnable: controller.selectedType.value?.value ==
-                                "Slide Master"
+                        isEnable: controller.selectedCategory.value?.key ==
+                                "SLIDE MASTER"
                             ? false
                             : true,
                       ),
@@ -185,7 +187,7 @@ class NewShortContentFormView extends StatelessWidget {
                     // ),
                     InputFields.formFieldNumberMask(
                       hintTxt: "SOM",
-                      widthRatio: .155,
+                      widthRatio: 0.16,
                       controller: controller.som,
                       paddingLeft: 0,
                       // isTime: true
@@ -209,12 +211,12 @@ class NewShortContentFormView extends StatelessWidget {
                       () => DateWithThreeTextField(
                         title: "Start Date",
                         mainTextController: controller.startData,
-                        widthRation: .155,
-                        isEnable: controller.selectedType.value?.value ==
-                                "Still Master"
+                        widthRation: 0.16,
+                        isEnable: controller.selectedCategory.value?.key ==
+                                "STILL MASTER"
                             ? false
-                            : controller.selectedType.value?.value ==
-                                    "Slide Master"
+                            : controller.selectedCategory.value?.key ==
+                                    "SLIDE MASTER"
                                 ? false
                                 : true,
                       ),
@@ -225,11 +227,11 @@ class NewShortContentFormView extends StatelessWidget {
                       widthRation: .155,
                     ),
                     Obx(
-                      () => controller.selectedType.value?.value ==
-                              "Still Master"
+                      () => controller.selectedCategory.value?.key ==
+                              "STILL MASTER"
                           ? defaultCheckBox()
-                          : controller.selectedType.value?.value !=
-                                  "Slide Master"
+                          : controller.selectedCategory.value?.key !=
+                                  "SLIDE MASTER"
                               ? SizedBox(
                                   width: Get.width * 0.16,
                                   child: Row(
@@ -257,12 +259,12 @@ class NewShortContentFormView extends StatelessWidget {
                       () => InputFields.formField1(
                         hintTxt: "Remarks",
                         controller: controller.remark,
-                        width: 0.49,
-                        isEnable: controller.selectedType.value?.value ==
-                                "Still Master"
+                        width: 0.50,
+                        isEnable: controller.selectedCategory.value?.key ==
+                                "STILL MASTER"
                             ? false
-                            : controller.selectedType.value?.value ==
-                                    "Slide Master"
+                            : controller.selectedCategory.value?.key ==
+                                    "SLIDE MASTER"
                                 ? false
                                 : true,
                       ),
@@ -368,6 +370,38 @@ class NewShortContentFormView extends StatelessWidget {
         controller.clearPage();
         Get.find<HomeController>().clearPage1();
         break;
+      default:
+    }
+  }
+
+  selectedId(name) async {
+    switch (name) {
+      case "MARRIDE ID":
+        controller.formId.value = 'A';
+        break;
+      case "NETWORK ID":
+        controller.formId.value = 'W';
+        break;
+      case "PRESENTATION":
+        controller.formId.value = 'O';
+        break;
+      case "PRESENTS":
+        controller.formId.value = 'T';
+        break;
+      case "STATION ID":
+        controller.formId.value = 'I';
+        break;
+
+      case "Bumper":
+        controller.formId.value = '1';
+        break;
+      case "DISCLAIMER":
+        controller.formId.value = 'D';
+        break;
+      case "VIGNETTE":
+        controller.formId.value = 'V';
+        break;
+
       default:
     }
   }
