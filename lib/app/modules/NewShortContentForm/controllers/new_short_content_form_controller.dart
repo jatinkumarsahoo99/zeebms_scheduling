@@ -114,8 +114,8 @@ class NewShortContentFormController extends GetxController {
     print(">>>>>>>>>" + sec.toString());
   }
 
-  getChannel(locationCode) {
-    Get.find<ConnectorControl>().GETMETHODCALL(
+  Future<void> getChannel(locationCode) async {
+    await Get.find<ConnectorControl>().GETMETHODCALL(
         api: ApiFactory.NEW_SHORT_CONTENT_LOCATION_LEAVE(locationCode),
         fun: (rawdata) {
           if (rawdata is Map && rawdata.containsKey("onLeaveLocation")) {
@@ -128,9 +128,9 @@ class NewShortContentFormController extends GetxController {
         });
   }
 
-  typeleave(formCode) {
+  Future<void> typeleave(formCode) async {
     if (formCode == "STILL MASTER") {
-      Get.find<ConnectorControl>().GETMETHODCALL(
+      await Get.find<ConnectorControl>().GETMETHODCALL(
           api: ApiFactory.NEW_SHORT_CONTENT_GetStillTypeMaster,
           fun: (rawdata) {
             if (rawdata is Map && rawdata.containsKey("infoStillType")) {
@@ -144,7 +144,7 @@ class NewShortContentFormController extends GetxController {
           });
     }
     if (formCode == "SLIDE MASTER") {
-      Get.find<ConnectorControl>().GETMETHODCALL(
+      await Get.find<ConnectorControl>().GETMETHODCALL(
           api: ApiFactory.NEW_SHORT_CONTENT_GetSlideTypeMaster,
           fun: (rawdata) {
             if (rawdata is Map && rawdata.containsKey("infoSlideTypes")) {
@@ -158,7 +158,7 @@ class NewShortContentFormController extends GetxController {
           });
     }
     if (formCode == "VIGNETTE MASTER") {
-      Get.find<ConnectorControl>().GETMETHODCALL(
+      await Get.find<ConnectorControl>().GETMETHODCALL(
           api: ApiFactory.NEW_SHORT_CONTENT_GetVignetee,
           fun: (rawdata) {
             if (rawdata is Map && rawdata.containsKey("infoVignetteType")) {
@@ -205,14 +205,25 @@ class NewShortContentFormController extends GetxController {
   retriveRecord() {
     Get.find<ConnectorControl>().GETMETHODCALL(
         api: ApiFactory.NEW_SHORT_CONTENT_RETRIEVE(
-            selectedLocation.value?.key,
-            selectedChannel.value?.key,
-            selectedCategory.value?.value,
-            houseId.text,
-            segment.text),
+            selectedLocation.value?.key ?? "",
+            selectedChannel.value?.key ?? "",
+            selectedCategory.value?.value ?? "",
+            houseId.text ?? "",
+            segment.text ?? ""),
         fun: (rawdata) {
           Map data = rawdata[0];
 
+          selectedCategory.value = categeroies.firstWhereOrNull((element) {
+            var result = element.key!.toString().toLowerCase() ==
+                    data['SlideType'].toString().toLowerCase().trim() ||
+                element.key!.toString().toLowerCase() ==
+                    data['Stilltype'].toString().toLowerCase().trim() ||
+                element.key!.toString().toLowerCase() ==
+                    data['SSVCode'].toString().toLowerCase().trim();
+            // print(result);
+            return result;
+          });
+          print("===== ${selectedCategory.value?.type}");
           switch (selectedCategory.value?.type) {
             //       {
             //     "stillCode": null,
@@ -253,14 +264,22 @@ class NewShortContentFormController extends GetxController {
 
             // formCode: "ZASTI00001"formName: "Still Master"
             case "STILL MASTER":
-              print("===== ${selectedCategory.value?.key}");
-              // selectedChannel.value = channels.firstWhereOrNull((element) =>
-              //     element.key?.toLowerCase() ==
-              //     (data["ChannelCode"] ?? "").toLowerCase());
-              typeCode = data["StillCode"];
-              selectedTape.value = tapes.firstWhereOrNull((element) =>
+              formId.value = "S/";
+              selectedLocation.value = locations.firstWhereOrNull((element) =>
                   element.key?.toLowerCase() ==
-                  (data["TapeTypeCode"] ?? "").toString().toLowerCase());
+                  (data["Locationcode"] ?? "").toLowerCase());
+              getChannel(data["Locationcode"]).then((value) {
+                selectedChannel.value = channels.firstWhereOrNull((element) {
+                  return element.key?.toLowerCase() ==
+                      (data["Channelcode"] ?? "").toLowerCase();
+                });
+              });
+              typeleave(selectedCategory.value?.type).then((value) {
+                selectedTape.value = tapes.firstWhereOrNull((element) =>
+                    element.key?.toLowerCase() ==
+                    (data["TapeTypeCode"] ?? "").toString().toLowerCase());
+              });
+              typeCode = data["StillCode"];
               caption.text = data["StillCaption"] ?? "";
               txCaption.text = data["ExportTapeCaption"] ?? "";
 
@@ -296,16 +315,27 @@ class NewShortContentFormController extends GetxController {
               break;
             //  "formCode": "ZASLI00045", "formName": "Slide Master"
             case "SLIDE MASTER":
-              // selectedChannel.value = channels.firstWhereOrNull((element) =>
-              //     element.key?.toLowerCase() ==
-              //     (data["ChannelCode"] ?? "").toLowerCase());
-              typeCode = data["SlideCode"];
-              selectedTape.value = tapes.firstWhereOrNull((element) =>
+              formId.value = "L/";
+              selectedLocation.value = locations.firstWhereOrNull((element) =>
                   element.key?.toLowerCase() ==
-                  (data["TapeTypeCode"] ?? "").toString().toLowerCase());
+                  (data["LocationCode"] ?? "").toLowerCase());
+              getChannel(data["LocationCode"]).then((value) {
+                selectedChannel.value = channels.firstWhereOrNull((element) {
+                  print(element.key);
+                  print(element.key?.toLowerCase() ==
+                      (data["ChannelCode"] ?? "").toLowerCase());
+                  return element.key?.toLowerCase() ==
+                      (data["ChannelCode"] ?? "").toLowerCase();
+                });
+              });
+              typeleave(selectedCategory.value?.type).then((value) {
+                selectedTape.value = tapes.firstWhereOrNull((element) =>
+                    element.key?.toLowerCase() ==
+                    (data["TapeTypeCode"] ?? "").toString().toLowerCase());
+              });
+              typeCode = data["SlideCode"];
 
               caption.text = data["SlideCaption"] ?? "";
-
               txCaption.text = data["ExportTapeCaption"] ?? "";
               if (txCaption.text.contains('L/')) {
                 txCaption.text = txCaption.text.replaceAll(r'L/', "");
@@ -313,12 +343,10 @@ class NewShortContentFormController extends GetxController {
               selectedCategory.value = categeroies.firstWhereOrNull((element) {
                 var result = element.key!.toString().toLowerCase() ==
                     data['SlideType'].toString().toLowerCase().trim();
-                // print(result);
+
                 return result;
               });
-
               som.text = data["SOM"];
-
               eom.text = data["EOM"] ?? "00:00:00:00";
               calculateDuration();
               // duration.value =
@@ -337,9 +365,16 @@ class NewShortContentFormController extends GetxController {
               break;
             // "formCode": "ZADAT00117", "formName": "Vignette Master"
             case "VIGNETTE MASTER":
-              selectedChannel.value = channels.firstWhereOrNull((element) =>
+              formId.value = "VP/";
+              selectedLocation.value = locations.firstWhereOrNull((element) =>
                   element.key?.toLowerCase() ==
-                  (data["ChannelCode"] ?? "").toLowerCase());
+                  (data["Locationcode"] ?? "").toLowerCase());
+              getChannel(data["Locationcode"]).then((value) {
+                selectedChannel.value = channels.firstWhereOrNull((element) {
+                  return element.key?.toLowerCase() ==
+                      (data["ChannelCode"] ?? "").toLowerCase();
+                });
+              });
               typeCode = data["VignetteCode"];
               caption.text = data["VignetteCaption"] ?? "";
               txCaption.text = data["ExportTapeCaption"] ?? "";
@@ -352,9 +387,14 @@ class NewShortContentFormController extends GetxController {
 
                 return result;
               });
-              selectedOrgRep.value = orgRepeats.firstWhereOrNull((element) =>
-                  element.key?.toLowerCase() ==
-                  (data["OriginalRepeatCode"] ?? "").toString().toLowerCase());
+              typeleave(selectedCategory.value?.type).then((value) {
+                selectedOrgRep.value = orgRepeats.firstWhereOrNull((element) =>
+                    element.key?.toLowerCase() ==
+                    (data["OriginalRepeatCode"] ?? "")
+                        .toString()
+                        .toLowerCase());
+              });
+
               selectedProgram.value = DropDownValue(
                 key: data["ProgramCode"] ?? "",
                 value: data["ProgramName"] ?? "",
@@ -597,19 +637,20 @@ class NewShortContentFormController extends GetxController {
   }
 
   houseIdValidate() {
-    if (selectedLocation.value?.key == null) {
-      LoadingDialog.showErrorDialog("Location cannot be empty.", callback: () {
-        locationFocusNode.requestFocus();
-      });
-    } else if (selectedChannel.value?.key == null) {
-      LoadingDialog.showErrorDialog("Channel cannot be empty.", callback: () {
-        channelFocusNode.requestFocus();
-      });
-    } else if (selectedCategory.value?.key == null) {
-      LoadingDialog.showErrorDialog("Category cannot be empty.", callback: () {
-        categoryFocusNode.requestFocus();
-      });
-    } else if (segment.text.isEmpty) {
+    // if (selectedLocation.value?.key == null) {
+    //   LoadingDialog.showErrorDialog("Location cannot be empty.", callback: () {
+    //     locationFocusNode.requestFocus();
+    //   });
+    // } else if (selectedChannel.value?.key == null) {
+    //   LoadingDialog.showErrorDialog("Channel cannot be empty.", callback: () {
+    //     channelFocusNode.requestFocus();
+    //   });
+    // } else if (selectedCategory.value?.key == null) {
+    //   LoadingDialog.showErrorDialog("Category cannot be empty.", callback: () {
+    //     categoryFocusNode.requestFocus();
+    //   });
+    // } else
+    if (segment.text.isEmpty) {
       LoadingDialog.showErrorDialog("Segment Number cannot be empty.",
           callback: () {
         segmentFN.requestFocus();
@@ -632,7 +673,9 @@ class NewShortContentFormController extends GetxController {
       onKeyEvent: (node, event) {
         if (event.logicalKey == LogicalKeyboardKey.tab &&
             event is KeyDownEvent) {
-          houseIdValidate();
+          if (houseId.text != "AUTOID") {
+            houseIdValidate();
+          }
           return KeyEventResult.ignored;
         }
         return KeyEventResult.ignored;
