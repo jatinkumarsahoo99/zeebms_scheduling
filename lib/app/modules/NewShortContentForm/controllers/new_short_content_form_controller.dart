@@ -264,6 +264,10 @@ class NewShortContentFormController extends GetxController {
               caption.text = data["StillCaption"] ?? "";
               txCaption.text = data["ExportTapeCaption"] ?? "";
 
+              if (txCaption.text.contains('S/')) {
+                txCaption.text = txCaption.text.replaceAll(r'S/', "");
+              }
+
               selectedCategory.value = categeroies.firstWhereOrNull((element) {
                 var result = element.key!.toLowerCase() ==
                     data['Stilltype'].toString().toLowerCase().trim();
@@ -303,7 +307,9 @@ class NewShortContentFormController extends GetxController {
               caption.text = data["SlideCaption"] ?? "";
 
               txCaption.text = data["ExportTapeCaption"] ?? "";
-
+              if (txCaption.text.contains('L/')) {
+                txCaption.text = txCaption.text.replaceAll(r'L/', "");
+              }
               selectedCategory.value = categeroies.firstWhereOrNull((element) {
                 var result = element.key!.toString().toLowerCase() ==
                     data['SlideType'].toString().toLowerCase().trim();
@@ -337,6 +343,9 @@ class NewShortContentFormController extends GetxController {
               typeCode = data["VignetteCode"];
               caption.text = data["VignetteCaption"] ?? "";
               txCaption.text = data["ExportTapeCaption"] ?? "";
+              if (txCaption.text.contains('VP/')) {
+                txCaption.text = txCaption.text.replaceAll(r'VP/', "");
+              }
               selectedCategory.value = categeroies.firstWhereOrNull((element) {
                 var result = element.key!.toString().toLowerCase() ==
                     data['SSVCode'].toString().toLowerCase().trim();
@@ -395,7 +404,15 @@ class NewShortContentFormController extends GetxController {
       });
     } else if (startD.isAfter(endD)) {
       LoadingDialog.showErrorDialog("Start date should not more than end date");
+    } else if (selectedProgram.value == null &&
+        selectedCategory.value!.type == "STILL MASTER") {
+      LoadingDialog.showErrorDialog("Program cannot be empty.");
     }
+
+    //  else if (selectedCategory.value!.type == "STILL MASTER" &&
+    //     selectedProgram.value!.key == null) {
+    //   LoadingDialog.showErrorDialog("Program cannot be empty.");
+    // }
     // else if (fillerNameCtr.text.trim().isEmpty) {
     //   LoadingDialog.showErrorDialog("Filler Caption cannot be empty.");
     // } else if (txCaptionCtr.text.trim().isEmpty) {
@@ -437,7 +454,8 @@ class NewShortContentFormController extends GetxController {
         "stillCode": typeCode,
         "stillCaption": caption.text,
         "programCode": selectedProgram.value?.key, // Common in (still/Vignette)
-        "exportTapeCaption": txCaption.text, // Common in (still/Slide)
+        "exportTapeCaption":
+            formId.value + txCaption.text, // Common in (still/Slide)
         "exportTapeCode": houseId.text, // Common in (still/Slide)
         "segmentNumber": segment.text,
         // int.tryParse(segment.text),
@@ -484,7 +502,8 @@ class NewShortContentFormController extends GetxController {
         "channelcode": selectedChannel
             .value?.key, // Common in (still/Slide/vignetteCaption)
         "eom": eom.text, // Common in (still/Slide/vignetee)
-        "exportTapeCaption": txCaption.text, // Common in (still/Slide)
+        "exportTapeCaption":
+            formId.value + txCaption.text, // Common in (still/Slide)
         "exportTapeCode": houseId.text,
       };
     }
@@ -496,7 +515,7 @@ class NewShortContentFormController extends GetxController {
         "vignetteCaption": caption.text,
         "vignetteDuration": intDuration,
         "exportTapeCode_VG": houseId.text,
-        "exportTapeCaption": txCaption.text,
+        "exportTapeCaption": formId.value + txCaption.text,
         "originalRepeatCode": selectedOrgRep.value?.key,
         "segmentNumber_VG": int.parse(segment.text),
         "startDate": DateFormat("yyyy-MM-dd")
@@ -532,29 +551,32 @@ class NewShortContentFormController extends GetxController {
                     msg:
                         "${rawdata["onSaveShortCode"]["message"]}\nID: ${rawdata["onSaveShortCode"]["lstShortCode"][0]['Exporttapecode']}",
                     callback: () {
-                      clearPage();
+                      houseId.text = rawdata["onSaveShortCode"]["lstShortCode"]
+                          [0]['Exporttapecode'];
                     });
               } else if (selectedCategory.value!.type == "STILL MASTER") {
                 LoadingDialog.callDataSaved(
                     msg:
                         "${rawdata["onSaveShortCode"]["message"]}\nID: ${rawdata["onSaveShortCode"]["lstShortCode"][0]['Exporttapecode']}",
                     callback: () {
-                      clearPage();
+                      houseId.text = rawdata["onSaveShortCode"]["lstShortCode"]
+                          [0]['Exporttapecode'];
                     });
               } else {
                 LoadingDialog.callDataSaved(
                     msg:
                         "${rawdata["onSaveShortCode"]["message"]}\nID: ${rawdata["onSaveShortCode"]["lstShortCode"][0]['ExportTapecode']}",
                     callback: () {
-                      clearPage();
+                      houseId.text = rawdata["onSaveShortCode"]["lstShortCode"]
+                          [0]['ExportTapecode'];
                     });
               }
 
               return true;
             } else {
-              LoadingDialog.callErrorMessage1(
-                  msg: "Already Exists in ${selectedCategory.value?.type}");
-              return false;
+              // LoadingDialog.callErrorMessage1(
+              //     msg: "Already Exists in ${selectedCategory.value?.type}");
+              // return false;
             }
           } catch (e) {
             LoadingDialog.callErrorMessage1(msg: "Save Failed");
