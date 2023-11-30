@@ -174,7 +174,7 @@ class SalesAuditNewController extends GetxController {
       gridStateManagerLeft?.rows[gridStateManagerLeft?.currentRowIdx ?? 0]
           .cells['programCode']?.value = "";
       gridStateManagerLeft?.rows[gridStateManagerLeft?.currentRowIdx ?? 0]
-          .cells['rowNumber']?.value = " ";
+          .cells['rownumber']?.value = " ";
 
       gridStateManagerRight?.rows[gridStateManagerRight?.currentRowIdx ?? 0]
           .cells['bookingNumber']?.value = " ";
@@ -191,7 +191,7 @@ class SalesAuditNewController extends GetxController {
         gridStateManagerLeft?.rows[gridStateManagerLeft?.currentRowIdx ?? 0]
             .cells['programCode']?.value = "";
         gridStateManagerLeft?.rows[gridStateManagerLeft?.currentRowIdx ?? 0]
-            .cells['rowNumber']?.value = " ";
+            .cells['rownumber']?.value = " ";
         gridStateManagerLeft?.notifyListeners();
       }, cancel: () {
         Get.back();
@@ -247,7 +247,7 @@ class SalesAuditNewController extends GetxController {
           gridStateManagerLeft?.rows[gridStateManagerLeft?.currentRowIdx ?? 0]
               .cells['programCode']?.value = "";
           gridStateManagerLeft?.rows[gridStateManagerLeft?.currentRowIdx ?? 0]
-              .cells['rowNumber']?.value = "";
+              .cells['rownumber']?.value = "";
           gridStateManagerLeft?.notifyListeners();
         }, cancel: () {
           Get.back();
@@ -285,7 +285,7 @@ class SalesAuditNewController extends GetxController {
             gridStateManagerLeft?.rows[i].cells['bookingStatus']?.value;
         gridStateManagerLeft?.rows[i].cells['bookingStatus']?.value = "E";
         gridStateManagerLeft?.rows[i].cells['programCode']?.value = "";
-        gridStateManagerLeft?.rows[i].cells['rowNumber']?.value = "";
+        gridStateManagerLeft?.rows[i].cells['rownumber']?.value = "";
         gridStateManagerLeft?.rows[i].cells['telecastTime']?.value = "";
         gridStateManagerLeft?.rows[i].cells['remarks']?.value =
             "Not telecast Sales Audit";
@@ -440,6 +440,7 @@ class SalesAuditNewController extends GetxController {
     print(">>>>>>postData${jsonEncode(postData)}");
     Get.find<ConnectorControl>().POSTMETHOD(
       api: ApiFactory.SALESAUDIT_NEW_SAVEDATA,
+      // api: "",
       json: postData,
       fun: (map) {
         Get.back();
@@ -469,11 +470,11 @@ class SalesAuditNewController extends GetxController {
         if (key.toString().trim() == "telecastTime") {
           if (row.cells[key]?.value != null &&
               (row.cells[key]?.value ?? "").toString().trim() != "") {
-            rowMap[key] = DateFormat("yyyy-MM-ddT").format(DateTime.now()) +
-                (row.cells[key]?.value ?? "");
+            // rowMap[key] = DateFormat("yyyy-MM-ddT").format(DateTime.now()) + (row.cells[key]?.value ?? "");
+            rowMap[key] = row.cells[key]?.value;
           } else {
-            rowMap[key] = DateFormat("yyyy-MM-dd").format(DateTime.now()) +
-                (row.cells[key]?.value ?? "");
+            // rowMap[key] = DateFormat("yyyy-MM-dd").format(DateTime.now()) + (row.cells[key]?.value ?? "");
+            rowMap[key] = null;
           }
         }
         else if(key.toString().trim() == "telecastDate"){
@@ -483,6 +484,13 @@ class SalesAuditNewController extends GetxController {
             format(DateFormat("dd/MM/yyyy").parse(row.cells[key]?.value));
           } else {
             rowMap[key] = (row.cells[key]?.value ?? "");
+          }
+        }else if(key.toString().trim() == "rownumber"){
+          if (row.cells[key]?.value != null &&
+              (row.cells[key]?.value ?? "").toString().trim() != "") {
+            rowMap[key] = int.parse(row.cells[key]?.value);
+          } else {
+            rowMap[key] = null;
           }
         }
         else {
@@ -503,17 +511,21 @@ class SalesAuditNewController extends GetxController {
     for (var row in statemanager.rows) {
       Map<String, dynamic> rowMap = {};
       for (var key in row.cells.keys) {
-        if (key.toString().trim() == "rowNumber") {
-          // rowMap[key] = DateFormat("yyyy-MM-dd").format(DateTime.now()) + (row.cells[key]?.value ?? "");
-          continue;
-        } else if (key.toString().trim() == "telecastTime") {
+         if (key.toString().trim() == "telecastTime") {
           if (row.cells[key]?.value != null &&
               (row.cells[key]?.value ?? "").toString().trim() != "") {
-            rowMap[key] = DateFormat("yyyy-MM-ddT").format(DateTime.now()) +
-                (row.cells[key]?.value ?? "").toString().trim();
+            // rowMap[key] = DateFormat("yyyy-MM-ddT").format(DateTime.now()) + (row.cells[key]?.value ?? "").toString().trim();
+            rowMap[key] = row.cells[key]?.value;
           } else {
-            rowMap[key] = DateFormat("yyyy-MM-dd").format(DateTime.now()) +
-                (row.cells[key]?.value ?? "").toString().trim();
+            // rowMap[key] = DateFormat("yyyy-MM-dd").format(DateTime.now()) + (row.cells[key]?.value ?? "").toString().trim();
+            rowMap[key] = null;
+          }
+        }else if(key.toString().trim() == "rownumber"){
+          if (row.cells[key]?.value != null &&
+              (row.cells[key]?.value ?? "").toString().trim() != "" &&  (row.cells[key]?.value ?? "").toString().trim() != "0") {
+            rowMap[key] = int.parse((row.cells[key]?.value).toString());
+          }else{
+            rowMap[key] = null;
           }
         } else {
           rowMap[key] = row.cells[key]?.value ?? "";
@@ -831,7 +843,7 @@ class SalesAuditNewController extends GetxController {
           gridStateManagerRight?.rows[rightindex].cells['programCode']?.value ??
               "";
       rowNumber =
-          gridStateManagerRight?.rows[rightindex].cells['rownumber']?.value ?? "";
+          (gridStateManagerRight?.rows[rightindex].cells['rownumber']?.value ?? "").toString();
       FPCtime =
           gridStateManagerRight?.rows[rightindex].cells['fpctime']?.value ?? "";
       TApeduration =
@@ -880,8 +892,8 @@ class SalesAuditNewController extends GetxController {
             Telecasttime;
         gridStateManagerLeft?.rows[leftIndex].cells['programCode']?.value =
             programCode;
-        gridStateManagerLeft?.rows[leftIndex].cells['rowNumber']?.value =
-            int.parse(rowNumber);
+        gridStateManagerLeft?.rows[leftIndex].cells['rownumber']?.value =
+            (rowNumber).toString();
 
         gridStateManagerRight?.rows[rightindex].cells['bookingNumber']?.value =
             gridStateManagerLeft?.rows[leftIndex].cells['bookingNumber']?.value;
@@ -926,8 +938,8 @@ class SalesAuditNewController extends GetxController {
             Telecasttime;
         gridStateManagerLeft?.rows[leftIndex].cells['programCode']?.value =
             programCode;
-        gridStateManagerLeft?.rows[leftIndex].cells['rowNumber']?.value =
-            int.parse(rowNumber);
+        gridStateManagerLeft?.rows[leftIndex].cells['rownumber']?.value =
+            (rowNumber).toString();
 
         gridStateManagerRight?.rows[rightindex].cells['bookingNumber']?.value =
             gridStateManagerLeft?.rows[leftIndex].cells['bookingNumber']?.value;
@@ -965,8 +977,8 @@ class SalesAuditNewController extends GetxController {
                   Telecasttime;
               gridStateManagerLeft?.rows[leftIndex].cells['programCode']?.value =
                   programCode;
-              gridStateManagerLeft?.rows[leftIndex].cells['rowNumber']?.value =
-                  int.parse(rowNumber);
+              gridStateManagerLeft?.rows[leftIndex].cells['rownumber']?.value =
+                  (rowNumber).toString();
 
               gridStateManagerRight?.rows[rightindex].cells['bookingNumber']?.value =
                   gridStateManagerLeft?.rows[leftIndex].cells['bookingNumber']?.value;

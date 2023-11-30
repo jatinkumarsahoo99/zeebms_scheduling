@@ -75,7 +75,7 @@ class LstAsrunlog2 {
   String? scheduleProgramCode;
   String? auditedOn;
   String? telecastProgram;
-  int? rowNumber;
+  String? rowNumber;
   String? remarks;
   String? remarks1;
   String? programName;
@@ -131,7 +131,7 @@ class LstAsrunlog2 {
     scheduleProgramCode = json['scheduleProgramCode'];
     auditedOn = json['auditedOn'];
     telecastProgram = json['telecastProgram'];
-    rowNumber = json['rowNumber'];
+    rowNumber = ((json['rowNumber'] != null && json['rowNumber'] != 0)?(json['rowNumber']??""):" ").toString();
     remarks = json['remarks'];
     remarks1 = json['remarks1'];
     programName = json['programName'];
@@ -163,7 +163,7 @@ class LstAsrunlog2 {
     data['scheduleProgramCode'] = this.scheduleProgramCode;
     data['auditedOn'] = this.auditedOn;
     data['telecastProgram'] = this.telecastProgram;
-    data['rowNumber'] = this.rowNumber;
+    data['rownumber'] = this.rowNumber;
     data['remarks'] = this.remarks;
     data['remarks1'] = this.remarks1;
     data['programName'] = this.programName;
@@ -196,7 +196,7 @@ class LstAsrunlog2 {
 }
 
 class LstAsrunlog1 {
-  int? rownumber;
+
   String? exportTapeCode;
   String? exportTapeCaption;
   int? tapeDuration;
@@ -208,6 +208,7 @@ class LstAsrunlog1 {
   String? programCode;
   String? programName;
   String? remark;
+  int? rownumber;
 
   LstAsrunlog1(
       {this.rownumber,
@@ -240,7 +241,7 @@ class LstAsrunlog1 {
 
   Map<String, dynamic> toJson() {
     final Map<String, dynamic> data = new Map<String, dynamic>();
-    data['rownumber'] = this.rownumber;
+
     data['exportTapeCode'] = this.exportTapeCode;
     data['exportTapeCaption'] = this.exportTapeCaption;
     data['tapeDuration'] = this.tapeDuration;
@@ -252,6 +253,7 @@ class LstAsrunlog1 {
     data['programCode'] = this.programCode;
     data['programName'] = this.programName;
     data['remark'] = this.remark;
+    data['rownumber'] = this.rownumber;
     return data;
   }
 

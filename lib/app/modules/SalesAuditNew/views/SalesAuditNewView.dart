@@ -326,8 +326,8 @@ class SalesAuditNewView  extends StatelessWidget  {
                                                 //  controller.gridStateManagerRight?.setCurrentCell(controller.gridStateManagerRight?.rows[2].cells["no"], 2) ;
                                              },
                                             hideKeys: const ['locationcode','channelcode',
-                                              'recordnumber','rowNumber',
-                                              'programCode','previousBookingStatus','scheduleProgramCode'],
+                                              'recordnumber',
+                                              'programCode','previousBookingStatus','scheduleProgramCode','rownumber'],
                                             witdthSpecificColumn: (controller
                                                         .userDataSettings?.userSetting
                                                         ?.firstWhere(
@@ -432,7 +432,7 @@ class SalesAuditNewView  extends StatelessWidget  {
                                                 // checkRow: true,
                                                 // checkRowKey: "no",
                                                 mode: PlutoGridMode.normal,
-                                                hideKeys: ['programCode','rownumber','bookingDetailCode'],
+                                                hideKeys: ['programCode','bookingDetailCode','rownumber'],
                                                 onSelected: (PlutoGridOnSelectedEvent? val ){
                                                   // print("singlr click"+val!.row!.toJson().toString());
                                                   print("singlr click"+val!.rowIdx.toString());
