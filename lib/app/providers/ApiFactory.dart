@@ -545,7 +545,7 @@ class ApiFactory {
           String eventType,
           String txId,
           String caption) =>
-      "$BASE_URL/api/Transmissionlog/GetFastInsertsearchClick?locationcode=$locId&channelcode=$channelId&telecastdate=$telecastDt&mine=$isMine&eventType=$eventType&TxID=${txId.replaceAll(",,", ",")}&Caption=$caption";
+      "$BASE_URL/api/Transmissionlog/GetFastInsertsearchClick?locationcode=$locId&channelcode=$channelId&telecastdate=$telecastDt&mine=$isMine&eventType=$eventType&TxID=$txId&Caption=$caption";
 
   static String TRANSMISSION_LOG_BUTTON_VERIFY(
           String locId, String channelId, String telecastDt, bool isStandBy) =>
