@@ -3268,12 +3268,13 @@ class TransmissionLogController extends GetxController {
         "W",
         "VP",
         "GL",
-        // "CL",
+        "CL",
         "FI",
         "M",
         "N",
         "O",
         "T",
+        "C",
       ];
       print("Total length of selecting row is>>>" +
           (gridStateManager?.currentSelectingRows?.length.toString() ?? ""));
@@ -3376,12 +3377,13 @@ class TransmissionLogController extends GetxController {
           "W",
           "VP",
           "GL",
-          // "CL",
+          "CL",
           "FI",
           "M",
           "N",
           "O",
           "T",
+          "C",
         ];
         // print("Total length of selecting row is 1 >>>" +
         //     (gridStateManager?.currentSelectingRows?.length.toString() ?? ""));
