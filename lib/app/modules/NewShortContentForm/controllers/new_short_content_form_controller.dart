@@ -262,7 +262,7 @@ class NewShortContentFormController extends GetxController {
                   element.key?.toLowerCase() ==
                   (data["TapeTypeCode"] ?? "").toString().toLowerCase());
               caption.text = data["StillCaption"] ?? "";
-              txCaption.text = data["ExportTapeCode"] ?? "";
+              txCaption.text = data["ExportTapeCaption"] ?? "";
 
               selectedCategory.value = categeroies.firstWhereOrNull((element) {
                 var result = element.key!.toLowerCase() ==
