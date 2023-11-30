@@ -3468,6 +3468,7 @@ class TransmissionLogController extends GetxController {
           }
         }
         if (listCutCopy.length > 0) {
+          listCutCopy = listCutCopy.reversed.toList();
           print("Copy");
           // copyRow = row;
           if (fun != null) {
