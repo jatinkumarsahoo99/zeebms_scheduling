@@ -110,13 +110,13 @@ class AuditStatusView extends GetView<AuditStatusController> {
                           },
                           onRowDoubleTap: (event) {
                             if (controller.currentType.value == "Cancelation") {
-                              controller.showECancel(event.rowIdx);
+                              controller.showECancel(event.row.sortIdx);
                             }
                             if (controller.currentType.value == "Addition") {
-                              controller.showEbooking(event.rowIdx);
+                              controller.showEbooking(event.row.sortIdx);
                             }
                             if (controller.currentType.value == "Reschedule") {
-                              controller.showEReschdule(event.rowIdx);
+                              controller.showEReschdule(event.row.sortIdx);
                             }
                           },
                         );
