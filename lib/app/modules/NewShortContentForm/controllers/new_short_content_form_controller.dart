@@ -14,7 +14,7 @@ class NewShortContentFormController extends GetxController {
   var locations = RxList<DropDownValue>([]);
   var channels = RxList<DropDownValue>([]);
   var types = RxList<DropDownValue>([]);
-  var categeroies = RxList<DropDownValue>([]);
+  var categeroies = RxList<DropDownValue2>([]);
   var formIdCategeroies = RxList<DropDownValue>([]);
 
   var tapes = RxList<DropDownValue>([]);
@@ -41,7 +41,7 @@ class NewShortContentFormController extends GetxController {
   Rxn<DropDownValue> selectedLocation = Rxn<DropDownValue>();
   Rxn<DropDownValue> selectedChannel = Rxn<DropDownValue>();
   Rxn<DropDownValue> selectedType = Rxn<DropDownValue>();
-  Rxn<DropDownValue> selectedCategory = Rxn<DropDownValue>();
+  Rxn<DropDownValue2> selectedCategory = Rxn<DropDownValue2>();
   Rxn<DropDownValue> selectedProgram = Rxn<DropDownValue>();
   Rxn<DropDownValue> selectedTape = Rxn<DropDownValue>();
   Rxn<DropDownValue> selectedOrgRep = Rxn<DropDownValue>();
@@ -78,10 +78,12 @@ class NewShortContentFormController extends GetxController {
             categeroies.value = [];
             formIdCategeroies.value = [];
             for (var categeroi in data["lstCategory"]) {
-              categeroies.add(DropDownValue(
-                  key: categeroi["ssvType"], value: categeroi["ssvName"]));
-              formIdCategeroies.add(DropDownValue(
-                  key: categeroi["ssvCode"], value: categeroi["ssvName"]));
+              categeroies.add(DropDownValue2(
+                  type: categeroi["ssvType"],
+                  value: categeroi["ssvName"],
+                  key: categeroi["ssvCode"]));
+              // formIdCategeroies.add(DropDownValue(
+              //     key: categeroi["ssvCode"], value: categeroi["ssvName"]));
             }
           }
         });
@@ -211,7 +213,7 @@ class NewShortContentFormController extends GetxController {
         fun: (rawdata) {
           Map data = rawdata[0];
 
-          switch (selectedCategory.value?.key) {
+          switch (selectedCategory.value?.type) {
             //       {
             //     "stillCode": null,
             //     "stillCaption": null,
@@ -261,9 +263,10 @@ class NewShortContentFormController extends GetxController {
                   (data["TapeTypeCode"] ?? "").toString().toLowerCase());
               caption.text = data["StillCaption"] ?? "";
               txCaption.text = data["ExportTapeCode"] ?? "";
-              print(data["Stilltype"]);
+
               selectedCategory.value = categeroies.firstWhereOrNull((element) {
-                var result = '1' == data['Stilltype'].toString();
+                var result = element.key!.toLowerCase() ==
+                    data['Stilltype'].toString().toLowerCase().trim();
 
                 return result;
               });
@@ -300,13 +303,11 @@ class NewShortContentFormController extends GetxController {
               caption.text = data["SlideCaption"] ?? "";
 
               txCaption.text = data["ExportTapeCaption"] ?? "";
-              print(data["SlideType"]);
+
               selectedCategory.value = categeroies.firstWhereOrNull((element) {
-                var result;
-                for (var i = 0; i < formIdCategeroies.length; i++) {
-                  result = formIdCategeroies[i].key!.toLowerCase() ==
-                      data['SlideType'].toString().toLowerCase();
-                }
+                var result = element.key!.toString().toLowerCase() ==
+                    data['SlideType'].toString().toLowerCase().trim();
+                // print(result);
                 return result;
               });
 
@@ -335,13 +336,11 @@ class NewShortContentFormController extends GetxController {
                   (data["ChannelCode"] ?? "").toLowerCase());
               typeCode = data["VignetteCode"];
               caption.text = data["VignetteCaption"] ?? "";
-              txCaption.text = data["ExportTapeCode"] ?? "";
+              txCaption.text = data["ExportTapeCaption"] ?? "";
               selectedCategory.value = categeroies.firstWhereOrNull((element) {
-                var result;
-                for (var i = 0; i < formIdCategeroies.length; i++) {
-                  result = formIdCategeroies[i].key!.toLowerCase() ==
-                      data['SSVCode'].toString().toLowerCase();
-                }
+                var result = element.key!.toString().toLowerCase() ==
+                    data['SSVCode'].toString().toLowerCase().trim();
+
                 return result;
               });
               selectedOrgRep.value = orgRepeats.firstWhereOrNull((element) =>
@@ -432,14 +431,14 @@ class NewShortContentFormController extends GetxController {
             seconds: int.parse(_durations[2]))
         .inSeconds;
     // formCode: "ZASTI00001"formName: "Still Master"
-    if (selectedCategory.value?.key == "STILL MASTER") {
+    if (selectedCategory.value?.type == "STILL MASTER") {
       body = {
         "SSVName": selectedCategory.value?.value,
         "stillCode": typeCode,
         "stillCaption": caption.text,
         "programCode": selectedProgram.value?.key, // Common in (still/Vignette)
-        "exportTapeCaption": houseId.text, // Common in (still/Slide)
-        "exportTapeCode": txCaption.text, // Common in (still/Slide)
+        "exportTapeCaption": txCaption.text, // Common in (still/Slide)
+        "exportTapeCode": houseId.text, // Common in (still/Slide)
         "segmentNumber": segment.text,
         // int.tryParse(segment.text),
         "stillDuration": intDuration,
@@ -458,17 +457,17 @@ class NewShortContentFormController extends GetxController {
         "channelcode": selectedChannel
             .value?.key, // Common in (still/Slide/vignetteCaption)
         "eom": eom.text, // Common in (still/Slide/vignetee)
-        "stillType": num.parse(formId.toString()),
+        "stillType": num.parse(selectedCategory.value!.key.toString()),
       };
     }
     //  "formCode": "ZASLI00045", "formName": "Slide Master"
-    if (selectedCategory.value?.key == "SLIDE MASTER") {
+    if (selectedCategory.value?.type == "SLIDE MASTER") {
       body = {
         "SSVName": selectedCategory.value?.value,
         "slideCode": typeCode,
         "slideCaption": caption.text,
         "segmentNumber_SL": int.tryParse(segment.text) ?? 0,
-        "slideType": formId.value,
+        "slideType": selectedCategory.value!.key,
         "exportTapeDuration": intDuration, //Common in (Slide/Vignette)
         "houseId": houseId.text, // Common in (still/Slide/vignetee)
         "som": som.text, // Common in (still/Slide/vignetee)
@@ -490,7 +489,7 @@ class NewShortContentFormController extends GetxController {
       };
     }
     // "formCode": "ZADAT00117", "formName": "Vignette Master"
-    if (selectedCategory.value?.key == "VIGNETTE MASTER") {
+    if (selectedCategory.value?.type == "VIGNETTE MASTER") {
       body = {
         "SSVName": selectedCategory.value?.value,
         "vignetteCode": typeCode,
@@ -528,14 +527,14 @@ class NewShortContentFormController extends GetxController {
           Get.back();
           try {
             if (rawdata is Map && rawdata.containsKey("onSaveShortCode")) {
-              if (selectedCategory.value!.key == "SLIDE MASTER") {
+              if (selectedCategory.value!.type == "SLIDE MASTER") {
                 LoadingDialog.callDataSaved(
                     msg:
                         "${rawdata["onSaveShortCode"]["message"]}\nID: ${rawdata["onSaveShortCode"]["lstShortCode"][0]['Exporttapecode']}",
                     callback: () {
                       clearPage();
                     });
-              } else if (selectedCategory.value!.key == "STILL MASTER") {
+              } else if (selectedCategory.value!.type == "STILL MASTER") {
                 LoadingDialog.callDataSaved(
                     msg:
                         "${rawdata["onSaveShortCode"]["message"]}\nID: ${rawdata["onSaveShortCode"]["lstShortCode"][0]['Exporttapecode']}",
@@ -554,7 +553,7 @@ class NewShortContentFormController extends GetxController {
               return true;
             } else {
               LoadingDialog.callErrorMessage1(
-                  msg: "Already Exists in ${selectedCategory.value?.key}");
+                  msg: "Already Exists in ${selectedCategory.value?.type}");
               return false;
             }
           } catch (e) {
@@ -598,7 +597,7 @@ class NewShortContentFormController extends GetxController {
         houseFocusNode.requestFocus();
       });
     } else {
-      houseleave();
+      // houseleave();
       retriveRecord();
     }
   }
