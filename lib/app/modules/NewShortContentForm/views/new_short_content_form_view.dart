@@ -90,6 +90,13 @@ class NewShortContentFormView extends StatelessWidget {
                               "type: ${controller.selectedCategory.value!.type}");
                           print(
                               "value: ${controller.selectedCategory.value!.value}");
+                          if (value.type == "SLIDE MASTER") {
+                            controller.formId.value = "L/";
+                          } else if (value.type == "STILL MASTER") {
+                            controller.formId.value = "S/";
+                          } else {
+                            controller.formId.value = "VP/";
+                          }
                         },
                         "Category",
                         0.16,
@@ -103,10 +110,13 @@ class NewShortContentFormView extends StatelessWidget {
                         controller: controller.caption,
                         width: .155,
                         focusNode: controller.captionFN),
-                    InputFields.formField1(
-                      hintTxt: "TX Caption",
-                      controller: controller.txCaption,
-                      width: 0.16,
+                    Obx(
+                      () => InputFields.formField1(
+                        hintTxt: "TX Caption",
+                        controller: controller.txCaption,
+                        width: 0.16,
+                        prefixText: controller.formId.value,
+                      ),
                     ),
                     Obx(
                       () => DropDownField.formDropDown1WidthMap(
