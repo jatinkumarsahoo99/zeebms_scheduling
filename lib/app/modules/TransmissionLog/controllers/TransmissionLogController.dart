@@ -1178,7 +1178,7 @@ class TransmissionLogController extends GetxController {
   void btnFastInsert_Add_Click() {
     // addEventToUndo();
     _download();
-    try {
+    // try {
       int row;
       // int eventdurat;
       blnMultipleGLs = false;
@@ -1306,10 +1306,10 @@ class TransmissionLogController extends GetxController {
       if (noOfRows != 0) {
         _download();
       }
-    } catch (e) {
-      print("Error found in btnFastInsert_Add_Click()" + e.toString());
-      Get.back();
-    }
+    // } catch (e) {
+    //   print("Error found in btnFastInsert_Add_Click()" + e.toString());
+    //   Get.back();
+    // }
   }
 
   insertFastData({required PlutoRow dr}) {
@@ -1614,7 +1614,7 @@ class TransmissionLogController extends GetxController {
       Exporttapecode,
       tapeDuration!,
       SOM,
-      BreakNumber: ((BreakNumber != null) ? int.tryParse(BreakNumber!) : 0)!,
+      BreakNumber: ((BreakNumber != null && BreakNumber!="") ? int.tryParse(BreakNumber!) : 0)!,
     );
     if (InsertRow == 0) {
       InsertRow = -1;
@@ -3385,7 +3385,7 @@ class TransmissionLogController extends GetxController {
         ];
         // print("Total length of selecting row is 1 >>>" +
         //     (gridStateManager?.currentSelectingRows?.length.toString() ?? ""));
-        List<PlutoRow>? selectRows = gridStateManager?.currentSelectingRows;
+        List<PlutoRow>? focusableSelectRows = gridStateManager?.currentSelectingRows;
         if ((gridStateManager?.currentSelectingRows.length ?? 0) > 0) {
           gridStateManager?.currentSelectingRows.forEach((element) {
             print("Cut sortIdx1 ${element.sortIdx.toString()}");
@@ -3407,10 +3407,29 @@ class TransmissionLogController extends GetxController {
             listCutCopy.add((gridStateManager?.currentRow)!);
           }
         }
-        listCutCopy = listCutCopy.reversed.toList();
-        print("Cut length is>>" + listCutCopy.length.toString());
+        // listCutCopy = listCutCopy.reversed.toList();
+        // print("Cut length is>>" + listCutCopy.length.toString());
+        bool isAvail = false;
+        gridStateManager?.currentSelectingRows.forEach((element) {
+          if (element.cells["rownumber"]?.value ==
+              gridStateManager?.currentRow?.cells["rownumber"]?.value) {
+            isAvail = true;
+          }
+        });
 
+        if(!isAvail){
+          listCutCopy.add((gridStateManager?.currentRow)!);
+          focusableSelectRows?.add((gridStateManager?.currentRow)!);
+        }
         if (listCutCopy.length > 0) {
+          if(!isAvail) {
+            listCutCopy.sort((a, b) =>
+                (a.cells["rownumber"]?.value.toString() ?? "").compareTo(
+                    b.cells["rownumber"]?.value.toString() ?? ""));
+            listCutCopy = listCutCopy.reversed.toList();
+          }else{
+            listCutCopy = listCutCopy.reversed.toList();
+          }
           print("Cutt");
           // copyRow = row;
           if (fun != null) {
@@ -3421,7 +3440,7 @@ class TransmissionLogController extends GetxController {
         }
         Future.delayed(Duration(microseconds: 50), () {
           gridStateManager?.clearCurrentSelecting();
-          selectRows?.forEach((element) {
+          focusableSelectRows?.forEach((element) {
             print("Cut sortIdx2 ${element.cells["rownumber"]?.value ?? ""}");
             gridStateManager?.toggleSelectingRow(
                 int.tryParse(element.cells["rownumber"]?.value ?? ""));
@@ -3467,8 +3486,28 @@ class TransmissionLogController extends GetxController {
             listCutCopy.add((gridStateManager?.currentRow)!);
           }
         }
+        bool isAvail = false;
+        gridStateManager?.currentSelectingRows.forEach((element) {
+          if (element.cells["rownumber"]?.value ==
+              gridStateManager?.currentRow?.cells["rownumber"]?.value) {
+            isAvail = true;
+          }
+        });
+
+        if(!isAvail){
+          listCutCopy.add((gridStateManager?.currentRow)!);
+        }
+
         if (listCutCopy.length > 0) {
-          listCutCopy = listCutCopy.reversed.toList();
+          // listCutCopy = listCutCopy.reversed.toList();
+          if(!isAvail) {
+            listCutCopy.sort((a, b) =>
+            (a.cells["rownumber"]?.value.toString() ?? "").compareTo(
+                b.cells["rownumber"]?.value.toString() ?? ""));
+            listCutCopy = listCutCopy.reversed.toList();
+          }else{
+            listCutCopy = listCutCopy.reversed.toList();
+          }
           print("Copy");
           // copyRow = row;
           if (fun != null) {
@@ -4436,6 +4475,7 @@ class TransmissionLogController extends GetxController {
       print("Copy Pressed Ctrl + c ");
       if (gridStateManager != null &&
           ((gridStateManager?.currentSelectingRows.length ?? 0) > 0)) {
+        print("shift + c");
         // String value = "";
         // gridStateManager?.currentSelectingRows.forEach((element) {
         //   value =
@@ -4444,7 +4484,7 @@ class TransmissionLogController extends GetxController {
         // print(">>>>>>>>valueJKS"+value.toString());
         // print(">>>>>>>>valueJKS"+(gridStateManager?.currentCell?.column.field).toString());
         // print(">>>>>>>>valueJKS"+(gridStateManager?.currentSelectingRows.length ).toString());
-        Utils.copyToClipboardHack(gridStateManager?.currentSelectingText ?? "");
+        Utils.copyToClipboardHack(gridStateManager?.currentSelectingText1 ?? "");
       } else if (gridStateManager != null &&
           gridStateManager?.currentCell != null) {
         print("Copy Pressed in clipboard ");
@@ -4455,7 +4495,7 @@ class TransmissionLogController extends GetxController {
     } else if (raw is RawKeyDownEvent &&
         raw.isControlPressed &&
         raw.character?.toLowerCase() == "c") {
-      print("cntrl + shift + c");
+      print("cntrl + c");
       if (gridStateManager != null &&
           ((gridStateManager?.currentSelectingRows.length ?? 0) > 0)) {
         String value = "";
@@ -4463,11 +4503,17 @@ class TransmissionLogController extends GetxController {
           value =
               "$value${element.cells[gridStateManager?.currentCell?.column.field]?.value}\n";
         });
-        print(">>>>>>>>valueJKS" + value.toString());
-        print(">>>>>>>>valueJKS" +
-            (gridStateManager?.currentCell?.column.field).toString());
-        print(">>>>>>>>valueJKS" +
-            (gridStateManager?.currentSelectingRows.length).toString());
+        bool isAvail = false;
+        gridStateManager?.currentSelectingRows.forEach((element) {
+          if (element.cells["rownumber"]?.value ==
+              gridStateManager?.currentRow?.cells["rownumber"]?.value) {
+            isAvail = true;
+          }
+        });
+        if (!isAvail) {
+          value = gridStateManager?.currentCell?.value + "\n" + value;
+        }
+
         Utils.copyToClipboardHack(value);
       } else if (gridStateManager != null &&
           gridStateManager?.currentCell != null) {
