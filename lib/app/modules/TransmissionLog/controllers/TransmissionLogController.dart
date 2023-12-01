@@ -3385,8 +3385,11 @@ class TransmissionLogController extends GetxController {
         ];
         // print("Total length of selecting row is 1 >>>" +
         //     (gridStateManager?.currentSelectingRows?.length.toString() ?? ""));
+        bool isAvail = false;
+        bool isMulti = false;
         List<PlutoRow>? focusableSelectRows = gridStateManager?.currentSelectingRows;
         if ((gridStateManager?.currentSelectingRows.length ?? 0) > 0) {
+          isMulti=true;
           gridStateManager?.currentSelectingRows.forEach((element) {
             print("Cut sortIdx1 ${element.sortIdx.toString()}");
             if (strAllowedEvent.contains(element.cells["eventType"]?.value
@@ -3397,6 +3400,24 @@ class TransmissionLogController extends GetxController {
               listCutCopy.add(element);
             }
           });
+          gridStateManager?.currentSelectingRows.forEach((element) {
+            if (element.cells["rownumber"]?.value ==
+                gridStateManager?.currentRow?.cells["rownumber"]?.value) {
+              isAvail = true;
+            }
+          });
+
+          if(!isAvail){
+            if (strAllowedEvent.contains(gridStateManager?.currentRow?.cells["eventType"]?.value
+                .toString()
+                .trim()
+                .toUpperCase() ??
+                "")) {
+              listCutCopy.add((gridStateManager?.currentRow)!);
+            }
+            // listCutCopy.add((gridStateManager?.currentRow)!);
+            focusableSelectRows?.add((gridStateManager?.currentRow)!);
+          }
         } else {
           if (strAllowedEvent.contains(gridStateManager
                   ?.currentRow?.cells["eventType"]?.value
@@ -3409,20 +3430,10 @@ class TransmissionLogController extends GetxController {
         }
         // listCutCopy = listCutCopy.reversed.toList();
         // print("Cut length is>>" + listCutCopy.length.toString());
-        bool isAvail = false;
-        gridStateManager?.currentSelectingRows.forEach((element) {
-          if (element.cells["rownumber"]?.value ==
-              gridStateManager?.currentRow?.cells["rownumber"]?.value) {
-            isAvail = true;
-          }
-        });
 
-        if(!isAvail){
-          listCutCopy.add((gridStateManager?.currentRow)!);
-          focusableSelectRows?.add((gridStateManager?.currentRow)!);
-        }
+
         if (listCutCopy.length > 0) {
-          if(!isAvail) {
+          if(!isAvail && isMulti) {
             listCutCopy.sort((a, b) =>
                 (a.cells["rownumber"]?.value.toString() ?? "").compareTo(
                     b.cells["rownumber"]?.value.toString() ?? ""));
@@ -3466,7 +3477,10 @@ class TransmissionLogController extends GetxController {
           "O",
           "T",
         ];
+        bool isAvail = false;
+        bool isMulti = false;
         if ((gridStateManager?.currentSelectingRows.length ?? 0) > 0) {
+          isMulti=true;
           gridStateManager?.currentSelectingRows.forEach((element) {
             if (strAllowedEvent.contains(element.cells["eventType"]?.value
                     .toString()
@@ -3476,6 +3490,24 @@ class TransmissionLogController extends GetxController {
               listCutCopy.add(element);
             }
           });
+
+          gridStateManager?.currentSelectingRows.forEach((element) {
+            if (element.cells["rownumber"]?.value ==
+                gridStateManager?.currentRow?.cells["rownumber"]?.value) {
+              isAvail = true;
+            }
+          });
+
+          if(!isAvail){
+            if (strAllowedEvent.contains(gridStateManager?.currentRow?.cells["eventType"]?.value
+                .toString()
+                .trim()
+                .toUpperCase() ??
+                "")) {
+              listCutCopy.add((gridStateManager?.currentRow)!);
+            }
+            // listCutCopy.add((gridStateManager?.currentRow)!);
+          }
         } else {
           if (strAllowedEvent.contains(gridStateManager
                   ?.currentRow?.cells["eventType"]?.value
@@ -3486,21 +3518,11 @@ class TransmissionLogController extends GetxController {
             listCutCopy.add((gridStateManager?.currentRow)!);
           }
         }
-        bool isAvail = false;
-        gridStateManager?.currentSelectingRows.forEach((element) {
-          if (element.cells["rownumber"]?.value ==
-              gridStateManager?.currentRow?.cells["rownumber"]?.value) {
-            isAvail = true;
-          }
-        });
 
-        if(!isAvail){
-          listCutCopy.add((gridStateManager?.currentRow)!);
-        }
 
         if (listCutCopy.length > 0) {
           // listCutCopy = listCutCopy.reversed.toList();
-          if(!isAvail) {
+          if(!isAvail && isMulti) {
             listCutCopy.sort((a, b) =>
             (a.cells["rownumber"]?.value.toString() ?? "").compareTo(
                 b.cells["rownumber"]?.value.toString() ?? ""));
