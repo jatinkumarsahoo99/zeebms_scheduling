@@ -96,6 +96,7 @@ class DataGridFromMapTransmissionLog extends StatelessWidget {
           enableDropToResize: false,
           enableContextMenu: false,
           width: 40,
+          frozen: PlutoColumnFrozen.start,
           // backgroundColor: Colors.white,
           minWidth: 40,
           renderer: ((rendererContext) {
@@ -399,6 +400,7 @@ class DataGridFromMapTransmissionLog extends StatelessWidget {
           enableSorting: enableSort,
           // enableRowDrag: draggableKeys != null ? draggableKeys!.contains(key) : false,
           enableRowDrag: key != "fpCtime" ? true : false,
+          frozen: key != "fpCtime" ? PlutoColumnFrozen.none :  PlutoColumnFrozen.start,
           enableEditingMode: false,
           enableDropToResize: true,
           enableContextMenu: false,
