@@ -54,7 +54,7 @@ class NewShortContentFormController extends GetxController {
       // duration = TextEditingController(text: "00:00:00:00"),
       startData = TextEditingController(),
       endDate = TextEditingController(),
-      segment = TextEditingController(),
+      segment = TextEditingController(text: "1"),
       remark = TextEditingController();
   var toBeBilled = RxBool(false);
   getInitData() {
@@ -715,7 +715,7 @@ class NewShortContentFormController extends GetxController {
     houseId.text = "AUTOID";
     startData.clear();
     endDate.clear();
-    segment.clear();
+    segment.text = "1";
     remark.clear();
     toBeBilled.value = false;
     typeCode = null;
