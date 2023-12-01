@@ -1772,7 +1772,7 @@ class DataGridMenu {
             value: DataGridMenuItem.delete,
             height: 25,
             enabled: true,
-            child: Text('Delete', style: TextStyle(fontSize: 11)),
+            child: Text('Delete (Del)', style: TextStyle(fontSize: 11)),
           ),
           const PopupMenuItem<DataGridMenuItem>(
             value: DataGridMenuItem.find,
@@ -1881,12 +1881,12 @@ class DataGridMenu {
             enabled: true,
             child: Text('Export To CSV', style: TextStyle(fontSize: 11)),
           ),
-          const PopupMenuItem<DataGridMenuItem>(
+         /* const PopupMenuItem<DataGridMenuItem>(
             value: DataGridMenuItem.delete,
             height: 25,
             enabled: true,
             child: Text('Delete (Del)', style: TextStyle(fontSize: 11)),
-          ),
+          ),*/
           const PopupMenuItem<DataGridMenuItem>(
             value: DataGridMenuItem.cut,
             height: 25,
