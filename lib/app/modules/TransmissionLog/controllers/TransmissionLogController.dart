@@ -382,8 +382,14 @@ class TransmissionLogController extends GetxController {
         fun: (map) {
           Get.back();
           logSaved = true;
-          LoadingDialog.callInfoMessage("Log Saved");
-          // showMessageBox("Log Saved", MessageBoxType.information);
+          if (map is Map &&
+              map.containsKey("lstPostTransmission") &&
+              map["lstPostTransmission"].toString().toLowerCase() ==
+                  "success") {
+            LoadingDialog.callDataSaved(msg: "Log Saved");
+          } else {
+            LoadingDialog.callErrorMessage1(msg: map.toString());
+          }
         });
   }
 
