@@ -3696,10 +3696,11 @@ class TransmissionLogController extends GetxController {
         return;
       }
 
-      bool? checkLostSec = await checkLostSecondaryEvents();
+      //Note: Check with User Date: 4 Dec 2023 - Confirmed by Vinod More
+      /*bool? checkLostSec = await checkLostSecondaryEvents();
       if (!(checkLostSec!)) {
         return;
-      }
+      }*/
 
       bool? hasWrongSec = await hasWrongSecondaryEventOffset(showMessage: true);
       if (hasWrongSec) {
