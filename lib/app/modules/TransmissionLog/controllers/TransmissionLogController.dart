@@ -4627,8 +4627,18 @@ class TransmissionLogController extends GetxController {
   deleteMultiple() async {
     if ((gridStateManager?.currentSelectingRows.length ?? 0) > 0) {
       print("Multiple select");
+      bool isAvail = false;
+      gridStateManager?.currentSelectingRows.forEach((element) {
+        if (element.cells["rownumber"]?.value ==
+            gridStateManager?.currentRow?.cells["rownumber"]?.value) {
+          isAvail = true;
+        }
+      });
       List<PlutoRow> deletRows = [];
       List<PlutoRow>? selectedRows = gridStateManager?.currentSelectingRows;
+      if(!isAvail){
+        selectedRows?.add((gridStateManager?.currentRow)!);
+      }
       for (int i = 0; i < (selectedRows?.length ?? 0); i++) {
         PlutoRow? row = selectedRows![i];
         if (["PR", "F"]
