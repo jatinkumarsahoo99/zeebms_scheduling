@@ -62,6 +62,7 @@ class ShortContentBulkImportView extends StatelessWidget {
                       btnText: "Clear",
                       callback: () {
                         controller.selectedMaster = null;
+                        controller.selectedFile.value = null;
                         controller.masters.refresh();
                         controller.responseList.clear();
                         controller.masterFN.requestFocus();
