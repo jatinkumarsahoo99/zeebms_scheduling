@@ -3948,7 +3948,7 @@ class TransmissionLogController extends GetxController {
         if (allowedEvents.contains(gridStateManager
             ?.rows[i - 1].cells["eventType"]?.value
             .toString()
-            .trim()
+            // .trim() ///Removed this to match with exe i.e-> "S " Added space in trailing
             .toLowerCase())) {
           // gridStateManager.firstDisplayedScrollingRowIndex = i - 12;
           gridStateManager?.moveScrollByRow(PlutoMoveDirection.down,
