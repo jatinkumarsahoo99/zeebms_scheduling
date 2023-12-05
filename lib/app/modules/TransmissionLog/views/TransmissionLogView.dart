@@ -1837,7 +1837,7 @@ class TransmissionLogView extends StatelessWidget {
                             ),
                           ),
                           SizedBox(
-                            width: 140,
+                            width: 100,
                           ),
                           Padding(
                             padding: EdgeInsets.only(top: 7),

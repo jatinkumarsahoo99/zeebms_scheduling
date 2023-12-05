@@ -382,8 +382,14 @@ class TransmissionLogController extends GetxController {
         fun: (map) {
           Get.back();
           logSaved = true;
-          LoadingDialog.callInfoMessage("Log Saved");
-          // showMessageBox("Log Saved", MessageBoxType.information);
+          if (map is Map &&
+              map.containsKey("lstPostTransmission") &&
+              map["lstPostTransmission"].toString().toLowerCase() ==
+                  "success") {
+            LoadingDialog.callDataSaved(msg: "Log Saved");
+          } else {
+            LoadingDialog.callErrorMessage1(msg: map.toString());
+          }
         });
   }
 
@@ -1178,138 +1184,152 @@ class TransmissionLogController extends GetxController {
   void btnFastInsert_Add_Click() {
     // addEventToUndo();
     _download();
-    try {
-      int row;
-      // int eventdurat;
-      blnMultipleGLs = false;
-      int? noOfRows = tblFastInsert?.currentSelectingRows.length ?? 0;
-      print("Selected is>>" +
-          (tblFastInsert?.currentSelectingRows.length.toString() ?? ""));
+    // try {
+    int row;
+    // int eventdurat;
+    blnMultipleGLs = false;
+    int? noOfRows = tblFastInsert?.currentSelectingRows.length ?? 0;
+    print("Selected is>>" +
+        (tblFastInsert?.currentSelectingRows.length.toString() ?? ""));
 
-      if (noOfRows == 0 && tblFastInsert?.currentRow == null) {
-        Get.back();
-        LoadingDialog.callInfoMessage("Nothing is selected");
-        return;
-      }
-      if (noOfRows == 0) {
-        insertFastData(dr: (tblFastInsert?.currentRow)!);
-      }
-      for (var dr in (tblFastInsert?.currentSelectingRows)!) {
-        String FPCTime;
-        if (gridStateManager?.currentRowIdx == 0) {
-          FPCTime = gridStateManager?.rows[gridStateManager?.currentRowIdx ?? 0]
-              .cells["fpCtime"]?.value;
-        } else {
-          FPCTime = gridStateManager
-              ?.rows[(gridStateManager?.currentRowIdx ?? 0) - 1]
-              .cells["fpCtime"]
-              ?.value;
-        }
-
-        if (dr.cells["eventtype"]?.value.toString().trim().toLowerCase() ==
-            "gl") {
-          FPCTime = gridStateManager?.rows[gridStateManager?.currentRowIdx ?? 0]
-              .cells["fpCtime"]?.value;
-        }
-
-        if (dr.cells["eventtype"]?.value.toString().trim() == "GL") {
-          if (["p", "s", "f", "gl"].contains(gridStateManager
-              ?.currentRow?.cells["eventType"]?.value
-              .toString()
-              .trim()
-              .toLowerCase())) {
-            row = (gridStateManager?.currentRowIdx ?? 0) + 1;
-
-            if ((gridStateManager?.rows.length ?? 0) > row) {
-              while (gridStateManager?.rows[row].cells["eventType"]?.value
-                      .toString()
-                      .trim()
-                      .toLowerCase() ==
-                  "gl") {
-                if (row < (gridStateManager?.rows.length ?? 0)) {
-                  row = row + 1;
-                }
-              }
-              gridStateManager?.setCurrentCell(
-                  gridStateManager?.rows[row].cells[1], row);
-            }
-          } else {
-            // MsgBox("Unable to add Secondary Events here!", vbExclamation, strAlertMessageTitle);
-            Get.back();
-            LoadingDialog.callInfoMessage(
-                "Unable to add Secondary Events here!");
-            return;
-          }
-        }
-
-        if (isInsertAfter.value) {
-          FPCTime = gridStateManager?.rows[gridStateManager?.currentRowIdx ?? 0]
-              .cells["fpCtime"]?.value;
-        }
-
-        setInsertRowFastInsert(
-            FPCTime,
-            dr.cells["eventtype"]?.value,
-            dr.cells["txCaption"]?.value,
-            dr.cells["txId"]?.value,
-            Utils.convertToTimeFromDouble(
-                value: num.tryParse(dr.cells["duration"]?.value) ?? 0),
-            dr.cells["som"]?.value,
-            dr.cells["promoTypeCode"]?.value,
-            dr.cells["segmentNumber"]?.value.toString() ?? "",
-            dontSave: true);
-
-        // Adding Tags for promos
-        // GoTo hell
-        if (dr.cells["eventtype"]?.value.toString().trim().toLowerCase() ==
-            "pr") {
-          if ((inserSearchModel?.lstListMyEventData?.lstFastInsertTags
-                      ?.where((x) => x.crTapeID == dr.cells["txId"]?.value)
-                      .toList()
-                      .length ??
-                  0) >
-              0) {
-            List<LstFastInsertTags>? filterList = inserSearchModel
-                ?.lstListMyEventData?.lstFastInsertTags
-                ?.where((x) => x.crTapeID == dr.cells["txId"]?.value)
-                .toList();
-            if ((filterList?.length ?? 0) == 1) {
-              row = gridStateManager?.currentRowIdx ?? 0 + 1;
-              gridStateManager?.setCurrentCell(
-                  gridStateManager?.rows[row].cells[0], row);
-              setInsertRowFastInsert(
-                  FPCTime,
-                  dr.cells["eventtype"]?.value,
-                  filterList![0].exportTapeCaption.toString(),
-                  filterList![0].tagTapeid.toString(),
-                  Utils.convertToTimeFromDouble(
-                      value: num.tryParse(
-                          filterList[0].promoDuration.toString() ?? "0")!),
-                  filterList![0].som!,
-                  filterList![0].promoTypeCode ?? "",
-                  filterList![0].segmentNumber.toString(),
-                  dontSave: true);
-              // UnSelectAllRows(gridStateManager ?);
-              // gridStateManager?.rows[row - 1].selected = true;
-              // gridStateManager?.currentCell = gridStateManager?.selectedRows[0].cells[1];
-              gridStateManager?.setCurrentCell(
-                  gridStateManager?.currentRow?.cells[1],
-                  gridStateManager?.currentRowIdx);
-            }
-          }
-        }
-
-        // hell:
-        // ColorGrid();
-        blnMultipleGLs = true;
-      }
-      if (noOfRows != 0) {
-        _download();
-      }
-    } catch (e) {
-      print("Error found in btnFastInsert_Add_Click()" + e.toString());
+    if (noOfRows == 0 && tblFastInsert?.currentRow == null) {
       Get.back();
+      LoadingDialog.callInfoMessage("Nothing is selected");
+      return;
     }
+    bool isFirstRowExist = false;
+    List<PlutoRow>? currentSelectRows = [];
+    if (noOfRows == 0) {
+      insertFastData(dr: (tblFastInsert?.currentRow)!);
+      return;
+    } else {
+      tblFastInsert?.currentSelectingRows.forEach((element) {
+        if (element.sortIdx == tblFastInsert?.currentRow?.sortIdx) {
+          isFirstRowExist = true;
+        }
+      });
+      currentSelectRows.addAll((tblFastInsert?.currentSelectingRows)!);
+      if (!isFirstRowExist) {
+        currentSelectRows.add((tblFastInsert?.currentRow)!);
+      }
+      currentSelectRows.sort((a, b) => (a.sortIdx).compareTo(b.sortIdx));
+      // currentSelectRows = currentSelectRows.reversed.toList();
+    }
+    for (var dr in (currentSelectRows)) {
+      String FPCTime;
+      if (gridStateManager?.currentRowIdx == 0) {
+        FPCTime = gridStateManager?.rows[gridStateManager?.currentRowIdx ?? 0]
+            .cells["fpCtime"]?.value;
+      } else {
+        FPCTime = gridStateManager
+            ?.rows[(gridStateManager?.currentRowIdx ?? 0) - 1]
+            .cells["fpCtime"]
+            ?.value;
+      }
+
+      if (dr.cells["eventtype"]?.value.toString().trim().toLowerCase() ==
+          "gl") {
+        FPCTime = gridStateManager?.rows[gridStateManager?.currentRowIdx ?? 0]
+            .cells["fpCtime"]?.value;
+      }
+
+      if (dr.cells["eventtype"]?.value.toString().trim() == "GL") {
+        if (["p", "s", "f", "gl"].contains(gridStateManager
+            ?.currentRow?.cells["eventType"]?.value
+            .toString()
+            .trim()
+            .toLowerCase())) {
+          row = (gridStateManager?.currentRowIdx ?? 0) + 1;
+
+          if ((gridStateManager?.rows.length ?? 0) > row) {
+            while (gridStateManager?.rows[row].cells["eventType"]?.value
+                    .toString()
+                    .trim()
+                    .toLowerCase() ==
+                "gl") {
+              if (row < (gridStateManager?.rows.length ?? 0)) {
+                row = row + 1;
+              }
+            }
+            gridStateManager?.setCurrentCell(
+                gridStateManager?.rows[row].cells[1], row);
+          }
+        } else {
+          // MsgBox("Unable to add Secondary Events here!", vbExclamation, strAlertMessageTitle);
+          Get.back();
+          LoadingDialog.callInfoMessage("Unable to add Secondary Events here!");
+          return;
+        }
+      }
+
+      if (isInsertAfter.value) {
+        FPCTime = gridStateManager?.rows[gridStateManager?.currentRowIdx ?? 0]
+            .cells["fpCtime"]?.value;
+      }
+
+      setInsertRowFastInsert(
+          FPCTime,
+          dr.cells["eventtype"]?.value,
+          dr.cells["txCaption"]?.value,
+          dr.cells["txId"]?.value,
+          Utils.convertToTimeFromDouble(
+              value: num.tryParse(dr.cells["duration"]?.value) ?? 0),
+          dr.cells["som"]?.value,
+          dr.cells["promoTypeCode"]?.value,
+          dr.cells["segmentNumber"]?.value.toString() ?? "",
+          dontSave: true);
+
+      // Adding Tags for promos
+      // GoTo hell
+      if (dr.cells["eventtype"]?.value.toString().trim().toLowerCase() ==
+          "pr") {
+        if ((inserSearchModel?.lstListMyEventData?.lstFastInsertTags
+                    ?.where((x) => x.crTapeID == dr.cells["txId"]?.value)
+                    .toList()
+                    .length ??
+                0) >
+            0) {
+          List<LstFastInsertTags>? filterList = inserSearchModel
+              ?.lstListMyEventData?.lstFastInsertTags
+              ?.where((x) => x.crTapeID == dr.cells["txId"]?.value)
+              .toList();
+          if ((filterList?.length ?? 0) == 1) {
+            row = gridStateManager?.currentRowIdx ?? 0 + 1;
+            gridStateManager?.setCurrentCell(
+                gridStateManager?.rows[row].cells[0], row);
+            setInsertRowFastInsert(
+                FPCTime,
+                dr.cells["eventtype"]?.value,
+                filterList![0].exportTapeCaption.toString(),
+                filterList![0].tagTapeid.toString(),
+                Utils.convertToTimeFromDouble(
+                    value: num.tryParse(
+                        filterList[0].promoDuration.toString() ?? "0")!),
+                filterList![0].som!,
+                filterList![0].promoTypeCode ?? "",
+                filterList![0].segmentNumber.toString(),
+                dontSave: true);
+            // UnSelectAllRows(gridStateManager ?);
+            // gridStateManager?.rows[row - 1].selected = true;
+            // gridStateManager?.currentCell = gridStateManager?.selectedRows[0].cells[1];
+            gridStateManager?.setCurrentCell(
+                gridStateManager?.currentRow?.cells[1],
+                gridStateManager?.currentRowIdx);
+          }
+        }
+      }
+
+      // hell:
+      // ColorGrid();
+      blnMultipleGLs = true;
+    }
+    if (noOfRows != 0) {
+      _download();
+    }
+    // } catch (e) {
+    //   print("Error found in btnFastInsert_Add_Click()" + e.toString());
+    //   Get.back();
+    // }
   }
 
   insertFastData({required PlutoRow dr}) {
@@ -1614,7 +1634,9 @@ class TransmissionLogController extends GetxController {
       Exporttapecode,
       tapeDuration!,
       SOM,
-      BreakNumber: ((BreakNumber != null) ? int.tryParse(BreakNumber!) : 0)!,
+      BreakNumber: ((BreakNumber != null && BreakNumber != "")
+          ? int.tryParse(BreakNumber!)
+          : 0)!,
     );
     if (InsertRow == 0) {
       InsertRow = -1;
@@ -3385,8 +3407,12 @@ class TransmissionLogController extends GetxController {
         ];
         // print("Total length of selecting row is 1 >>>" +
         //     (gridStateManager?.currentSelectingRows?.length.toString() ?? ""));
-        List<PlutoRow>? selectRows = gridStateManager?.currentSelectingRows;
+        bool isAvail = false;
+        bool isMulti = false;
+        List<PlutoRow>? focusableSelectRows =
+            gridStateManager?.currentSelectingRows;
         if ((gridStateManager?.currentSelectingRows.length ?? 0) > 0) {
+          isMulti = true;
           gridStateManager?.currentSelectingRows.forEach((element) {
             print("Cut sortIdx1 ${element.sortIdx.toString()}");
             if (strAllowedEvent.contains(element.cells["eventType"]?.value
@@ -3397,6 +3423,25 @@ class TransmissionLogController extends GetxController {
               listCutCopy.add(element);
             }
           });
+          gridStateManager?.currentSelectingRows.forEach((element) {
+            if (element.cells["rownumber"]?.value ==
+                gridStateManager?.currentRow?.cells["rownumber"]?.value) {
+              isAvail = true;
+            }
+          });
+
+          if (!isAvail) {
+            if (strAllowedEvent.contains(gridStateManager
+                    ?.currentRow?.cells["eventType"]?.value
+                    .toString()
+                    .trim()
+                    .toUpperCase() ??
+                "")) {
+              listCutCopy.add((gridStateManager?.currentRow)!);
+            }
+            // listCutCopy.add((gridStateManager?.currentRow)!);
+            focusableSelectRows?.add((gridStateManager?.currentRow)!);
+          }
         } else {
           if (strAllowedEvent.contains(gridStateManager
                   ?.currentRow?.cells["eventType"]?.value
@@ -3407,10 +3452,18 @@ class TransmissionLogController extends GetxController {
             listCutCopy.add((gridStateManager?.currentRow)!);
           }
         }
-        listCutCopy = listCutCopy.reversed.toList();
-        print("Cut length is>>" + listCutCopy.length.toString());
+        // listCutCopy = listCutCopy.reversed.toList();
+        // print("Cut length is>>" + listCutCopy.length.toString());
 
         if (listCutCopy.length > 0) {
+          if (!isAvail && isMulti) {
+            listCutCopy.sort((a, b) =>
+                (a.cells["rownumber"]?.value.toString() ?? "")
+                    .compareTo(b.cells["rownumber"]?.value.toString() ?? ""));
+            listCutCopy = listCutCopy.reversed.toList();
+          } else {
+            listCutCopy = listCutCopy.reversed.toList();
+          }
           print("Cutt");
           // copyRow = row;
           if (fun != null) {
@@ -3421,7 +3474,7 @@ class TransmissionLogController extends GetxController {
         }
         Future.delayed(Duration(microseconds: 50), () {
           gridStateManager?.clearCurrentSelecting();
-          selectRows?.forEach((element) {
+          focusableSelectRows?.forEach((element) {
             print("Cut sortIdx2 ${element.cells["rownumber"]?.value ?? ""}");
             gridStateManager?.toggleSelectingRow(
                 int.tryParse(element.cells["rownumber"]?.value ?? ""));
@@ -3447,7 +3500,10 @@ class TransmissionLogController extends GetxController {
           "O",
           "T",
         ];
+        bool isAvail = false;
+        bool isMulti = false;
         if ((gridStateManager?.currentSelectingRows.length ?? 0) > 0) {
+          isMulti = true;
           gridStateManager?.currentSelectingRows.forEach((element) {
             if (strAllowedEvent.contains(element.cells["eventType"]?.value
                     .toString()
@@ -3457,6 +3513,25 @@ class TransmissionLogController extends GetxController {
               listCutCopy.add(element);
             }
           });
+
+          gridStateManager?.currentSelectingRows.forEach((element) {
+            if (element.cells["rownumber"]?.value ==
+                gridStateManager?.currentRow?.cells["rownumber"]?.value) {
+              isAvail = true;
+            }
+          });
+
+          if (!isAvail) {
+            if (strAllowedEvent.contains(gridStateManager
+                    ?.currentRow?.cells["eventType"]?.value
+                    .toString()
+                    .trim()
+                    .toUpperCase() ??
+                "")) {
+              listCutCopy.add((gridStateManager?.currentRow)!);
+            }
+            // listCutCopy.add((gridStateManager?.currentRow)!);
+          }
         } else {
           if (strAllowedEvent.contains(gridStateManager
                   ?.currentRow?.cells["eventType"]?.value
@@ -3467,8 +3542,17 @@ class TransmissionLogController extends GetxController {
             listCutCopy.add((gridStateManager?.currentRow)!);
           }
         }
+
         if (listCutCopy.length > 0) {
-          listCutCopy = listCutCopy.reversed.toList();
+          // listCutCopy = listCutCopy.reversed.toList();
+          if (!isAvail && isMulti) {
+            listCutCopy.sort((a, b) =>
+                (a.cells["rownumber"]?.value.toString() ?? "")
+                    .compareTo(b.cells["rownumber"]?.value.toString() ?? ""));
+            listCutCopy = listCutCopy.reversed.toList();
+          } else {
+            listCutCopy = listCutCopy.reversed.toList();
+          }
           print("Copy");
           // copyRow = row;
           if (fun != null) {
@@ -3612,10 +3696,11 @@ class TransmissionLogController extends GetxController {
         return;
       }
 
-      bool? checkLostSec = await checkLostSecondaryEvents();
+      //Note: Check with User Date: 4 Dec 2023 - Confirmed by Vinod More
+      /*bool? checkLostSec = await checkLostSecondaryEvents();
       if (!(checkLostSec!)) {
         return;
-      }
+      }*/
 
       bool? hasWrongSec = await hasWrongSecondaryEventOffset(showMessage: true);
       if (hasWrongSec) {
@@ -3864,7 +3949,7 @@ class TransmissionLogController extends GetxController {
         if (allowedEvents.contains(gridStateManager
             ?.rows[i - 1].cells["eventType"]?.value
             .toString()
-            .trim()
+            // .trim() ///Removed this to match with exe i.e-> "S " Added space in trailing
             .toLowerCase())) {
           // gridStateManager.firstDisplayedScrollingRowIndex = i - 12;
           gridStateManager?.moveScrollByRow(PlutoMoveDirection.down,
@@ -4436,6 +4521,7 @@ class TransmissionLogController extends GetxController {
       print("Copy Pressed Ctrl + c ");
       if (gridStateManager != null &&
           ((gridStateManager?.currentSelectingRows.length ?? 0) > 0)) {
+        print("shift + c");
         // String value = "";
         // gridStateManager?.currentSelectingRows.forEach((element) {
         //   value =
@@ -4444,7 +4530,8 @@ class TransmissionLogController extends GetxController {
         // print(">>>>>>>>valueJKS"+value.toString());
         // print(">>>>>>>>valueJKS"+(gridStateManager?.currentCell?.column.field).toString());
         // print(">>>>>>>>valueJKS"+(gridStateManager?.currentSelectingRows.length ).toString());
-        Utils.copyToClipboardHack(gridStateManager?.currentSelectingText ?? "");
+        Utils.copyToClipboardHack(
+            gridStateManager?.currentSelectingText1 ?? "");
       } else if (gridStateManager != null &&
           gridStateManager?.currentCell != null) {
         print("Copy Pressed in clipboard ");
@@ -4455,7 +4542,7 @@ class TransmissionLogController extends GetxController {
     } else if (raw is RawKeyDownEvent &&
         raw.isControlPressed &&
         raw.character?.toLowerCase() == "c") {
-      print("cntrl + shift + c");
+      print("cntrl + c");
       if (gridStateManager != null &&
           ((gridStateManager?.currentSelectingRows.length ?? 0) > 0)) {
         String value = "";
@@ -4463,11 +4550,17 @@ class TransmissionLogController extends GetxController {
           value =
               "$value${element.cells[gridStateManager?.currentCell?.column.field]?.value}\n";
         });
-        print(">>>>>>>>valueJKS" + value.toString());
-        print(">>>>>>>>valueJKS" +
-            (gridStateManager?.currentCell?.column.field).toString());
-        print(">>>>>>>>valueJKS" +
-            (gridStateManager?.currentSelectingRows.length).toString());
+        bool isAvail = false;
+        gridStateManager?.currentSelectingRows.forEach((element) {
+          if (element.cells["rownumber"]?.value ==
+              gridStateManager?.currentRow?.cells["rownumber"]?.value) {
+            isAvail = true;
+          }
+        });
+        if (!isAvail) {
+          value = gridStateManager?.currentCell?.value + "\n" + value;
+        }
+
         Utils.copyToClipboardHack(value);
       } else if (gridStateManager != null &&
           gridStateManager?.currentCell != null) {
@@ -4559,8 +4652,18 @@ class TransmissionLogController extends GetxController {
   deleteMultiple() async {
     if ((gridStateManager?.currentSelectingRows.length ?? 0) > 0) {
       print("Multiple select");
+      bool isAvail = false;
+      gridStateManager?.currentSelectingRows.forEach((element) {
+        if (element.cells["rownumber"]?.value ==
+            gridStateManager?.currentRow?.cells["rownumber"]?.value) {
+          isAvail = true;
+        }
+      });
       List<PlutoRow> deletRows = [];
       List<PlutoRow>? selectedRows = gridStateManager?.currentSelectingRows;
+      if (!isAvail) {
+        selectedRows?.add((gridStateManager?.currentRow)!);
+      }
       for (int i = 0; i < (selectedRows?.length ?? 0); i++) {
         PlutoRow? row = selectedRows![i];
         if (["PR", "F"]
