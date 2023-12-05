@@ -82,6 +82,7 @@ class ShortContentBulkImportView extends StatelessWidget {
                           return DataGridFromMap3(
                             mapData: controller.responseList.value,
                             formatDate: false,
+                            hideCode: false,
                           );
                         }),
                       ),
