@@ -27,7 +27,7 @@ class NewShortContentFormView extends StatelessWidget {
             mainAxisSize: MainAxisSize.min,
             children: [
               AppBar(
-                title: const Text('New Short Content Form'),
+                title: const Text('STING MASTER'),
                 centerTitle: true,
                 backgroundColor: Colors.deepPurple,
               ),
@@ -186,7 +186,7 @@ class NewShortContentFormView extends StatelessWidget {
                         },
                         inkwellFocus: controller.programFocusNode,
                         selectedValue: controller.selectedProgram.value,
-                        width: Get.width * 0.325,
+                        width: Get.width * 0.495,
                         dialogHeight: 200,
                         isEnable: controller.selectedCategory.value?.type ==
                                 "SLIDE MASTER"
