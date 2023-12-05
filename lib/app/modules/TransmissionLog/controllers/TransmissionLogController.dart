@@ -100,6 +100,7 @@ class TransmissionLogController extends GetxController {
   TextEditingController txReplaceEvent_ = TextEditingController();
   TextEditingController txCaption_ = TextEditingController();
   TextEditingController insertDuration_ = TextEditingController();
+  TextEditingController insertDuration1_ = TextEditingController();
   TextEditingController replaceDuration = TextEditingController();
   TextEditingController fromReplaceInsert_ = TextEditingController();
   TextEditingController toReplaceInsert_ = TextEditingController();
@@ -614,6 +615,10 @@ class TransmissionLogController extends GetxController {
     txId = txId.replaceAll("\t", ",");
     txId = txId.replaceAll("\n", ",");
     txId = txId.replaceAll(",,", ",");
+    if ([" ", "\n", ",", "\t"].contains(txId[txId.length - 1])) {
+      txId = txId.substring(0, txId.length - 1);
+    }
+    txId_.text = txId;
     Get.find<ConnectorControl>().GETMETHODCALL(
         api: ApiFactory.TRANSMISSION_LOG_SEARCH_INSERT(
             selectLocation?.key ?? "",
@@ -634,6 +639,9 @@ class TransmissionLogController extends GetxController {
             insertDuration_.text = Utils.convertToTimeFromDouble(
                 value:
                     inserSearchModel?.lstListMyEventData?.totalDuration ?? 0);
+            if(inserSearchModel?.lstListMyEventData?.popUpMessage!=null && inserSearchModel?.lstListMyEventData?.popUpMessage!=""){
+              LoadingDialog.callInfoMessage(inserSearchModel?.lstListMyEventData?.popUpMessage??"");
+            }
             update(["insertList"]);
           } else {
             LoadingDialog.showErrorDialog("No data found");
@@ -1210,7 +1218,9 @@ class TransmissionLogController extends GetxController {
       });
       currentSelectRows.addAll((tblFastInsert?.currentSelectingRows)!);
       if (!isFirstRowExist) {
-        currentSelectRows.add((tblFastInsert?.currentRow)!);
+        if(tblFastInsert?.currentRow!=null) {
+          currentSelectRows.add((tblFastInsert?.currentRow)!);
+        }
       }
       currentSelectRows.sort((a, b) => (a.sortIdx).compareTo(b.sortIdx));
       // currentSelectRows = currentSelectRows.reversed.toList();
@@ -4745,6 +4755,48 @@ class TransmissionLogController extends GetxController {
               value: gridStateManager?.currentRow?.cells["tapeduration"]?.value
                       .toString() ??
                   "")!);
+    }
+  }
+
+  calculateDurationTimeInInsert() {
+    print("Total duration time called");
+    if (tblFastInsert == null) {
+      return;
+    }
+    if ((tblFastInsert?.currentSelectingRows.length ?? 0) > 0) {
+      num? totalTransmissionTime = 0;
+      bool isFirstRowExist = false;
+      tblFastInsert?.currentSelectingRows.forEach((element) {
+        if (element.sortIdx == tblFastInsert?.currentRow?.sortIdx) {
+          isFirstRowExist = true;
+        }
+      });
+      tblFastInsert?.currentSelectingRows.forEach((element) {
+        totalTransmissionTime = totalTransmissionTime! +
+            Utils.oldBMSConvertToSecondsValue(
+                value: Utils.convertToTimeFromDouble(
+                    value: num.tryParse(
+                        element.cells["duration"]?.value.toString() ?? "")!));
+      });
+      if (!isFirstRowExist) {
+        totalTransmissionTime = totalTransmissionTime! +
+            Utils.oldBMSConvertToSecondsValue(
+                value: Utils.convertToTimeFromDouble(
+                    value: num.tryParse(tblFastInsert
+                            ?.currentRow?.cells["duration"]?.value
+                            .toString() ??
+                        "")!));
+      }
+      insertDuration1_.text =
+          Utils.convertToTimeFromDouble(value: totalTransmissionTime!);
+    } else {
+      insertDuration1_.text = Utils.convertToTimeFromDouble(
+          value: Utils.oldBMSConvertToSecondsValue(
+              value: Utils.convertToTimeFromDouble(
+                  value: num.tryParse(tblFastInsert
+                          ?.currentRow?.cells["duration"]?.value
+                          .toString() ??
+                      "")!)));
     }
   }
 

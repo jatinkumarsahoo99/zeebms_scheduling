@@ -1351,7 +1351,8 @@ class TransmissionLogView extends StatelessWidget {
                                     load.stateManager.setSelectingMode(
                                         PlutoGridSelectingMode.row);
                                     // load.stateManager.setSelecting(true);
-                                    load.stateManager.toggleSelectingRow(0);
+                                    // load.stateManager.toggleSelectingRow(0);
+                                    load.stateManager.setCurrentCell(load.stateManager.firstCell, 0);
                                   },
                                   // colorCallback: (renderC) => Colors.red[200]!,
                                   onRowDoubleTap:
@@ -1784,6 +1785,8 @@ class TransmissionLogView extends StatelessWidget {
                                   LoadingDialog.showErrorDialog(
                                       "Please select event");
                                 } else {
+                                  controller.insertDuration_.text="00:00:00:00";
+                                  controller.insertDuration1_.text="00:00:00:00";
                                   controller.getBtnInsertSearchClick(
                                       isMine: controller.isMy.value,
                                       eventType:
@@ -1837,17 +1840,30 @@ class TransmissionLogView extends StatelessWidget {
                             ),
                           ),
                           SizedBox(
-                            width: 100,
+                            width: 20,
                           ),
                           Padding(
-                            padding: EdgeInsets.only(top: 7),
+                            padding: EdgeInsets.only(top: 3),
                             child: InputFields.formFieldNumberMask(
-                                hintTxt: "",
+                                hintTxt: "Total Duration",
                                 controller: controller.insertDuration_
                                   ..text = "00:00:00:00",
-                                widthRatio: 0.13,
+                                widthRatio: 0.10,
                                 isTime: false,
-                                isTitleReq: false,
+                                // isTitleReq: true,
+                                // paddingTop: 40,
+                                isEnable: false,
+                                paddingLeft: 0),
+                          ),
+                          Padding(
+                            padding: EdgeInsets.only(top: 3,left: 3),
+                            child: InputFields.formFieldNumberMask(
+                                hintTxt: "Selected Duration",
+                                controller: controller.insertDuration1_
+                                  ..text = "00:00:00:00",
+                                widthRatio: 0.10,
+                                isTime: false,
+                                // isTitleReq: false,
                                 // paddingTop: 40,
                                 isEnable: false,
                                 paddingLeft: 0),
@@ -1864,7 +1880,7 @@ class TransmissionLogView extends StatelessWidget {
                             return SizedBox(
                               // width: 500,
                               width: Get.width * 0.45,
-                              height: Get.height * 0.39,
+                              height: Get.height * 0.37,
                               child: (controller.inserSearchModel != null &&
                                       controller.inserSearchModel?.lstListMyEventData !=
                                           null &&
@@ -1894,8 +1910,14 @@ class TransmissionLogView extends StatelessWidget {
                                             .setGridMode(PlutoGridMode.normal);
                                         load.stateManager.setSelectingMode(
                                             PlutoGridSelectingMode.row);
+                                        load.stateManager.onSelectCellCallback =
+                                            () {
+                                          controller.calculateDurationTimeInInsert();
+                                        };
                                         // load.stateManager.setSelecting(true);
-                                        load.stateManager.toggleSelectingRow(0);
+                                        // load.stateManager.toggleSelectingRow(0);
+                                        load.stateManager.setCurrentCell(load.stateManager.firstCell, 0);
+                                        controller.calculateDurationTimeInInsert();
                                       },
                                       witdthSpecificColumn: (controller
                                           .userDataSettings?.userSetting
