@@ -688,14 +688,23 @@ class RoBookingView extends StatelessWidget {
     );
   }
 
-  btnHanlder(controller, btn) {
+  btnHanlder(RoBookingController controller, btn) {
     switch (btn["name"]) {
       case "Docs":
+        String documentKey = "";
+        if (controller.selectedLocation == null ||
+            controller.selectedChannel == null ||
+            controller.bookingMonthCtrl.text.isEmpty ||
+            controller.bookingNoCtrl.text.isEmpty) {
+          documentKey = "";
+        } else {
+          documentKey =
+              "RObooking ${controller.selectedLocation?.key ?? ''}${controller.selectedChannel?.key ?? ''}${controller.bookingMonthCtrl.text}${controller.bookingNoCtrl.text}";
+        }
         Get.defaultDialog(
           title: "Documents",
           content: CommonDocsView(
-            documentKey:
-                "RObooking ${controller.selectedLocation?.key ?? ''}${controller.selectedChannel?.key ?? ''}${controller.bookingMonthCtrl.text}${controller.bookingNoCtrl.text}",
+            documentKey: documentKey,
           ),
         ).then((value) {
           Get.delete<CommonDocsController>(tag: "commonDocs");
