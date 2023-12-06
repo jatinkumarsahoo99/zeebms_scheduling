@@ -298,17 +298,25 @@ class RoCancellationController extends GetxController {
   }
 
   docs() async {
-    if (cancelNumberctrl.text.isNotEmpty) {
-      Get.defaultDialog(
-        title: "Documents",
-        content: CommonDocsView(
-          documentKey:
-              "ROCancellation ${selectedLocation?.key ?? ''}${selectedChannel?.key ?? ''}${cancelMonthctrl.text}${cancelNumberctrl.text}",
-        ),
-      ).then((value) {
-        Get.delete<CommonDocsController>(tag: "commonDocs");
-      });
+    String documentKey = "";
+    if (cancelNumberctrl.text.isNotEmpty ||
+        selectedLocation == null ||
+        selectedChannel == null ||
+        cancelMonthctrl.text.isEmpty) {
+      documentKey = "";
+    } else {
+      documentKey =
+          "ROCancellation ${selectedLocation?.key ?? ''}${selectedChannel?.key ?? ''}${cancelMonthctrl.text}${cancelNumberctrl.text}";
     }
+
+    Get.defaultDialog(
+      title: "Documents",
+      content: CommonDocsView(
+        documentKey: documentKey,
+      ),
+    ).then((value) {
+      Get.delete<CommonDocsController>(tag: "commonDocs");
+    });
   }
 
   calculate() {
