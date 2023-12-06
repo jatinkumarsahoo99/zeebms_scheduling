@@ -78,9 +78,9 @@ class CommercialMasterController extends GetxController {
   TextEditingController agencyNameController = TextEditingController();
   TextEditingController clockIdController = TextEditingController();
 
-  TextEditingController endDateController = TextEditingController(text: DateFormat("dd-MM-yyyy").
-  format ( DateTime.now().
-  add(Duration(days: 3653))));
+  TextEditingController endDateController = TextEditingController(
+      text: DateFormat("dd-MM-yyyy")
+          .format(DateTime.now().add(Duration(days: 3653))));
   TextEditingController dispatchDateController = TextEditingController();
 
   Rx<TextEditingController> duration = TextEditingController().obs;
@@ -127,10 +127,10 @@ class CommercialMasterController extends GetxController {
     text = text.replaceAll("'", "`");
     return text;
   }
-  PermissionModel? formPermissions ;
+
+  PermissionModel? formPermissions;
   @override
   void onInit() {
-
     duration.value.text = "00:00:00:00";
     segController.text = '1';
     getAllDropDownList();
@@ -274,8 +274,7 @@ class CommercialMasterController extends GetxController {
 
     formPermissions = Get.find<MainController>()
         .permissionList!
-        .lastWhere((element) =>
-    element.appFormName == "frmCommercialMaster");
+        .lastWhere((element) => element.appFormName == "frmCommercialMaster");
 
     super.onInit();
   }
@@ -393,9 +392,10 @@ class CommercialMasterController extends GetxController {
     } else if (selectedAgencyDetails?.value == null) {
       Snack.callError("Please select Agency.");
     } else if ((commercialCode != "0" && commercialCode != "")) {
-      LoadingDialog.recordExists("Record Already exist!\nDo you want to modify it?", () {
+      LoadingDialog.recordExists(
+          "Record Already exist!\nDo you want to modify it?", () {
         callSaveApi();
-       /* if(formPermissions?.backDated == true){
+        /* if(formPermissions?.backDated == true){
           isEnable = true;
           isEnableSelective = false;
           update(['updateLeft', 'eventTable']);
@@ -405,7 +405,6 @@ class CommercialMasterController extends GetxController {
           isEnableSelective = false;
           update(['updateLeft', 'eventTable']);
         }*/
-
       });
     } else {
       callSaveApi();
@@ -416,8 +415,8 @@ class CommercialMasterController extends GetxController {
     LoadingDialog.recordExists(
         "End Date selected is ${DateFormat('dd/MM/yyyy').format(DateFormat("dd-MM-yyyy").parse(endDateController.text))} ${DateFormat('hh:mm:ss').format(DateTime.now())}. Want to proceed?",
         () {
-          callSaveBtnApi();
-         /* if(formPermissions?.backDated == true){
+      callSaveBtnApi();
+      /* if(formPermissions?.backDated == true){
             isEnable = true;
             isEnableSelective = false;
             update(['updateLeft', 'eventTable']);
@@ -426,7 +425,6 @@ class CommercialMasterController extends GetxController {
             isEnableSelective = false;
             update(['updateLeft', 'eventTable']);
           }*/
-
     });
   }
 
@@ -480,7 +478,7 @@ class CommercialMasterController extends GetxController {
                     map['result']['saveModel'][0]['exportTapecode'];
                 commercialCode =
                     map['result']['saveModel'][0]['commercialCode'];
-               /* if(formPermissions?.backDated == true){
+                /* if(formPermissions?.backDated == true){
                   isEnable = true;
                   isEnableSelective = false;
                   update(['updateLeft', 'eventTable']);
@@ -492,7 +490,9 @@ class CommercialMasterController extends GetxController {
                 }*/
               }
               LoadingDialog.callDataSavedMessage(
-                  (map['result']['genericMessage'] )?? "Record Saved Successfully",);
+                (map['result']['genericMessage']) ??
+                    "Record Saved Successfully",
+              );
             } else {
               // Get.back();
               LoadingDialog.showErrorDialog(
@@ -587,7 +587,9 @@ class CommercialMasterController extends GetxController {
     } else {
       documentKey = "CommercialMaster $commercialCode";
     }
-
+    if (documentKey == "") {
+      return;
+    }
     Get.defaultDialog(
       title: "Documents",
       content: CommonDocsView(documentKey: documentKey),
@@ -597,7 +599,7 @@ class CommercialMasterController extends GetxController {
   }
 
   getSecType(String key, {int? keyName}) {
-    if(key != null && key.toString().trim() !=""){
+    if (key != null && key.toString().trim() != "") {
       Get.find<ConnectorControl>().GETMETHODCALL(
           api: ApiFactory.COMMERCIAL_MASTER_GETSECTYPE + key,
           fun: (map) {
@@ -612,7 +614,8 @@ class CommercialMasterController extends GetxController {
                   if (element.key.toString().trim() ==
                       keyName.toString().trim()) {
                     selectedSecType?.value = DropDownValue(
-                        key: element.key.toString(), value: element.value ?? "");
+                        key: element.key.toString(),
+                        value: element.value ?? "");
                     selectedSecType?.refresh();
                     break;
                   }
@@ -621,7 +624,6 @@ class CommercialMasterController extends GetxController {
             }
           });
     }
-
   }
 
   getClientDetails(String clientName) {
@@ -641,7 +643,7 @@ class CommercialMasterController extends GetxController {
 
   getAgencyBrandType(String clientCode,
       {String? agName, String? agKey, String? braName, String? braKey}) {
-    if(clientCode != null && clientCode.toString().trim() != ""){
+    if (clientCode != null && clientCode.toString().trim() != "") {
       try {
         Get.find<ConnectorControl>().GETMETHODCALL(
             api: ApiFactory.COMMERCIAL_MASTER_GETAGENCYBRAND + clientCode,
@@ -698,7 +700,6 @@ class CommercialMasterController extends GetxController {
             });
       } catch (e) {}
     }
-
   }
 
   getLevelDetails(String brandCode) {
@@ -995,10 +996,10 @@ class CommercialMasterController extends GetxController {
             // isEnable = true;
             // isEnableSelective = false;
             // print(">>>>>>>>>>>>>>>>>>>permission"+(formPermissions?.backDated).toString());
-            if(formPermissions?.backDated == true){
+            if (formPermissions?.backDated == true) {
               isEnable = true;
               isEnableSelective = false;
-            }else{
+            } else {
               isEnable = false;
               isEnableSelective = false;
             }
