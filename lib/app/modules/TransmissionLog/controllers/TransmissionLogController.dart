@@ -1218,7 +1218,7 @@ class TransmissionLogController extends GetxController {
       });
       currentSelectRows.addAll((tblFastInsert?.currentSelectingRows)!);
       if (!isFirstRowExist) {
-        if(tblFastInsert?.currentRow!=null) {
+        if (tblFastInsert?.currentRow != null) {
           currentSelectRows.add((tblFastInsert?.currentRow)!);
         }
       }
@@ -4616,7 +4616,9 @@ class TransmissionLogController extends GetxController {
     } else if (raw is RawKeyDownEvent &&
         raw.logicalKey == LogicalKeyboardKey.delete) {
       print("Delete call");
-      deleteMultiple();
+      if (!canDialogShow.value) {
+        deleteMultiple();
+      }
     } else if (raw is RawKeyDownEvent && raw.character?.toLowerCase() == "y") {
       if (completerDialog != null && dialogWidget != null) {
         dialogWidget = null;
