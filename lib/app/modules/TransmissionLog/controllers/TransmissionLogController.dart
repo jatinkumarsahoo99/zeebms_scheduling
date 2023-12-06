@@ -615,7 +615,7 @@ class TransmissionLogController extends GetxController {
     txId = txId.replaceAll("\t", ",");
     txId = txId.replaceAll("\n", ",");
     txId = txId.replaceAll(",,", ",");
-    if ([" ", "\n", ",", "\t"].contains(txId[txId.length - 1])) {
+    if (txId!=null && txId!="" && [" ", "\n", ",", "\t"].contains(txId[txId.length - 1])) {
       txId = txId.substring(0, txId.length - 1);
     }
     txId_.text = txId;
@@ -861,7 +861,7 @@ class TransmissionLogController extends GetxController {
     for (int row = fromRow; row <= toRow; row++) {
       if ((gridStateManager?.rows[row].cells["exportTapeCode"]?.value ==
                   txReplaceTxId_.text &&
-              (gridStateManager?.rows[row].cells["eventType"]?.value
+              ((gridStateManager?.rows[row].cells["eventType"]?.value
                       .toString()
                       .trim() ==
                   txReplaceEvent_.text.trim()) ||
@@ -869,7 +869,7 @@ class TransmissionLogController extends GetxController {
               ?.rows[row].cells["eventType"]?.value
               .toString()
               .trim()
-              .toLowerCase())))) {
+              .toLowerCase()))))) {
         replaceCount++;
         gridStateManager?.rows[row].cells["exportTapeCode"]?.value =
             tblFastInsert?.rows[i].cells["txId"]?.value;
