@@ -27,7 +27,8 @@ class NewShortContentFormView extends StatelessWidget {
             mainAxisSize: MainAxisSize.min,
             children: [
               AppBar(
-                title: const Text('New Short Content Form'),
+                title: const Text('Sting Master'),
+                // Text('New Short Content Form'),
                 centerTitle: true,
                 backgroundColor: Colors.deepPurple,
               ),
@@ -49,7 +50,7 @@ class NewShortContentFormView extends StatelessWidget {
                           controller.locationFocusNode.requestFocus();
                         },
                         "Location",
-                        .155,
+                        0.16,
                         inkWellFocusNode: controller.locationFocusNode,
                         selected: controller.selectedLocation.value,
                         autoFocus: true,
@@ -108,7 +109,7 @@ class NewShortContentFormView extends StatelessWidget {
                     InputFields.formField1(
                         hintTxt: "Caption",
                         controller: controller.caption,
-                        width: .155,
+                        width: 0.16,
                         focusNode: controller.captionFN),
                     Obx(
                       () => InputFields.formField1(
@@ -144,7 +145,7 @@ class NewShortContentFormView extends StatelessWidget {
                           controller.orgFocusNode.requestFocus();
                         },
                         "Org / Repeat",
-                        .155,
+                        0.16,
                         inkWellFocusNode: controller.orgFocusNode,
                         selected: controller.selectedOrgRep.value,
                         autoFocus: true,
@@ -186,7 +187,7 @@ class NewShortContentFormView extends StatelessWidget {
                         },
                         inkwellFocus: controller.programFocusNode,
                         selectedValue: controller.selectedProgram.value,
-                        width: Get.width * 0.325,
+                        width: Get.width * 0.500,
                         dialogHeight: 200,
                         isEnable: controller.selectedCategory.value?.type ==
                                 "SLIDE MASTER"
@@ -208,7 +209,7 @@ class NewShortContentFormView extends StatelessWidget {
                     ),
                     InputFields.formFieldNumberMask(
                         hintTxt: "EOM",
-                        widthRatio: .155,
+                        widthRatio: 0.16,
                         controller: controller.eom,
                         // textFieldFN: controller.eomFN,
                         // isTime: true,
@@ -238,7 +239,7 @@ class NewShortContentFormView extends StatelessWidget {
                     DateWithThreeTextField(
                       title: "End Date",
                       mainTextController: controller.endDate,
-                      widthRation: .155,
+                      widthRation: 0.16,
                     ),
                     Obx(
                       () => controller.selectedCategory.value?.type ==
@@ -384,38 +385,6 @@ class NewShortContentFormView extends StatelessWidget {
         controller.clearPage();
         Get.find<HomeController>().clearPage1();
         break;
-      default:
-    }
-  }
-
-  selectedId(name) async {
-    switch (name) {
-      case "MARRIDE ID":
-        controller.formId.value = 'A';
-        break;
-      case "NETWORK ID":
-        controller.formId.value = 'W';
-        break;
-      case "PRESENTATION":
-        controller.formId.value = 'O';
-        break;
-      case "PRESENTS":
-        controller.formId.value = 'T';
-        break;
-      case "STATION ID":
-        controller.formId.value = 'I';
-        break;
-
-      case "Bumper":
-        controller.formId.value = '1';
-        break;
-      case "DISCLAIMER":
-        controller.formId.value = 'D';
-        break;
-      case "VIGNETTE":
-        controller.formId.value = 'V';
-        break;
-
       default:
     }
   }
