@@ -3,12 +3,14 @@ import 'package:flutter/material.dart';
 class DraggableFab extends StatefulWidget {
   final Widget child;
   final Offset? initPosition;
+  final Function? dragEndCall;
   final double securityBottom;
 
   const DraggableFab(
       {Key? key,
       required this.child,
       this.initPosition,
+      this.dragEndCall,
       this.securityBottom = 0})
       : super(key: key);
 
@@ -74,6 +76,9 @@ class _DraggableFabState extends State<DraggableFab> {
 
   void _handleDragEnded(DraggableDetails draggableDetails) {
     _calculatePosition(draggableDetails.offset);
+    if(widget.dragEndCall!=null){
+      widget.dragEndCall!();
+    }
   }
 
   void _calculatePosition(Offset targetOffset) {
