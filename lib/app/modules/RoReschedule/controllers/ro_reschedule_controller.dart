@@ -818,7 +818,7 @@ class RoRescheduleController extends GetxController {
       title: "Documents",
       content: CommonDocsView(
           documentKey:
-              "ROReschedule ${selectedLocation!.key}${selectedChannel!.key}${bookingMonthCtrl.text}${reSchedNoCtrl.text}"),
+              "ROReschedule ${selectedLocation?.key ?? ''}${selectedChannel?.key ?? ''}${bookingMonthCtrl.text}${reSchedNoCtrl.text}"),
     ).then((value) {
       Get.delete<CommonDocsController>(tag: "commonDocs");
     });

@@ -319,7 +319,7 @@ class PromoMasterController extends GetxController {
   docs() async {
     String documentKey = "";
     if (promoCode.isEmpty) {
-      documentKey = "";
+      documentKey = " ";
     } else {
       documentKey = "Promomaster$promoCode";
     }

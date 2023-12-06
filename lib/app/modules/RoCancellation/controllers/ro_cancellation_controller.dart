@@ -303,7 +303,7 @@ class RoCancellationController extends GetxController {
         title: "Documents",
         content: CommonDocsView(
           documentKey:
-              "ROCancellation${selectedLocation?.key ?? ''}${selectedChannel?.key ?? ''}${cancelMonthctrl.text}${cancelNumberctrl.text}",
+              "ROCancellation ${selectedLocation?.key ?? ''}${selectedChannel?.key ?? ''}${cancelMonthctrl.text}${cancelNumberctrl.text}",
         ),
       ).then((value) {
         Get.delete<CommonDocsController>(tag: "commonDocs");
