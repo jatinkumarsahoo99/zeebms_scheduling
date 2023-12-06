@@ -62,6 +62,7 @@ class ShortContentBulkImportView extends StatelessWidget {
                       btnText: "Clear",
                       callback: () {
                         controller.selectedMaster = null;
+                        controller.selectedFile.value = null;
                         controller.masters.refresh();
                         controller.responseList.clear();
                         controller.masterFN.requestFocus();
@@ -81,6 +82,7 @@ class ShortContentBulkImportView extends StatelessWidget {
                           return DataGridFromMap3(
                             mapData: controller.responseList.value,
                             formatDate: false,
+                            hideCode: false,
                           );
                         }),
                       ),

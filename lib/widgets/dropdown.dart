@@ -3422,6 +3422,295 @@ class DropDownField {
           ],
         ));
   }
+
+  static Widget formDropDown1WidthMap2(
+    List<DropDownValue2>? items,
+    Function(DropDownValue2) callback,
+    String hint,
+    double widthRatio, {
+    double? height,
+    bool showMenuInbottom = true,
+    double? paddingBottom,
+    DropDownValue2? selected,
+    bool? isEnable,
+    String? Function(DropDownValue2? value)? validator,
+    bool? searchReq,
+    bool autoFocus = false,
+    bool? showSearchField = true,
+    double dialogHeight = 350,
+    void Function(bool)? onFocusChange,
+    double? dialogWidth,
+    FocusNode? inkWellFocusNode,
+    GlobalKey? widgetKey,
+    bool showtitle = true,
+    bool titleInLeft = false,
+    Function(bool dropDownOpen)? dropdownOpen,
+  }) {
+    isEnable ??= true;
+    widgetKey ??= GlobalKey();
+    final textColor = (isEnable) ? Colors.black : Colors.grey;
+    final iconLineColor = (isEnable) ? Colors.deepPurpleAccent : Colors.grey;
+    inkWellFocusNode ??= FocusNode();
+    return Column(
+      // key: titleInLeft ? null : widgetKey,
+      mainAxisSize: MainAxisSize.min,
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        if (showtitle && !titleInLeft) ...{
+          Text(
+            hint,
+            style: TextStyle(
+              fontSize: SizeDefine.labelSize1,
+              color: Colors.black,
+              fontWeight: FontWeight.w500,
+            ),
+          ),
+          const SizedBox(height: 5),
+        },
+        StatefulBuilder(builder: (context, re) {
+          bool showNoRecord = false;
+          return Row(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              if (titleInLeft) ...{
+                Text(
+                  hint,
+                  style: TextStyle(
+                    fontSize: SizeDefine.labelSize1,
+                    color: Colors.black,
+                    fontWeight: FontWeight.w500,
+                  ),
+                ),
+                const SizedBox(width: 10),
+              },
+              InkWell(
+                  // key: widgetKey,
+                  // key: titleInLeft ? widgetKey : null,
+                  autofocus: autoFocus,
+                  focusNode: inkWellFocusNode,
+                  canRequestFocus: (isEnable ?? true),
+                  onFocusChange: onFocusChange,
+                  onTap: (!isEnable!)
+                      ? null
+                      : () {
+                          if (dropdownOpen != null) {
+                            dropdownOpen(true);
+                          }
+                          var isLoading = RxBool(false);
+
+                          final RenderBox renderBox = widgetKey!.currentContext
+                              ?.findRenderObject() as RenderBox;
+                          final offset = renderBox.localToGlobal(Offset.zero);
+                          final left = offset.dx;
+                          final top = (offset.dy + renderBox.size.height);
+                          final right = left + renderBox.size.width;
+                          final width = renderBox.size.width;
+                          if ((items == null || items.isEmpty)) {
+                            showMenu(
+                                context: context,
+                                useRootNavigator: true,
+                                position: RelativeRect.fromLTRB(
+                                    left, top, right, 0.0),
+                                constraints: BoxConstraints.expand(
+                                  width: dialogWidth ?? width,
+                                  height: 120,
+                                ),
+                                items: [
+                                  PopupMenuItem(
+                                    child: Text(
+                                      "No Record Found",
+                                      style: TextStyle(
+                                        fontSize:
+                                            SizeDefine.dropDownFontSize - 1,
+                                      ),
+                                    ),
+                                  )
+                                ]).then((value) {
+                              if (dropdownOpen != null) {
+                                dropdownOpen(false);
+                              }
+                            });
+                          } else {
+                            var tempList = RxList<DropDownValue2>([]);
+                            // if (selected == null) {
+                            //   tempList.addAll(items);
+                            // } else {
+                            for (var i = 0; i < items.length; i++) {
+                              tempList.add(items[i]);
+                            }
+                            // }
+                            showMenu(
+                              context: context,
+                              useRootNavigator: true,
+                              position:
+                                  RelativeRect.fromLTRB(left, top, right, 0.0),
+                              constraints: BoxConstraints.expand(
+                                width: dialogWidth ?? width,
+                                height: dialogHeight,
+                              ),
+                              items: [
+                                CustomPopupMenuItem(
+                                  textStyle: TextStyle(
+                                      color: Colors.black,
+                                      fontSize: SizeDefine.fontSizeInputField),
+                                  child: Container(
+                                    padding: const EdgeInsets.all(8),
+                                    height: dialogHeight - 20,
+                                    child: Column(
+                                      children: [
+                                        /// search
+                                        if (showSearchField ?? true)
+                                          TextFormField(
+                                            decoration: const InputDecoration(
+                                                contentPadding:
+                                                    EdgeInsets.all(12),
+                                                isDense: true,
+                                                isCollapsed: true,
+                                                hintText: "Search",
+                                                counterText: ""),
+                                            controller: TextEditingController(),
+                                            autofocus: true,
+                                            style: TextStyle(
+                                              fontSize:
+                                                  SizeDefine.fontSizeInputField,
+                                            ),
+                                            onChanged: ((value) {
+                                              if (value.isNotEmpty) {
+                                                tempList.clear();
+                                                for (var i = 0;
+                                                    i < items.length;
+                                                    i++) {
+                                                  if (items[i]
+                                                      .value!
+                                                      .toLowerCase()
+                                                      .contains(value
+                                                          .toLowerCase())) {
+                                                    tempList.add(items[i]);
+                                                  }
+                                                }
+                                              } else {
+                                                tempList.clear();
+                                                tempList.addAll(items);
+                                                tempList.refresh();
+                                              }
+                                            }),
+                                            inputFormatters: [
+                                              FilteringTextInputFormatter.deny(
+                                                  "  "),
+                                            ],
+                                            maxLength: SizeDefine.maxcharlimit,
+                                          ),
+
+                                        /// progreesbar
+                                        Obx(() {
+                                          return Visibility(
+                                            visible: isLoading.value,
+                                            child:
+                                                const LinearProgressIndicator(
+                                              minHeight: 3,
+                                            ),
+                                          );
+                                        }),
+
+                                        const SizedBox(height: 5),
+
+                                        /// list
+                                        Expanded(
+                                          child: Obx(
+                                            () {
+                                              return ListView(
+                                                shrinkWrap: true,
+                                                children: tempList
+                                                    .map(
+                                                      (element) => InkWell(
+                                                        onTap: () {
+                                                          Navigator.pop(
+                                                              context);
+                                                          selected = element;
+                                                          re(() {});
+                                                          callback(element);
+                                                          FocusScope.of(context)
+                                                              .requestFocus(
+                                                                  inkWellFocusNode);
+                                                        },
+                                                        child: Padding(
+                                                          padding:
+                                                              const EdgeInsets
+                                                                      .symmetric(
+                                                                  vertical: 8),
+                                                          child: Text(
+                                                            element.value ??
+                                                                "null",
+                                                            style: TextStyle(
+                                                              fontSize: SizeDefine
+                                                                      .dropDownFontSize -
+                                                                  1,
+                                                            ),
+                                                          ),
+                                                        ),
+                                                      ),
+                                                    )
+                                                    .toList(),
+                                              );
+                                            },
+                                          ),
+                                        ),
+                                      ],
+                                    ),
+                                  ),
+                                ),
+                              ],
+                            ).then((value) {
+                              if (dropdownOpen != null) {
+                                dropdownOpen(false);
+                              }
+                            });
+                          }
+                        },
+                  child: Container(
+                    key: widgetKey,
+                    width: Get.width * widthRatio,
+                    height: SizeDefine.heightInputField,
+                    decoration: BoxDecoration(
+                      border: Border.all(
+                        color: iconLineColor,
+                      ),
+                    ),
+                    child: Row(
+                      mainAxisSize: MainAxisSize.min,
+                      children: [
+                        Expanded(
+                            child: Align(
+                          alignment: Alignment.centerLeft,
+                          child: Padding(
+                            padding: const EdgeInsets.only(left: 8, right: 4),
+                            child: Text(
+                              (selected?.value ??
+                                  (items!.isEmpty && showNoRecord
+                                      ? "NO Record Found"
+                                      : "")),
+                              style: TextStyle(
+                                fontSize: SizeDefine.fontSizeInputField,
+                                color: textColor,
+                              ),
+                              maxLines: 1,
+                              textAlign: TextAlign.start,
+                            ),
+                          ),
+                        )),
+                        Icon(
+                          Icons.arrow_drop_down,
+                          color: iconLineColor,
+                        )
+                      ],
+                    ),
+                  )),
+            ],
+          );
+        }),
+      ],
+    );
+  }
 }
 
 class AlwaysDisabledFocusNode extends FocusNode {

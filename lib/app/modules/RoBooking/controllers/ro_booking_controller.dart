@@ -1094,8 +1094,8 @@ class RoBookingController extends GetxController {
             bookingNoLeaveDealCurrentRow = null;
             bookingNoLeaveData = RoBookingBkgNOLeaveData.fromJson(
                 value["info_LeaveBookingNumber"]);
-            bookingNoLeaveData!.lstdgvDealDetails =
-                bookingNoLeaveData!.lstdgvDealDetails!.where((e) {
+            bookingNoLeaveData?.lstdgvDealDetails =
+                bookingNoLeaveData?.lstdgvDealDetails?.where((e) {
               var result = selectedDeal?.value == e.dealNumber.toString() &&
                   selectedLocation?.value == e.locationname.toString() &&
                   selectedChannel?.value == e.channelname.toString();

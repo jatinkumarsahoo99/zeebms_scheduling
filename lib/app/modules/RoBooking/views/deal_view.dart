@@ -111,6 +111,15 @@ class DealView extends GetView<RoBookingController> {
                                       gridcontroller.dealNoLeaveData!
                                           .lstdgvDealDetails!.isNotEmpty
                                   ? DataGridShowOnlyKeys(
+                                      colorCallback: (event) {
+                                        if (event.row ==
+                                            gridcontroller
+                                                .dealViewGrid?.currentRow) {
+                                          return Colors.deepPurple.shade100;
+                                        } else {
+                                          return Colors.white;
+                                        }
+                                      },
                                       mapData: gridcontroller
                                           .dealNoLeaveData!.lstdgvDealDetails!
                                           .map((e) => e.toJson())
@@ -164,7 +173,7 @@ class DealView extends GetView<RoBookingController> {
                                             value.rowIdx);
                                       },
                                       hideCode: false,
-                                      mode: PlutoGridMode.selectWithOneTap,
+                                      // mode: PlutoGridMode.selectWithOneTap,
                                     )
                                   : Container(
                                       decoration: BoxDecoration(
