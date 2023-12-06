@@ -308,7 +308,9 @@ class RoCancellationController extends GetxController {
       documentKey =
           "ROCancellation ${selectedLocation?.key ?? ''}${selectedChannel?.key ?? ''}${cancelMonthctrl.text}${cancelNumberctrl.text}";
     }
-
+    if (documentKey == "") {
+      return;
+    }
     Get.defaultDialog(
       title: "Documents",
       content: CommonDocsView(

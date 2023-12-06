@@ -660,6 +660,9 @@ class RoRescheduleView extends StatelessWidget {
           documentKey =
               "ROReschedule ${controller.selectedLocation?.key ?? ''}${controller.selectedChannel?.key ?? ''}${controller.bookingMonthCtrl.text}${controller.reSchedNoCtrl.text}";
         }
+        if (documentKey == "") {
+          return;
+        }
         Get.defaultDialog(
           title: "Documents",
           content: CommonDocsView(

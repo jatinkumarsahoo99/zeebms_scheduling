@@ -701,6 +701,11 @@ class RoBookingView extends StatelessWidget {
           documentKey =
               "RObooking ${controller.selectedLocation?.key ?? ''}${controller.selectedChannel?.key ?? ''}${controller.bookingMonthCtrl.text}${controller.bookingNoCtrl.text}";
         }
+
+        if (documentKey == "") {
+          return;
+        }
+
         Get.defaultDialog(
           title: "Documents",
           content: CommonDocsView(

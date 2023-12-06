@@ -151,7 +151,7 @@ class BrandMasterController extends GetxController {
     isFocusNodeActive = false;
     LoadingDialog.call();
     brandNameFocus.requestFocus();
-    try{
+    try {
       Get.find<ConnectorControl>().GETMETHODCALL(
           api: ApiFactory.BRANDMASTER_GETCLIENTDETAILS +
               Uri.encodeComponent(client.replaceAll("'", "")),
@@ -175,7 +175,7 @@ class BrandMasterController extends GetxController {
               completer.complete("");
             }
           });
-    }catch(e){
+    } catch (e) {
       completer.complete("");
     }
     return completer.future;
@@ -309,6 +309,10 @@ class BrandMasterController extends GetxController {
       documentKey = "Brandmaster $strcode";
     }
 
+    if (documentKey == "") {
+      return;
+    }
+
     Get.defaultDialog(
       title: "Documents",
       content: CommonDocsView(documentKey: documentKey),
@@ -402,12 +406,12 @@ class BrandMasterController extends GetxController {
               map['brandMater'] != null) {
             if (strcode != "0") {
               LoadingDialog.callDataSavedMessage(
-                  "Record is updated successfully.",callback: (){
+                  "Record is updated successfully.", callback: () {
                 clearAll();
               });
             } else {
               LoadingDialog.callDataSavedMessage(
-                  "Record is inserted successfully.",callback: (){
+                  "Record is inserted successfully.", callback: () {
                 clearAll();
               });
             }
@@ -432,8 +436,6 @@ class BrandMasterController extends GetxController {
       },
     );
 
-
-
     clientFocus = FocusNode(
       onKeyEvent: (node, event) {
         if (event.logicalKey == LogicalKeyboardKey.tab) {
@@ -441,7 +443,6 @@ class BrandMasterController extends GetxController {
             fetchClientDetails(selectedClient?.value ?? "").then((value) {
               brandNameFocus.requestFocus();
             });
-
           }
           return KeyEventResult.ignored;
         }
@@ -452,13 +453,13 @@ class BrandMasterController extends GetxController {
     gridFocus = FocusNode(
       onKeyEvent: (node, event) {
         if (event.logicalKey == LogicalKeyboardKey.tab) {
-          if(brandController.text.trim() == ""){
+          if (brandController.text.trim() == "") {
             brandNameFocus.requestFocus();
-          }else if(brandShortNameController.text.trim() == ""){
+          } else if (brandShortNameController.text.trim() == "") {
             brandsShortNameFocus.requestFocus();
-          }else if(selectedProduct?.value == null){
+          } else if (selectedProduct?.value == null) {
             productFocus.requestFocus();
-          }else{
+          } else {
             gridFocus.nextFocus();
           }
 
@@ -480,8 +481,6 @@ class BrandMasterController extends GetxController {
 
     super.onInit();
   }
-
-
 
   @override
   void onReady() {

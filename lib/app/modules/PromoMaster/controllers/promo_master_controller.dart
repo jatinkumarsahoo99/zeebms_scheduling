@@ -323,7 +323,9 @@ class PromoMasterController extends GetxController {
     } else {
       documentKey = "Promomaster$promoCode";
     }
-
+    if (documentKey == "") {
+      return;
+    }
     Get.defaultDialog(
       title: "Documents",
       content: CommonDocsView(documentKey: documentKey),
