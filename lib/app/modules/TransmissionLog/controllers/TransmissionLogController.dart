@@ -298,8 +298,10 @@ class TransmissionLogController extends GetxController {
               fun();
               update(['commercialsList']);
             }
-          } else {
+          } else if (map is String) {
             Snack.callError(map.toString());
+          } else {
+            LoadingDialog.callInfoMessage("No data found");
           }
 
           /* channels.clear();
@@ -615,7 +617,9 @@ class TransmissionLogController extends GetxController {
     txId = txId.replaceAll("\t", ",");
     txId = txId.replaceAll("\n", ",");
     txId = txId.replaceAll(",,", ",");
-    if (txId!=null && txId!="" && [" ", "\n", ",", "\t"].contains(txId[txId.length - 1])) {
+    if (txId != null &&
+        txId != "" &&
+        [" ", "\n", ",", "\t"].contains(txId[txId.length - 1])) {
       txId = txId.substring(0, txId.length - 1);
     }
     txId_.text = txId;
@@ -639,8 +643,10 @@ class TransmissionLogController extends GetxController {
             insertDuration_.text = Utils.convertToTimeFromDouble(
                 value:
                     inserSearchModel?.lstListMyEventData?.totalDuration ?? 0);
-            if(inserSearchModel?.lstListMyEventData?.popUpMessage!=null && inserSearchModel?.lstListMyEventData?.popUpMessage!=""){
-              LoadingDialog.callInfoMessage(inserSearchModel?.lstListMyEventData?.popUpMessage??"");
+            if (inserSearchModel?.lstListMyEventData?.popUpMessage != null &&
+                inserSearchModel?.lstListMyEventData?.popUpMessage != "") {
+              LoadingDialog.callInfoMessage(
+                  inserSearchModel?.lstListMyEventData?.popUpMessage ?? "");
             }
             update(["insertList"]);
           } else {
@@ -860,16 +866,16 @@ class TransmissionLogController extends GetxController {
 
     for (int row = fromRow; row <= toRow; row++) {
       if ((gridStateManager?.rows[row].cells["exportTapeCode"]?.value ==
-                  txReplaceTxId_.text &&
-              ((gridStateManager?.rows[row].cells["eventType"]?.value
+              txReplaceTxId_.text &&
+          ((gridStateManager?.rows[row].cells["eventType"]?.value
                       .toString()
                       .trim() ==
                   txReplaceEvent_.text.trim()) ||
-          (["a", "w", "o", "t", "i"].contains(gridStateManager
-              ?.rows[row].cells["eventType"]?.value
-              .toString()
-              .trim()
-              .toLowerCase()))))) {
+              (["a", "w", "o", "t", "i"].contains(gridStateManager
+                  ?.rows[row].cells["eventType"]?.value
+                  .toString()
+                  .trim()
+                  .toLowerCase()))))) {
         replaceCount++;
         gridStateManager?.rows[row].cells["exportTapeCode"]?.value =
             tblFastInsert?.rows[i].cells["txId"]?.value;
