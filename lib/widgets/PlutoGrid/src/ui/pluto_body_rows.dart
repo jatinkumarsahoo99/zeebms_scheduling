@@ -88,29 +88,32 @@ class PlutoBodyRowsState extends PlutoStateWithChange<PlutoBodyRows> {
       scrollBarTrackColor: scrollbarConfig.scrollBarTrackColor,
       radius: scrollbarConfig.scrollbarRadius,
       radiusWhileDragging: scrollbarConfig.scrollbarRadiusWhileDragging,
-      child: SingleChildScrollView(
-        controller: _horizontalScroll,
-        scrollDirection: Axis.horizontal,
-        physics: const ClampingScrollPhysics(),
-        child: CustomSingleChildLayout(
-          delegate: ListResizeDelegate(stateManager, _columns),
-          child: ListView.builder(
-            controller: _verticalScroll,
-            scrollDirection: Axis.vertical,
-            physics: const ClampingScrollPhysics(),
-            itemCount: _rows.length,
-            itemExtent: stateManager.rowTotalHeight,
-            addRepaintBoundaries: false,
-            itemBuilder: (ctx, i) {
-              return PlutoBaseRow(
-                key: ValueKey('body_row_${_rows[i].key}'),
-                rowIdx: i,
-                row: _rows[i],
-                columns: _columns,
-                stateManager: stateManager,
-                visibilityLayout: true,
-              );
-            },
+      child: Padding(
+        padding: const EdgeInsets.only(bottom: 18.0),
+        child: SingleChildScrollView(
+          controller: _horizontalScroll,
+          scrollDirection: Axis.horizontal,
+          physics: const ClampingScrollPhysics(),
+          child: CustomSingleChildLayout(
+            delegate: ListResizeDelegate(stateManager, _columns),
+            child: ListView.builder(
+              controller: _verticalScroll,
+              scrollDirection: Axis.vertical,
+              physics: const ClampingScrollPhysics(),
+              itemCount: _rows.length,
+              itemExtent: stateManager.rowTotalHeight,
+              addRepaintBoundaries: false,
+              itemBuilder: (ctx, i) {
+                return PlutoBaseRow(
+                  key: ValueKey('body_row_${_rows[i].key}'),
+                  rowIdx: i,
+                  row: _rows[i],
+                  columns: _columns,
+                  stateManager: stateManager,
+                  visibilityLayout: true,
+                );
+              },
+            ),
           ),
         ),
       ),
