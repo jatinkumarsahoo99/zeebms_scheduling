@@ -695,7 +695,7 @@ class RoBookingView extends StatelessWidget {
           title: "Documents",
           content: CommonDocsView(
             documentKey:
-                "RObooking${controller.selectedLocation!.key}${controller.selectedChannel!.key}${controller.bookingMonthCtrl.text}${controller.bookingNoCtrl.text}",
+                "RObooking ${controller.selectedLocation?.key ?? ''}${controller.selectedChannel?.key ?? ''}${controller.bookingMonthCtrl.text}${controller.bookingNoCtrl.text}",
           ),
         ).then((value) {
           Get.delete<CommonDocsController>(tag: "commonDocs");

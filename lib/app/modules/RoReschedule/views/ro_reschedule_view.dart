@@ -654,7 +654,7 @@ class RoRescheduleView extends StatelessWidget {
           title: "Documents",
           content: CommonDocsView(
             documentKey:
-                "ROReschedule ${controller.selectedLocation!.key}${controller.selectedChannel!.key}${controller.bookingMonthCtrl.text}${controller.reSchedNoCtrl.text}",
+                "ROReschedule ${controller.selectedLocation?.key ?? ''}${controller.selectedChannel?.key ?? ''}${controller.bookingMonthCtrl.text}${controller.reSchedNoCtrl.text}",
           ),
         ).then((value) {
           Get.delete<CommonDocsController>(tag: "commonDocs");
