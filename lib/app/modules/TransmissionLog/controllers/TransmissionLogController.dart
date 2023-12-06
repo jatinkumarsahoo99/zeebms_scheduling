@@ -1268,7 +1268,7 @@ class TransmissionLogController extends GetxController {
               }
             }
             gridStateManager?.setCurrentCell(
-                gridStateManager?.rows[row].cells[1], row);
+                gridStateManager?.rows[row].cells["no"], row);
           }
         } else {
           // MsgBox("Unable to add Secondary Events here!", vbExclamation, strAlertMessageTitle);
@@ -1385,7 +1385,7 @@ class TransmissionLogController extends GetxController {
             }
           }
           gridStateManager?.setCurrentCell(
-              gridStateManager?.rows[row].cells[1], row);
+              gridStateManager?.rows[row].cells["no"], row);
         }
       } else {
         // MsgBox("Unable to add Secondary Events here!", vbExclamation, strAlertMessageTitle);
@@ -1500,7 +1500,7 @@ class TransmissionLogController extends GetxController {
               }
             }
             gridStateManager?.setCurrentCell(
-                gridStateManager?.rows[row].cells[1], row);
+                gridStateManager?.rows[row].cells["no"], row);
           }
         } else {
           // MsgBox("Unable to add Secondary Events here!", vbExclamation, strAlertMessageTitle);
@@ -1559,7 +1559,7 @@ class TransmissionLogController extends GetxController {
             // gridStateManager?.rows[row - 1].selected = true;
             // gridStateManager?.currentCell = gridStateManager?.selectedRows[0].cells[1];
             gridStateManager?.setCurrentCell(
-                gridStateManager?.currentRow?.cells[1],
+                gridStateManager?.currentRow?.cells["no"],
                 gridStateManager?.currentRowIdx);
           }
         }
@@ -1617,7 +1617,7 @@ class TransmissionLogController extends GetxController {
             .toString()
             .trim()
             .toLowerCase())) {
-          dr.cells["tapeduration"] =
+          dr.cells["tapeduration"]?.value =
               gridStateManager?.rows[myRow].cells["tapeduration"]?.value;
           tapeDuration =
               gridStateManager?.rows[myRow].cells["tapeduration"]?.value;
@@ -1663,16 +1663,18 @@ class TransmissionLogController extends GetxController {
     // dt.acceptChanges();
     colorGrid(false, dontSaveFile1: dontSave);
     // gridStateManager?.firstDisplayedScrollingRowIndex = intCurrentRowIndex[3];
-    /* if (EventType == "GL" && blnMultipleGLs) {
-      gridStateManager?.rows[intRowIndex - 1].selected = true;
+     if (EventType.trim().toLowerCase() == "gl" && blnMultipleGLs) {
+       gridStateManager?.setCurrentCell(
+           gridStateManager?.rows[intRowIndex].cells["no"], intRowIndex);
     } else {
-      gridStateManager?.rows[intRowIndex].selected = true;
-    }*/
+       gridStateManager?.setCurrentCell(
+           gridStateManager?.rows[intRowIndex + 1].cells["no"], intRowIndex + 1);
+    }
 
     // gridStateManager?.currentCell = gridStateManager?.rows[intRowIndex].cells[1];
     // gridStateManager?.setCurrentCell(gridStateManager?.rows[intRowIndex + 1].cells[1], intRowIndex + 1);
-    gridStateManager?.setCurrentCell(
-        gridStateManager?.rows[intRowIndex + 1].cells[1], intRowIndex + 1);
+    // gridStateManager?.setCurrentCell(
+    //     gridStateManager?.rows[intRowIndex + 1].cells[1], intRowIndex + 1);
     Get.back();
   }
 
