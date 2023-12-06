@@ -298,8 +298,10 @@ class TransmissionLogController extends GetxController {
               fun();
               update(['commercialsList']);
             }
-          } else {
+          } else if (map is String) {
             Snack.callError(map.toString());
+          } else {
+            LoadingDialog.callInfoMessage("No data found");
           }
 
           /* channels.clear();
