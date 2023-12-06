@@ -1268,7 +1268,7 @@ class TransmissionLogController extends GetxController {
               }
             }
             gridStateManager?.setCurrentCell(
-                gridStateManager?.rows[row].cells[1], row);
+                gridStateManager?.rows[row].cells["no"], row);
           }
         } else {
           // MsgBox("Unable to add Secondary Events here!", vbExclamation, strAlertMessageTitle);
@@ -1385,7 +1385,7 @@ class TransmissionLogController extends GetxController {
             }
           }
           gridStateManager?.setCurrentCell(
-              gridStateManager?.rows[row].cells[1], row);
+              gridStateManager?.rows[row].cells["no"], row);
         }
       } else {
         // MsgBox("Unable to add Secondary Events here!", vbExclamation, strAlertMessageTitle);
@@ -1617,7 +1617,7 @@ class TransmissionLogController extends GetxController {
             .toString()
             .trim()
             .toLowerCase())) {
-          dr.cells["tapeduration"] =
+          dr.cells["tapeduration"]?.value =
               gridStateManager?.rows[myRow].cells["tapeduration"]?.value;
           tapeDuration =
               gridStateManager?.rows[myRow].cells["tapeduration"]?.value;
