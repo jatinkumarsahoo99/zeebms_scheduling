@@ -231,10 +231,11 @@ class InventoryStatusReportView
                                   ? null
                                   : DataGridFromMap(
                                       mapData: controller.dataTableList.value,
-                                      mode: PlutoGridMode.selectWithOneTap,
-                                      // colorCallback: (row) => (row.row.cells.containsValue(controller.stateManager?.currentCell))
-                                      //     ? Colors.deepPurple.shade200
-                                      //     : Colors.white,
+                                      mode: PlutoGridMode.normal,
+                                      exportFileName: "Inventory Status Report",
+                                      colorCallback: (row) => (row.row.cells.containsValue(controller.stateManager?.currentCell))
+                                          ? Colors.deepPurple.shade200
+                                          : Colors.white,
                                       witdthSpecificColumn: (controller
                                           .userDataSettings?.userSetting
                                           ?.firstWhere(

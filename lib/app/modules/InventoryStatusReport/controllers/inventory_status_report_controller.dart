@@ -130,6 +130,7 @@ class InventoryStatusReportController extends GetxController {
           if (resp != null &&
               resp is Map<String, dynamic> &&
               resp['generate'] != null) {
+            dataTableList.clear();
             if ((resp['generate']['lstdetails'] as List<dynamic>).isNotEmpty) {
               dataTableList.clear();
               dataTableList.addAll((resp['generate']['lstdetails']));
@@ -144,6 +145,7 @@ class InventoryStatusReportController extends GetxController {
               dataTableList.addAll((resp['generate']['lstold']));
             }
           } else {
+            dataTableList.clear();
             LoadingDialog.showErrorDialog(resp.toString());
           }
         },
