@@ -267,10 +267,17 @@ class RoCancellationController extends GetxController {
       enableBrandClientAgent.value = false;
       enableEffDate.value = false;
       enableCancelNumber.value = false;
+      generateDate();
       update(["cancelData"]);
     } catch (e) {
       print(e.toString());
     }
+  }
+
+  void generateDate() {
+    cancelMonthctrl.text =
+        effDatectrl.text.split("-")[2] + effDatectrl.text.split("-")[1];
+    enableCancelMonth.value = false;
   }
 
   parseCancellationData() {
