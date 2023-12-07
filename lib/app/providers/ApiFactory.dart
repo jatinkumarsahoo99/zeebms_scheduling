@@ -545,7 +545,7 @@ class ApiFactory {
           String eventType,
           String txId,
           String caption) =>
-      "$BASE_URL/api/Transmissionlog/GetFastInsertsearchClick?locationcode=$locId&channelcode=$channelId&telecastdate=$telecastDt&mine=$isMine&eventType=$eventType&TxID=${txId.replaceAll(",,", ",")}&Caption=$caption";
+      "$BASE_URL/api/Transmissionlog/GetFastInsertsearchClick?locationcode=$locId&channelcode=$channelId&telecastdate=$telecastDt&mine=$isMine&eventType=$eventType&TxID=$txId&Caption=$caption";
 
   static String TRANSMISSION_LOG_BUTTON_VERIFY(
           String locId, String channelId, String telecastDt, bool isStandBy) =>
@@ -1457,7 +1457,7 @@ class ApiFactory {
   static String NEW_SHORT_CONTENT_SAVE = "$BASE_URL/api/ShortCode/SaveRecords";
   static String NEW_SHORT_CONTENT_RETRIEVE(
           locationCode, channelCode, formCode, houseId, segmentNumber) =>
-      "$BASE_URL/api/ShortCode/GetRetrivedRecords?LocationCode=$locationCode&ChannelCode=$channelCode&FormCode=$formCode&HouseId=$houseId&SegmentNumber=$segmentNumber";
+      "$BASE_URL/api/ShortCode/GetRetrivedRecords?LocationCode=$locationCode&ChannelCode=$channelCode&SSVName=$formCode&HouseId=$houseId&SegmentNumber=$segmentNumber";
 
   ////////////////////////////////////////////////////////////////////////////////////////
 }

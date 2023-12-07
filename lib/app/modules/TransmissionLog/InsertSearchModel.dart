@@ -22,6 +22,7 @@ class LstListMyEventData {
   List<LstListMyEventClips>? lstListMyEventClips;
   List<LstFastInsertTags>? lstFastInsertTags;
   num totalDuration = 0;
+  String? popUpMessage;
 
   LstListMyEventData({this.lstListMyEventClips, this.lstFastInsertTags});
 
@@ -39,6 +40,8 @@ class LstListMyEventData {
         lstFastInsertTags!.add(new LstFastInsertTags.fromJson(v));
       });
     }
+
+    popUpMessage = json["popUpMessage"];
   }
 
   Map<String, dynamic> toJson() {

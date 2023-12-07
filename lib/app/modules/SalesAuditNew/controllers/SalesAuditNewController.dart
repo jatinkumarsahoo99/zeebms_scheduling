@@ -1213,6 +1213,10 @@ class SalesAuditNewController extends GetxController {
               .format(DateFormat("dd-MM-yyyy").parse(scheduledController.text));
     }
 
+     if (documentKey == "") {
+          return;
+        }
+
     /* PlutoGridStateManager? viewDocsStateManger;
     try {
       LoadingDialog.call();

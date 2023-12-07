@@ -602,7 +602,7 @@ class DataGridMenu {
 
                                           Get.defaultDialog(
                                               content: Text(
-                                                  "You Have reach the end !\nDo u want to restart?"),
+                                                  "You Have reach the end !\nDo you want to restart?"),
                                               actions: [
                                                 ElevatedButton.icon(
                                                     onPressed: () {
@@ -1397,7 +1397,7 @@ class DataGridMenu {
 
                                           Get.defaultDialog(
                                               content: Text(
-                                                  "You Have reach the end !\nDo u want to restart?"),
+                                                  "You Have reach the end !\nDo you want to restart?"),
                                               actions: [
                                                 ElevatedButton.icon(
                                                     onPressed: () {
@@ -1772,7 +1772,7 @@ class DataGridMenu {
             value: DataGridMenuItem.delete,
             height: 25,
             enabled: true,
-            child: Text('Delete', style: TextStyle(fontSize: 11)),
+            child: Text('Delete (Del)', style: TextStyle(fontSize: 11)),
           ),
           const PopupMenuItem<DataGridMenuItem>(
             value: DataGridMenuItem.find,
@@ -1881,12 +1881,12 @@ class DataGridMenu {
             enabled: true,
             child: Text('Export To CSV', style: TextStyle(fontSize: 11)),
           ),
-          const PopupMenuItem<DataGridMenuItem>(
+         /* const PopupMenuItem<DataGridMenuItem>(
             value: DataGridMenuItem.delete,
             height: 25,
             enabled: true,
             child: Text('Delete (Del)', style: TextStyle(fontSize: 11)),
-          ),
+          ),*/
           const PopupMenuItem<DataGridMenuItem>(
             value: DataGridMenuItem.cut,
             height: 25,
@@ -2237,7 +2237,7 @@ class DataGridMenu {
 
                                           Get.defaultDialog(
                                               content: Text(
-                                                  "You Have reach the end !\nDo u want to restart?"),
+                                                  "You Have reach the end !\nDo you want to restart?"),
                                               actions: [
                                                 ElevatedButton.icon(
                                                     onPressed: () {
@@ -2736,7 +2736,7 @@ class DataGridMenu {
 
                                       Get.defaultDialog(
                                           content: Text(
-                                              "You Have reach the end !\nDo u want to restart?"),
+                                              "You Have reach the end !\nDo you want to restart?"),
                                           actions: [
                                             ElevatedButton.icon(
                                                 onPressed: () {

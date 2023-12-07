@@ -42,7 +42,7 @@ class TransmissionLogView extends StatelessWidget {
       return RawKeyboardListener(
         focusNode: new FocusNode(),
         onKey: (RawKeyEvent raw) {
-          controller.keyBoardHander(raw,context);
+          controller.keyBoardHander(raw, context);
           /*if (raw is RawKeyDownEvent &&
                   raw.isControlPressed &&
                   raw.character?.toLowerCase() == "c") {
@@ -117,7 +117,9 @@ class TransmissionLogView extends StatelessWidget {
                 ? DraggableFab(
                     initPosition: controller.getOffSetValue(constraints),
                     child: controller.dialogWidget!,
-                  )
+                    dragEndCall: () {
+                      controller.update(["insertList"]);
+                    })
                 : SizedBox();
           }),
           body: SizedBox(
@@ -409,8 +411,8 @@ class TransmissionLogView extends StatelessWidget {
                                 }
 
                                 if (data != null) {
-                                  color =
-                                      Color(int.parse('0x${data.backColor??"ffffffff"}'));
+                                  color = Color(int.parse(
+                                      '0x${data.backColor ?? "ffffffff"}'));
                                 }
                                 if (currentRow.cells["productName"]?.value !=
                                         null &&
@@ -595,8 +597,12 @@ class TransmissionLogView extends StatelessWidget {
                                     showRescheduleDialog(Get.context);
                                     break;
                                   case DataGridMenuItem.removeMarkError:
-                                    if ((controller.gridStateManager?.currentSelectingRows.length ?? 0) > 0) {
-                                      controller.btn_markError_ClickMultiple(index);
+                                    if ((controller.gridStateManager
+                                                ?.currentSelectingRows.length ??
+                                            0) >
+                                        0) {
+                                      controller
+                                          .btn_markError_ClickMultiple(index);
                                     } else {
                                       controller.btn_markError_Click(index);
                                     }
@@ -1137,502 +1143,6 @@ class TransmissionLogView extends StatelessWidget {
     );
   }
 
-  showInsertDialog(context) {
-    controller.inserSearchModel = null;
-    controller.txReplaceTxId_.text = "";
-    controller.txReplaceSegment_.text = "";
-    controller.replaceDuration.text = "00:00:00:00";
-    controller.txReplaceEvent_.text = "";
-    controller.fromReplaceInsert_.text = "00:00:00:00";
-    controller.toReplaceInsert_.text = "00:00:00:00";
-    controller.isMy.value = false;
-
-    return Get.defaultDialog(
-      barrierDismissible: false,
-      title: "Insert",
-      titleStyle: const TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
-      titlePadding: const EdgeInsets.only(top: 10),
-      contentPadding: const EdgeInsets.symmetric(horizontal: 10, vertical: 5),
-      content: SingleChildScrollView(
-        child: SizedBox(
-          height: Get.height * 0.75,
-          child: SingleChildScrollView(
-            child: SizedBox(
-              width: Get.width * 0.85,
-              // height: Get.he,
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: <Widget>[
-                  Row(
-                    children: [
-                      Obx(
-                        () => DropDownField.formDropDown1WidthMap(
-                          controller.listEventsinInsert.value,
-                          (value) {
-                            controller.selectEvent = value;
-                            // controller.selectedLocationId.text = value.key!;
-                            // controller.selectedLocationName.text = value.value!;
-                            // controller.getChannelsBasedOnLocation(value.key!);
-                          },
-                          "Event",
-                          0.13,
-                          // isEnable: controller.isEnable.value,
-                          // selected: controller.selectLocation,
-                          autoFocus: true,
-                          // dialogWidth: 330,
-                          dialogHeight: Get.height * .7,
-                        ),
-                      ),
-                      SizedBox(
-                        width: 10,
-                      ),
-                      InputFields.formField1(
-                          width: 0.13,
-                          onchanged: (value) {},
-                          hintTxt: "TX Caption",
-                          margin: true,
-                          controller: controller.txCaption_),
-                      SizedBox(
-                        width: 10,
-                      ),
-                      InputFields.formField1(
-                          width: 0.13,
-                          onchanged: (value) {},
-                          hintTxt: "TX Id",
-                          margin: true,
-                          controller: controller.txId_),
-                      SizedBox(
-                        width: 10,
-                      ),
-                      SizedBox(
-                        width: Get.width * 0.05,
-                        child: Row(
-                          children: [
-                            SizedBox(width: 5),
-                            Obx(
-                              () => Padding(
-                                padding: const EdgeInsets.only(top: 15.0),
-                                child: Checkbox(
-                                  value: controller.isMy.value,
-                                  onChanged: (val) {
-                                    controller.isMy.value = val!;
-                                  },
-                                  materialTapTargetSize:
-                                      MaterialTapTargetSize.shrinkWrap,
-                                ),
-                              ),
-                            ),
-                            Padding(
-                              padding:
-                                  const EdgeInsets.only(top: 15.0, left: 5),
-                              child: Text(
-                                "My",
-                                style:
-                                    TextStyle(fontSize: SizeDefine.labelSize1),
-                              ),
-                            ),
-                          ],
-                        ),
-                      ),
-                      Padding(
-                        padding: const EdgeInsets.only(top: 15.0, left: 10),
-                        child: FormButtonWrapper1(
-                          btnText: "Search",
-                          showIcon: false,
-                          callback: () {
-                            if (controller.selectEvent == null) {
-                              LoadingDialog.showErrorDialog(
-                                  "Please select event");
-                            } else {
-                              controller.getBtnInsertSearchClick(
-                                  isMine: controller.isMy.value,
-                                  eventType:
-                                      controller.selectEvent?.value ?? "",
-                                  txId: controller.txId_.text,
-                                  txCaption: controller.txCaption_.text);
-                            }
-                          },
-                        ),
-                      ),
-                      Padding(
-                        padding: const EdgeInsets.only(top: 15.0, left: 10),
-                        child: FormButtonWrapper1(
-                          btnText: "Add",
-                          showIcon: false,
-                          callback: () {
-                            // LoadingDialog.call();
-                            // controller.btnFastInsert_Add_Click();
-                            LoadingDialog.call();
-                            Future.delayed(Duration(seconds: 1), () {
-                              controller.btnFastInsert_Add_Click();
-                            });
-                          },
-                        ),
-                      ),
-                      FittedBox(
-                        child: Row(
-                          children: [
-                            SizedBox(width: 5),
-                            Obx(() => Padding(
-                                  padding: const EdgeInsets.only(top: 15.0),
-                                  child: Checkbox(
-                                    value: controller.isInsertAfter.value,
-                                    onChanged: (val) {
-                                      controller.isInsertAfter.value = val!;
-                                    },
-                                    materialTapTargetSize:
-                                        MaterialTapTargetSize.shrinkWrap,
-                                  ),
-                                )),
-                            Padding(
-                              padding:
-                                  const EdgeInsets.only(top: 15.0, left: 5),
-                              child: Text(
-                                "Insert After",
-                                style:
-                                    TextStyle(fontSize: SizeDefine.labelSize1),
-                              ),
-                            ),
-                          ],
-                        ),
-                      ),
-                      SizedBox(
-                        width: 10,
-                      ),
-                      InputFields.formFieldNumberMask(
-                          hintTxt: "",
-                          controller: controller.insertDuration_
-                            ..text = "00:00:00:00",
-                          widthRatio: 0.13,
-                          isTime: false,
-                          isEnable: false,
-                          paddingLeft: 0),
-                    ],
-                  ),
-                  SizedBox(
-                    height: 15,
-                  ),
-                  GetBuilder<TransmissionLogController>(
-                      id: "insertList",
-                      init: controller,
-                      builder: (controller) {
-                        return SizedBox(
-                          // width: 500,
-                          width: Get.width * 0.8,
-                          height: Get.height * 0.47,
-                          child: (controller.inserSearchModel != null &&
-                                  controller.inserSearchModel
-                                          ?.lstListMyEventData !=
-                                      null &&
-                                  controller
-                                          .inserSearchModel
-                                          ?.lstListMyEventData
-                                          ?.lstListMyEventClips !=
-                                      null &&
-                                  (controller
-                                              .inserSearchModel
-                                              ?.lstListMyEventData
-                                              ?.lstListMyEventClips
-                                              ?.length ??
-                                          0) >
-                                      0)
-                              ? DataGridFromMap(
-                                  hideCode: false,
-                                  formatDate: false,
-                                  // checkRow: true,
-                                  showSrNo: false,
-                                  mode: PlutoGridMode.normal,
-                                  // checkRowKey: "eventtype",
-                                  onload: (PlutoGridOnLoadedEvent load) {
-                                    controller.tblFastInsert =
-                                        load.stateManager;
-                                    load.stateManager
-                                        .setGridMode(PlutoGridMode.normal);
-                                    load.stateManager.setSelectingMode(
-                                        PlutoGridSelectingMode.row);
-                                    // load.stateManager.setSelecting(true);
-                                    load.stateManager.toggleSelectingRow(0);
-                                  },
-                                  // colorCallback: (renderC) => Colors.red[200]!,
-                                  onRowDoubleTap:
-                                      (PlutoGridOnRowDoubleTapEvent tap) {
-                                    // controller.tblFastInsert?.unCheckedRows;
-                                    /* controller.tblFastInsert
-                                        ?.setRowChecked(tap.row, true);*/
-                                    // controller.tblFastInsert
-                                    //     ?.setCurrentCell(tap.cell, tap.rowIdx);
-                                    LoadingDialog.call();
-                                    Future.delayed(Duration(seconds: 2), () {
-                                      controller
-                                          .btnFastInsert_Add_Click1(tap.rowIdx);
-                                    });
-                                  },
-                                  colorCallback: (colorData) {
-                                    if (controller
-                                            .tblFastInsert?.currentRowIdx ==
-                                        colorData.rowIdx) {
-                                      return Color(0xFFD1C4E9);
-                                    } else {
-                                      return Colors.white;
-                                    }
-                                  },
-                                  mapData: (controller.inserSearchModel
-                                      ?.lstListMyEventData?.lstListMyEventClips!
-                                      .map((e) => e.toJson())
-                                      .toList())!)
-                              // _dataTable3()
-                              : const WarningBox(
-                                  text:
-                                      'Enter Location, Channel & Date to get the Break Definitions'),
-                        );
-                      }),
-                  Padding(
-                    padding: const EdgeInsets.only(
-                        left: 5, right: 16, bottom: 4, top: 8),
-                    child: Row(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: const [
-                        Text(
-                          "Replace",
-                          style: TextStyle(fontSize: 13),
-                        ),
-                        Expanded(
-                          child: Padding(
-                            padding: EdgeInsets.only(left: 16),
-                            child: Divider(
-                              height: 1,
-                            ),
-                          ),
-                        ),
-                      ],
-                    ),
-                  ),
-                  Row(
-                    children: [
-                      InputFields.formField1(
-                          width: 0.1,
-                          onchanged: (value) {},
-                          hintTxt: "TX Id",
-                          margin: true,
-                          controller: controller.txReplaceTxId_),
-                      SizedBox(
-                        width: 10,
-                      ),
-                      InputFields.formField1(
-                          width: 0.05,
-                          onchanged: (value) {},
-                          hintTxt: "",
-                          isEnable: false,
-                          margin: true,
-                          controller: controller.txReplaceSegment_),
-                      SizedBox(
-                        width: 10,
-                      ),
-                      InputFields.formFieldNumberMask(
-                          hintTxt: "Duration",
-                          controller: controller.replaceDuration,
-                          widthRatio: 0.1,
-                          isTime: true,
-                          paddingLeft: 0),
-                      SizedBox(
-                        width: 10,
-                      ),
-                      InputFields.formField1(
-                          width: 0.05,
-                          onchanged: (value) {},
-                          hintTxt: "",
-                          isEnable: false,
-                          margin: true,
-                          controller: controller.txReplaceEvent_),
-                      SizedBox(width: 5),
-                      FittedBox(
-                        child: Row(
-                          children: [
-                            SizedBox(width: 5),
-                            Obx(() => Padding(
-                                  padding: const EdgeInsets.only(top: 15.0),
-                                  child: Checkbox(
-                                    value: controller.isAllDayReplace.value,
-                                    onChanged: (val) {
-                                      controller.isAllDayReplace.value = val!;
-                                    },
-                                    materialTapTargetSize:
-                                        MaterialTapTargetSize.shrinkWrap,
-                                  ),
-                                )),
-                            Padding(
-                              padding:
-                                  const EdgeInsets.only(top: 15.0, left: 5),
-                              child: Text(
-                                "All day",
-                                style:
-                                    TextStyle(fontSize: SizeDefine.labelSize1),
-                              ),
-                            ),
-                          ],
-                        ),
-                      ),
-                      SizedBox(width: 5),
-                      InputFields.formFieldNumberMask(
-                          hintTxt: "From",
-                          controller: controller.fromReplaceInsert_,
-                          widthRatio: 0.1,
-                          isTime: true,
-                          isEnable: false,
-                          paddingLeft: 0),
-                      SizedBox(width: 10),
-                      /*FormButtonWrapper(
-                        btnText: "",
-                        showIcon: false,
-                        callback: () {
-                          controller.fromReplaceInsert_.text = controller.gridStateManager?.currentRow?.cells["transmissionTime"]?.value ?? "";
-                          controller.fromReplaceIndexInsert_.text = controller.gridStateManager?.currentRowIdx.toString()??"";
-                        },
-                      ),*/
-                      /*Padding(
-                        padding: const EdgeInsets.only(top: 15.0, right: 5),
-                        child: ElevatedButton(
-                          style: ButtonStyle(
-                              overlayColor: MaterialStateProperty.all(
-                                Colors.deepPurple[900],
-                              ),
-                              alignment: Alignment.center),
-                          onPressed: () {
-                            controller.fromReplaceInsert_.text = controller
-                                    .gridStateManager
-                                    ?.currentRow
-                                    ?.cells["transmissionTime"]
-                                    ?.value ??
-                                "";
-                            controller.fromReplaceIndexInsert_.text = controller
-                                    .gridStateManager?.currentRowIdx
-                                    .toString() ??
-                                "";
-                          },
-                          // icon: showIcon ? Icon(iconData, size: 16) : Container(),
-                          child: Text("",
-                              style: TextStyle(
-                                fontSize: SizeDefine.fontSizeButton,
-                              ),
-                              textAlign: TextAlign.center),
-                        ),
-                      ),*/
-                      Padding(
-                        padding: const EdgeInsets.only(top: 15.0, right: 5),
-                        child: FormButtonWrapper1(
-                          btnText: "",
-                          showIcon: false,
-                          callback: () {
-                            controller.fromReplaceInsert_.text = controller
-                                    .gridStateManager
-                                    ?.currentRow
-                                    ?.cells["transmissionTime"]
-                                    ?.value ??
-                                "";
-                            controller.fromReplaceIndexInsert_.text = controller
-                                    .gridStateManager?.currentRowIdx
-                                    .toString() ??
-                                "";
-                          },
-                        ),
-                      ),
-                      InputFields.formFieldNumberMask(
-                          hintTxt: "To",
-                          controller: controller.toReplaceInsert_,
-                          widthRatio: 0.1,
-                          isTime: true,
-                          isEnable: false,
-                          paddingLeft: 0),
-                      /* Padding(
-                        padding:
-                            const EdgeInsets.only(top: 15.0, right: 5, left: 5),
-                        child: ElevatedButton(
-                          style: ButtonStyle(
-                              overlayColor: MaterialStateProperty.all(
-                                Colors.deepPurple[900],
-                              ),padding: MaterialStateProperty.all(
-                                EdgeInsets.symmetric(horizontal: 5,vertical: 5)
-                              ),
-                              alignment: Alignment.center),
-                          onPressed: () {
-                            controller.toReplaceInsert_.text = controller
-                                    .gridStateManager
-                                    ?.currentRow
-                                    ?.cells["transmissionTime"]
-                                    ?.value ??
-                                "";
-                            controller.toReplaceIndexInsert_.text = controller
-                                    .gridStateManager?.currentRowIdx
-                                    .toString() ??
-                                "";
-                          },
-                          // icon: showIcon ? Icon(iconData, size: 16) : Container(),
-                          child: Text("",
-                              style: TextStyle(
-                                fontSize: SizeDefine.fontSizeButton,
-                              ),
-                              textAlign: TextAlign.center),
-                        ),
-                      ),*/
-                      Padding(
-                        padding:
-                            const EdgeInsets.only(top: 15.0, right: 5, left: 5),
-                        child: FormButtonWrapper1(
-                          btnText: "",
-                          showIcon: false,
-                          callback: () {
-                            controller.toReplaceInsert_.text = controller
-                                    .gridStateManager
-                                    ?.currentRow
-                                    ?.cells["transmissionTime"]
-                                    ?.value ??
-                                "";
-                            controller.toReplaceIndexInsert_.text = controller
-                                    .gridStateManager?.currentRowIdx
-                                    .toString() ??
-                                "";
-                          },
-                        ),
-                      ),
-                      Padding(
-                        padding: const EdgeInsets.only(left: 10, top: 15),
-                        child: FormButtonWrapper1(
-                          btnText: "Get Event",
-                          showIcon: false,
-                          callback: () {
-                            controller.btnReplace_GetEvent_Click();
-                          },
-                        ),
-                      ),
-                      Padding(
-                        padding: const EdgeInsets.only(left: 10, top: 15),
-                        child: FormButtonWrapper1(
-                          btnText: "Replace",
-                          showIcon: false,
-                          callback: () {
-                            controller.btnReplace_Click();
-                          },
-                        ),
-                      ),
-                    ],
-                  )
-                ],
-              ),
-            ),
-          ),
-        ),
-      ),
-      confirm: FormButtonWrapper(
-        btnText: "Close",
-        showIcon: false,
-        callback: () {
-          Navigator.pop(context);
-        },
-      ),
-      radius: 10,
-    );
-  }
-
   showInsertDialog2() {
     controller.initialOffset.value = 2;
     controller.dialogWidget = Material(
@@ -1784,6 +1294,10 @@ class TransmissionLogView extends StatelessWidget {
                                   LoadingDialog.showErrorDialog(
                                       "Please select event");
                                 } else {
+                                  controller.insertDuration_.text =
+                                      "00:00:00:00";
+                                  controller.insertDuration1_.text =
+                                      "00:00:00:00";
                                   controller.getBtnInsertSearchClick(
                                       isMine: controller.isMy.value,
                                       eventType:
@@ -1837,17 +1351,30 @@ class TransmissionLogView extends StatelessWidget {
                             ),
                           ),
                           SizedBox(
-                            width: 140,
+                            width: 20,
                           ),
                           Padding(
-                            padding: EdgeInsets.only(top: 7),
+                            padding: EdgeInsets.only(top: 3),
                             child: InputFields.formFieldNumberMask(
-                                hintTxt: "",
+                                hintTxt: "Total Duration",
                                 controller: controller.insertDuration_
                                   ..text = "00:00:00:00",
-                                widthRatio: 0.13,
+                                widthRatio: 0.10,
                                 isTime: false,
-                                isTitleReq: false,
+                                // isTitleReq: true,
+                                // paddingTop: 40,
+                                isEnable: false,
+                                paddingLeft: 0),
+                          ),
+                          Padding(
+                            padding: EdgeInsets.only(top: 3, left: 3),
+                            child: InputFields.formFieldNumberMask(
+                                hintTxt: "Selected Duration",
+                                controller: controller.insertDuration1_
+                                  ..text = "00:00:00:00",
+                                widthRatio: 0.10,
+                                isTime: false,
+                                // isTitleReq: false,
                                 // paddingTop: 40,
                                 isEnable: false,
                                 paddingLeft: 0),
@@ -1864,7 +1391,7 @@ class TransmissionLogView extends StatelessWidget {
                             return SizedBox(
                               // width: 500,
                               width: Get.width * 0.45,
-                              height: Get.height * 0.39,
+                              height: Get.height * 0.37,
                               child: (controller.inserSearchModel != null &&
                                       controller.inserSearchModel?.lstListMyEventData !=
                                           null &&
@@ -1888,14 +1415,24 @@ class TransmissionLogView extends StatelessWidget {
                                       mode: PlutoGridMode.normal,
                                       // checkRowKey: "eventtype",
                                       onload: (PlutoGridOnLoadedEvent load) {
+                                        print("My Data is>>>");
                                         controller.tblFastInsert =
                                             load.stateManager;
                                         load.stateManager
                                             .setGridMode(PlutoGridMode.normal);
                                         load.stateManager.setSelectingMode(
                                             PlutoGridSelectingMode.row);
+                                        load.stateManager.onSelectCellCallback =
+                                            () {
+                                          controller
+                                              .calculateDurationTimeInInsert();
+                                        };
                                         // load.stateManager.setSelecting(true);
-                                        load.stateManager.toggleSelectingRow(0);
+                                        // load.stateManager.toggleSelectingRow(0);
+                                        load.stateManager.setCurrentCell(
+                                            load.stateManager.firstCell, 0);
+                                        controller
+                                            .calculateDurationTimeInInsert();
                                       },
                                       witdthSpecificColumn: (controller
                                           .userDataSettings?.userSetting

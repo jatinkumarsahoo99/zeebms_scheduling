@@ -48,7 +48,8 @@ class AuditStatusShowEbooking {
   Map<String, dynamic> toJson() {
     final Map<String, dynamic> data = new Map<String, dynamic>();
     if (this.lstShowEbooking != null) {
-      data['lstShowEbooking'] = this.lstShowEbooking!.map((v) => v.toJson()).toList();
+      data['lstShowEbooking'] =
+          this.lstShowEbooking!.map((v) => v.toJson()).toList();
     }
     if (this.lstShowEbook != null) {
       data['lstShowEbook'] = this.lstShowEbook!.map((v) => v.toJson()).toList();
@@ -70,8 +71,8 @@ class LstShowEbooking {
   String? locationname;
   String? channelCode;
   String? channelname;
-  int? bookingMonth;
-  int? bookingNumber;
+  num? bookingMonth;
+  num? bookingNumber;
   String? bookingDate;
   String? bookingEffectiveDate;
   String? bookingReferenceNumber;
@@ -93,15 +94,15 @@ class LstShowEbooking {
   String? payRouteName;
   String? paymentmodecode;
   String? paymentmodecaption;
-  int? isPdcEnterd;
-  int? maxSpend;
+  num? isPdcEnterd;
+  num? maxSpend;
   String? modifiedBy;
   String? verifiedby;
   String? chequeId;
   String? chequeNo;
-  int? chequeAmount;
+  num? chequeAmount;
   String? bankName;
-  int? pdcRequired;
+  num? pdcRequired;
 
   LstShowEbooking(
       {this.locationCode,
@@ -223,28 +224,28 @@ class LstShowEbooking {
 }
 
 class LstShowEbook {
-  int? rownumber;
-  int? bookingNumber;
+  num? rownumber;
+  num? bookingNumber;
   String? programname;
   String? scheduleDate;
   String? scheduleTime;
   String? endTime;
   String? tapeCode;
-  int? segmentnumber;
+  num? segmentnumber;
   String? commercialCaption;
-  int? totalspots;
-  int? tapeDuration;
-  int? spotAmount;
-  int? audited;
+  num? totalspots;
+  num? tapeDuration;
+  num? spotAmount;
+  num? audited;
   String? auditedby;
   String? bookingNo;
   String? dealno;
-  int? dealrownumber;
-  int? auditedspots;
-  int? salesgroupcode;
+  num? dealrownumber;
+  num? auditedspots;
+  num? salesgroupcode;
   String? auditedon;
-  int? bookingRate;
-  int? dealrate;
+  num? bookingRate;
+  num? dealrate;
 
   LstShowEbook(
       {this.rownumber,

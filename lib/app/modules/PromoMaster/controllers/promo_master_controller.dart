@@ -319,11 +319,13 @@ class PromoMasterController extends GetxController {
   docs() async {
     String documentKey = "";
     if (promoCode.isEmpty) {
-      documentKey = "";
+      documentKey = " ";
     } else {
       documentKey = "Promomaster$promoCode";
     }
-
+    if (documentKey == "") {
+      return;
+    }
     Get.defaultDialog(
       title: "Documents",
       content: CommonDocsView(documentKey: documentKey),
