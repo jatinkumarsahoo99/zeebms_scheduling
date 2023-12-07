@@ -4399,6 +4399,22 @@ class TransmissionLogController extends GetxController {
     return completer.future;
   }
 
+  Future<bool>? showDialogForYesNo2(String text) {
+    completerDialog = Completer<bool>();
+    LoadingDialog.recordExists(
+      text,
+      () {
+        completerDialog?.complete(true);
+        // return true;
+      },
+      cancel: () {
+        completerDialog?.complete(false);
+        // return false;
+      },
+    );
+    return completerDialog?.future;
+  }
+
   Offset? getOffSetValue(BoxConstraints constraints) {
     switch (initialOffset.value) {
       case 1:
@@ -4690,7 +4706,7 @@ class TransmissionLogController extends GetxController {
             .contains(row.cells["eventType"]?.value.toString().trim())) {
           deletRows.add(row);
         } else {
-          bool? isYes = await showDialogForYesNo1(
+          bool? isYes = await showDialogForYesNo2(
               "Want to delete selected record?\nEvent type: ${row.cells["eventType"]?.value ?? ""}\nDuration: ${row.cells["tapeduration"]?.value ?? ""}\nExportTapeCode: ${row.cells["exportTapeCode"]?.value ?? ""}\nExportTapeCaption: ${row.cells["exportTapeCaption"]?.value ?? ""}");
           /* print("Start id is>>" + (selectedRows?.first.cells["no"]?.value.toString() ?? ""));
         print("End id is>>" + (selectedRows?.last.cells["no"]?.value.toString() ?? ""));
@@ -4724,7 +4740,7 @@ class TransmissionLogController extends GetxController {
           gridStateManager?.removeCurrentRow();
           colorGrid(false);
         } else {
-          bool? isYes = await showDialogForYesNo1(
+          bool? isYes = await showDialogForYesNo2(
               "Want to delete selected record?\nEvent type: ${gridStateManager?.currentRow?.cells["eventType"]?.value ?? ""}\nDuration: ${gridStateManager?.currentRow?.cells["tapeduration"]?.value ?? ""}\nExportTapeCode: ${gridStateManager?.currentRow?.cells["exportTapeCode"]?.value ?? ""}\nExportTapeCaption: ${gridStateManager?.currentRow?.cells["exportTapeCaption"]?.value ?? ""}");
           if (isYes ?? false) {
             if (gridStateManager?.currentRow?.cells["eventType"]?.value
