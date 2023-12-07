@@ -4624,7 +4624,7 @@ class TransmissionLogController extends GetxController {
     } else if (raw is RawKeyDownEvent &&
         raw.logicalKey == LogicalKeyboardKey.delete) {
       print("Delete call");
-      if (!canDialogShow.value) {
+      if (gridStateManager!=null && (gridStateManager?.gridFocusNode.hasFocus??false)) {
         deleteMultiple();
       }
     } else if (raw is RawKeyDownEvent && raw.character?.toLowerCase() == "y") {
