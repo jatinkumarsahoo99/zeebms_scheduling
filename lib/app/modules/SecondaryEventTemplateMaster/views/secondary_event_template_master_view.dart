@@ -98,14 +98,6 @@ class SecondaryEventTemplateMasterView extends StatelessWidget {
                       isEnabled: controller.enableFields.value,
                       callback: () {
                         controller.getProgramPick();
-                        // Get.defaultDialog(
-                        //   title: "Documents",
-                        //   content: CommonDocsView(
-                        //       documentKey:
-                        //           "RObooking${controller.selectedLocation!.key}${controller.selectedChannel!.key}${controller.bookingMonthCtrl.text}${controller.bookingNoCtrl.text}"),
-                        // ).then((value) {
-                        //   Get.delete<CommonDocsController>(tag: "commonDocs");
-                        // });
                       },
                     );
                   }),

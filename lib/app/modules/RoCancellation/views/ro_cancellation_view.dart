@@ -360,7 +360,7 @@ class RoCancellationView extends StatelessWidget {
       Get.find<HomeController>().clearPage1();
     } else if (btnName == "Docs") {
       controller.docs();
-    } else if (btnName == "Docs") {
+    } else if (btnName == "Exit") {
       Get.find<HomeController>().postUserGridSetting2(listStateManager: [
         {"roCancellationGridManager": controller.roCancellationGridManager},
       ]);

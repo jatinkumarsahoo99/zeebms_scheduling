@@ -298,8 +298,10 @@ class TransmissionLogController extends GetxController {
               fun();
               update(['commercialsList']);
             }
-          } else {
+          } else if (map is String) {
             Snack.callError(map.toString());
+          } else {
+            LoadingDialog.callInfoMessage("No data found");
           }
 
           /* channels.clear();
@@ -615,7 +617,9 @@ class TransmissionLogController extends GetxController {
     txId = txId.replaceAll("\t", ",");
     txId = txId.replaceAll("\n", ",");
     txId = txId.replaceAll(",,", ",");
-    if ([" ", "\n", ",", "\t"].contains(txId[txId.length - 1])) {
+    if (txId != null &&
+        txId != "" &&
+        [" ", "\n", ",", "\t"].contains(txId[txId.length - 1])) {
       txId = txId.substring(0, txId.length - 1);
     }
     txId_.text = txId;
@@ -639,8 +643,10 @@ class TransmissionLogController extends GetxController {
             insertDuration_.text = Utils.convertToTimeFromDouble(
                 value:
                     inserSearchModel?.lstListMyEventData?.totalDuration ?? 0);
-            if(inserSearchModel?.lstListMyEventData?.popUpMessage!=null && inserSearchModel?.lstListMyEventData?.popUpMessage!=""){
-              LoadingDialog.callInfoMessage(inserSearchModel?.lstListMyEventData?.popUpMessage??"");
+            if (inserSearchModel?.lstListMyEventData?.popUpMessage != null &&
+                inserSearchModel?.lstListMyEventData?.popUpMessage != "") {
+              LoadingDialog.callInfoMessage(
+                  inserSearchModel?.lstListMyEventData?.popUpMessage ?? "");
             }
             update(["insertList"]);
           } else {
@@ -860,16 +866,16 @@ class TransmissionLogController extends GetxController {
 
     for (int row = fromRow; row <= toRow; row++) {
       if ((gridStateManager?.rows[row].cells["exportTapeCode"]?.value ==
-                  txReplaceTxId_.text &&
-              (gridStateManager?.rows[row].cells["eventType"]?.value
+              txReplaceTxId_.text &&
+          ((gridStateManager?.rows[row].cells["eventType"]?.value
                       .toString()
                       .trim() ==
                   txReplaceEvent_.text.trim()) ||
-          (["a", "w", "o", "t", "i"].contains(gridStateManager
-              ?.rows[row].cells["eventType"]?.value
-              .toString()
-              .trim()
-              .toLowerCase())))) {
+              (["a", "w", "o", "t", "i"].contains(gridStateManager
+                  ?.rows[row].cells["eventType"]?.value
+                  .toString()
+                  .trim()
+                  .toLowerCase()))))) {
         replaceCount++;
         gridStateManager?.rows[row].cells["exportTapeCode"]?.value =
             tblFastInsert?.rows[i].cells["txId"]?.value;
@@ -1218,7 +1224,7 @@ class TransmissionLogController extends GetxController {
       });
       currentSelectRows.addAll((tblFastInsert?.currentSelectingRows)!);
       if (!isFirstRowExist) {
-        if(tblFastInsert?.currentRow!=null) {
+        if (tblFastInsert?.currentRow != null) {
           currentSelectRows.add((tblFastInsert?.currentRow)!);
         }
       }
@@ -1262,7 +1268,7 @@ class TransmissionLogController extends GetxController {
               }
             }
             gridStateManager?.setCurrentCell(
-                gridStateManager?.rows[row].cells[1], row);
+                gridStateManager?.rows[row].cells["no"], row);
           }
         } else {
           // MsgBox("Unable to add Secondary Events here!", vbExclamation, strAlertMessageTitle);
@@ -1379,7 +1385,7 @@ class TransmissionLogController extends GetxController {
             }
           }
           gridStateManager?.setCurrentCell(
-              gridStateManager?.rows[row].cells[1], row);
+              gridStateManager?.rows[row].cells["no"], row);
         }
       } else {
         // MsgBox("Unable to add Secondary Events here!", vbExclamation, strAlertMessageTitle);
@@ -1494,7 +1500,7 @@ class TransmissionLogController extends GetxController {
               }
             }
             gridStateManager?.setCurrentCell(
-                gridStateManager?.rows[row].cells[1], row);
+                gridStateManager?.rows[row].cells["no"], row);
           }
         } else {
           // MsgBox("Unable to add Secondary Events here!", vbExclamation, strAlertMessageTitle);
@@ -1553,7 +1559,7 @@ class TransmissionLogController extends GetxController {
             // gridStateManager?.rows[row - 1].selected = true;
             // gridStateManager?.currentCell = gridStateManager?.selectedRows[0].cells[1];
             gridStateManager?.setCurrentCell(
-                gridStateManager?.currentRow?.cells[1],
+                gridStateManager?.currentRow?.cells["no"],
                 gridStateManager?.currentRowIdx);
           }
         }
@@ -1611,7 +1617,7 @@ class TransmissionLogController extends GetxController {
             .toString()
             .trim()
             .toLowerCase())) {
-          dr.cells["tapeduration"] =
+          dr.cells["tapeduration"]?.value =
               gridStateManager?.rows[myRow].cells["tapeduration"]?.value;
           tapeDuration =
               gridStateManager?.rows[myRow].cells["tapeduration"]?.value;
@@ -1657,16 +1663,18 @@ class TransmissionLogController extends GetxController {
     // dt.acceptChanges();
     colorGrid(false, dontSaveFile1: dontSave);
     // gridStateManager?.firstDisplayedScrollingRowIndex = intCurrentRowIndex[3];
-    /* if (EventType == "GL" && blnMultipleGLs) {
-      gridStateManager?.rows[intRowIndex - 1].selected = true;
+     if (EventType.trim().toLowerCase() == "gl" && blnMultipleGLs) {
+       gridStateManager?.setCurrentCell(
+           gridStateManager?.rows[intRowIndex].cells["no"], intRowIndex);
     } else {
-      gridStateManager?.rows[intRowIndex].selected = true;
-    }*/
+       gridStateManager?.setCurrentCell(
+           gridStateManager?.rows[intRowIndex + 1].cells["no"], intRowIndex + 1);
+    }
 
     // gridStateManager?.currentCell = gridStateManager?.rows[intRowIndex].cells[1];
     // gridStateManager?.setCurrentCell(gridStateManager?.rows[intRowIndex + 1].cells[1], intRowIndex + 1);
-    gridStateManager?.setCurrentCell(
-        gridStateManager?.rows[intRowIndex + 1].cells[1], intRowIndex + 1);
+    // gridStateManager?.setCurrentCell(
+    //     gridStateManager?.rows[intRowIndex + 1].cells[1], intRowIndex + 1);
     Get.back();
   }
 
@@ -4391,6 +4399,22 @@ class TransmissionLogController extends GetxController {
     return completer.future;
   }
 
+  Future<bool>? showDialogForYesNo2(String text) {
+    completerDialog = Completer<bool>();
+    LoadingDialog.recordExists(
+      text,
+      () {
+        completerDialog?.complete(true);
+        // return true;
+      },
+      cancel: () {
+        completerDialog?.complete(false);
+        // return false;
+      },
+    );
+    return completerDialog?.future;
+  }
+
   Offset? getOffSetValue(BoxConstraints constraints) {
     switch (initialOffset.value) {
       case 1:
@@ -4616,7 +4640,9 @@ class TransmissionLogController extends GetxController {
     } else if (raw is RawKeyDownEvent &&
         raw.logicalKey == LogicalKeyboardKey.delete) {
       print("Delete call");
-      deleteMultiple();
+      if (gridStateManager!=null && (gridStateManager?.gridFocusNode.hasFocus??false)) {
+        deleteMultiple();
+      }
     } else if (raw is RawKeyDownEvent && raw.character?.toLowerCase() == "y") {
       if (completerDialog != null && dialogWidget != null) {
         dialogWidget = null;
@@ -4680,7 +4706,7 @@ class TransmissionLogController extends GetxController {
             .contains(row.cells["eventType"]?.value.toString().trim())) {
           deletRows.add(row);
         } else {
-          bool? isYes = await showDialogForYesNo1(
+          bool? isYes = await showDialogForYesNo2(
               "Want to delete selected record?\nEvent type: ${row.cells["eventType"]?.value ?? ""}\nDuration: ${row.cells["tapeduration"]?.value ?? ""}\nExportTapeCode: ${row.cells["exportTapeCode"]?.value ?? ""}\nExportTapeCaption: ${row.cells["exportTapeCaption"]?.value ?? ""}");
           /* print("Start id is>>" + (selectedRows?.first.cells["no"]?.value.toString() ?? ""));
         print("End id is>>" + (selectedRows?.last.cells["no"]?.value.toString() ?? ""));
@@ -4714,7 +4740,7 @@ class TransmissionLogController extends GetxController {
           gridStateManager?.removeCurrentRow();
           colorGrid(false);
         } else {
-          bool? isYes = await showDialogForYesNo1(
+          bool? isYes = await showDialogForYesNo2(
               "Want to delete selected record?\nEvent type: ${gridStateManager?.currentRow?.cells["eventType"]?.value ?? ""}\nDuration: ${gridStateManager?.currentRow?.cells["tapeduration"]?.value ?? ""}\nExportTapeCode: ${gridStateManager?.currentRow?.cells["exportTapeCode"]?.value ?? ""}\nExportTapeCaption: ${gridStateManager?.currentRow?.cells["exportTapeCaption"]?.value ?? ""}");
           if (isYes ?? false) {
             if (gridStateManager?.currentRow?.cells["eventType"]?.value
@@ -4759,44 +4785,48 @@ class TransmissionLogController extends GetxController {
   }
 
   calculateDurationTimeInInsert() {
-    print("Total duration time called");
-    if (tblFastInsert == null) {
-      return;
-    }
-    if ((tblFastInsert?.currentSelectingRows.length ?? 0) > 0) {
-      num? totalTransmissionTime = 0;
-      bool isFirstRowExist = false;
-      tblFastInsert?.currentSelectingRows.forEach((element) {
-        if (element.sortIdx == tblFastInsert?.currentRow?.sortIdx) {
-          isFirstRowExist = true;
+    try {
+      print("Total duration time called");
+      if (tblFastInsert == null) {
+        return;
+      }
+      if ((tblFastInsert?.currentSelectingRows.length ?? 0) > 0) {
+        num? totalTransmissionTime = 0;
+        bool isFirstRowExist = false;
+        tblFastInsert?.currentSelectingRows.forEach((element) {
+          if (element.sortIdx == tblFastInsert?.currentRow?.sortIdx) {
+            isFirstRowExist = true;
+          }
+        });
+        tblFastInsert?.currentSelectingRows.forEach((element) {
+          totalTransmissionTime = totalTransmissionTime! +
+              Utils.oldBMSConvertToSecondsValue(
+                  value: Utils.convertToTimeFromDouble(
+                      value: num.tryParse(
+                          element.cells["duration"]?.value.toString() ?? "")!));
+        });
+        if (!isFirstRowExist) {
+          totalTransmissionTime = totalTransmissionTime! +
+              Utils.oldBMSConvertToSecondsValue(
+                  value: Utils.convertToTimeFromDouble(
+                      value: num.tryParse(tblFastInsert
+                              ?.currentRow?.cells["duration"]?.value
+                              .toString() ??
+                          "")!));
         }
-      });
-      tblFastInsert?.currentSelectingRows.forEach((element) {
-        totalTransmissionTime = totalTransmissionTime! +
-            Utils.oldBMSConvertToSecondsValue(
-                value: Utils.convertToTimeFromDouble(
-                    value: num.tryParse(
-                        element.cells["duration"]?.value.toString() ?? "")!));
-      });
-      if (!isFirstRowExist) {
-        totalTransmissionTime = totalTransmissionTime! +
-            Utils.oldBMSConvertToSecondsValue(
+        insertDuration1_.text =
+            Utils.convertToTimeFromDouble(value: totalTransmissionTime!);
+      } else {
+        insertDuration1_.text = Utils.convertToTimeFromDouble(
+            value: Utils.oldBMSConvertToSecondsValue(
                 value: Utils.convertToTimeFromDouble(
                     value: num.tryParse(tblFastInsert
                             ?.currentRow?.cells["duration"]?.value
                             .toString() ??
-                        "")!));
+                        "")!)));
       }
-      insertDuration1_.text =
-          Utils.convertToTimeFromDouble(value: totalTransmissionTime!);
-    } else {
-      insertDuration1_.text = Utils.convertToTimeFromDouble(
-          value: Utils.oldBMSConvertToSecondsValue(
-              value: Utils.convertToTimeFromDouble(
-                  value: num.tryParse(tblFastInsert
-                          ?.currentRow?.cells["duration"]?.value
-                          .toString() ??
-                      "")!)));
+    } catch (e) {
+      print(e.toString());
     }
   }
 

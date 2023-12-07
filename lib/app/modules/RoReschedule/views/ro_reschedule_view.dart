@@ -650,11 +650,23 @@ class RoRescheduleView extends StatelessWidget {
             strViewName: "vTesting"));
         break;
       case "Docs":
+        String documentKey = "";
+        if (controller.selectedLocation == null ||
+            controller.selectedChannel == null ||
+            controller.bookingMonthCtrl.text.isEmpty ||
+            controller.reSchedNoCtrl.text.isEmpty) {
+          documentKey = "";
+        } else {
+          documentKey =
+              "ROReschedule ${controller.selectedLocation?.key ?? ''}${controller.selectedChannel?.key ?? ''}${controller.bookingMonthCtrl.text}${controller.reSchedNoCtrl.text}";
+        }
+        if (documentKey == "") {
+          return;
+        }
         Get.defaultDialog(
           title: "Documents",
           content: CommonDocsView(
-            documentKey:
-                "ROReschedule ${controller.selectedLocation!.key}${controller.selectedChannel!.key}${controller.bookingMonthCtrl.text}${controller.reSchedNoCtrl.text}",
+            documentKey: documentKey,
           ),
         ).then((value) {
           Get.delete<CommonDocsController>(tag: "commonDocs");

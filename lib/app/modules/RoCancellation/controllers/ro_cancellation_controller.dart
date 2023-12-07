@@ -268,6 +268,10 @@ class RoCancellationController extends GetxController {
       enableEffDate.value = false;
       enableCancelNumber.value = false;
       update(["cancelData"]);
+      Future.delayed(Duration(seconds: 1)).then((value) {
+        cancelMonthctrl.text =
+            effDatectrl.text.split("-")[2] + effDatectrl.text.split("-")[1];
+      });
     } catch (e) {
       print(e.toString());
     }
@@ -298,17 +302,29 @@ class RoCancellationController extends GetxController {
   }
 
   docs() async {
-    if (cancelNumberctrl.text.isNotEmpty) {
-      Get.defaultDialog(
-        title: "Documents",
-        content: CommonDocsView(
-          documentKey:
-              "ROCancellation${selectedLocation?.key ?? ''}${selectedChannel?.key ?? ''}${cancelMonthctrl.text}${cancelNumberctrl.text}",
-        ),
-      ).then((value) {
-        Get.delete<CommonDocsController>(tag: "commonDocs");
-      });
+    cancelMonthctrl.text =
+        effDatectrl.text.split("-")[2] + effDatectrl.text.split("-")[1];
+    String documentKey = "";
+    if (cancelNumberctrl.text.isEmpty ||
+        selectedLocation == null ||
+        selectedChannel == null ||
+        cancelMonthctrl.text.isEmpty) {
+      documentKey = "";
+    } else {
+      documentKey =
+          "ROCancellation ${selectedLocation?.key ?? ''}${selectedChannel?.key ?? ''}${cancelMonthctrl.text}${cancelNumberctrl.text}";
     }
+    if (documentKey == "") {
+      return;
+    }
+    Get.defaultDialog(
+      title: "Documents",
+      content: CommonDocsView(
+        documentKey: documentKey,
+      ),
+    ).then((value) {
+      Get.delete<CommonDocsController>(tag: "commonDocs");
+    });
   }
 
   calculate() {
