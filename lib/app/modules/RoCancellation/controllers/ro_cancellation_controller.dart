@@ -299,7 +299,7 @@ class RoCancellationController extends GetxController {
 
   docs() async {
     String documentKey = "";
-    if (cancelNumberctrl.text.isNotEmpty ||
+    if (cancelNumberctrl.text.isEmpty ||
         selectedLocation == null ||
         selectedChannel == null ||
         cancelMonthctrl.text.isEmpty) {
