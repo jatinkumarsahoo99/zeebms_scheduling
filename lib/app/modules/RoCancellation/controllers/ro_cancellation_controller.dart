@@ -268,6 +268,10 @@ class RoCancellationController extends GetxController {
       enableEffDate.value = false;
       enableCancelNumber.value = false;
       update(["cancelData"]);
+      Future.delayed(Duration(seconds: 1)).then((value) {
+        cancelMonthctrl.text =
+            effDatectrl.text.split("-")[2] + effDatectrl.text.split("-")[1];
+      });
     } catch (e) {
       print(e.toString());
     }
@@ -298,8 +302,10 @@ class RoCancellationController extends GetxController {
   }
 
   docs() async {
+    cancelMonthctrl.text =
+        effDatectrl.text.split("-")[2] + effDatectrl.text.split("-")[1];
     String documentKey = "";
-    if (cancelNumberctrl.text.isNotEmpty ||
+    if (cancelNumberctrl.text.isEmpty ||
         selectedLocation == null ||
         selectedChannel == null ||
         cancelMonthctrl.text.isEmpty) {
