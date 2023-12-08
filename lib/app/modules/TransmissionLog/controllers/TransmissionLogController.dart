@@ -1047,6 +1047,7 @@ class TransmissionLogController extends GetxController {
                 selectedDate.text,
                 isStandby.value,
                 isPartialLog.value,
+                isSecondary,
                 selectExportFpcFrom?.value ?? "",
                 selectExportFpcTo?.value ?? '',
                 fileName),
