@@ -1426,11 +1426,53 @@ class TransmissionLogView extends StatelessWidget {
                                             () {
                                           controller
                                               .calculateDurationTimeInInsert();
+                                          /*if (load.stateManager.keyPressed.ctrl) {
+                                            print(
+                                                "Pressed : ${load.stateManager.currentRowIdx.toString()}");
+                                            if (load.stateManager.currentRow!=null && load
+                                                    .stateManager
+                                                    .currentSelectingRows
+                                                    .length ==
+                                                1) {
+                                              int fstRow = load
+                                                  .stateManager
+                                                  .currentSelectingRows[0]
+                                                  .sortIdx;
+                                              load.stateManager
+                                                  .clearCurrentCell();
+                                              print(
+                                                  "stateManager.currentSelectingRows()");
+                                              Future.delayed(
+                                                  Duration(
+                                                    seconds: 1,
+                                                  ), () {
+                                                load.stateManager.toggleSelectingRow(fstRow);
+                                                load.stateManager.toggleSelectingRow(fstRow);
+                                              });
+
+                                            }
+                                          }*/
                                         };
                                         // load.stateManager.setSelecting(true);
                                         // load.stateManager.toggleSelectingRow(0);
                                         load.stateManager.setCurrentCell(
-                                            load.stateManager.firstCell, 0);
+                                            load.stateManager.rows[0].cells["caption"], 0);
+                                        load.stateManager.gridFocusNode.requestFocus();
+                                        load.stateManager.gridFocusNode.addListener(() {
+                                          if(!load.stateManager.gridFocusNode.hasFocus){
+                                            if(load.stateManager.currentSelectingRows.length>0){
+                                              if(load.stateManager.currentRow==null){
+                                                return;
+                                              }
+                                              List<PlutoRow> selectRows=load.stateManager.currentSelectingRows;
+                                              load.stateManager.clearCurrentCell();
+                                              load.stateManager.clearCurrentSelecting();
+                                              selectRows.forEach((element) {
+                                                load.stateManager.toggleSelectingRow(element.sortIdx);
+                                              });
+                                            }
+                                          }
+                                        });
                                         controller
                                             .calculateDurationTimeInInsert();
                                       },
@@ -1450,14 +1492,19 @@ class TransmissionLogView extends StatelessWidget {
                                         LoadingDialog.call();
                                         Future.delayed(Duration(seconds: 2),
                                             () {
-                                          controller.btnFastInsert_Add_Click1(
-                                              tap.rowIdx);
+                                          /*controller.btnFastInsert_Add_Click1(
+                                              tap.rowIdx);*/
+                                          controller.insertFastData(
+                                              dr: tap.row);
                                         });
                                       },
                                       colorCallback: (colorData) {
                                         if (controller
                                                 .tblFastInsert?.currentRowIdx ==
                                             colorData.rowIdx) {
+                                          if(controller.tblFastInsert?.keyPressed.ctrl??false){
+                                            return Colors.white;
+                                          }
                                           return Color(0xFFD1C4E9);
                                         } else {
                                           return Colors.white;
