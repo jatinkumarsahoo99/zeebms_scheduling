@@ -616,10 +616,16 @@ class TransmissionLogView extends StatelessWidget {
                               },
                               mode: controller.selectedPlutoGridMode,
                               widthRatio: (Get.width / 11.4),
-                              mapData: (controller.transmissionLog
+                              mapData: controller.isFetch.value
+                                  ? (controller.transmissionLog
                                   ?.loadSavedLogOutput?.lstTransmissionLog!
                                   .map((e) => e.toJson())
-                                  .toList())!)
+                                  .toList())!
+                                  : ((controller.gridStateManager != null)
+                                  ? (controller.gridStateManager?.rows
+                                  .map((e) => e.toJson())
+                                  .toList())!
+                                  : []))
                           : Container(
                               // height: Get.height * .33,
                               // width: Get.width,
