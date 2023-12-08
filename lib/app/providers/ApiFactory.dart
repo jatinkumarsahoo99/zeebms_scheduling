@@ -604,10 +604,11 @@ class ApiFactory {
           String txtDt,
           bool standBy,
           bool chkPartialLog,
+          bool isSecondaryEvent,
           String fromTime,
           String toTime,
           String fileName) =>
-      "$BASE_URL/api/Transmissionlog/GetWriteLst?locationcode=$locId&channelcode=$chnlId&telecastdate=$txtDt&standbyLog=$standBy&chkPartialLog=$chkPartialLog&FromTime=$fromTime&ToTime=$toTime&FileName=$fileName";
+      "$BASE_URL/api/Transmissionlog/GetWriteLst?locationcode=$locId&channelcode=$chnlId&telecastdate=$txtDt&standbyLog=$standBy&chkPartialLog=$chkPartialLog&FromTime=$fromTime&ToTime=$toTime&FileName=$fileName&ProcessSecondaryEvents=$isSecondaryEvent";
   static String TRANSMISSION_LOG_WRITE_LST_NOIDA(
           String locId,
           String chnlId,
