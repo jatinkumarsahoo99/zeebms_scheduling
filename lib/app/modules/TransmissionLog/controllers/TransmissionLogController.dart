@@ -1330,7 +1330,7 @@ class TransmissionLogController extends GetxController {
             // gridStateManager?.rows[row - 1].selected = true;
             // gridStateManager?.currentCell = gridStateManager?.selectedRows[0].cells[1];
             gridStateManager?.setCurrentCell(
-                gridStateManager?.currentRow?.cells[1],
+                gridStateManager?.currentRow?.cells["no"],
                 gridStateManager?.currentRowIdx);
           }
         }
