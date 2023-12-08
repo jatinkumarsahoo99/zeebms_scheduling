@@ -386,6 +386,14 @@ class TransmissionLogView extends StatelessWidget {
                                     .setGridMode(PlutoGridMode.normal);
                                 loadevent.stateManager.onSelectCellCallback =
                                     () {
+                                  Future.delayed(Duration(microseconds: 100),
+                                      () {
+                                    if (!loadevent
+                                        .stateManager.gridFocusNode.hasFocus) {
+                                      loadevent.stateManager.gridFocusNode
+                                          .requestFocus();
+                                    }
+                                  });
                                   controller.calculateTotalTransmissionTime();
                                 };
                                 loadevent.stateManager.setSelectingMode(
@@ -1390,19 +1398,36 @@ class TransmissionLogView extends StatelessWidget {
                                         // load.stateManager.setSelecting(true);
                                         // load.stateManager.toggleSelectingRow(0);
                                         load.stateManager.setCurrentCell(
-                                            load.stateManager.rows[0].cells["caption"], 0);
-                                        load.stateManager.gridFocusNode.requestFocus();
-                                        load.stateManager.gridFocusNode.addListener(() {
-                                          if(!load.stateManager.gridFocusNode.hasFocus){
-                                            if(load.stateManager.currentSelectingRows.length>0){
-                                              if(load.stateManager.currentRow==null){
+                                            load.stateManager.rows[0]
+                                                .cells["caption"],
+                                            0);
+                                        load.stateManager.gridFocusNode
+                                            .requestFocus();
+                                        load.stateManager.gridFocusNode
+                                            .addListener(() {
+                                          if (!load.stateManager.gridFocusNode
+                                              .hasFocus) {
+                                            if (load
+                                                    .stateManager
+                                                    .currentSelectingRows
+                                                    .length >
+                                                0) {
+                                              if (load.stateManager
+                                                      .currentRow ==
+                                                  null) {
                                                 return;
                                               }
-                                              List<PlutoRow> selectRows=load.stateManager.currentSelectingRows;
-                                              load.stateManager.clearCurrentCell();
-                                              load.stateManager.clearCurrentSelecting();
+                                              List<PlutoRow> selectRows = load
+                                                  .stateManager
+                                                  .currentSelectingRows;
+                                              load.stateManager
+                                                  .clearCurrentCell();
+                                              load.stateManager
+                                                  .clearCurrentSelecting();
                                               selectRows.forEach((element) {
-                                                load.stateManager.toggleSelectingRow(element.sortIdx);
+                                                load.stateManager
+                                                    .toggleSelectingRow(
+                                                        element.sortIdx);
                                               });
                                             }
                                           }
@@ -1410,8 +1435,7 @@ class TransmissionLogView extends StatelessWidget {
                                         controller
                                             .calculateDurationTimeInInsert();
                                       },
-                                      witdthSpecificColumn: (controller
-                                          .userDataSettings?.userSetting
+                                      witdthSpecificColumn: (controller.userDataSettings?.userSetting
                                           ?.firstWhere((element) => element.controlName == "tblFastInsert",
                                               orElse: () => UserSetting())
                                           .userSettings),
@@ -1436,7 +1460,9 @@ class TransmissionLogView extends StatelessWidget {
                                         if (controller
                                                 .tblFastInsert?.currentRowIdx ==
                                             colorData.rowIdx) {
-                                          if(controller.tblFastInsert?.keyPressed.ctrl??false){
+                                          if (controller.tblFastInsert
+                                                  ?.keyPressed.ctrl ??
+                                              false) {
                                             return Colors.white;
                                           }
                                           return Color(0xFFD1C4E9);

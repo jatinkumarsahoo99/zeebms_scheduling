@@ -1330,7 +1330,7 @@ class TransmissionLogController extends GetxController {
             // gridStateManager?.rows[row - 1].selected = true;
             // gridStateManager?.currentCell = gridStateManager?.selectedRows[0].cells[1];
             gridStateManager?.setCurrentCell(
-                gridStateManager?.currentRow?.cells[1],
+                gridStateManager?.currentRow?.cells["no"],
                 gridStateManager?.currentRowIdx);
           }
         }
@@ -4733,9 +4733,11 @@ class TransmissionLogController extends GetxController {
       }
 
       if (deletRows.length > 0) {
-        gridStateManager?.removeRows(deletRows);
-        addEventToUndo();
-        colorGrid(false);
+        addEventToUndo(function: (){
+          gridStateManager?.removeRows(deletRows);
+          colorGrid(false);
+        });
+
       }
     } else {
       print("Single select");
