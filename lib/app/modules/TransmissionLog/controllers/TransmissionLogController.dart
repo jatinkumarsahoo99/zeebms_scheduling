@@ -4733,9 +4733,11 @@ class TransmissionLogController extends GetxController {
       }
 
       if (deletRows.length > 0) {
-        gridStateManager?.removeRows(deletRows);
-        addEventToUndo();
-        colorGrid(false);
+        addEventToUndo(function: (){
+          gridStateManager?.removeRows(deletRows);
+          colorGrid(false);
+        });
+
       }
     } else {
       print("Single select");
