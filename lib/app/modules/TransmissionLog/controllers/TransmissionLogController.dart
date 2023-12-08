@@ -1217,18 +1217,18 @@ class TransmissionLogController extends GetxController {
       insertFastData(dr: (tblFastInsert?.currentRow)!);
       return;
     } else {
-      tblFastInsert?.currentSelectingRows.forEach((element) {
+     /* tblFastInsert?.currentSelectingRows.forEach((element) {
         if (element.sortIdx == tblFastInsert?.currentRow?.sortIdx) {
           isFirstRowExist = true;
         }
-      });
+      });*/
       currentSelectRows.addAll((tblFastInsert?.currentSelectingRows)!);
-      if (!isFirstRowExist) {
+     /* if (!isFirstRowExist) {
         if (tblFastInsert?.currentRow != null) {
           currentSelectRows.add((tblFastInsert?.currentRow)!);
         }
       }
-      currentSelectRows.sort((a, b) => (a.sortIdx).compareTo(b.sortIdx));
+      currentSelectRows.sort((a, b) => (a.sortIdx).compareTo(b.sortIdx));*/
       // currentSelectRows = currentSelectRows.reversed.toList();
     }
     for (var dr in (currentSelectRows)) {
@@ -4549,6 +4549,13 @@ class TransmissionLogController extends GetxController {
     print("RAw is.>>>" + raw.toString());
     if (gridStateManager == null) return;
 
+   /* if (raw is RawKeyDownEvent && raw.isControlPressed) {
+      print("Control Pressed");
+      isControlPressed.value = true;
+    }else if(raw is RawKeyUpEvent && !raw.isControlPressed){
+      // print("Control Released");
+      isControlPressed.value = false;
+    }*/
     if (raw is RawKeyDownEvent &&
         raw.isShiftPressed &&
         raw.character?.toLowerCase() == "c") {

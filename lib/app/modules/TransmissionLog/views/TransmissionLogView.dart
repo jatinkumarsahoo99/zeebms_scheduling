@@ -43,72 +43,6 @@ class TransmissionLogView extends StatelessWidget {
         focusNode: new FocusNode(),
         onKey: (RawKeyEvent raw) {
           controller.keyBoardHander(raw, context);
-          /*if (raw is RawKeyDownEvent &&
-                  raw.isControlPressed &&
-                  raw.character?.toLowerCase() == "c") {
-                print("Copy Pressed Ctrl + c ");
-                if (controller.gridStateManager != null &&
-                    controller.gridStateManager?.currentCell != null) {
-                  print("Copy Pressed in clipboard ");
-                  */ /*Clipboard.setData(new ClipboardData(
-                      text: controller.gridStateManager?.currentCell?.value));*/ /*
-                  Utils.copyToClipboardHack(
-                      controller.gridStateManager?.currentCell?.value);
-                }
-              }
-
-              if (raw is RawKeyDownEvent &&
-                  raw.isControlPressed &&
-                  raw.character?.toLowerCase() == "c") {
-                print("Copy Pressed Ctrl + c ");
-                if (controller.gridStateManager != null &&
-                    controller.gridStateManager?.currentCell != null) {
-                  print("Copy Pressed in clipboard ");
-                  */ /*Clipboard.setData(new ClipboardData(
-                      text: controller.gridStateManager?.currentCell?.value));*/ /*
-                  Utils.copyToClipboardHack(
-                      controller.gridStateManager?.currentCell?.value);
-                }
-              }
-
-              if (raw is RawKeyDownEvent && raw.character?.toLowerCase() == "y") {
-                if (controller.completerDialog != null &&
-                    controller.dialogWidget != null) {
-                  controller.dialogWidget = null;
-                  controller.canDialogShow.value = false;
-                  controller.completerDialog?.complete(true);
-                }
-              }
-              if (raw is RawKeyDownEvent && raw.character?.toLowerCase() == "n") {
-                if (controller.completerDialog != null &&
-                    controller.dialogWidget != null) {
-                  controller.dialogWidget = null;
-                  controller.canDialogShow.value = false;
-                  controller.completerDialog?.complete(false);
-                }
-              }
-              switch (raw.logicalKey.keyLabel) {
-                case "F3":
-                  if (controller.gridStateManager != null) {
-                    controller.cutCopy(
-                        isCut: false,
-                        row: controller.gridStateManager?.currentRow);
-                  }
-                  break;
-                case "F2":
-                  if (controller.gridStateManager != null) {
-                    controller.cutCopy(
-                        isCut: true,
-                        row: controller.gridStateManager?.currentRow);
-                  }
-                  break;
-                case "F4":
-                  controller.paste(controller.gridStateManager?.currentRowIdx);
-                  break;
-                case "F5":
-                  controller.checkVerifyTime();
-                  break;
-              }*/
         },
         child: Scaffold(
           key: rebuildKey,
@@ -1426,11 +1360,53 @@ class TransmissionLogView extends StatelessWidget {
                                             () {
                                           controller
                                               .calculateDurationTimeInInsert();
+                                          /*if (load.stateManager.keyPressed.ctrl) {
+                                            print(
+                                                "Pressed : ${load.stateManager.currentRowIdx.toString()}");
+                                            if (load.stateManager.currentRow!=null && load
+                                                    .stateManager
+                                                    .currentSelectingRows
+                                                    .length ==
+                                                1) {
+                                              int fstRow = load
+                                                  .stateManager
+                                                  .currentSelectingRows[0]
+                                                  .sortIdx;
+                                              load.stateManager
+                                                  .clearCurrentCell();
+                                              print(
+                                                  "stateManager.currentSelectingRows()");
+                                              Future.delayed(
+                                                  Duration(
+                                                    seconds: 1,
+                                                  ), () {
+                                                load.stateManager.toggleSelectingRow(fstRow);
+                                                load.stateManager.toggleSelectingRow(fstRow);
+                                              });
+
+                                            }
+                                          }*/
                                         };
                                         // load.stateManager.setSelecting(true);
                                         // load.stateManager.toggleSelectingRow(0);
                                         load.stateManager.setCurrentCell(
-                                            load.stateManager.firstCell, 0);
+                                            load.stateManager.rows[0].cells["caption"], 0);
+                                        load.stateManager.gridFocusNode.requestFocus();
+                                        load.stateManager.gridFocusNode.addListener(() {
+                                          if(!load.stateManager.gridFocusNode.hasFocus){
+                                            if(load.stateManager.currentSelectingRows.length>0){
+                                              if(load.stateManager.currentRow==null){
+                                                return;
+                                              }
+                                              List<PlutoRow> selectRows=load.stateManager.currentSelectingRows;
+                                              load.stateManager.clearCurrentCell();
+                                              load.stateManager.clearCurrentSelecting();
+                                              selectRows.forEach((element) {
+                                                load.stateManager.toggleSelectingRow(element.sortIdx);
+                                              });
+                                            }
+                                          }
+                                        });
                                         controller
                                             .calculateDurationTimeInInsert();
                                       },
@@ -1450,14 +1426,19 @@ class TransmissionLogView extends StatelessWidget {
                                         LoadingDialog.call();
                                         Future.delayed(Duration(seconds: 2),
                                             () {
-                                          controller.btnFastInsert_Add_Click1(
-                                              tap.rowIdx);
+                                          /*controller.btnFastInsert_Add_Click1(
+                                              tap.rowIdx);*/
+                                          controller.insertFastData(
+                                              dr: tap.row);
                                         });
                                       },
                                       colorCallback: (colorData) {
                                         if (controller
                                                 .tblFastInsert?.currentRowIdx ==
                                             colorData.rowIdx) {
+                                          if(controller.tblFastInsert?.keyPressed.ctrl??false){
+                                            return Colors.white;
+                                          }
                                           return Color(0xFFD1C4E9);
                                         } else {
                                           return Colors.white;
