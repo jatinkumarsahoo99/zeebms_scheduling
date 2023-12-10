@@ -624,10 +624,16 @@ class TransmissionLogView extends StatelessWidget {
                               },
                               mode: controller.selectedPlutoGridMode,
                               widthRatio: (Get.width / 11.4),
-                              mapData: (controller.transmissionLog
+                              mapData: controller.isFetch.value
+                                  ? (controller.transmissionLog
                                   ?.loadSavedLogOutput?.lstTransmissionLog!
                                   .map((e) => e.toJson())
-                                  .toList())!)
+                                  .toList())!
+                                  : ((controller.gridStateManager != null)
+                                  ? (controller.gridStateManager?.rows
+                                  .map((e) => e.toJsonRowData())
+                                  .toList())!
+                                  : []))
                           : Container(
                               // height: Get.height * .33,
                               // width: Get.width,
@@ -1087,6 +1093,7 @@ class TransmissionLogView extends StatelessWidget {
 
   showInsertDialog2() {
     controller.initialOffset.value = 2;
+    controller.insertPopupOpen.value=true;
     controller.dialogWidget = Material(
       color: Colors.white,
       child: SizedBox(
@@ -1119,6 +1126,7 @@ class TransmissionLogView extends StatelessWidget {
                         onTap: () {
                           controller.dialogWidget = null;
                           controller.canDialogShow.value = false;
+                          controller.insertPopupOpen.value=true;
                         },
                         child: Icon(
                           Icons.close,

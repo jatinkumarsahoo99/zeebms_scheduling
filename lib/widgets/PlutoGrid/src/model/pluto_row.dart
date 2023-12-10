@@ -293,6 +293,25 @@ class PlutoRow {
 
     return json;
   }
+  Map<String, dynamic> toJsonRowData({
+    bool includeChildren = true,
+    String childrenField = 'children',
+  }) {
+    cells.remove("no");
+    final json = cells.map((key, value) => MapEntry(key, value.value));
+
+    if (!includeChildren || !type.isGroup) return json;
+
+    final List<Map<String, dynamic>> children = type.group.children
+        .map(
+          (e) => e.toJson(childrenField: childrenField),
+        )
+        .toList();
+
+    json[childrenField] = children;
+
+    return json;
+  }
 
   Map<String, dynamic> toJson1(
       {bool includeChildren = true,
