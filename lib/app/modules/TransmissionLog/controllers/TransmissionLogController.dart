@@ -163,6 +163,7 @@ class TransmissionLogController extends GetxController {
   int endVisibleRow = 0;
   List<PlutoRow> deletedSegmentData = [];
   BuildContext? contextGrid;
+  RxBool insertPopupOpen = RxBool(false);
 
   @override
   void onInit() {
@@ -1218,13 +1219,13 @@ class TransmissionLogController extends GetxController {
       insertFastData(dr: (tblFastInsert?.currentRow)!);
       return;
     } else {
-     /* tblFastInsert?.currentSelectingRows.forEach((element) {
+      /* tblFastInsert?.currentSelectingRows.forEach((element) {
         if (element.sortIdx == tblFastInsert?.currentRow?.sortIdx) {
           isFirstRowExist = true;
         }
       });*/
       currentSelectRows.addAll((tblFastInsert?.currentSelectingRows)!);
-     /* if (!isFirstRowExist) {
+      /* if (!isFirstRowExist) {
         if (tblFastInsert?.currentRow != null) {
           currentSelectRows.add((tblFastInsert?.currentRow)!);
         }
@@ -1664,12 +1665,12 @@ class TransmissionLogController extends GetxController {
     // dt.acceptChanges();
     colorGrid(false, dontSaveFile1: dontSave);
     // gridStateManager?.firstDisplayedScrollingRowIndex = intCurrentRowIndex[3];
-     if (EventType.trim().toLowerCase() == "gl" && blnMultipleGLs) {
-       gridStateManager?.setCurrentCell(
-           gridStateManager?.rows[intRowIndex].cells["no"], intRowIndex);
+    if (EventType.trim().toLowerCase() == "gl" && blnMultipleGLs) {
+      gridStateManager?.setCurrentCell(
+          gridStateManager?.rows[intRowIndex].cells["no"], intRowIndex);
     } else {
-       gridStateManager?.setCurrentCell(
-           gridStateManager?.rows[intRowIndex + 1].cells["no"], intRowIndex + 1);
+      gridStateManager?.setCurrentCell(
+          gridStateManager?.rows[intRowIndex + 1].cells["no"], intRowIndex + 1);
     }
 
     // gridStateManager?.currentCell = gridStateManager?.rows[intRowIndex].cells[1];
@@ -4550,7 +4551,7 @@ class TransmissionLogController extends GetxController {
     print("RAw is.>>>" + raw.toString());
     if (gridStateManager == null) return;
 
-   /* if (raw is RawKeyDownEvent && raw.isControlPressed) {
+    /* if (raw is RawKeyDownEvent && raw.isControlPressed) {
       print("Control Pressed");
       isControlPressed.value = true;
     }else if(raw is RawKeyUpEvent && !raw.isControlPressed){
@@ -4644,11 +4645,18 @@ class TransmissionLogController extends GetxController {
       if (dialogWidget != null) {
         dialogWidget = null;
         canDialogShow.value = false;
+        if (insertPopupOpen.value) {
+          insertPopupOpen.value = false;
+        }
       }
     } else if (raw is RawKeyDownEvent &&
         raw.logicalKey == LogicalKeyboardKey.delete) {
       print("Delete call");
-      if (gridStateManager!=null && (gridStateManager?.gridFocusNode.hasFocus??false)) {
+      if (insertPopupOpen.value &&
+          gridStateManager != null &&
+          (gridStateManager?.gridFocusNode.hasFocus ?? false)) {
+        deleteMultiple();
+      } else if (gridStateManager != null) {
         deleteMultiple();
       }
     } else if (raw is RawKeyDownEvent && raw.character?.toLowerCase() == "y") {
@@ -4733,11 +4741,10 @@ class TransmissionLogController extends GetxController {
       }
 
       if (deletRows.length > 0) {
-        addEventToUndo(function: (){
+        addEventToUndo(function: () {
           gridStateManager?.removeRows(deletRows);
           colorGrid(false);
         });
-
       }
     } else {
       print("Single select");

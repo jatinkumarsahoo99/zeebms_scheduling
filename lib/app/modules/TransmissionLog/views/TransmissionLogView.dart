@@ -1087,6 +1087,7 @@ class TransmissionLogView extends StatelessWidget {
 
   showInsertDialog2() {
     controller.initialOffset.value = 2;
+    controller.insertPopupOpen.value=true;
     controller.dialogWidget = Material(
       color: Colors.white,
       child: SizedBox(
@@ -1119,6 +1120,7 @@ class TransmissionLogView extends StatelessWidget {
                         onTap: () {
                           controller.dialogWidget = null;
                           controller.canDialogShow.value = false;
+                          controller.insertPopupOpen.value=true;
                         },
                         child: Icon(
                           Icons.close,
