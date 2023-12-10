@@ -631,7 +631,7 @@ class TransmissionLogView extends StatelessWidget {
                                   .toList())!
                                   : ((controller.gridStateManager != null)
                                   ? (controller.gridStateManager?.rows
-                                  .map((e) => e.toJson())
+                                  .map((e) => e.toJsonRowData())
                                   .toList())!
                                   : []))
                           : Container(
