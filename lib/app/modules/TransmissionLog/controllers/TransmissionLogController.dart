@@ -4656,10 +4656,22 @@ class TransmissionLogController extends GetxController {
           gridStateManager != null &&
           (gridStateManager?.gridFocusNode.hasFocus ?? false)) {
         deleteMultiple();
-      } else if (gridStateManager != null) {
+      } else if (!insertPopupOpen.value && gridStateManager != null) {
         deleteMultiple();
       }
-    } else if (raw is RawKeyDownEvent && raw.character?.toLowerCase() == "y") {
+    } /*else if (raw is RawKeyDownEvent &&
+        raw.logicalKey == LogicalKeyboardKey.backspace) {
+      print("Backspace Delete call");
+      if (insertPopupOpen.value &&
+          gridStateManager != null &&
+          (gridStateManager?.gridFocusNode.hasFocus ?? false)) {
+        print("Backspace Delete call 1");
+        deleteMultiple();
+      } else if (!insertPopupOpen.value && gridStateManager != null) {
+        print("Backspace Delete call 2");
+        deleteMultiple();
+      }
+    }*/ else if (raw is RawKeyDownEvent && raw.character?.toLowerCase() == "y") {
       if (completerDialog != null && dialogWidget != null) {
         dialogWidget = null;
         canDialogShow.value = false;
