@@ -1213,7 +1213,6 @@ class TransmissionLogController extends GetxController {
       LoadingDialog.callInfoMessage("Nothing is selected");
       return;
     }
-    bool isFirstRowExist = false;
     List<PlutoRow>? currentSelectRows = [];
     if (noOfRows == 0) {
       insertFastData(dr: (tblFastInsert?.currentRow)!);
@@ -1232,6 +1231,7 @@ class TransmissionLogController extends GetxController {
       }
       currentSelectRows.sort((a, b) => (a.sortIdx).compareTo(b.sortIdx));*/
       // currentSelectRows = currentSelectRows.reversed.toList();
+      addEventToUndo();
     }
     for (var dr in (currentSelectRows)) {
       String FPCTime;
@@ -1295,7 +1295,7 @@ class TransmissionLogController extends GetxController {
           dr.cells["som"]?.value,
           dr.cells["promoTypeCode"]?.value,
           dr.cells["segmentNumber"]?.value.toString() ?? "",
-          dontSave: true);
+          dontSave: true,needUndo: false);
 
       // Adding Tags for promos
       // GoTo hell
@@ -1326,7 +1326,7 @@ class TransmissionLogController extends GetxController {
                 filterList![0].som!,
                 filterList![0].promoTypeCode ?? "",
                 filterList![0].segmentNumber.toString(),
-                dontSave: true);
+                dontSave: true,needUndo: false);
             // UnSelectAllRows(gridStateManager ?);
             // gridStateManager?.rows[row - 1].selected = true;
             // gridStateManager?.currentCell = gridStateManager?.selectedRows[0].cells[1];
@@ -1586,12 +1586,15 @@ class TransmissionLogController extends GetxController {
       String SOM,
       String Promotypecode,
       String BreakNumber,
-      {bool? dontSave}) {
+      {bool? dontSave,
+      bool? needUndo = true}) {
     int intRowIndex = gridStateManager?.currentRowIdx ?? 0;
     int InsertRow =
         int.tryParse(gridStateManager?.currentRow?.cells["rownumber"]?.value) ??
             0;
-    addEventToUndo();
+    if (needUndo ?? true) {
+      addEventToUndo();
+    }
     if (InsertRow > 0) {
       if (isInsertAfter.value) {
         InsertRow = InsertRow + 1;
@@ -4659,7 +4662,8 @@ class TransmissionLogController extends GetxController {
       } else if (!insertPopupOpen.value && gridStateManager != null) {
         deleteMultiple();
       }
-    } /*else if (raw is RawKeyDownEvent &&
+    }
+    /*else if (raw is RawKeyDownEvent &&
         raw.logicalKey == LogicalKeyboardKey.backspace) {
       print("Backspace Delete call");
       if (insertPopupOpen.value &&
@@ -4671,7 +4675,8 @@ class TransmissionLogController extends GetxController {
         print("Backspace Delete call 2");
         deleteMultiple();
       }
-    }*/ else if (raw is RawKeyDownEvent && raw.character?.toLowerCase() == "y") {
+    }*/
+    else if (raw is RawKeyDownEvent && raw.character?.toLowerCase() == "y") {
       if (completerDialog != null && dialogWidget != null) {
         dialogWidget = null;
         canDialogShow.value = false;
