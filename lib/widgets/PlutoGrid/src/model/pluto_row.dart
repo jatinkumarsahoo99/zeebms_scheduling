@@ -293,24 +293,18 @@ class PlutoRow {
 
     return json;
   }
+
   Map<String, dynamic> toJsonRowData({
     bool includeChildren = true,
     String childrenField = 'children',
   }) {
-    cells.remove("no");
-    final json = cells.map((key, value) => MapEntry(key, value.value));
-
-    if (!includeChildren || !type.isGroup) return json;
-
-    final List<Map<String, dynamic>> children = type.group.children
-        .map(
-          (e) => e.toJson(childrenField: childrenField),
-        )
-        .toList();
-
-    json[childrenField] = children;
-
-    return json;
+    Map<String, dynamic> myCell1 = {};
+    for (var item in cells.entries) {
+      if (item.key != "no") {
+        myCell1[item.key] = item.value.value;
+      }
+    }
+    return myCell1;
   }
 
   Map<String, dynamic> toJson1(
@@ -335,6 +329,7 @@ class PlutoRow {
 
     return json;
   }
+
   Map<String, dynamic> toJsonIntConvert(
       {bool includeChildren = true,
       String childrenField = 'children',
@@ -342,11 +337,11 @@ class PlutoRow {
       List<String>? boolList}) {
     final json = cells.map((key, value) => MapEntry(
         key,
-        (boolList ?? []).contains(key)?
-            value.value.toString()=="true":
-             (intConverterKeys ?? []).contains(key)
-            ? int.tryParse(value.value.toString())
-            : value.value.toString()));
+        (boolList ?? []).contains(key)
+            ? value.value.toString() == "true"
+            : (intConverterKeys ?? []).contains(key)
+                ? int.tryParse(value.value.toString())
+                : value.value.toString()));
 
     if (!includeChildren || !type.isGroup) return json;
 
