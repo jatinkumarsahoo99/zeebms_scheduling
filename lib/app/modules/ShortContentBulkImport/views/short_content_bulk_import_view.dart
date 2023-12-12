@@ -69,7 +69,11 @@ class ShortContentBulkImportView extends StatelessWidget {
                         // Get.delete<ShortContentBulkImportController>();
                         // Get.find<HomeController>().clearPage1();
                       },
-                    )
+                    ),
+                    FormButton(
+                      btnText: "Exit",
+                      callback: () {},
+                    ),
                   ],
                 ),
                 const SizedBox(height: 10),
