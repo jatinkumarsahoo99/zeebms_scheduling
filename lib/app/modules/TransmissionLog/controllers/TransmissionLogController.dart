@@ -390,9 +390,23 @@ class TransmissionLogController extends GetxController {
               map.containsKey("lstPostTransmission") &&
               map["lstPostTransmission"].toString().toLowerCase() ==
                   "success") {
-            LoadingDialog.callDataSaved(msg: "Log Saved");
+            LoadingDialog.callDataSaved(
+                msg: "Log Saved",
+                callback: () {
+                  if (fun != null) {
+                    fun();
+                  }
+                });
           } else {
-            LoadingDialog.callErrorMessage1(msg: map.toString());
+            LoadingDialog.callErrorMessage1(
+                msg: map.toString(),
+                callback: () {
+                  // if (kDebugMode) {
+                    if (fun != null) {
+                      fun();
+                    }
+                  // }
+                });
           }
         });
   }
@@ -1295,7 +1309,8 @@ class TransmissionLogController extends GetxController {
           dr.cells["som"]?.value,
           dr.cells["promoTypeCode"]?.value,
           dr.cells["segmentNumber"]?.value.toString() ?? "",
-          dontSave: true,needUndo: false);
+          dontSave: true,
+          needUndo: false);
 
       // Adding Tags for promos
       // GoTo hell
@@ -1326,7 +1341,8 @@ class TransmissionLogController extends GetxController {
                 filterList![0].som!,
                 filterList![0].promoTypeCode ?? "",
                 filterList![0].segmentNumber.toString(),
-                dontSave: true,needUndo: false);
+                dontSave: true,
+                needUndo: false);
             // UnSelectAllRows(gridStateManager ?);
             // gridStateManager?.rows[row - 1].selected = true;
             // gridStateManager?.currentCell = gridStateManager?.selectedRows[0].cells[1];
@@ -3685,7 +3701,7 @@ class TransmissionLogController extends GetxController {
     });
   }
 
-  void btnSave_Click() async {
+  void btnSave_Click({Function? isDone}) async {
     if (gridStateManager != null) {
       gridStateManager?.clearCurrentSelecting();
     }
@@ -3764,7 +3780,11 @@ class TransmissionLogController extends GetxController {
         return;
       }
 
-      postTransmissionLog();
+      postTransmissionLog(fun: () {
+        if (isDone != null) {
+          isDone();
+        }
+      });
     } catch (ex) {
       print("Error is>>" + ex.toString());
       // cursor = Cursors.default;
