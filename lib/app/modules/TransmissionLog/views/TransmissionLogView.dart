@@ -267,8 +267,7 @@ class TransmissionLogView extends StatelessWidget {
                       child: (controller.transmissionLog != null &&
                               controller.transmissionLog?.loadSavedLogOutput !=
                                   null &&
-                              controller.transmissionLog?.loadSavedLogOutput
-                                      ?.lstTransmissionLog !=
+                              controller.transmissionLog?.loadSavedLogOutput?.lstTransmissionLog !=
                                   null &&
                               (controller.transmissionLog?.loadSavedLogOutput
                                   ?.lstTransmissionLog?.isNotEmpty)!)
@@ -626,14 +625,14 @@ class TransmissionLogView extends StatelessWidget {
                               widthRatio: (Get.width / 11.4),
                               mapData: controller.isFetch.value
                                   ? (controller.transmissionLog
-                                  ?.loadSavedLogOutput?.lstTransmissionLog!
-                                  .map((e) => e.toJson())
-                                  .toList())!
+                                      ?.loadSavedLogOutput?.lstTransmissionLog!
+                                      .map((e) => e.toJson())
+                                      .toList())!
                                   : ((controller.gridStateManager != null)
-                                  ? (controller.gridStateManager?.rows
-                                  .map((e) => e.toJsonRowData())
-                                  .toList())!
-                                  : []))
+                                      ? (controller.gridStateManager?.rows
+                                          .map((e) => e.toJsonRowData())
+                                          .toList())!
+                                      : []))
                           : Container(
                               // height: Get.height * .33,
                               // width: Get.width,
@@ -813,9 +812,10 @@ class TransmissionLogView extends StatelessWidget {
         showAaDialog(Get.context);
         break;
       case "Export":
-        controller.btnSave_Click();
-        controller.btnExportFetchFpc(fun: () {
-          showExportDialog(Get.context);
+        controller.btnSave_Click(isDone: () {
+          controller.btnExportFetchFpc(fun: () {
+            showExportDialog(Get.context);
+          });
         });
 
         break;
@@ -1093,7 +1093,7 @@ class TransmissionLogView extends StatelessWidget {
 
   showInsertDialog2() {
     controller.initialOffset.value = 2;
-    controller.insertPopupOpen.value=true;
+    controller.insertPopupOpen.value = true;
     controller.dialogWidget = Material(
       color: Colors.white,
       child: SizedBox(
@@ -1126,7 +1126,7 @@ class TransmissionLogView extends StatelessWidget {
                         onTap: () {
                           controller.dialogWidget = null;
                           controller.canDialogShow.value = false;
-                          controller.insertPopupOpen.value=true;
+                          controller.insertPopupOpen.value = true;
                         },
                         child: Icon(
                           Icons.close,
