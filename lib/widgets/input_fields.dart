@@ -275,7 +275,7 @@ class InputFields {
             onFieldSubmitted: onFieldSubmitted,
             inputFormatters: inputformatters.isEmpty
                 ? [
-                    LengthLimitingTextInputFormatter(SizeDefine.maxcharlimit),
+                    LengthLimitingTextInputFormatter(maxLen??SizeDefine.maxcharlimit),
                     FilteringTextInputFormatter.deny("  "),
                     // FilteringTextInputFormatter.allow(RegExp(r"^(\w+ ?)*$")),
                   ]
