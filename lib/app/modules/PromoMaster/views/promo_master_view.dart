@@ -100,6 +100,7 @@ class PromoMasterView extends GetView<PromoMasterController> {
                                                     prefixText: controller
                                                         .txCaptionPreFix.value,
                                                     padLeft: 0,
+                                                    maxLen: 1000
                                                   );
                                                 },
                                               ),
