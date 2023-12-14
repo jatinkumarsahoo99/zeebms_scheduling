@@ -621,6 +621,9 @@ class CommercialMasterController extends GetxController {
                   }
                 }
               }
+            }else{
+              secType.clear();
+              secType.refresh();
             }
           });
     }
