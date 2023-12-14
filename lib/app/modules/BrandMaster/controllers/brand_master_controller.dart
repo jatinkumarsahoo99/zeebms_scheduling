@@ -295,7 +295,7 @@ class BrandMasterController extends GetxController {
 
   txtBrandNameLostFocus() {
     isFocusNodeActive = false;
-    brandController.text = replaceInvalidChar(brandController.text);
+    brandController.text = replaceInvalidChar(brandController.text,upperCase: true);
     if (brandController.text != null && brandController.text != "") {
       getRetriveData(brandController.text);
     }
@@ -428,6 +428,7 @@ class BrandMasterController extends GetxController {
       onKeyEvent: (node, event) {
         if (event.logicalKey == LogicalKeyboardKey.tab) {
           if (brandController.text != null && brandController.text != "") {
+
             txtBrandNameLostFocus();
           }
           return KeyEventResult.ignored;
