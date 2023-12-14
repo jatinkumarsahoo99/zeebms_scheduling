@@ -602,7 +602,7 @@ class DataGridMenu {
 
                                           Get.defaultDialog(
                                               content: Text(
-                                                  "You Have reach the end !\nDo you want to restart?"),
+                                                  "You have reach the end!\nDo you want to restart?"),
                                               actions: [
                                                 ElevatedButton.icon(
                                                     onPressed: () {
@@ -1397,7 +1397,7 @@ class DataGridMenu {
 
                                           Get.defaultDialog(
                                               content: Text(
-                                                  "You Have reach the end !\nDo you want to restart?"),
+                                                  "You have reach the end!\nDo you want to restart?"),
                                               actions: [
                                                 ElevatedButton.icon(
                                                     onPressed: () {
@@ -2237,7 +2237,7 @@ class DataGridMenu {
 
                                           Get.defaultDialog(
                                               content: Text(
-                                                  "You Have reach the end !\nDo you want to restart?"),
+                                                  "You have reach the end!\nDo you want to restart?"),
                                               actions: [
                                                 ElevatedButton.icon(
                                                     onPressed: () {
@@ -2736,7 +2736,7 @@ class DataGridMenu {
 
                                       Get.defaultDialog(
                                           content: Text(
-                                              "You Have reach the end !\nDo you want to restart?"),
+                                              "You have reach the end!\nDo you want to restart?"),
                                           actions: [
                                             ElevatedButton.icon(
                                                 onPressed: () {

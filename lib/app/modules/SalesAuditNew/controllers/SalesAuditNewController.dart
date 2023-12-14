@@ -432,12 +432,12 @@ class SalesAuditNewController extends GetxController {
       "date": DateFormat("yyyy-MM-ddTHH:mm:ss")
           .format(DateFormat("dd-MM-yyyy").parse(scheduledController.text)),
       // "lstspots": masterListAsrunLog2.map((e) => e.toJson1()).toList(),
-      "lstspots": getDataFromGrid1(gridStateManagerLeft!),
+      "lstspots": getDataFromGrid1(gridStateManagerLeft),
       // "lstasrun": masterListAsrunLog1.map((e) => e.toJson1()).toList(),
-      "lstasrun": getDataFromGrid(gridStateManagerRight!),
+      "lstasrun": getDataFromGrid(gridStateManagerRight),
     };
 
-    print(">>>>>>postData${jsonEncode(postData)}");
+    // print(">>>>>>postData${jsonEncode(postData)}");
     Get.find<ConnectorControl>().POSTMETHOD(
       api: ApiFactory.SALESAUDIT_NEW_SAVEDATA,
       // api: "",
@@ -459,81 +459,95 @@ class SalesAuditNewController extends GetxController {
   }
 
   List<Map<String, dynamic>> getDataFromGrid(
-      PlutoGridStateManager statemanager) {
-    statemanager.setFilter((element) => true);
-    statemanager.notifyListeners();
-    List<Map<String, dynamic>> mapList = [];
+      PlutoGridStateManager ? statemanager) {
+    if(statemanager != null){
+      statemanager.setFilter((element) => true);
+      statemanager.notifyListeners();
+      List<Map<String, dynamic>> mapList = [];
 
-    for (var row in statemanager.rows) {
-      Map<String, dynamic> rowMap = {};
-      for (var key in row.cells.keys) {
-        if (key.toString().trim() == "telecastTime") {
-          if (row.cells[key]?.value != null &&
-              (row.cells[key]?.value ?? "").toString().trim() != "") {
-            // rowMap[key] = DateFormat("yyyy-MM-ddT").format(DateTime.now()) + (row.cells[key]?.value ?? "");
-            rowMap[key] = row.cells[key]?.value;
-          } else {
-            // rowMap[key] = DateFormat("yyyy-MM-dd").format(DateTime.now()) + (row.cells[key]?.value ?? "");
-            rowMap[key] = null;
+      for (var row in statemanager.rows) {
+        Map<String, dynamic> rowMap = {};
+        for (var key in row.cells.keys) {
+          if (key.toString().trim() == "telecastTime") {
+            if (row.cells[key]?.value != null &&
+                (row.cells[key]?.value ?? "").toString().trim() != "") {
+              // rowMap[key] = DateFormat("yyyy-MM-ddT").format(DateTime.now()) + (row.cells[key]?.value ?? "");
+              rowMap[key] = row.cells[key]?.value;
+            } else {
+              // rowMap[key] = DateFormat("yyyy-MM-dd").format(DateTime.now()) + (row.cells[key]?.value ?? "");
+              rowMap[key] = null;
+            }
           }
-        }
-        else if(key.toString().trim() == "telecastDate"){
-          if (row.cells[key]?.value != null &&
-              (row.cells[key]?.value ?? "").toString().trim() != "") {
-            rowMap[key] = DateFormat('yyyy-MM-ddTHH:mm:ss').
-            format(DateFormat("dd/MM/yyyy").parse(row.cells[key]?.value));
-          } else {
-            rowMap[key] = (row.cells[key]?.value ?? "");
+          else if(key.toString().trim() == "telecastDate"){
+            if (row.cells[key]?.value != null &&
+                (row.cells[key]?.value ?? "").toString().trim() != "") {
+              rowMap[key] = DateFormat('yyyy-MM-ddTHH:mm:ss').
+              format(DateFormat("dd/MM/yyyy").parse(row.cells[key]?.value));
+            } else {
+              rowMap[key] = (row.cells[key]?.value ?? "");
+            }
+          }else if(key.toString().trim() == "rownumber"){
+            if (row.cells[key]?.value != null &&
+                (row.cells[key]?.value ?? "").toString().trim() != "") {
+              rowMap[key] = int.parse(row.cells[key]?.value);
+            } else {
+              rowMap[key] = null;
+            }
           }
-        }else if(key.toString().trim() == "rownumber"){
-          if (row.cells[key]?.value != null &&
-              (row.cells[key]?.value ?? "").toString().trim() != "") {
-            rowMap[key] = int.parse(row.cells[key]?.value);
-          } else {
-            rowMap[key] = null;
+          else {
+            rowMap[key] = row.cells[key]?.value ?? "";
           }
-        }
-        else {
-          rowMap[key] = row.cells[key]?.value ?? "";
-        }
 
+        }
+        mapList.add(rowMap);
       }
-      mapList.add(rowMap);
+      return mapList;
+    }else{
+      return [];
     }
-    return mapList;
+
+
+
+
   }
 
   List<Map<String, dynamic>> getDataFromGrid1(
-      PlutoGridStateManager statemanager) {
-    statemanager.setFilter((element) => true);
-    statemanager.notifyListeners();
-    List<Map<String, dynamic>> mapList = [];
-    for (var row in statemanager.rows) {
-      Map<String, dynamic> rowMap = {};
-      for (var key in row.cells.keys) {
-         if (key.toString().trim() == "telecastTime") {
-          if (row.cells[key]?.value != null &&
-              (row.cells[key]?.value ?? "").toString().trim() != "") {
-            // rowMap[key] = DateFormat("yyyy-MM-ddT").format(DateTime.now()) + (row.cells[key]?.value ?? "").toString().trim();
-            rowMap[key] = row.cells[key]?.value;
+      PlutoGridStateManager? statemanager) {
+
+    if(statemanager != null){
+      statemanager.setFilter((element) => true);
+      statemanager.notifyListeners();
+      List<Map<String, dynamic>> mapList = [];
+      for (var row in statemanager.rows) {
+        Map<String, dynamic> rowMap = {};
+        for (var key in row.cells.keys) {
+          if (key.toString().trim() == "telecastTime") {
+            if (row.cells[key]?.value != null &&
+                (row.cells[key]?.value ?? "").toString().trim() != "") {
+              // rowMap[key] = DateFormat("yyyy-MM-ddT").format(DateTime.now()) + (row.cells[key]?.value ?? "").toString().trim();
+              rowMap[key] = row.cells[key]?.value;
+            } else {
+              // rowMap[key] = DateFormat("yyyy-MM-dd").format(DateTime.now()) + (row.cells[key]?.value ?? "").toString().trim();
+              rowMap[key] = null;
+            }
+          }else if(key.toString().trim() == "rownumber"){
+            if (row.cells[key]?.value != null &&
+                (row.cells[key]?.value ?? "").toString().trim() != "" &&  (row.cells[key]?.value ?? "").toString().trim() != "0") {
+              rowMap[key] = int.parse((row.cells[key]?.value).toString());
+            }else{
+              rowMap[key] = null;
+            }
           } else {
-            // rowMap[key] = DateFormat("yyyy-MM-dd").format(DateTime.now()) + (row.cells[key]?.value ?? "").toString().trim();
-            rowMap[key] = null;
+            rowMap[key] = row.cells[key]?.value ?? "";
           }
-        }else if(key.toString().trim() == "rownumber"){
-          if (row.cells[key]?.value != null &&
-              (row.cells[key]?.value ?? "").toString().trim() != "" &&  (row.cells[key]?.value ?? "").toString().trim() != "0") {
-            rowMap[key] = int.parse((row.cells[key]?.value).toString());
-          }else{
-            rowMap[key] = null;
-          }
-        } else {
-          rowMap[key] = row.cells[key]?.value ?? "";
         }
+        mapList.add(rowMap);
       }
-      mapList.add(rowMap);
+      return mapList;
+    }else{
+      return [];
     }
-    return mapList;
+
   }
 
   clearAll() {

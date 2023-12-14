@@ -659,8 +659,9 @@ mixin SelectingState implements IPlutoGridState {
       List<String> columnText = [];
       for (int i = 0; i < columnIndexes.length; i += 1) {
         final String field = refColumns[columnIndexes[i]].field;
-
-        columnText.add(row.cells[field]!.value.toString());
+        if(field != "no" ){
+          columnText.add(row.cells[field]!.value.toString());
+        }
       }
 
       rowText.add(columnText.join('\t'));
@@ -727,7 +728,9 @@ mixin SelectingState implements IPlutoGridState {
 
     for (int i = columnStartIdx; i <= columnEndIdx; i += 1) {
       final String field = refColumns[columnIndexes[i]].field;
-      columnHeaderText.add(field);
+      if(field != "no"){
+        columnHeaderText.add(field);
+      }
     }
 
     rowText.add(columnHeaderText.join('\t'));
@@ -737,8 +740,9 @@ mixin SelectingState implements IPlutoGridState {
 
       for (int j = columnStartIdx; j <= columnEndIdx; j += 1) {
         final String field = refColumns[columnIndexes[j]].field;
-
-        columnText.add(refRows[i].cells[field]!.value.toString());
+        if(field != "no"){
+          columnText.add(refRows[i].cells[field]!.value.toString());
+        }
       }
 
       rowText.add(columnText.join('\t'));
@@ -754,7 +758,9 @@ mixin SelectingState implements IPlutoGridState {
     List<String> columnHeaderText = [];
     for (int i = 0; i < columnIndexes.length; i += 1) {
       final String field = refColumns[columnIndexes[i]].field;
-      columnHeaderText.add(field);
+      if(field != "no" ){
+        columnHeaderText.add(field);
+      }
     }
     rowText.add(columnHeaderText.join('\t'));
 
@@ -763,8 +769,11 @@ mixin SelectingState implements IPlutoGridState {
 
       for (int i = 0; i < columnIndexes.length; i += 1) {
         final String field = refColumns[columnIndexes[i]].field;
+        if(field != "no" ){
+          columnText.add(row.cells[field]!.value.toString());
+        }
 
-        columnText.add(row.cells[field]!.value.toString());
+        // columnText.add(row.cells[field]!.value.toString());
       }
 
       rowText.add(columnText.join('\t'));
@@ -793,7 +802,9 @@ mixin SelectingState implements IPlutoGridState {
 
     for (int i = columnStartIdx; i <= columnEndIdx; i += 1) {
       final String field = refColumns[columnIndexes[i]].field;
-      columnHeaderText.add(field);
+      if(field != "no"){
+        columnHeaderText.add(field);
+      }
     }
 
     rowText.add(columnHeaderText.join('\t'));
@@ -803,8 +814,9 @@ mixin SelectingState implements IPlutoGridState {
 
       for (int j = columnStartIdx; j <= columnEndIdx; j += 1) {
         final String field = refColumns[columnIndexes[j]].field;
-
-        columnText.add(refRows[i].cells[field]!.value.toString());
+        if(field != "no"){
+          columnText.add(refRows[i].cells[field]!.value.toString());
+        }
       }
 
       rowText.add(columnText.join('\t'));

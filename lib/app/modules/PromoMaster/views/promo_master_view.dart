@@ -69,6 +69,7 @@ class PromoMasterView extends GetView<PromoMasterController> {
                                                 autoFocus: true,
                                                 focusNode: controller.captionFN,
                                                 padLeft: 0,
+                                                maxLen: 40
                                               ),
                                               DropDownField
                                                   .formDropDown1WidthMap(
@@ -99,6 +100,7 @@ class PromoMasterView extends GetView<PromoMasterController> {
                                                     prefixText: controller
                                                         .txCaptionPreFix.value,
                                                     padLeft: 0,
+                                                    maxLen: 40
                                                   );
                                                 },
                                               ),

@@ -163,6 +163,7 @@ class TransmissionLogController extends GetxController {
   int endVisibleRow = 0;
   List<PlutoRow> deletedSegmentData = [];
   BuildContext? contextGrid;
+  RxBool insertPopupOpen = RxBool(false);
 
   @override
   void onInit() {
@@ -389,9 +390,23 @@ class TransmissionLogController extends GetxController {
               map.containsKey("lstPostTransmission") &&
               map["lstPostTransmission"].toString().toLowerCase() ==
                   "success") {
-            LoadingDialog.callDataSaved(msg: "Log Saved");
+            LoadingDialog.callDataSaved(
+                msg: "Log Saved",
+                callback: () {
+                  if (fun != null) {
+                    fun();
+                  }
+                });
           } else {
-            LoadingDialog.callErrorMessage1(msg: map.toString());
+            LoadingDialog.callErrorMessage1(
+                msg: map.toString(),
+                callback: () {
+                  // if (kDebugMode) {
+                    if (fun != null) {
+                      fun();
+                    }
+                  // }
+                });
           }
         });
   }
@@ -1047,6 +1062,7 @@ class TransmissionLogController extends GetxController {
                 selectedDate.text,
                 isStandby.value,
                 isPartialLog.value,
+                isSecondary,
                 selectExportFpcFrom?.value ?? "",
                 selectExportFpcTo?.value ?? '',
                 fileName),
@@ -1211,25 +1227,25 @@ class TransmissionLogController extends GetxController {
       LoadingDialog.callInfoMessage("Nothing is selected");
       return;
     }
-    bool isFirstRowExist = false;
     List<PlutoRow>? currentSelectRows = [];
     if (noOfRows == 0) {
       insertFastData(dr: (tblFastInsert?.currentRow)!);
       return;
     } else {
-      tblFastInsert?.currentSelectingRows.forEach((element) {
+      /* tblFastInsert?.currentSelectingRows.forEach((element) {
         if (element.sortIdx == tblFastInsert?.currentRow?.sortIdx) {
           isFirstRowExist = true;
         }
-      });
+      });*/
       currentSelectRows.addAll((tblFastInsert?.currentSelectingRows)!);
-      if (!isFirstRowExist) {
+      /* if (!isFirstRowExist) {
         if (tblFastInsert?.currentRow != null) {
           currentSelectRows.add((tblFastInsert?.currentRow)!);
         }
       }
-      currentSelectRows.sort((a, b) => (a.sortIdx).compareTo(b.sortIdx));
+      currentSelectRows.sort((a, b) => (a.sortIdx).compareTo(b.sortIdx));*/
       // currentSelectRows = currentSelectRows.reversed.toList();
+      addEventToUndo();
     }
     for (var dr in (currentSelectRows)) {
       String FPCTime;
@@ -1293,7 +1309,8 @@ class TransmissionLogController extends GetxController {
           dr.cells["som"]?.value,
           dr.cells["promoTypeCode"]?.value,
           dr.cells["segmentNumber"]?.value.toString() ?? "",
-          dontSave: true);
+          dontSave: true,
+          needUndo: false);
 
       // Adding Tags for promos
       // GoTo hell
@@ -1324,12 +1341,13 @@ class TransmissionLogController extends GetxController {
                 filterList![0].som!,
                 filterList![0].promoTypeCode ?? "",
                 filterList![0].segmentNumber.toString(),
-                dontSave: true);
+                dontSave: true,
+                needUndo: false);
             // UnSelectAllRows(gridStateManager ?);
             // gridStateManager?.rows[row - 1].selected = true;
             // gridStateManager?.currentCell = gridStateManager?.selectedRows[0].cells[1];
             gridStateManager?.setCurrentCell(
-                gridStateManager?.currentRow?.cells[1],
+                gridStateManager?.currentRow?.cells["no"],
                 gridStateManager?.currentRowIdx);
           }
         }
@@ -1584,12 +1602,15 @@ class TransmissionLogController extends GetxController {
       String SOM,
       String Promotypecode,
       String BreakNumber,
-      {bool? dontSave}) {
+      {bool? dontSave,
+      bool? needUndo = true}) {
     int intRowIndex = gridStateManager?.currentRowIdx ?? 0;
     int InsertRow =
         int.tryParse(gridStateManager?.currentRow?.cells["rownumber"]?.value) ??
             0;
-    addEventToUndo();
+    if (needUndo ?? true) {
+      addEventToUndo();
+    }
     if (InsertRow > 0) {
       if (isInsertAfter.value) {
         InsertRow = InsertRow + 1;
@@ -1663,12 +1684,12 @@ class TransmissionLogController extends GetxController {
     // dt.acceptChanges();
     colorGrid(false, dontSaveFile1: dontSave);
     // gridStateManager?.firstDisplayedScrollingRowIndex = intCurrentRowIndex[3];
-     if (EventType.trim().toLowerCase() == "gl" && blnMultipleGLs) {
-       gridStateManager?.setCurrentCell(
-           gridStateManager?.rows[intRowIndex].cells["no"], intRowIndex);
+    if (EventType.trim().toLowerCase() == "gl" && blnMultipleGLs) {
+      gridStateManager?.setCurrentCell(
+          gridStateManager?.rows[intRowIndex].cells["no"], intRowIndex);
     } else {
-       gridStateManager?.setCurrentCell(
-           gridStateManager?.rows[intRowIndex + 1].cells["no"], intRowIndex + 1);
+      gridStateManager?.setCurrentCell(
+          gridStateManager?.rows[intRowIndex + 1].cells["no"], intRowIndex + 1);
     }
 
     // gridStateManager?.currentCell = gridStateManager?.rows[intRowIndex].cells[1];
@@ -3680,7 +3701,7 @@ class TransmissionLogController extends GetxController {
     });
   }
 
-  void btnSave_Click() async {
+  void btnSave_Click({Function? isDone}) async {
     if (gridStateManager != null) {
       gridStateManager?.clearCurrentSelecting();
     }
@@ -3759,7 +3780,11 @@ class TransmissionLogController extends GetxController {
         return;
       }
 
-      postTransmissionLog();
+      postTransmissionLog(fun: () {
+        if (isDone != null) {
+          isDone();
+        }
+      });
     } catch (ex) {
       print("Error is>>" + ex.toString());
       // cursor = Cursors.default;
@@ -4549,6 +4574,13 @@ class TransmissionLogController extends GetxController {
     print("RAw is.>>>" + raw.toString());
     if (gridStateManager == null) return;
 
+    /* if (raw is RawKeyDownEvent && raw.isControlPressed) {
+      print("Control Pressed");
+      isControlPressed.value = true;
+    }else if(raw is RawKeyUpEvent && !raw.isControlPressed){
+      // print("Control Released");
+      isControlPressed.value = false;
+    }*/
     if (raw is RawKeyDownEvent &&
         raw.isShiftPressed &&
         raw.character?.toLowerCase() == "c") {
@@ -4636,14 +4668,35 @@ class TransmissionLogController extends GetxController {
       if (dialogWidget != null) {
         dialogWidget = null;
         canDialogShow.value = false;
+        if (insertPopupOpen.value) {
+          insertPopupOpen.value = false;
+        }
       }
     } else if (raw is RawKeyDownEvent &&
         raw.logicalKey == LogicalKeyboardKey.delete) {
       print("Delete call");
-      if (gridStateManager!=null && (gridStateManager?.gridFocusNode.hasFocus??false)) {
+      if (insertPopupOpen.value &&
+          gridStateManager != null &&
+          (gridStateManager?.gridFocusNode.hasFocus ?? false)) {
+        deleteMultiple();
+      } else if (!insertPopupOpen.value && gridStateManager != null) {
         deleteMultiple();
       }
-    } else if (raw is RawKeyDownEvent && raw.character?.toLowerCase() == "y") {
+    }
+    /*else if (raw is RawKeyDownEvent &&
+        raw.logicalKey == LogicalKeyboardKey.backspace) {
+      print("Backspace Delete call");
+      if (insertPopupOpen.value &&
+          gridStateManager != null &&
+          (gridStateManager?.gridFocusNode.hasFocus ?? false)) {
+        print("Backspace Delete call 1");
+        deleteMultiple();
+      } else if (!insertPopupOpen.value && gridStateManager != null) {
+        print("Backspace Delete call 2");
+        deleteMultiple();
+      }
+    }*/
+    else if (raw is RawKeyDownEvent && raw.character?.toLowerCase() == "y") {
       if (completerDialog != null && dialogWidget != null) {
         dialogWidget = null;
         canDialogShow.value = false;
@@ -4725,9 +4778,10 @@ class TransmissionLogController extends GetxController {
       }
 
       if (deletRows.length > 0) {
-        gridStateManager?.removeRows(deletRows);
-        addEventToUndo();
-        colorGrid(false);
+        addEventToUndo(function: () {
+          gridStateManager?.removeRows(deletRows);
+          colorGrid(false);
+        });
       }
     } else {
       print("Single select");
