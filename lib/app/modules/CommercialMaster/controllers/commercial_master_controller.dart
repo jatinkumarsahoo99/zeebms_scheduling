@@ -58,7 +58,7 @@ class CommercialMasterController extends GetxController {
   TextEditingController level2Controller = TextEditingController();
   TextEditingController level3Controller = TextEditingController();
 
-  TextEditingController somController = TextEditingController();
+  TextEditingController somController = TextEditingController(text: "10:00:00:00");
   TextEditingController eomController = TextEditingController();
   TextEditingController durationController = TextEditingController();
 
@@ -621,6 +621,9 @@ class CommercialMasterController extends GetxController {
                   }
                 }
               }
+            }else{
+              secType.clear();
+              secType.refresh();
             }
           });
     }
