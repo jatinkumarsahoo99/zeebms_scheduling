@@ -613,10 +613,8 @@ class NewShortContentFormController extends GetxController {
               }
 
               return true;
-            } else {
-              // LoadingDialog.callErrorMessage1(
-              //     msg: "Already Exists in ${selectedCategory.value?.type}");
-              // return false;
+            } else if (rawdata is String) {
+              LoadingDialog.callErrorMessage1(msg: rawdata);
             }
           } catch (e) {
             LoadingDialog.callErrorMessage1(msg: "Save Failed");
