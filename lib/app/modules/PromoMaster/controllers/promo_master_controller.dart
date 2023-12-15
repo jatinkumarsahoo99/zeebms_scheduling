@@ -251,6 +251,7 @@ class PromoMasterController extends GetxController {
           // }
           if (resp['saveRecords']['tapeID'] != null) {
             tapeIDCtr.text = resp['saveRecords']['tapeID'].toString();
+            txNoCtr.text = resp['saveRecords']['tapeID'].toString();
             msg =
                 "${resp['saveRecords']['strMessage']}\nID: (${resp['saveRecords']['tapeID']})";
           }
