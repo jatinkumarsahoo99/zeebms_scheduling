@@ -718,6 +718,7 @@ class FillerMasterController extends GetxController {
             var msg = resp['saveRecord']['strMessage'].toString();
             if (resp['saveRecord']['tapeID'] != null) {
               tapeIDCtr.text = resp['saveRecord']['tapeID'].toString();
+              txNoCtr.text = resp['saveRecord']['tapeID'].toString();
               msg =
                   "${resp['saveRecord']['strMessage']}\nID: (${resp['saveRecord']['tapeID']})";
             }
