@@ -1312,6 +1312,7 @@ class RoBookingController extends GetxController {
 
             pagecontroller.jumpToPage(1);
             currentTab.value = "Programs";
+            update(['programView']);
           }
           if (value is Map &&
               value.containsKey("info_dgvDealDetailCellDouble") &&
