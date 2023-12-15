@@ -419,6 +419,19 @@ class SalesAuditNewController extends GetxController {
           });
     }
   }
+  
+  filerStateManagerData(stateManager){
+    if(showError.value == true && showCancel.value != true){
+      stateManager.setFilter((e)=>e.cells['bookingStatus']?.value.toString().trim().toLowerCase() != "c");
+    }else if(showError.value != true && showCancel.value == true){
+      stateManager.setFilter((e)=>e.cells['bookingStatus']?.value.toString().trim().toLowerCase() != "e");
+    }else if(showError.value != true && showCancel.value != true){
+      stateManager.setFilter((e)=>( e.cells['bookingStatus']?.value.toString().trim().toLowerCase() != "e" &&
+          e.cells['bookingStatus']?.value.toString().trim().toLowerCase() != "c" ));
+    }else{
+      stateManager.setFilter((element) => true);
+    }
+  }
 
   saveData() {
     // tblSpots - listAsrunLog2 - leftIndex - gridStateManagerLeft
@@ -449,10 +462,14 @@ class SalesAuditNewController extends GetxController {
           LoadingDialog.callDataSavedMessage((map['postSalesAduit'] ?? ""),
               callback: () {
             // clearAll();
-            Get.back();
+            // Get.back();
+                callGetRetrieve();
           });
         } else {
-          Snack.callError((map ?? "").toString());
+          LoadingDialog.showErrorDialog((map ?? "").toString(),callback: (){
+            callGetRetrieve();
+          });
+          // Snack.callError((map ?? "").toString());
         }
       },
     );
@@ -517,8 +534,12 @@ class SalesAuditNewController extends GetxController {
     if(statemanager != null){
       statemanager.setFilter((element) => true);
       statemanager.notifyListeners();
+      List<PlutoRow> myList = statemanager.rows;
+      filerStateManagerData(statemanager);
       List<Map<String, dynamic>> mapList = [];
-      for (var row in statemanager.rows) {
+      // print("rows_length: "+myList.length.toString());
+      // print("rows_length1: "+statemanager.filterRows.length.toString());
+      for (var row in myList) {
         Map<String, dynamic> rowMap = {};
         for (var key in row.cells.keys) {
           if (key.toString().trim() == "telecastTime") {

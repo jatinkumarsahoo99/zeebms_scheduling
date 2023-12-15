@@ -352,10 +352,16 @@ class SalesAuditNewView  extends StatelessWidget  {
                                               controller.gridStateManagerLeft?.setCurrentCell(controller.gridStateManagerLeft?.
                                               getRowByIdx(controller.selectedIndex)?.cells['exportTapeCode'],
                                                   controller.selectedIndex);
-                                              controller.gridStateManagerLeft?.moveCurrentCellByRowIdx(controller.selectedIndex??0, PlutoMoveDirection.down);
+
                                               load.stateManager.notifyListeners();
                                               load.stateManager.setSelectingMode(
                                                   PlutoGridSelectingMode.cell);
+
+                                              if((controller.gridStateManagerLeft?.rows.length ??0 )>0){
+                                                controller.gridStateManagerLeft?.moveCurrentCellByRowIdx(controller.selectedIndex??0, PlutoMoveDirection.down);
+                                              }
+
+                                              // controller.filerStateManagerData(load.stateManager);
 
                                               /*controller
                                                   .gridStateManagerLeft!
@@ -452,10 +458,15 @@ class SalesAuditNewView  extends StatelessWidget  {
                                                   controller.gridStateManagerRight?.setCurrentCell(controller.gridStateManagerRight?.
                                                   getRowByIdx(controller.selectedRightIndex)?.cells['exportTapeCode'],
                                                       controller.selectedRightIndex);
-                                                  controller.gridStateManagerRight?.moveCurrentCellByRowIdx(controller.selectedRightIndex??0,
-                                                      PlutoMoveDirection.down);
                                                   load.stateManager.setSelectingMode(
                                                       PlutoGridSelectingMode.cell);
+
+                                                  if((controller.gridStateManagerRight?.rows.length??0) > 0 ){
+                                                    controller.gridStateManagerRight?.moveCurrentCellByRowIdx(controller.selectedRightIndex??0,
+                                                        PlutoMoveDirection.down);
+                                                  }
+
+
 
                                                       /*controller
                                                   .gridStateManagerLeft!
