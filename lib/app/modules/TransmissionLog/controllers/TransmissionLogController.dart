@@ -402,9 +402,9 @@ class TransmissionLogController extends GetxController {
                 msg: map.toString(),
                 callback: () {
                   // if (kDebugMode) {
-                    if (fun != null) {
-                      fun();
-                    }
+                  if (fun != null) {
+                    fun();
+                  }
                   // }
                 });
           }
@@ -564,8 +564,12 @@ class TransmissionLogController extends GetxController {
               listTapeDetailsSegment?.add(DropDownValue(
                   key: e["exporttapecode"], value: e["exporttapecode1"]));
             });
-            if(listTapeDetailsSegment!=null && (listTapeDetailsSegment?.length??0)>0) {
+            if (listTapeDetailsSegment != null &&
+                (listTapeDetailsSegment?.length ?? 0) > 0) {
               selectTapeSegmentDialog = listTapeDetailsSegment![0];
+            } else {
+              selectTapeSegmentDialog = null;
+              listTapeDetailsSegment?.refresh();
             }
           } else {
             Snack.callError(map.toString());
