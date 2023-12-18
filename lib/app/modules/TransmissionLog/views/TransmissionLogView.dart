@@ -1787,7 +1787,7 @@ class TransmissionLogView extends StatelessWidget {
                     width: Get.width * 0.38,
                     // height: Get.he,
                     child: FocusTraversalGroup(
-                      policy: OrderedTraversalPolicy(),
+                      policy: ReadingOrderTraversalPolicy(),
                       child: Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: <Widget>[
