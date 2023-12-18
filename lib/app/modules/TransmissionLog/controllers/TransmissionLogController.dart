@@ -564,6 +564,9 @@ class TransmissionLogController extends GetxController {
               listTapeDetailsSegment?.add(DropDownValue(
                   key: e["exporttapecode"], value: e["exporttapecode1"]));
             });
+            if(listTapeDetailsSegment!=null && (listTapeDetailsSegment?.length??0)>0) {
+              selectTapeSegmentDialog = listTapeDetailsSegment![0];
+            }
           } else {
             Snack.callError(map.toString());
           }
@@ -573,6 +576,8 @@ class TransmissionLogController extends GetxController {
   void btnSearchSegment({Function? fun}) {
     if (selectProgramSegment == null) {
       // LoadingDialog.callInfoMessage("Please select program");
+    } else if (selectTapeSegmentDialog == null) {
+      LoadingDialog.callInfoMessage("Please select tape");
     } else {
       LoadingDialog.call();
       Get.find<ConnectorControl>().GETMETHODCALL(
@@ -4446,6 +4451,8 @@ class TransmissionLogController extends GetxController {
         return Offset(
             (constraints.maxWidth / 3) + 30, constraints.maxHeight / 3);
       case 2:
+        return Offset(Get.width * 0.27, Get.height * 0.10);
+      case 3:
         return Offset(Get.width * 0.27, Get.height * 0.10);
       default:
         return null;
