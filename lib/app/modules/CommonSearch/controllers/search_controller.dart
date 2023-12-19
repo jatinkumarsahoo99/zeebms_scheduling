@@ -1033,7 +1033,8 @@ class SearchController extends GetxController {
                 label: Text("Cancel")),*/
           ],
           radius: 10.0);
-    } else if ((rowvariance.dataType == "varchar" ||
+    }
+    else if ((rowvariance.dataType == "varchar" ||
         rowvariance.dataType == "char") &&
         rowvariance.tableName != "") {
       var allselect = RxBool(false);
@@ -1042,6 +1043,7 @@ class SearchController extends GetxController {
         try {
           tempser = rowvariance.searchCriteria
               ?.replaceAll("In ('", "")
+              .replaceAll("in ( '", "")
               .replaceAll("Not In('", "")
               .replaceAll(")", "")
               .replaceAll("'", "")
@@ -1117,6 +1119,22 @@ class SearchController extends GetxController {
                                     }
                                   }
                                   masterDialogList.addAll(templist);
+
+
+                                    for (var value1 in masterDialogList) {
+
+                                      for (var element in map) {
+                                        if (value1['code'] != null && value1['code'] != "") {
+                                          break;
+                                        }
+                                      if (value1['name'] == element['name']) {
+                                        value1['code'] = element['code'];
+                                        break;
+                                      }
+                                    }
+                                  }
+
+
 
                                   print(map.toString());
                                 } else {
@@ -1204,6 +1222,7 @@ class SearchController extends GetxController {
                       btnText: "Done",
                       callback: () {
                         String _searchCriteria = "";
+                        String _searchCriteria1 = "";
                         if ((grid!.type!) == "V") {
                           for (var i = 0;
                           i <
@@ -1211,6 +1230,8 @@ class SearchController extends GetxController {
                                   .where((e) => e["selected"] == true)
                                   .length;
                           i++) {
+                            print(">>>>>>>>>>masterDialogList"+masterDialogList.toString());
+
                             _searchCriteria = _searchCriteria +
                                 (i ==
                                     (masterDialogList
@@ -1230,8 +1251,30 @@ class SearchController extends GetxController {
                                     e["selected"] == true)
                                         .toList()[i]["name"] +
                                     "',");
+
+                            _searchCriteria1 = _searchCriteria1 +
+                                (i ==
+                                    (masterDialogList
+                                        .where((e) =>
+                                    e["selected"] == true)
+                                        .length -
+                                        1)
+                                    ? "'" +
+                                    (masterDialogList
+                                        .where((e) =>
+                                    e["selected"] == true)
+                                        .toList()[i]["code"]??"") +
+                                    "'"
+                                    : "'" +
+                                    (masterDialogList
+                                        .where((e) =>
+                                    e["selected"] == true)
+                                        .toList()[i]["code"] ??"")+
+                                    "',");
+
                           }
-                        } else {
+                        }
+                        else {
                           for (var i = 0;
                           i <
                               masterDialogList
@@ -1253,15 +1296,47 @@ class SearchController extends GetxController {
                                 e["selected"] == true)
                                     .toList()[i]["name"] +
                                     ","));
+                            _searchCriteria1 = _searchCriteria1 +
+                                (i ==
+                                    (masterDialogList
+                                        .where((e) =>
+                                    e["selected"] == true)
+                                        .length -
+                                        1)
+                                    ? (masterDialogList
+                                    .where((e) => e["selected"] == true)
+                                    .toList()[i]["code"]??"")
+                                    : ((masterDialogList
+                                    .where((e) =>
+                                e["selected"] == true)
+                                    .toList()[i]["code"]??"" )+
+                                    ","));
+
                           }
                         }
-                        grid!.variances!
+                        Variances varData1 =   grid!.variances!
                             .firstWhere((element) =>
-                        element.name == rowvariance.name)
-                            .searchCriteria = (grid!.type!) ==
-                            "V"
-                            ? "${checknotcheck.value ? "Not In" : "In"} ($_searchCriteria)"
-                            : _searchCriteria;
+                        element.name == rowvariance.name,orElse: () =>  Variances());
+
+                        if(varData1.name != null ){
+                          varData1.searchCriteria = (grid!.type!) ==
+                              "V"
+                              ? "${checknotcheck.value ? "Not In" : "In"} ($_searchCriteria)"
+                              : _searchCriteria;
+                        }
+
+
+                        Variances varData2 = grid!.variances!
+                            .firstWhere((element) =>
+                        element.name.toString() == rowvariance.valueColumnName.toString().toLowerCase(), orElse: ()=> Variances());
+
+                        if(varData2.name != null){
+                          varData2.searchCriteria = (grid!.type!) ==
+                              "V"
+                              ? "${checknotcheck.value ? "Not In" : "In"} ($_searchCriteria1)"
+                              : _searchCriteria1;
+                        }
+
                         updateGrid();
                         Get.back();
                       }),
@@ -1315,7 +1390,8 @@ class SearchController extends GetxController {
         masterDialogList.value = [];
         checknotcheck.value = false;
       });
-    } else if (rowvariance.dataType == "time" ||
+    }
+    else if (rowvariance.dataType == "time" ||
         rowvariance.dataType == "ime(0)") {
       // var timenow = DateTime.now();
 
@@ -1392,7 +1468,8 @@ class SearchController extends GetxController {
                 btnText: "Cancel"),
           ],
           radius: 10.0);
-    } else if (rowvariance.dataType == "money" ||
+    }
+    else if (rowvariance.dataType == "money" ||
         rowvariance.dataType == "float" ||
         rowvariance.dataType == "int" ||
         rowvariance.dataType == "numeric") {
@@ -1459,7 +1536,8 @@ class SearchController extends GetxController {
                 btnText: "Cancel"),
           ],
           radius: 10.0);
-    } else if ((rowvariance.dataType == "varchar" ||
+    }
+    else if ((rowvariance.dataType == "varchar" ||
         rowvariance.dataType == "char") &&
         rowvariance.tableName == "") {
       var multiValue = RxBool(false);
@@ -1525,7 +1603,8 @@ class SearchController extends GetxController {
                 btnText: "Cancel"),
           ],
           radius: 10.0);
-    } else if ((rowvariance.dataType!.toLowerCase() == "datetime") &&
+    }
+    else if ((rowvariance.dataType!.toLowerCase() == "datetime") &&
         grid!.type == "P") {
       // String valueText = DateFormat('dd-MMM-yyyy').format(DateTime.now());
       var tempCtr = TextEditingController();
@@ -1578,7 +1657,8 @@ class SearchController extends GetxController {
                 btnText: "Cancel"),
           ],
           radius: 10.0);
-    } else if ((rowvariance.dataType!.toLowerCase() == "date") &&
+    }
+    else if ((rowvariance.dataType!.toLowerCase() == "date") &&
         grid!.type == "P") {
       List dateTypes = [
         "My Dates",
