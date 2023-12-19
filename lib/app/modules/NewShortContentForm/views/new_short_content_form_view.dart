@@ -54,6 +54,7 @@ class NewShortContentFormView extends StatelessWidget {
                         inkWellFocusNode: controller.locationFocusNode,
                         selected: controller.selectedLocation.value,
                         autoFocus: true,
+                        isEnable: controller.enable.value
                       ),
                     ),
                     Obx(
@@ -63,6 +64,7 @@ class NewShortContentFormView extends StatelessWidget {
                         controller.channelFocusNode.requestFocus();
                       }, "Channel", 0.16,
                           autoFocus: true,
+                          isEnable: controller.enable.value,
                           inkWellFocusNode: controller.channelFocusNode,
                           selected: controller.selectedChannel.value),
                     ),
@@ -103,6 +105,7 @@ class NewShortContentFormView extends StatelessWidget {
                         0.16,
                         inkWellFocusNode: controller.categoryFocusNode,
                         autoFocus: true,
+                        isEnable: controller.enable.value,
                         selected: controller.selectedCategory.value,
                       ),
                     ),
@@ -172,6 +175,12 @@ class NewShortContentFormView extends StatelessWidget {
                         hintTxt: "House ID",
                         controller: controller.houseId,
                         width: 0.16,
+                        onchanged: (val){
+                          if(val.toString().trim() == "" || val == "AUTOID"){
+                            controller.enable.value = true;
+                            controller.enable.refresh();
+                          }
+                        },
                         focusNode: controller.houseFocusNode),
                     Obx(
                       () => DropDownField.formDropDownSearchAPI2(

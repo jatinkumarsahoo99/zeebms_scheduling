@@ -23,6 +23,7 @@ class NewShortContentFormController extends GetxController {
   RxString duration = RxString("00:00:00:00");
   num sec = 0;
   var formId = ''.obs;
+  Rx<bool> enable = Rx<bool>(true);
 
   FocusNode houseFocusNode = FocusNode(),
       locationFocusNode = FocusNode(),
@@ -211,20 +212,24 @@ class NewShortContentFormController extends GetxController {
             houseId.text ?? "",
             segment.text ?? ""),
         fun: (rawdata) {
-          Map data = rawdata[0];
+          // print(">>>>>>>responseData"+rawdata.toString());
 
-          selectedCategory.value = categeroies.firstWhereOrNull((element) {
-            var result = element.key!.toString().toLowerCase() ==
-                    data['SlideType'].toString().toLowerCase().trim() ||
-                element.key!.toString().toLowerCase() ==
-                    data['Stilltype'].toString().toLowerCase().trim() ||
-                element.key!.toString().toLowerCase() ==
-                    data['SSVCode'].toString().toLowerCase().trim();
-            // print(result);
-            return result;
-          });
-          print("===== ${selectedCategory.value?.type}");
-          switch (selectedCategory.value?.type) {
+          if(rawdata is List && rawdata.isNotEmpty){
+            Map data = rawdata[0];
+            enable.value = false;
+            enable.refresh();
+            selectedCategory.value = categeroies.firstWhereOrNull((element) {
+              var result = element.key!.toString().toLowerCase() ==
+                  data['SlideType'].toString().toLowerCase().trim() ||
+                  element.key!.toString().toLowerCase() ==
+                      data['Stilltype'].toString().toLowerCase().trim() ||
+                  element.key!.toString().toLowerCase() ==
+                      data['SSVCode'].toString().toLowerCase().trim();
+              // print(result);
+              return result;
+            });
+            print("===== ${selectedCategory.value?.type}");
+            switch (selectedCategory.value?.type) {
             //       {
             //     "stillCode": null,
             //     "stillCaption": null,
@@ -263,162 +268,173 @@ class NewShortContentFormController extends GetxController {
             // },
 
             // formCode: "ZASTI00001"formName: "Still Master"
-            case "STILL MASTER":
-              formId.value = "S/";
-              selectedLocation.value = locations.firstWhereOrNull((element) =>
-                  element.key?.toLowerCase() ==
-                  (data["Locationcode"] ?? "").toLowerCase());
-              getChannel(data["Locationcode"]).then((value) {
-                selectedChannel.value = channels.firstWhereOrNull((element) {
-                  return element.key?.toLowerCase() ==
-                      (data["Channelcode"] ?? "").toLowerCase();
+              case "STILL MASTER":
+                formId.value = "S/";
+                selectedLocation.value = locations.firstWhereOrNull((element) =>
+                element.key?.toLowerCase() ==
+                    (data["Locationcode"] ?? "").toLowerCase());
+                getChannel(data["Locationcode"]).then((value) {
+                  selectedChannel.value = channels.firstWhereOrNull((element) {
+                    return element.key?.toLowerCase() ==
+                        (data["Channelcode"] ?? "").toLowerCase();
+                  });
                 });
-              });
-              typeleave(selectedCategory.value?.type).then((value) {
-                selectedTape.value = tapes.firstWhereOrNull((element) =>
-                    element.key?.toLowerCase() ==
-                    (data["TapeTypeCode"] ?? "").toString().toLowerCase());
-              });
-              typeCode = data["StillCode"];
-              caption.text = data["StillCaption"] ?? "";
-              txCaption.text = data["ExportTapeCaption"] ?? "";
+                typeleave(selectedCategory.value?.type).then((value) {
+                  selectedTape.value = tapes.firstWhereOrNull((element) =>
+                  element.key?.toLowerCase() ==
+                      (data["TapeTypeCode"] ?? "").toString().toLowerCase());
+                });
+                typeCode = data["StillCode"];
+                caption.text = data["StillCaption"] ?? "";
+                txCaption.text = data["ExportTapeCaption"] ?? "";
 
-              if (txCaption.text.contains('S/')) {
-                txCaption.text = txCaption.text.replaceAll(r'S/', "");
-              }
+                if (txCaption.text.contains('S/')) {
+                  txCaption.text = txCaption.text.replaceAll(r'S/', "");
+                }
 
-              selectedCategory.value = categeroies.firstWhereOrNull((element) {
-                var result = element.key!.toLowerCase() ==
-                    data['Stilltype'].toString().toLowerCase().trim();
+                selectedCategory.value = categeroies.firstWhereOrNull((element) {
+                  var result = element.key!.toLowerCase() ==
+                      data['Stilltype'].toString().toLowerCase().trim();
 
-                return result;
-              });
-              som.text = data["SOM"];
-              eom.text = data["EOM"];
-              calculateDuration();
+                  return result;
+                });
+                som.text = data["SOM"];
+                eom.text = data["EOM"];
+                calculateDuration();
 
-              // duration.value = Utils.convertToTimeFromDouble(
-              //     value: int.tryParse(
-              //             data["StillDuration"].toString().split(".")[0]) ??
-              //         0);
-              selectedProgram.value = DropDownValue(
-                key: data["ProgramCode"] ?? "",
-                value: data["ProgramName"] ?? "",
-              );
-              // remark.text = data["remark"];
-              print("DATE: ${data["KillDate"]}");
+                // duration.value = Utils.convertToTimeFromDouble(
+                //     value: int.tryParse(
+                //             data["StillDuration"].toString().split(".")[0]) ??
+                //         0);
+                selectedProgram.value = DropDownValue(
+                  key: data["ProgramCode"] ?? "",
+                  value: data["ProgramName"] ?? "",
+                );
+                // remark.text = data["remark"];
+                print("DATE: ${data["KillDate"]}");
 
-              endDate.text = DateFormat("dd-MM-yyyy").format(
-                  DateFormat("MM/dd/yyyy hh:mm:ss").parse(data["KillDate"]));
-              toBeBilled.value = data["billflag"] == "0";
+                endDate.text = DateFormat("dd-MM-yyyy").format(
+                    DateFormat("MM/dd/yyyy hh:mm:ss").parse(data["KillDate"]));
+                toBeBilled.value = data["billflag"] == "0";
 
-              break;
+                break;
             //  "formCode": "ZASLI00045", "formName": "Slide Master"
-            case "SLIDE MASTER":
-              formId.value = "L/";
-              selectedLocation.value = locations.firstWhereOrNull((element) =>
-                  element.key?.toLowerCase() ==
-                  (data["LocationCode"] ?? "").toLowerCase());
-              getChannel(data["LocationCode"]).then((value) {
-                selectedChannel.value = channels.firstWhereOrNull((element) {
-                  print(element.key);
-                  print(element.key?.toLowerCase() ==
-                      (data["ChannelCode"] ?? "").toLowerCase());
-                  return element.key?.toLowerCase() ==
-                      (data["ChannelCode"] ?? "").toLowerCase();
+              case "SLIDE MASTER":
+                formId.value = "L/";
+                selectedLocation.value = locations.firstWhereOrNull((element) =>
+                element.key?.toLowerCase() ==
+                    (data["LocationCode"] ?? "").toLowerCase());
+                getChannel(data["LocationCode"]).then((value) {
+                  selectedChannel.value = channels.firstWhereOrNull((element) {
+                    print(element.key);
+                    print(element.key?.toLowerCase() ==
+                        (data["ChannelCode"] ?? "").toLowerCase());
+                    return element.key?.toLowerCase() ==
+                        (data["ChannelCode"] ?? "").toLowerCase();
+                  });
                 });
-              });
-              typeleave(selectedCategory.value?.type).then((value) {
-                selectedTape.value = tapes.firstWhereOrNull((element) =>
-                    element.key?.toLowerCase() ==
-                    (data["TapeTypeCode"] ?? "").toString().toLowerCase());
-              });
-              typeCode = data["SlideCode"];
+                typeleave(selectedCategory.value?.type).then((value) {
+                  selectedTape.value = tapes.firstWhereOrNull((element) =>
+                  element.key?.toLowerCase() ==
+                      (data["TapeTypeCode"] ?? "").toString().toLowerCase());
+                });
+                typeCode = data["SlideCode"];
 
-              caption.text = data["SlideCaption"] ?? "";
-              txCaption.text = data["ExportTapeCaption"] ?? "";
-              if (txCaption.text.contains('L/')) {
-                txCaption.text = txCaption.text.replaceAll(r'L/', "");
-              }
-              selectedCategory.value = categeroies.firstWhereOrNull((element) {
-                var result = element.key!.toString().toLowerCase() ==
-                    data['SlideType'].toString().toLowerCase().trim();
+                caption.text = data["SlideCaption"] ?? "";
+                txCaption.text = data["ExportTapeCaption"] ?? "";
+                if (txCaption.text.contains('L/')) {
+                  txCaption.text = txCaption.text.replaceAll(r'L/', "");
+                }
+                selectedCategory.value = categeroies.firstWhereOrNull((element) {
+                  var result = element.key!.toString().toLowerCase() ==
+                      data['SlideType'].toString().toLowerCase().trim();
 
-                return result;
-              });
-              som.text = data["SOM"];
-              eom.text = data["EOM"] ?? "00:00:00:00";
-              calculateDuration();
-              // duration.value =
-              //  Utils.convertToTimeFromDouble(
-              //     value: int.tryParse(data["ExportTapeDuration"]
-              //             .toString()
-              //             .split(".")[0]) ??
-              //         0);
-              // remark.text = data["remark"];
-              // startData.text = DateFormat("dd-MM-yyy").format(
-              //     DateFormat("dd/MM/yyyy hh:mm:ss").parse(data["ModifiedOn"]));
-              endDate.text = DateFormat("dd-MM-yyy").format(
-                  DateFormat("MM/dd/yyyy hh:mm:ss").parse(data["KillDate"]));
-              toBeBilled.value = data["billflag"] == "0";
+                  return result;
+                });
+                som.text = data["SOM"];
+                eom.text = data["EOM"] ?? "00:00:00:00";
+                calculateDuration();
+                // duration.value =
+                //  Utils.convertToTimeFromDouble(
+                //     value: int.tryParse(data["ExportTapeDuration"]
+                //             .toString()
+                //             .split(".")[0]) ??
+                //         0);
+                // remark.text = data["remark"];
+                // startData.text = DateFormat("dd-MM-yyy").format(
+                //     DateFormat("dd/MM/yyyy hh:mm:ss").parse(data["ModifiedOn"]));
+                endDate.text = DateFormat("dd-MM-yyy").format(
+                    DateFormat("MM/dd/yyyy hh:mm:ss").parse(data["KillDate"]));
+                toBeBilled.value = data["billflag"] == "0";
 
-              break;
+                break;
             // "formCode": "ZADAT00117", "formName": "Vignette Master"
-            case "VIGNETTE MASTER":
-              formId.value = "VP/";
-              selectedLocation.value = locations.firstWhereOrNull((element) =>
-                  element.key?.toLowerCase() ==
-                  (data["Locationcode"] ?? "").toLowerCase());
-              getChannel(data["Locationcode"]).then((value) {
-                selectedChannel.value = channels.firstWhereOrNull((element) {
-                  return element.key?.toLowerCase() ==
-                      (data["ChannelCode"] ?? "").toLowerCase();
+              case "VIGNETTE MASTER":
+                formId.value = "VP/";
+                selectedLocation.value = locations.firstWhereOrNull((element) =>
+                element.key?.toLowerCase() ==
+                    (data["Locationcode"] ?? "").toLowerCase());
+                getChannel(data["Locationcode"]).then((value) {
+                  selectedChannel.value = channels.firstWhereOrNull((element) {
+                    return element.key?.toLowerCase() ==
+                        (data["ChannelCode"] ?? "").toLowerCase();
+                  });
                 });
-              });
-              typeCode = data["VignetteCode"];
-              caption.text = data["VignetteCaption"] ?? "";
-              txCaption.text = data["ExportTapeCaption"] ?? "";
-              if (txCaption.text.contains('VP/')) {
-                txCaption.text = txCaption.text.replaceAll(r'VP/', "");
-              }
-              selectedCategory.value = categeroies.firstWhereOrNull((element) {
-                var result = element.key!.toString().toLowerCase() ==
-                    data['SSVCode'].toString().toLowerCase().trim();
+                typeCode = data["VignetteCode"];
+                caption.text = data["VignetteCaption"] ?? "";
+                txCaption.text = data["ExportTapeCaption"] ?? "";
+                if (txCaption.text.contains('VP/')) {
+                  txCaption.text = txCaption.text.replaceAll(r'VP/', "");
+                }
+                selectedCategory.value = categeroies.firstWhereOrNull((element) {
+                  var result = element.key!.toString().toLowerCase() ==
+                      data['SSVCode'].toString().toLowerCase().trim();
 
-                return result;
-              });
-              typeleave(selectedCategory.value?.type).then((value) {
-                selectedOrgRep.value = orgRepeats.firstWhereOrNull((element) =>
-                    element.key?.toLowerCase() ==
-                    (data["OriginalRepeatCode"] ?? "")
-                        .toString()
-                        .toLowerCase());
-              });
+                  return result;
+                });
+                typeleave(selectedCategory.value?.type).then((value) {
+                  selectedOrgRep.value = orgRepeats.firstWhereOrNull((element) =>
+                  element.key?.toLowerCase() ==
+                      (data["OriginalRepeatCode"] ?? "")
+                          .toString()
+                          .toLowerCase());
+                });
 
-              selectedProgram.value = DropDownValue(
-                key: data["ProgramCode"] ?? "",
-                value: data["ProgramName"] ?? "",
-              );
-              som.text = data["SOM"];
-              eom.text = data["EOM"];
-              calculateDuration();
+                selectedProgram.value = DropDownValue(
+                  key: data["ProgramCode"] ?? "",
+                  value: data["ProgramName"] ?? "",
+                );
+                som.text = data["SOM"];
+                eom.text = data["EOM"];
+                calculateDuration();
 
-              // duration.value = Utils.convertToTimeFromDouble(
-              //     value: int.tryParse(
-              //             data["VignetteDuration"].toString().split(".")[0]) ??
-              //         0);
-              remark.text = data["remarks"];
-              startData.text = DateFormat("dd-MM-yyy").format(
-                  DateFormat("MM/dd/yyyy hh:mm:ss").parse(data["StartDate"]));
-              endDate.text = DateFormat("dd-MM-yyy").format(
-                  DateFormat("MM/DD/yyyy hh:mm:ss").parse(data["KillDate"]));
-              toBeBilled.value = data["billflag"] == "1";
+                // duration.value = Utils.convertToTimeFromDouble(
+                //     value: int.tryParse(
+                //             data["VignetteDuration"].toString().split(".")[0]) ??
+                //         0);
+                remark.text = data["remarks"];
+                startData.text = DateFormat("dd-MM-yyy").format(
+                    DateFormat("MM/dd/yyyy hh:mm:ss").parse(data["StartDate"]));
+                endDate.text = DateFormat("dd-MM-yyy").format(
+                    DateFormat("MM/DD/yyyy hh:mm:ss").parse(data["KillDate"]));
+                toBeBilled.value = data["billflag"] == "1";
 
-              break;
+                break;
 
-            default:
+              default:
+            }
           }
-        });
+          else{
+            enable.value = true;
+            enable.refresh();
+          }
+
+
+        },failed: (data){
+      // print(">>>>>>>responseData"+data.toString());
+      enable.value = true;
+      enable.refresh();
+    });
   }
 
   saveValidate() {
@@ -717,5 +733,7 @@ class NewShortContentFormController extends GetxController {
     remark.clear();
     toBeBilled.value = false;
     typeCode = null;
+    enable.value = true;
+    enable.refresh();
   }
 }

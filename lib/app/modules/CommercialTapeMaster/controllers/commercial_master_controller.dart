@@ -165,6 +165,9 @@ class CommercialMasterController extends GetxController {
         if (event.logicalKey == LogicalKeyboardKey.tab) {
           if (tapeIdController.value.text != null &&
               tapeIdController.value.text != "") {
+
+            tapeIdController.value.text = tapeIdController.value.text.toString().toUpperCase();
+
             txNoController.text =
                 "${tapeIdController.value.text}-${segController.text}";
             fetchCommercialTapeMasterData("", tapeIdController.value.text,
