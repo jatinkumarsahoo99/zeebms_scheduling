@@ -857,6 +857,7 @@ class SearchController extends GetxController {
   }
 
   doubleClickHandler(Variances rowvariance) {
+    // print(">>>>>>row data type${rowvariance.dataType} - ${grid!.type}");
     if (rowvariance.dataType == "datetime" && grid!.type == "V") {
       var dateType = RxString("My Dates");
       // String from = DateFormat('dd-MMM-yyyy').format(DateTime.now());
