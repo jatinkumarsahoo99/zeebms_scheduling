@@ -37,7 +37,7 @@ import '../modules/BrandMaster/views/brand_master_view.dart';
 import '../modules/ComingUpMenu/views/coming_up_menu_view.dart';
 import '../modules/ComingUpNextMenu/views/coming_up_next_menu_view.dart';
 import '../modules/ComingUpTomorrowMenu/views/coming_up_tomorrow_menu_view.dart';
-import '../modules/CommercialMaster/views/commercial_master_view.dart';
+import '../modules/CommercialTapeMaster/views/commercial_master_view.dart';
 import '../modules/CommonSearch/views/common_search_view.dart';
 import '../modules/CreativeTagOn/views/creative_tag_on_view.dart';
 import '../modules/DSeriesSpecification/views/DSeriesSpecificationView.dart';

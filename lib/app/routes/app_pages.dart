@@ -8,7 +8,7 @@ import '../modules/BrandMaster/bindings/brand_master_binding.dart';
 import '../modules/ComingUpMenu/bindings/coming_up_menu_binding.dart';
 import '../modules/ComingUpNextMenu/bindings/coming_up_next_menu_binding.dart';
 import '../modules/ComingUpTomorrowMenu/bindings/coming_up_tomorrow_menu_binding.dart';
-import '../modules/CommercialMaster/bindings/commercial_master_binding.dart';
+import '../modules/CommercialTapeMaster/bindings/commercial_master_binding.dart';
 import '../modules/CommonDocs/bindings/common_docs_binding.dart';
 import '../modules/CommonDocs/views/common_docs_view.dart';
 import '../modules/CreativeTagOn/bindings/creative_tag_on_binding.dart';
