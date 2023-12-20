@@ -251,7 +251,7 @@ class ConnectorControl extends GetConnect {
   }
 
   POSTMETHOD(
-      {required String api, dynamic? json, required Function fun}) async {
+      {required String api, dynamic? json, required Function fun,Function? failed}) async {
     try {
       print("API NAME:>" + api);
       service.Response response = await dio.post(
