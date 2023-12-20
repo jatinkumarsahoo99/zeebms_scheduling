@@ -5,7 +5,8 @@ import 'package:file_saver/file_saver.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_file_saver/flutter_file_saver.dart';
 import 'package:get/get.dart';
-import 'package:bms_scheduling/widgets/PlutoGridExport/pluto_grid_export.dart' as pluto_grid_export;
+import 'package:bms_scheduling/widgets/PlutoGridExport/pluto_grid_export.dart'
+    as pluto_grid_export;
 import 'package:bms_scheduling/widgets/PlutoGridExport/pluto_grid_export.dart';
 
 import '../../widgets/LoadingDialog.dart';
@@ -16,29 +17,40 @@ class ExportData {
   static void topLevelFunction(Map<String, dynamic> args) {
     // performs work in an isolate
   }
+
   exportExcelFromJsonList(jsonList, screenName, {Function? callBack}) {
     print("Call json List>>>" + jsonEncode(jsonList));
     if (jsonList!.isNotEmpty) {
       var excel = Excel.createExcel();
       Sheet sheetObject = excel[screenName];
       excel.setDefaultSheet(screenName);
-      sheetObject.appendRow((jsonList![0]).keys.toList());
+      // sheetObject.appendRow((jsonList![0]).keys.toList());
+      List header = [];
+      (jsonList![0]).keys.toList().forEach((e) {
+        if (e == "no") return;
+        header.add(e);
+      });
+      sheetObject.appendRow(header);
       for (var element in jsonList!) {
         // sheetObject.appendRow((element as Map).values.toList());
-        Map data = {};
+        List data = [];
         element.forEach((key, value) {
+          if (key == "no") {
+            return;
+          }
           if (value != null) {
             try {
               num v = num.parse(value!);
-              data[key] = v;
+              data.add(v ?? "");
             } catch (e) {
-              data[key] = value;
+              // data[key] = value;
+              data.add(value ?? "");
             }
           } else {
-            data[key] = value;
+            data.add(value ?? "");
           }
         });
-        sheetObject.appendRow((data as Map).values.toList());
+        sheetObject.appendRow(data);
       }
 
       var value = excel.encode()!;
@@ -61,7 +73,9 @@ class ExportData {
 
   exportFilefromString(String data, String fileName) async {
     try {
-      await FlutterFileSaver().writeFileAsString(fileName: fileName, data: data).then((value) {
+      await FlutterFileSaver()
+          .writeFileAsString(fileName: fileName, data: data)
+          .then((value) {
         return value;
       });
     } catch (e) {
@@ -71,30 +85,40 @@ class ExportData {
 
   exportFilefromBase64(String data, String fileName) async {
     try {
-      await FlutterFileSaver().writeFileAsBytes(fileName: fileName, bytes: base64.decode(data)).then((value) {
+      await FlutterFileSaver()
+          .writeFileAsBytes(fileName: fileName, bytes: base64.decode(data))
+          .then((value) {
         LoadingDialog.callInfoMessage("Exported Successfully");
         return value;
       });
     } catch (e) {
-      Snack.callError("Failed To Save File");
-    }
-  }
-  exportFilefromBase64OtherFormat(String data, String fileName) async {
-    try {
-      await FileSaver.instance.saveFile(name: fileName.split(".")[0], ext: fileName.split(".")[1], mimeType: MimeType.other,bytes: base64.decode(data)).then((value) {
-        LoadingDialog.callInfoMessage("Exported Successfully");
-        return value;
-      });
-    } catch (e) {
-      print("File export error is>>>"+e.toString());
       Snack.callError("Failed To Save File");
     }
   }
 
+  exportFilefromBase64OtherFormat(String data, String fileName) async {
+    try {
+      await FileSaver.instance
+          .saveFile(
+              name: fileName.split(".")[0],
+              ext: fileName.split(".")[1],
+              mimeType: MimeType.other,
+              bytes: base64.decode(data))
+          .then((value) {
+        LoadingDialog.callInfoMessage("Exported Successfully");
+        return value;
+      });
+    } catch (e) {
+      print("File export error is>>>" + e.toString());
+      Snack.callError("Failed To Save File");
+    }
+  }
 
   exportFilefromByte(Uint8List data, String fileName) async {
     try {
-      await FlutterFileSaver().writeFileAsBytes(fileName: fileName, bytes: data).then((value) {
+      await FlutterFileSaver()
+          .writeFileAsBytes(fileName: fileName, bytes: data)
+          .then((value) {
         return value;
       });
     } catch (e) {
@@ -123,7 +147,7 @@ class ExportData {
     });
   }
 
-  printFromGridData1(fileName,Uint8List data) async {
+  printFromGridData1(fileName, Uint8List data) async {
     await Printing.layoutPdf(
         format: PdfPageFormat.a4.landscape,
         name: fileName,
@@ -135,7 +159,9 @@ class ExportData {
     });
   }
 
-  exportPdfFromGridData(pluto_grid_export.PlutoGridDefaultPdfExport plutoGridPdfExport, stateManager) async {
+  exportPdfFromGridData(
+      pluto_grid_export.PlutoGridDefaultPdfExport plutoGridPdfExport,
+      stateManager) async {
     LoadingDialog.call();
 
     plutoGridPdfExport.themeData = pluto_grid_export.ThemeData.withFont(
@@ -146,7 +172,9 @@ class ExportData {
         await rootBundle.load('assets/fonts/OpenSans-Bold.ttf'),
       ),
     );
-    await pluto_grid_export.Printing.sharePdf(bytes: await plutoGridPdfExport.export(stateManager), filename: plutoGridPdfExport.getFilename());
+    await pluto_grid_export.Printing.sharePdf(
+        bytes: await plutoGridPdfExport.export(stateManager),
+        filename: plutoGridPdfExport.getFilename());
 
     Get.back();
   }
