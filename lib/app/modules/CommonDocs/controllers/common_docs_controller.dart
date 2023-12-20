@@ -2,6 +2,7 @@ import 'dart:convert';
 
 import 'package:bms_scheduling/widgets/PlutoGrid/src/pluto_grid.dart';
 import 'package:file_picker/file_picker.dart';
+import 'package:file_saver/file_saver.dart';
 import 'package:get/get.dart';
 
 import '../../../../widgets/LoadingDialog.dart';
@@ -42,11 +43,15 @@ class CommonDocsController extends GetxController {
   handleOnRowDoubleTap(PlutoGridOnRowDoubleTapEvent row) {
     LoadingDialog.call();
     Get.find<ConnectorControl>().GET_METHOD_CALL_HEADER(
-      api: ApiFactory.COMMON_DOCS_VIEW((documents[row.rowIdx].documentId).toString()),
-      fun: (data) {
+      api: ApiFactory.COMMON_DOCS_VIEW(
+          (documents[row.rowIdx].documentId).toString()),
+      fun: (data) async {
         Get.back();
         if (data is Map && data.containsKey("addingDocument")) {
-          ExportData().exportFilefromByte(base64Decode(data["addingDocument"][0]["documentData"]), data["addingDocument"][0]["documentname"]);
+          /*ExportData().exportFilefromByte(
+              base64Decode(data["addingDocument"][0]["documentData"]),
+              data["addingDocument"][0]["documentname"]);*/
+          await FileSaver.instance.saveFile(name: (data["addingDocument"][0]["documentname"].toString().split(".")[0]),bytes: base64Decode(data["addingDocument"][0]["documentData"]),ext: (data["addingDocument"][0]["documentname"].toString().split(".")[1])!);
         }
       },
       failed: () {
@@ -56,12 +61,16 @@ class CommonDocsController extends GetxController {
   }
 
   handleOnDelete(String? documentKey) async {
-    if (documents[viewDocsStateManger?.currentRowIdx ?? 0].documentId == null || documentKey == null) {
+    if (documents[viewDocsStateManger?.currentRowIdx ?? 0].documentId == null ||
+        documentKey == null) {
       return;
     }
     LoadingDialog.call();
     await Get.find<ConnectorControl>().DELETEMETHOD(
-      api: ApiFactory.COMMON_DOCS_DELETE(documents[viewDocsStateManger?.currentRowIdx ?? 0].documentId.toString()),
+      api: ApiFactory.COMMON_DOCS_DELETE(
+          documents[viewDocsStateManger?.currentRowIdx ?? 0]
+              .documentId
+              .toString()),
       fun: (data) {
         Get.back();
       },
@@ -70,7 +79,10 @@ class CommonDocsController extends GetxController {
   }
 
   Future<void> handleAddDocs(String? documentKey) async {
-    FilePickerResult? result = await FilePicker.platform.pickFiles(allowMultiple: false, allowedExtensions: ['xlsx'], type: FileType.custom);
+    FilePickerResult? result = await FilePicker.platform.pickFiles(
+        allowMultiple: false,
+        allowedExtensions: ['xlsx'],
+        type: FileType.custom);
     if (result != null && result.files.isNotEmpty) {
       LoadingDialog.call();
       await Get.find<ConnectorControl>().POSTMETHOD_FORMDATA_HEADER(
@@ -98,17 +110,22 @@ class CommonDocsController extends GetxController {
   handleViewDocs(String? documentKey) {
     LoadingDialog.call();
     Get.find<ConnectorControl>().GET_METHOD_CALL_HEADER(
-      api: ApiFactory.COMMON_DOCS_VIEW(documents[viewDocsStateManger?.currentRowIdx ?? 0].documentId.toString()),
+      api: ApiFactory.COMMON_DOCS_VIEW(
+          documents[viewDocsStateManger?.currentRowIdx ?? 0]
+              .documentId
+              .toString()),
       fun: (data) async {
         Get.back();
 
         if (data is Map && data.containsKey("addingDocument")) {
-          var path = await ExportData()
-              .exportFilefromByte(base64Decode(data["addingDocument"][0]["documentData"]), data["addingDocument"][0]["documentname"]);
+          // var path = await ExportData().exportFilefromByte(
+          //     base64Decode(data["addingDocument"][0]["documentData"]),
+          //     data["addingDocument"][0]["documentname"]);
+          await FileSaver.instance.saveFile(name: (data["addingDocument"][0]["documentname"].toString().split(".")[0]),bytes: base64Decode(data["addingDocument"][0]["documentData"]),ext: (data["addingDocument"][0]["documentname"].toString().split(".")[1])!);
 
-          if (await urlL.canLaunchUrl(Uri.parse(path))) {
-            urlL.launchUrl(path);
-          }
+          // if (await urlL.canLaunchUrl(Uri.parse(path))) {
+          //   urlL.launchUrl(path);
+          // }
         }
       },
       failed: () {
