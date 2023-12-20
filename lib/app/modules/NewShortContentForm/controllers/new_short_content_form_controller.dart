@@ -602,6 +602,8 @@ class NewShortContentFormController extends GetxController {
           Get.back();
           try {
             if (rawdata is Map && rawdata.containsKey("onSaveShortCode")) {
+              enable.value = false;
+              enable.refresh();
               if (selectedCategory.value!.type == "SLIDE MASTER") {
                 LoadingDialog.callDataSaved(
                     msg:
@@ -629,10 +631,15 @@ class NewShortContentFormController extends GetxController {
               }
 
               return true;
-            } else if (rawdata is String) {
+            }
+            else if (rawdata is String) {
+              enable.value = true;
+              enable.refresh();
               LoadingDialog.callErrorMessage1(msg: rawdata);
             }
           } catch (e) {
+            enable.value = true;
+            enable.refresh();
             LoadingDialog.callErrorMessage1(msg: "Save Failed");
             return false;
           }
