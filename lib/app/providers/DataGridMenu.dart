@@ -363,7 +363,7 @@ class DataGridMenu {
         if (stateManager.rows.length < Const.exportRowsInLocal) {
           LoadingDialog.call();
           Future.delayed(Duration(seconds: 1), () {
-            Get.find<ExportData>().exportExcelFromJsonList(stateManager.toJson(),
+            ExportData().exportExcelFromJsonList(stateManager.toJson(),
                 exportFileName ?? "Excel-${DateTime.now().toString()}",
                 callBack: () {
                   Get.back();
@@ -1250,7 +1250,7 @@ class DataGridMenu {
         if (stateManager.rows.length < Const.exportRowsInLocal) {
           LoadingDialog.call();
           Future.delayed(Duration(seconds: 1), () {
-            Get.find<ExportData>().exportExcelFromJsonList(stateManager.toJson(),
+            ExportData().exportExcelFromJsonList(stateManager.toJson(),
                 exportFileName ?? "Excel-${DateTime.now().toString()}",
                 callBack: () {
                   Get.back();
