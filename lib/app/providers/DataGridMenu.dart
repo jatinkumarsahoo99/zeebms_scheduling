@@ -360,7 +360,7 @@ class DataGridMenu {
         break;
       case DataGridMenuItem.export:
         print("showGridMenu() export callled");
-        if (stateManager.rows.length < Const.exportRowsInLocal) {
+        /*if (stateManager.rows.length < Const.exportRowsInLocal) {
           LoadingDialog.call();
           Future.delayed(Duration(seconds: 1), () {
             ExportData().exportExcelFromJsonList(stateManager.toJson(),
@@ -369,7 +369,7 @@ class DataGridMenu {
                   Get.back();
                 });
           });
-        } else {
+        } else {*/
           // stateManager.setShowLoading(true);
           LoadingDialog.call();
           Get.find<ConnectorControl>().POSTMETHOD(
@@ -392,7 +392,7 @@ class DataGridMenu {
                 // stateManager.setShowLoading(false);
                 Get.back();
               });
-        }
+        // }
         break;
       case DataGridMenuItem.exportPDF:
       // pluto_grid_export.PlutoGridDefaultPdfExport plutoGridPdfExport =
@@ -1247,7 +1247,7 @@ class DataGridMenu {
             callBack: () {
               Get.back();
             });*/
-        if (stateManager.rows.length < Const.exportRowsInLocal) {
+       /* if (stateManager.rows.length < Const.exportRowsInLocal) {
           LoadingDialog.call();
           Future.delayed(Duration(seconds: 1), () {
             ExportData().exportExcelFromJsonList(stateManager.toJson(),
@@ -1256,7 +1256,7 @@ class DataGridMenu {
                   Get.back();
                 });
           });
-        } else {
+        } else {*/
           // stateManager.setShowLoading(true);
           LoadingDialog.call();
           Get.find<ConnectorControl>().POSTMETHOD(
@@ -1279,7 +1279,7 @@ class DataGridMenu {
                 // stateManager.setShowLoading(false);
                 Get.back();
               });
-        }
+        // }
         break;
       case DataGridMenuItem.exportPDF:
       // pluto_grid_export.PlutoGridDefaultPdfExport plutoGridPdfExport =
