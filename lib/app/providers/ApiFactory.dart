@@ -174,6 +174,7 @@ class ApiFactory {
 */
 ///////////////////////XML Download API////////////////////////
   static String EXPORT_TO_XML = "$BASE_URL_COMMON/api/Common/ConvertTableToXml";
+  static String EXPORT_TO_EXCEL = "$BASE_URL_COMMON/api/Common/ConvertJsonToExcel";
   static String CONVERT_TO_PDF =
       "$BASE_URL_COMMON/api/Common/ConvertTableToPDF";
   static String OPERATIONAL_FPC_PROGRAM_SEARCH =

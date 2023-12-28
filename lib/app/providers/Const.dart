@@ -17,6 +17,7 @@ class Const {
   static GlobalKey<NavigatorState> navigatorKey = GlobalKey<NavigatorState>();
   static String instrumentationKey = getInstrumentKey();
   static const appVersion = '1.0.4';
+  static const exportRowsInLocal = 2000;
 
   static const List<String> firstColumnBlankFormNames = ["frmsearchingKKBMS_View_DroppedSpots"];
 

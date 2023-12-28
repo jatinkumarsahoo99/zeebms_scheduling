@@ -4,6 +4,7 @@ import 'package:bms_scheduling/widgets/PlutoGrid/pluto_grid.dart';
 
 import '../../../../widgets/FormButton.dart';
 import '../../../../widgets/Snack.dart';
+import '../../../../widgets/gridForSearch.dart';
 import '../../../../widgets/gridFromMap.dart';
 import '../../../providers/Utils.dart';
 import '../controllers/search_controller.dart';
@@ -89,7 +90,7 @@ class SearchResultPage extends StatelessWidget {
                 width: Get.width * 2,
                 padding:
                 const EdgeInsets.only(bottom: 8, top: 8, left: 8, right: 8),
-                child: DataGridFromMap(
+                child: DataGridForSearch(
                   columnAutoResize: false,
                   formName:fromName ,
                   // showSrNo: false,
