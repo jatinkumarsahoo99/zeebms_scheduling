@@ -18,6 +18,7 @@ class Const {
   static String instrumentationKey = getInstrumentKey();
   static const appVersion = '1.0.4';
 
+  static const List<String> firstColumnBlankFormNames = ["frmsearchingKKBMS_View_DroppedSpots"];
 
 
   static List<SystemEnviroment> systemEnviroments = [
