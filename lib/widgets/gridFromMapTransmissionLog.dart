@@ -107,7 +107,7 @@ class DataGridFromMapTransmissionLog extends StatelessWidget {
                   if (onContextMenuClick == null) {
                     DataGridMenu().showGridMenu(
                         rendererContext.stateManager, detail, context,
-                        exportFileName: exportFileName);
+                        exportFileName: exportFileName,data: mapData);
                   } else {
                     DataGridMenu().showGridCustomTransmissionLog(
                         rendererContext.stateManager, detail, context,
@@ -354,7 +354,7 @@ class DataGridFromMapTransmissionLog extends StatelessWidget {
                 if (onContextMenuClick == null) {
                   DataGridMenu().showGridMenu(
                       rendererContext.stateManager, detail, context,
-                      exportFileName: exportFileName);
+                      exportFileName: exportFileName,data: mapData);
                 } else {
                   DataGridMenu().showGridCustomTransmissionLog(
                       rendererContext.stateManager, detail, context,

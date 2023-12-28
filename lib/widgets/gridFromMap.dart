@@ -142,12 +142,14 @@ class DataGridFromMap extends StatelessWidget {
                         DataGridMenu().showGridMenu(
                             rendererContext.stateManager, detail, context,
                             exportFileName: exportFileName,
+                            data: mapData,
                             csvFormat: csvFormat ?? false);
                       } else {
                         DataGridMenu().showGridCustomMenu(
                             rendererContext.stateManager, detail, context,
                             exportFileName: exportFileName,
                             onPressedClick: onContextMenuClick,
+                            data: mapData,
                             plutoContext: rendererContext);
                       }
                     }
@@ -240,12 +242,14 @@ class DataGridFromMap extends StatelessWidget {
                               DataGridMenu().showGridMenu(
                                   rendererContext.stateManager, detail, context,
                                   exportFileName: exportFileName,
+                                  data: mapData,
                                   csvFormat: csvFormat ?? false);
                             } else {
                               DataGridMenu().showGridCustomMenu(
                                   rendererContext.stateManager, detail, context,
                                   exportFileName: exportFileName,
                                   onPressedClick: onContextMenuClick,
+                                  data: mapData,
                                   plutoContext: rendererContext);
                             }
                           }
@@ -318,11 +322,13 @@ class DataGridFromMap extends StatelessWidget {
                               DataGridMenu().showGridMenu(
                                   rendererContext.stateManager, detail, context,
                                   exportFileName: exportFileName,
+                                  data: mapData,
                                   csvFormat: csvFormat ?? false);
                             } else {
                               DataGridMenu().showGridCustomMenu(
                                   rendererContext.stateManager, detail, context,
                                   exportFileName: exportFileName,
+                                  data: mapData,
                                   onPressedClick: onContextMenuClick,
                                   plutoContext: rendererContext);
                             }
@@ -390,6 +396,7 @@ class DataGridFromMap extends StatelessWidget {
                       ? (detail) {
                           DataGridMenu().showGridMenu(
                               rendererContext.stateManager, detail, context,
+                              data: mapData,
                               csvFormat: csvFormat ?? false);
                         }
                       : null,
@@ -430,12 +437,14 @@ class DataGridFromMap extends StatelessWidget {
                             DataGridMenu().showGridMenu(
                                 rendererContext.stateManager, detail, context,
                                 exportFileName: exportFileName,
+                                data: mapData,
                                 csvFormat: csvFormat ?? false);
                           } else {
                             DataGridMenu().showGridCustomMenu(
                                 rendererContext.stateManager, detail, context,
                                 exportFileName: exportFileName,
                                 onPressedClick: onContextMenuClick,
+                                data: mapData,
                                 plutoContext: rendererContext);
                           }
                         }
@@ -682,6 +691,7 @@ class DataGridFromMap3 extends StatelessWidget {
                         DataGridMenu().showGridMenu(
                             rendererContext.stateManager, detail, context,
                             exportFileName: exportFileName,
+                            data: mapData,
                             extraList: secondaryExtraDialogList);
                       }
                     : null,
@@ -754,6 +764,7 @@ class DataGridFromMap3 extends StatelessWidget {
                           DataGridMenu().showGridMenu(
                               rendererContext.stateManager, detail, context,
                               exportFileName: exportFileName,
+                              data: mapData,
                               extraList: secondaryExtraDialogList);
                         }
                       : null,
@@ -841,6 +852,7 @@ class DataGridFromMap3 extends StatelessWidget {
                           DataGridMenu().showGridMenu(
                               rendererContext.stateManager, detail, context,
                               exportFileName: exportFileName,
+                              data: mapData,
                               extraList: secondaryExtraDialogList);
                         }
                       : null,
@@ -1059,12 +1071,14 @@ class DataGridFromMap4 extends StatelessWidget {
                             rendererContext.stateManager, detail, context,
                             exportFileName: exportFileName,
                             csvFormat: csvFormat ?? false,
+                            data: mapData,
                             removeKeysFromFile: removeKeysFromFile);
                       } else {
                         DataGridMenu().showGridCustomMenu(
                             rendererContext.stateManager, detail, context,
                             exportFileName: exportFileName,
                             onPressedClick: onContextMenuClick,
+                            data: mapData,
                             plutoContext: rendererContext);
                       }
                     }
@@ -1158,12 +1172,14 @@ class DataGridFromMap4 extends StatelessWidget {
                                   rendererContext.stateManager, detail, context,
                                   exportFileName: exportFileName,
                                   csvFormat: csvFormat ?? false,
+                                  data: mapData,
                                   removeKeysFromFile: removeKeysFromFile);
                             } else {
                               DataGridMenu().showGridCustomMenu(
                                   rendererContext.stateManager, detail, context,
                                   exportFileName: exportFileName,
                                   onPressedClick: onContextMenuClick,
+                                  data: mapData,
                                   plutoContext: rendererContext);
                             }
                           }
@@ -1233,12 +1249,14 @@ class DataGridFromMap4 extends StatelessWidget {
                                   rendererContext.stateManager, detail, context,
                                   exportFileName: exportFileName,
                                   csvFormat: csvFormat ?? false,
+                                  data: mapData,
                                   removeKeysFromFile: removeKeysFromFile);
                             } else {
                               DataGridMenu().showGridCustomMenu(
                                   rendererContext.stateManager, detail, context,
                                   exportFileName: exportFileName,
                                   onPressedClick: onContextMenuClick,
+                                  data: mapData,
                                   plutoContext: rendererContext);
                             }
                           }
@@ -1305,6 +1323,7 @@ class DataGridFromMap4 extends StatelessWidget {
                       ? (detail) {
                           DataGridMenu().showGridMenu(
                               rendererContext.stateManager, detail, context,
+                              data: mapData,
                               csvFormat: csvFormat ?? false);
                         }
                       : null,
@@ -1346,12 +1365,14 @@ class DataGridFromMap4 extends StatelessWidget {
                                 rendererContext.stateManager, detail, context,
                                 exportFileName: exportFileName,
                                 csvFormat: csvFormat ?? false,
+                                data: mapData,
                                 removeKeysFromFile: removeKeysFromFile);
                           } else {
                             DataGridMenu().showGridCustomMenu(
                                 rendererContext.stateManager, detail, context,
                                 exportFileName: exportFileName,
                                 onPressedClick: onContextMenuClick,
+                                data: mapData,
                                 plutoContext: rendererContext);
                           }
                         }
@@ -1388,12 +1409,14 @@ class DataGridFromMap4 extends StatelessWidget {
                                 rendererContext.stateManager, detail, context,
                                 exportFileName: exportFileName,
                                 csvFormat: csvFormat ?? false,
+                                data: mapData,
                                 removeKeysFromFile: removeKeysFromFile);
                           } else {
                             DataGridMenu().showGridCustomMenu(
                                 rendererContext.stateManager, detail, context,
                                 exportFileName: exportFileName,
                                 onPressedClick: onContextMenuClick,
+                                data: mapData,
                                 plutoContext: rendererContext);
                           }
                         }
@@ -1622,12 +1645,14 @@ class DataGridFromMap5 extends StatelessWidget {
                             rendererContext.stateManager, detail, context,
                             exportFileName: exportFileName,
                             csvFormat: csvFormat ?? false,
+                            data: mapData,
                             removeKeysFromFile: removeKeysFromFile);
                       } else {
                         DataGridMenu().showGridCustomMenu(
                             rendererContext.stateManager, detail, context,
                             exportFileName: exportFileName,
                             onPressedClick: onContextMenuClick,
+                            data: mapData,
                             plutoContext: rendererContext);
                       }
                     }
@@ -1721,12 +1746,14 @@ class DataGridFromMap5 extends StatelessWidget {
                                   rendererContext.stateManager, detail, context,
                                   exportFileName: exportFileName,
                                   csvFormat: csvFormat ?? false,
+                                  data: mapData,
                                   removeKeysFromFile: removeKeysFromFile);
                             } else {
                               DataGridMenu().showGridCustomMenu(
                                   rendererContext.stateManager, detail, context,
                                   exportFileName: exportFileName,
                                   onPressedClick: onContextMenuClick,
+                                  data: mapData,
                                   plutoContext: rendererContext);
                             }
                           }
@@ -1800,12 +1827,14 @@ class DataGridFromMap5 extends StatelessWidget {
                                   rendererContext.stateManager, detail, context,
                                   exportFileName: exportFileName,
                                   csvFormat: csvFormat ?? false,
+                                  data: mapData,
                                   removeKeysFromFile: removeKeysFromFile);
                             } else {
                               DataGridMenu().showGridCustomMenu(
                                   rendererContext.stateManager, detail, context,
                                   exportFileName: exportFileName,
                                   onPressedClick: onContextMenuClick,
+                                  data: mapData,
                                   plutoContext: rendererContext);
                             }
                           }
@@ -1873,6 +1902,7 @@ class DataGridFromMap5 extends StatelessWidget {
                           DataGridMenu().showGridMenu(
                               rendererContext.stateManager, detail, context,
                               csvFormat: csvFormat ?? false,
+                              data: mapData,
                               removeKeysFromFile: removeKeysFromFile);
                         }
                       : null,
@@ -1914,12 +1944,14 @@ class DataGridFromMap5 extends StatelessWidget {
                                 rendererContext.stateManager, detail, context,
                                 exportFileName: exportFileName,
                                 csvFormat: csvFormat ?? false,
+                                data: mapData,
                                 removeKeysFromFile: removeKeysFromFile);
                           } else {
                             DataGridMenu().showGridCustomMenu(
                                 rendererContext.stateManager, detail, context,
                                 exportFileName: exportFileName,
                                 onPressedClick: onContextMenuClick,
+                                data: mapData,
                                 plutoContext: rendererContext);
                           }
                         }
