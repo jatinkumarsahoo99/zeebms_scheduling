@@ -352,7 +352,7 @@ class SearchController extends GetxController {
                   Get.to(() => SearchResultPage(
                     controller: this,
                     appFormName: this.strViewName,
-                    fromName:formName,
+                    fromNameString:formName,
                   ));
                 }
               }
@@ -841,7 +841,7 @@ class SearchController extends GetxController {
                       actionableMap: this.actionableMap,
                       actionableSearch: this.actionableSearch,
                       dialogClose: dialogClose,
-                      fromName: formName,
+                      fromNameString: formName,
                     ));
                   } else {
                     Get.to(() => SearchResultPage(
@@ -849,7 +849,7 @@ class SearchController extends GetxController {
                       appFormName: this.strViewName,
                       actionableMap: this.actionableMap,
                       actionableSearch: this.actionableSearch,
-                      fromName: formName,
+                      fromNameString: formName,
                     ));
                   }
                 }

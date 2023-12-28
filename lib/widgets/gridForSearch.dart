@@ -47,6 +47,7 @@ class DataGridForSearch extends StatelessWidget {
         this.dateFromat = "dd-MM-yyyy",
         this.onFocusChange,
         this.checkRow,
+        this.formName,
         this.doPasccal = true,
         this.exportFileName,
         this.focusNode,
@@ -78,6 +79,7 @@ class DataGridForSearch extends StatelessWidget {
   final double? widthRatio;
   final IconData? actionIcon;
   final String? actionIconKey;
+  final String? formName;
   final bool columnAutoResize;
   final List<String>? editKeys;
   final Function? actionOnPress;
@@ -486,6 +488,7 @@ class DataGridForSearch extends StatelessWidget {
               actionKey: actionIconKey,
               previousWidgetFN: previousWidgetFN,
               rowHeight: 25,
+              formName: formName
             ),
             rowColorCallback: colorCallback,
             onLoaded: (load) {
