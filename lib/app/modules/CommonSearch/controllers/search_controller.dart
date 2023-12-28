@@ -23,6 +23,7 @@ import '../../../controller/MainController.dart';
 import '../../../data/DropDownValue.dart';
 import '../../../providers/ApiFactory.dart';
 import '../../../providers/ExportData.dart';
+import '../../../providers/Utils.dart';
 import '../search_bindgrid.dart';
 import '../views/pivotPage.dart';
 import '../views/searchResult.dart';
@@ -68,8 +69,11 @@ class SearchController extends GetxController {
   int? selectVarianceId;
   String searchQuery = "";
 
+  String ?formName;
   @override
   void onInit() {
+    formName = Utils.getPageRouteName();
+    print(">>>>>formName onInit"+formName.toString());
     getInitialData();
     super.onInit();
   }
@@ -348,6 +352,7 @@ class SearchController extends GetxController {
                   Get.to(() => SearchResultPage(
                     controller: this,
                     appFormName: this.strViewName,
+                    fromNameString:formName,
                   ));
                 }
               }
@@ -836,6 +841,7 @@ class SearchController extends GetxController {
                       actionableMap: this.actionableMap,
                       actionableSearch: this.actionableSearch,
                       dialogClose: dialogClose,
+                      fromNameString: formName,
                     ));
                   } else {
                     Get.to(() => SearchResultPage(
@@ -843,6 +849,7 @@ class SearchController extends GetxController {
                       appFormName: this.strViewName,
                       actionableMap: this.actionableMap,
                       actionableSearch: this.actionableSearch,
+                      fromNameString: formName,
                     ));
                   }
                 }
