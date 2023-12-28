@@ -17,7 +17,7 @@ extension MapExtension on Map {
             readOnly: true,
             renderer: ((rendererContext) => GestureDetector(
                   onSecondaryTapDown: (detail) {
-                    DataGridMenu().showGridMenu(rendererContext.stateManager, detail, context);
+                    DataGridMenu().showGridMenu(rendererContext.stateManager, detail, context,data: []);
                   },
                   child: Text(
                     rendererContext.cell.value.toString(),
