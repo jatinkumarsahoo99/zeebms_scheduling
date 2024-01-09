@@ -144,7 +144,7 @@ class DataGridFromMap1 extends StatelessWidget {
                     return GestureDetector(
                       onSecondaryTapDown: (detail) {
                         DataGridMenu().showGridMenu(
-                            rendererContext.stateManager, detail, context);
+                            rendererContext.stateManager, detail, context,data: mapData);
                       },
                       child: Text(
                         rendererContext.cell.value.toString(),
@@ -158,7 +158,7 @@ class DataGridFromMap1 extends StatelessWidget {
                   return GestureDetector(
                     onSecondaryTapDown: (detail) {
                       DataGridMenu().showGridMenu(
-                          rendererContext.stateManager, detail, context);
+                          rendererContext.stateManager, detail, context,data: mapData);
                     },
                     child: Text(
                       rendererContext.cell.value.toString(),
@@ -218,7 +218,7 @@ class DataGridFromMap1 extends StatelessWidget {
                   return GestureDetector(
                     onSecondaryTapDown: (detail) {
                       DataGridMenu().showGridMenu(
-                          rendererContext.stateManager, detail, context);
+                          rendererContext.stateManager, detail, context,data: mapData);
                     },
                     child: Text(
                       rendererContext.cell.value.toString(),
@@ -233,7 +233,7 @@ class DataGridFromMap1 extends StatelessWidget {
                 return GestureDetector(
                   onSecondaryTapDown: (detail) {
                     DataGridMenu().showGridMenu(
-                        rendererContext.stateManager, detail, context);
+                        rendererContext.stateManager, detail, context,data: mapData);
                   },
                   child: Container(
                     height: 25,

@@ -118,6 +118,7 @@ class DataGridShowOnlyKeys extends StatelessWidget {
                     a,
                     context,
                     exportFileName: exportFileName,
+                    data: mapData,
                     // csvFormat: csvFormat ?? false,
                   );
                 },
@@ -196,6 +197,7 @@ class DataGridShowOnlyKeys extends StatelessWidget {
                         DataGridMenu().showGridMenu(
                             rendererContext.stateManager, detail, context,
                             exportFileName: exportFileName,
+                            data: mapData,
                             extraList: extraList);
                       },
                       child: Text(
@@ -266,6 +268,7 @@ class DataGridShowOnlyKeys extends StatelessWidget {
                         DataGridMenu().showGridMenu(
                             rendererContext.stateManager, detail, context,
                             exportFileName: exportFileName,
+                            data: mapData,
                             extraList: extraList);
                       },
                       child: Text(
@@ -290,6 +293,7 @@ class DataGridShowOnlyKeys extends StatelessWidget {
 
                       DataGridMenu().showGridMenu(
                           rendererContext.stateManager, detail, context,
+                          data: mapData,
                           exportFileName: exportFileName, extraList: extraList);
                     },
                     child: Text(

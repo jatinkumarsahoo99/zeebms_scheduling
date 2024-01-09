@@ -46,7 +46,7 @@ class ListDataGridFromMap extends StatelessWidget {
           readOnly: true,
           renderer: ((rendererContext) => GestureDetector(
                 onSecondaryTapDown: (detail) {
-                  DataGridMenu().showGridMenu(rendererContext.stateManager, detail, context);
+                  DataGridMenu().showGridMenu(rendererContext.stateManager, detail, context,data: mapData);
                 },
                 child: Text(
                   rendererContext.cell.value.toString(),
@@ -74,7 +74,7 @@ class ListDataGridFromMap extends StatelessWidget {
           readOnly: true,
           renderer: ((rendererContext) => GestureDetector(
                 onSecondaryTapDown: (detail) {
-                  DataGridMenu().showGridMenu(rendererContext.stateManager, detail, context);
+                  DataGridMenu().showGridMenu(rendererContext.stateManager, detail, context,data: mapData);
                 },
                 child: Text(
                   rendererContext.cell.value.toString(),

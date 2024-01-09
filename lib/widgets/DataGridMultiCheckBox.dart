@@ -117,7 +117,7 @@ class DataGridMultiCheckBox extends StatelessWidget {
                   onSecondaryTapDown: (detail) {
                     rendererContext.stateManager.setCurrentCell(rendererContext.cell, rendererContext.rowIdx);
 
-                    DataGridMenu().showGridMenu(rendererContext.stateManager, detail, context, exportFileName: exportFileName, extraList: extraList);
+                    DataGridMenu().showGridMenu(rendererContext.stateManager, detail, context, exportFileName: exportFileName, extraList: extraList,data: mapData,);
                   },
                   child: Text(
                     (checkRow == true && key == checkRowKey && hideCheckKeysValue) ? "" : rendererContext.cell.value.toString(),

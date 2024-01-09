@@ -34,6 +34,7 @@ class DataGridMenu {
       {String? exportFileName,
         List<SecondaryShowDialogModel>? extraList,
         List<String>? removeKeysFromFile,
+        required dynamic data,
         bool csvFormat = false}) async {
     print(">>>>>csvFormat" + csvFormat.toString());
     print("showGridMenu() Method Call");
@@ -1764,6 +1765,7 @@ class DataGridMenu {
       BuildContext context,
       {String? exportFileName,
         Function? onPressedClick,
+        required dynamic data,
         required PlutoColumnRendererContext plutoContext}) async {
     print("showGridCustomMenu() Method Call");
     clearFilterList() {
