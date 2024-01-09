@@ -61,7 +61,8 @@ PlutoGridConfiguration plutoGridConfiguration({
             ...PlutoGridShortcut.defaultActions,
 
             LogicalKeySet(LogicalKeyboardKey.control, LogicalKeyboardKey.keyC):
-            (Const.firstColumnBlankFormNames.contains(formName.toString()))? CopyValueFromDataTable1():CopyValueFromDataTable(),
+            (Const.firstColumnBlankFormNames.contains(formName.toString()))? CopyValueFromDataTable1():
+            CopyValueFromDataTable(),
 
             LogicalKeySet(LogicalKeyboardKey.tab):
                 CustomTabKeyAction(focusNode, previousWidgetFN),

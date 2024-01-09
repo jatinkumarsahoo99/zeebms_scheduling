@@ -119,9 +119,10 @@ class DateWiseErrorSpotsView extends StatelessWidget {
                                             "Datewise Error Spots Report",
                                         csvFormat: true,
                                         focusNode: controllerX.gridFocus,
+
                                         // checkRow: true,
                                         // checkRowKey: "no",
-                                        mode: PlutoGridMode.selectWithOneTap,
+                                        mode: PlutoGridMode.normal,
                                         colorCallback: (row) =>
                                             (row.row.cells.containsValue(controllerX.gridStateManager?.currentCell))
                                                 ? Colors.deepPurple.shade200
