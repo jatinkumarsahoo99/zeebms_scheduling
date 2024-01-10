@@ -157,6 +157,7 @@ class DropDownField {
     final iconLineColor =
         (enable.value) ? Colors.deepPurpleAccent : Colors.grey;
     FocusNode inkWellFocusNode = FocusNode();
+    final _scrollController = ScrollController();
     return Column(
       key: widgetKey,
       mainAxisSize: MainAxisSize.min,
@@ -256,35 +257,40 @@ class DropDownField {
                                   Expanded(
                                     child: Obx(
                                       () {
-                                        return ListView(
-                                          shrinkWrap: true,
-                                          children: tempList
-                                              .map(
-                                                (element) => InkWell(
-                                                  onTap: () {
-                                                    Navigator.pop(context);
-                                                    selectedItem = element;
-                                                    seleceted(element);
-                                                    re(() {});
-                                                    FocusScope.of(context)
-                                                        .requestFocus(
-                                                            inkWellFocusNode);
-                                                  },
-                                                  child: Padding(
-                                                    padding: const EdgeInsets
-                                                        .symmetric(vertical: 8),
-                                                    child: Text(
-                                                      element.value ?? "null",
-                                                      style: TextStyle(
-                                                        fontSize: SizeDefine
-                                                                .dropDownFontSize -
-                                                            1,
+                                        return Scrollbar(
+                                          controller: _scrollController,
+                                          isAlwaysShown: true,
+                                          child: ListView(
+                                            controller: _scrollController,
+                                            shrinkWrap: true,
+                                            children: tempList
+                                                .map(
+                                                  (element) => InkWell(
+                                                    onTap: () {
+                                                      Navigator.pop(context);
+                                                      selectedItem = element;
+                                                      seleceted(element);
+                                                      re(() {});
+                                                      FocusScope.of(context)
+                                                          .requestFocus(
+                                                              inkWellFocusNode);
+                                                    },
+                                                    child: Padding(
+                                                      padding: const EdgeInsets
+                                                          .symmetric(vertical: 8),
+                                                      child: Text(
+                                                        element.value ?? "null",
+                                                        style: TextStyle(
+                                                          fontSize: SizeDefine
+                                                                  .dropDownFontSize -
+                                                              1,
+                                                        ),
                                                       ),
                                                     ),
                                                   ),
-                                                ),
-                                              )
-                                              .toList(),
+                                                )
+                                                .toList(),
+                                          ),
                                         );
                                       },
                                     ),
@@ -1336,6 +1342,7 @@ class DropDownField {
     }
 
     inkwellFocus ??= FocusNode();
+    final _scrollController = ScrollController();
     return Column(
       key: widgetKey,
       mainAxisSize: MainAxisSize.min,
@@ -1445,50 +1452,55 @@ class DropDownField {
                                             ? Center(
                                                 child: Text(msg.value!),
                                               )
-                                            : ListView(
-                                                shrinkWrap: true,
-                                                children: items
-                                                    .map(
-                                                      (element) => InkWell(
-                                                        onTap: () {
-                                                          Navigator.pop(
-                                                              context);
-                                                          selectedValue =
-                                                              DropDownValue(
-                                                            key: element[
-                                                                    parseKeyForKey]
-                                                                .toString(),
-                                                            value: element[
-                                                                    parseKeyForValue]
-                                                                .toString(),
-                                                          );
-                                                          re(() {});
-                                                          FocusScope.of(context)
-                                                              .requestFocus(
-                                                                  inkwellFocus);
-                                                          onchanged(
-                                                              selectedValue!);
-                                                        },
-                                                        child: Padding(
-                                                          padding:
-                                                              const EdgeInsets
-                                                                      .symmetric(
-                                                                  vertical: 8),
-                                                          child: Text(
-                                                            (element[parseKeyForValue] ??
-                                                                    "null")
-                                                                .toString(),
-                                                            style: TextStyle(
-                                                              fontSize: SizeDefine
-                                                                      .dropDownFontSize -
-                                                                  1,
+                                            : Scrollbar(
+                                          controller: _scrollController,
+                                              isAlwaysShown:true,
+                                              child: ListView(
+                                                controller: _scrollController,
+                                                  shrinkWrap: true,
+                                                  children: items
+                                                      .map(
+                                                        (element) => InkWell(
+                                                          onTap: () {
+                                                            Navigator.pop(
+                                                                context);
+                                                            selectedValue =
+                                                                DropDownValue(
+                                                              key: element[
+                                                                      parseKeyForKey]
+                                                                  .toString(),
+                                                              value: element[
+                                                                      parseKeyForValue]
+                                                                  .toString(),
+                                                            );
+                                                            re(() {});
+                                                            FocusScope.of(context)
+                                                                .requestFocus(
+                                                                    inkwellFocus);
+                                                            onchanged(
+                                                                selectedValue!);
+                                                          },
+                                                          child: Padding(
+                                                            padding:
+                                                                const EdgeInsets
+                                                                        .symmetric(
+                                                                    vertical: 8),
+                                                            child: Text(
+                                                              (element[parseKeyForValue] ??
+                                                                      "null")
+                                                                  .toString(),
+                                                              style: TextStyle(
+                                                                fontSize: SizeDefine
+                                                                        .dropDownFontSize -
+                                                                    1,
+                                                              ),
                                                             ),
                                                           ),
                                                         ),
-                                                      ),
-                                                    )
-                                                    .toList(),
-                                              );
+                                                      )
+                                                      .toList(),
+                                                ),
+                                            );
                                       },
                                     ),
                                   ),
@@ -1713,6 +1725,7 @@ class DropDownField {
     final iconLineColor = (isEnable) ? Colors.deepPurpleAccent : Colors.grey;
     FocusNode inkwellFocus = FocusNode(
         descendantsAreFocusable: false, descendantsAreTraversable: false);
+    final _scrollController = ScrollController();
     return Column(
       key: widgetKey,
       mainAxisSize: MainAxisSize.min,
@@ -1812,35 +1825,40 @@ class DropDownField {
                                   Expanded(
                                     child: Obx(
                                       () {
-                                        return ListView(
-                                          shrinkWrap: true,
-                                          children: tempList
-                                              .map(
-                                                (element) => InkWell(
-                                                  onTap: () {
-                                                    Navigator.pop(context);
-                                                    selected = element;
-                                                    callback(element);
-                                                    re(() {});
-                                                    FocusScope.of(context)
-                                                        .requestFocus(
-                                                            inkwellFocus);
-                                                  },
-                                                  child: Padding(
-                                                    padding: const EdgeInsets
-                                                        .symmetric(vertical: 8),
-                                                    child: Text(
-                                                      element.value ?? "null",
-                                                      style: TextStyle(
-                                                        fontSize: SizeDefine
-                                                                .dropDownFontSize -
-                                                            1,
+                                        return Scrollbar(
+                                          controller: _scrollController,
+                                          isAlwaysShown: true,
+                                          child: ListView(
+                                            controller: _scrollController,
+                                            shrinkWrap: true,
+                                            children: tempList
+                                                .map(
+                                                  (element) => InkWell(
+                                                    onTap: () {
+                                                      Navigator.pop(context);
+                                                      selected = element;
+                                                      callback(element);
+                                                      re(() {});
+                                                      FocusScope.of(context)
+                                                          .requestFocus(
+                                                              inkwellFocus);
+                                                    },
+                                                    child: Padding(
+                                                      padding: const EdgeInsets
+                                                          .symmetric(vertical: 8),
+                                                      child: Text(
+                                                        element.value ?? "null",
+                                                        style: TextStyle(
+                                                          fontSize: SizeDefine
+                                                                  .dropDownFontSize -
+                                                              1,
+                                                        ),
                                                       ),
                                                     ),
                                                   ),
-                                                ),
-                                              )
-                                              .toList(),
+                                                )
+                                                .toList(),
+                                          ),
                                         );
                                       },
                                     ),
@@ -2117,6 +2135,7 @@ class DropDownField {
     final iconLineColor = (isEnable) ? Colors.deepPurpleAccent : Colors.grey;
     FocusNode inkwellFocus = FocusNode(
         descendantsAreFocusable: false, descendantsAreTraversable: false);
+    final _scrollController = ScrollController();
     return Column(
       key: widgetKey,
       mainAxisSize: MainAxisSize.min,
@@ -2236,35 +2255,40 @@ class DropDownField {
                                   Expanded(
                                     child: Obx(
                                       () {
-                                        return ListView(
-                                          shrinkWrap: true,
-                                          children: tempList
-                                              .map(
-                                                (element) => InkWell(
-                                                  onTap: () {
-                                                    Navigator.pop(context);
-                                                    selected?.value = element;
-                                                    callback(element);
-                                                    re(() {});
-                                                    FocusScope.of(context)
-                                                        .requestFocus(
-                                                            inkwellFocus);
-                                                  },
-                                                  child: Padding(
-                                                    padding: const EdgeInsets
-                                                        .symmetric(vertical: 8),
-                                                    child: Text(
-                                                      element.value ?? "null",
-                                                      style: TextStyle(
-                                                        fontSize: SizeDefine
-                                                                .dropDownFontSize -
-                                                            1,
+                                        return Scrollbar(
+                                          isAlwaysShown: true,
+                                          controller: _scrollController,
+                                          child: ListView(
+                                            controller: _scrollController,
+                                            shrinkWrap: true,
+                                            children: tempList
+                                                .map(
+                                                  (element) => InkWell(
+                                                    onTap: () {
+                                                      Navigator.pop(context);
+                                                      selected?.value = element;
+                                                      callback(element);
+                                                      re(() {});
+                                                      FocusScope.of(context)
+                                                          .requestFocus(
+                                                              inkwellFocus);
+                                                    },
+                                                    child: Padding(
+                                                      padding: const EdgeInsets
+                                                          .symmetric(vertical: 8),
+                                                      child: Text(
+                                                        element.value ?? "null",
+                                                        style: TextStyle(
+                                                          fontSize: SizeDefine
+                                                                  .dropDownFontSize -
+                                                              1,
+                                                        ),
                                                       ),
                                                     ),
                                                   ),
-                                                ),
-                                              )
-                                              .toList(),
+                                                )
+                                                .toList(),
+                                          ),
                                         );
                                       },
                                     ),
@@ -2626,6 +2650,7 @@ class DropDownField {
     final textColor = (isEnable) ? Colors.black : Colors.grey;
     final iconLineColor = (isEnable) ? Colors.deepPurpleAccent : Colors.grey;
     inkWellFocusNode ??= FocusNode();
+    final _scrollController = ScrollController();
     return Column(
       // key: titleInLeft ? null : widgetKey,
       mainAxisSize: MainAxisSize.min,
@@ -2793,39 +2818,44 @@ class DropDownField {
                                         Expanded(
                                           child: Obx(
                                             () {
-                                              return ListView(
-                                                shrinkWrap: true,
-                                                children: tempList
-                                                    .map(
-                                                      (element) => InkWell(
-                                                        onTap: () {
-                                                          Navigator.pop(
-                                                              context);
-                                                          selected = element;
-                                                          re(() {});
-                                                          callback(element);
-                                                          FocusScope.of(context)
-                                                              .requestFocus(
-                                                                  inkWellFocusNode);
-                                                        },
-                                                        child: Padding(
-                                                          padding:
-                                                              const EdgeInsets
-                                                                      .symmetric(
-                                                                  vertical: 8),
-                                                          child: Text(
-                                                            element.value ??
-                                                                "null",
-                                                            style: TextStyle(
-                                                              fontSize: SizeDefine
-                                                                      .dropDownFontSize -
-                                                                  1,
+                                              return Scrollbar(
+                                                isAlwaysShown:true,
+                                                controller: _scrollController,
+                                                child: ListView(
+                                                  controller: _scrollController,
+                                                  shrinkWrap: true,
+                                                  children: tempList
+                                                      .map(
+                                                        (element) => InkWell(
+                                                          onTap: () {
+                                                            Navigator.pop(
+                                                                context);
+                                                            selected = element;
+                                                            re(() {});
+                                                            callback(element);
+                                                            FocusScope.of(context)
+                                                                .requestFocus(
+                                                                    inkWellFocusNode);
+                                                          },
+                                                          child: Padding(
+                                                            padding:
+                                                                const EdgeInsets
+                                                                        .symmetric(
+                                                                    vertical: 8),
+                                                            child: Text(
+                                                              element.value ??
+                                                                  "null",
+                                                              style: TextStyle(
+                                                                fontSize: SizeDefine
+                                                                        .dropDownFontSize -
+                                                                    1,
+                                                              ),
                                                             ),
                                                           ),
                                                         ),
-                                                      ),
-                                                    )
-                                                    .toList(),
+                                                      )
+                                                      .toList(),
+                                                ),
                                               );
                                             },
                                           ),
@@ -3064,6 +3094,7 @@ class DropDownField {
       }
     });
     RxnInt currentIndex = RxnInt();
+    final _scrollController = ScrollController();
     return Column(
       // key: titleInLeft ? null : widgetKey,
       mainAxisSize: MainAxisSize.min,
@@ -3256,41 +3287,46 @@ class DropDownField {
                                           Expanded(
                                             child: Obx(
                                               () {
-                                                return ListView(
-                                                  shrinkWrap: true,
-                                                  children: tempList
-                                                      .map(
-                                                        (element) => InkWell(
-                                                          onTap: () {
-                                                            Navigator.pop(
-                                                                context);
-                                                            selected = element;
-                                                            re(() {});
-                                                            callback(element);
-                                                            FocusScope.of(
-                                                                    context)
-                                                                .requestFocus(
-                                                                    inkWellFocusNode);
-                                                          },
-                                                          child: Padding(
-                                                            padding:
-                                                                const EdgeInsets
-                                                                        .symmetric(
-                                                                    vertical:
-                                                                        8),
-                                                            child: Text(
-                                                              element.value ??
-                                                                  "null",
-                                                              style: TextStyle(
-                                                                fontSize: SizeDefine
-                                                                        .dropDownFontSize -
-                                                                    1,
+                                                return Scrollbar(
+                                                  controller: _scrollController,
+                                                  isAlwaysShown: true,
+                                                  child: ListView(
+                                                    controller: _scrollController,
+                                                    shrinkWrap: true,
+                                                    children: tempList
+                                                        .map(
+                                                          (element) => InkWell(
+                                                            onTap: () {
+                                                              Navigator.pop(
+                                                                  context);
+                                                              selected = element;
+                                                              re(() {});
+                                                              callback(element);
+                                                              FocusScope.of(
+                                                                      context)
+                                                                  .requestFocus(
+                                                                      inkWellFocusNode);
+                                                            },
+                                                            child: Padding(
+                                                              padding:
+                                                                  const EdgeInsets
+                                                                          .symmetric(
+                                                                      vertical:
+                                                                          8),
+                                                              child: Text(
+                                                                element.value ??
+                                                                    "null",
+                                                                style: TextStyle(
+                                                                  fontSize: SizeDefine
+                                                                          .dropDownFontSize -
+                                                                      1,
+                                                                ),
                                                               ),
                                                             ),
                                                           ),
-                                                        ),
-                                                      )
-                                                      .toList(),
+                                                        )
+                                                        .toList(),
+                                                  ),
                                                 );
                                               },
                                             ),
@@ -3451,6 +3487,7 @@ class DropDownField {
     final textColor = (isEnable) ? Colors.black : Colors.grey;
     final iconLineColor = (isEnable) ? Colors.deepPurpleAccent : Colors.grey;
     inkWellFocusNode ??= FocusNode();
+    final _scrollController = ScrollController();
     return Column(
       // key: titleInLeft ? null : widgetKey,
       mainAxisSize: MainAxisSize.min,
@@ -3618,39 +3655,44 @@ class DropDownField {
                                         Expanded(
                                           child: Obx(
                                             () {
-                                              return ListView(
-                                                shrinkWrap: true,
-                                                children: tempList
-                                                    .map(
-                                                      (element) => InkWell(
-                                                        onTap: () {
-                                                          Navigator.pop(
-                                                              context);
-                                                          selected = element;
-                                                          re(() {});
-                                                          callback(element);
-                                                          FocusScope.of(context)
-                                                              .requestFocus(
-                                                                  inkWellFocusNode);
-                                                        },
-                                                        child: Padding(
-                                                          padding:
-                                                              const EdgeInsets
-                                                                      .symmetric(
-                                                                  vertical: 8),
-                                                          child: Text(
-                                                            element.value ??
-                                                                "null",
-                                                            style: TextStyle(
-                                                              fontSize: SizeDefine
-                                                                      .dropDownFontSize -
-                                                                  1,
+                                              return Scrollbar(
+                                                controller: _scrollController,
+                                                isAlwaysShown: true,
+                                                child: ListView(
+                                                  controller: _scrollController,
+                                                  shrinkWrap: true,
+                                                  children: tempList
+                                                      .map(
+                                                        (element) => InkWell(
+                                                          onTap: () {
+                                                            Navigator.pop(
+                                                                context);
+                                                            selected = element;
+                                                            re(() {});
+                                                            callback(element);
+                                                            FocusScope.of(context)
+                                                                .requestFocus(
+                                                                    inkWellFocusNode);
+                                                          },
+                                                          child: Padding(
+                                                            padding:
+                                                                const EdgeInsets
+                                                                        .symmetric(
+                                                                    vertical: 8),
+                                                            child: Text(
+                                                              element.value ??
+                                                                  "null",
+                                                              style: TextStyle(
+                                                                fontSize: SizeDefine
+                                                                        .dropDownFontSize -
+                                                                    1,
+                                                              ),
                                                             ),
                                                           ),
                                                         ),
-                                                      ),
-                                                    )
-                                                    .toList(),
+                                                      )
+                                                      .toList(),
+                                                ),
                                               );
                                             },
                                           ),
