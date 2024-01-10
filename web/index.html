@@ -15,9 +15,15 @@
 
 
   <!--    1.1 Added by "Sanjaya" because of cache in Issue in Flutter-->
-  <meta http-equiv="cache-control" content="no-cache"/>
+<!--  <meta http-equiv="cache-control" content="no-cache"/>-->
+<!--  <meta http-equiv="expires" content="0"/>-->
+<!--  <meta http-equiv="pragma" content="no-cache"/>-->
+  <meta http-equiv="cache-control" content="no-cache, must-revalidate, post-check=0, pre-check=0" />
+  <!--    <meta http-equiv="cache-control" content="no-store" />-->
+  <meta http-equiv="cache-control" content="max-age=0" />
   <meta http-equiv="expires" content="0"/>
   <meta http-equiv="pragma" content="no-cache"/>
+
   <!--    End of 1.1 -->
 
 
@@ -33,7 +39,7 @@
   </script>
   <script type="text/javascript" src="azure_insight.js"></script>
   <!-- This script adds the flutter initialization JS code -->
-  <script src="flutter.js" defer></script>
+  <script src="flutter.js?version=@DateTime.UtcNow.ToString()" defer></script>
 </head>
 <body oncontextmenu="return false;">
 <style>
