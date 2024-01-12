@@ -540,7 +540,7 @@ class ApiFactory {
 
 static String TRANSMISSION_LOG_MULTICHOICE1(
           String locId, String chnlId, String txtDt, String fileName, String type) =>
-      "$BASE_URL/api/Transmissionlog/GetExportMultichoice?locationcode=$locId&channelcode=$chnlId&txtDate=$txtDt&filename=$fileName&Rdbtxlog=${type==""?"true":"false"}&Rdbfpc=${type==""?"true":"false"}&Rdbfpcadtlbreakwise=${type==""?"true":"false"}";
+      "$BASE_URL/api/Transmissionlog/GetExportMultichoice?locationcode=$locId&channelcode=$chnlId&txtDate=$txtDt&filename=$fileName&Rdbtxlog=${type=="Tx Log"?"true":"false"}&Rdbfpc=${type=="FPC"?"true":"false"}&Rdbfpcadtlbreakwise=${type=="FPC - Adtl Break"?"true":"false"}";
 
   static String TRANSMISSION_LOG_SEARCH_INSERT(
           String locId,
@@ -581,8 +581,9 @@ static String TRANSMISSION_LOG_MULTICHOICE1(
           int expRowno,
           String exportTime,
           bool secEvnt,
-          String apiCallVal) =>
-      "$BASE_URL/api/Transmissionlog/GetbtnExportDataClick?Locationcode=$locId&Txtdate=$txtDt&channelName=$chnlNm&LocationName=$locName&ExportRowNumber=$expRowno&ExportTime=$exportTime&AddSecondaryEvents=$secEvnt&ApiCallValue=$apiCallVal&ChannelCode=$chnlId";
+          String apiCallVal,
+          String mutichoiceOpt) =>
+      "$BASE_URL/api/Transmissionlog/GetbtnExportDataClick?Locationcode=$locId&Txtdate=$txtDt&channelName=$chnlNm&LocationName=$locName&ExportRowNumber=$expRowno&ExportTime=$exportTime&AddSecondaryEvents=$secEvnt&ApiCallValue=$apiCallVal&ChannelCode=$chnlId&MultichoiceOption=$mutichoiceOpt";
 
   static String TRANSMISSION_LOG_WRITE_EXCEL(
           String locId, String chnlId, String txtDt, bool standBy) =>
