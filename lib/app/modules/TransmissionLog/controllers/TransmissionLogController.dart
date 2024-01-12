@@ -952,7 +952,10 @@ class TransmissionLogController extends GetxController {
             gridStateManager?.currentRowIdx ?? 0,
             "00:00",
             isDone ?? false,
-            methodName),
+            methodName,
+            (type == "Multichoice (SA)")
+                ? selectMultiSa.value.replaceAll(" ", "").toUpperCase()
+                : ""),
         fun: (map) {
           Get.back();
           if (map is Map && map.containsKey("outExportDataClick")) {
@@ -4426,7 +4429,7 @@ class TransmissionLogController extends GetxController {
   }
 
   showMultichoiceExport() {
-    selectMultiSa.value="Tx Log";
+    selectMultiSa.value = "Tx Log";
     Get.defaultDialog(
       title: "",
       titleStyle: TextStyle(fontSize: 1),
