@@ -1,56 +1,63 @@
 <!DOCTYPE html>
 <html>
 <head>
-  <base href="$FLUTTER_BASE_HREF">
+    <base href="$FLUTTER_BASE_HREF">
 
-  <meta charset="UTF-8">
-  <meta content="IE=Edge" http-equiv="X-UA-Compatible">
-  <meta name="description" content="A new Flutter project.">
+    <meta charset="UTF-8">
+    <meta content="IE=Edge" http-equiv="X-UA-Compatible">
+    <meta name="description" content="A new Flutter project.">
 
-  <!-- iOS meta tags & icons -->
-  <meta name="apple-mobile-web-app-capable" content="yes">
-  <meta name="apple-mobile-web-app-status-bar-style" content="black">
-  <meta name="apple-mobile-web-app-title" content="bms_scheduling">
-  <link rel="apple-touch-icon" href="icons/Icon-192.png">
-
-
-  <!--    1.1 Added by "Sanjaya" because of cache in Issue in Flutter-->
-<!--  <meta http-equiv="cache-control" content="no-cache"/>-->
-<!--  <meta http-equiv="expires" content="0"/>-->
-<!--  <meta http-equiv="pragma" content="no-cache"/>-->
-  <meta http-equiv="cache-control" content="no-cache, must-revalidate, post-check=0, pre-check=0" />
-  <!--    <meta http-equiv="cache-control" content="no-store" />-->
-  <meta http-equiv="cache-control" content="max-age=0" />
-  <meta http-equiv="expires" content="0"/>
-  <meta http-equiv="pragma" content="no-cache"/>
-
-  <!--    End of 1.1 -->
+    <!-- iOS meta tags & icons -->
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black">
+    <meta name="apple-mobile-web-app-title" content="bms_scheduling">
+    <link rel="apple-touch-icon" href="icons/Icon-192.png">
 
 
-  <!-- Favicon -->
-  <link rel="icon" type="image/png" href="favicon.png"/>
-  
-  <title>bms_scheduling</title>
-  <link rel="manifest" href="manifest.json">
+    <!--    1.1 Added by "Sanjaya" because of cache in Issue in Flutter-->
+    <meta http-equiv="cache-control" content="no-cache, no-store, must-revalidate"/>
+    <meta http-equiv="pragma" content="no-cache"/>
+    <meta http-equiv="expires" content="0"/>
+    <!--    End of 1.1 -->
 
-  <script>
+
+    <!-- Favicon -->
+    <link rel="icon" type="image/png" href="favicon.png"/>
+
+    <title>bms_scheduling</title>
+    <link rel="manifest" href="manifest.json">
+
+    <script>
     // The value below is injected by flutter build, do not touch.
     var serviceWorkerVersion = null;
-  </script>
-  <script type="text/javascript" src="azure_insight.js"></script>
-  <!-- This script adds the flutter initialization JS code -->
-  <script src="flutter.js?version=@DateTime.UtcNow.ToString()" defer></script>
+
+    </script>
+    <script type="text/javascript" src="azure_insight.js"></script>
+    <!-- This script adds the flutter initialization JS code -->
+    <!--  <script src="flutter.js?version=@DateTime.UtcNow.ToString()" defer></script>-->
+    <script id="flutterScript" defer></script>
+
+    <script defer>
+    // Generate a random number
+    var randomNumber = Math.floor(Math.random() * 1000000); // Adjust range as needed
+
+    // Set the script source with the random number
+    document.getElementById("flutterScript").src = "flutter.js?version=" + randomNumber;
+
+
+    </script>
 </head>
 <body oncontextmenu="return false;">
 <style>
     body {
       background-color: #FFFFFF;
     }
+
 </style>
 
 <!-- Cookie notice -->
 <div>
-  <style>
+    <style>
       #cookie-notice {
         background-color: #fff;
         bottom: 0;
@@ -132,18 +139,19 @@
       }
 
 
+
     </style>
-  <!-- <section id="cookie-notice">
-       <div class="container">
-           <p>Google uses cookies to deliver its services, to personalize ads, and to analyze traffic. You can
-               adjust your privacy controls anytime in your
-               <a href="https://myaccount.google.com/data-and-personalization" target="_blank" rel="noopener">Google
-                   settings</a>.
-               <a href="https://policies.google.com/technologies/cookies" target="_blank" rel="noopener">Learn more</a>.
-           </p>
-           <button id="cookie-consent">Okay</button>
-       </div>
-   </section>-->
+    <!-- <section id="cookie-notice">
+         <div class="container">
+             <p>Google uses cookies to deliver its services, to personalize ads, and to analyze traffic. You can
+                 adjust your privacy controls anytime in your
+                 <a href="https://myaccount.google.com/data-and-personalization" target="_blank" rel="noopener">Google
+                     settings</a>.
+                 <a href="https://policies.google.com/technologies/cookies" target="_blank" rel="noopener">Learn more</a>.
+             </p>
+             <button id="cookie-consent">Okay</button>
+         </div>
+     </section>-->
 </div>
 <!--<script>
     function _setCookie(name, value) {
@@ -186,7 +194,7 @@
 
 <!-- Loading indicator -->
 <div id="loading">
-  <style>
+    <style>
       body {
         inset: 0;
         overflow: hidden;
@@ -239,8 +247,9 @@
       }
 
 
+
     </style>
-  <img src="icons/logo_test2.gif" alt="Loading indicator..."/>
+    <img src="icons/logo_test2.gif" alt="Loading indicator..."/>
 </div>
 <script type="text/javascript">
         function fromFlutter(data,server) {
@@ -256,8 +265,9 @@
         console.log("Locations is????>>>>"+String(window.top.location));
         return 'working';
     }
-    </script>
-  <script>
+
+</script>
+<script>
     window.addEventListener('load', function(ev) {
       // Download main.dart.js
       _flutter.loader.loadEntrypoint({
@@ -270,6 +280,7 @@
         return appRunner.runApp();
       });
     });
-  </script>
+
+</script>
 </body>
 </html>
