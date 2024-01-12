@@ -1,6 +1,7 @@
 import 'dart:convert';
 import 'package:bms_scheduling/widgets/LoadingDialog.dart';
 import 'package:bms_scheduling/widgets/radio_row.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:get/get.dart';
@@ -1734,7 +1735,6 @@ class TransmissionLogView extends StatelessWidget {
     controller.canDialogShow.value = true;
   }
 
-
   showSegmentDialog2(context) {
     controller.listTapeDetailsSegment?.value = [];
     controller.selectTapeSegmentDialog = null;
@@ -1934,13 +1934,16 @@ class TransmissionLogView extends StatelessWidget {
 
                                             controller.tblSegement =
                                                 load.stateManager;
-                                            load.stateManager.setSelectingMode(PlutoGridSelectingMode.row);
-                                            load.stateManager.setCurrentCell(load.stateManager.firstCell, 0);
-                                            load.stateManager.gridFocusNode.requestFocus();
+                                            load.stateManager.setSelectingMode(
+                                                PlutoGridSelectingMode.row);
+                                            load.stateManager.setCurrentCell(
+                                                load.stateManager.firstCell, 0);
+                                            load.stateManager.gridFocusNode
+                                                .requestFocus();
                                           },
                                           colorCallback: (colorData) {
-                                            if (controller
-                                                .tblSegement?.currentRowIdx ==
+                                            if (controller.tblSegement
+                                                    ?.currentRowIdx ==
                                                 colorData.rowIdx) {
                                               return Color(0xFFD1C4E9);
                                             } else {
@@ -2231,7 +2234,11 @@ class TransmissionLogView extends StatelessWidget {
             btnText: "Export",
             showIcon: false,
             callback: () {
-              controller.btnExportClick(controller.selectExportType.value);
+              if (controller.selectExportType.value == "Multichoice (SA)") {
+                controller.showMultichoiceExport();
+              } else {
+                controller.btnExportClick(controller.selectExportType.value);
+              }
             },
           ),
           SizedBox(

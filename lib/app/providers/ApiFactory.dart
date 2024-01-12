@@ -538,6 +538,10 @@ class ApiFactory {
           String locId, String chnlId, String txtDt, String fileName) =>
       "$BASE_URL/api/Transmissionlog/GetExportMultichoice?locationcode=$locId&channelcode=$chnlId&txtDate=$txtDt&filename=$fileName";
 
+static String TRANSMISSION_LOG_MULTICHOICE1(
+          String locId, String chnlId, String txtDt, String fileName, String type) =>
+      "$BASE_URL/api/Transmissionlog/GetExportMultichoice?locationcode=$locId&channelcode=$chnlId&txtDate=$txtDt&filename=$fileName&Rdbtxlog=${type==""?"true":"false"}&Rdbfpc=${type==""?"true":"false"}&Rdbfpcadtlbreakwise=${type==""?"true":"false"}";
+
   static String TRANSMISSION_LOG_SEARCH_INSERT(
           String locId,
           String channelId,
