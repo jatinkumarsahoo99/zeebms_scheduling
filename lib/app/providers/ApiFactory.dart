@@ -625,7 +625,7 @@ static String TRANSMISSION_LOG_MULTICHOICE1(
           String fromTime,
           String toTime,
           String fileName) =>
-      "$BASE_URL/api/Transmissionlog/GetWriteLst?locationcode=$locId&channelcode=$chnlId&telecastdate=$txtDt&standbyLog=$standBy&chkPartialLog=$chkPartialLog&FromTime=$fromTime&ToTime=$toTime&AddSecondaryEvents=$addSecondaryEvent&Noida=true&fileName=$fileName";
+      "$BASE_URL/api/Transmissionlog/GetWriteLst?locationcode=$locId&channelcode=$chnlId&telecastdate=$txtDt&standbyLog=$standBy&chkPartialLog=$chkPartialLog&FromTime=$fromTime&ToTime=$toTime&ProcessSecondaryEvents=$addSecondaryEvent&Noida=true&fileName=$fileName";
   static String TRANSMISSION_LOG_WRITE_GRASS_VALLEY(
     String locId,
     String chnlId,
