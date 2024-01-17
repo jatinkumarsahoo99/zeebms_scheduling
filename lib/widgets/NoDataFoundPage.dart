@@ -42,32 +42,41 @@ class NoDataFoundPage extends StatelessWidget {
               color: Colors.deepPurple,
               padding: EdgeInsets.symmetric(horizontal: 35, vertical: 20),
             )*/
-            RichText(
-              textAlign: TextAlign.center,
-              text: TextSpan(
-                text:
-                'You are not authorized to access this page. Please ',
-                // style: Theme.of(context).textTheme.bodyLarge,
-                style: TextStyle(fontSize: 18),
-                children: <InlineSpan>[
-                  WidgetSpan(
-                    alignment: PlaceholderAlignment.baseline,
-                    baseline: TextBaseline.alphabetic,
-                    child: LinkButton(
-                        urlLabel: "click here",
-                        context: context,
-                        function: () {
-                          // js.context.callMethod('fromFlutter', ['Flutter is calling upon JavaScript!']);
-                          html.window.open(ApiFactory.LOGIN_URL, "_self");
-                        }),
-                  ),
-                  TextSpan(
-                    text: ' to login',
-                  ),
-
-                ],
+        (html.window.top != html.window.self)
+            ? RichText(
+          textAlign: TextAlign.center,
+          text: TextSpan(
+            text:
+            'You are not authorized to access this page. Please contact support team',
+            // style: Theme.of(context).textTheme.bodyLarge,
+            style: TextStyle(fontSize: 18),
+          ),
+        )
+            : RichText(
+          textAlign: TextAlign.center,
+          text: TextSpan(
+            text:
+            'You are not authorized to access this page. Please ',
+            // style: Theme.of(context).textTheme.bodyLarge,
+            style: TextStyle(fontSize: 18),
+            children: <InlineSpan>[
+              WidgetSpan(
+                alignment: PlaceholderAlignment.baseline,
+                baseline: TextBaseline.alphabetic,
+                child: LinkButton(
+                    urlLabel: "click here",
+                    context: context,
+                    function: () {
+                      // js.context.callMethod('fromFlutter', ['Flutter is calling upon JavaScript!']);
+                      html.window.open(ApiFactory.LOGIN_URL, "_self");
+                    }),
               ),
-            ),
+              TextSpan(
+                text: ' to login',
+              ),
+            ],
+          ),
+        ),
           ],
         ),
       ),
