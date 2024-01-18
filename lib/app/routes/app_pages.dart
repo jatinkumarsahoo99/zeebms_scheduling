@@ -58,7 +58,7 @@ class AppPages {
 
   static const INITIAL = kReleaseMode
       ? Routes.HOME
-      : "${Routes.COMMERCIAL_MASTER}?personalNo=R9vVPL7er1Os%2FusemWG%2FIw%3D%3D&loginCode=0iGe3vK5h2KGjfSKZTpmsQ%3D%3D&formName=GFkgpt44E84UF3PtJkNRPw%3D%3D";
+      : "${Routes.AUTO_ID_FILLER_REPORT}?personalNo=R9vVPL7er1Os%2FusemWG%2FIw%3D%3D&loginCode=0iGe3vK5h2KGjfSKZTpmsQ%3D%3D&formName=GFkgpt44E84UF3PtJkNRPw%3D%3D";
 
   static final routes = [
     GetPage(
@@ -79,6 +79,22 @@ class AppPages {
     GetPage(
       name: _Paths.MOVIE_SCHEDULE_REPORT,
       page: () => AuthGuard1(childName: _Paths.MOVIE_SCHEDULE_REPORT),
+    ),
+    GetPage(
+      name: _Paths.AUTO_ID_STING_REPORT,
+      page: () => AuthGuard1(childName: _Paths.AUTO_ID_STING_REPORT),
+    ),
+    GetPage(
+      name: _Paths.AUTO_ID_COMMERCIAL_REPORT,
+      page: () => AuthGuard1(childName: _Paths.AUTO_ID_COMMERCIAL_REPORT),
+    ),
+    GetPage(
+      name: _Paths.AUTO_ID_PROMOS_REPORT,
+      page: () => AuthGuard1(childName: _Paths.AUTO_ID_PROMOS_REPORT),
+    ),
+    GetPage(
+      name: _Paths.AUTO_ID_FILLER_REPORT,
+      page: () => AuthGuard1(childName: _Paths.AUTO_ID_FILLER_REPORT),
     ),
     GetPage(
       name: _Paths.GENERATE_BOOKING_ACTIVITY,
