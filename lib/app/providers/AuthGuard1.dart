@@ -390,6 +390,31 @@ class _AuthGuard1State extends State<AuthGuard1> with WidgetsBindingObserver {
                   screenName: "Movie Schedule Report",
                   strViewName: "FPC_MovieListing");
               break;
+            ///////////////////New Forms////////////////////////
+            case Routes.AUTO_ID_COMMERCIAL_REPORT:
+              currentWidget = SearchPage(
+                  key: const Key("AUTO_ID_COMMERCIAL_REPORT"),
+                  screenName: "Auto ID Commercial Report",
+                  strViewName: "BMS_Sp_Commercial_AUTOID_Report");
+              break;
+            case Routes.AUTO_ID_FILLER_REPORT:
+              currentWidget = SearchPage(
+                  key: const Key("AUTO_ID_FILLER_REPORT"),
+                  screenName: "Auto ID Promos Report",
+                  strViewName: "BMS_Sp_Promos_AUTOID_Report");
+              break;
+            case Routes.AUTO_ID_PROMOS_REPORT:
+              currentWidget = SearchPage(
+                  key: const Key("AUTO_ID_PROMOS_REPORT"),
+                  screenName: "Auto ID Filler Report",
+                  strViewName: "BMS_Sp_Filler_AUTOID_Report");
+              break;
+            case Routes.AUTO_ID_STING_REPORT:
+              currentWidget = SearchPage(
+                  key: const Key("AUTO_ID_STING_REPORT"),
+                  screenName: "Auto ID Sting Report",
+                  strViewName: "BMS_Sp_Sting_AUTOID_Report");
+              break;
             ///////////////////////////
             default:
               currentWidget = const NoDataFoundPage();

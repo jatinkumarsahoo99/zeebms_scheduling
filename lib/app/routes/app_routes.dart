@@ -79,6 +79,10 @@ abstract class Routes {
   static const DATEWISE_COMMERCIAL_LOG = _Paths.DATEWISE_COMMERCIAL_LOG;
   static const DEAL_UTILIZATION = _Paths.DEAL_UTILIZATION;
   static const MOVIE_SCHEDULE_REPORT = _Paths.MOVIE_SCHEDULE_REPORT;
+  static const AUTO_ID_COMMERCIAL_REPORT = _Paths.AUTO_ID_COMMERCIAL_REPORT;
+  static const AUTO_ID_PROMOS_REPORT = _Paths.AUTO_ID_PROMOS_REPORT;
+  static const AUTO_ID_FILLER_REPORT = _Paths.AUTO_ID_FILLER_REPORT;
+  static const AUTO_ID_STING_REPORT = _Paths.AUTO_ID_STING_REPORT;
   static const SHORT_CONTENT_BULK_IMPORT = _Paths.SHORT_CONTENT_BULK_IMPORT;
 }
 
@@ -216,4 +220,8 @@ abstract class _Paths {
   static const DEAL_UTILIZATION = '/frmsearchingKKBMS_view_DealUtil';
   static const MOVIE_SCHEDULE_REPORT = '/frmsearchingKKFPC_MovieListing';
   static const SHORT_CONTENT_BULK_IMPORT = '/frmshortformcontentbulkentry';
+  static const AUTO_ID_COMMERCIAL_REPORT = '/frmsearchingKKBMS_Sp_Commercial_AUTOID_Report';
+  static const AUTO_ID_PROMOS_REPORT = '/frmsearchingKKBMS_Sp_Promos_AUTOID_Report';
+  static const AUTO_ID_FILLER_REPORT = '/frmsearchingKKBMS_Sp_Filler_AUTOID_Report';
+  static const AUTO_ID_STING_REPORT = '/frmsearchingKKBMS_Sp_Sting_AUTOID_Report';
 }
