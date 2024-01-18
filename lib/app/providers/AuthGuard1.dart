@@ -400,14 +400,15 @@ class _AuthGuard1State extends State<AuthGuard1> with WidgetsBindingObserver {
             case Routes.AUTO_ID_FILLER_REPORT:
               currentWidget = SearchPage(
                   key: const Key("AUTO_ID_FILLER_REPORT"),
-                  screenName: "Auto ID Promos Report",
-                  strViewName: "BMS_Sp_Promos_AUTOID_Report");
+                  screenName: "Auto ID Filler Report",
+                  strViewName: "BMS_Sp_Filler_AUTOID_Report");
               break;
             case Routes.AUTO_ID_PROMOS_REPORT:
               currentWidget = SearchPage(
                   key: const Key("AUTO_ID_PROMOS_REPORT"),
-                  screenName: "Auto ID Filler Report",
-                  strViewName: "BMS_Sp_Filler_AUTOID_Report");
+                  screenName: "Auto ID Promos Report",
+                  strViewName: "BMS_Sp_Promos_AUTOID_Report",
+              );
               break;
             case Routes.AUTO_ID_STING_REPORT:
               currentWidget = SearchPage(
