@@ -31,21 +31,22 @@
     // The value below is injected by flutter build, do not touch.
     var serviceWorkerVersion = null;
 
+
     </script>
     <script type="text/javascript" src="azure_insight.js"></script>
     <!-- This script adds the flutter initialization JS code -->
-      <script src="flutter.js" defer></script>
-<!--    <script id="flutterScript" defer></script>-->
+    <script src="flutter.js" defer></script>
+    <!--    <script id="flutterScript" defer></script>-->
 
-<!--    <script defer>-->
-<!--    // Generate a random number-->
-<!--    var randomNumber = Math.floor(Math.random() * 1000000); // Adjust range as needed-->
+    <!--    <script defer>-->
+    <!--    // Generate a random number-->
+    <!--    var randomNumber = Math.floor(Math.random() * 1000000); // Adjust range as needed-->
 
-<!--    // Set the script source with the random number-->
-<!--    document.getElementById("flutterScript").src = "flutter.js?version=" + randomNumber;-->
+    <!--    // Set the script source with the random number-->
+    <!--    document.getElementById("flutterScript").src = "flutter.js?version=" + randomNumber;-->
 
 
-<!--    </script>-->
+    <!--    </script>-->
 </head>
 <body oncontextmenu="return false;">
 <style>
@@ -53,51 +54,11 @@
       background-color: #FFFFFF;
     }
 
+
 </style>
 
-<!-- Cookie notice -->
-
-<!--<script>
-    function _setCookie(name, value) {
-      const expires = "; expires=2147483647"; // ~2038 i.e. until user clears cookies
-      document.cookie = name + "=" + (value || "") + expires + "; SameSite=Strict";
-    }
-
-    function _getCookie(name) {
-      var nameEQ = name + "=";
-      var ca = document.cookie.split(';');
-      for (var i = 0; i < ca.length; i++) {
-        var c = ca[i];
-        while (c.charAt(0) == ' ') c = c.substring(1, c.length);
-        if (c.indexOf(nameEQ) == 0) return c.substring(nameEQ.length, c.length);
-      }
-      return null;
-    }
-
-    function initCookieNotice() {
-      const notice = document.getElementById('cookie-notice');
-      const consentBtn = document.getElementById('cookie-consent');
-      const cookieKey = 'cookie-consent';
-      const cookieConsentValue = 'true'
-      const activeClass = 'show';
-      if (_getCookie(cookieKey) === cookieConsentValue) {
-        return;
-      }
-      notice.classList.add(activeClass);
-      consentBtn.classList.add(activeClass);
-      consentBtn.addEventListener('click', (e) => {
-        e.preventDefault();
-        _setCookie(cookieKey, cookieConsentValue);
-        notice.classList.remove(activeClass);
-        consentBtn.classList.add(activeClass);
-      });
-    }
-
-    initCookieNotice();
-  </script>-->
-
 <!-- Loading indicator -->
-<!--<div id="loading">
+<div id="loading">
     <style>
       body {
         inset: 0;
@@ -150,11 +111,9 @@
         }
       }
 
-
-
     </style>
     <img src="icons/logo_test2.gif" alt="Loading indicator..."/>
-</div>-->
+</div>
 <script type="text/javascript">
         function fromFlutter(data,server) {
         // Do something
@@ -169,26 +128,24 @@
         console.log("Locations is????>>>>"+String(window.top.location));
         return 'working';
     }
-
 </script>
 <script>
     window.addEventListener('load', function(ev) {
       // Download main.dart.js
-       //var loading = document.querySelector('#loading');
+       var loading = document.querySelector('#loading');
       _flutter.loader.loadEntrypoint({
       entrypointUrl: "main.dart.js?v=" + serviceWorkerVersion,
         serviceWorker: {
           serviceWorkerVersion: serviceWorkerVersion,
         }
       }).then(function(engineInitializer) {
-      //loading.classList.add('main_done');
+      loading.classList.add('main_done');
         return engineInitializer.initializeEngine();
       }).then(function(appRunner) {
-      //loading.classList.add('init_done');
+      loading.classList.add('init_done');
         return appRunner.runApp();
       });
     });
-
 </script>
 </body>
 </html>
