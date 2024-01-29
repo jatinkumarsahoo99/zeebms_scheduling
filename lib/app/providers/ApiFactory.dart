@@ -583,7 +583,7 @@ static String TRANSMISSION_LOG_MULTICHOICE1(
           bool secEvnt,
           String apiCallVal,
           String mutichoiceOpt) =>
-      "$BASE_URL/api/Transmissionlog/GetbtnExportDataClick?Locationcode=$locId&Txtdate=$txtDt&channelName=$chnlNm&LocationName=$locName&ExportRowNumber=$expRowno&ExportTime=$exportTime&AddSecondaryEvents=$secEvnt&ApiCallValue=$apiCallVal&ChannelCode=$chnlId&MultichoiceOption=$mutichoiceOpt";
+      "$BASE_URL/api/Transmissionlog/GetbtnExportDataClick?Locationcode=$locId&Txtdate=$txtDt&channelName=${Uri.encodeComponent(chnlNm)}&LocationName=$locName&ExportRowNumber=$expRowno&ExportTime=$exportTime&AddSecondaryEvents=$secEvnt&ApiCallValue=$apiCallVal&ChannelCode=$chnlId&MultichoiceOption=$mutichoiceOpt";
 
   static String TRANSMISSION_LOG_WRITE_EXCEL(
           String locId, String chnlId, String txtDt, bool standBy) =>
