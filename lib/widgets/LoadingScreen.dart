@@ -27,22 +27,25 @@ class PleaseWaitCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Center(
-        child: Card(
-      child: Padding(
-        padding: const EdgeInsets.all(30),
-        child: Row(
-          mainAxisSize: MainAxisSize.min,
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            const Text("Please Wait"),
-            const SizedBox(
-              width: 20,
-            ),
-            const CircularProgressIndicator()
-          ],
+    return Container(
+      color: Colors.white,
+      child: Center(
+          child: Card(
+        child: Padding(
+          padding: const EdgeInsets.all(30),
+          child: Row(
+            mainAxisSize: MainAxisSize.min,
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              const Text("Please Wait"),
+              const SizedBox(
+                width: 20,
+              ),
+              const CircularProgressIndicator()
+            ],
+          ),
         ),
-      ),
-    ));
+      )),
+    );
   }
 }
