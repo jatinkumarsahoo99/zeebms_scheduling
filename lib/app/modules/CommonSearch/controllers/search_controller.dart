@@ -1399,6 +1399,7 @@ class SearchController extends GetxController {
         checknotcheck.value = false;
       });
     }
+
     else if (rowvariance.dataType == "time" ||
         rowvariance.dataType == "ime(0)") {
       // var timenow = DateTime.now();
@@ -1545,6 +1546,77 @@ class SearchController extends GetxController {
           ],
           radius: 10.0);
     }
+
+    else if ((rowvariance.dataType == "varchar" ||
+        rowvariance.dataType == "char") &&
+       ( rowvariance.tableName == "") && grid!.type == "P") {
+      var multiValue = RxBool(false);
+      String valueText = "";
+      Get.defaultDialog(
+          title: rowvariance.name!,
+          content: Column(
+            children: [
+              InputFields.formField1(
+                  width: 0.30,
+                  onchanged: (value) {
+                    valueText = value;
+                  },
+                  inputformatters: [
+                    FilteringTextInputFormatter.deny("  "),
+                    // FilteringTextInputFormatter.deny("  "),
+                  ],
+                  hintTxt: "Like",
+                  controller: TextEditingController()),
+              Row(
+                children: [
+                  Obx(
+                        () => Checkbox(
+                        value: multiValue.value,
+                        onChanged: (value) {
+                          multiValue.value = value!;
+                        }),
+                  ),
+                  Text("Multi Value")
+                ],
+              )
+            ],
+          ),
+          actions: [
+            FormButton(
+                callback: () {
+                  grid!.variances!
+                      .firstWhere((element) => element.name == rowvariance.name)
+                      .searchCriteria = multiValue
+                      .value
+                      // ? "in ${valueText.split(",").map((e) => "'${e.trim()}'")}"
+                      ? "%$valueText%"
+                      // : "like %$valueText%";
+                      : "%$valueText%";
+                  updateGrid();
+                  Get.back();
+                },
+                // icon: Icon(Icons.done),
+                btnText: "Done"),
+            FormButton(
+                callback: () {
+                  grid!.variances!
+                      .firstWhere((element) => element.name == rowvariance.name)
+                      .searchCriteria = "";
+                  updateGrid();
+                  Get.back();
+                },
+                // icon: Icon(Icons.remove_circle_outline),
+                btnText: "Clear"),
+            FormButton(
+                callback: () {
+                  Get.back();
+                },
+                // icon: Icon(Icons.clear),
+                btnText: "Cancel"),
+          ],
+          radius: 10.0);
+    }
+
     else if ((rowvariance.dataType == "varchar" ||
         rowvariance.dataType == "char") &&
         rowvariance.tableName == "") {
@@ -1612,6 +1684,7 @@ class SearchController extends GetxController {
           ],
           radius: 10.0);
     }
+
     else if ((rowvariance.dataType!.toLowerCase() == "datetime") &&
         grid!.type == "P") {
       // String valueText = DateFormat('dd-MMM-yyyy').format(DateTime.now());
