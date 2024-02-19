@@ -896,7 +896,8 @@ class DataGridMenu {
   }
 
 
-  showGridMenuForSearchForm(PlutoGridStateManager stateManager, TapDownDetails details,
+  showGridMenuForSearchForm(PlutoGridStateManager stateManager,
+      TapDownDetails details,
       BuildContext context,
       {String? exportFileName,
         List<SecondaryShowDialogModel>? extraList,
@@ -1238,27 +1239,29 @@ class DataGridMenu {
                 });
           });
         } else {*/
-          // stateManager.setShowLoading(true);
-          LoadingDialog.call();
-          Get.find<ConnectorControl>().POSTMETHOD(
-              api: ApiFactory.EXPORT_TO_EXCEL,
-              fun: (value) {
-                // stateManager.setShowLoading(false);
-                Get.back();
-                // ExportData().printFromGridData1((exportFileName ?? 'export${DateTime.now().toString()}') + ".pdf",value);
-               /* ExportData().printFromGridData1(
+        // stateManager.setShowLoading(true);
+        LoadingDialog.call();
+        Get.find<ConnectorControl>().POSTMETHOD(
+            api: ApiFactory.EXPORT_TO_EXCEL,
+            fun: (value) {
+              // stateManager.setShowLoading(false);
+              Get.back();
+              // ExportData().printFromGridData1((exportFileName ?? 'export${DateTime.now().toString()}') + ".pdf",value);
+              /* ExportData().printFromGridData1(
                     (exportFileName ?? 'export${DateTime.now().toString()}') +
                         ".pdf",
                     base64.decode(value));*/
-                ExportData().exportFilefromBase64(value, (exportFileName ?? "Excel-${DateTime.now().toString()}")+".xlsx");
-              },
-              json: {
-                "JsonData": jsonEncode(data)
-              },
-              failed: () {
-                // stateManager.setShowLoading(false);
-                Get.back();
-              });
+              ExportData().exportFilefromBase64(value,
+                  (exportFileName ?? "Excel-${DateTime.now().toString()}") +
+                      ".xlsx");
+            },
+            json: {
+              "JsonData": jsonEncode(data)
+            },
+            failed: () {
+              // stateManager.setShowLoading(false);
+              Get.back();
+            });
         // }
         break;
       case DataGridMenuItem.exportPDF:
@@ -2115,7 +2118,7 @@ class DataGridMenu {
             callBack: () {
               Get.back();
             });*/
-       /* if (stateManager.rows.length < Const.exportRowsInLocal) {
+      /* if (stateManager.rows.length < Const.exportRowsInLocal) {
           LoadingDialog.call();
           Future.delayed(Duration(seconds: 1), () {
             ExportData().exportExcelFromJsonList(stateManager.toJson(),
@@ -2125,28 +2128,30 @@ class DataGridMenu {
                 });
           });
         } else {*/
-          // stateManager.setShowLoading(true);
-          LoadingDialog.call();
-          Get.find<ConnectorControl>().POSTMETHOD(
-              api: ApiFactory.EXPORT_TO_EXCEL,
-              fun: (value) {
-                // stateManager.setShowLoading(false);
-                Get.back();
-                // ExportData().printFromGridData1((exportFileName ?? 'export${DateTime.now().toString()}') + ".pdf",value);
-                /* ExportData().printFromGridData1(
+      // stateManager.setShowLoading(true);
+        LoadingDialog.call();
+        Get.find<ConnectorControl>().POSTMETHOD(
+            api: ApiFactory.EXPORT_TO_EXCEL,
+            fun: (value) {
+              // stateManager.setShowLoading(false);
+              Get.back();
+              // ExportData().printFromGridData1((exportFileName ?? 'export${DateTime.now().toString()}') + ".pdf",value);
+              /* ExportData().printFromGridData1(
                     (exportFileName ?? 'export${DateTime.now().toString()}') +
                         ".pdf",
                     base64.decode(value));*/
-                ExportData().exportFilefromBase64(value, (exportFileName ?? "Excel-${DateTime.now().toString()}")+".xlsx");
-              },
-              json: {
-                "JsonData": jsonEncode(
-                    stateManager.rows.map((e) => e.toJsonWithRawData()).toList())
-              },
-              failed: () {
-                // stateManager.setShowLoading(false);
-                Get.back();
-              });
+              ExportData().exportFilefromBase64(value,
+                  (exportFileName ?? "Excel-${DateTime.now().toString()}") +
+                      ".xlsx");
+            },
+            json: {
+              "JsonData": jsonEncode(
+                  stateManager.rows.map((e) => e.toJsonWithRawData()).toList())
+            },
+            failed: () {
+              // stateManager.setShowLoading(false);
+              Get.back();
+            });
         // }
         break;
       case DataGridMenuItem.exportPDF:
@@ -3518,6 +3523,62 @@ class DataGridMenu {
         break;
 
       case null:
+        break;
+    }
+  }
+
+
+  showClearFilter(PlutoGridStateManager stateManager,
+      TapDownDetails details, BuildContext context,) async {
+    clearFilterList() {
+      Get
+          .find<MainController>()
+          .filters1[stateManager.hashCode.toString()] =
+          RxList([]);
+    }
+
+
+    applyfilters(PlutoGridStateManager stateManager) {
+      var _filters = Get
+          .find<MainController>()
+          .filters1[stateManager.hashCode.toString()] ??
+          [];
+      stateManager.setFilter((element) => true);
+      List<PlutoRow> _filterRows = stateManager.rows;
+      for (var filter in _filters) {
+        if (filter.operator == "equal") {
+          _filterRows = _filterRows
+              .where((element) =>
+          element.cells[filter.field]!.value == filter.value)
+              .toList();
+        } else {
+          _filterRows = _filterRows
+              .where((element) =>
+          element.cells[filter.field]!.value != filter.value)
+              .toList();
+        }
+      }
+      stateManager.setFilter((element) => _filterRows.contains(element));
+    }
+
+    var selected = await showMenu(
+        context: context,
+        position: RelativeRect.fromSize(
+            details.globalPosition & Size(40, 40), Get.size),
+        items: [
+
+          const PopupMenuItem<DataGridMenuItem>(
+            value: DataGridMenuItem.clearfilter,
+            height: 25,
+            enabled: true,
+            child: Text('Remove All Filters', style: TextStyle(fontSize: 11)),
+          ),
+
+        ]);
+    switch (selected) {
+      case DataGridMenuItem.clearfilter:
+        clearFilterList();
+        applyfilters(stateManager);
         break;
     }
   }
