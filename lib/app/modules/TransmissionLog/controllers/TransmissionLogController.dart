@@ -4793,13 +4793,13 @@ class TransmissionLogController extends GetxController {
       }
     }*/
     else if (raw is RawKeyDownEvent && raw.character?.toLowerCase() == "y") {
-      if (completerDialog != null && dialogWidget != null) {
+      if (completerDialog != null && dialogWidget != null && canDialogShow.value) {
         dialogWidget = null;
         canDialogShow.value = false;
         completerDialog?.complete(true);
       }
     } else if (raw is RawKeyDownEvent && raw.character?.toLowerCase() == "n") {
-      if (completerDialog != null && dialogWidget != null) {
+      if (completerDialog != null && dialogWidget != null && canDialogShow.value) {
         dialogWidget = null;
         canDialogShow.value = false;
         completerDialog?.complete(false);
