@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:bms_scheduling/widgets/PlutoGrid/pluto_grid.dart';
 
+import '../providers/Const.dart';
 import '../providers/SizeDefine.dart';
 import '../providers/Utils.dart';
 
@@ -46,6 +47,7 @@ PlutoGridConfiguration plutoGridConfiguration({
   Function? actionOnPress,
   Function(int, bool)? spaceOnPress,
   String? actionKey,
+  String? formName,
   double rowHeight = 35,
   bool autoScale = false,
   Color? checkColor = const Color(0xFFD1C4E9),
@@ -57,8 +59,11 @@ PlutoGridConfiguration plutoGridConfiguration({
           actions: {
             // This is a Map with basic shortcut keys and actions set.
             ...PlutoGridShortcut.defaultActions,
+
             LogicalKeySet(LogicalKeyboardKey.control, LogicalKeyboardKey.keyC):
-                CopyValueFromDataTable(),
+            (Const.firstColumnBlankFormNames.contains(formName.toString()))? CopyValueFromDataTable1():
+            CopyValueFromDataTable(),
+
             LogicalKeySet(LogicalKeyboardKey.tab):
                 CustomTabKeyAction(focusNode, previousWidgetFN),
             LogicalKeySet(LogicalKeyboardKey.shift, LogicalKeyboardKey.tab):
@@ -266,6 +271,7 @@ PlutoGridConfiguration plutoGridConfiguration2({
   bool autoScale = false,
   required FocusNode focusNode,
   FocusNode? previousWidgetFN,
+  String? formName,
   double rowHeight = 25,
   Function()? actionOnPressKeyboard,
   LogicalKeyboardKey? logicalKeyboardKey,
@@ -276,7 +282,7 @@ PlutoGridConfiguration plutoGridConfiguration2({
             // This is a Map with basic shortcut keys and actions set.
             ...PlutoGridShortcut.defaultActions,
             LogicalKeySet(LogicalKeyboardKey.control, LogicalKeyboardKey.keyC):
-                CopyValueFromDataTable(),
+            (Const.firstColumnBlankFormNames.contains(formName.toString()))? CopyValueFromDataTable1():CopyValueFromDataTable(),
             LogicalKeySet(LogicalKeyboardKey.shift, LogicalKeyboardKey.tab):
                 CustomTabKeyAction(focusNode, previousWidgetFN),
             LogicalKeySet(LogicalKeyboardKey.tab):
@@ -362,7 +368,36 @@ Selecting Mode Name:${stateManager.selectingMode.name}
           stateManager.selectValueFromRow([stateManager.currentRow!]));
     } else {
       print("copying cells");
-      Utils.copyToClipboardHack(stateManager.currentSelectingText);
+      // Utils.copyToClipboardHack(stateManager.currentSelectingTextWithHeaderWithDrop);
+      Utils.copyToClipboardHack(stateManager.currentSelectingTextWithHeader);
+    }
+  }
+}
+
+class CopyValueFromDataTable1 extends PlutoGridShortcutAction {
+  @override
+  void execute(
+      {required PlutoKeyManagerEvent keyEvent,
+        required PlutoGridStateManager stateManager}) {
+    if (stateManager.isEditing == true) {
+      return;
+    }
+    print('''
+Current Column Name:${stateManager.currentColumnField}\n
+Selecting rows lentgh:${stateManager.currentSelectingRows.length}\n
+Selectig currentSelectingPositionList Lentgh:${stateManager.currentSelectingPositionList.length}\n
+Selecting Mode Name:${stateManager.selectingMode.name}
+''');
+    if (stateManager.currentSelectingPositionList.isEmpty &&
+        stateManager.currentSelectingRows.isEmpty &&
+        stateManager.currentColumnField == "no" &&
+        stateManager.currentRow != null) {
+      print("copying one row");
+      Utils.copyToClipboardHack(
+          stateManager.selectValueFromRow([stateManager.currentRow!]));
+    } else {
+      print("copying cells");
+      Utils.copyToClipboardHack(stateManager.currentSelectingTextWithHeaderWithDrop);
     }
   }
 }

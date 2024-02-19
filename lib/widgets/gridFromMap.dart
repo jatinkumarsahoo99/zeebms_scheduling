@@ -53,6 +53,7 @@ class DataGridFromMap extends StatelessWidget {
       this.focusNode,
       this.previousWidgetFN,
       this.witdthSpecificColumn,
+      this.formName,
       this.enableAutoEditing = false,
       this.csvFormat = false})
       : super(key: key);
@@ -79,6 +80,7 @@ class DataGridFromMap extends StatelessWidget {
   final double? widthRatio;
   final IconData? actionIcon;
   final String? actionIconKey;
+  final String? formName;
   final bool columnAutoResize;
   final List<String>? editKeys;
   final Function? actionOnPress;
@@ -517,6 +519,7 @@ class DataGridFromMap extends StatelessWidget {
             mode: mode ?? PlutoGridMode.normal,
             configuration: plutoGridConfiguration(
               focusNode: focusNode!,
+              formName: formName,
               autoScale: columnAutoResize,
               spaceOnPress: spaceOnPress,
               actionOnPress: actionOnPress,
@@ -594,6 +597,7 @@ class DataGridFromMap3 extends StatelessWidget {
     this.keyBoardButtonPressed,
     this.witdthSpecificColumn,
     this.customWidgetInRenderContext,
+    this.formName,
     this.rowHeight = 25,
   }) : super(key: widgetKey);
   final Map<String, double>? witdthSpecificColumn;
@@ -614,6 +618,7 @@ class DataGridFromMap3 extends StatelessWidget {
   final bool? formatDate;
   final bool? checkRow;
   final String? checkRowKey;
+  final String? formName;
   final Map? keyMapping;
   final String? dateFromat;
   final String? exportFileName;
@@ -915,6 +920,7 @@ class DataGridFromMap3 extends StatelessWidget {
             mode: mode ?? PlutoGridMode.normal,
             configuration: plutoGridConfiguration2(
               focusNode: focusNode!,
+              formName:formName,
               autoScale: columnAutoResize,
               actionOnPress: actionOnPress,
               actionKey: actionIconKey ?? [],

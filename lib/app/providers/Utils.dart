@@ -52,6 +52,17 @@ class Utils {
     return true;
   }
 
+  static String getPageRouteName(){
+    try{
+      String extractName = (html.window.location.href.split("?")[0])
+          .split(ApiFactory.SPLIT_CLEAR_PAGE)[1];
+      print(">>>>>>>formName$extractName");
+      return extractName;
+    }catch(e){
+      return "";
+    }
+  }
+
   static Future<String> pasteFromClipboardHack() async {
     // Request access to the clipboard
     try {
