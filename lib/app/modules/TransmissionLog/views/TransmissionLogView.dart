@@ -41,7 +41,7 @@ class TransmissionLogView extends StatelessWidget {
           Offset(constraints.maxWidth / 2, constraints.maxHeight / 2);
 
       return RawKeyboardListener(
-        focusNode: new FocusNode(),
+        focusNode: controller.keyboardFocus,
         onKey: (RawKeyEvent raw) {
           controller.keyBoardHander(raw, context);
         },
@@ -1931,7 +1931,6 @@ class TransmissionLogView extends StatelessWidget {
                                           formatDate: false,
                                           onload:
                                               (PlutoGridOnLoadedEvent load) {
-
                                             controller.tblSegement =
                                                 load.stateManager;
                                             load.stateManager.setSelectingMode(

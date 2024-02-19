@@ -166,6 +166,7 @@ class TransmissionLogController extends GetxController {
   BuildContext? contextGrid;
   RxBool insertPopupOpen = RxBool(false);
   RxString selectMultiSa = RxString("Tx Log");
+  FocusNode keyboardFocus=FocusNode();
 
   @override
   void onInit() {
