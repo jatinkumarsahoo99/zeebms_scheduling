@@ -277,7 +277,8 @@ class DropDownField {
                                                     },
                                                     child: Padding(
                                                       padding: const EdgeInsets
-                                                          .symmetric(vertical: 8),
+                                                              .symmetric(
+                                                          vertical: 8),
                                                       child: Text(
                                                         element.value ?? "null",
                                                         style: TextStyle(
@@ -1305,6 +1306,7 @@ class DropDownField {
     double? width,
     bool isEnable = true,
     bool autoFocus = false,
+    bool? isMandatory = false,
     dynamic customInData,
     double? widthofDialog,
     FocusNode? inkwellFocus,
@@ -1313,6 +1315,7 @@ class DropDownField {
     int miniumSearchLength = 2,
     void Function()? suffixCallBack,
     IconData suffixIconData = Icons.article,
+    Function(bool dropDownOpen)? dropdownOpen,
   }) {
     final textColor = isEnable ? Colors.black : Colors.grey;
     final iconLineColor = isEnable ? Colors.deepPurpleAccent : Colors.grey;
@@ -1348,6 +1351,26 @@ class DropDownField {
       mainAxisSize: MainAxisSize.min,
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
+        RichText(
+          text: TextSpan(children: [
+            TextSpan(
+              text: title ?? "",
+              style: TextStyle(
+                fontSize: SizeDefine.labelSize1,
+                color: Colors.black,
+                fontWeight: FontWeight.w500,
+              ),
+            ),
+            TextSpan(
+              text: (isMandatory ?? false) ? " *" : "",
+              style: TextStyle(
+                fontSize: SizeDefine.labelSize1,
+                color: Colors.red,
+                fontWeight: FontWeight.bold,
+              ),
+            ),
+          ]),
+        ) /*
         Text(
           title,
           style: TextStyle(
@@ -1355,16 +1378,21 @@ class DropDownField {
             color: textColor,
             fontWeight: FontWeight.w500,
           ),
-        ),
+        )*/
+        ,
         const SizedBox(height: 5),
-        StatefulBuilder(builder: (context, re) {
-          return InkWell(
+        StatefulBuilder(
+          builder: (context, re) {
+            return InkWell(
               autofocus: autoFocus,
               focusNode: inkwellFocus,
               canRequestFocus: isEnable,
               onTap: !isEnable
                   ? null
                   : () {
+                      if (dropdownOpen != null) {
+                        dropdownOpen(true);
+                      }
                       String fieldText = "";
                       final RenderBox renderBox = widgetKey.currentContext
                           ?.findRenderObject() as RenderBox;
@@ -1453,10 +1481,10 @@ class DropDownField {
                                                 child: Text(msg.value!),
                                               )
                                             : Scrollbar(
-                                          controller: _scrollController,
-                                              isAlwaysShown:true,
-                                              child: ListView(
                                                 controller: _scrollController,
+                                                isAlwaysShown: true,
+                                                child: ListView(
+                                                  controller: _scrollController,
                                                   shrinkWrap: true,
                                                   children: items
                                                       .map(
@@ -1474,7 +1502,8 @@ class DropDownField {
                                                                   .toString(),
                                                             );
                                                             re(() {});
-                                                            FocusScope.of(context)
+                                                            FocusScope.of(
+                                                                    context)
                                                                 .requestFocus(
                                                                     inkwellFocus);
                                                             onchanged(
@@ -1484,7 +1513,8 @@ class DropDownField {
                                                             padding:
                                                                 const EdgeInsets
                                                                         .symmetric(
-                                                                    vertical: 8),
+                                                                    vertical:
+                                                                        8),
                                                             child: Text(
                                                               (element[parseKeyForValue] ??
                                                                       "null")
@@ -1500,7 +1530,7 @@ class DropDownField {
                                                       )
                                                       .toList(),
                                                 ),
-                                            );
+                                              );
                                       },
                                     ),
                                   ),
@@ -1509,57 +1539,65 @@ class DropDownField {
                             ),
                           ),
                         ],
-                      );
+                      ).then((value) {
+                        if (dropdownOpen != null) {
+                          dropdownOpen(false);
+                        }
+                      });
                     },
-              child: Builder(builder: (context) {
-                if (inkwellFocus!.hasFocus) {
-                  FocusScope.of(context).requestFocus(inkwellFocus);
-                }
-                return Container(
-                  width: width,
-                  height: SizeDefine.heightInputField,
-                  decoration: BoxDecoration(
-                    border: Border.all(
-                      color: iconLineColor,
+              child: Builder(
+                builder: (context) {
+                  if (inkwellFocus!.hasFocus) {
+                    FocusScope.of(context).requestFocus(inkwellFocus);
+                  }
+                  return Container(
+                    width: width,
+                    height: SizeDefine.heightInputField,
+                    decoration: BoxDecoration(
+                      border: Border.all(
+                        color: iconLineColor,
+                      ),
                     ),
-                  ),
-                  child: Row(
-                    children: [
-                      Expanded(
-                          child: Align(
-                        alignment: Alignment.centerLeft,
-                        child: Padding(
-                          padding: const EdgeInsets.only(left: 8, right: 4),
-                          child: Text(
-                            (selectedValue?.value ?? ""),
-                            style: TextStyle(
-                              fontSize: SizeDefine.fontSizeInputField,
-                              color: textColor,
+                    child: Row(
+                      children: [
+                        Expanded(
+                            child: Align(
+                          alignment: Alignment.centerLeft,
+                          child: Padding(
+                            padding: const EdgeInsets.only(left: 8, right: 4),
+                            child: Text(
+                              (selectedValue?.value ?? ""),
+                              style: TextStyle(
+                                fontSize: SizeDefine.fontSizeInputField,
+                                color: textColor,
+                              ),
+                              maxLines: 1,
+                              textAlign: TextAlign.start,
                             ),
-                            maxLines: 1,
-                            textAlign: TextAlign.start,
                           ),
-                        ),
-                      )),
-                      Visibility(
-                        visible: suffixCallBack == null,
-                        replacement: GestureDetector(
-                          onTap: suffixCallBack,
+                        )),
+                        Visibility(
+                          visible: suffixCallBack == null,
+                          replacement: GestureDetector(
+                            onTap: suffixCallBack,
+                            child: Icon(
+                              suffixIconData,
+                              color: iconLineColor,
+                            ),
+                          ),
                           child: Icon(
-                            suffixIconData,
+                            Icons.arrow_drop_down,
                             color: iconLineColor,
                           ),
-                        ),
-                        child: Icon(
-                          Icons.arrow_drop_down,
-                          color: iconLineColor,
-                        ),
-                      )
-                    ],
-                  ),
-                );
-              }));
-        }),
+                        )
+                      ],
+                    ),
+                  );
+                },
+              ),
+            );
+          },
+        ),
       ],
     );
   }
@@ -1845,7 +1883,8 @@ class DropDownField {
                                                     },
                                                     child: Padding(
                                                       padding: const EdgeInsets
-                                                          .symmetric(vertical: 8),
+                                                              .symmetric(
+                                                          vertical: 8),
                                                       child: Text(
                                                         element.value ?? "null",
                                                         style: TextStyle(
@@ -2275,7 +2314,8 @@ class DropDownField {
                                                     },
                                                     child: Padding(
                                                       padding: const EdgeInsets
-                                                          .symmetric(vertical: 8),
+                                                              .symmetric(
+                                                          vertical: 8),
                                                       child: Text(
                                                         element.value ?? "null",
                                                         style: TextStyle(
@@ -2643,6 +2683,7 @@ class DropDownField {
     GlobalKey? widgetKey,
     bool showtitle = true,
     bool titleInLeft = false,
+    bool? isMandatory = false,
     Function(bool dropDownOpen)? dropdownOpen,
   }) {
     isEnable ??= true;
@@ -2657,13 +2698,25 @@ class DropDownField {
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         if (showtitle && !titleInLeft) ...{
-          Text(
-            hint,
-            style: TextStyle(
-              fontSize: SizeDefine.labelSize1,
-              color: Colors.black,
-              fontWeight: FontWeight.w500,
-            ),
+          RichText(
+            text: TextSpan(children: [
+              TextSpan(
+                text: hint ?? "",
+                style: TextStyle(
+                  fontSize: SizeDefine.labelSize1,
+                  color: Colors.black,
+                  fontWeight: FontWeight.w500,
+                ),
+              ),
+              TextSpan(
+                text: (isMandatory ?? false) ? " *" : "",
+                style: TextStyle(
+                  fontSize: SizeDefine.labelSize1,
+                  color: Colors.red,
+                  fontWeight: FontWeight.bold,
+                ),
+              ),
+            ]),
           ),
           const SizedBox(height: 5),
         },
@@ -2819,7 +2872,7 @@ class DropDownField {
                                           child: Obx(
                                             () {
                                               return Scrollbar(
-                                                isAlwaysShown:true,
+                                                isAlwaysShown: true,
                                                 controller: _scrollController,
                                                 child: ListView(
                                                   controller: _scrollController,
@@ -2833,7 +2886,8 @@ class DropDownField {
                                                             selected = element;
                                                             re(() {});
                                                             callback(element);
-                                                            FocusScope.of(context)
+                                                            FocusScope.of(
+                                                                    context)
                                                                 .requestFocus(
                                                                     inkWellFocusNode);
                                                           },
@@ -2841,7 +2895,8 @@ class DropDownField {
                                                             padding:
                                                                 const EdgeInsets
                                                                         .symmetric(
-                                                                    vertical: 8),
+                                                                    vertical:
+                                                                        8),
                                                             child: Text(
                                                               element.value ??
                                                                   "null",
@@ -3291,7 +3346,8 @@ class DropDownField {
                                                   controller: _scrollController,
                                                   isAlwaysShown: true,
                                                   child: ListView(
-                                                    controller: _scrollController,
+                                                    controller:
+                                                        _scrollController,
                                                     shrinkWrap: true,
                                                     children: tempList
                                                         .map(
@@ -3299,7 +3355,8 @@ class DropDownField {
                                                             onTap: () {
                                                               Navigator.pop(
                                                                   context);
-                                                              selected = element;
+                                                              selected =
+                                                                  element;
                                                               re(() {});
                                                               callback(element);
                                                               FocusScope.of(
@@ -3316,10 +3373,12 @@ class DropDownField {
                                                               child: Text(
                                                                 element.value ??
                                                                     "null",
-                                                                style: TextStyle(
-                                                                  fontSize: SizeDefine
-                                                                          .dropDownFontSize -
-                                                                      1,
+                                                                style:
+                                                                    TextStyle(
+                                                                  fontSize:
+                                                                      SizeDefine
+                                                                              .dropDownFontSize -
+                                                                          1,
                                                                 ),
                                                               ),
                                                             ),
@@ -3670,7 +3729,8 @@ class DropDownField {
                                                             selected = element;
                                                             re(() {});
                                                             callback(element);
-                                                            FocusScope.of(context)
+                                                            FocusScope.of(
+                                                                    context)
                                                                 .requestFocus(
                                                                     inkWellFocusNode);
                                                           },
@@ -3678,7 +3738,8 @@ class DropDownField {
                                                             padding:
                                                                 const EdgeInsets
                                                                         .symmetric(
-                                                                    vertical: 8),
+                                                                    vertical:
+                                                                        8),
                                                             child: Text(
                                                               element.value ??
                                                                   "null",

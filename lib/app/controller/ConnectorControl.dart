@@ -311,6 +311,22 @@ class ConnectorControl extends GetConnect {
           // LoadingDialog.showErrorDialog((e.response?.data["status"]));
         }
       } else {
+        if (Get.isDialogOpen ?? false) {
+          Get.back();
+        }
+        if (e.response?.data is Map && e.response?.data.containsKey("status")) {
+          if (e.response?.data["status"] is num) {
+            LoadingDialog.showErrorDialog(
+                (e.response?.data["title"]).toString());
+          } else {
+            LoadingDialog.showErrorDialog(
+                (e.response?.data["status"]).toString());
+          }
+          // LoadingDialog.showErrorDialog((e.response?.data["status"]));
+        } else {
+          LoadingDialog.showErrorDialog(
+              ("Something went wrong please try again"));
+        }
         switch (e.type) {
           case DioErrorType.connectionTimeout:
           case DioErrorType.cancel:
@@ -637,7 +653,7 @@ class ConnectorControl extends GetConnect {
         }
       } else if (response.statusCode == 417) {
         fun(response.data);
-      }else if (response.statusCode == 504) {
+      } else if (response.statusCode == 504) {
         fun("Server timeout. Please try again later");
       } else {
         print("Message is: >>1");
