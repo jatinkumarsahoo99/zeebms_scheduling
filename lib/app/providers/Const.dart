@@ -39,6 +39,16 @@ class Const {
     SystemEnviroment(value: "WEBI-Unmix", url: ""),
   ];
 
+  static Map<int, String> errorCode = {
+    400: "400 - Bad Request",
+    403: "403 - Forbidden Access",
+    413: "413 - Unable to process large request",
+    500: "500 - Something went wrong. Please try again later",
+    502: "502 - The request is not completed. Please try again later",
+    504: "504 - The request is timed out. Please try again later"
+  };
+
+
   static const double SIXTY_MIN = 0.9;
   static double THIRTY_MIN = 1;
   static double FIFTEEN_MIN = 2;
