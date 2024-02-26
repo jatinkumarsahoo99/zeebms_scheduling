@@ -255,7 +255,7 @@ class ConnectorControl extends GetConnect {
     } on DioError catch (e) {
       if (e.response?.statusCode == 401) {
         updateToken(() {
-          GETMETHODCALL(api: api, fun: fun, failed: failed);
+          GETMETHODCALL_TOKEN(api: api, token: token, fun: fun, failed: failed);
         });
       } else if ([400, 403].contains(e.response?.statusCode)) {
         if (Get.isDialogOpen ?? false) {
@@ -328,7 +328,7 @@ class ConnectorControl extends GetConnect {
     } on DioError catch (e) {
       if (e.response?.statusCode == 401) {
         updateToken(() {
-          GETMETHODCALL(api: api, fun: fun, failed: failed);
+          POSTMETHOD(api: api, fun: fun, failed: failed);
         });
       } else if ([400, 403].contains(e.response?.statusCode)) {
         if (Get.isDialogOpen ?? false) {
@@ -402,7 +402,7 @@ class ConnectorControl extends GetConnect {
     } on DioError catch (e) {
       if (e.response?.statusCode == 401) {
         updateToken(() {
-          GETMETHODCALL(api: api, fun: fun, failed: failed);
+          GET_METHOD_WITH_PARAM(api: api, fun: fun, failed: failed);
         });
       } else if ([400, 403].contains(e.response?.statusCode)) {
         if (Get.isDialogOpen ?? false) {
@@ -476,7 +476,7 @@ class ConnectorControl extends GetConnect {
     } on DioError catch (e) {
       if (e.response?.statusCode == 401) {
         updateToken(() {
-          GETMETHODCALL(api: api, fun: fun, failed: failed);
+          DELETEMETHOD(api: api, fun: fun, failed: failed);
         });
       } else if ([400, 403].contains(e.response?.statusCode)) {
         if (Get.isDialogOpen ?? false) {
@@ -643,7 +643,8 @@ class ConnectorControl extends GetConnect {
       }
       if (e.response?.statusCode == 401) {
         updateToken(() {
-          POSTMETHOD_FORMDATA(api: api, json: json, fun: fun, timeout: timeout);
+          POSTMETHOD_FORMDATAWITHTYPE(
+              api: api, json: json, fun: fun, timeout: timeout);
         });
       } else if ([400, 403].contains(e.response?.statusCode)) {
         if (Get.isDialogOpen ?? false) {
@@ -728,7 +729,8 @@ class ConnectorControl extends GetConnect {
     } on DioError catch (e) {
       if (e.response?.statusCode == 401) {
         updateToken(() {
-          POSTMETHOD_FORMDATA(api: api, json: json, fun: fun, timeout: timeout);
+          POSTMETHOD_FORMDATA_HEADER(
+              api: api, json: json, fun: fun, timeout: timeout);
         });
       } else if ([400, 403].contains(e.response?.statusCode)) {
         if (Get.isDialogOpen ?? false) {
@@ -818,7 +820,8 @@ class ConnectorControl extends GetConnect {
     } on DioError catch (e) {
       if (e.response?.statusCode == 401) {
         updateToken(() {
-          GETMETHODCALL(api: api, fun: fun, failed: failed);
+          GET_METHOD_CALL_HEADER(
+              api: api, fun: fun, failed: failed, responseType: responseType);
         });
       } else if ([400, 403].contains(e.response?.statusCode)) {
         if (Get.isDialogOpen ?? false) {
