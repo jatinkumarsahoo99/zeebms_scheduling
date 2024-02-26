@@ -42,11 +42,24 @@ class NoDataFoundPage extends StatelessWidget {
               color: Colors.deepPurple,
               padding: EdgeInsets.symmetric(horizontal: 35, vertical: 20),
             )*/
+        (html.window.top != html.window.self)
+            ? Column(
+          children: [
             RichText(
               textAlign: TextAlign.center,
               text: TextSpan(
                 text:
-                'You are not authorized to access this page. Please ',
+                'You are not authorized to access this page. Please contact support team.',
+                // style: Theme.of(context).textTheme.bodyLarge,
+                style: TextStyle(fontSize: 18),
+              ),
+            ),
+            SizedBox(height: 5,),
+            RichText(
+              textAlign: TextAlign.center,
+              text: TextSpan(
+                text:
+                '',
                 // style: Theme.of(context).textTheme.bodyLarge,
                 style: TextStyle(fontSize: 18),
                 children: <InlineSpan>[
@@ -54,20 +67,49 @@ class NoDataFoundPage extends StatelessWidget {
                     alignment: PlaceholderAlignment.baseline,
                     baseline: TextBaseline.alphabetic,
                     child: LinkButton(
-                        urlLabel: "click here",
+                        urlLabel: "Click here",
                         context: context,
                         function: () {
                           // js.context.callMethod('fromFlutter', ['Flutter is calling upon JavaScript!']);
-                          html.window.open(ApiFactory.LOGIN_URL, "_self");
+                          print("Click here to exit");
+                          if (html.window.location.href.contains("loginCode")) {
+                            Utils.callJSToExit(param: "exit|${Utils.getFormName()}");
+                          }
                         }),
                   ),
                   TextSpan(
-                    text: ' to login',
+                    text: ' to go home',
                   ),
-
                 ],
               ),
             ),
+          ],
+        )
+            : RichText(
+          textAlign: TextAlign.center,
+          text: TextSpan(
+            text:
+            'You are not authorized to access this page. Please ',
+            // style: Theme.of(context).textTheme.bodyLarge,
+            style: TextStyle(fontSize: 18),
+            children: <InlineSpan>[
+              WidgetSpan(
+                alignment: PlaceholderAlignment.baseline,
+                baseline: TextBaseline.alphabetic,
+                child: LinkButton(
+                    urlLabel: "click here",
+                    context: context,
+                    function: () {
+                      // js.context.callMethod('fromFlutter', ['Flutter is calling upon JavaScript!']);
+                      html.window.open(ApiFactory.LOGIN_URL, "_self");
+                    }),
+              ),
+              TextSpan(
+                text: ' to login',
+              ),
+            ],
+          ),
+        ),
           ],
         ),
       ),

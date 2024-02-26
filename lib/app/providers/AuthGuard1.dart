@@ -37,7 +37,7 @@ import '../modules/BrandMaster/views/brand_master_view.dart';
 import '../modules/ComingUpMenu/views/coming_up_menu_view.dart';
 import '../modules/ComingUpNextMenu/views/coming_up_next_menu_view.dart';
 import '../modules/ComingUpTomorrowMenu/views/coming_up_tomorrow_menu_view.dart';
-import '../modules/CommercialMaster/views/commercial_master_view.dart';
+import '../modules/CommercialTapeMaster/views/commercial_master_view.dart';
 import '../modules/CommonSearch/views/common_search_view.dart';
 import '../modules/CreativeTagOn/views/creative_tag_on_view.dart';
 import '../modules/DSeriesSpecification/views/DSeriesSpecificationView.dart';
@@ -389,6 +389,32 @@ class _AuthGuard1State extends State<AuthGuard1> with WidgetsBindingObserver {
                   key: const Key("MOVIE_SCHEDULE_REPORT"),
                   screenName: "Movie Schedule Report",
                   strViewName: "FPC_MovieListing");
+              break;
+            ///////////////////New Forms////////////////////////
+            case Routes.AUTO_ID_COMMERCIAL_REPORT:
+              currentWidget = SearchPage(
+                  key: const Key("AUTO_ID_COMMERCIAL_REPORT"),
+                  screenName: "Auto ID Commercial Report",
+                  strViewName: "BMS_Sp_Commercial_AUTOID_Report");
+              break;
+            case Routes.AUTO_ID_FILLER_REPORT:
+              currentWidget = SearchPage(
+                  key: const Key("AUTO_ID_FILLER_REPORT"),
+                  screenName: "Auto ID Filler Report",
+                  strViewName: "BMS_Sp_Filler_AUTOID_Report");
+              break;
+            case Routes.AUTO_ID_PROMOS_REPORT:
+              currentWidget = SearchPage(
+                  key: const Key("AUTO_ID_PROMOS_REPORT"),
+                  screenName: "Auto ID Promos Report",
+                  strViewName: "BMS_Sp_Promos_AUTOID_Report",
+              );
+              break;
+            case Routes.AUTO_ID_STING_REPORT:
+              currentWidget = SearchPage(
+                  key: const Key("AUTO_ID_STING_REPORT"),
+                  screenName: "Auto ID Sting Report",
+                  strViewName: "BMS_Sp_Sting_AUTOID_Report");
               break;
             ///////////////////////////
             default:

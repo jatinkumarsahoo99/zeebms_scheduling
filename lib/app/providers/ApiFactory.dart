@@ -174,6 +174,7 @@ class ApiFactory {
 */
 ///////////////////////XML Download API////////////////////////
   static String EXPORT_TO_XML = "$BASE_URL_COMMON/api/Common/ConvertTableToXml";
+  static String EXPORT_TO_EXCEL = "$BASE_URL_COMMON/api/Common/ConvertJsonToExcel";
   static String CONVERT_TO_PDF =
       "$BASE_URL_COMMON/api/Common/ConvertTableToPDF";
   static String OPERATIONAL_FPC_PROGRAM_SEARCH =
@@ -537,6 +538,10 @@ class ApiFactory {
           String locId, String chnlId, String txtDt, String fileName) =>
       "$BASE_URL/api/Transmissionlog/GetExportMultichoice?locationcode=$locId&channelcode=$chnlId&txtDate=$txtDt&filename=$fileName";
 
+static String TRANSMISSION_LOG_MULTICHOICE1(
+          String locId, String chnlId, String txtDt, String fileName, String type) =>
+      "$BASE_URL/api/Transmissionlog/GetExportMultichoice?locationcode=$locId&channelcode=$chnlId&txtDate=$txtDt&filename=$fileName&Rdbtxlog=${type=="Tx Log"?"true":"false"}&Rdbfpc=${type=="FPC"?"true":"false"}&Rdbfpcadtlbreakwise=${type=="FPC - Adtl Break"?"true":"false"}";
+
   static String TRANSMISSION_LOG_SEARCH_INSERT(
           String locId,
           String channelId,
@@ -576,8 +581,9 @@ class ApiFactory {
           int expRowno,
           String exportTime,
           bool secEvnt,
-          String apiCallVal) =>
-      "$BASE_URL/api/Transmissionlog/GetbtnExportDataClick?Locationcode=$locId&Txtdate=$txtDt&channelName=$chnlNm&LocationName=$locName&ExportRowNumber=$expRowno&ExportTime=$exportTime&AddSecondaryEvents=$secEvnt&ApiCallValue=$apiCallVal&ChannelCode=$chnlId";
+          String apiCallVal,
+          String mutichoiceOpt) =>
+      "$BASE_URL/api/Transmissionlog/GetbtnExportDataClick?Locationcode=$locId&Txtdate=$txtDt&channelName=${Uri.encodeComponent(chnlNm)}&LocationName=$locName&ExportRowNumber=$expRowno&ExportTime=$exportTime&AddSecondaryEvents=$secEvnt&ApiCallValue=$apiCallVal&ChannelCode=$chnlId&MultichoiceOption=$mutichoiceOpt";
 
   static String TRANSMISSION_LOG_WRITE_EXCEL(
           String locId, String chnlId, String txtDt, bool standBy) =>
@@ -619,7 +625,7 @@ class ApiFactory {
           String fromTime,
           String toTime,
           String fileName) =>
-      "$BASE_URL/api/Transmissionlog/GetWriteLst?locationcode=$locId&channelcode=$chnlId&telecastdate=$txtDt&standbyLog=$standBy&chkPartialLog=$chkPartialLog&FromTime=$fromTime&ToTime=$toTime&AddSecondaryEvents=$addSecondaryEvent&Noida=true&fileName=$fileName";
+      "$BASE_URL/api/Transmissionlog/GetWriteLst?locationcode=$locId&channelcode=$chnlId&telecastdate=$txtDt&standbyLog=$standBy&chkPartialLog=$chkPartialLog&FromTime=$fromTime&ToTime=$toTime&ProcessSecondaryEvents=$addSecondaryEvent&Noida=true&fileName=$fileName";
   static String TRANSMISSION_LOG_WRITE_GRASS_VALLEY(
     String locId,
     String chnlId,

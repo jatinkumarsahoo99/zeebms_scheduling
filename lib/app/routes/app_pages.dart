@@ -8,7 +8,7 @@ import '../modules/BrandMaster/bindings/brand_master_binding.dart';
 import '../modules/ComingUpMenu/bindings/coming_up_menu_binding.dart';
 import '../modules/ComingUpNextMenu/bindings/coming_up_next_menu_binding.dart';
 import '../modules/ComingUpTomorrowMenu/bindings/coming_up_tomorrow_menu_binding.dart';
-import '../modules/CommercialMaster/bindings/commercial_master_binding.dart';
+import '../modules/CommercialTapeMaster/bindings/commercial_master_binding.dart';
 import '../modules/CommonDocs/bindings/common_docs_binding.dart';
 import '../modules/CommonDocs/views/common_docs_view.dart';
 import '../modules/CreativeTagOn/bindings/creative_tag_on_binding.dart';
@@ -79,6 +79,22 @@ class AppPages {
     GetPage(
       name: _Paths.MOVIE_SCHEDULE_REPORT,
       page: () => AuthGuard1(childName: _Paths.MOVIE_SCHEDULE_REPORT),
+    ),
+    GetPage(
+      name: _Paths.AUTO_ID_STING_REPORT,
+      page: () => AuthGuard1(childName: _Paths.AUTO_ID_STING_REPORT),
+    ),
+    GetPage(
+      name: _Paths.AUTO_ID_COMMERCIAL_REPORT,
+      page: () => AuthGuard1(childName: _Paths.AUTO_ID_COMMERCIAL_REPORT),
+    ),
+    GetPage(
+      name: _Paths.AUTO_ID_PROMOS_REPORT,
+      page: () => AuthGuard1(childName: _Paths.AUTO_ID_PROMOS_REPORT),
+    ),
+    GetPage(
+      name: _Paths.AUTO_ID_FILLER_REPORT,
+      page: () => AuthGuard1(childName: _Paths.AUTO_ID_FILLER_REPORT),
     ),
     GetPage(
       name: _Paths.GENERATE_BOOKING_ACTIVITY,

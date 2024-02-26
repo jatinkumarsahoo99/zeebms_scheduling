@@ -4,6 +4,7 @@ import 'package:bms_scheduling/widgets/PlutoGrid/pluto_grid.dart';
 
 import '../../../../widgets/FormButton.dart';
 import '../../../../widgets/Snack.dart';
+import '../../../../widgets/gridForSearch.dart';
 import '../../../../widgets/gridFromMap.dart';
 import '../../../providers/Utils.dart';
 import '../controllers/search_controller.dart';
@@ -16,15 +17,18 @@ class SearchResultPage extends StatelessWidget {
     this.actionableSearch = false,
     this.actionableMap,
     this.dialogClose,
+    this.fromNameString,
   }) : super(key: key);
   final SearchController controller;
   final void Function(dynamic)? dialogClose;
   final String appFormName;
+  final String ? fromNameString;
   final bool actionableSearch;
   final Map<String, void Function(String value)>? actionableMap;
 
   @override
   Widget build(BuildContext context) {
+    print(">>>>>>>formName"+fromNameString.toString());
     List<PlutoColumn> columns = [];
     for (var column in controller.searchResult![0].keys) {
       columns.add(PlutoColumn(
@@ -86,8 +90,9 @@ class SearchResultPage extends StatelessWidget {
                 width: Get.width * 2,
                 padding:
                 const EdgeInsets.only(bottom: 8, top: 8, left: 8, right: 8),
-                child: DataGridFromMap(
+                child: DataGridForSearch(
                   columnAutoResize: false,
+                  formName:fromNameString ,
                   // showSrNo: false,
                   // columnAutoResize:
                   //     (controller.searchResult!.length > 5) ? false : true,

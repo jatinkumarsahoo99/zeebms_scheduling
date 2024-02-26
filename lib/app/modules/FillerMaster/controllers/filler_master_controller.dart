@@ -40,6 +40,7 @@ class FillerMasterController extends GetxController {
   /// 18=>event
   /// 19=>channel
   late List<DropDownValue?> selectedDropDowns;
+  late List<FocusNode?> focusNodeList;
   List<PermissionModel>? formPermissions;
   FillerMasterOnLoadModel? onloadModel;
   var rightDataTable = <FillerMasterAnnotationModel>[].obs;
@@ -65,7 +66,7 @@ class FillerMasterController extends GetxController {
       segIDCtr = TextEditingController(),
       txNoCtr = TextEditingController(),
       eomCtr = TextEditingController(text: "00:00:00:00"),
-      somCtr = TextEditingController(text: "00:00:00:00"),
+      somCtr = TextEditingController(text: "10:00:00:00"),
       // durationCtr = TextEditingController(text: "00:00:00:00"),
       movieNameCtr = TextEditingController(),
       releaseYearCtr = TextEditingController(),
@@ -74,11 +75,34 @@ class FillerMasterController extends GetxController {
       musicCompanyCtr = TextEditingController();
 
   var locationFN = FocusNode(),
+      channelFN = FocusNode(),
+      bannerFN = FocusNode(),
       eomFN = FocusNode(),
       fillerNameFN = FocusNode(),
+      txCaptionFN = FocusNode(),
+      somFN = FocusNode(),
       segNoFN = FocusNode(),
+      txNoFN = FocusNode(),
       tapeIDFN = FocusNode(),
+      tapeTypeFN = FocusNode(),
+      typeFN = FocusNode(),
+      censorFN = FocusNode(),
+      langFN = FocusNode(),
+      prodFN = FocusNode(),
+      colorFN = FocusNode(),
+      idNoFN = FocusNode(),
       rightTableFN = FocusNode();
+
+  bool isLocOpen = false,
+      isChannelOpen = false,
+      isBannerOpen = false,
+      isTypOpen = false,
+      isCensorOpen = false,
+      isLangOpen = false,
+      isPrdOpen = false,
+      isColorOpen = false,
+      isIdOpen = false,
+      isTapeTypOpen = false;
 
   clearPage() {
     rightDataTable.clear();
@@ -106,6 +130,7 @@ class FillerMasterController extends GetxController {
     musicCompanyCtr.clear();
     fillerCode = "";
     selectedDropDowns = List.generate(20, (index) => null);
+    focusNodeList = List.generate(17, (index) => FocusNode());
     if (onloadModel?.fillerMasterOnload?.lsttapesource != null &&
         onloadModel!.fillerMasterOnload!.lsttapesource!.isNotEmpty) {
       selectedDropDowns[16] =
@@ -123,10 +148,171 @@ class FillerMasterController extends GetxController {
   @override
   void onInit() {
     selectedDropDowns = List.generate(20, (index) => null);
-
+    focusNodeList = List.generate(17, (index) => FocusNode());
     formPermissions =
         Utils.fetchPermissions1(Routes.FILLER_MASTER.replaceAll("/", ""));
     super.onInit();
+    locationFN.addListener(() {
+      if (!locationFN.hasFocus) {
+        if (onloadModel?.fillerMasterOnload != null &&
+            selectedDropDowns[0] == null &&
+            !isLocOpen &&
+            (!(Get.isDialogOpen ?? false))) {
+          LoadingDialog.callErrorMessage1(msg: "Please select location");
+          // locationFN.requestFocus();
+        }
+      }
+    });
+    channelFN.addListener(() {
+      if (!channelFN.hasFocus) {
+        if (selectedDropDowns[19] == null &&
+            !isChannelOpen &&
+            (!(Get.isDialogOpen ?? false))) {
+          LoadingDialog.callErrorMessage1(msg: "Please select channel");
+          // channelFN.requestFocus();
+        }
+      }
+    });
+    bannerFN.addListener(() {
+      if (!bannerFN.hasFocus) {
+        if (selectedDropDowns[2] == null &&
+            !isBannerOpen &&
+            (!(Get.isDialogOpen ?? false))) {
+          LoadingDialog.callErrorMessage1(msg: "Please select banner");
+        }
+      }
+    });
+    fillerNameFN.addListener(() {
+      if (!fillerNameFN.hasFocus) {
+        if (fillerNameCtr.text == "" && (!(Get.isDialogOpen ?? false))) {
+          LoadingDialog.callErrorMessage1(msg: "Please enter file name");
+        }
+      }
+    });
+    txCaptionFN.addListener(() {
+      if (!txCaptionFN.hasFocus) {
+        if (txCaptionCtr.text == "" && (!(Get.isDialogOpen ?? false))) {
+          LoadingDialog.callErrorMessage1(msg: "Please enter tx caption");
+        }
+      }
+    });
+    tapeIDFN.addListener(() {
+      if (!tapeIDFN.hasFocus) {
+        if (tapeIDCtr.text == "" && (!(Get.isDialogOpen ?? false))) {
+          LoadingDialog.callErrorMessage1(msg: "Please enter tape id");
+        }
+      }
+    });
+    segNoFN.addListener(() {
+      if (!segNoFN.hasFocus) {
+        if (segNoCtrLeft.text == "" && (!(Get.isDialogOpen ?? false))) {
+          LoadingDialog.callErrorMessage1(msg: "Please enter seg no");
+        }
+      }
+    });
+    txNoFN.addListener(() {
+      if (!txNoFN.hasFocus) {
+        if (txNoCtr.text == "" && (!(Get.isDialogOpen ?? false))) {
+          LoadingDialog.callErrorMessage1(msg: "Please enter tx no");
+        }
+      }
+    });
+    somFN.addListener(() {
+      if (!somFN.hasFocus) {
+        if (somCtr.text == "" && (!(Get.isDialogOpen ?? false))) {
+          LoadingDialog.callErrorMessage1(msg: "Please enter som");
+        }
+      }
+    });
+    eomFN.addListener(() {
+      if (!eomFN.hasFocus) {
+        if (eomCtr.text == "" && (!(Get.isDialogOpen ?? false))) {
+          LoadingDialog.callErrorMessage1(msg: "Please enter eom");
+        } else {
+          calculateDuration();
+        }
+      }
+    });
+    tapeTypeFN.addListener(() {
+      if (!tapeTypeFN.hasFocus) {
+        if (selectedDropDowns[3] == null &&
+            !isTapeTypOpen &&
+            (!(Get.isDialogOpen ?? false))) {
+          LoadingDialog.callErrorMessage1(msg: "Please select tape type");
+          // channelFN.requestFocus();
+        }
+      }
+    });
+    typeFN.addListener(() {
+      if (!typeFN.hasFocus) {
+        if (selectedDropDowns[4] == null &&
+            !isTypOpen &&
+            (!(Get.isDialogOpen ?? false))) {
+          LoadingDialog.callErrorMessage1(msg: "Please select type");
+          // channelFN.requestFocus();
+        }
+      }
+    });
+    censorFN.addListener(() {
+      if (!censorFN.hasFocus) {
+        if (selectedDropDowns[5] == null &&
+            !isCensorOpen &&
+            (!(Get.isDialogOpen ?? false))) {
+          LoadingDialog.callErrorMessage1(msg: "Please select censorship");
+          // channelFN.requestFocus();
+        }
+      }
+    });
+    langFN.addListener(() {
+      if (!langFN.hasFocus) {
+        if (selectedDropDowns[6] == null &&
+            !isLangOpen &&
+            (!(Get.isDialogOpen ?? false))) {
+          LoadingDialog.callErrorMessage1(msg: "Please select language");
+          // channelFN.requestFocus();
+        }
+      }
+    });
+    prodFN.addListener(() {
+      if (!prodFN.hasFocus) {
+        if (selectedDropDowns[7] == null &&
+            !isPrdOpen &&
+            (!(Get.isDialogOpen ?? false))) {
+          LoadingDialog.callErrorMessage1(msg: "Please select production");
+          // channelFN.requestFocus();
+        }
+      }
+    });
+    colorFN.addListener(() {
+      if (!colorFN.hasFocus) {
+        if (selectedDropDowns[8] == null &&
+            !isColorOpen &&
+            (!(Get.isDialogOpen ?? false))) {
+          LoadingDialog.callErrorMessage1(msg: "Please select color");
+          // channelFN.requestFocus();
+        }
+      }
+    });
+    colorFN.addListener(() {
+      if (!colorFN.hasFocus) {
+        if (selectedDropDowns[8] == null &&
+            !isColorOpen &&
+            (!(Get.isDialogOpen ?? false))) {
+          LoadingDialog.callErrorMessage1(msg: "Please select color");
+          // channelFN.requestFocus();
+        }
+      }
+    });
+    idNoFN.addListener(() {
+      if (!idNoFN.hasFocus) {
+        if (selectedDropDowns[17] == null &&
+            !isIdOpen &&
+            (!(Get.isDialogOpen ?? false))) {
+          LoadingDialog.callErrorMessage1(msg: "Please select id");
+          // channelFN.requestFocus();
+        }
+      }
+    });
   }
 
   @override
@@ -145,7 +331,7 @@ class FillerMasterController extends GetxController {
       if ((secondEom - secondSom) < 0) {
         LoadingDialog.showErrorDialog("EOM should not be less than SOM.",
             callback: () {
-          eomFN.requestFocus();
+          // eomFN.requestFocus();
         });
       } else {
         durationController.value.text =
@@ -229,12 +415,12 @@ class FillerMasterController extends GetxController {
       }
       return KeyEventResult.ignored;
     };
-    eomFN.onKey = (node, event) {
+    /*eomFN.onKey = (node, event) {
       if (event.logicalKey == LogicalKeyboardKey.tab && !event.isShiftPressed) {
         calculateDuration();
       }
       return KeyEventResult.ignored;
-    };
+    };*/
   }
 
   setCartNo() async {
@@ -685,9 +871,9 @@ class FillerMasterController extends GetxController {
     } else if (selectedDropDowns[4] == null) {
       LoadingDialog.showErrorDialog("Filler Type cannot be empty.");
     } else if (selectedDropDowns[5] == null) {
-      LoadingDialog.showErrorDialog("Censhor ship cannot be empty.");
+      LoadingDialog.showErrorDialog("Censor ship cannot be empty.");
     } else if (selectedDropDowns[6] == null) {
-      LoadingDialog.showErrorDialog("Langauge cannot be empty.");
+      LoadingDialog.showErrorDialog("Language cannot be empty.");
     } else if (selectedDropDowns[7] == null) {
       LoadingDialog.showErrorDialog("Production cannot be empty.");
     } else if (selectedDropDowns[8] == null) {

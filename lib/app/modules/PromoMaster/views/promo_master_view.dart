@@ -17,6 +17,7 @@ import '../controllers/promo_master_controller.dart';
 
 class PromoMasterView extends GetView<PromoMasterController> {
   const PromoMasterView({Key? key}) : super(key: key);
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -61,58 +62,64 @@ class PromoMasterView extends GetView<PromoMasterController> {
                                             alignment: WrapAlignment.center,
                                             children: [
                                               InputFields.formField1(
-                                                hintTxt: "Caption",
-                                                controller:
-                                                    controller.captionCtr,
-                                                width: controller
-                                                    .componentWidthRatio,
-                                                autoFocus: true,
-                                                focusNode: controller.captionFN,
-                                                padLeft: 0,
-                                                maxLen: 40
-                                              ),
-                                              DropDownField
-                                                  .formDropDown1WidthMap(
-                                                controller
-                                                        .onloadModel
-                                                        ?.promoMasterOnLoad
-                                                        ?.lstCategory ??
-                                                    [],
-                                                (val) => controller
-                                                    .handleOnChangedCategory(
-                                                        val,
-                                                        callAPI: true),
-                                                "Category",
-                                                .35,
-                                                selected: controller
-                                                    .selectedDropDowns[0],
-                                                inkWellFocusNode:
-                                                    controller.categoryFN,
-                                              ),
+                                                  hintTxt: "Caption",
+                                                  controller:
+                                                      controller.captionCtr,
+                                                  width: controller
+                                                      .componentWidthRatio,
+                                                  autoFocus: true,
+                                                  focusNode:
+                                                      controller.captionFN,
+                                                  padLeft: 0,
+                                                  maxLen: 40,
+                                                  isMandatory: true),
+                                              DropDownField.formDropDown1WidthMap(
+                                                  controller
+                                                          .onloadModel
+                                                          ?.promoMasterOnLoad
+                                                          ?.lstCategory ??
+                                                      [],
+                                                  (val) => controller
+                                                      .handleOnChangedCategory(
+                                                          val,
+                                                          callAPI: true),
+                                                  "Category",
+                                                  .35,
+                                                  selected: controller
+                                                      .selectedDropDowns[0],
+                                                  inkWellFocusNode:
+                                                      controller.categoryFN,
+                                                  dropdownOpen: (v) {
+                                                controller.isCatOpen = v;
+                                              }, isMandatory: true),
                                               Obx(
                                                 () {
                                                   return InputFields.formField1(
-                                                    hintTxt: "TX Caption",
-                                                    controller:
-                                                        controller.txCaptionCtr,
-                                                    width: controller
-                                                        .componentWidthRatio,
-                                                    prefixText: controller
-                                                        .txCaptionPreFix.value,
-                                                    padLeft: 0,
-                                                    maxLen: 40
-                                                  );
+                                                      hintTxt: "TX Caption",
+                                                      controller: controller
+                                                          .txCaptionCtr,
+                                                      width: controller
+                                                          .componentWidthRatio,
+                                                      prefixText: controller
+                                                          .txCaptionPreFix
+                                                          .value,
+                                                      padLeft: 0,
+                                                      maxLen: 40,
+                                                      focusNode:
+                                                          controller.txCapFN,
+                                                      isMandatory: true);
                                                 },
                                               ),
                                               InputFields.formField1(
-                                                hintTxt: "Tape ID",
-                                                controller:
-                                                    controller.tapeIDCtr,
-                                                width: controller
-                                                    .componentWidthRatio,
-                                                focusNode: controller.tapeIDFN,
-                                                padLeft: 0,
-                                              ),
+                                                  hintTxt: "Tape ID",
+                                                  controller:
+                                                      controller.tapeIDCtr,
+                                                  width: controller
+                                                      .componentWidthRatio,
+                                                  focusNode:
+                                                      controller.tapeIDFN,
+                                                  padLeft: 0,
+                                                  isMandatory: true),
                                               Obx(
                                                 () {
                                                   return InputFields.numbers(
@@ -130,20 +137,19 @@ class PromoMasterView extends GetView<PromoMasterController> {
                                                 },
                                               ),
                                               InputFields.formField1(
-                                                hintTxt: "TX No",
-                                                controller: controller.txNoCtr,
-                                                focusNode: controller.txNoFN,
-                                                width: controller
-                                                    .componentWidthRatio,
-                                                padLeft: 0,
-                                              ),
+                                                  hintTxt: "TX No",
+                                                  controller:
+                                                      controller.txNoCtr,
+                                                  focusNode: controller.txNoFN,
+                                                  width: controller
+                                                      .componentWidthRatio,
+                                                  padLeft: 0,
+                                                  isMandatory: true),
                                               DropDownField
                                                   .formDropDownSearchAPI2(
                                                 GlobalKey(),
                                                 context,
-                                                width: context.width *
-                                                    controller
-                                                        .componentWidthRatio,
+                                                width: context.width * .35,
                                                 onchanged: (val) => controller
                                                     .selectedDropDowns[1] = val,
                                                 title: 'Company',
@@ -155,6 +161,10 @@ class PromoMasterView extends GetView<PromoMasterController> {
                                                 parseKeyForValue: "CompanyName",
                                                 inkwellFocus:
                                                     controller.companyFN,
+                                                isMandatory: true,
+                                                dropdownOpen: (v) {
+                                                  controller.isCompOpen = v;
+                                                },
                                               ),
                                               DropDownField
                                                   .formDropDown1WidthMap(
@@ -168,6 +178,12 @@ class PromoMasterView extends GetView<PromoMasterController> {
                                                 controller.componentWidthRatio,
                                                 selected: controller
                                                     .selectedDropDowns[2],
+                                                inkWellFocusNode:
+                                                    controller.locationFN,
+                                                isMandatory: true,
+                                                dropdownOpen: (v) {
+                                                  controller.isLocOpen = v;
+                                                },
                                               ),
                                               // SizedBox(width: 20),
                                               Obx(() {
@@ -182,6 +198,12 @@ class PromoMasterView extends GetView<PromoMasterController> {
                                                       .componentWidthRatio,
                                                   selected: controller
                                                       .selectedDropDowns[3],
+                                                  inkWellFocusNode:
+                                                      controller.chnlFN,
+                                                  isMandatory: true,
+                                                  dropdownOpen: (v) {
+                                                    controller.isChnlOpen = v;
+                                                  },
                                                 );
                                               }),
                                               GetBuilder(
@@ -228,6 +250,12 @@ class PromoMasterView extends GetView<PromoMasterController> {
                                                 controller.componentWidthRatio,
                                                 selected: controller
                                                     .selectedDropDowns[5],
+                                                isMandatory: true,
+                                                inkWellFocusNode:
+                                                    controller.pTypFN,
+                                                dropdownOpen: (v) {
+                                                  controller.isPtypOpen = v;
+                                                },
                                               ),
                                               DropDownField
                                                   .formDropDownSearchAPI2(
@@ -250,16 +278,22 @@ class PromoMasterView extends GetView<PromoMasterController> {
                                                       .handleProgramPickerTap();
                                                 },
                                               ),
-                                              DropDownField
-                                                  .formDropDown1WidthMap(
-                                                [],
-                                                (val) => controller
-                                                    .selectedDropDowns[7] = val,
-                                                "Tag Detail",
-                                                controller.componentWidthRatio,
-                                                selected: controller
-                                                    .selectedDropDowns[7],
-                                              ),
+                                              Obx(() {
+                                                return DropDownField
+                                                    .formDropDown1WidthMap(
+                                                  [],
+                                                  (val) => controller
+                                                          .selectedDropDowns[
+                                                      7] = val,
+                                                  "Tag Detail",
+                                                  controller
+                                                      .componentWidthRatio,
+                                                  selected: controller
+                                                      .selectedDropDowns[7],
+                                                  isEnable: controller
+                                                      .isTagShown.value,
+                                                );
+                                              }),
                                               // SizedBox(width: 20),
                                               DropDownField
                                                   .formDropDown1WidthMap(
@@ -288,6 +322,12 @@ class PromoMasterView extends GetView<PromoMasterController> {
                                                 controller.componentWidthRatio,
                                                 selected: controller
                                                     .selectedDropDowns[9],
+                                                isMandatory: true,
+                                                inkWellFocusNode:
+                                                    controller.billFN,
+                                                dropdownOpen: (v) {
+                                                  controller.isBillOpen = v;
+                                                },
                                               ),
                                               DropDownField
                                                   .formDropDown1WidthMap(
@@ -303,23 +343,29 @@ class PromoMasterView extends GetView<PromoMasterController> {
                                                 controller.componentWidthRatio,
                                                 selected: controller
                                                     .selectedDropDowns[10],
+                                                isMandatory: true,
+                                                inkWellFocusNode:
+                                                    controller.tapeTypFN,
+                                                dropdownOpen: (v) {
+                                                  controller.isTapTypOpen = v;
+                                                },
                                               ),
                                               InputFields.formFieldNumberMask(
-                                                controller: controller.somCtr,
-                                                hintTxt: 'SOM',
-                                                widthRatio: controller
-                                                    .componentWidthRatio,
-                                                paddingLeft: 0,
-                                                textFieldFN: controller.somFN,
-                                              ),
+                                                  controller: controller.somCtr,
+                                                  hintTxt: 'SOM',
+                                                  widthRatio: controller
+                                                      .componentWidthRatio,
+                                                  paddingLeft: 0,
+                                                  textFieldFN: controller.somFN,
+                                                  isMandatory: true),
                                               InputFields.formFieldNumberMask(
-                                                controller: controller.eomCtr,
-                                                hintTxt: 'EOM',
-                                                widthRatio: controller
-                                                    .componentWidthRatio,
-                                                paddingLeft: 0,
-                                                textFieldFN: controller.eomFN,
-                                              ),
+                                                  controller: controller.eomCtr,
+                                                  hintTxt: 'EOM',
+                                                  widthRatio: controller
+                                                      .componentWidthRatio,
+                                                  paddingLeft: 0,
+                                                  textFieldFN: controller.eomFN,
+                                                  isMandatory: true),
                                               InputFields.formField1(
                                                 controller:
                                                     controller.durationCtr,
@@ -394,7 +440,8 @@ class PromoMasterView extends GetView<PromoMasterController> {
                                             url: ApiFactory
                                                 .PROMO_MASTER_EVENT_SEARCH,
                                             customInData: "onLeaveEvent",
-                                            parseKeyForKey: "eventid", //eventid
+                                            parseKeyForKey: "eventid",
+                                            //eventid
                                             parseKeyForValue: "eventname",
                                           ),
                                           const SizedBox(height: 14),

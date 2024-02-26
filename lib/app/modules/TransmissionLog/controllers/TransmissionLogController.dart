@@ -21,6 +21,7 @@ import '../../../../widgets/WarningBox.dart';
 import '../../../../widgets/dropdown.dart';
 import '../../../../widgets/gridFromMap.dart';
 import '../../../../widgets/input_fields.dart';
+import '../../../../widgets/radio_row.dart';
 import '../../../controller/ConnectorControl.dart';
 import '../../../data/DropDownValue.dart';
 import '../../../data/user_data_settings_model.dart';
@@ -164,6 +165,8 @@ class TransmissionLogController extends GetxController {
   List<PlutoRow> deletedSegmentData = [];
   BuildContext? contextGrid;
   RxBool insertPopupOpen = RxBool(false);
+  RxString selectMultiSa = RxString("Tx Log");
+  FocusNode keyboardFocus=FocusNode();
 
   @override
   void onInit() {
@@ -402,9 +405,9 @@ class TransmissionLogController extends GetxController {
                 msg: map.toString(),
                 callback: () {
                   // if (kDebugMode) {
-                    if (fun != null) {
-                      fun();
-                    }
+                  if (fun != null) {
+                    fun();
+                  }
                   // }
                 });
           }
@@ -564,6 +567,13 @@ class TransmissionLogController extends GetxController {
               listTapeDetailsSegment?.add(DropDownValue(
                   key: e["exporttapecode"], value: e["exporttapecode1"]));
             });
+            if (listTapeDetailsSegment != null &&
+                (listTapeDetailsSegment?.length ?? 0) > 0) {
+              selectTapeSegmentDialog = listTapeDetailsSegment![0];
+            } else {
+              selectTapeSegmentDialog = null;
+              listTapeDetailsSegment?.refresh();
+            }
           } else {
             Snack.callError(map.toString());
           }
@@ -573,6 +583,8 @@ class TransmissionLogController extends GetxController {
   void btnSearchSegment({Function? fun}) {
     if (selectProgramSegment == null) {
       // LoadingDialog.callInfoMessage("Please select program");
+    } else if (selectTapeSegmentDialog == null) {
+      LoadingDialog.callInfoMessage("Please select tape");
     } else {
       LoadingDialog.call();
       Get.find<ConnectorControl>().GETMETHODCALL(
@@ -923,8 +935,12 @@ class TransmissionLogController extends GetxController {
   }
 
   void btnExportClick(type) async {
-    bool? isDone =
-        await showDialogForYesNo("Do you want to add secondary event?");
+    bool? isDone;
+    if (["Multichoice (SA)"].contains(type)) {
+      isDone = false;
+    } else {
+      isDone = await showDialogForYesNo("Do you want to add secondary event?");
+    }
     LoadingDialog.call();
     String methodName = getExportMethod(type)!;
     Get.find<ConnectorControl>().GETMETHODCALL(
@@ -936,8 +952,11 @@ class TransmissionLogController extends GetxController {
             selectLocation?.value ?? "",
             gridStateManager?.currentRowIdx ?? 0,
             "00:00",
-            isDone!,
-            methodName),
+            isDone ?? false,
+            methodName,
+            (type == "Multichoice (SA)")
+                ? selectMultiSa.value.replaceAll(" ", "").toUpperCase()
+                : ""),
         fun: (map) {
           Get.back();
           if (map is Map && map.containsKey("outExportDataClick")) {
@@ -947,7 +966,7 @@ class TransmissionLogController extends GetxController {
             logWrite(
               strFilePrefix + outputFormat.split("|")[1],
               type,
-              isDone!,
+              isDone ?? false,
             );
           } else {}
         });
@@ -958,11 +977,13 @@ class TransmissionLogController extends GetxController {
       case "Multichoice (SA)":
         LoadingDialog.call();
         Get.find<ConnectorControl>().GETMETHODCALL(
-            api: ApiFactory.TRANSMISSION_LOG_MULTICHOICE(
-                selectLocation?.key ?? "",
-                selectChannel?.key ?? "",
-                selectedDate.text,
-                fileName),
+            api: ApiFactory.TRANSMISSION_LOG_MULTICHOICE1(
+              selectLocation?.key ?? "",
+              selectChannel?.key ?? "",
+              selectedDate.text,
+              fileName,
+              selectMultiSa.value,
+            ),
             fun: (map) {
               Get.back();
               ExportData().exportFilefromBase64(map, fileName);
@@ -4408,6 +4429,79 @@ class TransmissionLogController extends GetxController {
     return completer.future;
   }
 
+  showMultichoiceExport() {
+    selectMultiSa.value = "Tx Log";
+    Get.defaultDialog(
+      title: "",
+      titleStyle: TextStyle(fontSize: 1),
+      content: Column(
+        mainAxisAlignment: MainAxisAlignment.center,
+        children: [
+          Icon(
+            CupertinoIcons.question_circle_fill,
+            color: Colors.blueAccent,
+            size: 55,
+          ),
+          SizedBox(
+            height: 20,
+          ),
+          Text(
+            "Kindly select Data of Export",
+            style: TextStyle(
+                color: Colors.blueAccent, fontSize: SizeDefine.popupTxtSize),
+            textAlign: TextAlign.center,
+          ),
+          SizedBox(
+            height: 10,
+          ),
+          Obx(
+            () {
+              return RadioRow(
+                items: ['Tx Log', 'FPC', 'FPC - Adtl Break'],
+                groupValue: selectMultiSa.value,
+                isVertical: false,
+                onchange: (val) => selectMultiSa.value = val,
+              );
+            },
+          ),
+          SizedBox(
+            height: 5,
+          ),
+        ],
+      ),
+      radius: 10,
+      /*confirm: MaterialButton(
+          onPressed: () {
+            Get.back();
+            confirm!();
+          },
+          child: Text(deleteTitle ?? "Yes")),*/
+      confirm: DailogCloseButton(
+          autoFocus: false,
+          callback: () {
+            Get.back();
+          },
+          btnText: "Cancel"),
+      cancel: DailogCloseButton(
+          autoFocus: true,
+          callback: () {
+            Get.back();
+            btnExportClick(selectExportType.value);
+          },
+          btnText: "Proceed"),
+      /*cancel: MaterialButton(
+          onPressed: () {
+            Get.back();
+          },
+          autofocus: true,
+          child: Text(deleteCancel ?? "No")),*/
+      contentPadding: EdgeInsets.only(
+          left: SizeDefine.popupMarginHorizontal + 10,
+          right: SizeDefine.popupMarginHorizontal + 10,
+          bottom: 16),
+    );
+  }
+
   Future<bool>? showDialogForYesNo(String text) {
     Completer<bool> completer = Completer<bool>();
     LoadingDialog.recordExists(
@@ -4446,6 +4540,8 @@ class TransmissionLogController extends GetxController {
         return Offset(
             (constraints.maxWidth / 3) + 30, constraints.maxHeight / 3);
       case 2:
+        return Offset(Get.width * 0.27, Get.height * 0.10);
+      case 3:
         return Offset(Get.width * 0.27, Get.height * 0.10);
       default:
         return null;
@@ -4697,13 +4793,13 @@ class TransmissionLogController extends GetxController {
       }
     }*/
     else if (raw is RawKeyDownEvent && raw.character?.toLowerCase() == "y") {
-      if (completerDialog != null && dialogWidget != null) {
+      if (completerDialog != null && dialogWidget != null && canDialogShow.value) {
         dialogWidget = null;
         canDialogShow.value = false;
         completerDialog?.complete(true);
       }
     } else if (raw is RawKeyDownEvent && raw.character?.toLowerCase() == "n") {
-      if (completerDialog != null && dialogWidget != null) {
+      if (completerDialog != null && dialogWidget != null && canDialogShow.value) {
         dialogWidget = null;
         canDialogShow.value = false;
         completerDialog?.complete(false);

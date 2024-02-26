@@ -165,6 +165,9 @@ class CommercialMasterController extends GetxController {
         if (event.logicalKey == LogicalKeyboardKey.tab) {
           if (tapeIdController.value.text != null &&
               tapeIdController.value.text != "") {
+
+            tapeIdController.value.text = tapeIdController.value.text.toString().toUpperCase();
+
             txNoController.text =
                 "${tapeIdController.value.text}-${segController.text}";
             fetchCommercialTapeMasterData("", tapeIdController.value.text,
@@ -495,13 +498,26 @@ class CommercialMasterController extends GetxController {
               );
             } else {
               // Get.back();
-              LoadingDialog.showErrorDialog(
-                  (map ?? "Something went wrong").toString());
+              if(map['result'] != null && map['result']['errorMessage'] != null && map['result']['errorMessage'] != ""){
+                LoadingDialog.showErrorDialog(
+                    (map['result']['errorMessage'] ?? "Something went wrong").toString());
+              }else{
+                LoadingDialog.showErrorDialog(
+                    (map ?? "Something went wrong").toString());
+              }
+            /*  LoadingDialog.showErrorDialog(
+                  (map['result']['errorMessage'] ?? "Something went wrong").toString());*/
             }
           } else {
             // Get.back();
-            LoadingDialog.showErrorDialog(
-                (map ?? "Something went wrong").toString());
+            if(map['result'] != null && map['result']['errorMessage'] != null && map['result']['errorMessage'] != ""){
+              LoadingDialog.showErrorDialog(
+                  (map['result']['errorMessage'] ?? "Something went wrong").toString());
+            }else{
+              LoadingDialog.showErrorDialog(
+                  (map ?? "Something went wrong").toString());
+            }
+
           }
         });
   }

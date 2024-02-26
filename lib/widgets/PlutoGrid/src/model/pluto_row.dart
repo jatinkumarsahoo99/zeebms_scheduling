@@ -294,6 +294,32 @@ class PlutoRow {
     return json;
   }
 
+  Map<String, dynamic> toJsonWithRawData({
+    bool includeChildren = true,
+    String childrenField = 'children',
+  }) {
+    Map<String, dynamic> myCell1 = {};
+    for (var item in cells.entries) {
+      if (item.key != "no") {
+        if (item.value.value == null) {
+          myCell1[item.key] = "";
+        } else {
+          try {
+            num v = num.parse(item.value.value);
+            // data.add(v ?? "");
+            myCell1[item.key] = v ?? "";
+          } catch (e) {
+            // data[key] = value;
+            // data.add(value ?? "");
+            myCell1[item.key] = item.value.value ?? "";
+          }
+          // myCell1[item.key] = item.value.value;
+        }
+      }
+    }
+    return myCell1;
+  }
+
   Map<String, dynamic> toJsonRowData({
     bool includeChildren = true,
     String childrenField = 'children',
