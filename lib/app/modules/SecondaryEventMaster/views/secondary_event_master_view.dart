@@ -194,13 +194,13 @@ class SecondaryEventMasterView extends GetView<SecondaryEventMasterController> {
                           title: "Start Date",
                           mainTextController: controller.startDateTC,
                           widthRation: .23,
-                          endDate: DateTime.now(),
+                          // endDate: ,
                         ),
                         DateWithThreeTextField(
                           title: "End Date",
                           mainTextController: controller.endDateTC,
                           widthRation: .23,
-                          startDate: DateTime.now(),
+                          // startDate: DateTime.now(),
                         )
                       ],
                     ),
