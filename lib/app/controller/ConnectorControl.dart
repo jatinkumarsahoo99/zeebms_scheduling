@@ -328,7 +328,7 @@ class ConnectorControl extends GetConnect {
     } on DioError catch (e) {
       if (e.response?.statusCode == 401) {
         updateToken(() {
-          POSTMETHOD(api: api, fun: fun, failed: failed);
+          POSTMETHOD(api: api, fun: fun, failed: failed,json: json);
         });
       } else if ([400, 403].contains(e.response?.statusCode)) {
         if (Get.isDialogOpen ?? false) {
