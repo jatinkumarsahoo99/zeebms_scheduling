@@ -123,42 +123,54 @@ class PromoMasterController extends GetxController {
     captionFN.addListener(() {
       if (!captionFN.hasFocus) {
         if (captionCtr.text == "" && (!(Get.isDialogOpen ?? false))) {
-          LoadingDialog.callErrorMessage1(msg: "Please enter caption");
+          LoadingDialog.callErrorMessage1(msg: "Please enter caption",callback: (){
+            captionFN.requestFocus();
+          });
         }
       }
     });
     txCapFN.addListener(() {
       if (!txCapFN.hasFocus) {
         if (txCaptionCtr.text == "" && (!(Get.isDialogOpen ?? false))) {
-          LoadingDialog.callErrorMessage1(msg: "Please enter tx caption");
+          LoadingDialog.callErrorMessage1(msg: "Please enter tx caption",callback: (){
+            txCapFN.requestFocus();
+          });
         }
       }
     });
     tapeIDFN.addListener(() {
       if (!tapeIDFN.hasFocus) {
         if (tapeIDCtr.text == "" && (!(Get.isDialogOpen ?? false))) {
-          LoadingDialog.callErrorMessage1(msg: "Please enter tape id");
+          LoadingDialog.callErrorMessage1(msg: "Please enter tape id",callback: (){
+            tapeIDFN.requestFocus();
+          });
         }
       }
     });
     txNoFN.addListener(() {
       if (!txNoFN.hasFocus) {
         if (txNoCtr.text == "" && (!(Get.isDialogOpen ?? false))) {
-          LoadingDialog.callErrorMessage1(msg: "Please enter tx no");
+          LoadingDialog.callErrorMessage1(msg: "Please enter tx no",callback: (){
+            txNoFN.requestFocus();
+          });
         }
       }
     });
     somFN.addListener(() {
       if (!somFN.hasFocus) {
         if (somCtr.text == "" && (!(Get.isDialogOpen ?? false))) {
-          LoadingDialog.callErrorMessage1(msg: "Please enter som");
+          LoadingDialog.callErrorMessage1(msg: "Please enter som",callback: (){
+            somFN.requestFocus();
+          });
         }
       }
     });
     txNoFN.addListener(() {
       if (!txNoFN.hasFocus) {
         if (txNoCtr.text == "" && (!(Get.isDialogOpen ?? false))) {
-          LoadingDialog.callErrorMessage1(msg: "Please enter tx no");
+          LoadingDialog.callErrorMessage1(msg: "Please enter tx no",callback: (){
+            txNoFN.requestFocus();
+          });
         }
       }
     });
@@ -167,7 +179,9 @@ class PromoMasterController extends GetxController {
         if (selectedDropDowns[0] == null &&
             !isCatOpen &&
             (!(Get.isDialogOpen ?? false))) {
-          LoadingDialog.callErrorMessage1(msg: "Please select category");
+          LoadingDialog.callErrorMessage1(msg: "Please select category",callback: (){
+            categoryFN.requestFocus();
+          });
           // locationFN.requestFocus();
         }
       }
@@ -177,7 +191,9 @@ class PromoMasterController extends GetxController {
         if (selectedDropDowns[1] == null &&
             !isCompOpen &&
             (!(Get.isDialogOpen ?? false))) {
-          LoadingDialog.callErrorMessage1(msg: "Please select company");
+          LoadingDialog.callErrorMessage1(msg: "Please select company",callback: (){
+            companyFN.requestFocus();
+          });
           // locationFN.requestFocus();
         }
       }
@@ -187,7 +203,9 @@ class PromoMasterController extends GetxController {
         if (selectedDropDowns[2] == null &&
             !isLocOpen &&
             (!(Get.isDialogOpen ?? false))) {
-          LoadingDialog.callErrorMessage1(msg: "Please select location");
+          LoadingDialog.callErrorMessage1(msg: "Please select location",callback: (){
+            locationFN.requestFocus();
+          });
           // locationFN.requestFocus();
         }
       }
@@ -197,7 +215,9 @@ class PromoMasterController extends GetxController {
         if (channelList.value!=null && selectedDropDowns[3] == null &&
             !isChnlOpen &&
             (!(Get.isDialogOpen ?? false))) {
-          LoadingDialog.callErrorMessage1(msg: "Please select channel");
+          LoadingDialog.callErrorMessage1(msg: "Please select channel",callback: (){
+            chnlFN.requestFocus();
+          });
           // locationFN.requestFocus();
         }
       }
@@ -207,7 +227,9 @@ class PromoMasterController extends GetxController {
         if (selectedDropDowns[5] == null &&
             !isPtypOpen &&
             (!(Get.isDialogOpen ?? false))) {
-          LoadingDialog.callErrorMessage1(msg: "Please select p-type");
+          LoadingDialog.callErrorMessage1(msg: "Please select p-type",callback: (){
+            pTypFN.requestFocus();
+          });
           // locationFN.requestFocus();
         }
       }
@@ -217,7 +239,9 @@ class PromoMasterController extends GetxController {
         if (selectedDropDowns[9] == null &&
             !isBillOpen &&
             (!(Get.isDialogOpen ?? false))) {
-          LoadingDialog.callErrorMessage1(msg: "Please select billing");
+          LoadingDialog.callErrorMessage1(msg: "Please select billing",callback: (){
+            billFN.requestFocus();
+          });
           // locationFN.requestFocus();
         }
       }
@@ -227,7 +251,9 @@ class PromoMasterController extends GetxController {
         if (selectedDropDowns[10] == null &&
             !isTapTypOpen &&
             (!(Get.isDialogOpen ?? false))) {
-          LoadingDialog.callErrorMessage1(msg: "Please select tape type");
+          LoadingDialog.callErrorMessage1(msg: "Please select tape type",callback: (){
+            tapeTypFN.requestFocus();
+          });
         }
       }
     });
