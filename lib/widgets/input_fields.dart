@@ -237,26 +237,28 @@ class InputFields {
             hint: hintTxt,
             txtColor: Colors.black,
           ),*/
-          RichText(
-            text: TextSpan(children: [
-              TextSpan(
-                text: hintTxt ?? "",
-                style: TextStyle(
-                  fontSize: SizeDefine.labelSize1,
-                  color: Colors.black,
-                  fontWeight: FontWeight.w500,
-                ),
-              ),
-              TextSpan(
-                text: (isMandatory ?? false) ? " *" : "",
-                style: TextStyle(
-                  fontSize: SizeDefine.labelSize1,
-                  color: Colors.red,
-                  fontWeight: FontWeight.bold,
-                ),
-              ),
-            ]),
-          ),
+          Padding(
+              padding: EdgeInsets.only(bottom: 5),
+              child: RichText(
+                text: TextSpan(children: [
+                  TextSpan(
+                    text: hintTxt ?? "",
+                    style: TextStyle(
+                      fontSize: SizeDefine.labelSize1,
+                      color: Colors.black,
+                      fontWeight: FontWeight.w500,
+                    ),
+                  ),
+                  TextSpan(
+                    text: (isMandatory ?? false) ? " *" : "",
+                    style: TextStyle(
+                      fontSize: SizeDefine.labelSize1,
+                      color: Colors.red,
+                      fontWeight: FontWeight.bold,
+                    ),
+                  ),
+                ]),
+              )),
         },
         Container(
           // padding: const EdgeInsets.only(
