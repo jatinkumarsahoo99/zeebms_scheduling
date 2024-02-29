@@ -158,7 +158,10 @@ class FillerMasterController extends GetxController {
             selectedDropDowns[0] == null &&
             !isLocOpen &&
             (!(Get.isDialogOpen ?? false))) {
-          LoadingDialog.callErrorMessage1(msg: "Please select location");
+          LoadingDialog.callErrorMessage1(msg: "Please select location",callback: (){
+            locationFN.requestFocus();
+          });
+
           // locationFN.requestFocus();
         }
       }
@@ -168,7 +171,9 @@ class FillerMasterController extends GetxController {
         if (selectedDropDowns[19] == null &&
             !isChannelOpen &&
             (!(Get.isDialogOpen ?? false))) {
-          LoadingDialog.callErrorMessage1(msg: "Please select channel");
+          LoadingDialog.callErrorMessage1(msg: "Please select channel",callback: (){
+            channelFN.requestFocus();
+          });
           // channelFN.requestFocus();
         }
       }
@@ -178,56 +183,72 @@ class FillerMasterController extends GetxController {
         if (selectedDropDowns[2] == null &&
             !isBannerOpen &&
             (!(Get.isDialogOpen ?? false))) {
-          LoadingDialog.callErrorMessage1(msg: "Please select banner");
+          LoadingDialog.callErrorMessage1(msg: "Please select banner",callback: (){
+            bannerFN.requestFocus();
+          });
         }
       }
     });
     fillerNameFN.addListener(() {
       if (!fillerNameFN.hasFocus) {
         if (fillerNameCtr.text == "" && (!(Get.isDialogOpen ?? false))) {
-          LoadingDialog.callErrorMessage1(msg: "Please enter file name");
+          LoadingDialog.callErrorMessage1(msg: "Please enter file name",callback: (){
+            fillerNameFN.requestFocus();
+          });
         }
       }
     });
     txCaptionFN.addListener(() {
       if (!txCaptionFN.hasFocus) {
         if (txCaptionCtr.text == "" && (!(Get.isDialogOpen ?? false))) {
-          LoadingDialog.callErrorMessage1(msg: "Please enter tx caption");
+          LoadingDialog.callErrorMessage1(msg: "Please enter tx caption",callback: (){
+            txCaptionFN.requestFocus();
+          });
         }
       }
     });
     tapeIDFN.addListener(() {
       if (!tapeIDFN.hasFocus) {
         if (tapeIDCtr.text == "" && (!(Get.isDialogOpen ?? false))) {
-          LoadingDialog.callErrorMessage1(msg: "Please enter tape id");
+          LoadingDialog.callErrorMessage1(msg: "Please enter tape id",callback: (){
+            tapeIDFN.requestFocus();
+          });
         }
       }
     });
     segNoFN.addListener(() {
       if (!segNoFN.hasFocus) {
         if (segNoCtrLeft.text == "" && (!(Get.isDialogOpen ?? false))) {
-          LoadingDialog.callErrorMessage1(msg: "Please enter seg no");
+          LoadingDialog.callErrorMessage1(msg: "Please enter seg no",callback: (){
+            segNoFN.requestFocus();
+          });
         }
       }
     });
     txNoFN.addListener(() {
       if (!txNoFN.hasFocus) {
         if (txNoCtr.text == "" && (!(Get.isDialogOpen ?? false))) {
-          LoadingDialog.callErrorMessage1(msg: "Please enter tx no");
+          LoadingDialog.callErrorMessage1(msg: "Please enter tx no",callback: (){
+            txNoFN.requestFocus();
+          });
         }
       }
     });
     somFN.addListener(() {
       if (!somFN.hasFocus) {
         if (somCtr.text == "" && (!(Get.isDialogOpen ?? false))) {
-          LoadingDialog.callErrorMessage1(msg: "Please enter som");
+          LoadingDialog.callErrorMessage1(msg: "Please enter som",callback: (){
+            somFN.requestFocus();
+          });
         }
       }
     });
     eomFN.addListener(() {
       if (!eomFN.hasFocus) {
         if (eomCtr.text == "" && (!(Get.isDialogOpen ?? false))) {
-          LoadingDialog.callErrorMessage1(msg: "Please enter eom");
+          LoadingDialog.callErrorMessage1(msg: "Please enter eom",callback: (){
+            eomFN.requestFocus();
+          });
         } else {
           calculateDuration();
         }
@@ -238,7 +259,9 @@ class FillerMasterController extends GetxController {
         if (selectedDropDowns[3] == null &&
             !isTapeTypOpen &&
             (!(Get.isDialogOpen ?? false))) {
-          LoadingDialog.callErrorMessage1(msg: "Please select tape type");
+          LoadingDialog.callErrorMessage1(msg: "Please select tape type",callback: (){
+            tapeTypeFN.requestFocus();
+          });
           // channelFN.requestFocus();
         }
       }
@@ -248,7 +271,9 @@ class FillerMasterController extends GetxController {
         if (selectedDropDowns[4] == null &&
             !isTypOpen &&
             (!(Get.isDialogOpen ?? false))) {
-          LoadingDialog.callErrorMessage1(msg: "Please select type");
+          LoadingDialog.callErrorMessage1(msg: "Please select type",callback: (){
+            typeFN.requestFocus();
+          });
           // channelFN.requestFocus();
         }
       }
@@ -258,7 +283,9 @@ class FillerMasterController extends GetxController {
         if (selectedDropDowns[5] == null &&
             !isCensorOpen &&
             (!(Get.isDialogOpen ?? false))) {
-          LoadingDialog.callErrorMessage1(msg: "Please select censorship");
+          LoadingDialog.callErrorMessage1(msg: "Please select censorship",callback: (){
+            censorFN.requestFocus();
+          });
           // channelFN.requestFocus();
         }
       }
@@ -268,7 +295,9 @@ class FillerMasterController extends GetxController {
         if (selectedDropDowns[6] == null &&
             !isLangOpen &&
             (!(Get.isDialogOpen ?? false))) {
-          LoadingDialog.callErrorMessage1(msg: "Please select language");
+          LoadingDialog.callErrorMessage1(msg: "Please select language",callback: (){
+            langFN.requestFocus();
+          });
           // channelFN.requestFocus();
         }
       }
@@ -278,7 +307,9 @@ class FillerMasterController extends GetxController {
         if (selectedDropDowns[7] == null &&
             !isPrdOpen &&
             (!(Get.isDialogOpen ?? false))) {
-          LoadingDialog.callErrorMessage1(msg: "Please select production");
+          LoadingDialog.callErrorMessage1(msg: "Please select production",callback: (){
+            prodFN.requestFocus();
+          });
           // channelFN.requestFocus();
         }
       }
@@ -288,12 +319,14 @@ class FillerMasterController extends GetxController {
         if (selectedDropDowns[8] == null &&
             !isColorOpen &&
             (!(Get.isDialogOpen ?? false))) {
-          LoadingDialog.callErrorMessage1(msg: "Please select color");
+          LoadingDialog.callErrorMessage1(msg: "Please select color",callback: (){
+            colorFN.requestFocus();
+          });
           // channelFN.requestFocus();
         }
       }
     });
-    colorFN.addListener(() {
+    /*colorFN.addListener(() {
       if (!colorFN.hasFocus) {
         if (selectedDropDowns[8] == null &&
             !isColorOpen &&
@@ -302,13 +335,15 @@ class FillerMasterController extends GetxController {
           // channelFN.requestFocus();
         }
       }
-    });
+    });*/
     idNoFN.addListener(() {
       if (!idNoFN.hasFocus) {
         if (selectedDropDowns[17] == null &&
             !isIdOpen &&
             (!(Get.isDialogOpen ?? false))) {
-          LoadingDialog.callErrorMessage1(msg: "Please select id");
+          LoadingDialog.callErrorMessage1(msg: "Please select id",callback: (){
+            idNoFN.requestFocus();
+          });
           // channelFN.requestFocus();
         }
       }
