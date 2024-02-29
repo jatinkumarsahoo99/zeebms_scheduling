@@ -3539,6 +3539,7 @@ class DropDownField {
     GlobalKey? widgetKey,
     bool showtitle = true,
     bool titleInLeft = false,
+    bool? isMandatory = false,
     Function(bool dropDownOpen)? dropdownOpen,
   }) {
     isEnable ??= true;
@@ -3552,7 +3553,7 @@ class DropDownField {
       mainAxisSize: MainAxisSize.min,
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        if (showtitle && !titleInLeft) ...{
+       /* if (showtitle && !titleInLeft) ...{
           Text(
             hint,
             style: TextStyle(
@@ -3560,6 +3561,29 @@ class DropDownField {
               color: Colors.black,
               fontWeight: FontWeight.w500,
             ),
+          ),
+          const SizedBox(height: 5),
+        },*/
+        if (showtitle && !titleInLeft) ...{
+          RichText(
+            text: TextSpan(children: [
+              TextSpan(
+                text: hint ?? "",
+                style: TextStyle(
+                  fontSize: SizeDefine.labelSize1,
+                  color: Colors.black,
+                  fontWeight: FontWeight.w500,
+                ),
+              ),
+              TextSpan(
+                text: (isMandatory ?? false) ? " *" : "",
+                style: TextStyle(
+                  fontSize: SizeDefine.labelSize1,
+                  color: Colors.red,
+                  fontWeight: FontWeight.bold,
+                ),
+              ),
+            ]),
           ),
           const SizedBox(height: 5),
         },
