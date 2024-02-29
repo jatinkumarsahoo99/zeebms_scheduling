@@ -25,6 +25,10 @@ class NewShortContentFormController extends GetxController {
   var formId = ''.obs;
   Rx<bool> enable = Rx<bool>(true);
 
+  bool isLocOpen = false;
+  bool isChnlOpen = false;
+  bool isCatOpen = false;
+
   FocusNode houseFocusNode = FocusNode(),
       locationFocusNode = FocusNode(),
       channelFocusNode = FocusNode(),
@@ -34,6 +38,7 @@ class NewShortContentFormController extends GetxController {
       tapeFocusNode = FocusNode(),
       orgFocusNode = FocusNode(),
       eomFN = FocusNode(),
+      somFN = FocusNode(),
       durationFN = FocusNode(),
       captionFN = FocusNode(),
       segmentFN = FocusNode();
@@ -50,7 +55,7 @@ class NewShortContentFormController extends GetxController {
   TextEditingController caption = TextEditingController(),
       txCaption = TextEditingController(),
       houseId = TextEditingController(text: "AUTOID"),
-      som = TextEditingController(text: "00:00:00:00"),
+      som = TextEditingController(text: "10:00:00:00"),
       eom = TextEditingController(text: "00:00:00:00"),
       // duration = TextEditingController(text: "00:00:00:00"),
       startData = TextEditingController(),
@@ -58,6 +63,7 @@ class NewShortContentFormController extends GetxController {
       segment = TextEditingController(text: "1"),
       remark = TextEditingController();
   var toBeBilled = RxBool(false);
+
   getInitData() {
     Get.find<ConnectorControl>().GETMETHODCALL(
         api: ApiFactory.NEW_SHORT_CONTENT_INIT,
@@ -214,13 +220,13 @@ class NewShortContentFormController extends GetxController {
         fun: (rawdata) {
           // print(">>>>>>>responseData"+rawdata.toString());
 
-          if(rawdata is List && rawdata.isNotEmpty){
+          if (rawdata is List && rawdata.isNotEmpty) {
             Map data = rawdata[0];
             enable.value = false;
             enable.refresh();
             selectedCategory.value = categeroies.firstWhereOrNull((element) {
               var result = element.key!.toString().toLowerCase() ==
-                  data['SlideType'].toString().toLowerCase().trim() ||
+                      data['SlideType'].toString().toLowerCase().trim() ||
                   element.key!.toString().toLowerCase() ==
                       data['Stilltype'].toString().toLowerCase().trim() ||
                   element.key!.toString().toLowerCase() ==
@@ -230,48 +236,48 @@ class NewShortContentFormController extends GetxController {
             });
             print("===== ${selectedCategory.value?.type}");
             switch (selectedCategory.value?.type) {
-            //       {
-            //     "stillCode": null,
-            //     "stillCaption": null,
-            //     "programCode": null,
-            //     "programName": null,
-            //     "programTypeCode": null,
-            //     "exportTapeCaption": "ZEETV ID YEH 10",
-            //     "exportTapeCode": "533190",
-            //     "segmentNumber": 5,
-            //     "stillDuration": null,
-            //     "houseId": "Z6667",
-            //     "som": "10:00:00:00",
-            //     "tapeTypeCode": "ZABET00003",
-            //     "dated": "Y",
-            //     "killDate": "2005-03-01T00:00:00",
-            //     "modifiedBy": "BIN0000161",
-            //     "locationcode": "ZAZEE00001",
-            //     "channelcode": "ZAZEE00001",
-            //     "eom": null,
-            //     "stillType": 1,
-            //     "slideCode": 1033,
-            //     "slideCaption": "ZEETV ID YEH HAI ZTV 10",
-            //     "segmentNumber_SL": null,
-            //     "slideType": "W ",
-            //     "exportTapeDuration": 10,
-            //     "vignetteCode": null,
-            //     "vignetteCaption": null,
-            //     "vignetteDuration": null,
-            //     "exportTapeCode_VG": null,
-            //     "originalRepeatCode": null,
-            //     "segmentNumber_VG": null,
-            //     "startDate": null,
-            //     "remarks": null,
-            //     "billflag": null,
-            //     "companycode": ""
-            // },
+              //       {
+              //     "stillCode": null,
+              //     "stillCaption": null,
+              //     "programCode": null,
+              //     "programName": null,
+              //     "programTypeCode": null,
+              //     "exportTapeCaption": "ZEETV ID YEH 10",
+              //     "exportTapeCode": "533190",
+              //     "segmentNumber": 5,
+              //     "stillDuration": null,
+              //     "houseId": "Z6667",
+              //     "som": "10:00:00:00",
+              //     "tapeTypeCode": "ZABET00003",
+              //     "dated": "Y",
+              //     "killDate": "2005-03-01T00:00:00",
+              //     "modifiedBy": "BIN0000161",
+              //     "locationcode": "ZAZEE00001",
+              //     "channelcode": "ZAZEE00001",
+              //     "eom": null,
+              //     "stillType": 1,
+              //     "slideCode": 1033,
+              //     "slideCaption": "ZEETV ID YEH HAI ZTV 10",
+              //     "segmentNumber_SL": null,
+              //     "slideType": "W ",
+              //     "exportTapeDuration": 10,
+              //     "vignetteCode": null,
+              //     "vignetteCaption": null,
+              //     "vignetteDuration": null,
+              //     "exportTapeCode_VG": null,
+              //     "originalRepeatCode": null,
+              //     "segmentNumber_VG": null,
+              //     "startDate": null,
+              //     "remarks": null,
+              //     "billflag": null,
+              //     "companycode": ""
+              // },
 
-            // formCode: "ZASTI00001"formName: "Still Master"
+              // formCode: "ZASTI00001"formName: "Still Master"
               case "STILL MASTER":
                 formId.value = "S/";
                 selectedLocation.value = locations.firstWhereOrNull((element) =>
-                element.key?.toLowerCase() ==
+                    element.key?.toLowerCase() ==
                     (data["Locationcode"] ?? "").toLowerCase());
                 getChannel(data["Locationcode"]).then((value) {
                   selectedChannel.value = channels.firstWhereOrNull((element) {
@@ -281,7 +287,7 @@ class NewShortContentFormController extends GetxController {
                 });
                 typeleave(selectedCategory.value?.type).then((value) {
                   selectedTape.value = tapes.firstWhereOrNull((element) =>
-                  element.key?.toLowerCase() ==
+                      element.key?.toLowerCase() ==
                       (data["TapeTypeCode"] ?? "").toString().toLowerCase());
                 });
                 typeCode = data["StillCode"];
@@ -292,7 +298,8 @@ class NewShortContentFormController extends GetxController {
                   txCaption.text = txCaption.text.replaceAll(r'S/', "");
                 }
 
-                selectedCategory.value = categeroies.firstWhereOrNull((element) {
+                selectedCategory.value =
+                    categeroies.firstWhereOrNull((element) {
                   var result = element.key!.toLowerCase() ==
                       data['Stilltype'].toString().toLowerCase().trim();
 
@@ -318,11 +325,11 @@ class NewShortContentFormController extends GetxController {
                 toBeBilled.value = data["billflag"] == "0";
 
                 break;
-            //  "formCode": "ZASLI00045", "formName": "Slide Master"
+              //  "formCode": "ZASLI00045", "formName": "Slide Master"
               case "SLIDE MASTER":
                 formId.value = "L/";
                 selectedLocation.value = locations.firstWhereOrNull((element) =>
-                element.key?.toLowerCase() ==
+                    element.key?.toLowerCase() ==
                     (data["LocationCode"] ?? "").toLowerCase());
                 getChannel(data["LocationCode"]).then((value) {
                   selectedChannel.value = channels.firstWhereOrNull((element) {
@@ -335,7 +342,7 @@ class NewShortContentFormController extends GetxController {
                 });
                 typeleave(selectedCategory.value?.type).then((value) {
                   selectedTape.value = tapes.firstWhereOrNull((element) =>
-                  element.key?.toLowerCase() ==
+                      element.key?.toLowerCase() ==
                       (data["TapeTypeCode"] ?? "").toString().toLowerCase());
                 });
                 typeCode = data["SlideCode"];
@@ -345,7 +352,8 @@ class NewShortContentFormController extends GetxController {
                 if (txCaption.text.contains('L/')) {
                   txCaption.text = txCaption.text.replaceAll(r'L/', "");
                 }
-                selectedCategory.value = categeroies.firstWhereOrNull((element) {
+                selectedCategory.value =
+                    categeroies.firstWhereOrNull((element) {
                   var result = element.key!.toString().toLowerCase() ==
                       data['SlideType'].toString().toLowerCase().trim();
 
@@ -368,11 +376,11 @@ class NewShortContentFormController extends GetxController {
                 toBeBilled.value = data["billflag"] == "0";
 
                 break;
-            // "formCode": "ZADAT00117", "formName": "Vignette Master"
+              // "formCode": "ZADAT00117", "formName": "Vignette Master"
               case "VIGNETTE MASTER":
                 formId.value = "VP/";
                 selectedLocation.value = locations.firstWhereOrNull((element) =>
-                element.key?.toLowerCase() ==
+                    element.key?.toLowerCase() ==
                     (data["Locationcode"] ?? "").toLowerCase());
                 getChannel(data["Locationcode"]).then((value) {
                   selectedChannel.value = channels.firstWhereOrNull((element) {
@@ -386,18 +394,20 @@ class NewShortContentFormController extends GetxController {
                 if (txCaption.text.contains('VP/')) {
                   txCaption.text = txCaption.text.replaceAll(r'VP/', "");
                 }
-                selectedCategory.value = categeroies.firstWhereOrNull((element) {
+                selectedCategory.value =
+                    categeroies.firstWhereOrNull((element) {
                   var result = element.key!.toString().toLowerCase() ==
                       data['SSVCode'].toString().toLowerCase().trim();
 
                   return result;
                 });
                 typeleave(selectedCategory.value?.type).then((value) {
-                  selectedOrgRep.value = orgRepeats.firstWhereOrNull((element) =>
-                  element.key?.toLowerCase() ==
-                      (data["OriginalRepeatCode"] ?? "")
-                          .toString()
-                          .toLowerCase());
+                  selectedOrgRep.value = orgRepeats.firstWhereOrNull(
+                      (element) =>
+                          element.key?.toLowerCase() ==
+                          (data["OriginalRepeatCode"] ?? "")
+                              .toString()
+                              .toLowerCase());
                 });
 
                 selectedProgram.value = DropDownValue(
@@ -423,18 +433,16 @@ class NewShortContentFormController extends GetxController {
 
               default:
             }
-          }
-          else{
+          } else {
             enable.value = true;
             enable.refresh();
           }
-
-
-        },failed: (data){
-      // print(">>>>>>>responseData"+data.toString());
-      enable.value = true;
-      enable.refresh();
-    });
+        },
+        failed: (data) {
+          // print(">>>>>>>responseData"+data.toString());
+          enable.value = true;
+          enable.refresh();
+        });
   }
 
   saveValidate() {
@@ -631,8 +639,7 @@ class NewShortContentFormController extends GetxController {
               }
 
               return true;
-            }
-            else if (rawdata is String) {
+            } else if (rawdata is String) {
               enable.value = true;
               enable.refresh();
               LoadingDialog.callErrorMessage1(msg: rawdata);
@@ -708,6 +715,76 @@ class NewShortContentFormController extends GetxController {
       }
     });
     super.onInit();
+
+    locationFocusNode.addListener(() {
+      if (!locationFocusNode.hasFocus) {
+        if (locations.value != null &&
+            !isLocOpen &&
+            selectedLocation.value == null &&
+            (!(Get.isDialogOpen ?? false))) {
+          LoadingDialog.callErrorMessage1(
+              msg: "Please select location",
+              callback: () {
+                locationFocusNode.requestFocus();
+              });
+        }
+      }
+    });
+
+    channelFocusNode.addListener(() {
+      if (!channelFocusNode.hasFocus) {
+        if (!isChnlOpen &&
+            selectedChannel.value == null &&
+            (!(Get.isDialogOpen ?? false))) {
+          LoadingDialog.callErrorMessage1(
+              msg: "Please select channel",
+              callback: () {
+                channelFocusNode.requestFocus();
+              });
+        }
+      }
+    });
+    categoryFocusNode.addListener(() {
+      if (!categoryFocusNode.hasFocus) {
+        if (!isCatOpen &&
+            selectedCategory.value == null &&
+            (!(Get.isDialogOpen ?? false))) {
+          LoadingDialog.callErrorMessage1(
+              msg: "Please select category",
+              callback: () {
+                categoryFocusNode.requestFocus();
+              });
+        }
+      }
+    });
+    somFN.addListener(() {
+      if (!somFN.hasFocus) {
+        if (som.value == "" &&
+            som.value == "00:00:00:00" &&
+            (!(Get.isDialogOpen ?? false))) {
+          LoadingDialog.callErrorMessage1(
+              msg: "Please enter som",
+              callback: () {
+                somFN.requestFocus();
+              });
+        }
+      }
+    });
+    eomFN.addListener(() {
+      if (!eomFN.hasFocus) {
+        if (eom.value == "" &&
+            eom.value == "00:00:00:00" &&
+            (!(Get.isDialogOpen ?? false))) {
+          LoadingDialog.callErrorMessage1(
+              msg: "Please enter som",
+              callback: () {
+                eomFN.requestFocus();
+              });
+        }else{
+          calculateDuration();
+        }
+      }
+    });
   }
 
   @override
