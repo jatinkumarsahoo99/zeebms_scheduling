@@ -45,7 +45,7 @@ var context_path = "";
 
    // Request headers you wish to allow
    res.setHeader('Access-Control-Allow-Headers', 'content-type,access_token');
-   res.setHeader('Clear-Site-Data', '*');
+//   res.setHeader('Clear-Site-Data', '*');
    res.setHeader('Cache-Control', 'no-cache, no-store, must-revalidate');
    res.setHeader('Pragma', 'no-cache');
    res.setHeader('Expires', '0');
