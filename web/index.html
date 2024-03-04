@@ -135,6 +135,7 @@
        var loading = document.querySelector('#loading');
       _flutter.loader.loadEntrypoint({
       entrypointUrl: "main.dart.js?v=" + serviceWorkerVersion,
+      timeoutMillis: 10000,
         serviceWorker: {
           serviceWorkerVersion: serviceWorkerVersion,
         }
