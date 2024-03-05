@@ -17,6 +17,7 @@ class NewShortContentFormView extends StatelessWidget {
   NewShortContentFormView({Key? key}) : super(key: key);
   final controller =
       Get.put<NewShortContentFormController>(NewShortContentFormController());
+
   @override
   Widget build(BuildContext context) {
     return Center(
@@ -43,30 +44,40 @@ class NewShortContentFormView extends StatelessWidget {
                   children: [
                     Obx(
                       () => DropDownField.formDropDown1WidthMap(
-                        controller.locations.value,
-                        (value) {
-                          controller.getChannel(value.key);
-                          controller.selectedLocation.value = value;
-                          controller.locationFocusNode.requestFocus();
-                        },
-                        "Location",
-                        0.16,
-                        inkWellFocusNode: controller.locationFocusNode,
-                        selected: controller.selectedLocation.value,
-                        autoFocus: true,
-                        isEnable: controller.enable.value
-                      ),
+                          controller.locations.value,
+                          (value) {
+                            controller.getChannel(value.key);
+                            controller.selectedLocation.value = value;
+                            controller.locationFocusNode.requestFocus();
+                          },
+                          "Location",
+                          0.16,
+                          inkWellFocusNode: controller.locationFocusNode,
+                          selected: controller.selectedLocation.value,
+                          autoFocus: true,
+                          isEnable: controller.enable.value,
+                          isMandatory: true,
+                          dropdownOpen: (val) {
+                            controller.isLocOpen = val;
+                          }),
                     ),
                     Obx(
                       () => DropDownField.formDropDown1WidthMap(
-                          controller.channels.value, (value) {
-                        controller.selectedChannel.value = value;
-                        controller.channelFocusNode.requestFocus();
-                      }, "Channel", 0.16,
+                          controller.channels.value,
+                          (value) {
+                            controller.selectedChannel.value = value;
+                            controller.channelFocusNode.requestFocus();
+                          },
+                          "Channel",
+                          0.16,
                           autoFocus: true,
                           isEnable: controller.enable.value,
                           inkWellFocusNode: controller.channelFocusNode,
-                          selected: controller.selectedChannel.value),
+                          isMandatory: true,
+                          selected: controller.selectedChannel.value,
+                          dropdownOpen: (val) {
+                            controller.isChnlOpen = val;
+                          }),
                     ),
                     // Obx(
                     //   () => DropDownField.formDropDown1WidthMap(
@@ -81,33 +92,36 @@ class NewShortContentFormView extends StatelessWidget {
                     // ),
                     Obx(
                       () => DropDownField.formDropDown1WidthMap2(
-                        controller.categeroies.value,
-                        (value) {
-                          controller.selectedCategory.value = value;
-                          controller.categoryFocusNode.requestFocus();
-                          controller.typeleave(value.type);
-                          // selectedId(value.value);
-                          print(
-                              "Key: ${controller.selectedCategory.value!.key}");
-                          print(
-                              "type: ${controller.selectedCategory.value!.type}");
-                          print(
-                              "value: ${controller.selectedCategory.value!.value}");
-                          if (value.type == "SLIDE MASTER") {
-                            controller.formId.value = "L/";
-                          } else if (value.type == "STILL MASTER") {
-                            controller.formId.value = "S/";
-                          } else {
-                            controller.formId.value = "VP/";
-                          }
-                        },
-                        "Category",
-                        0.16,
-                        inkWellFocusNode: controller.categoryFocusNode,
-                        autoFocus: true,
-                        isEnable: controller.enable.value,
-                        selected: controller.selectedCategory.value,
-                      ),
+                          controller.categeroies.value,
+                          (value) {
+                            controller.selectedCategory.value = value;
+                            controller.categoryFocusNode.requestFocus();
+                            controller.typeleave(value.type);
+                            // selectedId(value.value);
+                            print(
+                                "Key: ${controller.selectedCategory.value!.key}");
+                            print(
+                                "type: ${controller.selectedCategory.value!.type}");
+                            print(
+                                "value: ${controller.selectedCategory.value!.value}");
+                            if (value.type == "SLIDE MASTER") {
+                              controller.formId.value = "L/";
+                            } else if (value.type == "STILL MASTER") {
+                              controller.formId.value = "S/";
+                            } else {
+                              controller.formId.value = "VP/";
+                            }
+                          },
+                          "Category",
+                          0.16,
+                          inkWellFocusNode: controller.categoryFocusNode,
+                          autoFocus: true,
+                          isEnable: controller.enable.value,
+                          selected: controller.selectedCategory.value,
+                          isMandatory: true,
+                          dropdownOpen: (val) {
+                            controller.isCatOpen = val;
+                          }),
                     ),
                     InputFields.formField1(
                         hintTxt: "Caption",
@@ -175,8 +189,8 @@ class NewShortContentFormView extends StatelessWidget {
                         hintTxt: "House ID",
                         controller: controller.houseId,
                         width: 0.16,
-                        onchanged: (val){
-                          if(val.toString().trim() == "" || val == "AUTOID"){
+                        onchanged: (val) {
+                          if (val.toString().trim() == "" || val == "AUTOID") {
                             controller.enable.value = true;
                             controller.enable.refresh();
                           }
@@ -202,6 +216,7 @@ class NewShortContentFormView extends StatelessWidget {
                                 "SLIDE MASTER"
                             ? false
                             : true,
+                        // isMandatory:true
                       ),
                     ),
                     // InputFields.formField1(
@@ -210,22 +225,25 @@ class NewShortContentFormView extends StatelessWidget {
                     //   width: 0.325,
                     // ),
                     InputFields.formFieldNumberMask(
-                      hintTxt: "SOM",
-                      widthRatio: 0.16,
-                      controller: controller.som,
-                      paddingLeft: 0,
-                      // isTime: true
-                    ),
+                        hintTxt: "SOM",
+                        widthRatio: 0.16,
+                        controller: controller.som,
+                        paddingLeft: 0,
+                        isMandatory: true,
+                        textFieldFN: controller.somFN
+                        // isTime: true
+                        ),
                     InputFields.formFieldNumberMask(
                         hintTxt: "EOM",
                         widthRatio: 0.16,
                         controller: controller.eom,
-                        // textFieldFN: controller.eomFN,
+                        textFieldFN: controller.eomFN,
                         // isTime: true,
                         paddingLeft: 0,
-                        onEditComplete: (val) {
+                        isMandatory: true,
+                        /*onEditComplete: (val) {
                           controller.calculateDuration();
-                        }),
+                        }*/),
                     Obx(() => InputFields.formFieldDisable(
                           hintTxt: "Duration",
                           value: controller.duration.value,
