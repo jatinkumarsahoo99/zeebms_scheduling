@@ -503,7 +503,8 @@ class SalesAuditNewController extends GetxController {
             } else {
               rowMap[key] = (row.cells[key]?.value ?? "");
             }
-          }else if(key.toString().trim() == "rownumber"){
+          }
+          else if(key.toString().trim() == "rownumber"){
             if (row.cells[key]?.value != null &&
                 (row.cells[key]?.value ?? "").toString().trim() != "") {
               rowMap[key] = int.parse(row.cells[key]?.value);
