@@ -166,6 +166,7 @@ class TransmissionLogController extends GetxController {
   BuildContext? contextGrid;
   RxBool insertPopupOpen = RxBool(false);
   RxString selectMultiSa = RxString("Tx Log");
+  FocusNode keyboardFocus=FocusNode();
 
   @override
   void onInit() {
@@ -4792,13 +4793,13 @@ class TransmissionLogController extends GetxController {
       }
     }*/
     else if (raw is RawKeyDownEvent && raw.character?.toLowerCase() == "y") {
-      if (completerDialog != null && dialogWidget != null) {
+      if (completerDialog != null && dialogWidget != null && canDialogShow.value) {
         dialogWidget = null;
         canDialogShow.value = false;
         completerDialog?.complete(true);
       }
     } else if (raw is RawKeyDownEvent && raw.character?.toLowerCase() == "n") {
-      if (completerDialog != null && dialogWidget != null) {
+      if (completerDialog != null && dialogWidget != null && canDialogShow.value) {
         dialogWidget = null;
         canDialogShow.value = false;
         completerDialog?.complete(false);

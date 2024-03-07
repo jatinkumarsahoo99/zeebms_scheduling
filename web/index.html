@@ -88,7 +88,7 @@
 
       #loading.init_done img {
         animation: .33s ease-in-out 0s 1 forwards zooooom;
-        opacity: .05;
+        opacity: .00;
       }
 
       @keyframes breathe {
@@ -135,6 +135,7 @@
        var loading = document.querySelector('#loading');
       _flutter.loader.loadEntrypoint({
       entrypointUrl: "main.dart.js?v=" + serviceWorkerVersion,
+      timeoutMillis: 10000,
         serviceWorker: {
           serviceWorkerVersion: serviceWorkerVersion,
         }

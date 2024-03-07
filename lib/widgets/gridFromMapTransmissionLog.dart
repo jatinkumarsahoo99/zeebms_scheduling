@@ -107,7 +107,7 @@ class DataGridFromMapTransmissionLog extends StatelessWidget {
                   if (onContextMenuClick == null) {
                     DataGridMenu().showGridMenu(
                         rendererContext.stateManager, detail, context,
-                        exportFileName: exportFileName,data: mapData);
+                        exportFileName: exportFileName, data: mapData);
                   } else {
                     DataGridMenu().showGridCustomTransmissionLog(
                         rendererContext.stateManager, detail, context,
@@ -354,7 +354,7 @@ class DataGridFromMapTransmissionLog extends StatelessWidget {
                 if (onContextMenuClick == null) {
                   DataGridMenu().showGridMenu(
                       rendererContext.stateManager, detail, context,
-                      exportFileName: exportFileName,data: mapData);
+                      exportFileName: exportFileName, data: mapData);
                 } else {
                   DataGridMenu().showGridCustomTransmissionLog(
                       rendererContext.stateManager, detail, context,
@@ -400,7 +400,9 @@ class DataGridFromMapTransmissionLog extends StatelessWidget {
           enableSorting: enableSort,
           // enableRowDrag: draggableKeys != null ? draggableKeys!.contains(key) : false,
           enableRowDrag: key != "fpCtime" ? true : false,
-          frozen: key != "fpCtime" ? PlutoColumnFrozen.none :  PlutoColumnFrozen.start,
+          frozen: key != "fpCtime"
+              ? PlutoColumnFrozen.none
+              : PlutoColumnFrozen.start,
           enableEditingMode: false,
           enableDropToResize: true,
           enableContextMenu: false,
@@ -448,68 +450,84 @@ class DataGridFromMapTransmissionLog extends StatelessWidget {
       }
     }
 
+    PlutoGridStateManager? stateManager;
+
     return Scaffold(
       key: _globalKey,
-      body: Focus(
-        autofocus: false,
-        focusNode: _focusNode,
-        onFocusChange: onFocusChange,
-        child: NotificationListener<ScrollNotification>(
-          onNotification: (notification) {
-            if (notification is ScrollUpdateNotification) {
-              // Handle scroll updates here
-              final scrollPosition = notification.metrics.pixels;
-              Get.find<TransmissionLogController>()
-                  .findVisibleRows(scrollPosition);
-              // Do something with the visible rows
-            }
-            return false;
-          },
-          child: PlutoGrid(
-              // mode: mode ?? PlutoGridMode.normal,
-              mode: PlutoGridMode.normal,
-              configuration:
-                  plutoGridConfigurationTransmisionLog(focusNode: _focusNode),
-              // configuration: const PlutoGridConfiguration(),
-              rowColorCallback: colorCallback,
-              onLoaded: onload,
-              columns: segColumn,
-              onRowDoubleTap: onRowDoubleTap,
-              onRowsMoved: onRowsMoved,
-              onChanged: onChanged,
-              onSelected: onSelected,
-              cellColorCallback: cellColorCallback,
-              /*createFooter: (stateManager) {
-                return PlutoLazyPagination(
-                  // Determine the first page.
-                  // Default is 1.
-                  initialPage: 1,
+      body: GestureDetector(
+        onSecondaryTapDown: (detail) {
+          print("Length of List: "+(stateManager?.refRows.length??0).toString());
+          if(stateManager?.refRows.isEmpty??false)
+          DataGridMenu().showClearFilter(
+            stateManager!,
+            detail,
+            context,
+          );
+        },
+        child: Focus(
+          autofocus: false,
+          focusNode: _focusNode,
+          onFocusChange: onFocusChange,
+          child: NotificationListener<ScrollNotification>(
+            onNotification: (notification) {
+              if (notification is ScrollUpdateNotification) {
+                // Handle scroll updates here
+                final scrollPosition = notification.metrics.pixels;
+                Get.find<TransmissionLogController>()
+                    .findVisibleRows(scrollPosition);
+                // Do something with the visible rows
+              }
+              return false;
+            },
+            child: PlutoGrid(
+                // mode: mode ?? PlutoGridMode.normal,
+                mode: PlutoGridMode.normal,
+                configuration:
+                    plutoGridConfigurationTransmisionLog(focusNode: _focusNode),
+                // configuration: const PlutoGridConfiguration(),
+                rowColorCallback: colorCallback,
+                onLoaded: (PlutoGridOnLoadedEvent pluto) {
+                  stateManager = pluto.stateManager;
+                  if (onload != null) onload!(pluto);
+                },
+                columns: segColumn,
+                onRowDoubleTap: onRowDoubleTap,
+                onRowsMoved: onRowsMoved,
+                onChanged: onChanged,
+                onSelected: onSelected,
+                cellColorCallback: cellColorCallback,
+                /*createFooter: (stateManager) {
+                  return PlutoLazyPagination(
+                    // Determine the first page.
+                    // Default is 1.
+                    initialPage: 1,
 
-                  // First call the fetch function to determine whether to load the page.
-                  // Default is true.
-                  initialFetch: true,
+                    // First call the fetch function to determine whether to load the page.
+                    // Default is true.
+                    initialFetch: true,
 
-                  // Decide whether sorting will be handled by the server.
-                  // If false, handle sorting on the client side.
-                  // Default is true.
-                  fetchWithSorting: true,
+                    // Decide whether sorting will be handled by the server.
+                    // If false, handle sorting on the client side.
+                    // Default is true.
+                    fetchWithSorting: true,
 
-                  // Decide whether filtering is handled by the server.
-                  // If false, handle filtering on the client side.
-                  // Default is true.
-                  fetchWithFiltering: true,
+                    // Decide whether filtering is handled by the server.
+                    // If false, handle filtering on the client side.
+                    // Default is true.
+                    fetchWithFiltering: true,
 
-                  // Determines the page size to move to the previous and next page buttons.
-                  // Default value is null. In this case,
-                  // it moves as many as the number of page buttons visible on the screen.
-                  pageSizeToMove: null,
-                  fetch: (contextData){
-                    return fetch(contextData,stateManager,segRows);
-                  },
-                  stateManager: stateManager,
-                );
-              },*/
-              rows: segRows),
+                    // Determines the page size to move to the previous and next page buttons.
+                    // Default value is null. In this case,
+                    // it moves as many as the number of page buttons visible on the screen.
+                    pageSizeToMove: null,
+                    fetch: (contextData){
+                      return fetch(contextData,stateManager,segRows);
+                    },
+                    stateManager: stateManager,
+                  );
+                },*/
+                rows: segRows),
+          ),
         ),
       ),
     );

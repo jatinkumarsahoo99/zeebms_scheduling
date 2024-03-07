@@ -16,6 +16,7 @@ import '../controllers/filler_master_controller.dart';
 
 class FillerMasterView extends GetView<FillerMasterController> {
   const FillerMasterView({Key? key}) : super(key: key);
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -49,20 +50,28 @@ class FillerMasterView extends GetView<FillerMasterController> {
                                       runSpacing: 10,
                                       children: [
                                         DropDownField.formDropDown1WidthMap(
-                                          controller
-                                                  .onloadModel
-                                                  ?.fillerMasterOnload
-                                                  ?.lstLocation ??
-                                              [],
-                                          controller.locationOnChanged,
-                                          "Location",
-                                          controller.componentWidthRatio,
-                                          autoFocus: true,
-                                          selected:
-                                              controller.selectedDropDowns[0],
-                                          inkWellFocusNode:
-                                              controller.locationFN,
-                                        ),
+                                            controller
+                                                    .onloadModel
+                                                    ?.fillerMasterOnload
+                                                    ?.lstLocation ??
+                                                [],
+                                            controller.locationOnChanged,
+                                            "Location",
+                                            0.26,
+                                            autoFocus: true,
+                                            selected:
+                                                controller.selectedDropDowns[0],
+                                            inkWellFocusNode:
+                                                controller.locationFN,
+                                            isMandatory: true,
+                                            /*validator: (value) {
+                                            if (value == null || value == "") {
+                                              return "Please select location";
+                                            }
+                                          },*/
+                                            dropdownOpen: (val) {
+                                          controller.isLocOpen = val;
+                                        }),
                                         Obx(() {
                                           return DropDownField
                                               .formDropDown1WidthMap(
@@ -70,16 +79,21 @@ class FillerMasterView extends GetView<FillerMasterController> {
                                             (a) => controller
                                                 .selectedDropDowns[19] = a,
                                             "Channel",
-                                            controller.componentWidthRatio,
+                                            0.26,
                                             selected: controller
                                                 .selectedDropDowns[19],
+                                            inkWellFocusNode:
+                                                controller.channelFN,
+                                            isMandatory: true,
+                                            dropdownOpen: (val) {
+                                              controller.isChannelOpen = val;
+                                            },
                                           );
                                         }),
                                         DropDownField.formDropDownSearchAPI2(
                                           GlobalKey(),
                                           context,
-                                          width: context.width *
-                                              controller.componentWidthRatio,
+                                          width: context.width * 0.525,
                                           onchanged: (v) => controller
                                               .selectedDropDowns[2] = v,
                                           title: 'Banner',
@@ -89,6 +103,11 @@ class FillerMasterView extends GetView<FillerMasterController> {
                                               .FILLER_MASTER_BANNER_SEARCH,
                                           parseKeyForKey: "BannerCode",
                                           parseKeyForValue: "BannerName",
+                                          isMandatory: true,
+                                          inkwellFocus: controller.bannerFN,
+                                          dropdownOpen: (val) {
+                                            controller.isBannerOpen = val;
+                                          },
                                         ),
                                         InputFields.formField1(
                                           hintTxt: "Filler Name",
@@ -97,6 +116,7 @@ class FillerMasterView extends GetView<FillerMasterController> {
                                           focusNode: controller.fillerNameFN,
                                           maxLen: 40,
                                           padLeft: 0,
+                                          isMandatory: true,
                                         ),
                                         InputFields.formField1(
                                           hintTxt: "TX Caption",
@@ -107,17 +127,20 @@ class FillerMasterView extends GetView<FillerMasterController> {
                                                   2,
                                           prefixText: "F/",
                                           maxLen: 40,
+                                          focusNode: controller.txCaptionFN,
                                           padLeft: 0,
+                                          isMandatory: true,
                                         ),
 
                                         InputFields.formField1(
-                                          hintTxt: "Tape ID",
-                                          controller: controller.tapeIDCtr,
-                                          width: controller.componentWidthRatio,
-                                          focusNode: controller.tapeIDFN,
-                                          // maxLen: 10,
-                                          padLeft: 0,
-                                        ),
+                                            hintTxt: "Tape ID",
+                                            controller: controller.tapeIDCtr,
+                                            width:
+                                                controller.componentWidthRatio,
+                                            focusNode: controller.tapeIDFN,
+                                            // maxLen: 10,
+                                            padLeft: 0,
+                                            isMandatory: true),
                                         // SizedBox(width: 20),
                                         InputFields.formField1(
                                           hintTxt: "Seg No",
@@ -126,6 +149,7 @@ class FillerMasterView extends GetView<FillerMasterController> {
                                           focusNode: controller.segNoFN,
                                           maxLen: 5,
                                           padLeft: 0,
+                                          isMandatory: true,
                                           inputformatters: [
                                             FilteringTextInputFormatter
                                                 .digitsOnly,
@@ -133,29 +157,31 @@ class FillerMasterView extends GetView<FillerMasterController> {
                                         ),
                                         // SizedBox(width: 20),
                                         InputFields.formField1(
-                                          hintTxt: "TX No",
-                                          controller: controller.txNoCtr,
-                                          width: controller.componentWidthRatio,
-                                          padLeft: 0,
-                                        ),
+                                            hintTxt: "TX No",
+                                            controller: controller.txNoCtr,
+                                            width:
+                                                controller.componentWidthRatio,
+                                            padLeft: 0,
+                                            isMandatory: true),
                                         InputFields.formFieldNumberMask(
-                                          controller: controller.somCtr,
-                                          hintTxt: 'SOM',
-                                          widthRatio:
-                                              controller.componentWidthRatio,
-                                          paddingLeft: 0,
-                                        ),
+                                            controller: controller.somCtr,
+                                            hintTxt: 'SOM',
+                                            widthRatio:
+                                                controller.componentWidthRatio,
+                                            textFieldFN: controller.somFN,
+                                            paddingLeft: 0,
+                                            isMandatory: true),
                                         InputFields.formFieldNumberMask(
-                                          controller: controller.eomCtr,
-                                          hintTxt: 'EOM',
-                                          widthRatio:
-                                              controller.componentWidthRatio,
-                                          paddingLeft: 0,
-                                          // textFieldFN: controller.eomFN,
-                                          onEditComplete: (val) {
-                                            controller.calculateDuration();
-                                          },
-                                        ),
+                                            controller: controller.eomCtr,
+                                            hintTxt: 'EOM',
+                                            widthRatio:
+                                                controller.componentWidthRatio,
+                                            paddingLeft: 0,
+                                            textFieldFN: controller.eomFN,
+                                            // onEditComplete: (val) {
+                                            //   controller.calculateDuration();
+                                            // },
+                                            isMandatory: true),
                                         Obx(() => InputFields.formFieldDisable(
                                               hintTxt: "Duration",
                                               value: controller.duration.value,
@@ -174,6 +200,12 @@ class FillerMasterView extends GetView<FillerMasterController> {
                                           controller.componentWidthRatio,
                                           selected:
                                               controller.selectedDropDowns[3],
+                                          isMandatory: true,
+                                          inkWellFocusNode:
+                                              controller.tapeTypeFN,
+                                          dropdownOpen: (val) {
+                                            controller.isTapeTypOpen = val;
+                                          },
                                         ),
                                         DropDownField.formDropDown1WidthMap(
                                           controller
@@ -187,6 +219,11 @@ class FillerMasterView extends GetView<FillerMasterController> {
                                           controller.componentWidthRatio,
                                           selected:
                                               controller.selectedDropDowns[4],
+                                          inkWellFocusNode: controller.typeFN,
+                                          isMandatory: true,
+                                          dropdownOpen: (val) {
+                                            controller.isTypOpen = val;
+                                          },
                                         ),
                                         // SizedBox(width: 20),
                                         DropDownField.formDropDown1WidthMap(
@@ -197,10 +234,15 @@ class FillerMasterView extends GetView<FillerMasterController> {
                                               [],
                                           (v) => controller
                                               .selectedDropDowns[5] = v,
-                                          "Censhorship",
+                                          "Censorship",
                                           controller.componentWidthRatio,
                                           selected:
                                               controller.selectedDropDowns[5],
+                                          isMandatory: true,
+                                          inkWellFocusNode: controller.censorFN,
+                                          dropdownOpen: (val) {
+                                            controller.isCensorOpen = val;
+                                          },
                                         ),
                                         DropDownField.formDropDown1WidthMap(
                                           controller
@@ -210,10 +252,15 @@ class FillerMasterView extends GetView<FillerMasterController> {
                                               [],
                                           (v) => controller
                                               .selectedDropDowns[6] = v,
-                                          "Langauge",
+                                          "Language",
                                           controller.componentWidthRatio,
                                           selected:
                                               controller.selectedDropDowns[6],
+                                          isMandatory: true,
+                                          inkWellFocusNode: controller.langFN,
+                                          dropdownOpen: (val) {
+                                            controller.isLangOpen = val;
+                                          },
                                         ),
                                         DropDownField.formDropDown1WidthMap(
                                           controller
@@ -227,6 +274,11 @@ class FillerMasterView extends GetView<FillerMasterController> {
                                           controller.componentWidthRatio,
                                           selected:
                                               controller.selectedDropDowns[7],
+                                          isMandatory: true,
+                                          inkWellFocusNode: controller.prodFN,
+                                          dropdownOpen: (val) {
+                                            controller.isPrdOpen = val;
+                                          },
                                         ),
                                         InputFields.formField1(
                                           hintTxt: "Seg ID",
@@ -245,6 +297,11 @@ class FillerMasterView extends GetView<FillerMasterController> {
                                           controller.componentWidthRatio,
                                           selected:
                                               controller.selectedDropDowns[8],
+                                          isMandatory: true,
+                                          inkWellFocusNode: controller.colorFN,
+                                          dropdownOpen: (val) {
+                                            controller.isColorOpen = val;
+                                          },
                                         ),
                                         DropDownField.formDropDown1WidthMap(
                                           controller
@@ -442,6 +499,11 @@ class FillerMasterView extends GetView<FillerMasterController> {
                                                     .01,
                                                 selected: controller
                                                     .selectedDropDowns[17],
+                                                isMandatory: true,
+                                                inkWellFocusNode: controller.idNoFN,
+                                                dropdownOpen: (v){
+                                                  controller.isIdOpen=v;
+                                                }
                                               ),
                                             ],
                                           ),

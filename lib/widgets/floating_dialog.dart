@@ -5,11 +5,13 @@ class DraggableFab extends StatefulWidget {
   final Offset? initPosition;
   final Function? dragEndCall;
   final double securityBottom;
+  // final FocusNode? focusNode;
 
   const DraggableFab(
       {Key? key,
       required this.child,
       this.initPosition,
+      // this.focusNode,
       this.dragEndCall,
       this.securityBottom = 0})
       : super(key: key);
@@ -76,7 +78,7 @@ class _DraggableFabState extends State<DraggableFab> {
 
   void _handleDragEnded(DraggableDetails draggableDetails) {
     _calculatePosition(draggableDetails.offset);
-    if(widget.dragEndCall!=null){
+    if (widget.dragEndCall != null) {
       widget.dragEndCall!();
     }
   }

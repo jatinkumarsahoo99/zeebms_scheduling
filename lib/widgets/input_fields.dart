@@ -214,6 +214,7 @@ class InputFields {
     bool showTitle = true,
     int maxLines = 1,
     bool readOnly = false,
+    bool? isMandatory = false,
     double? height,
     void Function(String)? onFieldSubmitted,
     String? prefixText,
@@ -232,10 +233,32 @@ class InputFields {
       mainAxisAlignment: MainAxisAlignment.end,
       children: [
         if (showTitle) ...{
-          LabelText.style(
+          /* LabelText.style(
             hint: hintTxt,
             txtColor: Colors.black,
-          ),
+          ),*/
+          Padding(
+              padding: EdgeInsets.only(bottom: 5),
+              child: RichText(
+                text: TextSpan(children: [
+                  TextSpan(
+                    text: hintTxt ?? "",
+                    style: TextStyle(
+                      fontSize: SizeDefine.labelSize1,
+                      color: Colors.black,
+                      fontWeight: FontWeight.w500,
+                    ),
+                  ),
+                  TextSpan(
+                    text: (isMandatory ?? false) ? " *" : "",
+                    style: TextStyle(
+                      fontSize: SizeDefine.labelSize1,
+                      color: Colors.red,
+                      fontWeight: FontWeight.bold,
+                    ),
+                  ),
+                ]),
+              )),
         },
         Container(
           // padding: const EdgeInsets.only(
@@ -275,7 +298,8 @@ class InputFields {
             onFieldSubmitted: onFieldSubmitted,
             inputFormatters: inputformatters.isEmpty
                 ? [
-                    LengthLimitingTextInputFormatter(maxLen??SizeDefine.maxcharlimit),
+                    LengthLimitingTextInputFormatter(
+                        maxLen ?? SizeDefine.maxcharlimit),
                     FilteringTextInputFormatter.deny("  "),
                     // FilteringTextInputFormatter.allow(RegExp(r"^(\w+ ?)*$")),
                   ]
@@ -964,6 +988,7 @@ class InputFields {
     bool isTime = false,
     bool isEnable = true,
     bool isTitleReq = true,
+    bool? isMandatory = false,
     FocusNode? textFieldFN,
   }) {
     if (controller.text.isEmpty) {
@@ -980,6 +1005,7 @@ class InputFields {
           paddingTop: paddingTop ?? 15,
           isEnable: isEnable,
           textFieldFN: textFieldFN,
+          isMandatory: isMandatory,
           onFocusChange: (time) {
             if (onEditComplete != null) {
               onEditComplete(time);
@@ -1214,6 +1240,7 @@ class InputFields {
     void Function(String time)? onFocusChange,
     bool isTime = true,
     bool titleReq = true,
+    bool? isMandatory = false,
     double? paddingTop,
     FocusNode? textFieldFN,
   }) {
@@ -1371,7 +1398,26 @@ class InputFields {
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             titleReq
-                ? Text(title, style: TextStyle(color: textColor, fontSize: 10))
+                ? RichText(
+                    text: TextSpan(children: [
+                      TextSpan(
+                        text: title ?? "",
+                        style: TextStyle(
+                          fontSize: SizeDefine.labelSize1,
+                          color: Colors.black,
+                          fontWeight: FontWeight.w500,
+                        ),
+                      ),
+                      TextSpan(
+                        text: (isMandatory ?? false) ? " *" : "",
+                        style: TextStyle(
+                          fontSize: SizeDefine.labelSize1,
+                          color: Colors.red,
+                          fontWeight: FontWeight.bold,
+                        ),
+                      ),
+                    ]),
+                  ) /*,Text(title, style: TextStyle(color: textColor, fontSize: 10))*/
                 : SizedBox.shrink(),
             // LabelText.style(
             //     hint: title, txtColor: isEnable ? Colors.black : Colors.grey),
